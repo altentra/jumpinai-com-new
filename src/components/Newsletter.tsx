@@ -42,6 +42,43 @@ const Newsletter = () => {
         body: { email }
       });
 
+      // Handle the special case where we get a FunctionsHttpError due to 409 status
+      if (error && error.message?.includes("non-2xx status code")) {
+        console.log("Received non-2xx status, checking if it's already subscribed case");
+        
+        // Try to get the response data from the error context
+        // For 409 status (already subscribed), we want to show a success message
+        try {
+          // Make a direct fetch to get the actual response
+          const response = await fetch(`${supabase.supabaseUrl}/functions/v1/send-newsletter-email`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${supabase.supabaseKey}`,
+              'apikey': supabase.supabaseKey
+            },
+            body: JSON.stringify({ email })
+          });
+          
+          const responseData = await response.json();
+          console.log("Direct response data:", responseData);
+          
+          if (response.status === 409 && responseData.message?.includes("already subscribed")) {
+            toast({
+              title: "You're Already Part of Our Community! 🎉",
+              description: "Great news! You're already subscribed to our newsletter. Check your inbox for our latest AI insights and updates.",
+            });
+            setEmail("");
+            return;
+          }
+        } catch (directFetchError) {
+          console.error("Direct fetch also failed:", directFetchError);
+        }
+        
+        // If we can't determine it's already subscribed, show generic error
+        throw error;
+      }
+
       if (error) {
         console.error("Supabase function error:", error);
         throw error;
