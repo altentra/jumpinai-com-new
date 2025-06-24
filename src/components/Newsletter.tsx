@@ -52,15 +52,14 @@ const Newsletter = () => {
         // Handle already subscribed case with friendly message
         if (data.message?.includes("already subscribed")) {
           toast({
-            title: "You're Already Subscribed! 🎉",
-            description: "Great news! You're already part of our community. Check your inbox for our latest AI insights and updates.",
+            title: "You're Already Part of Our Community! 🎉",
+            description: "Great news! You're already subscribed to our newsletter. Check your inbox for our latest AI insights and updates.",
           });
         } else {
-          // Handle other subscription issues
+          // Handle other subscription issues with friendly tone
           toast({
-            title: "Subscription Notice",
-            description: data.message || "There was an issue with your subscription. Please try again or contact us at info@jumpinai.com.",
-            variant: "destructive",
+            title: "Subscription Update",
+            description: data.message || "We're processing your subscription. If you continue to have issues, please contact us at info@jumpinai.com.",
           });
         }
         setEmail("");
@@ -69,21 +68,23 @@ const Newsletter = () => {
 
       console.log("Newsletter signup successful:", data);
       
-      // Show appropriate success message
+      // Show appropriate success message based on subscription type
       const isResubscription = data?.isResubscription;
       toast({
         title: isResubscription ? "Welcome Back! 🎉" : "Welcome to JumpinAI! 🚀",
         description: isResubscription 
-          ? "Fantastic! You're back in our community. Check your inbox for the latest AI strategies and insights."
+          ? "Fantastic! You're back in our community. We've reactivated your subscription and you'll receive our latest AI strategies and insights."
           : "Thank you for joining our community! Check your inbox for a welcome email with exclusive AI content and resources.",
       });
       
       setEmail("");
     } catch (error) {
       console.error("Error processing newsletter signup:", error);
+      
+      // Show friendly error message instead of technical details
       toast({
-        title: "Technical Difficulty",
-        description: "We're experiencing a temporary issue. Please try again in a moment, or feel free to contact us at info@jumpinai.com for assistance.",
+        title: "Subscription Processing",
+        description: "We're currently processing your subscription request. If this continues, please reach out to us at info@jumpinai.com and we'll help you personally.",
         variant: "destructive",
       });
     } finally {
@@ -144,7 +145,7 @@ const Newsletter = () => {
                   disabled={isSubmitting}
                   className="modern-button group bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-3 text-base font-semibold rounded-2xl transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
                 >
-                  {isSubmitting ? "Joining..." : "Join Now"}
+                  {isSubmitting ? "Processing..." : "Join Now"}
                   <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </div>
@@ -168,7 +169,7 @@ const Newsletter = () => {
             </div>
             
             <p className="text-muted-foreground text-xs font-light">
-              Professional insights only. Unsubscribe anytime. Already unsubscribed? You can resubscribe here!
+              Professional insights only. Unsubscribe anytime. Previously unsubscribed? You can resubscribe here!
             </p>
           </div>
         </div>
