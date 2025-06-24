@@ -1,0 +1,180 @@
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Mail, Sparkles, ArrowRight } from "lucide-react";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+
+const Newsletter = () => {
+  const [email, setEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!email) {
+      toast({
+        title: "Email Required",
+        description: "Please enter your email address to subscribe.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast({
+        title: "Invalid Email Format",
+        description: "Please enter a valid email address (e.g., example@domain.com).",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+    console.log("Newsletter signup:", email);
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('send-newsletter-email', {
+        body: { email }
+      });
+
+      if (error) {
+        console.error("Supabase function error:", error);
+        throw error;
+      }
+
+      // Check if it's an error response from our function
+      if (data && !data.success) {
+        // Handle already subscribed case with friendly message
+        if (data.message?.includes("already subscribed")) {
+          toast({
+            title: "You're Already Subscribed! 🎉",
+            description: "Great news! You're already part of our community. Check your inbox for our latest AI insights and updates.",
+          });
+        } else {
+          // Handle other subscription issues
+          toast({
+            title: "Subscription Notice",
+            description: data.message || "There was an issue with your subscription. Please try again or contact us at info@jumpinai.com.",
+            variant: "destructive",
+          });
+        }
+        setEmail("");
+        return;
+      }
+
+      console.log("Newsletter signup successful:", data);
+      
+      // Show appropriate success message
+      const isResubscription = data?.isResubscription;
+      toast({
+        title: isResubscription ? "Welcome Back! 🎉" : "Welcome to JumpinAI! 🚀",
+        description: isResubscription 
+          ? "Fantastic! You're back in our community. Check your inbox for the latest AI strategies and insights."
+          : "Thank you for joining our community! Check your inbox for a welcome email with exclusive AI content and resources.",
+      });
+      
+      setEmail("");
+    } catch (error) {
+      console.error("Error processing newsletter signup:", error);
+      toast({
+        title: "Technical Difficulty",
+        description: "We're experiencing a temporary issue. Please try again in a moment, or feel free to contact us at info@jumpinai.com for assistance.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <section id="newsletter" className="relative py-12 px-4 sm:px-6 lg:px-8 scroll-snap-section">
+      <div className="relative z-10 max-w-4xl mx-auto text-center">
+        <div className="relative border-2 border-border/40 dark:border-border/60 rounded-3xl p-8 sm:p-10 shadow-modern-lg animate-fade-in-up bg-background/80 backdrop-blur-sm hover:border-border/60 dark:hover:border-border/80 transition-all duration-500 hover:shadow-2xl dark:hover:shadow-[0_25px_50px_-12px_rgba(255,255,255,0.1)]">
+          {/* Enhanced Border Glow Effect */}
+          <div className="absolute -inset-0.5 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 rounded-3xl opacity-30 dark:opacity-50 blur-sm"></div>
+          <div className="absolute inset-0 bg-background rounded-3xl"></div>
+          
+          {/* Content */}
+          <div className="relative z-10">
+            {/* Icon */}
+            <div className="flex items-center justify-center mb-5">
+              <div className="relative">
+                <div className="absolute inset-0 bg-primary rounded-2xl blur-lg opacity-20 dark:opacity-30"></div>
+                <div className="relative bg-primary p-3 rounded-2xl shadow-lg">
+                  <Mail className="h-8 w-8 text-primary-foreground" />
+                </div>
+              </div>
+            </div>
+            
+            {/* Badge */}
+            <div className="inline-flex items-center px-3 py-1.5 bg-muted/60 backdrop-blur-sm rounded-full mb-5 border border-border/50">
+              <Sparkles className="h-4 w-4 text-muted-foreground mr-2" />
+              <span className="text-sm font-semibold text-muted-foreground">Join the Professionals</span>
+            </div>
+            
+            <h2 className="text-3xl sm:text-4xl font-black text-foreground mb-3 tracking-tight font-display">
+              Stay Ahead
+            </h2>
+            
+            <p className="text-base text-muted-foreground mb-6 max-w-2xl mx-auto leading-relaxed font-light">
+              Get the latest AI tools, strategic insights, and professional workflows delivered to your inbox. Join thousands of industry leaders already implementing AI strategically.
+            </p>
+            
+            {/* Newsletter Form */}
+            <form onSubmit={handleSubmit} className="max-w-lg mx-auto mb-5">
+              <div className="flex flex-col sm:flex-row gap-3">
+                <div className="flex-1 relative">
+                  <Input
+                    type="email"
+                    placeholder="Enter your professional email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    className="w-full px-5 py-3 text-base rounded-2xl border-border bg-background text-foreground placeholder-muted-foreground focus:bg-background transition-all duration-300 focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
+                  />
+                </div>
+                <Button 
+                  type="submit"
+                  size="lg"
+                  disabled={isSubmitting}
+                  className="modern-button group bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-3 text-base font-semibold rounded-2xl transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
+                >
+                  {isSubmitting ? "Joining..." : "Join Now"}
+                  <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </div>
+            </form>
+            
+            <div className="flex flex-col sm:flex-row justify-center items-center gap-5 mb-3">
+              <div className="text-center">
+                <div className="text-xl font-bold text-foreground font-display">30K+</div>
+                <div className="text-muted-foreground text-sm">Professionals</div>
+              </div>
+              <div className="w-px h-6 bg-border hidden sm:block"></div>
+              <div className="text-center">
+                <div className="text-xl font-bold text-foreground font-display">98%</div>
+                <div className="text-muted-foreground text-sm">Satisfaction</div>
+              </div>
+              <div className="w-px h-6 bg-border hidden sm:block"></div>
+              <div className="text-center">
+                <div className="text-xl font-bold text-foreground font-display">Weekly</div>
+                <div className="text-muted-foreground text-sm">Updates</div>
+              </div>
+            </div>
+            
+            <p className="text-muted-foreground text-xs font-light">
+              Professional insights only. Unsubscribe anytime. Already unsubscribed? You can resubscribe here!
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default Newsletter;
