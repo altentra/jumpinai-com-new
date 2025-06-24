@@ -1,1 +1,259 @@
 
+import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.50.0';
+import { Resend } from "npm:resend@2.0.0";
+
+const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
+
+// Initialize Supabase client
+const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+};
+
+interface NewsletterData {
+  email: string;
+}
+
+const handler = async (req: Request): Promise<Response> => {
+  if (req.method === "OPTIONS") {
+    return new Response(null, { headers: corsHeaders });
+  }
+
+  try {
+    const { email }: NewsletterData = await req.json();
+
+    console.log("Processing newsletter signup:", email);
+
+    // First, check if the email already exists (active or inactive)
+    const { data: existingSubscriber, error: checkError } = await supabase
+      .from('newsletter_subscribers')
+      .select('*')
+      .eq('email', email.toLowerCase())
+      .single();
+
+    if (checkError && checkError.code !== 'PGRST116') { // PGRST116 = no rows found
+      console.error("Error checking existing subscriber:", checkError);
+      throw checkError;
+    }
+
+    let isResubscription = false;
+
+    if (existingSubscriber) {
+      if (existingSubscriber.is_active) {
+        // Already subscribed and active
+        console.log("Email already subscribed and active:", email);
+        return new Response(
+          JSON.stringify({ 
+            success: false, 
+            message: "This email is already subscribed to our newsletter. Check your inbox for our latest updates!" 
+          }),
+          {
+            status: 409,
+            headers: {
+              "Content-Type": "application/json",
+              ...corsHeaders,
+            },
+          }
+        );
+      } else {
+        // Previously unsubscribed, reactivate
+        console.log("Reactivating previously unsubscribed email:", email);
+        const { data: updateData, error: updateError } = await supabase
+          .from('newsletter_subscribers')
+          .update({ 
+            is_active: true,
+            subscribed_at: new Date().toISOString(),
+            source: 'website_resubscription'
+          })
+          .eq('email', email.toLowerCase())
+          .select();
+
+        if (updateError) {
+          console.error("Error reactivating subscriber:", updateError);
+          throw updateError;
+        }
+
+        isResubscription = true;
+        console.log("Successfully reactivated subscriber:", updateData);
+      }
+    } else {
+      // New subscriber
+      console.log("Creating new subscriber:", email);
+      const { data: insertData, error: insertError } = await supabase
+        .from('newsletter_subscribers')
+        .insert([
+          { 
+            email: email.toLowerCase(),
+            source: 'website'
+          }
+        ])
+        .select();
+
+      if (insertError) {
+        console.error("Error creating new subscriber:", insertError);
+        throw insertError;
+      }
+
+      console.log("Successfully created new subscriber:", insertData);
+    }
+
+    // Generate unsubscribe link
+    const unsubscribeUrl = `${supabaseUrl}/functions/v1/unsubscribe-newsletter?email=${encodeURIComponent(email)}`;
+
+    // Send welcome email to the subscriber
+    const welcomeSubject = isResubscription 
+      ? "Welcome Back to JumpinAI - Great to Have You Again!" 
+      : "Welcome to JumpinAI - Your AI Transformation Journey Starts Now!";
+
+    const welcomeMessage = isResubscription
+      ? "Welcome back! We're thrilled to have you rejoin our community of AI professionals."
+      : "You're now part of an exclusive community of industry leaders who are strategically implementing AI to transform their businesses.";
+
+    const welcomeResponse = await resend.emails.send({
+      from: "info@jumpinai.com",
+      to: [email],
+      subject: welcomeSubject,
+      html: `
+        <div style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+          <div style="background: linear-gradient(135deg, #374151 0%, #1f2937 100%); padding: 30px; text-align: center;">
+            <h1 style="color: white; margin: 0; font-size: 28px;">${isResubscription ? 'Welcome Back to JumpinAI!' : 'Welcome to JumpinAI!'}</h1>
+            <p style="color: #d1d5db; margin: 10px 0 0 0; font-size: 16px;">Your AI transformation journey ${isResubscription ? 'continues' : 'starts now'}</p>
+          </div>
+          
+          <div style="padding: 30px; background: #f9f9f9;">
+            <div style="background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+              <h2 style="color: #374151; margin-bottom: 20px;">${isResubscription ? 'Thanks for rejoining' : 'Thanks for joining'} 30,000+ professionals!</h2>
+              
+              <p style="font-size: 16px; margin-bottom: 20px;">
+                ${welcomeMessage}
+              </p>
+              
+              <div style="background: #f3f4f6; padding: 20px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #374151;">
+                <h3 style="color: #374151; margin-top: 0;">What you'll receive:</h3>
+                <ul style="margin: 10px 0; padding-left: 20px;">
+                  <li><strong>Weekly AI Insights:</strong> Latest tools and strategic workflows</li>
+                  <li><strong>Professional Resources:</strong> Actionable guides and case studies</li>
+                  <li><strong>Industry Updates:</strong> Stay ahead of AI trends and innovations</li>
+                  <li><strong>Exclusive Content:</strong> First access to our premium resources</li>
+                </ul>
+              </div>
+              
+              <p style="font-size: 16px; margin: 20px 0;">
+                Our next newsletter is coming soon with actionable AI strategies you can implement immediately. Get ready to accelerate your transformation!
+              </p>
+              
+              <div style="text-align: center; margin: 25px 0;">
+                <a href="mailto:info@jumpinai.com" style="background: linear-gradient(135deg, #374151 0%, #1f2937 100%); color: white; padding: 12px 25px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: 600;">Get in Touch</a>
+              </div>
+              
+              <div style="border-top: 1px solid #e5e7eb; padding-top: 20px; margin-top: 25px; text-align: center; font-size: 14px; color: #6b7280;">
+                <p style="margin: 5px 0;">Questions? We're here to help!</p>
+                <p style="margin: 5px 0;">Reply to this email or contact us at <a href="mailto:info@jumpinai.com" style="color: #374151;">info@jumpinai.com</a></p>
+              </div>
+            </div>
+          </div>
+          
+          <div style="background: #374151; padding: 20px; text-align: center;">
+            <p style="color: white; margin: 0; font-size: 14px;">
+              ${isResubscription ? 'Welcome back!' : 'Welcome aboard!'}<br>
+              <strong>The JumpinAI Team</strong><br>
+              <a href="mailto:info@jumpinai.com" style="color: #d1d5db;">info@jumpinai.com</a>
+            </p>
+            <p style="color: #9ca3af; margin: 15px 0 0 0; font-size: 12px;">
+              You can <a href="${unsubscribeUrl}" style="color: #d1d5db; text-decoration: underline;">unsubscribe</a> at any time.
+            </p>
+          </div>
+        </div>
+      `,
+    });
+
+    console.log("Welcome email sent:", welcomeResponse);
+
+    // Send notification email to us
+    const notificationResponse = await resend.emails.send({
+      from: "info@jumpinai.com",
+      to: ["info@jumpinai.com"],
+      subject: `${isResubscription ? 'Newsletter Resubscription' : 'New Newsletter Subscription'} - JumpinAI`,
+      html: `
+        <div style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+          <div style="background: linear-gradient(135deg, #374151 0%, #1f2937 100%); padding: 30px; text-align: center;">
+            <h1 style="color: white; margin: 0; font-size: 24px;">${isResubscription ? 'Newsletter Resubscription' : 'New Newsletter Subscription'}</h1>
+          </div>
+          
+          <div style="padding: 30px; background: #f9f9f9;">
+            <div style="background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+              <h2 style="color: #374151; margin-bottom: 20px;">${isResubscription ? 'Professional Rejoined!' : 'New Professional Joined!'}</h2>
+              
+              <div style="margin-bottom: 15px;">
+                <strong style="color: #6b7280;">Email:</strong>
+                <span style="margin-left: 10px;"><a href="mailto:${email}" style="color: #374151;">${email}</a></span>
+              </div>
+              
+              <div style="margin-bottom: 15px;">
+                <strong style="color: #6b7280;">Action:</strong>
+                <span style="margin-left: 10px;">${isResubscription ? 'Resubscribed' : 'New Subscription'}</span>
+              </div>
+              
+              <div style="margin-bottom: 15px;">
+                <strong style="color: #6b7280;">Date:</strong>
+                <span style="margin-left: 10px;">${new Date().toLocaleDateString()}</span>
+              </div>
+              
+              <div style="background: #f3f4f6; padding: 15px; border-radius: 4px; margin: 20px 0;">
+                <p style="margin: 0; color: #374151;">
+                  ${isResubscription 
+                    ? 'Email has been reactivated in the database and welcome back email sent automatically.' 
+                    : 'Email has been added to the database and welcome email sent automatically.'}
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <div style="background: #374151; padding: 20px; text-align: center;">
+            <p style="color: white; margin: 0; font-size: 14px;">JumpinAI Newsletter System</p>
+          </div>
+        </div>
+      `,
+    });
+
+    console.log("Notification email sent:", notificationResponse);
+
+    return new Response(
+      JSON.stringify({ 
+        success: true, 
+        message: isResubscription 
+          ? "Welcome back! You've been successfully resubscribed to our newsletter!" 
+          : "Successfully subscribed to newsletter!",
+        isResubscription,
+        welcomeResponse, 
+        notificationResponse 
+      }),
+      {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json",
+          ...corsHeaders,
+        },
+      }
+    );
+  } catch (error: any) {
+    console.error("Error in send-newsletter-email function:", error);
+    return new Response(
+      JSON.stringify({ 
+        success: false,
+        error: "We're experiencing technical difficulties. Please try again in a few moments or contact us at info@jumpinai.com if the problem persists." 
+      }),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json", ...corsHeaders },
+      }
+    );
+  }
+};
+
+serve(handler);
