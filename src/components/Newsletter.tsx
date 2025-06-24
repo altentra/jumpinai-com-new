@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Mail, Sparkles, ArrowRight } from "lucide-react";
@@ -48,17 +49,19 @@ const Newsletter = () => {
 
       // Check if it's an error response from our function
       if (data && !data.success) {
-        // Handle already subscribed case with friendly message (NOT as error)
+        // Handle already subscribed case with friendly SUCCESS message (NOT as error)
         if (data.message?.includes("already subscribed")) {
           toast({
             title: "You're Already Part of Our Community! 🎉",
             description: "Great news! You're already subscribed to our newsletter. Check your inbox for our latest AI insights and updates.",
+            // NO variant specified = default success styling (green)
           });
         } else {
           // Handle other subscription issues with friendly tone (NOT as error)
           toast({
             title: "Subscription Update",
             description: data.message || "We're processing your subscription. If you continue to have issues, please contact us at info@jumpinai.com.",
+            // NO variant specified = default success styling (green)
           });
         }
         setEmail("");
@@ -74,16 +77,17 @@ const Newsletter = () => {
         description: isResubscription 
           ? "Fantastic! You're back in our community. We've reactivated your subscription and you'll receive our latest AI strategies and insights."
           : "Thank you for joining our community! Check your inbox for a welcome email with exclusive AI content and resources.",
+        // NO variant specified = default success styling (green)
       });
       
       setEmail("");
     } catch (error) {
       console.error("Error processing newsletter signup:", error);
       
-      // Show friendly error message instead of technical details
+      // Show friendly error message ONLY for actual technical errors
       toast({
-        title: "Subscription Processing",
-        description: "We're currently processing your subscription request. If this continues, please reach out to us at info@jumpinai.com and we'll help you personally.",
+        title: "Technical Issue",
+        description: "We're experiencing a temporary issue. Please try again in a moment or contact us at info@jumpinai.com if this continues.",
         variant: "destructive",
       });
     } finally {
