@@ -163,7 +163,7 @@ const handler = async (req: Request): Promise<Response> => {
       console.log("Successfully created new subscriber:", insertData);
     }
 
-    // Generate unsubscribe link
+    // Generate unsubscribe link - FIXED to use correct URL format
     const unsubscribeUrl = `${supabaseUrl}/functions/v1/unsubscribe-newsletter?email=${encodeURIComponent(sanitizedEmail)}`;
 
     // Send welcome email to the subscriber

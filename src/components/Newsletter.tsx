@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Mail, Sparkles, ArrowRight } from "lucide-react";
@@ -49,14 +48,14 @@ const Newsletter = () => {
 
       // Check if it's an error response from our function
       if (data && !data.success) {
-        // Handle already subscribed case with friendly message
+        // Handle already subscribed case with friendly message (NOT as error)
         if (data.message?.includes("already subscribed")) {
           toast({
             title: "You're Already Part of Our Community! 🎉",
             description: "Great news! You're already subscribed to our newsletter. Check your inbox for our latest AI insights and updates.",
           });
         } else {
-          // Handle other subscription issues with friendly tone
+          // Handle other subscription issues with friendly tone (NOT as error)
           toast({
             title: "Subscription Update",
             description: data.message || "We're processing your subscription. If you continue to have issues, please contact us at info@jumpinai.com.",
