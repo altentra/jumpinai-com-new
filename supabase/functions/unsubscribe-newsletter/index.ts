@@ -1,3 +1,4 @@
+
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.50.0';
 
@@ -9,11 +10,6 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey);
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-  "X-Content-Type-Options": "nosniff",
-  "X-Frame-Options": "DENY",
-  "X-XSS-Protection": "1; mode=block",
-  "Referrer-Policy": "strict-origin-when-cross-origin",
-  "Content-Security-Policy": "default-src 'self'; style-src 'unsafe-inline'; font-src 'self' data:; script-src 'none'; object-src 'none';",
 };
 
 const sanitizeInput = (input: string): string => {
@@ -140,20 +136,6 @@ const createHtmlPage = (title: string, heading: string, message: string, icon: s
   return html;
 };
 
-const createHtmlResponse = (html: string, status: number = 200) => {
-  return new Response(html, {
-    status,
-    headers: {
-      "Content-Type": "text/html; charset=utf-8",
-      "Cache-Control": "no-cache, no-store, must-revalidate",
-      "Pragma": "no-cache",
-      "Expires": "0",
-      "X-Content-Type-Options": "nosniff",
-      ...corsHeaders,
-    },
-  });
-};
-
 const handler = async (req: Request): Promise<Response> => {
   console.log("Unsubscribe request received:", req.method, req.url);
   
@@ -175,7 +157,16 @@ const handler = async (req: Request): Promise<Response> => {
         "⚠️"
       );
       
-      return createHtmlResponse(errorHtml, 400);
+      return new Response(errorHtml, {
+        status: 400,
+        headers: {
+          "Content-Type": "text/html; charset=utf-8",
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          "Pragma": "no-cache",
+          "Expires": "0",
+          ...corsHeaders,
+        },
+      });
     }
 
     // Enhanced email validation
@@ -188,7 +179,16 @@ const handler = async (req: Request): Promise<Response> => {
         "⚠️"
       );
       
-      return createHtmlResponse(errorHtml, 400);
+      return new Response(errorHtml, {
+        status: 400,
+        headers: {
+          "Content-Type": "text/html; charset=utf-8",
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          "Pragma": "no-cache",
+          "Expires": "0",
+          ...corsHeaders,
+        },
+      });
     }
 
     const sanitizedEmail = email.toLowerCase().trim();
@@ -215,7 +215,16 @@ const handler = async (req: Request): Promise<Response> => {
         "ℹ️"
       );
       
-      return createHtmlResponse(alreadyUnsubscribedHtml, 200);
+      return new Response(alreadyUnsubscribedHtml, {
+        status: 200,
+        headers: {
+          "Content-Type": "text/html; charset=utf-8",
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          "Pragma": "no-cache",
+          "Expires": "0",
+          ...corsHeaders,
+        },
+      });
     }
 
     console.log("Successfully unsubscribed:", sanitizedEmail);
@@ -234,7 +243,16 @@ const handler = async (req: Request): Promise<Response> => {
       true
     );
     
-    return createHtmlResponse(successHtml, 200);
+    return new Response(successHtml, {
+      status: 200,
+      headers: {
+        "Content-Type": "text/html; charset=utf-8",
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        "Pragma": "no-cache",
+        "Expires": "0",
+        ...corsHeaders,
+      },
+    });
   } catch (error: any) {
     console.error("Error in unsubscribe function:", error);
     
@@ -245,7 +263,16 @@ const handler = async (req: Request): Promise<Response> => {
       "❌"
     );
     
-    return createHtmlResponse(errorHtml, 500);
+    return new Response(errorHtml, {
+      status: 500,
+      headers: {
+        "Content-Type": "text/html; charset=utf-8",
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        "Pragma": "no-cache",
+        "Expires": "0",
+        ...corsHeaders,
+      },
+    });
   }
 };
 
