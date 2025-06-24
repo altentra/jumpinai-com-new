@@ -22,10 +22,24 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
+    console.log("Contact form function started");
+    console.log("Environment check - RESEND_API_KEY:", Deno.env.get("RESEND_API_KEY") ? "Present" : "Missing");
+
     const { name, email, subject, message }: ContactFormData = await req.json();
 
     console.log("Processing contact form submission:", { name, email, subject });
 
+    if (!name || !email || !subject || !message) {
+      throw new Error("All fields are required");
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      throw new Error("Invalid email format");
+    }
+
+    console.log("Sending notification email");
     // Send notification email to us
     const notificationResponse = await resend.emails.send({
       from: "info@jumpinai.com",
@@ -79,6 +93,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Notification email sent:", notificationResponse);
 
+    console.log("Sending confirmation email");
     // Send confirmation email to the user
     const confirmationResponse = await resend.emails.send({
       from: "info@jumpinai.com",
@@ -147,8 +162,12 @@ const handler = async (req: Request): Promise<Response> => {
     );
   } catch (error: any) {
     console.error("Error in send-contact-email function:", error);
+    console.error("Error stack:", error.stack);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ 
+        error: error.message,
+        details: "Please check the function logs for more details" 
+      }),
       {
         status: 500,
         headers: { "Content-Type": "application/json", ...corsHeaders },

@@ -25,9 +25,22 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { email }: NewsletterData = await req.json();
+    console.log("Newsletter function started");
+    console.log("Environment check - RESEND_API_KEY:", Deno.env.get("RESEND_API_KEY") ? "Present" : "Missing");
+    console.log("Environment check - SUPABASE_URL:", Deno.env.get("SUPABASE_URL") ? "Present" : "Missing");
 
+    const { email }: NewsletterData = await req.json();
     console.log("Processing newsletter signup:", email);
+
+    if (!email) {
+      throw new Error("Email is required");
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      throw new Error("Invalid email format");
+    }
 
     // First, check if the email already exists (active or inactive)
     const { data: existingSubscriber, error: checkError } = await supabase
@@ -114,6 +127,7 @@ const handler = async (req: Request): Promise<Response> => {
       ? "Welcome back! We're thrilled to have you rejoin our community of AI professionals."
       : "You're now part of an exclusive community of industry leaders who are strategically implementing AI to transform their businesses.";
 
+    console.log("Sending welcome email to:", email);
     const welcomeResponse = await resend.emails.send({
       from: "info@jumpinai.com",
       to: [email],
@@ -175,6 +189,7 @@ const handler = async (req: Request): Promise<Response> => {
     console.log("Welcome email sent:", welcomeResponse);
 
     // Send notification email to us
+    console.log("Sending notification email");
     const notificationResponse = await resend.emails.send({
       from: "info@jumpinai.com",
       to: ["info@jumpinai.com"],
@@ -243,10 +258,12 @@ const handler = async (req: Request): Promise<Response> => {
     );
   } catch (error: any) {
     console.error("Error in send-newsletter-email function:", error);
+    console.error("Error stack:", error.stack);
     return new Response(
       JSON.stringify({ 
         success: false,
-        error: "We're experiencing technical difficulties. Please try again in a few moments or contact us at info@jumpinai.com if the problem persists." 
+        error: "We're experiencing technical difficulties. Please try again in a few moments or contact us at info@jumpinai.com if the problem persists.",
+        details: error.message 
       }),
       {
         status: 500,
