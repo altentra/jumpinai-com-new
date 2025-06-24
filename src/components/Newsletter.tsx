@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Mail, Sparkles, ArrowRight } from "lucide-react";
@@ -49,13 +48,13 @@ const Newsletter = () => {
         // Try to get the response data from the error context
         // For 409 status (already subscribed), we want to show a success message
         try {
-          // Make a direct fetch to get the actual response
-          const response = await fetch(`${supabase.supabaseUrl}/functions/v1/send-newsletter-email`, {
+          // Make a direct fetch to get the actual response using the correct Supabase URL
+          const response = await fetch(`https://cieczaajcgkgdgenfdzi.supabase.co/functions/v1/send-newsletter-email`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${supabase.supabaseKey}`,
-              'apikey': supabase.supabaseKey
+              'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpZWN6YWFqY2drZ2RnZW5mZHppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1MzU4OTksImV4cCI6MjA2NjExMTg5OX0.OiDppCXfN_AN64XvCvfhphFqbjSvRtKSwF-cIXCZMQU`,
+              'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpZWN6YWFqY2drZ2RnZW5mZHppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1MzU4OTksImV4cCI6MjA2NjExMTg5OX0.OiDppCXfN_AN64XvCvfhphFqbjSvRtKSwF-cIXCZMQU'
             },
             body: JSON.stringify({ email })
           });

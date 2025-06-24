@@ -165,7 +165,9 @@ const handler = async (req: Request): Promise<Response> => {
         status: 400,
         headers: {
           "Content-Type": "text/html; charset=utf-8",
-          "Cache-Control": "no-cache",
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          "Pragma": "no-cache",
+          "Expires": "0",
           ...corsHeaders,
         },
       });
@@ -185,7 +187,9 @@ const handler = async (req: Request): Promise<Response> => {
         status: 400,
         headers: {
           "Content-Type": "text/html; charset=utf-8",
-          "Cache-Control": "no-cache",
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          "Pragma": "no-cache",
+          "Expires": "0",
           ...corsHeaders,
         },
       });
@@ -219,7 +223,9 @@ const handler = async (req: Request): Promise<Response> => {
         status: 200,
         headers: {
           "Content-Type": "text/html; charset=utf-8",
-          "Cache-Control": "no-cache",
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          "Pragma": "no-cache",
+          "Expires": "0",
           ...corsHeaders,
         },
       });
@@ -245,7 +251,9 @@ const handler = async (req: Request): Promise<Response> => {
       status: 200,
       headers: {
         "Content-Type": "text/html; charset=utf-8",
-        "Cache-Control": "no-cache",
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        "Pragma": "no-cache",
+        "Expires": "0",
         ...corsHeaders,
       },
     });
@@ -263,7 +271,9 @@ const handler = async (req: Request): Promise<Response> => {
       status: 500,
       headers: {
         "Content-Type": "text/html; charset=utf-8",
-        "Cache-Control": "no-cache",
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        "Pragma": "no-cache",
+        "Expires": "0",
         ...corsHeaders,
       },
     });
