@@ -13,7 +13,7 @@ const corsHeaders = {
   "X-Frame-Options": "DENY",
   "X-XSS-Protection": "1; mode=block",
   "Referrer-Policy": "strict-origin-when-cross-origin",
-  "Content-Security-Policy": "default-src 'self'; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self';",
+  "Content-Security-Policy": "default-src 'self'; style-src 'unsafe-inline'; font-src 'self' data:; script-src 'none'; object-src 'none';",
 };
 
 const sanitizeInput = (input: string): string => {
