@@ -29,8 +29,8 @@ const createHtmlPage = (title: string, heading: string, message: string, icon: s
   const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>${sanitizeInput(title)}</title>
   <style>
     * {
@@ -140,6 +140,20 @@ const createHtmlPage = (title: string, heading: string, message: string, icon: s
   return html;
 };
 
+const createHtmlResponse = (html: string, status: number = 200) => {
+  return new Response(html, {
+    status,
+    headers: {
+      "Content-Type": "text/html; charset=utf-8",
+      "Cache-Control": "no-cache, no-store, must-revalidate",
+      "Pragma": "no-cache",
+      "Expires": "0",
+      "X-Content-Type-Options": "nosniff",
+      ...corsHeaders,
+    },
+  });
+};
+
 const handler = async (req: Request): Promise<Response> => {
   console.log("Unsubscribe request received:", req.method, req.url);
   
@@ -161,16 +175,7 @@ const handler = async (req: Request): Promise<Response> => {
         "⚠️"
       );
       
-      return new Response(errorHtml, {
-        status: 400,
-        headers: {
-          "Content-Type": "text/html; charset=utf-8",
-          "Cache-Control": "no-cache, no-store, must-revalidate",
-          "Pragma": "no-cache",
-          "Expires": "0",
-          ...corsHeaders,
-        },
-      });
+      return createHtmlResponse(errorHtml, 400);
     }
 
     // Enhanced email validation
@@ -183,16 +188,7 @@ const handler = async (req: Request): Promise<Response> => {
         "⚠️"
       );
       
-      return new Response(errorHtml, {
-        status: 400,
-        headers: {
-          "Content-Type": "text/html; charset=utf-8",
-          "Cache-Control": "no-cache, no-store, must-revalidate",
-          "Pragma": "no-cache",
-          "Expires": "0",
-          ...corsHeaders,
-        },
-      });
+      return createHtmlResponse(errorHtml, 400);
     }
 
     const sanitizedEmail = email.toLowerCase().trim();
@@ -219,16 +215,7 @@ const handler = async (req: Request): Promise<Response> => {
         "ℹ️"
       );
       
-      return new Response(alreadyUnsubscribedHtml, {
-        status: 200,
-        headers: {
-          "Content-Type": "text/html; charset=utf-8",
-          "Cache-Control": "no-cache, no-store, must-revalidate",
-          "Pragma": "no-cache",
-          "Expires": "0",
-          ...corsHeaders,
-        },
-      });
+      return createHtmlResponse(alreadyUnsubscribedHtml, 200);
     }
 
     console.log("Successfully unsubscribed:", sanitizedEmail);
@@ -247,16 +234,7 @@ const handler = async (req: Request): Promise<Response> => {
       true
     );
     
-    return new Response(successHtml, {
-      status: 200,
-      headers: {
-        "Content-Type": "text/html; charset=utf-8",
-        "Cache-Control": "no-cache, no-store, must-revalidate",
-        "Pragma": "no-cache",
-        "Expires": "0",
-        ...corsHeaders,
-      },
-    });
+    return createHtmlResponse(successHtml, 200);
   } catch (error: any) {
     console.error("Error in unsubscribe function:", error);
     
@@ -267,16 +245,7 @@ const handler = async (req: Request): Promise<Response> => {
       "❌"
     );
     
-    return new Response(errorHtml, {
-      status: 500,
-      headers: {
-        "Content-Type": "text/html; charset=utf-8",
-        "Cache-Control": "no-cache, no-store, must-revalidate",
-        "Pragma": "no-cache",
-        "Expires": "0",
-        ...corsHeaders,
-      },
-    });
+    return createHtmlResponse(errorHtml, 500);
   }
 };
 
