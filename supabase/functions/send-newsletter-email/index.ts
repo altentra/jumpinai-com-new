@@ -13,11 +13,35 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey);
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "X-Content-Type-Options": "nosniff",
+  "X-Frame-Options": "DENY",
+  "X-XSS-Protection": "1; mode=block",
+  "Referrer-Policy": "strict-origin-when-cross-origin",
 };
 
 interface NewsletterData {
   email: string;
 }
+
+// Rate limiting check (basic implementation)
+const rateLimitCache = new Map<string, { count: number; resetTime: number }>();
+
+const checkRateLimit = (ip: string): boolean => {
+  const now = Date.now();
+  const limit = rateLimitCache.get(ip);
+  
+  if (!limit || now > limit.resetTime) {
+    rateLimitCache.set(ip, { count: 1, resetTime: now + 60000 }); // 1 minute window
+    return true;
+  }
+  
+  if (limit.count >= 3) { // Max 3 newsletter requests per minute
+    return false;
+  }
+  
+  limit.count++;
+  return true;
+};
 
 const handler = async (req: Request): Promise<Response> => {
   if (req.method === "OPTIONS") {
@@ -29,6 +53,22 @@ const handler = async (req: Request): Promise<Response> => {
     console.log("Environment check - RESEND_API_KEY:", Deno.env.get("RESEND_API_KEY") ? "Present" : "Missing");
     console.log("Environment check - SUPABASE_URL:", Deno.env.get("SUPABASE_URL") ? "Present" : "Missing");
 
+    // Basic rate limiting
+    const clientIP = req.headers.get("x-forwarded-for") || "unknown";
+    if (!checkRateLimit(clientIP)) {
+      console.log("Rate limit exceeded for IP:", clientIP);
+      return new Response(
+        JSON.stringify({ 
+          success: false,
+          error: "Too many subscription attempts. Please try again later." 
+        }),
+        {
+          status: 429,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
+    }
+
     const { email }: NewsletterData = await req.json();
     console.log("Processing newsletter signup:", email);
 
@@ -36,17 +76,25 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error("Email is required");
     }
 
-    // Basic email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    // Enhanced email validation
+    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
     if (!emailRegex.test(email)) {
       throw new Error("Invalid email format");
+    }
+
+    // Sanitize email
+    const sanitizedEmail = email.trim().toLowerCase();
+
+    // Length validation
+    if (sanitizedEmail.length > 320) { // RFC standard max email length
+      throw new Error("Email address is too long");
     }
 
     // First, check if the email already exists (active or inactive)
     const { data: existingSubscriber, error: checkError } = await supabase
       .from('newsletter_subscribers')
       .select('*')
-      .eq('email', email.toLowerCase())
+      .eq('email', sanitizedEmail)
       .single();
 
     if (checkError && checkError.code !== 'PGRST116') { // PGRST116 = no rows found
@@ -59,7 +107,7 @@ const handler = async (req: Request): Promise<Response> => {
     if (existingSubscriber) {
       if (existingSubscriber.is_active) {
         // Already subscribed and active
-        console.log("Email already subscribed and active:", email);
+        console.log("Email already subscribed and active:", sanitizedEmail);
         return new Response(
           JSON.stringify({ 
             success: false, 
@@ -75,7 +123,7 @@ const handler = async (req: Request): Promise<Response> => {
         );
       } else {
         // Previously unsubscribed, reactivate
-        console.log("Reactivating previously unsubscribed email:", email);
+        console.log("Reactivating previously unsubscribed email:", sanitizedEmail);
         const { data: updateData, error: updateError } = await supabase
           .from('newsletter_subscribers')
           .update({ 
@@ -83,7 +131,7 @@ const handler = async (req: Request): Promise<Response> => {
             subscribed_at: new Date().toISOString(),
             source: 'website_resubscription'
           })
-          .eq('email', email.toLowerCase())
+          .eq('email', sanitizedEmail)
           .select();
 
         if (updateError) {
@@ -96,12 +144,12 @@ const handler = async (req: Request): Promise<Response> => {
       }
     } else {
       // New subscriber
-      console.log("Creating new subscriber:", email);
+      console.log("Creating new subscriber:", sanitizedEmail);
       const { data: insertData, error: insertError } = await supabase
         .from('newsletter_subscribers')
         .insert([
           { 
-            email: email.toLowerCase(),
+            email: sanitizedEmail,
             source: 'website'
           }
         ])
@@ -116,7 +164,7 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     // Generate unsubscribe link
-    const unsubscribeUrl = `${supabaseUrl}/functions/v1/unsubscribe-newsletter?email=${encodeURIComponent(email)}`;
+    const unsubscribeUrl = `${supabaseUrl}/functions/v1/unsubscribe-newsletter?email=${encodeURIComponent(sanitizedEmail)}`;
 
     // Send welcome email to the subscriber
     const welcomeSubject = isResubscription 
@@ -127,10 +175,10 @@ const handler = async (req: Request): Promise<Response> => {
       ? "Welcome back! We're thrilled to have you rejoin our community of AI professionals."
       : "You're now part of an exclusive community of industry leaders who are strategically implementing AI to transform their businesses.";
 
-    console.log("Sending welcome email to:", email);
+    console.log("Sending welcome email to:", sanitizedEmail);
     const welcomeResponse = await resend.emails.send({
       from: "info@jumpinai.com",
-      to: [email],
+      to: [sanitizedEmail],
       subject: welcomeSubject,
       html: `
         <div style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
@@ -206,7 +254,7 @@ const handler = async (req: Request): Promise<Response> => {
               
               <div style="margin-bottom: 15px;">
                 <strong style="color: #6b7280;">Email:</strong>
-                <span style="margin-left: 10px;"><a href="mailto:${email}" style="color: #374151;">${email}</a></span>
+                <span style="margin-left: 10px;"><a href="mailto:${sanitizedEmail}" style="color: #374151;">${sanitizedEmail}</a></span>
               </div>
               
               <div style="margin-bottom: 15px;">

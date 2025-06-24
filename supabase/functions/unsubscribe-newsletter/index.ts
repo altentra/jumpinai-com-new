@@ -10,6 +10,19 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey);
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "X-Content-Type-Options": "nosniff",
+  "X-Frame-Options": "DENY",
+  "X-XSS-Protection": "1; mode=block",
+  "Referrer-Policy": "strict-origin-when-cross-origin",
+};
+
+const sanitizeInput = (input: string): string => {
+  return input
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#x27;")
+    .replace(/\//g, "&#x2F;");
 };
 
 const createHtmlPage = (title: string, heading: string, message: string, icon: string, isSuccess = false) => {
@@ -18,7 +31,7 @@ const createHtmlPage = (title: string, heading: string, message: string, icon: s
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${title}</title>
+  <title>${sanitizeInput(title)}</title>
   <style>
     * {
       margin: 0;
@@ -113,7 +126,7 @@ const createHtmlPage = (title: string, heading: string, message: string, icon: s
 <body>
   <div class="container">
     <span class="icon">${icon}</span>
-    <h1>${heading}</h1>
+    <h1>${sanitizeInput(heading)}</h1>
     ${message}
     <a href="https://jumpinai.com" class="button">← Back to JumpinAI</a>
     <div class="contact-info">
@@ -158,11 +171,33 @@ const handler = async (req: Request): Promise<Response> => {
       });
     }
 
+    // Enhanced email validation
+    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+    if (!emailRegex.test(email)) {
+      const errorHtml = createHtmlPage(
+        "Invalid Email - JumpinAI",
+        "Invalid Email Format",
+        "<p>The email address in the unsubscribe link is not valid.</p><p>If you need assistance, please contact us at <strong>info@jumpinai.com</strong></p>",
+        "⚠️"
+      );
+      
+      return new Response(errorHtml, {
+        status: 400,
+        headers: {
+          "Content-Type": "text/html; charset=utf-8",
+          "Cache-Control": "no-cache",
+          ...corsHeaders,
+        },
+      });
+    }
+
+    const sanitizedEmail = email.toLowerCase().trim();
+
     // Update the subscriber to mark as inactive
     const { data, error } = await supabase
       .from('newsletter_subscribers')
       .update({ is_active: false })
-      .eq('email', email.toLowerCase())
+      .eq('email', sanitizedEmail)
       .eq('is_active', true)
       .select();
 
@@ -190,7 +225,7 @@ const handler = async (req: Request): Promise<Response> => {
       });
     }
 
-    console.log("Successfully unsubscribed:", email);
+    console.log("Successfully unsubscribed:", sanitizedEmail);
 
     // Return success page
     const successHtml = createHtmlPage(
@@ -199,7 +234,7 @@ const handler = async (req: Request): Promise<Response> => {
       `<p>You have been successfully unsubscribed from the JumpinAI newsletter.</p>
        <p>We're sorry to see you go! If you change your mind, you can always subscribe again on our website.</p>
        <div class="details-box">
-         <p><strong>Email:</strong> ${email}</p>
+         <p><strong>Email:</strong> ${sanitizeInput(sanitizedEmail)}</p>
          <p><strong>Unsubscribed on:</strong> ${new Date().toLocaleDateString()}</p>
        </div>`,
       "✅",
