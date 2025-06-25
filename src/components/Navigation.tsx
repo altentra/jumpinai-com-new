@@ -41,6 +41,11 @@ const Navigation = () => {
     setIsOpen(false);
   };
 
+  const handleWhopClick = () => {
+    window.open('https://whop.com/jumpinai/', '_blank');
+    setIsOpen(false);
+  };
+
   const navItems = [
     { name: "About", href: "#about" },
     { name: "What We Offer", href: "#what-we-offer" },
@@ -90,10 +95,10 @@ const Navigation = () => {
           <div className="hidden md:flex items-center space-x-4">
             <ThemeToggle />
             <Button 
-              onClick={() => handleNavClick("#newsletter")}
+              onClick={handleWhopClick}
               className="modern-button bg-gradient-to-r from-gray-800 to-black hover:from-gray-900 hover:to-gray-800 dark:from-white dark:to-gray-300 dark:hover:from-gray-100 dark:hover:to-gray-400 text-white dark:text-black px-6 py-2.5 rounded-xl font-semibold transition-all duration-300 hover:scale-105"
             >
-              Join Newsletter
+              Join our Whop
             </Button>
           </div>
 
@@ -124,10 +129,10 @@ const Navigation = () => {
               ))}
               <div className="pt-2">
                 <Button 
-                  onClick={() => handleNavClick("#newsletter")}
+                  onClick={handleWhopClick}
                   className="w-full modern-button bg-gradient-to-r from-gray-800 to-black hover:from-gray-900 hover:to-gray-800 dark:from-white dark:to-gray-300 dark:hover:from-gray-100 dark:hover:to-gray-400 text-white dark:text-black py-3 rounded-xl font-semibold"
                 >
-                  Join Newsletter
+                  Join our Whop
                 </Button>
               </div>
             </div>
