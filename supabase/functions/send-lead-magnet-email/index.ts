@@ -1,4 +1,5 @@
 
+
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
@@ -14,7 +15,8 @@ const corsHeaders = {
 };
 
 serve(async (req: Request) => {
-  console.log("Edge function called with method:", req.method);
+  const startTime = Date.now();
+  console.log("Edge function called with method:", req.method, "at", new Date().toISOString());
   
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
@@ -39,7 +41,7 @@ serve(async (req: Request) => {
   try {
     console.log("Processing request body...");
     const { email }: RequestBody = await req.json();
-    console.log("Processing lead magnet email for:", email);
+    console.log("Processing lead magnet email for:", email, "at", Date.now() - startTime, "ms");
 
     if (!email) {
       console.log("No email provided");
@@ -97,7 +99,7 @@ serve(async (req: Request) => {
     // PDF download URL
     const pdfUrl = "https://cieczaajcgkgdgenfdzi.supabase.co/storage/v1/object/public/lead-magnets/jumpstart-ai-7-fast-wins.pdf";
 
-    // Send welcome email to the user
+    // Prepare both emails
     const userEmailData = {
       from: "JumpinAI <info@jumpinai.com>",
       to: [email],
@@ -186,27 +188,6 @@ serve(async (req: Request) => {
       `,
     };
 
-    console.log("Sending welcome email to:", email);
-    
-    const userResponse = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${RESEND_API_KEY}`,
-      },
-      body: JSON.stringify(userEmailData),
-    });
-
-    if (!userResponse.ok) {
-      const errorText = await userResponse.text();
-      console.error("Resend API error for user email:", userResponse.status, errorText);
-      throw new Error(`Failed to send user email: ${userResponse.status} ${errorText}`);
-    }
-
-    const userResult = await userResponse.json();
-    console.log("Welcome email sent successfully:", userResult);
-
-    // Send notification email to admin
     const adminEmailData = {
       from: "JumpinAI <info@jumpinai.com>",
       to: ["info@jumpinai.com"],
@@ -269,31 +250,65 @@ serve(async (req: Request) => {
       `,
     };
 
-    console.log("Sending notification email to admin");
+    console.log("Sending both emails in parallel at", Date.now() - startTime, "ms");
     
-    const adminResponse = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${RESEND_API_KEY}`,
-      },
-      body: JSON.stringify(adminEmailData),
-    });
+    // Send both emails in parallel with timeout
+    const emailPromises = [
+      fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${RESEND_API_KEY}`,
+        },
+        body: JSON.stringify(userEmailData),
+        signal: AbortSignal.timeout(10000), // 10 second timeout
+      }),
+      fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${RESEND_API_KEY}`,
+        },
+        body: JSON.stringify(adminEmailData),
+        signal: AbortSignal.timeout(10000), // 10 second timeout
+      })
+    ];
 
-    if (!adminResponse.ok) {
-      const errorText = await adminResponse.text();
-      console.error("Resend API error for admin notification:", adminResponse.status, errorText);
-      // Don't throw error here - user email was successful, admin notification is secondary
+    const [userResponse, adminResponse] = await Promise.allSettled(emailPromises);
+    console.log("Both email requests completed at", Date.now() - startTime, "ms");
+
+    // Handle user email result
+    let userResult;
+    if (userResponse.status === 'fulfilled' && userResponse.value.ok) {
+      userResult = await userResponse.value.json();
+      console.log("Welcome email sent successfully:", userResult, "at", Date.now() - startTime, "ms");
     } else {
-      const adminResult = await adminResponse.json();
-      console.log("Admin notification sent successfully:", adminResult);
+      const error = userResponse.status === 'fulfilled' 
+        ? await userResponse.value.text() 
+        : userResponse.reason;
+      console.error("Failed to send user email:", error);
+      throw new Error(`Failed to send user email: ${error}`);
     }
+
+    // Handle admin email result (non-critical)
+    if (adminResponse.status === 'fulfilled' && adminResponse.value.ok) {
+      const adminResult = await adminResponse.value.json();
+      console.log("Admin notification sent successfully:", adminResult, "at", Date.now() - startTime, "ms");
+    } else {
+      const error = adminResponse.status === 'fulfilled' 
+        ? await adminResponse.value.text() 
+        : adminResponse.reason;
+      console.error("Admin notification failed (non-critical):", error);
+    }
+
+    console.log("Function completed successfully in", Date.now() - startTime, "ms");
 
     return new Response(
       JSON.stringify({ 
         success: true, 
         message: "Lead magnet email sent successfully",
-        emailId: userResult.id 
+        emailId: userResult.id,
+        processingTime: Date.now() - startTime
       }),
       {
         status: 200,
@@ -305,12 +320,14 @@ serve(async (req: Request) => {
     );
 
   } catch (error) {
-    console.error("Error in send-lead-magnet-email function:", error);
+    const processingTime = Date.now() - startTime;
+    console.error("Error in send-lead-magnet-email function:", error, "after", processingTime, "ms");
     
     return new Response(
       JSON.stringify({ 
         success: false, 
-        error: "Failed to send lead magnet email" 
+        error: "Failed to send lead magnet email",
+        processingTime
       }),
       {
         status: 500,
@@ -322,3 +339,4 @@ serve(async (req: Request) => {
     );
   }
 });
+
