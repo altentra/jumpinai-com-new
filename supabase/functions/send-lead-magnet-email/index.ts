@@ -1,3 +1,4 @@
+
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.50.0';
 
@@ -347,6 +348,22 @@ serve(async (req: Request) => {
         ? await adminResponse.value.text() 
         : adminResponse.reason;
       console.error("Admin notification failed (non-critical):", error);
+    }
+
+    // 🚀 NEW: Sync to Google Sheets after successful email processing
+    console.log("Syncing contact to Google Sheets...");
+    try {
+      const { data: syncData, error: syncError } = await supabase.functions.invoke('sync-to-google-sheets', {
+        body: { email }
+      });
+
+      if (syncError) {
+        console.error("Google Sheets sync error (non-critical):", syncError);
+      } else {
+        console.log("Google Sheets sync successful:", syncData);
+      }
+    } catch (syncError) {
+      console.error("Google Sheets sync failed (non-critical):", syncError);
     }
 
     console.log("Function completed successfully in", Date.now() - startTime, "ms");

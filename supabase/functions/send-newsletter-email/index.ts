@@ -1,3 +1,4 @@
+
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.50.0';
 import { Resend } from "npm:resend@2.0.0";
@@ -326,6 +327,22 @@ const handler = async (req: Request): Promise<Response> => {
     });
 
     console.log("Notification email sent:", notificationResponse);
+
+    // 🚀 NEW: Sync to Google Sheets after successful newsletter signup
+    console.log("Syncing newsletter subscriber to Google Sheets...");
+    try {
+      const { data: syncData, error: syncError } = await supabase.functions.invoke('sync-to-google-sheets', {
+        body: { email: sanitizedEmail }
+      });
+
+      if (syncError) {
+        console.error("Google Sheets sync error (non-critical):", syncError);
+      } else {
+        console.log("Google Sheets sync successful:", syncData);
+      }
+    } catch (syncError) {
+      console.error("Google Sheets sync failed (non-critical):", syncError);
+    }
 
     return new Response(
       JSON.stringify({ 
