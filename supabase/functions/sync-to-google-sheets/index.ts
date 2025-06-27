@@ -19,6 +19,21 @@ interface SyncRequest {
   sync_all?: boolean;
 }
 
+// Helper function to format date in PST
+const formatDatePST = (dateString: string): string => {
+  const date = new Date(dateString);
+  return date.toLocaleString('en-US', {
+    timeZone: 'America/Los_Angeles',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
+  });
+};
+
 const handler = async (req: Request): Promise<Response> => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -111,7 +126,7 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    // Prepare data for Google Sheets
+    // Prepare data for Google Sheets with PST timestamps
     const sheetsData = contacts.map(contact => ({
       email: contact.email,
       first_name: contact.first_name || '',
@@ -121,8 +136,8 @@ const handler = async (req: Request): Promise<Response> => {
       newsletter_subscribed: contact.newsletter_subscribed ? 'Yes' : 'No',
       lead_magnet_downloaded: contact.lead_magnet_downloaded ? 'Yes' : 'No',
       tags: contact.tags ? contact.tags.join(', ') : '',
-      created_at: contact.created_at,
-      updated_at: contact.updated_at,
+      created_at: formatDatePST(contact.created_at),
+      updated_at: formatDatePST(contact.updated_at),
       notes: contact.notes || ''
     }));
 
@@ -135,7 +150,7 @@ const handler = async (req: Request): Promise<Response> => {
     const webhookPayload = {
       action: sync_all ? "bulk_sync" : "single_sync",
       data: sheetsData,
-      timestamp: new Date().toISOString(),
+      timestamp: formatDatePST(new Date().toISOString()),
       source: "jumpinai_supabase"
     };
 

@@ -1,4 +1,3 @@
-
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.50.0';
 
@@ -19,9 +18,22 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "Content-Type, Authorization, apikey, x-client-info",
 };
 
+// Helper function to format date in PST
+const formatDatePST = (date: Date): string => {
+  return date.toLocaleString('en-US', {
+    timeZone: 'America/Los_Angeles',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZoneName: 'short'
+  });
+};
+
 serve(async (req: Request) => {
   const startTime = Date.now();
-  console.log("Edge function called with method:", req.method, "at", new Date().toISOString());
+  console.log("Edge function called with method:", req.method, "at", formatDatePST(new Date()));
   
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
@@ -270,15 +282,7 @@ serve(async (req: Request) => {
             </div>
             
             <div style="background: white; padding: 20px; border-radius: 8px;">
-              <p style="margin: 0; font-size: 16px;"><strong>Time (PST):</strong> ${new Date().toLocaleString('en-US', { 
-                timeZone: 'America/Los_Angeles',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                timeZoneName: 'short'
-              })}</p>
+              <p style="margin: 0; font-size: 16px;"><strong>Time (PST):</strong> ${formatDatePST(new Date())}</p>
             </div>
           </div>
 
