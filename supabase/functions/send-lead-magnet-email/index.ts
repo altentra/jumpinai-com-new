@@ -1,3 +1,4 @@
+
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
@@ -239,7 +240,15 @@ serve(async (req: Request) => {
             </div>
             
             <div style="background: white; padding: 20px; border-radius: 8px;">
-              <p style="margin: 0; font-size: 16px;"><strong>Time (UTC):</strong> ${new Date().toISOString().replace('T', ' ').substring(0, 19)}</p>
+              <p style="margin: 0; font-size: 16px;"><strong>Time (PST):</strong> ${new Date().toLocaleString('en-US', { 
+                timeZone: 'America/Los_Angeles',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                timeZoneName: 'short'
+              })}</p>
             </div>
           </div>
 
