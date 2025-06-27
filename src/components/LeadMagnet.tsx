@@ -103,15 +103,12 @@ const LeadMagnet = () => {
   };
 
   const handleDirectDownload = () => {
-    // Create a professional download URL that will redirect to our edge function
-    const downloadUrl = `${window.location.origin}/api/download/ai-guide.pdf`;
-    
-    // For now, we'll use the edge function directly but with cleaner URL structure
-    const actualDownloadUrl = `https://cieczaajcgkgdgenfdzi.supabase.co/functions/v1/download-pdf?file=ai-guide`;
+    // Use the direct working Supabase storage URL
+    const downloadUrl = "https://cieczaajcgkgdgenfdzi.supabase.co/storage/v1/object/public/lead-magnets/jumpstart-ai-7-fast-wins.pdf";
     
     // Create temporary download link
     const link = document.createElement('a');
-    link.href = actualDownloadUrl;
+    link.href = downloadUrl;
     link.download = 'Jumpstart AI - 7 Fast Wins You Can Use Today.pdf';
     document.body.appendChild(link);
     link.click();
