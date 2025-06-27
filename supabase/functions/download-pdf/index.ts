@@ -42,19 +42,18 @@ serve(async (req: Request) => {
     
     console.log("Requesting PDF file:", fileName);
 
-    // Use the direct working Supabase storage URL
+    // The WORKING direct URL - we know this works from your testing
     const directUrl = `https://cieczaajcgkgdgenfdzi.supabase.co/storage/v1/object/public/lead-magnets/${fileName}`;
-    console.log("Fetching from direct URL:", directUrl);
+    console.log("Fetching from verified working URL:", directUrl);
 
-    const response = await fetch(directUrl, {
-      method: 'GET',
-      headers: {
-        'Cache-Control': 'no-cache',
-      }
-    });
+    // Fetch the PDF from the working storage URL
+    const response = await fetch(directUrl);
 
     if (!response.ok) {
       console.error("Failed to fetch PDF:", response.status, response.statusText);
+      const errorText = await response.text();
+      console.error("Error response body:", errorText);
+      
       return new Response(`PDF not found - Status: ${response.status}`, {
         status: 404,
         headers: corsHeaders,
@@ -65,14 +64,14 @@ serve(async (req: Request) => {
     
     console.log("PDF fetched successfully, size:", pdfBuffer.byteLength, "bytes");
 
-    // Return the PDF with professional headers
+    // Return the PDF with professional headers and filename
     return new Response(pdfBuffer, {
       status: 200,
       headers: {
         ...corsHeaders,
         "Content-Type": "application/pdf",
         "Content-Disposition": `attachment; filename="Jumpstart AI - 7 Fast Wins You Can Use Today.pdf"`,
-        "Cache-Control": "public, max-age=3600", // Cache for 1 hour
+        "Cache-Control": "public, max-age=3600",
       },
     });
 
