@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -102,8 +103,8 @@ const LeadMagnet = () => {
   };
 
   const handleDirectDownload = () => {
-    // Create download link to the PDF in Supabase storage
-    const downloadUrl = `https://cieczaajcgkgdgenfdzi.supabase.co/storage/v1/object/public/lead-magnets/jumpstart-ai-7-fast-wins.pdf`;
+    // Use the new proxy endpoint instead of direct Supabase URL
+    const downloadUrl = `https://cieczaajcgkgdgenfdzi.supabase.co/functions/v1/download-pdf?file=ai-guide`;
     
     // Create temporary download link
     const link = document.createElement('a');

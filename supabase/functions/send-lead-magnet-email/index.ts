@@ -1,5 +1,3 @@
-
-
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
@@ -96,8 +94,8 @@ serve(async (req: Request) => {
       );
     }
 
-    // PDF download URL
-    const pdfUrl = "https://cieczaajcgkgdgenfdzi.supabase.co/storage/v1/object/public/lead-magnets/jumpstart-ai-7-fast-wins.pdf";
+    // Updated PDF download URL using the proxy endpoint
+    const pdfUrl = "https://cieczaajcgkgdgenfdzi.supabase.co/functions/v1/download-pdf?file=ai-guide";
 
     // Prepare both emails
     const userEmailData = {
@@ -339,4 +337,3 @@ serve(async (req: Request) => {
     );
   }
 });
-
