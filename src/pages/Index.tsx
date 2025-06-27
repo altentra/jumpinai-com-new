@@ -7,13 +7,40 @@ import WhatWeShare from "@/components/WhatWeShare";
 import WhoItsFor from "@/components/WhoItsFor";
 import Newsletter from "@/components/Newsletter";
 import Footer from "@/components/Footer";
+import { GoogleSheetsTest } from "@/components/GoogleSheetsTest";
 
 const Index = () => {
+  // Add debug info to console
+  console.log("Index page loaded - checking if in development mode");
+  console.log("Current URL:", window.location.href);
+  console.log("Current pathname:", window.location.pathname);
+  
+  // Show test component only in development or when URL contains 'test'
+  const showTest = window.location.hostname === 'localhost' || 
+                   window.location.search.includes('test=true') ||
+                   window.location.pathname.includes('test');
+
   return (
     <div className="min-h-screen scroll-snap-container">
       <Navigation />
       <Hero />
       <LeadMagnet />
+      
+      {showTest && (
+        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 m-4">
+          <div className="flex">
+            <div className="ml-3">
+              <p className="text-sm text-yellow-700">
+                <strong>DEBUG MODE:</strong> Google Sheets Test Component
+              </p>
+              <div className="mt-2">
+                <GoogleSheetsTest />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
       <div className="space-y-8">
         <About />
         <WhatWeShare />
