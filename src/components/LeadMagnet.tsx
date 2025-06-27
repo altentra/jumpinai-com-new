@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -103,20 +102,15 @@ const LeadMagnet = () => {
   };
 
   const handleDirectDownload = () => {
-    // Use the direct working Supabase storage URL
-    const downloadUrl = "https://cieczaajcgkgdgenfdzi.supabase.co/storage/v1/object/public/lead-magnets/jumpstart-ai-7-fast-wins.pdf";
+    // Use the professional branded URL
+    const downloadUrl = "https://jumpinai.com/download/ai-guide";
     
-    // Create temporary download link
-    const link = document.createElement('a');
-    link.href = downloadUrl;
-    link.download = 'Jumpstart AI - 7 Fast Wins You Can Use Today.pdf';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    // Open the PDF in a new tab
+    window.open(downloadUrl, '_blank');
     
     toast({
       title: "Download Started! 📥",
-      description: "Your PDF is downloading now. Enjoy your AI fast wins!",
+      description: "Your PDF is opening in a new tab. Enjoy your AI fast wins!",
     });
   };
 

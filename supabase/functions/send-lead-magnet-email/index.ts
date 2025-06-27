@@ -1,4 +1,3 @@
-
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
@@ -95,8 +94,8 @@ serve(async (req: Request) => {
       );
     }
 
-    // Use the direct Supabase storage URL for PDF download
-    const pdfUrl = "https://cieczaajcgkgdgenfdzi.supabase.co/storage/v1/object/public/lead-magnets/jumpstart-ai-7-fast-wins.pdf";
+    // Use the professional branded URL for PDF download
+    const pdfUrl = "https://jumpinai.com/download/ai-guide";
 
     // Prepare both emails
     const userEmailData = {
