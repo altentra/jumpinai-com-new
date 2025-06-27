@@ -1,6 +1,12 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.50.0';
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+
+// Initialize Supabase client
+const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 interface RequestBody {
   email: string;
@@ -92,6 +98,50 @@ serve(async (req: Request) => {
           } 
         }
       );
+    }
+
+    // Add to unified contacts table
+    console.log("Adding contact to unified system...");
+    const { data: contactData, error: contactError } = await supabase
+      .rpc('upsert_contact', {
+        p_email: email,
+        p_source: 'lead_magnet',
+        p_lead_magnet_downloaded: true,
+        p_tags: ['lead_magnet_subscriber']
+      });
+
+    if (contactError) {
+      console.error("Error adding contact:", contactError);
+      // Continue with email sending even if contact insert fails
+    } else {
+      console.log("Contact added successfully:", contactData);
+      
+      // Log the activity
+      await supabase
+        .from('contact_activities')
+        .insert({
+          contact_id: contactData,
+          activity_type: 'lead_magnet_download',
+          source: 'website',
+          details: {
+            pdf_name: 'Jumpstart AI: 7 Fast Wins You Can Use Today',
+            user_agent: req.headers.get('user-agent') || 'unknown'
+          }
+        });
+    }
+
+    // Keep original lead_magnet_downloads for legacy tracking
+    const { error: insertError } = await supabase
+      .from('lead_magnet_downloads')
+      .insert({
+        email: email,
+        ip_address: null,
+        user_agent: req.headers.get('user-agent') || 'unknown'
+      });
+
+    if (insertError) {
+      console.error("Database insert error:", insertError);
+      // Don't throw error here, we still want to send the email
     }
 
     // Use the professional branded URL for PDF download

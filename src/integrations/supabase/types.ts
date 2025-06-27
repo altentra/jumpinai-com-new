@@ -9,6 +9,86 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      contact_activities: {
+        Row: {
+          activity_type: string
+          contact_id: string | null
+          created_at: string | null
+          details: Json | null
+          id: string
+          source: string
+        }
+        Insert: {
+          activity_type: string
+          contact_id?: string | null
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          source: string
+        }
+        Update: {
+          activity_type?: string
+          contact_id?: string | null
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          source?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contact_activities_contact_id_fkey"
+            columns: ["contact_id"]
+            isOneToOne: false
+            referencedRelation: "contacts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contacts: {
+        Row: {
+          created_at: string | null
+          email: string
+          first_name: string | null
+          id: string
+          last_name: string | null
+          lead_magnet_downloaded: boolean | null
+          newsletter_subscribed: boolean | null
+          notes: string | null
+          source: string
+          status: string | null
+          tags: string[] | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          lead_magnet_downloaded?: boolean | null
+          newsletter_subscribed?: boolean | null
+          notes?: string | null
+          source: string
+          status?: string | null
+          tags?: string[] | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          lead_magnet_downloaded?: boolean | null
+          newsletter_subscribed?: boolean | null
+          notes?: string | null
+          source?: string
+          status?: string | null
+          tags?: string[] | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       lead_magnet_downloads: {
         Row: {
           downloaded_at: string
@@ -65,7 +145,18 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      upsert_contact: {
+        Args: {
+          p_email: string
+          p_first_name?: string
+          p_last_name?: string
+          p_source?: string
+          p_newsletter_subscribed?: boolean
+          p_lead_magnet_downloaded?: boolean
+          p_tags?: string[]
+        }
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never

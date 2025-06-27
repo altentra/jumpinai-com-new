@@ -1,4 +1,3 @@
-
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.50.0';
 import { Resend } from "npm:resend@2.0.0";
@@ -90,22 +89,18 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error("Email address is too long");
     }
 
-    // First, check if the email already exists (active or inactive)
-    const { data: existingSubscriber, error: checkError } = await supabase
-      .from('newsletter_subscribers')
+    // Check if contact exists in unified system
+    const { data: existingContact, error: checkError } = await supabase
+      .from('contacts')
       .select('*')
       .eq('email', sanitizedEmail)
       .single();
 
-    if (checkError && checkError.code !== 'PGRST116') { // PGRST116 = no rows found
-      console.error("Error checking existing subscriber:", checkError);
-      throw checkError;
-    }
-
     let isResubscription = false;
+    let contactId;
 
-    if (existingSubscriber) {
-      if (existingSubscriber.is_active) {
+    if (existingContact) {
+      if (existingContact.newsletter_subscribed && existingContact.status === 'active') {
         // Already subscribed and active
         console.log("Email already subscribed and active:", sanitizedEmail);
         return new Response(
@@ -122,48 +117,96 @@ const handler = async (req: Request): Promise<Response> => {
           }
         );
       } else {
-        // Previously unsubscribed, reactivate
-        console.log("Reactivating previously unsubscribed email:", sanitizedEmail);
+        // Previously existed but not newsletter subscribed or inactive
+        console.log("Updating existing contact for newsletter:", sanitizedEmail);
         const { data: updateData, error: updateError } = await supabase
+          .from('contacts')
+          .update({ 
+            newsletter_subscribed: true,
+            status: 'active',
+            updated_at: new Date().toISOString(),
+            tags: existingContact.tags?.includes('newsletter_subscriber') 
+              ? existingContact.tags 
+              : [...(existingContact.tags || []), 'newsletter_subscriber']
+          })
+          .eq('email', sanitizedEmail)
+          .select()
+          .single();
+
+        if (updateError) {
+          console.error("Error updating existing contact:", updateError);
+          throw updateError;
+        }
+
+        contactId = updateData.id;
+        isResubscription = !existingContact.newsletter_subscribed;
+        console.log("Successfully updated existing contact:", updateData);
+      }
+    } else {
+      // New contact - use the upsert function
+      console.log("Creating new contact:", sanitizedEmail);
+      const { data: newContactId, error: insertError } = await supabase
+        .rpc('upsert_contact', {
+          p_email: sanitizedEmail,
+          p_source: 'newsletter',
+          p_newsletter_subscribed: true,
+          p_tags: ['newsletter_subscriber']
+        });
+
+      if (insertError) {
+        console.error("Error creating new contact:", insertError);
+        throw insertError;
+      }
+
+      contactId = newContactId;
+      console.log("Successfully created new contact:", contactId);
+    }
+
+    // Log the activity
+    await supabase
+      .from('contact_activities')
+      .insert({
+        contact_id: contactId,
+        activity_type: isResubscription ? 'newsletter_resubscribe' : 'newsletter_subscribe',
+        source: 'website',
+        details: {
+          user_agent: req.headers.get('user-agent') || 'unknown',
+          ip_address: clientIP
+        }
+      });
+
+    // Keep legacy newsletter_subscribers table for backward compatibility
+    const { data: legacySubscriber, error: legacyCheckError } = await supabase
+      .from('newsletter_subscribers')
+      .select('*')
+      .eq('email', sanitizedEmail)
+      .single();
+
+    if (legacySubscriber) {
+      if (!legacySubscriber.is_active) {
+        // Reactivate in legacy table
+        await supabase
           .from('newsletter_subscribers')
           .update({ 
             is_active: true,
             subscribed_at: new Date().toISOString(),
             source: 'website_resubscription'
           })
-          .eq('email', sanitizedEmail)
-          .select();
-
-        if (updateError) {
-          console.error("Error reactivating subscriber:", updateError);
-          throw updateError;
-        }
-
-        isResubscription = true;
-        console.log("Successfully reactivated subscriber:", updateData);
+          .eq('email', sanitizedEmail);
       }
     } else {
-      // New subscriber
-      console.log("Creating new subscriber:", sanitizedEmail);
-      const { data: insertData, error: insertError } = await supabase
+      // Create new entry in legacy table
+      await supabase
         .from('newsletter_subscribers')
         .insert([
           { 
             email: sanitizedEmail,
             source: 'website'
           }
-        ])
-        .select();
-
-      if (insertError) {
-        console.error("Error creating new subscriber:", insertError);
-        throw insertError;
-      }
-
-      console.log("Successfully created new subscriber:", insertData);
+        ]);
     }
 
-    // Generate unsubscribe link - FIXED to use correct URL format
+    // Generate unsubscribe link
     const unsubscribeUrl = `${supabaseUrl}/functions/v1/unsubscribe-newsletter?email=${encodeURIComponent(sanitizedEmail)}`;
 
     // Send welcome email to the subscriber
@@ -173,7 +216,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     const welcomeMessage = isResubscription
       ? "Welcome back! We're thrilled to have you rejoin our community of AI professionals."
-      : "You're now part of an exclusive community of industry leaders who are strategically implementing AI to transform their businesses.";
+      : "You're now part of an exclusive community of 30,000+ industry leaders who are strategically implementing AI to transform their businesses.";
 
     console.log("Sending welcome email to:", sanitizedEmail);
     const welcomeResponse = await resend.emails.send({
@@ -269,9 +312,7 @@ const handler = async (req: Request): Promise<Response> => {
               
               <div style="background: #f3f4f6; padding: 15px; border-radius: 4px; margin: 20px 0;">
                 <p style="margin: 0; color: #374151;">
-                  ${isResubscription 
-                    ? 'Email has been reactivated in the database and welcome back email sent automatically.' 
-                    : 'Email has been added to the database and welcome email sent automatically.'}
+                  Contact added to unified system and welcome email sent automatically.
                 </p>
               </div>
             </div>
