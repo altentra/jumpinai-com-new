@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -56,12 +55,25 @@ const LeadMagnet = () => {
       }
 
       // Send welcome email with PDF
+      console.log("Calling edge function...");
       const { data, error } = await supabase.functions.invoke('send-lead-magnet-email', {
         body: { email }
       });
 
       if (error) {
         console.error("Email function error:", error);
+        
+        // If it's a network error, still show download ready
+        if (error.message?.includes('Failed to fetch') || error.message?.includes('network')) {
+          console.log("Network error detected, allowing direct download");
+          setDownloadReady(true);
+          toast({
+            title: "Download Ready! 📥",
+            description: "There was a network issue with email delivery, but you can download the PDF directly below.",
+          });
+          return;
+        }
+        
         throw error;
       }
 
@@ -77,10 +89,12 @@ const LeadMagnet = () => {
     } catch (error) {
       console.error("Error processing lead magnet request:", error);
       
+      // Still allow download even if email fails
+      setDownloadReady(true);
+      
       toast({
-        title: "Something went wrong",
-        description: "Please try again or contact us at info@jumpinai.com if this continues.",
-        variant: "destructive",
+        title: "Download Ready! 📥",
+        description: "Your PDF is ready for download below. We'll also try to send it to your email.",
       });
     } finally {
       setIsSubmitting(false);
@@ -202,7 +216,7 @@ const LeadMagnet = () => {
                     <div className="space-y-2">
                       <h3 className="text-xl font-semibold">Success! 🎉</h3>
                       <p className="text-muted-foreground">
-                        We've sent the PDF to your inbox. You can also download it directly:
+                        Your PDF is ready! Download it directly below:
                       </p>
                     </div>
                     

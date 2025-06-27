@@ -7,31 +7,42 @@ interface RequestBody {
   email: string;
 }
 
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization, apikey, x-client-info",
+};
+
 serve(async (req: Request) => {
+  console.log("Edge function called with method:", req.method);
+  
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
+    console.log("Handling CORS preflight");
     return new Response(null, {
       status: 200,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, OPTIONS",
-        "Access-Control-Allow-Headers": "Content-Type, Authorization, apikey",
-      },
+      headers: corsHeaders,
     });
   }
 
   if (req.method !== "POST") {
+    console.log("Invalid method:", req.method);
     return new Response(JSON.stringify({ error: "Method not allowed" }), {
       status: 405,
-      headers: { "Content-Type": "application/json" },
+      headers: { 
+        "Content-Type": "application/json",
+        ...corsHeaders
+      },
     });
   }
 
   try {
+    console.log("Processing request body...");
     const { email }: RequestBody = await req.json();
     console.log("Processing lead magnet email for:", email);
 
     if (!email) {
+      console.log("No email provided");
       return new Response(
         JSON.stringify({ 
           success: false, 
@@ -39,7 +50,10 @@ serve(async (req: Request) => {
         }),
         { 
           status: 400, 
-          headers: { "Content-Type": "application/json" } 
+          headers: { 
+            "Content-Type": "application/json",
+            ...corsHeaders
+          } 
         }
       );
     }
@@ -47,6 +61,7 @@ serve(async (req: Request) => {
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
+      console.log("Invalid email format:", email);
       return new Response(
         JSON.stringify({ 
           success: false, 
@@ -54,7 +69,10 @@ serve(async (req: Request) => {
         }),
         { 
           status: 400, 
-          headers: { "Content-Type": "application/json" } 
+          headers: { 
+            "Content-Type": "application/json",
+            ...corsHeaders
+          } 
         }
       );
     }
@@ -68,7 +86,10 @@ serve(async (req: Request) => {
         }),
         { 
           status: 500, 
-          headers: { "Content-Type": "application/json" } 
+          headers: { 
+            "Content-Type": "application/json",
+            ...corsHeaders
+          } 
         }
       );
     }
@@ -195,7 +216,7 @@ serve(async (req: Request) => {
         status: 200,
         headers: {
           "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
+          ...corsHeaders,
         },
       }
     );
@@ -212,7 +233,7 @@ serve(async (req: Request) => {
         status: 500,
         headers: {
           "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
+          ...corsHeaders,
         },
       }
     );
