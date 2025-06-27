@@ -25,10 +25,12 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    console.log("Google Sheets sync function started");
+    console.log("=== Google Sheets sync function started ===");
+    console.log("Request method:", req.method);
+    console.log("Request URL:", req.url);
     
     if (!GOOGLE_SHEETS_WEBHOOK_URL) {
-      console.error("GOOGLE_SHEETS_WEBHOOK_URL not configured");
+      console.error("❌ GOOGLE_SHEETS_WEBHOOK_URL not configured");
       return new Response(
         JSON.stringify({ 
           success: false,
@@ -41,12 +43,15 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
+    console.log("✅ Webhook URL found:", GOOGLE_SHEETS_WEBHOOK_URL.substring(0, 50) + "...");
+
     const { email, sync_all }: SyncRequest = await req.json();
-    console.log("Sync request:", { email, sync_all });
+    console.log("📥 Sync request received:", { email, sync_all });
 
     let contacts;
     
     if (sync_all) {
+      console.log("🔄 Starting bulk sync of all contacts...");
       // Sync all contacts
       const { data, error } = await supabase
         .from('contacts')
@@ -55,12 +60,14 @@ const handler = async (req: Request): Promise<Response> => {
         .order('created_at', { ascending: false });
         
       if (error) {
-        console.error("Error fetching all contacts:", error);
+        console.error("❌ Error fetching all contacts:", error);
         throw error;
       }
       
       contacts = data;
+      console.log(`✅ Found ${contacts?.length || 0} active contacts for bulk sync`);
     } else if (email) {
+      console.log("🔄 Starting single contact sync for:", email);
       // Sync specific contact
       const { data, error } = await supabase
         .from('contacts')
@@ -69,12 +76,14 @@ const handler = async (req: Request): Promise<Response> => {
         .single();
         
       if (error) {
-        console.error("Error fetching contact:", error);
+        console.error("❌ Error fetching contact:", error);
         throw error;
       }
       
       contacts = [data];
+      console.log("✅ Found contact for sync:", data.email);
     } else {
+      console.error("❌ Invalid request: missing email or sync_all parameter");
       return new Response(
         JSON.stringify({ 
           success: false,
@@ -88,6 +97,7 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     if (!contacts || contacts.length === 0) {
+      console.log("⚠️ No contacts to sync");
       return new Response(
         JSON.stringify({ 
           success: true,
@@ -116,30 +126,40 @@ const handler = async (req: Request): Promise<Response> => {
       notes: contact.notes || ''
     }));
 
+    console.log("📊 Prepared data for Google Sheets:", sheetsData.length, "contacts");
+
     // Send to Google Sheets via webhook
-    console.log(`Sending ${sheetsData.length} contacts to Google Sheets`);
+    console.log(`🚀 Sending ${sheetsData.length} contacts to Google Sheets...`);
+    console.log("📤 Webhook URL being called:", GOOGLE_SHEETS_WEBHOOK_URL);
+    
+    const webhookPayload = {
+      action: sync_all ? "bulk_sync" : "single_sync",
+      data: sheetsData,
+      timestamp: new Date().toISOString(),
+      source: "jumpinai_supabase"
+    };
+
+    console.log("📦 Webhook payload:", JSON.stringify(webhookPayload, null, 2));
     
     const response = await fetch(GOOGLE_SHEETS_WEBHOOK_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        action: sync_all ? "bulk_sync" : "single_sync",
-        data: sheetsData,
-        timestamp: new Date().toISOString(),
-        source: "jumpinai_supabase"
-      }),
+      body: JSON.stringify(webhookPayload),
     });
+
+    console.log("📡 Webhook response status:", response.status);
+    console.log("📡 Webhook response headers:", Object.fromEntries(response.headers.entries()));
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("Google Sheets webhook error:", errorText);
+      console.error("❌ Google Sheets webhook error:", errorText);
       throw new Error(`Google Sheets webhook failed: ${response.status} ${errorText}`);
     }
 
     const result = await response.json();
-    console.log("Google Sheets sync successful:", result);
+    console.log("✅ Google Sheets sync successful:", result);
 
     return new Response(
       JSON.stringify({ 
@@ -158,7 +178,8 @@ const handler = async (req: Request): Promise<Response> => {
     );
 
   } catch (error: any) {
-    console.error("Error in sync-to-google-sheets function:", error);
+    console.error("💥 Error in sync-to-google-sheets function:", error);
+    console.error("💥 Error stack:", error.stack);
     return new Response(
       JSON.stringify({ 
         success: false,
