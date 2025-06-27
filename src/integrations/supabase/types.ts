@@ -9,6 +9,33 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      lead_magnet_downloads: {
+        Row: {
+          downloaded_at: string
+          email: string
+          id: string
+          ip_address: string | null
+          pdf_name: string
+          user_agent: string | null
+        }
+        Insert: {
+          downloaded_at?: string
+          email: string
+          id?: string
+          ip_address?: string | null
+          pdf_name?: string
+          user_agent?: string | null
+        }
+        Update: {
+          downloaded_at?: string
+          email?: string
+          id?: string
+          ip_address?: string | null
+          pdf_name?: string
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       newsletter_subscribers: {
         Row: {
           email: string

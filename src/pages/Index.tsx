@@ -1,6 +1,7 @@
 
 import Navigation from "@/components/Navigation";
 import Hero from "@/components/Hero";
+import LeadMagnet from "@/components/LeadMagnet";
 import About from "@/components/About";
 import WhatWeShare from "@/components/WhatWeShare";
 import WhoItsFor from "@/components/WhoItsFor";
@@ -12,6 +13,7 @@ const Index = () => {
     <div className="min-h-screen scroll-snap-container">
       <Navigation />
       <Hero />
+      <LeadMagnet />
       <div className="space-y-8">
         <About />
         <WhatWeShare />
