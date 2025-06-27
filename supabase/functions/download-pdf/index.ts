@@ -42,42 +42,20 @@ serve(async (req: Request) => {
     
     console.log("Requesting PDF file:", fileName);
 
-    // Try multiple possible storage URLs to find the working one
-    const possibleUrls = [
-      `https://cieczaajcgkgdgenfdzi.supabase.co/storage/v1/object/public/lead-magnets/${fileName}`,
-      `https://cieczaajcgkgdgenfdzi.supabase.co/storage/v1/object/public/lead_magnets/${fileName}`,
-      `https://cieczaajcgkgdgenfdzi.supabase.co/storage/v1/object/public/pdfs/${fileName}`,
-    ];
+    // Use the direct working Supabase storage URL
+    const directUrl = `https://cieczaajcgkgdgenfdzi.supabase.co/storage/v1/object/public/lead-magnets/${fileName}`;
+    console.log("Fetching from direct URL:", directUrl);
 
-    let response;
-    let workingUrl;
-    
-    for (const testUrl of possibleUrls) {
-      console.log("Trying URL:", testUrl);
-      try {
-        response = await fetch(testUrl, {
-          method: 'GET',
-          headers: {
-            'Cache-Control': 'no-cache',
-          }
-        });
-        
-        if (response.ok) {
-          workingUrl = testUrl;
-          console.log("Successfully fetched from:", workingUrl);
-          break;
-        } else {
-          console.log("Failed with status:", response.status, "for URL:", testUrl);
-        }
-      } catch (fetchError) {
-        console.error("Fetch error for URL:", testUrl, fetchError);
-        continue;
+    const response = await fetch(directUrl, {
+      method: 'GET',
+      headers: {
+        'Cache-Control': 'no-cache',
       }
-    }
-    
-    if (!response || !response.ok) {
-      console.error("All URLs failed. Last response status:", response?.status);
-      return new Response("PDF not found - please check if the file exists in storage", {
+    });
+
+    if (!response.ok) {
+      console.error("Failed to fetch PDF:", response.status, response.statusText);
+      return new Response(`PDF not found - Status: ${response.status}`, {
         status: 404,
         headers: corsHeaders,
       });
@@ -85,15 +63,15 @@ serve(async (req: Request) => {
 
     const pdfBuffer = await response.arrayBuffer();
     
-    console.log("PDF fetched successfully, size:", pdfBuffer.byteLength, "bytes from:", workingUrl);
+    console.log("PDF fetched successfully, size:", pdfBuffer.byteLength, "bytes");
 
-    // Return the PDF with proper headers
+    // Return the PDF with professional headers
     return new Response(pdfBuffer, {
       status: 200,
       headers: {
         ...corsHeaders,
         "Content-Type": "application/pdf",
-        "Content-Disposition": `attachment; filename="${fileName}"`,
+        "Content-Disposition": `attachment; filename="Jumpstart AI - 7 Fast Wins You Can Use Today.pdf"`,
         "Cache-Control": "public, max-age=3600", // Cache for 1 hour
       },
     });
