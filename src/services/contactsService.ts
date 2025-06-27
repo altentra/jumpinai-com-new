@@ -38,7 +38,7 @@ export const contactsService = {
       throw error;
     }
 
-    return data || [];
+    return (data || []) as Contact[];
   },
 
   // Get contact by email
@@ -57,7 +57,7 @@ export const contactsService = {
       throw error;
     }
 
-    return data;
+    return data as Contact;
   },
 
   // Get contact activities
@@ -73,7 +73,7 @@ export const contactsService = {
       throw error;
     }
 
-    return data || [];
+    return (data || []) as ContactActivity[];
   },
 
   // Sync specific contact to Google Sheets
@@ -115,16 +115,18 @@ export const contactsService = {
       throw allError;
     }
 
+    const contacts = (allContacts || []) as Contact[];
+
     const stats = {
-      total: allContacts?.length || 0,
-      active: allContacts?.filter(c => c.status === 'active').length || 0,
-      newsletter_subscribers: allContacts?.filter(c => c.newsletter_subscribed).length || 0,
-      lead_magnet_downloads: allContacts?.filter(c => c.lead_magnet_downloaded).length || 0,
+      total: contacts.length,
+      active: contacts.filter(c => c.status === 'active').length,
+      newsletter_subscribers: contacts.filter(c => c.newsletter_subscribed).length,
+      lead_magnet_downloads: contacts.filter(c => c.lead_magnet_downloaded).length,
       sources: {} as Record<string, number>
     };
 
     // Count by source
-    allContacts?.forEach(contact => {
+    contacts.forEach(contact => {
       stats.sources[contact.source] = (stats.sources[contact.source] || 0) + 1;
     });
 
