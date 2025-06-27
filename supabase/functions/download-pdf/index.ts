@@ -42,14 +42,42 @@ serve(async (req: Request) => {
     
     console.log("Requesting PDF file:", fileName);
 
-    // Fetch the actual PDF from Supabase storage
-    const pdfUrl = `https://cieczaajcgkgdgenfdzi.supabase.co/storage/v1/object/public/lead-magnets/${fileName}`;
+    // Try multiple possible storage URLs to find the working one
+    const possibleUrls = [
+      `https://cieczaajcgkgdgenfdzi.supabase.co/storage/v1/object/public/lead-magnets/${fileName}`,
+      `https://cieczaajcgkgdgenfdzi.supabase.co/storage/v1/object/public/lead_magnets/${fileName}`,
+      `https://cieczaajcgkgdgenfdzi.supabase.co/storage/v1/object/public/pdfs/${fileName}`,
+    ];
+
+    let response;
+    let workingUrl;
     
-    const response = await fetch(pdfUrl);
+    for (const testUrl of possibleUrls) {
+      console.log("Trying URL:", testUrl);
+      try {
+        response = await fetch(testUrl, {
+          method: 'GET',
+          headers: {
+            'Cache-Control': 'no-cache',
+          }
+        });
+        
+        if (response.ok) {
+          workingUrl = testUrl;
+          console.log("Successfully fetched from:", workingUrl);
+          break;
+        } else {
+          console.log("Failed with status:", response.status, "for URL:", testUrl);
+        }
+      } catch (fetchError) {
+        console.error("Fetch error for URL:", testUrl, fetchError);
+        continue;
+      }
+    }
     
-    if (!response.ok) {
-      console.error("Failed to fetch PDF:", response.status, response.statusText);
-      return new Response("PDF not found", {
+    if (!response || !response.ok) {
+      console.error("All URLs failed. Last response status:", response?.status);
+      return new Response("PDF not found - please check if the file exists in storage", {
         status: 404,
         headers: corsHeaders,
       });
@@ -57,7 +85,7 @@ serve(async (req: Request) => {
 
     const pdfBuffer = await response.arrayBuffer();
     
-    console.log("PDF fetched successfully, size:", pdfBuffer.byteLength, "bytes");
+    console.log("PDF fetched successfully, size:", pdfBuffer.byteLength, "bytes from:", workingUrl);
 
     // Return the PDF with proper headers
     return new Response(pdfBuffer, {
@@ -73,9 +101,15 @@ serve(async (req: Request) => {
   } catch (error) {
     console.error("Error in PDF download proxy:", error);
     
-    return new Response("Internal server error", {
+    return new Response(JSON.stringify({ 
+      error: "Internal server error", 
+      details: error.message 
+    }), {
       status: 500,
-      headers: corsHeaders,
+      headers: {
+        ...corsHeaders,
+        "Content-Type": "application/json",
+      },
     });
   }
 });
