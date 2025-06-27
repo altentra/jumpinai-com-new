@@ -40,7 +40,6 @@ const App = () => (
           <Route path="/contact-us" element={<ContactUs />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/test-sync" element={<TestSync />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
