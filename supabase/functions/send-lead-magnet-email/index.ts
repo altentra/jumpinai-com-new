@@ -97,8 +97,8 @@ serve(async (req: Request) => {
     // PDF download URL
     const pdfUrl = "https://cieczaajcgkgdgenfdzi.supabase.co/storage/v1/object/public/lead-magnets/jumpstart-ai-7-fast-wins.pdf";
 
-    // Send email using Resend
-    const emailData = {
+    // Send welcome email to the user
+    const userEmailData = {
       from: "JumpinAI <info@jumpinai.com>",
       to: [email],
       subject: "🚀 Your Free AI Guide: 7 Fast Wins You Can Use Today!",
@@ -186,31 +186,114 @@ serve(async (req: Request) => {
       `,
     };
 
-    console.log("Sending email to:", email);
+    console.log("Sending welcome email to:", email);
     
-    const response = await fetch("https://api.resend.com/emails", {
+    const userResponse = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
-      body: JSON.stringify(emailData),
+      body: JSON.stringify(userEmailData),
     });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("Resend API error:", response.status, errorText);
-      throw new Error(`Failed to send email: ${response.status} ${errorText}`);
+    if (!userResponse.ok) {
+      const errorText = await userResponse.text();
+      console.error("Resend API error for user email:", userResponse.status, errorText);
+      throw new Error(`Failed to send user email: ${userResponse.status} ${errorText}`);
     }
 
-    const result = await response.json();
-    console.log("Email sent successfully:", result);
+    const userResult = await userResponse.json();
+    console.log("Welcome email sent successfully:", userResult);
+
+    // Send notification email to admin
+    const adminEmailData = {
+      from: "JumpinAI <info@jumpinai.com>",
+      to: ["info@jumpinai.com"],
+      subject: "🎉 New Lead Magnet Download - JumpinAI",
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>New Lead Capture</title>
+        </head>
+        <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+          
+          <div style="text-align: center; margin-bottom: 30px;">
+            <h1 style="color: #059669; font-size: 28px; margin-bottom: 10px;">🎉 New Lead Captured!</h1>
+            <p style="font-size: 18px; color: #666; margin: 0;">Someone just downloaded your AI guide</p>
+          </div>
+
+          <div style="background: #f0fdf4; border: 2px solid #059669; padding: 30px; border-radius: 12px; margin-bottom: 30px;">
+            <h2 style="color: #1e293b; font-size: 20px; margin-bottom: 20px; text-align: center;">
+              📧 Lead Details
+            </h2>
+            
+            <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 15px;">
+              <p style="margin: 0; font-size: 16px;"><strong>Email:</strong> ${email}</p>
+            </div>
+            
+            <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 15px;">
+              <p style="margin: 0; font-size: 16px;"><strong>Downloaded:</strong> Jumpstart AI - 7 Fast Wins You Can Use Today</p>
+            </div>
+            
+            <div style="background: white; padding: 20px; border-radius: 8px;">
+              <p style="margin: 0; font-size: 16px;"><strong>Time:</strong> ${new Date().toLocaleString('en-US', { 
+                timeZone: 'UTC',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                timeZoneName: 'short'
+              })}</p>
+            </div>
+          </div>
+
+          <div style="text-align: center; margin-bottom: 20px;">
+            <p style="color: #475569; font-size: 14px; margin: 0;">
+              🚀 <strong>Next steps:</strong> Consider following up with this lead or adding them to your nurture sequence.
+            </p>
+          </div>
+
+          <div style="border-top: 1px solid #e2e8f0; padding-top: 20px; text-align: center;">
+            <p style="color: #64748b; font-size: 12px; margin: 0;">
+              This notification was sent automatically from your JumpinAI lead magnet system.
+            </p>
+          </div>
+
+        </body>
+        </html>
+      `,
+    };
+
+    console.log("Sending notification email to admin");
+    
+    const adminResponse = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${RESEND_API_KEY}`,
+      },
+      body: JSON.stringify(adminEmailData),
+    });
+
+    if (!adminResponse.ok) {
+      const errorText = await adminResponse.text();
+      console.error("Resend API error for admin notification:", adminResponse.status, errorText);
+      // Don't throw error here - user email was successful, admin notification is secondary
+    } else {
+      const adminResult = await adminResponse.json();
+      console.log("Admin notification sent successfully:", adminResult);
+    }
 
     return new Response(
       JSON.stringify({ 
         success: true, 
         message: "Lead magnet email sent successfully",
-        emailId: result.id 
+        emailId: userResult.id 
       }),
       {
         status: 200,
