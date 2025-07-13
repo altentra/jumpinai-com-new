@@ -2,6 +2,7 @@
 import Navigation from "@/components/Navigation";
 import Hero from "@/components/Hero";
 import LeadMagnet from "@/components/LeadMagnet";
+import BookPromotion from "@/components/BookPromotion";
 import About from "@/components/About";
 import WhatWeShare from "@/components/WhatWeShare";
 import WhoItsFor from "@/components/WhoItsFor";
@@ -25,6 +26,7 @@ const Index = () => {
       <Navigation />
       <Hero />
       <LeadMagnet />
+      <BookPromotion />
       
       {showTest && (
         <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 m-4">
