@@ -65,14 +65,9 @@ const AboutUs = () => {
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" className="text-lg px-8" asChild>
-              <Link to="/">
+              <a href="https://whop.com/jumpinai/" target="_blank" rel="noopener noreferrer">
                 Start Building Now
                 <ArrowRight className="ml-2 w-5 h-5" />
-              </Link>
-            </Button>
-            <Button variant="outline" size="lg" className="text-lg px-8" asChild>
-              <a href="https://whop.com/jumpinai/" target="_blank" rel="noopener noreferrer">
-                View Our Tools
               </a>
             </Button>
           </div>
@@ -150,11 +145,26 @@ const AboutUs = () => {
               or simply curious about AI's potential—we've got the tools and strategies to get you there fast.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="text-lg px-8" asChild>
-                <Link to="/">
-                  Get Your Free AI Jumpstart Guide
-                  <ArrowRight className="ml-2 w-5 h-5" />
-                </Link>
+              <Button 
+                size="lg" 
+                className="text-lg px-8"
+                onClick={() => {
+                  const leadMagnetSection = document.querySelector('#lead-magnet');
+                  if (leadMagnetSection) {
+                    // Navigate to home page first if not already there
+                    if (window.location.pathname !== '/') {
+                      window.location.href = '/#lead-magnet';
+                    } else {
+                      leadMagnetSection.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  } else {
+                    // Fallback to navigate to home page with hash
+                    window.location.href = '/#lead-magnet';
+                  }
+                }}
+              >
+                Get Your Free AI Jumpstart Guide
+                <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
             </div>
           </div>
@@ -162,36 +172,66 @@ const AboutUs = () => {
       </section>
 
       {/* Call to Action */}
-      <section className="px-6 py-20 bg-primary text-primary-foreground">
+      <section className="px-6 py-20 bg-muted/30">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-5xl font-bold mb-6">
-            Ready to Jump In?
+          <h2 className="text-3xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+            The Time to Build is Now
           </h2>
-          <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
-            Stop waiting for the "perfect moment" to start with AI. 
-            The perfect moment is now. The perfect tools are here.
+          <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
+            While others are still figuring out what AI can do, you could already be using it to create real value. 
+            <span className="text-primary font-semibold"> We've done the heavy lifting</span> — the tools are ready, 
+            the strategies are proven, and the opportunity is massive.
           </p>
+          
+          <div className="bg-card rounded-2xl p-8 mb-8 border border-border/50">
+            <h3 className="text-2xl font-bold mb-4 text-foreground">
+              Why Choose JumpinAI?
+            </h3>
+            <div className="grid md:grid-cols-3 gap-6 text-left">
+              <div>
+                <h4 className="font-bold text-primary mb-2">Speed</h4>
+                <p className="text-muted-foreground text-sm">Get results in days, not months. Our tools work immediately.</p>
+              </div>
+              <div>
+                <h4 className="font-bold text-primary mb-2">Clarity</h4>
+                <p className="text-muted-foreground text-sm">No confusing jargon. Clear instructions for real outcomes.</p>
+              </div>
+              <div>
+                <h4 className="font-bold text-primary mb-2">Results</h4>
+                <p className="text-muted-foreground text-sm">Built by practitioners who've generated real AI-powered revenue.</p>
+              </div>
+            </div>
+          </div>
+          
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button 
               size="lg" 
-              variant="secondary" 
               className="text-lg px-8"
               asChild
             >
               <a href="https://whop.com/jumpinai/" target="_blank" rel="noopener noreferrer">
-                Explore Our AI PowerStack
+                Access Our AI PowerStack
                 <ArrowRight className="ml-2 w-5 h-5" />
               </a>
             </Button>
             <Button 
               size="lg" 
               variant="outline" 
-              className="text-lg px-8 bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
-              asChild
+              className="text-lg px-8"
+              onClick={() => {
+                const leadMagnetSection = document.querySelector('#lead-magnet');
+                if (leadMagnetSection) {
+                  if (window.location.pathname !== '/') {
+                    window.location.href = '/#lead-magnet';
+                  } else {
+                    leadMagnetSection.scrollIntoView({ behavior: 'smooth' });
+                  }
+                } else {
+                  window.location.href = '/#lead-magnet';
+                }
+              }}
             >
-              <Link to="/">
-                Start with Free Resources
-              </Link>
+              Start with Free Guide
             </Button>
           </div>
         </div>
