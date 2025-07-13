@@ -3,9 +3,6 @@ import Navigation from "@/components/Navigation";
 import Hero from "@/components/Hero";
 import LeadMagnet from "@/components/LeadMagnet";
 import BookPromotion from "@/components/BookPromotion";
-import About from "@/components/About";
-import WhatWeShare from "@/components/WhatWeShare";
-import WhoItsFor from "@/components/WhoItsFor";
 import Newsletter from "@/components/Newsletter";
 import Footer from "@/components/Footer";
 import { GoogleSheetsTest } from "@/components/GoogleSheetsTest";
@@ -43,12 +40,7 @@ const Index = () => {
         </div>
       )}
       
-      <div className="space-y-8">
-        <About />
-        <WhatWeShare />
-        <WhoItsFor />
-        <Newsletter />
-      </div>
+      <Newsletter />
       <Footer />
     </div>
   );

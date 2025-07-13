@@ -47,9 +47,7 @@ const Navigation = () => {
   };
 
   const navItems = [
-    { name: "About", href: "#about" },
-    { name: "What We Offer", href: "#what-we-offer" },
-    { name: "Who It's For", href: "#who-its-for" },
+    { name: "About Us", href: "/about-us" },
     { name: "Contact Us", href: "/contact-us" },
   ];
 
