@@ -105,7 +105,7 @@ const LeadMagnetButton = () => {
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
-        <Button size="lg" className="text-lg px-8 hover-scale transition-all duration-300 hover:shadow-lg hover:shadow-primary/25 group">
+        <Button size="lg" className="text-lg px-8 modern-button bg-gradient-to-r from-gray-800 to-black hover:from-gray-900 hover:to-gray-800 dark:from-white dark:to-gray-300 dark:hover:from-gray-100 dark:hover:to-gray-400 text-white dark:text-black transition-all duration-300 hover:scale-105 group">
           Get Your Free AI Jumpstart Guide
           <ArrowRight className="ml-2 w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
         </Button>
@@ -251,7 +251,7 @@ const AboutUs = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="text-lg px-8 hover-scale transition-all duration-300 hover:shadow-lg hover:shadow-primary/25" asChild>
+            <Button size="lg" className="text-lg px-8 modern-button bg-gradient-to-r from-gray-800 to-black hover:from-gray-900 hover:to-gray-800 dark:from-white dark:to-gray-300 dark:hover:from-gray-100 dark:hover:to-gray-400 text-white dark:text-black transition-all duration-300 hover:scale-105 group" asChild>
               <a href="https://whop.com/jumpinai/" target="_blank" rel="noopener noreferrer">
                 Start Building Now
                 <ArrowRight className="ml-2 w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
@@ -373,7 +373,7 @@ const AboutUs = () => {
           <div className="flex justify-center">
             <Button 
               size="lg" 
-              className="text-lg px-8 hover-scale transition-all duration-300 hover:shadow-lg hover:shadow-primary/25 group"
+              className="text-lg px-8 modern-button bg-gradient-to-r from-gray-800 to-black hover:from-gray-900 hover:to-gray-800 dark:from-white dark:to-gray-300 dark:hover:from-gray-100 dark:hover:to-gray-400 text-white dark:text-black transition-all duration-300 hover:scale-105 group"
               asChild
             >
               <a href="https://whop.com/jumpinai/" target="_blank" rel="noopener noreferrer">
