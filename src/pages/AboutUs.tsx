@@ -195,7 +195,7 @@ const AboutUs = () => {
   const beliefs = [
     {
       title: "AI is for Everyone",
-      description: "You don't need a computer science degree. You need the right tools and guidance."
+      description: "You don't need a computer science degree. You need the right guidance and blueprints."
     },
     {
       title: "Speed Beats Perfection",
@@ -203,29 +203,29 @@ const AboutUs = () => {
     },
     {
       title: "Applied Over Theory",
-      description: "We build real tools for real problems. No fluff, no academic exercises."
+      description: "We teach real strategies for real problems. No fluff, no academic exercises."
     },
     {
       title: "Action Creates Opportunity",
-      description: "While others debate AI's future, we're building it. Join the builders."
+      description: "While others debate AI's future, we're educating the builders. Join the movement."
     }
   ];
 
   const offerings = [
     {
       icon: Zap,
-      title: "Ready-to-Use AI Tools",
-      description: "Skip the learning curve. Our tools work out of the box for real business needs."
+      title: "AI Implementation Guides",
+      description: "Learn which AI tools to use and exactly how to use them for real business results."
     },
     {
       icon: Target,
       title: "Strategic Blueprints",
-      description: "Step-by-step guides that turn AI concepts into profitable actions."
+      description: "Step-by-step workflows that turn AI concepts into profitable actions."
     },
     {
       icon: Rocket,
-      title: "Fast-Track Resources",
-      description: "Everything you need to start generating AI-powered income streams today."
+      title: "Educational Resources",
+      description: "Prompts, guides, and educational materials to start generating AI-powered income streams today."
     }
   ];
 
@@ -246,8 +246,8 @@ const AboutUs = () => {
           </h1>
           
           <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
-            JumpinAI exists for one reason: to get you building with AI <span className="text-primary font-semibold">today</span>, not tomorrow. 
-            We're done with the theory. It's time to build, ship, and profit.
+            JumpinAI exists for one reason: to get you implementing AI <span className="text-primary font-semibold">today</span>, not tomorrow. 
+            We provide the education, blueprints, and guidance you need to succeed. No theory—just results.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -269,7 +269,7 @@ const AboutUs = () => {
               What We Believe
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              These aren't just values. They're the principles that drive every tool we build and every strategy we share.
+              These aren't just values. They're the principles that drive every guide we create and every strategy we teach.
             </p>
           </div>
 
@@ -299,8 +299,8 @@ const AboutUs = () => {
               What We Do
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              We create the bridge between AI potential and real-world profit. 
-              No technical background required. No months of learning. Just results.
+              We provide education and guidance that bridges AI potential with real-world profit. 
+              No technical background required. No months of learning. Just clear, actionable guidance.
             </p>
           </div>
 
@@ -329,7 +329,7 @@ const AboutUs = () => {
             </h3>
             <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
               Whether you're a creator looking to automate your workflow, an entrepreneur building your next venture, 
-              or simply curious about AI's potential—we've got the tools and strategies to get you there fast.
+              or simply curious about AI's potential—we provide the education and strategies to get you there fast.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <LeadMagnetButton />
@@ -346,7 +346,7 @@ const AboutUs = () => {
           </h2>
           <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
             While others are still figuring out what AI can do, you could already be using it to create real value. 
-            <span className="text-primary font-semibold"> We've done the heavy lifting</span> — the tools are ready, 
+            <span className="text-primary font-semibold"> We've done the research</span> — the blueprints are ready, 
             the strategies are proven, and the opportunity is massive.
           </p>
           
@@ -357,7 +357,7 @@ const AboutUs = () => {
             <div className="grid md:grid-cols-3 gap-6 text-left">
               <div>
                 <h4 className="font-bold text-primary mb-2">Speed</h4>
-                <p className="text-muted-foreground text-sm">Get results in days, not months. Our tools work immediately.</p>
+                <p className="text-muted-foreground text-sm">Get results in days, not months. Our guides provide immediate actionable steps.</p>
               </div>
               <div>
                 <h4 className="font-bold text-primary mb-2">Clarity</h4>
@@ -365,7 +365,7 @@ const AboutUs = () => {
               </div>
               <div>
                 <h4 className="font-bold text-primary mb-2">Results</h4>
-                <p className="text-muted-foreground text-sm">Built by practitioners who've generated real AI-powered revenue.</p>
+                <p className="text-muted-foreground text-sm">Created by practitioners who've generated real AI-powered revenue.</p>
               </div>
             </div>
           </div>
