@@ -105,9 +105,9 @@ const LeadMagnetButton = () => {
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
-        <Button size="lg" className="text-lg px-8">
+        <Button size="lg" className="text-lg px-8 hover-scale transition-all duration-300 hover:shadow-lg hover:shadow-primary/25 group">
           Get Your Free AI Jumpstart Guide
-          <ArrowRight className="ml-2 w-5 h-5" />
+          <ArrowRight className="ml-2 w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
@@ -251,10 +251,10 @@ const AboutUs = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="text-lg px-8" asChild>
+            <Button size="lg" className="text-lg px-8 hover-scale transition-all duration-300 hover:shadow-lg hover:shadow-primary/25" asChild>
               <a href="https://whop.com/jumpinai/" target="_blank" rel="noopener noreferrer">
                 Start Building Now
-                <ArrowRight className="ml-2 w-5 h-5" />
+                <ArrowRight className="ml-2 w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
               </a>
             </Button>
           </div>
@@ -373,12 +373,12 @@ const AboutUs = () => {
           <div className="flex justify-center">
             <Button 
               size="lg" 
-              className="text-lg px-8"
+              className="text-lg px-8 hover-scale transition-all duration-300 hover:shadow-lg hover:shadow-primary/25 group"
               asChild
             >
               <a href="https://whop.com/jumpinai/" target="_blank" rel="noopener noreferrer">
                 Join Our Whop
-                <ArrowRight className="ml-2 w-5 h-5" />
+                <ArrowRight className="ml-2 w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
               </a>
             </Button>
           </div>
