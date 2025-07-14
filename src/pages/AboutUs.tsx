@@ -1,8 +1,195 @@
-import { ArrowRight, Zap, Target, Users, Rocket } from "lucide-react";
+import { ArrowRight, Zap, Target, Users, Rocket, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+
+// Component to handle lead magnet functionality
+const LeadMagnetButton = () => {
+  const [email, setEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [downloadReady, setDownloadReady] = useState(false);
+  const { toast } = useToast();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!email) {
+      toast({
+        title: "Email Required",
+        description: "Please enter your email address to download the PDF.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast({
+        title: "Invalid Email Format",
+        description: "Please enter a valid email address.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+    
+    try {
+      const { error: insertError } = await supabase
+        .from('lead_magnet_downloads')
+        .insert({
+          email: email,
+          ip_address: null,
+          user_agent: navigator.userAgent
+        });
+
+      if (insertError) {
+        console.error("Database insert error:", insertError);
+      }
+
+      const { data, error } = await supabase.functions.invoke('send-lead-magnet-email', {
+        body: { email }
+      });
+
+      if (error) {
+        console.error("Email function error:", error);
+        
+        if (error.message?.includes('Failed to fetch') || error.message?.includes('network')) {
+          setDownloadReady(true);
+          toast({
+            title: "Download Ready! 📥",
+            description: "There was a network issue with email delivery, but you can download the PDF directly below.",
+          });
+          return;
+        }
+        
+        throw error;
+      }
+      
+      toast({
+        title: "Success! 🎉",
+        description: "Check your inbox for the PDF download link. You can also download it directly below.",
+      });
+      
+      setDownloadReady(true);
+      setEmail("");
+    } catch (error) {
+      console.error("Error processing lead magnet request:", error);
+      setDownloadReady(true);
+      
+      toast({
+        title: "Download Ready! 📥",
+        description: "Your PDF is ready for download below. We'll also try to send it to your email.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleDirectDownload = () => {
+    const downloadUrl = "https://jumpinai.com/download/ai-guide";
+    window.open(downloadUrl, '_blank');
+    
+    toast({
+      title: "Download Started! 📥",
+      description: "Your PDF is opening in a new tab. Enjoy your AI fast wins!",
+    });
+  };
+
+  return (
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+      <DialogTrigger asChild>
+        <Button size="lg" className="text-lg px-8">
+          Get Your Free AI Jumpstart Guide
+          <ArrowRight className="ml-2 w-5 h-5" />
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle className="text-2xl font-bold text-center">
+            Download Your Free AI Guide
+          </DialogTitle>
+        </DialogHeader>
+        
+        {!downloadReady ? (
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="text-center space-y-2">
+              <p className="text-muted-foreground">
+                Enter your email to get instant access to "Jumpstart AI: 7 Fast Wins You Can Use Today"
+              </p>
+            </div>
+            
+            <div className="space-y-4">
+              <Input
+                type="email"
+                placeholder="Enter your email address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="w-full px-4 py-3 text-base rounded-xl"
+              />
+              
+              <Button 
+                type="submit"
+                size="lg"
+                disabled={isSubmitting}
+                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-3 text-base font-semibold rounded-xl"
+              >
+                {isSubmitting ? "Sending..." : "Send Me The PDF"}
+                <Download className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
+            
+            <p className="text-xs text-muted-foreground text-center">
+              We respect your privacy. Unsubscribe at any time.
+            </p>
+          </form>
+        ) : (
+          <div className="text-center space-y-6">
+            <div className="flex justify-center">
+              <div className="w-16 h-16 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center">
+                <Download className="h-8 w-8 text-green-600 dark:text-green-400" />
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <h3 className="text-xl font-semibold">Success! 🎉</h3>
+              <p className="text-muted-foreground">
+                Your PDF is ready! Download it directly below:
+              </p>
+            </div>
+            
+            <Button 
+              onClick={handleDirectDownload}
+              size="lg"
+              className="w-full bg-green-600 hover:bg-green-700 text-white py-3 text-base font-semibold rounded-xl"
+            >
+              <Download className="mr-2 h-4 w-4" />
+              Download PDF Now
+            </Button>
+            
+            <Button 
+              onClick={() => {
+                setIsDialogOpen(false);
+                setDownloadReady(false);
+              }}
+              variant="outline"
+              className="w-full"
+            >
+              Close
+            </Button>
+          </div>
+        )}
+      </DialogContent>
+    </Dialog>
+  );
+};
 
 const AboutUs = () => {
   const beliefs = [
@@ -145,27 +332,7 @@ const AboutUs = () => {
               or simply curious about AI's potential—we've got the tools and strategies to get you there fast.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                size="lg" 
-                className="text-lg px-8"
-                onClick={() => {
-                  const leadMagnetSection = document.querySelector('#lead-magnet');
-                  if (leadMagnetSection) {
-                    // Navigate to home page first if not already there
-                    if (window.location.pathname !== '/') {
-                      window.location.href = '/#lead-magnet';
-                    } else {
-                      leadMagnetSection.scrollIntoView({ behavior: 'smooth' });
-                    }
-                  } else {
-                    // Fallback to navigate to home page with hash
-                    window.location.href = '/#lead-magnet';
-                  }
-                }}
-              >
-                Get Your Free AI Jumpstart Guide
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
+            <LeadMagnetButton />
             </div>
           </div>
         </div>
@@ -203,35 +370,16 @@ const AboutUs = () => {
             </div>
           </div>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex justify-center">
             <Button 
               size="lg" 
               className="text-lg px-8"
               asChild
             >
               <a href="https://whop.com/jumpinai/" target="_blank" rel="noopener noreferrer">
-                Access Our AI PowerStack
+                Join Our Whop
                 <ArrowRight className="ml-2 w-5 h-5" />
               </a>
-            </Button>
-            <Button 
-              size="lg" 
-              variant="outline" 
-              className="text-lg px-8"
-              onClick={() => {
-                const leadMagnetSection = document.querySelector('#lead-magnet');
-                if (leadMagnetSection) {
-                  if (window.location.pathname !== '/') {
-                    window.location.href = '/#lead-magnet';
-                  } else {
-                    leadMagnetSection.scrollIntoView({ behavior: 'smooth' });
-                  }
-                } else {
-                  window.location.href = '/#lead-magnet';
-                }
-              }}
-            >
-              Start with Free Guide
             </Button>
           </div>
         </div>
