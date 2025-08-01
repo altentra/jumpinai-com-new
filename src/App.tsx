@@ -12,6 +12,9 @@ import TermsOfUse from "./pages/TermsOfUse";
 import ContactUs from "./pages/ContactUs";
 import FAQ from "./pages/FAQ";
 import TestSync from "./pages/TestSync";
+import Jumps from "./pages/Jumps";
+import PaymentSuccess from "./pages/PaymentSuccess";
+import Download from "./pages/Download";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -63,6 +66,9 @@ const App = () => {
             <Route path="/contact-us" element={<ContactUs />} />
             <Route path="/faq" element={<FAQ />} />
             <Route path="/test-sync" element={<TestSync />} />
+            <Route path="/jumps" element={<Jumps />} />
+            <Route path="/payment-success" element={<PaymentSuccess />} />
+            <Route path="/download/:token" element={<Download />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
