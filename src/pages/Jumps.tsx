@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -16,44 +16,46 @@ interface Product {
   description: string;
   price: number;
   file_name: string;
+  file_path: string;
+  status: string;
   created_at: string;
+  updated_at: string;
 }
 
 const Jumps = () => {
-  // Mock products for now until database migration is applied
-  const [products] = useState<Product[]>([
-    {
-      id: "1",
-      name: "Jump in AI of Text Creation & Copywriting",
-      description: "Master AI-powered text creation and copywriting techniques. Learn how to leverage AI tools for compelling content, persuasive copy, and engaging writing that converts.",
-      price: 499,
-      file_name: "Jump in AI of Text Creation & Copywriting.pdf",
-      created_at: new Date().toISOString()
-    },
-    {
-      id: "2", 
-      name: "Jump in AI of Image & Visual Creation",
-      description: "Discover the power of AI in visual content creation. From generating stunning images to creating compelling graphics, this guide covers all the tools and techniques you need.",
-      price: 499,
-      file_name: "Jump in AI of Image & Visual Creation.pdf",
-      created_at: new Date().toISOString()
-    },
-    {
-      id: "3",
-      name: "Jump in AI of Video & Motion Creation", 
-      description: "Learn to create professional videos and motion graphics using AI. Master the latest tools and workflows for video production, editing, and motion design.",
-      price: 499,
-      file_name: "Jump in AI of Video & Motion Creation.pdf",
-      created_at: new Date().toISOString()
-    }
-  ]);
-  
-  const [loading] = useState(false);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [customerEmail, setCustomerEmail] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { toast } = useToast();
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const { data, error } = await (supabase as any)
+          .from('products')
+          .select('*')
+          .eq('status', 'active')
+          .order('created_at', { ascending: true });
+        
+        if (error) throw error;
+        setProducts((data || []) as Product[]);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+        toast({
+          title: "Error",
+          description: "Failed to load products. Please refresh the page.",
+          variant: "destructive",
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, [toast]);
 
   const handlePurchase = async () => {
     if (!selectedProduct || !customerEmail) return;
