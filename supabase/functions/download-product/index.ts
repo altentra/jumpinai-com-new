@@ -43,22 +43,9 @@ serve(async (req) => {
       });
     }
 
-    console.log("About to initialize Supabase...");
-    
+    // Test with the specific token we know exists
     if (downloadToken === "81f23298-6a87-43b8-b2c1-91f1d5f48c39") {
       console.log("=== TOKEN MATCHED - STARTING REAL DOWNLOAD ===");
-      
-      // First try a simple approach - just return a bigger test file to confirm the path works
-      console.log("Creating larger test file for debugging...");
-      const largerTestPDF = new Uint8Array(1000).fill(65); // 1000 bytes of 'A' characters
-      
-      return new Response(largerTestPDF, {
-        headers: {
-          ...corsHeaders,
-          "Content-Type": "application/pdf", 
-          "Content-Disposition": `attachment; filename="debug-test-1kb.pdf"`,
-        },
-      });
       
       try {
         // Initialize Supabase client
@@ -68,41 +55,22 @@ serve(async (req) => {
           { auth: { persistSession: false } }
         );
         
-        console.log("Supabase client initialized");
-        
-        // First, let's list what files are in the bucket
-        const { data: bucketFiles, error: listError } = await supabase.storage
-          .from("digital-products")
-          .list();
-        
-        console.log("Bucket listing:", { bucketFiles, listError });
+        console.log("Supabase client initialized, attempting storage download...");
         
         // Try to download the specific file we know exists
         const { data: fileData, error: fileError } = await supabase.storage
           .from("digital-products")
           .download("jump-in-ai-text-creation-copywriting.pdf");
         
-        console.log("Storage download result:", { 
-          fileError: fileError ? JSON.stringify(fileError) : null, 
-          fileSize: fileData?.size,
-          hasFileData: !!fileData
-        });
+        console.log("Storage download completed");
         
         if (fileError) {
-          console.error("Detailed file error:", fileError.message, fileError.statusCode);
+          console.error("Storage error:", JSON.stringify(fileError));
+          throw new Error(`Storage error: ${fileError.message}`);
         }
         
-        if (fileError || !fileData) {
-          console.error("File download failed, using fallback");
-          // Fall back to test PDF
-          const testPDF = new Uint8Array([37, 80, 68, 70]);
-          return new Response(testPDF, {
-            headers: {
-              ...corsHeaders,
-              "Content-Type": "application/pdf",
-              "Content-Disposition": `attachment; filename="fallback-test.pdf"`,
-            },
-          });
+        if (!fileData) {
+          throw new Error("No file data returned");
         }
         
         console.log("Real file downloaded successfully, size:", fileData.size);
@@ -116,14 +84,13 @@ serve(async (req) => {
         });
         
       } catch (error) {
-        console.error("Supabase operation failed:", error);
-        // Fall back to test PDF
-        const testPDF = new Uint8Array([37, 80, 68, 70]);
+        console.error("Download failed, using fallback:", error.message);
+        const testPDF = new Uint8Array([37, 80, 68, 70, 45, 49, 46, 52]); // "%PDF-1.4"
         return new Response(testPDF, {
           headers: {
             ...corsHeaders,
             "Content-Type": "application/pdf",
-            "Content-Disposition": `attachment; filename="error-fallback.pdf"`,
+            "Content-Disposition": `attachment; filename="fallback-error.pdf"`,
           },
         });
       }
