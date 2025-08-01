@@ -37,6 +37,18 @@ serve(async (req) => {
       throw new Error("Invalid download link");
     }
 
+    // If this is a HEAD request, just return product info in headers
+    if (req.method === "HEAD") {
+      return new Response(null, {
+        headers: {
+          ...corsHeaders,
+          "x-product-name": order.products.name,
+          "x-file-name": order.products.file_name,
+          "x-product-description": order.products.description || "",
+        },
+      });
+    }
+
     // Download file from storage
     const { data: fileData, error: fileError } = await supabase.storage
       .from("digital-products")

@@ -21,17 +21,32 @@ const Download = () => {
     const getProductInfo = async () => {
       if (!token) return;
       
-      // For now, just set basic product info since we know the token
-      if (token === "81f23298-6a87-43b8-b2c1-91f1d5f48c39") {
-        setProductInfo({
-          name: "Jump in AI of Text Creation & Copywriting",
-          fileName: "Jump in AI of Text Creation & Copywriting.pdf",
-          description: "Master AI-powered text creation and copywriting techniques",
-          downloadCount: 0,
-          maxDownloads: 50
+      try {
+        // Call our edge function to get product info
+        const response = await fetch(`https://cieczaajcgkgdgenfdzi.supabase.co/functions/v1/download-product/${token}`, {
+          method: 'HEAD' // Just check if token is valid without downloading
         });
-      } else {
-        setErrorMessage("Invalid download link");
+        
+        if (response.ok) {
+          // Extract product info from headers if available, or set defaults
+          const productName = response.headers.get('x-product-name') || 'Digital Product';
+          const fileName = response.headers.get('x-file-name') || 'Download.pdf';
+          const description = response.headers.get('x-product-description') || 'Your digital download is ready';
+          
+          setProductInfo({
+            name: productName,
+            fileName: fileName,
+            description: description,
+            downloadCount: 0,
+            maxDownloads: 50
+          });
+        } else {
+          setErrorMessage("Invalid or expired download link");
+          setDownloadStatus('error');
+        }
+      } catch (error) {
+        console.error('Error checking download:', error);
+        setErrorMessage("Unable to verify download link");
         setDownloadStatus('error');
       }
     };
