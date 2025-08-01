@@ -71,8 +71,8 @@ const Jumps = () => {
 
       if (error) throw error;
 
-      // Open Stripe checkout in a new tab
-      window.open(data.url, '_blank');
+      // Redirect to Stripe checkout (mobile-friendly)
+      window.location.href = data.url;
       
       setIsDialogOpen(false);
       setCustomerEmail("");
@@ -80,7 +80,7 @@ const Jumps = () => {
       
       toast({
         title: "Redirecting to Checkout",
-        description: "Opening Stripe checkout in a new tab...",
+        description: "Redirecting to Stripe payment...",
       });
     } catch (error) {
       console.error("Error creating payment:", error);
