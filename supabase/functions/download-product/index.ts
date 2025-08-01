@@ -59,15 +59,30 @@ serve(async (req) => {
         
         console.log("Supabase client initialized");
         
+        // First, let's list what files are in the bucket
+        const { data: bucketFiles, error: listError } = await supabase.storage
+          .from("digital-products")
+          .list();
+        
+        console.log("Bucket listing:", { bucketFiles, listError });
+        
         // Try to download the specific file we know exists
         const { data: fileData, error: fileError } = await supabase.storage
           .from("digital-products")
           .download("jump-in-ai-text-creation-copywriting.pdf");
         
-        console.log("Storage download result:", { fileError, fileSize: fileData?.size });
+        console.log("Storage download result:", { 
+          fileError: fileError ? JSON.stringify(fileError) : null, 
+          fileSize: fileData?.size,
+          hasFileData: !!fileData
+        });
+        
+        if (fileError) {
+          console.error("Detailed file error:", fileError.message, fileError.statusCode);
+        }
         
         if (fileError || !fileData) {
-          console.error("File download failed:", fileError);
+          console.error("File download failed, using fallback");
           // Fall back to test PDF
           const testPDF = new Uint8Array([37, 80, 68, 70]);
           return new Response(testPDF, {
