@@ -126,17 +126,22 @@ const PaymentSuccess = () => {
                   </p>
                 </div>
 
-                <div className="bg-muted/30 p-4 rounded-lg border">
-                  <div className="flex items-center gap-2 mb-3">
-                    <Mail className="h-4 w-4 text-primary" />
-                    <span className="font-medium">Download Instructions</span>
+                <div className="bg-gradient-to-br from-primary/5 to-primary/10 p-6 rounded-xl border border-primary/20">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center">
+                      <Mail className="h-4 w-4 text-primary" />
+                    </div>
+                    <span className="font-semibold text-foreground">Your Download is Ready</span>
                   </div>
-                  <ul className="text-sm text-muted-foreground space-y-1">
-                    <li>• A download link has been sent to your email</li>
-                    <li>• You can download this product up to 5 times</li>
-                    <li>• Download link is valid for 30 days</li>
-                    <li>• Keep your email for future reference</li>
-                  </ul>
+                  <div className="space-y-3 text-sm">
+                    <p className="text-muted-foreground">
+                      We've sent a secure download link directly to your email inbox. 
+                      The link provides lifetime access to your digital product.
+                    </p>
+                    <p className="text-muted-foreground">
+                      Please save your email confirmation for future reference and easy re-download access.
+                    </p>
+                  </div>
                 </div>
 
                 <div className="flex gap-3">
