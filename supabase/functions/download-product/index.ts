@@ -7,8 +7,13 @@ const corsHeaders = {
 };
 
 serve(async (req) => {
+  console.log("=== DOWNLOAD FUNCTION STARTED ===");
+  console.log("Request method:", req.method);
+  console.log("Request URL:", req.url);
+  
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
+    console.log("Handling OPTIONS request");
     return new Response(null, { headers: corsHeaders });
   }
 
