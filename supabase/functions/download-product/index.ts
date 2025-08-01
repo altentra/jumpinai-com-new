@@ -21,27 +21,34 @@ serve(async (req) => {
     
     // Try to get token from request body (for API calls)
     let bodyToken;
-    try {
-      const body = await req.json();
-      bodyToken = body.token;
-    } catch (e) {
-      // No JSON body, that's fine
+    if (req.method === "POST") {
+      try {
+        const body = await req.json();
+        bodyToken = body.token;
+      } catch (e) {
+        // No JSON body, that's fine
+      }
     }
     
     downloadToken = bodyToken || pathToken;
 
-    console.log("Full URL:", req.url);
-    console.log("URL pathname:", url.pathname);
-    console.log("Path token:", pathToken);
-    console.log("Body token:", bodyToken);
-    console.log("Final token:", downloadToken);
+    console.log("Processing download request:", {
+      method: req.method,
+      url: req.url,
+      pathToken,
+      bodyToken,
+      finalToken: downloadToken
+    });
 
     if (!downloadToken) {
-      console.error("No download token found in URL or body");
-      throw new Error("Download token is required");
+      console.error("No download token found");
+      return new Response(JSON.stringify({ 
+        error: "Download token is required" 
+      }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 400,
+      });
     }
-
-    console.log("Processing download for token:", downloadToken);
 
     // Initialize Supabase client with service role
     const supabase = createClient(
@@ -50,18 +57,24 @@ serve(async (req) => {
       { auth: { persistSession: false } }
     );
 
-    // Get order by download token
-    console.log("Searching for order with token:", downloadToken);
-    const { data: order, error: orderError } = await supabase
+    // Get order with product details using LEFT JOIN
+    console.log("Fetching order for token:", downloadToken);
+    const { data: orderData, error: orderError } = await supabase
       .from("orders")
       .select(`
         *,
-        products (*)
+        products!inner (
+          id,
+          name,
+          file_path,
+          file_name
+        )
       `)
       .eq("download_token", downloadToken)
+      .eq("status", "paid")
       .single();
 
-    console.log("Order query result:", { order, orderError });
+    console.log("Order query result:", { orderData, orderError });
 
     if (orderError) {
       console.error("Order fetch error:", orderError);
@@ -74,8 +87,8 @@ serve(async (req) => {
       });
     }
 
-    if (!order) {
-      console.error("No order found for token:", downloadToken);
+    if (!orderData) {
+      console.error("No order found");
       return new Response(JSON.stringify({ 
         error: "Invalid or expired download link" 
       }), {
@@ -84,19 +97,8 @@ serve(async (req) => {
       });
     }
 
-    // Check if order is paid
-    if (order.status !== "paid") {
-      console.error("Order not paid. Status:", order.status);
-      return new Response(JSON.stringify({ 
-        error: "Order not yet paid or payment failed" 
-      }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 403,
-      });
-    }
-
     // Check download limits
-    if (order.download_count >= order.max_downloads) {
+    if (orderData.download_count >= orderData.max_downloads) {
       return new Response(JSON.stringify({ 
         error: "Download limit exceeded" 
       }), {
@@ -106,7 +108,7 @@ serve(async (req) => {
     }
 
     // Check if order is not too old (30 days)
-    const orderDate = new Date(order.created_at);
+    const orderDate = new Date(orderData.created_at);
     const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
     
     if (orderDate < thirtyDaysAgo) {
@@ -119,9 +121,23 @@ serve(async (req) => {
     }
 
     // Get the file from storage
-    const filePath = order.products.file_path.startsWith("digital-products/") 
-      ? order.products.file_path.replace("digital-products/", "")
-      : order.products.file_path;
+    const product = orderData.products;
+    console.log("Product details:", product);
+    
+    if (!product || !product.file_path) {
+      return new Response(JSON.stringify({ 
+        error: "Product file not configured" 
+      }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 404,
+      });
+    }
+
+    const filePath = product.file_path.startsWith("digital-products/") 
+      ? product.file_path.replace("digital-products/", "")
+      : product.file_path;
+    
+    console.log("Downloading file from storage:", filePath);
     
     const { data: fileData, error: fileError } = await supabase.storage
       .from("digital-products")
@@ -130,7 +146,8 @@ serve(async (req) => {
     if (fileError || !fileData) {
       console.error("File download error:", fileError);
       return new Response(JSON.stringify({ 
-        error: "Product file not found" 
+        error: "Product file not found",
+        details: fileError?.message 
       }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 404,
@@ -141,22 +158,22 @@ serve(async (req) => {
     const { error: updateError } = await supabase
       .from("orders")
       .update({
-        download_count: order.download_count + 1
+        download_count: orderData.download_count + 1
       })
-      .eq("id", order.id);
+      .eq("id", orderData.id);
 
     if (updateError) {
       console.error("Download count update error:", updateError);
     }
 
-    console.log("File download successful for:", order.products.name);
+    console.log("File download successful for:", product.name);
 
     // Return the file
     return new Response(fileData, {
       headers: {
         ...corsHeaders,
         "Content-Type": "application/pdf",
-        "Content-Disposition": `attachment; filename="${order.products.file_name}"`,
+        "Content-Disposition": `attachment; filename="${product.file_name}"`,
       },
     });
   } catch (error) {
