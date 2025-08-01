@@ -2,14 +2,13 @@
 import { ArrowRight } from "lucide-react";
 import { 
   FaInstagram, 
-  FaTwitter, 
   FaFacebookF, 
   FaYoutube, 
   FaTiktok, 
   FaLinkedinIn, 
-  FaPinterestP,
-  FaWhatsapp
+  FaPinterestP
 } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 import { SiThreads } from "react-icons/si";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -58,34 +57,36 @@ const Footer = () => {
               Empowering professionals and organizations to implement AI strategically with clarity, precision, and measurable results.
             </p>
             
-            {/* Social Links - Enhanced Design */}
+            {/* Social Links - Professional Design */}
             <div className="flex flex-wrap gap-2 max-w-sm">
-              <a href="https://www.instagram.com/jumpinai" target="_blank" rel="noopener noreferrer" className="group relative bg-gradient-to-br from-muted/80 to-muted/50 hover:from-pink-500 hover:to-orange-500 p-2.5 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-md flex items-center justify-center">
-                <FaInstagram className="h-4 w-4 text-muted-foreground group-hover:text-white transition-colors duration-300" />
+              <a href="https://www.instagram.com/jumpinai" target="_blank" rel="noopener noreferrer" className="group relative bg-muted/60 hover:bg-muted/80 p-2.5 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-sm flex items-center justify-center border border-transparent hover:border-muted-foreground/20">
+                <FaInstagram className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors duration-300" />
               </a>
-              <a href="https://x.com/jump_in_ai" target="_blank" rel="noopener noreferrer" className="group relative bg-gradient-to-br from-muted/80 to-muted/50 hover:from-blue-500 hover:to-blue-600 p-2.5 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-md flex items-center justify-center">
-                <FaTwitter className="h-4 w-4 text-muted-foreground group-hover:text-white transition-colors duration-300" />
+              <a href="https://x.com/jump_in_ai" target="_blank" rel="noopener noreferrer" className="group relative bg-muted/60 hover:bg-muted/80 p-2.5 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-sm flex items-center justify-center border border-transparent hover:border-muted-foreground/20">
+                <FaXTwitter className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors duration-300" />
               </a>
-              <a href="https://facebook.com/jumpinai/" target="_blank" rel="noopener noreferrer" className="group relative bg-gradient-to-br from-muted/80 to-muted/50 hover:from-blue-600 hover:to-blue-700 p-2.5 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-md flex items-center justify-center">
-                <FaFacebookF className="h-4 w-4 text-muted-foreground group-hover:text-white transition-colors duration-300" />
+              <a href="https://facebook.com/jumpinai/" target="_blank" rel="noopener noreferrer" className="group relative bg-muted/60 hover:bg-muted/80 p-2.5 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-sm flex items-center justify-center border border-transparent hover:border-muted-foreground/20">
+                <FaFacebookF className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors duration-300" />
               </a>
-              <a href="https://www.youtube.com/@JumpinAI" target="_blank" rel="noopener noreferrer" className="group relative bg-gradient-to-br from-muted/80 to-muted/50 hover:from-red-500 hover:to-red-600 p-2.5 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-md flex items-center justify-center">
-                <FaYoutube className="h-4 w-4 text-muted-foreground group-hover:text-white transition-colors duration-300" />
+              <a href="https://www.youtube.com/@JumpinAI" target="_blank" rel="noopener noreferrer" className="group relative bg-muted/60 hover:bg-muted/80 p-2.5 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-sm flex items-center justify-center border border-transparent hover:border-muted-foreground/20">
+                <FaYoutube className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors duration-300" />
               </a>
-              <a href="https://www.tiktok.com/@jump_in_ai" target="_blank" rel="noopener noreferrer" className="group relative bg-gradient-to-br from-muted/80 to-muted/50 hover:from-gray-800 hover:to-black p-2.5 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-md flex items-center justify-center">
-                <FaTiktok className="h-4 w-4 text-muted-foreground group-hover:text-white transition-colors duration-300" />
+              <a href="https://www.tiktok.com/@jump_in_ai" target="_blank" rel="noopener noreferrer" className="group relative bg-muted/60 hover:bg-muted/80 p-2.5 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-sm flex items-center justify-center border border-transparent hover:border-muted-foreground/20">
+                <FaTiktok className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors duration-300" />
               </a>
-              <a href="https://www.threads.com/@jumpinai" target="_blank" rel="noopener noreferrer" className="group relative bg-gradient-to-br from-muted/80 to-muted/50 hover:from-purple-600 hover:to-purple-700 p-2.5 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-md flex items-center justify-center">
-                <SiThreads className="h-4 w-4 text-muted-foreground group-hover:text-white transition-colors duration-300" />
+              <a href="https://www.threads.com/@jumpinai" target="_blank" rel="noopener noreferrer" className="group relative bg-muted/60 hover:bg-muted/80 p-2.5 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-sm flex items-center justify-center border border-transparent hover:border-muted-foreground/20">
+                <SiThreads className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors duration-300" />
               </a>
-              <a href="https://www.linkedin.com/company/jumpinai/" target="_blank" rel="noopener noreferrer" className="group relative bg-gradient-to-br from-muted/80 to-muted/50 hover:from-blue-700 hover:to-blue-800 p-2.5 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-md flex items-center justify-center">
-                <FaLinkedinIn className="h-4 w-4 text-muted-foreground group-hover:text-white transition-colors duration-300" />
+              <a href="https://www.linkedin.com/company/jumpinai/" target="_blank" rel="noopener noreferrer" className="group relative bg-muted/60 hover:bg-muted/80 p-2.5 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-sm flex items-center justify-center border border-transparent hover:border-muted-foreground/20">
+                <FaLinkedinIn className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors duration-300" />
               </a>
-              <a href="https://www.pinterest.com/jumpinai/" target="_blank" rel="noopener noreferrer" className="group relative bg-gradient-to-br from-muted/80 to-muted/50 hover:from-red-600 hover:to-red-700 p-2.5 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-md flex items-center justify-center">
-                <FaPinterestP className="h-4 w-4 text-muted-foreground group-hover:text-white transition-colors duration-300" />
+              <a href="https://www.pinterest.com/jumpinai/" target="_blank" rel="noopener noreferrer" className="group relative bg-muted/60 hover:bg-muted/80 p-2.5 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-sm flex items-center justify-center border border-transparent hover:border-muted-foreground/20">
+                <FaPinterestP className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors duration-300" />
               </a>
-              <a href="https://whop.com/jumpinai/" target="_blank" rel="noopener noreferrer" className="group relative bg-gradient-to-br from-muted/80 to-muted/50 hover:from-green-500 hover:to-green-600 p-2.5 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-md flex items-center justify-center">
-                <FaWhatsapp className="h-4 w-4 text-muted-foreground group-hover:text-white transition-colors duration-300" />
+              <a href="https://whop.com/jumpinai/" target="_blank" rel="noopener noreferrer" className="group relative bg-muted/60 hover:bg-muted/80 p-2.5 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-sm flex items-center justify-center border border-transparent hover:border-muted-foreground/20">
+                <svg className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors duration-300" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2L2 7L12 12L22 7L12 2M2 17L12 22L22 17M2 12L12 17L22 12"/>
+                </svg>
               </a>
             </div>
           </div>
