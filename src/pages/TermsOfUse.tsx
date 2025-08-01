@@ -37,7 +37,7 @@ const TermsOfUse = () => {
       <section className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto prose prose-lg dark:prose-invert">
           <div className="bg-muted/30 p-8 rounded-2xl mb-8">
-            <p className="text-sm text-muted-foreground mb-2">Last updated: January 1, 2025</p>
+            <p className="text-sm text-muted-foreground mb-2">Last updated: August 1, 2025</p>
             <p className="text-base">
               These Terms of Use ("Terms") govern your use of the JumpinAI website and services operated by JumpinAI, LLC ("we," "our," or "us").
             </p>
@@ -50,9 +50,11 @@ const TermsOfUse = () => {
           <p className="mb-6">JumpinAI provides educational content, insights, and resources related to artificial intelligence for professionals and organizations. Our services include:</p>
           <ul className="mb-8">
             <li>Educational content and articles</li>
-            <li>AI strategy guidance</li>
+            <li>Digital products and downloadable resources</li>
+            <li>AI strategy guidance and templates</li>
             <li>Newsletter and updates</li>
             <li>Community engagement</li>
+            <li>Payment processing for digital products</li>
           </ul>
 
           <h2 className="text-3xl font-bold mb-6 mt-12 font-display">User Responsibilities</h2>
@@ -65,17 +67,42 @@ const TermsOfUse = () => {
             <li>Not use our services for spam or unauthorized marketing</li>
           </ul>
 
+          <h2 className="text-3xl font-bold mb-6 mt-12 font-display">Digital Products and Purchases</h2>
+          <p className="mb-6">When you purchase digital products from us:</p>
+          <ul className="mb-8">
+            <li>You receive a limited, non-exclusive license to use the digital content for personal or commercial use as specified</li>
+            <li>Digital products are delivered electronically via download links</li>
+            <li>You are responsible for downloading and storing your purchased content</li>
+            <li>Due to the digital nature of our products, all sales are final unless otherwise required by law</li>
+            <li>Unauthorized redistribution or sharing of purchased content is prohibited</li>
+          </ul>
+
+          <h2 className="text-3xl font-bold mb-6 mt-12 font-display">Payment and Billing</h2>
+          <p className="mb-6">Payment processing is handled securely through Stripe. By making a purchase, you agree to:</p>
+          <ul className="mb-8">
+            <li>Provide accurate billing information</li>
+            <li>Pay all charges associated with your purchases</li>
+            <li>Accept that prices may change without notice</li>
+            <li>Understand that failed payments may result in service suspension</li>
+          </ul>
+
+          <h2 className="text-3xl font-bold mb-6 mt-12 font-display">Refunds and Cancellations</h2>
+          <p className="mb-8">Due to the instant delivery nature of digital products, all sales are generally final. However, we may provide refunds at our sole discretion in cases of technical issues preventing download or other exceptional circumstances. Refund requests must be made within 7 days of purchase.</p>
+
           <h2 className="text-3xl font-bold mb-6 mt-12 font-display">Intellectual Property</h2>
-          <p className="mb-8">All content on our website, including text, graphics, logos, and software, is the property of JumpinAI, LLC or our licensors and is protected by copyright and other intellectual property laws.</p>
+          <p className="mb-8">All content on our website, including text, graphics, logos, software, and digital products, is the property of JumpinAI, LLC or our licensors and is protected by copyright and other intellectual property laws. Purchased digital products grant you specific usage rights as outlined in the product description.</p>
 
           <h2 className="text-3xl font-bold mb-6 mt-12 font-display">Prohibited Uses</h2>
           <p className="mb-6">You may not use our services to:</p>
           <ul className="mb-8">
             <li>Violate any applicable laws or regulations</li>
             <li>Infringe on intellectual property rights</li>
+            <li>Redistribute, resell, or share purchased digital content without authorization</li>
+            <li>Use fraudulent payment methods or chargeback abuse</li>
             <li>Transmit harmful or malicious code</li>
             <li>Collect personal information without consent</li>
             <li>Impersonate others or provide false information</li>
+            <li>Attempt to reverse engineer or extract our digital products</li>
           </ul>
 
           <h2 className="text-3xl font-bold mb-6 mt-12 font-display">Disclaimer of Warranties</h2>

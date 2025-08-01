@@ -37,7 +37,7 @@ const PrivacyPolicy = () => {
       <section className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto prose prose-lg dark:prose-invert">
           <div className="bg-muted/30 p-8 rounded-2xl mb-8">
-            <p className="text-sm text-muted-foreground mb-2">Last updated: January 1, 2025</p>
+            <p className="text-sm text-muted-foreground mb-2">Last updated: August 1, 2025</p>
             <p className="text-base">
               This Privacy Policy describes how JumpinAI, LLC ("we," "our," or "us") collects, uses, and shares information about you when you use our website and services.
             </p>
@@ -50,6 +50,9 @@ const PrivacyPolicy = () => {
           <ul className="mb-8">
             <li>Subscribe to our newsletter</li>
             <li>Contact us through our contact form</li>
+            <li>Purchase digital products from our store</li>
+            <li>Create an account or make payments</li>
+            <li>Download digital assets or resources</li>
             <li>Engage with our content and services</li>
             <li>Participate in surveys or feedback</li>
           </ul>
@@ -64,11 +67,25 @@ const PrivacyPolicy = () => {
             <li>Device information</li>
           </ul>
 
+          <h2 className="text-3xl font-bold mb-6 mt-12 font-display">Payment Information</h2>
+          <p className="mb-6">When you make a purchase, we collect payment information through our third-party payment processor, Stripe. This includes:</p>
+          <ul className="mb-8">
+            <li>Credit card or payment method details (processed securely by Stripe)</li>
+            <li>Billing address and contact information</li>
+            <li>Transaction history and purchase records</li>
+            <li>Email address for receipt and product delivery</li>
+          </ul>
+          <p className="mb-8">We do not store your complete payment card details on our servers. All payment processing is handled securely by Stripe, which complies with PCI DSS standards.</p>
+
           <h2 className="text-3xl font-bold mb-6 mt-12 font-display">How We Use Your Information</h2>
           <p className="mb-6">We use the information we collect to:</p>
           <ul className="mb-8">
             <li>Provide, maintain, and improve our services</li>
+            <li>Process payments and deliver digital products</li>
             <li>Send you newsletters and updates (with your consent)</li>
+            <li>Send transactional emails related to your purchases</li>
+            <li>Provide customer support and respond to inquiries</li>
+            <li>Prevent fraud and ensure payment security</li>
             <li>Respond to your comments and questions</li>
             <li>Analyze how our website is used</li>
             <li>Comply with legal obligations</li>
@@ -77,10 +94,21 @@ const PrivacyPolicy = () => {
           <h2 className="text-3xl font-bold mb-6 mt-12 font-display">Information Sharing</h2>
           <p className="mb-6">We do not sell, trade, or otherwise transfer your personal information to third parties without your consent, except as described in this policy:</p>
           <ul className="mb-8">
-            <li>With service providers who assist us in operating our website</li>
+            <li>With service providers who assist us in operating our website and processing payments (including Stripe)</li>
+            <li>With Supabase for secure data hosting and authentication services</li>
+            <li>For email delivery services to send newsletters and product notifications</li>
             <li>When required by law or to protect our rights</li>
             <li>In connection with a business transfer or merger</li>
           </ul>
+
+          <h2 className="text-3xl font-bold mb-6 mt-12 font-display">Third-Party Services</h2>
+          <p className="mb-6">We use trusted third-party services to provide our services:</p>
+          <ul className="mb-8">
+            <li><strong>Stripe:</strong> For secure payment processing (subject to Stripe's Privacy Policy)</li>
+            <li><strong>Supabase:</strong> For data storage and user authentication</li>
+            <li><strong>Email Service Providers:</strong> For delivering newsletters and transactional emails</li>
+          </ul>
+          <p className="mb-8">These third parties have their own privacy policies and we encourage you to review them.</p>
 
           <h2 className="text-3xl font-bold mb-6 mt-12 font-display">Data Security</h2>
           <p className="mb-8">We implement appropriate security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. However, no method of transmission over the internet is 100% secure.</p>
