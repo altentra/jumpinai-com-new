@@ -13,7 +13,37 @@ const Download = () => {
   const [isDownloading, setIsDownloading] = useState(false);
   const [downloadStatus, setDownloadStatus] = useState<'idle' | 'downloading' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
+  const [productInfo, setProductInfo] = useState<any>(null);
   const { toast } = useToast();
+
+  // Get product info when component loads
+  useEffect(() => {
+    const getProductInfo = async () => {
+      if (!token) return;
+      
+      try {
+        const response = await fetch(`https://cieczaajcgkgdgenfdzi.supabase.co/functions/v1/download-product/${token}`);
+        
+        if (response.headers.get('content-type')?.includes('application/json')) {
+          const data = await response.json();
+          if (data.error) {
+            setErrorMessage(data.error);
+            setDownloadStatus('error');
+          }
+        } else if (response.ok) {
+          // If we get a file response, we know the download works
+          setProductInfo({
+            name: "Jump in AI of Text Creation & Copywriting",
+            size: "Premium PDF Guide"
+          });
+        }
+      } catch (error) {
+        console.error('Error checking product:', error);
+      }
+    };
+    
+    getProductInfo();
+  }, [token]);
 
   const handleDownload = async () => {
     if (!token) {
@@ -29,45 +59,9 @@ const Download = () => {
     setDownloadStatus('downloading');
 
     try {
-      console.log("Downloading with token:", token);
+      // Simple direct download
+      window.location.href = `https://cieczaajcgkgdgenfdzi.supabase.co/functions/v1/download-product/${token}`;
       
-      // Use Supabase functions invoke instead of direct fetch
-      const { data, error } = await supabase.functions.invoke('download-product', {
-        body: JSON.stringify({ token }),
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      });
-
-      if (error) {
-        console.error('Supabase function error:', error);
-        throw new Error(error.message || 'Download failed');
-      }
-
-      if (!data) {
-        throw new Error('No data received from download function');
-      }
-
-      // Convert the response to a blob if it's not already
-      let blob;
-      if (data instanceof Blob) {
-        blob = data;
-      } else {
-        // If data is base64 or other format, convert it
-        blob = new Blob([data], { type: 'application/pdf' });
-      }
-
-      // Create download link
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.style.display = 'none';
-      a.href = url;
-      a.download = `AI-Guide-${token.substring(0, 8)}.pdf`;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-
       setDownloadStatus('success');
       toast({
         title: "Download Started",
@@ -76,10 +70,10 @@ const Download = () => {
     } catch (error) {
       console.error('Download error:', error);
       setDownloadStatus('error');
-      setErrorMessage(error instanceof Error ? error.message : 'Download failed');
+      setErrorMessage('Download failed');
       toast({
         title: "Download Failed",
-        description: error instanceof Error ? error.message : 'An error occurred during download',
+        description: "Please try again or contact support",
         variant: "destructive",
       });
     } finally {
@@ -124,8 +118,13 @@ const Download = () => {
               Download Your Product
             </h1>
             <p className="text-xl text-muted-foreground">
-              Your AI guide is ready for download
+              {productInfo ? productInfo.name : "Your AI guide is ready for download"}
             </p>
+            {productInfo && (
+              <p className="text-sm text-muted-foreground mt-2">
+                {productInfo.size}
+              </p>
+            )}
           </div>
 
           <Card className="mb-8">
