@@ -6,6 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Download as DownloadIcon, FileText, Loader2, AlertCircle, CheckCircle } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import { supabase } from "@/integrations/supabase/client";
 
 const Download = () => {
   const { token } = useParams();
@@ -28,35 +29,40 @@ const Download = () => {
     setDownloadStatus('downloading');
 
     try {
-      const response = await fetch(`https://cieczaajcgkgdgenfdzi.supabase.co/functions/v1/download-product/${token}`, {
-        method: 'GET',
+      console.log("Downloading with token:", token);
+      
+      // Use Supabase functions invoke instead of direct fetch
+      const { data, error } = await supabase.functions.invoke('download-product', {
+        body: JSON.stringify({ token }),
         headers: {
           'Content-Type': 'application/json',
-        },
+        }
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Download failed');
+      if (error) {
+        console.error('Supabase function error:', error);
+        throw new Error(error.message || 'Download failed');
       }
 
-      // Get the filename from the response headers or use a default
-      const contentDisposition = response.headers.get('content-disposition');
-      let filename = 'download.pdf';
-      if (contentDisposition) {
-        const filenameMatch = contentDisposition.match(/filename="(.+)"/);
-        if (filenameMatch) {
-          filename = filenameMatch[1];
-        }
+      if (!data) {
+        throw new Error('No data received from download function');
       }
 
-      // Create blob and download
-      const blob = await response.blob();
+      // Convert the response to a blob if it's not already
+      let blob;
+      if (data instanceof Blob) {
+        blob = data;
+      } else {
+        // If data is base64 or other format, convert it
+        blob = new Blob([data], { type: 'application/pdf' });
+      }
+
+      // Create download link
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.style.display = 'none';
       a.href = url;
-      a.download = filename;
+      a.download = `AI-Guide-${token.substring(0, 8)}.pdf`;
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);

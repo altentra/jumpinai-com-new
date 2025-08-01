@@ -13,15 +13,31 @@ serve(async (req) => {
   }
 
   try {
+    let downloadToken;
+    
+    // Try to get token from URL path first (for direct links)
     const url = new URL(req.url);
-    const downloadToken = url.pathname.split('/').pop();
+    const pathToken = url.pathname.split('/').pop();
+    
+    // Try to get token from request body (for API calls)
+    let bodyToken;
+    try {
+      const body = await req.json();
+      bodyToken = body.token;
+    } catch (e) {
+      // No JSON body, that's fine
+    }
+    
+    downloadToken = bodyToken || pathToken;
 
     console.log("Full URL:", req.url);
     console.log("URL pathname:", url.pathname);
-    console.log("Extracted token:", downloadToken);
+    console.log("Path token:", pathToken);
+    console.log("Body token:", bodyToken);
+    console.log("Final token:", downloadToken);
 
     if (!downloadToken) {
-      console.error("No download token found in URL");
+      console.error("No download token found in URL or body");
       throw new Error("Download token is required");
     }
 
