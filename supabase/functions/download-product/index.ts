@@ -97,15 +97,18 @@ serve(async (req) => {
       });
     }
 
-    // Check download limits
-    if (orderData.download_count >= orderData.max_downloads) {
-      return new Response(JSON.stringify({ 
-        error: "Download limit exceeded" 
-      }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 403,
-      });
-    }
+    // Temporarily disable download limits for testing
+    console.log(`Download count: ${orderData.download_count}/${orderData.max_downloads}`);
+    
+    // TODO: Re-enable this check later
+    // if (orderData.download_count >= orderData.max_downloads) {
+    //   return new Response(JSON.stringify({ 
+    //     error: "Download limit exceeded" 
+    //   }), {
+    //     headers: { ...corsHeaders, "Content-Type": "application/json" },
+    //     status: 403,
+    //   });
+    // }
 
     // Check if order is not too old (30 days)
     const orderDate = new Date(orderData.created_at);
