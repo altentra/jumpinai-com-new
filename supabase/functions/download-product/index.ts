@@ -16,7 +16,12 @@ serve(async (req) => {
     const url = new URL(req.url);
     const downloadToken = url.pathname.split('/').pop();
 
+    console.log("Full URL:", req.url);
+    console.log("URL pathname:", url.pathname);
+    console.log("Extracted token:", downloadToken);
+
     if (!downloadToken) {
+      console.error("No download token found in URL");
       throw new Error("Download token is required");
     }
 
