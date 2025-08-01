@@ -14,6 +14,7 @@ serve(async (req) => {
   try {
     const url = new URL(req.url);
     const downloadToken = url.pathname.split('/').pop();
+    const isInfoRequest = url.searchParams.get('info') === 'true';
 
     if (!downloadToken) {
       throw new Error("Download token required");
@@ -37,14 +38,18 @@ serve(async (req) => {
       throw new Error("Invalid download link");
     }
 
-    // If this is a HEAD request, just return product info in headers
-    if (req.method === "HEAD") {
-      return new Response(null, {
+    // If this is an info request, return product info as JSON
+    if (isInfoRequest) {
+      return new Response(JSON.stringify({
+        product: order.products,
+        order: {
+          download_count: order.download_count,
+          max_downloads: order.max_downloads
+        }
+      }), {
         headers: {
           ...corsHeaders,
-          "x-product-name": order.products.name,
-          "x-file-name": order.products.file_name,
-          "x-product-description": order.products.description || "",
+          "Content-Type": "application/json"
         },
       });
     }

@@ -23,23 +23,21 @@ const Download = () => {
       
       try {
         // Call our edge function to get product info
-        const response = await fetch(`https://cieczaajcgkgdgenfdzi.supabase.co/functions/v1/download-product/${token}`, {
-          method: 'HEAD' // Just check if token is valid without downloading
-        });
+        const response = await fetch(`https://cieczaajcgkgdgenfdzi.supabase.co/functions/v1/download-product/${token}?info=true`);
         
         if (response.ok) {
-          // Extract product info from headers if available, or set defaults
-          const productName = response.headers.get('x-product-name') || 'Digital Product';
-          const fileName = response.headers.get('x-file-name') || 'Download.pdf';
-          const description = response.headers.get('x-product-description') || 'Your digital download is ready';
-          
-          setProductInfo({
-            name: productName,
-            fileName: fileName,
-            description: description,
-            downloadCount: 0,
-            maxDownloads: 50
-          });
+          const data = await response.json();
+          if (data.product) {
+            setProductInfo({
+              name: data.product.name,
+              fileName: data.product.file_name,
+              description: data.product.description || "Your digital download is ready",
+              downloadCount: data.order.download_count || 0,
+              maxDownloads: 50
+            });
+          } else {
+            throw new Error(data.error || "Invalid product");
+          }
         } else {
           setErrorMessage("Invalid or expired download link");
           setDownloadStatus('error');
