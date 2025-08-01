@@ -52,16 +52,25 @@ serve(async (req) => {
     // Get order from database
     const { data: order, error: orderError } = await supabase
       .from("orders")
-      .select(`
-        *,
-        products (*)
-      `)
+      .select("*")
       .eq("stripe_session_id", sessionId)
       .single();
 
     if (orderError || !order) {
       console.error("Order fetch error:", orderError);
       throw new Error("Order not found");
+    }
+
+    // Get product details separately
+    const { data: product, error: productError } = await supabase
+      .from("products")
+      .select("*")
+      .eq("id", order.product_id)
+      .single();
+
+    if (productError || !product) {
+      console.error("Product fetch error:", productError);
+      throw new Error("Product not found");
     }
 
     // Update order status if not already paid
@@ -87,15 +96,15 @@ serve(async (req) => {
       const emailResponse = await resend.emails.send({
         from: "JumpinAI <downloads@jumpinai.com>",
         to: [order.user_email],
-        subject: `Your ${order.products.name} is ready for download!`,
+        subject: `Your ${product.name} is ready for download!`,
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
             <h1 style="color: #333; text-align: center;">Thank you for your purchase!</h1>
             
             <div style="background-color: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0;">
-              <h2 style="color: #495057; margin-top: 0;">${order.products.name}</h2>
+              <h2 style="color: #495057; margin-top: 0;">${product.name}</h2>
               <p style="color: #6c757d; line-height: 1.6;">
-                ${order.products.description}
+                ${product.description}
               </p>
             </div>
             
@@ -135,7 +144,7 @@ serve(async (req) => {
       success: true,
       order: {
         id: order.id,
-        productName: order.products.name,
+        productName: product.name,
         downloadUrl: `${req.headers.get("origin")}/download/${order.download_token}`,
         status: "paid"
       }
