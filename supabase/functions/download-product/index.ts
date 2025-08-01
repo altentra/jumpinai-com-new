@@ -45,9 +45,20 @@ serve(async (req) => {
 
     console.log("About to initialize Supabase...");
     
-    // Test if the token matches our expected value
     if (downloadToken === "81f23298-6a87-43b8-b2c1-91f1d5f48c39") {
-      console.log("Token matches - attempting real file download");
+      console.log("=== TOKEN MATCHED - STARTING REAL DOWNLOAD ===");
+      
+      // First try a simple approach - just return a bigger test file to confirm the path works
+      console.log("Creating larger test file for debugging...");
+      const largerTestPDF = new Uint8Array(1000).fill(65); // 1000 bytes of 'A' characters
+      
+      return new Response(largerTestPDF, {
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "application/pdf", 
+          "Content-Disposition": `attachment; filename="debug-test-1kb.pdf"`,
+        },
+      });
       
       try {
         // Initialize Supabase client
