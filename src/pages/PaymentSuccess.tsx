@@ -38,26 +38,34 @@ const PaymentSuccess = () => {
 
   const verifyPayment = async (sessionId: string) => {
     try {
+      console.log("Verifying payment for session:", sessionId);
+      
       const { data, error } = await supabase.functions.invoke("verify-payment", {
         body: { sessionId },
       });
 
-      if (error) throw error;
+      console.log("Verify payment response:", { data, error });
 
-      if (data.success) {
+      if (error) {
+        console.error("Supabase function error:", error);
+        throw error;
+      }
+
+      if (data && data.success) {
         setOrderDetails(data.order);
         toast({
           title: "Payment Successful!",
           description: "Your product is ready for download. Check your email for the download link.",
         });
       } else {
-        throw new Error("Payment verification failed");
+        console.error("Payment verification failed:", data);
+        throw new Error(data?.error || "Payment verification failed");
       }
     } catch (error) {
       console.error("Error verifying payment:", error);
       toast({
-        title: "Verification Error",
-        description: "Unable to verify payment. Please contact support.",
+        title: "Verification Error", 
+        description: `Unable to verify payment: ${error.message}. Please contact support.`,
         variant: "destructive",
       });
     } finally {
