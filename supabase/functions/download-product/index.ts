@@ -84,14 +84,16 @@ serve(async (req) => {
         });
         
       } catch (error) {
-        console.error("Download failed, using fallback:", error.message);
-        const testPDF = new Uint8Array([37, 80, 68, 70, 45, 49, 46, 52]); // "%PDF-1.4"
-        return new Response(testPDF, {
-          headers: {
-            ...corsHeaders,
-            "Content-Type": "application/pdf",
-            "Content-Disposition": `attachment; filename="fallback-error.pdf"`,
-          },
+        console.error("Download failed, error details:", error.message);
+        
+        // Instead of fallback, let's return the error so we can see what's happening
+        return new Response(JSON.stringify({ 
+          error: "Storage download failed",
+          details: error.message,
+          timestamp: new Date().toISOString()
+        }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 500,
         });
       }
     }
