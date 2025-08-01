@@ -165,14 +165,7 @@ const PaymentSuccess = () => {
             </Card>
           )}
 
-          <div className="text-center space-y-4">
-            <Button variant="outline" asChild>
-              <Link to="/jumps">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Browse More Products
-              </Link>
-            </Button>
-            
+          <div className="text-center">
             <p className="text-sm text-muted-foreground">
               Need help? Contact us at support@jumpinai.com
             </p>

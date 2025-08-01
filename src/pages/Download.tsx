@@ -203,7 +203,13 @@ const Download = () => {
                 </div>
               )}
 
-              <div className="text-center pt-4 border-t">
+              <div className="text-center pt-4 border-t space-y-4">
+                <Button variant="outline" asChild>
+                  <a href="/jumps">
+                    Browse More Products
+                  </a>
+                </Button>
+                
                 <p className="text-sm text-muted-foreground">
                   Need help? Contact us at{" "}
                   <a href="mailto:support@jumpinai.com" className="text-primary hover:underline">
