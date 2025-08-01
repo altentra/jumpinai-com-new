@@ -74,9 +74,13 @@ serve(async (req) => {
     }
 
     // Get the file from storage
+    const filePath = order.products.file_path.startsWith("digital-products/") 
+      ? order.products.file_path.replace("digital-products/", "")
+      : order.products.file_path;
+    
     const { data: fileData, error: fileError } = await supabase.storage
       .from("digital-products")
-      .download(order.products.file_path.replace("digital-products/", ""));
+      .download(filePath);
 
     if (fileError || !fileData) {
       console.error("File download error:", fileError);
