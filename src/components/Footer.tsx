@@ -83,11 +83,6 @@ const Footer = () => {
               <a href="https://www.pinterest.com/jumpinai/" target="_blank" rel="noopener noreferrer" className="group relative bg-muted/60 hover:bg-muted/80 p-2.5 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-sm flex items-center justify-center border border-transparent hover:border-muted-foreground/20">
                 <FaPinterestP className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors duration-300" />
               </a>
-              <a href="https://whop.com/jumpinai/" target="_blank" rel="noopener noreferrer" className="group relative bg-muted/60 hover:bg-muted/80 p-2.5 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-sm flex items-center justify-center border border-transparent hover:border-muted-foreground/20">
-                <svg className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors duration-300" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2L2 7L12 12L22 7L12 2M2 17L12 22L22 17M2 12L12 17L22 12"/>
-                </svg>
-              </a>
             </div>
           </div>
 
