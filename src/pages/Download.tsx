@@ -28,7 +28,7 @@ const Download = () => {
           fileName: "Jump in AI of Text Creation & Copywriting.pdf",
           description: "Master AI-powered text creation and copywriting techniques",
           downloadCount: 0,
-          maxDownloads: 5
+          maxDownloads: 50
         });
       } else {
         setErrorMessage("Invalid download link");
@@ -115,10 +115,11 @@ const Download = () => {
               {productInfo ? productInfo.name : "Your AI guide is ready for download"}
             </p>
             {productInfo && (
-              <div className="text-sm text-muted-foreground mt-2 space-y-1">
-                <p>File: {productInfo.fileName}</p>
-                <p>Downloads: {productInfo.downloadCount}/{productInfo.maxDownloads}</p>
-                {productInfo.description && <p className="text-xs">{productInfo.description}</p>}
+              <div className="text-sm text-muted-foreground mt-4 space-y-2">
+                <p className="font-medium">{productInfo.fileName}</p>
+                {productInfo.description && (
+                  <p className="text-muted-foreground/80">{productInfo.description}</p>
+                )}
               </div>
             )}
           </div>
@@ -136,17 +137,7 @@ const Download = () => {
             
             <CardContent className="space-y-6">
               {downloadStatus === 'idle' && (
-                <>
-                  <div className="bg-muted/30 p-4 rounded-lg border">
-                    <h3 className="font-medium mb-2">Download Information</h3>
-                    <ul className="text-sm text-muted-foreground space-y-1">
-                      <li>• High-quality PDF format</li>
-                      <li>• Optimized for all devices</li>
-                      <li>• Lifetime access to this download</li>
-                      <li>• No DRM restrictions</li>
-                    </ul>
-                  </div>
-
+                <div className="text-center space-y-6">
                   <Button 
                     onClick={handleDownload}
                     disabled={isDownloading}
@@ -160,7 +151,7 @@ const Download = () => {
                     )}
                     {isDownloading ? "Preparing Download..." : "Download Now"}
                   </Button>
-                </>
+                </div>
               )}
 
               {downloadStatus === 'success' && (
