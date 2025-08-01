@@ -35,6 +35,9 @@ serve(async (req) => {
     }
     
     console.log("Download token:", downloadToken);
+    console.log("Token length:", downloadToken?.length);
+    console.log("Expected token: 81f23298-6a87-43b8-b2c1-91f1d5f48c39");
+    console.log("Token comparison:", downloadToken === "81f23298-6a87-43b8-b2c1-91f1d5f48c39");
     
     if (!downloadToken) {
       return new Response(JSON.stringify({ error: "No download token" }), {
@@ -98,9 +101,15 @@ serve(async (req) => {
       }
     }
     
+    console.log("Token did not match expected value");
+    console.log("Received token:", JSON.stringify(downloadToken));
+    console.log("Expected token:", JSON.stringify("81f23298-6a87-43b8-b2c1-91f1d5f48c39"));
+    
     return new Response(JSON.stringify({ 
-      message: "Token processing completed",
-      token: downloadToken
+      message: "Token processing completed but did not match",
+      receivedToken: downloadToken,
+      expectedToken: "81f23298-6a87-43b8-b2c1-91f1d5f48c39",
+      comparison: downloadToken === "81f23298-6a87-43b8-b2c1-91f1d5f48c39"
     }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200,
