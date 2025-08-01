@@ -51,6 +51,7 @@ serve(async (req) => {
     );
 
     // Get order by download token
+    console.log("Searching for order with token:", downloadToken);
     const { data: order, error: orderError } = await supabase
       .from("orders")
       .select(`
@@ -58,16 +59,39 @@ serve(async (req) => {
         products (*)
       `)
       .eq("download_token", downloadToken)
-      .eq("status", "paid")
       .single();
 
-    if (orderError || !order) {
+    console.log("Order query result:", { order, orderError });
+
+    if (orderError) {
       console.error("Order fetch error:", orderError);
+      return new Response(JSON.stringify({ 
+        error: "Invalid or expired download link",
+        details: orderError.message 
+      }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 404,
+      });
+    }
+
+    if (!order) {
+      console.error("No order found for token:", downloadToken);
       return new Response(JSON.stringify({ 
         error: "Invalid or expired download link" 
       }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 404,
+      });
+    }
+
+    // Check if order is paid
+    if (order.status !== "paid") {
+      console.error("Order not paid. Status:", order.status);
+      return new Response(JSON.stringify({ 
+        error: "Order not yet paid or payment failed" 
+      }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 403,
       });
     }
 
