@@ -114,6 +114,12 @@ const Footer = () => {
                   Contact Us
                 </Link>
               </li>
+              <li>
+                <Link to="/for-investors" className="group flex items-center text-muted-foreground hover:text-foreground transition-colors duration-300">
+                  <ArrowRight className="h-4 w-4 mr-2 group-hover:translate-x-1 transition-transform" />
+                  For Investors
+                </Link>
+              </li>
             </ul>
           </div>
 
