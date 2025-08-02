@@ -84,13 +84,13 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    // Get the file download URL
-    const { data: urlData } = supabase.storage
+    // Get a signed URL for secure download (valid for 1 hour)
+    const { data: urlData, error: urlError } = await supabase.storage
       .from('digital-products')
-      .getPublicUrl(`investment-decks/${deckFile.name}`);
+      .createSignedUrl(`investment-decks/${deckFile.name}`, 3600); // 1 hour expiry
 
-    if (!urlData.publicUrl) {
-      console.error("Failed to generate download URL");
+    if (urlError || !urlData.signedUrl) {
+      console.error("Failed to generate download URL:", urlError);
       return new Response(
         JSON.stringify({ error: "Unable to generate download link" }),
         {
@@ -108,7 +108,7 @@ const handler = async (req: Request): Promise<Response> => {
       status: 302,
       headers: {
         ...corsHeaders,
-        "Location": urlData.publicUrl,
+        "Location": urlData.signedUrl,
         "Cache-Control": "no-cache, no-store, must-revalidate"
       },
     });
