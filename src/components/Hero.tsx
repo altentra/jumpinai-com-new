@@ -1,6 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Hero = () => {
   const scrollToSection = (sectionId: string) => {
@@ -66,11 +67,11 @@ const Hero = () => {
               asChild
               className="modern-button group bg-gradient-to-r from-gray-800 to-black hover:from-gray-900 hover:to-gray-800 dark:from-white dark:to-gray-300 dark:hover:from-gray-100 dark:hover:to-gray-400 text-white dark:text-black px-10 py-6 text-lg font-semibold rounded-2xl transition-all duration-500 hover:scale-105 shadow-steel"
             >
-              <a href="https://whop.com/jumpinai/" target="_blank" rel="noopener noreferrer">
+              <Link to="/jumps">
                 <Sparkles className="mr-2 h-5 w-5 group-hover:animate-spin" />
                 Get Started
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-              </a>
+              </Link>
             </Button>
             
             <Button 

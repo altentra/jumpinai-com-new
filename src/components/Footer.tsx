@@ -91,6 +91,12 @@ const Footer = () => {
             <h3 className="text-lg font-bold mb-6 text-foreground font-display">Quick Links</h3>
             <ul className="space-y-3">
               <li>
+                <Link to="/jumps" className="group flex items-center text-muted-foreground hover:text-foreground transition-colors duration-300">
+                  <ArrowRight className="h-4 w-4 mr-2 group-hover:translate-x-1 transition-transform" />
+                  AI Guides
+                </Link>
+              </li>
+              <li>
                 <Link to="/about-us" className="group flex items-center text-muted-foreground hover:text-foreground transition-colors duration-300">
                   <ArrowRight className="h-4 w-4 mr-2 group-hover:translate-x-1 transition-transform" />
                   About Us

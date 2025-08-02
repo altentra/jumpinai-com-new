@@ -119,11 +119,11 @@ const Jumps = () => {
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-16">
             <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent mb-6">
-              AI Jump Starts
+              AI Transformation Guides
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Master AI with our comprehensive digital guides. Each product is carefully crafted to give you practical, 
-              actionable insights you can implement immediately. Instant download, lifetime access.
+              Accelerate your journey into AI mastery with domain-specific learning resources. 
+              Each guide provides strategic frameworks and practical steps to transform your expertise with artificial intelligence.
             </p>
           </div>
 
