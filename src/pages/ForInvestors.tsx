@@ -5,7 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
-import { TrendingUp, Users, Globe, DollarSign, Target, Lightbulb, Rocket, Mail } from 'lucide-react';
+import { InvestmentDeckModal } from "@/components/InvestmentDeckModal";
+import { TrendingUp, Users, Globe, DollarSign, Target, Lightbulb, Rocket, Mail, Loader2 } from 'lucide-react';
+import { useToast } from "@/hooks/use-toast";
+import { sendInvestorContactEmail } from "@/services/investorService";
 
 const ForInvestors = () => {
   const [formData, setFormData] = useState({
@@ -14,6 +17,9 @@ const ForInvestors = () => {
     investmentLevel: '',
     message: ''
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDeckModalOpen, setIsDeckModalOpen] = useState(false);
+  const { toast } = useToast();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({
@@ -22,10 +28,51 @@ const ForInvestors = () => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const scrollToContactForm = () => {
+    const contactSection = document.getElementById('contact-form-section');
+    if (contactSection) {
+      contactSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
-    console.log('Investment inquiry submitted:', formData);
+    
+    if (!formData.name || !formData.email) {
+      toast({
+        title: "Missing Information",
+        description: "Please provide your name and email.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      await sendInvestorContactEmail(formData);
+      toast({
+        title: "Message Sent Successfully",
+        description: "We'll respond to your inquiry within 24 hours.",
+      });
+      
+      // Reset form
+      setFormData({
+        name: '',
+        email: '',
+        investmentLevel: '',
+        message: ''
+      });
+    } catch (error: any) {
+      console.error("Error sending investor contact:", error);
+      toast({
+        title: "Send Failed",
+        description: error.message || "Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -49,11 +96,20 @@ const ForInvestors = () => {
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="text-lg px-8 py-3">
+              <Button 
+                size="lg" 
+                className="text-lg px-8 py-3"
+                onClick={() => setIsDeckModalOpen(true)}
+              >
                 <Target className="mr-2 h-5 w-5" />
                 Explore Investment Deck
               </Button>
-              <Button variant="outline" size="lg" className="text-lg px-8 py-3">
+              <Button 
+                variant="outline" 
+                size="lg" 
+                className="text-lg px-8 py-3"
+                onClick={scrollToContactForm}
+              >
                 <Mail className="mr-2 h-5 w-5" />
                 Contact Our Team
               </Button>
@@ -255,7 +311,7 @@ const ForInvestors = () => {
       </section>
 
       {/* Call to Action */}
-      <section className="py-20 px-4 bg-gradient-to-br from-primary/5 via-background to-secondary/5">
+      <section id="contact-form-section" className="py-20 px-4 bg-gradient-to-br from-primary/5 via-background to-secondary/5">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold text-foreground mb-4">
@@ -336,9 +392,18 @@ const ForInvestors = () => {
                 </div>
                 
                 <div className="text-center">
-                  <Button type="submit" size="lg" className="text-lg px-12 py-3">
-                    <DollarSign className="mr-2 h-5 w-5" />
-                    Invest or Partner With Us
+                  <Button type="submit" size="lg" className="text-lg px-12 py-3" disabled={isSubmitting}>
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                        Sending...
+                      </>
+                    ) : (
+                      <>
+                        <DollarSign className="mr-2 h-5 w-5" />
+                        Invest or Partner With Us
+                      </>
+                    )}
                   </Button>
                   <p className="text-sm text-muted-foreground mt-4">
                     We'll respond within 24 hours to discuss opportunities and next steps.
@@ -351,6 +416,11 @@ const ForInvestors = () => {
       </section>
 
       <Footer />
+      
+      <InvestmentDeckModal 
+        isOpen={isDeckModalOpen} 
+        onClose={() => setIsDeckModalOpen(false)} 
+      />
     </div>
   );
 };

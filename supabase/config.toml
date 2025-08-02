@@ -35,6 +35,15 @@ verify_jwt = false
 [functions.send-contact-email]
 verify_jwt = false
 
+[functions.send-investor-email]
+verify_jwt = false
+
+[functions.request-investment-deck]
+verify_jwt = false
+
+[functions.download-investment-deck]
+verify_jwt = false
+
 [functions.unsubscribe-newsletter]
 verify_jwt = false
 
