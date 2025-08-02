@@ -68,11 +68,9 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    // Look for the investment deck file
+    // Look for the specific investment deck file
     const deckFile = fileList?.find(file => 
-      file.name.includes('investment-deck') || 
-      file.name.includes('pitch-deck') ||
-      file.name.toLowerCase().includes('jumpinai')
+      file.name === 'jumpinai-investor-pitch-deck.pdf'
     );
 
     if (!deckFile) {
