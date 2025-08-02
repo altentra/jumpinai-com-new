@@ -122,7 +122,7 @@ const Jumps = () => {
               Jumps in AI. Guides.
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Take decisive leaps into AI mastery across different domains. Each guide delivers strategic insights and practical frameworks to elevate your expertise in artificial intelligence.
+              Take decisive leaps into AI mastery across specialized fields. Each guide delivers strategic insights and practical frameworks to elevate your expertise in artificial intelligence.
             </p>
           </div>
 

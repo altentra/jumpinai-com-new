@@ -47,7 +47,7 @@ const Navigation = () => {
   };
 
   const navItems = [
-    { name: "Jumps", href: "/jumps" },
+    { name: "Jumps in AI", href: "/jumps" },
     { name: "About Us", href: "/about-us" },
     { name: "Contact Us", href: "/contact-us" },
   ];
