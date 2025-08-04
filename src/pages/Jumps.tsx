@@ -129,7 +129,7 @@ const Jumps = () => {
           {/* Products Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {products.map((product) => (
-              <Card key={product.id} className="group hover:shadow-lg transition-all duration-300 border-muted/50 hover:border-primary/20">
+              <Card key={product.id} className="group hover:shadow-lg transition-all duration-300 border-muted/50 hover:border-primary/20 h-full flex flex-col">
                 <CardHeader className="pb-4">
                   <div className="flex items-center gap-3 mb-3">
                     <div className="p-2 rounded-lg bg-primary/10">
@@ -145,7 +145,7 @@ const Jumps = () => {
                   </CardDescription>
                 </CardHeader>
                 
-                <CardContent className="pb-4">
+                <CardContent className="pb-4 flex-grow">
                   <div className="flex items-center gap-2 mb-4">
                     <CheckCircle className="h-4 w-4 text-green-500" />
                     <span className="text-sm text-muted-foreground">Instant Download</span>
@@ -156,7 +156,7 @@ const Jumps = () => {
                   </div>
                 </CardContent>
                 
-                <CardFooter className="pt-0">
+                <CardFooter className="pt-0 mt-auto">
                   <div className="w-full">
                     <div className="flex items-center justify-between mb-4">
                       <div className="text-2xl font-bold text-primary">
