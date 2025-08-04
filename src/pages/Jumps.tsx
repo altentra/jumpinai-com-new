@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Download, ShoppingCart, CheckCircle, FileText, Shield } from "lucide-react";
+import { Loader2, Download, ShoppingCart, CheckCircle, FileText, Lock } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 
@@ -244,8 +244,8 @@ const Jumps = () => {
                 <span className="text-sm font-medium">Instant Access</span>
               </div>
               <div className="flex items-center gap-2">
-                <Shield className="h-5 w-5 text-primary" />
-                <span className="text-sm font-medium">Money-Back Guarantee</span>
+                <Lock className="h-5 w-5 text-primary" />
+                <span className="text-sm font-medium">SSL Secured</span>
               </div>
             </div>
           </div>
