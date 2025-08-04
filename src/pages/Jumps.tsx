@@ -231,24 +231,6 @@ const Jumps = () => {
               </Card>
             ))}
           </div>
-
-          {/* Trust Indicators */}
-          <div className="mt-16 text-center">
-            <div className="inline-flex items-center gap-6 p-6 bg-muted/30 rounded-lg border border-muted/50">
-              <div className="flex items-center gap-2">
-                <CheckCircle className="h-5 w-5 text-green-500" />
-                <span className="text-sm font-medium">Secure Payments</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Download className="h-5 w-5 text-blue-500" />
-                <span className="text-sm font-medium">Instant Access</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Lock className="h-5 w-5 text-primary" />
-                <span className="text-sm font-medium">SSL Secured</span>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
       
