@@ -231,6 +231,21 @@ const Jumps = () => {
               </Card>
             ))}
           </div>
+
+          {/* All-Access Whop CTA */}
+          <div className="mt-16">
+            <div className="p-6 md:p-8 rounded-xl border border-muted/50 bg-muted/30 text-center">
+              <h2 className="text-2xl md:text-3xl font-semibold mb-3">Get access to all guides</h2>
+              <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
+                Want everything in one place? Join our Whop for just $19.99 and unlock all products together.
+              </p>
+              <Button size="lg" className="w-full sm:w-auto" asChild>
+                <a href="https://whop.com/jumpinai/" target="_blank" rel="noopener noreferrer">
+                  Join on Whop — $19.99
+                </a>
+              </Button>
+            </div>
+          </div>
         </div>
       </section>
       
