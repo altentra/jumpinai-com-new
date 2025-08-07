@@ -239,7 +239,7 @@ const Jumps = () => {
               <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
                 Want everything in one place? Join our Whop for just $19.99 and unlock all products together.
               </p>
-              <Button size="lg" className="w-full sm:w-auto" asChild>
+              <Button size="lg" className="w-full sm:w-auto hover-scale" asChild>
                 <a href="https://whop.com/jumpinai/" target="_blank" rel="noopener noreferrer">
                   Join on Whop — $19.99
                 </a>
