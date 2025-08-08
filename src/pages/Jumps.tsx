@@ -127,7 +127,7 @@ const Jumps = () => {
           </div>
 
           {/* Products Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,340px))] justify-center gap-8">
             {products.map((product) => (
               <Card key={product.id} className="group hover:shadow-lg transition-all duration-300 border-muted/50 hover:border-primary/20 h-full flex flex-col">
                 <CardHeader className="pb-4">
