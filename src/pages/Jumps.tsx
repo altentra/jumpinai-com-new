@@ -38,6 +38,7 @@ const Jumps = () => {
           .from('products')
           .select('*')
           .eq('status', 'active')
+          .neq('file_name', 'jump-in-ai-powerstack.pdf')
           .order('created_at', { ascending: true });
         
         if (error) throw error;
