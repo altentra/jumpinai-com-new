@@ -9,6 +9,11 @@ import { useToast } from "@/hooks/use-toast";
 import { Loader2, Download, ShoppingCart, CheckCircle, FileText, Feather, BookOpen, Image as ImageIcon, Paintbrush, Music, Code2, Laptop, Sparkles } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import jumpsText from "@/assets/icons/jumps-text.webp";
+import jumpsImage from "@/assets/icons/jumps-image.webp";
+import jumpsSound from "@/assets/icons/jumps-sound.webp";
+import jumpsCode from "@/assets/icons/jumps-code.webp";
+import jumpsGeneral from "@/assets/icons/jumps-general.webp";
 
 interface Product {
   id: string;
@@ -169,7 +174,30 @@ const Jumps = () => {
                 <Card className="group hover:shadow-lg transition-all duration-300 border-muted/50 hover:border-primary/20 h-full flex flex-col">
                   <CardHeader className="pb-4">
                       <div className="flex items-center gap-3 mb-3">
-                        {getProductBadge(product.name)}
+                        {(() => {
+                          const n = product.name.toLowerCase();
+                          const src = (n.includes("text") || n.includes("writing") || n.includes("copy"))
+                            ? jumpsText
+                            : (n.includes("image") || n.includes("design") || n.includes("art"))
+                              ? jumpsImage
+                              : (n.includes("sound") || n.includes("music") || n.includes("audio"))
+                                ? jumpsSound
+                                : (n.includes("website") || n.includes("app") || n.includes("coding") || n.includes("code") || n.includes("development"))
+                                  ? jumpsCode
+                                  : jumpsGeneral;
+                          return (
+                            <div className="relative w-14 h-14 rounded-xl bg-card border border-border flex items-center justify-center overflow-hidden">
+                              <img
+                                src={src}
+                                alt={`Minimal icon for ${product.name}`}
+                                width={56}
+                                height={56}
+                                loading="lazy"
+                                className="w-10 h-10 object-contain opacity-90"
+                              />
+                            </div>
+                          );
+                        })()}
                         <span className="text-xs font-medium text-muted-foreground">PDF Guide</span>
                       </div>
                     <CardTitle className="text-xl group-hover:text-primary transition-colors duration-300">
