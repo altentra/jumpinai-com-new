@@ -119,8 +119,8 @@ const Jumps = () => {
       n.includes("clip") ||
       n.includes("motion")
     ) {
-      Primary = Camera;
-      Secondary = Clapperboard;
+      Primary = Clapperboard;
+      Secondary = Camera;
     } else if (
       n.includes("website") ||
       n.includes("app") ||
