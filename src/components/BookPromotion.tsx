@@ -69,7 +69,7 @@ const BookPromotion = () => {
     fetchProduct();
   }, [toast]);
 
-  const priceCents = product?.price ?? 499; // default to $4.99
+  const priceCents = product?.price ?? 999; // default to $9.99
   const priceDisplay = (priceCents / 100).toFixed(2);
 
   const handlePurchase = async () => {
@@ -113,7 +113,7 @@ const BookPromotion = () => {
   return (
     <section className="relative py-14 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
-        <article className="bg-card/60 backdrop-blur-sm border border-border/50 rounded-2xl p-6 sm:p-8">
+        <article className="bg-card/60 backdrop-blur-sm border border-border/50 rounded-2xl p-6 sm:p-8 shadow-sm animate-enter">
           <header className="text-center mb-6">
             <div className="inline-flex items-center px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
               <Book className="h-4 w-4 text-primary mr-2" />
@@ -122,90 +122,94 @@ const BookPromotion = () => {
             <h2 className="mt-4 text-3xl sm:text-4xl font-black tracking-tight">
               Jump in AI: <span className="gradient-text-primary">PowerStack</span>
             </h2>
-            <p className="mt-3 text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto">
-              A compact, practical guide to 21 strategic AI jumps. Build leverage, move faster,
-              and turn ideas into results.
-            </p>
           </header>
 
           {/* Compact product summary */}
-          <div className="mt-2 mb-6 text-center space-y-3">
-            <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto">
-              A concise, practical PDF guide to 21 strategic AI jumps with step-by-step playbooks you can apply today.
-            </p>
-            <ul className="text-sm text-muted-foreground flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
-              <li>21 concise strategies</li>
-              <li>Action checklists</li>
-              <li>Lifetime access (PDF)</li>
-            </ul>
-          </div>
-
-          <div className="mt-6 flex flex-col items-center justify-center gap-4 text-center">
-            <div className="flex items-baseline gap-2">
-              <span className="text-2xl font-bold text-foreground">${priceDisplay}</span>
-              <span className="text-xs text-muted-foreground">One-time</span>
+            <div className="mt-2 mb-6 text-center space-y-4">
+              <p className="text-sm sm:text-base text-muted-foreground max-w-3xl mx-auto">
+                Jump in AI: PowerStack is your concise, professional field guide to making AI move the needle in your work.
+                Inside, you’ll find 21 proven jumps with clear objectives, recommended tools, and step-by-step actions you can
+                apply in hours—not weeks.
+              </p>
+              <ul className="text-sm text-muted-foreground flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
+                <li>21 strategic, no‑fluff playbooks</li>
+                <li>Ready-to-use prompts and templates</li>
+                <li>Quick-start checklists for each jump</li>
+                <li>Case-style examples and outcomes</li>
+                <li>Lifetime access (PDF)</li>
+              </ul>
             </div>
 
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogTrigger asChild>
-                <Button
-                  size="lg"
-                  disabled={loadingProduct || !product}
-                  className="px-6 rounded-xl"
-                >
-                  <ShoppingCart className="h-4 w-4 mr-2" />
-                  {loadingProduct ? "Loading..." : "Buy Now"}
-                </Button>
-              </DialogTrigger>
+          <div className="mt-6 flex flex-col items-center justify-center text-center">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button
+                    size="lg"
+                    disabled={loadingProduct || !product}
+                    className="min-w-[220px] px-8 rounded-xl hover-scale"
+                  >
+                    <ShoppingCart className="h-4 w-4 mr-2" />
+                    {loadingProduct ? "Loading..." : `Buy Now — $${priceDisplay}`}
+                  </Button>
+                </DialogTrigger>
 
-              <DialogContent className="sm:max-w-md">
-                <DialogHeader>
-                  <DialogTitle>Complete Your Purchase</DialogTitle>
-                  <DialogDescription>
-                    {product?.name || "PowerStack"} — ${priceDisplay}
-                  </DialogDescription>
-                </DialogHeader>
+                <DialogContent className="sm:max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>Complete Your Purchase</DialogTitle>
+                    <DialogDescription>
+                      {product?.name || "PowerStack"} — ${priceDisplay}
+                    </DialogDescription>
+                  </DialogHeader>
 
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email Address</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="your.email@example.com"
-                      value={customerEmail}
-                      onChange={(e) => setCustomerEmail(e.target.value)}
-                      required
-                    />
-                    <p className="text-xs text-muted-foreground">
-                      We’ll email your download link after payment
-                    </p>
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="email">Email Address</Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        placeholder="your.email@example.com"
+                        value={customerEmail}
+                        onChange={(e) => setCustomerEmail(e.target.value)}
+                        required
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        We’ll email your download link after payment
+                      </p>
+                    </div>
+
+                    <div className="flex gap-3">
+                      <Button
+                        variant="outline"
+                        onClick={() => setIsDialogOpen(false)}
+                        className="flex-1"
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        onClick={handlePurchase}
+                        disabled={!customerEmail || isProcessing}
+                        className="flex-1"
+                      >
+                        {isProcessing ? (
+                          <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                        ) : (
+                          <ShoppingCart className="h-4 w-4 mr-2" />
+                        )}
+                        {isProcessing ? "Processing..." : "Continue to Payment"}
+                      </Button>
+                    </div>
                   </div>
+                </DialogContent>
+              </Dialog>
 
-                  <div className="flex gap-3">
-                    <Button
-                      variant="outline"
-                      onClick={() => setIsDialogOpen(false)}
-                      className="flex-1"
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      onClick={handlePurchase}
-                      disabled={!customerEmail || isProcessing}
-                      className="flex-1"
-                    >
-                      {isProcessing ? (
-                        <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                      ) : (
-                        <ShoppingCart className="h-4 w-4 mr-2" />
-                      )}
-                      {isProcessing ? "Processing..." : "Continue to Payment"}
-                    </Button>
-                  </div>
-                </div>
-              </DialogContent>
-            </Dialog>
+              <Button asChild variant="outline" size="lg" className="min-w-[220px] px-8 rounded-xl hover-scale">
+                <a href="https://www.amazon.com/dp/B0FHCM3VQ8" target="_blank" rel="noopener noreferrer">
+                  Buy on Amazon — $15.99
+                </a>
+              </Button>
+            </div>
+            <p className="mt-2 text-xs text-muted-foreground">Direct PDF download via secure checkout</p>
           </div>
 
           {(!product && !loadingProduct) && (
