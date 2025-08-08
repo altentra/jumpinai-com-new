@@ -127,108 +127,110 @@ const Jumps = () => {
           </div>
 
           {/* Products Grid */}
-          <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,340px))] justify-center gap-8">
+          <div className="flex flex-wrap justify-center gap-8">
             {products.map((product) => (
-              <Card key={product.id} className="group hover:shadow-lg transition-all duration-300 border-muted/50 hover:border-primary/20 h-full flex flex-col">
-                <CardHeader className="pb-4">
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="p-2 rounded-lg bg-primary/10">
-                      <FileText className="h-5 w-5 text-primary" />
-                    </div>
-                    <span className="text-sm font-medium text-primary">PDF Guide</span>
-                  </div>
-                  <CardTitle className="text-xl group-hover:text-primary transition-colors duration-300">
-                    {product.name}
-                  </CardTitle>
-                  <CardDescription className="text-muted-foreground leading-relaxed">
-                    {product.description}
-                  </CardDescription>
-                </CardHeader>
-                
-                <CardContent className="pb-4 flex-grow">
-                  <div className="flex items-center gap-2 mb-4">
-                    <CheckCircle className="h-4 w-4 text-green-500" />
-                    <span className="text-sm text-muted-foreground">Instant Download</span>
-                  </div>
-                  <div className="flex items-center gap-2 mb-4">
-                    <Download className="h-4 w-4 text-blue-500" />
-                    <span className="text-sm text-muted-foreground">Lifetime Access</span>
-                  </div>
-                </CardContent>
-                
-                <CardFooter className="pt-0 mt-auto">
-                  <div className="w-full">
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="text-2xl font-bold text-primary">
-                        ${formatPrice(product.price)}
+              <div key={product.id} className="w-full sm:w-[320px] md:w-[340px]">
+                <Card className="group hover:shadow-lg transition-all duration-300 border-muted/50 hover:border-primary/20 h-full flex flex-col">
+                  <CardHeader className="pb-4">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="p-2 rounded-lg bg-primary/10">
+                        <FileText className="h-5 w-5 text-primary" />
                       </div>
-                      <div className="text-sm text-muted-foreground">
-                        One-time payment
-                      </div>
+                      <span className="text-sm font-medium text-primary">PDF Guide</span>
                     </div>
-                    
-                    <Dialog open={isDialogOpen && selectedProduct?.id === product.id} onOpenChange={setIsDialogOpen}>
-                      <DialogTrigger asChild>
-                        <Button 
-                          className="w-full group-hover:bg-primary/90 transition-colors duration-300"
-                          onClick={() => setSelectedProduct(product)}
-                        >
-                          <ShoppingCart className="h-4 w-4 mr-2" />
-                          Buy Now
-                        </Button>
-                      </DialogTrigger>
-                      
-                      <DialogContent className="sm:max-w-md">
-                        <DialogHeader>
-                          <DialogTitle>Complete Your Purchase</DialogTitle>
-                          <DialogDescription>
-                            You're about to purchase "{selectedProduct?.name}" for ${selectedProduct ? formatPrice(selectedProduct.price) : '0.00'}
-                          </DialogDescription>
-                        </DialogHeader>
-                        
-                        <div className="space-y-4">
-                          <div className="space-y-2">
-                            <Label htmlFor="email">Email Address</Label>
-                            <Input
-                              id="email"
-                              type="email"
-                              placeholder="your.email@example.com"
-                              value={customerEmail}
-                              onChange={(e) => setCustomerEmail(e.target.value)}
-                              required
-                            />
-                            <p className="text-xs text-muted-foreground">
-                              We'll send your download link to this email
-                            </p>
-                          </div>
-                          
-                          <div className="flex gap-3">
-                            <Button 
-                              variant="outline" 
-                              onClick={() => setIsDialogOpen(false)}
-                              className="flex-1"
-                            >
-                              Cancel
-                            </Button>
-                            <Button 
-                              onClick={handlePurchase}
-                              disabled={!customerEmail || isProcessing}
-                              className="flex-1"
-                            >
-                              {isProcessing ? (
-                                <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                              ) : (
-                                <ShoppingCart className="h-4 w-4 mr-2" />
-                              )}
-                              {isProcessing ? "Processing..." : "Continue to Payment"}
-                            </Button>
-                          </div>
+                    <CardTitle className="text-xl group-hover:text-primary transition-colors duration-300">
+                      {product.name}
+                    </CardTitle>
+                    <CardDescription className="text-muted-foreground leading-relaxed">
+                      {product.description}
+                    </CardDescription>
+                  </CardHeader>
+                  
+                  <CardContent className="pb-4 flex-grow">
+                    <div className="flex items-center gap-2 mb-4">
+                      <CheckCircle className="h-4 w-4 text-green-500" />
+                      <span className="text-sm text-muted-foreground">Instant Download</span>
+                    </div>
+                    <div className="flex items-center gap-2 mb-4">
+                      <Download className="h-4 w-4 text-blue-500" />
+                      <span className="text-sm text-muted-foreground">Lifetime Access</span>
+                    </div>
+                  </CardContent>
+                  
+                  <CardFooter className="pt-0 mt-auto">
+                    <div className="w-full">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="text-2xl font-bold text-primary">
+                          ${formatPrice(product.price)}
                         </div>
-                      </DialogContent>
-                    </Dialog>
-                  </div>
-                </CardFooter>
-              </Card>
+                        <div className="text-sm text-muted-foreground">
+                          One-time payment
+                        </div>
+                      </div>
+                      
+                      <Dialog open={isDialogOpen && selectedProduct?.id === product.id} onOpenChange={setIsDialogOpen}>
+                        <DialogTrigger asChild>
+                          <Button 
+                            className="w-full group-hover:bg-primary/90 transition-colors duration-300"
+                            onClick={() => setSelectedProduct(product)}
+                          >
+                            <ShoppingCart className="h-4 w-4 mr-2" />
+                            Buy Now
+                          </Button>
+                        </DialogTrigger>
+                        
+                        <DialogContent className="sm:max-w-md">
+                          <DialogHeader>
+                            <DialogTitle>Complete Your Purchase</DialogTitle>
+                            <DialogDescription>
+                              You're about to purchase "{selectedProduct?.name}" for ${selectedProduct ? formatPrice(selectedProduct.price) : '0.00'}
+                            </DialogDescription>
+                          </DialogHeader>
+                          
+                          <div className="space-y-4">
+                            <div className="space-y-2">
+                              <Label htmlFor="email">Email Address</Label>
+                              <Input
+                                id="email"
+                                type="email"
+                                placeholder="your.email@example.com"
+                                value={customerEmail}
+                                onChange={(e) => setCustomerEmail(e.target.value)}
+                                required
+                              />
+                              <p className="text-xs text-muted-foreground">
+                                We'll send your download link to this email
+                              </p>
+                            </div>
+                            
+                            <div className="flex gap-3">
+                              <Button 
+                                variant="outline" 
+                                onClick={() => setIsDialogOpen(false)}
+                                className="flex-1"
+                              >
+                                Cancel
+                              </Button>
+                              <Button 
+                                onClick={handlePurchase}
+                                disabled={!customerEmail || isProcessing}
+                                className="flex-1"
+                              >
+                                {isProcessing ? (
+                                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                                ) : (
+                                  <ShoppingCart className="h-4 w-4 mr-2" />
+                                )}
+                                {isProcessing ? "Processing..." : "Continue to Payment"}
+                              </Button>
+                            </div>
+                          </div>
+                        </DialogContent>
+                      </Dialog>
+                    </div>
+                  </CardFooter>
+                </Card>
+              </div>
             ))}
           </div>
 
