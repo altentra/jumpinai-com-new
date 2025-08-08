@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Download, ShoppingCart, CheckCircle, FileText, Lock } from "lucide-react";
+import { Loader2, Download, ShoppingCart, CheckCircle, FileText, Feather, BookOpen, Image as ImageIcon, Paintbrush, Music, Code2, Laptop, Sparkles } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 
@@ -98,6 +98,42 @@ const Jumps = () => {
     return (price / 100).toFixed(2);
   };
 
+  const getProductBadge = (name: string) => {
+    const n = name.toLowerCase();
+    let Primary = Sparkles;
+    let Secondary: any = null;
+
+    if (n.includes("text") || n.includes("writing") || n.includes("copy")) {
+      Primary = Feather;
+      Secondary = BookOpen;
+    } else if (n.includes("image") || n.includes("design") || n.includes("art")) {
+      Primary = Paintbrush;
+      Secondary = ImageIcon;
+    } else if (n.includes("sound") || n.includes("music") || n.includes("audio")) {
+      Primary = Music;
+      Secondary = Sparkles;
+    } else if (
+      n.includes("website") ||
+      n.includes("app") ||
+      n.includes("coding") ||
+      n.includes("code") ||
+      n.includes("development")
+    ) {
+      Primary = Code2;
+      Secondary = Laptop;
+    }
+
+    return (
+      <div className="relative w-14 h-14 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center shadow-sm">
+        <Primary className="h-6 w-6 text-primary" />
+        {Secondary ? (
+          <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-md bg-background/90 border border-border flex items-center justify-center">
+            <Secondary className="h-3.5 w-3.5 text-muted-foreground" />
+          </div>
+        ) : null}
+      </div>
+    );
+  };
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
@@ -132,12 +168,10 @@ const Jumps = () => {
               <div key={product.id} className="w-full sm:w-[320px] md:w-[340px]">
                 <Card className="group hover:shadow-lg transition-all duration-300 border-muted/50 hover:border-primary/20 h-full flex flex-col">
                   <CardHeader className="pb-4">
-                    <div className="flex items-center gap-3 mb-3">
-                      <div className="p-2 rounded-lg bg-primary/10">
-                        <FileText className="h-5 w-5 text-primary" />
+                      <div className="flex items-center gap-3 mb-3">
+                        {getProductBadge(product.name)}
+                        <span className="text-xs font-medium text-muted-foreground">PDF Guide</span>
                       </div>
-                      <span className="text-sm font-medium text-primary">PDF Guide</span>
-                    </div>
                     <CardTitle className="text-xl group-hover:text-primary transition-colors duration-300">
                       {product.name}
                     </CardTitle>
