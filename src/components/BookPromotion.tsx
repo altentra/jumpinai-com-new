@@ -1,109 +1,221 @@
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Book, ExternalLink, Zap, TrendingUp, Users, Target, Lightbulb, Rocket } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Book, ShoppingCart, Zap, Loader2 } from "lucide-react";
+
+interface ProductRow {
+  id: string;
+  name: string;
+  description: string | null;
+  price: number; // in cents
+  file_name: string;
+  file_path: string;
+  status: string;
+}
+
+const POWERSTACK_FILE_NAME = "jump-in-ai-powerstack.pdf";
 
 const BookPromotion = () => {
-  const handleWhopAccess = () => {
-    window.open('https://whop.com/jumpinai/', '_blank');
-  };
+  const { toast } = useToast();
+  const [product, setProduct] = useState<ProductRow | null>(null);
+  const [loadingProduct, setLoadingProduct] = useState(true);
+  const [customerEmail, setCustomerEmail] = useState("");
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const handleAmazonPurchase = () => {
-    window.open('https://www.amazon.com/gp/aw/d/B0FHCM3VQ8', '_blank');
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const { data, error } = await (supabase as any)
+          .from("products")
+          .select("*")
+          .eq("status", "active")
+          .eq("file_name", POWERSTACK_FILE_NAME)
+          .maybeSingle();
+
+        if (error) throw error;
+        if (!data) {
+          toast({
+            title: "Product not found",
+            description:
+              "We couldn't find PowerStack in the catalog. Please try again later.",
+            variant: "destructive",
+          });
+        }
+        setProduct(data as ProductRow | null);
+      } catch (err) {
+        console.error("Error fetching PowerStack product:", err);
+        toast({
+          title: "Error",
+          description: "Failed to load product. Please refresh the page.",
+          variant: "destructive",
+        });
+      } finally {
+        setLoadingProduct(false);
+      }
+    };
+
+    fetchProduct();
+  }, [toast]);
+
+  const priceCents = product?.price ?? 499; // default to $4.99
+  const priceDisplay = (priceCents / 100).toFixed(2);
+
+  const handlePurchase = async () => {
+    if (!product?.id || !customerEmail) return;
+    setIsProcessing(true);
+    try {
+      const { data, error } = await supabase.functions.invoke(
+        "create-product-payment",
+        {
+          body: {
+            productId: product.id,
+            customerEmail,
+          },
+        }
+      );
+
+      if (error) throw error;
+
+      // Redirect to Stripe checkout
+      window.location.href = data.url;
+
+      setIsDialogOpen(false);
+      setCustomerEmail("");
+
+      toast({
+        title: "Redirecting to Checkout",
+        description: "Taking you to the secure payment page...",
+      });
+    } catch (err) {
+      console.error("Error creating payment:", err);
+      toast({
+        title: "Payment Error",
+        description: "Failed to create payment session. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   return (
-    <section className="relative py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-muted/10 via-background to-primary/5">
+    <section className="relative py-14 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
-        <div className="text-center space-y-8">
-          
-          <div className="inline-flex items-center px-4 py-2 bg-amber-100 dark:bg-amber-900/20 rounded-full border border-amber-200 dark:border-amber-800">
-            <Book className="h-4 w-4 text-amber-600 dark:text-amber-400 mr-2" />
-            <span className="text-sm font-semibold text-amber-700 dark:text-amber-300">New Book Available</span>
-          </div>
-          
-          <div className="space-y-6">
-            <h2 className="text-4xl sm:text-5xl font-black text-foreground tracking-tight font-display">
-              Jump in AI: 
-              <span className="gradient-text-primary block">PowerStack</span>
+        <article className="bg-card/60 backdrop-blur-sm border border-border/50 rounded-2xl p-6 sm:p-8">
+          <header className="text-center mb-6">
+            <div className="inline-flex items-center px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
+              <Book className="h-4 w-4 text-primary mr-2" />
+              <span className="text-xs font-semibold text-primary">Digital Guide</span>
+            </div>
+            <h2 className="mt-4 text-3xl sm:text-4xl font-black tracking-tight">
+              Jump in AI: <span className="gradient-text-primary">PowerStack</span>
             </h2>
-            
-            <h3 className="text-2xl sm:text-3xl font-bold text-muted-foreground leading-tight">
-              21 Strategic Jumps to Apply AI, Build Leverage, and Move at the Speed of Opportunity
-            </h3>
-            
-            <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto">
-              Ready to go beyond the basics? This comprehensive guide reveals 21 strategic approaches to implementing AI that will transform how you work, scale your impact, and accelerate your success.
+            <p className="mt-3 text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto">
+              A compact, practical guide to 21 strategic AI jumps. Build leverage, move faster,
+              and turn ideas into results.
             </p>
-          </div>
+          </header>
 
-          {/* Benefits Grid */}
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl mx-auto">
+          {/* Slim feature bullets */}
+          <div className="grid sm:grid-cols-3 gap-3 sm:gap-4 mb-6">
             {[
-              { icon: TrendingUp, text: "Scale your operations" },
-              { icon: Lightbulb, text: "Strategic AI implementation" },
-              { icon: Rocket, text: "Accelerate growth" },
-              { icon: Target, text: "Competitive advantage" }
-            ].map((item, index) => (
-              <div key={index} className="flex flex-col items-center space-y-3 p-4">
-                <div className="flex-shrink-0 w-12 h-12 bg-amber-100 dark:bg-amber-900/20 rounded-lg flex items-center justify-center">
-                  <item.icon className="h-6 w-6 text-amber-600 dark:text-amber-400" />
-                </div>
-                <span className="text-muted-foreground font-medium text-center">{item.text}</span>
+              "21 actionable strategies",
+              "Immediate, practical steps",
+              "Lifetime access (PDF)",
+            ].map((feature, i) => (
+              <div key={i} className="flex items-start gap-2">
+                <Zap className="h-4 w-4 text-primary mt-0.5" />
+                <span className="text-sm text-muted-foreground">{feature}</span>
               </div>
             ))}
           </div>
 
-          {/* Key Features */}
-          <div className="bg-card/50 backdrop-blur-sm rounded-2xl p-8 border border-border/50 max-w-3xl mx-auto">
-            <h4 className="text-xl font-bold text-foreground mb-6">What You'll Master:</h4>
-            <div className="grid sm:grid-cols-2 gap-4 text-left">
-              {[
-                "21 proven AI implementation strategies",
-                "Framework for building AI-powered systems",
-                "Methods to leverage AI for competitive advantage",
-                "Practical tools for immediate implementation",
-                "Advanced techniques for scaling operations",
-                "Future-proofing your AI strategy"
-              ].map((feature, index) => (
-                <div key={index} className="flex items-start space-x-3">
-                  <Zap className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
-                  <span className="text-muted-foreground">{feature}</span>
-                </div>
-              ))}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="flex items-baseline gap-2">
+              <span className="text-2xl font-bold text-foreground">${priceDisplay}</span>
+              <span className="text-xs text-muted-foreground">One-time</span>
             </div>
+
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <DialogTrigger asChild>
+                <Button
+                  size="lg"
+                  disabled={loadingProduct || !product}
+                  className="px-6 rounded-xl"
+                >
+                  <ShoppingCart className="h-4 w-4 mr-2" />
+                  {loadingProduct ? "Loading..." : "Buy Now"}
+                </Button>
+              </DialogTrigger>
+
+              <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                  <DialogTitle>Complete Your Purchase</DialogTitle>
+                  <DialogDescription>
+                    {product?.name || "PowerStack"} — ${priceDisplay}
+                  </DialogDescription>
+                </DialogHeader>
+
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email Address</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="your.email@example.com"
+                      value={customerEmail}
+                      onChange={(e) => setCustomerEmail(e.target.value)}
+                      required
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      We’ll email your download link after payment
+                    </p>
+                  </div>
+
+                  <div className="flex gap-3">
+                    <Button
+                      variant="outline"
+                      onClick={() => setIsDialogOpen(false)}
+                      className="flex-1"
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      onClick={handlePurchase}
+                      disabled={!customerEmail || isProcessing}
+                      className="flex-1"
+                    >
+                      {isProcessing ? (
+                        <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                      ) : (
+                        <ShoppingCart className="h-4 w-4 mr-2" />
+                      )}
+                      {isProcessing ? "Processing..." : "Continue to Payment"}
+                    </Button>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
 
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button 
-              onClick={handleWhopAccess}
-              size="lg" 
-              className="modern-button bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 text-lg font-semibold rounded-2xl transition-all duration-300 hover:scale-105 shadow-lg"
-            >
-              <Users className="h-5 w-5 mr-2" />
-              Access via Whop Community
-            </Button>
-            
-            <Button 
-              onClick={handleAmazonPurchase}
-              size="lg" 
-              variant="outline"
-              className="border-2 border-primary/20 hover:border-primary hover:bg-primary/5 px-8 py-4 text-lg font-semibold rounded-2xl transition-all duration-300 hover:scale-105"
-            >
-              <ExternalLink className="h-5 w-5 mr-2" />
-              Buy on Amazon
-            </Button>
-          </div>
-
-          <div className="text-center space-y-2">
-            <p className="text-sm text-muted-foreground">
-              Join our premium community for exclusive access or purchase directly from Amazon
+          {(!product && !loadingProduct) && (
+            <p className="mt-4 text-xs text-destructive">
+              This product isn’t configured yet. Please check back soon.
             </p>
-            <p className="text-xs text-muted-foreground flex items-center justify-center">
-              <Book className="h-4 w-4 mr-2" />
-              Available in digital and print formats
-            </p>
-          </div>
-        </div>
+          )}
+        </article>
       </div>
     </section>
   );
