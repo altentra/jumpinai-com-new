@@ -113,7 +113,7 @@ const BookPromotion = () => {
   return (
     <section className="relative py-14 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
-        <article className="bg-card/60 backdrop-blur-sm border border-border/50 rounded-2xl p-6 sm:p-8 shadow-sm animate-enter">
+        <article className="relative border-2 border-border/40 dark:border-border/60 rounded-3xl p-8 sm:p-10 bg-background/80 backdrop-blur-sm shadow-modern-lg hover:border-border/60 transition-all duration-500">
           <header className="text-center mb-6">
             <div className="inline-flex items-center px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
               <Book className="h-4 w-4 text-primary mr-2" />
@@ -147,7 +147,7 @@ const BookPromotion = () => {
                   <Button
                     size="lg"
                     disabled={loadingProduct || !product}
-                    className="min-w-[220px] px-8 rounded-xl hover-scale"
+                    className="min-w-[240px] px-8 rounded-2xl transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl group"
                   >
                     <ShoppingCart className="h-4 w-4 mr-2" />
                     {loadingProduct ? "Loading..." : `Buy Now — $${priceDisplay}`}
@@ -203,7 +203,7 @@ const BookPromotion = () => {
                 </DialogContent>
               </Dialog>
 
-              <Button asChild variant="outline" size="lg" className="min-w-[220px] px-8 rounded-xl hover-scale">
+              <Button asChild variant="outline" size="lg" className="min-w-[240px] px-8 rounded-2xl transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl group">
                 <a href="https://www.amazon.com/dp/B0FHCM3VQ8" target="_blank" rel="noopener noreferrer">
                   Buy on Amazon — $15.99
                 </a>
