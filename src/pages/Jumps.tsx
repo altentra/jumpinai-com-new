@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Download, ShoppingCart, CheckCircle, FileText, Feather, BookOpen, Image as ImageIcon, Paintbrush, Music, Code2, Laptop, Sparkles } from "lucide-react";
+import { Loader2, Download, ShoppingCart, CheckCircle, FileText, Feather, BookOpen, Image as ImageIcon, Paintbrush, Music, Code2, Laptop, Sparkles, Camera, Clapperboard } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 
@@ -112,6 +112,15 @@ const Jumps = () => {
     } else if (n.includes("sound") || n.includes("music") || n.includes("audio")) {
       Primary = Music;
       Secondary = Sparkles;
+    } else if (
+      n.includes("video") ||
+      n.includes("film") ||
+      n.includes("camera") ||
+      n.includes("clip") ||
+      n.includes("motion")
+    ) {
+      Primary = Camera;
+      Secondary = Clapperboard;
     } else if (
       n.includes("website") ||
       n.includes("app") ||
