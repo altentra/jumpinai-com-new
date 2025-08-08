@@ -128,21 +128,19 @@ const BookPromotion = () => {
             </p>
           </header>
 
-          {/* Slim feature bullets */}
-          <div className="grid sm:grid-cols-3 gap-3 sm:gap-4 mb-6">
-            {[
-              "21 actionable strategies",
-              "Immediate, practical steps",
-              "Lifetime access (PDF)",
-            ].map((feature, i) => (
-              <div key={i} className="flex items-start gap-2">
-                <Zap className="h-4 w-4 text-primary mt-0.5" />
-                <span className="text-sm text-muted-foreground">{feature}</span>
-              </div>
-            ))}
+          {/* Compact product summary */}
+          <div className="mt-2 mb-6 text-center space-y-3">
+            <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto">
+              A concise, practical PDF guide to 21 strategic AI jumps with step-by-step playbooks you can apply today.
+            </p>
+            <ul className="text-sm text-muted-foreground flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
+              <li>21 concise strategies</li>
+              <li>Action checklists</li>
+              <li>Lifetime access (PDF)</li>
+            </ul>
           </div>
 
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="mt-6 flex flex-col items-center justify-center gap-4 text-center">
             <div className="flex items-baseline gap-2">
               <span className="text-2xl font-bold text-foreground">${priceDisplay}</span>
               <span className="text-xs text-muted-foreground">One-time</span>
