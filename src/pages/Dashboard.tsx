@@ -4,7 +4,7 @@ import { useNavigate, Routes, Route, Navigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import { SidebarProvider, SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import AppSidebar from "@/components/dashboard/AppSidebar";
 import DashboardHome from "./dashboard/DashboardHome";
 import MyJumps from "./dashboard/MyJumps";
@@ -13,17 +13,6 @@ import Workflows from "./dashboard/Workflows";
 import Blueprints from "./dashboard/Blueprints";
 import Strategies from "./dashboard/Strategies";
 import AccountProfile from "./dashboard/AccountProfile";
-
-function DashboardFooterOffset() {
-  const { state } = useSidebar();
-  const mlClass = state === "collapsed" ? "md:ml-[var(--sidebar-width-icon)]" : "md:ml-[var(--sidebar-width)]";
-  return (
-    <div className={`${mlClass} transition-[margin] duration-200 ease-linear`}>
-      <Footer />
-    </div>
-  );
-}
-
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -71,12 +60,9 @@ export default function Dashboard() {
             </div>
           </main>
         </div>
-
-        {/* Make footer not overlap sidebar on desktop by offsetting left margin to sidebar width */}
-        <DashboardFooterOffset />
       </SidebarProvider>
 
-      {/* Remove global footer here; moved inside provider to align with sidebar */}
+      <Footer />
     </>
   );
 }

@@ -9,6 +9,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarFooter,
   useSidebar,
 } from "@/components/ui/sidebar";
 
@@ -19,7 +20,6 @@ const items = [
   { title: "My Workflows", url: "/dashboard/workflows", icon: GitBranch },
   { title: "My Blueprints", url: "/dashboard/blueprints", icon: Boxes },
   { title: "My Strategies", url: "/dashboard/strategies", icon: Lightbulb },
-  { title: "Profile", url: "/dashboard/profile", icon: User },
 ];
 
 export default function AppSidebar() {
@@ -32,7 +32,7 @@ export default function AppSidebar() {
     isActive ? "bg-muted text-primary font-medium" : "hover:bg-muted/50";
 
   return (
-    <Sidebar className={isCollapsed ? "w-14 top-20" : "w-64 top-20"} collapsible="icon">
+    <Sidebar className={isCollapsed ? "w-14 top-20 bottom-24" : "w-64 top-20 bottom-24"} collapsible="icon">
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>Dashboard</SidebarGroupLabel>
@@ -53,6 +53,18 @@ export default function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
+      <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild className="justify-start">
+              <NavLink to="/dashboard/profile" className={getNavCls}>
+                <User className="mr-2 h-4 w-4" />
+                {!isCollapsed && <span>Profile</span>}
+              </NavLink>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
     </Sidebar>
   );
 }
