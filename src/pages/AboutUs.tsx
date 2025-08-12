@@ -7,6 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import { Helmet, HelmetProvider } from "react-helmet-async";
 
 // Component to handle lead magnet functionality
 const LeadMagnetButton = () => {
@@ -230,9 +231,22 @@ const AboutUs = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navigation />
-      
+    <HelmetProvider>
+      <div className="min-h-screen bg-background">
+        <Helmet>
+          <title>About JumpinAI | AI Strategy, Tools and Implementation</title>
+          <meta name="description" content="Learn who JumpinAI is: an AI education and implementation studio helping teams turn AI into measurable results with clarity, speed, and impact." />
+          <link rel="canonical" href="https://jumpinai.com/about-us" />
+          <script type="application/ld+json">{JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Organization',
+            name: 'JumpinAI',
+            url: 'https://jumpinai.com',
+            logo: 'https://jumpinai.com/lovable-uploads/74bafbff-f098-4d0a-9180-b4923d3d9616.png',
+            sameAs: ['https://twitter.com/jumpinai']
+          })}</script>
+        </Helmet>
+        <Navigation />
       {/* Hero Section */}
       <section className="relative px-6 py-20 md:py-32">
         <div className="max-w-4xl mx-auto text-center">
@@ -386,7 +400,8 @@ const AboutUs = () => {
       </section>
 
       <Footer />
-    </div>
+      </div>
+    </HelmetProvider>
   );
 };
 
