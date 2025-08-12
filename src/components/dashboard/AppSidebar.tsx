@@ -35,9 +35,17 @@ export default function AppSidebar() {
     <Sidebar className={isCollapsed ? "w-14 top-20 bottom-12" : "w-64 top-20 bottom-12"} collapsible="icon">
       <SidebarContent className="pb-24">
         <SidebarGroup>
-          <SidebarGroupLabel>Dashboard</SidebarGroupLabel>
+          
           <SidebarGroupContent>
             <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild className="justify-start h-10">
+                  <NavLink to="/dashboard/profile" end className={(nav) => getNavCls(nav) + " text-base py-3 font-semibold"}>
+                    <User className="mr-2 h-4 w-4" />
+                    {!isCollapsed && <span>Profile</span>}
+                  </NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild className="justify-start">
@@ -53,18 +61,6 @@ export default function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild className="justify-start">
-              <NavLink to="/dashboard/profile" className={getNavCls}>
-                <User className="mr-2 h-4 w-4" />
-                {!isCollapsed && <span>Profile</span>}
-              </NavLink>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarFooter>
     </Sidebar>
   );
 }
