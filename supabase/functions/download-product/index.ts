@@ -54,6 +54,14 @@ serve(async (req) => {
       });
     }
 
+    // Enforce max downloads
+    if ((order.download_count ?? 0) >= (order.max_downloads ?? 0)) {
+      return new Response(JSON.stringify({ error: "Download limit reached" }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 403,
+      });
+    }
+
     // Download file from storage
     const { data: fileData, error: fileError } = await supabase.storage
       .from("digital-products")

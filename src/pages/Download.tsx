@@ -32,8 +32,8 @@ const Download = () => {
               name: data.product.name,
               fileName: data.product.file_name,
               description: data.product.description || "Your digital download is ready",
-              downloadCount: data.order.download_count || 0,
-              maxDownloads: 50
+              downloadCount: data.order.download_count ?? 0,
+              maxDownloads: data.order.max_downloads ?? 5
             });
           } else {
             throw new Error(data.error || "Invalid product");
@@ -58,6 +58,18 @@ const Download = () => {
         title: "Error",
         description: "Invalid download token",
         variant: "destructive",
+      });
+      return;
+    }
+
+    // Prevent client-side attempt if limit already reached
+    if (productInfo && productInfo.downloadCount >= productInfo.maxDownloads) {
+      setDownloadStatus('error');
+      setErrorMessage('You have reached the maximum number of downloads for this purchase.');
+      toast({
+        title: 'Download limit reached',
+        description: 'Please contact support if you need additional access.',
+        variant: 'destructive',
       });
       return;
     }
