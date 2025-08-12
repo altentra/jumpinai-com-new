@@ -17,6 +17,7 @@ import PaymentSuccess from "./pages/PaymentSuccess";
 import Download from "./pages/Download";
 import ForInvestors from "./pages/ForInvestors";
 import NotFound from "./pages/NotFound";
+import Resources from "./pages/Resources";
 
 const queryClient = new QueryClient();
 
@@ -66,6 +67,7 @@ const App = () => {
             <Route path="/terms-of-use" element={<TermsOfUse />} />
             <Route path="/contact-us" element={<ContactUs />} />
             <Route path="/faq" element={<FAQ />} />
+            <Route path="/resources" element={<Resources />} />
             <Route path="/test-sync" element={<TestSync />} />
             <Route path="/jumps" element={<Jumps />} />
             <Route path="/for-investors" element={<ForInvestors />} />
