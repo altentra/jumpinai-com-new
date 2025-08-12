@@ -28,7 +28,7 @@ const categories: Category[] = [
     title: "AI Text Generation",
     tools: [
       {
-        name: "OpenAI ChatGPT (GPT-4o)",
+        name: "OpenAI ChatGPT (GPT-5)",
         url: "https://openai.com/",
         description: "General-purpose assistant for writing, reasoning, and multimodal tasks.",
         promptExample:
@@ -40,7 +40,7 @@ const categories: Category[] = [
         ],
       },
       {
-        name: "Anthropic Claude 3.5 Sonnet",
+        name: "Anthropic Claude",
         url: "https://claude.ai/",
         description: "Strong writing and analysis with long context and reliable reasoning.",
         promptExample:
@@ -52,7 +52,7 @@ const categories: Category[] = [
         ],
       },
       {
-        name: "Google Gemini 1.5 Pro",
+        name: "Google Gemini 2.5 Pro",
         url: "https://gemini.google.com/",
         description: "Long‑context multimodal model integrated with Google ecosystem.",
         promptExample:
@@ -61,6 +61,18 @@ const categories: Category[] = [
           "Provide table/context; request bullet executive summary.",
           "Probe on anomalies; ask for 3 hypotheses with tests.",
           "Finalize with risks, opportunities, and next steps.",
+        ],
+      },
+      {
+        name: "xAI Grok 4",
+        url: "https://x.ai/",
+        description: "Fast, up‑to‑date reasoning with strong web awareness; Grok 4 Imagine excels at image tasks.",
+        promptExample:
+          "Act as a trend analyst. Using fresh web sources, outline the 5 biggest AI regulation changes in 2025 with citations and implications for SaaS founders.",
+        workflowSteps: [
+          "Ask for current, cited sources; set timeframe.",
+          "Request a pros/cons table and action checklist.",
+          "Deliver an executive brief plus 3 tweet‑length summaries.",
         ],
       },
       {
@@ -154,6 +166,18 @@ const categories: Category[] = [
         ],
       },
       {
+        name: "Grok 4 Imagine",
+        url: "https://x.ai/",
+        description: "Image generation by xAI with strong composition and text rendering.",
+        promptExample:
+          "brand key visual: geometric shapes forming a letter ‘A’, crisp vector style, accurate text ‘ALPHA’, high contrast, 3:2",
+        workflowSteps: [
+          "Define layout constraints and typography.",
+          "Generate alternates; refine text rendering.",
+          "Export SVG/PNG with color tokens.",
+        ],
+      },
+      {
         name: "Ideogram",
         url: "https://ideogram.ai/",
         description: "Text‑accurate logo/poster designs and typography inside images.",
@@ -202,7 +226,7 @@ const categories: Category[] = [
         ],
       },
       {
-        name: "DALL·E 3",
+        name: "OpenAI DALL·E",
         url: "https://openai.com/dall-e-3",
         description: "Natural language to detailed, coherent images with strong compositing.",
         promptExample:
@@ -231,6 +255,30 @@ const categories: Category[] = [
     id: "video",
     title: "AI Video Generation",
     tools: [
+      {
+        name: "Google Veo 3",
+        url: "https://deepmind.google/technologies/veo/",
+        description: "High‑fidelity text‑to‑video with cinematic control and long shots.",
+        promptExample:
+          "8‑second aerial glide over a futuristic city at dusk, volumetric light, 24fps, subtle camera tilt, cinematic film grain",
+        workflowSteps: [
+          "Write 1‑shot storyboard; set duration/fps.",
+          "Generate alternates; pick most stable.",
+          "Add sound design and color grade.",
+        ],
+      },
+      {
+        name: "Kling AI",
+        url: "https://klingai.com/",
+        description: "Photoreal motion and dynamic physics; strong for action shots.",
+        promptExample:
+          "slow‑motion splash of water over fresh berries, macro lens, shallow DOF, 5 seconds, natural lighting",
+        workflowSteps: [
+          "Specify motion style and pacing.",
+          "Iterate on stabilization and realism.",
+          "Finalize with SFX and subtle grade.",
+        ],
+      },
       {
         name: "Runway Gen‑3",
         url: "https://runwayml.com/",
@@ -435,6 +483,18 @@ const categories: Category[] = [
     id: "apps",
     title: "AI Websites & Apps",
     tools: [
+      {
+        name: "Lovable",
+        url: "https://lovable.dev/",
+        description: "AI editor to build and ship full web apps with React, Tailwind, and Supabase—live preview and instant changes.",
+        promptExample:
+          "Create a responsive marketing site with hero, features, pricing, newsletter signup, and a resources page with tabs.",
+        workflowSteps: [
+          "Describe pages and components; generate skeleton.",
+          "Refine UI with design tokens; wire forms and toasts.",
+          "Publish and connect a custom domain.",
+        ],
+      },
       {
         name: "Framer AI",
         url: "https://www.framer.com/ai/",
@@ -657,12 +717,14 @@ export default function Resources() {
         <main className="px-6 py-10">
           <div className="max-w-6xl mx-auto">
             <Tabs defaultValue="tools" className="w-full">
-              <div className="flex justify-center mb-8">
-                <TabsList className="rounded-full border border-border/60 bg-muted/50 p-1 backdrop-blur supports-[backdrop-filter]:bg-muted/60">
-                  <TabsTrigger value="tools" className="rounded-full px-4 md:px-6">Tools</TabsTrigger>
-                  <TabsTrigger value="prompts" className="rounded-full px-4 md:px-6">Prompts</TabsTrigger>
-                  <TabsTrigger value="workflows" className="rounded-full px-4 md:px-6">Workflows</TabsTrigger>
-                </TabsList>
+              <div className="sticky top-16 md:top-20 z-40 -mx-6 px-6 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+                <div className="max-w-6xl mx-auto flex justify-center py-3 border-b border-border/40">
+                  <TabsList className="rounded-full border border-border/60 bg-muted/50 p-1 backdrop-blur supports-[backdrop-filter]:bg-muted/60">
+                    <TabsTrigger value="tools" className="rounded-full px-4 md:px-6">Tools</TabsTrigger>
+                    <TabsTrigger value="prompts" className="rounded-full px-4 md:px-6">Prompts</TabsTrigger>
+                    <TabsTrigger value="workflows" className="rounded-full px-4 md:px-6">Workflows</TabsTrigger>
+                  </TabsList>
+                </div>
               </div>
 
               {/* Tools tab */}
