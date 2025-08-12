@@ -722,6 +722,170 @@ function WorkflowCard({ tool }: { tool: Tool }) {
   );
 }
 
+// Build professional implementation blueprints dynamically per category
+function buildBlueprint(
+  categoryId: string,
+  tool: Tool
+): { prerequisites: string[]; steps: string[]; metrics: string[] } {
+  const commonPrereq = [
+    "Account access and correct plan/quotas enabled",
+    "Team permissions + security review (PII, compliance)",
+    "Folder/project structure and naming conventions",
+  ];
+
+  switch (categoryId) {
+    case "text":
+      return {
+        prerequisites: [
+          ...commonPrereq,
+          "Brand voice/style guide and example artifacts",
+          "Knowledge sources (docs, FAQs) and citation rules",
+        ],
+        steps: [
+          `Define objective and audience for ${tool.name} (KPIs, tone, length)`,
+          "Create prompt templates with role, constraints, outputs",
+          "Add retrieval or references when needed; specify citation format",
+          "Iterate with outlines first, then expand and refine",
+          "Establish review loop and approval workflow",
+          "Publish to channels; store versions and changelog",
+        ],
+        metrics: [
+          "Quality score (readability, brand fit)",
+          "Time-to-draft and revision count",
+          "Engagement/CTR or reply rate depending on asset",
+        ],
+      };
+    case "image":
+      return {
+        prerequisites: [
+          ...commonPrereq,
+          "Brand color tokens, logo assets, typography",
+          "Reference board or style guide",
+        ],
+        steps: [
+          `Set brief for ${tool.name}: subject, lens, lighting, aspect ratio`,
+          "Generate 6–12 variations; track seeds for reproducibility",
+          "Use in/outpainting or control-nets for precision",
+          "Upscale and denoise; check skin/hands/typography",
+          "Export in target sizes with color-safe profiles",
+          "Store final assets in DAM with metadata",
+        ],
+        metrics: [
+          "Approval rate and iteration count",
+          "Production time per asset",
+          "Brand compliance checklist pass rate",
+        ],
+      };
+    case "video":
+      return {
+        prerequisites: [
+          ...commonPrereq,
+          "Storyboard outline and shot list (fps, duration)",
+          "Audio library/SFX licensing ready",
+        ],
+        steps: [
+          `Draft one-shot prompts for ${tool.name} with camera + motion`,
+          "Generate alt takes; pick most stable and coherent",
+          "Stabilize, trim, and color grade; add captions",
+          "Sound design with VO/music; loudness normalize",
+          "Render deliverables for each platform",
+        ],
+        metrics: [
+          "Coherence/stability score (subject/object integrity)",
+          "View-through rate and watch time",
+          "Edit time saved vs. baseline",
+        ],
+      };
+    case "audio":
+      return {
+        prerequisites: [
+          ...commonPrereq,
+          "Target BPM/genre/mood and reference tracks",
+          "Microphone/voice rights if cloning",
+        ],
+        steps: [
+          `Define structure for ${tool.name}: intro/verse/chorus or loop length`,
+          "Generate multiple takes; select best motifs",
+          "Adjust lyrics/phonemes or instrumentation",
+          "Master to platform loudness; export stems if needed",
+          "Tag and license for intended use",
+        ],
+        metrics: [
+          "Mix clarity and loudness targets met",
+          "Revision cycles to approval",
+          "Engagement/retention on placements",
+        ],
+      };
+    case "apps":
+      return {
+        prerequisites: [
+          ...commonPrereq,
+          "Feature list, sitemap, and design tokens",
+          "Environment config and hosting plan",
+        ],
+        steps: [
+          `Draft component/page blueprint in ${tool.name}`,
+          "Generate UI skeleton; wire forms and routes",
+          "Connect data/APIs; set auth and toasts",
+          "Enforce accessibility and responsiveness",
+          "SEO: title/meta/canonical + structured data",
+          "Publish; set up analytics and error tracking",
+        ],
+        metrics: [
+          "Time-to-first-draft and time-to-publish",
+          "Core Web Vitals and accessibility score",
+          "Conversion KPI for key flows",
+        ],
+      };
+    default:
+      return { prerequisites: commonPrereq, steps: [], metrics: [] };
+  }
+}
+
+function BlueprintCard({ tool, categoryId }: { tool: Tool; categoryId: string }) {
+  const bp = buildBlueprint(categoryId, tool);
+  return (
+    <Card className="h-full border-border/60">
+      <CardHeader>
+        <CardTitle className="flex items-center justify-between text-base md:text-lg">
+          <span>{tool.name}</span>
+          <Badge variant="outline">Blueprint</Badge>
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div>
+          <p className="text-xs uppercase tracking-wide text-muted-foreground mb-2">Prerequisites</p>
+          <ul className="list-disc pl-5 space-y-1 text-sm text-muted-foreground">
+            {bp.prerequisites.map((p, i) => (
+              <li key={i}>{p}</li>
+            ))}
+          </ul>
+        </div>
+        {bp.steps.length > 0 && (
+          <div>
+            <p className="text-xs uppercase tracking-wide text-muted-foreground mb-2">Implementation</p>
+            <ol className="list-decimal pl-5 space-y-2 text-sm text-muted-foreground">
+              {bp.steps.map((s, i) => (
+                <li key={i}>{s}</li>
+              ))}
+            </ol>
+          </div>
+        )}
+        {bp.metrics.length > 0 && (
+          <div>
+            <p className="text-xs uppercase tracking-wide text-muted-foreground mb-2">Metrics</p>
+            <ul className="list-disc pl-5 space-y-1 text-sm text-muted-foreground">
+              {bp.metrics.map((m, i) => (
+                <li key={i}>{m}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
 export default function Resources() {
   return (
     <HelmetProvider>
@@ -771,6 +935,7 @@ export default function Resources() {
                     <TabsTrigger value="tools" className="rounded-full px-4 md:px-6">Tools</TabsTrigger>
                     <TabsTrigger value="prompts" className="rounded-full px-4 md:px-6">Prompts</TabsTrigger>
                     <TabsTrigger value="workflows" className="rounded-full px-4 md:px-6">Workflows</TabsTrigger>
+                    <TabsTrigger value="blueprints" className="rounded-full px-4 md:px-6">Blueprints</TabsTrigger>
                   </TabsList>
                 </div>
               </div>
@@ -820,6 +985,23 @@ export default function Resources() {
                     <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                       {cat.tools.map((tool) => (
                         <WorkflowCard key={tool.name} tool={tool} />
+                      ))}
+                    </div>
+                  </section>
+                ))}
+              </TabsContent>
+
+              {/* Blueprints tab */}
+              <TabsContent value="blueprints">
+                {categories.map((cat) => (
+                  <section key={cat.id} className="mb-14">
+                    <SectionHeader
+                      title={cat.title}
+                      subtitle="Professional implementation plans: prerequisites, steps, and metrics."
+                    />
+                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {cat.tools.map((tool) => (
+                        <BlueprintCard key={tool.name} tool={tool} categoryId={cat.id} />
                       ))}
                     </div>
                   </section>
