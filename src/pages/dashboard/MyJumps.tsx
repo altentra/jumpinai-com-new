@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { Download, ShoppingCart, CheckCircle } from "lucide-react";
+import { Download, ShoppingCart, CheckCircle, Crown } from "lucide-react";
 
 interface Product {
   id: string;
@@ -81,37 +81,70 @@ export default function MyJumps() {
     }
   };
 
+  const upgradeToPro = async () => {
+    try {
+      const { data, error } = await supabase.functions.invoke('create-checkout');
+      if (error) throw error;
+      window.open((data as any)?.url, '_blank');
+    } catch (e: any) {
+      console.error(e);
+      toast({ title: 'Checkout error', description: e.message || 'Could not start subscription checkout', variant: 'destructive' });
+    }
+  };
+
   return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-      {products.map((p) => {
-        const order = purchasedByProduct.get(p.id);
-        return (
-          <Card key={p.id} className="flex flex-col">
-            <CardHeader>
-              <CardTitle className="text-base">{p.name}</CardTitle>
-            </CardHeader>
-            <CardContent className="text-sm text-muted-foreground flex-1">
-              {p.description}
-            </CardContent>
-            <CardFooter className="flex items-center justify-between gap-3">
-              {order ? (
-                <Button asChild>
-                  <a href={`/download/${order.download_token ?? ''}`}>
-                    <Download className="mr-2 h-4 w-4" /> Access
-                  </a>
-                </Button>
-              ) : (
-                <Button onClick={() => buy(p.id)}>
-                  <ShoppingCart className="mr-2 h-4 w-4" /> Buy ${formatPrice(p.price)}
-                </Button>
-              )}
-              <div className="text-xs text-muted-foreground flex items-center gap-1">
-                <CheckCircle className="h-3.5 w-3.5" /> Instant download
-              </div>
-            </CardFooter>
-          </Card>
-        );
-      })}
+    <div className="space-y-6">
+      <Card className="animate-fade-in">
+        <CardContent className="py-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <Crown className="h-5 w-5 text-primary" />
+              <h2 className="text-base font-semibold">Unlock all Jumps with JumpinAI Pro</h2>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              On the free plan, you can buy Jumps à la carte. To access every Jump, plus ongoing updates, upgrade to Pro for $10/month.
+            </p>
+          </div>
+          <div className="flex gap-2">
+            <Button onClick={upgradeToPro}>Upgrade to Pro — $10/mo</Button>
+            <Button variant="secondary" asChild>
+              <a href="#jumps-list">Continue à la carte</a>
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      <div id="jumps-list" className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {products.map((p) => {
+          const order = purchasedByProduct.get(p.id);
+          return (
+            <Card key={p.id} className="flex flex-col">
+              <CardHeader>
+                <CardTitle className="text-base">{p.name}</CardTitle>
+              </CardHeader>
+              <CardContent className="text-sm text-muted-foreground flex-1">
+                {p.description}
+              </CardContent>
+              <CardFooter className="flex items-center justify-between gap-3">
+                {order ? (
+                  <Button asChild>
+                    <a href={`/download/${order.download_token ?? ''}`}>
+                      <Download className="mr-2 h-4 w-4" /> Access
+                    </a>
+                  </Button>
+                ) : (
+                  <Button onClick={() => buy(p.id)}>
+                    <ShoppingCart className="mr-2 h-4 w-4" /> Buy ${formatPrice(p.price)}
+                  </Button>
+                )}
+                <div className="text-xs text-muted-foreground flex items-center gap-1">
+                  <CheckCircle className="h-3.5 w-3.5" /> Instant download
+                </div>
+              </CardFooter>
+            </Card>
+          );
+        })}
+      </div>
     </div>
   );
 }
