@@ -34,12 +34,12 @@ const Jumps = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const { data, error } = await (supabase as any)
-          .from('products')
-          .select('*')
-          .eq('status', 'active')
-          .neq('file_name', 'jump-in-ai-powerstack.pdf')
-          .order('created_at', { ascending: true });
+          const { data, error } = await (supabase as any)
+            .from('products')
+            .select('id, name, description, price, status, created_at, updated_at, file_name')
+            .eq('status', 'active')
+            .neq('file_name', 'jump-in-ai-powerstack.pdf')
+            .order('created_at', { ascending: true });
         
         if (error) throw error;
         setProducts((data || []) as Product[]);

@@ -39,7 +39,7 @@ const BookPromotion = () => {
       try {
         const { data, error } = await (supabase as any)
           .from("products")
-          .select("*")
+          .select("id, name, description, price, status, created_at, updated_at, file_name")
           .eq("status", "active")
           .eq("file_name", POWERSTACK_FILE_NAME)
           .maybeSingle();
