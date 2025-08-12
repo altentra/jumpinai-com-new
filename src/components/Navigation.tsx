@@ -64,7 +64,7 @@ const Navigation = () => {
           <Link to="/" className="flex items-center group cursor-pointer">
             <div className="w-10 h-10 rounded-xl overflow-hidden group-hover:scale-105 transition-transform duration-300">
               <img 
-                src="/lovable-uploads/e5569afe-9d72-47bc-8b5c-5641bd1d4de6.png" 
+                src="/lovable-uploads/74bafbff-f098-4d0a-9180-b4923d3d9616.png" 
                 alt="JumpinAI Logo" 
                 className="w-full h-full object-cover"
               />
