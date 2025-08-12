@@ -248,9 +248,57 @@ const AboutUs = () => {
         </Helmet>
         <Navigation />
       {/* Hero Section */}
-      <section className="relative px-6 py-20 md:py-32">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-8">
+      <section className="relative px-0">
+        <div
+          className="relative min-h-[50vh] md:min-h-[60vh] flex items-center justify-center overflow-hidden"
+          style={{ backgroundImage: "url('/lovable-uploads/702eb376-48c5-4944-b717-9d5208414ecb.png')", backgroundSize: 'cover', backgroundPosition: 'center' }}
+        >
+          {/* Top dark shadow/overlay */}
+          <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/60 to-transparent" />
+
+          <div className="relative z-10 px-6 text-center">
+            <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4">About JumpinAI</h1>
+            <p className="text-lg md:text-xl text-muted-foreground">From curiosity to capability—fast.</p>
+            <div className="mt-8 flex justify-center">
+              <Button size="lg" className="text-lg px-8 modern-button bg-gradient-to-r from-gray-800 to-black hover:from-gray-900 hover:to-gray-800 dark:from-white dark:to-gray-300 dark:hover:from-gray-100 dark:hover:to-gray-400 text-white dark:text-black transition-all duration-300 hover:scale-105 group" asChild>
+                <a href="https://whop.com/jumpinai/" target="_blank" rel="noopener noreferrer">
+                  Start Building Now
+                  <ArrowRight className="ml-2 w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
+                </a>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Brand Intro Section */}
+      <section className="px-6 py-16 md:py-24">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-5 gap-8 items-center">
+          <div className="md:col-span-2 flex justify-center">
+            <img
+              src="/lovable-uploads/74bafbff-f098-4d0a-9180-b4923d3d9616.png"
+              alt="JumpinAI logo"
+              className="w-48 h-48 object-contain drop-shadow-lg"
+              loading="lazy"
+            />
+          </div>
+          <article className="md:col-span-3 space-y-5">
+            <h2 className="text-3xl md:text-4xl font-bold">Who We Are</h2>
+            <p className="text-lg text-muted-foreground leading-relaxed">
+              JumpinAI is a modern AI education and implementation studio. We help creators, entrepreneurs, and teams turn
+              artificial intelligence into an unfair advantage—quickly and responsibly.
+            </p>
+            <p className="text-lg text-muted-foreground leading-relaxed">
+              We cut through the noise with clarity, curate the right tools, and provide step-by-step blueprints that move you from
+              idea to deployed workflows in days, not months.
+            </p>
+            <p className="text-lg text-muted-foreground leading-relaxed">
+              Our promise is simple: less theory, more outcomes. Clear guidance, fast execution, and measurable results—so you can
+              build with confidence.
+            </p>
+          </article>
+        </div>
+      </section
             <Zap className="w-4 h-4" />
             Built for the Speed of Opportunity
           </div>
