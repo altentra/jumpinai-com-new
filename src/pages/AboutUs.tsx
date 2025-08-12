@@ -249,12 +249,17 @@ const AboutUs = () => {
         <Navigation />
       {/* Hero Section */}
       <section className="relative px-0">
-        <div
-          className="relative min-h-[50vh] md:min-h-[60vh] flex items-center justify-center overflow-hidden"
-          style={{ backgroundImage: "url('/lovable-uploads/702eb376-48c5-4944-b717-9d5208414ecb.png')", backgroundSize: 'cover', backgroundPosition: 'center' }}
-        >
+        <div className="relative min-h-[65vh] md:min-h-[80vh] lg:min-h-[85vh] flex items-center justify-center overflow-hidden bg-background">
+          <img
+            src="/lovable-uploads/702eb376-48c5-4944-b717-9d5208414ecb.png"
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 w-full h-full object-contain"
+            loading="eager"
+            decoding="async"
+          />
           {/* Top dark shadow/overlay */}
-          <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/60 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/60 to-transparent pointer-events-none" />
 
           <div className="relative z-10 px-6 text-center">
             <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4">About JumpinAI</h1>
@@ -275,12 +280,18 @@ const AboutUs = () => {
       <section className="px-6 py-16 md:py-24">
         <div className="max-w-6xl mx-auto grid md:grid-cols-5 gap-8 items-center">
           <div className="md:col-span-2 flex justify-center">
-            <img
-              src="/lovable-uploads/74bafbff-f098-4d0a-9180-b4923d3d9616.png"
-              alt="JumpinAI logo"
-              className="w-48 h-48 object-contain drop-shadow-lg"
-              loading="lazy"
-            />
+            <div className="relative rounded-2xl p-3 bg-card/60 border border-border shadow-sm">
+              <img
+                src="/lovable-uploads/74bafbff-f098-4d0a-9180-b4923d3d9616.png"
+                alt="JumpinAI brand logo"
+                className="w-48 h-48 rounded-xl object-contain shadow-md"
+                loading="lazy"
+              />
+              <div
+                className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-primary/10"
+                aria-hidden="true"
+              />
+            </div>
           </div>
           <article className="md:col-span-3 space-y-5">
             <h2 className="text-3xl md:text-4xl font-bold">Who We Are</h2>
