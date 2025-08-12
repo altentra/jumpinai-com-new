@@ -18,6 +18,8 @@ import Download from "./pages/Download";
 import ForInvestors from "./pages/ForInvestors";
 import NotFound from "./pages/NotFound";
 import Resources from "./pages/Resources";
+import Auth from "./pages/Auth";
+import Profile from "./pages/Profile";
 
 const queryClient = new QueryClient();
 
@@ -73,6 +75,8 @@ const App = () => {
             <Route path="/for-investors" element={<ForInvestors />} />
             <Route path="/payment-success" element={<PaymentSuccess />} />
             <Route path="/download/:token" element={<Download />} />
+            <Route path="/auth" element={<Auth />} />
+            <Route path="/profile" element={<Profile />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

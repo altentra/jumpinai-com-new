@@ -51,6 +51,7 @@ const Navigation = () => {
     { name: "Resources", href: "/resources" },
     { name: "About Us", href: "/about-us" },
     { name: "Contact Us", href: "/contact-us" },
+    { name: "Login", href: "/auth" },
   ];
 
   return (
