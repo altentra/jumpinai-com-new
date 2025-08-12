@@ -6,6 +6,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import Navigation from "@/components/Navigation";
+import Footer from "@/components/Footer";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
+import { User, Shield, Crown, CreditCard, RefreshCcw, Save, LogOut } from "lucide-react";
 
 interface SubscriberInfo {
   subscribed: boolean;
@@ -127,85 +134,211 @@ const Profile = () => {
 
   const proActive = useMemo(() => subInfo?.subscribed && subInfo.subscription_tier === "JumpinAI Pro", [subInfo]);
 
-  if (loading) return <main className="min-h-screen pt-28 pb-20"><div className="max-w-4xl mx-auto">Loading...</div></main>;
+  if (loading) {
+    return (
+      <>
+        <Navigation />
+        <main className="min-h-screen pt-28 pb-20">
+          <div className="max-w-6xl mx-auto px-6">Loading...</div>
+        </main>
+        <Footer />
+      </>
+    );
+  }
 
   return (
-    <main className="min-h-screen pt-28 pb-20">
+    <>
       <Helmet>
-        <title>Your Profile | JumpinAI</title>
-        <meta name="description" content="Manage your profile, security, and JumpinAI Pro subscription." />
+        <title>My Account | JumpinAI</title>
+        <meta name="description" content="Manage your profile, security, and JumpinAI Pro subscription in your account dashboard." />
         <link rel="canonical" href={`${window.location.origin}/profile`} />
       </Helmet>
+      <Navigation />
 
-      <section className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
-        <article className="glass rounded-2xl p-6 border border-border md:col-span-2">
-          <h1 className="text-2xl font-bold mb-4">Profile</h1>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="display_name">Display name</Label>
-              <Input id="display_name" value={profile.display_name} onChange={(e) => setProfile({ ...profile, display_name: e.target.value })} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="avatar_url">Avatar URL</Label>
-              <Input id="avatar_url" value={profile.avatar_url} onChange={(e) => setProfile({ ...profile, avatar_url: e.target.value })} />
+      <main className="min-h-screen pt-28 pb-24">
+        {/* Header */}
+        <header className="max-w-6xl mx-auto px-6">
+          <div className="rounded-2xl border border-border glass p-6 md:p-8 animate-fade-in">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div>
+                <h1 className="text-3xl md:text-4xl font-bold flex items-center gap-3">
+                  <User className="h-7 w-7 text-primary" />
+                  Account
+                </h1>
+                <p className="text-muted-foreground mt-2">{email}</p>
+              </div>
+              <div className="flex items-center gap-2">
+                {subInfo?.subscribed ? (
+                  <Badge className="bg-primary/10 text-primary">{subInfo.subscription_tier || 'Pro'} Active</Badge>
+                ) : (
+                  <Badge variant="secondary">Free plan</Badge>
+                )}
+              </div>
             </div>
           </div>
-          <div className="mt-4 flex gap-3">
-            <Button onClick={saveProfile}>Save changes</Button>
-          </div>
-        </article>
+        </header>
 
-        <aside className="glass rounded-2xl p-6 border border-border">
-          <h2 className="text-xl font-semibold mb-4">Security</h2>
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input id="email" value={email} disabled />
-          </div>
-          <div className="space-y-2 mt-3">
-            <Label htmlFor="new_password">New password</Label>
-            <Input id="new_password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-          </div>
-          <Button className="mt-3 w-full" onClick={changePassword}>Update password</Button>
-          <Button className="mt-3 w-full" variant="outline" onClick={async () => { await supabase.auth.signOut(); navigate("/auth"); }}>Sign out</Button>
-        </aside>
-      </section>
+        {/* Tabs */}
+        <section className="max-w-6xl mx-auto px-6 mt-6">
+          <Tabs defaultValue="overview" className="w-full">
+            <TabsList className="grid grid-cols-2 md:grid-cols-4 w-full">
+              <TabsTrigger value="overview" className="flex items-center gap-2">
+                <Crown className="h-4 w-4" /> Overview
+              </TabsTrigger>
+              <TabsTrigger value="profile" className="flex items-center gap-2">
+                <User className="h-4 w-4" /> Profile
+              </TabsTrigger>
+              <TabsTrigger value="security" className="flex items-center gap-2">
+                <Shield className="h-4 w-4" /> Security
+              </TabsTrigger>
+              <TabsTrigger value="subscription" className="flex items-center gap-2">
+                <CreditCard className="h-4 w-4" /> Subscription
+              </TabsTrigger>
+            </TabsList>
 
-      <section className="max-w-4xl mx-auto mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-        <article className={`rounded-2xl p-6 border ${proActive ? 'border-primary' : 'border-border'} glass`}>
-          <h2 className="text-xl font-semibold">Free</h2>
-          <p className="text-muted-foreground">$0 / month</p>
-          <ul className="mt-4 space-y-2 list-disc list-inside">
-            {planFeatures.free.map((f) => (<li key={f}>{f}</li>))}
-          </ul>
-        </article>
-        <article className={`rounded-2xl p-6 border ${proActive ? 'border-primary' : 'border-border'} glass`}>
-          <div className="flex items-baseline justify-between">
-            <div>
-              <h2 className="text-xl font-semibold">JumpinAI Pro</h2>
-              <p className="text-muted-foreground">$10 / month</p>
-            </div>
-            {proActive && <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs">Your plan</span>}
-          </div>
-          <ul className="mt-4 space-y-2 list-disc list-inside">
-            {planFeatures.pro.map((f) => (<li key={f}>{f}</li>))}
-          </ul>
-          <div className="mt-4 flex gap-3">
-            {!proActive ? (
-              <Button onClick={subscribe}>Get JumpinAI Pro</Button>
-            ) : (
-              <>
-                <Button variant="secondary" onClick={manage}>Manage subscription</Button>
-                <Button variant="outline" onClick={refreshSubscription}>Refresh status</Button>
-              </>
-            )}
-          </div>
-          {subInfo?.subscription_end && (
-            <p className="mt-3 text-sm text-muted-foreground">Current period ends: {new Date(subInfo.subscription_end).toLocaleString()}</p>
-          )}
-        </article>
-      </section>
-    </main>
+            {/* Overview */}
+            <TabsContent value="overview" className="mt-6 animate-fade-in">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2"><Crown className="h-5 w-5 text-primary" /> Subscription</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <p className="text-muted-foreground">
+                    {subInfo?.subscribed
+                      ? `You're on ${subInfo.subscription_tier || 'JumpinAI Pro'}. Next renewal: ${subInfo.subscription_end ? new Date(subInfo.subscription_end).toLocaleString() : '—'}`
+                      : 'You are on the Free plan. Upgrade to JumpinAI Pro to unlock all blueprints and workflows.'}
+                  </p>
+                </CardContent>
+                <CardFooter className="flex flex-wrap gap-3">
+                  {!subInfo?.subscribed ? (
+                    <Button onClick={subscribe} className="hover-scale">
+                      <Crown className="mr-2 h-4 w-4" /> Get JumpinAI Pro
+                    </Button>
+                  ) : (
+                    <>
+                      <Button variant="secondary" onClick={manage} className="hover-scale">
+                        <CreditCard className="mr-2 h-4 w-4" /> Manage subscription
+                      </Button>
+                      <Button variant="outline" onClick={refreshSubscription} className="hover-scale">
+                        <RefreshCcw className="mr-2 h-4 w-4" /> Refresh status
+                      </Button>
+                    </>
+                  )}
+                </CardFooter>
+              </Card>
+            </TabsContent>
+
+            {/* Profile */}
+            <TabsContent value="profile" className="mt-6 animate-fade-in">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2"><User className="h-5 w-5 text-primary" /> Profile details</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="display_name">Display name</Label>
+                      <Input id="display_name" value={profile.display_name} onChange={(e) => setProfile({ ...profile, display_name: e.target.value })} />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="avatar_url">Avatar URL</Label>
+                      <Input id="avatar_url" value={profile.avatar_url} onChange={(e) => setProfile({ ...profile, avatar_url: e.target.value })} />
+                    </div>
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <Button onClick={saveProfile} className="hover-scale">
+                    <Save className="mr-2 h-4 w-4" /> Save changes
+                  </Button>
+                </CardFooter>
+              </Card>
+            </TabsContent>
+
+            {/* Security */}
+            <TabsContent value="security" className="mt-6 animate-fade-in">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2"><Shield className="h-5 w-5 text-primary" /> Security</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email</Label>
+                    <Input id="email" value={email} disabled />
+                  </div>
+                  <Separator />
+                  <div className="space-y-2">
+                    <Label htmlFor="new_password">New password</Label>
+                    <Input id="new_password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                  </div>
+                </CardContent>
+                <CardFooter className="flex flex-wrap gap-3">
+                  <Button onClick={changePassword} className="hover-scale">
+                    Update password
+                  </Button>
+                  <Button variant="outline" onClick={async () => { await supabase.auth.signOut(); navigate("/auth"); }} className="hover-scale">
+                    <LogOut className="mr-2 h-4 w-4" /> Sign out
+                  </Button>
+                </CardFooter>
+              </Card>
+            </TabsContent>
+
+            {/* Subscription Plans */}
+            <TabsContent value="subscription" className="mt-6 animate-fade-in">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card className="h-full">
+                  <CardHeader>
+                    <CardTitle>Free</CardTitle>
+                    <p className="text-muted-foreground">$0 / month</p>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-2 list-disc list-inside">
+                      {planFeatures.free.map((f) => (<li key={f}>{f}</li>))}
+                    </ul>
+                  </CardContent>
+                </Card>
+
+                <Card className={`h-full ${subInfo?.subscribed ? 'ring-1 ring-primary/30' : ''}`}>
+                  <CardHeader className="flex items-start justify-between">
+                    <div>
+                      <CardTitle>JumpinAI Pro</CardTitle>
+                      <p className="text-muted-foreground">$10 / month</p>
+                    </div>
+                    {subInfo?.subscribed && (
+                      <Badge className="bg-primary/10 text-primary">Your plan</Badge>
+                    )}
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-2 list-disc list-inside">
+                      {planFeatures.pro.map((f) => (<li key={f}>{f}</li>))}
+                    </ul>
+                  </CardContent>
+                  <CardFooter className="flex flex-wrap gap-3">
+                    {!subInfo?.subscribed ? (
+                      <Button onClick={subscribe} className="hover-scale">
+                        <Crown className="mr-2 h-4 w-4" /> Get JumpinAI Pro
+                      </Button>
+                    ) : (
+                      <>
+                        <Button variant="secondary" onClick={manage} className="hover-scale">
+                          <CreditCard className="mr-2 h-4 w-4" /> Manage subscription
+                        </Button>
+                        <Button variant="outline" onClick={refreshSubscription} className="hover-scale">
+                          <RefreshCcw className="mr-2 h-4 w-4" /> Refresh status
+                        </Button>
+                      </>
+                    )}
+                  </CardFooter>
+                </Card>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </section>
+      </main>
+
+      <Footer />
+    </>
   );
+
 };
 
 export default Profile;
