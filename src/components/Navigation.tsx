@@ -4,10 +4,12 @@ import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ThemeToggle from "@/components/ThemeToggle";
 import { Link, useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isAuthed, setIsAuthed] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -16,6 +18,22 @@ const Navigation = () => {
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    let mounted = true;
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!mounted) return;
+      setIsAuthed(!!session?.user);
+    });
+    supabase.auth.getSession().then(({ data }) => {
+      if (!mounted) return;
+      setIsAuthed(!!data.session?.user);
+    });
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const handleNavClick = (href: string) => {
@@ -41,8 +59,12 @@ const Navigation = () => {
     setIsOpen(false);
   };
 
-  const handleWhopClick = () => {
-    window.open('https://whop.com/jumpinai/', '_blank');
+  const handleCtaClick = () => {
+    if (isAuthed) {
+      navigate('/profile');
+    } else {
+      navigate('/auth');
+    }
     setIsOpen(false);
   };
 
@@ -51,7 +73,6 @@ const Navigation = () => {
     { name: "Resources", href: "/resources" },
     { name: "About Us", href: "/about-us" },
     { name: "Contact Us", href: "/contact-us" },
-    { name: "Login", href: "/auth" },
   ];
 
   return (
@@ -96,10 +117,10 @@ const Navigation = () => {
           <div className="hidden md:flex items-center space-x-4">
             <ThemeToggle />
             <Button 
-              onClick={handleWhopClick}
+              onClick={handleCtaClick}
               className="modern-button bg-gradient-to-r from-gray-800 to-black hover:from-gray-900 hover:to-gray-800 dark:from-white dark:to-gray-300 dark:hover:from-gray-100 dark:hover:to-gray-400 text-white dark:text-black px-6 py-2.5 rounded-xl font-semibold transition-all duration-300 hover:scale-105"
             >
-              Join our Whop
+              {isAuthed ? 'My Account' : 'Log In'}
             </Button>
           </div>
 
@@ -130,10 +151,10 @@ const Navigation = () => {
               ))}
               <div className="pt-2">
                 <Button 
-                  onClick={handleWhopClick}
+                  onClick={handleCtaClick}
                   className="w-full modern-button bg-gradient-to-r from-gray-800 to-black hover:from-gray-900 hover:to-gray-800 dark:from-white dark:to-gray-300 dark:hover:from-gray-100 dark:hover:to-gray-400 text-white dark:text-black py-3 rounded-xl font-semibold"
                 >
-                  Join our Whop
+                  {isAuthed ? 'My Account' : 'Log In'}
                 </Button>
               </div>
             </div>

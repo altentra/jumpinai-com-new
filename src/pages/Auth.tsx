@@ -17,11 +17,11 @@ const Auth = () => {
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session?.user) {
-        navigate("/profile", { replace: true });
+        navigate("/", { replace: true });
       }
     });
     supabase.auth.getSession().then(({ data }) => {
-      if (data.session?.user) navigate("/profile", { replace: true });
+      if (data.session?.user) navigate("/", { replace: true });
     });
     return () => subscription.unsubscribe();
   }, [navigate]);
@@ -39,7 +39,7 @@ const Auth = () => {
 
   const handleSignUp = async () => {
     setLoading(true);
-    const redirectUrl = `${window.location.origin}/profile`;
+    const redirectUrl = `${window.location.origin}/`;
     const { error } = await supabase.auth.signUp({
       email,
       password,
