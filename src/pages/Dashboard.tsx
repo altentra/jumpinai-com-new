@@ -37,7 +37,7 @@ export default function Dashboard() {
       <Navigation />
 
       <SidebarProvider>
-        <div className="min-h-screen flex w-full pt-28 pb-24">
+        <div className="min-h-screen flex w-full pt-20 pb-24">
           <AppSidebar />
 
           <main className="flex-1">
