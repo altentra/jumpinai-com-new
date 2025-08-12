@@ -255,8 +255,7 @@ const AboutUs = () => {
 
           <div className="relative z-10 px-6 text-center">
             <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4">About JumpinAI</h1>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">We help creators, entrepreneurs, and teams turn AI into measurable outcomes—without the noise.</p>
-            <p className="mt-4 text-base md:text-lg text-muted-foreground max-w-3xl mx-auto">Clarity over hype. Blueprints over theory. Results in days, not months.</p>
+            <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">For creators, founders, and teams who want results—not research. Learn the right tools, then ship real automations in days.</p>
             <div className="mt-8 flex justify-center">
               <Button size="lg" className="text-lg px-8 modern-button bg-gradient-to-r from-gray-800 to-black hover:from-gray-900 hover:to-gray-800 dark:from-white dark:to-gray-300 dark:hover:from-gray-100 dark:hover:to-gray-400 text-white dark:text-black transition-all duration-300 hover:scale-105 group" asChild>
                 <a href="https://whop.com/jumpinai/" target="_blank" rel="noopener noreferrer">
