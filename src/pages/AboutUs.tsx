@@ -249,21 +249,14 @@ const AboutUs = () => {
         <Navigation />
       {/* Hero Section */}
       <section className="relative px-0 mt-20">
-        <div className="relative min-h-[calc(100svh-5rem)] flex items-center justify-center overflow-hidden bg-background">
-          <img
-            src="/lovable-uploads/702eb376-48c5-4944-b717-9d5208414ecb.png"
-            alt=""
-            aria-hidden="true"
-            className="absolute inset-0 w-full h-full object-contain object-center"
-            loading="eager"
-            decoding="async"
-          />
+        <div className="relative min-h-[60svh] md:min-h-[65svh] flex items-center justify-center overflow-hidden bg-background">
           {/* Top dark shadow/overlay */}
-          <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/60 to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-background/60 to-transparent pointer-events-none" />
 
           <div className="relative z-10 px-6 text-center">
             <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4">About JumpinAI</h1>
-            <p className="text-lg md:text-xl text-muted-foreground">From curiosity to capability—fast.</p>
+            <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">We help creators, entrepreneurs, and teams turn AI into measurable outcomes—without the noise.</p>
+            <p className="mt-4 text-base md:text-lg text-muted-foreground max-w-3xl mx-auto">Clarity over hype. Blueprints over theory. Results in days, not months.</p>
             <div className="mt-8 flex justify-center">
               <Button size="lg" className="text-lg px-8 modern-button bg-gradient-to-r from-gray-800 to-black hover:from-gray-900 hover:to-gray-800 dark:from-white dark:to-gray-300 dark:hover:from-gray-100 dark:hover:to-gray-400 text-white dark:text-black transition-all duration-300 hover:scale-105 group" asChild>
                 <a href="https://whop.com/jumpinai/" target="_blank" rel="noopener noreferrer">
