@@ -1,7 +1,8 @@
 
 import { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import ThemeToggle from "@/components/ThemeToggle";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -61,7 +62,7 @@ const Navigation = () => {
 
   const handleCtaClick = () => {
     if (isAuthed) {
-      navigate('/profile');
+      navigate('/dashboard');
     } else {
       navigate('/auth');
     }
@@ -116,12 +117,28 @@ const Navigation = () => {
           {/* Theme Toggle & CTA */}
           <div className="hidden md:flex items-center space-x-4">
             <ThemeToggle />
-            <Button 
-              onClick={handleCtaClick}
-              className="modern-button bg-gradient-to-r from-gray-800 to-black hover:from-gray-900 hover:to-gray-800 dark:from-white dark:to-gray-300 dark:hover:from-gray-100 dark:hover:to-gray-400 text-white dark:text-black px-6 py-2.5 rounded-xl font-semibold transition-all duration-300 hover:scale-105"
-            >
-              {isAuthed ? 'My Account' : 'Log In'}
-            </Button>
+            {isAuthed ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button 
+                    className="modern-button bg-gradient-to-r from-gray-800 to-black hover:from-gray-900 hover:to-gray-800 dark:from-white dark:to-gray-300 dark:hover:from-gray-100 dark:hover:to-gray-400 text-white dark:text-black px-6 py-2.5 rounded-xl font-semibold transition-all duration-300 hover:scale-105"
+                  >
+                    My Account <ChevronDown className="ml-2 h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="min-w-[180px]">
+                  <DropdownMenuItem onSelect={() => navigate('/dashboard')}>Dashboard</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => navigate('/profile')}>Profile</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Button 
+                onClick={handleCtaClick}
+                className="modern-button bg-gradient-to-r from-gray-800 to-black hover:from-gray-900 hover:to-gray-800 dark:from-white dark:to-gray-300 dark:hover:from-gray-100 dark:hover:to-gray-400 text-white dark:text-black px-6 py-2.5 rounded-xl font-semibold transition-all duration-300 hover:scale-105"
+              >
+                Log In
+              </Button>
+            )}
           </div>
 
           {/* Mobile menu button */}

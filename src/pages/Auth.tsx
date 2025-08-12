@@ -17,11 +17,11 @@ const Auth = () => {
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session?.user) {
-        navigate("/", { replace: true });
+        navigate("/dashboard", { replace: true });
       }
     });
     supabase.auth.getSession().then(({ data }) => {
-      if (data.session?.user) navigate("/", { replace: true });
+      if (data.session?.user) navigate("/dashboard", { replace: true });
     });
     return () => subscription.unsubscribe();
   }, [navigate]);
