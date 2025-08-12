@@ -248,13 +248,13 @@ const AboutUs = () => {
         </Helmet>
         <Navigation />
       {/* Hero Section */}
-      <section className="relative px-0">
-        <div className="relative min-h-[65vh] md:min-h-[80vh] lg:min-h-[85vh] flex items-center justify-center overflow-hidden bg-background">
+      <section className="relative px-0 mt-20">
+        <div className="relative min-h-[calc(100svh-5rem)] flex items-center justify-center overflow-hidden bg-background">
           <img
             src="/lovable-uploads/702eb376-48c5-4944-b717-9d5208414ecb.png"
             alt=""
             aria-hidden="true"
-            className="absolute inset-0 w-full h-full object-contain"
+            className="absolute inset-0 w-full h-full object-contain object-center"
             loading="eager"
             decoding="async"
           />
