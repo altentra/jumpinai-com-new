@@ -9,7 +9,6 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarFooter,
   useSidebar,
 } from "@/components/ui/sidebar";
 
@@ -20,6 +19,7 @@ const items = [
   { title: "My Workflows", url: "/dashboard/workflows", icon: GitBranch },
   { title: "My Blueprints", url: "/dashboard/blueprints", icon: Boxes },
   { title: "My Strategies", url: "/dashboard/strategies", icon: Lightbulb },
+  { title: "Profile", url: "/dashboard/profile", icon: User },
 ];
 
 export default function AppSidebar() {
@@ -53,18 +53,6 @@ export default function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild className="justify-start">
-              <NavLink to="/dashboard/profile" className={getNavCls}>
-                <User className="mr-2 h-4 w-4" />
-                {!isCollapsed && <span>Profile</span>}
-              </NavLink>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarFooter>
     </Sidebar>
   );
 }
