@@ -112,18 +112,6 @@ const categories: Category[] = [
         ],
       },
       {
-        name: "Jasper",
-        url: "https://www.jasper.ai/",
-        description: "Marketing‑focused AI copilot for copy, campaigns, and briefs.",
-        promptExample:
-          "Create a 3‑email B2B nurture sequence. Audience: CFOs at SaaS Series B. Goal: book demo. Provide subject lines + 2 CTA variants.",
-        workflowSteps: [
-          "Define ICP, goal, stage; request 3‑email arc.",
-          "A/B subject lines and CTAs; apply brand style.",
-          "Export to ESP with UTM conventions.",
-        ],
-      },
-      {
         name: "Notion AI",
         url: "https://www.notion.so/product/ai",
         description: "AI inside your docs and wiki for summarizing, drafting, and cleanup.",
@@ -133,6 +121,30 @@ const categories: Category[] = [
           "Paste raw notes; ask for action list by owner/date.",
           "Request concise recap; auto‑link to related pages.",
           "Share and @mention owners for accountability.",
+        ],
+      },
+      {
+        name: "Meta Llama",
+        url: "https://ai.meta.com/llama/",
+        description: "Open-weight family for local and hosted use; great for customized assistants.",
+        promptExample:
+          "As a customer support copilot, draft empathetic replies using the following knowledge base (paste). Keep under 120 words and include links.",
+        workflowSteps: [
+          "Select Llama family suited to constraints (context, size).",
+          "Add RAG with policies/FAQ; few-shot to set tone.",
+          "Evaluate on real tickets; refine prompts and guardrails.",
+        ],
+      },
+      {
+        name: "Mistral Large",
+        url: "https://mistral.ai/",
+        description: "Efficient, high-quality reasoning; solid for multilingual and tooling.",
+        promptExample:
+          "Translate this technical blog to French with accurate terminology and keep markdown structure intact.",
+        workflowSteps: [
+          "Provide glossary and tone examples.",
+          "Constrain output to preserve code blocks and links.",
+          "QA with bilingual reviewer and run lints.",
         ],
       },
     ],
@@ -190,13 +202,13 @@ const categories: Category[] = [
         ],
       },
       {
-        name: "Stable Diffusion XL",
+        name: "Stable Diffusion 3",
         url: "https://stability.ai/",
-        description: "Open models for controllable, local or cloud image workflows.",
+        description: "Latest open family for high‑quality, controllable image pipelines (local or cloud).",
         promptExample:
           "photoreal architectural exterior, golden hour, 24mm, soft shadows, PBR detail, 4k, --ar 16:9",
         workflowSteps: [
-          "Select SDXL checkpoint and control‑nets.",
+          "Select SD3 base/refiner models and control‑nets as needed.",
           "Use image‑to‑image for consistent angles.",
           "Batch render and sort via metadata.",
         ],
@@ -247,6 +259,18 @@ const categories: Category[] = [
           "Pick template; generate base artwork.",
           "Adjust layout/brand colors; add text.",
           "Export to platform‑specific sizes.",
+        ],
+      },
+      {
+        name: "Google Imagen 3",
+        url: "https://cloud.google.com/vertex-ai/generative-ai/docs/image/overview",
+        description: "Photoreal and design‑grade image generation available via Vertex AI.",
+        promptExample:
+          "lifestyle product photo of stainless steel water bottle on granite countertop, soft window light, 3:2, brand color accents",
+        workflowSteps: [
+          "Define product, lighting, and aspect ratio.",
+          "Generate variations; select most on‑brand.",
+          "Upscale and export with color‑safe profile.",
         ],
       },
     ],
@@ -352,15 +376,15 @@ const categories: Category[] = [
         ],
       },
       {
-        name: "Kapwing AI",
-        url: "https://www.kapwing.com/ai",
-        description: "Templates, subtitles, and AI cuts for social video.",
+        name: "OpenAI Sora",
+        url: "https://openai.com/sora",
+        description: "Advanced text‑to‑video for cinematic, coherent scenes from short prompts.",
         promptExample:
-          "Auto‑subtitle and cut this 2‑min clip into 3 TikTok‑style shorts with dynamic captions.",
+          "10‑second wide shot of a rainy neon street at night, reflections on wet pavement, slow dolly forward, 24fps, cinematic",
         workflowSteps: [
-          "Upload source; select format/templates.",
-          "Generate cuts and captions; tweak timing.",
-          "Export platform‑specific presets.",
+          "Write concise shot description with camera and motion.",
+          "Generate 2–3 takes; pick most coherent composition.",
+          "Color grade and add ambience in post.",
         ],
       },
       {
@@ -475,6 +499,30 @@ const categories: Category[] = [
           "Choose language/voice; paste script.",
           "Tweak speed/pronunciation; QA sample.",
           "Batch render and organize files.",
+        ],
+      },
+      {
+        name: "Stable Audio",
+        url: "https://stability.ai/audio",
+        description: "Text‑to‑music and sound effects generation by Stability AI.",
+        promptExample:
+          "cinematic trailer hit, low brass and percussion, 5 seconds, high impact, no melody",
+        workflowSteps: [
+          "Specify length, style, and instrumentation.",
+          "Generate alternates; pick the tightest transients.",
+          "Export WAV; layer under VO for dynamics.",
+        ],
+      },
+      {
+        name: "Meta MusicGen",
+        url: "https://ai.meta.com/research/musicgen/",
+        description: "Open research model for controllable music generation and remixing.",
+        promptExample:
+          "chill lo‑fi beat at 85bpm, warm vinyl crackle, mellow Rhodes chords, 45 seconds, no vocals",
+        workflowSteps: [
+          "Provide tempo and style cues; set structure.",
+          "Iterate motifs; export stems/MIDI for DAW.",
+          "Mix and master to platform loudness.",
         ],
       },
     ],
@@ -718,7 +766,7 @@ export default function Resources() {
           <div className="max-w-6xl mx-auto">
             <Tabs defaultValue="tools" className="w-full">
               <div className="sticky top-16 md:top-20 z-40 -mx-6 px-6 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-                <div className="max-w-6xl mx-auto flex justify-center py-3 border-b border-border/40">
+                <div className="max-w-7xl mx-auto flex justify-center py-3 border-b border-border/40">
                   <TabsList className="rounded-full border border-border/60 bg-muted/50 p-1 backdrop-blur supports-[backdrop-filter]:bg-muted/60">
                     <TabsTrigger value="tools" className="rounded-full px-4 md:px-6">Tools</TabsTrigger>
                     <TabsTrigger value="prompts" className="rounded-full px-4 md:px-6">Prompts</TabsTrigger>
