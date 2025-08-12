@@ -43,7 +43,7 @@ export default function AppSidebar() {
                   <SidebarMenuButton asChild className="justify-start">
                     <NavLink to={item.url} end className={getNavCls}>
                       <item.icon className="mr-2 h-4 w-4" />
-                      {!collapsed && <span>{item.title}</span>}
+                      {!isCollapsed && <span>{item.title}</span>}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -59,7 +59,7 @@ export default function AppSidebar() {
             <SidebarMenuButton asChild className="justify-start">
               <NavLink to="/dashboard/profile" className={getNavCls}>
                 <User className="mr-2 h-4 w-4" />
-                {!collapsed && <span>Profile</span>}
+                {!isCollapsed && <span>Profile</span>}
               </NavLink>
             </SidebarMenuButton>
           </SidebarMenuItem>
