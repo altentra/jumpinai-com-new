@@ -32,8 +32,8 @@ export default function AppSidebar() {
     isActive ? "bg-muted text-primary font-medium" : "hover:bg-muted/50";
 
   return (
-    <Sidebar className={isCollapsed ? "w-14" : "w-64"} collapsible="icon" variant="inset">
-      <SidebarContent className="pb-16">
+    <Sidebar className={isCollapsed ? "w-14 top-20 bottom-12" : "w-64 top-20 bottom-12"} collapsible="icon">
+      <SidebarContent className="pb-24">
         <SidebarGroup>
           <SidebarGroupLabel>Dashboard</SidebarGroupLabel>
           <SidebarGroupContent>

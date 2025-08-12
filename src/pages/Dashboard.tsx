@@ -3,7 +3,6 @@ import { Helmet } from "react-helmet-async";
 import { useNavigate, Routes, Route, Navigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import AppSidebar from "@/components/dashboard/AppSidebar";
 import DashboardHome from "./dashboard/DashboardHome";
@@ -37,7 +36,7 @@ export default function Dashboard() {
       <Navigation />
 
       <SidebarProvider>
-        <div className="min-h-screen flex w-full pt-20 pb-24">
+        <div className="min-h-screen flex w-full pt-20">
           <AppSidebar />
 
           <main className="flex-1">
@@ -62,7 +61,9 @@ export default function Dashboard() {
         </div>
       </SidebarProvider>
 
-      <Footer />
+      <div className="h-12 border-t bg-background flex items-center justify-center text-sm text-muted-foreground">
+        © 2025 JumpinAI, LLC. All rights reserved.
+      </div>
     </>
   );
 }
