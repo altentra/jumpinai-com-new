@@ -298,29 +298,6 @@ const AboutUs = () => {
             </p>
           </article>
         </div>
-      </section
-            <Zap className="w-4 h-4" />
-            Built for the Speed of Opportunity
-          </div>
-          
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-            We Turn AI Curiosity Into Real Results
-          </h1>
-          
-          <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
-            JumpinAI exists for one reason: to get you implementing AI <span className="text-primary font-semibold">today</span>, not tomorrow. 
-            We provide the education, blueprints, and guidance you need to succeed. No theory—just results.
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="text-lg px-8 modern-button bg-gradient-to-r from-gray-800 to-black hover:from-gray-900 hover:to-gray-800 dark:from-white dark:to-gray-300 dark:hover:from-gray-100 dark:hover:to-gray-400 text-white dark:text-black transition-all duration-300 hover:scale-105 group" asChild>
-              <a href="https://whop.com/jumpinai/" target="_blank" rel="noopener noreferrer">
-                Start Building Now
-                <ArrowRight className="ml-2 w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
-              </a>
-            </Button>
-          </div>
-        </div>
       </section>
 
       {/* What We Believe */}
