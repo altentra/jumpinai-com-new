@@ -1,4 +1,5 @@
 import { NavLink, useLocation } from "react-router-dom";
+import { useEffect } from "react";
 import { LayoutDashboard, Rocket, Sparkles, GitBranch, Boxes, Lightbulb, User } from "lucide-react";
 import {
   Sidebar,
@@ -23,10 +24,14 @@ const items = [
 ];
 
 export default function AppSidebar() {
-  const { state } = useSidebar();
+  const { state, setOpenMobile, isMobile } = useSidebar();
   const isCollapsed = state === "collapsed";
   const location = useLocation();
   const currentPath = location.pathname;
+
+  useEffect(() => {
+    if (isMobile) setOpenMobile(false);
+  }, [currentPath, isMobile, setOpenMobile]);
 
   const getNavCls = ({ isActive }: { isActive: boolean }) =>
     isActive ? "bg-muted text-primary font-medium" : "hover:bg-muted/50";

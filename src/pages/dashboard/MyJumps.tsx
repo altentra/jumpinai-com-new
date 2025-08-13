@@ -74,7 +74,7 @@ export default function MyJumps() {
         body: { productId, customerEmail: email },
       });
       if (error) throw error;
-      window.open((data as any)?.url, '_blank');
+      window.location.href = (data as any)?.url;
     } catch (e: any) {
       console.error(e);
       toast({ title: 'Payment error', description: e.message || 'Could not start checkout', variant: 'destructive' });
@@ -85,7 +85,7 @@ export default function MyJumps() {
     try {
       const { data, error } = await supabase.functions.invoke('create-checkout');
       if (error) throw error;
-      window.open((data as any)?.url, '_blank');
+      window.location.href = (data as any)?.url;
     } catch (e: any) {
       console.error(e);
       toast({ title: 'Checkout error', description: e.message || 'Could not start subscription checkout', variant: 'destructive' });

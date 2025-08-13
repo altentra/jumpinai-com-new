@@ -115,7 +115,7 @@ const Profile = () => {
       const { data, error } = await supabase.functions.invoke("create-checkout");
       if (error) throw error;
       const url = (data as any)?.url;
-      if (url) window.open(url, "_blank");
+      if (url) window.location.href = url;
     } catch (e: any) {
       toast.error(e.message || "Failed to start checkout");
     }
@@ -126,7 +126,7 @@ const Profile = () => {
       const { data, error } = await supabase.functions.invoke("customer-portal");
       if (error) throw error;
       const url = (data as any)?.url;
-      if (url) window.open(url, "_blank");
+      if (url) window.location.href = url;
     } catch (e: any) {
       toast.error(e.message || "Failed to open customer portal");
     }
