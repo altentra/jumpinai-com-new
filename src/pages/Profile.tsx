@@ -181,20 +181,20 @@ const Profile = () => {
         {/* Tabs */}
         <section className="max-w-6xl mx-auto px-6 mt-6">
           <Tabs defaultValue="overview" className="w-full">
-            <TabsList className="grid grid-cols-2 md:grid-cols-4 w-full">
-              <TabsTrigger value="overview" className="flex items-center gap-2">
-                <Crown className="h-4 w-4" /> Overview
-              </TabsTrigger>
-              <TabsTrigger value="profile" className="flex items-center gap-2">
-                <User className="h-4 w-4" /> Profile
-              </TabsTrigger>
-              <TabsTrigger value="security" className="flex items-center gap-2">
-                <Shield className="h-4 w-4" /> Security
-              </TabsTrigger>
-              <TabsTrigger value="subscription" className="flex items-center gap-2">
-                <CreditCard className="h-4 w-4" /> Subscription
-              </TabsTrigger>
-            </TabsList>
+          <TabsList className="flex flex-nowrap overflow-x-auto md:grid md:grid-cols-4 w-full gap-2 md:gap-0 -mx-2 px-2 md:mx-0 md:px-0 rounded-xl bg-muted/30">
+            <TabsTrigger value="overview" className="flex items-center gap-2 shrink-0 whitespace-nowrap">
+              <Crown className="h-4 w-4" /> Overview
+            </TabsTrigger>
+            <TabsTrigger value="profile" className="flex items-center gap-2 shrink-0 whitespace-nowrap">
+              <User className="h-4 w-4" /> Profile
+            </TabsTrigger>
+            <TabsTrigger value="security" className="flex items-center gap-2 shrink-0 whitespace-nowrap">
+              <Shield className="h-4 w-4" /> Security
+            </TabsTrigger>
+            <TabsTrigger value="subscription" className="flex items-center gap-2 shrink-0 whitespace-nowrap">
+              <CreditCard className="h-4 w-4" /> Subscription
+            </TabsTrigger>
+          </TabsList>
 
             {/* Overview */}
             <TabsContent value="overview" className="mt-6 animate-fade-in">

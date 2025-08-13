@@ -159,17 +159,17 @@ export default function ProfileTabs() {
       {/* Tabs */}
       <section className="mt-6">
         <Tabs defaultValue="overview" className="w-full">
-          <TabsList className="grid grid-cols-2 md:grid-cols-4 w-full">
-            <TabsTrigger value="overview" className="flex items-center gap-2">
+          <TabsList className="flex flex-nowrap overflow-x-auto md:grid md:grid-cols-4 w-full gap-2 md:gap-0 -mx-2 px-2 md:mx-0 md:px-0 rounded-xl bg-muted/30">
+            <TabsTrigger value="overview" className="flex items-center gap-2 shrink-0 whitespace-nowrap">
               <Crown className="h-4 w-4" /> Overview
             </TabsTrigger>
-            <TabsTrigger value="profile" className="flex items-center gap-2">
+            <TabsTrigger value="profile" className="flex items-center gap-2 shrink-0 whitespace-nowrap">
               <User className="h-4 w-4" /> Profile
             </TabsTrigger>
-            <TabsTrigger value="security" className="flex items-center gap-2">
+            <TabsTrigger value="security" className="flex items-center gap-2 shrink-0 whitespace-nowrap">
               <Shield className="h-4 w-4" /> Security
             </TabsTrigger>
-            <TabsTrigger value="subscription" className="flex items-center gap-2">
+            <TabsTrigger value="subscription" className="flex items-center gap-2 shrink-0 whitespace-nowrap">
               <CreditCard className="h-4 w-4" /> Subscription
             </TabsTrigger>
           </TabsList>
