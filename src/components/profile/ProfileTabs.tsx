@@ -311,6 +311,13 @@ export default function ProfileTabs() {
           </TabsContent>
         </Tabs>
       </section>
+
+      {/* Bottom Log Out */}
+      <div className="mt-6">
+        <Button variant="outline" onClick={async () => { await supabase.auth.signOut(); navigate('/auth'); }} className="w-full md:w-auto hover-scale">
+          <LogOut className="mr-2 h-4 w-4" /> Log Out
+        </Button>
+      </div>
     </div>
   );
 }

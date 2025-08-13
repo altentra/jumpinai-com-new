@@ -128,6 +128,7 @@ const Navigation = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="min-w-[200px] z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 border border-border shadow-lg rounded-xl">
                   <DropdownMenuItem onSelect={() => navigate('/dashboard')}>Dashboard</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={async () => { await supabase.auth.signOut(); navigate('/auth'); }}>Log Out</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
