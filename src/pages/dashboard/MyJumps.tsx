@@ -102,14 +102,11 @@ export default function MyJumps() {
               <h2 className="text-base font-semibold">Unlock all Jumps with JumpinAI Pro</h2>
             </div>
             <p className="text-sm text-muted-foreground">
-              On the free plan, you can buy Jumps à la carte. To access every Jump, plus ongoing updates, upgrade to Pro for $10/month.
+              Purchase Jumps individually on the Free plan. For unlimited access to all current and future Jumps with continuous updates, upgrade to JumpinAI Pro.
             </p>
           </div>
           <div className="flex gap-2">
-            <Button onClick={upgradeToPro}>Upgrade to Pro — $10/mo</Button>
-            <Button variant="secondary" asChild>
-              <a href="#jumps-list">Continue à la carte</a>
-            </Button>
+            <Button onClick={upgradeToPro}>Join JumpinAI Pro for $10/month</Button>
           </div>
         </CardContent>
       </Card>
