@@ -88,19 +88,25 @@ export default function AppSidebar() {
   return (
     <Sidebar className="w-64 mt-20">
       <SidebarHeader className="border-b border-border">
-        <div className="text-sm text-muted-foreground mb-1">
-          Welcome{userName ? `, ${userName}` : ""}, to JumpinAI!
+        <div className="text-center text-base text-muted-foreground mb-1">
+          Welcome{userName ? (
+            <>
+              , <span className="font-bold text-foreground">{userName}</span>!
+            </>
+          ) : "!"}
         </div>
         {subInfo && (
-          <Badge 
-            variant="outline" 
-            className={cn(
-              "text-xs w-fit",
-              subInfo.subscribed ? "border-primary/20 text-primary" : "border-muted text-muted-foreground"
-            )}
-          >
-            {subInfo.subscribed ? subInfo.subscription_tier || 'JumpinAI Pro' : 'Free Plan'}
-          </Badge>
+          <div className="flex justify-center">
+            <Badge 
+              variant="outline" 
+              className={cn(
+                "text-xs w-fit",
+                subInfo.subscribed ? "border-primary/20 text-primary" : "border-muted text-muted-foreground"
+              )}
+            >
+              {subInfo.subscribed ? subInfo.subscription_tier || 'JumpinAI Pro' : 'Free Plan'}
+            </Badge>
+          </div>
         )}
       </SidebarHeader>
 
