@@ -97,24 +97,31 @@ serve(async (req) => {
     const payload = await req.json();
     console.log('Received payload:', JSON.stringify(payload, null, 2));
     
-    const {
-      user,
-      email_data: { token_hash, redirect_to, email_action_type }
-    } = payload as {
-      user: { email: string };
-      email_data: {
-        token_hash: string;
-        redirect_to: string;
-        email_action_type: string;
-      };
-    };
+    // Handle different possible payload structures from Supabase Auth Hooks
+    let user_email, token_hash, redirect_to, email_action_type;
+    
+    if (payload.user && payload.email_data) {
+      // Standard webhook format
+      user_email = payload.user.email;
+      token_hash = payload.email_data.token_hash;
+      redirect_to = payload.email_data.redirect_to;
+      email_action_type = payload.email_data.email_action_type;
+    } else if (payload.email && payload.token_hash) {
+      // Direct format
+      user_email = payload.email;
+      token_hash = payload.token_hash;
+      redirect_to = payload.redirect_to || '';
+      email_action_type = payload.email_action_type || 'signup';
+    } else {
+      throw new Error('Invalid payload structure');
+    }
 
     const supabase_url = Deno.env.get('SUPABASE_URL') ?? '';
-    const html = generateConfirmationHTML(token_hash, email_action_type, redirect_to, supabase_url, user.email);
+    const html = generateConfirmationHTML(token_hash, email_action_type, redirect_to, supabase_url, user_email);
 
     const { error } = await resend.emails.send({
       from: 'JumpinAI <onboarding@resend.dev>',
-      to: [user.email],
+      to: [user_email],
       subject: '🚀 Welcome to JumpinAI - Confirm your email',
       html,
     });
