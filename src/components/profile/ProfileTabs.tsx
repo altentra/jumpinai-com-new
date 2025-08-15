@@ -165,13 +165,21 @@ export default function ProfileTabs() {
 
   const fetchOrders = async () => {
     try {
-      console.log("Fetching orders for email:", email);
+      const currentUser = (await supabase.auth.getUser()).data.user;
+      const userEmail = currentUser?.email;
+      
+      console.log("Fetching orders for email:", userEmail);
+      
+      if (!userEmail) {
+        console.error("No user email found");
+        return;
+      }
       
       // First fetch orders without products join
       const { data: ordersData, error: ordersError } = await supabase
         .from("orders")
         .select("*")
-        .eq("user_email", email)
+        .eq("user_email", userEmail)
         .eq("status", "paid") // Only show completed orders
         .order("created_at", { ascending: false });
       
