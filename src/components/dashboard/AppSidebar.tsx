@@ -55,9 +55,9 @@ export default function AppSidebar() {
         <SidebarGroup>
           {/* Welcome Message */}
           {!isCollapsed && userName && (
-            <div className="px-3 py-2 mb-4">
-              <p className="text-sm font-medium text-muted-foreground">Welcome,</p>
-              <p className="text-base font-semibold text-foreground truncate">{userName}</p>
+            <div className="px-3 py-3 mb-2 border-b border-border">
+              <p className="text-sm font-medium text-foreground">Welcome, {userName}</p>
+              <p className="text-xs text-muted-foreground">to JumpinAI!</p>
             </div>
           )}
           
