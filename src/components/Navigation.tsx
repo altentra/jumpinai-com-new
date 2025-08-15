@@ -10,7 +10,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const { isAuthenticated, logout } = useAuth0();
+  const { isAuthenticated, logout, loginWithRedirect } = useAuth0();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -48,7 +48,7 @@ const Navigation = () => {
     if (isAuthenticated) {
       navigate('/dashboard');
     } else {
-      navigate('/auth');
+      loginWithRedirect();
     }
     setIsOpen(false);
   };
