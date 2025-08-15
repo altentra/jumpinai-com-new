@@ -173,6 +173,7 @@ export default function ProfileTabs() {
         .order("created_at", { ascending: false });
       
       if (error) throw error;
+      console.log("Fetched orders:", data); // Debug log
       setOrders(data || []);
     } catch (error: any) {
       console.error("Error fetching orders:", error);
