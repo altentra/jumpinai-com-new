@@ -15,26 +15,22 @@ interface SubscriberInfo {
 
 const planFeatures = {
   free: [
-    "📚 Access to 5 basic AI prompts",
-    "📧 Weekly newsletter with AI insights", 
-    "💬 Community support forum",
-    "📖 Basic AI education resources",
-    "🎯 3 simple workflow templates",
-    "📝 Limited prompt library access"
+    "Access to basic AI resources",
+    "Weekly newsletter with AI insights", 
+    "Community support forum",
+    "Basic workflow templates",
+    "Limited prompt library access"
   ],
   pro: [
-    "🚀 Everything in Free plan",
-    "📚 Access to 500+ premium AI prompts",
-    "🔄 50+ advanced workflow templates", 
-    "📋 Complete blueprints library (100+ blueprints)",
-    "🎯 Custom strategy builder tool",
-    "⚡ Early access to new AI tools & features",
-    "📞 Priority email & chat support",
-    "📊 Advanced analytics & insights",
-    "🔗 API integrations & automations",
-    "🎨 Custom prompt generator",
-    "📱 Mobile app access",
-    "🏆 Exclusive monthly AI masterclasses"
+    "Everything in Free plan",
+    "Full blueprints library access",
+    "Advanced workflow templates", 
+    "Premium prompt collection",
+    "Priority email support",
+    "Early access to new features",
+    "Advanced analytics dashboard",
+    "Custom strategy tools",
+    "Monthly AI training sessions"
   ],
 };
 
@@ -174,131 +170,104 @@ export default function Subscription() {
       </Card>
 
       {/* Subscription Plans */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
         {/* Free Plan */}
-        <Card className="relative overflow-hidden border-2 hover:shadow-lg transition-all duration-300">
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-muted to-muted-foreground/20"></div>
-          <CardHeader className="pb-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="text-2xl font-bold text-foreground">Free Plan</CardTitle>
-                <p className="text-muted-foreground text-sm mt-1">Perfect for getting started</p>
-              </div>
-              <div className="text-right">
-                <div className="text-3xl font-bold">$0</div>
-                <div className="text-sm text-muted-foreground">per month</div>
-              </div>
+        <Card className="relative h-full border hover:shadow-md transition-shadow duration-200">
+          <CardHeader>
+            <div className="text-center space-y-2">
+              <CardTitle className="text-xl font-semibold">Free Plan</CardTitle>
+              <div className="text-2xl font-bold">$0</div>
+              <p className="text-sm text-muted-foreground">per month</p>
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="space-y-3">
+            <ul className="space-y-3 list-disc list-inside marker:text-foreground">
               {planFeatures.free.map((feature, index) => (
-                <div key={index} className="flex items-start gap-3">
-                  <div className="flex-shrink-0 w-5 h-5 rounded-full bg-muted flex items-center justify-center mt-0.5">
-                    <div className="w-2 h-2 rounded-full bg-muted-foreground"></div>
-                  </div>
-                  <span className="text-sm text-foreground leading-relaxed">{feature}</span>
-                </div>
+                <li key={index} className="text-sm text-foreground">
+                  {feature}
+                </li>
               ))}
-            </div>
+            </ul>
           </CardContent>
-          <CardFooter className="pt-6">
+          <CardFooter className="mt-auto">
             <div className="w-full text-center">
-              <div className="text-sm text-muted-foreground mb-3">Currently active</div>
-              <div className="text-xs text-muted-foreground">No commitment • Cancel anytime</div>
+              <div className="text-sm text-muted-foreground">Currently active</div>
             </div>
           </CardFooter>
         </Card>
 
         {/* Pro Plan */}
-        <Card className={`relative overflow-hidden border-2 hover:shadow-xl transition-all duration-300 ${subInfo?.subscribed ? 'ring-2 ring-primary/30 border-primary/20' : 'border-primary/30 hover:border-primary/50'}`}>
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-primary/80 to-primary"></div>
+        <Card className={`relative h-full transition-all duration-200 ${subInfo?.subscribed ? 'ring-2 ring-primary/30 border-primary/50' : 'border-primary/30 hover:border-primary/50 hover:shadow-lg'}`}>
           {subInfo?.subscribed && (
-            <div className="absolute -top-3 -right-3">
-              <Badge className="bg-primary text-primary-foreground shadow-lg px-3 py-1">Your Plan</Badge>
+            <div className="absolute -top-2 left-1/2 transform -translate-x-1/2">
+              <Badge className="bg-primary text-primary-foreground">Your Plan</Badge>
             </div>
           )}
           {!subInfo?.subscribed && (
-            <div className="absolute -top-3 -right-3">
-              <Badge className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground shadow-lg px-3 py-1">Most Popular</Badge>
+            <div className="absolute -top-2 left-1/2 transform -translate-x-1/2">
+              <Badge className="bg-primary text-primary-foreground">Most Popular</Badge>
             </div>
           )}
-          <CardHeader className="pb-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
-                  JumpinAI Pro
-                </CardTitle>
-                <p className="text-muted-foreground text-sm mt-1">Unlock the full potential of AI</p>
-              </div>
-              <div className="text-right">
-                <div className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">$10</div>
-                <div className="text-sm text-muted-foreground">per month</div>
-              </div>
+          <CardHeader>
+            <div className="text-center space-y-2">
+              <CardTitle className="text-xl font-semibold text-primary">JumpinAI Pro</CardTitle>
+              <div className="text-2xl font-bold text-primary">$10</div>
+              <p className="text-sm text-muted-foreground">per month</p>
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="space-y-3">
+            <ul className="space-y-3 list-disc list-inside marker:text-primary">
               {planFeatures.pro.map((feature, index) => (
-                <div key={index} className="flex items-start gap-3">
-                  <div className="flex-shrink-0 w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center mt-0.5">
-                    <div className="w-2 h-2 rounded-full bg-primary"></div>
-                  </div>
-                  <span className="text-sm text-foreground leading-relaxed">{feature}</span>
-                </div>
+                <li key={index} className="text-sm text-foreground">
+                  {feature}
+                </li>
               ))}
-            </div>
-            <div className="mt-6 p-4 rounded-lg bg-gradient-to-r from-primary/5 to-primary/10 border border-primary/20">
-              <div className="text-sm font-medium text-primary mb-1">🎁 Limited Time Bonus</div>
-              <div className="text-xs text-muted-foreground">First month includes personal AI strategy consultation ($200 value)</div>
-            </div>
+            </ul>
           </CardContent>
-          <CardFooter className="pt-6 space-y-4">
-            <div className="w-full space-y-3">
-              {!subInfo?.subscribed ? (
-                <>
-                  <Button 
-                    onClick={subscribe} 
-                    className="w-full bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-300 h-12 text-base font-semibold"
-                  >
-                    <Crown className="mr-2 h-5 w-5" /> 
-                    Upgrade to Pro
-                  </Button>
-                  <div className="text-center text-xs text-muted-foreground">
-                    30-day money-back guarantee • Cancel anytime
-                  </div>
-                </>
-              ) : (
-                <div className="space-y-3">
-                  <Button 
-                    variant="secondary" 
-                    onClick={manage} 
-                    className="w-full hover-scale border-primary/20 hover:border-primary/40"
-                  >
-                    <ExternalLink className="mr-2 h-4 w-4" /> 
-                    Manage Billing
-                  </Button>
-                  <div className="flex gap-2">
-                    <Button 
-                      variant="outline" 
-                      onClick={refreshSubscription} 
-                      className="flex-1 hover-scale text-xs"
-                    >
-                      <RefreshCcw className="mr-1 h-3 w-3" /> 
-                      Refresh
-                    </Button>
-                    <Button 
-                      variant="destructive" 
-                      onClick={cancelSubscription} 
-                      className="flex-1 hover-scale text-xs"
-                    >
-                      <AlertTriangle className="mr-1 h-3 w-3" /> 
-                      Cancel
-                    </Button>
-                  </div>
+          <CardFooter className="mt-auto space-y-3">
+            {!subInfo?.subscribed ? (
+              <>
+                <Button 
+                  onClick={subscribe} 
+                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+                >
+                  <Crown className="mr-2 h-4 w-4" /> 
+                  Upgrade to Pro
+                </Button>
+                <div className="text-center text-xs text-muted-foreground">
+                  Cancel anytime
                 </div>
-              )}
-            </div>
+              </>
+            ) : (
+              <div className="space-y-2 w-full">
+                <Button 
+                  variant="secondary" 
+                  onClick={manage} 
+                  className="w-full"
+                >
+                  <ExternalLink className="mr-2 h-4 w-4" /> 
+                  Manage Billing
+                </Button>
+                <div className="flex gap-2">
+                  <Button 
+                    variant="outline" 
+                    onClick={refreshSubscription} 
+                    className="flex-1 text-xs"
+                  >
+                    <RefreshCcw className="mr-1 h-3 w-3" /> 
+                    Refresh
+                  </Button>
+                  <Button 
+                    variant="destructive" 
+                    onClick={cancelSubscription} 
+                    className="flex-1 text-xs"
+                  >
+                    <AlertTriangle className="mr-1 h-3 w-3" /> 
+                    Cancel
+                  </Button>
+                </div>
+              </div>
+            )}
           </CardFooter>
         </Card>
       </div>
