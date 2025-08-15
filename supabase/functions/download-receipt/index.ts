@@ -44,16 +44,31 @@ serve(async (req) => {
     }
 
     console.log("Retrieving payment intent...");
-    // Get the payment intent to find the charge
-    const paymentIntent = await stripe.paymentIntents.retrieve(session.payment_intent as string);
+    // Get the payment intent with expanded charges
+    const paymentIntent = await stripe.paymentIntents.retrieve(session.payment_intent as string, {
+      expand: ['charges']
+    });
     console.log("Payment intent retrieved:", { id: paymentIntent.id, charges_count: paymentIntent.charges?.data?.length });
     
+    // Try to get charges directly if not available in payment intent
+    let charges;
     if (!paymentIntent.charges || paymentIntent.charges.data.length === 0) {
+      console.log("No charges in payment intent, fetching charges directly...");
+      charges = await stripe.charges.list({
+        payment_intent: paymentIntent.id,
+        limit: 1
+      });
+      console.log("Direct charges fetch result:", { count: charges.data.length });
+    } else {
+      charges = paymentIntent.charges;
+    }
+    
+    if (!charges || charges.data.length === 0) {
       console.error("No charges found for payment intent:", paymentIntent.id);
       throw new Error("No charges found for this payment");
     }
 
-    const charge = paymentIntent.charges.data[0];
+    const charge = charges.data[0];
     console.log("Charge found:", { id: charge.id, receipt_url: charge.receipt_url });
     
     if (!charge.receipt_url) {
