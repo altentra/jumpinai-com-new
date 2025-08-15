@@ -38,8 +38,38 @@ const Auth = () => {
     }
   };
 
+  const checkEmailExists = async (email: string) => {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password: 'dummy-password-to-check-existence'
+    });
+    
+    // If we get a specific error about invalid credentials, the user exists
+    if (error && error.message.includes('Invalid login credentials')) {
+      return true;
+    }
+    
+    // If no error, user doesn't exist (highly unlikely with dummy password)
+    if (!error) {
+      await supabase.auth.signOut(); // Sign out if somehow signed in
+      return true;
+    }
+    
+    return false;
+  };
+
   const handleSignUp = async () => {
     setLoading(true);
+    
+    // Check if user already exists
+    const userExists = await checkEmailExists(email);
+    if (userExists) {
+      setLoading(false);
+      toast.error("An account with this email already exists. Please sign in instead.");
+      setIsSignUp(false); // Switch to sign in mode
+      return;
+    }
+    
     const redirectUrl = `${window.location.origin}/`;
     const { data, error } = await supabase.auth.signUp({
       email,
@@ -49,7 +79,6 @@ const Auth = () => {
         data: { display_name: name }
       },
     });
-    
     
     setLoading(false);
     if (error) {
