@@ -1,4 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { Resend } from "npm:resend@2.0.0";
+
+const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -37,14 +40,60 @@ serve(async (req) => {
 
     console.log('Extracted:', { user_email, token_hash, email_action_type });
 
-    // For now, just log the confirmation request - we'll add Resend later
-    console.log(`Would send confirmation email to: ${user_email}`);
-    console.log(`Confirmation link would be: https://cieczaajcgkgdgenfdzi.supabase.co/auth/v1/verify?token=${token_hash}&type=${email_action_type}&redirect_to=${redirect_to}`);
+    const confirmationLink = `https://cieczaajcgkgdgenfdzi.supabase.co/auth/v1/verify?token=${token_hash}&type=${email_action_type}&redirect_to=${redirect_to}`;
+    console.log(`Sending confirmation email to: ${user_email}`);
+    console.log(`Confirmation link: ${confirmationLink}`);
+
+    // Send confirmation email via Resend
+    const emailResponse = await resend.emails.send({
+      from: "Jumpin AI <onboarding@resend.dev>",
+      to: [user_email],
+      subject: "Confirm your email address",
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <div style="text-align: center; margin-bottom: 30px;">
+            <h1 style="color: #333; margin: 0;">Welcome to Jumpin AI!</h1>
+          </div>
+          
+          <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+            <h2 style="color: #333; margin-top: 0;">Confirm your email address</h2>
+            <p style="color: #666; line-height: 1.6;">
+              Thank you for signing up! Please click the button below to confirm your email address and activate your account.
+            </p>
+            
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${confirmationLink}" 
+                 style="background: #007bff; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">
+                Confirm Email Address
+              </a>
+            </div>
+            
+            <p style="color: #666; font-size: 14px; line-height: 1.6;">
+              If the button doesn't work, you can copy and paste this link into your browser:<br>
+              <a href="${confirmationLink}" style="color: #007bff; word-break: break-all;">${confirmationLink}</a>
+            </p>
+          </div>
+          
+          <div style="text-align: center; color: #999; font-size: 12px;">
+            <p>If you didn't create an account with us, you can safely ignore this email.</p>
+            <p>&copy; 2025 Jumpin AI. All rights reserved.</p>
+          </div>
+        </div>
+      `,
+    });
+
+    if (emailResponse.error) {
+      console.error('Resend error:', emailResponse.error);
+      throw new Error(`Failed to send email: ${emailResponse.error.message}`);
+    }
+
+    console.log('Confirmation email sent successfully:', emailResponse.data);
 
     return new Response(JSON.stringify({ 
       success: true,
-      message: 'Confirmation email would be sent',
-      email: user_email
+      message: 'Confirmation email sent successfully',
+      email: user_email,
+      emailId: emailResponse.data?.id
     }), {
       status: 200,
       headers: { 'Content-Type': 'application/json', ...corsHeaders }
