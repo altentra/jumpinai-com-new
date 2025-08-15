@@ -87,7 +87,7 @@ export default function AppSidebar() {
     isActive ? "bg-muted text-primary font-medium" : "hover:bg-muted/50";
 
   return (
-    <Sidebar className="w-64">
+    <Sidebar className="w-64 mt-20">
       <SidebarHeader className="border-b border-border">
         <div className="text-sm text-muted-foreground mb-1">
           Welcome{userName ? `, ${userName}` : ""}, to JumpinAI!
