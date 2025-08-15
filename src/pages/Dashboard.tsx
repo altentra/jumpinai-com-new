@@ -62,11 +62,6 @@ export default function Dashboard() {
                 <SidebarTrigger className="mr-2 hover:bg-muted/50 transition-colors rounded-md p-1" />
                 <h1 className="text-lg font-semibold">My Dashboard</h1>
               </div>
-              {userName && (
-                <div className="text-sm text-muted-foreground">
-                  Welcome, <span className="text-foreground font-medium">{userName}</span>!
-                </div>
-              )}
             </header>
 
             <div className="p-4 md:p-6">
