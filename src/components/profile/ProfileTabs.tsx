@@ -393,6 +393,73 @@ export default function ProfileTabs() {
                 </Button>
               </CardFooter>
             </Card>
+
+            {/* Account Actions */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2"><AlertTriangle className="h-5 w-5 text-destructive" /> Account Actions</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground mb-4">Manage your account settings and data.</p>
+                <div className="flex flex-col md:flex-row gap-4">
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="destructive" className="w-full md:w-auto hover-scale">
+                        <Trash2 className="mr-2 h-4 w-4" /> Delete Account
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent className="max-w-md">
+                      <AlertDialogHeader>
+                        <AlertDialogTitle className="flex items-center gap-2 text-destructive">
+                          <AlertTriangle className="h-5 w-5" />
+                          Delete Account Permanently
+                        </AlertDialogTitle>
+                        <AlertDialogDescription className="space-y-4">
+                          <div>
+                            <strong>This action cannot be undone.</strong> Deleting your account will:
+                          </div>
+                          <ul className="list-disc list-inside space-y-1 text-sm">
+                            <li>Permanently delete all your account data</li>
+                            <li>Cancel any active subscriptions immediately</li>
+                            <li>Remove access to all purchased content</li>
+                            <li>Delete your profile and saved preferences</li>
+                          </ul>
+                          <div>
+                            To regain access in the future, you would need to create a new account and repurchase any products or subscriptions.
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="delete-confirm">Type <strong>DELETE</strong> to confirm:</Label>
+                            <Input
+                              id="delete-confirm"
+                              value={deleteConfirmText}
+                              onChange={(e) => setDeleteConfirmText(e.target.value)}
+                              placeholder="Type DELETE here"
+                              className="font-mono"
+                            />
+                          </div>
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel onClick={() => setDeleteConfirmText("")}>
+                          Cancel
+                        </AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={deleteAccount}
+                          disabled={deleteConfirmText !== "DELETE" || isDeleting}
+                          className="bg-destructive hover:bg-destructive/90"
+                        >
+                          {isDeleting ? "Deleting..." : "Delete Account"}
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+
+                  <Button variant="outline" onClick={async () => { await supabase.auth.signOut(); navigate('/auth'); }} className="w-full md:w-auto hover-scale">
+                    <LogOut className="mr-2 h-4 w-4" /> Log Out
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
 
           {/* Security */}
@@ -412,12 +479,9 @@ export default function ProfileTabs() {
                   <Input id="new_password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
                 </div>
               </CardContent>
-              <CardFooter className="flex flex-wrap gap-3">
+              <CardFooter>
                 <Button onClick={changePassword} className="hover-scale">
                   Update password
-                </Button>
-                <Button variant="outline" onClick={async () => { await supabase.auth.signOut(); navigate("/auth"); }} className="hover-scale">
-                  <LogOut className="mr-2 h-4 w-4" /> Sign out
                 </Button>
               </CardFooter>
             </Card>
@@ -508,65 +572,6 @@ export default function ProfileTabs() {
           </TabsContent>
         </Tabs>
       </section>
-
-      {/* Bottom Actions */}
-      <div className="mt-6 flex flex-col md:flex-row gap-4">
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button variant="destructive" className="w-full md:w-auto hover-scale">
-              <Trash2 className="mr-2 h-4 w-4" /> Delete Account
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent className="max-w-md">
-            <AlertDialogHeader>
-              <AlertDialogTitle className="flex items-center gap-2 text-destructive">
-                <AlertTriangle className="h-5 w-5" />
-                Delete Account Permanently
-              </AlertDialogTitle>
-              <AlertDialogDescription className="space-y-4">
-                <div>
-                  <strong>This action cannot be undone.</strong> Deleting your account will:
-                </div>
-                <ul className="list-disc list-inside space-y-1 text-sm">
-                  <li>Permanently delete all your account data</li>
-                  <li>Cancel any active subscriptions immediately</li>
-                  <li>Remove access to all purchased content</li>
-                  <li>Delete your profile and saved preferences</li>
-                </ul>
-                <div>
-                  To regain access in the future, you would need to create a new account and repurchase any products or subscriptions.
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="delete-confirm">Type <strong>DELETE</strong> to confirm:</Label>
-                  <Input
-                    id="delete-confirm"
-                    value={deleteConfirmText}
-                    onChange={(e) => setDeleteConfirmText(e.target.value)}
-                    placeholder="Type DELETE here"
-                    className="font-mono"
-                  />
-                </div>
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel onClick={() => setDeleteConfirmText("")}>
-                Cancel
-              </AlertDialogCancel>
-              <AlertDialogAction
-                onClick={deleteAccount}
-                disabled={deleteConfirmText !== "DELETE" || isDeleting}
-                className="bg-destructive hover:bg-destructive/90"
-              >
-                {isDeleting ? "Deleting..." : "Delete Account"}
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-
-        <Button variant="outline" onClick={async () => { await supabase.auth.signOut(); navigate('/auth'); }} className="w-full md:w-auto hover-scale">
-          <LogOut className="mr-2 h-4 w-4" /> Log Out
-        </Button>
-      </div>
     </div>
   );
 }
