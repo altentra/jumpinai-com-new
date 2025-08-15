@@ -43,6 +43,7 @@ export default function ProfileTabs() {
   const [loading, setLoading] = useState<boolean>(true);
   const [deleteConfirmText, setDeleteConfirmText] = useState<string>("");
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
+  const [downloadingReceipt, setDownloadingReceipt] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -165,20 +166,44 @@ export default function ProfileTabs() {
   const fetchOrders = async () => {
     try {
       const { data, error } = await supabase
-        .from('orders')
-        .select(`
-          *,
-          products (
-            name,
-            description
-          )
-        `)
-        .order('created_at', { ascending: false });
+        .from("orders")
+        .select("*, products(*)")
+        .eq("user_email", email)
+        .eq("status", "paid") // Only show completed orders
+        .order("created_at", { ascending: false });
       
       if (error) throw error;
       setOrders(data || []);
     } catch (error: any) {
-      console.error('Error fetching orders:', error);
+      console.error("Error fetching orders:", error);
+      toast.error("Failed to load order history");
+    }
+  };
+
+  const downloadReceipt = async (stripeSessionId: string) => {
+    if (!stripeSessionId) {
+      toast.error("No receipt available for this order");
+      return;
+    }
+
+    setDownloadingReceipt(stripeSessionId);
+    try {
+      const { data, error } = await supabase.functions.invoke("download-receipt", {
+        body: { sessionId: stripeSessionId }
+      });
+
+      if (error) throw error;
+
+      if (data?.receiptUrl) {
+        window.open(data.receiptUrl, '_blank');
+      } else {
+        toast.error("Receipt not available");
+      }
+    } catch (error: any) {
+      console.error("Error downloading receipt:", error);
+      toast.error("Failed to download receipt");
+    } finally {
+      setDownloadingReceipt(null);
     }
   };
 
@@ -373,7 +398,7 @@ export default function ProfileTabs() {
                           <TableHead>Product</TableHead>
                           <TableHead>Date</TableHead>
                           <TableHead>Amount</TableHead>
-                          <TableHead>Status</TableHead>
+                          <TableHead>Downloads</TableHead>
                           <TableHead>Actions</TableHead>
                         </TableRow>
                       </TableHeader>
@@ -395,20 +420,34 @@ export default function ProfileTabs() {
                               ${(order.amount / 100).toFixed(2)} {order.currency?.toUpperCase()}
                             </TableCell>
                             <TableCell>
-                              <Badge variant={order.status === 'paid' ? 'default' : 'secondary'}>
-                                {order.status || 'pending'}
-                              </Badge>
+                              <div className="text-sm">
+                                <div>{order.download_count || 0} / {order.max_downloads || 5}</div>
+                                <div className="text-muted-foreground">downloads</div>
+                              </div>
                             </TableCell>
                             <TableCell>
-                              {order.status === 'paid' && order.download_token && (
-                                <Button 
-                                  variant="outline" 
-                                  size="sm"
-                                  onClick={() => window.open(`/api/download/${order.download_token}`, '_blank')}
-                                >
-                                  Download
-                                </Button>
-                              )}
+                              <div className="flex gap-2">
+                                {order.download_token && (
+                                  <Button 
+                                    variant="outline" 
+                                    size="sm"
+                                    onClick={() => window.open(`${window.location.origin}/api/download-product/${order.download_token}`, '_blank')}
+                                    disabled={(order.download_count || 0) >= (order.max_downloads || 5)}
+                                  >
+                                    Download
+                                  </Button>
+                                )}
+                                {order.stripe_session_id && (
+                                  <Button 
+                                    variant="outline" 
+                                    size="sm"
+                                    onClick={() => downloadReceipt(order.stripe_session_id)}
+                                    disabled={downloadingReceipt === order.stripe_session_id}
+                                  >
+                                    {downloadingReceipt === order.stripe_session_id ? "Loading..." : "Receipt"}
+                                  </Button>
+                                )}
+                              </div>
                             </TableCell>
                           </TableRow>
                         ))}
