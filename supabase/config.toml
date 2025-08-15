@@ -11,8 +11,8 @@ max_rows = 1000
 [auth]
 enabled = true
 port = 54324
-site_url = "http://localhost:3000"
-additional_redirect_urls = ["https://lovable.dev"]
+site_url = "https://www.jumpinai.com"
+additional_redirect_urls = ["https://lovable.dev", "http://localhost:3000", "https://4a6994dd-87fd-4337-a29d-8d2d56e25570.lovableproject.com"]
 jwt_expiry = 3600
 refresh_token_rotation_enabled = true
 refresh_token_reuse_interval = 10
@@ -51,6 +51,9 @@ verify_jwt = false
 verify_jwt = false
 
 [functions.send-confirmation-email]
+verify_jwt = false
+
+[functions.check-email-exists]
 verify_jwt = false
 
 [realtime]
