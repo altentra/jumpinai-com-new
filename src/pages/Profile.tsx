@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Helmet } from "react-helmet-async";
+import { useAuth0 } from "@auth0/auth0-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
@@ -42,27 +43,20 @@ const Profile = () => {
   const [subInfo, setSubInfo] = useState<SubscriberInfo | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
+  const { isAuthenticated, isLoading: authLoading, user, loginWithRedirect, logout } = useAuth0();
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (!session?.user) {
-        navigate("/auth", { replace: true });
+    if (!authLoading) {
+      if (!isAuthenticated) {
+        loginWithRedirect();
+      } else if (user) {
+        setEmail(user.email || "");
+        fetchProfile();
+        refreshSubscription();
+        setLoading(false);
       }
-    });
-    supabase.auth.getSession().then(async ({ data }) => {
-      const user = data.session?.user;
-      if (!user) {
-        navigate("/auth", { replace: true });
-        return;
-      }
-      setEmail(user.email || "");
-      await fetchProfile();
-      await refreshSubscription();
-      setLoading(false);
-    });
-    return () => subscription.unsubscribe();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [navigate]);
+    }
+  }, [isAuthenticated, authLoading, user, loginWithRedirect]);
 
   const fetchProfile = async () => {
     const { data, error } = await (supabase.from("profiles" as any) as any)
@@ -275,7 +269,7 @@ const Profile = () => {
                   <Button onClick={changePassword} className="hover-scale">
                     Update password
                   </Button>
-                  <Button variant="outline" onClick={async () => { await supabase.auth.signOut(); navigate("/auth"); }} className="hover-scale">
+                  <Button variant="outline" onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })} className="hover-scale">
                     <LogOut className="mr-2 h-4 w-4" /> Sign out
                   </Button>
                 </CardFooter>
@@ -335,7 +329,7 @@ const Profile = () => {
 
           {/* Bottom Log Out */}
           <div className="mt-6">
-            <Button variant="outline" onClick={async () => { await supabase.auth.signOut(); navigate('/auth'); }} className="w-full md:w-auto hover-scale">
+            <Button variant="outline" onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })} className="w-full md:w-auto hover-scale">
               <LogOut className="mr-2 h-4 w-4" /> Log Out
             </Button>
           </div>

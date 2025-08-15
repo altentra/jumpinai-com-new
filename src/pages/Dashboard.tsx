@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useNavigate, Routes, Route, Navigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
+import { useAuth0 } from "@auth0/auth0-react";
 import Navigation from "@/components/Navigation";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import AppSidebar from "@/components/dashboard/AppSidebar";
@@ -17,32 +17,18 @@ import Subscription from "./dashboard/Subscription";
 export default function Dashboard() {
   const navigate = useNavigate();
   const [userName, setUserName] = useState<string>("");
+  const { isAuthenticated, isLoading, user, loginWithRedirect } = useAuth0();
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (!session?.user) {
-        navigate("/auth", { replace: true });
-      } else {
-        // Get user's name from metadata
-        if (session.user.user_metadata?.display_name) {
-          setUserName(session.user.user_metadata.display_name);
-        }
+    if (!isLoading) {
+      if (!isAuthenticated) {
+        loginWithRedirect();
+      } else if (user) {
+        // Get user's name from Auth0 user object
+        setUserName(user.name || user.email || "");
       }
-    });
-    
-    supabase.auth.getSession().then(({ data }) => {
-      if (!data.session?.user) {
-        navigate("/auth", { replace: true });
-      } else {
-        // Get user's name from metadata for existing session
-        if (data.session.user.user_metadata?.display_name) {
-          setUserName(data.session.user.user_metadata.display_name);
-        }
-      }
-    });
-    
-    return () => subscription.unsubscribe();
-  }, [navigate]);
+    }
+  }, [isAuthenticated, isLoading, user, loginWithRedirect]);
 
   return (
     <>

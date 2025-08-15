@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useAuth0 } from "@auth0/auth0-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -39,24 +40,19 @@ export default function Subscription() {
   const [subInfo, setSubInfo] = useState<SubscriberInfo | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
+  const { isAuthenticated, isLoading: authLoading, user, loginWithRedirect } = useAuth0();
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (!session?.user) navigate("/auth", { replace: true });
-    });
-    supabase.auth.getSession().then(async ({ data }) => {
-      const user = data.session?.user;
-      if (!user) {
-        navigate("/auth", { replace: true });
-        return;
+    if (!authLoading) {
+      if (!isAuthenticated) {
+        loginWithRedirect();
+      } else if (user) {
+        setEmail(user.email || "");
+        refreshSubscription();
+        setLoading(false);
       }
-      setEmail(user.email || "");
-      await refreshSubscription();
-      setLoading(false);
-    });
-    return () => subscription.unsubscribe();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [navigate]);
+    }
+  }, [isAuthenticated, authLoading, user, loginWithRedirect]);
 
   const refreshSubscription = async () => {
     try {
