@@ -9,7 +9,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { User, Shield, Crown, CreditCard, RefreshCcw, Save, LogOut } from "lucide-react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { User, Shield, Crown, CreditCard, RefreshCcw, Save, LogOut, ExternalLink, AlertTriangle, History } from "lucide-react";
 
 interface SubscriberInfo {
   subscribed: boolean;
@@ -37,6 +38,7 @@ export default function ProfileTabs() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [subInfo, setSubInfo] = useState<SubscriberInfo | null>(null);
+  const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
 
@@ -53,6 +55,7 @@ export default function ProfileTabs() {
       setEmail(user.email || "");
       await fetchProfile();
       await refreshSubscription();
+      await fetchOrders();
       setLoading(false);
     });
     return () => subscription.unsubscribe();
@@ -156,6 +159,41 @@ export default function ProfileTabs() {
     }
   };
 
+  const fetchOrders = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('orders')
+        .select(`
+          *,
+          products (
+            name,
+            description
+          )
+        `)
+        .order('created_at', { ascending: false });
+      
+      if (error) throw error;
+      setOrders(data || []);
+    } catch (error: any) {
+      console.error('Error fetching orders:', error);
+    }
+  };
+
+  const cancelSubscription = async () => {
+    if (!confirm('Are you sure you want to cancel your subscription? You will lose access to Pro features at the end of your billing period.')) {
+      return;
+    }
+    
+    try {
+      const { data, error } = await supabase.functions.invoke("customer-portal");
+      if (error) throw error;
+      const url = (data as any)?.url;
+      if (url) window.open(url, '_blank');
+    } catch (e: any) {
+      toast.error(e.message || "Failed to open billing portal");
+    }
+  };
+
   const proActive = useMemo(() => subInfo?.subscribed && subInfo.subscription_tier === "JumpinAI Pro", [subInfo]);
 
   if (loading) {
@@ -189,7 +227,7 @@ export default function ProfileTabs() {
       {/* Tabs */}
       <section className="mt-6">
         <Tabs defaultValue="overview" className="w-full">
-          <TabsList className="flex flex-nowrap overflow-x-auto md:grid md:grid-cols-4 w-full gap-2 md:gap-0 -mx-2 px-2 md:mx-0 md:px-0 rounded-xl bg-muted/30">
+          <TabsList className="flex flex-nowrap overflow-x-auto md:grid md:grid-cols-5 w-full gap-2 md:gap-0 -mx-2 px-2 md:mx-0 md:px-0 rounded-xl bg-muted/30">
             <TabsTrigger value="overview" className="flex items-center gap-2 shrink-0 whitespace-nowrap">
               <Crown className="h-4 w-4" /> Overview
             </TabsTrigger>
@@ -201,6 +239,9 @@ export default function ProfileTabs() {
             </TabsTrigger>
             <TabsTrigger value="subscription" className="flex items-center gap-2 shrink-0 whitespace-nowrap">
               <CreditCard className="h-4 w-4" /> Subscription
+            </TabsTrigger>
+            <TabsTrigger value="orders" className="flex items-center gap-2 shrink-0 whitespace-nowrap">
+              <History className="h-4 w-4" /> Order History
             </TabsTrigger>
           </TabsList>
 
@@ -217,22 +258,25 @@ export default function ProfileTabs() {
                     : 'You are on the Free plan. Upgrade to JumpinAI Pro to unlock all blueprints and workflows.'}
                 </p>
               </CardContent>
-              <CardFooter className="flex flex-wrap gap-3">
-                {!subInfo?.subscribed ? (
-                  <Button onClick={subscribe} className="hover-scale">
-                    <Crown className="mr-2 h-4 w-4" /> Get JumpinAI Pro
-                  </Button>
-                ) : (
-                  <>
-                    <Button variant="secondary" onClick={manage} className="hover-scale">
-                      <CreditCard className="mr-2 h-4 w-4" /> Manage subscription
+                <CardFooter className="flex flex-wrap gap-3">
+                  {!subInfo?.subscribed ? (
+                    <Button onClick={subscribe} className="hover-scale">
+                      <Crown className="mr-2 h-4 w-4" /> Get JumpinAI Pro
                     </Button>
-                    <Button variant="outline" onClick={refreshSubscription} className="hover-scale">
-                      <RefreshCcw className="mr-2 h-4 w-4" /> Refresh status
-                    </Button>
-                  </>
-                )}
-              </CardFooter>
+                  ) : (
+                    <>
+                      <Button variant="secondary" onClick={manage} className="hover-scale">
+                        <ExternalLink className="mr-2 h-4 w-4" /> Manage billing
+                      </Button>
+                      <Button variant="outline" onClick={refreshSubscription} className="hover-scale">
+                        <RefreshCcw className="mr-2 h-4 w-4" /> Refresh status
+                      </Button>
+                      <Button variant="destructive" onClick={cancelSubscription} className="hover-scale">
+                        <AlertTriangle className="mr-2 h-4 w-4" /> Cancel subscription
+                      </Button>
+                    </>
+                  )}
+                </CardFooter>
             </Card>
           </TabsContent>
 
@@ -321,23 +365,96 @@ export default function ProfileTabs() {
                   </ul>
                 </CardContent>
                 <CardFooter className="flex flex-wrap gap-3">
-                  {!subInfo?.subscribed ? (
-                    <Button onClick={subscribe} className="hover-scale">
-                      <Crown className="mr-2 h-4 w-4" /> Get JumpinAI Pro
+                {!subInfo?.subscribed ? (
+                  <Button onClick={subscribe} className="hover-scale">
+                    <Crown className="mr-2 h-4 w-4" /> Get JumpinAI Pro
+                  </Button>
+                ) : (
+                  <>
+                    <Button variant="secondary" onClick={manage} className="hover-scale">
+                      <ExternalLink className="mr-2 h-4 w-4" /> Manage billing
                     </Button>
-                  ) : (
-                    <>
-                      <Button variant="secondary" onClick={manage} className="hover-scale">
-                        <CreditCard className="mr-2 h-4 w-4" /> Manage subscription
-                      </Button>
-                      <Button variant="outline" onClick={refreshSubscription} className="hover-scale">
-                        <RefreshCcw className="mr-2 h-4 w-4" /> Refresh status
-                      </Button>
-                    </>
-                  )}
-                </CardFooter>
+                    <Button variant="outline" onClick={refreshSubscription} className="hover-scale">
+                      <RefreshCcw className="mr-2 h-4 w-4" /> Refresh status
+                    </Button>
+                    <Button variant="destructive" onClick={cancelSubscription} className="hover-scale">
+                      <AlertTriangle className="mr-2 h-4 w-4" /> Cancel subscription
+                    </Button>
+                  </>
+                )}
+              </CardFooter>
               </Card>
             </div>
+
+            {/* Order History */}
+            <TabsContent value="orders" className="mt-6 animate-fade-in">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <History className="h-5 w-5 text-primary" /> Order History
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {orders.length === 0 ? (
+                    <div className="text-center py-8 text-muted-foreground">
+                      <History className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                      <p>No orders found</p>
+                      <p className="text-sm">Your purchase history will appear here</p>
+                    </div>
+                  ) : (
+                    <div className="overflow-x-auto">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>Product</TableHead>
+                            <TableHead>Date</TableHead>
+                            <TableHead>Amount</TableHead>
+                            <TableHead>Status</TableHead>
+                            <TableHead>Actions</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {orders.map((order) => (
+                            <TableRow key={order.id}>
+                              <TableCell>
+                                <div>
+                                  <div className="font-medium">{order.products?.name || 'Product'}</div>
+                                  <div className="text-sm text-muted-foreground">
+                                    {order.products?.description || 'Digital product'}
+                                  </div>
+                                </div>
+                              </TableCell>
+                              <TableCell>
+                                {new Date(order.created_at).toLocaleDateString()}
+                              </TableCell>
+                              <TableCell>
+                                ${(order.amount / 100).toFixed(2)} {order.currency?.toUpperCase()}
+                              </TableCell>
+                              <TableCell>
+                                <Badge variant={order.status === 'paid' ? 'default' : 'secondary'}>
+                                  {order.status || 'pending'}
+                                </Badge>
+                              </TableCell>
+                              <TableCell>
+                                {order.status === 'paid' && order.download_token && (
+                                  <Button 
+                                    variant="outline" 
+                                    size="sm"
+                                    onClick={() => window.open(`/api/download/${order.download_token}`, '_blank')}
+                                  >
+                                    Download
+                                  </Button>
+                                )}
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
           </TabsContent>
         </Tabs>
       </section>

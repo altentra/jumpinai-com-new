@@ -2,16 +2,24 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Rocket, Sparkles, GitBranch, Boxes, Lightbulb, ChevronRight, Crown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
+interface SubscriberInfo {
+  subscribed: boolean;
+  subscription_tier?: string | null;
+  subscription_end?: string | null;
+}
+
 const DashboardHome = () => {
   const navigate = useNavigate();
   const [userName, setUserName] = useState<string>("");
+  const [subInfo, setSubInfo] = useState<SubscriberInfo | null>(null);
 
   useEffect(() => {
-    const fetchUserName = async () => {
+    const fetchUserData = async () => {
       try {
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
@@ -30,14 +38,27 @@ const DashboardHome = () => {
             const emailName = user.email?.split('@')[0] || '';
             setUserName(emailName);
           }
+          
+          // Fetch subscription status
+          await refreshSubscription();
         }
       } catch (error) {
-        console.error('Error fetching user name:', error);
+        console.error('Error fetching user data:', error);
       }
     };
     
-    fetchUserName();
+    fetchUserData();
   }, []);
+
+  const refreshSubscription = async () => {
+    try {
+      const { data, error } = await supabase.functions.invoke("check-subscription");
+      if (error) throw error;
+      setSubInfo(data as SubscriberInfo);
+    } catch (e: any) {
+      console.error('Error fetching subscription:', e);
+    }
+  };
 
   const subscribe = async () => {
     try {
@@ -92,28 +113,37 @@ const DashboardHome = () => {
     <div className="space-y-8">
       {/* Welcome Header */}
       <div className="text-center py-8 animate-fade-in-down">
-        <h1 className="text-4xl font-bold gradient-text-primary mb-3">
-          Welcome{userName ? `, ${userName}` : ""}, to JumpinAI!
-        </h1>
+        <div className="flex items-center justify-center gap-3 mb-3">
+          <h1 className="text-4xl font-bold gradient-text-primary">
+            Welcome{userName ? `, ${userName}` : ""}, to JumpinAI!
+          </h1>
+          {subInfo && (
+            <Badge className={subInfo.subscribed ? "bg-primary/10 text-primary border-primary/20" : "bg-muted text-muted-foreground"}>
+              {subInfo.subscribed ? subInfo.subscription_tier || 'Pro Plan' : 'Free Plan'}
+            </Badge>
+          )}
+        </div>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
           Your AI-powered dashboard is ready. Explore your tools, manage your projects, and accelerate your AI journey.
         </p>
       </div>
 
-      {/* Pro Subscription Card */}
-      <Card className="border-border glass animate-fade-in-up">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Crown className="h-5 w-5 text-primary" /> Upgrade to JumpinAI Pro
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="text-muted-foreground">
-          Get all digital products with ongoing updates for just $10/month.
-        </CardContent>
-        <CardFooter>
-          <Button onClick={subscribe} className="modern-button">Get Pro</Button>
-        </CardFooter>
-      </Card>
+      {/* Pro Subscription Card - Only show if not subscribed */}
+      {subInfo && !subInfo.subscribed && (
+        <Card className="border-border glass animate-fade-in-up">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Crown className="h-5 w-5 text-primary" /> Upgrade to JumpinAI Pro
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="text-muted-foreground">
+            Get all digital products with ongoing updates for just $10/month.
+          </CardContent>
+          <CardFooter>
+            <Button onClick={subscribe} className="modern-button">Get Pro</Button>
+          </CardFooter>
+        </Card>
+      )}
 
       {/* Dashboard Sections Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in-up animate-delay-200">
