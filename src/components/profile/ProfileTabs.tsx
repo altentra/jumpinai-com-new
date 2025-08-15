@@ -165,16 +165,47 @@ export default function ProfileTabs() {
 
   const fetchOrders = async () => {
     try {
-      const { data, error } = await supabase
+      console.log("Fetching orders for email:", email);
+      
+      // First fetch orders without products join
+      const { data: ordersData, error: ordersError } = await supabase
         .from("orders")
-        .select("*, products(*)")
+        .select("*")
         .eq("user_email", email)
         .eq("status", "paid") // Only show completed orders
         .order("created_at", { ascending: false });
       
-      if (error) throw error;
-      console.log("Fetched orders:", data); // Debug log
-      setOrders(data || []);
+      if (ordersError) {
+        console.error("Orders error:", ordersError);
+        throw ordersError;
+      }
+      
+      console.log("Fetched orders data:", ordersData);
+      
+      // Then fetch product data for each order
+      if (ordersData && ordersData.length > 0) {
+        const ordersWithProducts = await Promise.all(
+          ordersData.map(async (order) => {
+            const { data: productData, error: productError } = await supabase
+              .from("products")
+              .select("*")
+              .eq("id", order.product_id)
+              .single();
+            
+            if (productError) {
+              console.error("Product fetch error for order", order.id, ":", productError);
+              return { ...order, products: null };
+            }
+            
+            return { ...order, products: productData };
+          })
+        );
+        
+        console.log("Orders with products:", ordersWithProducts);
+        setOrders(ordersWithProducts);
+      } else {
+        setOrders([]);
+      }
     } catch (error: any) {
       console.error("Error fetching orders:", error);
       toast.error("Failed to load order history");
