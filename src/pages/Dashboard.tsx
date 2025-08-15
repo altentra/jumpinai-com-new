@@ -52,14 +52,14 @@ export default function Dashboard() {
       </Helmet>
       <Navigation />
 
-      <SidebarProvider>
+      <SidebarProvider defaultOpen={true}>
         <div className="min-h-screen flex w-full pt-20">
           <AppSidebar />
 
           <main className="flex-1">
             <header className="h-14 flex items-center justify-between border-b px-4">
               <div className="flex items-center">
-                <SidebarTrigger className="mr-2" />
+                <SidebarTrigger className="mr-2 hover:bg-muted/50 transition-colors rounded-md p-1" />
                 <h1 className="text-lg font-semibold">My Dashboard</h1>
               </div>
               {userName && (
