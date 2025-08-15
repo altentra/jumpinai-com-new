@@ -461,7 +461,7 @@ export default function ProfileTabs() {
                             </TableCell>
                             <TableCell>
                               <div className="text-sm">
-                                <div>{order.download_count || 0} / {order.max_downloads || 5}</div>
+                                <div>{order.download_count || 0} / {order.max_downloads || 20}</div>
                                 <div className="text-muted-foreground">downloads</div>
                               </div>
                             </TableCell>
@@ -471,8 +471,8 @@ export default function ProfileTabs() {
                                   <Button 
                                     variant="outline" 
                                     size="sm"
-                                    onClick={() => window.open(`${window.location.origin}/api/download-product/${order.download_token}`, '_blank')}
-                                    disabled={(order.download_count || 0) >= (order.max_downloads || 5)}
+                                    onClick={() => window.open(`https://cieczaajcgkgdgenfdzi.supabase.co/functions/v1/download-product/${order.download_token}`, '_blank')}
+                                    disabled={(order.download_count || 0) >= (order.max_downloads || 20)}
                                   >
                                     Download
                                   </Button>
