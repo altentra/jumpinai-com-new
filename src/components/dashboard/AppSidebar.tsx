@@ -22,7 +22,6 @@ interface SubscriberInfo {
 export default function AppSidebar() {
   const { isMobile, setOpenMobile } = useSidebar();
   const { pathname: currentPath } = useLocation();
-  const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
   const [userName, setUserName] = useState<string>("");
   const [subInfo, setSubInfo] = useState<SubscriberInfo | null>(null);
 
@@ -174,29 +173,7 @@ export default function AppSidebar() {
             My Strategies
           </Link>
 
-          {/* Analytics Section */}
-          <Collapsible open={isAnalyticsOpen} onOpenChange={setIsAnalyticsOpen}>
-            <CollapsibleTrigger className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm hover:bg-muted/50 transition-colors w-full">
-              <Settings className="h-4 w-4" />
-              Analytics
-              <ChevronDown className="h-4 w-4 ml-auto" />
-            </CollapsibleTrigger>
-            <CollapsibleContent>
-              <div className="ml-6 space-y-1 mt-1">
-                <Link 
-                  to="/dashboard/analytics" 
-                  className={cn(
-                    "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
-                    getNavCls({ isActive: currentPath === "/dashboard/analytics" })
-                  )}
-                >
-                  Dashboard
-                </Link>
-              </div>
-            </CollapsibleContent>
-          </Collapsible>
-
-          {/* Profile & Settings - Moved back up */}
+          {/* Profile & Settings */}
           <Link 
             to="/dashboard/profile" 
             className={cn(
