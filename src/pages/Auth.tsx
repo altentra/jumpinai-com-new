@@ -1,90 +1,18 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
-import { supabase } from "@/integrations/supabase/client";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { useAuth0 } from "@auth0/auth0-react";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
 import { useNavigate, Link } from "react-router-dom";
 
 const Auth = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
-  const [isSignUp, setIsSignUp] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const { loginWithRedirect, logout, user, isAuthenticated, isLoading } = useAuth0();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session?.user) {
-        navigate("/dashboard", { replace: true });
-      }
-    });
-    supabase.auth.getSession().then(({ data }) => {
-      if (data.session?.user) navigate("/dashboard", { replace: true });
-    });
-    return () => subscription.unsubscribe();
-  }, [navigate]);
-
-  const handleSignIn = async () => {
-    setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    setLoading(false);
-    if (error) {
-      toast.error(error.message);
-    } else {
-      toast.success("Signed in successfully");
+    if (isAuthenticated && user) {
+      navigate("/dashboard", { replace: true });
     }
-  };
-
-  const checkEmailExists = async (email: string) => {
-    try {
-      const { data, error } = await supabase.functions.invoke('check-email-exists', {
-        body: { email }
-      });
-
-      if (error) {
-        console.error('Error checking email:', error);
-        return false;
-      }
-
-      return data?.exists || false;
-    } catch (error) {
-      console.error('Error checking email:', error);
-      return false;
-    }
-  };
-
-  const handleSignUp = async () => {
-    setLoading(true);
-    
-    // Check if user already exists
-    const userExists = await checkEmailExists(email);
-    if (userExists) {
-      setLoading(false);
-      toast.error("An account with this email already exists. Please sign in instead.");
-      setIsSignUp(false); // Switch to sign in mode
-      return;
-    }
-    
-    const redirectUrl = `${window.location.origin}/`;
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: { 
-        emailRedirectTo: redirectUrl,
-        data: { display_name: name }
-      },
-    });
-    
-    setLoading(false);
-    if (error) {
-      toast.error(error.message);
-    } else {
-      toast.success("Check your email to confirm your account");
-    }
-  };
+  }, [isAuthenticated, user, navigate]);
 
   return (
     <main className="min-h-screen pt-28 pb-20 bg-gradient-to-br from-background via-background to-muted/20">
@@ -99,74 +27,40 @@ const Auth = () => {
           {/* Header */}
           <div className="text-center mb-8 animate-fade-in-down">
             <h1 className="text-3xl font-bold gradient-text-primary mb-3">
-              {isSignUp ? "Join JumpinAI" : "Welcome back"}
+              Welcome to JumpinAI
             </h1>
             <p className="text-muted-foreground">
-              {isSignUp 
-                ? "Create your account and start your AI journey" 
-                : "Sign in to access your dashboard"
-              }
+              Sign in to access your AI-powered dashboard
             </p>
           </div>
 
           {/* Auth Form */}
           <div className="glass rounded-2xl p-8 border border-border shadow-modern animate-fade-in-up">
             <div className="space-y-6">
-              {isSignUp && (
-                <div className="space-y-2">
-                  <Label htmlFor="name" className="text-sm font-medium">Full Name</Label>
-                  <Input 
-                    id="name" 
-                    type="text" 
-                    value={name} 
-                    onChange={(e) => setName(e.target.value)} 
-                    placeholder="Your full name"
-                    className="h-11"
-                  />
+              {isAuthenticated ? (
+                <div className="text-center space-y-4">
+                  <p className="text-foreground">Welcome, {user?.name || user?.email}!</p>
+                  <Button 
+                    className="w-full h-11 modern-button" 
+                    onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}
+                  >
+                    Sign Out
+                  </Button>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <Button 
+                    className="w-full h-11 modern-button" 
+                    onClick={() => loginWithRedirect()}
+                    disabled={isLoading}
+                  >
+                    {isLoading ? "Please wait..." : "Sign In / Sign Up"}
+                  </Button>
+                  <p className="text-sm text-muted-foreground text-center">
+                    Secure authentication powered by Auth0
+                  </p>
                 </div>
               )}
-              
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-sm font-medium">Email</Label>
-                <Input 
-                  id="email" 
-                  type="email" 
-                  value={email} 
-                  onChange={(e) => setEmail(e.target.value)} 
-                  placeholder="you@example.com"
-                  className="h-11"
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="password" className="text-sm font-medium">Password</Label>
-                <Input 
-                  id="password" 
-                  type="password" 
-                  value={password} 
-                  onChange={(e) => setPassword(e.target.value)} 
-                  placeholder="••••••••"
-                  className="h-11"
-                />
-              </div>
-              
-              <Button 
-                className="w-full h-11 modern-button" 
-                onClick={isSignUp ? handleSignUp : handleSignIn} 
-                disabled={loading || (isSignUp && !name.trim())}
-              >
-                {loading ? "Please wait..." : isSignUp ? "Create Account" : "Sign In"}
-              </Button>
-              
-              <div className="text-center">
-                <button
-                  type="button"
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors underline underline-offset-4"
-                  onClick={() => setIsSignUp((v) => !v)}
-                >
-                  {isSignUp ? "Already have an account? Sign in" : "New here? Create an account"}
-                </button>
-              </div>
             </div>
           </div>
 

@@ -5,12 +5,12 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import ThemeToggle from "@/components/ThemeToggle";
 import { Link, useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isAuthed, setIsAuthed] = useState(false);
+  const { isAuthenticated, logout } = useAuth0();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -19,22 +19,6 @@ const Navigation = () => {
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  useEffect(() => {
-    let mounted = true;
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (!mounted) return;
-      setIsAuthed(!!session?.user);
-    });
-    supabase.auth.getSession().then(({ data }) => {
-      if (!mounted) return;
-      setIsAuthed(!!data.session?.user);
-    });
-    return () => {
-      mounted = false;
-      subscription.unsubscribe();
-    };
   }, []);
 
   const handleNavClick = (href: string) => {
@@ -61,7 +45,7 @@ const Navigation = () => {
   };
 
   const handleCtaClick = () => {
-    if (isAuthed) {
+    if (isAuthenticated) {
       navigate('/dashboard');
     } else {
       navigate('/auth');
@@ -117,7 +101,7 @@ const Navigation = () => {
           {/* Theme Toggle & CTA */}
           <div className="hidden md:flex items-center space-x-4">
             <ThemeToggle />
-            {isAuthed ? (
+            {isAuthenticated ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button 
@@ -128,7 +112,7 @@ const Navigation = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="min-w-[200px] z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 border border-border shadow-lg rounded-xl">
                   <DropdownMenuItem onSelect={() => navigate('/dashboard')}>Dashboard</DropdownMenuItem>
-                  <DropdownMenuItem onSelect={async () => { await supabase.auth.signOut(); navigate('/auth'); }}>Log Out</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => logout({ logoutParams: { returnTo: window.location.origin } })}>Log Out</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
@@ -171,7 +155,7 @@ const Navigation = () => {
                   onClick={handleCtaClick}
                   className="w-full modern-button bg-gradient-to-r from-gray-800 to-black hover:from-gray-900 hover:to-gray-800 dark:from-white dark:to-gray-300 dark:hover:from-gray-100 dark:hover:to-gray-400 text-white dark:text-black py-3 rounded-xl font-semibold"
                 >
-                  {isAuthed ? 'My Account' : 'Log In'}
+                  {isAuthenticated ? 'My Account' : 'Log In'}
                 </Button>
               </div>
             </div>
