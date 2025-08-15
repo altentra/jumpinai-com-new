@@ -40,26 +40,16 @@ const Auth = () => {
 
   const checkEmailExists = async (email: string) => {
     try {
-      // Try to initiate password reset - this will tell us if user exists
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/auth`
+      const { data, error } = await supabase.functions.invoke('check-email-exists', {
+        body: { email }
       });
-      
-      // If no error, user exists (password reset was initiated)
-      if (!error) {
-        return true;
-      }
-      
-      // Check for specific error messages that indicate user doesn't exist
-      if (error.message.includes('User not found') || 
-          error.message.includes('Unable to find') ||
-          error.message.includes('does not exist')) {
+
+      if (error) {
+        console.error('Error checking email:', error);
         return false;
       }
-      
-      // For other errors, assume user might exist to be safe
-      console.log('Email check error:', error.message);
-      return false;
+
+      return data?.exists || false;
     } catch (error) {
       console.error('Error checking email:', error);
       return false;
