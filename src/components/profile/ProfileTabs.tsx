@@ -228,15 +228,23 @@ export default function ProfileTabs() {
 
     setDownloadingReceipt(stripeSessionId);
     try {
+      console.log("Downloading receipt for session:", stripeSessionId);
       const { data, error } = await supabase.functions.invoke("download-receipt", {
         body: { sessionId: stripeSessionId }
       });
 
-      if (error) throw error;
+      console.log("Receipt response:", { data, error });
+
+      if (error) {
+        console.error("Supabase function error:", error);
+        throw error;
+      }
 
       if (data?.receiptUrl) {
+        console.log("Opening receipt URL:", data.receiptUrl);
         window.open(data.receiptUrl, '_blank');
       } else {
+        console.error("No receipt URL in response:", data);
         toast.error("Receipt not available");
       }
     } catch (error: any) {
