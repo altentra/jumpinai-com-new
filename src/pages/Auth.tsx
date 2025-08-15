@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const Auth = () => {
   const [email, setEmail] = useState("");
@@ -144,7 +144,15 @@ const Auth = () => {
           </div>
 
           <aside className="mt-6 text-center text-sm text-muted-foreground animate-fade-in-up animate-delay-200">
-            By continuing you agree to our <span className="text-foreground">Terms</span> and acknowledge our <span className="text-foreground">Privacy Policy</span>.
+            By continuing you agree to our{" "}
+            <Link to="/terms-of-use" className="text-foreground hover:underline underline-offset-4 transition-colors">
+              Terms of Use
+            </Link>{" "}
+            and acknowledge our{" "}
+            <Link to="/privacy-policy" className="text-foreground hover:underline underline-offset-4 transition-colors">
+              Privacy Policy
+            </Link>
+            .
           </aside>
         </section>
       </div>
