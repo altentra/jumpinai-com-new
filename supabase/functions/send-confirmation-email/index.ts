@@ -136,16 +136,3 @@ serve(async (req) => {
     });
   }
 });
-    }
-    
-  } catch (error) {
-    console.error('Function error:', error);
-    return new Response(JSON.stringify({ 
-      error: error.message,
-      success: false
-    }), {
-      status: 200, // Return 200 to avoid blocking signup
-      headers: { 'Content-Type': 'application/json', ...corsHeaders }
-    });
-  }
-});
