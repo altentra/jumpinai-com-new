@@ -11,14 +11,32 @@ const DashboardHome = () => {
   const [userName, setUserName] = useState<string>("");
 
   useEffect(() => {
-    const fetchUserProfile = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user?.user_metadata?.display_name) {
-        setUserName(user.user_metadata.display_name);
+    const fetchUserName = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          // First try to get from profiles table
+          const { data: profile } = await (supabase.from("profiles" as any) as any)
+            .select('display_name')
+            .eq('id', user.id)
+            .single();
+          
+          if (profile?.display_name) {
+            setUserName(profile.display_name);
+          } else if (user.user_metadata?.display_name) {
+            setUserName(user.user_metadata.display_name);
+          } else {
+            // Fallback to email name part
+            const emailName = user.email?.split('@')[0] || '';
+            setUserName(emailName);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching user name:', error);
       }
     };
     
-    fetchUserProfile();
+    fetchUserName();
   }, []);
 
   const subscribe = async () => {

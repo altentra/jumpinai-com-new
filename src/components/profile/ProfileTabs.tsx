@@ -72,24 +72,54 @@ export default function ProfileTabs() {
   };
 
   const saveProfile = async () => {
-    const user = (await supabase.auth.getUser()).data.user;
-    if (!user) return;
-    const { error } = await (supabase.from("profiles" as any) as any)
-      .upsert({ id: user.id, display_name: profile?.display_name, avatar_url: profile?.avatar_url });
-    if (error) toast.error(error.message);
-    else {
-      toast.success("Profile saved");
-      fetchProfile();
+    try {
+      const user = (await supabase.auth.getUser()).data.user;
+      if (!user) return;
+      
+      // Update profile in profiles table
+      const { error: profileError } = await (supabase.from("profiles" as any) as any)
+        .upsert({ id: user.id, display_name: profile?.display_name, avatar_url: profile?.avatar_url });
+      
+      if (profileError) throw profileError;
+      
+      // Update user metadata to keep it in sync
+      const { error: userError } = await supabase.auth.updateUser({
+        data: { 
+          display_name: profile?.display_name,
+          avatar_url: profile?.avatar_url 
+        }
+      });
+      
+      if (userError) throw userError;
+      
+      toast.success("Profile updated successfully!");
+      await fetchProfile();
+      
+      // Force a refresh of the sidebar by triggering a window refresh event
+      window.dispatchEvent(new Event('profile-updated'));
+    } catch (error: any) {
+      console.error('Profile update error:', error);
+      toast.error(error.message || "Failed to update profile");
     }
   };
 
   const changePassword = async () => {
-    if (!password) return toast.error("Enter a new password");
-    const { error } = await supabase.auth.updateUser({ password });
-    if (error) toast.error(error.message);
-    else {
-      toast.success("Password updated");
+    if (!password) {
+      return toast.error("Please enter a new password");
+    }
+    if (password.length < 6) {
+      return toast.error("Password must be at least 6 characters long");
+    }
+    
+    try {
+      const { error } = await supabase.auth.updateUser({ password });
+      if (error) throw error;
+      
+      toast.success("Password updated successfully! You will receive a confirmation email.");
       setPassword("");
+    } catch (error: any) {
+      console.error('Password update error:', error);
+      toast.error(error.message || "Failed to update password");
     }
   };
 
