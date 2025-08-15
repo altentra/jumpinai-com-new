@@ -226,7 +226,7 @@ export default function Subscription() {
           </CardContent>
           <CardFooter className="mt-auto space-y-3">
             {!subInfo?.subscribed ? (
-              <>
+              <div className="w-full space-y-3 text-center">
                 <Button 
                   onClick={subscribe} 
                   className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
@@ -234,10 +234,10 @@ export default function Subscription() {
                   <Crown className="mr-2 h-4 w-4" /> 
                   Upgrade to Pro
                 </Button>
-                <div className="text-center text-xs text-muted-foreground">
+                <div className="text-xs text-muted-foreground">
                   Cancel anytime
                 </div>
-              </>
+              </div>
             ) : (
               <div className="space-y-2 w-full">
                 <Button 
