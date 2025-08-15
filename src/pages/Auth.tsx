@@ -39,23 +39,31 @@ const Auth = () => {
   };
 
   const checkEmailExists = async (email: string) => {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password: 'dummy-password-to-check-existence'
-    });
-    
-    // If we get a specific error about invalid credentials, the user exists
-    if (error && error.message.includes('Invalid login credentials')) {
-      return true;
+    try {
+      // Try to initiate password reset - this will tell us if user exists
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/auth`
+      });
+      
+      // If no error, user exists (password reset was initiated)
+      if (!error) {
+        return true;
+      }
+      
+      // Check for specific error messages that indicate user doesn't exist
+      if (error.message.includes('User not found') || 
+          error.message.includes('Unable to find') ||
+          error.message.includes('does not exist')) {
+        return false;
+      }
+      
+      // For other errors, assume user might exist to be safe
+      console.log('Email check error:', error.message);
+      return false;
+    } catch (error) {
+      console.error('Error checking email:', error);
+      return false;
     }
-    
-    // If no error, user doesn't exist (highly unlikely with dummy password)
-    if (!error) {
-      await supabase.auth.signOut(); // Sign out if somehow signed in
-      return true;
-    }
-    
-    return false;
   };
 
   const handleSignUp = async () => {
