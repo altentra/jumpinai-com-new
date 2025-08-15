@@ -49,7 +49,7 @@ serve(async (req) => {
     console.log('RESEND_API_KEY exists:', !!Deno.env.get("RESEND_API_KEY"));
     
     const emailResponse = await resend.emails.send({
-      from: "Jumpin AI <onboarding@resend.dev>",
+      from: "Jumpin AI <hello@jumpinai.com>",
       to: [user_email],
       subject: "Confirm your email address",
       html: `
