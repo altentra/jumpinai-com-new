@@ -1,4 +1,10 @@
-import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
+import { 
+  Sidebar, 
+  SidebarContent, 
+  SidebarHeader, 
+  SidebarFooter,
+  useSidebar 
+} from "@/components/ui/sidebar";
 import { useLocation, Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
@@ -14,7 +20,7 @@ interface SubscriberInfo {
 }
 
 export default function AppSidebar() {
-  const { setOpenMobile, isMobile } = useSidebar();
+  const { isMobile, setOpenMobile } = useSidebar();
   const { pathname: currentPath } = useLocation();
   const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
   const [userName, setUserName] = useState<string>("");
@@ -81,9 +87,8 @@ export default function AppSidebar() {
     isActive ? "bg-muted text-primary font-medium" : "hover:bg-muted/50";
 
   return (
-    <div className="flex h-full w-64 flex-col bg-background border-r border-border">
-      {/* Welcome Section - Moved to Top */}
-      <div className="p-4 border-b border-border">
+    <Sidebar className="w-64">
+      <SidebarHeader className="border-b border-border">
         <div className="text-sm text-muted-foreground mb-1">
           Welcome{userName ? `, ${userName}` : ""}, to JumpinAI!
         </div>
@@ -91,16 +96,16 @@ export default function AppSidebar() {
           <Badge 
             variant="outline" 
             className={cn(
-              "text-xs",
+              "text-xs w-fit",
               subInfo.subscribed ? "border-primary/20 text-primary" : "border-muted text-muted-foreground"
             )}
           >
             {subInfo.subscribed ? subInfo.subscription_tier || 'JumpinAI Pro' : 'Free Plan'}
           </Badge>
         )}
-      </div>
+      </SidebarHeader>
 
-      <div className="flex-1 overflow-y-auto">
+      <SidebarContent>
         {/* Navigation Links */}
         <nav className="p-4 space-y-2">
           <Link 
@@ -191,21 +196,20 @@ export default function AppSidebar() {
             </CollapsibleContent>
           </Collapsible>
         </nav>
+      </SidebarContent>
 
-        {/* User Profile Section */}
-        <div className="p-4 border-t border-border">
-          <Link 
-            to="/dashboard/profile" 
-            className={cn(
-              "flex items-center gap-3 rounded-lg px-3 py-2 text-sm hover:bg-muted/50 transition-colors",
-              getNavCls({ isActive: currentPath === "/dashboard/profile" })
-            )}
-          >
-            <User className="h-4 w-4" />
-            Profile & Settings
-          </Link>
-        </div>
-      </div>
-    </div>
+      <SidebarFooter className="border-t border-border">
+        <Link 
+          to="/dashboard/profile" 
+          className={cn(
+            "flex items-center gap-3 rounded-lg px-3 py-2 text-sm hover:bg-muted/50 transition-colors",
+            getNavCls({ isActive: currentPath === "/dashboard/profile" })
+          )}
+        >
+          <User className="h-4 w-4" />
+          Profile & Settings
+        </Link>
+      </SidebarFooter>
+    </Sidebar>
   );
 }
