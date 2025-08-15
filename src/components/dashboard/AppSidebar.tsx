@@ -82,11 +82,22 @@ export default function AppSidebar() {
 
   return (
     <div className="flex h-full w-64 flex-col bg-background border-r border-border">
-      <div className="p-6">
-        <div className="flex items-center gap-2">
-          <SidebarTrigger />
-          <h2 className="text-lg font-semibold">Dashboard</h2>
+      {/* Welcome Section - Moved to Top */}
+      <div className="p-4 border-b border-border">
+        <div className="text-sm text-muted-foreground mb-1">
+          Welcome{userName ? `, ${userName}` : ""}, to JumpinAI!
         </div>
+        {subInfo && (
+          <Badge 
+            variant="outline" 
+            className={cn(
+              "text-xs",
+              subInfo.subscribed ? "border-primary/20 text-primary" : "border-muted text-muted-foreground"
+            )}
+          >
+            {subInfo.subscribed ? subInfo.subscription_tier || 'JumpinAI Pro' : 'Free Plan'}
+          </Badge>
+        )}
       </div>
 
       <div className="flex-1 overflow-y-auto">
@@ -183,22 +194,6 @@ export default function AppSidebar() {
 
         {/* User Profile Section */}
         <div className="p-4 border-t border-border">
-          <div className="flex items-center gap-2 mb-1">
-            <div className="text-sm text-muted-foreground">
-              Welcome{userName ? `, ${userName}` : ""}, to JumpinAI!
-            </div>
-            {subInfo && (
-              <Badge 
-                variant="outline" 
-                className={cn(
-                  "text-xs",
-                  subInfo.subscribed ? "border-primary/20 text-primary" : "border-muted text-muted-foreground"
-                )}
-              >
-                {subInfo.subscribed ? subInfo.subscription_tier || 'Pro Plan' : 'Free Plan'}
-              </Badge>
-            )}
-          </div>
           <Link 
             to="/dashboard/profile" 
             className={cn(
