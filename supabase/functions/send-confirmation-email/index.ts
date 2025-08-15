@@ -94,10 +94,13 @@ serve(async (req) => {
   }
 
   try {
+    const payload = await req.json();
+    console.log('Received payload:', JSON.stringify(payload, null, 2));
+    
     const {
       user,
       email_data: { token_hash, redirect_to, email_action_type }
-    } = await req.json() as {
+    } = payload as {
       user: { email: string };
       email_data: {
         token_hash: string;
