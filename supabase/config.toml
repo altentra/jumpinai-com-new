@@ -29,6 +29,9 @@ port = 54322
 shadow_port = 54320
 major_version = 15
 
+[functions.auth0-sync]
+verify_jwt = false
+
 [functions.send-newsletter-email]
 verify_jwt = false
 
@@ -49,9 +52,6 @@ verify_jwt = false
 
 [functions.download-product]
 verify_jwt = false
-
-# [functions.send-confirmation-email]
-# verify_jwt = false
 
 [functions.check-email-exists]
 verify_jwt = false

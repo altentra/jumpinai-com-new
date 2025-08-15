@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useEffect, useState } from "react";
+import { useAuth0 } from "@auth0/auth0-react";
 import { supabase } from "@/integrations/supabase/client";
 import { User, Settings, Home, FileText, Workflow, Lightbulb, Boxes, ChevronDown, CreditCard } from "lucide-react";
 
@@ -24,53 +25,29 @@ export default function AppSidebar() {
   const { pathname: currentPath } = useLocation();
   const [userName, setUserName] = useState<string>("");
   const [subInfo, setSubInfo] = useState<SubscriberInfo | null>(null);
+  const { user, isAuthenticated } = useAuth0();
 
   useEffect(() => {
     if (isMobile) setOpenMobile(false);
   }, [currentPath, isMobile, setOpenMobile]);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user) {
-          // First try to get from profiles table
-          const { data: profile } = await (supabase.from("profiles" as any) as any)
-            .select('display_name')
-            .eq('id', user.id)
-            .single();
-          
-          if (profile?.display_name) {
-            setUserName(profile.display_name);
-          } else if (user.user_metadata?.display_name) {
-            setUserName(user.user_metadata.display_name);
-          } else {
-            // Fallback to email name part
-            const emailName = user.email?.split('@')[0] || '';
-            setUserName(emailName);
-          }
-          
-          // Fetch subscription status
-          await refreshSubscription();
-        }
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      }
-    };
-    
-    fetchUserData();
-    
+    if (isAuthenticated && user) {
+      setUserName(user.name || user.email?.split('@')[0] || "");
+      refreshSubscription();
+    }
+
     // Listen for profile updates
     const handleProfileUpdate = () => {
-      fetchUserData();
+      if (user) {
+        setUserName(user.name || user.email?.split('@')[0] || "");
+      }
+      refreshSubscription();
     };
-    
+
     window.addEventListener('profile-updated', handleProfileUpdate);
-    
-    return () => {
-      window.removeEventListener('profile-updated', handleProfileUpdate);
-    };
-  }, []);
+    return () => window.removeEventListener('profile-updated', handleProfileUpdate);
+  }, [isAuthenticated, user]);
 
   const refreshSubscription = async () => {
     try {
