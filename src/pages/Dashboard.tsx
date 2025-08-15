@@ -12,6 +12,7 @@ import Workflows from "./dashboard/Workflows";
 import Blueprints from "./dashboard/Blueprints";
 import Strategies from "./dashboard/Strategies";
 import AccountProfile from "./dashboard/AccountProfile";
+import Subscription from "./dashboard/Subscription";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -73,6 +74,7 @@ export default function Dashboard() {
                 <Route path="blueprints" element={<Blueprints />} />
                 <Route path="strategies" element={<Strategies />} />
                 <Route path="profile" element={<AccountProfile />} />
+                <Route path="subscription" element={<Subscription />} />
                 <Route path="*" element={<Navigate to="." replace />} />
               </Routes>
             </div>

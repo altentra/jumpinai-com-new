@@ -226,30 +226,25 @@ export default function ProfileTabs() {
 
       {/* Tabs */}
       <section className="mt-6">
-        <Tabs defaultValue="overview" className="w-full">
-          <TabsList className="flex flex-nowrap overflow-x-auto md:grid md:grid-cols-5 w-full gap-2 md:gap-0 -mx-2 px-2 md:mx-0 md:px-0 rounded-xl bg-muted/30">
-            <TabsTrigger value="overview" className="flex items-center gap-2 shrink-0 whitespace-nowrap">
-              <Crown className="h-4 w-4" /> Overview
-            </TabsTrigger>
+        <Tabs defaultValue="profile" className="w-full">
+          <TabsList className="flex flex-nowrap overflow-x-auto md:grid md:grid-cols-3 w-full gap-2 md:gap-0 -mx-2 px-2 md:mx-0 md:px-0 rounded-xl bg-muted/30">
             <TabsTrigger value="profile" className="flex items-center gap-2 shrink-0 whitespace-nowrap">
-              <User className="h-4 w-4" /> Profile
+              <User className="h-4 w-4" /> Profile & Overview
             </TabsTrigger>
             <TabsTrigger value="security" className="flex items-center gap-2 shrink-0 whitespace-nowrap">
               <Shield className="h-4 w-4" /> Security
-            </TabsTrigger>
-            <TabsTrigger value="subscription" className="flex items-center gap-2 shrink-0 whitespace-nowrap">
-              <CreditCard className="h-4 w-4" /> Subscription
             </TabsTrigger>
             <TabsTrigger value="orders" className="flex items-center gap-2 shrink-0 whitespace-nowrap">
               <History className="h-4 w-4" /> Order History
             </TabsTrigger>
           </TabsList>
 
-          {/* Overview */}
-          <TabsContent value="overview" className="mt-6 animate-fade-in">
+          {/* Profile & Overview Combined */}
+          <TabsContent value="profile" className="mt-6 animate-fade-in space-y-6">
+            {/* Subscription Overview */}
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2"><Crown className="h-5 w-5 text-primary" /> Subscription</CardTitle>
+                <CardTitle className="flex items-center gap-2"><Crown className="h-5 w-5 text-primary" /> Subscription Overview</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <p className="text-muted-foreground">
@@ -258,30 +253,25 @@ export default function ProfileTabs() {
                     : 'You are on the Free plan. Upgrade to JumpinAI Pro to unlock all blueprints and workflows.'}
                 </p>
               </CardContent>
-                <CardFooter className="flex flex-wrap gap-3">
-                  {!subInfo?.subscribed ? (
-                    <Button onClick={subscribe} className="hover-scale">
-                      <Crown className="mr-2 h-4 w-4" /> Get JumpinAI Pro
+              <CardFooter className="flex flex-wrap gap-3">
+                {!subInfo?.subscribed ? (
+                  <Button onClick={subscribe} className="hover-scale">
+                    <Crown className="mr-2 h-4 w-4" /> Get JumpinAI Pro
+                  </Button>
+                ) : (
+                  <>
+                    <Button variant="secondary" onClick={manage} className="hover-scale">
+                      <ExternalLink className="mr-2 h-4 w-4" /> Manage billing
                     </Button>
-                  ) : (
-                    <>
-                      <Button variant="secondary" onClick={manage} className="hover-scale">
-                        <ExternalLink className="mr-2 h-4 w-4" /> Manage billing
-                      </Button>
-                      <Button variant="outline" onClick={refreshSubscription} className="hover-scale">
-                        <RefreshCcw className="mr-2 h-4 w-4" /> Refresh status
-                      </Button>
-                      <Button variant="destructive" onClick={cancelSubscription} className="hover-scale">
-                        <AlertTriangle className="mr-2 h-4 w-4" /> Cancel subscription
-                      </Button>
-                    </>
-                  )}
-                </CardFooter>
+                    <Button variant="outline" onClick={refreshSubscription} className="hover-scale">
+                      <RefreshCcw className="mr-2 h-4 w-4" /> Refresh status
+                    </Button>
+                  </>
+                )}
+              </CardFooter>
             </Card>
-          </TabsContent>
 
-          {/* Profile */}
-          <TabsContent value="profile" className="mt-6 animate-fade-in">
+            {/* Profile Details */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2"><User className="h-5 w-5 text-primary" /> Profile details</CardTitle>
@@ -334,127 +324,74 @@ export default function ProfileTabs() {
             </Card>
           </TabsContent>
 
-          {/* Subscription Plans */}
-          <TabsContent value="subscription" className="mt-6 animate-fade-in">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Card className="h-full">
-                <CardHeader>
-                  <CardTitle>Free</CardTitle>
-                  <p className="text-muted-foreground">$0 / month</p>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2 list-disc list-inside">
-                    {planFeatures.free.map((f) => (<li key={f}>{f}</li>))}
-                  </ul>
-                </CardContent>
-              </Card>
-
-              <Card className={`h-full ${subInfo?.subscribed ? 'ring-1 ring-primary/30' : ''}`}>
-                <CardHeader className="flex items-start justify-between">
-                  <div>
-                    <CardTitle>JumpinAI Pro</CardTitle>
-                    <p className="text-muted-foreground">$10 / month</p>
+          {/* Order History */}
+          <TabsContent value="orders" className="mt-6 animate-fade-in">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <History className="h-5 w-5 text-primary" /> Order History
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {orders.length === 0 ? (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <History className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                    <p>No orders found</p>
+                    <p className="text-sm">Your purchase history will appear here</p>
                   </div>
-                  {subInfo?.subscribed && (
-                    <Badge className="bg-primary/10 text-primary">Your plan</Badge>
-                  )}
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2 list-disc list-inside">
-                    {planFeatures.pro.map((f) => (<li key={f}>{f}</li>))}
-                  </ul>
-                </CardContent>
-                <CardFooter className="flex flex-wrap gap-3">
-                {!subInfo?.subscribed ? (
-                  <Button onClick={subscribe} className="hover-scale">
-                    <Crown className="mr-2 h-4 w-4" /> Get JumpinAI Pro
-                  </Button>
                 ) : (
-                  <>
-                    <Button variant="secondary" onClick={manage} className="hover-scale">
-                      <ExternalLink className="mr-2 h-4 w-4" /> Manage billing
-                    </Button>
-                    <Button variant="outline" onClick={refreshSubscription} className="hover-scale">
-                      <RefreshCcw className="mr-2 h-4 w-4" /> Refresh status
-                    </Button>
-                    <Button variant="destructive" onClick={cancelSubscription} className="hover-scale">
-                      <AlertTriangle className="mr-2 h-4 w-4" /> Cancel subscription
-                    </Button>
-                  </>
-                )}
-              </CardFooter>
-              </Card>
-            </div>
-
-            {/* Order History */}
-            <TabsContent value="orders" className="mt-6 animate-fade-in">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <History className="h-5 w-5 text-primary" /> Order History
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {orders.length === 0 ? (
-                    <div className="text-center py-8 text-muted-foreground">
-                      <History className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                      <p>No orders found</p>
-                      <p className="text-sm">Your purchase history will appear here</p>
-                    </div>
-                  ) : (
-                    <div className="overflow-x-auto">
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>Product</TableHead>
-                            <TableHead>Date</TableHead>
-                            <TableHead>Amount</TableHead>
-                            <TableHead>Status</TableHead>
-                            <TableHead>Actions</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {orders.map((order) => (
-                            <TableRow key={order.id}>
-                              <TableCell>
-                                <div>
-                                  <div className="font-medium">{order.products?.name || 'Product'}</div>
-                                  <div className="text-sm text-muted-foreground">
-                                    {order.products?.description || 'Digital product'}
-                                  </div>
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Product</TableHead>
+                          <TableHead>Date</TableHead>
+                          <TableHead>Amount</TableHead>
+                          <TableHead>Status</TableHead>
+                          <TableHead>Actions</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {orders.map((order) => (
+                          <TableRow key={order.id}>
+                            <TableCell>
+                              <div>
+                                <div className="font-medium">{order.products?.name || 'Product'}</div>
+                                <div className="text-sm text-muted-foreground">
+                                  {order.products?.description || 'Digital product'}
                                 </div>
-                              </TableCell>
-                              <TableCell>
-                                {new Date(order.created_at).toLocaleDateString()}
-                              </TableCell>
-                              <TableCell>
-                                ${(order.amount / 100).toFixed(2)} {order.currency?.toUpperCase()}
-                              </TableCell>
-                              <TableCell>
-                                <Badge variant={order.status === 'paid' ? 'default' : 'secondary'}>
-                                  {order.status || 'pending'}
-                                </Badge>
-                              </TableCell>
-                              <TableCell>
-                                {order.status === 'paid' && order.download_token && (
-                                  <Button 
-                                    variant="outline" 
-                                    size="sm"
-                                    onClick={() => window.open(`/api/download/${order.download_token}`, '_blank')}
-                                  >
-                                    Download
-                                  </Button>
-                                )}
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </TabsContent>
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              {new Date(order.created_at).toLocaleDateString()}
+                            </TableCell>
+                            <TableCell>
+                              ${(order.amount / 100).toFixed(2)} {order.currency?.toUpperCase()}
+                            </TableCell>
+                            <TableCell>
+                              <Badge variant={order.status === 'paid' ? 'default' : 'secondary'}>
+                                {order.status || 'pending'}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>
+                              {order.status === 'paid' && order.download_token && (
+                                <Button 
+                                  variant="outline" 
+                                  size="sm"
+                                  onClick={() => window.open(`/api/download/${order.download_token}`, '_blank')}
+                                >
+                                  Download
+                                </Button>
+                              )}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
           </TabsContent>
         </Tabs>
       </section>

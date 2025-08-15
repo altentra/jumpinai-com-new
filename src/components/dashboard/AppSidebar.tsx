@@ -11,7 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { User, Settings, Home, FileText, Workflow, Lightbulb, Boxes, ChevronDown } from "lucide-react";
+import { User, Settings, Home, FileText, Workflow, Lightbulb, Boxes, ChevronDown, CreditCard } from "lucide-react";
 
 interface SubscriberInfo {
   subscribed: boolean;
@@ -189,6 +189,18 @@ export default function AppSidebar() {
           >
             <User className="h-4 w-4" />
             Profile & Settings
+          </Link>
+
+          {/* Subscription */}
+          <Link 
+            to="/dashboard/subscription" 
+            className={cn(
+              "flex items-center gap-3 rounded-lg px-3 py-2 text-sm hover:bg-muted/50 transition-colors",
+              getNavCls({ isActive: currentPath === "/dashboard/subscription" })
+            )}
+          >
+            <CreditCard className="h-4 w-4" />
+            Subscription
           </Link>
         </nav>
       </SidebarContent>
