@@ -50,8 +50,8 @@ verify_jwt = false
 [functions.download-product]
 verify_jwt = false
 
-# [functions.send-confirmation-email]
-# verify_jwt = false
+[functions.send-confirmation-email]
+verify_jwt = false
 
 [functions.check-email-exists]
 verify_jwt = false
