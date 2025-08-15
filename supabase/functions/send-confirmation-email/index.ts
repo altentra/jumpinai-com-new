@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { Resend } from "npm:resend@4.0.0";
+import { Resend } from "npm:resend@2.0.0";
 
-const resend = new Resend(Deno.env.get('RESEND_API_KEY') as string);
+const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -85,6 +85,8 @@ const generateConfirmationHTML = (token_hash: string, email_action_type: string,
 };
 
 serve(async (req) => {
+  console.log(`${req.method} request received`);
+  
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
@@ -94,6 +96,7 @@ serve(async (req) => {
   }
 
   try {
+    console.log('Processing POST request...');
     const payload = await req.json();
     console.log('Received payload:', JSON.stringify(payload, null, 2));
     
@@ -113,12 +116,16 @@ serve(async (req) => {
       redirect_to = payload.redirect_to || '';
       email_action_type = payload.email_action_type || 'signup';
     } else {
+      console.error('Invalid payload structure:', payload);
       throw new Error('Invalid payload structure');
     }
+
+    console.log('Extracted data:', { user_email, token_hash, redirect_to, email_action_type });
 
     const supabase_url = Deno.env.get('SUPABASE_URL') ?? '';
     const html = generateConfirmationHTML(token_hash, email_action_type, redirect_to, supabase_url, user_email);
 
+    console.log('Sending email to:', user_email);
     const { error } = await resend.emails.send({
       from: 'JumpinAI <onboarding@resend.dev>',
       to: [user_email],
@@ -131,6 +138,7 @@ serve(async (req) => {
       throw error;
     }
 
+    console.log('Email sent successfully');
     return new Response(JSON.stringify({ success: true }), {
       status: 200,
       headers: { 'Content-Type': 'application/json', ...corsHeaders }
