@@ -195,21 +195,20 @@ export default function AppSidebar() {
               </div>
             </CollapsibleContent>
           </Collapsible>
+
+          {/* Profile & Settings - Moved back up */}
+          <Link 
+            to="/dashboard/profile" 
+            className={cn(
+              "flex items-center gap-3 rounded-lg px-3 py-2 text-sm hover:bg-muted/50 transition-colors",
+              getNavCls({ isActive: currentPath === "/dashboard/profile" })
+            )}
+          >
+            <User className="h-4 w-4" />
+            Profile & Settings
+          </Link>
         </nav>
       </SidebarContent>
-
-      <SidebarFooter className="border-t border-border">
-        <Link 
-          to="/dashboard/profile" 
-          className={cn(
-            "flex items-center gap-3 rounded-lg px-3 py-2 text-sm hover:bg-muted/50 transition-colors",
-            getNavCls({ isActive: currentPath === "/dashboard/profile" })
-          )}
-        >
-          <User className="h-4 w-4" />
-          Profile & Settings
-        </Link>
-      </SidebarFooter>
     </Sidebar>
   );
 }
