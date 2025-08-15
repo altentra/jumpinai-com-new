@@ -1,6 +1,7 @@
 import { NavLink, useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { LayoutDashboard, Rocket, Sparkles, GitBranch, Boxes, Lightbulb, User } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 import {
   Sidebar,
   SidebarContent,
@@ -28,10 +29,22 @@ export default function AppSidebar() {
   const isCollapsed = state === "collapsed";
   const location = useLocation();
   const currentPath = location.pathname;
+  const [userName, setUserName] = useState<string>("");
 
   useEffect(() => {
     if (isMobile) setOpenMobile(false);
   }, [currentPath, isMobile, setOpenMobile]);
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user?.user_metadata?.display_name) {
+        setUserName(user.user_metadata.display_name);
+      }
+    };
+    
+    fetchUserProfile();
+  }, []);
 
   const getNavCls = ({ isActive }: { isActive: boolean }) =>
     isActive ? "bg-muted text-primary font-medium" : "hover:bg-muted/50";
@@ -40,6 +53,13 @@ export default function AppSidebar() {
     <Sidebar className={isCollapsed ? "w-14 top-20 bottom-12" : "w-64 top-20 bottom-12"} collapsible="icon">
       <SidebarContent className="pb-24">
         <SidebarGroup>
+          {/* Welcome Message */}
+          {!isCollapsed && userName && (
+            <div className="px-3 py-2 mb-4">
+              <p className="text-sm font-medium text-muted-foreground">Welcome,</p>
+              <p className="text-base font-semibold text-foreground truncate">{userName}</p>
+            </div>
+          )}
           
           <SidebarGroupContent>
             <SidebarMenu>

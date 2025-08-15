@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -40,11 +41,16 @@ const Auth = () => {
   const handleSignUp = async () => {
     setLoading(true);
     const redirectUrl = `${window.location.origin}/`;
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: { emailRedirectTo: redirectUrl },
+      options: { 
+        emailRedirectTo: redirectUrl,
+        data: { display_name: name }
+      },
     });
+    
+    
     setLoading(false);
     if (error) {
       toast.error(error.message);
@@ -54,38 +60,94 @@ const Auth = () => {
   };
 
   return (
-    <main className="min-h-screen pt-28 pb-20">
+    <main className="min-h-screen pt-28 pb-20 bg-gradient-to-br from-background via-background to-muted/20">
       <Helmet>
         <title>Login or Sign Up | JumpinAI</title>
         <meta name="description" content="Sign in or create an account to access your profile and JumpinAI Pro subscription." />
         <link rel="canonical" href={`${window.location.origin}/auth`} />
       </Helmet>
-      <section className="max-w-md mx-auto glass rounded-2xl p-8 border border-border">
-        <h1 className="text-2xl font-bold mb-6">{isSignUp ? "Create your account" : "Welcome back"}</h1>
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" />
+      
+      <div className="container mx-auto px-4">
+        <section className="max-w-md mx-auto">
+          {/* Header */}
+          <div className="text-center mb-8 animate-fade-in-down">
+            <h1 className="text-3xl font-bold gradient-text-primary mb-3">
+              {isSignUp ? "Join JumpinAI" : "Welcome back"}
+            </h1>
+            <p className="text-muted-foreground">
+              {isSignUp 
+                ? "Create your account and start your AI journey" 
+                : "Sign in to access your dashboard"
+              }
+            </p>
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
-            <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" />
+
+          {/* Auth Form */}
+          <div className="glass rounded-2xl p-8 border border-border shadow-modern animate-fade-in-up">
+            <div className="space-y-6">
+              {isSignUp && (
+                <div className="space-y-2">
+                  <Label htmlFor="name" className="text-sm font-medium">Full Name</Label>
+                  <Input 
+                    id="name" 
+                    type="text" 
+                    value={name} 
+                    onChange={(e) => setName(e.target.value)} 
+                    placeholder="Your full name"
+                    className="h-11"
+                  />
+                </div>
+              )}
+              
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-sm font-medium">Email</Label>
+                <Input 
+                  id="email" 
+                  type="email" 
+                  value={email} 
+                  onChange={(e) => setEmail(e.target.value)} 
+                  placeholder="you@example.com"
+                  className="h-11"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="password" className="text-sm font-medium">Password</Label>
+                <Input 
+                  id="password" 
+                  type="password" 
+                  value={password} 
+                  onChange={(e) => setPassword(e.target.value)} 
+                  placeholder="••••••••"
+                  className="h-11"
+                />
+              </div>
+              
+              <Button 
+                className="w-full h-11 modern-button" 
+                onClick={isSignUp ? handleSignUp : handleSignIn} 
+                disabled={loading || (isSignUp && !name.trim())}
+              >
+                {loading ? "Please wait..." : isSignUp ? "Create Account" : "Sign In"}
+              </Button>
+              
+              <div className="text-center">
+                <button
+                  type="button"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors underline underline-offset-4"
+                  onClick={() => setIsSignUp((v) => !v)}
+                >
+                  {isSignUp ? "Already have an account? Sign in" : "New here? Create an account"}
+                </button>
+              </div>
+            </div>
           </div>
-          <Button className="w-full" onClick={isSignUp ? handleSignUp : handleSignIn} disabled={loading}>
-            {loading ? "Please wait..." : isSignUp ? "Sign Up" : "Sign In"}
-          </Button>
-          <button
-            type="button"
-            className="text-sm text-muted-foreground hover:text-foreground underline underline-offset-4"
-            onClick={() => setIsSignUp((v) => !v)}
-          >
-            {isSignUp ? "Already have an account? Sign in" : "New here? Create an account"}
-          </button>
-        </div>
-      </section>
-      <aside className="max-w-md mx-auto mt-6 text-sm text-muted-foreground">
-        By continuing you agree to our Terms and acknowledge our Privacy Policy.
-      </aside>
+
+          <aside className="mt-6 text-center text-sm text-muted-foreground animate-fade-in-up animate-delay-200">
+            By continuing you agree to our <span className="text-foreground">Terms</span> and acknowledge our <span className="text-foreground">Privacy Policy</span>.
+          </aside>
+        </section>
+      </div>
     </main>
   );
 };

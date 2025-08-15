@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useNavigate, Routes, Route, Navigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -15,14 +15,31 @@ import AccountProfile from "./dashboard/AccountProfile";
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const [userName, setUserName] = useState<string>("");
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (!session?.user) navigate("/auth", { replace: true });
+      if (!session?.user) {
+        navigate("/auth", { replace: true });
+      } else {
+        // Get user's name from metadata
+        if (session.user.user_metadata?.display_name) {
+          setUserName(session.user.user_metadata.display_name);
+        }
+      }
     });
+    
     supabase.auth.getSession().then(({ data }) => {
-      if (!data.session?.user) navigate("/auth", { replace: true });
+      if (!data.session?.user) {
+        navigate("/auth", { replace: true });
+      } else {
+        // Get user's name from metadata for existing session
+        if (data.session.user.user_metadata?.display_name) {
+          setUserName(data.session.user.user_metadata.display_name);
+        }
+      }
     });
+    
     return () => subscription.unsubscribe();
   }, [navigate]);
 
@@ -40,9 +57,16 @@ export default function Dashboard() {
           <AppSidebar />
 
           <main className="flex-1">
-            <header className="h-14 flex items-center border-b px-4">
-              <SidebarTrigger className="mr-2" />
-              <h1 className="text-lg font-semibold">My Dashboard</h1>
+            <header className="h-14 flex items-center justify-between border-b px-4">
+              <div className="flex items-center">
+                <SidebarTrigger className="mr-2" />
+                <h1 className="text-lg font-semibold">My Dashboard</h1>
+              </div>
+              {userName && (
+                <div className="text-sm text-muted-foreground">
+                  Welcome, <span className="text-foreground font-medium">{userName}</span>!
+                </div>
+              )}
             </header>
 
             <div className="p-4 md:p-6">
