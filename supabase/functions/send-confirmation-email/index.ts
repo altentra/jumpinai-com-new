@@ -45,6 +45,9 @@ serve(async (req) => {
     console.log(`Confirmation link: ${confirmationLink}`);
 
     // Send confirmation email via Resend
+    console.log('About to send email via Resend...');
+    console.log('RESEND_API_KEY exists:', !!Deno.env.get("RESEND_API_KEY"));
+    
     const emailResponse = await resend.emails.send({
       from: "Jumpin AI <onboarding@resend.dev>",
       to: [user_email],
