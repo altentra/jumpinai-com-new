@@ -102,14 +102,33 @@ async function handleUserCreated(supabase: any, user: Auth0User) {
   console.log('Creating profile for user:', user.user_id)
   
   try {
-    // Extract Auth0 user ID (remove auth0| prefix if present)
-    const userId = user.user_id.replace(/^auth0\|/, '')
-    
-    // Create profile in Supabase
+    // Try to reuse existing profile id from subscribers by email, otherwise generate a new UUID
+    let profileId: string | null = null
+
+    if (user.email) {
+      const { data: existingSub, error: subLookupError } = await supabase
+        .from('subscribers')
+        .select('user_id')
+        .eq('email', user.email)
+        .maybeSingle()
+
+      if (subLookupError) {
+        console.warn('Subscriber lookup error (non-fatal):', subLookupError)
+      }
+
+      profileId = existingSub?.user_id ?? null
+    }
+
+    if (!profileId) {
+      // Generate a UUID for our profiles table (it expects uuid, not Auth0 id)
+      profileId = crypto.randomUUID()
+    }
+
+    // Upsert profile in Supabase using the UUID profileId
     const { error: profileError } = await supabase
       .from('profiles')
       .upsert({
-        id: userId,
+        id: profileId,
         display_name: user.name || user.email?.split('@')[0] || '',
         avatar_url: user.picture || '',
         created_at: new Date().toISOString(),
@@ -121,24 +140,24 @@ async function handleUserCreated(supabase: any, user: Auth0User) {
       throw profileError
     }
 
-    // Create subscriber record (free tier by default)
+    // Create or update subscriber record, linking to the same profileId
     const { error: subscriberError } = await supabase
       .from('subscribers')
       .upsert({
-        user_id: userId,
+        user_id: profileId,
         email: user.email,
         subscribed: false,
         subscription_tier: null,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
-      })
+      }, { onConflict: 'email' })
 
     if (subscriberError) {
       console.error('Subscriber creation error:', subscriberError)
       // Don't throw here, profile creation is more important
     }
 
-    console.log('Successfully created profile and subscriber for:', user.user_id)
+    console.log('Successfully created/linked profile and subscriber for:', user.user_id, 'profileId:', profileId)
     
   } catch (error) {
     console.error('Error in handleUserCreated:', error)
@@ -150,7 +169,29 @@ async function handleUserUpdated(supabase: any, user: Auth0User) {
   console.log('Updating profile for user:', user.user_id)
   
   try {
-    const userId = user.user_id.replace(/^auth0\|/, '')
+    // Find linked profileId via subscribers by email
+    let profileId: string | null = null
+
+    if (user.email) {
+      const { data: existingSub, error: subLookupError } = await supabase
+        .from('subscribers')
+        .select('user_id')
+        .eq('email', user.email)
+        .maybeSingle()
+
+      if (subLookupError) {
+        console.warn('Subscriber lookup error (non-fatal):', subLookupError)
+      }
+
+      profileId = existingSub?.user_id ?? null
+    }
+
+    if (!profileId) {
+      // If we can't find a profile, create it now to keep things consistent
+      console.log('No existing profile found, creating one...')
+      await handleUserCreated(supabase, user)
+      return
+    }
     
     const { error } = await supabase
       .from('profiles')
@@ -159,7 +200,7 @@ async function handleUserUpdated(supabase: any, user: Auth0User) {
         avatar_url: user.picture || '',
         updated_at: new Date().toISOString()
       })
-      .eq('id', userId)
+      .eq('id', profileId)
 
     if (error) {
       console.error('Profile update error:', error)
@@ -174,7 +215,7 @@ async function handleUserUpdated(supabase: any, user: Auth0User) {
           email: user.email,
           updated_at: new Date().toISOString()
         })
-        .eq('user_id', userId)
+        .eq('user_id', profileId)
         
       if (emailError) {
         console.error('Subscriber email update error:', emailError)
@@ -194,23 +235,71 @@ async function handleUserDeleted(supabase: any, user: Auth0User) {
   console.log('Deleting profile for user:', user.user_id)
   
   try {
-    const userId = user.user_id.replace(/^auth0\|/, '')
-    
-    // Delete user data in correct order (respecting foreign keys)
-    const tables = ['contact_activities', 'contacts', 'orders', 'subscribers', 'profiles']
-    
-    for (const table of tables) {
-      const { error } = await supabase
-        .from(table)
+    // Resolve profileId via subscribers by email
+    let profileId: string | null = null
+
+    if (user.email) {
+      const { data: existingSub } = await supabase
+        .from('subscribers')
+        .select('user_id')
+        .eq('email', user.email)
+        .maybeSingle()
+      profileId = existingSub?.user_id ?? null
+    }
+
+    // Delete user-related data
+    // Orders: match by user_email
+    if (user.email) {
+      const { error: ordersError } = await supabase
+        .from('orders')
         .delete()
-        .eq(table === 'contacts' ? 'email' : 'user_id', table === 'contacts' ? user.email : userId)
-        
-      if (error && !error.message.includes('No rows found')) {
-        console.error(`Error deleting from ${table}:`, error)
+        .eq('user_email', user.email)
+      if (ordersError) {
+        console.error('Error deleting from orders:', ordersError)
+      }
+
+      // Contacts by email
+      const { error: contactsError } = await supabase
+        .from('contacts')
+        .delete()
+        .eq('email', user.email)
+      if (contactsError) {
+        console.error('Error deleting from contacts:', contactsError)
       }
     }
 
-    console.log('Successfully deleted profile for:', user.user_id)
+    // Subscribers by profileId or email
+    if (profileId) {
+      const { error: subByIdError } = await supabase
+        .from('subscribers')
+        .delete()
+        .eq('user_id', profileId)
+      if (subByIdError) {
+        console.error('Error deleting subscriber by user_id:', subByIdError)
+      }
+    }
+    if (user.email) {
+      const { error: subByEmailError } = await supabase
+        .from('subscribers')
+        .delete()
+        .eq('email', user.email)
+      if (subByEmailError) {
+        console.error('Error deleting subscriber by email:', subByEmailError)
+      }
+    }
+
+    // Profiles by id
+    if (profileId) {
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .delete()
+        .eq('id', profileId)
+      if (profileError) {
+        console.error('Error deleting profile:', profileError)
+      }
+    }
+
+    console.log('Successfully deleted data for:', user.user_id)
     
   } catch (error) {
     console.error('Error in handleUserDeleted:', error)
