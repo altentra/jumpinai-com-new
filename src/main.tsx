@@ -5,7 +5,7 @@ import { Auth0Provider } from '@auth0/auth0-react'
 import App from './App.tsx'
 import './index.css'
 
-const AUTH0_DOMAIN = "dev-iyfpdob2thyte37k.us.auth0.com"
+const AUTH0_DOMAIN = "login.jumpinai.com"
 const AUTH0_CLIENT_ID = "XX2TPAzKsR98BETXcC4EdJoR4hI85Tlw"
 
 createRoot(document.getElementById('root')!).render(
