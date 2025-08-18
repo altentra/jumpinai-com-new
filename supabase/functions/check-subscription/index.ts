@@ -27,24 +27,39 @@ serve(async (req) => {
     if (!authHeader) throw new Error("No authorization header provided");
     const token = authHeader.replace("Bearer ", "");
 
-    const { data: userData, error: userError } = await supabaseClient.auth.getUser(token);
-    if (userError) throw new Error(`Authentication error: ${userError.message}`);
-    const user = userData.user;
-    if (!user?.email) throw new Error("User not authenticated or email not available");
+    // Resolve user email from Auth0 access token
+    const userinfoRes = await fetch("https://login.jumpinai.com/userinfo", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!userinfoRes.ok) throw new Error("Failed to verify Auth0 token");
+    const userinfo = await userinfoRes.json();
+    const userEmail = userinfo?.email as string;
+    if (!userEmail) throw new Error("Email not available from Auth0 userinfo");
+
+    // Try to find existing subscriber to reuse linked profile id
+    const { data: existingSub } = await supabaseClient
+      .from("subscribers")
+      .select("user_id")
+      .eq("email", userEmail)
+      .maybeSingle();
+    const existingUserId = existingSub?.user_id ?? null;
 
     const stripe = new Stripe(stripeKey, { apiVersion: "2023-10-16" });
-    const customers = await stripe.customers.list({ email: user.email, limit: 1 });
+    const customers = await stripe.customers.list({ email: userEmail, limit: 1 });
 
     if (customers.data.length === 0) {
-      await supabaseClient.from("subscribers").upsert({
-        email: user.email,
-        user_id: user.id,
-        stripe_customer_id: null,
-        subscribed: false,
-        subscription_tier: null,
-        subscription_end: null,
-        updated_at: new Date().toISOString(),
-      }, { onConflict: 'email' });
+      await supabaseClient.from("subscribers").upsert(
+        {
+          email: userEmail,
+          user_id: existingUserId,
+          stripe_customer_id: null,
+          subscribed: false,
+          subscription_tier: null,
+          subscription_end: null,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: "email" }
+      );
       return new Response(JSON.stringify({ subscribed: false }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 200,
@@ -67,15 +82,18 @@ serve(async (req) => {
       subscriptionTier = amount === 1000 ? "JumpinAI Pro" : "Other";
     }
 
-    await supabaseClient.from("subscribers").upsert({
-      email: user.email,
-      user_id: user.id,
-      stripe_customer_id: customerId,
-      subscribed: hasActiveSub,
-      subscription_tier: subscriptionTier,
-      subscription_end: subscriptionEnd,
-      updated_at: new Date().toISOString(),
-    }, { onConflict: 'email' });
+    await supabaseClient.from("subscribers").upsert(
+      {
+        email: userEmail,
+        user_id: existingUserId,
+        stripe_customer_id: customerId,
+        subscribed: hasActiveSub,
+        subscription_tier: subscriptionTier,
+        subscription_end: subscriptionEnd,
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: "email" }
+    );
 
     return new Response(JSON.stringify({
       subscribed: hasActiveSub,

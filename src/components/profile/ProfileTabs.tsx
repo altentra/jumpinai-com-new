@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { User, Shield, Crown, CreditCard, RefreshCcw, Save, LogOut, ExternalLink, AlertTriangle, History, Trash2 } from "lucide-react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { useAuth0Token } from "@/hooks/useAuth0Token";
 
 interface SubscriberInfo {
   subscribed: boolean;
@@ -47,6 +48,7 @@ export default function ProfileTabs() {
   const [downloadingReceipt, setDownloadingReceipt] = useState<string | null>(null);
   const navigate = useNavigate();
   const { isAuthenticated, isLoading: authLoading, user, loginWithRedirect, logout } = useAuth0();
+  const { getAuthHeaders } = useAuth0Token();
 
   useEffect(() => {
     if (!authLoading) {
@@ -128,7 +130,9 @@ export default function ProfileTabs() {
 
   const refreshSubscription = async () => {
     try {
-      const { data, error } = await supabase.functions.invoke("check-subscription");
+      const { data, error } = await supabase.functions.invoke("check-subscription", {
+        headers: await getAuthHeaders(),
+      });
       if (error) throw error;
       setSubInfo(data as SubscriberInfo);
     } catch (e: any) {

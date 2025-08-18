@@ -27,13 +27,17 @@ serve(async (req) => {
     if (!authHeader) throw new Error("No authorization header provided");
     const token = authHeader.replace("Bearer ", "");
 
-    const { data: userData, error: userError } = await supabaseClient.auth.getUser(token);
-    if (userError) throw new Error(`Authentication error: ${userError.message}`);
-    const user = userData.user;
-    if (!user?.email) throw new Error("User not authenticated or email not available");
+    // Resolve user email from Auth0 access token
+    const userinfoRes = await fetch("https://login.jumpinai.com/userinfo", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!userinfoRes.ok) throw new Error("Failed to verify Auth0 token");
+    const userinfo = await userinfoRes.json();
+    const userEmail = userinfo?.email as string;
+    if (!userEmail) throw new Error("Email not available from Auth0 userinfo");
 
     const stripe = new Stripe(stripeKey, { apiVersion: "2023-10-16" });
-    const customers = await stripe.customers.list({ email: user.email, limit: 1 });
+    const customers = await stripe.customers.list({ email: userEmail, limit: 1 });
     if (customers.data.length === 0) {
       throw new Error("No Stripe customer found for this user");
     }
