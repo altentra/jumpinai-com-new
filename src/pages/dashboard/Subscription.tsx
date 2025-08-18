@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Crown, CreditCard, RefreshCcw, ExternalLink, AlertTriangle } from "lucide-react";
+import { useAuth0Token } from "@/hooks/useAuth0Token";
 
 interface SubscriberInfo {
   subscribed: boolean;
@@ -41,6 +42,7 @@ export default function Subscription() {
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
   const { isAuthenticated, isLoading: authLoading, user, loginWithRedirect } = useAuth0();
+  const { getAuthHeaders } = useAuth0Token();
 
   useEffect(() => {
     if (!authLoading) {
@@ -56,7 +58,9 @@ export default function Subscription() {
 
   const refreshSubscription = async () => {
     try {
-      const { data, error } = await supabase.functions.invoke("check-subscription");
+      const { data, error } = await supabase.functions.invoke("check-subscription", {
+        headers: await getAuthHeaders(),
+      });
       if (error) throw error;
       setSubInfo(data as SubscriberInfo);
     } catch (e: any) {
@@ -67,7 +71,9 @@ export default function Subscription() {
 
   const subscribe = async () => {
     try {
-      const { data, error } = await supabase.functions.invoke("create-checkout");
+      const { data, error } = await supabase.functions.invoke("create-checkout", {
+        headers: await getAuthHeaders(),
+      });
       if (error) throw error;
       const url = (data as any)?.url;
       if (url) window.location.href = url;
@@ -78,7 +84,9 @@ export default function Subscription() {
 
   const manage = async () => {
     try {
-      const { data, error } = await supabase.functions.invoke("customer-portal");
+      const { data, error } = await supabase.functions.invoke("customer-portal", {
+        headers: await getAuthHeaders(),
+      });
       if (error) throw error;
       const url = (data as any)?.url;
       if (url) window.location.href = url;
@@ -93,7 +101,9 @@ export default function Subscription() {
     }
     
     try {
-      const { data, error } = await supabase.functions.invoke("customer-portal");
+      const { data, error } = await supabase.functions.invoke("customer-portal", {
+        headers: await getAuthHeaders(),
+      });
       if (error) throw error;
       const url = (data as any)?.url;
       if (url) window.open(url, '_blank');

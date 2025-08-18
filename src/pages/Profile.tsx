@@ -14,6 +14,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { User, Shield, Crown, CreditCard, RefreshCcw, Save, LogOut } from "lucide-react";
+import { useAuth0Token } from "@/hooks/useAuth0Token";
 
 interface SubscriberInfo {
   subscribed: boolean;
@@ -44,6 +45,7 @@ const Profile = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
   const { isAuthenticated, isLoading: authLoading, user, loginWithRedirect, logout } = useAuth0();
+  const { getAuthHeaders } = useAuth0Token();
 
   useEffect(() => {
     if (!authLoading) {
@@ -95,7 +97,9 @@ const Profile = () => {
 
   const refreshSubscription = async () => {
     try {
-      const { data, error } = await supabase.functions.invoke("check-subscription");
+      const { data, error } = await supabase.functions.invoke("check-subscription", {
+        headers: await getAuthHeaders(),
+      });
       if (error) throw error;
       setSubInfo(data as SubscriberInfo);
     } catch (e: any) {
@@ -106,7 +110,9 @@ const Profile = () => {
 
   const subscribe = async () => {
     try {
-      const { data, error } = await supabase.functions.invoke("create-checkout");
+      const { data, error } = await supabase.functions.invoke("create-checkout", {
+        headers: await getAuthHeaders(),
+      });
       if (error) throw error;
       const url = (data as any)?.url;
       if (url) window.location.href = url;
@@ -117,7 +123,9 @@ const Profile = () => {
 
   const manage = async () => {
     try {
-      const { data, error } = await supabase.functions.invoke("customer-portal");
+      const { data, error } = await supabase.functions.invoke("customer-portal", {
+        headers: await getAuthHeaders(),
+      });
       if (error) throw error;
       const url = (data as any)?.url;
       if (url) window.location.href = url;

@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Rocket, Sparkles, GitBranch, Boxes, Lightbulb, ChevronRight, Crown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { useAuth0Token } from "@/hooks/useAuth0Token";
 
 interface SubscriberInfo {
   subscribed: boolean;
@@ -17,6 +18,7 @@ const DashboardHome = () => {
   const navigate = useNavigate();
   const [userName, setUserName] = useState<string>("");
   const [subInfo, setSubInfo] = useState<SubscriberInfo | null>(null);
+  const { getAuthHeaders } = useAuth0Token();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -52,7 +54,9 @@ const DashboardHome = () => {
 
   const refreshSubscription = async () => {
     try {
-      const { data, error } = await supabase.functions.invoke("check-subscription");
+      const { data, error } = await supabase.functions.invoke("check-subscription", {
+        headers: await getAuthHeaders(),
+      });
       if (error) throw error;
       setSubInfo(data as SubscriberInfo);
     } catch (e: any) {
@@ -62,7 +66,9 @@ const DashboardHome = () => {
 
   const subscribe = async () => {
     try {
-      const { data, error } = await supabase.functions.invoke("create-checkout");
+      const { data, error } = await supabase.functions.invoke("create-checkout", {
+        headers: await getAuthHeaders(),
+      });
       if (error) throw error;
       const url = (data as any)?.url;
       if (url) window.location.href = url;

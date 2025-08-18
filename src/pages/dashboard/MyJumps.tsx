@@ -4,6 +4,7 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/componen
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Download, ShoppingCart, CheckCircle, Crown } from "lucide-react";
+import { useAuth0Token } from "@/hooks/useAuth0Token";
 
 interface Product {
   id: string;
@@ -24,6 +25,7 @@ export default function MyJumps() {
   const [products, setProducts] = useState<Product[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
   const { toast } = useToast();
+  const { getAuthHeaders } = useAuth0Token();
 
   const purchasedByProduct = useMemo(() => {
     const map = new Map<string, Order>();
@@ -83,7 +85,9 @@ export default function MyJumps() {
 
   const upgradeToPro = async () => {
     try {
-      const { data, error } = await supabase.functions.invoke('create-checkout');
+      const { data, error } = await supabase.functions.invoke('create-checkout', {
+        headers: await getAuthHeaders(),
+      });
       if (error) throw error;
       window.location.href = (data as any)?.url;
     } catch (e: any) {

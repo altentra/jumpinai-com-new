@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { supabase } from "@/integrations/supabase/client";
 import { User, Settings, Home, FileText, Workflow, Lightbulb, Boxes, ChevronDown, CreditCard } from "lucide-react";
+import { useAuth0Token } from "@/hooks/useAuth0Token";
 
 interface SubscriberInfo {
   subscribed: boolean;
@@ -26,6 +27,7 @@ export default function AppSidebar() {
   const [userName, setUserName] = useState<string>("");
   const [subInfo, setSubInfo] = useState<SubscriberInfo | null>(null);
   const { user, isAuthenticated } = useAuth0();
+  const { getAuthHeaders } = useAuth0Token();
 
   useEffect(() => {
     if (isMobile) setOpenMobile(false);
@@ -51,7 +53,9 @@ export default function AppSidebar() {
 
   const refreshSubscription = async () => {
     try {
-      const { data, error } = await supabase.functions.invoke("check-subscription");
+      const { data, error } = await supabase.functions.invoke("check-subscription", {
+        headers: await getAuthHeaders(),
+      });
       if (error) throw error;
       setSubInfo(data as SubscriberInfo);
     } catch (e: any) {

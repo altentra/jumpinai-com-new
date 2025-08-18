@@ -143,7 +143,9 @@ export default function ProfileTabs() {
 
   const subscribe = async () => {
     try {
-      const { data, error } = await supabase.functions.invoke("create-checkout");
+      const { data, error } = await supabase.functions.invoke("create-checkout", {
+        headers: await getAuthHeaders(),
+      });
       if (error) throw error;
       const url = (data as any)?.url;
       if (url) window.location.href = url;
@@ -154,7 +156,9 @@ export default function ProfileTabs() {
 
   const manage = async () => {
     try {
-      const { data, error } = await supabase.functions.invoke("customer-portal");
+      const { data, error } = await supabase.functions.invoke("customer-portal", {
+        headers: await getAuthHeaders(),
+      });
       if (error) throw error;
       const url = (data as any)?.url;
       if (url) window.location.href = url;
