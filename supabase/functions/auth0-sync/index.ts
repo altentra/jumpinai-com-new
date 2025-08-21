@@ -7,7 +7,8 @@ const corsHeaders = {
 }
 
 interface Auth0User {
-  user_id: string
+  user_id?: string
+  auth0_id?: string
   email: string
   name?: string
   picture?: string
@@ -59,7 +60,8 @@ serve(async (req) => {
     const eventType = body.event || body.type
     const user: Auth0User = body.user || body
 
-    console.log('Processing event:', eventType, 'for user:', user.user_id)
+    const userId = user.auth0_id || user.user_id || user.email
+    console.log('Processing event:', eventType, 'for user:', userId)
 
     switch (eventType) {
       case 'post_user_registration':
@@ -99,7 +101,8 @@ serve(async (req) => {
 })
 
 async function handleUserCreated(supabase: any, user: Auth0User) {
-  console.log('Creating profile for user:', user.user_id)
+  const userId = user.auth0_id || user.user_id || user.email
+  console.log('Creating profile for user:', userId)
   
   try {
     // Try to reuse existing profile id from subscribers by email, otherwise generate a new UUID
@@ -157,7 +160,7 @@ async function handleUserCreated(supabase: any, user: Auth0User) {
       // Don't throw here, profile creation is more important
     }
 
-    console.log('Successfully created/linked profile and subscriber for:', user.user_id, 'profileId:', profileId)
+    console.log('Successfully created/linked profile and subscriber for:', userId, 'profileId:', profileId)
     
   } catch (error) {
     console.error('Error in handleUserCreated:', error)
