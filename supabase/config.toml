@@ -62,6 +62,12 @@ verify_jwt = false
 [functions.customer-portal]
 verify_jwt = false
 
+[functions.send-verification-email]
+verify_jwt = true
+
+[functions.verify-email]
+verify_jwt = false
+
 [realtime]
 enabled = true
 port = 54323
