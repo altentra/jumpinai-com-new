@@ -46,6 +46,7 @@ export default function ProfileTabs() {
   const [deleteConfirmText, setDeleteConfirmText] = useState<string>("");
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
   const [downloadingReceipt, setDownloadingReceipt] = useState<string | null>(null);
+  const [supabaseUser, setSupabaseUser] = useState<any>(null);
   const navigate = useNavigate();
   const { isAuthenticated, isLoading: authLoading, user, login, logout } = useAuth();
   const { getAuthHeaders } = useAuth0Token();
@@ -56,6 +57,7 @@ export default function ProfileTabs() {
         login('/dashboard/profile');
       } else if (user) {
         setEmail(user.email || "");
+        fetchSupabaseUser();
         fetchProfile();
         refreshSubscription();
         fetchOrders();
@@ -63,6 +65,13 @@ export default function ProfileTabs() {
       }
     }
   }, [isAuthenticated, authLoading, user, login]);
+
+  const fetchSupabaseUser = async () => {
+    const { data, error } = await supabase.auth.getUser();
+    if (data?.user) {
+      setSupabaseUser(data.user);
+    }
+  };
 
   const fetchProfile = async () => {
     const { data, error } = await (supabase.from("profiles" as any) as any)
@@ -374,20 +383,57 @@ export default function ProfileTabs() {
               </CardFooter>
             </Card>
 
+            {/* Email & Account Status */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2"><User className="h-5 w-5 text-primary" /> Account Information</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Email Address</Label>
+                    <div className="flex items-center gap-2">
+                      <Input value={email} disabled className="bg-muted/50" />
+                      {supabaseUser?.email_confirmed_at ? (
+                        <Badge variant="default" className="bg-green-500/10 text-green-600 border-green-500/20">
+                          Verified
+                        </Badge>
+                      ) : (
+                        <Badge variant="outline" className="bg-yellow-500/10 text-yellow-600 border-yellow-500/20">
+                          Unverified
+                        </Badge>
+                      )}
+                    </div>
+                    {!supabaseUser?.email_confirmed_at && (
+                      <p className="text-xs text-muted-foreground">
+                        Email verification is required for purchases and subscriptions.
+                      </p>
+                    )}
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Account Status</Label>
+                    <div className="flex items-center gap-2">
+                      <Badge variant="default" className="bg-primary/10 text-primary">Active</Badge>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
             {/* Profile Details */}
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2"><User className="h-5 w-5 text-primary" /> Profile details</CardTitle>
+                <CardTitle className="flex items-center gap-2"><User className="h-5 w-5 text-primary" /> Profile Details</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="display_name">Display name</Label>
-                    <Input id="display_name" value={profile.display_name} onChange={(e) => setProfile({ ...profile, display_name: e.target.value })} />
+                    <Label htmlFor="display_name">Display Name</Label>
+                    <Input id="display_name" value={profile.display_name} onChange={(e) => setProfile({ ...profile, display_name: e.target.value })} placeholder="Enter your display name" />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="avatar_url">Avatar URL</Label>
-                    <Input id="avatar_url" value={profile.avatar_url} onChange={(e) => setProfile({ ...profile, avatar_url: e.target.value })} />
+                    <Input id="avatar_url" value={profile.avatar_url} onChange={(e) => setProfile({ ...profile, avatar_url: e.target.value })} placeholder="Enter avatar image URL" />
                   </div>
                 </div>
               </CardContent>
