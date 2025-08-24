@@ -6,6 +6,7 @@ interface AuthUser {
   email: string | null;
   display_name?: string | null;
   avatar_url?: string | null;
+  isGoogleUser?: boolean;
 }
 
 interface AuthContextValue {
@@ -44,6 +45,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           authUser.user_metadata?.display_name ||
           authUser.email?.split('@')[0] || null,
         avatar_url: profile?.avatar_url || authUser.user_metadata?.avatar_url || null,
+        isGoogleUser: authUser.app_metadata?.provider === 'google' || 
+          authUser.app_metadata?.providers?.includes('google'),
       };
     } catch (error) {
       console.error('Error fetching profile:', error);
@@ -56,6 +59,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           authUser.user_metadata?.display_name ||
           authUser.email?.split('@')[0] || null,
         avatar_url: authUser.user_metadata?.avatar_url || null,
+        isGoogleUser: authUser.app_metadata?.provider === 'google' || 
+          authUser.app_metadata?.providers?.includes('google'),
       };
     }
   };

@@ -368,20 +368,85 @@ export default function ProfileTabs() {
       {/* Header */}
       <header>
         <div className="rounded-2xl border border-border glass p-6 md:p-8 animate-fade-in">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div>
-              <h1 className="text-3xl md:text-4xl font-bold flex items-center gap-3">
-                <User className="h-7 w-7 text-primary" />
-                Account
-              </h1>
-              <p className="text-muted-foreground mt-2">{email}</p>
+          <div className="flex flex-col gap-6">
+            {/* Account Header */}
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div>
+                <h1 className="text-3xl md:text-4xl font-bold flex items-center gap-3">
+                  <User className="h-7 w-7 text-primary" />
+                  Account
+                </h1>
+                <p className="text-muted-foreground mt-2">{email}</p>
+              </div>
+              <div className="flex items-center gap-2">
+                {subInfo?.subscribed ? (
+                  <Badge className="bg-primary/10 text-primary">{subInfo.subscription_tier || 'Pro'} Active</Badge>
+                ) : (
+                  <Badge variant="secondary">Free plan</Badge>
+                )}
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              {subInfo?.subscribed ? (
-                <Badge className="bg-primary/10 text-primary">{subInfo.subscription_tier || 'Pro'} Active</Badge>
-              ) : (
-                <Badge variant="secondary">Free plan</Badge>
-              )}
+
+            {/* Profile Management Section */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Avatar Section */}
+              <div className="space-y-4">
+                <div className="flex items-center gap-4">
+                  {profile.avatar_url ? (
+                    <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-border">
+                      <img 
+                        src={profile.avatar_url} 
+                        alt="Profile Avatar" 
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center border-2 border-border">
+                      <User className="h-8 w-8 text-muted-foreground" />
+                    </div>
+                  )}
+                  <div className="flex-1">
+                    <Label htmlFor="display_name">Display Name</Label>
+                    <Input 
+                      id="display_name" 
+                      value={profile.display_name} 
+                      onChange={(e) => setProfile({ ...profile, display_name: e.target.value })}
+                      disabled={user?.isGoogleUser}
+                      className={user?.isGoogleUser ? "bg-muted/50" : ""}
+                    />
+                    {user?.isGoogleUser && (
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Name managed by Google - cannot be changed here
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Avatar URL Section */}
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="avatar_url">Avatar URL</Label>
+                  <Input 
+                    id="avatar_url" 
+                    value={profile.avatar_url} 
+                    onChange={(e) => setProfile({ ...profile, avatar_url: e.target.value })}
+                    disabled={user?.isGoogleUser}
+                    className={user?.isGoogleUser ? "bg-muted/50" : ""}
+                    placeholder="https://example.com/avatar.jpg"
+                  />
+                  {user?.isGoogleUser && (
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Avatar managed by Google - cannot be changed here
+                    </p>
+                  )}
+                </div>
+                {!user?.isGoogleUser && (
+                  <Button onClick={saveProfile} size="sm" className="hover-scale">
+                    <Save className="mr-2 h-4 w-4" /> Save Changes
+                  </Button>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -445,9 +510,9 @@ export default function ProfileTabs() {
                     <Label>Email Address</Label>
                     <div className="flex items-center gap-2">
                       <Input value={email} disabled className="bg-muted/50" />
-                      {emailVerificationStatus.verified ? (
+                      {emailVerificationStatus.verified || user?.isGoogleUser ? (
                         <Badge variant="default" className="bg-green-500/10 text-green-600 border-green-500/20">
-                          Verified
+                          {user?.isGoogleUser ? "Google Verified" : "Verified"}
                         </Badge>
                       ) : (
                         <Badge variant="outline" className="bg-yellow-500/10 text-yellow-600 border-yellow-500/20">
@@ -455,7 +520,7 @@ export default function ProfileTabs() {
                         </Badge>
                       )}
                     </div>
-                    {!emailVerificationStatus.verified && (
+                    {!emailVerificationStatus.verified && !user?.isGoogleUser && (
                       <div className="space-y-2">
                         <p className="text-xs text-muted-foreground">
                           Email verification is required for purchases and subscriptions.
@@ -488,22 +553,12 @@ export default function ProfileTabs() {
                 <CardTitle className="flex items-center gap-2"><User className="h-5 w-5 text-primary" /> Profile Details</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="display_name">Display Name</Label>
-                    <Input id="display_name" value={profile.display_name} onChange={(e) => setProfile({ ...profile, display_name: e.target.value })} placeholder="Enter your display name" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="avatar_url">Avatar URL</Label>
-                    <Input id="avatar_url" value={profile.avatar_url} onChange={(e) => setProfile({ ...profile, avatar_url: e.target.value })} placeholder="Enter avatar image URL" />
-                  </div>
+                <div className="text-center py-8">
+                  <p className="text-muted-foreground">
+                    Profile information (name and avatar) has been moved to the top of this page for easier access.
+                  </p>
                 </div>
               </CardContent>
-              <CardFooter>
-                <Button onClick={saveProfile} className="hover-scale">
-                  <Save className="mr-2 h-4 w-4" /> Save changes
-                </Button>
-              </CardFooter>
             </Card>
 
             {/* Account Actions */}
@@ -578,14 +633,33 @@ export default function ProfileTabs() {
                   <Input id="email" value={email} disabled />
                 </div>
                 <Separator />
-                <div className="space-y-2">
-                  <Label htmlFor="new_password">New password</Label>
-                  <Input id="new_password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                </div>
+                {!user?.isGoogleUser ? (
+                  <div className="space-y-2">
+                    <Label htmlFor="new_password">New password</Label>
+                    <Input id="new_password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter new password" />
+                    <p className="text-xs text-muted-foreground">
+                      Password must be at least 6 characters long
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    <Label>Password</Label>
+                    <div className="p-3 bg-muted/50 rounded-md border">
+                      <p className="text-sm text-muted-foreground">
+                        🔐 Your account is secured by Google. Password changes are managed through your Google account.
+                      </p>
+                    </div>
+                  </div>
+                )}
               </CardContent>
-              <CardFooter>
-                <Button onClick={changePassword} className="hover-scale">
-                  Update password
+              <CardFooter className="flex flex-wrap gap-3">
+                {!user?.isGoogleUser && (
+                  <Button onClick={changePassword} className="hover-scale">
+                    <Shield className="mr-2 h-4 w-4" /> Update password
+                  </Button>
+                )}
+                <Button variant="outline" onClick={() => logout()} className="hover-scale">
+                  <LogOut className="mr-2 h-4 w-4" /> Sign out
                 </Button>
               </CardFooter>
             </Card>
