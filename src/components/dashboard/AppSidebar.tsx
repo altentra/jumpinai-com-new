@@ -35,6 +35,7 @@ export default function AppSidebar() {
 
   useEffect(() => {
     if (isAuthenticated && user) {
+      // Use display_name from profiles table, fallback to email username
       setUserName(user?.display_name || user?.email?.split('@')[0] || "");
       refreshSubscription();
     }

@@ -23,28 +23,66 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Function to fetch and merge user profile data
+  const fetchUserWithProfile = async (authUser: any): Promise<AuthUser | null> => {
+    if (!authUser) return null;
+
+    try {
+      // Fetch profile data from profiles table
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('display_name, avatar_url')
+        .eq('id', authUser.id)
+        .single();
+
+      return {
+        id: authUser.id,
+        email: authUser.email,
+        display_name: profile?.display_name || 
+          authUser.user_metadata?.full_name ||
+          authUser.user_metadata?.name ||
+          authUser.user_metadata?.display_name ||
+          authUser.email?.split('@')[0] || null,
+        avatar_url: profile?.avatar_url || authUser.user_metadata?.avatar_url || null,
+      };
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+      // Fallback to auth metadata
+      return {
+        id: authUser.id,
+        email: authUser.email,
+        display_name: authUser.user_metadata?.full_name ||
+          authUser.user_metadata?.name ||
+          authUser.user_metadata?.display_name ||
+          authUser.email?.split('@')[0] || null,
+        avatar_url: authUser.user_metadata?.avatar_url || null,
+      };
+    }
+  };
+
   useEffect(() => {
     // Listen for auth changes FIRST
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      const sUser = session?.user ?? null;
-      setUser(sUser ? {
-        id: sUser.id,
-        email: sUser.email,
-        display_name: (sUser.user_metadata as any)?.display_name ?? null,
-        avatar_url: (sUser.user_metadata as any)?.avatar_url ?? null,
-      } : null);
-      setIsLoading(false);
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      const authUser = session?.user ?? null;
+      
+      if (authUser) {
+        // Defer the profile fetch to avoid auth callback issues
+        setTimeout(async () => {
+          const userWithProfile = await fetchUserWithProfile(authUser);
+          setUser(userWithProfile);
+          setIsLoading(false);
+        }, 0);
+      } else {
+        setUser(null);
+        setIsLoading(false);
+      }
     });
 
     // Then check current session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      const sUser = session?.user ?? null;
-      setUser(sUser ? {
-        id: sUser.id,
-        email: sUser.email,
-        display_name: (sUser.user_metadata as any)?.display_name ?? null,
-        avatar_url: (sUser.user_metadata as any)?.avatar_url ?? null,
-      } : null);
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      const authUser = session?.user ?? null;
+      const userWithProfile = await fetchUserWithProfile(authUser);
+      setUser(userWithProfile);
       setIsLoading(false);
     });
 
