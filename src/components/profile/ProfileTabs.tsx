@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -49,6 +49,7 @@ export default function ProfileTabs() {
   const [supabaseUser, setSupabaseUser] = useState<any>(null);
   const [emailVerificationStatus, setEmailVerificationStatus] = useState<{ verified: boolean; loading: boolean }>({ verified: false, loading: false });
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { isAuthenticated, isLoading: authLoading, user, login, logout } = useAuth();
   const { getAuthHeaders } = useAuth0Token();
 
@@ -66,6 +67,24 @@ export default function ProfileTabs() {
       }
     }
   }, [isAuthenticated, authLoading, user, login]);
+
+  // Check for email verification success parameter
+  useEffect(() => {
+    const emailVerified = searchParams.get('emailVerified');
+    if (emailVerified === 'success') {
+      toast.success("🎉 Email verified successfully! You now have full access to all JumpinAI features.");
+      // Remove the parameter from URL to clean it up
+      setSearchParams(prev => {
+        const newParams = new URLSearchParams(prev);
+        newParams.delete('emailVerified');
+        return newParams;
+      });
+      // Refresh the verification status
+      setTimeout(() => {
+        fetchProfile();
+      }, 1000);
+    }
+  }, [searchParams, setSearchParams]);
 
   const fetchSupabaseUser = async () => {
     const { data, error } = await supabase.auth.getUser();

@@ -163,63 +163,14 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log('Email successfully verified for user:', profile.id);
 
-    // Return redirect response to dashboard
-    return new Response(
-      `
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <title>Email Verified Successfully</title>
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <meta http-equiv="refresh" content="3;url=https://www.jumpinai.com/dashboard/profile">
-          <style>
-            body { 
-              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif; 
-              margin: 0; 
-              padding: 20px; 
-              background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-              min-height: 100vh;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-            }
-            .container { 
-              max-width: 500px; 
-              background: white; 
-              padding: 40px; 
-              border-radius: 16px; 
-              text-align: center; 
-              box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            }
-            .success { color: #059669; margin: 0; font-size: 24px; font-weight: 600; }
-            .checkmark { font-size: 64px; color: #10b981; margin-bottom: 20px; animation: bounce 0.6s ease-in-out; }
-            .message { color: #6b7280; font-size: 16px; line-height: 1.5; margin: 20px 0; }
-            .redirect-info { color: #9ca3af; font-size: 14px; margin-top: 30px; }
-            @keyframes bounce {
-              0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-              40% { transform: translateY(-10px); }
-              60% { transform: translateY(-5px); }
-            }
-          </style>
-          <script>
-            // Redirect after 3 seconds
-            setTimeout(function() {
-              window.location.href = 'https://www.jumpinai.com/dashboard/profile';
-            }, 3000);
-          </script>
-        </head>
-        <body>
-          <div class="container">
-            <div class="checkmark">✅</div>
-            <h1 class="success">Email Verified Successfully!</h1>
-            <p class="message">Your email address has been verified. You now have full access to all JumpinAI features including purchases and subscriptions.</p>
-            <div class="redirect-info">Redirecting you back to your dashboard in 3 seconds...</div>
-          </div>
-        </body>
-      </html>
-      `,
-      { status: 200, headers: { "Content-Type": "text/html; charset=utf-8", ...corsHeaders } }
-    );
+    // Immediately redirect to dashboard with success parameter
+    return new Response(null, {
+      status: 302,
+      headers: {
+        "Location": "https://www.jumpinai.com/dashboard/profile?emailVerified=success",
+        ...corsHeaders
+      }
+    });
 
   } catch (error: any) {
     console.error("Error in verify-email function:", error);
