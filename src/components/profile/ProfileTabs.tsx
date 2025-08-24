@@ -47,6 +47,7 @@ export default function ProfileTabs() {
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
   const [downloadingReceipt, setDownloadingReceipt] = useState<string | null>(null);
   const [supabaseUser, setSupabaseUser] = useState<any>(null);
+  const [emailVerificationStatus, setEmailVerificationStatus] = useState<{ verified: boolean; loading: boolean }>({ verified: false, loading: false });
   const navigate = useNavigate();
   const { isAuthenticated, isLoading: authLoading, user, login, logout } = useAuth();
   const { getAuthHeaders } = useAuth0Token();
@@ -75,13 +76,17 @@ export default function ProfileTabs() {
 
   const fetchProfile = async () => {
     const { data, error } = await (supabase.from("profiles" as any) as any)
-      .select("display_name, avatar_url")
+      .select("display_name, avatar_url, email_verified")
       .eq("id", (await supabase.auth.getUser()).data.user?.id)
       .maybeSingle();
     if (error) {
       console.error(error);
     } else {
       setProfile({ display_name: (data as any)?.display_name ?? "", avatar_url: (data as any)?.avatar_url ?? "" });
+      setEmailVerificationStatus({ 
+        verified: (data as any)?.email_verified ?? false, 
+        loading: false 
+      });
     }
   };
 
@@ -283,6 +288,33 @@ export default function ProfileTabs() {
     }
   };
 
+  const sendVerificationEmail = async () => {
+    if (!user?.id || !user?.email) {
+      toast.error("Unable to send verification email");
+      return;
+    }
+
+    setEmailVerificationStatus({ ...emailVerificationStatus, loading: true });
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('send-verification-email', {
+        body: {
+          userId: user.id,
+          email: user.email
+        }
+      });
+
+      if (error) throw error;
+      
+      toast.success("Verification email sent! Check your inbox and click the verification link.");
+    } catch (error: any) {
+      console.error('Verification email error:', error);
+      toast.error(error.message || "Failed to send verification email");
+    } finally {
+      setEmailVerificationStatus({ ...emailVerificationStatus, loading: false });
+    }
+  };
+
   const deleteAccount = async () => {
     if (deleteConfirmText !== "DELETE") {
       toast.error("Please type 'DELETE' exactly as shown to confirm");
@@ -394,7 +426,7 @@ export default function ProfileTabs() {
                     <Label>Email Address</Label>
                     <div className="flex items-center gap-2">
                       <Input value={email} disabled className="bg-muted/50" />
-                      {supabaseUser?.email_confirmed_at ? (
+                      {emailVerificationStatus.verified ? (
                         <Badge variant="default" className="bg-green-500/10 text-green-600 border-green-500/20">
                           Verified
                         </Badge>
@@ -404,10 +436,21 @@ export default function ProfileTabs() {
                         </Badge>
                       )}
                     </div>
-                    {!supabaseUser?.email_confirmed_at && (
-                      <p className="text-xs text-muted-foreground">
-                        Email verification is required for purchases and subscriptions.
-                      </p>
+                    {!emailVerificationStatus.verified && (
+                      <div className="space-y-2">
+                        <p className="text-xs text-muted-foreground">
+                          Email verification is required for purchases and subscriptions.
+                        </p>
+                        <Button 
+                          size="sm" 
+                          variant="outline" 
+                          onClick={sendVerificationEmail}
+                          disabled={emailVerificationStatus.loading}
+                          className="text-xs"
+                        >
+                          {emailVerificationStatus.loading ? "Sending..." : "Send Verification Email"}
+                        </Button>
+                      </div>
                     )}
                   </div>
                   <div className="space-y-2">

@@ -242,6 +242,9 @@ export type Database = {
           avatar_url: string | null
           created_at: string
           display_name: string | null
+          email_verification_expires_at: string | null
+          email_verification_token: string | null
+          email_verified: boolean | null
           id: string
           updated_at: string
         }
@@ -249,6 +252,9 @@ export type Database = {
           avatar_url?: string | null
           created_at?: string
           display_name?: string | null
+          email_verification_expires_at?: string | null
+          email_verification_token?: string | null
+          email_verified?: boolean | null
           id: string
           updated_at?: string
         }
@@ -256,6 +262,9 @@ export type Database = {
           avatar_url?: string | null
           created_at?: string
           display_name?: string | null
+          email_verification_expires_at?: string | null
+          email_verification_token?: string | null
+          email_verified?: boolean | null
           id?: string
           updated_at?: string
         }
