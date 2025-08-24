@@ -452,7 +452,7 @@ export default function ProfileTabs() {
                 </AlertDialogContent>
               </AlertDialog>
 
-              <Button variant="outline" onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })} className="w-full md:w-auto hover-scale">
+              <Button variant="outline" onClick={() => logout()} className="w-full md:w-auto hover-scale">
                 <LogOut className="mr-2 h-4 w-4" /> Log Out
               </Button>
             </div>
