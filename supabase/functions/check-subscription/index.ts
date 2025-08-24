@@ -27,22 +27,20 @@ serve(async (req) => {
     if (!authHeader) throw new Error("No authorization header provided");
     const token = authHeader.replace("Bearer ", "");
 
-    // Resolve user email from Auth0 access token
-    const userinfoRes = await fetch("https://login.jumpinai.com/userinfo", {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    if (!userinfoRes.ok) throw new Error("Failed to verify Auth0 token");
-    const userinfo = await userinfoRes.json();
-    const userEmail = userinfo?.email as string;
-    if (!userEmail) throw new Error("Email not available from Auth0 userinfo");
+    // Get user from Supabase Auth token
+    const { data: userData, error: userError } = await supabaseClient.auth.getUser(token);
+    if (userError) throw new Error(`Authentication error: ${userError.message}`);
+    const user = userData.user;
+    if (!user?.email) throw new Error("User not authenticated or email not available");
+    const userEmail = user.email;
 
-    // Try to find existing subscriber to reuse linked profile id
+    // Try to find existing subscriber to reuse linked profile id, or use current user id
     const { data: existingSub } = await supabaseClient
       .from("subscribers")
       .select("user_id")
       .eq("email", userEmail)
       .maybeSingle();
-    const existingUserId = existingSub?.user_id ?? null;
+    const userId = existingSub?.user_id || user.id;
 
     const stripe = new Stripe(stripeKey, { apiVersion: "2023-10-16" });
     const customers = await stripe.customers.list({ email: userEmail, limit: 1 });
@@ -51,7 +49,7 @@ serve(async (req) => {
       await supabaseClient.from("subscribers").upsert(
         {
           email: userEmail,
-          user_id: existingUserId,
+          user_id: userId,
           stripe_customer_id: null,
           subscribed: false,
           subscription_tier: null,
@@ -85,7 +83,7 @@ serve(async (req) => {
     await supabaseClient.from("subscribers").upsert(
       {
         email: userEmail,
-        user_id: existingUserId,
+        user_id: userId,
         stripe_customer_id: customerId,
         subscribed: hasActiveSub,
         subscription_tier: subscriptionTier,

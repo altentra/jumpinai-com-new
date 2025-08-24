@@ -24,14 +24,12 @@ serve(async (req) => {
     if (!authHeader) throw new Error("No authorization header provided");
     const token = authHeader.replace("Bearer ", "");
 
-    // Resolve user email from Auth0 access token
-    const userinfoRes = await fetch("https://login.jumpinai.com/userinfo", {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    if (!userinfoRes.ok) throw new Error("Failed to verify Auth0 token");
-    const userinfo = await userinfoRes.json();
-    const userEmail = userinfo?.email as string;
-    if (!userEmail) throw new Error("Email not available from Auth0 userinfo");
+    // Get user from Supabase Auth token
+    const { data: userData, error: userError } = await supabaseClient.auth.getUser(token);
+    if (userError) throw new Error(`Authentication error: ${userError.message}`);
+    const user = userData.user;
+    if (!user?.email) throw new Error("User not authenticated or email not available");
+    const userEmail = user.email;
 
     const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
     if (!stripeKey) throw new Error("STRIPE_SECRET_KEY is not set");

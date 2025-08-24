@@ -13,7 +13,6 @@ import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { User, Shield, Crown, CreditCard, RefreshCcw, Save, LogOut, ExternalLink, AlertTriangle, History, Trash2 } from "lucide-react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { useAuth0Token } from "@/hooks/useAuth0Token";
 
 interface SubscriberInfo {
   subscribed: boolean;
@@ -51,7 +50,6 @@ export default function ProfileTabs() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const { isAuthenticated, isLoading: authLoading, user, login, logout } = useAuth();
-  const { getAuthHeaders } = useAuth0Token();
 
   useEffect(() => {
     if (!authLoading) {
@@ -163,9 +161,7 @@ export default function ProfileTabs() {
 
   const refreshSubscription = async () => {
     try {
-      const { data, error } = await supabase.functions.invoke("check-subscription", {
-        headers: await getAuthHeaders(),
-      });
+      const { data, error } = await supabase.functions.invoke("check-subscription");
       if (error) throw error;
       setSubInfo(data as SubscriberInfo);
     } catch (e: any) {
@@ -176,9 +172,7 @@ export default function ProfileTabs() {
 
   const subscribe = async () => {
     try {
-      const { data, error } = await supabase.functions.invoke("create-checkout", {
-        headers: await getAuthHeaders(),
-      });
+      const { data, error } = await supabase.functions.invoke("create-checkout");
       if (error) throw error;
       const url = (data as any)?.url;
       if (url) window.location.href = url;
@@ -189,9 +183,7 @@ export default function ProfileTabs() {
 
   const manage = async () => {
     try {
-      const { data, error } = await supabase.functions.invoke("customer-portal", {
-        headers: await getAuthHeaders(),
-      });
+      const { data, error } = await supabase.functions.invoke("customer-portal");
       if (error) throw error;
       const url = (data as any)?.url;
       if (url) window.location.href = url;
@@ -414,33 +406,12 @@ export default function ProfileTabs() {
                       disabled={user?.isGoogleUser}
                       className={user?.isGoogleUser ? "bg-muted/50" : ""}
                     />
-                    {user?.isGoogleUser && (
-                      <p className="text-xs text-muted-foreground mt-1">
-                        Name managed by Google - cannot be changed here
-                      </p>
-                    )}
                   </div>
                 </div>
               </div>
 
-              {/* Avatar URL Section */}
+              {/* Save Button */}
               <div className="space-y-4">
-                <div>
-                  <Label htmlFor="avatar_url">Avatar URL</Label>
-                  <Input 
-                    id="avatar_url" 
-                    value={profile.avatar_url} 
-                    onChange={(e) => setProfile({ ...profile, avatar_url: e.target.value })}
-                    disabled={user?.isGoogleUser}
-                    className={user?.isGoogleUser ? "bg-muted/50" : ""}
-                    placeholder="https://example.com/avatar.jpg"
-                  />
-                  {user?.isGoogleUser && (
-                    <p className="text-xs text-muted-foreground mt-1">
-                      Avatar managed by Google - cannot be changed here
-                    </p>
-                  )}
-                </div>
                 {!user?.isGoogleUser && (
                   <Button onClick={saveProfile} size="sm" className="hover-scale">
                     <Save className="mr-2 h-4 w-4" /> Save Changes
@@ -547,19 +518,6 @@ export default function ProfileTabs() {
               </CardContent>
             </Card>
 
-            {/* Profile Details */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2"><User className="h-5 w-5 text-primary" /> Profile Details</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-center py-8">
-                  <p className="text-muted-foreground">
-                    Profile information (name and avatar) has been moved to the top of this page for easier access.
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
 
             {/* Account Actions */}
             <div className="flex flex-col md:flex-row gap-4 pt-4">
