@@ -27,24 +27,32 @@ serve(async (req) => {
     console.log('Auth0 sync webhook received:', req.method)
     
     // Verify webhook secret for security
-    const webhookSecret = Deno.env.get('AUTH0_WEBHOOK_SECRET')
-    const authHeader = req.headers.get('authorization')
-    
+    const webhookSecret = Deno.env.get('AUTH0_WEBHOOK_SECRET') || ''
+    const authHeader = req.headers.get('authorization') || req.headers.get('Authorization') || ''
+
+    // Helpful diagnostics without leaking secrets
+    console.log('Auth header present:', Boolean(authHeader), 'Secret present:', Boolean(webhookSecret))
+
     if (!authHeader || !webhookSecret) {
-      console.error('Missing auth header or webhook secret')
-      return new Response('Unauthorized', { 
-        status: 401, 
-        headers: corsHeaders 
+      console.error('Missing auth header or webhook secret. Incoming header keys:', Array.from(req.headers.keys()))
+      return new Response('Unauthorized', {
+        status: 401,
+        headers: corsHeaders
       })
     }
 
-    // Extract the secret from the authorization header
-    const providedSecret = authHeader.replace('Bearer ', '')
+    // Extract the secret from the authorization header (support raw or Bearer <token>)
+    const providedSecret = authHeader.startsWith('Bearer ')
+      ? authHeader.slice(7).trim()
+      : authHeader.trim()
+
+    console.log('Auth header starts with Bearer:', authHeader.startsWith('Bearer '), 'Auth header length:', authHeader.length)
+
     if (providedSecret !== webhookSecret) {
-      console.error('Invalid webhook secret')
-      return new Response('Unauthorized', { 
-        status: 401, 
-        headers: corsHeaders 
+      console.error('Invalid webhook secret (mismatch)')
+      return new Response('Unauthorized', {
+        status: 401,
+        headers: corsHeaders
       })
     }
 
