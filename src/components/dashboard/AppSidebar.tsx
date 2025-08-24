@@ -9,8 +9,7 @@ import { useLocation, Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { useEffect, useState } from "react";
-import { useAuth0 } from "@auth0/auth0-react";
+import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { User, Settings, Home, FileText, Workflow, Lightbulb, Boxes, ChevronDown, CreditCard } from "lucide-react";
 import { useAuth0Token } from "@/hooks/useAuth0Token";
@@ -26,7 +25,7 @@ export default function AppSidebar() {
   const { pathname: currentPath } = useLocation();
   const [userName, setUserName] = useState<string>("");
   const [subInfo, setSubInfo] = useState<SubscriberInfo | null>(null);
-  const { user, isAuthenticated } = useAuth0();
+  const { user, isAuthenticated } = useAuth();
   const { getAuthHeaders } = useAuth0Token();
 
   useEffect(() => {
@@ -35,14 +34,14 @@ export default function AppSidebar() {
 
   useEffect(() => {
     if (isAuthenticated && user) {
-      setUserName(user.name || user.email?.split('@')[0] || "");
+      setUserName(user?.display_name || user?.email?.split('@')[0] || "");
       refreshSubscription();
     }
 
     // Listen for profile updates
     const handleProfileUpdate = () => {
       if (user) {
-        setUserName(user.name || user.email?.split('@')[0] || "");
+        setUserName(user?.display_name || user?.email?.split('@')[0] || "");
       }
       refreshSubscription();
     };

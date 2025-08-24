@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useAuth0 } from "@auth0/auth0-react";
+import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
@@ -47,13 +47,13 @@ export default function ProfileTabs() {
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
   const [downloadingReceipt, setDownloadingReceipt] = useState<string | null>(null);
   const navigate = useNavigate();
-  const { isAuthenticated, isLoading: authLoading, user, loginWithRedirect, logout } = useAuth0();
+  const { isAuthenticated, isLoading: authLoading, user, login, logout } = useAuth();
   const { getAuthHeaders } = useAuth0Token();
 
   useEffect(() => {
     if (!authLoading) {
       if (!isAuthenticated) {
-        loginWithRedirect();
+        login('/dashboard/profile');
       } else if (user) {
         setEmail(user.email || "");
         fetchProfile();
@@ -62,7 +62,7 @@ export default function ProfileTabs() {
         setLoading(false);
       }
     }
-  }, [isAuthenticated, authLoading, user, loginWithRedirect]);
+  }, [isAuthenticated, authLoading, user, login]);
 
   const fetchProfile = async () => {
     const { data, error } = await (supabase.from("profiles" as any) as any)

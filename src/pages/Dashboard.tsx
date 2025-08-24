@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useNavigate, Routes, Route, Navigate } from "react-router-dom";
-import { useAuth0 } from "@auth0/auth0-react";
+import { useAuth } from "@/hooks/useAuth";
 import Navigation from "@/components/Navigation";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import AppSidebar from "@/components/dashboard/AppSidebar";
@@ -17,18 +17,17 @@ import Subscription from "./dashboard/Subscription";
 export default function Dashboard() {
   const navigate = useNavigate();
   const [userName, setUserName] = useState<string>("");
-  const { isAuthenticated, isLoading, user, loginWithRedirect } = useAuth0();
+  const { isAuthenticated, isLoading, user, login } = useAuth();
 
   useEffect(() => {
     if (!isLoading) {
       if (!isAuthenticated) {
-        loginWithRedirect();
+        login('/dashboard');
       } else if (user) {
-        // Get user's name from Auth0 user object
-        setUserName(user.name || user.email || "");
+        setUserName(user.display_name || user.email || "");
       }
     }
-  }, [isAuthenticated, isLoading, user, loginWithRedirect]);
+  }, [isAuthenticated, isLoading, user, login]);
 
   return (
     <>

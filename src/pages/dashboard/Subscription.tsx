@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useAuth0 } from "@auth0/auth0-react";
+import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -41,20 +41,20 @@ export default function Subscription() {
   const [subInfo, setSubInfo] = useState<SubscriberInfo | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
-  const { isAuthenticated, isLoading: authLoading, user, loginWithRedirect } = useAuth0();
+  const { isAuthenticated, isLoading: authLoading, user, login } = useAuth();
   const { getAuthHeaders } = useAuth0Token();
 
   useEffect(() => {
     if (!authLoading) {
       if (!isAuthenticated) {
-        loginWithRedirect();
+        login('/dashboard/subscription');
       } else if (user) {
         setEmail(user.email || "");
         refreshSubscription();
         setLoading(false);
       }
     }
-  }, [isAuthenticated, authLoading, user, loginWithRedirect]);
+  }, [isAuthenticated, authLoading, user, login]);
 
   const refreshSubscription = async () => {
     try {
