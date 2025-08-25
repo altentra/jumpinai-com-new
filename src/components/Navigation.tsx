@@ -55,6 +55,7 @@ const Navigation = () => {
   const navItems = [
     { name: "Jumps in AI", href: "/jumps" },
     { name: "Resources", href: "/resources" },
+    { name: "Pricing", href: "/pricing" },
     { name: "About Us", href: "/about-us" },
     { name: "Contact Us", href: "/contact-us" },
   ];

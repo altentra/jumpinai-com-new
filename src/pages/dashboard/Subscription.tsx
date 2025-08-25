@@ -62,7 +62,18 @@ export default function Subscription() {
         headers: await getAuthHeaders(),
       });
       if (error) throw error;
-      setSubInfo(data as SubscriberInfo);
+        const { subscribed, subscription_tier, subscription_end } = data;
+        setSubInfo({ subscribed, subscription_tier, subscription_end });
+        
+        // Show success message if user just returned from payment
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('payment') === 'success') {
+          toast.success("Payment successful! Welcome to JumpinAI Pro!", {
+            duration: 5000,
+          });
+          // Clean up URL
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }
     } catch (e: any) {
       console.error(e);
       toast.error("Could not refresh subscription status");

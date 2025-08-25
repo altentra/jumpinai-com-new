@@ -21,6 +21,7 @@ import Resources from "./pages/Resources";
 import Profile from "./pages/Profile";
 import Dashboard from "./pages/Dashboard";
 import Auth from "./pages/Auth";
+import Pricing from "./pages/Pricing";
 
 const queryClient = new QueryClient();
 
@@ -71,6 +72,7 @@ const App = () => {
             <Route path="/contact-us" element={<ContactUs />} />
             <Route path="/faq" element={<FAQ />} />
             <Route path="/resources" element={<Resources />} />
+            <Route path="/pricing" element={<Pricing />} />
             <Route path="/test-sync" element={<TestSync />} />
             <Route path="/jumps" element={<Jumps />} />
             <Route path="/for-investors" element={<ForInvestors />} />

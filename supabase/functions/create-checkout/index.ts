@@ -56,8 +56,8 @@ serve(async (req) => {
           quantity: 1,
         },
       ],
-      success_url: `${origin}/profile`,
-      cancel_url: `${origin}/profile`,
+      success_url: `${origin}/dashboard/subscription?payment=success`,
+      cancel_url: `${origin}/pricing`,
     });
 
     return new Response(JSON.stringify({ url: session.url }), {
