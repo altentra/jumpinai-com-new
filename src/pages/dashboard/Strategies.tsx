@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Lock, Plus, Search, Star, Bookmark, Target } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
+import { useEffect, useState } from "react";
 
 type Strategy = {
   name: string;
@@ -12,18 +14,60 @@ type Strategy = {
   category: string;
 };
 
-const strategies: Strategy[] = [
+const freeStrategies: Strategy[] = [
   { name: "AI-First Content Strategy", description: "Leverage AI throughout the content lifecycle", approach: "Integrate AI tools at every stage: ideation with GPT-4, creation with specialized tools, optimization with analytics AI, and distribution with automation platforms.", category: "Content Marketing" },
   { name: "Multimodal AI Strategy", description: "Combine text, image, and video AI tools", approach: "Create cohesive campaigns using text AI for copy, image AI for visuals, and video AI for dynamic content, ensuring consistent brand voice across all modalities.", category: "Brand Strategy" },
   { name: "AI-Powered Research Strategy", description: "Systematic approach to AI-enhanced research", approach: "Use AI for data collection, analysis, and synthesis. Combine multiple AI sources for comprehensive insights, always verify with human expertise.", category: "Research Strategy" },
   { name: "Automation-First Operations", description: "Streamline operations with AI automation", approach: "Identify repetitive tasks, implement AI solutions for automation, maintain human oversight for quality control, and continuously optimize processes.", category: "Operations Strategy" },
-  { name: "AI Governance Strategy", description: "Responsible AI implementation framework", approach: "Establish clear AI usage guidelines, implement security measures, train teams on best practices, and regularly audit AI outputs for quality and compliance.", category: "Governance" },
-  { name: "Performance Marketing with AI", description: "Data-driven marketing optimization", approach: "Use AI for audience analysis, content personalization, campaign optimization, and performance prediction. Combine multiple AI insights for better ROI.", category: "Marketing Strategy" },
 ];
+
+const proStrategies: Strategy[] = [
+  { name: "Enterprise Digital Transformation", description: "Comprehensive digital modernization strategy", approach: "Assess current state, define future vision, develop technology roadmap, implement change management, measure progress through KPIs, and ensure sustainable transformation across all business units.", category: "Digital Transformation" },
+  { name: "Market Expansion Strategy", description: "Strategic market entry and growth framework", approach: "Conduct market analysis, assess competitive landscape, develop go-to-market strategy, establish partnerships and distribution channels, create localization plans, and implement performance tracking systems.", category: "Market Strategy" },
+  { name: "Innovation Management Strategy", description: "Systematic approach to innovation and R&D", approach: "Establish innovation pipeline, implement stage-gate processes, create innovation metrics, foster innovative culture, manage intellectual property, and balance incremental vs. breakthrough innovations.", category: "Innovation Strategy" },
+  { name: "Mergers & Acquisitions Strategy", description: "M&A planning and execution framework", approach: "Define strategic rationale, conduct target screening, perform due diligence, negotiate terms, plan integration, manage cultural alignment, and measure synergy realization throughout the process.", category: "M&A Strategy" },
+  { name: "ESG Strategy Implementation", description: "Environmental, Social, Governance strategy", approach: "Conduct materiality assessment, set science-based targets, implement governance frameworks, engage stakeholders, measure impact, ensure regulatory compliance, and communicate progress transparently.", category: "ESG Strategy" },
+  { name: "Customer Experience Strategy", description: "Holistic customer experience transformation", approach: "Map customer journeys, identify pain points, design experience improvements, implement omnichannel solutions, measure customer satisfaction, and create feedback loops for continuous improvement.", category: "CX Strategy" },
+  { name: "Data Strategy & Analytics", description: "Data-driven organization transformation", approach: "Assess data maturity, design data architecture, implement governance frameworks, build analytics capabilities, create self-service tools, and establish data-driven decision-making processes.", category: "Data Strategy" },
+  { name: "Cybersecurity Strategy", description: "Comprehensive cybersecurity framework", approach: "Assess current security posture, identify threats and vulnerabilities, implement defense-in-depth strategy, establish incident response procedures, and create security awareness programs.", category: "Cybersecurity" },
+  { name: "Supply Chain Strategy", description: "Supply chain optimization and resilience", approach: "Map supply network, assess risks and vulnerabilities, optimize costs and efficiency, implement technology solutions, establish supplier relationships, and create contingency plans.", category: "Supply Chain" },
+  { name: "Talent Strategy", description: "Strategic workforce planning and development", approach: "Analyze workforce needs, develop talent acquisition strategies, create learning and development programs, implement succession planning, and foster inclusive culture and employee engagement.", category: "Talent Strategy" },
+  { name: "Financial Strategy", description: "Corporate financial planning and optimization", approach: "Analyze financial performance, optimize capital structure, develop investment strategies, manage risks, plan for growth financing, and implement financial controls and reporting systems.", category: "Financial Strategy" },
+  { name: "Brand Strategy", description: "Comprehensive brand development and management", approach: "Conduct brand audit, define brand positioning, develop brand identity, create brand guidelines, implement brand management systems, and measure brand performance and equity.", category: "Brand Strategy" },
+  { name: "Operational Excellence Strategy", description: "Continuous improvement and efficiency optimization", approach: "Map value streams, identify waste and inefficiencies, implement lean methodologies, establish performance metrics, create improvement culture, and sustain operational improvements.", category: "Operational Excellence" },
+  { name: "International Strategy", description: "Global expansion and market entry strategy", approach: "Analyze international opportunities, assess market entry modes, develop localization strategies, navigate regulatory requirements, establish global operations, and manage cultural differences.", category: "International Strategy" },
+  { name: "Sustainability Strategy", description: "Corporate sustainability and responsibility framework", approach: "Set sustainability goals, implement environmental programs, engage stakeholders, measure and report progress, integrate sustainability into business strategy, and drive competitive advantage.", category: "Sustainability" }
+];
+
+const allStrategies = [...freeStrategies, ...proStrategies];
 
 export default function Strategies() {
   const { isAuthenticated } = useAuth();
-  const showAllContent = false;
+  const [subscriptionStatus, setSubscriptionStatus] = useState<{subscribed: boolean; subscription_tier: string | null}>({subscribed: false, subscription_tier: null});
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const checkSubscription = async () => {
+      if (!isAuthenticated) {
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        const { data, error } = await supabase.functions.invoke('check-subscription');
+        if (error) throw error;
+        setSubscriptionStatus(data);
+      } catch (error) {
+        console.error('Error checking subscription:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkSubscription();
+  }, [isAuthenticated]);
+
+  const showAllContent = subscriptionStatus.subscribed && subscriptionStatus.subscription_tier === 'JumpinAI Pro';
 
   const UpgradeSection = ({ message }: { message: string }) => (
     <div className="bg-muted/50 border border-border rounded-lg p-8 text-center mt-8">
@@ -128,7 +172,7 @@ export default function Strategies() {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {strategies.map((strategy, index) => (
+          {allStrategies.map((strategy, index) => (
             <StrategyCard 
               key={index} 
               strategy={strategy} 
