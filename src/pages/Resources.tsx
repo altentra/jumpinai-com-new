@@ -1,13 +1,25 @@
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
-import { Helmet, HelmetProvider } from "react-helmet-async";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ExternalLink, Lock } from "lucide-react";
+import { 
+  Zap, 
+  FileText, 
+  GitBranch, 
+  Layers, 
+  Target,
+  Lock,
+  ExternalLink,
+  Copy,
+  Star,
+  TrendingUp
+} from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
-import React from "react";
+import { useState, useEffect } from "react";
+import { Helmet } from "react-helmet-async";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Navigation from "@/components/Navigation";
+import Footer from "@/components/Footer";
+import { supabase } from "@/integrations/supabase/client";
 
 // Data models
 type Tool = {
@@ -67,6 +79,23 @@ const promptTemplates: PromptTemplate[] = [
   { name: "Trend Analysis", description: "Analyze current trends with citations", prompt: "Act as a trend analyst. Using fresh web sources, outline the 5 biggest AI regulation changes in 2025 with citations and implications for SaaS founders.", category: "Research" },
   { name: "Brand Voice Rewrite", description: "Rewrite content to match brand voice", prompt: "Rewrite this email to match our brand voice (confident, concise, friendly). Keep to 120 words and include CTA to demo.", category: "Content Creation" },
   { name: "Meeting Notes Cleanup", description: "Transform meeting notes into actionable items", prompt: "Clean up these meeting notes into action items by owner and due date. Add a one‑paragraph recap for stakeholders.", category: "Productivity" },
+  
+  // PRO CONTENT - Professional Templates
+  { name: "Strategic Planning Framework", description: "Comprehensive business strategy development", prompt: "Act as a McKinsey consultant. Develop a 3-year strategic plan for [COMPANY]. Include: 1) Market analysis, 2) Competitive positioning, 3) Growth opportunities, 4) Resource allocation strategy, 5) KPIs and milestones, 6) Risk mitigation. Format as executive presentation.", category: "Strategy" },
+  { name: "Investment Pitch Deck", description: "Professional investor presentation", prompt: "Create a Series A pitch deck for [STARTUP]. Structure: Problem (market pain), Solution (unique value prop), Market (TAM/SAM), Traction (metrics/proof), Business Model (revenue streams), Competition (differentiation), Team (expertise), Financials (projections), Ask (funding/use). Keep slides concise, data-driven.", category: "Fundraising" },
+  { name: "Customer Success Playbook", description: "Retention and expansion strategies", prompt: "Design a customer success framework for B2B SaaS. Include: 1) Onboarding workflow, 2) Health score metrics, 3) Expansion triggers, 4) Churn prevention tactics, 5) Success milestones, 6) Escalation protocols. Focus on revenue retention and growth.", category: "Customer Success" },
+  { name: "Competitive Intelligence Report", description: "Deep market and competitor analysis", prompt: "Analyze [COMPETITOR] as a strategic intelligence expert. Cover: 1) Business model breakdown, 2) Pricing strategy, 3) Product positioning, 4) Marketing channels, 5) Strengths/weaknesses, 6) Strategic recommendations. Use public data sources.", category: "Intelligence" },
+  { name: "Financial Model Builder", description: "Comprehensive business financial planning", prompt: "Build a 5-year financial model for [BUSINESS TYPE]. Include: Revenue projections (multiple streams), Cost structure (fixed/variable), Cash flow analysis, Break-even analysis, Scenario planning (best/base/worst), Key ratios, Funding requirements. Make it investor-ready.", category: "Finance" },
+  { name: "Legal Document Analyzer", description: "Contract and agreement review", prompt: "Review this [CONTRACT TYPE] as a corporate lawyer. Identify: 1) Key terms and obligations, 2) Risk factors, 3) Negotiation points, 4) Compliance requirements, 5) Red flags, 6) Recommended changes. Provide business-friendly summary.", category: "Legal" },
+  { name: "HR Policy Framework", description: "Employee handbook and policies", prompt: "Create comprehensive HR policies for [COMPANY SIZE] company. Include: Employee handbook, Performance review process, Compensation framework, Remote work policy, DEI initiatives, Compliance requirements. Ensure legal compliance and cultural alignment.", category: "Human Resources" },
+  { name: "Crisis Communication Plan", description: "Strategic communications during crises", prompt: "Develop crisis communication strategy for [SITUATION]. Include: Stakeholder mapping, Message frameworks, Communication channels, Timeline/escalation, Media response templates, Internal communications, Recovery plan. Tone: transparent, accountable, action-oriented.", category: "Communications" },
+  { name: "Product Roadmap Strategy", description: "Strategic product development planning", prompt: "Create 18-month product roadmap for [PRODUCT]. Include: User research insights, Feature prioritization matrix, Technical debt allocation, Resource requirements, Success metrics, Go-to-market alignment, Competitive considerations. Use RICE or similar framework.", category: "Product Management" },
+  { name: "Sales Enablement Kit", description: "Complete sales team resources", prompt: "Build sales enablement package for [PRODUCT/SERVICE]. Include: 1) Battlecards (competitors), 2) Objection handling scripts, 3) Discovery questions, 4) Demo flow, 5) Proposal templates, 6) ROI calculators, 7) Case studies framework. Focus on conversion optimization.", category: "Sales" },
+  { name: "Data Strategy Blueprint", description: "Enterprise data management and analytics", prompt: "Design data strategy for [ORGANIZATION]. Cover: Data architecture, Governance framework, Analytics capabilities, Privacy compliance, Technology stack, Team structure, ROI measurement, Implementation roadmap. Focus on business value creation.", category: "Data Strategy" },
+  { name: "Change Management Plan", description: "Organizational transformation guidance", prompt: "Create change management strategy for [TRANSFORMATION]. Include: Stakeholder analysis, Communication plan, Training programs, Resistance mitigation, Success metrics, Timeline/milestones, Support structures. Use Kotter's 8-step model.", category: "Change Management" },
+  { name: "Partnership Strategy", description: "Strategic alliance and partnership development", prompt: "Develop partnership strategy for [BUSINESS GOAL]. Include: Partner identification criteria, Value proposition mapping, Partnership models, Legal framework, Performance metrics, Risk assessment, Activation plan. Focus on mutual value creation.", category: "Partnerships" },
+  { name: "Operational Excellence Framework", description: "Process optimization and efficiency", prompt: "Design operational excellence program for [DEPARTMENT/FUNCTION]. Include: Process mapping, Efficiency metrics, Automation opportunities, Quality standards, Performance dashboards, Continuous improvement protocols. Apply lean/six sigma principles.", category: "Operations" },
+  { name: "Innovation Lab Setup", description: "Innovation program and culture development", prompt: "Establish innovation program for [ORGANIZATION]. Include: Innovation framework, Idea management process, Resource allocation, Success metrics, Cultural elements, External partnerships, Portfolio management, Scaling mechanisms.", category: "Innovation" },
 ];
 
 // Workflows data
@@ -97,11 +126,49 @@ const strategies: Strategy[] = [
   { name: "Automation-First Operations", description: "Streamline operations with AI automation", approach: "Identify repetitive tasks, implement AI solutions for automation, maintain human oversight for quality control, and continuously optimize processes.", category: "Operations Strategy" },
   { name: "AI Governance Strategy", description: "Responsible AI implementation framework", approach: "Establish clear AI usage guidelines, implement security measures, train teams on best practices, and regularly audit AI outputs for quality and compliance.", category: "Governance" },
   { name: "Performance Marketing with AI", description: "Data-driven marketing optimization", approach: "Use AI for audience analysis, content personalization, campaign optimization, and performance prediction. Combine multiple AI insights for better ROI.", category: "Marketing Strategy" },
+  
+  // PRO CONTENT - Professional Strategies
+  { name: "Digital Transformation Strategy", description: "Comprehensive organizational digital evolution", approach: "Assess current digital maturity, define target state architecture, prioritize transformation initiatives based on business impact, implement agile transformation with continuous measurement and optimization. Focus on customer experience, operational efficiency, and competitive advantage.", category: "Digital Strategy" },
+  { name: "Market Expansion Strategy", description: "Strategic geographic and demographic growth", approach: "Conduct thorough market analysis including cultural, regulatory, and competitive factors. Develop localization strategy for products, marketing, and operations. Establish partnerships and distribution channels. Implement phased expansion with performance monitoring and local adaptation.", category: "Growth Strategy" },
+  { name: "Customer-Centric Transformation", description: "Organization-wide customer experience optimization", approach: "Map comprehensive customer journey across all touchpoints. Redesign processes and systems around customer needs. Implement customer feedback loops and real-time personalization. Train organization on customer-first mindset with incentive alignment.", category: "Customer Experience" },
+  { name: "Innovation Ecosystem Strategy", description: "Building sustainable innovation capabilities", approach: "Create innovation framework combining internal R&D, external partnerships, and acquisition strategy. Establish innovation labs, accelerator programs, and venture partnerships. Implement idea management systems with clear evaluation and scaling processes.", category: "Innovation Strategy" },
+  { name: "Sustainability & ESG Strategy", description: "Environmental, social, and governance excellence", approach: "Conduct ESG assessment and materiality analysis. Set science-based targets for environmental impact. Develop social impact programs and governance frameworks. Integrate ESG metrics into business operations and stakeholder reporting.", category: "ESG Strategy" },
+  { name: "Data-Driven Culture Strategy", description: "Organization-wide analytics and insights adoption", approach: "Establish data governance and quality frameworks. Implement self-service analytics platforms and democratize data access. Develop data literacy programs across all functions. Create data-driven decision-making processes with clear success metrics.", category: "Data Strategy" },
+  { name: "Agile Organization Strategy", description: "Organizational agility and responsiveness enhancement", approach: "Transform organizational structure to cross-functional teams. Implement agile methodologies across business functions. Develop rapid decision-making processes and feedback loops. Create continuous learning and adaptation culture with performance metrics.", category: "Organizational Strategy" },
+  { name: "Platform Business Strategy", description: "Multi-sided platform development and scaling", approach: "Design platform architecture with network effects consideration. Develop multi-sided value propositions and monetization models. Implement platform governance and ecosystem management. Scale through strategic partnerships and platform extensions.", category: "Platform Strategy" },
+  { name: "Cybersecurity Strategy", description: "Comprehensive security posture and risk management", approach: "Conduct security risk assessment and gap analysis. Implement zero-trust security architecture with multi-layered protection. Develop incident response and business continuity plans. Create security awareness culture with regular training and simulations.", category: "Security Strategy" },
+  { name: "Talent Strategy & Future of Work", description: "Workforce transformation and capability building", approach: "Assess future skill requirements and capability gaps. Develop comprehensive talent acquisition, development, and retention strategies. Implement flexible work models and performance management systems. Create continuous learning and career development programs.", category: "Talent Strategy" },
+  { name: "Supply Chain Resilience Strategy", description: "End-to-end supply chain optimization and risk mitigation", approach: "Map supply chain dependencies and vulnerability points. Diversify supplier base and develop alternative sourcing strategies. Implement supply chain visibility and predictive analytics. Create risk management protocols and contingency plans.", category: "Supply Chain Strategy" },
+  { name: "Customer Acquisition Strategy", description: "Systematic customer acquisition and growth optimization", approach: "Develop ideal customer profile and buyer personas with detailed segmentation. Create multi-channel acquisition funnel with content marketing, paid acquisition, and partnership channels. Implement customer acquisition cost optimization and lifetime value maximization strategies.", category: "Acquisition Strategy" },
+  { name: "Pricing Strategy Optimization", description: "Value-based pricing and revenue optimization", approach: "Conduct price sensitivity analysis and competitive benchmarking. Develop value-based pricing models with segmentation strategies. Implement dynamic pricing and bundling optimization. Create pricing governance and regular optimization processes.", category: "Pricing Strategy" },
+  { name: "Strategic Partnership Ecosystem", description: "Alliance and partnership strategy development", approach: "Map strategic partnership opportunities across the value chain. Develop partnership framework with clear value propositions and success metrics. Implement partner enablement and joint go-to-market strategies. Create ecosystem governance and performance management systems.", category: "Partnership Strategy" },
+  { name: "Crisis Management & Business Continuity", description: "Organizational resilience and crisis response capability", approach: "Develop comprehensive risk assessment and scenario planning. Create crisis management protocols with clear escalation procedures. Implement business continuity plans with alternative operations models. Establish crisis communication and stakeholder management frameworks.", category: "Risk Management" },
 ];
 
 export default function Resources() {
-  const { user, isAuthenticated } = useAuth();
-  const showAllContent = false; // For now, show premium content only to subscribed users
+  const { isAuthenticated } = useAuth();
+  const [activeTab, setActiveTab] = useState("tools");
+  const [subscriptionInfo, setSubscriptionInfo] = useState<{ subscribed: boolean; subscription_tier?: string }>({ subscribed: false });
+
+  // Check subscription status
+  useEffect(() => {
+    const checkSubscription = async () => {
+      if (!isAuthenticated) return;
+      
+      try {
+        const { data } = await supabase.functions.invoke("check-subscription");
+        if (data) {
+          setSubscriptionInfo(data);
+        }
+      } catch (error) {
+        console.error('Error checking subscription:', error);
+      }
+    };
+
+    checkSubscription();
+  }, [isAuthenticated]);
+
+  const showAllContent = subscriptionInfo.subscribed;
 
   // Universal upgrade section component
   const UpgradeSection = ({ message }: { message: string }) => (
@@ -234,36 +301,35 @@ export default function Resources() {
   );
 
   return (
-    <HelmetProvider>
-      <div className="min-h-screen bg-background">
-        <Helmet>
-          <title>AI Resources - Tools, Prompts & Workflows | Jumps in AI</title>
-          <meta
-            name="description"
-            content="Discover the best AI tools, prompt templates, and workflows. Access curated resources for text generation, image creation, video production, and more."
-          />
-          <meta name="keywords" content="AI tools, prompts, workflows, ChatGPT, Midjourney, AI resources, artificial intelligence" />
-          <link rel="canonical" href="https://jumpsinai.com/resources" />
-        </Helmet>
+    <div className="min-h-screen bg-background">
+      <Helmet>
+        <title>AI Resources - Tools, Prompts & Workflows | Jumps in AI</title>
+        <meta
+          name="description"
+          content="Discover the best AI tools, prompt templates, and workflows. Access curated resources for text generation, image creation, video production, and more."
+        />
+        <meta name="keywords" content="AI tools, prompts, workflows, ChatGPT, Midjourney, AI resources, artificial intelligence" />
+        <link rel="canonical" href="https://jumpsinai.com/resources" />
+      </Helmet>
 
-        <Navigation />
+      <Navigation />
 
-        <main className="container mx-auto px-4 pt-24 pb-16">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold mb-4">AI Resources</h1>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Discover the best AI tools, prompt templates, workflows, blueprints, and strategies to supercharge your productivity.
-            </p>
-          </div>
+      <main className="container mx-auto px-4 pt-24 pb-16">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold mb-4">AI Resources</h1>
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            Discover the best AI tools, prompt templates, workflows, blueprints, and strategies to supercharge your productivity.
+          </p>
+        </div>
 
-          <Tabs defaultValue="tools" className="w-full">
-            <TabsList className="grid w-full grid-cols-5 mb-8">
-              <TabsTrigger value="tools">Tools</TabsTrigger>
-              <TabsTrigger value="prompts">Prompts</TabsTrigger>
-              <TabsTrigger value="workflows">Workflows</TabsTrigger>
-              <TabsTrigger value="blueprints">Blueprints</TabsTrigger>
-              <TabsTrigger value="strategies">Strategies</TabsTrigger>
-            </TabsList>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-5 mb-8">
+            <TabsTrigger value="tools">Tools</TabsTrigger>
+            <TabsTrigger value="prompts">Prompts</TabsTrigger>
+            <TabsTrigger value="workflows">Workflows</TabsTrigger>
+            <TabsTrigger value="blueprints">Blueprints</TabsTrigger>
+            <TabsTrigger value="strategies">Strategies</TabsTrigger>
+          </TabsList>
 
             <TabsContent value="tools" className="space-y-8">
               <div className="text-center mb-8">
@@ -345,6 +411,5 @@ export default function Resources() {
 
         <Footer />
       </div>
-    </HelmetProvider>
-  );
+    );
 }
