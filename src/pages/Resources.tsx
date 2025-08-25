@@ -103,13 +103,12 @@ export default function Resources() {
   const { user, isAuthenticated } = useAuth();
   const showAllContent = false; // For now, show premium content only to subscribed users
 
-  // Component for premium overlay
-  const PremiumOverlay = () => (
-    <div className="absolute inset-0 bg-background/90 backdrop-blur-sm flex flex-col items-center justify-center z-10 rounded-lg">
-      <Lock className="h-8 w-8 text-muted-foreground mb-3" />
-      <p className="text-sm text-muted-foreground text-center mb-4 px-4">
-        Upgrade to Pro to gain access
-      </p>
+  // Universal upgrade section component
+  const UpgradeSection = ({ message }: { message: string }) => (
+    <div className="bg-muted/50 border border-border rounded-lg p-8 text-center mt-8">
+      <Lock className="h-8 w-8 text-muted-foreground mb-3 mx-auto" />
+      <p className="text-lg font-medium mb-2">{message}</p>
+      <p className="text-muted-foreground mb-4">Upgrade to Pro to gain access to all premium content</p>
       <Button 
         onClick={() => {
           if (!isAuthenticated) {
@@ -168,79 +167,70 @@ export default function Resources() {
 
   // Workflow Card Component (first 4 visible, rest blurred)
   const WorkflowCard = ({ workflow, isBlurred }: { workflow: Workflow; isBlurred: boolean }) => (
-    <div className="relative">
-      <Card className={`h-full ${isBlurred ? 'filter blur-[2px] pointer-events-none' : ''}`}>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-lg">{workflow.name}</CardTitle>
-            <Badge variant="secondary">{workflow.category}</Badge>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <p className="text-muted-foreground mb-4">{workflow.description}</p>
-          <div>
-            <h4 className="font-semibold mb-2">Steps:</h4>
-            <ol className="text-sm space-y-1">
-              {workflow.steps.map((step, index) => (
-                <li key={index} className="flex">
-                  <span className="font-medium mr-2">{index + 1}.</span>
-                  <span>{step}</span>
-                </li>
-              ))}
-            </ol>
-          </div>
-        </CardContent>
-      </Card>
-      {isBlurred && <PremiumOverlay />}
-    </div>
+    <Card className={`h-full ${isBlurred ? 'filter blur-[2px] pointer-events-none' : ''}`}>
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-lg">{workflow.name}</CardTitle>
+          <Badge variant="secondary">{workflow.category}</Badge>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <p className="text-muted-foreground mb-4">{workflow.description}</p>
+        <div>
+          <h4 className="font-semibold mb-2">Steps:</h4>
+          <ol className="text-sm space-y-1">
+            {workflow.steps.map((step, index) => (
+              <li key={index} className="flex">
+                <span className="font-medium mr-2">{index + 1}.</span>
+                <span>{step}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </CardContent>
+    </Card>
   );
 
   // Blueprint Card Component (first 4 visible, rest blurred)
   const BlueprintCard = ({ blueprint, isBlurred }: { blueprint: Blueprint; isBlurred: boolean }) => (
-    <div className="relative">
-      <Card className={`h-full ${isBlurred ? 'filter blur-[2px] pointer-events-none' : ''}`}>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-lg">{blueprint.name}</CardTitle>
-            <Badge variant="secondary">{blueprint.category}</Badge>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <p className="text-muted-foreground mb-4">{blueprint.description}</p>
-          <div>
-            <h4 className="font-semibold mb-2">Template:</h4>
-            <pre className="text-xs bg-muted p-3 rounded overflow-auto whitespace-pre-wrap">
-              {blueprint.template}
-            </pre>
-          </div>
-        </CardContent>
-      </Card>
-      {isBlurred && <PremiumOverlay />}
-    </div>
+    <Card className={`h-full ${isBlurred ? 'filter blur-[2px] pointer-events-none' : ''}`}>
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-lg">{blueprint.name}</CardTitle>
+          <Badge variant="secondary">{blueprint.category}</Badge>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <p className="text-muted-foreground mb-4">{blueprint.description}</p>
+        <div>
+          <h4 className="font-semibold mb-2">Template:</h4>
+          <pre className="text-xs bg-muted p-3 rounded overflow-auto whitespace-pre-wrap">
+            {blueprint.template}
+          </pre>
+        </div>
+      </CardContent>
+    </Card>
   );
 
   // Strategy Card Component (first 4 visible, rest blurred)
   const StrategyCard = ({ strategy, isBlurred }: { strategy: Strategy; isBlurred: boolean }) => (
-    <div className="relative">
-      <Card className={`h-full ${isBlurred ? 'filter blur-[2px] pointer-events-none' : ''}`}>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-lg">{strategy.name}</CardTitle>
-            <Badge variant="secondary">{strategy.category}</Badge>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <p className="text-muted-foreground mb-4">{strategy.description}</p>
-          <div>
-            <h4 className="font-semibold mb-2">Approach:</h4>
-            <p className="text-sm bg-muted p-3 rounded">
-              {strategy.approach}
-            </p>
-          </div>
-        </CardContent>
-      </Card>
-      {isBlurred && <PremiumOverlay />}
-    </div>
+    <Card className={`h-full ${isBlurred ? 'filter blur-[2px] pointer-events-none' : ''}`}>
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-lg">{strategy.name}</CardTitle>
+          <Badge variant="secondary">{strategy.category}</Badge>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <p className="text-muted-foreground mb-4">{strategy.description}</p>
+        <div>
+          <h4 className="font-semibold mb-2">Approach:</h4>
+          <p className="text-sm bg-muted p-3 rounded">
+            {strategy.approach}
+          </p>
+        </div>
+      </CardContent>
+    </Card>
   );
 
   return (
@@ -297,6 +287,7 @@ export default function Resources() {
                   <PromptCard key={index} prompt={prompt} />
                 ))}
               </div>
+              {!showAllContent && <UpgradeSection message="View more professional prompts" />}
             </TabsContent>
 
             <TabsContent value="workflows" className="space-y-8">
@@ -313,6 +304,7 @@ export default function Resources() {
                   />
                 ))}
               </div>
+              {!showAllContent && workflows.length > 4 && <UpgradeSection message="View more professional workflows" />}
             </TabsContent>
 
             <TabsContent value="blueprints" className="space-y-8">
@@ -329,6 +321,7 @@ export default function Resources() {
                   />
                 ))}
               </div>
+              {!showAllContent && blueprints.length > 4 && <UpgradeSection message="View more professional blueprints" />}
             </TabsContent>
 
             <TabsContent value="strategies" className="space-y-8">
@@ -345,6 +338,7 @@ export default function Resources() {
                   />
                 ))}
               </div>
+              {!showAllContent && strategies.length > 4 && <UpgradeSection message="View more professional strategies" />}
             </TabsContent>
           </Tabs>
         </main>
