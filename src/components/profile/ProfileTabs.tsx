@@ -92,18 +92,34 @@ export default function ProfileTabs() {
   };
 
   const fetchProfile = async () => {
+    const { data: authData } = await supabase.auth.getUser();
+    const authUser = authData?.user;
+    if (!authUser) return;
+
     const { data, error } = await (supabase.from("profiles" as any) as any)
       .select("display_name, avatar_url, email_verified")
-      .eq("id", (await supabase.auth.getUser()).data.user?.id)
+      .eq("id", authUser.id)
       .maybeSingle();
+
     if (error) {
       console.error(error);
-    } else {
-      setProfile({ display_name: (data as any)?.display_name ?? "", avatar_url: (data as any)?.avatar_url ?? "" });
-      setEmailVerificationStatus({ 
-        verified: (data as any)?.email_verified ?? false, 
-        loading: false 
-      });
+    }
+
+    const meta = authUser.user_metadata || {};
+    const identities = (authUser.identities || []);
+    const identityData = identities[0]?.identity_data || {};
+
+    const display = (data as any)?.display_name ?? meta.full_name ?? meta.name ?? meta.display_name ?? authUser.email?.split("@")[0] ?? "";
+    const avatar = (data as any)?.avatar_url ?? meta.avatar_url ?? meta.picture ?? identityData.picture ?? "";
+
+    setProfile({ display_name: display, avatar_url: avatar });
+    setEmailVerificationStatus({ 
+      verified: (data as any)?.email_verified ?? false, 
+      loading: false 
+    });
+
+    if ((!data || !(data as any).avatar_url) && avatar) {
+      await (supabase.from("profiles" as any) as any).upsert({ id: authUser.id, display_name: display, avatar_url: avatar });
     }
   };
 

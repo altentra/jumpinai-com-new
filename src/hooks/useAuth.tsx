@@ -34,31 +34,55 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .from('profiles')
         .select('display_name, avatar_url')
         .eq('id', authUser.id)
-        .single();
+        .maybeSingle();
+
+      const meta = authUser.user_metadata || {};
+      const identities = (authUser.identities || []);
+      const identityData = identities[0]?.identity_data || {};
+
+      const derivedDisplay = profile?.display_name ||
+        meta.full_name ||
+        meta.name ||
+        meta.display_name ||
+        authUser.email?.split('@')[0] || null;
+
+      const derivedAvatar = profile?.avatar_url ||
+        meta.avatar_url ||
+        meta.picture ||
+        identityData.picture ||
+        null;
+
+      // If profile is missing or missing key fields, upsert to keep in sync
+      if (!profile || (!profile.avatar_url && derivedAvatar) || (!profile.display_name && derivedDisplay)) {
+        await supabase.from('profiles').upsert({
+          id: authUser.id,
+          display_name: derivedDisplay ?? undefined,
+          avatar_url: derivedAvatar ?? undefined,
+        });
+      }
 
       return {
         id: authUser.id,
         email: authUser.email,
-        display_name: profile?.display_name || 
-          authUser.user_metadata?.full_name ||
-          authUser.user_metadata?.name ||
-          authUser.user_metadata?.display_name ||
-          authUser.email?.split('@')[0] || null,
-        avatar_url: profile?.avatar_url || authUser.user_metadata?.avatar_url || null,
+        display_name: derivedDisplay,
+        avatar_url: derivedAvatar,
         isGoogleUser: authUser.app_metadata?.provider === 'google' || 
           authUser.app_metadata?.providers?.includes('google'),
       };
     } catch (error) {
       console.error('Error fetching profile:', error);
       // Fallback to auth metadata
+      const meta = authUser.user_metadata || {};
+      const identities = (authUser.identities || []);
+      const identityData = identities[0]?.identity_data || {};
       return {
         id: authUser.id,
         email: authUser.email,
-        display_name: authUser.user_metadata?.full_name ||
-          authUser.user_metadata?.name ||
-          authUser.user_metadata?.display_name ||
+        display_name: meta.full_name ||
+          meta.name ||
+          meta.display_name ||
           authUser.email?.split('@')[0] || null,
-        avatar_url: authUser.user_metadata?.avatar_url || null,
+        avatar_url: meta.avatar_url || meta.picture || identityData.picture || null,
         isGoogleUser: authUser.app_metadata?.provider === 'google' || 
           authUser.app_metadata?.providers?.includes('google'),
       };
