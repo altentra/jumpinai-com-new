@@ -1,8 +1,144 @@
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Lock, Plus, Search, Star, Bookmark, Target } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { useAuth } from "@/hooks/useAuth";
+
+type Strategy = {
+  name: string;
+  description: string;
+  approach: string;
+  category: string;
+};
+
+const strategies: Strategy[] = [
+  { name: "AI-First Content Strategy", description: "Leverage AI throughout the content lifecycle", approach: "Integrate AI tools at every stage: ideation with GPT-4, creation with specialized tools, optimization with analytics AI, and distribution with automation platforms.", category: "Content Marketing" },
+  { name: "Multimodal AI Strategy", description: "Combine text, image, and video AI tools", approach: "Create cohesive campaigns using text AI for copy, image AI for visuals, and video AI for dynamic content, ensuring consistent brand voice across all modalities.", category: "Brand Strategy" },
+  { name: "AI-Powered Research Strategy", description: "Systematic approach to AI-enhanced research", approach: "Use AI for data collection, analysis, and synthesis. Combine multiple AI sources for comprehensive insights, always verify with human expertise.", category: "Research Strategy" },
+  { name: "Automation-First Operations", description: "Streamline operations with AI automation", approach: "Identify repetitive tasks, implement AI solutions for automation, maintain human oversight for quality control, and continuously optimize processes.", category: "Operations Strategy" },
+  { name: "AI Governance Strategy", description: "Responsible AI implementation framework", approach: "Establish clear AI usage guidelines, implement security measures, train teams on best practices, and regularly audit AI outputs for quality and compliance.", category: "Governance" },
+  { name: "Performance Marketing with AI", description: "Data-driven marketing optimization", approach: "Use AI for audience analysis, content personalization, campaign optimization, and performance prediction. Combine multiple AI insights for better ROI.", category: "Marketing Strategy" },
+];
+
 export default function Strategies() {
+  const { isAuthenticated } = useAuth();
+  const showAllContent = false;
+
+  const UpgradeSection = ({ message }: { message: string }) => (
+    <div className="bg-muted/50 border border-border rounded-lg p-8 text-center mt-8">
+      <Lock className="h-8 w-8 text-muted-foreground mb-3 mx-auto" />
+      <p className="text-lg font-medium mb-2">{message}</p>
+      <p className="text-muted-foreground mb-4">Upgrade to Pro to gain access to all premium content</p>
+      <Button 
+        onClick={() => {
+          if (!isAuthenticated) {
+            window.location.href = '/auth?next=' + encodeURIComponent(window.location.pathname);
+          } else {
+            window.location.href = '/pricing';
+          }
+        }}
+        className="text-sm"
+      >
+        {!isAuthenticated ? 'Login to Subscribe' : 'Upgrade to Pro'} - $10/month
+      </Button>
+    </div>
+  );
+
+  const StrategyCard = ({ strategy, isBlurred }: { strategy: Strategy; isBlurred: boolean }) => (
+    <Card className={`h-full ${isBlurred ? 'filter blur-[2px] pointer-events-none' : ''}`}>
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-lg">{strategy.name}</CardTitle>
+          <Badge variant="secondary">{strategy.category}</Badge>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <p className="text-muted-foreground mb-4">{strategy.description}</p>
+        <div>
+          <h4 className="font-semibold mb-2">Approach:</h4>
+          <p className="text-sm bg-muted p-3 rounded">
+            {strategy.approach}
+          </p>
+        </div>
+      </CardContent>
+    </Card>
+  );
+
   return (
-    <div className="space-y-4">
-      <h2 className="text-xl font-semibold">My Strategies</h2>
-      <p className="text-muted-foreground">Plan and iterate on strategies. Coming soon.</p>
+    <div className="space-y-12">
+      {/* My Strategies Section */}
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-semibold">My Strategies</h2>
+          <Button>
+            <Plus className="h-4 w-4 mr-2" />
+            Create Strategy
+          </Button>
+        </div>
+        
+        <div className="flex items-center space-x-4">
+          <div className="relative flex-1 max-w-md">
+            <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+            <Input 
+              placeholder="Search your strategies..." 
+              className="pl-10"
+            />
+          </div>
+          <Button variant="outline" size="sm">
+            <Star className="h-4 w-4 mr-2" />
+            Favorites
+          </Button>
+          <Button variant="outline" size="sm">
+            <Target className="h-4 w-4 mr-2" />
+            Active
+          </Button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <Card className="border-2 border-dashed border-muted-foreground/25 hover:border-primary/50 transition-colors">
+            <CardContent className="flex flex-col items-center justify-center py-12 text-center">
+              <Plus className="h-12 w-12 text-muted-foreground mb-4" />
+              <h3 className="font-semibold mb-2">Create Your First Strategy</h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                Plan and execute your AI transformation
+              </p>
+              <Button variant="outline" size="sm">Get Started</Button>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="bg-muted/30 rounded-lg p-6">
+          <h3 className="font-semibold mb-2">✨ Coming Soon</h3>
+          <ul className="text-sm text-muted-foreground space-y-1">
+            <li>• Strategic planning tools and frameworks</li>
+            <li>• Goal tracking and milestone management</li>
+            <li>• Performance metrics and ROI analysis</li>
+            <li>• Team alignment and collaboration features</li>
+            <li>• Expert strategy consultation</li>
+          </ul>
+        </div>
+      </div>
+
+      {/* JumpinAI Strategies Section */}
+      <div className="space-y-6">
+        <div className="border-t pt-8">
+          <h2 className="text-2xl font-semibold mb-2">JumpinAI Strategies</h2>
+          <p className="text-muted-foreground">Proven strategies for AI implementation and optimization</p>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {strategies.map((strategy, index) => (
+            <StrategyCard 
+              key={index} 
+              strategy={strategy} 
+              isBlurred={index >= 4 && !showAllContent}
+            />
+          ))}
+        </div>
+        
+        {!showAllContent && <UpgradeSection message="View more professional strategies" />}
+      </div>
     </div>
   );
 }
