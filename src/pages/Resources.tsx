@@ -172,7 +172,7 @@ const categories: Category[] = [
         url: "https://www.adobe.com/sensei/generative-ai/firefly.html",
         description: "Integrated with Photoshop/Illustrator for editable, brand‑safe imagery.",
         promptExample:
-          "Extend canvas and generate realistic background matching the original photo’s perspective and lighting.",
+          "Extend canvas and generate realistic background matching the original photo's perspective and lighting.",
         workflowSteps: [
           "Open in Photoshop; use Generative Expand with prompt.",
           "Mask/product isolate; generate alt backgrounds.",
@@ -184,7 +184,7 @@ const categories: Category[] = [
         url: "https://x.ai/",
         description: "Image generation by xAI with strong composition and text rendering.",
         promptExample:
-          "brand key visual: geometric shapes forming a letter ‘A’, crisp vector style, accurate text ‘ALPHA’, high contrast, 3:2",
+          "brand key visual: geometric shapes forming a letter 'A', crisp vector style, accurate text 'ALPHA', high contrast, 3:2",
         workflowSteps: [
           "Define layout constraints and typography.",
           "Generate alternates; refine text rendering.",
@@ -196,7 +196,7 @@ const categories: Category[] = [
         url: "https://ideogram.ai/",
         description: "Text‑accurate logo/poster designs and typography inside images.",
         promptExample:
-          "minimal tech conference poster with accurate text: ‘AI NEXT 2025’ in neo‑grotesk, grid layout, high contrast, CMYK",
+          "minimal tech conference poster with accurate text: 'AI NEXT 2025' in neo‑grotesk, grid layout, high contrast, CMYK",
         workflowSteps: [
           "Define layout, font family, color constraints.",
           "Generate multiple typographic compositions.",
@@ -282,830 +282,332 @@ const categories: Category[] = [
     title: "AI Video Generation",
     tools: [
       {
-        name: "Google Veo 3",
-        url: "https://deepmind.google/technologies/veo/",
-        description: "High‑fidelity text‑to‑video with cinematic control and long shots.",
+        name: "Runway Gen-2",
+        url: "https://runwayml.com/gen-2",
+        description: "Text-to-video generation with editing and inpainting capabilities.",
         promptExample:
-          "8‑second aerial glide over a futuristic city at dusk, volumetric light, 24fps, subtle camera tilt, cinematic film grain",
+          "Create a 10-second video of a futuristic cityscape at sunset with flying cars and neon lights.",
         workflowSteps: [
-          "Write 1‑shot storyboard; set duration/fps.",
-          "Generate alternates; pick most stable.",
-          "Add sound design and color grade.",
-        ],
-      },
-      {
-        name: "Kling AI",
-        url: "https://klingai.com/",
-        description: "Photoreal motion and dynamic physics; strong for action shots.",
-        promptExample:
-          "slow‑motion splash of water over fresh berries, macro lens, shallow DOF, 5 seconds, natural lighting",
-        workflowSteps: [
-          "Specify motion style and pacing.",
-          "Iterate on stabilization and realism.",
-          "Finalize with SFX and subtle grade.",
-        ],
-      },
-      {
-        name: "Runway Gen‑3",
-        url: "https://runwayml.com/",
-        description: "Text‑to‑video and image‑to‑video with cinematic control.",
-        promptExample:
-          "cinematic drone reveal of coastal cliffs at sunrise, volumetric light, 6‑second shot, 24fps, anamorphic bokeh",
-        workflowSteps: [
-          "Write 1‑shot storyboard; set duration/fps.",
-          "Generate alternates; pick most stable.",
-          "Add sound design and color grade.",
-        ],
-      },
-      {
-        name: "Pika",
-        url: "https://pika.art/",
-        description: "Fast text‑to‑video and edits with stylization controls.",
-        promptExample:
-          "animated explainer of fintech app UI, clean motion graphics, white background, 5 seconds, smooth transitions",
-        workflowSteps: [
-          "Define scene style and pacing.",
-          "Generate clips; trim and stitch.",
-          "Overlay VO/captions; export 1080p.",
-        ],
-      },
-      {
-        name: "Luma Dream Machine",
-        url: "https://lumalabs.ai/dream-machine",
-        description: "Photoreal, dynamic camera motion from text or images.",
-        promptExample:
-          "macro shot of mechanical watch gears moving, shallow DOF, soft glints, studio lighting, 4 seconds",
-        workflowSteps: [
-          "Provide style reference; set shot length.",
-          "Iterate on motion and depth cues.",
-          "Stabilize and add subtle SFX.",
+          "Input detailed text prompt describing the scene.",
+          "Generate initial video clip.",
+          "Use inpainting to refine specific frames or objects.",
+          "Export final video in desired format.",
         ],
       },
       {
         name: "Synthesia",
         url: "https://www.synthesia.io/",
-        description: "Avatar‑based studio videos for training and localization.",
+        description: "AI video creation platform with customizable avatars and voiceovers.",
         promptExample:
-          "Create a 60‑sec onboarding explainer with a friendly avatar, English VO, captions, and brand background.",
+          "Create a product demo video with a professional avatar explaining features in English.",
         workflowSteps: [
-          "Pick avatar/scenes; paste script.",
-          "Add captions and localized variants.",
-          "Render and distribute to LMS.",
+          "Select avatar and language.",
+          "Input script or text.",
+          "Customize background and branding.",
+          "Generate and review video.",
         ],
       },
       {
-        name: "HeyGen",
-        url: "https://www.heygen.com/",
-        description: "Realistic avatars, voice cloning, and face‑to‑video.",
+        name: "Pictory",
+        url: "https://pictory.ai/",
+        description: "Automatically create short branded videos from long content.",
         promptExample:
-          "Turn this blog post into a 45‑sec avatar video with dynamic subtitles and CTA end card.",
+          "Summarize a 10-minute webinar into a 2-minute highlight video with captions.",
         workflowSteps: [
-          "Import article; summarize to script.",
-          "Select avatar/voice; add subtitles.",
-          "Export vertical and landscape.",
-        ],
-      },
-      {
-        name: "Descript",
-        url: "https://www.descript.com/",
-        description: "AI editing, overdub, and text‑based timeline for podcasts/videos.",
-        promptExample:
-          "Remove filler words, balance levels, and generate clean transcript with speaker labels.",
-        workflowSteps: [
-          "Transcribe; run filler removal/levels.",
-          "Edit by text; add music beds.",
-          "Export with burned‑in captions.",
-        ],
-      },
-      {
-        name: "OpenAI Sora",
-        url: "https://openai.com/sora",
-        description: "Advanced text‑to‑video for cinematic, coherent scenes from short prompts.",
-        promptExample:
-          "10‑second wide shot of a rainy neon street at night, reflections on wet pavement, slow dolly forward, 24fps, cinematic",
-        workflowSteps: [
-          "Write concise shot description with camera and motion.",
-          "Generate 2–3 takes; pick most coherent composition.",
-          "Color grade and add ambience in post.",
-        ],
-      },
-      {
-        name: "VEED AI",
-        url: "https://www.veed.io/ai",
-        description: "Web editor with AI cleanup, subtitles, and repurposing.",
-        promptExample:
-          "Turn webinar into a 60‑sec highlight with subtitles and logo watermark.",
-        workflowSteps: [
-          "Import recording; detect highlights.",
-          "Auto‑subtitle and brand overlay.",
-          "Export 1080p and square teaser.",
+          "Upload long-form video or text.",
+          "Select key highlights or auto-generate.",
+          "Customize captions and branding.",
+          "Export short video clips.",
         ],
       },
     ],
   },
   {
-    id: "audio",
-    title: "AI Music & Sound",
+    id: "music",
+    title: "AI Music Generation",
     tools: [
-      {
-        name: "Suno",
-        url: "https://suno.com/",
-        description: "Text‑to‑music with vocals; diverse genres and radio‑ready output.",
-        promptExample:
-          "modern pop track, 120bpm, female vocal, uplifting chorus, clean mix, radio edit, 60 seconds",
-        workflowSteps: [
-          "Specify genre, bpm, vocal, and mood.",
-          "Generate alt takes; pick best chorus.",
-          "Mastering polish and fade‑outs.",
-        ],
-      },
-      {
-        name: "Udio",
-        url: "https://www.udio.com/",
-        description: "High‑quality song generation and structure control.",
-        promptExample:
-          "ambient electronic, 90bpm, evolving pads, no vocals, cinematic build, 45 seconds",
-        workflowSteps: [
-          "Define structure and instrumentation.",
-          "Iterate on sections; extend variations.",
-          "Export stems if available; mix down.",
-        ],
-      },
       {
         name: "AIVA",
         url: "https://www.aiva.ai/",
-        description: "Classical/orchestral composition for film and games.",
+        description: "AI composer for creating soundtracks and music pieces.",
         promptExample:
-          "heroic orchestral theme, strings/brass, 100bpm, majestic, loopable 30s",
+          "Compose a calm, piano-based soundtrack for a meditation app lasting 3 minutes.",
         workflowSteps: [
-          "Pick style; set tempo and mood.",
-          "Generate motif; adjust instrumentation.",
-          "Export MIDI for DAW editing.",
+          "Select music style and instruments.",
+          "Input mood and length.",
+          "Generate composition.",
+          "Edit and export audio file.",
+        ],
+      },
+      {
+        name: "Amper Music",
+        url: "https://www.ampermusic.com/",
+        description: "Create custom music tracks with AI for videos and podcasts.",
+        promptExample:
+          "Generate an upbeat background track for a tech product launch video.",
+        workflowSteps: [
+          "Choose genre and mood.",
+          "Set tempo and length.",
+          "Generate and preview tracks.",
+          "Download final version.",
         ],
       },
       {
         name: "Soundraw",
         url: "https://soundraw.io/",
-        description: "Royalty‑free background music with structure control.",
+        description: "AI music generator with customization options.",
         promptExample:
-          "corporate background, light upbeat, 2 minutes, no vocals, simple melody",
+          "Create a suspenseful soundtrack with rising tension for a thriller scene.",
         workflowSteps: [
-          "Choose length/energy; generate tracks.",
-          "Edit sections and transitions.",
-          "Download with appropriate license.",
-        ],
-      },
-      {
-        name: "Beatoven.ai",
-        url: "https://www.beatoven.ai/",
-        description: "AI background music tailored to video moods and cuts.",
-        promptExample:
-          "tech explainer soundtrack, medium energy, 60 seconds, sparse instrumentation",
-        workflowSteps: [
-          "Import cut timing; align sections.",
-          "Adjust mood per chapter; export WAV.",
-          "Loudness normalize to -14 LUFS.",
-        ],
-      },
-      {
-        name: "Mubert",
-        url: "https://mubert.com/",
-        description: "Procedural music generation and API for apps.",
-        promptExample:
-          "deep focus playlist, lo‑fi chillhop, 90bpm, 30 minutes",
-        workflowSteps: [
-          "Define use case; pick genre and length.",
-          "Generate stream/loop; check usage rights.",
-          "Integrate via API if needed.",
-        ],
-      },
-      {
-        name: "ElevenLabs",
-        url: "https://elevenlabs.io/",
-        description: "Premium text‑to‑speech and voice cloning for narration.",
-        promptExample:
-          "Convert this script to an American female voice, warm and confident, with natural pacing and slight smile.",
-        workflowSteps: [
-          "Pick voice or clone; set speaking style.",
-          "Generate takes; adjust pacing/energy.",
-          "Export WAV; mix with background music.",
-        ],
-      },
-      {
-        name: "PlayHT",
-        url: "https://play.ht/",
-        description: "Realistic TTS and voice studio for multilingual content.",
-        promptExample:
-          "Narrate this tutorial in Spanish with a neutral Latin American accent, 1.0x speed, clear articulation.",
-        workflowSteps: [
-          "Choose language/voice; paste script.",
-          "Tweak speed/pronunciation; QA sample.",
-          "Batch render and organize files.",
-        ],
-      },
-      {
-        name: "Stable Audio",
-        url: "https://stability.ai/audio",
-        description: "Text‑to‑music and sound effects generation by Stability AI.",
-        promptExample:
-          "cinematic trailer hit, low brass and percussion, 5 seconds, high impact, no melody",
-        workflowSteps: [
-          "Specify length, style, and instrumentation.",
-          "Generate alternates; pick the tightest transients.",
-          "Export WAV; layer under VO for dynamics.",
-        ],
-      },
-      {
-        name: "Meta MusicGen",
-        url: "https://ai.meta.com/research/musicgen/",
-        description: "Open research model for controllable music generation and remixing.",
-        promptExample:
-          "chill lo‑fi beat at 85bpm, warm vinyl crackle, mellow Rhodes chords, 45 seconds, no vocals",
-        workflowSteps: [
-          "Provide tempo and style cues; set structure.",
-          "Iterate motifs; export stems/MIDI for DAW.",
-          "Mix and master to platform loudness.",
-        ],
-      },
-    ],
-  },
-  {
-    id: "apps",
-    title: "AI Websites & Apps",
-    tools: [
-      {
-        name: "Lovable",
-        url: "https://lovable.dev/",
-        description: "AI editor to build and ship full web apps with React, Tailwind, and Supabase—live preview and instant changes.",
-        promptExample:
-          "Create a responsive marketing site with hero, features, pricing, newsletter signup, and a resources page with tabs.",
-        workflowSteps: [
-          "Describe pages and components; generate skeleton.",
-          "Refine UI with design tokens; wire forms and toasts.",
-          "Publish and connect a custom domain.",
-        ],
-      },
-      {
-        name: "Framer AI",
-        url: "https://www.framer.com/ai/",
-        description: "Generate and edit responsive websites visually with AI.",
-        promptExample:
-          "Generate a SaaS landing page: hero, social proof, features grid (6), pricing (3 tiers), FAQ, footer. Tone: modern, credible.",
-        workflowSteps: [
-          "Describe sections and brand tone.",
-          "Iterate layout; wire up nav and forms.",
-          "Publish and connect analytics.",
-        ],
-      },
-      {
-        name: "Webflow AI",
-        url: "https://webflow.com/ai",
-        description: "AI‑assisted component generation and content editing.",
-        promptExample:
-          "Create a CMS‑driven blog layout with hero, categories, and 3‑column grid. Add pagination and search.",
-        workflowSteps: [
-          "Define CMS schema; generate layout.",
-          "Bind data; add filters and search.",
-          "Optimize SEO and publish.",
-        ],
-      },
-      {
-        name: "V0 by Vercel",
-        url: "https://v0.dev/",
-        description: "Generate React/Tailwind components from prompts or sketches.",
-        promptExample:
-          "Build a responsive pricing table with monthly/annual toggle, 3 tiers, highlighted ‘Pro’, and CTA buttons.",
-        workflowSteps: [
-          "Describe component spec; generate code.",
-          "Refine variants and accessibility.",
-          "Paste into repo and ship.",
-        ],
-      },
-      {
-        name: "Replit Agent",
-        url: "https://replit.com/",
-        description: "AI coding agent to create and refactor apps from natural language.",
-        promptExample:
-          "Create a Node + React app that fetches GitHub issues and displays charts. Include tests and README.",
-        workflowSteps: [
-          "Specify stack and requirements.",
-          "Review diffs; run and fix tests.",
-          "Deploy and monitor logs.",
-        ],
-      },
-      {
-        name: "Builder.io AI (Visual Copilot)",
-        url: "https://www.builder.io/ai",
-        description: "Turn designs into clean code and editable content.",
-        promptExample:
-          "Import this Figma frame and generate a responsive React component with props for content and layout.",
-        workflowSteps: [
-          "Connect Figma; import components.",
-          "Generate code; map to CMS fields.",
-          "Preview and A/B test variants.",
-        ],
-      },
-      {
-        name: "Bubble",
-        url: "https://bubble.io/",
-        description: "No‑code app builder with workflows and database.",
-        promptExample:
-          "Prototype a marketplace MVP with user auth, listings, search, and Stripe checkout.",
-        workflowSteps: [
-          "Design data types; build pages.",
-          "Create workflows and integrations.",
-          "Launch and iterate on feedback.",
-        ],
-      },
-      {
-        name: "Softr",
-        url: "https://www.softr.io/",
-        description: "Build client portals and apps on top of Airtable/Notion.",
-        promptExample:
-          "Create a client portal from Airtable with login, role‑based views, and file uploads.",
-        workflowSteps: [
-          "Connect Airtable; define roles.",
-          "Assemble pages and permissions.",
-          "Brand and publish with custom domain.",
-        ],
-      },
-      {
-        name: "Retool AI",
-        url: "https://retool.com/ai",
-        description: "Internal tools with LLM blocks, RAG, and automations.",
-        promptExample:
-          "Build an internal ticket triage app with RAG answers and priority scoring.",
-        workflowSteps: [
-          "Connect DB/APIs; add LLM blocks.",
-          "Wire RAG to knowledge base.",
-          "Deploy with auth and audit logs.",
-        ],
-      },
-      {
-        name: "FlutterFlow",
-        url: "https://flutterflow.io/",
-        description: "Visual builder for Flutter apps with AI assist.",
-        promptExample:
-          "Generate a mobile onboarding flow with email login, progress dots, and success screen.",
-        workflowSteps: [
-          "Sketch screens; generate components.",
-          "Bind to Firebase; test on device.",
-          "Export code and publish.",
+          "Select scene type and mood.",
+          "Customize instruments and structure.",
+          "Generate music.",
+          "Edit and export.",
         ],
       },
     ],
   },
 ];
 
-function SectionHeader({ title, subtitle }: { title: string; subtitle?: string }) {
-  return (
-    <div className="text-center mb-10">
-      <h2 className="text-2xl md:text-3xl font-bold">{title}</h2>
-      {subtitle && (
-        <p className="text-muted-foreground mt-2 max-w-2xl mx-auto">{subtitle}</p>
-      )}
-    </div>
-  );
-}
-
-function ToolCard({ tool }: { tool: Tool }) {
-  return (
-    <Card className="h-full border-border/60 hover:border-primary/40 transition-colors">
-      <CardHeader>
-        <CardTitle className="flex items-center justify-between text-base md:text-lg">
-          <span>{tool.name}</span>
-          <a
-            href={tool.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-primary hover:underline"
-            aria-label={`Open ${tool.name} in new tab`}
-          >
-            Visit
-            <ExternalLink className="w-4 h-4" />
-          </a>
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <p className="text-sm text-muted-foreground">{tool.description}</p>
-      </CardContent>
-    </Card>
-  );
-}
-
-function PromptCard({ tool }: { tool: Tool }) {
-  return (
-    <Card className="h-full border-border/60">
-      <CardHeader>
-        <CardTitle className="text-base md:text-lg">{tool.name}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <p className="text-xs uppercase tracking-wide text-muted-foreground mb-2">Example prompt</p>
-        <pre className="whitespace-pre-wrap text-sm bg-muted/50 p-3 rounded-md border border-border/50">{tool.promptExample}</pre>
-      </CardContent>
-    </Card>
-  );
-}
-
-function WorkflowCard({ tool }: { tool: Tool }) {
-  return (
-    <Card className="h-full border-border/60">
-      <CardHeader>
-        <CardTitle className="text-base md:text-lg">{tool.name}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <ol className="list-decimal pl-5 space-y-2 text-sm text-muted-foreground">
-          {tool.workflowSteps.map((s, i) => (
-            <li key={i}>{s}</li>
-          ))}
-        </ol>
-      </CardContent>
-    </Card>
-  );
-}
-
-// Build professional implementation blueprints dynamically per category
-function buildBlueprint(
-  categoryId: string,
-  tool: Tool
-): { prerequisites: string[]; steps: string[]; metrics: string[] } {
-  const commonPrereq = [
-    "Account access and correct plan/quotas enabled",
-    "Team permissions + security review (PII, compliance)",
-    "Folder/project structure and naming conventions",
-  ];
-
-  switch (categoryId) {
-    case "text":
-      return {
-        prerequisites: [
-          ...commonPrereq,
-          "Brand voice/style guide and example artifacts",
-          "Knowledge sources (docs, FAQs) and citation rules",
-        ],
-        steps: [
-          `Define objective and audience for ${tool.name} (KPIs, tone, length)`,
-          "Create prompt templates with role, constraints, outputs",
-          "Add retrieval or references when needed; specify citation format",
-          "Iterate with outlines first, then expand and refine",
-          "Establish review loop and approval workflow",
-          "Publish to channels; store versions and changelog",
-        ],
-        metrics: [
-          "Quality score (readability, brand fit)",
-          "Time-to-draft and revision count",
-          "Engagement/CTR or reply rate depending on asset",
-        ],
-      };
-    case "image":
-      return {
-        prerequisites: [
-          ...commonPrereq,
-          "Brand color tokens, logo assets, typography",
-          "Reference board or style guide",
-        ],
-        steps: [
-          `Set brief for ${tool.name}: subject, lens, lighting, aspect ratio`,
-          "Generate 6–12 variations; track seeds for reproducibility",
-          "Use in/outpainting or control-nets for precision",
-          "Upscale and denoise; check skin/hands/typography",
-          "Export in target sizes with color-safe profiles",
-          "Store final assets in DAM with metadata",
-        ],
-        metrics: [
-          "Approval rate and iteration count",
-          "Production time per asset",
-          "Brand compliance checklist pass rate",
-        ],
-      };
-    case "video":
-      return {
-        prerequisites: [
-          ...commonPrereq,
-          "Storyboard outline and shot list (fps, duration)",
-          "Audio library/SFX licensing ready",
-        ],
-        steps: [
-          `Draft one-shot prompts for ${tool.name} with camera + motion`,
-          "Generate alt takes; pick most stable and coherent",
-          "Stabilize, trim, and color grade; add captions",
-          "Sound design with VO/music; loudness normalize",
-          "Render deliverables for each platform",
-        ],
-        metrics: [
-          "Coherence/stability score (subject/object integrity)",
-          "View-through rate and watch time",
-          "Edit time saved vs. baseline",
-        ],
-      };
-    case "audio":
-      return {
-        prerequisites: [
-          ...commonPrereq,
-          "Target BPM/genre/mood and reference tracks",
-          "Microphone/voice rights if cloning",
-        ],
-        steps: [
-          `Define structure for ${tool.name}: intro/verse/chorus or loop length`,
-          "Generate multiple takes; select best motifs",
-          "Adjust lyrics/phonemes or instrumentation",
-          "Master to platform loudness; export stems if needed",
-          "Tag and license for intended use",
-        ],
-        metrics: [
-          "Mix clarity and loudness targets met",
-          "Revision cycles to approval",
-          "Engagement/retention on placements",
-        ],
-      };
-    case "apps":
-      return {
-        prerequisites: [
-          ...commonPrereq,
-          "Feature list, sitemap, and design tokens",
-          "Environment config and hosting plan",
-        ],
-        steps: [
-          `Draft component/page blueprint in ${tool.name}`,
-          "Generate UI skeleton; wire forms and routes",
-          "Connect data/APIs; set auth and toasts",
-          "Enforce accessibility and responsiveness",
-          "SEO: title/meta/canonical + structured data",
-          "Publish; set up analytics and error tracking",
-        ],
-        metrics: [
-          "Time-to-first-draft and time-to-publish",
-          "Core Web Vitals and accessibility score",
-          "Conversion KPI for key flows",
-        ],
-      };
-    default:
-      return { prerequisites: commonPrereq, steps: [], metrics: [] };
-  }
-}
-
-function BlueprintCard({ tool, categoryId }: { tool: Tool; categoryId: string }) {
-  const bp = buildBlueprint(categoryId, tool);
-  return (
-    <Card className="h-full border-border/60">
-      <CardHeader>
-        <CardTitle className="flex items-center justify-between text-base md:text-lg">
-          <span>{tool.name}</span>
-          <Badge variant="outline">Blueprint</Badge>
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div>
-          <p className="text-xs uppercase tracking-wide text-muted-foreground mb-2">Prerequisites</p>
-          <ul className="list-disc pl-5 space-y-1 text-sm text-muted-foreground">
-            {bp.prerequisites.map((p, i) => (
-              <li key={i}>{p}</li>
-            ))}
-          </ul>
-        </div>
-        {bp.steps.length > 0 && (
-          <div>
-            <p className="text-xs uppercase tracking-wide text-muted-foreground mb-2">Implementation</p>
-            <ol className="list-decimal pl-5 space-y-2 text-sm text-muted-foreground">
-              {bp.steps.map((s, i) => (
-                <li key={i}>{s}</li>
-              ))}
-            </ol>
-          </div>
-        )}
-        {bp.metrics.length > 0 && (
-          <div>
-            <p className="text-xs uppercase tracking-wide text-muted-foreground mb-2">Metrics</p>
-            <ul className="list-disc pl-5 space-y-1 text-sm text-muted-foreground">
-              {bp.metrics.map((m, i) => (
-                <li key={i}>{m}</li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </CardContent>
-    </Card>
-  );
-}
-
-// Premium overlay component for locked content
-const PremiumOverlay = () => {
-  const { isAuthenticated, login } = useAuth();
-  
-  const handleUpgrade = () => {
-    if (isAuthenticated) {
-      window.location.href = '/pricing';
-    } else {
-      login('/pricing');
-    }
-  };
-  
-  return (
-    <div className="relative">
-      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent z-10 rounded-lg flex items-center justify-center">
-        <div className="text-center p-6 max-w-sm">
-          <Lock className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-          <h3 className="text-lg font-semibold mb-2">Unlock All Resources</h3>
-          <p className="text-sm text-muted-foreground mb-4">
-            Get access to all workflows and blueprints with our Pro plan
-          </p>
-          <Button onClick={handleUpgrade} className="w-full">
-            {isAuthenticated ? 'Upgrade for $10/month' : 'Sign Up & Subscribe'}
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// Blurred placeholder card component
-const BlurredCard = ({ children }: { children: React.ReactNode }) => (
-  <div className="relative">
-    <div className="blur-sm opacity-50 pointer-events-none">
-      {children}
-    </div>
-  </div>
-);
-
 export default function Resources() {
-  const { user } = useAuth();
-  const isPremium = user && (user as any).subscription_tier; // Check if user has premium subscription
-  
+  const { user, isAuthenticated } = useAuth();
+  const showAllContent = false; // For now, show only first 4 items to everyone
+
+  // Flatten all tools from all categories
+  const allTools = categories.flatMap(category =>
+    category.tools.map(tool => ({ ...tool, category: category.title }))
+  );
+
+  // Component for premium overlay
+  const PremiumOverlay = () => (
+    <div className="absolute inset-0 bg-background/90 backdrop-blur-sm flex flex-col items-center justify-center z-10 rounded-lg">
+      <Lock className="h-8 w-8 text-muted-foreground mb-3" />
+      <p className="text-sm text-muted-foreground text-center mb-4 px-4">
+        Access all workflows and blueprints
+      </p>
+      <Button 
+        onClick={() => {
+          if (!isAuthenticated) {
+            window.location.href = '/auth?next=' + encodeURIComponent(window.location.pathname);
+          } else {
+            window.location.href = '/pricing';
+          }
+        }}
+        className="text-sm"
+      >
+        {!isAuthenticated ? 'Login to Subscribe' : 'Upgrade to Pro'} - $10/month
+      </Button>
+    </div>
+  );
+
+  // Component for blurred tool card
+  const BlurredToolCard = ({ tool }: { tool: Tool & { category: string } }) => (
+    <div className="relative">
+      <Card className="h-full filter blur-[2px] pointer-events-none">
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-lg">{tool.name}</CardTitle>
+            <Badge variant="secondary">{tool.category}</Badge>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <p className="text-muted-foreground mb-4">{tool.description}</p>
+          <div className="space-y-3">
+            <div>
+              <h4 className="font-semibold mb-2">Example Prompt:</h4>
+              <p className="text-sm bg-muted p-3 rounded italic">
+                {tool.promptExample}
+              </p>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-2">Workflow Steps:</h4>
+              <ol className="text-sm space-y-1">
+                {tool.workflowSteps.map((step, index) => (
+                  <li key={index} className="flex">
+                    <span className="font-medium mr-2">{index + 1}.</span>
+                    <span>{step}</span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+      <PremiumOverlay />
+    </div>
+  );
+
   return (
     <HelmetProvider>
       <div className="min-h-screen bg-background">
         <Helmet>
-          <title>AI Resources: Tools, Prompts, Workflows | JumpinAI</title>
-          <meta name="description" content="Explore the best AI tools with pro prompts and workflows. Browse text, image, video, audio, and app builders—curated by JumpinAI." />
-          <link rel="canonical" href="https://jumpinai.com/resources" />
-          <script type="application/ld+json">{JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'CollectionPage',
-            name: 'JumpinAI Resources',
-            url: 'https://jumpinai.com/resources',
-            hasPart: categories.map((c) => ({
-              '@type': 'ItemList',
-              name: c.title,
-              itemListElement: c.tools.map((t, idx) => ({
-                '@type': 'Thing',
-                position: idx + 1,
-                name: t.name,
-                url: t.url,
-                description: t.description,
-              })),
-            })),
-          })}</script>
+          <title>AI Resources - Workflows & Blueprints | Jumpin AI</title>
+          <meta 
+            name="description" 
+            content="Access our comprehensive collection of AI workflows and blueprints for text generation, image creation, video production, and more. Professional prompts and step-by-step guides for AI tools."
+          />
+          <meta name="keywords" content="AI workflows, AI blueprints, prompts, ChatGPT, Midjourney, AI tools, automation" />
+          <link rel="canonical" href="https://www.jumpinai.com/resources" />
         </Helmet>
-
+        
         <Navigation />
-
-        {/* Hero */}
-        <section className="px-6 mt-24">
-          <div className="max-w-6xl mx-auto text-center">
-            <h1 className="text-4xl md:text-6xl font-bold mb-4">AI Resources</h1>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
-              The best tools, the right prompts, and proven workflows—organized by what you want to build.
-            </p>
-          </div>
-        </section>
-
-        {/* Tabs */}
-        <main className="px-6 py-10">
+        
+        <main className="container mx-auto px-6 py-12">
           <div className="max-w-6xl mx-auto">
-            <Tabs defaultValue="tools" className="w-full">
-              <div className="sticky top-16 md:top-20 z-40 -mx-6 px-6 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-                <div className="max-w-7xl mx-auto flex justify-center py-3 border-b border-border/40">
-                  <TabsList className="rounded-full border border-border/60 bg-muted/50 p-1 backdrop-blur supports-[backdrop-filter]:bg-muted/60">
-                    <TabsTrigger value="tools" className="rounded-full px-4 md:px-6">Tools</TabsTrigger>
-                    <TabsTrigger value="prompts" className="rounded-full px-4 md:px-6">Prompts</TabsTrigger>
-                    <TabsTrigger value="workflows" className="rounded-full px-4 md:px-6">Workflows</TabsTrigger>
-                    <TabsTrigger value="blueprints" className="rounded-full px-4 md:px-6">Blueprints</TabsTrigger>
-                  </TabsList>
+            <div className="text-center mb-12">
+              <h1 className="text-4xl font-bold mb-4">
+                AI Workflows & Blueprints
+              </h1>
+              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                Master AI tools with our comprehensive collection of proven workflows, 
+                expert prompts, and step-by-step blueprints for every creative and business need.
+              </p>
+            </div>
+
+            <Tabs defaultValue="workflows" className="w-full">
+              <TabsList className="grid w-full grid-cols-2 mb-8">
+                <TabsTrigger value="workflows">AI Workflows</TabsTrigger>
+                <TabsTrigger value="blueprints">AI Blueprints</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="workflows" className="space-y-8">
+                <div className="text-center mb-8">
+                  <h2 className="text-2xl font-semibold mb-3">
+                    Step-by-Step AI Workflows
+                  </h2>
+                  <p className="text-muted-foreground">
+                    Complete workflows with prompts and processes for specific outcomes
+                  </p>
                 </div>
-              </div>
-
-              {/* Tools tab */}
-              <TabsContent value="tools">
-                {categories.map((cat) => (
-                  <section key={cat.id} className="mb-14">
-                    <SectionHeader
-                      title={cat.title}
-                      subtitle="Curated leaders with clear use cases."
-                    />
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {cat.tools.map((tool) => (
-                        <ToolCard key={tool.name} tool={tool} />
-                      ))}
-                    </div>
-                  </section>
-                ))}
-              </TabsContent>
-
-              {/* Prompts tab */}
-              <TabsContent value="prompts">
-                {categories.map((cat) => (
-                  <section key={cat.id} className="mb-14">
-                    <SectionHeader
-                      title={cat.title}
-                      subtitle="Copy‑paste professional prompts—then tailor to your context."
-                    />
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {cat.tools.map((tool) => (
-                        <PromptCard key={tool.name} tool={tool} />
-                      ))}
-                    </div>
-                  </section>
-                ))}
-              </TabsContent>
-
-              {/* Workflows tab */}
-              <TabsContent value="workflows">
-                {categories.map((cat) => (
-                  <section key={cat.id} className="mb-14">
-                    <SectionHeader
-                      title={cat.title}
-                      subtitle="Field‑tested sequences to get repeatable results."
-                    />
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {/* Show first 4 tools */}
-                      {cat.tools.slice(0, 4).map((tool) => (
-                        <WorkflowCard key={tool.name} tool={tool} />
-                      ))}
-                      
-                      {/* Show blurred versions of remaining tools for non-premium users */}
-                      {!isPremium && cat.tools.length > 4 && (
-                        <>
-                          {cat.tools.slice(4, 8).map((tool) => (
-                            <BlurredCard key={`blurred-${tool.name}`}>
-                              <WorkflowCard tool={tool} />
-                            </BlurredCard>
-                          ))}
-                        </>
-                      )}
-                      
-                      {/* Show all tools for premium users */}
-                      {isPremium && cat.tools.slice(4).map((tool) => (
-                        <WorkflowCard key={tool.name} tool={tool} />
-                      ))}
-                    </div>
+                
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                  {allTools.map((tool, index) => {
+                    const isVisible = showAllContent || index < 4;
                     
-                    {/* Premium overlay for non-premium users */}
-                    {!isPremium && cat.tools.length > 4 && (
-                      <div className="mt-8">
-                        <PremiumOverlay />
-                      </div>
-                    )}
-                  </section>
-                ))}
+                    if (isVisible) {
+                      return (
+                        <Card key={`${tool.name}-${index}`} className="h-full">
+                          <CardHeader>
+                            <div className="flex items-center justify-between">
+                              <CardTitle className="text-lg">{tool.name}</CardTitle>
+                              <div className="flex items-center gap-2">
+                                <Badge variant="outline" className="text-xs">{tool.category}</Badge>
+                                <Button variant="outline" size="sm" asChild>
+                                  <a 
+                                    href={tool.url} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-2"
+                                  >
+                                    <ExternalLink className="h-4 w-4" />
+                                    Visit
+                                  </a>
+                                </Button>
+                              </div>
+                            </div>
+                          </CardHeader>
+                          <CardContent>
+                            <p className="text-muted-foreground mb-4">{tool.description}</p>
+                            <div className="space-y-3">
+                              <div>
+                                <h4 className="font-semibold mb-2">Example Prompt:</h4>
+                                <p className="text-sm bg-muted p-3 rounded italic">
+                                  {tool.promptExample}
+                                </p>
+                              </div>
+                              <div>
+                                <h4 className="font-semibold mb-2">Workflow Steps:</h4>
+                                <ol className="text-sm space-y-1">
+                                  {tool.workflowSteps.map((step, stepIndex) => (
+                                    <li key={stepIndex} className="flex">
+                                      <span className="font-medium mr-2">{stepIndex + 1}.</span>
+                                      <span>{step}</span>
+                                    </li>
+                                  ))}
+                                </ol>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      );
+                    } else {
+                      return <BlurredToolCard key={`${tool.name}-${index}`} tool={tool} />;
+                    }
+                  })}
+                </div>
               </TabsContent>
-
-              {/* Blueprints tab */}
-              <TabsContent value="blueprints">
-                {categories.map((cat) => (
-                  <section key={cat.id} className="mb-14">
-                    <SectionHeader
-                      title={cat.title}
-                      subtitle="Professional implementation plans: prerequisites, steps, and metrics."
-                    />
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {/* Show first 4 tools */}
-                      {cat.tools.slice(0, 4).map((tool) => (
-                        <BlueprintCard key={tool.name} tool={tool} categoryId={cat.id} />
-                      ))}
-                      
-                      {/* Show blurred versions of remaining tools for non-premium users */}
-                      {!isPremium && cat.tools.length > 4 && (
-                        <>
-                          {cat.tools.slice(4, 8).map((tool) => (
-                            <BlurredCard key={`blurred-${tool.name}`}>
-                              <BlueprintCard tool={tool} categoryId={cat.id} />
-                            </BlurredCard>
-                          ))}
-                        </>
-                      )}
-                      
-                      {/* Show all tools for premium users */}
-                      {isPremium && cat.tools.slice(4).map((tool) => (
-                        <BlueprintCard key={tool.name} tool={tool} categoryId={cat.id} />
-                      ))}
-                    </div>
+              
+              <TabsContent value="blueprints" className="space-y-8">
+                <div className="text-center mb-8">
+                  <h2 className="text-2xl font-semibold mb-3">
+                    Ready-to-Use AI Blueprints
+                  </h2>
+                  <p className="text-muted-foreground">
+                    Copy-paste templates and frameworks for immediate results
+                  </p>
+                </div>
+                
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                  {allTools.map((tool, index) => {
+                    const isVisible = showAllContent || index < 4;
                     
-                    {/* Premium overlay for non-premium users */}
-                    {!isPremium && cat.tools.length > 4 && (
-                      <div className="mt-8">
-                        <PremiumOverlay />
-                      </div>
-                    )}
-                  </section>
-                ))}
+                    if (isVisible) {
+                      return (
+                        <Card key={`${tool.name}-${index}`} className="h-full">
+                          <CardHeader>
+                            <div className="flex items-center justify-between">
+                              <CardTitle className="text-lg">{tool.name}</CardTitle>
+                              <div className="flex items-center gap-2">
+                                <Badge variant="outline" className="text-xs">{tool.category}</Badge>
+                                <Button variant="outline" size="sm" asChild>
+                                  <a 
+                                    href={tool.url} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-2"
+                                  >
+                                    <ExternalLink className="h-4 w-4" />
+                                    Visit
+                                  </a>
+                                </Button>
+                              </div>
+                            </div>
+                          </CardHeader>
+                          <CardContent>
+                            <p className="text-muted-foreground mb-4">{tool.description}</p>
+                            <div className="space-y-3">
+                              <div>
+                                <h4 className="font-semibold mb-2">Blueprint Template:</h4>
+                                <p className="text-sm bg-muted p-3 rounded font-mono">
+                                  {tool.promptExample}
+                                </p>
+                              </div>
+                              <div>
+                                <h4 className="font-semibold mb-2">Implementation:</h4>
+                                <ol className="text-sm space-y-1">
+                                  {tool.workflowSteps.map((step, stepIndex) => (
+                                    <li key={stepIndex} className="flex">
+                                      <span className="font-medium mr-2">{stepIndex + 1}.</span>
+                                      <span>{step}</span>
+                                    </li>
+                                  ))}
+                                </ol>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      );
+                    } else {
+                      return <BlurredToolCard key={`${tool.name}-${index}`} tool={tool} />;
+                    }
+                  })}
+                </div>
               </TabsContent>
             </Tabs>
           </div>
         </main>
-
-        <footer className="mt-10">
-          <Footer />
-        </footer>
+        
+        <Footer />
       </div>
     </HelmetProvider>
   );
