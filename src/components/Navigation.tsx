@@ -56,6 +56,9 @@ const Navigation = () => {
     { name: "Jumps in AI", href: "/jumps" },
     { name: "Resources", href: "/resources" },
     { name: "Pricing", href: "/pricing" },
+  ];
+
+  const companyItems = [
     { name: "About Us", href: "/about-us" },
     { name: "Contact Us", href: "/contact-us" },
   ];
@@ -95,6 +98,23 @@ const Navigation = () => {
                   <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-gray-800 to-black dark:from-white dark:to-gray-300 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
                 </button>
               ))}
+              
+              {/* Company dropdown */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="relative text-muted-foreground hover:text-foreground px-4 py-2 text-sm font-medium transition-all duration-300 group flex items-center">
+                    Company <ChevronDown className="ml-1 h-3 w-3" />
+                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-gray-800 to-black dark:from-white dark:to-gray-300 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="min-w-[150px] z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 border border-border shadow-lg rounded-xl">
+                  {companyItems.map((item) => (
+                    <DropdownMenuItem key={item.name} onSelect={() => handleNavClick(item.href)}>
+                      {item.name}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
 
@@ -142,6 +162,15 @@ const Navigation = () => {
           <div className="md:hidden animate-fade-in-down">
             <div className="px-2 pt-2 pb-3 space-y-1 glass rounded-2xl mt-2 border border-border">
               {navItems.map((item) => (
+                <button
+                  key={item.name}
+                  onClick={() => handleNavClick(item.href)}
+                  className="text-muted-foreground hover:text-foreground block w-full text-left px-4 py-3 rounded-xl text-base font-medium hover:bg-accent transition-all duration-300"
+                >
+                  {item.name}
+                </button>
+              ))}
+              {companyItems.map((item) => (
                 <button
                   key={item.name}
                   onClick={() => handleNavClick(item.href)}
