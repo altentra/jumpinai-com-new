@@ -4,7 +4,9 @@ import { Helmet, HelmetProvider } from "react-helmet-async";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ExternalLink } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ExternalLink, Lock } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 import React from "react";
 
 // Data model
@@ -886,7 +888,49 @@ function BlueprintCard({ tool, categoryId }: { tool: Tool; categoryId: string })
   );
 }
 
+// Premium overlay component for locked content
+const PremiumOverlay = () => {
+  const { isAuthenticated, login } = useAuth();
+  
+  const handleUpgrade = () => {
+    if (isAuthenticated) {
+      window.location.href = '/pricing';
+    } else {
+      login('/pricing');
+    }
+  };
+  
+  return (
+    <div className="relative">
+      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent z-10 rounded-lg flex items-center justify-center">
+        <div className="text-center p-6 max-w-sm">
+          <Lock className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+          <h3 className="text-lg font-semibold mb-2">Unlock All Resources</h3>
+          <p className="text-sm text-muted-foreground mb-4">
+            Get access to all workflows and blueprints with our Pro plan
+          </p>
+          <Button onClick={handleUpgrade} className="w-full">
+            {isAuthenticated ? 'Upgrade for $10/month' : 'Sign Up & Subscribe'}
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Blurred placeholder card component
+const BlurredCard = ({ children }: { children: React.ReactNode }) => (
+  <div className="relative">
+    <div className="blur-sm opacity-50 pointer-events-none">
+      {children}
+    </div>
+  </div>
+);
+
 export default function Resources() {
+  const { user } = useAuth();
+  const isPremium = user && (user as any).subscription_tier; // Check if user has premium subscription
+  
   return (
     <HelmetProvider>
       <div className="min-h-screen bg-background">
@@ -983,10 +1027,34 @@ export default function Resources() {
                       subtitle="Field‑tested sequences to get repeatable results."
                     />
                     <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {cat.tools.map((tool) => (
+                      {/* Show first 4 tools */}
+                      {cat.tools.slice(0, 4).map((tool) => (
+                        <WorkflowCard key={tool.name} tool={tool} />
+                      ))}
+                      
+                      {/* Show blurred versions of remaining tools for non-premium users */}
+                      {!isPremium && cat.tools.length > 4 && (
+                        <>
+                          {cat.tools.slice(4, 8).map((tool) => (
+                            <BlurredCard key={`blurred-${tool.name}`}>
+                              <WorkflowCard tool={tool} />
+                            </BlurredCard>
+                          ))}
+                        </>
+                      )}
+                      
+                      {/* Show all tools for premium users */}
+                      {isPremium && cat.tools.slice(4).map((tool) => (
                         <WorkflowCard key={tool.name} tool={tool} />
                       ))}
                     </div>
+                    
+                    {/* Premium overlay for non-premium users */}
+                    {!isPremium && cat.tools.length > 4 && (
+                      <div className="mt-8">
+                        <PremiumOverlay />
+                      </div>
+                    )}
                   </section>
                 ))}
               </TabsContent>
@@ -1000,10 +1068,34 @@ export default function Resources() {
                       subtitle="Professional implementation plans: prerequisites, steps, and metrics."
                     />
                     <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {cat.tools.map((tool) => (
+                      {/* Show first 4 tools */}
+                      {cat.tools.slice(0, 4).map((tool) => (
+                        <BlueprintCard key={tool.name} tool={tool} categoryId={cat.id} />
+                      ))}
+                      
+                      {/* Show blurred versions of remaining tools for non-premium users */}
+                      {!isPremium && cat.tools.length > 4 && (
+                        <>
+                          {cat.tools.slice(4, 8).map((tool) => (
+                            <BlurredCard key={`blurred-${tool.name}`}>
+                              <BlueprintCard tool={tool} categoryId={cat.id} />
+                            </BlurredCard>
+                          ))}
+                        </>
+                      )}
+                      
+                      {/* Show all tools for premium users */}
+                      {isPremium && cat.tools.slice(4).map((tool) => (
                         <BlueprintCard key={tool.name} tool={tool} categoryId={cat.id} />
                       ))}
                     </div>
+                    
+                    {/* Premium overlay for non-premium users */}
+                    {!isPremium && cat.tools.length > 4 && (
+                      <div className="mt-8">
+                        <PremiumOverlay />
+                      </div>
+                    )}
                   </section>
                 ))}
               </TabsContent>
