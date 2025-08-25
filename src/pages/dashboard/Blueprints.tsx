@@ -163,11 +163,11 @@ export default function Blueprints() {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {allBlueprints.map((blueprint, index) => (
+          {(showAllContent ? allBlueprints : allBlueprints.slice(0, 6)).map((blueprint, index) => (
             <BlueprintCard 
               key={index} 
               blueprint={blueprint} 
-              isBlurred={index >= 4 && !showAllContent}
+              isBlurred={!showAllContent && index >= 4}
             />
           ))}
         </div>

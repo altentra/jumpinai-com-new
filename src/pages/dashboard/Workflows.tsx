@@ -174,11 +174,11 @@ export default function Workflows() {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {allWorkflows.map((workflow, index) => (
+          {(showAllContent ? allWorkflows : allWorkflows.slice(0, 6)).map((workflow, index) => (
             <WorkflowCard 
               key={index} 
               workflow={workflow} 
-              isBlurred={index >= 4 && !showAllContent}
+              isBlurred={!showAllContent && index >= 4}
             />
           ))}
         </div>

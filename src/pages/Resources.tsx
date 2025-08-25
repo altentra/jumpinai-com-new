@@ -211,9 +211,9 @@ export default function Resources() {
     </Card>
   );
 
-  // Prompt Card Component (always visible)
-  const PromptCard = ({ prompt }: { prompt: PromptTemplate }) => (
-    <Card className="h-full">
+  // Prompt Card Component (first 4 visible, rest blurred)
+  const PromptCard = ({ prompt, isBlurred }: { prompt: PromptTemplate; isBlurred?: boolean }) => (
+    <Card className={`h-full ${isBlurred ? 'filter blur-[2px] pointer-events-none' : ''}`}>
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg">{prompt.name}</CardTitle>
@@ -349,8 +349,8 @@ export default function Resources() {
                 <p className="text-muted-foreground">Ready-to-use prompt templates for maximum AI effectiveness</p>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {promptTemplates.map((prompt, index) => (
-                  <PromptCard key={index} prompt={prompt} />
+                {(showAllContent ? promptTemplates : promptTemplates.slice(0, 6)).map((prompt, index) => (
+                  <PromptCard key={index} prompt={prompt} isBlurred={!showAllContent && index >= 4} />
                 ))}
               </div>
               {!showAllContent && <UpgradeSection message="View more professional prompts" />}
@@ -362,7 +362,7 @@ export default function Resources() {
                 <p className="text-muted-foreground">Step-by-step processes for consistent AI results</p>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {workflows.map((workflow, index) => (
+                {(showAllContent ? workflows : workflows.slice(0, 6)).map((workflow, index) => (
                   <WorkflowCard 
                     key={index} 
                     workflow={workflow} 
@@ -379,7 +379,7 @@ export default function Resources() {
                 <p className="text-muted-foreground">Proven templates and frameworks for AI implementation</p>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {blueprints.map((blueprint, index) => (
+                {(showAllContent ? blueprints : blueprints.slice(0, 6)).map((blueprint, index) => (
                   <BlueprintCard 
                     key={index} 
                     blueprint={blueprint} 
@@ -396,7 +396,7 @@ export default function Resources() {
                 <p className="text-muted-foreground">Strategic approaches to AI adoption and implementation</p>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {strategies.map((strategy, index) => (
+                {(showAllContent ? strategies : strategies.slice(0, 6)).map((strategy, index) => (
                   <StrategyCard 
                     key={index} 
                     strategy={strategy} 
