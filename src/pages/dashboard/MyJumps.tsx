@@ -87,6 +87,7 @@ export default function MyJumps() {
     try {
       const { data, error } = await supabase.functions.invoke('create-checkout', {
         headers: await getAuthHeaders(),
+        body: { source: 'dashboard-home' },
       });
       if (error) throw error;
       window.location.href = (data as any)?.url;

@@ -14,6 +14,7 @@ import FAQ from "./pages/FAQ";
 import TestSync from "./pages/TestSync";
 import Jumps from "./pages/Jumps";
 import PaymentSuccess from "./pages/PaymentSuccess";
+import SubscriptionSuccess from "./pages/SubscriptionSuccess";
 import Download from "./pages/Download";
 import ForInvestors from "./pages/ForInvestors";
 import NotFound from "./pages/NotFound";
@@ -77,6 +78,7 @@ const App = () => {
             <Route path="/jumps" element={<Jumps />} />
             <Route path="/for-investors" element={<ForInvestors />} />
             <Route path="/payment-success" element={<PaymentSuccess />} />
+            <Route path="/subscription-success" element={<SubscriptionSuccess />} />
             <Route path="/download/:token" element={<Download />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/dashboard/*" element={<Dashboard />} />

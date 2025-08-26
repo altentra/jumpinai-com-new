@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,7 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Download, ShoppingCart, CheckCircle, FileText, Feather, BookOpen, Image as ImageIcon, Paintbrush, Music, Code2, Laptop, Sparkles, Camera, Clapperboard } from "lucide-react";
+import { Loader2, Download, ShoppingCart, CheckCircle, FileText, Feather, BookOpen, Image as ImageIcon, Paintbrush, Music, Code2, Laptop, Sparkles, Camera, Clapperboard, User } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 
@@ -22,29 +23,59 @@ interface Product {
   updated_at: string;
 }
 
+interface Order {
+  id: string;
+  product_id: string;
+  download_token: string | null;
+  status: string | null;
+}
+
 const Jumps = () => {
   const [products, setProducts] = useState<Product[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [customerEmail, setCustomerEmail] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { toast } = useToast();
+  const { user, isAuthenticated } = useAuth();
+
+  const purchasedByProduct = useMemo(() => {
+    const map = new Map<string, Order>();
+    orders.forEach((o) => {
+      if (o.status === 'paid') map.set(o.product_id, o);
+    });
+    return map;
+  }, [orders]);
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchData = async () => {
       try {
-          const { data, error } = await (supabase as any)
-            .from('products')
-            .select('id, name, description, price, status, created_at, updated_at, file_name')
-            .eq('status', 'active')
-            .neq('file_name', 'jump-in-ai-powerstack.pdf')
-            .order('created_at', { ascending: true });
+        // Fetch products
+        const { data, error } = await (supabase as any)
+          .from('products')
+          .select('id, name, description, price, status, created_at, updated_at, file_name')
+          .eq('status', 'active')
+          .neq('file_name', 'jump-in-ai-powerstack.pdf')
+          .order('created_at', { ascending: true });
         
         if (error) throw error;
         setProducts((data || []) as Product[]);
+
+        // If user is logged in, fetch their orders
+        if (isAuthenticated && user?.email) {
+          const { data: orderData, error: orderError } = await (supabase as any)
+            .from('orders')
+            .select('id, product_id, download_token, status')
+            .eq('user_email', user.email)
+            .eq('status', 'paid');
+          
+          if (orderError) throw orderError;
+          setOrders((orderData || []) as Order[]);
+        }
       } catch (error) {
-        console.error('Error fetching products:', error);
+        console.error('Error fetching data:', error);
         toast({
           title: "Error",
           description: "Failed to load products. Please refresh the page.",
@@ -55,18 +86,21 @@ const Jumps = () => {
       }
     };
 
-    fetchProducts();
-  }, [toast]);
+    fetchData();
+  }, [toast, isAuthenticated, user?.email]);
 
   const handlePurchase = async () => {
-    if (!selectedProduct || !customerEmail) return;
+    if (!selectedProduct) return;
+    
+    const email = isAuthenticated && user?.email ? user.email : customerEmail;
+    if (!email) return;
 
     setIsProcessing(true);
     try {
       const { data, error } = await supabase.functions.invoke("create-product-payment", {
         body: {
           productId: selectedProduct.id,
-          customerEmail: customerEmail,
+          customerEmail: email,
         },
       });
 
@@ -78,6 +112,57 @@ const Jumps = () => {
       setIsDialogOpen(false);
       setCustomerEmail("");
       setSelectedProduct(null);
+      
+      toast({
+        title: "Redirecting to Checkout",
+        description: "Redirecting to Stripe payment...",
+      });
+    } catch (error) {
+      console.error("Error creating payment:", error);
+      toast({
+        title: "Payment Error",
+        description: "Failed to create payment session. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const handleBuyClick = (product: Product) => {
+    setSelectedProduct(product);
+    
+    // If user is logged in, proceed directly to purchase
+    if (isAuthenticated && user?.email) {
+      // Use setTimeout to ensure selectedProduct is set before calling handlePurchase
+      setTimeout(() => {
+        handlePurchaseDirectly(product);
+      }, 0);
+    } else {
+      // Show email dialog for guest users
+      setIsDialogOpen(true);
+    }
+  };
+
+  const handlePurchaseDirectly = async (product: Product) => {
+    if (!product) return;
+    
+    const email = user?.email;
+    if (!email) return;
+
+    setIsProcessing(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("create-product-payment", {
+        body: {
+          productId: product.id,
+          customerEmail: email,
+        },
+      });
+
+      if (error) throw error;
+
+      // Redirect to Stripe checkout (mobile-friendly)
+      window.location.href = data.url;
       
       toast({
         title: "Redirecting to Checkout",
@@ -174,108 +259,129 @@ const Jumps = () => {
 
           {/* Products Grid */}
           <div className="flex flex-wrap justify-center gap-8">
-            {products.map((product) => (
-              <div key={product.id} className="w-full sm:w-[320px] md:w-[340px]">
-                <Card className="group hover:shadow-lg transition-all duration-300 border-muted/50 hover:border-primary/20 h-full flex flex-col">
-                  <CardHeader className="pb-4">
-                      <div className="flex items-center gap-3 mb-3">
-                        {getProductBadge(product.name)}
-                        <span className="text-xs font-medium text-muted-foreground">PDF Guide</span>
-                      </div>
-                    <CardTitle className="text-xl group-hover:text-primary transition-colors duration-300">
-                      {product.name}
-                    </CardTitle>
-                    <CardDescription className="text-muted-foreground leading-relaxed">
-                      {product.description}
-                    </CardDescription>
-                  </CardHeader>
-                  
-                  <CardContent className="pb-4 flex-grow">
-                    <div className="flex items-center gap-2 mb-4">
-                      <CheckCircle className="h-4 w-4 text-green-500" />
-                      <span className="text-sm text-muted-foreground">Instant Download</span>
-                    </div>
-                    <div className="flex items-center gap-2 mb-4">
-                      <Download className="h-4 w-4 text-blue-500" />
-                      <span className="text-sm text-muted-foreground">Lifetime Access</span>
-                    </div>
-                  </CardContent>
-                  
-                  <CardFooter className="pt-0 mt-auto">
-                    <div className="w-full">
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="text-2xl font-bold text-primary">
-                          ${formatPrice(product.price)}
+            {products.map((product) => {
+              const order = purchasedByProduct.get(product.id);
+              const hasPurchased = !!order;
+              
+              return (
+                <div key={product.id} className="w-full sm:w-[320px] md:w-[340px]">
+                  <Card className={`group hover:shadow-lg transition-all duration-300 border-muted/50 hover:border-primary/20 h-full flex flex-col ${hasPurchased ? 'ring-2 ring-green-500/30 border-green-500/50' : ''}`}>
+                    <CardHeader className="pb-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-3">
+                          {getProductBadge(product.name)}
+                          <span className="text-xs font-medium text-muted-foreground">PDF Guide</span>
                         </div>
-                        <div className="text-sm text-muted-foreground">
-                          One-time payment
-                        </div>
+                        {hasPurchased && (
+                          <CheckCircle className="h-5 w-5 text-green-500" />
+                        )}
                       </div>
-                      
-                      <Dialog open={isDialogOpen && selectedProduct?.id === product.id} onOpenChange={setIsDialogOpen}>
-                        <DialogTrigger asChild>
-                          <Button 
-                            className="w-full group-hover:bg-primary/90 transition-colors duration-300"
-                            onClick={() => setSelectedProduct(product)}
-                          >
-                            <ShoppingCart className="h-4 w-4 mr-2" />
-                            Buy Now
-                          </Button>
-                        </DialogTrigger>
-                        
-                        <DialogContent className="sm:max-w-md">
-                          <DialogHeader>
-                            <DialogTitle>Complete Your Purchase</DialogTitle>
-                            <DialogDescription>
-                              You're about to purchase "{selectedProduct?.name}" for ${selectedProduct ? formatPrice(selectedProduct.price) : '0.00'}
-                            </DialogDescription>
-                          </DialogHeader>
-                          
-                          <div className="space-y-4">
-                            <div className="space-y-2">
-                              <Label htmlFor="email">Email Address</Label>
-                              <Input
-                                id="email"
-                                type="email"
-                                placeholder="your.email@example.com"
-                                value={customerEmail}
-                                onChange={(e) => setCustomerEmail(e.target.value)}
-                                required
-                              />
-                              <p className="text-xs text-muted-foreground">
-                                We'll send your download link to this email
-                              </p>
-                            </div>
-                            
-                            <div className="flex gap-3">
-                              <Button 
-                                variant="outline" 
-                                onClick={() => setIsDialogOpen(false)}
-                                className="flex-1"
-                              >
-                                Cancel
-                              </Button>
-                              <Button 
-                                onClick={handlePurchase}
-                                disabled={!customerEmail || isProcessing}
-                                className="flex-1"
-                              >
-                                {isProcessing ? (
-                                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                                ) : (
-                                  <ShoppingCart className="h-4 w-4 mr-2" />
-                                )}
-                                {isProcessing ? "Processing..." : "Continue to Payment"}
-                              </Button>
-                            </div>
+                      <CardTitle className="text-xl group-hover:text-primary transition-colors duration-300">
+                        {product.name}
+                      </CardTitle>
+                      <CardDescription className="text-muted-foreground leading-relaxed">
+                        {product.description}
+                      </CardDescription>
+                    </CardHeader>
+                    
+                    <CardContent className="pb-4 flex-grow">
+                      <div className="flex items-center gap-2 mb-4">
+                        <CheckCircle className="h-4 w-4 text-green-500" />
+                        <span className="text-sm text-muted-foreground">Instant Download</span>
+                      </div>
+                      <div className="flex items-center gap-2 mb-4">
+                        <Download className="h-4 w-4 text-blue-500" />
+                        <span className="text-sm text-muted-foreground">Lifetime Access</span>
+                      </div>
+                    </CardContent>
+                    
+                    <CardFooter className="pt-0 mt-auto">
+                      <div className="w-full">
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="text-2xl font-bold text-primary">
+                            ${formatPrice(product.price)}
                           </div>
-                        </DialogContent>
-                      </Dialog>
-                    </div>
-                  </CardFooter>
-                </Card>
-              </div>
-            ))}
+                          <div className="text-sm text-muted-foreground">
+                            One-time payment
+                          </div>
+                        </div>
+                        
+                        {hasPurchased ? (
+                          <Button asChild className="w-full bg-green-600 hover:bg-green-700 text-white">
+                            <a href={`/download/${order?.download_token ?? ''}`}>
+                              <Download className="h-4 w-4 mr-2" />
+                              Access Your Guide
+                            </a>
+                          </Button>
+                        ) : (
+                          <>
+                            <Dialog open={isDialogOpen && selectedProduct?.id === product.id} onOpenChange={setIsDialogOpen}>
+                              <DialogTrigger asChild>
+                                <Button 
+                                  className="w-full group-hover:bg-primary/90 transition-colors duration-300"
+                                  onClick={() => handleBuyClick(product)}
+                                >
+                                  <ShoppingCart className="h-4 w-4 mr-2" />
+                                  Buy Now
+                                </Button>
+                              </DialogTrigger>
+                        
+                              <DialogContent className="sm:max-w-md">
+                                <DialogHeader>
+                                  <DialogTitle>Complete Your Purchase</DialogTitle>
+                                  <DialogDescription>
+                                    You're about to purchase "{selectedProduct?.name}" for ${selectedProduct ? formatPrice(selectedProduct.price) : '0.00'}
+                                  </DialogDescription>
+                                </DialogHeader>
+                                
+                                <div className="space-y-4">
+                                  <div className="space-y-2">
+                                    <Label htmlFor="email">Email Address</Label>
+                                    <Input
+                                      id="email"
+                                      type="email"
+                                      placeholder="your.email@example.com"
+                                      value={customerEmail}
+                                      onChange={(e) => setCustomerEmail(e.target.value)}
+                                      required
+                                    />
+                                    <p className="text-xs text-muted-foreground">
+                                      We'll send your download link to this email
+                                    </p>
+                                  </div>
+                                  
+                                  <div className="flex gap-3">
+                                    <Button 
+                                      variant="outline" 
+                                      onClick={() => setIsDialogOpen(false)}
+                                      className="flex-1"
+                                    >
+                                      Cancel
+                                    </Button>
+                                    <Button 
+                                      onClick={handlePurchase}
+                                      disabled={!customerEmail || isProcessing}
+                                      className="flex-1"
+                                    >
+                                      {isProcessing ? (
+                                        <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                                      ) : (
+                                        <ShoppingCart className="h-4 w-4 mr-2" />
+                                      )}
+                                      {isProcessing ? "Processing..." : "Continue to Payment"}
+                                    </Button>
+                                  </div>
+                                </div>
+                              </DialogContent>
+                            </Dialog>
+                          </>
+                        )}
+                      </div>
+                    </CardFooter>
+                  </Card>
+                </div>
+              );
+            })}
           </div>
 
           {/* All-Access Whop CTA */}

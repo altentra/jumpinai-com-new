@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { CheckCircle, Download, Loader2, Mail, ArrowLeft } from "lucide-react";
+import { CheckCircle, Download, Loader2, Mail, ArrowLeft, User } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
@@ -165,7 +165,29 @@ const PaymentSuccess = () => {
             </Card>
           )}
 
-          <div className="text-center">
+          <div className="text-center space-y-6">
+            {/* Account creation suggestion for non-logged users */}
+            <Card className="bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
+              <CardHeader>
+                <CardTitle className="flex items-center justify-center gap-2 text-primary">
+                  <User className="h-5 w-5" />
+                  Keep Track of All Your Purchases
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="text-center space-y-3">
+                <p className="text-sm text-muted-foreground">
+                  Create a free JumpinAI account to access all your purchases from one convenient dashboard, 
+                  track your AI learning journey, and get exclusive updates.
+                </p>
+                <Button asChild className="hover-scale">
+                  <Link to="/auth">
+                    <User className="h-4 w-4 mr-2" />
+                    Create Free Account
+                  </Link>
+                </Button>
+              </CardContent>
+            </Card>
+
             <p className="text-sm text-muted-foreground">
               Need help? Contact us at support@jumpinai.com
             </p>

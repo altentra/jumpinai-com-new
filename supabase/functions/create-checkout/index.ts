@@ -41,6 +41,34 @@ serve(async (req) => {
 
     const origin = req.headers.get("origin") || "http://localhost:3000";
 
+    // Parse request body to get source information
+    let body: any = {};
+    try {
+      body = await req.json();
+    } catch {
+      // No body provided, use defaults
+    }
+    
+    const source = body.source || 'unknown';
+    
+    // Determine success and cancel URLs based on source
+    let successUrl = `${origin}/subscription-success`;
+    let cancelUrl = `${origin}/pricing`;
+    
+    switch (source) {
+      case 'pricing':
+        cancelUrl = `${origin}/pricing`;
+        break;
+      case 'dashboard-home':
+        cancelUrl = `${origin}/dashboard`;
+        break;
+      case 'dashboard-subscription':
+        cancelUrl = `${origin}/dashboard/subscription`;
+        break;
+      default:
+        cancelUrl = `${origin}/pricing`;
+    }
+
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
       customer: existingCustomerId,
@@ -56,8 +84,12 @@ serve(async (req) => {
           quantity: 1,
         },
       ],
-      success_url: `${origin}/dashboard/subscription?payment=success`,
-      cancel_url: `${origin}/pricing`,
+      success_url: successUrl,
+      cancel_url: cancelUrl,
+      metadata: {
+        source: source,
+        user_id: user.id,
+      },
     });
 
     return new Response(JSON.stringify({ url: session.url }), {

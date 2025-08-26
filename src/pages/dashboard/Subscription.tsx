@@ -84,6 +84,7 @@ export default function Subscription() {
     try {
       const { data, error } = await supabase.functions.invoke("create-checkout", {
         headers: await getAuthHeaders(),
+        body: { source: 'dashboard-subscription' },
       });
       if (error) throw error;
       const url = (data as any)?.url;
@@ -97,6 +98,7 @@ export default function Subscription() {
     try {
       const { data, error } = await supabase.functions.invoke("customer-portal", {
         headers: await getAuthHeaders(),
+        body: { source: 'dashboard-subscription' },
       });
       if (error) throw error;
       const url = (data as any)?.url;
@@ -114,6 +116,7 @@ export default function Subscription() {
     try {
       const { data, error } = await supabase.functions.invoke("customer-portal", {
         headers: await getAuthHeaders(),
+        body: { source: 'dashboard-subscription' },
       });
       if (error) throw error;
       const url = (data as any)?.url;

@@ -79,6 +79,7 @@ export default function Pricing() {
       setLoading(true);
       const { data, error } = await supabase.functions.invoke("create-checkout", {
         headers: await getAuthHeaders(),
+        body: { source: 'pricing' },
       });
       if (error) throw error;
       const url = (data as any)?.url;
