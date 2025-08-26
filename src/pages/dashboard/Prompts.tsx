@@ -172,11 +172,11 @@ export default function Prompts() {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {(showAllContent ? allPrompts : allPrompts.slice(0, 6)).map((prompt, index) => (
+          {(showAllContent ? allPrompts : allPrompts.slice(0, 12)).map((prompt, index) => (
             <PromptCard 
               key={index} 
               prompt={prompt} 
-              isBlurred={!showAllContent && index >= 4}
+              isBlurred={!showAllContent && index >= 10}
             />
           ))}
         </div>

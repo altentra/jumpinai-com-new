@@ -349,8 +349,8 @@ export default function Resources() {
                 <p className="text-muted-foreground">Ready-to-use prompt templates for maximum AI effectiveness</p>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {(showAllContent ? promptTemplates : promptTemplates.slice(0, 6)).map((prompt, index) => (
-                  <PromptCard key={index} prompt={prompt} isBlurred={!showAllContent && index >= 4} />
+                {(showAllContent ? promptTemplates : promptTemplates.slice(0, 12)).map((prompt, index) => (
+                  <PromptCard key={index} prompt={prompt} isBlurred={!showAllContent && index >= 10} />
                 ))}
               </div>
               {!showAllContent && <UpgradeSection message="View more professional prompts" />}
