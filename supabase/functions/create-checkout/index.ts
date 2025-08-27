@@ -92,6 +92,25 @@ serve(async (req) => {
       },
     });
 
+    // Send subscription notification email to admin
+    try {
+      await supabaseClient.functions.invoke('send-purchase-notification', {
+        body: {
+          type: 'subscription',
+          customerEmail: user.email,
+          amount: 1000, // $10.00 in cents
+          currency: 'usd',
+          subscriptionTier: 'JumpinAI Pro',
+          stripeSessionId: session.id,
+          timestamp: new Date().toISOString()
+        }
+      });
+      console.log("✅ Subscription notification sent to admin");
+    } catch (notificationError) {
+      console.error("⚠️ Failed to send subscription notification:", notificationError);
+      // Don't fail the checkout if notification fails
+    }
+
     return new Response(JSON.stringify({ url: session.url }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200,

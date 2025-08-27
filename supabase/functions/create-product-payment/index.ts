@@ -102,6 +102,26 @@ serve(async (req) => {
 
     console.log("Order created:", order.id);
 
+    // Send purchase notification email to admin
+    try {
+      await supabase.functions.invoke('send-purchase-notification', {
+        body: {
+          type: 'product',
+          customerEmail: customerEmail,
+          amount: product.price,
+          currency: 'usd',
+          productName: product.name,
+          orderId: order.id,
+          stripeSessionId: session.id,
+          timestamp: new Date().toISOString()
+        }
+      });
+      console.log("✅ Purchase notification sent to admin");
+    } catch (notificationError) {
+      console.error("⚠️ Failed to send purchase notification:", notificationError);
+      // Don't fail the payment if notification fails
+    }
+
     return new Response(JSON.stringify({ 
       url: session.url,
       sessionId: session.id 
