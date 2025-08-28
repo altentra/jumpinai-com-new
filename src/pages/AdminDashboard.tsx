@@ -67,13 +67,15 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [syncing, setSyncing] = useState(false);
   
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, isLoading } = useAuth();
   const navigate = useNavigate();
 
   // Admin access control - only specific email can access
   const ADMIN_EMAIL = "info@jumpinai.com";
   
   useEffect(() => {
+    if (isLoading) return; // Wait for auth to resolve
+
     if (!isAuthenticated) {
       navigate('/auth');
       return;
@@ -86,7 +88,7 @@ export default function AdminDashboard() {
     }
     
     fetchAdminData();
-  }, [user, isAuthenticated, navigate]);
+  }, [user, isAuthenticated, isLoading, navigate]);
 
   const fetchAdminData = async () => {
     setLoading(true);
