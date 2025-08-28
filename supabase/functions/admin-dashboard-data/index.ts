@@ -141,6 +141,7 @@ serve(async (req) => {
         status: o.status,
         created_at: o.created_at,
         product_name: productById.get(o.product_id)?.name || "Unknown Product",
+        is_completed: o.status === "paid",
       }));
 
     const recentSubscribers = [...subscribers]
@@ -165,8 +166,25 @@ serve(async (req) => {
       const userOrders = email ? orders.filter((o) => o.user_email === email) : [];
       const downloadsCount = userOrders.reduce((sum, o) => sum + (o.download_count || 0), 0);
       const paid = userOrders.filter((o) => o.status === "paid");
+      const attempts = userOrders.filter((o) => o.status === "pending");
       const totalSpent = paid.reduce((sum, o) => sum + (o.amount || 0), 0) / 100;
       const lastOrder = paid.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())[0];
+      
+      // Add order details with product names
+      const completedOrders = paid.map((o) => ({
+        id: o.id,
+        amount: o.amount / 100,
+        product_name: productById.get(o.product_id)?.name || "Unknown Product",
+        created_at: o.created_at,
+        download_count: o.download_count || 0,
+      }));
+      
+      const purchaseAttempts = attempts.map((o) => ({
+        id: o.id,
+        amount: o.amount / 100,
+        product_name: productById.get(o.product_id)?.name || "Unknown Product",
+        created_at: o.created_at,
+      }));
 
       let subscription_status: "active" | "expired" | "none" = "none";
       if (userSubs?.subscribed) {
@@ -190,10 +208,13 @@ serve(async (req) => {
         subscription_status,
         subscription_tier: userSubs?.subscription_tier,
         subscription_end: userSubs?.subscription_end,
-        total_orders: userOrders.length,
+        total_orders: paid.length,
+        total_purchase_attempts: attempts.length,
         total_spent: totalSpent,
         last_order_date: lastOrder?.created_at,
         total_downloads: downloadsCount,
+        completed_orders: completedOrders,
+        purchase_attempts: purchaseAttempts,
         newsletter_subscribed: !!contact?.newsletter_subscribed,
         lead_magnet_downloaded: !!contact?.lead_magnet_downloaded,
         last_login: auth?.last_sign_in_at || null,

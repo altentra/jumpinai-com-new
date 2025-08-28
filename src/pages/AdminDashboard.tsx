@@ -47,7 +47,8 @@ interface RecentOrder {
   amount: number;
   status: string;
   created_at: string;
-  product_name?: string;
+  product_name: string;
+  is_completed: boolean;
 }
 
 interface RecentSubscriber {
@@ -94,12 +95,26 @@ interface User {
   subscription_tier?: string;
   subscription_end?: string;
   total_orders?: number;
+  total_purchase_attempts?: number;
   total_spent?: number;
   last_order_date?: string;
   total_downloads?: number;
   newsletter_subscribed?: boolean;
   lead_magnet_downloaded?: boolean;
   last_login?: string;
+  completed_orders?: Array<{
+    id: string;
+    amount: number;
+    product_name: string;
+    created_at: string;
+    download_count: number;
+  }>;
+  purchase_attempts?: Array<{
+    id: string;
+    amount: number;
+    product_name: string;
+    created_at: string;
+  }>;
 }
 
 export default function AdminDashboard() {
@@ -489,8 +504,8 @@ export default function AdminDashboard() {
                       <TableCell>{order.product_name}</TableCell>
                       <TableCell>${(order.amount / 100).toFixed(2)}</TableCell>
                       <TableCell>
-                        <Badge variant={order.status === 'paid' ? 'default' : 'secondary'}>
-                          {order.status}
+                        <Badge variant={order.is_completed ? 'default' : 'destructive'}>
+                          {order.is_completed ? 'Completed' : 'Purchase Attempt'}
                         </Badge>
                       </TableCell>
                       <TableCell>
@@ -729,9 +744,16 @@ export default function AdminDashboard() {
                           )}
                           
                           <div className="flex items-center justify-between">
-                            <span className="text-sm text-muted-foreground">Orders:</span>
-                            <Badge variant="outline">
+                            <span className="text-sm text-muted-foreground">Completed Orders:</span>
+                            <Badge variant="default" className="bg-green-600">
                               {user.total_orders || 0} orders
+                            </Badge>
+                          </div>
+                          
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-muted-foreground">Purchase Attempts:</span>
+                            <Badge variant="destructive">
+                              {user.total_purchase_attempts || 0} attempts
                             </Badge>
                           </div>
                           
@@ -812,6 +834,39 @@ export default function AdminDashboard() {
                               </Badge>
                             </div>
                           </div>
+                          
+                          {/* Purchase History */}
+                          {user.completed_orders && user.completed_orders.length > 0 && (
+                            <div className="pt-3 mt-3 border-t">
+                              <p className="text-sm font-medium mb-2 text-green-600">Completed Purchases:</p>
+                              <div className="space-y-2">
+                                {user.completed_orders.map((order) => (
+                                  <div key={order.id} className="text-xs bg-green-50 dark:bg-green-950/20 p-2 rounded">
+                                    <div className="font-medium">{order.product_name}</div>
+                                    <div className="text-muted-foreground">
+                                      ${order.amount.toFixed(2)} • {new Date(order.created_at).toLocaleDateString()} • {order.download_count} downloads
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                          
+                          {user.purchase_attempts && user.purchase_attempts.length > 0 && (
+                            <div className="pt-3 mt-3 border-t">
+                              <p className="text-sm font-medium mb-2 text-orange-600">Purchase Attempts:</p>
+                              <div className="space-y-2">
+                                {user.purchase_attempts.map((attempt) => (
+                                  <div key={attempt.id} className="text-xs bg-orange-50 dark:bg-orange-950/20 p-2 rounded">
+                                    <div className="font-medium">{attempt.product_name}</div>
+                                    <div className="text-muted-foreground">
+                                      ${attempt.amount.toFixed(2)} • {new Date(attempt.created_at).toLocaleDateString()} • Not completed
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
