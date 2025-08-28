@@ -57,6 +57,11 @@ interface RecentSubscriber {
   subscription_tier: string;
   subscribed: boolean;
   created_at: string;
+  last_login: string | null;
+  total_paid: number;
+  total_downloads: number;
+  completed_orders: number;
+  subscription_end?: string | null;
 }
 
 interface Contact {
@@ -522,35 +527,73 @@ export default function AdminDashboard() {
         <TabsContent value="subscribers">
           <Card>
             <CardHeader>
-              <CardTitle>Pro Subscribers</CardTitle>
+              <CardTitle>Paid Subscribers ($10/month Plan)</CardTitle>
+              <p className="text-sm text-muted-foreground">
+                Comprehensive details for all users with active paid subscriptions
+              </p>
             </CardHeader>
             <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Tier</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Joined</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
+              {recentSubscribers.length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  <Crown className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                  <p className="text-lg font-medium mb-2">No paid subscribers yet</p>
+                  <p className="text-sm">Users with active subscriptions will appear here</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
                   {recentSubscribers.map((subscriber) => (
-                    <TableRow key={subscriber.id}>
-                      <TableCell>{subscriber.email}</TableCell>
-                      <TableCell>{subscriber.subscription_tier || 'Pro'}</TableCell>
-                      <TableCell>
-                        <Badge variant={subscriber.subscribed ? 'default' : 'secondary'}>
-                          {subscriber.subscribed ? 'Active' : 'Inactive'}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        {new Date(subscriber.created_at).toLocaleDateString()}
-                      </TableCell>
-                    </TableRow>
+                    <Card key={subscriber.id} className="p-4">
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="font-medium text-lg">{subscriber.email}</p>
+                            <div className="flex gap-2 mt-1">
+                              <Badge variant="secondary" className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100">
+                                {subscriber.subscription_tier || 'Pro'}
+                              </Badge>
+                              <Badge variant={subscriber.subscribed ? "default" : "secondary"}>
+                                {subscriber.subscribed ? 'Active' : 'Inactive'}
+                              </Badge>
+                            </div>
+                          </div>
+                          <div className="text-right text-sm text-muted-foreground">
+                            Subscribed: {new Date(subscriber.created_at).toLocaleDateString()}
+                          </div>
+                        </div>
+                        
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-2 border-t">
+                          <div>
+                            <p className="text-sm text-muted-foreground">Total Paid</p>
+                            <p className="font-medium text-lg">${subscriber.total_paid.toFixed(2)}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-muted-foreground">Orders</p>
+                            <p className="font-medium text-lg">{subscriber.completed_orders}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-muted-foreground">Downloads</p>
+                            <p className="font-medium text-lg">{subscriber.total_downloads}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-muted-foreground">Last Login</p>
+                            <p className="font-medium">
+                              {subscriber.last_login ? new Date(subscriber.last_login).toLocaleDateString() : 'Never'}
+                            </p>
+                          </div>
+                        </div>
+                        
+                        {subscriber.subscription_end && (
+                          <div className="pt-2 border-t">
+                            <p className="text-sm text-muted-foreground">
+                              Subscription ends: <span className="font-medium">{new Date(subscriber.subscription_end).toLocaleDateString()}</span>
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    </Card>
                   ))}
-                </TableBody>
-              </Table>
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>

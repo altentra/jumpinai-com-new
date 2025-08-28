@@ -97,6 +97,9 @@ serve(async (req) => {
     const paidOrders = orders.filter((o) => o.status === "paid");
     const totalRevenueCents = paidOrders.reduce((sum, o) => sum + (o.amount || 0), 0);
 
+    // Filter paid subscribers early for stats calculation
+    const paidSubscribers = subscribers.filter(s => s.subscribed && s.subscription_tier);
+
     const now = new Date();
     const currentMonth = now.getMonth();
     const currentYear = now.getFullYear();
@@ -116,7 +119,7 @@ serve(async (req) => {
 
     const stats = {
       totalUsers: profiles.length,
-      totalSubscribers: subscribers.filter((s) => s.subscribed).length,
+      totalSubscribers: paidSubscribers.length, // Only count actual paid subscribers
       totalOrders: paidOrders.length, // Only count actually paid orders
       totalRevenue: totalRevenueCents / 100,
       totalContacts: contacts.length,
@@ -129,11 +132,11 @@ serve(async (req) => {
       averageOrderValue: paidOrders.length ? totalRevenueCents / paidOrders.length / 100 : 0,
     };
 
-    // Recent orders with product names
+    // All orders with product names (not just recent)
     const productById = new Map(products.map((p: any) => [p.id, p]));
     const recentOrders = [...orders]
       .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-      .slice(0, 10)
+      .slice(0, 50) // Show more orders
       .map((o) => ({
         id: o.id,
         user_email: o.user_email,
@@ -144,9 +147,24 @@ serve(async (req) => {
         is_completed: o.status === "paid",
       }));
 
-    const recentSubscribers = [...subscribers]
+    // Only show actual paid subscribers for the subscription plan
+    const recentSubscribers = [...paidSubscribers]
       .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-      .slice(0, 10);
+      .slice(0, 50)
+      .map((s) => {
+        const auth = authById.get(s.user_id);
+        const userOrders = s.email ? orders.filter(o => o.user_email === s.email && o.status === 'paid') : [];
+        const totalPaid = userOrders.reduce((sum, o) => sum + (o.amount || 0), 0) / 100;
+        const totalDownloads = userOrders.reduce((sum, o) => sum + (o.download_count || 0), 0);
+        
+        return {
+          ...s,
+          last_login: auth?.last_sign_in_at || null,
+          total_paid: totalPaid,
+          total_downloads: totalDownloads,
+          completed_orders: userOrders.length,
+        };
+      });
 
     const contactsSorted = [...contacts].sort(
       (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
