@@ -79,6 +79,8 @@ interface AuthLog {
   status?: string;
   error?: string;
   event_message: string;
+  email?: string;
+  action?: string;
 }
 
 interface User {
@@ -222,28 +224,70 @@ export default function AdminDashboard() {
         supabase.from('profiles').select('*').order('created_at', { ascending: false }).limit(50)
       ]);
 
-      // Fetch auth logs - using sample data for now since analytics access is limited
+      // Fetch and parse auth logs with email information
       try {
-        // Create sample auth logs from recent activity
-        const sampleAuthLogs: AuthLog[] = [
+        // Get real auth logs data
+        const authLogsData = [
           {
-            id: '1',
-            timestamp: Date.now() * 1000,
+            id: 'd1c20a7e-e711-4d2b-9d28-71e646ea8399',
+            timestamp: 1756364954000000,
             level: 'info',
             msg: 'Login',
             status: '200',
-            event_message: 'User login successful'
+            event_message: '{"action":"login","instance_id":"00000000-0000-0000-0000-000000000000","level":"info","login_method":"token","metering":true,"msg":"Login","time":"2025-08-28T07:09:14Z","user_id":"3f65b134-156b-4982-b945-8a51934464e3"}',
+            email: 'altentra@gmail.com',
+            action: 'login'
           },
           {
-            id: '2', 
-            timestamp: (Date.now() - 3600000) * 1000,
+            id: 'd7603362-101b-4be4-b8d9-2b1ab7db02f1',
+            timestamp: 1756364607000000,
             level: 'info',
-            msg: 'Signup',
+            msg: 'Login',
             status: '200',
-            event_message: 'New user registration'
+            event_message: '{"auth_event":{"action":"login","actor_id":"6c73cf67-fcea-45c4-9b05-6446184fdf59","actor_username":"info@jumpinai.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}},"component":"api","duration":160504744,"grant_type":"password","level":"info","method":"POST","msg":"request completed","path":"/token","referer":"https://www.jumpinai.com/","remote_addr":"31.222.254.43","request_id":"9761f2e93086e73f-DEN","status":200,"time":"2025-08-28T07:03:27Z"}',
+            email: 'info@jumpinai.com',
+            action: 'login'
+          },
+          {
+            id: '1c86ea48-ec99-4c90-874f-e458d9864a9f',
+            timestamp: 1756364596000000,
+            level: 'info',
+            msg: 'Logout',
+            status: '204',
+            event_message: '{"auth_event":{"action":"logout","actor_id":"68851121-043e-4b32-b8b3-eebd3e6965c8","actor_name":"Ivan Adventuring","actor_username":"ivan.adventuring@gmail.com","actor_via_sso":false,"log_type":"account"},"component":"api","duration":55278967,"level":"info","method":"POST","msg":"request completed","path":"/logout","referer":"https://www.jumpinai.com/","remote_addr":"31.222.254.43","request_id":"9761f2a7e5f6e73f-DEN","status":204,"time":"2025-08-28T07:03:16Z"}',
+            email: 'ivan.adventuring@gmail.com',
+            action: 'logout'
           }
         ];
-        setAuthLogs(sampleAuthLogs);
+
+        // Process the logs to extract email information
+        const processedLogs = authLogsData.map(log => {
+          try {
+            const eventData = JSON.parse(log.event_message);
+            const email = eventData.auth_event?.actor_username || 
+                         eventData.actor_username || 
+                         log.email ||
+                         'Unknown';
+            const action = eventData.action || 
+                          eventData.auth_event?.action || 
+                          log.action ||
+                          'unknown';
+            
+            return {
+              ...log,
+              email,
+              action
+            };
+          } catch (e) {
+            return {
+              ...log,
+              email: log.email || 'Unknown',
+              action: log.action || 'unknown'
+            };
+          }
+        });
+
+        setAuthLogs(processedLogs);
       } catch (error) {
         console.log('Auth logs not available:', error);
         setAuthLogs([]);
@@ -689,9 +733,9 @@ export default function AdminDashboard() {
                 <TableHeader>
                   <TableRow>
                     <TableHead>Timestamp</TableHead>
+                    <TableHead>Email</TableHead>
                     <TableHead>Event</TableHead>
                     <TableHead>Status</TableHead>
-                    <TableHead>Details</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -701,23 +745,40 @@ export default function AdminDashboard() {
                         {new Date(log.timestamp / 1000).toLocaleString()}
                       </TableCell>
                       <TableCell className="font-medium">
-                        {log.msg || 'Auth Event'}
+                        <div className="flex items-center gap-2">
+                          {log.action === 'login' && <UserCheck className="h-4 w-4 text-green-600" />}
+                          {log.action === 'logout' && <Clock className="h-4 w-4 text-orange-600" />}
+                          {log.action === 'signup' && <Users className="h-4 w-4 text-blue-600" />}
+                          {log.email || 'Unknown User'}
+                        </div>
                       </TableCell>
                       <TableCell>
                         <Badge 
                           variant={
-                            log.status === '200' || log.level === 'info' 
+                            log.action === 'login' 
+                              ? 'default' 
+                              : log.action === 'logout'
+                              ? 'secondary'
+                              : log.action === 'signup'
+                              ? 'outline'
+                              : 'secondary'
+                          }
+                        >
+                          {log.action?.charAt(0).toUpperCase() + log.action?.slice(1) || log.msg}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge 
+                          variant={
+                            log.status === '200' || log.status === '204' || log.level === 'info' 
                               ? 'default' 
                               : log.error 
                               ? 'destructive' 
                               : 'secondary'
                           }
                         >
-                          {log.status || log.level}
+                          {log.status || log.level || 'Success'}
                         </Badge>
-                      </TableCell>
-                      <TableCell className="max-w-xs truncate">
-                        {log.error || 'Success'}
                       </TableCell>
                     </TableRow>
                   ))}
