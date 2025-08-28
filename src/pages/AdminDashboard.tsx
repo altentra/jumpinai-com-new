@@ -90,6 +90,16 @@ interface User {
   avatar_url: string | null;
   created_at: string;
   email_verified: boolean;
+  subscription_status?: 'active' | 'expired' | 'none';
+  subscription_tier?: string;
+  subscription_end?: string;
+  total_orders?: number;
+  total_spent?: number;
+  last_order_date?: string;
+  total_downloads?: number;
+  newsletter_subscribed?: boolean;
+  lead_magnet_downloaded?: boolean;
+  last_login?: string;
 }
 
 export default function AdminDashboard() {
@@ -187,6 +197,96 @@ export default function AdminDashboard() {
     };
   }, [user, isAuthenticated, isLoading, navigate]);
 
+  const fetchComprehensiveUserData = async () => {
+    try {
+      // Get all profiles
+      const { data: profilesData } = await supabase
+        .from('profiles')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (!profilesData) return [];
+
+      // Get all orders, subscribers, contacts, lead downloads to build comprehensive user profiles
+      const [
+        { data: ordersData },
+        { data: subscribersData },
+        { data: contactsData },
+        { data: leadDownloadsData }
+      ] = await Promise.all([
+        supabase.from('orders').select('*'),
+        supabase.from('subscribers').select('*'),
+        supabase.from('contacts').select('*'),
+        supabase.from('lead_magnet_downloads').select('*')
+      ]);
+
+      // Create comprehensive user profiles
+      const comprehensiveUsers: User[] = profilesData.map(profile => {
+        const userSubscription = subscribersData?.find(sub => sub.user_id === profile.id);
+        
+        // Find email from various sources - use user_email to match orders
+        const userOrders = ordersData?.filter(order => 
+          // Try to match orders by finding users with matching emails in other tables
+          userSubscription?.email === order.user_email
+        ) || [];
+        
+        const userContact = contactsData?.find(contact => 
+          // Try to match by finding contacts with matching emails from orders or subscriptions
+          (contact.email && userOrders.some(order => order.user_email === contact.email)) ||
+          (contact.email && userSubscription?.email === contact.email)
+        );
+        
+        const userDownloads = leadDownloadsData?.filter(download => 
+          userContact?.email && download.email === userContact.email
+        ) || [];
+
+        // Get email from various sources in order of preference
+        const email = userOrders[0]?.user_email || 
+          userSubscription?.email || 
+          userContact?.email || 
+          undefined;
+
+        // Calculate user stats
+        const paidOrders = userOrders.filter(order => order.status === 'paid');
+        const totalSpent = paidOrders.reduce((sum, order) => sum + (order.amount || 0), 0);
+        const lastOrder = paidOrders.sort((a, b) => 
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        )[0];
+
+        // Determine subscription status
+        let subscriptionStatus: 'active' | 'expired' | 'none' = 'none';
+        if (userSubscription?.subscribed) {
+          if (userSubscription.subscription_end) {
+            const endDate = new Date(userSubscription.subscription_end);
+            subscriptionStatus = endDate > new Date() ? 'active' : 'expired';
+          } else {
+            subscriptionStatus = 'active';
+          }
+        }
+
+        return {
+          ...profile,
+          email,
+          subscription_status: subscriptionStatus,
+          subscription_tier: userSubscription?.subscription_tier,
+          subscription_end: userSubscription?.subscription_end,
+          total_orders: userOrders.length,
+          total_spent: totalSpent / 100, // Convert from cents
+          last_order_date: lastOrder?.created_at,
+          total_downloads: userDownloads.length,
+          newsletter_subscribed: userContact?.newsletter_subscribed || false,
+          lead_magnet_downloaded: userContact?.lead_magnet_downloaded || false,
+          last_login: undefined // We could add this from auth logs if needed
+        };
+      });
+
+      return comprehensiveUsers;
+    } catch (error) {
+      console.error('Error fetching comprehensive user data:', error);
+      return [];
+    }
+  };
+
   const fetchAdminData = async () => {
     setLoading(true);
     try {
@@ -204,7 +304,7 @@ export default function AdminDashboard() {
         { data: recentSubscribersData },
         { data: allContactsData },
         { data: productsData },
-        { data: allUsersData }
+        allUsersData
       ] = await Promise.all([
         supabase.from('profiles').select('id', { count: 'exact' }),
         supabase.from('subscribers').select('id', { count: 'exact' }).eq('subscribed', true),
@@ -221,7 +321,7 @@ export default function AdminDashboard() {
         supabase.from('subscribers').select('*').order('created_at', { ascending: false }).limit(10),
         supabase.from('contacts').select('*').order('created_at', { ascending: false }).limit(20),
         supabase.from('products').select('*'),
-        supabase.from('profiles').select('*').order('created_at', { ascending: false }).limit(50)
+        fetchComprehensiveUserData()
       ]);
 
       // Fetch and parse auth logs with email information
@@ -665,35 +765,214 @@ export default function AdminDashboard() {
         <TabsContent value="users">
           <Card>
             <CardHeader>
-              <CardTitle>All Users ({stats.totalUsers})</CardTitle>
+              <CardTitle className="flex items-center gap-2">
+                <Users className="h-5 w-5" />
+                Comprehensive User Profiles ({stats.totalUsers})
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Display Name</TableHead>
-                    <TableHead>Email Verified</TableHead>
-                    <TableHead>Registered</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {users.map((user) => (
-                    <TableRow key={user.id}>
-                      <TableCell className="font-medium">{user.email || `User ${user.id.slice(0, 8)}...`}</TableCell>
-                      <TableCell>{user.display_name || '-'}</TableCell>
-                      <TableCell>
-                        <Badge variant={user.email_verified ? 'default' : 'secondary'}>
-                          {user.email_verified ? '✅ Verified' : '❌ Unverified'}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        {new Date(user.created_at).toLocaleDateString()}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+              <div className="mb-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="text-center p-4 bg-muted rounded-lg">
+                  <Crown className="h-6 w-6 mx-auto mb-2 text-primary" />
+                  <div className="text-2xl font-bold">
+                    {users.filter(user => user.subscription_status === 'active').length}
+                  </div>
+                  <p className="text-sm text-muted-foreground">Active Subscribers</p>
+                </div>
+                <div className="text-center p-4 bg-muted rounded-lg">
+                  <ShoppingBag className="h-6 w-6 mx-auto mb-2 text-green-600" />
+                  <div className="text-2xl font-bold">
+                    {users.filter(user => (user.total_orders || 0) > 0).length}
+                  </div>
+                  <p className="text-sm text-muted-foreground">Paying Customers</p>
+                </div>
+                <div className="text-center p-4 bg-muted rounded-lg">
+                  <Mail className="h-6 w-6 mx-auto mb-2 text-blue-600" />
+                  <div className="text-2xl font-bold">
+                    {users.filter(user => user.newsletter_subscribed).length}
+                  </div>
+                  <p className="text-sm text-muted-foreground">Newsletter Subscribers</p>
+                </div>
+                <div className="text-center p-4 bg-muted rounded-lg">
+                  <Download className="h-6 w-6 mx-auto mb-2 text-purple-600" />
+                  <div className="text-2xl font-bold">
+                    {users.filter(user => user.lead_magnet_downloaded).length}
+                  </div>
+                  <p className="text-sm text-muted-foreground">Lead Downloads</p>
+                </div>
+              </div>
+              
+              <div className="space-y-4">
+                {users.map((user) => (
+                  <Card key={user.id} className="p-4">
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                      {/* User Info */}
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                            <Users className="h-5 w-5 text-primary" />
+                          </div>
+                          <div>
+                            <h3 className="font-semibold text-lg">
+                              {user.display_name || 'Unknown User'}
+                            </h3>
+                            <p className="text-muted-foreground">
+                              {user.email || `User ${user.id.slice(0, 8)}...`}
+                            </p>
+                          </div>
+                        </div>
+                        
+                        <div className="grid grid-cols-2 gap-2 text-sm">
+                          <div>
+                            <Badge variant={user.email_verified ? 'default' : 'secondary'}>
+                              {user.email_verified ? '✅ Verified' : '❌ Unverified'}
+                            </Badge>
+                          </div>
+                          <div>
+                            <span className="text-muted-foreground">Joined:</span>
+                            <br />
+                            {new Date(user.created_at).toLocaleDateString()}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Subscription & Purchase Info */}
+                      <div className="space-y-3">
+                        <h4 className="font-semibold flex items-center gap-2">
+                          <Crown className="h-4 w-4" />
+                          Subscription & Purchases
+                        </h4>
+                        
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-muted-foreground">Status:</span>
+                            <Badge 
+                              variant={
+                                user.subscription_status === 'active' 
+                                  ? 'default' 
+                                  : user.subscription_status === 'expired'
+                                  ? 'secondary'
+                                  : 'outline'
+                              }
+                            >
+                              {user.subscription_status === 'active' && '👑 Active'}
+                              {user.subscription_status === 'expired' && '⏰ Expired'}
+                              {user.subscription_status === 'none' && '🆓 Free'}
+                            </Badge>
+                          </div>
+                          
+                          {user.subscription_tier && (
+                            <div className="flex items-center justify-between">
+                              <span className="text-sm text-muted-foreground">Tier:</span>
+                              <span className="font-medium">{user.subscription_tier}</span>
+                            </div>
+                          )}
+                          
+                          {user.subscription_end && (
+                            <div className="flex items-center justify-between">
+                              <span className="text-sm text-muted-foreground">Expires:</span>
+                              <span className="text-sm">
+                                {new Date(user.subscription_end).toLocaleDateString()}
+                              </span>
+                            </div>
+                          )}
+                          
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-muted-foreground">Orders:</span>
+                            <Badge variant="outline">
+                              {user.total_orders || 0} orders
+                            </Badge>
+                          </div>
+                          
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-muted-foreground">Total Spent:</span>
+                            <span className="font-bold text-green-600">
+                              ${(user.total_spent || 0).toFixed(2)}
+                            </span>
+                          </div>
+                          
+                          {user.last_order_date && (
+                            <div className="flex items-center justify-between">
+                              <span className="text-sm text-muted-foreground">Last Order:</span>
+                              <span className="text-sm">
+                                {new Date(user.last_order_date).toLocaleDateString()}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Engagement & Activity */}
+                      <div className="space-y-3">
+                        <h4 className="font-semibold flex items-center gap-2">
+                          <BarChart3 className="h-4 w-4" />
+                          Engagement & Activity
+                        </h4>
+                        
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-muted-foreground">Newsletter:</span>
+                            <Badge variant={user.newsletter_subscribed ? 'default' : 'secondary'}>
+                              {user.newsletter_subscribed ? '✅ Subscribed' : '❌ Not subscribed'}
+                            </Badge>
+                          </div>
+                          
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-muted-foreground">Lead Magnet:</span>
+                            <Badge variant={user.lead_magnet_downloaded ? 'default' : 'secondary'}>
+                              {user.lead_magnet_downloaded ? '✅ Downloaded' : '❌ Not downloaded'}
+                            </Badge>
+                          </div>
+                          
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-muted-foreground">Downloads:</span>
+                            <Badge variant="outline">
+                              {user.total_downloads || 0} downloads
+                            </Badge>
+                          </div>
+                          
+                          {user.last_login && (
+                            <div className="flex items-center justify-between">
+                              <span className="text-sm text-muted-foreground">Last Login:</span>
+                              <span className="text-sm">
+                                {new Date(user.last_login).toLocaleDateString()}
+                              </span>
+                            </div>
+                          )}
+                          
+                          {/* User Value Assessment */}
+                          <div className="mt-3 pt-2 border-t">
+                            <div className="flex items-center justify-between">
+                              <span className="text-sm text-muted-foreground">Value Level:</span>
+                              <Badge 
+                                variant={
+                                  (user.total_spent || 0) > 50 
+                                    ? 'default' 
+                                    : (user.total_spent || 0) > 0 || user.subscription_status === 'active'
+                                    ? 'secondary'
+                                    : 'outline'
+                                }
+                              >
+                                {(user.total_spent || 0) > 50 && '💎 High Value'}
+                                {(user.total_spent || 0) > 0 && (user.total_spent || 0) <= 50 && '💰 Customer'}
+                                {user.subscription_status === 'active' && (user.total_spent || 0) === 0 && '👑 Subscriber'}
+                                {(user.total_spent || 0) === 0 && user.subscription_status !== 'active' && user.newsletter_subscribed && '📧 Lead'}
+                                {(user.total_spent || 0) === 0 && user.subscription_status !== 'active' && !user.newsletter_subscribed && '👀 Visitor'}
+                              </Badge>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+              
+              {users.length === 0 && (
+                <div className="text-center py-8 text-muted-foreground">
+                  No users found.
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
