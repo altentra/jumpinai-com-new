@@ -28,9 +28,13 @@ interface AdminStats {
   totalOrders: number;
   totalRevenue: number;
   totalContacts: number;
+  totalNewsletterSubscribers: number;
+  totalLeadMagnetDownloads: number;
   pendingOrders: number;
   completedOrders: number;
   monthlyRevenue: number;
+  dailyRevenue: number;
+  averageOrderValue: number;
 }
 
 interface RecentOrder {
@@ -50,6 +54,19 @@ interface RecentSubscriber {
   created_at: string;
 }
 
+interface Contact {
+  id: string;
+  email: string;
+  first_name: string | null;
+  last_name: string | null;
+  source: string;
+  status: string;
+  newsletter_subscribed: boolean;
+  lead_magnet_downloaded: boolean;
+  tags: string[];
+  created_at: string;
+}
+
 export default function AdminDashboard() {
   const [stats, setStats] = useState<AdminStats>({
     totalUsers: 0,
@@ -57,13 +74,18 @@ export default function AdminDashboard() {
     totalOrders: 0,
     totalRevenue: 0,
     totalContacts: 0,
+    totalNewsletterSubscribers: 0,
+    totalLeadMagnetDownloads: 0,
     pendingOrders: 0,
     completedOrders: 0,
-    monthlyRevenue: 0
+    monthlyRevenue: 0,
+    dailyRevenue: 0,
+    averageOrderValue: 0
   });
   
   const [recentOrders, setRecentOrders] = useState<RecentOrder[]>([]);
   const [recentSubscribers, setRecentSubscribers] = useState<RecentSubscriber[]>([]);
+  const [contacts, setContacts] = useState<Contact[]>([]);
   const [loading, setLoading] = useState(true);
   const [syncing, setSyncing] = useState(false);
   
@@ -96,53 +118,112 @@ export default function AdminDashboard() {
     }
     
     fetchAdminData();
+    
+    // Set up real-time subscriptions for continuous updates
+    const ordersChannel = supabase
+      .channel('admin-orders')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, () => {
+        console.log('Orders updated, refreshing data...');
+        fetchAdminData();
+      })
+      .subscribe();
+
+    const subscribersChannel = supabase
+      .channel('admin-subscribers')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'subscribers' }, () => {
+        console.log('Subscribers updated, refreshing data...');
+        fetchAdminData();
+      })
+      .subscribe();
+
+    const contactsChannel = supabase
+      .channel('admin-contacts')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'contacts' }, () => {
+        console.log('Contacts updated, refreshing data...');
+        fetchAdminData();
+      })
+      .subscribe();
+
+    const profilesChannel = supabase
+      .channel('admin-profiles')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'profiles' }, () => {
+        console.log('Profiles updated, refreshing data...');
+        fetchAdminData();
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(ordersChannel);
+      supabase.removeChannel(subscribersChannel);
+      supabase.removeChannel(contactsChannel);
+      supabase.removeChannel(profilesChannel);
+    };
   }, [user, isAuthenticated, isLoading, navigate]);
 
   const fetchAdminData = async () => {
     setLoading(true);
     try {
-      // Fetch stats in parallel
+      // Fetch comprehensive stats in parallel
       const [
         { count: totalUsers },
         { count: totalSubscribers },
         { count: totalOrders },
         { count: totalContacts },
+        { count: totalNewsletterSubscribers },
+        { count: totalLeadMagnetDownloads },
         { data: ordersData },
         { data: subscribersData },
         { data: recentOrdersData },
-        { data: recentSubscribersData }
+        { data: recentSubscribersData },
+        { data: allContactsData },
+        { data: productsData }
       ] = await Promise.all([
         supabase.from('profiles').select('id', { count: 'exact' }),
         supabase.from('subscribers').select('id', { count: 'exact' }).eq('subscribed', true),
         supabase.from('orders').select('id', { count: 'exact' }),
         supabase.from('contacts').select('id', { count: 'exact' }),
-        supabase.from('orders').select('amount, status, created_at'),
+        supabase.from('newsletter_subscribers').select('id', { count: 'exact' }).eq('is_active', true),
+        supabase.from('lead_magnet_downloads').select('id', { count: 'exact' }),
+        supabase.from('orders').select('amount, status, created_at, user_email'),
         supabase.from('subscribers').select('*').eq('subscribed', true),
         supabase.from('orders').select(`
           id, user_email, amount, status, created_at,
           products!inner(name)
         `).order('created_at', { ascending: false }).limit(10),
-        supabase.from('subscribers').select('*').order('created_at', { ascending: false }).limit(10)
+        supabase.from('subscribers').select('*').order('created_at', { ascending: false }).limit(10),
+        supabase.from('contacts').select('*').order('created_at', { ascending: false }).limit(20),
+        supabase.from('products').select('*')
       ]);
 
       // Calculate revenue and other stats
-      const totalRevenue = ordersData?.reduce((sum, order) => 
-        order.status === 'paid' ? sum + (order.amount || 0) : sum, 0) || 0;
+      const paidOrders = ordersData?.filter(order => order.status === 'paid') || [];
+      const totalRevenue = paidOrders.reduce((sum, order) => sum + (order.amount || 0), 0);
       
       const currentMonth = new Date().getMonth();
       const currentYear = new Date().getFullYear();
-      const monthlyRevenue = ordersData?.reduce((sum, order) => {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      
+      const monthlyRevenue = paidOrders.reduce((sum, order) => {
         const orderDate = new Date(order.created_at);
-        if (orderDate.getMonth() === currentMonth && 
-            orderDate.getFullYear() === currentYear && 
-            order.status === 'paid') {
+        if (orderDate.getMonth() === currentMonth && orderDate.getFullYear() === currentYear) {
           return sum + (order.amount || 0);
         }
         return sum;
-      }, 0) || 0;
+      }, 0);
+
+      const dailyRevenue = paidOrders.reduce((sum, order) => {
+        const orderDate = new Date(order.created_at);
+        orderDate.setHours(0, 0, 0, 0);
+        if (orderDate.getTime() === today.getTime()) {
+          return sum + (order.amount || 0);
+        }
+        return sum;
+      }, 0);
 
       const pendingOrders = ordersData?.filter(order => order.status === 'pending').length || 0;
-      const completedOrders = ordersData?.filter(order => order.status === 'paid').length || 0;
+      const completedOrders = paidOrders.length;
+      const averageOrderValue = completedOrders > 0 ? totalRevenue / completedOrders : 0;
 
       setStats({
         totalUsers: totalUsers || 0,
@@ -150,9 +231,13 @@ export default function AdminDashboard() {
         totalOrders: totalOrders || 0,
         totalRevenue: totalRevenue / 100, // Convert from cents
         totalContacts: totalContacts || 0,
+        totalNewsletterSubscribers: totalNewsletterSubscribers || 0,
+        totalLeadMagnetDownloads: totalLeadMagnetDownloads || 0,
         pendingOrders,
         completedOrders,
-        monthlyRevenue: monthlyRevenue / 100 // Convert from cents
+        monthlyRevenue: monthlyRevenue / 100, // Convert from cents
+        dailyRevenue: dailyRevenue / 100, // Convert from cents
+        averageOrderValue: averageOrderValue / 100 // Convert from cents
       });
 
       // Format recent data
@@ -163,6 +248,7 @@ export default function AdminDashboard() {
       
       setRecentOrders(formattedOrders);
       setRecentSubscribers(recentSubscribersData || []);
+      setContacts(allContactsData || []);
       
     } catch (error) {
       console.error('Error fetching admin data:', error);
@@ -233,6 +319,7 @@ export default function AdminDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.totalUsers}</div>
+            <p className="text-xs text-muted-foreground">Registered accounts</p>
           </CardContent>
         </Card>
 
@@ -243,6 +330,7 @@ export default function AdminDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-primary">{stats.totalSubscribers}</div>
+            <p className="text-xs text-muted-foreground">Active subscriptions</p>
           </CardContent>
         </Card>
 
@@ -269,6 +357,50 @@ export default function AdminDashboard() {
             <p className="text-xs text-muted-foreground">
               ${stats.monthlyRevenue.toFixed(2)} this month
             </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Newsletter Subscribers</CardTitle>
+            <Mail className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.totalNewsletterSubscribers}</div>
+            <p className="text-xs text-muted-foreground">Active newsletter subs</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Lead Downloads</CardTitle>
+            <Download className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.totalLeadMagnetDownloads}</div>
+            <p className="text-xs text-muted-foreground">Lead magnet downloads</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Daily Revenue</CardTitle>
+            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">${stats.dailyRevenue.toFixed(2)}</div>
+            <p className="text-xs text-muted-foreground">Today's earnings</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Avg Order Value</CardTitle>
+            <CreditCard className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">${stats.averageOrderValue.toFixed(2)}</div>
+            <p className="text-xs text-muted-foreground">Per completed order</p>
           </CardContent>
         </Card>
       </div>
@@ -358,13 +490,68 @@ export default function AdminDashboard() {
         <TabsContent value="contacts">
           <Card>
             <CardHeader>
-              <CardTitle>Contact Statistics</CardTitle>
+              <CardTitle>All Contacts ({stats.totalContacts})</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{stats.totalContacts} Total Contacts</div>
-              <p className="text-muted-foreground mt-2">
-                Includes newsletter subscribers, lead magnet downloads, and contact form submissions.
-              </p>
+              <div className="mb-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="text-center p-4 bg-muted rounded-lg">
+                  <div className="text-2xl font-bold">{stats.totalNewsletterSubscribers}</div>
+                  <p className="text-sm text-muted-foreground">Newsletter Subscribers</p>
+                </div>
+                <div className="text-center p-4 bg-muted rounded-lg">
+                  <div className="text-2xl font-bold">{stats.totalLeadMagnetDownloads}</div>
+                  <p className="text-sm text-muted-foreground">Lead Magnet Downloads</p>
+                </div>
+                <div className="text-center p-4 bg-muted rounded-lg">
+                  <div className="text-2xl font-bold">{stats.totalContacts}</div>
+                  <p className="text-sm text-muted-foreground">All Contacts</p>
+                </div>
+              </div>
+              
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Email</TableHead>
+                    <TableHead>Name</TableHead>
+                    <TableHead>Source</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Newsletter</TableHead>
+                    <TableHead>Lead Magnet</TableHead>
+                    <TableHead>Created</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {contacts.map((contact) => (
+                    <TableRow key={contact.id}>
+                      <TableCell className="font-medium">{contact.email}</TableCell>
+                      <TableCell>
+                        {contact.first_name || contact.last_name 
+                          ? `${contact.first_name || ''} ${contact.last_name || ''}`.trim()
+                          : '-'
+                        }
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline">{contact.source}</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant={contact.status === 'active' ? 'default' : 'secondary'}>
+                          {contact.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        {contact.newsletter_subscribed ? '✅' : '❌'}
+                      </TableCell>
+                      <TableCell>
+                        {contact.lead_magnet_downloaded ? '✅' : '❌'}
+                      </TableCell>
+                      <TableCell>
+                        {new Date(contact.created_at).toLocaleDateString()}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+              
               <Button onClick={syncToGoogleSheets} className="mt-4" disabled={syncing}>
                 <FileSpreadsheet className="h-4 w-4 mr-2" />
                 {syncing ? 'Syncing...' : 'Export to Google Sheets'}
