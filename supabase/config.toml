@@ -68,6 +68,9 @@ verify_jwt = true
 [functions.verify-email]
 verify_jwt = false
 
+[functions.admin-dashboard-data]
+verify_jwt = true
+
 [realtime]
 enabled = true
 port = 54323
