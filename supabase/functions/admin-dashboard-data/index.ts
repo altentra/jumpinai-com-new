@@ -117,12 +117,12 @@ serve(async (req) => {
     const stats = {
       totalUsers: profiles.length,
       totalSubscribers: subscribers.filter((s) => s.subscribed).length,
-      totalOrders: orders.length,
+      totalOrders: paidOrders.length, // Only count actually paid orders
       totalRevenue: totalRevenueCents / 100,
       totalContacts: contacts.length,
       totalNewsletterSubscribers: contacts.filter((c) => c.newsletter_subscribed).length,
       totalLeadMagnetDownloads: leadDownloads.length,
-      pendingOrders: orders.filter((o) => o.status === "pending").length,
+      abandonedCarts: orders.filter((o) => o.status === "pending").length,
       completedOrders: paidOrders.length,
       monthlyRevenue: monthlyRevenueCents / 100,
       dailyRevenue: dailyRevenueCents / 100,

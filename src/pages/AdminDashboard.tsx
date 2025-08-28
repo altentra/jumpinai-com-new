@@ -34,7 +34,7 @@ interface AdminStats {
   totalContacts: number;
   totalNewsletterSubscribers: number;
   totalLeadMagnetDownloads: number;
-  pendingOrders: number;
+  abandonedCarts: number;
   completedOrders: number;
   monthlyRevenue: number;
   dailyRevenue: number;
@@ -111,7 +111,7 @@ export default function AdminDashboard() {
     totalContacts: 0,
     totalNewsletterSubscribers: 0,
     totalLeadMagnetDownloads: 0,
-    pendingOrders: 0,
+    abandonedCarts: 0,
     completedOrders: 0,
     monthlyRevenue: 0,
     dailyRevenue: 0,
@@ -393,7 +393,7 @@ export default function AdminDashboard() {
           <CardContent>
             <div className="text-2xl font-bold">{stats.totalOrders}</div>
             <p className="text-xs text-muted-foreground">
-              {stats.completedOrders} paid, {stats.pendingOrders} pending
+              {stats.completedOrders} paid, {stats.abandonedCarts} abandoned
             </p>
           </CardContent>
         </Card>
