@@ -76,8 +76,16 @@ export default function AdminDashboard() {
   useEffect(() => {
     if (isLoading) return; // Wait for auth to resolve
 
+    // Debug admin gate state
+    console.log('Admin access check', {
+      isLoading,
+      isAuthenticated,
+      email: user?.email,
+    });
+
     if (!isAuthenticated) {
-      navigate('/auth');
+      // Preserve intended destination so Auth sends us back here
+      navigate('/auth?next=/admin');
       return;
     }
     
