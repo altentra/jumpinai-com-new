@@ -92,6 +92,9 @@ export default function Subscription() {
   };
 
   const manage = async () => {
+    console.log("🔧 [Mobile Debug] Subscription manage billing clicked");
+    // Open a placeholder window synchronously to avoid popup blockers on mobile
+    const placeholder = window.open('', '_blank');
     try {
       const { data: session } = await supabase.auth.getSession();
       const accessToken = session.session?.access_token;
@@ -101,8 +104,23 @@ export default function Subscription() {
       });
       if (error) throw error;
       const url = (data as any)?.url;
-      if (url) window.open(url, '_blank');
+      if (url) {
+        console.log("🔧 [Mobile Debug] Navigating to portal URL:", url);
+        if (placeholder && typeof placeholder.location !== 'undefined') {
+          placeholder.location.href = url;
+          console.log("🔧 [Mobile Debug] Used placeholder window");
+        } else {
+          const win = window.open(url, '_blank');
+          if (!win) {
+            console.log("🔧 [Mobile Debug] window.open returned null, falling back to same-tab navigation");
+            window.location.href = url;
+          }
+        }
+      }
     } catch (e: any) {
+      console.error("🔧 [Mobile Debug] Manage billing error:", e);
+      // Close placeholder if we created it and failed
+      try { placeholder?.close(); } catch {}
       toast.error(e.message || "Failed to open customer portal");
     }
   };
@@ -112,6 +130,9 @@ export default function Subscription() {
       return;
     }
     
+    console.log("🔧 [Mobile Debug] Cancel subscription clicked");
+    // Open a placeholder window synchronously to avoid popup blockers on mobile
+    const placeholder = window.open('', '_blank');
     try {
       const { data: session } = await supabase.auth.getSession();
       const accessToken = session.session?.access_token;
@@ -121,8 +142,23 @@ export default function Subscription() {
       });
       if (error) throw error;
       const url = (data as any)?.url;
-      if (url) window.open(url, '_blank');
+      if (url) {
+        console.log("🔧 [Mobile Debug] Navigating to cancel portal URL:", url);
+        if (placeholder && typeof placeholder.location !== 'undefined') {
+          placeholder.location.href = url;
+          console.log("🔧 [Mobile Debug] Used placeholder window for cancel");
+        } else {
+          const win = window.open(url, '_blank');
+          if (!win) {
+            console.log("🔧 [Mobile Debug] window.open returned null for cancel, falling back to same-tab navigation");
+            window.location.href = url;
+          }
+        }
+      }
     } catch (e: any) {
+      console.error("🔧 [Mobile Debug] Cancel subscription error:", e);
+      // Close placeholder if we created it and failed
+      try { placeholder?.close(); } catch {}
       toast.error(e.message || "Failed to open billing portal");
     }
   };
