@@ -248,45 +248,40 @@ export default function ProfileTabs() {
         return;
       }
       
-      // First fetch orders without products join
-      const { data: ordersData, error: ordersError } = await supabase
+      // Single query with products join to get real product names
+      const { data, error } = await supabase
         .from("orders")
-        .select("*")
+        .select(`
+          id,
+          product_id,
+          amount,
+          download_token,
+          download_count,
+          max_downloads,
+          created_at,
+          updated_at,
+          user_email,
+          stripe_session_id,
+          stripe_payment_intent_id,
+          currency,
+          status,
+          products (
+            name,
+            description,
+            file_name
+          )
+        `)
         .eq("user_email", userEmail)
         .in("status", ["paid"]) // Show paid orders (includes subscription orders)
         .order("created_at", { ascending: false });
       
-      if (ordersError) {
-        console.error("Orders error:", ordersError);
-        throw ordersError;
+      if (error) {
+        console.error("Orders error:", error);
+        throw error;
       }
       
-      console.log("Fetched orders data:", ordersData);
-      
-      // Then fetch product data for each order
-      if (ordersData && ordersData.length > 0) {
-        const ordersWithProducts = await Promise.all(
-          ordersData.map(async (order) => {
-            const { data: productData, error: productError } = await supabase
-              .from("products")
-              .select("*")
-              .eq("id", order.product_id)
-              .single();
-            
-            if (productError) {
-              console.error("Product fetch error for order", order.id, ":", productError);
-              return { ...order, products: null };
-            }
-            
-            return { ...order, products: productData };
-          })
-        );
-        
-        console.log("Orders with products:", ordersWithProducts);
-        setOrders(ordersWithProducts);
-      } else {
-        setOrders([]);
-      }
+      console.log("Fetched orders with products:", data);
+      setOrders(data || []);
     } catch (error: any) {
       console.error("Error fetching orders:", error);
       toast.error("Failed to load order history");
