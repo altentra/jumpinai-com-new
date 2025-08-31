@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,20 +8,37 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
 
-interface SubscriberInfo {
-  subscribed: boolean;
-  subscription_tier?: string | null;
-  subscription_end?: string | null;
-}
+// Memoized dashboard section card for better performance
+const DashboardCard = React.memo(({ section, onClick }: { 
+  section: { title: string; description: string; icon: any; path: string; color: string }; 
+  onClick: () => void;
+}) => (
+  <Card 
+    className="border-border hover:shadow-modern transition-all duration-300 cursor-pointer group"
+    onClick={onClick}
+  >
+    <CardHeader className="pb-3">
+      <CardTitle className="flex items-center justify-between text-lg">
+        <div className="flex items-center gap-3">
+          <section.icon className={`h-5 w-5 ${section.color}`} />
+          <span>{section.title}</span>
+        </div>
+        <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors" />
+      </CardTitle>
+    </CardHeader>
+    <CardContent>
+      <CardDescription className="text-sm">
+        {section.description}
+      </CardDescription>
+    </CardContent>
+  </Card>
+));
+
+DashboardCard.displayName = 'DashboardCard';
 
 const DashboardHome = () => {
   const navigate = useNavigate();
   const { user, subscription } = useAuth();
-
-  useEffect(() => {
-    // User data is already available from useAuth context
-    // No need to fetch it again
-  }, []);
 
   const subscribe = async () => {
     try {
@@ -111,26 +128,11 @@ const DashboardHome = () => {
       {/* Dashboard Sections Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in-up animate-delay-200">
         {dashboardSections.map((section, index) => (
-          <Card 
+          <DashboardCard 
             key={section.title}
-            className="border-border hover:shadow-modern transition-all duration-300 cursor-pointer group"
+            section={section}
             onClick={() => navigate(section.path)}
-          >
-            <CardHeader className="pb-3">
-              <CardTitle className="flex items-center justify-between text-lg">
-                <div className="flex items-center gap-3">
-                  <section.icon className={`h-5 w-5 ${section.color}`} />
-                  <span>{section.title}</span>
-                </div>
-                <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors" />
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <CardDescription className="text-sm">
-                {section.description}
-              </CardDescription>
-            </CardContent>
-          </Card>
+          />
         ))}
       </div>
     </div>

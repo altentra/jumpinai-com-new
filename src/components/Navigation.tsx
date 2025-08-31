@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
@@ -6,7 +6,7 @@ import ThemeToggle from "@/components/ThemeToggle";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 
-const Navigation = () => {
+const Navigation = React.memo(() => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const { isAuthenticated, logout, login } = useAuth();
@@ -20,7 +20,17 @@ const Navigation = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleNavClick = (href: string) => {
+  // Preload page when user hovers over navigation link
+  const handleMouseEnter = useCallback((href: string) => {
+    if (href.startsWith('/')) {
+      // Preload the page component
+      import(`../pages${href === '/jumps' ? '/Jumps' : href === '/resources' ? '/Resources' : href === '/pricing' ? '/Pricing' : ''}.tsx`).catch(() => {
+        // Silently fail if import doesn't work
+      });
+    }
+  }, []);
+
+  const handleNavClick = useCallback((href: string) => {
     if (href.startsWith('/')) {
       // External page navigation
       navigate(href);
@@ -41,16 +51,16 @@ const Navigation = () => {
       }
     }
     setIsOpen(false);
-  };
+  }, [navigate]);
 
-  const handleCtaClick = () => {
+  const handleCtaClick = useCallback(() => {
     if (isAuthenticated) {
       navigate('/dashboard');
     } else {
       login();
     }
     setIsOpen(false);
-  };
+  }, [isAuthenticated, navigate, login]);
 
   const navItems = [
     { name: "Jumps in AI", href: "/jumps" },
@@ -77,6 +87,9 @@ const Navigation = () => {
               <img 
                 src="/lovable-uploads/74bafbff-f098-4d0a-9180-b4923d3d9616.png" 
                 alt="JumpinAI Logo" 
+                width="40"
+                height="40"
+                loading="eager"
                 className="w-full h-full object-cover"
               />
             </div>
@@ -92,6 +105,7 @@ const Navigation = () => {
                 <button
                   key={item.name}
                   onClick={() => handleNavClick(item.href)}
+                  onMouseEnter={() => handleMouseEnter(item.href)}
                   className="relative text-muted-foreground hover:text-foreground px-4 py-2 text-sm font-medium transition-all duration-300 group"
                 >
                   {item.name}
@@ -193,6 +207,8 @@ const Navigation = () => {
       </div>
     </nav>
   );
-};
+});
+
+Navigation.displayName = 'Navigation';
 
 export default Navigation;
