@@ -38,6 +38,7 @@ const Jumps = () => {
   const [customerEmail, setCustomerEmail] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [subInfo, setSubInfo] = useState<any>(null);
   const { toast } = useToast();
   const { user, isAuthenticated } = useAuth();
 
@@ -63,7 +64,7 @@ const Jumps = () => {
         if (error) throw error;
         setProducts((data || []) as Product[]);
 
-        // If user is logged in, fetch their orders
+        // If user is logged in, fetch their orders and subscription status
         if (isAuthenticated && user?.email) {
           const { data: orderData, error: orderError } = await (supabase as any)
             .from('orders')
@@ -73,6 +74,16 @@ const Jumps = () => {
           
           if (orderError) throw orderError;
           setOrders((orderData || []) as Order[]);
+
+          // Check subscription status
+          try {
+            const { data: subData, error: subError } = await supabase.functions.invoke("check-subscription");
+            if (!subError && subData) {
+              setSubInfo(subData);
+            }
+          } catch (e) {
+            console.error('Failed to check subscription:', e);
+          }
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -306,9 +317,9 @@ const Jumps = () => {
                           </div>
                         </div>
                         
-                        {hasPurchased ? (
+                        {hasPurchased || (subInfo?.subscribed && subInfo?.subscription_tier === "JumpinAI Pro") ? (
                           <Button asChild className="w-full bg-green-600 hover:bg-green-700 text-white">
-                            <a href={`/download/${order?.download_token ?? ''}`}>
+                            <a href={order?.download_token ? `/download/${order.download_token}` : `https://cieczaajcgkgdgenfdzi.supabase.co/storage/v1/object/public/digital-products/${product.file_name}`}>
                               <Download className="h-4 w-4 mr-2" />
                               Access Your Guide
                             </a>
@@ -384,20 +395,22 @@ const Jumps = () => {
             })}
           </div>
 
-          {/* All-Access Whop CTA */}
-          <div className="mt-16">
-            <div className="p-6 md:p-8 rounded-xl border border-muted/50 bg-muted/30 text-center">
-              <h2 className="text-2xl md:text-3xl font-semibold mb-3">Get access to all guides</h2>
-              <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-                Want everything in one place? Join our Whop for just $19.99 and unlock all products together.
-              </p>
-              <Button size="lg" className="w-full sm:w-auto hover-scale" asChild>
-                <a href="https://whop.com/jumpinai/" target="_blank" rel="noopener noreferrer">
-                  Join on Whop — $19.99
-                </a>
-              </Button>
+          {/* All-Access CTA - Only show if user is not subscribed to Pro */}
+          {!(subInfo?.subscribed && subInfo?.subscription_tier === "JumpinAI Pro") && (
+            <div className="mt-16">
+              <div className="p-6 md:p-8 rounded-xl border border-muted/50 bg-muted/30 text-center">
+                <h2 className="text-2xl md:text-3xl font-semibold mb-3">Get access to all guides</h2>
+                <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
+                  Want everything in one place? Join our Whop for just $19.99 and unlock all products together.
+                </p>
+                <Button size="lg" className="w-full sm:w-auto hover-scale" asChild>
+                  <a href="https://whop.com/jumpinai/" target="_blank" rel="noopener noreferrer">
+                    Join on Whop — $19.99
+                  </a>
+                </Button>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </section>
       

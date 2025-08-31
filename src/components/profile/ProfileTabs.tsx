@@ -199,11 +199,14 @@ export default function ProfileTabs() {
 
   const manage = async () => {
     try {
-      const { data, error } = await supabase.functions.invoke("customer-portal");
+      const { data, error } = await supabase.functions.invoke("customer-portal", {
+        body: { source: 'dashboard-profile' }
+      });
       if (error) throw error;
       const url = (data as any)?.url;
-      if (url) window.location.href = url;
+      if (url) window.open(url, '_blank');
     } catch (e: any) {
+      console.error('Customer portal error:', e);
       toast.error(e.message || "Failed to open customer portal");
     }
   };
@@ -225,7 +228,7 @@ export default function ProfileTabs() {
         .from("orders")
         .select("*")
         .eq("user_email", userEmail)
-        .eq("status", "paid") // Only show completed orders
+        .in("status", ["paid", "subscription"]) // Show both product orders and subscriptions
         .order("created_at", { ascending: false });
       
       if (ordersError) {
@@ -442,14 +445,14 @@ export default function ProfileTabs() {
       {/* Tabs */}
       <section className="mt-6">
         <Tabs defaultValue="profile" className="w-full">
-          <TabsList className="flex flex-nowrap overflow-x-auto md:grid md:grid-cols-3 w-full gap-2 md:gap-0 -mx-2 px-2 md:mx-0 md:px-0 rounded-xl bg-muted/30">
-            <TabsTrigger value="profile" className="flex items-center gap-2 shrink-0 whitespace-nowrap">
+          <TabsList className="grid grid-cols-1 sm:grid-cols-3 w-full gap-2 sm:gap-0 rounded-xl bg-muted/30">
+            <TabsTrigger value="profile" className="flex items-center gap-2 whitespace-nowrap text-xs sm:text-sm">
               <User className="h-4 w-4" /> Profile & Overview
             </TabsTrigger>
-            <TabsTrigger value="security" className="flex items-center gap-2 shrink-0 whitespace-nowrap">
+            <TabsTrigger value="security" className="flex items-center gap-2 whitespace-nowrap text-xs sm:text-sm">
               <Shield className="h-4 w-4" /> Security
             </TabsTrigger>
-            <TabsTrigger value="orders" className="flex items-center gap-2 shrink-0 whitespace-nowrap">
+            <TabsTrigger value="orders" className="flex items-center gap-2 whitespace-nowrap text-xs sm:text-sm">
               <History className="h-4 w-4" /> Order History
             </TabsTrigger>
           </TabsList>

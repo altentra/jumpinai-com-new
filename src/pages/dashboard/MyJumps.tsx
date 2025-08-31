@@ -24,6 +24,7 @@ interface Order {
 export default function MyJumps() {
   const [products, setProducts] = useState<Product[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
+  const [subInfo, setSubInfo] = useState<any>(null);
   const { toast } = useToast();
   const { getAuthHeaders } = useAuth0Token();
 
@@ -56,6 +57,16 @@ export default function MyJumps() {
             .eq('status', 'paid');
           if (oErr) throw oErr;
           setOrders((ords || []) as Order[]);
+
+          // Check subscription status
+          try {
+            const { data: subData, error: subError } = await supabase.functions.invoke("check-subscription");
+            if (!subError && subData) {
+              setSubInfo(subData);
+            }
+          } catch (e) {
+            console.error('Failed to check subscription:', e);
+          }
         }
       } catch (e) {
         console.error(e);
@@ -99,22 +110,25 @@ export default function MyJumps() {
 
   return (
     <div className="space-y-6">
-      <Card className="animate-fade-in">
-        <CardContent className="py-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div className="space-y-1">
-            <div className="flex items-center gap-2">
-              <Crown className="h-5 w-5 text-primary" />
-              <h2 className="text-base font-semibold">Unlock all Jumps with JumpinAI Pro</h2>
+      {/* Only show upgrade CTA if user is not subscribed to Pro */}
+      {!(subInfo?.subscribed && subInfo?.subscription_tier === "JumpinAI Pro") && (
+        <Card className="animate-fade-in">
+          <CardContent className="py-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <Crown className="h-5 w-5 text-primary" />
+                <h2 className="text-base font-semibold">Unlock all Jumps with JumpinAI Pro</h2>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Purchase Jumps individually on the Free plan. For unlimited access to all current and future Jumps with continuous updates, upgrade to JumpinAI Pro.
+              </p>
             </div>
-            <p className="text-sm text-muted-foreground">
-              Purchase Jumps individually on the Free plan. For unlimited access to all current and future Jumps with continuous updates, upgrade to JumpinAI Pro.
-            </p>
-          </div>
-          <div className="flex gap-2">
-            <Button onClick={upgradeToPro}>Join JumpinAI Pro for $10/month</Button>
-          </div>
-        </CardContent>
-      </Card>
+            <div className="flex gap-2">
+              <Button onClick={upgradeToPro}>Join JumpinAI Pro for $10/month</Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <div id="jumps-list" className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {products.map((p) => {
@@ -128,9 +142,9 @@ export default function MyJumps() {
                 {p.description}
               </CardContent>
               <CardFooter className="flex items-center justify-between gap-3">
-                {order ? (
+                {order || (subInfo?.subscribed && subInfo?.subscription_tier === "JumpinAI Pro") ? (
                   <Button asChild>
-                    <a href={`/download/${order.download_token ?? ''}`}>
+                    <a href={order?.download_token ? `/download/${order.download_token}` : `https://cieczaajcgkgdgenfdzi.supabase.co/storage/v1/object/public/digital-products/${p.file_name}`}>
                       <Download className="mr-2 h-4 w-4" /> Access
                     </a>
                   </Button>
@@ -140,7 +154,8 @@ export default function MyJumps() {
                   </Button>
                 )}
                 <div className="text-xs text-muted-foreground flex items-center gap-1">
-                  <CheckCircle className="h-3.5 w-3.5" /> Instant download
+                  <CheckCircle className="h-3.5 w-3.5" /> 
+                  {(subInfo?.subscribed && subInfo?.subscription_tier === "JumpinAI Pro") ? "Included with Pro" : "Instant download"}
                 </div>
               </CardFooter>
             </Card>
