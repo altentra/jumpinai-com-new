@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect, useState } from "react";
+import WorkflowDetailModal from "@/components/WorkflowDetailModal";
 
 type Workflow = {
   name: string;
@@ -45,6 +46,8 @@ const allWorkflows = [...freeWorkflows, ...proWorkflows];
 
 export default function Workflows() {
   const { isAuthenticated, subscription } = useAuth();
+  const [selectedWorkflow, setSelectedWorkflow] = useState<Workflow | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Use cached subscription data - no API call needed!
   const showAllContent = subscription?.subscribed && subscription.subscription_tier === 'JumpinAI Pro';
@@ -168,6 +171,15 @@ export default function Workflows() {
         
         {!showAllContent && <UpgradeSection message="View more professional workflows" />}
       </div>
+
+      <WorkflowDetailModal 
+        workflow={selectedWorkflow}
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setSelectedWorkflow(null);
+        }}
+      />
     </div>
   );
 }
