@@ -17,6 +17,7 @@ import PaymentSuccess from "./pages/PaymentSuccess";
 import SubscriptionSuccess from "./pages/SubscriptionSuccess";
 import AdminDashboard from "./pages/AdminDashboard";
 import Download from "./pages/Download";
+import DownloadPro from "./pages/DownloadPro";
 import ForInvestors from "./pages/ForInvestors";
 import NotFound from "./pages/NotFound";
 import Resources from "./pages/Resources";
@@ -82,6 +83,7 @@ const App = () => {
         <Route path="/subscription-success" element={<SubscriptionSuccess />} />
         <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/download/:token" element={<Download />} />
+            <Route path="/download-pro/:productId" element={<DownloadPro />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/dashboard/*" element={<Dashboard />} />
             <Route path="/auth" element={<Auth />} />

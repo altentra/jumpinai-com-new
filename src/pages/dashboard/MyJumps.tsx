@@ -144,24 +144,11 @@ export default function MyJumps() {
               <CardFooter className="flex items-center justify-between gap-3">
                 {order || (subInfo?.subscribed && subInfo?.subscription_tier === "JumpinAI Pro") ? (
                   <Button 
-                    onClick={async () => {
-                      try {
-                        if (order?.download_token) {
-                          window.location.href = `/download/${order.download_token}`;
-                        } else {
-                          const { data: session } = await supabase.auth.getSession();
-                          const accessToken = session.session?.access_token;
-                          const { data, error } = await supabase.functions.invoke('download-subscriber-product', {
-                            body: { productId: p.id },
-                            headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
-                          });
-                          if (error) throw error;
-                          const url = (data as any)?.url;
-                          if (url) window.open(url, '_blank');
-                        }
-                      } catch (e: any) {
-                        console.error(e);
-                        toast({ title: 'Download error', description: e.message || 'Could not access this file', variant: 'destructive' });
+                    onClick={() => {
+                      if (order?.download_token) {
+                        window.location.href = `/download/${order.download_token}`;
+                      } else {
+                        window.location.href = `/download-pro/${p.id}`;
                       }
                     }}
                   >
@@ -174,7 +161,7 @@ export default function MyJumps() {
                 )}
                 <div className="text-xs text-muted-foreground flex items-center gap-1">
                   <CheckCircle className="h-3.5 w-3.5" /> 
-                  {(subInfo?.subscribed && subInfo?.subscription_tier === "JumpinAI Pro") ? "Included with Pro" : "Instant download"}
+                  {order || (subInfo?.subscribed && subInfo?.subscription_tier === "JumpinAI Pro") ? "Included with Pro" : "Instant download"}
                 </div>
               </CardFooter>
             </Card>
