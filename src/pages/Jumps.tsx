@@ -319,11 +319,25 @@ const Jumps = () => {
                         </div>
                         
                         {hasPurchased || (subInfo?.subscribed && subInfo?.subscription_tier === "JumpinAI Pro") ? (
-                          <Button asChild className="w-full bg-green-600 hover:bg-green-700 text-white">
-                            <a href={order?.download_token ? `/download/${order.download_token}` : `https://cieczaajcgkgdgenfdzi.supabase.co/storage/v1/object/public/digital-products/${product.file_name}`}>
-                              <Download className="h-4 w-4 mr-2" />
-                              Access Your Guide
-                            </a>
+                          <Button asChild={false} className="w-full bg-green-600 hover:bg-green-700 text-white" onClick={async () => {
+                            try {
+                              if (order?.download_token) {
+                                window.location.href = `/download/${order.download_token}`;
+                              } else {
+                                const { data, error } = await supabase.functions.invoke('download-subscriber-product', {
+                                  body: { productId: product.id },
+                                });
+                                if (error) throw error;
+                                const url = (data as any)?.url;
+                                if (url) window.open(url, '_blank');
+                              }
+                            } catch (e: any) {
+                              console.error(e);
+                              toast({ title: 'Download error', description: e.message || 'Could not access this file', variant: 'destructive' });
+                            }
+                          }}>
+                            <Download className="h-4 w-4 mr-2" />
+                            Access Your Guide
                           </Button>
                         ) : (
                           <>

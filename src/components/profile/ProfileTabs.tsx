@@ -484,6 +484,9 @@ export default function ProfileTabs() {
                     <Button variant="outline" onClick={refreshSubscription} className="hover-scale">
                       <RefreshCw className="mr-2 h-4 w-4" /> Refresh status
                     </Button>
+                    <Button variant="destructive" onClick={cancelSubscription} className="hover-scale">
+                      <AlertTriangle className="mr-2 h-4 w-4" /> Cancel subscription
+                    </Button>
                   </>
                 )}
               </CardFooter>
@@ -698,16 +701,16 @@ export default function ProfileTabs() {
                             </TableCell>
                             <TableCell>
                               <div className="flex gap-2">
-                                {order.products?.name !== 'JumpinAI Pro Subscription' && order.download_token && (
-                                  <Button 
-                                    variant="outline" 
-                                    size="sm"
-                                    onClick={() => window.open(`https://cieczaajcgkgdgenfdzi.supabase.co/functions/v1/download-product/${order.download_token}`, '_blank')}
-                                    disabled={(order.download_count || 0) >= (order.max_downloads || 20)}
-                                  >
-                                    Download
-                                  </Button>
-                                )}
+                                  {order.download_token && order.products?.file_name && order.products?.name !== 'JumpinAI Pro Subscription' && (
+                                    <Button 
+                                      variant="outline" 
+                                      size="sm"
+                                      onClick={() => window.open(`https://cieczaajcgkgdgenfdzi.supabase.co/functions/v1/download-product/${order.download_token}`, '_blank')}
+                                      disabled={(order.download_count || 0) >= (order.max_downloads || 20)}
+                                    >
+                                      Download
+                                    </Button>
+                                  )}
                                 {order.stripe_session_id && (
                                   <Button 
                                     variant="outline" 

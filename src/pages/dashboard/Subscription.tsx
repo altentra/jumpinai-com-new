@@ -58,9 +58,7 @@ export default function Subscription() {
 
   const refreshSubscription = async () => {
     try {
-      const { data, error } = await supabase.functions.invoke("check-subscription", {
-        headers: await getAuthHeaders(),
-      });
+      const { data, error } = await supabase.functions.invoke("check-subscription");
       if (error) throw error;
         const { subscribed, subscription_tier, subscription_end } = data;
         setSubInfo({ subscribed, subscription_tier, subscription_end });
@@ -83,7 +81,6 @@ export default function Subscription() {
   const subscribe = async () => {
     try {
       const { data, error } = await supabase.functions.invoke("create-checkout", {
-        headers: await getAuthHeaders(),
         body: { source: 'dashboard-subscription' },
       });
       if (error) throw error;
@@ -97,7 +94,6 @@ export default function Subscription() {
   const manage = async () => {
     try {
       const { data, error } = await supabase.functions.invoke("customer-portal", {
-        headers: await getAuthHeaders(),
         body: { source: 'dashboard-subscription' },
       });
       if (error) throw error;
@@ -115,7 +111,6 @@ export default function Subscription() {
     
     try {
       const { data, error } = await supabase.functions.invoke("customer-portal", {
-        headers: await getAuthHeaders(),
         body: { source: 'dashboard-subscription' },
       });
       if (error) throw error;

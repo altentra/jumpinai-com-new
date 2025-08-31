@@ -98,7 +98,6 @@ export default function MyJumps() {
   const upgradeToPro = async () => {
     try {
       const { data, error } = await supabase.functions.invoke('create-checkout', {
-        headers: await getAuthHeaders(),
         body: { source: 'dashboard-home' },
       });
       if (error) throw error;
@@ -144,10 +143,26 @@ export default function MyJumps() {
               </CardContent>
               <CardFooter className="flex items-center justify-between gap-3">
                 {order || (subInfo?.subscribed && subInfo?.subscription_tier === "JumpinAI Pro") ? (
-                  <Button asChild>
-                    <a href={order?.download_token ? `/download/${order.download_token}` : `https://cieczaajcgkgdgenfdzi.supabase.co/storage/v1/object/public/digital-products/${p.file_name}`}>
-                      <Download className="mr-2 h-4 w-4" /> Access
-                    </a>
+                  <Button 
+                    onClick={async () => {
+                      try {
+                        if (order?.download_token) {
+                          window.location.href = `/download/${order.download_token}`;
+                        } else {
+                          const { data, error } = await supabase.functions.invoke('download-subscriber-product', {
+                            body: { productId: p.id },
+                          });
+                          if (error) throw error;
+                          const url = (data as any)?.url;
+                          if (url) window.open(url, '_blank');
+                        }
+                      } catch (e: any) {
+                        console.error(e);
+                        toast({ title: 'Download error', description: e.message || 'Could not access this file', variant: 'destructive' });
+                      }
+                    }}
+                  >
+                    <Download className="mr-2 h-4 w-4" /> Access
                   </Button>
                 ) : (
                   <Button onClick={() => buy(p.id)}>

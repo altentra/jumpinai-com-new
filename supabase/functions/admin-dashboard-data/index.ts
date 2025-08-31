@@ -103,7 +103,7 @@ serve(async (req) => {
     const totalRevenueCents = paidOrders.reduce((sum, o) => sum + (o.amount || 0), 0);
 
     // Filter paid subscribers early for stats calculation - only real active Stripe subscribers
-    const paidSubscribers = subscribers.filter(s => s.subscribed && s.stripe_customer_id && s.subscription_end && new Date(s.subscription_end) > new Date());
+    const paidSubscribers = subscribers.filter(s => s.subscribed);
 
     const now = new Date();
     const currentMonth = now.getMonth();
