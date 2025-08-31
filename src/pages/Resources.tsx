@@ -146,29 +146,11 @@ const strategies: Strategy[] = [
 ];
 
 export default function Resources() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, subscription } = useAuth();
   const [activeTab, setActiveTab] = useState("tools");
-  const [subscriptionInfo, setSubscriptionInfo] = useState<{ subscribed: boolean; subscription_tier?: string }>({ subscribed: false });
 
-  // Check subscription status
-  useEffect(() => {
-    const checkSubscription = async () => {
-      if (!isAuthenticated) return;
-      
-      try {
-        const { data } = await supabase.functions.invoke("check-subscription");
-        if (data) {
-          setSubscriptionInfo(data);
-        }
-      } catch (error) {
-        console.error('Error checking subscription:', error);
-      }
-    };
-
-    checkSubscription();
-  }, [isAuthenticated]);
-
-  const showAllContent = subscriptionInfo.subscribed;
+  // Use cached subscription data - no API call needed!
+  const showAllContent = subscription?.subscribed || false;
 
   // Universal upgrade section component
   const UpgradeSection = ({ message }: { message: string }) => (

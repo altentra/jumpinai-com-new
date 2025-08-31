@@ -42,32 +42,10 @@ const proStrategies: Strategy[] = [
 const allStrategies = [...freeStrategies, ...proStrategies];
 
 export default function Strategies() {
-  const { isAuthenticated } = useAuth();
-  const [subscriptionStatus, setSubscriptionStatus] = useState<{subscribed: boolean; subscription_tier: string | null}>({subscribed: false, subscription_tier: null});
-  const [isLoading, setIsLoading] = useState(true);
+  const { isAuthenticated, subscription } = useAuth();
 
-  useEffect(() => {
-    const checkSubscription = async () => {
-      if (!isAuthenticated) {
-        setIsLoading(false);
-        return;
-      }
-
-      try {
-        const { data, error } = await supabase.functions.invoke('check-subscription');
-        if (error) throw error;
-        setSubscriptionStatus(data);
-      } catch (error) {
-        console.error('Error checking subscription:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    checkSubscription();
-  }, [isAuthenticated]);
-
-  const showAllContent = subscriptionStatus.subscribed && subscriptionStatus.subscription_tier === 'JumpinAI Pro';
+  // Use cached subscription data - no API call needed!
+  const showAllContent = subscription?.subscribed && subscription.subscription_tier === 'JumpinAI Pro';
 
   const UpgradeSection = ({ message }: { message: string }) => (
     <div className="bg-muted/50 border border-border rounded-lg p-8 text-center mt-8">
