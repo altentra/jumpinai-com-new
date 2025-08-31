@@ -755,23 +755,23 @@ export default function ProfileTabs() {
                           </div>
                         </div>
                         
-                        {order.download_token && (
+                        {order.products?.file_name && order.download_token && (
                           <div>
                             <div className="text-xs text-muted-foreground mb-1">Downloads</div>
                             <div className="text-sm">
-                              {order.download_count || 0} / {order.max_downloads || 20}
+                              {order.download_count || 0} / {order.max_downloads || 5}
                             </div>
                           </div>
                         )}
                         
                         <div className="flex flex-col gap-2 pt-2">
-                          {order.download_token && (
+                          {order.products?.file_name && order.download_token && (
                             <Button 
                               variant="outline" 
                               size="sm"
                               className="w-full text-xs"
                               onClick={() => window.open(`https://cieczaajcgkgdgenfdzi.supabase.co/functions/v1/download-product/${order.download_token}`, '_blank')}
-                              disabled={(order.download_count || 0) >= (order.max_downloads || 20)}
+                              disabled={(order.download_count || 0) >= (order.max_downloads || 5)}
                             >
                               <Download className="mr-2 h-3 w-3" />
                               Download
@@ -831,24 +831,22 @@ export default function ProfileTabs() {
                                 ${(order.amount / 100).toFixed(2)} {order.currency?.toUpperCase()}
                               </TableCell>
                               <TableCell className="text-sm">
-                                {order.download_token ? (
+                                {order.products?.file_name && order.download_token ? (
                                   <div className="text-sm">
-                                    <div>{order.download_count || 0} / {order.max_downloads || 20}</div>
+                                    <div>{order.download_count || 0} / {order.max_downloads || 5}</div>
                                     <div className="text-xs text-muted-foreground">downloads</div>
                                   </div>
-                                ) : (
-                                  <div className="text-sm text-muted-foreground">—</div>
-                                )}
+                                ) : null}
                               </TableCell>
                               <TableCell>
                                 <div className="flex flex-col lg:flex-row gap-1 lg:gap-2">
-                                  {order.download_token && (
+                                  {order.products?.file_name && order.download_token && (
                                     <Button 
                                       variant="outline" 
                                       size="sm"
                                       className="text-xs whitespace-nowrap"
                                       onClick={() => window.open(`https://cieczaajcgkgdgenfdzi.supabase.co/functions/v1/download-product/${order.download_token}`, '_blank')}
-                                      disabled={(order.download_count || 0) >= (order.max_downloads || 20)}
+                                      disabled={(order.download_count || 0) >= (order.max_downloads || 5)}
                                     >
                                       Download
                                     </Button>
