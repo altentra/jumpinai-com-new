@@ -199,18 +199,19 @@ export default function ProfileTabs() {
 
   const manage = async () => {
     try {
+      const { data: session } = await supabase.auth.getSession();
+      const accessToken = session.session?.access_token;
       const { data, error } = await supabase.functions.invoke("customer-portal", {
-        body: { source: 'dashboard-profile' }
+        body: { source: 'dashboard-profile' },
+        headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
       });
       if (error) throw error;
       const url = (data as any)?.url;
       if (url) window.open(url, '_blank');
     } catch (e: any) {
-      console.error('Customer portal error:', e);
-      toast.error(e.message || "Failed to open customer portal");
+      toast.error(e.message || "Failed to open billing portal");
     }
   };
-
   const fetchOrders = async () => {
     try {
       const currentUser = (await supabase.auth.getUser()).data.user;
@@ -309,7 +310,12 @@ export default function ProfileTabs() {
     }
     
     try {
-      const { data, error } = await supabase.functions.invoke("customer-portal");
+      const { data: session } = await supabase.auth.getSession();
+      const accessToken = session.session?.access_token;
+      const { data, error } = await supabase.functions.invoke("customer-portal", {
+        body: { source: 'dashboard-profile' },
+        headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
+      });
       if (error) throw error;
       const url = (data as any)?.url;
       if (url) window.open(url, '_blank');

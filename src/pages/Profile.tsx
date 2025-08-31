@@ -117,10 +117,15 @@ const Profile = () => {
 
   const manage = async () => {
     try {
-      const { data, error } = await supabase.functions.invoke("customer-portal");
+      const { data: session } = await supabase.auth.getSession();
+      const accessToken = session.session?.access_token;
+      const { data, error } = await supabase.functions.invoke("customer-portal", {
+        body: { source: 'profile' },
+        headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
+      });
       if (error) throw error;
       const url = (data as any)?.url;
-      if (url) window.location.href = url;
+      if (url) window.open(url, '_blank');
     } catch (e: any) {
       toast.error(e.message || "Failed to open customer portal");
     }
