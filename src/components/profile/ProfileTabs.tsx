@@ -489,17 +489,17 @@ export default function ProfileTabs() {
       {/* Tabs */}
       <section className="mt-4 sm:mt-6">
         <Tabs defaultValue="profile" className="w-full">
-          <TabsList className="flex flex-col sm:flex-row flex-wrap w-full gap-1 rounded-xl bg-muted/30 p-1 h-auto">
-            <TabsTrigger value="profile" className="w-full sm:w-auto flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm py-2 px-2 sm:px-4">
+          <TabsList className="flex flex-col sm:flex-row w-full gap-1 sm:gap-2 rounded-xl bg-muted/30 p-1 h-auto sm:justify-center sm:max-w-4xl sm:mx-auto">
+            <TabsTrigger value="profile" className="w-full sm:flex-1 sm:max-w-48 flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm py-3 px-3 sm:px-6 transition-all duration-200 hover:bg-background/80">
               <User className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" /> 
               <span className="sm:hidden">Overview</span>
               <span className="hidden sm:inline">Profile & Overview</span>
             </TabsTrigger>
-            <TabsTrigger value="security" className="w-full sm:w-auto flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm py-2 px-2 sm:px-4">
+            <TabsTrigger value="security" className="w-full sm:flex-1 sm:max-w-48 flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm py-3 px-3 sm:px-6 transition-all duration-200 hover:bg-background/80">
               <Shield className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" /> 
               <span>Security</span>
             </TabsTrigger>
-            <TabsTrigger value="orders" className="w-full sm:w-auto flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm py-2 px-2 sm:px-4">
+            <TabsTrigger value="orders" className="w-full sm:flex-1 sm:max-w-48 flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm py-3 px-3 sm:px-6 transition-all duration-200 hover:bg-background/80">
               <History className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" /> 
               <span>Order History</span>
             </TabsTrigger>
