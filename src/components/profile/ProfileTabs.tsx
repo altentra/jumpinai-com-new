@@ -381,36 +381,40 @@ export default function ProfileTabs() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-6 pb-8">
+    <div className="max-w-6xl mx-auto px-3 sm:px-6 pb-8">
       {/* Header */}
       <header>
-        <div className="rounded-2xl border border-border glass p-6 md:p-8 animate-fade-in">
-          <div className="flex flex-col gap-6">
+        <div className="rounded-2xl border border-border glass p-4 sm:p-6 md:p-8 animate-fade-in">
+          <div className="flex flex-col gap-4 sm:gap-6">
             {/* Account Header */}
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-              <div>
-                <h1 className="text-3xl md:text-4xl font-bold flex items-center gap-3">
-                  <User className="h-7 w-7 text-primary" />
-                  Account
-                </h1>
-                <p className="text-muted-foreground mt-2">{email}</p>
-              </div>
-              <div className="flex items-center gap-2">
-                {subInfo?.subscribed ? (
-                  <Badge className="bg-primary/10 text-primary">{subInfo.subscription_tier || 'Pro'} Active</Badge>
-                ) : (
-                  <Badge variant="secondary">Free plan</Badge>
-                )}
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+                <div className="min-w-0 flex-1">
+                  <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold flex items-center gap-2 sm:gap-3">
+                    <User className="h-6 w-6 sm:h-7 sm:w-7 text-primary flex-shrink-0" />
+                    <span className="truncate">Account</span>
+                  </h1>
+                  <p className="text-muted-foreground mt-1 sm:mt-2 text-sm sm:text-base truncate">{email}</p>
+                </div>
+                <div className="flex items-center gap-2 sm:self-start">
+                  {subInfo?.subscribed ? (
+                    <Badge className="bg-primary/10 text-primary text-xs sm:text-sm whitespace-nowrap">
+                      {subInfo.subscription_tier || 'Pro'} Active
+                    </Badge>
+                  ) : (
+                    <Badge variant="secondary" className="text-xs sm:text-sm whitespace-nowrap">Free plan</Badge>
+                  )}
+                </div>
               </div>
             </div>
 
             {/* Profile Management Section */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-4">
               {/* Avatar Section */}
-              <div className="space-y-4">
-                <div className="flex items-center gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
                   {profile.avatar_url ? (
-                    <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-border">
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden border-2 border-border flex-shrink-0">
                       <img 
                         src={profile.avatar_url} 
                         alt="Profile Avatar" 
@@ -418,12 +422,12 @@ export default function ProfileTabs() {
                       />
                     </div>
                   ) : (
-                    <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center border-2 border-border">
-                      <User className="h-8 w-8 text-muted-foreground" />
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-muted flex items-center justify-center border-2 border-border flex-shrink-0">
+                      <User className="h-6 w-6 sm:h-8 sm:w-8 text-muted-foreground" />
                     </div>
                   )}
-                  <div className="flex-1">
-                    <Label htmlFor="display_name">Display Name</Label>
+                  <div className="flex-1 min-w-0 space-y-2">
+                    <Label htmlFor="display_name" className="text-sm">Display Name</Label>
                     <Input 
                       id="display_name" 
                       value={profile.display_name} 
@@ -433,15 +437,16 @@ export default function ProfileTabs() {
                     />
                   </div>
                 </div>
-              </div>
 
-              {/* Save Button */}
-              <div className="space-y-4">
-                {!user?.isGoogleUser && (
-                  <Button onClick={saveProfile} size="sm" className="hover-scale">
-                    <Save className="mr-2 h-4 w-4" /> Save Changes
-                  </Button>
-                )}
+                {/* Save Button */}
+                <div className="flex justify-start sm:justify-end">
+                  {!user?.isGoogleUser && (
+                    <Button onClick={saveProfile} size="sm" className="hover-scale w-full sm:w-auto">
+                      <Save className="mr-2 h-4 w-4" /> 
+                      <span className="sm:inline">Save Changes</span>
+                    </Button>
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -449,49 +454,60 @@ export default function ProfileTabs() {
       </header>
 
       {/* Tabs */}
-      <section className="mt-6">
+      <section className="mt-4 sm:mt-6">
         <Tabs defaultValue="profile" className="w-full">
-          <TabsList className="grid grid-cols-1 sm:grid-cols-3 w-full gap-2 sm:gap-0 rounded-xl bg-muted/30">
-            <TabsTrigger value="profile" className="flex items-center gap-2 whitespace-nowrap text-xs sm:text-sm">
-              <User className="h-4 w-4" /> Profile & Overview
+          <TabsList className="grid grid-cols-1 sm:grid-cols-3 w-full gap-1 sm:gap-0 rounded-xl bg-muted/30 p-1">
+            <TabsTrigger value="profile" className="flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm py-2 px-2 sm:px-4">
+              <User className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" /> 
+              <span className="hidden xs:inline sm:inline">Profile &</span>
+              <span>Overview</span>
             </TabsTrigger>
-            <TabsTrigger value="security" className="flex items-center gap-2 whitespace-nowrap text-xs sm:text-sm">
-              <Shield className="h-4 w-4" /> Security
+            <TabsTrigger value="security" className="flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm py-2 px-2 sm:px-4">
+              <Shield className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" /> 
+              <span>Security</span>
             </TabsTrigger>
-            <TabsTrigger value="orders" className="flex items-center gap-2 whitespace-nowrap text-xs sm:text-sm">
-              <History className="h-4 w-4" /> Order History
+            <TabsTrigger value="orders" className="flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm py-2 px-2 sm:px-4">
+              <History className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" /> 
+              <span className="hidden xs:inline sm:inline">Order</span>
+              <span>History</span>
             </TabsTrigger>
           </TabsList>
 
           {/* Profile & Overview Combined */}
-          <TabsContent value="profile" className="mt-6 animate-fade-in space-y-6">
+          <TabsContent value="profile" className="mt-4 sm:mt-6 animate-fade-in space-y-4 sm:space-y-6">
             {/* Subscription Overview */}
             <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2"><Crown className="h-5 w-5 text-primary" /> Subscription Overview</CardTitle>
+              <CardHeader className="pb-3 sm:pb-6">
+                <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                  <Crown className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" /> 
+                  Subscription Overview
+                </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <p className="text-muted-foreground">
+              <CardContent className="space-y-3 sm:space-y-4 pt-0">
+                <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
                   {subInfo?.subscribed
-                    ? `You're on ${subInfo.subscription_tier || 'JumpinAI Pro'}. Next renewal: ${subInfo.subscription_end ? new Date(subInfo.subscription_end).toLocaleString() : '—'}`
+                    ? `You're on ${subInfo.subscription_tier || 'JumpinAI Pro'}. Next renewal: ${subInfo.subscription_end ? new Date(subInfo.subscription_end).toLocaleDateString() : '—'}`
                     : 'You are on the Free plan. Upgrade to JumpinAI Pro to unlock all blueprints and workflows.'}
                 </p>
               </CardContent>
-              <CardFooter className="flex flex-wrap gap-3">
+              <CardFooter className="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-3 pt-3 sm:pt-6">
                 {!subInfo?.subscribed ? (
-                  <Button onClick={subscribe} className="hover-scale">
+                  <Button onClick={subscribe} className="hover-scale w-full sm:w-auto">
                     <Crown className="mr-2 h-4 w-4" /> Get JumpinAI Pro
                   </Button>
                 ) : (
                   <>
-                    <Button variant="secondary" onClick={manage} className="hover-scale">
-                      <ExternalLink className="mr-2 h-4 w-4" /> Manage billing
+                    <Button variant="secondary" onClick={manage} className="hover-scale w-full sm:w-auto">
+                      <ExternalLink className="mr-2 h-4 w-4" /> 
+                      <span className="sm:inline">Manage billing</span>
                     </Button>
-                    <Button variant="outline" onClick={refreshSubscription} className="hover-scale">
-                      <RefreshCw className="mr-2 h-4 w-4" /> Refresh status
+                    <Button variant="outline" onClick={refreshSubscription} className="hover-scale w-full sm:w-auto">
+                      <RefreshCw className="mr-2 h-4 w-4" /> 
+                      <span className="sm:inline">Refresh status</span>
                     </Button>
-                    <Button variant="destructive" onClick={cancelSubscription} className="hover-scale">
-                      <AlertTriangle className="mr-2 h-4 w-4" /> Cancel subscription
+                    <Button variant="destructive" onClick={cancelSubscription} className="hover-scale w-full sm:w-auto">
+                      <AlertTriangle className="mr-2 h-4 w-4" /> 
+                      <span className="sm:inline">Cancel subscription</span>
                     </Button>
                   </>
                 )}
@@ -500,100 +516,107 @@ export default function ProfileTabs() {
 
             {/* Email & Account Status */}
             <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2"><User className="h-5 w-5 text-primary" /> Account Information</CardTitle>
+              <CardHeader className="pb-3 sm:pb-6">
+                <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                  <User className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" /> 
+                  Account Information
+                </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label>Email Address</Label>
-                    <div className="flex items-center gap-2">
-                      <Input value={email} disabled className="bg-muted/50" />
-                      {emailVerificationStatus.verified || user?.isGoogleUser ? (
-                        <Badge variant="default" className="bg-green-500/10 text-green-600 border-green-500/20">
-                          {user?.isGoogleUser ? "Google Verified" : "Verified"}
-                        </Badge>
-                      ) : (
-                        <Badge variant="outline" className="bg-yellow-500/10 text-yellow-600 border-yellow-500/20">
-                          Unverified
-                        </Badge>
+              <CardContent className="space-y-3 sm:space-y-4 pt-0">
+                <div className="space-y-4 sm:space-y-6">
+                  <div className="space-y-3">
+                    <Label className="text-sm font-medium">Email Address</Label>
+                    <div className="space-y-2">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                        <Input value={email} disabled className="bg-muted/50 text-sm" />
+                        {emailVerificationStatus.verified || user?.isGoogleUser ? (
+                          <Badge variant="default" className="bg-green-500/10 text-green-600 border-green-500/20 text-xs whitespace-nowrap self-start sm:self-center">
+                            {user?.isGoogleUser ? "Google Verified" : "Verified"}
+                          </Badge>
+                        ) : (
+                          <Badge variant="outline" className="bg-yellow-500/10 text-yellow-600 border-yellow-500/20 text-xs whitespace-nowrap self-start sm:self-center">
+                            Unverified
+                          </Badge>
+                        )}
+                      </div>
+                      {!emailVerificationStatus.verified && !user?.isGoogleUser && (
+                        <div className="space-y-2">
+                          <p className="text-xs text-muted-foreground leading-relaxed">
+                            Email verification is required for purchases and subscriptions.
+                          </p>
+                          <Button 
+                            size="sm" 
+                            variant="outline" 
+                            onClick={sendVerificationEmail}
+                            disabled={emailVerificationStatus.loading}
+                            className="text-xs h-8 w-full sm:w-auto"
+                          >
+                            {emailVerificationStatus.loading ? "Sending..." : "Send Verification Email"}
+                          </Button>
+                        </div>
                       )}
                     </div>
-                    {!emailVerificationStatus.verified && !user?.isGoogleUser && (
-                      <div className="space-y-2">
-                        <p className="text-xs text-muted-foreground">
-                          Email verification is required for purchases and subscriptions.
-                        </p>
-                        <Button 
-                          size="sm" 
-                          variant="outline" 
-                          onClick={sendVerificationEmail}
-                          disabled={emailVerificationStatus.loading}
-                          className="text-xs"
-                        >
-                          {emailVerificationStatus.loading ? "Sending..." : "Send Verification Email"}
-                        </Button>
-                      </div>
-                    )}
                   </div>
-                  <div className="space-y-2">
-                    <Label>Account Status</Label>
+                  <div className="space-y-3">
+                    <Label className="text-sm font-medium">Account Status</Label>
                     <div className="flex items-center gap-2">
-                      <Badge variant="default" className="bg-primary/10 text-primary">Active</Badge>
+                      <Badge variant="default" className="bg-primary/10 text-primary text-xs">Active</Badge>
                     </div>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-
             {/* Account Actions */}
-            <div className="flex flex-col md:flex-row gap-4 pt-4">
+            <div className="flex flex-col sm:flex-row gap-3 pt-2">
               <AlertDialog>
                 <AlertDialogTrigger asChild>
-                  <Button variant="destructive" className="w-full md:w-auto hover-scale">
+                  <Button variant="destructive" className="w-full sm:w-auto hover-scale">
                     <Trash2 className="mr-2 h-4 w-4" /> Delete Account
                   </Button>
                 </AlertDialogTrigger>
-                <AlertDialogContent className="max-w-md">
+                <AlertDialogContent className="w-[95vw] max-w-md mx-auto">
                   <AlertDialogHeader>
-                    <AlertDialogTitle className="flex items-center gap-2 text-destructive">
-                      <AlertTriangle className="h-5 w-5" />
-                      Delete Account Permanently
+                    <AlertDialogTitle className="flex items-center gap-2 text-destructive text-lg">
+                      <AlertTriangle className="h-5 w-5 flex-shrink-0" />
+                      <span className="text-base sm:text-lg">Delete Account Permanently</span>
                     </AlertDialogTitle>
-                    <AlertDialogDescription className="space-y-4">
-                      <div>
+                    <AlertDialogDescription className="space-y-3 sm:space-y-4">
+                      <div className="text-sm leading-relaxed">
                         <strong>This action cannot be undone.</strong> Deleting your account will:
                       </div>
-                      <ul className="list-disc list-inside space-y-1 text-sm">
+                      <ul className="list-disc list-inside space-y-1 text-xs sm:text-sm text-muted-foreground leading-relaxed">
                         <li>Permanently delete all your account data</li>
                         <li>Cancel any active subscriptions immediately</li>
                         <li>Remove access to all purchased content</li>
                         <li>Delete your profile and saved preferences</li>
                       </ul>
-                      <div>
+                      <div className="text-sm leading-relaxed">
                         To regain access in the future, you would need to create a new account and repurchase any products or subscriptions.
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="delete-confirm">Type <strong>DELETE</strong> to confirm:</Label>
+                        <Label htmlFor="delete-confirm" className="text-sm">Type <strong>DELETE</strong> to confirm:</Label>
                         <Input
                           id="delete-confirm"
                           value={deleteConfirmText}
                           onChange={(e) => setDeleteConfirmText(e.target.value)}
                           placeholder="Type DELETE here"
-                          className="font-mono"
+                          className="font-mono text-sm"
                         />
                       </div>
                     </AlertDialogDescription>
                   </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel onClick={() => setDeleteConfirmText("")}>
+                  <AlertDialogFooter className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+                    <AlertDialogCancel 
+                      onClick={() => setDeleteConfirmText("")}
+                      className="w-full sm:w-auto order-2 sm:order-1"
+                    >
                       Cancel
                     </AlertDialogCancel>
                     <AlertDialogAction
                       onClick={deleteAccount}
                       disabled={deleteConfirmText !== "DELETE" || isDeleting}
-                      className="bg-destructive hover:bg-destructive/90"
+                      className="bg-destructive hover:bg-destructive/90 w-full sm:w-auto order-1 sm:order-2"
                     >
                       {isDeleting ? "Deleting..." : "Delete Account"}
                     </AlertDialogAction>
@@ -601,50 +624,60 @@ export default function ProfileTabs() {
                 </AlertDialogContent>
               </AlertDialog>
 
-              <Button variant="outline" onClick={() => logout()} className="w-full md:w-auto hover-scale">
+              <Button variant="outline" onClick={() => logout()} className="w-full sm:w-auto hover-scale">
                 <LogOut className="mr-2 h-4 w-4" /> Log Out
               </Button>
             </div>
           </TabsContent>
 
           {/* Security */}
-          <TabsContent value="security" className="mt-6 animate-fade-in">
+          <TabsContent value="security" className="mt-4 sm:mt-6 animate-fade-in">
             <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2"><Shield className="h-5 w-5 text-primary" /> Security</CardTitle>
+              <CardHeader className="pb-3 sm:pb-6">
+                <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                  <Shield className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" /> 
+                  Security
+                </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input id="email" value={email} disabled />
+              <CardContent className="space-y-4 sm:space-y-6 pt-0">
+                <div className="space-y-3">
+                  <Label htmlFor="email" className="text-sm font-medium">Email</Label>
+                  <Input id="email" value={email} disabled className="bg-muted/50 text-sm" />
                 </div>
                 <Separator />
                 {!user?.isGoogleUser ? (
-                  <div className="space-y-2">
-                    <Label htmlFor="new_password">New password</Label>
-                    <Input id="new_password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter new password" />
-                    <p className="text-xs text-muted-foreground">
+                  <div className="space-y-3">
+                    <Label htmlFor="new_password" className="text-sm font-medium">New password</Label>
+                    <Input 
+                      id="new_password" 
+                      type="password" 
+                      value={password} 
+                      onChange={(e) => setPassword(e.target.value)} 
+                      placeholder="Enter new password"
+                      className="text-sm" 
+                    />
+                    <p className="text-xs text-muted-foreground leading-relaxed">
                       Password must be at least 6 characters long
                     </p>
                   </div>
                 ) : (
-                  <div className="space-y-2">
-                    <Label>Password</Label>
-                    <div className="p-3 bg-muted/50 rounded-md border">
-                      <p className="text-sm text-muted-foreground">
+                  <div className="space-y-3">
+                    <Label className="text-sm font-medium">Password</Label>
+                    <div className="p-3 sm:p-4 bg-muted/50 rounded-md border">
+                      <p className="text-sm text-muted-foreground leading-relaxed">
                         🔐 Your account is secured by Google. Password changes are managed through your Google account.
                       </p>
                     </div>
                   </div>
                 )}
               </CardContent>
-              <CardFooter className="flex flex-wrap gap-3">
+              <CardFooter className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-3 sm:pt-6">
                 {!user?.isGoogleUser && (
-                  <Button onClick={changePassword} className="hover-scale">
+                  <Button onClick={changePassword} className="hover-scale w-full sm:w-auto">
                     <Shield className="mr-2 h-4 w-4" /> Update password
                   </Button>
                 )}
-                <Button variant="outline" onClick={() => logout()} className="hover-scale">
+                <Button variant="outline" onClick={() => logout()} className="hover-scale w-full sm:w-auto">
                   <LogOut className="mr-2 h-4 w-4" /> Sign out
                 </Button>
               </CardFooter>
@@ -652,87 +685,160 @@ export default function ProfileTabs() {
           </TabsContent>
 
           {/* Order History */}
-          <TabsContent value="orders" className="mt-6 animate-fade-in">
+          <TabsContent value="orders" className="mt-4 sm:mt-6 animate-fade-in">
             <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <History className="h-5 w-5 text-primary" /> Order History
+              <CardHeader className="pb-3 sm:pb-6">
+                <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                  <History className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" /> 
+                  Order History
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-0">
                 {orders.length === 0 ? (
-                  <div className="text-center py-8 text-muted-foreground">
-                    <History className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                    <p>No orders found</p>
-                    <p className="text-sm">Your purchase history will appear here</p>
+                  <div className="text-center py-6 sm:py-8 text-muted-foreground">
+                    <History className="h-10 w-10 sm:h-12 sm:w-12 mx-auto mb-3 sm:mb-4 opacity-50" />
+                    <p className="text-sm sm:text-base">No orders found</p>
+                    <p className="text-xs sm:text-sm">Your purchase history will appear here</p>
                   </div>
                 ) : (
-                  <div className="overflow-x-auto">
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>Product</TableHead>
-                          <TableHead>Date</TableHead>
-                          <TableHead>Amount</TableHead>
-                          <TableHead>Downloads</TableHead>
-                          <TableHead>Actions</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {orders.map((order) => (
-                          <TableRow key={order.id}>
-                            <TableCell>
-                              <div>
-                                <div className="font-medium">{order.products?.name || 'Product'}</div>
-                                <div className="text-sm text-muted-foreground">
-                                  {order.products?.description || 'Digital product'}
-                                </div>
-                              </div>
-                            </TableCell>
-                            <TableCell>
-                              {new Date(order.created_at).toLocaleDateString()}
-                            </TableCell>
-                            <TableCell>
-                              ${(order.amount / 100).toFixed(2)} {order.currency?.toUpperCase()}
-                            </TableCell>
-                            <TableCell>
-                              {order.products?.name === 'JumpinAI Pro Subscription' ? (
-                                <div className="text-sm text-muted-foreground">—</div>
+                  <div className="space-y-4 sm:hidden">
+                    {/* Mobile Card View */}
+                    {orders.map((order) => (
+                      <div key={order.id} className="border border-border rounded-lg p-4 space-y-3">
+                        <div className="flex flex-col gap-2">
+                          <div className="font-medium text-sm">{order.products?.name || 'Product'}</div>
+                          <div className="text-xs text-muted-foreground">
+                            {order.products?.description || 'Digital product'}
+                          </div>
+                        </div>
+                        
+                        <div className="grid grid-cols-2 gap-4 text-sm">
+                          <div>
+                            <div className="text-xs text-muted-foreground mb-1">Date</div>
+                            <div>{new Date(order.created_at).toLocaleDateString()}</div>
+                          </div>
+                          <div>
+                            <div className="text-xs text-muted-foreground mb-1">Amount</div>
+                            <div>${(order.amount / 100).toFixed(2)} {order.currency?.toUpperCase()}</div>
+                          </div>
+                        </div>
+                        
+                        {order.products?.name !== 'JumpinAI Pro Subscription' && (
+                          <div>
+                            <div className="text-xs text-muted-foreground mb-1">Downloads</div>
+                            <div className="text-sm">
+                              {order.download_count || 0} / {order.max_downloads || 20}
+                            </div>
+                          </div>
+                        )}
+                        
+                        <div className="flex flex-col gap-2 pt-2">
+                          {order.download_token && order.products?.file_name && order.products?.name !== 'JumpinAI Pro Subscription' && (
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              className="w-full text-xs"
+                              onClick={() => window.open(`https://cieczaajcgkgdgenfdzi.supabase.co/functions/v1/download-product/${order.download_token}`, '_blank')}
+                              disabled={(order.download_count || 0) >= (order.max_downloads || 20)}
+                            >
+                              <Download className="mr-2 h-3 w-3" />
+                              Download
+                            </Button>
+                          )}
+                          {order.stripe_session_id && (
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              className="w-full text-xs"
+                              onClick={() => downloadReceipt(order.stripe_session_id)}
+                              disabled={downloadingReceipt === order.stripe_session_id}
+                            >
+                              {downloadingReceipt === order.stripe_session_id ? (
+                                <Loader2 className="mr-2 h-3 w-3 animate-spin" />
                               ) : (
-                                <div className="text-sm">
-                                  <div>{order.download_count || 0} / {order.max_downloads || 20}</div>
-                                  <div className="text-muted-foreground">downloads</div>
-                                </div>
+                                <ExternalLink className="mr-2 h-3 w-3" />
                               )}
-                            </TableCell>
-                            <TableCell>
-                              <div className="flex gap-2">
+                              {downloadingReceipt === order.stripe_session_id ? "Loading..." : "Receipt"}
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                
+                {/* Desktop Table View */}
+                {orders.length > 0 && (
+                  <div className="hidden sm:block">
+                    <div className="overflow-x-auto">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead className="text-xs sm:text-sm">Product</TableHead>
+                            <TableHead className="text-xs sm:text-sm">Date</TableHead>
+                            <TableHead className="text-xs sm:text-sm">Amount</TableHead>
+                            <TableHead className="text-xs sm:text-sm">Downloads</TableHead>
+                            <TableHead className="text-xs sm:text-sm">Actions</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {orders.map((order) => (
+                            <TableRow key={order.id}>
+                              <TableCell className="min-w-0">
+                                <div>
+                                  <div className="font-medium text-sm truncate">{order.products?.name || 'Product'}</div>
+                                  <div className="text-xs text-muted-foreground truncate">
+                                    {order.products?.description || 'Digital product'}
+                                  </div>
+                                </div>
+                              </TableCell>
+                              <TableCell className="text-sm whitespace-nowrap">
+                                {new Date(order.created_at).toLocaleDateString()}
+                              </TableCell>
+                              <TableCell className="text-sm whitespace-nowrap">
+                                ${(order.amount / 100).toFixed(2)} {order.currency?.toUpperCase()}
+                              </TableCell>
+                              <TableCell className="text-sm">
+                                {order.products?.name === 'JumpinAI Pro Subscription' ? (
+                                  <div className="text-sm text-muted-foreground">—</div>
+                                ) : (
+                                  <div className="text-sm">
+                                    <div>{order.download_count || 0} / {order.max_downloads || 20}</div>
+                                    <div className="text-xs text-muted-foreground">downloads</div>
+                                  </div>
+                                )}
+                              </TableCell>
+                              <TableCell>
+                                <div className="flex flex-col lg:flex-row gap-1 lg:gap-2">
                                   {order.download_token && order.products?.file_name && order.products?.name !== 'JumpinAI Pro Subscription' && (
                                     <Button 
                                       variant="outline" 
                                       size="sm"
+                                      className="text-xs whitespace-nowrap"
                                       onClick={() => window.open(`https://cieczaajcgkgdgenfdzi.supabase.co/functions/v1/download-product/${order.download_token}`, '_blank')}
                                       disabled={(order.download_count || 0) >= (order.max_downloads || 20)}
                                     >
                                       Download
                                     </Button>
                                   )}
-                                {order.stripe_session_id && (
-                                  <Button 
-                                    variant="outline" 
-                                    size="sm"
-                                    onClick={() => downloadReceipt(order.stripe_session_id)}
-                                    disabled={downloadingReceipt === order.stripe_session_id}
-                                  >
-                                    {downloadingReceipt === order.stripe_session_id ? "Loading..." : "Receipt"}
-                                  </Button>
-                                )}
-                              </div>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
+                                  {order.stripe_session_id && (
+                                    <Button 
+                                      variant="outline" 
+                                      size="sm"
+                                      className="text-xs whitespace-nowrap"
+                                      onClick={() => downloadReceipt(order.stripe_session_id)}
+                                      disabled={downloadingReceipt === order.stripe_session_id}
+                                    >
+                                      {downloadingReceipt === order.stripe_session_id ? "Loading..." : "Receipt"}
+                                    </Button>
+                                  )}
+                                </div>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </div>
                   </div>
                 )}
               </CardContent>
