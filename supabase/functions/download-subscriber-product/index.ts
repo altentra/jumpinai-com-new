@@ -52,21 +52,24 @@ serve(async (req) => {
     // Resolve product
     let product: any = null;
     if (productId) {
-      const { data, error } = await supabase.from('products').select('id, file_name').eq('id', productId).maybeSingle();
+      const { data, error } = await supabase.from('products').select('id, file_name, file_path').eq('id', productId).maybeSingle();
       if (error) throw error;
       product = data;
     } else if (fileName) {
-      const { data, error } = await supabase.from('products').select('id, file_name').eq('file_name', fileName).maybeSingle();
+      const { data, error } = await supabase.from('products').select('id, file_name, file_path').eq('file_name', fileName).maybeSingle();
       if (error) throw error;
       product = data;
     }
     if (!product?.file_name) throw new Error('Product file not found');
 
+    // Extract just the filename from file_path (e.g., "digital-products/file.pdf" -> "file.pdf")
+    const actualFileName = product.file_path ? product.file_path.split('/').pop() : product.file_name;
+
     // Create signed URL (60 seconds)
     const { data: signed, error: signErr } = await supabase
       .storage
       .from('digital-products')
-      .createSignedUrl(product.file_name, 60);
+      .createSignedUrl(actualFileName, 60);
     if (signErr) throw signErr;
 
     return new Response(JSON.stringify({ url: signed.signedUrl }), {

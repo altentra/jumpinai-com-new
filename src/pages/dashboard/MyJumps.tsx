@@ -149,8 +149,11 @@ export default function MyJumps() {
                         if (order?.download_token) {
                           window.location.href = `/download/${order.download_token}`;
                         } else {
+                          const { data: session } = await supabase.auth.getSession();
+                          const accessToken = session.session?.access_token;
                           const { data, error } = await supabase.functions.invoke('download-subscriber-product', {
                             body: { productId: p.id },
+                            headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
                           });
                           if (error) throw error;
                           const url = (data as any)?.url;
