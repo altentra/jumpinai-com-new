@@ -199,6 +199,8 @@ export default function ProfileTabs() {
 
   const manage = async () => {
     console.log("🔧 [Mobile Debug] Manage billing clicked");
+    // Open a placeholder window synchronously to avoid popup blockers on mobile
+    const placeholder = window.open('', '_blank');
     try {
       const { data: session } = await supabase.auth.getSession();
       const accessToken = session.session?.access_token;
@@ -215,18 +217,22 @@ export default function ProfileTabs() {
       const url = (data as any)?.url;
       
       if (url) {
-        console.log("🔧 [Mobile Debug] Opening URL:", url);
-        // Try multiple approaches for mobile compatibility
-        try {
-          window.open(url, '_blank');
-          console.log("🔧 [Mobile Debug] window.open succeeded");
-        } catch (popupError) {
-          console.log("🔧 [Mobile Debug] window.open failed, trying location.href");
-          window.location.href = url;
+        console.log("🔧 [Mobile Debug] Navigating to portal URL:", url);
+        if (placeholder && typeof placeholder.location !== 'undefined') {
+          placeholder.location.href = url;
+          console.log("🔧 [Mobile Debug] Used placeholder window");
+        } else {
+          const win = window.open(url, '_blank');
+          if (!win) {
+            console.log("🔧 [Mobile Debug] window.open returned null, falling back to same-tab navigation");
+            window.location.href = url;
+          }
         }
       }
     } catch (e: any) {
       console.error("🔧 [Mobile Debug] Manage billing error:", e);
+      // Close placeholder if we created it and failed
+      try { placeholder?.close(); } catch {}
       toast.error(e.message || "Failed to open billing portal");
     }
   };
@@ -294,6 +300,8 @@ export default function ProfileTabs() {
     }
 
     console.log("🔧 [Mobile Debug] Download receipt clicked for:", stripeSessionId);
+    // Open placeholder window synchronously to bypass mobile popup blockers
+    const placeholder = window.open('', '_blank');
     setDownloadingReceipt(stripeSessionId);
     try {
       console.log("🔧 [Mobile Debug] Invoking download-receipt function");
@@ -309,21 +317,26 @@ export default function ProfileTabs() {
       }
 
       if (data?.receiptUrl) {
-        console.log("🔧 [Mobile Debug] Opening receipt URL:", data.receiptUrl);
-        try {
-          window.open(data.receiptUrl, '_blank');
-          console.log("🔧 [Mobile Debug] Receipt window.open succeeded");
-        } catch (popupError) {
-          console.log("🔧 [Mobile Debug] Receipt window.open failed, trying location.href");
-          window.location.href = data.receiptUrl;
+        console.log("🔧 [Mobile Debug] Navigating to receipt URL:", data.receiptUrl);
+        if (placeholder && typeof placeholder.location !== 'undefined') {
+          placeholder.location.href = data.receiptUrl;
+          console.log("🔧 [Mobile Debug] Used placeholder window for receipt");
+        } else {
+          const win = window.open(data.receiptUrl, '_blank');
+          if (!win) {
+            console.log("🔧 [Mobile Debug] window.open returned null for receipt, falling back to same-tab navigation");
+            window.location.href = data.receiptUrl;
+          }
         }
       } else {
         console.error("🔧 [Mobile Debug] No receipt URL in response:", data);
         toast.error("Receipt not available");
+        try { placeholder?.close(); } catch {}
       }
     } catch (error: any) {
       console.error("🔧 [Mobile Debug] Error downloading receipt:", error);
       toast.error("Failed to download receipt");
+      try { placeholder?.close(); } catch {}
     } finally {
       setDownloadingReceipt(null);
     }
