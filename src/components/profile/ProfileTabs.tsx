@@ -755,7 +755,7 @@ export default function ProfileTabs() {
                           </div>
                         </div>
                         
-                        {order.products?.file_name && order.download_token && (
+                        {order.products?.file_name && order.download_token && order.products?.name !== 'JumpinAI Pro Subscription' && (
                           <div>
                             <div className="text-xs text-muted-foreground mb-1">Downloads</div>
                             <div className="text-sm">
@@ -765,7 +765,7 @@ export default function ProfileTabs() {
                         )}
                         
                         <div className="flex flex-col gap-2 pt-2">
-                          {order.products?.file_name && order.download_token && (
+                          {order.products?.file_name && order.download_token && order.products?.name !== 'JumpinAI Pro Subscription' && (
                             <Button 
                               variant="outline" 
                               size="sm"
@@ -831,7 +831,7 @@ export default function ProfileTabs() {
                                 ${(order.amount / 100).toFixed(2)} {order.currency?.toUpperCase()}
                               </TableCell>
                               <TableCell className="text-sm">
-                                {order.products?.file_name && order.download_token ? (
+                                {order.products?.file_name && order.download_token && order.products?.name !== 'JumpinAI Pro Subscription' ? (
                                   <div className="text-sm">
                                     <div>{order.download_count || 0} / {order.max_downloads || 5}</div>
                                     <div className="text-xs text-muted-foreground">downloads</div>
@@ -840,7 +840,7 @@ export default function ProfileTabs() {
                               </TableCell>
                               <TableCell>
                                 <div className="flex flex-col lg:flex-row gap-1 lg:gap-2">
-                                  {order.products?.file_name && order.download_token && (
+                                  {order.products?.file_name && order.download_token && order.products?.name !== 'JumpinAI Pro Subscription' && (
                                     <Button 
                                       variant="outline" 
                                       size="sm"
