@@ -1,9 +1,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { CheckCircle, Circle, Clock, Users, Target, Lightbulb } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { CheckCircle, Clock, Users, Wrench, AlertTriangle, BookOpen } from "lucide-react";
 
 type Workflow = {
   name: string;
@@ -12,21 +10,29 @@ type Workflow = {
   category: string;
 };
 
-type DetailedWorkflow = Workflow & {
+type DetailedWorkflow = {
+  name: string;
+  description: string;
+  steps: string[];
+  category: string;
   overview: string;
   prerequisites: string[];
   timeEstimate: string;
-  difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
+  difficulty: string;
   tools: string[];
   detailedSteps: {
     title: string;
     description: string;
     actions: string[];
-    tips: string[];
-    expectedOutcome: string;
   }[];
-  variations: string[];
-  troubleshooting: { problem: string; solution: string; }[];
+  variations: {
+    name: string;
+    description: string;
+  }[];
+  troubleshooting: {
+    issue: string;
+    solution: string;
+  }[];
   resources: { name: string; url: string; }[];
 };
 
@@ -48,226 +54,364 @@ const workflowDetails: Record<string, DetailedWorkflow> = {
         actions: [
           "Define your role context: 'Act as a [specific role] with expertise in [domain]'",
           "Identify target audience: demographics, pain points, preferred communication style",
-          "Set content constraints: word count, format requirements, publication channel",
-          "Establish deliverable specifications: blog post, social media, email, etc."
-        ],
-        tips: [
-          "Be specific about audience level (beginner vs expert)",
-          "Include emotional tone preferences (professional, casual, inspiring)",
-          "Mention any compliance or legal considerations",
-          "Reference similar successful content as examples"
-        ],
-        expectedOutcome: "Clear content brief with defined parameters and expectations"
+          "Set clear constraints: word count, format requirements, publication timeline",
+          "Establish success metrics: engagement goals, conversion targets, brand alignment"
+        ]
       },
       {
         title: "Step 2: Strategic Outline Development",
-        description: "Create a structured framework before diving into full content creation.",
+        description: "Create a structured framework that ensures comprehensive coverage and logical flow.",
         actions: [
-          "Request an outline with main sections and key points",
-          "Review outline for logical flow and completeness",
-          "Iterate on structure based on audience journey and objectives",
-          "Approve final outline before proceeding to full content"
-        ],
-        tips: [
-          "Ask for estimated reading time for each section",
-          "Ensure outline includes hook, value propositions, and call-to-action",
-          "Consider SEO keyword integration opportunities",
-          "Validate outline against content marketing best practices"
-        ],
-        expectedOutcome: "Approved content outline with clear section hierarchy and flow"
+          "Request a detailed outline with main sections and subsections",
+          "Iterate on structure based on audience journey and content objectives",
+          "Validate outline against SEO requirements and keyword strategy", 
+          "Confirm logical flow and ensure all key points are covered"
+        ]
       },
       {
-        title: "Step 3: Content Generation and Refinement",
-        description: "Transform your approved outline into polished, engaging content.",
+        title: "Step 3: Content Creation & Iteration",
+        description: "Generate the actual content with multiple variations and refinements.",
         actions: [
-          "Generate initial content draft based on approved outline",
-          "Review for brand voice, tone, and messaging consistency",
-          "Request variations for key sections (headlines, CTAs, conclusions)",
-          "Apply final brand guidelines and style preferences"
-        ],
-        tips: [
-          "Generate 3-5 headline options to test engagement",
-          "Create multiple CTA variations for A/B testing",
-          "Ensure content includes data, examples, or case studies",
-          "Optimize for readability with shorter paragraphs and bullet points"
-        ],
-        expectedOutcome: "Final content ready for publication with multiple tested variations"
+          "Create initial content draft following the approved outline",
+          "Generate 2-3 variations of key sections for testing and optimization",
+          "Apply brand voice guidelines and style consistency checks",
+          "Optimize for readability, engagement, and conversion goals"
+        ]
+      },
+      {
+        title: "Step 4: Quality Assurance & Finalization",
+        description: "Ensure content meets all requirements and brand standards before publication.",
+        actions: [
+          "Conduct thorough review for accuracy, tone, and brand alignment",
+          "Verify all facts, statistics, and claims with reliable sources",
+          "Optimize for SEO with appropriate keywords and meta descriptions",
+          "Prepare final version with calls-to-action and distribution strategy"
+        ]
       }
     ],
     variations: [
-      "Video Script Workflow: Add storyboard development and visual cue planning",
-      "Social Media Workflow: Create platform-specific adaptations and scheduling",
-      "Email Campaign Workflow: Include subject line testing and segmentation",
-      "Technical Content Workflow: Add expert review and accuracy validation steps"
+      { name: "Blog Post Variation", description: "Optimized for long-form educational content with SEO focus" },
+      { name: "Social Media Variation", description: "Adapted for platform-specific content with engagement optimization" },
+      { name: "Email Campaign Variation", description: "Tailored for email marketing with personalization and conversion focus" }
     ],
     troubleshooting: [
-      {
-        problem: "AI generates generic, bland content",
-        solution: "Provide more specific context, examples of preferred style, and detailed audience personas"
-      },
-      {
-        problem: "Content doesn't match brand voice",
-        solution: "Create a detailed brand voice document with do's/don'ts and example phrases"
-      },
-      {
-        problem: "Outline feels incomplete or illogical",
-        solution: "Ask AI to explain the reasoning behind structure and suggest alternative approaches"
-      }
+      { issue: "Content lacks originality", solution: "Add more specific context about your unique perspective, include personal examples, and request multiple angles on the same topic" },
+      { issue: "AI output is too generic", solution: "Provide more detailed audience information, include competitor analysis, and specify exact tone and style requirements" },
+      { issue: "Content doesn't match brand voice", solution: "Include 3-5 examples of your existing content, create a detailed brand voice document, and iterate with feedback" }
     ],
     resources: [
-      { name: "Content Marketing Institute", url: "https://contentmarketinginstitute.com" },
-      { name: "HubSpot Content Strategy Guide", url: "https://blog.hubspot.com/marketing/content-strategy" },
-      { name: "Copyblogger Writing Tips", url: "https://copyblogger.com" }
+      { name: "Content Marketing Guide", url: "#" },
+      { name: "Brand Voice Templates", url: "#" },
+      { name: "SEO Best Practices", url: "#" }
     ]
   },
-  
+
+  "Document Analysis Workflow": {
+    name: "Document Analysis Workflow",
+    description: "Process for analyzing and summarizing documents",
+    steps: ["Upload/reference source docs; ask for structured SOP.", "Iterate to add owners/SLAs; request ambiguity list.", "Export final SOP with version and change log."],
+    category: "Analysis",
+    overview: "A systematic approach to transforming complex documents into actionable insights and structured procedures. Essential for legal review, policy analysis, and knowledge extraction.",
+    prerequisites: ["Document access and upload capability", "Clear analysis objectives", "Stakeholder identification", "Output format requirements"],
+    timeEstimate: "45-120 minutes per document",
+    difficulty: "Intermediate",
+    tools: ["AI document analysis tools", "OCR software", "Collaboration platforms", "Version control systems"],
+    detailedSteps: [
+      {
+        title: "Step 1: Document Ingestion & Initial Analysis",
+        description: "Upload and perform initial assessment of the document structure and content.",
+        actions: [
+          "Upload or reference source documents with proper security protocols",
+          "Perform initial document structure analysis and content mapping",
+          "Identify key sections, stakeholders, and decision points",
+          "Extract metadata, dates, and version information for tracking"
+        ]
+      },
+      {
+        title: "Step 2: Structured Content Extraction",
+        description: "Convert document content into organized, actionable information.",
+        actions: [
+          "Request structured SOP format with clear sections and hierarchy",
+          "Extract key processes, procedures, and business rules",
+          "Identify dependencies, prerequisites, and success criteria",
+          "Create summary sections with executive overview and key takeaways"
+        ]
+      },
+      {
+        title: "Step 3: Stakeholder & Accountability Mapping",
+        description: "Add ownership structure and service level agreements to extracted content.",
+        actions: [
+          "Identify and assign process owners for each section or procedure",
+          "Define Service Level Agreements (SLAs) and performance metrics",
+          "Add approval workflows and escalation procedures",
+          "Create responsibility matrices (RACI) for complex processes"
+        ]
+      },
+      {
+        title: "Step 4: Quality Assurance & Finalization",
+        description: "Ensure accuracy, completeness, and usability of the final output.",
+        actions: [
+          "Generate comprehensive ambiguity list highlighting unclear areas",
+          "Validate extracted information against source documents",
+          "Create final SOP with proper versioning and change management",
+          "Export in required formats with distribution and maintenance plans"
+        ]
+      }
+    ],
+    variations: [
+      { name: "Legal Document Analysis", description: "Specialized for contracts, compliance documents, and legal texts" },
+      { name: "Technical Documentation Review", description: "Optimized for technical manuals, specifications, and procedures" },
+      { name: "Policy Document Extraction", description: "Focused on organizational policies, guidelines, and governance documents" }
+    ],
+    troubleshooting: [
+      { issue: "Poor document quality or formatting", solution: "Use OCR preprocessing, manual cleanup, or request better quality source documents" },
+      { issue: "Complex multi-section documents", solution: "Break into smaller sections, analyze incrementally, and maintain cross-references" },
+      { issue: "Ambiguous or contradictory content", solution: "Flag all ambiguities, seek clarification from stakeholders, and document assumptions" }
+    ],
+    resources: [
+      { name: "Document Analysis Templates", url: "#" },
+      { name: "SOP Creation Guidelines", url: "#" },
+      { name: "Process Mapping Tools", url: "#" }
+    ]
+  },
+
+  "Executive Reporting Workflow": {
+    name: "Executive Reporting Workflow", 
+    description: "Create executive-ready reports from data",
+    steps: ["Provide table/context; request bullet executive summary.", "Probe on anomalies; ask for 3 hypotheses with tests.", "Finalize with risks, opportunities, and next steps."],
+    category: "Business Intelligence",
+    overview: "Transform raw data and complex analysis into concise, actionable executive reports that drive strategic decision-making and organizational alignment.",
+    prerequisites: ["Access to relevant data sources", "Understanding of business context", "Executive audience insights", "Strategic objectives clarity"],
+    timeEstimate: "60-180 minutes per report",
+    difficulty: "Intermediate",
+    tools: ["Business intelligence platforms", "Data visualization tools", "Statistical analysis software", "Executive presentation templates"],
+    detailedSteps: [
+      {
+        title: "Step 1: Data Contextualization & Executive Summary",
+        description: "Transform raw data into executive-level insights with proper business context.",
+        actions: [
+          "Provide comprehensive data tables with proper context and methodology",
+          "Request structured executive summary with key findings in bullet format",
+          "Highlight the most critical 3-5 insights that require executive attention",
+          "Include performance against established KPIs and benchmarks"
+        ]
+      },
+      {
+        title: "Step 2: Anomaly Investigation & Hypothesis Development",
+        description: "Deep-dive into data anomalies and develop testable hypotheses for unusual patterns.",
+        actions: [
+          "Identify and probe significant variances, outliers, and unexpected trends",
+          "Generate 3 testable hypotheses for each major anomaly or insight",
+          "Design verification tests and validation methods for each hypothesis",
+          "Prioritize investigations based on potential business impact and feasibility"
+        ]
+      },
+      {
+        title: "Step 3: Strategic Risk & Opportunity Assessment",
+        description: "Evaluate implications and develop actionable recommendations for executive decision-making.",
+        actions: [
+          "Conduct comprehensive risk analysis with likelihood and impact assessment",
+          "Identify strategic opportunities with market timing and resource requirements",
+          "Develop scenario planning with best/worst/most likely case projections",
+          "Quantify potential financial impact of identified risks and opportunities"
+        ]
+      },
+      {
+        title: "Step 4: Action Planning & Next Steps",
+        description: "Create concrete action plan with clear accountability and timeline for implementation.",
+        actions: [
+          "Define specific next steps with assigned owners and realistic timelines",
+          "Establish success metrics and monitoring protocols for recommended actions",
+          "Create executive decision framework with clear options and trade-offs", 
+          "Schedule follow-up reviews and progress checkpoints"
+        ]
+      }
+    ],
+    variations: [
+      { name: "Financial Performance Report", description: "Focused on financial metrics, variance analysis, and fiscal performance" },
+      { name: "Operational Dashboard Report", description: "Operational KPIs, efficiency metrics, and process performance analysis" },
+      { name: "Market Intelligence Report", description: "Competitive analysis, market trends, and strategic positioning insights" }
+    ],
+    troubleshooting: [
+      { issue: "Data quality or completeness issues", solution: "Clearly document data limitations, provide confidence intervals, and recommend data improvement initiatives" },
+      { issue: "Too much technical detail for executives", solution: "Use executive summary format, focus on implications rather than methodology, provide technical appendix" },
+      { issue: "Conflicting or unclear insights", solution: "Present multiple scenarios, highlight uncertainties, and provide decision frameworks for ambiguous situations" }
+    ],
+    resources: [
+      { name: "Executive Report Templates", url: "#" },
+      { name: "Data Visualization Best Practices", url: "#" },
+      { name: "Strategic Analysis Frameworks", url: "#" }
+    ]
+  },
+
+  "Research Workflow": {
+    name: "Research Workflow",
+    description: "Comprehensive research with citations",
+    steps: ["Ask for current, cited sources; set timeframe.", "Request a pros/cons table and action checklist.", "Deliver an executive brief plus 3 tweet‑length summaries."],
+    category: "Research",
+    overview: "A systematic approach to conducting thorough research that delivers credible, actionable insights with proper attribution and multiple output formats for different audiences.",
+    prerequisites: ["Access to research databases and sources", "Clear research objectives", "Target audience definition", "Timeline and scope parameters"],
+    timeEstimate: "2-8 hours depending on scope",
+    difficulty: "Intermediate",
+    tools: ["Academic databases", "Web research tools", "Citation management", "Content synthesis platforms"],
+    detailedSteps: [
+      {
+        title: "Step 1: Research Scoping & Source Identification", 
+        description: "Define research parameters and identify current, credible sources with proper citations.",
+        actions: [
+          "Establish clear research questions and success criteria",
+          "Set specific timeframe constraints for source currency (typically 1-3 years)",
+          "Identify and access appropriate databases, journals, and expert sources",
+          "Create initial source list with proper citation format and credibility assessment"
+        ]
+      },
+      {
+        title: "Step 2: Comprehensive Analysis & Synthesis",
+        description: "Conduct thorough analysis and create structured comparison frameworks.",
+        actions: [
+          "Extract key findings, methodologies, and conclusions from each source",
+          "Create detailed pros/cons analysis table with weighted criteria",
+          "Develop comprehensive action checklist with prioritized recommendations", 
+          "Cross-reference findings to identify consensus, conflicts, and gaps"
+        ]
+      },
+      {
+        title: "Step 3: Multi-Format Output Creation",
+        description: "Transform research into multiple formats optimized for different stakeholder needs.",
+        actions: [
+          "Develop comprehensive executive brief with methodology and full findings",
+          "Create 3 tweet-length summaries highlighting key insights for social sharing",
+          "Include complete bibliography with accessible links and source quality ratings",
+          "Add visual summaries, infographics, or data visualizations where appropriate"
+        ]
+      },
+      {
+        title: "Step 4: Quality Assurance & Distribution Strategy",
+        description: "Validate findings and prepare for effective dissemination across channels.",
+        actions: [
+          "Conduct peer review and fact-checking of all claims and citations",
+          "Verify all links, sources, and data accuracy before distribution",
+          "Create distribution strategy tailored to different audience segments",
+          "Establish update schedule and monitoring for ongoing developments"
+        ]
+      }
+    ],
+    variations: [
+      { name: "Academic Research Synthesis", description: "Peer-reviewed academic sources with rigorous methodology focus" },
+      { name: "Market Research Analysis", description: "Industry reports, market data, and competitive intelligence gathering" },
+      { name: "Policy Research Brief", description: "Government sources, policy documents, and regulatory analysis" }
+    ],
+    troubleshooting: [
+      { issue: "Limited access to premium sources", solution: "Utilize institutional access, open-access alternatives, and government/NGO publications" },
+      { issue: "Conflicting information across sources", solution: "Document all perspectives, analyze source credibility, and present balanced view with uncertainty noted" },
+      { issue: "Information overload or scope creep", solution: "Return to original research questions, create clear inclusion/exclusion criteria, and set firm boundaries" }
+    ],
+    resources: [
+      { name: "Research Methodology Guide", url: "#" },
+      { name: "Citation and Source Evaluation", url: "#" },
+      { name: "Research Synthesis Templates", url: "#" }
+    ]
+  },
+
   "n8n AI Content Generation Pipeline": {
     name: "n8n AI Content Generation Pipeline",
     description: "Enterprise-scale content automation with multiple AI models",
     steps: ["Set up content brief intake via forms or API with validation rules", "Route requests through n8n based on content type and complexity", "Orchestrate multiple AI models (GPT-5, Claude, Gemini) for content creation", "Implement quality control with AI-powered review and human approval", "Distribute content across platforms with analytics tracking", "Create feedback loops for continuous pipeline optimization"],
     category: "AI Content Automation",
-    overview: "Build a sophisticated content generation pipeline that automatically creates, reviews, and distributes content across multiple channels using n8n workflow automation and multiple AI services.",
-    prerequisites: ["n8n instance (cloud or self-hosted)", "API access to multiple AI services", "Content management system integration", "Basic understanding of workflow automation", "Content strategy and brand guidelines"],
+    overview: "This advanced automation pipeline revolutionizes content creation by orchestrating multiple AI models through n8n workflows. Perfect for enterprises managing high-volume content production with consistent quality standards.",
+    prerequisites: ["n8n Pro subscription with AI integrations", "API access to multiple AI services", "Content management system", "Analytics platform integration", "Content approval workflow"],
     timeEstimate: "2-4 weeks implementation",
-    difficulty: "Advanced",
-    tools: ["n8n", "OpenAI API", "Claude API", "Google Gemini API", "Slack/Teams", "Content CMS", "Analytics platforms"],
+    difficulty: "Advanced", 
+    tools: ["n8n Pro", "OpenAI API", "Claude API", "Google Gemini", "Content CMS", "Analytics tools"],
     detailedSteps: [
       {
-        title: "Step 1: Content Intake System Setup",
-        description: "Create a robust system for capturing and validating content requests from various sources.",
+        title: "Step 1: Content Request System Setup",
+        description: "Build the intake system that captures content requirements and validates requests.",
         actions: [
-          "Set up webhook endpoints in n8n for form submissions and API requests",
-          "Create intake forms with required fields: content type, audience, tone, length, deadline",
-          "Implement validation rules for all input fields and content requirements",
-          "Set up automatic acknowledgment emails with tracking numbers",
-          "Create a content request database to track all submissions and status"
-        ],
-        tips: [
-          "Use conditional logic to show/hide fields based on content type",
-          "Include file upload capability for reference materials",
-          "Set up automatic priority scoring based on urgency and importance",
-          "Create templates for common content types to speed up intake"
-        ],
-        expectedOutcome: "Fully functional content intake system with validation and tracking"
+          "Create n8n webhook trigger for content requests from forms or API",
+          "Set up data validation nodes to ensure required fields are present",
+          "Implement content type classification (blog, social, email, etc.)",
+          "Add priority scoring based on urgency and content type",
+          "Create database storage for request tracking and audit trails"
+        ]
       },
       {
-        title: "Step 2: Intelligent Request Routing",
-        description: "Implement smart routing logic to direct content requests to appropriate AI services and workflows.",
+        title: "Step 2: AI Model Selection Logic", 
+        description: "Implement intelligent routing to the most appropriate AI model based on content requirements.",
         actions: [
-          "Create routing logic based on content type, complexity, and urgency",
-          "Set up AI service selection criteria (GPT-5 for creative, Claude for analysis, etc.)",
-          "Implement load balancing across multiple AI services to optimize costs",
-          "Create escalation paths for complex or high-priority requests",
-          "Set up monitoring for routing decisions and performance metrics"
-        ],
-        tips: [
-          "Use switch nodes in n8n for clean routing logic",
-          "Monitor API usage and costs across different services",
-          "Create fallback routing if primary services are unavailable",
-          "Log all routing decisions for optimization analysis"
-        ],
-        expectedOutcome: "Smart routing system that efficiently distributes work across AI services"
+          "Build conditional logic for AI model selection based on content type",
+          "Configure GPT-4 for creative and long-form content",
+          "Route technical content to Claude for accuracy and depth",
+          "Use Gemini for data analysis and research-heavy content",
+          "Implement fallback logic if primary AI service is unavailable",
+          "Add cost optimization rules to balance quality and budget"
+        ]
       },
       {
-        title: "Step 3: Multi-AI Orchestration Engine",
-        description: "Coordinate multiple AI models to create comprehensive, high-quality content.",
+        title: "Step 3: Content Generation Orchestration",
+        description: "Execute the content creation process with multiple AI models working in coordination.",
         actions: [
-          "Configure API connections for OpenAI, Claude, and Gemini services",
-          "Create specialized prompts for each AI service based on their strengths",
-          "Implement parallel processing for speed and sequential processing for quality",
-          "Set up context sharing between AI models for consistency",
-          "Create a master prompt template system for different content types"
-        ],
-        tips: [
-          "Use environment variables for API keys and sensitive configuration",
-          "Implement retry logic with exponential backoff for API calls",
-          "Create prompt libraries for consistent AI interactions",
-          "Monitor token usage and implement cost controls"
-        ],
-        expectedOutcome: "Orchestrated AI system producing consistent, high-quality content"
+          "Trigger primary AI model with optimized prompts and context",
+          "Generate multiple content variations for A/B testing",
+          "Implement secondary AI review for quality assessment",
+          "Add fact-checking nodes using search APIs or knowledge bases", 
+          "Create content enhancement workflows for SEO optimization",
+          "Generate metadata, tags, and categorization automatically"
+        ]
       },
       {
-        title: "Step 4: Quality Control and Review System",
-        description: "Implement automated and human review processes to ensure content quality and brand consistency.",
+        title: "Step 4: Quality Control & Approval Workflow",
+        description: "Implement automated quality checks and human approval processes.",
         actions: [
-          "Set up AI-powered content analysis for tone, style, and brand compliance",
-          "Create automated fact-checking and plagiarism detection workflows",
-          "Implement human review assignment based on content type and complexity",
-          "Set up approval workflows with multiple review stages",
-          "Create feedback collection and content revision processes"
-        ],
-        tips: [
-          "Use sentiment analysis to ensure appropriate tone",
-          "Implement readability scoring and optimization suggestions",
-          "Create reviewer assignment logic based on expertise and availability",
-          "Set up automated notifications for review deadlines"
-        ],
-        expectedOutcome: "Comprehensive quality control system ensuring brand-consistent content"
+          "Run AI-powered quality scoring based on brand guidelines",
+          "Check for plagiarism and originality using specialized APIs",
+          "Validate SEO requirements and readability scores",
+          "Route content through appropriate approval chains",
+          "Send notifications to reviewers with editing suggestions",
+          "Track approval times and bottlenecks for optimization"
+        ]
       },
       {
         title: "Step 5: Multi-Platform Distribution",
-        description: "Automatically distribute approved content across multiple channels with proper formatting and scheduling.",
+        description: "Automatically distribute approved content across multiple channels and platforms.",
         actions: [
-          "Set up integrations with content management systems and social platforms",
-          "Create platform-specific formatting and optimization rules",
-          "Implement scheduling logic based on audience analytics and engagement data",
-          "Set up cross-platform content adaptation (blog to social, etc.)",
-          "Create distribution tracking and analytics collection"
-        ],
-        tips: [
-          "Use webhook notifications to confirm successful publishing",
-          "Implement content versioning for different platforms",
-          "Set up automatic hashtag and keyword optimization",
-          "Create distribution reports for stakeholder communication"
-        ],
-        expectedOutcome: "Automated content distribution system with platform optimization"
+          "Format content for different platforms (WordPress, social media, email)",
+          "Schedule publication based on optimal timing algorithms",
+          "Generate platform-specific variations (Twitter threads, LinkedIn articles)",
+          "Add tracking parameters for analytics and attribution",
+          "Trigger cross-platform promotion workflows",
+          "Update content calendars and stakeholder notifications"
+        ]
       },
       {
-        title: "Step 6: Analytics and Optimization Loop",
-        description: "Collect performance data and continuously improve the content generation pipeline.",
+        title: "Step 6: Performance Analytics & Optimization",
+        description: "Continuously monitor content performance and optimize the pipeline.",
         actions: [
-          "Set up analytics collection from all distribution channels",
-          "Create performance dashboards with key content metrics",
-          "Implement A/B testing for different content variations",
-          "Set up automated reporting for content performance and ROI",
-          "Create optimization recommendations based on performance data"
-        ],
-        tips: [
-          "Track both engagement metrics and business outcomes",
-          "Use cohort analysis to understand long-term content impact",
-          "Implement automated alerts for exceptional performance (good or bad)",
-          "Create monthly optimization reviews and pipeline improvements"
-        ],
-        expectedOutcome: "Data-driven optimization system that continuously improves content performance"
+          "Collect performance data from all distribution channels",
+          "Analyze engagement patterns and content effectiveness",
+          "Generate automated reports for content teams and executives",
+          "Identify high-performing content patterns for future use",
+          "Optimize AI prompts based on performance data",
+          "Update model selection algorithms based on success metrics"
+        ]
       }
     ],
     variations: [
-      "Social Media Focus: Adapt pipeline for short-form content and platform-specific optimization",
-      "Technical Content: Add expert review stages and accuracy validation processes",
-      "Multilingual Pipeline: Include translation and localization workflows",
-      "Video Content: Extend pipeline to include script-to-video generation"
+      { name: "Blog Content Pipeline", description: "Specialized for long-form educational and thought leadership content" },
+      { name: "Social Media Content Factory", description: "High-volume social content production with platform optimization" },
+      { name: "Email Marketing Automation", description: "Personalized email content generation with segmentation" }
     ],
     troubleshooting: [
-      {
-        problem: "AI services returning inconsistent quality",
-        solution: "Refine prompts with specific examples and implement more detailed quality scoring"
-      },
-      {
-        problem: "High API costs",
-        solution: "Implement intelligent routing to use less expensive models for simpler tasks"
-      },
-      {
-        problem: "Content review bottlenecks",
-        solution: "Create automated pre-screening and intelligent reviewer assignment"
-      }
+      { issue: "AI model selection not optimal", solution: "Analyze content performance by model, adjust selection criteria, implement A/B testing for model performance" },
+      { issue: "Quality control bottlenecks", solution: "Implement parallel review processes, add automated pre-screening, optimize approval workflows" },
+      { issue: "High API costs", solution: "Implement intelligent caching, optimize prompt efficiency, add cost monitoring and budget controls" }
     ],
     resources: [
-      { name: "n8n Documentation", url: "https://docs.n8n.io" },
-      { name: "OpenAI API Guide", url: "https://platform.openai.com/docs" },
-      { name: "Content Automation Best Practices", url: "https://blog.n8n.io" }
+      { name: "n8n AI Integrations Guide", url: "#" },
+      { name: "Content Automation Best Practices", url: "#" },
+      { name: "Multi-AI Orchestration Patterns", url: "#" }
     ]
   }
-  // Add more detailed workflows here...
 };
 
 interface WorkflowDetailModalProps {
@@ -279,207 +423,158 @@ interface WorkflowDetailModalProps {
 export default function WorkflowDetailModal({ workflow, isOpen, onClose }: WorkflowDetailModalProps) {
   if (!workflow) return null;
 
-  const detailed = workflowDetails[workflow.name];
-  if (!detailed) {
-    // Fallback for workflows without detailed information
-    return (
-      <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="max-w-4xl max-h-[90vh]">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              {workflow.name}
-              <Badge variant="secondary">{workflow.category}</Badge>
-            </DialogTitle>
-          </DialogHeader>
-          <ScrollArea className="max-h-[70vh]">
-            <div className="space-y-6">
-              <p className="text-muted-foreground">{workflow.description}</p>
-              
-              <div>
-                <h3 className="font-semibold mb-3">Steps:</h3>
-                <ol className="list-decimal list-inside space-y-2">
-                  {workflow.steps.map((step, index) => (
-                    <li key={index} className="text-sm">{step}</li>
-                  ))}
-                </ol>
-              </div>
-              
-              <div className="text-center text-muted-foreground">
-                <p>Detailed implementation guide coming soon...</p>
-              </div>
-            </div>
-          </ScrollArea>
-        </DialogContent>
-      </Dialog>
-    );
-  }
+  const detailedWorkflow = workflowDetails[workflow.name];
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-6xl max-h-[90vh]">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-xl">
-            {detailed.name}
-            <Badge variant="secondary">{detailed.category}</Badge>
+          <DialogTitle className="flex items-center gap-3">
+            {workflow.name}
+            <Badge variant="secondary">{workflow.category}</Badge>
           </DialogTitle>
         </DialogHeader>
-        
-        <ScrollArea className="max-h-[75vh]">
-          <div className="space-y-8 pr-4">
-            {/* Overview Section */}
-            <div>
-              <h3 className="font-semibold text-lg mb-3 flex items-center gap-2">
-                <Target className="h-5 w-5" />
-                Overview
-              </h3>
-              <p className="text-muted-foreground leading-relaxed">{detailed.overview}</p>
-            </div>
 
-            {/* Quick Info */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-muted/50 p-4 rounded-lg">
-                <div className="flex items-center gap-2 mb-2">
-                  <Clock className="h-4 w-4 text-primary" />
-                  <span className="font-medium">Time Estimate</span>
-                </div>
-                <p className="text-sm text-muted-foreground">{detailed.timeEstimate}</p>
-              </div>
-              <div className="bg-muted/50 p-4 rounded-lg">
-                <div className="flex items-center gap-2 mb-2">
-                  <Users className="h-4 w-4 text-primary" />
-                  <span className="font-medium">Difficulty</span>
-                </div>
-                <Badge variant={detailed.difficulty === 'Beginner' ? 'default' : detailed.difficulty === 'Intermediate' ? 'secondary' : 'destructive'}>
-                  {detailed.difficulty}
-                </Badge>
-              </div>
-              <div className="bg-muted/50 p-4 rounded-lg">
-                <div className="flex items-center gap-2 mb-2">
-                  <Lightbulb className="h-4 w-4 text-primary" />
-                  <span className="font-medium">Tools Needed</span>
-                </div>
-                <p className="text-sm text-muted-foreground">{detailed.tools.length} tools</p>
-              </div>
-            </div>
+        {detailedWorkflow ? (
+          <Tabs defaultValue="overview" className="mt-4">
+            <TabsList className="grid w-full grid-cols-6">
+              <TabsTrigger value="overview">Overview</TabsTrigger>
+              <TabsTrigger value="prerequisites">Prerequisites</TabsTrigger>
+              <TabsTrigger value="steps">Steps</TabsTrigger>
+              <TabsTrigger value="variations">Variations</TabsTrigger>
+              <TabsTrigger value="troubleshooting">Troubleshooting</TabsTrigger>
+              <TabsTrigger value="resources">Resources</TabsTrigger>
+            </TabsList>
 
-            {/* Prerequisites */}
-            <div>
-              <h3 className="font-semibold text-lg mb-3">Prerequisites</h3>
-              <ul className="space-y-2">
-                {detailed.prerequisites.map((prereq, index) => (
-                  <li key={index} className="flex items-start gap-2">
-                    <CheckCircle className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
+            <TabsContent value="overview" className="mt-6 space-y-6">
+              <div>
+                <h3 className="text-lg font-semibold mb-3">Workflow Overview</h3>
+                <p className="text-muted-foreground leading-relaxed">{detailedWorkflow.overview}</p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="flex items-center gap-3 p-4 border rounded-lg">
+                  <Clock className="h-5 w-5 text-primary" />
+                  <div>
+                    <p className="font-medium">Time Estimate</p>
+                    <p className="text-sm text-muted-foreground">{detailedWorkflow.timeEstimate}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 p-4 border rounded-lg">
+                  <Users className="h-5 w-5 text-primary" />
+                  <div>
+                    <p className="font-medium">Difficulty</p>
+                    <p className="text-sm text-muted-foreground">{detailedWorkflow.difficulty}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 p-4 border rounded-lg">
+                  <Wrench className="h-5 w-5 text-primary" />
+                  <div>
+                    <p className="font-medium">Primary Tools</p>
+                    <p className="text-sm text-muted-foreground">{detailedWorkflow.tools.slice(0, 2).join(", ")}</p>
+                  </div>
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="prerequisites" className="mt-6 space-y-4">
+              <h3 className="text-lg font-semibold">Prerequisites & Requirements</h3>
+              <div className="space-y-3">
+                {detailedWorkflow.prerequisites.map((prereq, index) => (
+                  <div key={index} className="flex items-start gap-3 p-3 bg-muted/50 rounded-lg">
+                    <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
                     <span className="text-sm">{prereq}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Tools */}
-            <div>
-              <h3 className="font-semibold text-lg mb-3">Required Tools</h3>
-              <div className="flex flex-wrap gap-2">
-                {detailed.tools.map((tool, index) => (
-                  <Badge key={index} variant="outline">{tool}</Badge>
+                  </div>
                 ))}
               </div>
-            </div>
+              
+              <div className="mt-6">
+                <h4 className="font-semibold mb-3">Required Tools & Platforms</h4>
+                <div className="grid grid-cols-2 gap-2">
+                  {detailedWorkflow.tools.map((tool, index) => (
+                    <div key={index} className="flex items-center gap-2 p-2 border rounded">
+                      <Wrench className="h-4 w-4 text-primary" />
+                      <span className="text-sm">{tool}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </TabsContent>
 
-            <Separator />
-
-            {/* Detailed Steps */}
-            <div>
-              <h3 className="font-semibold text-lg mb-4">Detailed Implementation Guide</h3>
-              <div className="space-y-8">
-                {detailed.detailedSteps.map((step, index) => (
-                  <div key={index} className="border rounded-lg p-6">
-                    <h4 className="font-semibold text-lg mb-3 text-primary">{step.title}</h4>
+            <TabsContent value="steps" className="mt-6 space-y-6">
+              <h3 className="text-lg font-semibold">Detailed Implementation Steps</h3>
+              {detailedWorkflow.detailedSteps.map((step, stepIndex) => (
+                <div key={stepIndex} className="border rounded-lg p-6 space-y-4">
+                  <div>
+                    <h4 className="font-semibold text-primary mb-2">{step.title}</h4>
                     <p className="text-muted-foreground mb-4">{step.description}</p>
-                    
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                      <div>
-                        <h5 className="font-medium mb-2">Actions to Take:</h5>
-                        <ul className="space-y-2">
-                          {step.actions.map((action, actionIndex) => (
-                            <li key={actionIndex} className="flex items-start gap-2">
-                              <Circle className="h-3 w-3 text-primary mt-1.5 flex-shrink-0" />
-                              <span className="text-sm">{action}</span>
-                            </li>
-                          ))}
-                        </ul>
+                  </div>
+                  <div className="space-y-2">
+                    <h5 className="font-medium">Action Items:</h5>
+                    {step.actions.map((action, actionIndex) => (
+                      <div key={actionIndex} className="flex items-start gap-3 ml-4">
+                        <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
+                        <span className="text-sm">{action}</span>
                       </div>
-                      
-                      <div>
-                        <h5 className="font-medium mb-2">Pro Tips:</h5>
-                        <ul className="space-y-2">
-                          {step.tips.map((tip, tipIndex) => (
-                            <li key={tipIndex} className="flex items-start gap-2">
-                              <Lightbulb className="h-3 w-3 text-yellow-500 mt-1.5 flex-shrink-0" />
-                              <span className="text-sm text-muted-foreground">{tip}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                    
-                    <div className="mt-4 p-3 bg-green-50 dark:bg-green-950/20 rounded-lg">
-                      <h5 className="font-medium text-green-800 dark:text-green-200 mb-1">Expected Outcome:</h5>
-                      <p className="text-sm text-green-700 dark:text-green-300">{step.expectedOutcome}</p>
-                    </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </TabsContent>
+
+            <TabsContent value="variations" className="mt-6 space-y-4">
+              <h3 className="text-lg font-semibold">Workflow Variations</h3>
+              <div className="grid gap-4">
+                {detailedWorkflow.variations.map((variation, index) => (
+                  <div key={index} className="p-4 border rounded-lg">
+                    <h4 className="font-semibold mb-2">{variation.name}</h4>
+                    <p className="text-sm text-muted-foreground">{variation.description}</p>
                   </div>
                 ))}
               </div>
-            </div>
+            </TabsContent>
 
-            {/* Variations */}
-            <div>
-              <h3 className="font-semibold text-lg mb-3">Workflow Variations</h3>
-              <ul className="space-y-2">
-                {detailed.variations.map((variation, index) => (
-                  <li key={index} className="flex items-start gap-2">
-                    <Badge variant="outline" className="mt-0.5">V{index + 1}</Badge>
-                    <span className="text-sm">{variation}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Troubleshooting */}
-            <div>
-              <h3 className="font-semibold text-lg mb-3">Troubleshooting Guide</h3>
+            <TabsContent value="troubleshooting" className="mt-6 space-y-4">
+              <h3 className="text-lg font-semibold">Common Issues & Solutions</h3>
               <div className="space-y-4">
-                {detailed.troubleshooting.map((item, index) => (
-                  <div key={index} className="border-l-4 border-yellow-500 pl-4">
-                    <h5 className="font-medium text-yellow-800 dark:text-yellow-200">{item.problem}</h5>
-                    <p className="text-sm text-muted-foreground mt-1">{item.solution}</p>
+                {detailedWorkflow.troubleshooting.map((item, index) => (
+                  <div key={index} className="p-4 border rounded-lg space-y-2">
+                    <div className="flex items-start gap-3">
+                      <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5 flex-shrink-0" />
+                      <div className="space-y-2">
+                        <h4 className="font-semibold text-red-700 dark:text-red-400">Issue: {item.issue}</h4>
+                        <p className="text-sm text-muted-foreground"><strong>Solution:</strong> {item.solution}</p>
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>
-            </div>
+            </TabsContent>
 
-            {/* Resources */}
-            <div>
-              <h3 className="font-semibold text-lg mb-3">Additional Resources</h3>
-              <div className="space-y-2">
-                {detailed.resources.map((resource, index) => (
-                  <a
-                    key={index}
-                    href={resource.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-primary hover:underline"
-                  >
-                    <span className="text-sm">{resource.name}</span>
-                  </a>
+            <TabsContent value="resources" className="mt-6 space-y-4">
+              <h3 className="text-lg font-semibold">Additional Resources</h3>
+              <div className="grid gap-3">
+                {detailedWorkflow.resources.map((resource, index) => (
+                  <div key={index} className="flex items-center gap-3 p-3 border rounded-lg hover:bg-muted/50 transition-colors">
+                    <BookOpen className="h-5 w-5 text-primary" />
+                    <a href={resource.url} className="font-medium hover:underline" target="_blank" rel="noopener noreferrer">
+                      {resource.name}
+                    </a>
+                  </div>
                 ))}
               </div>
-            </div>
+            </TabsContent>
+          </Tabs>
+        ) : (
+          <div className="text-center py-12">
+            <AlertTriangle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+            <h3 className="text-lg font-semibold mb-2">Detailed Guide Coming Soon</h3>
+            <p className="text-muted-foreground">
+              We're working on comprehensive step-by-step guides for this workflow. 
+              Check back soon for detailed implementation instructions!
+            </p>
           </div>
-        </ScrollArea>
-
-        <div className="flex justify-end mt-4">
-          <Button onClick={onClose}>Close</Button>
-        </div>
+        )}
       </DialogContent>
     </Dialog>
   );
