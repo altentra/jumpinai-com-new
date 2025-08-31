@@ -387,6 +387,226 @@ const blueprintDetails: Record<string, DetailedBlueprint> = {
       { name: "Workflow Design Patterns", url: "#" },
       { name: "Integration Templates", url: "#" }
     ]
+  },
+
+  "Executive Dashboard Blueprint": {
+    name: "Executive Dashboard Blueprint",
+    description: "Template for executive reporting",
+    template: "# Executive Dashboard\n## Key Metrics\n[Primary KPIs]\n## Performance Summary\n[5 bullet points]\n## Risks & Opportunities\n[Assessment]\n## Recommendations\n[Action items]\n## Next Steps\n[Timeline and owners]",
+    category: "Business Intelligence",
+    overview: "A comprehensive framework for creating executive-level dashboards that provide strategic insights, performance metrics, and actionable intelligence for senior leadership decision-making.",
+    useCase: "Perfect for executives, board members, and senior managers who need at-a-glance visibility into business performance, strategic initiatives, and key decision points.",
+    benefits: [
+      "Provides real-time visibility into critical business metrics",
+      "Enables data-driven decision making at the executive level",
+      "Streamlines executive reporting and reduces preparation time by 70%",
+      "Identifies risks and opportunities before they impact business",
+      "Facilitates strategic alignment across leadership team"
+    ],
+    customization: [
+      "Adapt KPI selection based on industry and business model",
+      "Customize visualization types for different executive preferences",
+      "Modify update frequency based on business velocity and needs",
+      "Scale complexity based on organizational size and structure",
+      "Integrate with existing BI tools and data sources"
+    ],
+    implementationSteps: [
+      {
+        title: "Strategic Metrics Identification",
+        description: "Define the most critical metrics that drive executive decision-making.",
+        actions: [
+          "Conduct stakeholder interviews to identify key decision factors",
+          "Map business objectives to measurable KPIs and success metrics",
+          "Prioritize metrics based on impact and actionability",
+          "Establish baseline measurements and target benchmarks",
+          "Create metric definitions and calculation methodologies"
+        ]
+      },
+      {
+        title: "Data Architecture & Integration",
+        description: "Build robust data infrastructure to support executive reporting needs.",
+        actions: [
+          "Identify and catalog all relevant data sources across the organization",
+          "Design data integration and ETL processes for real-time updates",
+          "Implement data quality controls and validation procedures",
+          "Create data governance framework for accuracy and consistency",
+          "Establish data security and access control protocols"
+        ]
+      },
+      {
+        title: "Dashboard Design & User Experience",
+        description: "Create intuitive and visually compelling executive dashboard interfaces.",
+        actions: [
+          "Design executive-friendly layouts with clear visual hierarchy",
+          "Implement interactive elements for drill-down capabilities",
+          "Create mobile-responsive designs for executive accessibility",
+          "Add contextual alerts and exception reporting features",
+          "Build narrative elements that explain data insights and implications"
+        ]
+      },
+      {
+        title: "Automated Analysis & Insights",
+        description: "Implement intelligent analysis capabilities that generate actionable insights.",
+        actions: [
+          "Deploy AI-powered trend detection and anomaly identification",
+          "Create automated variance analysis and performance commentary",
+          "Implement predictive analytics for forecasting and scenario planning",
+          "Add comparative analysis against industry benchmarks",
+          "Generate automated recommendations based on data patterns"
+        ]
+      },
+      {
+        title: "Distribution & Governance",
+        description: "Establish systematic distribution and ongoing governance of executive reporting.",
+        actions: [
+          "Create automated distribution schedules for different stakeholder groups",
+          "Implement version control and audit trails for data lineage",
+          "Establish review cycles and continuous improvement processes",
+          "Add feedback mechanisms for dashboard effectiveness",
+          "Create training and adoption programs for executive users"
+        ]
+      }
+    ],
+    examples: [
+      {
+        title: "CEO Performance Dashboard",
+        description: "Comprehensive view of company performance across all functions",
+        results: "Reduced executive meeting preparation time by 50%, improved strategic decision speed by 40%"
+      },
+      {
+        title: "Board Meeting Dashboard", 
+        description: "Board-ready summary of financial, operational, and strategic metrics",
+        results: "Enhanced board engagement with data-driven discussions, reduced reporting overhead by 60%"
+      },
+      {
+        title: "Division Head Dashboard",
+        description: "Departmental performance tracking with cross-functional dependencies",
+        results: "Improved cross-departmental collaboration, increased goal achievement by 35%"
+      }
+    ],
+    bestPractices: [
+      "Focus on actionable metrics that drive decisions, not vanity metrics",
+      "Use clear visual hierarchy with the most important information prominently displayed",
+      "Provide context for all metrics including trends, targets, and benchmarks",
+      "Implement real-time or near-real-time data updates for operational metrics",
+      "Include narrative insights and recommendations, not just raw data",
+      "Design for mobile accessibility since executives often view on mobile devices"
+    ],
+    resources: [
+      { name: "Executive Reporting Best Practices", url: "#" },
+      { name: "KPI Selection Framework", url: "#" },
+      { name: "Dashboard Design Guidelines", url: "#" }
+    ]
+  },
+
+  "Brand Voice Guide": {
+    name: "Brand Voice Guide",
+    description: "Template for maintaining brand consistency",
+    template: "# Brand Voice Guide\n## Voice Characteristics\n[Personality traits]\n## Tone Guidelines\n[Situational tones]\n## Do's and Don'ts\n[Examples]\n## Templates\n[Reusable formats]\n## Quality Checks\n[Verification process]",
+    category: "Branding",
+    overview: "A comprehensive framework for establishing, documenting, and maintaining consistent brand voice across all communication channels and touchpoints. This guide ensures cohesive brand personality and messaging that resonates with target audiences.",
+    useCase: "Essential for marketing teams, content creators, customer service representatives, and any team members who communicate on behalf of the brand across various channels and platforms.",
+    benefits: [
+      "Ensures consistent brand personality across all communications",
+      "Reduces content creation time with clear guidelines and templates",
+      "Improves brand recognition and customer trust through consistency",
+      "Facilitates easier onboarding of new team members and agencies",
+      "Enhances customer experience with cohesive messaging"
+    ],
+    customization: [
+      "Adapt voice characteristics to match industry and target audience",
+      "Customize tone variations for different communication contexts",
+      "Modify examples to reflect specific product or service categories",
+      "Scale complexity based on brand maturity and team size",
+      "Integrate with existing brand guidelines and style manuals"
+    ],
+    implementationSteps: [
+      {
+        title: "Brand Personality Definition",
+        description: "Establish core brand personality traits and communication principles.",
+        actions: [
+          "Conduct brand audit and competitive analysis for positioning",
+          "Define 3-5 core personality traits that represent the brand",
+          "Create brand persona with detailed character description",
+          "Map personality traits to communication behaviors and language",
+          "Validate brand personality with key stakeholders and customer research"
+        ]
+      },
+      {
+        title: "Voice Characteristics Development",
+        description: "Translate brand personality into specific voice and language guidelines.",
+        actions: [
+          "Define vocabulary preferences and language style (formal/casual, technical/simple)",
+          "Establish grammar and punctuation conventions",
+          "Create guidelines for industry jargon and technical terminology usage",
+          "Develop signature phrases and brand-specific language",
+          "Set standards for humor, emotion, and personality expression"
+        ]
+      },
+      {
+        title: "Contextual Tone Guidelines",
+        description: "Create tone variations for different situations and communication contexts.",
+        actions: [
+          "Map different communication scenarios (customer service, marketing, crisis)",
+          "Define appropriate tone adjustments for each context",
+          "Create tone examples for various emotional situations",
+          "Establish escalation guidelines for sensitive or difficult communications",
+          "Develop cultural and localization considerations for global brands"
+        ]
+      },
+      {
+        title: "Practical Application Tools",
+        description: "Build templates, examples, and tools for consistent implementation.",
+        actions: [
+          "Create content templates for common communication types",
+          "Develop before/after examples showing voice application",
+          "Build decision trees for tone selection in different scenarios",
+          "Create voice evaluation checklists and quality control measures",
+          "Establish approval processes for brand-critical communications"
+        ]
+      },
+      {
+        title: "Training & Governance",
+        description: "Implement training programs and ongoing governance for voice consistency.",
+        actions: [
+          "Develop comprehensive training materials and workshops",
+          "Create certification programs for key communicators",
+          "Establish regular auditing and feedback processes",
+          "Build measurement systems for voice consistency across channels",
+          "Create continuous improvement processes based on performance data"
+        ]
+      }
+    ],
+    examples: [
+      {
+        title: "Technology Startup Voice",
+        description: "Friendly, innovative, and accessible voice for B2B SaaS company",
+        results: "Increased brand recognition by 45%, improved customer satisfaction scores by 30%"
+      },
+      {
+        title: "Financial Services Voice",
+        description: "Trustworthy, professional, and empowering voice for financial advisor",
+        results: "Enhanced client trust scores by 25%, increased referral rates by 40%"
+      },
+      {
+        title: "E-commerce Retail Voice",
+        description: "Energetic, helpful, and trend-aware voice for fashion retailer",
+        results: "Boosted customer engagement by 50%, increased repeat purchase rate by 35%"
+      }
+    ],
+    bestPractices: [
+      "Start with clear brand strategy and customer personas before defining voice",
+      "Use real examples and scenarios rather than abstract descriptions",
+      "Regular training and reinforcement across all team members",
+      "Consistent application across all touchpoints and channels",
+      "Regular auditing and feedback to maintain voice quality",
+      "Evolution and refinement based on market feedback and brand growth"
+    ],
+    resources: [
+      { name: "Brand Voice Development Workshop", url: "#" },
+      { name: "Content Style Guide Templates", url: "#" },
+      { name: "Voice Consistency Audit Tools", url: "#" }
+    ]
   }
 };
 

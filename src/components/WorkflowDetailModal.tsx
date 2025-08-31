@@ -411,6 +411,269 @@ const workflowDetails: Record<string, DetailedWorkflow> = {
       { name: "Content Automation Best Practices", url: "#" },
       { name: "Multi-AI Orchestration Patterns", url: "#" }
     ]
+  },
+
+  "n8n Intelligent Customer Support Workflow": {
+    name: "n8n Intelligent Customer Support Workflow",
+    description: "AI-powered customer service automation and escalation",
+    steps: ["Capture customer inquiries from multiple channels (email, chat, tickets)", "Use AI to categorize and prioritize support requests automatically", "Route to appropriate AI models for response generation and sentiment analysis", "Implement escalation logic based on complexity and customer tier", "Track resolution times and customer satisfaction scores", "Generate insights and recommendations for support improvement"],
+    category: "Customer Service Automation",
+    overview: "Transform customer support operations with intelligent automation that handles inquiries, provides AI-powered responses, and optimizes human agent workflows. This system delivers 24/7 support while improving response times and customer satisfaction.",
+    prerequisites: ["n8n Pro subscription", "Customer support platform API access", "AI service integrations (OpenAI, Claude)", "Customer database access", "Email/chat platform integrations"],
+    timeEstimate: "3-5 weeks implementation",
+    difficulty: "Advanced",
+    tools: ["n8n Pro", "Zendesk/Freshdesk API", "OpenAI API", "Slack/Teams", "Customer CRM", "Analytics platforms"],
+    detailedSteps: [
+      {
+        title: "Multi-Channel Inquiry Capture",
+        description: "Set up comprehensive intake system that captures customer inquiries from all support channels.",
+        actions: [
+          "Configure webhooks for email, chat, and ticket system integrations",
+          "Implement data standardization across different channel formats",
+          "Add customer identification and account linking logic",
+          "Create unified inquiry format with metadata extraction",
+          "Set up deduplication logic to prevent duplicate processing"
+        ]
+      },
+      {
+        title: "AI-Powered Categorization & Prioritization",
+        description: "Implement intelligent classification system to route and prioritize support requests.",
+        actions: [
+          "Deploy AI models for automatic ticket categorization and tagging",
+          "Create priority scoring based on customer tier, issue type, and urgency",
+          "Implement sentiment analysis to identify frustrated or angry customers",
+          "Add business impact assessment for technical and billing issues",
+          "Create escalation triggers for high-value or complex issues"
+        ]
+      },
+      {
+        title: "Intelligent Response Generation",
+        description: "Generate contextual AI responses while maintaining quality and brand consistency.",
+        actions: [
+          "Configure AI models with company knowledge base and policy information",
+          "Implement response templates for common inquiry types",
+          "Add personalization based on customer history and preferences",
+          "Create multi-language support for international customers",
+          "Establish quality control checks before response delivery"
+        ]
+      },
+      {
+        title: "Smart Escalation & Routing",
+        description: "Implement sophisticated logic to route complex issues to appropriate human agents.",
+        actions: [
+          "Define escalation criteria based on issue complexity and customer value",
+          "Create agent skill matching and workload balancing logic",
+          "Implement SLA monitoring and deadline tracking systems",
+          "Add supervisor notification for high-priority escalations",
+          "Create handoff protocols with full context preservation"
+        ]
+      },
+      {
+        title: "Performance Tracking & Analytics",
+        description: "Monitor support metrics and generate insights for continuous improvement.",
+        actions: [
+          "Track resolution times, customer satisfaction, and first-contact resolution rates",
+          "Monitor AI response accuracy and customer feedback on automated responses",
+          "Generate agent performance reports and coaching recommendations",
+          "Create executive dashboards with key support metrics and trends",
+          "Implement predictive analytics for support volume forecasting"
+        ]
+      }
+    ],
+    variations: [
+      { name: "Technical Support Automation", description: "Specialized for technical product support with diagnostic capabilities" },
+      { name: "E-commerce Support Pipeline", description: "Optimized for order inquiries, returns, and billing questions" },
+      { name: "SaaS Customer Success", description: "Focused on onboarding, feature usage, and subscription management" }
+    ],
+    troubleshooting: [
+      { issue: "AI responses lack context or accuracy", solution: "Enhance knowledge base training data, implement feedback loops, and add human review checkpoints for quality improvement" },
+      { issue: "Escalation overload to human agents", solution: "Refine escalation criteria, improve AI response quality, and add more self-service options for common issues" },
+      { issue: "Integration failures with support platforms", solution: "Implement robust error handling, add backup routing options, and monitor API health with automatic retries" }
+    ],
+    resources: [
+      { name: "Customer Support Automation Guide", url: "#" },
+      { name: "AI Integration Best Practices", url: "#" },
+      { name: "Support Metrics Dashboard", url: "#" }
+    ]
+  },
+
+  "n8n Data Intelligence & Reporting System": {
+    name: "n8n Data Intelligence & Reporting System", 
+    description: "Automated business intelligence with AI-powered insights",
+    steps: ["Connect to multiple data sources (CRM, analytics, databases) with scheduling", "Implement data cleaning and transformation using n8n functions", "Apply AI analysis for trend detection and predictive insights", "Generate automated reports with natural language summaries", "Distribute reports to stakeholders via email, Slack, or dashboards", "Monitor data quality and alert on anomalies or significant changes"],
+    category: "Business Intelligence",
+    overview: "Create an intelligent data processing pipeline that automatically collects, analyzes, and reports on business metrics with AI-generated insights. This system transforms raw data into actionable intelligence for strategic decision-making.",
+    prerequisites: ["n8n Pro subscription", "Database and API access to data sources", "AI service accounts", "Business intelligence tools", "Stakeholder communication channels"],
+    timeEstimate: "4-6 weeks implementation", 
+    difficulty: "Advanced",
+    tools: ["n8n Pro", "Database connectors", "OpenAI/Claude APIs", "Tableau/Power BI", "Slack/Email", "Google Sheets"],
+    detailedSteps: [
+      {
+        title: "Multi-Source Data Integration",
+        description: "Establish connections to all relevant data sources with automated scheduling.",
+        actions: [
+          "Configure secure connections to CRM, ERP, analytics platforms, and databases",
+          "Set up scheduled data extraction with incremental loading capabilities",
+          "Implement data source monitoring and health checks",
+          "Create data lineage tracking for audit and troubleshooting",
+          "Add error handling and retry logic for failed data pulls"
+        ]
+      },
+      {
+        title: "Data Processing & Transformation", 
+        description: "Clean, validate, and transform raw data into analysis-ready formats.",
+        actions: [
+          "Implement data quality checks and validation rules",
+          "Create data standardization and normalization processes",
+          "Add calculated fields and derived metrics computation",
+          "Establish master data management for consistent dimensions",
+          "Build data warehouse staging and historical data management"
+        ]
+      },
+      {
+        title: "AI-Powered Analytics & Insights",
+        description: "Apply artificial intelligence to detect patterns, trends, and generate predictive insights.",
+        actions: [
+          "Deploy AI models for trend detection and anomaly identification",
+          "Implement predictive analytics for forecasting and scenario planning",
+          "Generate natural language insights and commentary on data patterns",
+          "Create automated hypothesis testing and statistical analysis",
+          "Add competitive benchmarking and industry comparison capabilities"
+        ]
+      },
+      {
+        title: "Automated Report Generation",
+        description: "Create comprehensive reports with visualizations and AI-generated narratives.",
+        actions: [
+          "Build dynamic report templates with interactive visualizations",
+          "Generate executive summaries with key insights and recommendations",
+          "Create drill-down capabilities for detailed analysis",
+          "Add personalized reports based on recipient roles and interests",
+          "Implement version control and report approval workflows"
+        ]
+      },
+      {
+        title: "Intelligent Distribution & Alerting",
+        description: "Deliver reports and insights through appropriate channels with smart notifications.",
+        actions: [
+          "Set up automated report distribution via email, Slack, and dashboards",
+          "Create intelligent alerting for significant changes or anomalies",
+          "Implement recipient preferences and delivery optimization",
+          "Add interactive elements for stakeholder feedback and requests",
+          "Build mobile-friendly formats for executive accessibility"
+        ]
+      }
+    ],
+    variations: [
+      { name: "Financial Performance Intelligence", description: "Specialized for financial metrics, budgets, and profitability analysis" },
+      { name: "Sales & Marketing Analytics", description: "Focused on pipeline, conversion, and campaign performance metrics" },
+      { name: "Operational KPI Monitoring", description: "Real-time operational metrics with predictive maintenance insights" }
+    ],
+    troubleshooting: [
+      { issue: "Data quality inconsistencies", solution: "Implement comprehensive data validation rules, source system monitoring, and establish data governance protocols" },
+      { issue: "AI insights lack business relevance", solution: "Improve AI model training with business context, add domain expertise, and implement feedback mechanisms" },
+      { issue: "Report delivery failures or delays", solution: "Add redundant delivery methods, implement retry logic, and create backup reporting procedures" }
+    ],
+    resources: [
+      { name: "Business Intelligence Architecture", url: "#" },
+      { name: "AI Analytics Implementation", url: "#" },
+      { name: "Data Quality Management", url: "#" }
+    ]
+  },
+
+  "n8n Sales Process Automation": {
+    name: "n8n Sales Process Automation",
+    description: "Complete sales pipeline automation with AI lead scoring", 
+    steps: ["Capture leads from multiple sources with deduplication and enrichment", "Score leads using AI analysis of behavior, demographics, and interactions", "Trigger personalized nurture campaigns based on lead scoring and segment", "Automate follow-up sequences with AI-generated personalized content", "Route qualified leads to appropriate sales representatives automatically", "Track conversion metrics and optimize the pipeline based on performance"],
+    category: "Sales Automation",
+    overview: "Revolutionize your sales process with intelligent automation that captures, scores, nurtures, and converts leads while optimizing sales team performance. This system increases conversion rates and sales efficiency through AI-powered personalization and workflow automation.",
+    prerequisites: ["n8n Pro subscription", "CRM system access", "Marketing automation platform", "AI service integrations", "Lead source integrations"],
+    timeEstimate: "3-5 weeks implementation",
+    difficulty: "Intermediate to Advanced", 
+    tools: ["n8n Pro", "Salesforce/HubSpot CRM", "OpenAI/Claude APIs", "Email marketing platforms", "Lead generation tools"],
+    detailedSteps: [
+      {
+        title: "Multi-Channel Lead Capture & Enrichment",
+        description: "Establish comprehensive lead intake system with automated data enrichment.",
+        actions: [
+          "Integrate lead sources: website forms, social media, events, referrals, and partnerships",
+          "Implement deduplication logic to prevent duplicate lead creation",
+          "Add automated lead enrichment using external data providers",
+          "Create lead source tracking and attribution for ROI analysis", 
+          "Set up real-time lead notification and routing systems"
+        ]
+      },
+      {
+        title: "AI-Powered Lead Scoring & Qualification",
+        description: "Deploy intelligent scoring system to identify and prioritize high-value prospects.",
+        actions: [
+          "Implement AI models analyzing demographic, firmographic, and behavioral data",
+          "Create dynamic scoring based on website activity, email engagement, and content consumption",
+          "Add predictive analytics for lead conversion probability",
+          "Establish lead grading system combining fit and interest scores",
+          "Create automated qualification workflows with progressive profiling"
+        ]
+      },
+      {
+        title: "Personalized Nurture Campaign Automation",
+        description: "Execute targeted nurture sequences based on lead characteristics and behavior.",
+        actions: [
+          "Design segmentation logic based on industry, company size, and buyer persona",
+          "Create personalized email sequences with dynamic content insertion",
+          "Implement behavioral triggers for content delivery and campaign progression",
+          "Add multi-channel nurturing including email, social, and retargeting",
+          "Build lead lifecycle management with stage progression tracking"
+        ]
+      },
+      {
+        title: "AI-Generated Follow-up & Content Personalization",
+        description: "Create intelligent follow-up sequences with AI-powered personalization.",
+        actions: [
+          "Generate personalized email content based on lead profile and interests",
+          "Create dynamic proposals and sales collateral tailored to prospect needs",
+          "Implement AI-powered optimal timing for outreach and follow-up",
+          "Add sentiment analysis for email responses and engagement optimization",
+          "Build conversation intelligence to improve messaging effectiveness"
+        ]
+      },
+      {
+        title: "Intelligent Lead Routing & Assignment",
+        description: "Optimize lead distribution to sales team members based on various criteria.",
+        actions: [
+          "Create territory and account-based routing rules",
+          "Implement rep capacity and workload balancing algorithms",
+          "Add skill-based matching for complex or specialized leads",
+          "Create round-robin and priority-based assignment logic", 
+          "Build escalation procedures for unworked leads and missed follow-ups"
+        ]
+      },
+      {
+        title: "Performance Analytics & Pipeline Optimization",
+        description: "Monitor sales metrics and continuously optimize the automation system.",
+        actions: [
+          "Track conversion rates at each stage of the sales funnel",
+          "Monitor lead quality scores and sales team feedback",
+          "Analyze campaign performance and ROI by source and segment",
+          "Generate sales forecasting reports with predictive analytics",
+          "Create optimization recommendations based on performance data"
+        ]
+      }
+    ],
+    variations: [
+      { name: "B2B Enterprise Sales", description: "Complex sales cycles with account-based marketing and multi-stakeholder engagement" },
+      { name: "SaaS Sales Automation", description: "Product-led growth with trial conversion and expansion revenue focus" }, 
+      { name: "E-commerce Sales Pipeline", description: "High-volume transactional sales with abandoned cart recovery and upselling" }
+    ],
+    troubleshooting: [
+      { issue: "Low lead quality or poor scoring accuracy", solution: "Refine scoring algorithms with sales feedback, improve data sources, and implement continuous model training" },
+      { issue: "Sales team adoption challenges", solution: "Provide comprehensive training, create intuitive workflows, and demonstrate clear value through metrics" },
+      { issue: "Integration complexity with existing systems", solution: "Use middleware platforms, implement gradual rollout, and ensure robust error handling and monitoring" }
+    ],
+    resources: [
+      { name: "Sales Automation Best Practices", url: "#" },
+      { name: "Lead Scoring Model Guide", url: "#" },
+      { name: "Sales Pipeline Optimization", url: "#" }
+    ]
   }
 };
 
