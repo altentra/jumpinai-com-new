@@ -743,9 +743,9 @@ export default function ProfileTabs() {
                     {orders.map((order) => (
                       <div key={order.id} className="border border-border rounded-lg p-4 space-y-3">
                         <div className="flex flex-col gap-2">
-                          <div className="font-medium text-sm">{order.products?.name || 'Unknown Product'}</div>
+                          <div className="font-medium text-sm">{order.products?.name ?? (order.download_token ? 'Digital product' : 'JumpinAI Pro Subscription')}</div>
                           <div className="text-xs text-muted-foreground">
-                            {order.products?.description || (order.products?.name && order.products.name.toLowerCase().includes('subscription') ? 'Monthly subscription' : 'Digital product')}
+                            {order.products?.description || (!order.download_token ? 'Monthly subscription' : 'Digital product')}
                           </div>
                         </div>
                         
@@ -760,7 +760,7 @@ export default function ProfileTabs() {
                           </div>
                         </div>
                         
-                        {order.products?.name && !order.products.name.toLowerCase().includes('subscription') && (
+                        {order.download_token && (
                           <div>
                             <div className="text-xs text-muted-foreground mb-1">Downloads</div>
                             <div className="text-sm">
@@ -770,7 +770,7 @@ export default function ProfileTabs() {
                         )}
                         
                         <div className="flex flex-col gap-2 pt-2">
-                          {order.download_token && order.products?.file_name && order.products?.name && !order.products.name.toLowerCase().includes('subscription') && (
+                          {order.download_token && (
                             <Button 
                               variant="outline" 
                               size="sm"
@@ -823,9 +823,9 @@ export default function ProfileTabs() {
                             <TableRow key={order.id}>
                               <TableCell className="min-w-0">
                                 <div>
-                                  <div className="font-medium text-sm truncate">{order.products?.name || 'Unknown Product'}</div>
+                                  <div className="font-medium text-sm truncate">{order.products?.name ?? (order.download_token ? 'Digital product' : 'JumpinAI Pro Subscription')}</div>
                                   <div className="text-xs text-muted-foreground truncate">
-                                    {order.products?.description || (order.products?.name && order.products.name.toLowerCase().includes('subscription') ? 'Monthly subscription' : 'Digital product')}
+                                    {order.products?.description || (!order.download_token ? 'Monthly subscription' : 'Digital product')}
                                   </div>
                                 </div>
                               </TableCell>
@@ -836,18 +836,18 @@ export default function ProfileTabs() {
                                 ${(order.amount / 100).toFixed(2)} {order.currency?.toUpperCase()}
                               </TableCell>
                               <TableCell className="text-sm">
-                                {order.products?.name && order.products.name.toLowerCase().includes('subscription') ? (
-                                  <div className="text-sm text-muted-foreground">—</div>
-                                ) : (
+                                {order.download_token ? (
                                   <div className="text-sm">
                                     <div>{order.download_count || 0} / {order.max_downloads || 20}</div>
                                     <div className="text-xs text-muted-foreground">downloads</div>
                                   </div>
+                                ) : (
+                                  <div className="text-sm text-muted-foreground">—</div>
                                 )}
                               </TableCell>
                               <TableCell>
                                 <div className="flex flex-col lg:flex-row gap-1 lg:gap-2">
-                                  {order.download_token && order.products?.file_name && order.products?.name && !order.products.name.toLowerCase().includes('subscription') && (
+                                  {order.download_token && (
                                     <Button 
                                       variant="outline" 
                                       size="sm"
