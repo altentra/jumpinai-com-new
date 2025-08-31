@@ -43,6 +43,7 @@ export default function MyJumps() {
           .from('products')
           .select('id, name, description, price, file_name, status')
           .eq('status', 'active')
+          .neq('name', 'JumpinAI Pro Subscription')
           .order('created_at', { ascending: true });
         if (pErr) throw pErr;
         setProducts((prods || []) as Product[]);

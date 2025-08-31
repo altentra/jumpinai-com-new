@@ -23,6 +23,7 @@ const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [subChecked, setSubChecked] = useState(false);
 
   // Function to fetch and merge user profile data
   const fetchUserWithProfile = async (authUser: any): Promise<AuthUser | null> => {
@@ -117,6 +118,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     return () => subscription.unsubscribe();
   }, []);
+
+  useEffect(() => {
+    if (user && !subChecked) {
+      supabase.functions.invoke('check-subscription').catch(() => {}).finally(() => setSubChecked(true));
+    }
+  }, [user, subChecked]);
 
   const login = (redirectTo?: string) => {
     const next = redirectTo ?? window.location.pathname + window.location.search;

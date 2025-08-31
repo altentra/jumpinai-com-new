@@ -58,6 +58,7 @@ const Jumps = () => {
           .from('products')
           .select('id, name, description, price, status, created_at, updated_at, file_name')
           .eq('status', 'active')
+          .neq('name', 'JumpinAI Pro Subscription')
           .neq('file_name', 'jump-in-ai-powerstack.pdf')
           .order('created_at', { ascending: true });
         

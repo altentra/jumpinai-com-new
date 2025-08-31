@@ -687,14 +687,18 @@ export default function ProfileTabs() {
                               ${(order.amount / 100).toFixed(2)} {order.currency?.toUpperCase()}
                             </TableCell>
                             <TableCell>
-                              <div className="text-sm">
-                                <div>{order.download_count || 0} / {order.max_downloads || 20}</div>
-                                <div className="text-muted-foreground">downloads</div>
-                              </div>
+                              {order.products?.name === 'JumpinAI Pro Subscription' ? (
+                                <div className="text-sm text-muted-foreground">—</div>
+                              ) : (
+                                <div className="text-sm">
+                                  <div>{order.download_count || 0} / {order.max_downloads || 20}</div>
+                                  <div className="text-muted-foreground">downloads</div>
+                                </div>
+                              )}
                             </TableCell>
                             <TableCell>
                               <div className="flex gap-2">
-                                {order.download_token && (
+                                {order.products?.name !== 'JumpinAI Pro Subscription' && order.download_token && (
                                   <Button 
                                     variant="outline" 
                                     size="sm"
