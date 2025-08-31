@@ -58,7 +58,7 @@ export default function Auth() {
           data: { 
             display_name: signupName 
           },
-          emailRedirectTo: `${window.location.origin}/dashboard`
+          emailRedirectTo: `https://www.jumpinai.com/dashboard`
         },
       });
       if (error) throw error;
@@ -77,7 +77,7 @@ export default function Auth() {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/dashboard`,
+          redirectTo: `https://www.jumpinai.com/dashboard`,
         },
       });
       if (error) throw error;
@@ -92,7 +92,7 @@ export default function Auth() {
     setLoading(true);
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(forgotPasswordEmail, {
-        redirectTo: `${window.location.origin}/auth?next=/dashboard`,
+        redirectTo: `https://www.jumpinai.com/auth?next=/dashboard`,
       });
       if (error) throw error;
       toast.success("Password reset email sent! Check your inbox.");
