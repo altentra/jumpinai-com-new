@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect, useState } from "react";
+import StrategyDetailModal from "@/components/StrategyDetailModal";
 
 type Strategy = {
   name: string;
@@ -46,6 +47,8 @@ const allStrategies = [...freeStrategies, ...proStrategies];
 
 export default function Strategies() {
   const { isAuthenticated, subscription } = useAuth();
+  const [selectedStrategy, setSelectedStrategy] = useState<Strategy | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Use cached subscription data - no API call needed!
   const showAllContent = subscription?.subscribed && subscription.subscription_tier === 'JumpinAI Pro';
@@ -71,7 +74,15 @@ export default function Strategies() {
   );
 
   const StrategyCard = ({ strategy, isBlurred }: { strategy: Strategy; isBlurred: boolean }) => (
-    <Card className={`h-full ${isBlurred ? 'filter blur-[2px] pointer-events-none' : ''}`}>
+    <Card 
+      className={`h-full cursor-pointer hover:shadow-lg transition-shadow ${isBlurred ? 'filter blur-[2px] pointer-events-none' : ''}`}
+      onClick={() => {
+        if (!isBlurred) {
+          setSelectedStrategy(strategy);
+          setIsModalOpen(true);
+        }
+      }}
+    >
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg">{strategy.name}</CardTitle>
@@ -81,11 +92,15 @@ export default function Strategies() {
       <CardContent>
         <p className="text-muted-foreground mb-4">{strategy.description}</p>
         <div>
-          <h4 className="font-semibold mb-2">Approach:</h4>
-          <p className="text-sm bg-muted p-3 rounded">
-            {strategy.approach}
+          <h4 className="font-semibold mb-2">Strategic Approach:</h4>
+          <p className="text-sm bg-muted p-3 rounded line-clamp-3">
+            {strategy.approach.length > 150 ? strategy.approach.substring(0, 150) + '...' : strategy.approach}
           </p>
         </div>
+        <Button size="sm" className="mt-4 w-full" variant="outline">
+          <Target className="h-4 w-4 mr-2" />
+          View Strategic Framework
+        </Button>
       </CardContent>
     </Card>
   );
@@ -164,6 +179,15 @@ export default function Strategies() {
         
         {!showAllContent && <UpgradeSection message="View more professional strategies" />}
       </div>
+
+      <StrategyDetailModal 
+        strategy={selectedStrategy}
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setSelectedStrategy(null);
+        }}
+      />
     </div>
   );
 }

@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect, useState } from "react";
+import BlueprintDetailModal from "@/components/BlueprintDetailModal";
 
 type Blueprint = {
   name: string;
@@ -37,6 +38,8 @@ const allBlueprints = [...freeBlueprints, ...proBlueprints];
 
 export default function Blueprints() {
   const { isAuthenticated, subscription } = useAuth();
+  const [selectedBlueprint, setSelectedBlueprint] = useState<Blueprint | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Use cached subscription data - no API call needed!
   const showAllContent = subscription?.subscribed && subscription.subscription_tier === 'JumpinAI Pro';
@@ -62,7 +65,15 @@ export default function Blueprints() {
   );
 
   const BlueprintCard = ({ blueprint, isBlurred }: { blueprint: Blueprint; isBlurred: boolean }) => (
-    <Card className={`h-full ${isBlurred ? 'filter blur-[2px] pointer-events-none' : ''}`}>
+    <Card 
+      className={`h-full cursor-pointer hover:shadow-lg transition-shadow ${isBlurred ? 'filter blur-[2px] pointer-events-none' : ''}`}
+      onClick={() => {
+        if (!isBlurred) {
+          setSelectedBlueprint(blueprint);
+          setIsModalOpen(true);
+        }
+      }}
+    >
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg">{blueprint.name}</CardTitle>
@@ -72,11 +83,15 @@ export default function Blueprints() {
       <CardContent>
         <p className="text-muted-foreground mb-4">{blueprint.description}</p>
         <div>
-          <h4 className="font-semibold mb-2">Template:</h4>
-          <pre className="text-xs bg-muted p-3 rounded overflow-auto whitespace-pre-wrap">
-            {blueprint.template}
+          <h4 className="font-semibold mb-2">Template Preview:</h4>
+          <pre className="text-xs bg-muted p-2 rounded text-muted-foreground overflow-hidden max-h-16">
+            {blueprint.template.substring(0, 120)}...
           </pre>
         </div>
+        <Button size="sm" className="mt-4 w-full" variant="outline">
+          <FileText className="h-4 w-4 mr-2" />
+          View Full Blueprint
+        </Button>
       </CardContent>
     </Card>
   );
@@ -155,6 +170,15 @@ export default function Blueprints() {
         
         {!showAllContent && <UpgradeSection message="View more professional blueprints" />}
       </div>
+
+      <BlueprintDetailModal 
+        blueprint={selectedBlueprint}
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setSelectedBlueprint(null);
+        }}
+      />
     </div>
   );
 }

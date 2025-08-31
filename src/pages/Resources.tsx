@@ -11,7 +11,8 @@ import {
   ExternalLink,
   Copy,
   Star,
-  TrendingUp
+  TrendingUp,
+  Play
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useState, useEffect } from "react";
@@ -20,6 +21,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
+import WorkflowDetailModal from "@/components/WorkflowDetailModal";
+import BlueprintDetailModal from "@/components/BlueprintDetailModal";
+import StrategyDetailModal from "@/components/StrategyDetailModal";
 
 // Data models
 type Tool = {
@@ -158,6 +162,12 @@ const strategies: Strategy[] = [
 export default function Resources() {
   const { isAuthenticated, subscription } = useAuth();
   const [activeTab, setActiveTab] = useState("tools");
+  const [selectedWorkflow, setSelectedWorkflow] = useState<Workflow | null>(null);
+  const [selectedBlueprint, setSelectedBlueprint] = useState<Blueprint | null>(null);
+  const [selectedStrategy, setSelectedStrategy] = useState<Strategy | null>(null);
+  const [isWorkflowModalOpen, setIsWorkflowModalOpen] = useState(false);
+  const [isBlueprintModalOpen, setIsBlueprintModalOpen] = useState(false);
+  const [isStrategyModalOpen, setIsStrategyModalOpen] = useState(false);
 
   // Use cached subscription data - no API call needed!
   const showAllContent = subscription?.subscribed || false;
@@ -226,7 +236,15 @@ export default function Resources() {
 
   // Workflow Card Component (first 4 visible, rest blurred)
   const WorkflowCard = ({ workflow, isBlurred }: { workflow: Workflow; isBlurred: boolean }) => (
-    <Card className={`h-full ${isBlurred ? 'filter blur-[2px] pointer-events-none' : ''}`}>
+    <Card 
+      className={`h-full cursor-pointer hover:shadow-lg transition-shadow ${isBlurred ? 'filter blur-[2px] pointer-events-none' : ''}`}
+      onClick={() => {
+        if (!isBlurred) {
+          setSelectedWorkflow(workflow);
+          setIsWorkflowModalOpen(true);
+        }
+      }}
+    >
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg">{workflow.name}</CardTitle>
@@ -236,23 +254,38 @@ export default function Resources() {
       <CardContent>
         <p className="text-muted-foreground mb-4">{workflow.description}</p>
         <div>
-          <h4 className="font-semibold mb-2">Steps:</h4>
+          <h4 className="font-semibold mb-2">Steps Preview:</h4>
           <ol className="text-sm space-y-1">
-            {workflow.steps.map((step, index) => (
+            {workflow.steps.slice(0, 2).map((step, index) => (
               <li key={index} className="flex">
                 <span className="font-medium mr-2">{index + 1}.</span>
-                <span>{step}</span>
+                <span>{step.length > 60 ? step.substring(0, 60) + '...' : step}</span>
               </li>
             ))}
+            {workflow.steps.length > 2 && (
+              <li className="text-muted-foreground text-xs">+ {workflow.steps.length - 2} more steps...</li>
+            )}
           </ol>
         </div>
+        <Button size="sm" className="mt-4 w-full" variant="outline">
+          <Play className="h-4 w-4 mr-2" />
+          View Detailed Guide
+        </Button>
       </CardContent>
     </Card>
   );
 
   // Blueprint Card Component (first 4 visible, rest blurred)
   const BlueprintCard = ({ blueprint, isBlurred }: { blueprint: Blueprint; isBlurred: boolean }) => (
-    <Card className={`h-full ${isBlurred ? 'filter blur-[2px] pointer-events-none' : ''}`}>
+    <Card 
+      className={`h-full cursor-pointer hover:shadow-lg transition-shadow ${isBlurred ? 'filter blur-[2px] pointer-events-none' : ''}`}
+      onClick={() => {
+        if (!isBlurred) {
+          setSelectedBlueprint(blueprint);
+          setIsBlueprintModalOpen(true);
+        }
+      }}
+    >
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg">{blueprint.name}</CardTitle>
@@ -262,18 +295,30 @@ export default function Resources() {
       <CardContent>
         <p className="text-muted-foreground mb-4">{blueprint.description}</p>
         <div>
-          <h4 className="font-semibold mb-2">Template:</h4>
-          <pre className="text-xs bg-muted p-3 rounded overflow-auto whitespace-pre-wrap">
-            {blueprint.template}
+          <h4 className="font-semibold mb-2">Template Preview:</h4>
+          <pre className="text-xs bg-muted p-2 rounded text-muted-foreground overflow-hidden max-h-16">
+            {blueprint.template.substring(0, 120)}...
           </pre>
         </div>
+        <Button size="sm" className="mt-4 w-full" variant="outline">
+          <FileText className="h-4 w-4 mr-2" />
+          View Full Blueprint
+        </Button>
       </CardContent>
     </Card>
   );
 
   // Strategy Card Component (first 4 visible, rest blurred)
   const StrategyCard = ({ strategy, isBlurred }: { strategy: Strategy; isBlurred: boolean }) => (
-    <Card className={`h-full ${isBlurred ? 'filter blur-[2px] pointer-events-none' : ''}`}>
+    <Card 
+      className={`h-full cursor-pointer hover:shadow-lg transition-shadow ${isBlurred ? 'filter blur-[2px] pointer-events-none' : ''}`}
+      onClick={() => {
+        if (!isBlurred) {
+          setSelectedStrategy(strategy);
+          setIsStrategyModalOpen(true);
+        }
+      }}
+    >
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg">{strategy.name}</CardTitle>
@@ -283,11 +328,15 @@ export default function Resources() {
       <CardContent>
         <p className="text-muted-foreground mb-4">{strategy.description}</p>
         <div>
-          <h4 className="font-semibold mb-2">Approach:</h4>
-          <p className="text-sm bg-muted p-3 rounded">
-            {strategy.approach}
+          <h4 className="font-semibold mb-2">Strategic Approach:</h4>
+          <p className="text-sm bg-muted p-3 rounded line-clamp-3">
+            {strategy.approach.length > 150 ? strategy.approach.substring(0, 150) + '...' : strategy.approach}
           </p>
         </div>
+        <Button size="sm" className="mt-4 w-full" variant="outline">
+          <Target className="h-4 w-4 mr-2" />
+          View Strategic Framework
+        </Button>
       </CardContent>
     </Card>
   );
@@ -402,6 +451,34 @@ export default function Resources() {
         </main>
 
         <Footer />
+
+        {/* Modal Components */}
+        <WorkflowDetailModal 
+          workflow={selectedWorkflow}
+          isOpen={isWorkflowModalOpen}
+          onClose={() => {
+            setIsWorkflowModalOpen(false);
+            setSelectedWorkflow(null);
+          }}
+        />
+
+        <BlueprintDetailModal 
+          blueprint={selectedBlueprint}
+          isOpen={isBlueprintModalOpen}
+          onClose={() => {
+            setIsBlueprintModalOpen(false);
+            setSelectedBlueprint(null);
+          }}
+        />
+
+        <StrategyDetailModal 
+          strategy={selectedStrategy}
+          isOpen={isStrategyModalOpen}
+          onClose={() => {
+            setIsStrategyModalOpen(false);
+            setSelectedStrategy(null);
+          }}
+        />
       </div>
     );
-}
+  }
