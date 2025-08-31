@@ -198,17 +198,35 @@ export default function ProfileTabs() {
   };
 
   const manage = async () => {
+    console.log("🔧 [Mobile Debug] Manage billing clicked");
     try {
       const { data: session } = await supabase.auth.getSession();
       const accessToken = session.session?.access_token;
+      console.log("🔧 [Mobile Debug] Got session, invoking customer-portal");
+      
       const { data, error } = await supabase.functions.invoke("customer-portal", {
         body: { source: 'dashboard-profile' },
         headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
       });
+      
+      console.log("🔧 [Mobile Debug] Customer portal response:", { data, error });
+      
       if (error) throw error;
       const url = (data as any)?.url;
-      if (url) window.open(url, '_blank');
+      
+      if (url) {
+        console.log("🔧 [Mobile Debug] Opening URL:", url);
+        // Try multiple approaches for mobile compatibility
+        try {
+          window.open(url, '_blank');
+          console.log("🔧 [Mobile Debug] window.open succeeded");
+        } catch (popupError) {
+          console.log("🔧 [Mobile Debug] window.open failed, trying location.href");
+          window.location.href = url;
+        }
+      }
     } catch (e: any) {
+      console.error("🔧 [Mobile Debug] Manage billing error:", e);
       toast.error(e.message || "Failed to open billing portal");
     }
   };
@@ -275,29 +293,36 @@ export default function ProfileTabs() {
       return;
     }
 
+    console.log("🔧 [Mobile Debug] Download receipt clicked for:", stripeSessionId);
     setDownloadingReceipt(stripeSessionId);
     try {
-      console.log("Downloading receipt for session:", stripeSessionId);
+      console.log("🔧 [Mobile Debug] Invoking download-receipt function");
       const { data, error } = await supabase.functions.invoke("download-receipt", {
         body: { sessionId: stripeSessionId }
       });
 
-      console.log("Receipt response:", { data, error });
+      console.log("🔧 [Mobile Debug] Receipt response:", { data, error });
 
       if (error) {
-        console.error("Supabase function error:", error);
+        console.error("🔧 [Mobile Debug] Supabase function error:", error);
         throw error;
       }
 
       if (data?.receiptUrl) {
-        console.log("Opening receipt URL:", data.receiptUrl);
-        window.open(data.receiptUrl, '_blank');
+        console.log("🔧 [Mobile Debug] Opening receipt URL:", data.receiptUrl);
+        try {
+          window.open(data.receiptUrl, '_blank');
+          console.log("🔧 [Mobile Debug] Receipt window.open succeeded");
+        } catch (popupError) {
+          console.log("🔧 [Mobile Debug] Receipt window.open failed, trying location.href");
+          window.location.href = data.receiptUrl;
+        }
       } else {
-        console.error("No receipt URL in response:", data);
+        console.error("🔧 [Mobile Debug] No receipt URL in response:", data);
         toast.error("Receipt not available");
       }
     } catch (error: any) {
-      console.error("Error downloading receipt:", error);
+      console.error("🔧 [Mobile Debug] Error downloading receipt:", error);
       toast.error("Failed to download receipt");
     } finally {
       setDownloadingReceipt(null);
