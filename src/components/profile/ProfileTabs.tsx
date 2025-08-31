@@ -818,8 +818,8 @@ export default function ProfileTabs() {
                             <TableRow key={order.id}>
                               <TableCell className="min-w-0">
                                 <div>
-                                  <div className="font-medium text-sm truncate">{order.products?.name ?? (order.download_token ? 'Digital product' : 'JumpinAI Pro Subscription')}</div>
-                                  <div className="text-xs text-muted-foreground truncate">
+                                  <div className="font-medium text-sm">{order.products?.name ?? (order.download_token ? 'Digital product' : 'JumpinAI Pro Subscription')}</div>
+                                  <div className="text-xs text-muted-foreground break-words">
                                     {order.products?.description || (!order.download_token ? 'Monthly subscription' : 'Digital product')}
                                   </div>
                                 </div>
