@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Download, ShoppingCart, CheckCircle, Crown } from "lucide-react";
 import { useAuth0Token } from "@/hooks/useAuth0Token";
+import { subscriptionCache } from "@/utils/subscriptionCache";
 
 interface Product {
   id: string;
@@ -59,14 +60,20 @@ export default function MyJumps() {
           if (oErr) throw oErr;
           setOrders((ords || []) as Order[]);
 
-          // Check subscription status
-          try {
-            const { data: subData, error: subError } = await supabase.functions.invoke("check-subscription");
-            if (!subError && subData) {
-              setSubInfo(subData);
+          // Check subscription status using cache first
+          const cachedSub = subscriptionCache.get();
+          if (cachedSub) {
+            setSubInfo(cachedSub);
+          } else {
+            try {
+              const { data: subData, error: subError } = await supabase.functions.invoke("check-subscription");
+              if (!subError && subData) {
+                setSubInfo(subData);
+                subscriptionCache.set(subData);
+              }
+            } catch (e) {
+              console.error('Failed to check subscription:', e);
             }
-          } catch (e) {
-            console.error('Failed to check subscription:', e);
           }
         }
       } catch (e) {

@@ -10,6 +10,7 @@ import { Loader2, Download, ShoppingCart, CheckCircle, FileText, Feather, BookOp
 import { useAuth } from "@/hooks/useAuth";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import { subscriptionCache } from "@/utils/subscriptionCache";
 
 interface Product {
   id: string;
@@ -76,14 +77,20 @@ const Jumps = () => {
           if (orderError) throw orderError;
           setOrders((orderData || []) as Order[]);
 
-          // Check subscription status
-          try {
-            const { data: subData, error: subError } = await supabase.functions.invoke("check-subscription");
-            if (!subError && subData) {
-              setSubInfo(subData);
+          // Check subscription status using cache first
+          const cachedSub = subscriptionCache.get();
+          if (cachedSub) {
+            setSubInfo(cachedSub);
+          } else {
+            try {
+              const { data: subData, error: subError } = await supabase.functions.invoke("check-subscription");
+              if (!subError && subData) {
+                setSubInfo(subData);
+                subscriptionCache.set(subData);
+              }
+            } catch (e) {
+              console.error('Failed to check subscription:', e);
             }
-          } catch (e) {
-            console.error('Failed to check subscription:', e);
           }
         }
       } catch (error) {
