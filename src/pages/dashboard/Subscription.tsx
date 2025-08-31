@@ -41,7 +41,7 @@ export default function Subscription() {
   const [subInfo, setSubInfo] = useState<SubscriberInfo | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
-  const { isAuthenticated, isLoading: authLoading, user, login } = useAuth();
+  const { isAuthenticated, isLoading: authLoading, user, login, subscription, refreshSubscription } = useAuth();
   const { getAuthHeaders } = useAuth0Token();
 
   useEffect(() => {
@@ -50,18 +50,9 @@ export default function Subscription() {
         login('/dashboard/subscription');
       } else if (user) {
         setEmail(user.email || "");
-        refreshSubscription();
+        // Use cached subscription data from auth context
+        setSubInfo(subscription || { subscribed: false });
         setLoading(false);
-      }
-    }
-  }, [isAuthenticated, authLoading, user, login]);
-
-  const refreshSubscription = async () => {
-    try {
-      const { data, error } = await supabase.functions.invoke("check-subscription");
-      if (error) throw error;
-        const { subscribed, subscription_tier, subscription_end } = data;
-        setSubInfo({ subscribed, subscription_tier, subscription_end });
         
         // Show success message if user just returned from payment
         const urlParams = new URLSearchParams(window.location.search);
@@ -72,10 +63,17 @@ export default function Subscription() {
           // Clean up URL
           window.history.replaceState({}, document.title, window.location.pathname);
         }
-    } catch (e: any) {
-      console.error(e);
-      toast.error("Could not refresh subscription status");
+      }
     }
+  }, [isAuthenticated, authLoading, user, subscription, login]);
+
+  // Use the cached refreshSubscription from auth context - this will update both cache and local state
+  const handleRefreshSubscription = async () => {
+    await refreshSubscription();
+    // Update local state with the refreshed data
+    setTimeout(() => {
+      setSubInfo(subscription || { subscribed: false });
+    }, 100);
   };
 
   const subscribe = async () => {
@@ -215,7 +213,7 @@ export default function Subscription() {
               <Button variant="secondary" onClick={manage} className="hover-scale">
                 <ExternalLink className="mr-2 h-4 w-4" /> Manage billing
               </Button>
-              <Button variant="outline" onClick={refreshSubscription} className="hover-scale">
+              <Button variant="outline" onClick={handleRefreshSubscription} className="hover-scale">
                 <RefreshCcw className="mr-2 h-4 w-4" /> Refresh status
               </Button>
               <Button variant="destructive" onClick={cancelSubscription} className="hover-scale">
@@ -308,7 +306,7 @@ export default function Subscription() {
                 <div className="flex gap-2">
                   <Button 
                     variant="outline" 
-                    onClick={refreshSubscription} 
+                    onClick={handleRefreshSubscription} 
                     className="flex-1 text-xs"
                   >
                     <RefreshCcw className="mr-1 h-3 w-3" /> 

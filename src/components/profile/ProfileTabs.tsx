@@ -49,7 +49,7 @@ export default function ProfileTabs() {
   const [emailVerificationStatus, setEmailVerificationStatus] = useState<{ verified: boolean; loading: boolean }>({ verified: false, loading: false });
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { isAuthenticated, isLoading: authLoading, user, login, logout } = useAuth();
+  const { isAuthenticated, isLoading: authLoading, user, login, logout, subscription, refreshSubscription } = useAuth();
 
   useEffect(() => {
     if (!authLoading) {
@@ -59,12 +59,13 @@ export default function ProfileTabs() {
         setEmail(user.email || "");
         fetchSupabaseUser();
         fetchProfile();
-        refreshSubscription();
+        // Use cached subscription data instead of making API call
+        setSubInfo(subscription || { subscribed: false });
         fetchOrders();
         setLoading(false);
       }
     }
-  }, [isAuthenticated, authLoading, user, login]);
+  }, [isAuthenticated, authLoading, user, subscription, login]);
 
   // Check for email verification success parameter
   useEffect(() => {
@@ -175,16 +176,17 @@ export default function ProfileTabs() {
     }
   };
 
-  const refreshSubscription = async () => {
-    try {
-      const { data, error } = await supabase.functions.invoke("check-subscription");
-      if (error) throw error;
-      setSubInfo(data as SubscriberInfo);
-    } catch (e: any) {
-      console.error(e);
-      toast.error("Could not refresh subscription status");
-    }
-  };
+  // Use the cached refreshSubscription from auth context
+  // const refreshSubscription = async () => {
+  //   try {
+  //     const { data, error } = await supabase.functions.invoke("check-subscription");
+  //     if (error) throw error;
+  //     setSubInfo(data as SubscriberInfo);
+  //   } catch (e: any) {
+  //     console.error(e);
+  //     toast.error("Could not refresh subscription status");
+  //   }
+  // };
 
   const subscribe = async () => {
     try {

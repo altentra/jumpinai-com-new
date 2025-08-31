@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { subscriptionCache } from "@/utils/subscriptionCache";
 
 interface AuthUser {
   id: string;
@@ -9,10 +10,19 @@ interface AuthUser {
   isGoogleUser?: boolean;
 }
 
+interface SubscriptionInfo {
+  subscribed: boolean;
+  subscription_tier?: string | null;
+  subscription_end?: string | null;
+}
+
 interface AuthContextValue {
   user: AuthUser | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  subscription: SubscriptionInfo | null;
+  isSubscriptionLoading: boolean;
+  refreshSubscription: () => Promise<void>;
   login: (redirectTo?: string) => void;
   loginWithRedirect: (redirectTo?: string) => void; // shim for old calls
   logout: () => Promise<void>;
@@ -23,7 +33,8 @@ const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [subChecked, setSubChecked] = useState(false);
+  const [subscription, setSubscription] = useState<SubscriptionInfo | null>(null);
+  const [isSubscriptionLoading, setIsSubscriptionLoading] = useState(false);
 
   // Function to fetch and merge user profile data
   const fetchUserWithProfile = async (authUser: any): Promise<AuthUser | null> => {
@@ -119,11 +130,57 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return () => subscription.unsubscribe();
   }, []);
 
-  useEffect(() => {
-    if (user && !subChecked) {
-      supabase.functions.invoke('check-subscription').catch(() => {}).finally(() => setSubChecked(true));
+  // Fetch subscription data with caching
+  const fetchSubscription = async (): Promise<SubscriptionInfo | null> => {
+    // Try cache first
+    const cached = subscriptionCache.get();
+    if (cached) {
+      return {
+        subscribed: cached.subscribed,
+        subscription_tier: cached.subscription_tier,
+        subscription_end: cached.subscription_end
+      };
     }
-  }, [user, subChecked]);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('check-subscription');
+      if (error) throw error;
+      
+      const subInfo: SubscriptionInfo = {
+        subscribed: data?.subscribed || false,
+        subscription_tier: data?.subscription_tier || null,
+        subscription_end: data?.subscription_end || null
+      };
+      
+      // Cache the result
+      subscriptionCache.set(subInfo);
+      return subInfo;
+    } catch (error) {
+      console.error('Error fetching subscription:', error);
+      return { subscribed: false, subscription_tier: null, subscription_end: null };
+    }
+  };
+
+  const refreshSubscription = async () => {
+    if (!user) return;
+    
+    setIsSubscriptionLoading(true);
+    subscriptionCache.clear(); // Clear cache to force refresh
+    
+    try {
+      const subInfo = await fetchSubscription();
+      setSubscription(subInfo);
+    } finally {
+      setIsSubscriptionLoading(false);
+    }
+  };
+
+  // Load subscription data when user is available
+  useEffect(() => {
+    if (user && !subscription) {
+      fetchSubscription().then(setSubscription);
+    }
+  }, [user, subscription]);
 
   const login = (redirectTo?: string) => {
     const next = redirectTo ?? window.location.pathname + window.location.search;
@@ -132,6 +189,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = async () => {
+    subscriptionCache.clear(); // Clear cache on logout
     await supabase.auth.signOut();
     window.location.href = "/";
   };
@@ -140,10 +198,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     user,
     isAuthenticated: !!user,
     isLoading,
+    subscription,
+    isSubscriptionLoading,
+    refreshSubscription,
     login,
     loginWithRedirect: login,
     logout,
-  }), [user, isLoading]);
+  }), [user, isLoading, subscription, isSubscriptionLoading]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

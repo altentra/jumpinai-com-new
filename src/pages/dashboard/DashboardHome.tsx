@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Rocket, Sparkles, GitBranch, Boxes, Lightbulb, ChevronRight, Crown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { useAuth0Token } from "@/hooks/useAuth0Token";
+import { useAuth } from "@/hooks/useAuth";
 
 interface SubscriberInfo {
   subscribed: boolean;
@@ -16,59 +16,16 @@ interface SubscriberInfo {
 
 const DashboardHome = () => {
   const navigate = useNavigate();
-  const [userName, setUserName] = useState<string>("");
-  const [subInfo, setSubInfo] = useState<SubscriberInfo | null>(null);
-  const { getAuthHeaders } = useAuth0Token();
+  const { user, subscription } = useAuth();
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user) {
-          // First try to get from profiles table
-          const { data: profile } = await (supabase.from("profiles" as any) as any)
-            .select('display_name')
-            .eq('id', user.id)
-            .single();
-          
-          if (profile?.display_name) {
-            setUserName(profile.display_name);
-          } else if (user.user_metadata?.display_name) {
-            setUserName(user.user_metadata.display_name);
-          } else {
-            // Fallback to email name part
-            const emailName = user.email?.split('@')[0] || '';
-            setUserName(emailName);
-          }
-          
-          // Fetch subscription status
-          await refreshSubscription();
-        }
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      }
-    };
-    
-    fetchUserData();
+    // User data is already available from useAuth context
+    // No need to fetch it again
   }, []);
-
-  const refreshSubscription = async () => {
-    try {
-      const { data, error } = await supabase.functions.invoke("check-subscription", {
-        headers: await getAuthHeaders(),
-      });
-      if (error) throw error;
-      setSubInfo(data as SubscriberInfo);
-    } catch (e: any) {
-      console.error('Error fetching subscription:', e);
-    }
-  };
 
   const subscribe = async () => {
     try {
-      const { data, error } = await supabase.functions.invoke("create-checkout", {
-        headers: await getAuthHeaders(),
-      });
+      const { data, error } = await supabase.functions.invoke("create-checkout");
       if (error) throw error;
       const url = (data as any)?.url;
       if (url) window.location.href = url;
@@ -121,11 +78,11 @@ const DashboardHome = () => {
       <div className="text-center py-8 animate-fade-in-down">
         <div className="flex items-center justify-center gap-3 mb-3">
           <h1 className="text-4xl font-bold gradient-text-primary">
-            Welcome{userName ? `, ${userName}` : ""}, to JumpinAI!
+            Welcome{user?.display_name ? `, ${user.display_name}` : ""}, to JumpinAI!
           </h1>
-          {subInfo && (
-            <Badge className={subInfo.subscribed ? "bg-primary/10 text-primary border-primary/20" : "bg-muted text-muted-foreground"}>
-              {subInfo.subscribed ? subInfo.subscription_tier || 'Pro Plan' : 'Free Plan'}
+          {subscription && (
+            <Badge className={subscription.subscribed ? "bg-primary/10 text-primary border-primary/20" : "bg-muted text-muted-foreground"}>
+              {subscription.subscribed ? subscription.subscription_tier || 'Pro Plan' : 'Free Plan'}
             </Badge>
           )}
         </div>
@@ -135,7 +92,7 @@ const DashboardHome = () => {
       </div>
 
       {/* Pro Subscription Card - Only show if not subscribed */}
-      {subInfo && !subInfo.subscribed && (
+      {subscription && !subscription.subscribed && (
         <Card className="border-border glass animate-fade-in-up">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
