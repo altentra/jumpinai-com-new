@@ -11,7 +11,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { User, Shield, Crown, CreditCard, RefreshCcw, Save, LogOut, ExternalLink, AlertTriangle, History, Trash2 } from "lucide-react";
+import { User, Shield, Crown, CreditCard, RefreshCw, Save, LogOut, ExternalLink, AlertTriangle, History, Trash2, Download, Loader2 } from "lucide-react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
 interface SubscriberInfo {
@@ -228,7 +228,7 @@ export default function ProfileTabs() {
         .from("orders")
         .select("*")
         .eq("user_email", userEmail)
-        .in("status", ["paid", "subscription"]) // Show both product orders and subscriptions
+        .in("status", ["paid"]) // Show paid orders (includes subscription orders)
         .order("created_at", { ascending: false });
       
       if (ordersError) {
@@ -482,7 +482,7 @@ export default function ProfileTabs() {
                       <ExternalLink className="mr-2 h-4 w-4" /> Manage billing
                     </Button>
                     <Button variant="outline" onClick={refreshSubscription} className="hover-scale">
-                      <RefreshCcw className="mr-2 h-4 w-4" /> Refresh status
+                      <RefreshCw className="mr-2 h-4 w-4" /> Refresh status
                     </Button>
                   </>
                 )}

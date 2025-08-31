@@ -80,6 +80,9 @@ serve(async (req) => {
     const leadDownloads = leadRes.data ?? [];
     const products = productsRes.data ?? [];
 
+    // Create product map for lookups
+    const productById = new Map(products.map((p: any) => [p.id, p]));
+
     // Fetch auth users (emails, created_at, last_sign_in_at)
     const adminClient = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
     const allAuthUsers: any[] = [];
@@ -95,6 +98,8 @@ serve(async (req) => {
 
     // Stats
     const paidOrders = orders.filter((o) => o.status === "paid");
+    // Count subscription orders separately (they are also "revenue" generating)
+    const subscriptionOrders = paidOrders.filter((o) => productById.get(o.product_id)?.name === "JumpinAI Pro Subscription");
     const totalRevenueCents = paidOrders.reduce((sum, o) => sum + (o.amount || 0), 0);
 
     // Filter paid subscribers early for stats calculation - only real active Stripe subscribers
@@ -127,13 +132,17 @@ serve(async (req) => {
       totalLeadMagnetDownloads: leadDownloads.length,
       abandonedCarts: orders.filter((o) => o.status === "pending").length,
       completedOrders: paidOrders.length,
+      // Add breakdown of revenue and orders
+      subscriptionRevenue: subscriptionOrders.reduce((sum, o) => sum + (o.amount || 0), 0) / 100,
+      productRevenue: paidOrders.filter(o => !(productById.get(o.product_id)?.name === "JumpinAI Pro Subscription")).reduce((sum, o) => sum + (o.amount || 0), 0) / 100,
+      subscriptionOrders: subscriptionOrders.length,
+      productOrders: paidOrders.filter(o => !(productById.get(o.product_id)?.name === "JumpinAI Pro Subscription")).length,
       monthlyRevenue: monthlyRevenueCents / 100,
       dailyRevenue: dailyRevenueCents / 100,
       averageOrderValue: paidOrders.length ? totalRevenueCents / paidOrders.length / 100 : 0,
     };
 
     // All orders with product names (show ALL orders, not just recent)
-    const productById = new Map(products.map((p: any) => [p.id, p]));
     const recentOrders = [...orders]
       .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
       // Show ALL orders, not just recent ones
@@ -145,6 +154,7 @@ serve(async (req) => {
         created_at: o.created_at,
         product_name: productById.get(o.product_id)?.name || "Unknown Product",
         is_completed: o.status === "paid",
+        is_subscription: productById.get(o.product_id)?.name === "JumpinAI Pro Subscription",
       }));
 
     // Only show actual active paid subscribers for the $10/month pro plan
@@ -153,6 +163,8 @@ serve(async (req) => {
       .map((s) => {
         const auth = authById.get(s.user_id);
         const userOrders = s.email ? orders.filter(o => o.user_email === s.email && o.status === 'paid') : [];
+        const subscriptionOrders = userOrders.filter(o => productById.get(o.product_id)?.name === "JumpinAI Pro Subscription");
+        const productPurchases = userOrders.filter(o => productById.get(o.product_id)?.name !== "JumpinAI Pro Subscription");
         const totalPaid = userOrders.reduce((sum, o) => sum + (o.amount || 0), 0) / 100;
         const totalDownloads = userOrders.reduce((sum, o) => sum + (o.download_count || 0), 0);
         
@@ -162,6 +174,8 @@ serve(async (req) => {
           total_paid: totalPaid,
           total_downloads: totalDownloads,
           completed_orders: userOrders.length,
+          subscription_payments: subscriptionOrders.length,
+          product_purchases: productPurchases.length,
         };
       });
 
