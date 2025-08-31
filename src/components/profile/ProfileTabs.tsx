@@ -456,20 +456,19 @@ export default function ProfileTabs() {
       {/* Tabs */}
       <section className="mt-4 sm:mt-6">
         <Tabs defaultValue="profile" className="w-full">
-          <TabsList className="grid grid-cols-1 sm:grid-cols-3 w-full gap-1 sm:gap-0 rounded-xl bg-muted/30 p-1">
-            <TabsTrigger value="profile" className="flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm py-2 px-2 sm:px-4">
+          <TabsList className="flex flex-col sm:flex-row flex-wrap w-full gap-1 rounded-xl bg-muted/30 p-1 h-auto">
+            <TabsTrigger value="profile" className="w-full sm:w-auto flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm py-2 px-2 sm:px-4">
               <User className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" /> 
-              <span className="hidden xs:inline sm:inline">Profile &</span>
-              <span>Overview</span>
+              <span className="sm:hidden">Overview</span>
+              <span className="hidden sm:inline">Profile & Overview</span>
             </TabsTrigger>
-            <TabsTrigger value="security" className="flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm py-2 px-2 sm:px-4">
+            <TabsTrigger value="security" className="w-full sm:w-auto flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm py-2 px-2 sm:px-4">
               <Shield className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" /> 
               <span>Security</span>
             </TabsTrigger>
-            <TabsTrigger value="orders" className="flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm py-2 px-2 sm:px-4">
+            <TabsTrigger value="orders" className="w-full sm:w-auto flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm py-2 px-2 sm:px-4">
               <History className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" /> 
-              <span className="hidden xs:inline sm:inline">Order</span>
-              <span>History</span>
+              <span>Order History</span>
             </TabsTrigger>
           </TabsList>
 
