@@ -1,5 +1,7 @@
 import { useEffect } from "react";
 import { useSearchParams, Link } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle, Crown, ArrowRight, Sparkles } from "lucide-react";
@@ -9,15 +11,42 @@ import { Helmet } from "react-helmet-async";
 
 const SubscriptionSuccess = () => {
   const [searchParams] = useSearchParams();
+  const { user } = useAuth();
 
   useEffect(() => {
-    // Clean up URL parameters after a short delay
-    const timer = setTimeout(() => {
+    // Send welcome email to the customer
+    const sendWelcomeEmail = async () => {
+      if (user?.email) {
+        try {
+          console.log("Sending welcome email to:", user.email);
+          await supabase.functions.invoke('send-subscription-welcome', {
+            body: {
+              customerEmail: user.email,
+              customerName: user.display_name || user.email?.split('@')[0],
+              subscriptionTier: 'JumpinAI Pro'
+            }
+          });
+          console.log("✅ Welcome email sent successfully");
+        } catch (error) {
+          console.error("⚠️ Failed to send welcome email:", error);
+          // Don't block the page if email fails
+        }
+      }
+    };
+
+    // Send welcome email after a short delay to ensure subscription is processed
+    const emailTimer = setTimeout(sendWelcomeEmail, 2000);
+    
+    // Clean up URL parameters after a delay
+    const urlTimer = setTimeout(() => {
       window.history.replaceState({}, document.title, window.location.pathname);
     }, 3000);
 
-    return () => clearTimeout(timer);
-  }, []);
+    return () => {
+      clearTimeout(emailTimer);
+      clearTimeout(urlTimer);
+    };
+  }, [user]);
 
   return (
     <>
