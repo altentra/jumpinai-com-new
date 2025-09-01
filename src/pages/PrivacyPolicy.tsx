@@ -37,9 +37,9 @@ const PrivacyPolicy = () => {
       <section className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto prose prose-lg dark:prose-invert">
           <div className="bg-muted/30 p-8 rounded-2xl mb-8">
-            <p className="text-sm text-muted-foreground mb-2">Last updated: August 1, 2025</p>
+            <p className="text-sm text-muted-foreground mb-2">Last updated: September 1, 2025</p>
             <p className="text-base">
-              This Privacy Policy describes how JumpinAI, LLC ("we," "our," or "us") collects, uses, and shares information about you when you use our website and services.
+              This Privacy Policy describes how JumpinAI, LLC ("we," "our," or "us") collects, uses, and shares information about you when you use our website and services, including when you authenticate using third-party services like Google.
             </p>
           </div>
 
@@ -51,7 +51,8 @@ const PrivacyPolicy = () => {
             <li>Subscribe to our newsletter</li>
             <li>Contact us through our contact form</li>
             <li>Purchase digital products from our store</li>
-            <li>Create an account or make payments</li>
+            <li>Create an account using email/password or third-party authentication (Google)</li>
+            <li>Make payments</li>
             <li>Download digital assets or resources</li>
             <li>Engage with our content and services</li>
             <li>Participate in surveys or feedback</li>
@@ -101,9 +102,27 @@ const PrivacyPolicy = () => {
             <li>In connection with a business transfer or merger</li>
           </ul>
 
+          <h2 className="text-3xl font-bold mb-6 mt-12 font-display">Google Authentication</h2>
+          <p className="mb-6">When you choose to sign in with Google, we collect and process the following information from your Google account:</p>
+          <ul className="mb-6">
+            <li>Your Google email address</li>
+            <li>Your Google profile name</li>
+            <li>Your Google profile picture (if available)</li>
+            <li>Basic profile information</li>
+          </ul>
+          <p className="mb-6">We use this information to:</p>
+          <ul className="mb-8">
+            <li>Create and manage your account</li>
+            <li>Provide personalized services</li>
+            <li>Verify your identity</li>
+            <li>Deliver our services and communicate with you</li>
+          </ul>
+          <p className="mb-8">Your use of Google Sign-In is subject to Google's Privacy Policy. We do not store your Google password or access your Google account beyond the basic profile information you authorize.</p>
+
           <h2 className="text-3xl font-bold mb-6 mt-12 font-display">Third-Party Services</h2>
           <p className="mb-6">We use trusted third-party services to provide our services:</p>
           <ul className="mb-8">
+            <li><strong>Google:</strong> For authentication services (subject to Google's Privacy Policy)</li>
             <li><strong>Stripe:</strong> For secure payment processing (subject to Stripe's Privacy Policy)</li>
             <li><strong>Supabase:</strong> For data storage and user authentication</li>
             <li><strong>Email Service Providers:</strong> For delivering newsletters and transactional emails</li>
@@ -113,14 +132,35 @@ const PrivacyPolicy = () => {
           <h2 className="text-3xl font-bold mb-6 mt-12 font-display">Data Security</h2>
           <p className="mb-8">We implement appropriate security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. However, no method of transmission over the internet is 100% secure.</p>
 
-          <h2 className="text-3xl font-bold mb-6 mt-12 font-display">Your Rights</h2>
-          <p className="mb-6">Depending on your location, you may have certain rights regarding your personal information, including:</p>
-          <ul className="mb-8">
+          <h2 className="text-3xl font-bold mb-6 mt-12 font-display">Your Privacy Rights</h2>
+          <p className="mb-6">Depending on your location, you may have certain rights regarding your personal information:</p>
+          
+          <h3 className="text-2xl font-semibold mb-4 mt-8">General Rights</h3>
+          <ul className="mb-6">
             <li>The right to access your personal information</li>
             <li>The right to correct inaccurate information</li>
             <li>The right to delete your personal information</li>
             <li>The right to withdraw consent</li>
             <li>The right to data portability</li>
+          </ul>
+
+          <h3 className="text-2xl font-semibold mb-4 mt-8">California Privacy Rights (CCPA)</h3>
+          <p className="mb-4">If you are a California resident, you have additional rights including:</p>
+          <ul className="mb-6">
+            <li>The right to know what personal information we collect about you</li>
+            <li>The right to delete personal information we have collected</li>
+            <li>The right to opt-out of the sale of personal information</li>
+            <li>The right to non-discrimination for exercising your privacy rights</li>
+          </ul>
+          <p className="mb-6">We do not sell personal information. You can exercise your privacy rights by contacting us or using our "Your Privacy Choices" tool.</p>
+
+          <h3 className="text-2xl font-semibold mb-4 mt-8">European Privacy Rights (GDPR)</h3>
+          <p className="mb-4">If you are in the European Union, you have additional rights including:</p>
+          <ul className="mb-8">
+            <li>The right to object to processing</li>
+            <li>The right to restrict processing</li>
+            <li>The right to data portability</li>
+            <li>The right to withdraw consent at any time</li>
           </ul>
 
           <h2 className="text-3xl font-bold mb-6 mt-12 font-display">Cookies</h2>

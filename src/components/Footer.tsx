@@ -11,9 +11,12 @@ import {
 import { FaXTwitter } from "react-icons/fa6";
 import { SiThreads } from "react-icons/si";
 import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { PrivacyChoices } from "./PrivacyChoices";
 
 const Footer = () => {
   const navigate = useNavigate();
+  const [isPrivacyChoicesOpen, setIsPrivacyChoicesOpen] = useState(false);
 
   const handleNavClick = (href: string) => {
     if (window.location.pathname !== '/') {
@@ -139,6 +142,15 @@ const Footer = () => {
                   Terms of Use
                 </Link>
               </li>
+              <li>
+                <button 
+                  onClick={() => setIsPrivacyChoicesOpen(true)}
+                  className="group flex items-center text-muted-foreground hover:text-foreground transition-colors duration-300 text-left"
+                >
+                  <ArrowRight className="h-4 w-4 mr-2 group-hover:translate-x-1 transition-transform" />
+                  Your Privacy Choices
+                </button>
+              </li>
             </ul>
           </div>
         </div>
@@ -155,6 +167,12 @@ const Footer = () => {
       
       {/* Bottom Gradient */}
       <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border to-transparent opacity-50"></div>
+      
+      {/* Privacy Choices Modal */}
+      <PrivacyChoices 
+        isOpen={isPrivacyChoicesOpen} 
+        onClose={() => setIsPrivacyChoicesOpen(false)} 
+      />
     </footer>
   );
 };
