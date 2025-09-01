@@ -43,32 +43,18 @@ const ScrollToTop = () => {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    console.log("Route changed to:", pathname);
     window.scrollTo(0, 0);
   }, [pathname]);
 
   return null;
 };
 
-// Debug component to log route information
+// Route change handler (debug info removed for production)
 const RouteDebugger = () => {
-  const location = useLocation();
-  
-  useEffect(() => {
-    console.log("Current route info:", {
-      pathname: location.pathname,
-      search: location.search,
-      hash: location.hash,
-      state: location.state
-    });
-  }, [location]);
-
   return null;
 };
 
 const App = () => {
-  console.log("App component rendering");
-  
   // Initialize critical page preloading after main app loads
   useEffect(() => {
     preloadCriticalPages();

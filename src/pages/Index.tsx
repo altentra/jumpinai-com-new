@@ -8,11 +8,6 @@ import Footer from "@/components/Footer";
 import { GoogleSheetsTest } from "@/components/GoogleSheetsTest";
 
 const Index = () => {
-  // Add debug info to console
-  console.log("Index page loaded - checking if in development mode");
-  console.log("Current URL:", window.location.href);
-  console.log("Current pathname:", window.location.pathname);
-  
   // Show test component only in development or when URL contains 'test'
   const showTest = window.location.hostname === 'localhost' || 
                    window.location.search.includes('test=true') ||

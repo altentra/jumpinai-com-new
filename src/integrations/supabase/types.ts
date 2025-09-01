@@ -311,6 +311,17 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      check_rate_limit: {
+        Args: {
+          email_col: string
+          limit_count: number
+          table_name: string
+          time_col: string
+          time_window_hours?: number
+          user_email: string
+        }
+        Returns: boolean
+      }
       upsert_contact: {
         Args: {
           p_email: string
