@@ -48,21 +48,14 @@ const Newsletter = () => {
         // Try to get the response data from the error context
         // For 409 status (already subscribed), we want to show a success message
         try {
-          // Make a direct fetch to get the actual response using the correct Supabase URL
-          const response = await fetch(`https://cieczaajcgkgdgenfdzi.supabase.co/functions/v1/send-newsletter-email`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpZWN6YWFqY2drZ2RnZW5mZHppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1MzU4OTksImV4cCI6MjA2NjExMTg5OX0.OiDppCXfN_AN64XvCvfhphFqbjSvRtKSwF-cIXCZMQU`,
-              'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpZWN6YWFqY2drZ2RnZW5mZHppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1MzU4OTksImV4cCI6MjA2NjExMTg5OX0.OiDppCXfN_AN64XvCvfhphFqbjSvRtKSwF-cIXCZMQU'
-            },
-            body: JSON.stringify({ email })
+          // Use the configured Supabase client instead of hardcoded API keys
+          const { data: retryData, error: retryError } = await supabase.functions.invoke('send-newsletter-email', {
+            body: { email }
           });
           
-          const responseData = await response.json();
-          console.log("Direct response data:", responseData);
-          
-          if (response.status === 409 && responseData.message?.includes("already subscribed")) {
+          if (retryError) {
+            console.log("Retry also failed:", retryError);
+          } else if (retryData && retryData.message?.includes("already subscribed")) {
             toast({
               title: "You're Already Part of Our Community! 🎉",
               description: "Great news! You're already subscribed to our newsletter. Check your inbox for our latest AI insights and updates.",
