@@ -1,13 +1,13 @@
-import { useEffect, useMemo, useState } from "react";
-import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/integrations/supabase/client";
-import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState, useEffect, useMemo } from "react";
+import { Navigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
-import { Crown, CreditCard, RefreshCcw, ExternalLink, AlertTriangle } from "lucide-react";
-import { useAuth0Token } from "@/hooks/useAuth0Token";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { ExternalLink, Loader2, RefreshCw, X, CreditCard, Crown, AlertTriangle } from "lucide-react";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface SubscriberInfo {
   subscribed: boolean;
@@ -37,12 +37,11 @@ const planFeatures = {
 };
 
 export default function Subscription() {
+  const { user, refreshSubscription, isAuthenticated, isLoading: authLoading, login, subscription } = useAuth();
+  const isMobile = useIsMobile();
   const [email, setEmail] = useState<string>("");
   const [subInfo, setSubInfo] = useState<SubscriberInfo | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const navigate = useNavigate();
-  const { isAuthenticated, isLoading: authLoading, user, login, subscription, refreshSubscription } = useAuth();
-  const { getAuthHeaders } = useAuth0Token();
 
   useEffect(() => {
     if (!authLoading) {
@@ -90,35 +89,33 @@ export default function Subscription() {
   };
 
   const manage = async () => {
-    console.log("🔧 [Mobile Debug] Subscription manage billing clicked");
-    // Open a placeholder window synchronously to avoid popup blockers on mobile
-    const placeholder = window.open('', '_blank');
     try {
       const { data: session } = await supabase.auth.getSession();
       const accessToken = session.session?.access_token;
+      
       const { data, error } = await supabase.functions.invoke("customer-portal", {
         body: { source: 'dashboard-subscription' },
         headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
       });
+      
       if (error) throw error;
       const url = (data as any)?.url;
+      
       if (url) {
-        console.log("🔧 [Mobile Debug] Navigating to portal URL:", url);
-        if (placeholder && typeof placeholder.location !== 'undefined') {
-          placeholder.location.href = url;
-          console.log("🔧 [Mobile Debug] Used placeholder window");
-        } else {
-          const win = window.open(url, '_blank');
-          if (!win) {
-            console.log("🔧 [Mobile Debug] window.open returned null, falling back to same-tab navigation");
+        if (isMobile) {
+          // Use placeholder window approach for mobile to avoid popup blockers
+          const placeholder = window.open('', '_blank');
+          if (placeholder && typeof placeholder.location !== 'undefined') {
+            placeholder.location.href = url;
+          } else {
             window.location.href = url;
           }
+        } else {
+          // Direct approach for desktop - much faster
+          window.open(url, '_blank');
         }
       }
     } catch (e: any) {
-      console.error("🔧 [Mobile Debug] Manage billing error:", e);
-      // Close placeholder if we created it and failed
-      try { placeholder?.close(); } catch {}
       toast.error(e.message || "Failed to open customer portal");
     }
   };
@@ -128,35 +125,33 @@ export default function Subscription() {
       return;
     }
     
-    console.log("🔧 [Mobile Debug] Cancel subscription clicked");
-    // Open a placeholder window synchronously to avoid popup blockers on mobile
-    const placeholder = window.open('', '_blank');
     try {
       const { data: session } = await supabase.auth.getSession();
       const accessToken = session.session?.access_token;
+      
       const { data, error } = await supabase.functions.invoke("customer-portal", {
         body: { source: 'dashboard-subscription' },
         headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
       });
+      
       if (error) throw error;
       const url = (data as any)?.url;
+      
       if (url) {
-        console.log("🔧 [Mobile Debug] Navigating to cancel portal URL:", url);
-        if (placeholder && typeof placeholder.location !== 'undefined') {
-          placeholder.location.href = url;
-          console.log("🔧 [Mobile Debug] Used placeholder window for cancel");
-        } else {
-          const win = window.open(url, '_blank');
-          if (!win) {
-            console.log("🔧 [Mobile Debug] window.open returned null for cancel, falling back to same-tab navigation");
+        if (isMobile) {
+          // Use placeholder window approach for mobile to avoid popup blockers
+          const placeholder = window.open('', '_blank');
+          if (placeholder && typeof placeholder.location !== 'undefined') {
+            placeholder.location.href = url;
+          } else {
             window.location.href = url;
           }
+        } else {
+          // Direct approach for desktop - much faster
+          window.open(url, '_blank');
         }
       }
     } catch (e: any) {
-      console.error("🔧 [Mobile Debug] Cancel subscription error:", e);
-      // Close placeholder if we created it and failed
-      try { placeholder?.close(); } catch {}
       toast.error(e.message || "Failed to open billing portal");
     }
   };
@@ -214,7 +209,7 @@ export default function Subscription() {
                 <ExternalLink className="mr-2 h-4 w-4" /> Manage billing
               </Button>
               <Button variant="outline" onClick={handleRefreshSubscription} className="hover-scale">
-                <RefreshCcw className="mr-2 h-4 w-4" /> Refresh status
+                <RefreshCw className="mr-2 h-4 w-4" /> Refresh status
               </Button>
               <Button variant="destructive" onClick={cancelSubscription} className="hover-scale">
                 <AlertTriangle className="mr-2 h-4 w-4" /> Cancel subscription
@@ -309,7 +304,7 @@ export default function Subscription() {
                     onClick={handleRefreshSubscription} 
                     className="flex-1 text-xs"
                   >
-                    <RefreshCcw className="mr-1 h-3 w-3" /> 
+                    <RefreshCw className="mr-1 h-3 w-3" /> 
                     Refresh
                   </Button>
                   <Button 

@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { User, Shield, Crown, CreditCard, RefreshCw, Save, LogOut, ExternalLink, AlertTriangle, History, Trash2, Download, Loader2 } from "lucide-react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface SubscriberInfo {
   subscribed: boolean;
@@ -36,6 +37,8 @@ const planFeatures = {
 };
 
 export default function ProfileTabs() {
+  const { user, refreshSubscription } = useAuth();
+  const isMobile = useIsMobile();
   const [profile, setProfile] = useState<{ display_name: string; avatar_url: string }>({ display_name: "", avatar_url: "" });
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -49,7 +52,7 @@ export default function ProfileTabs() {
   const [emailVerificationStatus, setEmailVerificationStatus] = useState<{ verified: boolean; loading: boolean }>({ verified: false, loading: false });
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { isAuthenticated, isLoading: authLoading, user, login, logout, subscription, refreshSubscription } = useAuth();
+  const { isAuthenticated, isLoading: authLoading, login, logout, subscription } = useAuth();
 
   useEffect(() => {
     if (!authLoading) {
@@ -200,41 +203,33 @@ export default function ProfileTabs() {
   };
 
   const manage = async () => {
-    console.log("🔧 [Mobile Debug] Manage billing clicked");
-    // Open a placeholder window synchronously to avoid popup blockers on mobile
-    const placeholder = window.open('', '_blank');
     try {
       const { data: session } = await supabase.auth.getSession();
       const accessToken = session.session?.access_token;
-      console.log("🔧 [Mobile Debug] Got session, invoking customer-portal");
       
       const { data, error } = await supabase.functions.invoke("customer-portal", {
         body: { source: 'dashboard-profile' },
         headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
       });
       
-      console.log("🔧 [Mobile Debug] Customer portal response:", { data, error });
-      
       if (error) throw error;
       const url = (data as any)?.url;
       
       if (url) {
-        console.log("🔧 [Mobile Debug] Navigating to portal URL:", url);
-        if (placeholder && typeof placeholder.location !== 'undefined') {
-          placeholder.location.href = url;
-          console.log("🔧 [Mobile Debug] Used placeholder window");
-        } else {
-          const win = window.open(url, '_blank');
-          if (!win) {
-            console.log("🔧 [Mobile Debug] window.open returned null, falling back to same-tab navigation");
+        if (isMobile) {
+          // Use placeholder window approach for mobile to avoid popup blockers
+          const placeholder = window.open('', '_blank');
+          if (placeholder && typeof placeholder.location !== 'undefined') {
+            placeholder.location.href = url;
+          } else {
             window.location.href = url;
           }
+        } else {
+          // Direct approach for desktop - much faster
+          window.open(url, '_blank');
         }
       }
     } catch (e: any) {
-      console.error("🔧 [Mobile Debug] Manage billing error:", e);
-      // Close placeholder if we created it and failed
-      try { placeholder?.close(); } catch {}
       toast.error(e.message || "Failed to open billing portal");
     }
   };
