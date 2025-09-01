@@ -13,48 +13,67 @@ const Hero = () => {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* AI-Inspired Dark Curtain Background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-slate-900 via-stone-800 to-amber-900/20 dark:from-slate-950 dark:via-stone-900 dark:to-amber-950/30"></div>
+      {/* AI-Inspired Curtain Background - Light Mode */}
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-200 via-slate-300 to-slate-400 dark:from-slate-900 dark:via-slate-800 dark:to-slate-700"></div>
       
-      {/* Vertical Texture Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-emerald-900/5 to-transparent dark:via-emerald-950/10"></div>
+      {/* Deep Blue to Teal Innovative Gradient */}
+      <div className="absolute inset-0 bg-gradient-to-b from-blue-900/80 via-teal-800/60 to-cyan-700/40 dark:from-blue-950/90 dark:via-teal-900/70 dark:to-cyan-800/50"></div>
       
-      {/* Subtle Light from Bottom */}
-      <div className="absolute bottom-0 left-0 right-0 h-96 bg-gradient-to-t from-amber-50/10 via-stone-100/5 to-transparent dark:from-amber-950/20 dark:via-stone-900/10 dark:to-transparent"></div>
-      
-      {/* AI Neural Network Pattern */}
-      <div className="absolute inset-0 opacity-10 dark:opacity-20">
-        <div className="absolute top-20 left-10 w-64 h-64 bg-gradient-radial from-emerald-800/30 to-transparent rounded-full animate-pulse"></div>
-        <div className="absolute top-40 right-20 w-48 h-48 bg-gradient-radial from-amber-800/20 to-transparent rounded-full animate-pulse animation-delay-2000"></div>
-        <div className="absolute bottom-32 left-1/3 w-56 h-56 bg-gradient-radial from-stone-700/25 to-transparent rounded-full animate-pulse animation-delay-4000"></div>
+      {/* Vertical Curtain Drapes Effect */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-800/20 via-transparent via-transparent to-blue-800/20 dark:from-blue-950/30 dark:via-transparent dark:to-blue-950/30"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-teal-600/10 to-transparent dark:via-teal-800/15"></div>
       </div>
       
-      {/* Curved Jump Effect */}
-      <div className="absolute bottom-0 left-0 right-0 h-32">
+      {/* Bottom Light Effect */}
+      <div className="absolute bottom-0 left-0 right-0 h-96 bg-gradient-to-t from-cyan-100/30 via-teal-50/15 to-transparent dark:from-cyan-950/40 dark:via-teal-900/20 dark:to-transparent"></div>
+      
+      {/* AI Neural Network Pattern */}
+      <div className="absolute inset-0 opacity-15 dark:opacity-25">
+        <div className="absolute top-20 left-10 w-64 h-64 bg-gradient-radial from-teal-600/40 via-teal-700/20 to-transparent rounded-full animate-pulse"></div>
+        <div className="absolute top-40 right-20 w-48 h-48 bg-gradient-radial from-cyan-600/30 via-cyan-700/15 to-transparent rounded-full animate-pulse animation-delay-2000"></div>
+        <div className="absolute bottom-32 left-1/3 w-56 h-56 bg-gradient-radial from-blue-600/35 via-blue-700/18 to-transparent rounded-full animate-pulse animation-delay-4000"></div>
+      </div>
+      
+      {/* Enhanced Curved Jump Effect */}
+      <div className="absolute bottom-0 left-0 right-0 h-40 opacity-60 dark:opacity-80">
         <svg
           className="absolute bottom-0 w-full h-full"
-          viewBox="0 0 1200 120"
+          viewBox="0 0 1200 150"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >
+          {/* Main jump curve */}
           <path
-            d="M0 120L50 105C100 90 200 60 300 45C400 30 500 30 600 37.5C700 45 800 60 900 67.5C1000 75 1100 75 1150 75L1200 75V120H1150C1100 120 1000 120 900 120C800 120 700 120 600 120C500 120 400 120 300 120C200 120 100 120 50 120H0Z"
+            d="M0 150L80 135C160 120 320 90 480 75C640 60 800 60 960 75C1120 90 1280 120 1360 135L1440 150V150H1360C1280 150 1120 150 960 150C800 150 640 150 480 150C320 150 160 150 80 150H0Z"
             fill="url(#jumpGradient)"
-            className="opacity-20 dark:opacity-30"
+            className="drop-shadow-lg"
+          />
+          {/* Secondary curve for depth */}
+          <path
+            d="M0 150L100 140C200 130 400 110 600 100C800 90 1000 90 1100 95L1200 100V150H1100C1000 150 800 150 600 150C400 150 200 150 100 150H0Z"
+            fill="url(#jumpGradient2)"
+            opacity="0.7"
           />
           <defs>
             <linearGradient id="jumpGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="rgb(120 113 108)" stopOpacity="0.1" />
-              <stop offset="50%" stopColor="rgb(217 119 6)" stopOpacity="0.3" />
-              <stop offset="100%" stopColor="rgb(6 78 59)" stopOpacity="0.2" />
+              <stop offset="0%" stopColor="rgb(30 58 138)" stopOpacity="0.6" />
+              <stop offset="30%" stopColor="rgb(5 150 105)" stopOpacity="0.8" />
+              <stop offset="70%" stopColor="rgb(6 182 212)" stopOpacity="0.7" />
+              <stop offset="100%" stopColor="rgb(14 116 144)" stopOpacity="0.5" />
+            </linearGradient>
+            <linearGradient id="jumpGradient2" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="rgb(59 130 246)" stopOpacity="0.4" />
+              <stop offset="50%" stopColor="rgb(34 211 238)" stopOpacity="0.6" />
+              <stop offset="100%" stopColor="rgb(16 185 129)" stopOpacity="0.3" />
             </linearGradient>
           </defs>
         </svg>
       </div>
       
-      {/* Subtle Noise Texture */}
-      <div className="absolute inset-0 opacity-30 dark:opacity-50 mix-blend-overlay" style={{
-        backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23374151' fill-opacity='0.02'%3E%3Cpath d='M20 20c0 2.21-1.79 4-4 4s-4-1.79-4-4 1.79-4 4-4 4 1.79 4 4zm0-10c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm10 0c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2z'/%3E%3C/g%3E%3C/svg%3E")`
+      {/* Subtle Tech Pattern Overlay */}
+      <div className="absolute inset-0 opacity-20 dark:opacity-40 mix-blend-soft-light" style={{
+        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23059669' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3Ccircle cx='10' cy='10' r='1'/%3E%3Ccircle cx='50' cy='10' r='1'/%3E%3Ccircle cx='10' cy='50' r='1'/%3E%3Ccircle cx='50' cy='50' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
       }}></div>
       
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
