@@ -48,11 +48,74 @@ const Hero = () => {
       {/* Bottom Sophisticated Light Effect */}
       <div className="absolute bottom-0 left-0 right-0 h-96 bg-gradient-to-t from-white/60 via-slate-50/30 to-transparent dark:from-stone-950/60 dark:via-slate-900/30 dark:to-transparent"></div>
       
-      {/* AI Neural Network Pattern */}
+      {/* Advanced AI Neural Network Pattern */}
       <div className="absolute inset-0 opacity-20 dark:opacity-30">
         <div className="absolute top-20 left-10 w-64 h-64 bg-gradient-radial from-indigo-200/40 via-indigo-300/20 to-transparent dark:from-indigo-950/50 dark:via-indigo-900/25 dark:to-transparent rounded-full animate-pulse"></div>
         <div className="absolute top-40 right-20 w-48 h-48 bg-gradient-radial from-blue-200/30 via-blue-300/15 to-transparent dark:from-blue-950/40 dark:via-blue-900/20 dark:to-transparent rounded-full animate-pulse animation-delay-2000"></div>
         <div className="absolute bottom-32 left-1/3 w-56 h-56 bg-gradient-radial from-slate-300/35 via-slate-400/18 to-transparent dark:from-slate-900/45 dark:via-slate-800/22 dark:to-transparent rounded-full animate-pulse animation-delay-4000"></div>
+      </div>
+
+      {/* Floating Particles */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-blue-300/60 dark:bg-blue-400/40 rounded-full animate-bounce" style={{ animationDuration: '3s', animationDelay: '0s' }}></div>
+        <div className="absolute top-1/3 right-1/3 w-1 h-1 bg-indigo-400/70 dark:bg-indigo-300/50 rounded-full animate-bounce" style={{ animationDuration: '4s', animationDelay: '1s' }}></div>
+        <div className="absolute bottom-1/3 left-1/5 w-3 h-3 bg-slate-400/50 dark:bg-slate-300/30 rounded-full animate-bounce" style={{ animationDuration: '5s', animationDelay: '2s' }}></div>
+        <div className="absolute top-2/3 right-1/4 w-1.5 h-1.5 bg-blue-500/60 dark:bg-blue-200/40 rounded-full animate-bounce" style={{ animationDuration: '3.5s', animationDelay: '0.5s' }}></div>
+        <div className="absolute bottom-1/4 right-1/5 w-2 h-2 bg-indigo-300/80 dark:bg-indigo-400/50 rounded-full animate-bounce" style={{ animationDuration: '4.5s', animationDelay: '1.5s' }}></div>
+      </div>
+
+      {/* Neural Connection Lines */}
+      <div className="absolute inset-0 opacity-10 dark:opacity-20">
+        <svg className="w-full h-full" viewBox="0 0 1200 800">
+          <defs>
+            <linearGradient id="connectionGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="rgb(99 102 241)" stopOpacity="0.6" />
+              <stop offset="100%" stopColor="rgb(59 130 246)" stopOpacity="0.2" />
+            </linearGradient>
+            <linearGradient id="connectionGradientDark" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="rgb(148 163 184)" stopOpacity="0.4" />
+              <stop offset="100%" stopColor="rgb(71 85 105)" stopOpacity="0.1" />
+            </linearGradient>
+          </defs>
+          <path
+            d="M100 200 Q300 100 500 250 T900 180"
+            stroke={`url(#${isDark ? 'connectionGradientDark' : 'connectionGradient'})`}
+            strokeWidth="1"
+            fill="none"
+            className="animate-pulse"
+            style={{ animationDuration: '4s' }}
+          />
+          <path
+            d="M200 400 Q600 200 800 450 T1100 350"
+            stroke={`url(#${isDark ? 'connectionGradientDark' : 'connectionGradient'})`}
+            strokeWidth="0.8"
+            fill="none"
+            className="animate-pulse"
+            style={{ animationDuration: '6s', animationDelay: '2s' }}
+          />
+          <path
+            d="M50 600 Q400 500 700 650 T1000 550"
+            stroke={`url(#${isDark ? 'connectionGradientDark' : 'connectionGradient'})`}
+            strokeWidth="0.6"
+            fill="none"
+            className="animate-pulse"
+            style={{ animationDuration: '5s', animationDelay: '1s' }}
+          />
+        </svg>
+      </div>
+
+      {/* Advanced Mesh Gradient Overlay */}
+      <div className="absolute inset-0 opacity-30 dark:opacity-40">
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-blue-100/20 via-transparent via-transparent to-indigo-200/30 dark:from-blue-950/30 dark:via-transparent dark:to-indigo-950/40"></div>
+        <div className="absolute top-0 right-0 w-2/3 h-2/3 bg-gradient-to-bl from-slate-200/25 via-transparent to-blue-300/20 dark:from-slate-800/35 dark:via-transparent dark:to-blue-900/30 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-3/4 h-3/4 bg-gradient-to-tr from-indigo-100/30 via-transparent to-slate-300/25 dark:from-indigo-950/40 dark:via-transparent dark:to-slate-800/35 rounded-full blur-2xl"></div>
+      </div>
+
+      {/* Dynamic Light Rays */}
+      <div className="absolute inset-0 opacity-15 dark:opacity-25">
+        <div className="absolute top-1/4 -left-32 w-64 h-1 bg-gradient-to-r from-transparent via-blue-300/50 to-transparent dark:via-blue-400/30 rotate-45 animate-pulse" style={{ animationDuration: '3s' }}></div>
+        <div className="absolute top-1/2 -right-32 w-48 h-0.5 bg-gradient-to-r from-transparent via-indigo-400/60 to-transparent dark:via-indigo-300/40 -rotate-45 animate-pulse" style={{ animationDuration: '4s', animationDelay: '1.5s' }}></div>
+        <div className="absolute bottom-1/3 left-1/4 w-56 h-0.5 bg-gradient-to-r from-transparent via-slate-400/50 to-transparent dark:via-slate-300/30 rotate-12 animate-pulse" style={{ animationDuration: '5s', animationDelay: '2.5s' }}></div>
       </div>
       
       {/* Enhanced Curved Jump Effect */}
