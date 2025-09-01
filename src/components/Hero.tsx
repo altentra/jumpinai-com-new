@@ -33,20 +33,66 @@ const Hero = () => {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Sophisticated Background - Light: Almost White, Dark: Very Dark */}
-      <div className="absolute inset-0 bg-gradient-to-b from-gray-50 via-slate-100 to-stone-200 dark:from-slate-950 dark:via-gray-900 dark:to-stone-900"></div>
+      {/* Sophisticated Background - Light: Almost White, Dark: Much Darker */}
+      <div className="absolute inset-0 bg-gradient-to-b from-gray-50 via-slate-100 to-stone-200 dark:from-gray-950 dark:via-slate-950 dark:to-black"></div>
       
       {/* Innovative Color Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-blue-50/30 via-indigo-100/20 to-slate-300/40 dark:from-blue-950/80 dark:via-indigo-950/60 dark:to-slate-800/70"></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-blue-50/30 via-indigo-100/20 to-slate-300/40 dark:from-slate-950/90 dark:via-gray-950/80 dark:to-stone-950/90"></div>
       
       {/* Vertical Curtain Drapes Effect */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-200/40 via-transparent to-slate-200/40 dark:from-slate-950/60 dark:via-transparent dark:to-slate-950/60"></div>
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-100/20 to-transparent dark:via-blue-950/30"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-200/40 via-transparent to-slate-200/40 dark:from-black/80 dark:via-transparent dark:to-black/80"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-100/20 to-transparent dark:via-slate-950/50"></div>
       </div>
       
       {/* Bottom Sophisticated Light Effect */}
-      <div className="absolute bottom-0 left-0 right-0 h-96 bg-gradient-to-t from-white/60 via-slate-50/30 to-transparent dark:from-stone-950/60 dark:via-slate-900/30 dark:to-transparent"></div>
+      <div className="absolute bottom-0 left-0 right-0 h-96 bg-gradient-to-t from-white/60 via-slate-50/30 to-transparent dark:from-black/80 dark:via-gray-950/50 dark:to-transparent"></div>
+
+      {/* Advanced Animated Grid Pattern */}
+      <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.08]">
+        <div className="absolute inset-0 bg-grid-pattern animate-pulse" style={{ 
+          backgroundImage: `linear-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px)`,
+          backgroundSize: '50px 50px',
+          animationDuration: '8s'
+        }}></div>
+      </div>
+
+      {/* Sophisticated Noise Texture */}
+      <div className="absolute inset-0 opacity-[0.015] dark:opacity-[0.06] mix-blend-overlay">
+        <div className="absolute inset-0" style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+          backgroundRepeat: 'repeat',
+          backgroundSize: '128px 128px'
+        }}></div>
+      </div>
+
+      {/* Advanced Ripple Effects */}
+      <div className="absolute inset-0 opacity-5 dark:opacity-15">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 border border-blue-300/20 dark:border-blue-400/30 rounded-full animate-ping" style={{ animationDuration: '6s', animationDelay: '0s' }}></div>
+        <div className="absolute top-1/2 right-1/3 w-64 h-64 border border-indigo-400/25 dark:border-indigo-300/35 rounded-full animate-ping" style={{ animationDuration: '8s', animationDelay: '2s' }}></div>
+        <div className="absolute bottom-1/3 left-1/2 w-80 h-80 border border-slate-400/20 dark:border-slate-300/30 rounded-full animate-ping" style={{ animationDuration: '10s', animationDelay: '4s' }}></div>
+      </div>
+
+      {/* Sophisticated Hexagonal Pattern */}
+      <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.12]">
+        <div className="absolute inset-0" style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg stroke='%234F46E5' stroke-width='0.5' stroke-opacity='0.1'%3E%3Cpolygon points='30,5 50,17 50,43 30,55 10,43 10,17'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          backgroundRepeat: 'repeat',
+          backgroundPosition: '0 0, 30px 30px'
+        }}></div>
+      </div>
+
+      {/* Advanced Lighting Rays */}
+      <div className="absolute inset-0 opacity-8 dark:opacity-20">
+        <div className="absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-blue-300/40 via-transparent via-transparent to-indigo-400/30 dark:from-blue-400/20 dark:via-transparent dark:to-indigo-300/15 animate-pulse" style={{ animationDuration: '7s' }}></div>
+        <div className="absolute top-0 right-1/3 w-px h-full bg-gradient-to-b from-indigo-400/35 via-transparent via-transparent to-blue-300/25 dark:from-indigo-300/18 dark:via-transparent dark:to-blue-400/12 animate-pulse" style={{ animationDuration: '9s', animationDelay: '2s' }}></div>
+        <div className="absolute top-0 left-2/3 w-px h-full bg-gradient-to-b from-slate-400/30 via-transparent via-transparent to-blue-400/20 dark:from-slate-300/15 dark:via-transparent dark:to-blue-300/10 animate-pulse" style={{ animationDuration: '11s', animationDelay: '4s' }}></div>
+      </div>
+
+      {/* Sophisticated Mesh Distortion */}
+      <div className="absolute inset-0 opacity-[0.04] dark:opacity-[0.15]">
+        <div className="absolute top-1/3 left-1/4 w-full h-full bg-gradient-conic from-blue-200/30 via-indigo-300/20 via-slate-200/25 to-blue-200/30 dark:from-blue-900/40 dark:via-indigo-950/30 dark:via-slate-900/35 dark:to-blue-900/40 rounded-full blur-3xl transform rotate-45 animate-spin" style={{ animationDuration: '60s' }}></div>
+      </div>
       
       {/* Advanced AI Neural Network Pattern */}
       <div className="absolute inset-0 opacity-20 dark:opacity-30">
