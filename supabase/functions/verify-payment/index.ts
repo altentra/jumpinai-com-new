@@ -75,11 +75,24 @@ serve(async (req) => {
 
     // Update order status if not already paid
     if (order.status !== "paid") {
+      // Get user_id from email if not already set
+      let userId = order.user_id;
+      if (!userId && order.user_email) {
+        try {
+          const { data: users } = await supabase.auth.admin.listUsers();
+          const user = users.users.find(u => u.email === order.user_email);
+          userId = user?.id || null;
+        } catch (error) {
+          console.warn("Could not fetch user_id for email:", order.user_email);
+        }
+      }
+
       const { error: updateError } = await supabase
         .from("orders")
         .update({
           status: "paid",
           stripe_payment_intent_id: session.payment_intent,
+          user_id: userId, // Set user_id if we found it
         })
         .eq("id", order.id);
 

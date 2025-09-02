@@ -82,11 +82,22 @@ serve(async (req) => {
 
     console.log("Stripe session created:", session.id);
 
+    // Get user_id from email for better security
+    let userId = null;
+    try {
+      const { data: users } = await supabase.auth.admin.listUsers();
+      const user = users.users.find(u => u.email === customerEmail);
+      userId = user?.id || null;
+    } catch (error) {
+      console.warn("Could not fetch user_id for email:", customerEmail);
+    }
+
     // Create order record
     const { data: order, error: orderError } = await supabase
       .from("orders")
       .insert({
         user_email: customerEmail,
+        user_id: userId,
         product_id: product.id,
         stripe_session_id: session.id,
         amount: product.price,

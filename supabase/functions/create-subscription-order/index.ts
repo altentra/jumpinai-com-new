@@ -58,11 +58,22 @@ serve(async (req) => {
       throw new Error("Subscription product not found");
     }
 
+    // Get user_id from email for better security
+    let userId = null;
+    try {
+      const { data: users } = await supabaseClient.auth.admin.listUsers();
+      const user = users.users.find(u => u.email === customerEmail);
+      userId = user?.id || null;
+    } catch (error) {
+      console.warn("Could not fetch user_id for email:", customerEmail);
+    }
+
     // Create order record for the subscription
     const { error: orderError } = await supabaseClient
       .from('orders')
       .insert({
         user_email: customerEmail,
+        user_id: userId,
         product_id: subscriptionProducts.id,
         amount: subscription.items.data[0].price.unit_amount || 1000, // Default to $10
         currency: subscription.currency || 'usd',
