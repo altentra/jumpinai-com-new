@@ -6,7 +6,8 @@ import Navigation from "@/components/Navigation";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import AppSidebar from "@/components/dashboard/AppSidebar";
 import DashboardHome from "./dashboard/DashboardHome";
-import MyJumps from "./dashboard/MyJumps";
+import MyJumpsNew from "./dashboard/MyJumpsNew";
+import JumpsGuides from "./dashboard/JumpsGuides";
 import Prompts from "./dashboard/Prompts";
 import Workflows from "./dashboard/Workflows";
 import Blueprints from "./dashboard/Blueprints";
@@ -53,7 +54,8 @@ export default function Dashboard() {
             <div className="p-4 md:p-6">
               <Routes>
                 <Route index element={<DashboardHome />} />
-                <Route path="jumps" element={<MyJumps />} />
+                <Route path="jumps" element={<MyJumpsNew />} />
+                <Route path="jumps-guides" element={<JumpsGuides />} />
                 <Route path="prompts" element={<Prompts />} />
                 <Route path="workflows" element={<Workflows />} />
                 <Route path="blueprints" element={<Blueprints />} />

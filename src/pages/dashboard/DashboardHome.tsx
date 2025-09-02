@@ -53,16 +53,23 @@ const DashboardHome = () => {
 
   const dashboardSections = [
     {
-      title: "My Jumps in AI",
-      description: "Explore and manage your AI jumps",
+      title: "My Jumps",
+      description: "Your personal AI jumps collection",
       icon: Rocket,
       path: "/dashboard/jumps",
       color: "text-blue-500"
     },
     {
+      title: "Jumps in AI Guides",
+      description: "Explore and purchase AI guide products",
+      icon: Sparkles,
+      path: "/dashboard/jumps-guides",
+      color: "text-cyan-500"
+    },
+    {
       title: "My Prompts", 
       description: "Create and organize your prompts",
-      icon: Sparkles,
+      icon: Lightbulb,
       path: "/dashboard/prompts",
       color: "text-purple-500"
     },

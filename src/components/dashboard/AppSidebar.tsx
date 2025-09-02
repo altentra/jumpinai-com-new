@@ -114,7 +114,18 @@ export default function AppSidebar() {
             )}
           >
             <FileText className="h-4 w-4" />
-            My Jumps in AI
+            My Jumps
+          </Link>
+
+          <Link 
+            to="/dashboard/jumps-guides" 
+            className={cn(
+              "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
+              getNavCls({ isActive: currentPath === "/dashboard/jumps-guides" })
+            )}
+          >
+            <FileText className="h-4 w-4" />
+            Jumps in AI Guides
           </Link>
 
           <Link 
