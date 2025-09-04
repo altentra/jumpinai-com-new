@@ -3,9 +3,11 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useOptimizedAuth } from "@/hooks/useOptimizedAuth";
 
 const Hero = () => {
   const [isDark, setIsDark] = useState(false);
+  const { isAuthenticated } = useOptimizedAuth();
 
   useEffect(() => {
     const checkTheme = () => {
@@ -262,15 +264,29 @@ const Hero = () => {
               </Link>
             </Button>
             
-            <Button 
-              variant="outline" 
-              size="lg" 
-              onClick={() => scrollToSection('newsletter')}
-              className="modern-button group glass border-2 border-border hover:border-foreground px-10 py-6 text-lg font-semibold rounded-2xl transition-all duration-500 hover:scale-105 backdrop-blur-sm text-foreground hover:text-foreground"
-            >
-              Stay ahead with AI
-              <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-            </Button>
+            {isAuthenticated ? (
+              <Button 
+                variant="outline" 
+                size="lg" 
+                onClick={() => scrollToSection('newsletter')}
+                className="modern-button group glass border-2 border-border hover:border-foreground px-10 py-6 text-lg font-semibold rounded-2xl transition-all duration-500 hover:scale-105 backdrop-blur-sm text-foreground hover:text-foreground"
+              >
+                Stay ahead with AI
+                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            ) : (
+              <Button 
+                variant="outline" 
+                size="lg" 
+                asChild
+                className="modern-button group glass border-2 border-border hover:border-foreground px-10 py-6 text-lg font-semibold rounded-2xl transition-all duration-500 hover:scale-105 backdrop-blur-sm text-foreground hover:text-foreground"
+              >
+                <Link to="/auth">
+                  Create account
+                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </Button>
+            )}
           </div>
         </div>
         
