@@ -47,13 +47,15 @@ const Footer = () => {
           {/* Brand */}
           <div className="md:col-span-2">
             <Link to="/" className="flex items-center mb-6 group">
-              <div className="relative w-10 h-10 rounded-xl overflow-hidden group-hover:scale-105 transition-transform duration-300">
-                <div className="absolute inset-0 bg-white/40 rounded-xl blur-md opacity-0 dark:opacity-100 transition-opacity duration-300 scale-110"></div>
-                <img 
-                  src="/lovable-uploads/156b282b-1e93-436c-914a-a886a6a5cdfd.png" 
-                  alt="JumpinAI Logo" 
-                  className="relative z-10 w-full h-full object-cover"
-                />
+              <div className="relative">
+                <div className="pointer-events-none absolute -inset-1 rounded-2xl bg-white/40 dark:bg-white/60 blur-lg opacity-0 dark:opacity-80 transition-opacity duration-300"></div>
+                <div className="relative w-10 h-10 rounded-xl overflow-hidden group-hover:scale-105 transition-transform duration-300 ring-1 ring-white/10 dark:ring-white/20">
+                  <img 
+                    src="/lovable-uploads/156b282b-1e93-436c-914a-a886a6a5cdfd.png" 
+                    alt="JumpinAI Logo" 
+                    className="w-full h-full object-cover"
+                  />
+                </div>
               </div>
               <span className="ml-3 text-2xl font-black font-display text-foreground">JumpinAI</span>
             </Link>
