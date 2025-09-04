@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -246,7 +246,17 @@ export default function Auth() {
               </Tabs>
             </CardContent>
             <CardFooter className="justify-center">
-              <p className="text-sm text-muted-foreground">By continuing you agree to our Terms and Privacy Policy.</p>
+              <p className="text-sm text-muted-foreground">
+                By continuing you agree to our{" "}
+                <Link to="/terms-of-use" className="underline hover:text-foreground transition-colors">
+                  Terms
+                </Link>{" "}
+                and{" "}
+                <Link to="/privacy-policy" className="underline hover:text-foreground transition-colors">
+                  Privacy Policy
+                </Link>
+                .
+              </p>
             </CardFooter>
           </Card>
         </section>
