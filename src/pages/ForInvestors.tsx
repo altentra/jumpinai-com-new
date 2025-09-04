@@ -311,36 +311,24 @@ const ForInvestors = () => {
       </section>
 
       {/* Crunchbase Profile */}
-      <section className="py-16 px-4 bg-gradient-to-br from-secondary/5 to-background">
-        <div className="max-w-4xl mx-auto text-center">
-          <Card className="border-0 shadow-lg bg-gradient-to-br from-background to-secondary/5">
-            <CardContent className="p-8">
-              <div className="space-y-6">
-                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
-                  <Globe className="h-8 w-8 text-primary" />
-                </div>
-                
-                <div className="space-y-3">
-                  <h3 className="text-2xl font-bold text-foreground">
-                    Explore Our Company Profile
-                  </h3>
-                  <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                    Get detailed insights into our company metrics, funding history, and growth trajectory on Crunchbase.
-                  </p>
-                </div>
-                
-                <Button 
-                  size="lg" 
-                  variant="outline"
-                  className="text-lg px-8 py-3 border-primary/30 hover:border-primary hover:bg-primary/10 transition-all duration-300"
-                  onClick={() => window.open('https://www.crunchbase.com/organization/jumpinai', '_blank')}
-                >
-                  <ExternalLink className="mr-2 h-5 w-5" />
-                  View on Crunchbase
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+      <section className="py-8 px-4">
+        <div className="max-w-2xl mx-auto text-center">
+          <div className="flex items-center justify-center gap-4 p-4 border border-border rounded-lg bg-background/50 backdrop-blur-sm">
+            <Globe className="h-5 w-5 text-primary flex-shrink-0" />
+            <div className="text-left">
+              <p className="text-sm font-medium text-foreground">View our company profile</p>
+              <p className="text-xs text-muted-foreground">Detailed metrics on Crunchbase</p>
+            </div>
+            <Button 
+              size="sm" 
+              variant="outline"
+              className="text-sm px-4 py-2 border-primary/30 hover:border-primary hover:bg-primary/10"
+              onClick={() => window.open('https://www.crunchbase.com/organization/jumpinai', '_blank')}
+            >
+              <ExternalLink className="mr-1 h-3 w-3" />
+              View
+            </Button>
+          </div>
         </div>
       </section>
 
