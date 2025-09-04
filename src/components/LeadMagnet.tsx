@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Download, Mail, CheckCircle, Target, Users, Zap } from "lucide-react";
+import { Download, Mail, CheckCircle, Zap } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -133,23 +133,6 @@ const LeadMagnet = () => {
             <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto">
               Stop wondering how to implement AI in your business. Get 7 proven strategies that you can start using immediately to boost productivity and streamline your workflow.
             </p>
-          </div>
-
-          {/* Benefits List */}
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl mx-auto">
-            {[
-              { icon: Target, text: "Automate repetitive tasks" },
-              { icon: Users, text: "Improve team collaboration" },
-              { icon: Zap, text: "Generate content faster" },
-              { icon: CheckCircle, text: "Make data-driven decisions" }
-            ].map((item, index) => (
-              <div key={index} className="flex flex-col items-center space-y-3 p-4">
-                <div className="flex-shrink-0 w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                  <item.icon className="h-6 w-6 text-primary" />
-                </div>
-                <span className="text-muted-foreground font-medium text-center">{item.text}</span>
-              </div>
-            ))}
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
