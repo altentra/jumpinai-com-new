@@ -84,7 +84,7 @@ const Navigation = React.memo(() => {
           {/* Logo */}
           <Link to="/" className="flex items-center group cursor-pointer">
             <div className="relative">
-              <div className="pointer-events-none absolute -inset-1 rounded-2xl bg-white/40 dark:bg-white/60 blur-lg opacity-0 dark:opacity-80 transition-opacity duration-300"></div>
+              <div className="pointer-events-none absolute -inset-1 rounded-2xl bg-white/25 dark:bg-white/35 blur-md opacity-0 dark:opacity-60 transition-opacity duration-300"></div>
               <div className="relative w-10 h-10 rounded-xl overflow-hidden group-hover:scale-105 transition-transform duration-300 ring-1 ring-white/10 dark:ring-white/20">
                 <img 
                   src="/lovable-uploads/156b282b-1e93-436c-914a-a886a6a5cdfd.png" 
