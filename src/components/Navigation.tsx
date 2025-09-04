@@ -85,7 +85,7 @@ const Navigation = React.memo(() => {
           <Link to="/" className="flex items-center group cursor-pointer">
             <div className="w-10 h-10 rounded-xl overflow-hidden group-hover:scale-105 transition-transform duration-300">
               <img 
-                src="/lovable-uploads/74bafbff-f098-4d0a-9180-b4923d3d9616.png" 
+                src="/lovable-uploads/156b282b-1e93-436c-914a-a886a6a5cdfd.png" 
                 alt="JumpinAI Logo" 
                 width="40"
                 height="40"

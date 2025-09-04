@@ -224,7 +224,7 @@ const Hero = () => {
               <div className="absolute inset-0 bg-gradient-to-r from-gray-800 to-black rounded-2xl blur-lg opacity-75 animate-glow dark:from-white dark:to-gray-300 dark:animate-glow-dark"></div>
               <div className="relative bg-gradient-to-r from-gray-800 to-black rounded-2xl dark:from-white dark:to-gray-300 w-20 h-20 p-0 overflow-hidden">
                 <img 
-                  src="/lovable-uploads/74bafbff-f098-4d0a-9180-b4923d3d9616.png" 
+                  src="/lovable-uploads/156b282b-1e93-436c-914a-a886a6a5cdfd.png" 
                   alt="JumpinAI Logo" 
                   className="w-full h-full object-cover scale-140"
                 />

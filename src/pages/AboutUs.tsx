@@ -242,7 +242,7 @@ const AboutUs = () => {
             '@type': 'Organization',
             name: 'JumpinAI',
             url: 'https://jumpinai.com',
-            logo: 'https://jumpinai.com/lovable-uploads/74bafbff-f098-4d0a-9180-b4923d3d9616.png',
+            logo: 'https://jumpinai.com/lovable-uploads/156b282b-1e93-436c-914a-a886a6a5cdfd.png',
             sameAs: ['https://twitter.com/jumpinai']
           })}</script>
         </Helmet>
@@ -274,7 +274,7 @@ const AboutUs = () => {
           <div className="md:col-span-2 flex justify-center">
             <div className="relative rounded-2xl p-3 bg-card/60 border border-border shadow-sm">
               <img
-                src="/lovable-uploads/74bafbff-f098-4d0a-9180-b4923d3d9616.png"
+                src="/lovable-uploads/156b282b-1e93-436c-914a-a886a6a5cdfd.png"
                 alt="JumpinAI brand logo"
                 className="w-48 h-48 rounded-xl object-contain shadow-md"
                 loading="lazy"
