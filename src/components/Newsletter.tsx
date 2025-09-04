@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Mail, Sparkles, ArrowRight } from "lucide-react";
+import { Mail, ArrowRight } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -144,12 +144,6 @@ const Newsletter = () => {
               </div>
             </div>
             
-            {/* Badge */}
-            <div className="inline-flex items-center px-3 py-1.5 bg-muted/60 backdrop-blur-sm rounded-full mb-5 border border-border/50">
-              <Sparkles className="h-4 w-4 text-muted-foreground mr-2" />
-              <span className="text-sm font-semibold text-muted-foreground">Join the Professionals</span>
-            </div>
-            
             <h2 className="text-3xl sm:text-4xl font-black text-foreground mb-3 tracking-tight font-display">
               Stay Ahead
             </h2>
@@ -164,7 +158,7 @@ const Newsletter = () => {
                 <div className="flex-1 relative">
                   <Input
                     type="email"
-                    placeholder="Enter your professional email"
+                    placeholder="Enter your email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
