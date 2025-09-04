@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { InvestmentDeckModal } from "@/components/InvestmentDeckModal";
-import { TrendingUp, Users, Globe, DollarSign, Target, Lightbulb, Rocket, Mail, Loader2 } from 'lucide-react';
+import { TrendingUp, Users, Globe, DollarSign, Target, Lightbulb, Rocket, Mail, Loader2, ExternalLink } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { sendInvestorContactEmail } from "@/services/investorService";
 
@@ -307,6 +307,40 @@ const ForInvestors = () => {
               </CardContent>
             </Card>
           </div>
+        </div>
+      </section>
+
+      {/* Crunchbase Profile */}
+      <section className="py-16 px-4 bg-gradient-to-br from-secondary/5 to-background">
+        <div className="max-w-4xl mx-auto text-center">
+          <Card className="border-0 shadow-lg bg-gradient-to-br from-background to-secondary/5">
+            <CardContent className="p-8">
+              <div className="space-y-6">
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
+                  <Globe className="h-8 w-8 text-primary" />
+                </div>
+                
+                <div className="space-y-3">
+                  <h3 className="text-2xl font-bold text-foreground">
+                    Explore Our Company Profile
+                  </h3>
+                  <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                    Get detailed insights into our company metrics, funding history, and growth trajectory on Crunchbase.
+                  </p>
+                </div>
+                
+                <Button 
+                  size="lg" 
+                  variant="outline"
+                  className="text-lg px-8 py-3 border-primary/30 hover:border-primary hover:bg-primary/10 transition-all duration-300"
+                  onClick={() => window.open('https://www.crunchbase.com/organization/jumpinai', '_blank')}
+                >
+                  <ExternalLink className="mr-2 h-5 w-5" />
+                  View on Crunchbase
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </section>
 
