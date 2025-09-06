@@ -1124,10 +1124,9 @@ export default function Resources() {
             </p>
           </div>
 
-          {/* Two-row tab system */}
+          {/* Resource type tabs */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            {/* First row: Resource type tabs */}
-            <TabsList className="grid w-full grid-cols-5 mb-6">
+            <TabsList className="grid w-full grid-cols-5 mb-8">
               <TabsTrigger value="tools" className="flex items-center gap-2">
                 <Zap className="h-4 w-4" />
                 Tools
@@ -1150,47 +1149,53 @@ export default function Resources() {
               </TabsTrigger>
             </TabsList>
 
-            {/* Second row: Topic category tabs */}
+            {/* Second row: Topic category tabs (shown after first selection) */}
             <div className="mb-8">
-              <Tabs value={activeTopicTab} onValueChange={setActiveTopicTab as (value: string) => void}>
-                <TabsList className="grid w-full grid-cols-5">
-                  <TabsTrigger value="Text" className="flex items-center gap-2">
-                    <Type className="h-4 w-4" />
+              <div className="text-center mb-6">
+                <p className="text-muted-foreground">
+                  Choose a topic category for {activeTab}:
+                </p>
+              </div>
+              
+              <Tabs value={activeTopicTab} onValueChange={setActiveTopicTab as (value: string) => void} className="w-full">
+                <TabsList className="grid w-full grid-cols-5 bg-muted/30">
+                  <TabsTrigger value="Text" className="flex items-center gap-2 text-sm">
+                    <Type className="h-3 w-3" />
                     Text
                   </TabsTrigger>
-                  <TabsTrigger value="Image" className="flex items-center gap-2">
-                    <Image className="h-4 w-4" />
+                  <TabsTrigger value="Image" className="flex items-center gap-2 text-sm">
+                    <Image className="h-3 w-3" />
                     Image
                   </TabsTrigger>
-                  <TabsTrigger value="Video" className="flex items-center gap-2">
-                    <Video className="h-4 w-4" />
+                  <TabsTrigger value="Video" className="flex items-center gap-2 text-sm">
+                    <Video className="h-3 w-3" />
                     Video
                   </TabsTrigger>
-                  <TabsTrigger value="Audio" className="flex items-center gap-2">
-                    <Headphones className="h-4 w-4" />
+                  <TabsTrigger value="Audio" className="flex items-center gap-2 text-sm">
+                    <Headphones className="h-3 w-3" />
                     Audio
                   </TabsTrigger>
-                  <TabsTrigger value="Web/App" className="flex items-center gap-2">
-                    <Globe className="h-4 w-4" />
+                  <TabsTrigger value="Web/App" className="flex items-center gap-2 text-sm">
+                    <Globe className="h-3 w-3" />
                     Web/App
                   </TabsTrigger>
                 </TabsList>
 
-                {/* Content for each resource type */}
-                <TabsContent value="tools" className="mt-8">
-                  {(['Text', 'Image', 'Video', 'Audio', 'Web/App'] as TopicCategory[]).map(topic => (
-                    <TabsContent key={topic} value={topic}>
+                {/* Content based on selected resource type and topic */}
+                <div className="mt-8">
+                  {activeTab === 'tools' && (
+                    <TabsContent value={activeTopicTab} className="mt-0">
                       <div className="space-y-6">
                         <div className="flex items-center gap-3 mb-6">
                           {(() => {
-                            const IconComponent = getTopicIcon(topic);
+                            const IconComponent = getTopicIcon(activeTopicTab);
                             return <IconComponent className="h-6 w-6 text-primary" />;
                           })()}
-                          <h2 className="text-2xl font-semibold">{topic} Tools</h2>
+                          <h2 className="text-2xl font-semibold">{activeTopicTab} Tools</h2>
                         </div>
                         
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                          {filterByTopicCategory(tools, topic).map((tool, index) => (
+                          {filterByTopicCategory(tools, activeTopicTab).map((tool, index) => (
                             <ResourceCard 
                               key={index} 
                               item={tool} 
@@ -1199,30 +1204,28 @@ export default function Resources() {
                           ))}
                         </div>
                         
-                        {filterByTopicCategory(tools, topic).length === 0 && (
+                        {filterByTopicCategory(tools, activeTopicTab).length === 0 && (
                           <div className="text-center py-12">
-                            <p className="text-muted-foreground">No {topic.toLowerCase()} tools available yet. Check back soon!</p>
+                            <p className="text-muted-foreground">No {activeTopicTab.toLowerCase()} tools available yet. Check back soon!</p>
                           </div>
                         )}
                       </div>
                     </TabsContent>
-                  ))}
-                </TabsContent>
+                  )}
 
-                <TabsContent value="prompts" className="mt-8">
-                  {(['Text', 'Image', 'Video', 'Audio', 'Web/App'] as TopicCategory[]).map(topic => (
-                    <TabsContent key={topic} value={topic}>
+                  {activeTab === 'prompts' && (
+                    <TabsContent value={activeTopicTab} className="mt-0">
                       <div className="space-y-6">
                         <div className="flex items-center gap-3 mb-6">
                           {(() => {
-                            const IconComponent = getTopicIcon(topic);
+                            const IconComponent = getTopicIcon(activeTopicTab);
                             return <IconComponent className="h-6 w-6 text-primary" />;
                           })()}
-                          <h2 className="text-2xl font-semibold">{topic} Prompts</h2>
+                          <h2 className="text-2xl font-semibold">{activeTopicTab} Prompts</h2>
                         </div>
                         
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                          {filterByTopicCategory(promptTemplates, topic).slice(0, showAllContent ? undefined : 6).map((prompt, index) => (
+                          {filterByTopicCategory(promptTemplates, activeTopicTab).slice(0, showAllContent ? undefined : 6).map((prompt, index) => (
                             <ResourceCard 
                               key={index} 
                               item={prompt} 
@@ -1232,34 +1235,32 @@ export default function Resources() {
                           ))}
                         </div>
                         
-                        {filterByTopicCategory(promptTemplates, topic).length === 0 && (
+                        {filterByTopicCategory(promptTemplates, activeTopicTab).length === 0 && (
                           <div className="text-center py-12">
-                            <p className="text-muted-foreground">No {topic.toLowerCase()} prompts available yet. Check back soon!</p>
+                            <p className="text-muted-foreground">No {activeTopicTab.toLowerCase()} prompts available yet. Check back soon!</p>
                           </div>
                         )}
                         
-                        {!showAllContent && filterByTopicCategory(promptTemplates, topic).length > 4 && (
-                          <UpgradeSection message={`Unlock all ${topic} prompts`} />
+                        {!showAllContent && filterByTopicCategory(promptTemplates, activeTopicTab).length > 4 && (
+                          <UpgradeSection message={`Unlock all ${activeTopicTab} prompts`} />
                         )}
                       </div>
                     </TabsContent>
-                  ))}
-                </TabsContent>
+                  )}
 
-                <TabsContent value="workflows" className="mt-8">
-                  {(['Text', 'Image', 'Video', 'Audio', 'Web/App'] as TopicCategory[]).map(topic => (
-                    <TabsContent key={topic} value={topic}>
+                  {activeTab === 'workflows' && (
+                    <TabsContent value={activeTopicTab} className="mt-0">
                       <div className="space-y-6">
                         <div className="flex items-center gap-3 mb-6">
                           {(() => {
-                            const IconComponent = getTopicIcon(topic);
+                            const IconComponent = getTopicIcon(activeTopicTab);
                             return <IconComponent className="h-6 w-6 text-primary" />;
                           })()}
-                          <h2 className="text-2xl font-semibold">{topic} Workflows</h2>
+                          <h2 className="text-2xl font-semibold">{activeTopicTab} Workflows</h2>
                         </div>
                         
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                          {filterByTopicCategory(workflows, topic).slice(0, showAllContent ? undefined : 4).map((workflow, index) => (
+                          {filterByTopicCategory(workflows, activeTopicTab).slice(0, showAllContent ? undefined : 4).map((workflow, index) => (
                             <ResourceCard 
                               key={index} 
                               item={workflow} 
@@ -1269,34 +1270,32 @@ export default function Resources() {
                           ))}
                         </div>
                         
-                        {filterByTopicCategory(workflows, topic).length === 0 && (
+                        {filterByTopicCategory(workflows, activeTopicTab).length === 0 && (
                           <div className="text-center py-12">
-                            <p className="text-muted-foreground">No {topic.toLowerCase()} workflows available yet. Check back soon!</p>
+                            <p className="text-muted-foreground">No {activeTopicTab.toLowerCase()} workflows available yet. Check back soon!</p>
                           </div>
                         )}
                         
-                        {!showAllContent && filterByTopicCategory(workflows, topic).length > 2 && (
-                          <UpgradeSection message={`Unlock all ${topic} workflows`} />
+                        {!showAllContent && filterByTopicCategory(workflows, activeTopicTab).length > 2 && (
+                          <UpgradeSection message={`Unlock all ${activeTopicTab} workflows`} />
                         )}
                       </div>
                     </TabsContent>
-                  ))}
-                </TabsContent>
+                  )}
 
-                <TabsContent value="blueprints" className="mt-8">
-                  {(['Text', 'Image', 'Video', 'Audio', 'Web/App'] as TopicCategory[]).map(topic => (
-                    <TabsContent key={topic} value={topic}>
+                  {activeTab === 'blueprints' && (
+                    <TabsContent value={activeTopicTab} className="mt-0">
                       <div className="space-y-6">
                         <div className="flex items-center gap-3 mb-6">
                           {(() => {
-                            const IconComponent = getTopicIcon(topic);
+                            const IconComponent = getTopicIcon(activeTopicTab);
                             return <IconComponent className="h-6 w-6 text-primary" />;
                           })()}
-                          <h2 className="text-2xl font-semibold">{topic} Blueprints</h2>
+                          <h2 className="text-2xl font-semibold">{activeTopicTab} Blueprints</h2>
                         </div>
                         
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                          {filterByTopicCategory(blueprints, topic).slice(0, showAllContent ? undefined : 4).map((blueprint, index) => (
+                          {filterByTopicCategory(blueprints, activeTopicTab).slice(0, showAllContent ? undefined : 4).map((blueprint, index) => (
                             <ResourceCard 
                               key={index} 
                               item={blueprint} 
@@ -1306,34 +1305,32 @@ export default function Resources() {
                           ))}
                         </div>
                         
-                        {filterByTopicCategory(blueprints, topic).length === 0 && (
+                        {filterByTopicCategory(blueprints, activeTopicTab).length === 0 && (
                           <div className="text-center py-12">
-                            <p className="text-muted-foreground">No {topic.toLowerCase()} blueprints available yet. Check back soon!</p>
+                            <p className="text-muted-foreground">No {activeTopicTab.toLowerCase()} blueprints available yet. Check back soon!</p>
                           </div>
                         )}
                         
-                        {!showAllContent && filterByTopicCategory(blueprints, topic).length > 2 && (
-                          <UpgradeSection message={`Unlock all ${topic} blueprints`} />
+                        {!showAllContent && filterByTopicCategory(blueprints, activeTopicTab).length > 2 && (
+                          <UpgradeSection message={`Unlock all ${activeTopicTab} blueprints`} />
                         )}
                       </div>
                     </TabsContent>
-                  ))}
-                </TabsContent>
+                  )}
 
-                <TabsContent value="strategies" className="mt-8">
-                  {(['Text', 'Image', 'Video', 'Audio', 'Web/App'] as TopicCategory[]).map(topic => (
-                    <TabsContent key={topic} value={topic}>
+                  {activeTab === 'strategies' && (
+                    <TabsContent value={activeTopicTab} className="mt-0">
                       <div className="space-y-6">
                         <div className="flex items-center gap-3 mb-6">
                           {(() => {
-                            const IconComponent = getTopicIcon(topic);
+                            const IconComponent = getTopicIcon(activeTopicTab);
                             return <IconComponent className="h-6 w-6 text-primary" />;
                           })()}
-                          <h2 className="text-2xl font-semibold">{topic} Strategies</h2>
+                          <h2 className="text-2xl font-semibold">{activeTopicTab} Strategies</h2>
                         </div>
                         
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                          {filterByTopicCategory(strategies, topic).slice(0, showAllContent ? undefined : 4).map((strategy, index) => (
+                          {filterByTopicCategory(strategies, activeTopicTab).slice(0, showAllContent ? undefined : 4).map((strategy, index) => (
                             <ResourceCard 
                               key={index} 
                               item={strategy} 
@@ -1343,19 +1340,19 @@ export default function Resources() {
                           ))}
                         </div>
                         
-                        {filterByTopicCategory(strategies, topic).length === 0 && (
+                        {filterByTopicCategory(strategies, activeTopicTab).length === 0 && (
                           <div className="text-center py-12">
-                            <p className="text-muted-foreground">No {topic.toLowerCase()} strategies available yet. Check back soon!</p>
+                            <p className="text-muted-foreground">No {activeTopicTab.toLowerCase()} strategies available yet. Check back soon!</p>
                           </div>
                         )}
                         
-                        {!showAllContent && filterByTopicCategory(strategies, topic).length > 2 && (
-                          <UpgradeSection message={`Unlock all ${topic} strategies`} />
+                        {!showAllContent && filterByTopicCategory(strategies, activeTopicTab).length > 2 && (
+                          <UpgradeSection message={`Unlock all ${activeTopicTab} strategies`} />
                         )}
                       </div>
                     </TabsContent>
-                  ))}
-                </TabsContent>
+                  )}
+                </div>
               </Tabs>
             </div>
           </Tabs>

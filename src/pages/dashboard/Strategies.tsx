@@ -10,37 +10,45 @@ import StrategyDetailModal from "@/components/StrategyDetailModal";
 
 type Strategy = {
   name: string;
-  description: string;
+  whatItIs: string;
+  whatItsFor: string;
+  desiredOutcome: string;
   approach: string;
+  topicCategory: 'Text' | 'Image' | 'Video' | 'Audio' | 'Web/App';
   category: string;
 };
 
 const freeStrategies: Strategy[] = [
-  { name: "AI-First Content Strategy", description: "Leverage AI throughout the content lifecycle", approach: "Integrate AI tools at every stage: ideation with GPT-4, creation with specialized tools, optimization with analytics AI, and distribution with automation platforms.", category: "Content Marketing" },
-  { name: "Multimodal AI Strategy", description: "Combine text, image, and video AI tools", approach: "Create cohesive campaigns using text AI for copy, image AI for visuals, and video AI for dynamic content, ensuring consistent brand voice across all modalities.", category: "Brand Strategy" },
-  { name: "AI-Powered Research Strategy", description: "Systematic approach to AI-enhanced research", approach: "Use AI for data collection, analysis, and synthesis. Combine multiple AI sources for comprehensive insights, always verify with human expertise.", category: "Research Strategy" },
-  { name: "Automation-First Operations", description: "Streamline operations with AI automation", approach: "Identify repetitive tasks, implement AI solutions for automation, maintain human oversight for quality control, and continuously optimize processes.", category: "Operations Strategy" },
-  { name: "n8n Enterprise Automation Strategy", description: "Comprehensive workflow automation transformation", approach: "Conduct automation readiness assessment, map all business processes for automation potential, design n8n center of excellence, implement governance framework, create training programs, deploy workflows in phases, and establish continuous improvement culture.", category: "Process Automation" },
-  { name: "AI-Powered Business Intelligence with n8n", description: "Intelligent data processing and insights generation", approach: "Integrate all data sources into n8n pipelines, implement AI-powered data analysis and pattern recognition, create automated reporting with natural language insights, establish real-time monitoring and alerting, and build predictive analytics capabilities.", category: "Business Intelligence" },
-  { name: "n8n Customer Experience Automation", description: "End-to-end customer journey automation", approach: "Map customer touchpoints and interaction points, design personalized automation workflows, implement AI-driven customer segmentation and targeting, create omnichannel experience orchestration, and establish feedback loops for continuous optimization.", category: "Customer Experience" },
+  { 
+    name: "Content-First Growth", 
+    whatItIs: "Systematic approach to building business growth through valuable content creation",
+    whatItsFor: "Companies looking to establish thought leadership and drive organic growth", 
+    desiredOutcome: "Sustainable growth through content that attracts, engages, and converts ideal customers",
+    approach: "Create valuable, educational content that addresses customer pain points, optimized for search and social sharing, with clear conversion paths to turn readers into leads and customers", 
+    topicCategory: "Text",
+    category: "Growth Marketing" 
+  },
+  { 
+    name: "SEO-Driven Strategy", 
+    whatItIs: "Long-term strategy for building organic search traffic and brand visibility",
+    whatItsFor: "Businesses wanting to reduce paid advertising dependency and build sustainable traffic", 
+    desiredOutcome: "Dominant search rankings for key terms driving qualified traffic and conversions",
+    approach: "Comprehensive keyword research, technical SEO optimization, content cluster creation, and authority building through high-quality backlinks and thought leadership content", 
+    topicCategory: "Text",
+    category: "Search Marketing" 
+  },
 ];
 
 const proStrategies: Strategy[] = [
-  { name: "Enterprise Digital Transformation", description: "Comprehensive digital modernization strategy", approach: "Assess current state, define future vision, develop technology roadmap, implement change management, measure progress through KPIs, and ensure sustainable transformation across all business units.", category: "Digital Transformation" },
-  { name: "Market Expansion Strategy", description: "Strategic market entry and growth framework", approach: "Conduct market analysis, assess competitive landscape, develop go-to-market strategy, establish partnerships and distribution channels, create localization plans, and implement performance tracking systems.", category: "Market Strategy" },
-  { name: "Innovation Management Strategy", description: "Systematic approach to innovation and R&D", approach: "Establish innovation pipeline, implement stage-gate processes, create innovation metrics, foster innovative culture, manage intellectual property, and balance incremental vs. breakthrough innovations.", category: "Innovation Strategy" },
-  { name: "Mergers & Acquisitions Strategy", description: "M&A planning and execution framework", approach: "Define strategic rationale, conduct target screening, perform due diligence, negotiate terms, plan integration, manage cultural alignment, and measure synergy realization throughout the process.", category: "M&A Strategy" },
-  { name: "ESG Strategy Implementation", description: "Environmental, Social, Governance strategy", approach: "Conduct materiality assessment, set science-based targets, implement governance frameworks, engage stakeholders, measure impact, ensure regulatory compliance, and communicate progress transparently.", category: "ESG Strategy" },
-  { name: "Customer Experience Strategy", description: "Holistic customer experience transformation", approach: "Map customer journeys, identify pain points, design experience improvements, implement omnichannel solutions, measure customer satisfaction, and create feedback loops for continuous improvement.", category: "CX Strategy" },
-  { name: "Data Strategy & Analytics", description: "Data-driven organization transformation", approach: "Assess data maturity, design data architecture, implement governance frameworks, build analytics capabilities, create self-service tools, and establish data-driven decision-making processes.", category: "Data Strategy" },
-  { name: "Cybersecurity Strategy", description: "Comprehensive cybersecurity framework", approach: "Assess current security posture, identify threats and vulnerabilities, implement defense-in-depth strategy, establish incident response procedures, and create security awareness programs.", category: "Cybersecurity" },
-  { name: "Supply Chain Strategy", description: "Supply chain optimization and resilience", approach: "Map supply network, assess risks and vulnerabilities, optimize costs and efficiency, implement technology solutions, establish supplier relationships, and create contingency plans.", category: "Supply Chain" },
-  { name: "Talent Strategy", description: "Strategic workforce planning and development", approach: "Analyze workforce needs, develop talent acquisition strategies, create learning and development programs, implement succession planning, and foster inclusive culture and employee engagement.", category: "Talent Strategy" },
-  { name: "Financial Strategy", description: "Corporate financial planning and optimization", approach: "Analyze financial performance, optimize capital structure, develop investment strategies, manage risks, plan for growth financing, and implement financial controls and reporting systems.", category: "Financial Strategy" },
-  { name: "Brand Strategy", description: "Comprehensive brand development and management", approach: "Conduct brand audit, define brand positioning, develop brand identity, create brand guidelines, implement brand management systems, and measure brand performance and equity.", category: "Brand Strategy" },
-  { name: "Operational Excellence Strategy", description: "Continuous improvement and efficiency optimization", approach: "Map value streams, identify waste and inefficiencies, implement lean methodologies, establish performance metrics, create improvement culture, and sustain operational improvements.", category: "Operational Excellence" },
-  { name: "International Strategy", description: "Global expansion and market entry strategy", approach: "Analyze international opportunities, assess market entry modes, develop localization strategies, navigate regulatory requirements, establish global operations, and manage cultural differences.", category: "International Strategy" },
-  { name: "Sustainability Strategy", description: "Corporate sustainability and responsibility framework", approach: "Set sustainability goals, implement environmental programs, engage stakeholders, measure and report progress, integrate sustainability into business strategy, and drive competitive advantage.", category: "Sustainability" }
+  { 
+    name: "Product-Led Growth Strategy", 
+    whatItIs: "Growth strategy where the product itself drives user acquisition, expansion, and retention",
+    whatItsFor: "SaaS companies and digital products looking to scale efficiently", 
+    desiredOutcome: "Sustainable growth with lower customer acquisition costs and higher lifetime value",
+    approach: "Optimize product for viral sharing, create self-service onboarding, implement usage-based expansion opportunities, and use in-product messaging to drive upgrades and referrals", 
+    topicCategory: "Web/App",
+    category: "Growth Strategy" 
+  },
 ];
 
 const allStrategies = [...freeStrategies, ...proStrategies];
