@@ -507,93 +507,338 @@ const tools: Tool[] = [
 const promptTemplates: PromptTemplate[] = [
   // Text Prompts
   {
-    name: "Product Marketing Brief",
-    whatItIs: "Comprehensive product launch messaging framework",
-    whatItsFor: "Creating structured marketing briefs for new features or products",
-    desiredOutcome: "Clear positioning, benefits, and compelling messaging that drives adoption",
-    prompt: "Act as a senior product marketer. Create a 500‑word launch brief for a B2B SaaS feature. Include: 1) narrative, 2) ICP pain, 3) 3 key benefits, 4) messaging pillars, 5) CTA. Tone: confident, concise.",
+    name: "Content Marketing Strategy",
+    whatItIs: "Comprehensive content planning framework for marketing campaigns",
+    whatItsFor: "Creating data-driven content strategies that align with business goals",
+    desiredOutcome: "Strategic content roadmap with clear objectives, audience targeting, and measurable outcomes",
+    prompt: "Act as a content marketing strategist. Create a 3-month content strategy for [BUSINESS TYPE] targeting [AUDIENCE]. Include: 1) Content pillars and themes, 2) Platform-specific content calendar, 3) SEO keyword integration, 4) Engagement tactics, 5) Performance metrics and KPIs. Format as actionable roadmap with timelines.",
     topicCategory: "Text",
-    category: "Marketing"
+    category: "Marketing Strategy"
   },
   {
-    name: "Policy Analysis",
-    whatItIs: "Systematic document analysis and SOP creation framework",
-    whatItsFor: "Converting complex policy documents into actionable procedures",
-    desiredOutcome: "Clear, implementable SOPs with defined steps, owners, and timelines",
-    prompt: "You are an operations analyst. Summarize this policy PDF into an SOP with steps, owners, and SLAs. Flag ambiguities and propose fixes.",
+    name: "Email Campaign Copywriter",
+    whatItIs: "High-converting email sequence creation framework",
+    whatItsFor: "Writing persuasive email campaigns that drive opens, clicks, and conversions",
+    desiredOutcome: "Engaging email sequences with compelling subject lines and strong calls-to-action",
+    prompt: "You are an expert email copywriter. Write a 5-email welcome sequence for [PRODUCT/SERVICE]. Each email should: 1) Have a compelling subject line, 2) Hook readers in first sentence, 3) Provide value and build trust, 4) Include clear CTA, 5) Maintain consistent brand voice. Include open/click optimization tips.",
     topicCategory: "Text",
-    category: "Analysis"
+    category: "Email Marketing"
   },
   {
-    name: "Executive Summary",
-    whatItIs: "Data-driven executive communication template",
-    whatItsFor: "Transforming complex data into executive-ready insights",
-    desiredOutcome: "Concise, actionable summaries that drive leadership decisions",
-    prompt: "As a data storyteller, explain these metrics (paste table) to an executive in 5 bullets. Add a final risk/opportunity section.",
+    name: "SEO Blog Post Writer",
+    whatItIs: "Search-optimized content creation framework",
+    whatItsFor: "Creating blog posts that rank well and provide value to readers",
+    desiredOutcome: "High-quality, SEO-optimized articles that drive organic traffic and engagement",
+    prompt: "Act as an SEO content specialist. Write a 1500-word blog post about [TOPIC] targeting keyword '[KEYWORD]'. Include: 1) Compelling title with keyword, 2) Meta description (150 chars), 3) H2/H3 structure with related keywords, 4) Internal linking opportunities, 5) Expert insights and data, 6) Strong conclusion with CTA.",
     topicCategory: "Text",
-    category: "Business Intelligence"
+    category: "SEO Content"
   },
   {
-    name: "Brand Voice Rewrite",
-    whatItIs: "Content optimization framework for brand consistency",
-    whatItsFor: "Ensuring all communications align with established brand voice",
-    desiredOutcome: "Consistent, on-brand messaging that resonates with target audience",
-    prompt: "Rewrite this email to match our brand voice (confident, concise, friendly). Keep to 120 words and include CTA to demo.",
+    name: "Social Media Caption Creator",
+    whatItIs: "Platform-specific social media content framework",
+    whatItsFor: "Creating engaging social media posts that drive interaction and brand awareness",
+    desiredOutcome: "Compelling social content optimized for each platform's unique audience and format",
+    prompt: "Create social media captions for [PLATFORM] about [TOPIC/PRODUCT]. Include: 1) Attention-grabbing hook, 2) Value-driven content, 3) Platform-appropriate hashtags, 4) Clear call-to-action, 5) Brand voice consistency. Provide 3 variations with different angles and optimize for platform algorithms.",
     topicCategory: "Text",
-    category: "Content Creation"
+    category: "Social Media"
+  },
+  {
+    name: "Product Description Writer",
+    whatItIs: "Conversion-focused product copy framework",
+    whatItsFor: "Writing compelling product descriptions that highlight benefits and drive sales",
+    desiredOutcome: "Persuasive product copy that addresses customer pain points and motivates purchases",
+    prompt: "You are a conversion copywriter. Write product descriptions for [PRODUCT] targeting [CUSTOMER TYPE]. Include: 1) Benefit-focused headline, 2) Key features with emotional benefits, 3) Social proof elements, 4) Urgency/scarcity if applicable, 5) Strong purchase CTA. Address common objections and use persuasive language.",
+    topicCategory: "Text",
+    category: "E-commerce"
+  },
+  {
+    name: "Press Release Template",
+    whatItIs: "Professional PR announcement framework",
+    whatItsFor: "Creating newsworthy press releases that capture media attention",
+    desiredOutcome: "Professional PR content that generates media coverage and brand awareness",
+    prompt: "Write a press release for [ANNOUNCEMENT/EVENT]. Follow AP style and include: 1) Compelling headline and subheadline, 2) Strong lead paragraph with 5 W's, 3) Executive quotes, 4) Company background, 5) Media contact information. Make it newsworthy and include relevant industry data.",
+    topicCategory: "Text",
+    category: "Public Relations"
   },
 
-  // Image Prompts  
+  // Image Prompts
   {
-    name: "Social Media Visual Brief",
-    whatItIs: "Visual content creation framework for social platforms",
-    whatItsFor: "Generating engaging social media graphics and visual content",
-    desiredOutcome: "Platform-optimized visuals that drive engagement and brand recognition",
-    prompt: "Create a visual content brief for [PLATFORM]. Include: 1) Brand elements to incorporate, 2) Color palette and style, 3) Key message hierarchy, 4) Call-to-action placement, 5) Platform specifications and best practices.",
+    name: "Brand Visual Identity",
+    whatItIs: "Comprehensive visual branding framework",
+    whatItsFor: "Creating cohesive visual identity systems for brands and businesses",
+    desiredOutcome: "Professional brand visuals that communicate values and attract target customers",
+    prompt: "Design a visual identity for [BRAND/COMPANY] in [INDUSTRY]. Create mood board including: 1) Logo concepts and variations, 2) Color palette with hex codes, 3) Typography pairings, 4) Visual style and imagery direction, 5) Brand applications (business cards, social media, etc.). Ensure consistency across all touchpoints.",
+    topicCategory: "Image",
+    category: "Brand Design"
+  },
+  {
+    name: "Social Media Graphics",
+    whatItIs: "Platform-optimized visual content creation framework",
+    whatItsFor: "Creating engaging graphics for various social media platforms",
+    desiredOutcome: "Eye-catching visuals that drive engagement and maintain brand consistency",
+    prompt: "Create social media graphics for [PLATFORM] promoting [CONTENT/OFFER]. Include: 1) Platform-specific dimensions, 2) Brand colors and fonts, 3) Clear hierarchy and readable text, 4) Strong visual focal point, 5) Call-to-action if needed. Design for mobile viewing and platform best practices.",
     topicCategory: "Image",
     category: "Social Media"
   },
   {
+    name: "Website Hero Section",
+    whatItIs: "High-impact website header design framework",
+    whatItsFor: "Creating compelling above-the-fold website sections that convert visitors",
+    desiredOutcome: "Engaging hero sections that communicate value proposition and drive user action",
+    prompt: "Design a website hero section for [BUSINESS/PRODUCT]. Include: 1) Compelling headline and subheadline, 2) Hero image or illustration, 3) Primary CTA button, 4) Trust signals or social proof, 5) Mobile-responsive layout. Focus on clear value proposition and conversion optimization.",
+    topicCategory: "Image",
+    category: "Web Design"
+  },
+  {
+    name: "Infographic Designer",
+    whatItIs: "Data visualization and information design framework",
+    whatItsFor: "Creating informative and shareable infographic content",
+    desiredOutcome: "Clear, visually appealing infographics that simplify complex information",
+    prompt: "Create an infographic about [TOPIC/DATA]. Include: 1) Compelling title and introduction, 2) Clear data visualization with charts/graphs, 3) Logical flow and sections, 4) Consistent color scheme and branding, 5) Sources and credits. Make it shareable and easy to understand at a glance.",
+    topicCategory: "Image",
+    category: "Data Visualization"
+  },
+  {
     name: "Product Photography Direction",
     whatItIs: "Professional product visual planning framework",
-    whatItsFor: "Creating compelling product imagery for marketing and sales",
-    desiredOutcome: "High-converting product visuals that showcase features and benefits",
-    prompt: "Develop product photography direction for [PRODUCT]. Include: 1) Lighting setup and mood, 2) Props and styling requirements, 3) Key features to highlight, 4) Multiple angle requirements, 5) Brand consistency guidelines.",
+    whatItsFor: "Creating compelling product imagery for marketing and e-commerce",
+    desiredOutcome: "High-quality product photos that showcase features and drive conversions",
+    prompt: "Plan product photography for [PRODUCT]. Include: 1) Shot list with multiple angles, 2) Lighting setup and mood, 3) Props and styling requirements, 4) Background and environment, 5) Post-processing guidelines. Focus on highlighting key features and creating lifestyle context.",
     topicCategory: "Image",
-    category: "Product Marketing"
+    category: "Product Photography"
+  },
+  {
+    name: "Marketing Materials Design",
+    whatItIs: "Print and digital marketing collateral framework",
+    whatItsFor: "Creating professional marketing materials for various business needs",
+    desiredOutcome: "Cohesive marketing collateral that reinforces brand identity and drives action",
+    prompt: "Design marketing materials for [CAMPAIGN/EVENT]. Create: 1) Flyer/brochure layout, 2) Business card design, 3) Email header graphics, 4) Social media ad visuals, 5) Presentation template. Maintain brand consistency and include clear CTAs throughout.",
+    topicCategory: "Image",
+    category: "Marketing Design"
   },
 
   // Video Prompts
   {
-    name: "Explainer Video Script",
-    whatItIs: "Structured video content creation framework",
-    whatItsFor: "Creating engaging explainer videos for products or concepts",
-    desiredOutcome: "Clear, compelling video content that educates and converts viewers",
-    prompt: "Write an explainer video script for [TOPIC]. Structure: Hook (0-5s), Problem (5-15s), Solution (15-45s), Benefits (45-60s), CTA (60-70s). Include visual cues and timing.",
+    name: "Product Demo Video",
+    whatItIs: "Compelling product demonstration framework",
+    whatItsFor: "Creating effective product demo videos that showcase features and benefits",
+    desiredOutcome: "Engaging demos that educate prospects and drive product adoption",
+    prompt: "Create a product demo video script for [PRODUCT]. Structure: 1) Hook with problem statement (0-10s), 2) Product introduction and key features (10-45s), 3) Live demonstration with use cases (45-90s), 4) Benefits and results (90-105s), 5) Strong CTA (105-120s). Include visual cues and screen directions.",
     topicCategory: "Video",
-    category: "Educational Content"
+    category: "Product Marketing"
+  },
+  {
+    name: "Educational Tutorial Series",
+    whatItIs: "Structured learning video content framework",
+    whatItsFor: "Creating comprehensive tutorial videos that teach skills or concepts",
+    desiredOutcome: "Clear, engaging educational content that helps viewers learn and apply knowledge",
+    prompt: "Plan a tutorial video series for [SKILL/TOPIC]. Create: 1) Series overview and learning objectives, 2) Episode breakdown with progression, 3) Individual video scripts with step-by-step instructions, 4) Visual aids and demonstrations needed, 5) Practice exercises and resources. Make it beginner-friendly yet comprehensive.",
+    topicCategory: "Video",
+    category: "Education"
+  },
+  {
+    name: "Brand Story Video",
+    whatItIs: "Emotional brand narrative framework",
+    whatItsFor: "Creating compelling brand story videos that connect with audiences",
+    desiredOutcome: "Authentic brand videos that build emotional connection and trust",
+    prompt: "Write a brand story video for [COMPANY]. Include: 1) Founder's journey and motivation, 2) Problem the company solves, 3) Mission and values demonstration, 4) Customer impact stories, 5) Future vision and call to join. Use storytelling techniques and emotional hooks throughout.",
+    topicCategory: "Video",
+    category: "Brand Marketing"
+  },
+  {
+    name: "Social Media Video Content",
+    whatItIs: "Platform-optimized short-form video framework",
+    whatItsFor: "Creating engaging short videos for social media platforms",
+    desiredOutcome: "Viral-ready content that drives engagement and brand awareness",
+    prompt: "Create short-form video content for [PLATFORM] about [TOPIC]. Include: 1) Attention-grabbing first 3 seconds, 2) Clear value proposition, 3) Platform-specific format and timing, 4) Trending audio/music suggestions, 5) Engagement-driving elements. Optimize for mobile viewing and shareability.",
+    topicCategory: "Video",
+    category: "Social Media"
+  },
+  {
+    name: "Customer Testimonial Video",
+    whatItIs: "Social proof video content framework",
+    whatItsFor: "Creating authentic customer success story videos",
+    desiredOutcome: "Compelling testimonials that build trust and drive conversions",
+    prompt: "Plan customer testimonial videos for [PRODUCT/SERVICE]. Include: 1) Customer selection criteria, 2) Interview question framework, 3) Story structure (challenge, solution, results), 4) B-roll footage requirements, 5) Call-to-action integration. Focus on specific results and emotional transformation.",
+    topicCategory: "Video",
+    category: "Social Proof"
+  },
+  {
+    name: "Live Stream Planning",
+    whatItIs: "Interactive live video content framework",
+    whatItsFor: "Planning and executing engaging live streaming content",
+    desiredOutcome: "Interactive live content that builds community and drives real-time engagement",
+    prompt: "Plan a live stream for [TOPIC/PURPOSE]. Include: 1) Content outline with timing, 2) Audience engagement tactics, 3) Technical setup requirements, 4) Interactive elements (Q&A, polls, etc.), 5) Follow-up strategy. Create talking points and backup content for smooth delivery.",
+    topicCategory: "Video",
+    category: "Live Content"
   },
 
   // Audio Prompts
   {
-    name: "Podcast Episode Structure",
-    whatItIs: "Professional podcast content planning framework",
+    name: "Podcast Episode Planning",
+    whatItIs: "Professional podcast content structure framework",
     whatItsFor: "Creating engaging, well-structured podcast episodes",
-    desiredOutcome: "Compelling audio content that retains listeners and drives engagement",
-    prompt: "Design podcast episode structure for [TOPIC]. Include: 1) Hook and intro (0-2min), 2) Main content segments with transitions, 3) Guest interview questions, 4) Key takeaways summary, 5) CTA and outro.",
+    desiredOutcome: "Compelling audio content that retains listeners and builds audience",
+    prompt: "Plan a podcast episode about [TOPIC]. Include: 1) Episode title and description, 2) Detailed outline with segments, 3) Guest interview questions, 4) Transition scripts, 5) Key takeaways and CTA. Structure for 30-45 minute episode with clear value delivery throughout.",
     topicCategory: "Audio",
-    category: "Content Creation"
+    category: "Podcasting"
+  },
+  {
+    name: "Voiceover Script Writer",
+    whatItIs: "Professional voiceover content framework",
+    whatItsFor: "Creating effective voiceover scripts for various media",
+    desiredOutcome: "Clear, engaging audio scripts optimized for voice delivery",
+    prompt: "Write a voiceover script for [PROJECT TYPE]. Include: 1) Natural, conversational tone, 2) Clear pronunciation guides for complex terms, 3) Appropriate pacing and pauses, 4) Emotional cues and emphasis, 5) Call-to-action delivery. Optimize for [DURATION] and target [AUDIENCE].",
+    topicCategory: "Audio",
+    category: "Voice Content"
+  },
+  {
+    name: "Audio Branding Strategy",
+    whatItIs: "Comprehensive audio identity framework",
+    whatItsFor: "Creating consistent audio branding across all touchpoints",
+    desiredOutcome: "Cohesive audio identity that reinforces brand recognition",
+    prompt: "Develop audio branding strategy for [BRAND]. Include: 1) Brand voice characteristics and tone, 2) Musical style and mood guidelines, 3) Sound effects library, 4) Voiceover talent specifications, 5) Application across platforms (ads, videos, podcasts). Ensure consistency with visual brand identity.",
+    topicCategory: "Audio",
+    category: "Brand Audio"
+  },
+  {
+    name: "Audiobook Narration Guide",
+    whatItIs: "Professional audiobook production framework",
+    whatItsFor: "Creating engaging audiobook content and narration",
+    desiredOutcome: "Professional audiobook that engages listeners and conveys content effectively",
+    prompt: "Create audiobook narration guide for [BOOK/CONTENT]. Include: 1) Character voice distinctions, 2) Pacing and rhythm guidelines, 3) Chapter transition techniques, 4) Emphasis and emotional delivery, 5) Technical recording requirements. Focus on listener engagement and comprehension.",
+    topicCategory: "Audio",
+    category: "Audiobook Production"
+  },
+  {
+    name: "Music for Content Creation",
+    whatItIs: "Background music selection and creation framework",
+    whatItsFor: "Choosing or creating appropriate music for various content types",
+    desiredOutcome: "Perfect audio accompaniment that enhances content without distraction",
+    prompt: "Select/create background music for [CONTENT TYPE]. Consider: 1) Mood and emotional tone needed, 2) Target audience preferences, 3) Content pacing and energy, 4) Licensing requirements, 5) Brand alignment. Provide specific genre, tempo, and instrumentation recommendations.",
+    topicCategory: "Audio",
+    category: "Music Creation"
+  },
+  {
+    name: "Radio Ad Creative",
+    whatItIs: "Compelling radio advertisement framework",
+    whatItsFor: "Creating effective radio ads that drive action",
+    desiredOutcome: "Memorable radio spots that generate leads and brand awareness",
+    prompt: "Write a radio ad for [PRODUCT/SERVICE]. Create 30-second and 60-second versions including: 1) Attention-grabbing opening, 2) Clear value proposition, 3) Memorable tagline or jingle, 4) Strong call-to-action with contact info, 5) Local relevance if applicable. Optimize for audio-only medium.",
+    topicCategory: "Audio",
+    category: "Radio Advertising"
   },
 
-  // Web/App Prompts
+  // Web/App Dev Prompts
   {
     name: "User Experience Audit",
-    whatItIs: "Comprehensive UX evaluation and improvement framework",
+    whatItIs: "Comprehensive UX evaluation framework",
     whatItsFor: "Identifying and fixing user experience issues in digital products",
     desiredOutcome: "Improved user satisfaction, conversion rates, and product usability",
-    prompt: "Conduct UX audit for [WEBSITE/APP]. Analyze: 1) User journey and pain points, 2) Interface usability issues, 3) Conversion funnel optimization, 4) Accessibility compliance, 5) Mobile responsiveness, 6) Performance recommendations.",
-  topicCategory: "Web/App Dev",
+    prompt: "Conduct UX audit for [WEBSITE/APP]. Analyze: 1) User journey and pain points, 2) Interface usability issues, 3) Conversion funnel optimization, 4) Accessibility compliance, 5) Mobile responsiveness, 6) Performance recommendations. Provide actionable improvement priorities.",
+    topicCategory: "Web/App Dev",
     category: "User Experience"
+  },
+  {
+    name: "Landing Page Optimizer",
+    whatItIs: "Conversion-focused landing page framework",
+    whatItsFor: "Creating high-converting landing pages for marketing campaigns",
+    desiredOutcome: "Landing pages that maximize conversion rates and campaign ROI",
+    prompt: "Optimize landing page for [CAMPAIGN/PRODUCT]. Include: 1) Compelling headline and value proposition, 2) Clear CTA above the fold, 3) Social proof and testimonials, 4) Benefit-focused copy, 5) Mobile optimization, 6) A/B testing recommendations. Focus on conversion psychology principles.",
+    topicCategory: "Web/App Dev",
+    category: "Conversion Optimization"
+  },
+  {
+    name: "App Feature Planning",
+    whatItIs: "Strategic feature development framework",
+    whatItsFor: "Planning and prioritizing app features for maximum user value",
+    desiredOutcome: "Well-prioritized feature roadmap that drives user engagement and business goals",
+    prompt: "Plan app features for [APP TYPE]. Include: 1) User story mapping, 2) Feature prioritization matrix, 3) MVP vs future release planning, 4) Technical requirements, 5) Success metrics for each feature. Consider user needs, business goals, and technical feasibility.",
+    topicCategory: "Web/App Dev",
+    category: "Product Planning"
+  },
+  {
+    name: "Website Performance Analysis",
+    whatItIs: "Technical performance optimization framework",
+    whatItsFor: "Analyzing and improving website speed and performance",
+    desiredOutcome: "Faster loading websites that improve user experience and SEO rankings",
+    prompt: "Analyze website performance for [WEBSITE]. Evaluate: 1) Page load speeds and Core Web Vitals, 2) Image optimization opportunities, 3) Code minification and compression, 4) Caching strategies, 5) CDN implementation, 6) Mobile performance. Provide specific optimization recommendations.",
+    topicCategory: "Web/App Dev",
+    category: "Performance"
+  },
+  {
+    name: "API Documentation Writer",
+    whatItIs: "Clear technical documentation framework",
+    whatItsFor: "Creating comprehensive API documentation for developers",
+    desiredOutcome: "Clear, usable documentation that accelerates developer adoption",
+    prompt: "Write API documentation for [API/SERVICE]. Include: 1) Getting started guide, 2) Authentication methods, 3) Endpoint descriptions with examples, 4) Request/response formats, 5) Error handling, 6) SDK/library information. Make it developer-friendly with code samples.",
+    topicCategory: "Web/App Dev",
+    category: "Technical Writing"
+  },
+  {
+    name: "Database Design Planning",
+    whatItIs: "Efficient database architecture framework",
+    whatItsFor: "Designing scalable database structures for applications",
+    desiredOutcome: "Well-structured databases that support application needs and scale efficiently",
+    prompt: "Design database schema for [APPLICATION]. Include: 1) Entity relationship diagram, 2) Table structures with data types, 3) Indexing strategy, 4) Relationship definitions, 5) Data validation rules, 6) Scalability considerations. Optimize for performance and maintainability.",
+    topicCategory: "Web/App Dev",
+    category: "Database Design"
+  },
+
+  // Workflow/AI Agents Prompts
+  {
+    name: "Business Process Automation",
+    whatItIs: "Workflow automation planning framework",
+    whatItsFor: "Identifying and automating repetitive business processes",
+    desiredOutcome: "Streamlined operations with reduced manual work and improved efficiency",
+    prompt: "Design automation workflow for [BUSINESS PROCESS]. Include: 1) Current process mapping, 2) Automation opportunities identification, 3) Tool/platform recommendations, 4) Implementation steps, 5) Success metrics, 6) Training requirements. Focus on ROI and ease of implementation.",
+    topicCategory: "Workflow/AI Agents",
+    category: "Process Automation"
+  },
+  {
+    name: "Customer Service Chatbot",
+    whatItIs: "AI-powered customer support framework",
+    whatItsFor: "Creating intelligent chatbots that handle customer inquiries",
+    desiredOutcome: "Effective automated customer support that improves satisfaction and reduces costs",
+    prompt: "Design customer service chatbot for [BUSINESS/INDUSTRY]. Include: 1) Common customer questions and responses, 2) Conversation flow and decision trees, 3) Escalation triggers to human agents, 4) Personality and tone guidelines, 5) Integration requirements, 6) Performance metrics. Ensure helpful and human-like interactions.",
+    topicCategory: "Workflow/AI Agents",
+    category: "Customer Service"
+  },
+  {
+    name: "Lead Generation Automation",
+    whatItIs: "Automated lead capture and nurturing framework",
+    whatItsFor: "Creating systems that automatically generate and qualify leads",
+    desiredOutcome: "Consistent lead flow with automated qualification and nurturing",
+    prompt: "Create lead generation automation for [BUSINESS]. Include: 1) Lead capture mechanisms, 2) Qualification criteria and scoring, 3) Automated follow-up sequences, 4) CRM integration, 5) Nurturing campaign workflows, 6) Analytics and reporting. Focus on quality over quantity.",
+    topicCategory: "Workflow/AI Agents",
+    category: "Sales Automation"
+  },
+  {
+    name: "Social Media Management",
+    whatItIs: "Automated social media workflow framework",
+    whatItsFor: "Streamlining social media content creation and posting",
+    desiredOutcome: "Consistent social media presence with minimal manual effort",
+    prompt: "Design social media automation for [BRAND]. Include: 1) Content calendar automation, 2) Cross-platform posting schedules, 3) Engagement monitoring and response, 4) Hashtag research and optimization, 5) Performance tracking, 6) Crisis management protocols. Maintain authentic brand voice throughout.",
+    topicCategory: "Workflow/AI Agents",
+    category: "Social Media"
+  },
+  {
+    name: "Data Analysis Pipeline",
+    whatItIs: "Automated data processing and insights framework",
+    whatItsFor: "Creating systems that automatically analyze business data",
+    desiredOutcome: "Regular business insights with minimal manual data processing",
+    prompt: "Build data analysis pipeline for [BUSINESS METRICS]. Include: 1) Data source integration, 2) Automated data cleaning and processing, 3) Key metrics calculation, 4) Alert systems for anomalies, 5) Automated reporting, 6) Visualization dashboards. Focus on actionable insights delivery.",
+    topicCategory: "Workflow/AI Agents",
+    category: "Data Analytics"
+  },
+  {
+    name: "Project Management Automation",
+    whatItIs: "Intelligent project workflow framework",
+    whatItsFor: "Automating project management tasks and communications",
+    desiredOutcome: "Streamlined project delivery with improved team coordination",
+    prompt: "Create project management automation for [PROJECT TYPE]. Include: 1) Task assignment and tracking, 2) Progress reporting automation, 3) Deadline and milestone alerts, 4) Resource allocation optimization, 5) Team communication triggers, 6) Performance analytics. Integrate with existing project management tools.",
+    topicCategory: "Workflow/AI Agents",
+    category: "Project Management"
   }
 ];
 
@@ -1382,9 +1627,9 @@ export default function Resources() {
         <div className="max-w-7xl mx-auto px-4 py-12">
           {/* Header */}
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold mb-4">AI Resources Hub</h1>
+            <h1 className="text-4xl font-bold mb-4">AI Resources</h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Comprehensive collection of AI tools, templates, and strategies organized by topic to accelerate your projects
+              Your complete toolkit for AI-powered productivity. Discover curated tools, proven prompts, and strategic frameworks across all creative and business domains.
             </p>
           </div>
 
