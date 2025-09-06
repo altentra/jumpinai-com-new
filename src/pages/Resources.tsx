@@ -356,13 +356,69 @@ const tools: Tool[] = [
 
   // Web/App Dev Tools
   { 
+    name: "Lovable", 
+    url: "https://lovable.dev/", 
+    whatItIs: "AI-powered web application development platform",
+    whatItsFor: "Building full-stack web applications with AI assistance",
+    desiredOutcome: "Rapid development of modern web apps with intelligent code generation",
+    topicCategory: "Web/App Dev",
+    category: "AI Development"
+  },
+  { 
+    name: "Bolt.new", 
+    url: "https://bolt.new/", 
+    whatItIs: "AI-powered full-stack web development environment",
+    whatItsFor: "Creating complete web applications from prompts",
+    desiredOutcome: "Instant web app prototyping and development through AI",
+    topicCategory: "Web/App Dev",
+    category: "AI Development"
+  },
+  { 
+    name: "Replit", 
+    url: "https://replit.com/", 
+    whatItIs: "Cloud-based development environment with AI coding assistant",
+    whatItsFor: "Collaborative coding and rapid prototyping with AI help",
+    desiredOutcome: "Streamlined development workflow with AI-powered coding assistance",
+    topicCategory: "Web/App Dev",
+    category: "Development Platform"
+  },
+  { 
+    name: "Cursor", 
+    url: "https://cursor.sh/", 
+    whatItIs: "AI-first code editor built for pair programming with AI",
+    whatItsFor: "Writing code with intelligent AI assistance and autocompletion",
+    desiredOutcome: "Faster, more accurate coding with AI-powered suggestions and edits",
+    topicCategory: "Web/App Dev",
+    category: "Code Editor"
+  },
+  { 
+    name: "GitHub Copilot", 
+    url: "https://github.com/features/copilot", 
+    whatItIs: "AI-powered code completion and generation tool",
+    whatItsFor: "Accelerating coding with intelligent code suggestions",
+    desiredOutcome: "Increased development productivity with AI-generated code snippets",
+    topicCategory: "Web/App Dev",
+    category: "AI Assistant"
+  },
+  { 
+    name: "Claude Code", 
+    url: "https://claude.ai/", 
+    whatItIs: "Anthropic's AI assistant specialized for coding tasks",
+    whatItsFor: "Code review, debugging, and complex programming problems",
+    desiredOutcome: "High-quality code solutions with detailed explanations",
+    topicCategory: "Web/App Dev",
+    category: "AI Assistant"
+  },
+
+  // Workflow/AI Agents Tools
+  { 
     name: "n8n", 
     url: "https://n8n.io/", 
     whatItIs: "Open-source workflow automation platform",
     whatItsFor: "Building automated workflows connecting apps and AI services",
     desiredOutcome: "Streamlined business processes with AI-powered automation",
-    topicCategory: "Web/App Dev",
-    category: "Automation"
+    topicCategory: "Workflow/AI Agents",
+    category: "Workflow Automation"
   },
   { 
     name: "Zapier", 
@@ -370,17 +426,80 @@ const tools: Tool[] = [
     whatItIs: "No-code automation platform connecting thousands of apps",
     whatItsFor: "Automating repetitive tasks between different web applications",
     desiredOutcome: "Increased productivity through seamless app integrations",
-    topicCategory: "Web/App Dev",
+    topicCategory: "Workflow/AI Agents",
     category: "Automation"
   },
   { 
-    name: "Bubble", 
-    url: "https://bubble.io/", 
-    whatItIs: "No-code platform for building web applications",
-    whatItsFor: "Creating full-featured web apps without traditional coding",
-    desiredOutcome: "Functional web applications built through visual programming",
-    topicCategory: "Web/App Dev",
-    category: "No-Code Development"
+    name: "Make.com", 
+    url: "https://www.make.com/", 
+    whatItIs: "Visual automation platform for connecting apps and services",
+    whatItsFor: "Creating complex automated workflows with visual interface",
+    desiredOutcome: "Advanced automation scenarios with conditional logic and data transformation",
+    topicCategory: "Workflow/AI Agents",
+    category: "Automation"
+  },
+  { 
+    name: "ManyChat", 
+    url: "https://manychat.com/", 
+    whatItIs: "Chatbot platform for Facebook Messenger, Instagram, and SMS",
+    whatItsFor: "Building conversational AI agents for customer engagement",
+    desiredOutcome: "Automated customer interactions that drive sales and support",
+    topicCategory: "Workflow/AI Agents",
+    category: "Chatbots"
+  },
+  { 
+    name: "Notion", 
+    url: "https://www.notion.so/", 
+    whatItIs: "All-in-one workspace with AI-powered features",
+    whatItsFor: "Managing projects, documentation, and workflows with AI assistance",
+    desiredOutcome: "Organized, collaborative workspace that enhances team productivity",
+    topicCategory: "Workflow/AI Agents",
+    category: "Productivity"
+  },
+  { 
+    name: "Motion", 
+    url: "https://www.usemotion.com/", 
+    whatItIs: "AI-powered calendar and task management platform",
+    whatItsFor: "Optimizing schedules and automating task prioritization",
+    desiredOutcome: "Perfectly organized calendar with AI-optimized time allocation",
+    topicCategory: "Workflow/AI Agents",
+    category: "Time Management"
+  },
+  { 
+    name: "ClickUp", 
+    url: "https://clickup.com/", 
+    whatItIs: "Project management platform with AI-powered features",
+    whatItsFor: "Managing complex projects with AI-assisted planning and tracking",
+    desiredOutcome: "Streamlined project delivery with intelligent task management",
+    topicCategory: "Workflow/AI Agents",
+    category: "Project Management"
+  },
+  { 
+    name: "Monday.com", 
+    url: "https://monday.com/", 
+    whatItIs: "Work management platform with automation and AI features",
+    whatItsFor: "Coordinating team workflows and automating project processes",
+    desiredOutcome: "Enhanced team collaboration with automated project tracking",
+    topicCategory: "Workflow/AI Agents",
+    category: "Work Management"
+  },
+  { 
+    name: "SEMrush", 
+    url: "https://www.semrush.com/", 
+    whatItIs: "Digital marketing toolkit with AI-powered insights",
+    whatItsFor: "SEO, content marketing, and competitive analysis with AI assistance",
+    desiredOutcome: "Data-driven marketing strategies with AI-powered recommendations",
+    topicCategory: "Workflow/AI Agents",
+    category: "Marketing Analytics"
+  },
+  { 
+    name: "Tidio", 
+    url: "https://www.tidio.com/", 
+    whatItIs: "Live chat and chatbot platform with AI capabilities",
+    whatItsFor: "Providing automated customer support and lead generation",
+    desiredOutcome: "Improved customer satisfaction with AI-powered chat support",
+    topicCategory: "Workflow/AI Agents",
+    category: "Customer Support"
   }
 ];
 
@@ -1303,28 +1422,28 @@ export default function Resources() {
               </div>
               
               <Tabs value={activeTopicTab} onValueChange={setActiveTopicTab as (value: string) => void} className="w-full">
-                <TabsList className="grid w-full grid-cols-5 bg-muted/30">
-                  <TabsTrigger value="Text" className="flex items-center gap-2 text-sm">
+                <TabsList className="flex flex-wrap justify-center w-full bg-muted/30 h-auto p-1 gap-1">
+                  <TabsTrigger value="Text" className="flex items-center gap-2 text-sm flex-shrink-0">
                     <Type className="h-3 w-3" />
                     Text
                   </TabsTrigger>
-                  <TabsTrigger value="Image" className="flex items-center gap-2 text-sm">
+                  <TabsTrigger value="Image" className="flex items-center gap-2 text-sm flex-shrink-0">
                     <Image className="h-3 w-3" />
                     Image
                   </TabsTrigger>
-                  <TabsTrigger value="Video" className="flex items-center gap-2 text-sm">
+                  <TabsTrigger value="Video" className="flex items-center gap-2 text-sm flex-shrink-0">
                     <Video className="h-3 w-3" />
                     Video
                   </TabsTrigger>
-                  <TabsTrigger value="Audio" className="flex items-center gap-2 text-sm">
+                  <TabsTrigger value="Audio" className="flex items-center gap-2 text-sm flex-shrink-0">
                     <Headphones className="h-3 w-3" />
                     Audio
                   </TabsTrigger>
-                  <TabsTrigger value="Web/App Dev" className="flex items-center gap-2 text-sm">
+                  <TabsTrigger value="Web/App Dev" className="flex items-center gap-2 text-sm flex-shrink-0">
                     <Globe className="h-3 w-3" />
                     Web/App Dev
                   </TabsTrigger>
-                  <TabsTrigger value="Workflow/AI Agents" className="flex items-center gap-2 text-sm">
+                  <TabsTrigger value="Workflow/AI Agents" className="flex items-center gap-2 text-sm flex-shrink-0">
                     <Zap className="h-3 w-3" />
                     Workflow/AI Agents
                   </TabsTrigger>
