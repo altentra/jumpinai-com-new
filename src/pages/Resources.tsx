@@ -12,7 +12,12 @@ import {
   Copy,
   Star,
   TrendingUp,
-  Play
+  Play,
+  Type,
+  Image,
+  Video,
+  Headphones,
+  Globe
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useState, useEffect } from "react";
@@ -25,143 +30,975 @@ import WorkflowDetailModal from "@/components/WorkflowDetailModal";
 import BlueprintDetailModal from "@/components/BlueprintDetailModal";
 import StrategyDetailModal from "@/components/StrategyDetailModal";
 
-// Data models
+// Updated data models with structured information
 type Tool = {
   name: string;
   url: string;
-  description: string;
+  whatItIs: string;
+  whatItsFor: string;
+  desiredOutcome: string;
+  topicCategory: 'Text' | 'Image' | 'Video' | 'Audio' | 'Web/App';
   category: string;
 };
 
 type PromptTemplate = {
   name: string;
-  description: string;
+  whatItIs: string;
+  whatItsFor: string;
+  desiredOutcome: string;
   prompt: string;
+  topicCategory: 'Text' | 'Image' | 'Video' | 'Audio' | 'Web/App';
   category: string;
 };
 
 type Workflow = {
   name: string;
-  description: string;
+  whatItIs: string;
+  whatItsFor: string;
+  desiredOutcome: string;
   steps: string[];
+  topicCategory: 'Text' | 'Image' | 'Video' | 'Audio' | 'Web/App';
   category: string;
 };
 
 type Blueprint = {
   name: string;
-  description: string;
+  whatItIs: string;
+  whatItsFor: string;
+  desiredOutcome: string;
   template: string;
+  topicCategory: 'Text' | 'Image' | 'Video' | 'Audio' | 'Web/App';
   category: string;
 };
 
 type Strategy = {
   name: string;
-  description: string;
+  whatItIs: string;
+  whatItsFor: string;
+  desiredOutcome: string;
   approach: string;
+  topicCategory: 'Text' | 'Image' | 'Video' | 'Audio' | 'Web/App';
   category: string;
 };
 
-// Tools data
+type TopicCategory = 'Text' | 'Image' | 'Video' | 'Audio' | 'Web/App';
+
+// Tools data with structured information
 const tools: Tool[] = [
-  { name: "OpenAI ChatGPT (GPT-5)", url: "https://openai.com/", description: "General-purpose assistant for writing, reasoning, and multimodal tasks.", category: "Text Generation" },
-  { name: "Anthropic Claude", url: "https://claude.ai/", description: "Strong writing and analysis with long context and reliable reasoning.", category: "Text Generation" },
-  { name: "Google Gemini 2.5 Pro", url: "https://gemini.google.com/", description: "Long‑context multimodal model integrated with Google ecosystem.", category: "Text Generation" },
-  { name: "xAI Grok 4", url: "https://x.ai/", description: "Fast, up‑to‑date reasoning with strong web awareness.", category: "Text Generation" },
-  { name: "Perplexity", url: "https://www.perplexity.ai/", description: "Answer engine combining live search with model reasoning and citations.", category: "Research" },
-  { name: "Midjourney", url: "https://www.midjourney.com/", description: "High‑fidelity, stylized image generation with strong aesthetics.", category: "Image Generation" },
-  { name: "Adobe Firefly", url: "https://www.adobe.com/sensei/generative-ai/firefly.html", description: "Integrated with Photoshop/Illustrator for editable, brand‑safe imagery.", category: "Image Generation" },
-  { name: "Runway Gen-2", url: "https://runwayml.com/gen-2", description: "Text-to-video generation with editing and inpainting capabilities.", category: "Video Generation" },
-  { name: "Synthesia", url: "https://www.synthesia.io/", description: "AI video creation platform with customizable avatars and voiceovers.", category: "Video Generation" },
-  { name: "AIVA", url: "https://www.aiva.ai/", description: "AI composer for creating soundtracks and music pieces.", category: "Music Generation" },
-  { name: "n8n", url: "https://n8n.io/", description: "Free and open-source workflow automation tool with AI integrations and visual builder.", category: "Automation" },
+  // Text Tools
+  { 
+    name: "OpenAI ChatGPT", 
+    url: "https://openai.com/", 
+    whatItIs: "Advanced conversational AI model for text generation and analysis",
+    whatItsFor: "Writing assistance, content creation, problem-solving, and complex reasoning tasks",
+    desiredOutcome: "High-quality text outputs, accurate information, and contextual understanding",
+    topicCategory: "Text",
+    category: "AI Assistant"
+  },
+  { 
+    name: "Anthropic Claude", 
+    url: "https://claude.ai/", 
+    whatItIs: "Constitutional AI assistant with strong analytical capabilities",
+    whatItsFor: "Long-form content analysis, research, and ethical reasoning",
+    desiredOutcome: "Thoughtful analysis, reliable information, and nuanced understanding",
+    topicCategory: "Text",
+    category: "AI Assistant"
+  },
+  { 
+    name: "Google Gemini", 
+    url: "https://gemini.google.com/", 
+    whatItIs: "Multimodal AI model integrated with Google's ecosystem",
+    whatItsFor: "Text generation with access to real-time information and Google services",
+    desiredOutcome: "Current information, seamless integration, and multimodal capabilities",
+    topicCategory: "Text",
+    category: "AI Assistant"
+  },
+  { 
+    name: "Perplexity", 
+    url: "https://www.perplexity.ai/", 
+    whatItIs: "AI-powered search engine with source citations",
+    whatItsFor: "Research tasks requiring current information with verifiable sources",
+    desiredOutcome: "Accurate research with citations, real-time data, and source verification",
+    topicCategory: "Text",
+    category: "Research"
+  },
+
+  // Image Tools
+  { 
+    name: "Midjourney", 
+    url: "https://www.midjourney.com/", 
+    whatItIs: "AI image generation platform with artistic focus",
+    whatItsFor: "Creating high-quality, stylized images for creative and commercial use",
+    desiredOutcome: "Visually stunning, artistic images with unique aesthetic appeal",
+    topicCategory: "Image",
+    category: "Image Generation"
+  },
+  { 
+    name: "Adobe Firefly", 
+    url: "https://www.adobe.com/sensei/generative-ai/firefly.html", 
+    whatItIs: "Adobe's generative AI integrated into Creative Cloud",
+    whatItsFor: "Professional image creation and editing within existing workflows",
+    desiredOutcome: "Brand-safe, editable images with seamless Creative Cloud integration",
+    topicCategory: "Image",
+    category: "Image Generation"
+  },
+  { 
+    name: "DALL-E 3", 
+    url: "https://openai.com/dall-e-3", 
+    whatItIs: "OpenAI's advanced text-to-image generation model",
+    whatItsFor: "Creating detailed, accurate images from complex text descriptions",
+    desiredOutcome: "Precise visual representations that match detailed prompts",
+    topicCategory: "Image",
+    category: "Image Generation"
+  },
+
+  // Video Tools
+  { 
+    name: "Runway", 
+    url: "https://runwayml.com/", 
+    whatItIs: "AI-powered video creation and editing platform",
+    whatItsFor: "Generating and editing videos with AI assistance",
+    desiredOutcome: "Professional-quality video content with AI-enhanced effects",
+    topicCategory: "Video",
+    category: "Video Generation"
+  },
+  { 
+    name: "Synthesia", 
+    url: "https://www.synthesia.io/", 
+    whatItIs: "AI video creation platform with synthetic avatars",
+    whatItsFor: "Creating training videos, presentations, and educational content",
+    desiredOutcome: "Professional videos with AI avatars for scalable content creation",
+    topicCategory: "Video",
+    category: "Video Generation"
+  },
+  { 
+    name: "Luma Dream Machine", 
+    url: "https://lumalabs.ai/", 
+    whatItIs: "AI video generation from text and image prompts",
+    whatItsFor: "Creating short video clips and animations from descriptions",
+    desiredOutcome: "Smooth, realistic video clips for content and marketing",
+    topicCategory: "Video",
+    category: "Video Generation"
+  },
+
+  // Audio Tools
+  { 
+    name: "ElevenLabs", 
+    url: "https://elevenlabs.io/", 
+    whatItIs: "AI voice synthesis and speech generation platform",
+    whatItsFor: "Creating realistic voiceovers, podcasts, and audio content",
+    desiredOutcome: "Natural-sounding speech with customizable voices and emotions",
+    topicCategory: "Audio",
+    category: "Voice Generation"
+  },
+  { 
+    name: "AIVA", 
+    url: "https://www.aiva.ai/", 
+    whatItIs: "AI music composition platform",
+    whatItsFor: "Creating original soundtracks, background music, and compositions",
+    desiredOutcome: "Professional-quality music tailored to specific moods and purposes",
+    topicCategory: "Audio",
+    category: "Music Generation"
+  },
+  { 
+    name: "Mubert", 
+    url: "https://mubert.com/", 
+    whatItIs: "AI-powered royalty-free music generation",
+    whatItsFor: "Creating background music for content, apps, and commercial use",
+    desiredOutcome: "Endless, royalty-free music streams customized to specific needs",
+    topicCategory: "Audio",
+    category: "Music Generation"
+  },
+
+  // Web/App Tools
+  { 
+    name: "n8n", 
+    url: "https://n8n.io/", 
+    whatItIs: "Open-source workflow automation platform",
+    whatItsFor: "Building automated workflows connecting apps and AI services",
+    desiredOutcome: "Streamlined business processes with AI-powered automation",
+    topicCategory: "Web/App",
+    category: "Automation"
+  },
+  { 
+    name: "Zapier", 
+    url: "https://zapier.com/", 
+    whatItIs: "No-code automation platform connecting thousands of apps",
+    whatItsFor: "Automating repetitive tasks between different web applications",
+    desiredOutcome: "Increased productivity through seamless app integrations",
+    topicCategory: "Web/App",
+    category: "Automation"
+  },
+  { 
+    name: "Bubble", 
+    url: "https://bubble.io/", 
+    whatItIs: "No-code platform for building web applications",
+    whatItsFor: "Creating full-featured web apps without traditional coding",
+    desiredOutcome: "Functional web applications built through visual programming",
+    topicCategory: "Web/App",
+    category: "No-Code Development"
+  }
 ];
 
-// Prompts data
+// Prompts data with structured information
 const promptTemplates: PromptTemplate[] = [
-  { name: "Product Marketing Brief", description: "Create comprehensive product launch briefs", prompt: "Act as a senior product marketer. Create a 500‑word launch brief for a B2B SaaS feature. Include: 1) narrative, 2) ICP pain, 3) 3 key benefits, 4) messaging pillars, 5) CTA. Tone: confident, concise.", category: "Marketing" },
-  { name: "Policy Analysis", description: "Analyze and summarize policy documents", prompt: "You are an operations analyst. Summarize this policy PDF into an SOP with steps, owners, and SLAs. Flag ambiguities and propose fixes.", category: "Analysis" },
-  { name: "Executive Summary", description: "Create executive summaries from data", prompt: "As a data storyteller, explain these metrics (paste table) to an executive in 5 bullets. Add a final risk/opportunity section.", category: "Business Intelligence" },
-  { name: "Trend Analysis", description: "Analyze current trends with citations", prompt: "Act as a trend analyst. Using fresh web sources, outline the 5 biggest AI regulation changes in 2025 with citations and implications for SaaS founders.", category: "Research" },
-  { name: "Brand Voice Rewrite", description: "Rewrite content to match brand voice", prompt: "Rewrite this email to match our brand voice (confident, concise, friendly). Keep to 120 words and include CTA to demo.", category: "Content Creation" },
-  { name: "Meeting Notes Cleanup", description: "Transform meeting notes into actionable items", prompt: "Clean up these meeting notes into action items by owner and due date. Add a one‑paragraph recap for stakeholders.", category: "Productivity" },
-  
-  // PRO CONTENT - Professional Templates
-  { name: "Strategic Planning Framework", description: "Comprehensive business strategy development", prompt: "Act as a McKinsey consultant. Develop a 3-year strategic plan for [COMPANY]. Include: 1) Market analysis, 2) Competitive positioning, 3) Growth opportunities, 4) Resource allocation strategy, 5) KPIs and milestones, 6) Risk mitigation. Format as executive presentation.", category: "Strategy" },
-  { name: "Investment Pitch Deck", description: "Professional investor presentation", prompt: "Create a Series A pitch deck for [STARTUP]. Structure: Problem (market pain), Solution (unique value prop), Market (TAM/SAM), Traction (metrics/proof), Business Model (revenue streams), Competition (differentiation), Team (expertise), Financials (projections), Ask (funding/use). Keep slides concise, data-driven.", category: "Fundraising" },
-  { name: "Customer Success Playbook", description: "Retention and expansion strategies", prompt: "Design a customer success framework for B2B SaaS. Include: 1) Onboarding workflow, 2) Health score metrics, 3) Expansion triggers, 4) Churn prevention tactics, 5) Success milestones, 6) Escalation protocols. Focus on revenue retention and growth.", category: "Customer Success" },
-  { name: "Competitive Intelligence Report", description: "Deep market and competitor analysis", prompt: "Analyze [COMPETITOR] as a strategic intelligence expert. Cover: 1) Business model breakdown, 2) Pricing strategy, 3) Product positioning, 4) Marketing channels, 5) Strengths/weaknesses, 6) Strategic recommendations. Use public data sources.", category: "Intelligence" },
-  { name: "Financial Model Builder", description: "Comprehensive business financial planning", prompt: "Build a 5-year financial model for [BUSINESS TYPE]. Include: Revenue projections (multiple streams), Cost structure (fixed/variable), Cash flow analysis, Break-even analysis, Scenario planning (best/base/worst), Key ratios, Funding requirements. Make it investor-ready.", category: "Finance" },
-  { name: "Legal Document Analyzer", description: "Contract and agreement review", prompt: "Review this [CONTRACT TYPE] as a corporate lawyer. Identify: 1) Key terms and obligations, 2) Risk factors, 3) Negotiation points, 4) Compliance requirements, 5) Red flags, 6) Recommended changes. Provide business-friendly summary.", category: "Legal" },
-  { name: "HR Policy Framework", description: "Employee handbook and policies", prompt: "Create comprehensive HR policies for [COMPANY SIZE] company. Include: Employee handbook, Performance review process, Compensation framework, Remote work policy, DEI initiatives, Compliance requirements. Ensure legal compliance and cultural alignment.", category: "Human Resources" },
-  { name: "Crisis Communication Plan", description: "Strategic communications during crises", prompt: "Develop crisis communication strategy for [SITUATION]. Include: Stakeholder mapping, Message frameworks, Communication channels, Timeline/escalation, Media response templates, Internal communications, Recovery plan. Tone: transparent, accountable, action-oriented.", category: "Communications" },
-  { name: "Product Roadmap Strategy", description: "Strategic product development planning", prompt: "Create 18-month product roadmap for [PRODUCT]. Include: User research insights, Feature prioritization matrix, Technical debt allocation, Resource requirements, Success metrics, Go-to-market alignment, Competitive considerations. Use RICE or similar framework.", category: "Product Management" },
-  { name: "Sales Enablement Kit", description: "Complete sales team resources", prompt: "Build sales enablement package for [PRODUCT/SERVICE]. Include: 1) Battlecards (competitors), 2) Objection handling scripts, 3) Discovery questions, 4) Demo flow, 5) Proposal templates, 6) ROI calculators, 7) Case studies framework. Focus on conversion optimization.", category: "Sales" },
-  { name: "Data Strategy Blueprint", description: "Enterprise data management and analytics", prompt: "Design data strategy for [ORGANIZATION]. Cover: Data architecture, Governance framework, Analytics capabilities, Privacy compliance, Technology stack, Team structure, ROI measurement, Implementation roadmap. Focus on business value creation.", category: "Data Strategy" },
-  { name: "Change Management Plan", description: "Organizational transformation guidance", prompt: "Create change management strategy for [TRANSFORMATION]. Include: Stakeholder analysis, Communication plan, Training programs, Resistance mitigation, Success metrics, Timeline/milestones, Support structures. Use Kotter's 8-step model.", category: "Change Management" },
-  { name: "Partnership Strategy", description: "Strategic alliance and partnership development", prompt: "Develop partnership strategy for [BUSINESS GOAL]. Include: Partner identification criteria, Value proposition mapping, Partnership models, Legal framework, Performance metrics, Risk assessment, Activation plan. Focus on mutual value creation.", category: "Partnerships" },
-  { name: "Operational Excellence Framework", description: "Process optimization and efficiency", prompt: "Design operational excellence program for [DEPARTMENT/FUNCTION]. Include: Process mapping, Efficiency metrics, Automation opportunities, Quality standards, Performance dashboards, Continuous improvement protocols. Apply lean/six sigma principles.", category: "Operations" },
-  { name: "Innovation Lab Setup", description: "Innovation program and culture development", prompt: "Establish innovation program for [ORGANIZATION]. Include: Innovation framework, Idea management process, Resource allocation, Success metrics, Cultural elements, External partnerships, Portfolio management, Scaling mechanisms.", category: "Innovation" },
+  // Text Prompts
+  {
+    name: "Product Marketing Brief",
+    whatItIs: "Comprehensive product launch messaging framework",
+    whatItsFor: "Creating structured marketing briefs for new features or products",
+    desiredOutcome: "Clear positioning, benefits, and compelling messaging that drives adoption",
+    prompt: "Act as a senior product marketer. Create a 500‑word launch brief for a B2B SaaS feature. Include: 1) narrative, 2) ICP pain, 3) 3 key benefits, 4) messaging pillars, 5) CTA. Tone: confident, concise.",
+    topicCategory: "Text",
+    category: "Marketing"
+  },
+  {
+    name: "Policy Analysis",
+    whatItIs: "Systematic document analysis and SOP creation framework",
+    whatItsFor: "Converting complex policy documents into actionable procedures",
+    desiredOutcome: "Clear, implementable SOPs with defined steps, owners, and timelines",
+    prompt: "You are an operations analyst. Summarize this policy PDF into an SOP with steps, owners, and SLAs. Flag ambiguities and propose fixes.",
+    topicCategory: "Text",
+    category: "Analysis"
+  },
+  {
+    name: "Executive Summary",
+    whatItIs: "Data-driven executive communication template",
+    whatItsFor: "Transforming complex data into executive-ready insights",
+    desiredOutcome: "Concise, actionable summaries that drive leadership decisions",
+    prompt: "As a data storyteller, explain these metrics (paste table) to an executive in 5 bullets. Add a final risk/opportunity section.",
+    topicCategory: "Text",
+    category: "Business Intelligence"
+  },
+  {
+    name: "Brand Voice Rewrite",
+    whatItIs: "Content optimization framework for brand consistency",
+    whatItsFor: "Ensuring all communications align with established brand voice",
+    desiredOutcome: "Consistent, on-brand messaging that resonates with target audience",
+    prompt: "Rewrite this email to match our brand voice (confident, concise, friendly). Keep to 120 words and include CTA to demo.",
+    topicCategory: "Text",
+    category: "Content Creation"
+  },
+
+  // Image Prompts  
+  {
+    name: "Social Media Visual Brief",
+    whatItIs: "Visual content creation framework for social platforms",
+    whatItsFor: "Generating engaging social media graphics and visual content",
+    desiredOutcome: "Platform-optimized visuals that drive engagement and brand recognition",
+    prompt: "Create a visual content brief for [PLATFORM]. Include: 1) Brand elements to incorporate, 2) Color palette and style, 3) Key message hierarchy, 4) Call-to-action placement, 5) Platform specifications and best practices.",
+    topicCategory: "Image",
+    category: "Social Media"
+  },
+  {
+    name: "Product Photography Direction",
+    whatItIs: "Professional product visual planning framework",
+    whatItsFor: "Creating compelling product imagery for marketing and sales",
+    desiredOutcome: "High-converting product visuals that showcase features and benefits",
+    prompt: "Develop product photography direction for [PRODUCT]. Include: 1) Lighting setup and mood, 2) Props and styling requirements, 3) Key features to highlight, 4) Multiple angle requirements, 5) Brand consistency guidelines.",
+    topicCategory: "Image",
+    category: "Product Marketing"
+  },
+
+  // Video Prompts
+  {
+    name: "Explainer Video Script",
+    whatItIs: "Structured video content creation framework",
+    whatItsFor: "Creating engaging explainer videos for products or concepts",
+    desiredOutcome: "Clear, compelling video content that educates and converts viewers",
+    prompt: "Write an explainer video script for [TOPIC]. Structure: Hook (0-5s), Problem (5-15s), Solution (15-45s), Benefits (45-60s), CTA (60-70s). Include visual cues and timing.",
+    topicCategory: "Video",
+    category: "Educational Content"
+  },
+
+  // Audio Prompts
+  {
+    name: "Podcast Episode Structure",
+    whatItIs: "Professional podcast content planning framework",
+    whatItsFor: "Creating engaging, well-structured podcast episodes",
+    desiredOutcome: "Compelling audio content that retains listeners and drives engagement",
+    prompt: "Design podcast episode structure for [TOPIC]. Include: 1) Hook and intro (0-2min), 2) Main content segments with transitions, 3) Guest interview questions, 4) Key takeaways summary, 5) CTA and outro.",
+    topicCategory: "Audio",
+    category: "Content Creation"
+  },
+
+  // Web/App Prompts
+  {
+    name: "User Experience Audit",
+    whatItIs: "Comprehensive UX evaluation and improvement framework",
+    whatItsFor: "Identifying and fixing user experience issues in digital products",
+    desiredOutcome: "Improved user satisfaction, conversion rates, and product usability",
+    prompt: "Conduct UX audit for [WEBSITE/APP]. Analyze: 1) User journey and pain points, 2) Interface usability issues, 3) Conversion funnel optimization, 4) Accessibility compliance, 5) Mobile responsiveness, 6) Performance recommendations.",
+    topicCategory: "Web/App",
+    category: "User Experience"
+  }
 ];
 
-// Workflows data
+// Workflows data with structured information
 const workflows: Workflow[] = [
-  { name: "Content Creation Workflow", description: "Systematic approach to creating high-quality content", steps: ["Define role, audience, constraints, and deliverable length.", "Ask for a structured outline first; iterate on sections.", "Request variations and finalize with style and brand guardrails."], category: "Content" },
-  { name: "Document Analysis Workflow", description: "Process for analyzing and summarizing documents", steps: ["Upload/reference source docs; ask for structured SOP.", "Iterate to add owners/SLAs; request ambiguity list.", "Export final SOP with version and change log."], category: "Analysis" },
-  { name: "Executive Reporting Workflow", description: "Create executive-ready reports from data", steps: ["Provide table/context; request bullet executive summary.", "Probe on anomalies; ask for 3 hypotheses with tests.", "Finalize with risks, opportunities, and next steps."], category: "Business Intelligence" },
-  { name: "Research Workflow", description: "Comprehensive research with citations", steps: ["Ask for current, cited sources; set timeframe.", "Request a pros/cons table and action checklist.", "Deliver an executive brief plus 3 tweet‑length summaries."], category: "Research" },
-  { name: "Brand Management Workflow", description: "Maintain consistent brand voice across content", steps: ["Import brand guidelines and examples.", "Calibrate with few‑shot samples; lock style checks.", "Deploy templates and measure reply rates."], category: "Branding" },
-  { name: "Meeting Management Workflow", description: "Transform meetings into actionable outcomes", steps: ["Paste raw notes; ask for action list by owner/date.", "Request concise recap; auto‑link to related pages.", "Share and @mention owners for accountability."], category: "Productivity" },
-  { name: "n8n AI Automation Workflow", description: "Build intelligent workflows with n8n and AI services", steps: ["Design workflow with n8n visual editor and identify automation triggers.", "Connect AI APIs (OpenAI, Claude, etc.) using HTTP request nodes.", "Add conditional logic and data transformation for intelligent routing.", "Test workflow with sample data and optimize performance.", "Deploy to production with monitoring and error handling.", "Scale with webhooks and schedule-based automation."], category: "AI Automation" },
-  { name: "n8n Content Processing Pipeline", description: "Automated content creation and distribution system", steps: ["Set up trigger nodes for content sources (RSS, webhooks, etc.).", "Use AI nodes to analyze, summarize, and enhance content.", "Apply content transformation and formatting rules.", "Distribute to multiple channels (social media, email, CMS).", "Track performance metrics and engagement data.", "Optimize workflow based on analytics and feedback."], category: "Content Automation" },
-  { name: "n8n Data Intelligence Workflow", description: "Automated data collection and AI-powered insights", steps: ["Configure data source connectors (APIs, databases, spreadsheets).", "Implement data cleaning and validation using built-in nodes.", "Apply AI analysis for pattern recognition and predictions.", "Generate automated reports and visualizations.", "Set up alert systems for anomaly detection.", "Create feedback loops for continuous improvement."], category: "Data Processing" },
+  // Text Workflows
+  {
+    name: "Content Creation Pipeline",
+    whatItIs: "Systematic approach to producing high-quality written content",
+    whatItsFor: "Creating consistent, engaging content across multiple channels",
+    desiredOutcome: "Streamlined content production with consistent quality and brand voice",
+    steps: [
+      "Define target audience, goals, and key messages",
+      "Research topic thoroughly and gather supporting data",
+      "Create detailed outline with clear structure",
+      "Write first draft focusing on core message",
+      "Review and optimize for brand voice and SEO",
+      "Get feedback and iterate based on input",
+      "Finalize and schedule for publication"
+    ],
+    topicCategory: "Text",
+    category: "Content Marketing"
+  },
+  {
+    name: "Document Analysis Workflow",
+    whatItIs: "Structured process for analyzing and extracting insights from documents",
+    whatItsFor: "Converting complex documents into actionable business intelligence",
+    desiredOutcome: "Clear insights and recommendations from document analysis",
+    steps: [
+      "Upload and digitize source documents",
+      "Identify key sections and data points",
+      "Extract and categorize important information",
+      "Analyze patterns and trends in the data",
+      "Create executive summary with recommendations",
+      "Validate findings with stakeholders"
+    ],
+    topicCategory: "Text",
+    category: "Business Intelligence"
+  },
+
+  // Image Workflows
+  {
+    name: "Visual Brand Asset Creation",
+    whatItIs: "Comprehensive process for creating consistent visual brand materials",
+    whatItsFor: "Maintaining brand consistency across all visual touchpoints",
+    desiredOutcome: "Cohesive visual identity that strengthens brand recognition",
+    steps: [
+      "Define brand visual guidelines and standards",
+      "Create mood boards and style references",
+      "Design primary visual assets and templates",
+      "Test assets across different platforms and contexts",
+      "Create usage guidelines and asset library",
+      "Distribute assets to relevant teams"
+    ],
+    topicCategory: "Image",
+    category: "Brand Management"
+  },
+
+  // Video Workflows
+  {
+    name: "Video Content Production",
+    whatItIs: "End-to-end process for creating professional video content",
+    whatItsFor: "Producing engaging video content for marketing and education",
+    desiredOutcome: "High-quality videos that achieve specific business objectives",
+    steps: [
+      "Define video objectives and target audience",
+      "Create detailed script and storyboard",
+      "Plan production schedule and resource requirements",
+      "Film or create video assets",
+      "Edit and add graphics, music, and effects",
+      "Review, get approval, and make final adjustments",
+      "Publish and promote across relevant channels"
+    ],
+    topicCategory: "Video",
+    category: "Content Production"
+  },
+
+  // Audio Workflows
+  {
+    name: "Podcast Production Pipeline",
+    whatItIs: "Complete workflow for podcast creation and distribution",
+    whatItsFor: "Creating professional podcasts that engage and retain audiences",
+    desiredOutcome: "Consistent, high-quality podcast episodes that build audience",
+    steps: [
+      "Research topic and prepare detailed outline",
+      "Schedule and conduct interviews or record content",
+      "Edit audio for clarity and pacing",
+      "Add intro, outro, and background music",
+      "Create show notes and timestamps",
+      "Upload to podcast platforms and promote"
+    ],
+    topicCategory: "Audio",
+    category: "Content Creation"
+  },
+
+  // Web/App Workflows
+  {
+    name: "App Development Lifecycle",
+    whatItIs: "Structured approach to building and launching digital applications",
+    whatItsFor: "Creating user-friendly applications that meet business requirements",
+    desiredOutcome: "Successful app launch with strong user adoption and engagement",
+    steps: [
+      "Define app requirements and user stories",
+      "Create wireframes and user interface designs",
+      "Develop MVP with core functionality",
+      "Conduct user testing and gather feedback",
+      "Iterate based on user feedback and metrics",
+      "Launch with marketing and user acquisition strategy"
+    ],
+    topicCategory: "Web/App",
+    category: "Product Development"
+  }
 ];
 
-// Blueprints data
+// Blueprints data with structured information
 const blueprints: Blueprint[] = [
-  { name: "Product Launch Blueprint", description: "Complete template for product launches", template: "# Product Launch Brief\n## Narrative\n[Product story and positioning]\n## ICP Pain Points\n[Target customer problems]\n## Key Benefits\n1. [Benefit 1]\n2. [Benefit 2]\n3. [Benefit 3]\n## Messaging Pillars\n[Core messages]\n## Call-to-Action\n[Clear next steps]", category: "Marketing" },
-  { name: "SOP Template", description: "Standard Operating Procedure template", template: "# Standard Operating Procedure\n## Purpose\n[Why this SOP exists]\n## Scope\n[What this covers]\n## Responsibilities\n[Who does what]\n## Procedure\n[Step-by-step process]\n## Quality Controls\n[Checks and balances]", category: "Operations" },
-  { name: "Executive Dashboard Blueprint", description: "Template for executive reporting", template: "# Executive Dashboard\n## Key Metrics\n[Primary KPIs]\n## Performance Summary\n[5 bullet points]\n## Risks & Opportunities\n[Assessment]\n## Recommendations\n[Action items]\n## Next Steps\n[Timeline and owners]", category: "Business Intelligence" },
-  { name: "Brand Voice Guide", description: "Template for maintaining brand consistency", template: "# Brand Voice Guide\n## Voice Characteristics\n[Personality traits]\n## Tone Guidelines\n[Situational tones]\n## Do's and Don'ts\n[Examples]\n## Templates\n[Reusable formats]\n## Quality Checks\n[Verification process]", category: "Branding" },
-  { name: "Research Brief Template", description: "Structured approach to research projects", template: "# Research Brief\n## Objective\n[What we want to learn]\n## Scope\n[Boundaries and timeframe]\n## Sources\n[Where to look]\n## Deliverables\n[Expected outputs]\n## Success Criteria\n[How to measure quality]", category: "Research" },
-  { name: "Meeting Action Template", description: "Transform meetings into results", template: "# Meeting Action Items\n## Meeting Summary\n[One paragraph recap]\n## Action Items\n[Owner | Task | Due Date]\n## Decisions Made\n[Key outcomes]\n## Next Meeting\n[Agenda preview]\n## Stakeholder Communication\n[Who to update]", category: "Productivity" },
-  { name: "n8n Workflow Blueprint", description: "Complete template for building AI-powered automation workflows", template: "# n8n AI Workflow Blueprint\n## Workflow Overview\n### Purpose\n[What this workflow accomplishes]\n### Input Sources\n[Data sources and triggers]\n### Output Destinations\n[Where results are delivered]\n\n## Node Configuration\n### Trigger Nodes\n[Webhook, Schedule, Manual triggers]\n### AI Processing Nodes\n[OpenAI, Claude, custom AI APIs]\n### Data Transformation\n[JSON parsing, data mapping, filtering]\n### Action Nodes\n[Email, Slack, database updates]\n\n## Error Handling\n### Retry Logic\n[Retry attempts and delays]\n### Fallback Actions\n[What happens on failure]\n### Monitoring\n[Alerts and logging setup]\n\n## Performance Optimization\n### Batch Processing\n[Handle multiple items efficiently]\n### Rate Limiting\n[API usage optimization]\n### Caching\n[Store frequently accessed data]\n\n## Testing & Deployment\n### Test Data\n[Sample inputs for validation]\n### Staging Environment\n[Pre-production testing]\n### Production Rollout\n[Deployment checklist]", category: "Automation Templates" },
-  { name: "n8n AI Integration Blueprint", description: "Template for connecting multiple AI services", template: "# n8n AI Integration Blueprint\n## Architecture Overview\n### AI Services Integration\n[OpenAI, Anthropic, Google AI, etc.]\n### Data Flow Design\n[Input → Processing → Output pipeline]\n### Scalability Considerations\n[Performance and cost optimization]\n\n## Core Components\n### Input Handlers\n[Webhooks, file uploads, API endpoints]\n### AI Processing Chain\n[Sequential AI model calls]\n### Output Formatters\n[Result transformation and delivery]\n### Error Recovery\n[Fallback mechanisms and retries]\n\n## AI Service Configurations\n### OpenAI Integration\n[API keys, models, parameters]\n### Claude Integration\n[Authentication and prompt optimization]\n### Custom AI Models\n[Model endpoints and data formats]\n### Fallback Services\n[Backup AI providers]\n\n## Quality Assurance\n### Input Validation\n[Data quality checks]\n### Output Verification\n[Result accuracy validation]\n### Performance Monitoring\n[Response times and success rates]\n### Cost Tracking\n[API usage and billing optimization]\n\n## Use Cases\n### Content Generation\n[Blog posts, social media, emails]\n### Data Analysis\n[Report generation, insights extraction]\n### Customer Support\n[Automated responses, ticket routing]\n### Process Automation\n[Document processing, data entry]", category: "AI Integration" },
-  { name: "n8n Business Process Blueprint", description: "Enterprise workflow automation template", template: "# n8n Business Process Automation\n## Process Definition\n### Business Objective\n[What business problem this solves]\n### Process Flow\n[Step-by-step business logic]\n### Success Metrics\n[KPIs and measurement criteria]\n\n## Stakeholder Management\n### Process Owners\n[Who owns and maintains the workflow]\n### End Users\n[Who interacts with the workflow]\n### Approval Chains\n[Decision makers and authorization flow]\n\n## Technical Architecture\n### System Integrations\n[CRM, ERP, databases, APIs]\n### Data Sources\n[Where information comes from]\n### Processing Logic\n[Business rules and conditions]\n### Output Systems\n[Where results are stored/sent]\n\n## Compliance & Security\n### Data Privacy\n[GDPR, CCPA, other regulations]\n### Access Controls\n[Who can access and modify]\n### Audit Trails\n[Logging and compliance tracking]\n### Security Measures\n[Encryption, authentication]\n\n## Implementation Plan\n### Phase 1: Setup\n[Initial configuration and testing]\n### Phase 2: Pilot\n[Limited rollout with key users]\n### Phase 3: Full Deployment\n[Organization-wide implementation]\n### Phase 4: Optimization\n[Performance tuning and enhancements]\n\n## Support & Maintenance\n### Monitoring\n[Performance dashboards and alerts]\n### Troubleshooting\n[Common issues and solutions]\n### Updates\n[Version control and change management]\n### Training\n[User onboarding and support materials]", category: "Business Automation" },
+  // Text Blueprints
+  {
+    name: "Content Strategy Blueprint",
+    whatItIs: "Comprehensive template for planning content marketing initiatives",
+    whatItsFor: "Creating data-driven content strategies that drive business results",
+    desiredOutcome: "Clear content roadmap with defined goals, metrics, and execution plan",
+    template: `# Content Strategy Blueprint
+
+## Executive Summary
+[Brief overview of content strategy goals and approach]
+
+## Target Audience Analysis
+### Primary Audience
+- Demographics: [Age, location, job title]
+- Pain Points: [Key challenges they face]
+- Content Preferences: [Preferred formats and channels]
+
+### Secondary Audiences
+[Additional audience segments and their characteristics]
+
+## Content Pillars
+1. [Pillar 1]: [Description and purpose]
+2. [Pillar 2]: [Description and purpose]
+3. [Pillar 3]: [Description and purpose]
+
+## Content Calendar
+### Monthly Themes
+- Month 1: [Theme and focus]
+- Month 2: [Theme and focus]
+- Month 3: [Theme and focus]
+
+### Content Types & Frequency
+- Blog Posts: [Frequency and topics]
+- Social Media: [Platform-specific content plan]
+- Email Newsletter: [Frequency and themes]
+
+## Success Metrics
+### Primary KPIs
+- [Metric 1]: [Target and measurement method]
+- [Metric 2]: [Target and measurement method]
+
+### Secondary Metrics
+- [Additional metrics to track]
+
+## Resource Requirements
+- Team members needed: [Roles and responsibilities]
+- Budget allocation: [Content creation, promotion, tools]
+- Tools and platforms: [Required software and subscriptions]
+
+## Implementation Timeline
+### Phase 1 (Months 1-2): [Initial focus and deliverables]
+### Phase 2 (Months 3-4): [Scaling and optimization]
+### Phase 3 (Months 5-6): [Advanced tactics and analysis]`,
+    topicCategory: "Text",
+    category: "Marketing Strategy"
+  },
+
+  // Image Blueprints
+  {
+    name: "Visual Brand Guidelines",
+    whatItIs: "Complete template for defining and maintaining visual brand consistency",
+    whatItsFor: "Ensuring consistent brand representation across all visual materials",
+    desiredOutcome: "Cohesive brand identity that builds recognition and trust",
+    template: `# Visual Brand Guidelines
+
+## Brand Overview
+### Mission Statement
+[Company mission and values]
+
+### Brand Personality
+[Key personality traits and characteristics]
+
+## Logo Usage
+### Primary Logo
+- File formats: [Available formats and usage]
+- Minimum sizes: [Size requirements for different applications]
+- Clear space: [Spacing requirements around logo]
+
+### Logo Variations
+- Horizontal version: [When to use]
+- Vertical version: [When to use]
+- Icon version: [When to use]
+
+### Logo Don'ts
+- [List of prohibited logo uses]
+
+## Color Palette
+### Primary Colors
+- Color 1: [Hex code, RGB, CMYK values and usage]
+- Color 2: [Hex code, RGB, CMYK values and usage]
+
+### Secondary Colors
+- [Additional colors with specifications]
+
+### Color Applications
+- Digital: [RGB values for screens]
+- Print: [CMYK values for printing]
+
+## Typography
+### Primary Typeface
+- Font family: [Name and characteristics]
+- Usage: [When to use this font]
+
+### Secondary Typeface
+- Font family: [Name and characteristics]
+- Usage: [When to use this font]
+
+## Visual Elements
+### Photography Style
+- [Description of preferred photography style]
+- [Do's and don'ts for imagery]
+
+### Iconography
+- [Style guidelines for icons and graphics]
+- [Approved icon libraries or custom requirements]
+
+## Application Examples
+### Business Cards
+### Letterhead
+### Website Headers
+### Social Media Assets`,
+    topicCategory: "Image",
+    category: "Brand Identity"
+  },
+
+  // Video Blueprints
+  {
+    name: "Video Marketing Campaign Template",
+    whatItIs: "Structured framework for planning and executing video marketing campaigns",
+    whatItsFor: "Creating effective video campaigns that drive engagement and conversions",
+    desiredOutcome: "Successful video campaigns with measurable business impact",
+    template: `# Video Marketing Campaign Blueprint
+
+## Campaign Overview
+### Campaign Name: [Campaign title]
+### Campaign Goals: [Specific, measurable objectives]
+### Target Audience: [Primary and secondary audiences]
+### Campaign Duration: [Start and end dates]
+
+## Video Content Strategy
+### Core Message
+[Primary message to communicate]
+
+### Video Types
+1. **Hero Video**
+   - Purpose: [Main campaign driver]
+   - Length: [Duration]
+   - Distribution: [Where it will be shared]
+
+2. **Supporting Videos**
+   - Video 2: [Purpose and specifications]
+   - Video 3: [Purpose and specifications]
+
+## Production Requirements
+### Pre-Production
+- Script development: [Timeline and requirements]
+- Storyboard creation: [Visual planning needs]
+- Location scouting: [If applicable]
+- Talent casting: [If applicable]
+
+### Production
+- Filming schedule: [Dates and logistics]
+- Equipment needs: [Cameras, lighting, audio]
+- Crew requirements: [Roles needed]
+
+### Post-Production
+- Editing timeline: [Expected completion dates]
+- Graphics and animation: [Requirements]
+- Sound design and music: [Audio needs]
+
+## Distribution Strategy
+### Primary Channels
+- [Platform 1]: [Content format and posting schedule]
+- [Platform 2]: [Content format and posting schedule]
+
+### Paid Promotion
+- Budget allocation: [Amount per platform]
+- Targeting criteria: [Audience specifications]
+- Timeline: [Campaign dates]
+
+## Success Metrics
+### Awareness Metrics
+- Reach: [Target numbers]
+- Impressions: [Target numbers]
+- Brand lift: [Measurement method]
+
+### Engagement Metrics
+- View completion rate: [Target percentage]
+- Social shares: [Target numbers]
+- Comments and likes: [Target engagement]
+
+### Conversion Metrics
+- Click-through rate: [Target percentage]
+- Lead generation: [Target numbers]
+- Sales attribution: [Revenue goals]
+
+## Timeline and Milestones
+### Week 1-2: [Planning and preparation]
+### Week 3-4: [Production phase]
+### Week 5-6: [Post-production and review]
+### Week 7-8: [Launch and promotion]
+### Week 9-10: [Optimization and analysis]`,
+    topicCategory: "Video",
+    category: "Marketing Campaign"
+  },
+
+  // Audio Blueprints
+  {
+    name: "Podcast Launch Strategy",
+    whatItIs: "Complete framework for launching and growing a successful podcast",
+    whatItsFor: "Building an engaged podcast audience and establishing thought leadership",
+    desiredOutcome: "Successful podcast launch with sustainable growth and engagement",
+    template: `# Podcast Launch Strategy Blueprint
+
+## Podcast Concept
+### Show Name: [Podcast title]
+### Tagline: [Brief description of the show]
+### Format: [Interview, solo, panel, etc.]
+### Episode Length: [Target duration]
+### Release Schedule: [Frequency and day of week]
+
+## Target Audience
+### Primary Listener
+- Demographics: [Age, profession, interests]
+- Pain points: [What challenges they face]
+- Listening habits: [When and where they consume podcasts]
+
+### Value Proposition
+[What unique value does your podcast provide?]
+
+## Content Strategy
+### Show Themes
+1. [Theme 1]: [Description and episode ideas]
+2. [Theme 2]: [Description and episode ideas]
+3. [Theme 3]: [Description and episode ideas]
+
+### Episode Structure
+- Intro: [Duration and content]
+- Main content: [Segments and flow]
+- Outro: [Call-to-action and closing]
+
+### Guest Strategy
+- Target guest profile: [Type of guests to pursue]
+- Outreach process: [How to find and contact guests]
+- Preparation process: [Pre-interview requirements]
+
+## Production Workflow
+### Recording Setup
+- Equipment: [Microphones, software, etc.]
+- Recording schedule: [When and how often]
+- Remote recording: [Tools and process]
+
+### Post-Production
+- Editing software: [Tools and workflow]
+- Audio enhancement: [Noise reduction, leveling]
+- Intro/outro music: [Selection and licensing]
+
+## Distribution Strategy
+### Podcast Platforms
+- Primary platforms: [Apple Podcasts, Spotify, etc.]
+- Submission process: [Requirements and timeline]
+- RSS feed setup: [Technical requirements]
+
+### Promotion Channels
+- Social media: [Platform-specific strategies]
+- Email marketing: [Newsletter integration]
+- Website integration: [Show notes and transcripts]
+
+## Monetization Strategy
+### Revenue Streams
+- Sponsorships: [Target advertisers and rates]
+- Premium content: [Paid subscription options]
+- Affiliate marketing: [Product recommendations]
+
+### Audience Growth Targets
+- Month 1: [Download and subscriber goals]
+- Month 3: [Growth milestones]
+- Month 6: [Long-term targets]
+
+## Launch Plan
+### Pre-Launch (8 weeks out)
+- Week 1-2: [Content planning and guest booking]
+- Week 3-4: [Recording first episodes]
+- Week 5-6: [Website and artwork creation]
+- Week 7-8: [Platform submission and marketing prep]
+
+### Launch Week
+- Day 1: [Launch activities]
+- Day 2-3: [Promotion push]
+- Day 4-7: [Community engagement and feedback collection]
+
+### Post-Launch (First 3 months)
+- Month 1: [Focus areas and goals]
+- Month 2: [Optimization and growth tactics]
+- Month 3: [Review and strategy adjustment]`,
+    topicCategory: "Audio",
+    category: "Content Strategy"
+  },
+
+  // Web/App Blueprints
+  {
+    name: "SaaS Product Launch Blueprint",
+    whatItIs: "Comprehensive template for launching software-as-a-service products",
+    whatItsFor: "Ensuring successful product launches with strong market penetration",
+    desiredOutcome: "Successful SaaS launch with rapid user acquisition and revenue growth",
+    template: `# SaaS Product Launch Blueprint
+
+## Product Overview
+### Product Name: [Product title]
+### Core Value Proposition: [Primary benefit and differentiation]
+### Target Market: [Primary customer segment]
+### Pricing Model: [Subscription tiers and pricing]
+
+## Pre-Launch Strategy
+### Market Research
+- Competitive analysis: [Key competitors and positioning]
+- Customer interviews: [Validation and feedback]
+- Market size: [TAM, SAM, SOM analysis]
+
+### Product Development
+- MVP features: [Core functionality for launch]
+- User testing: [Beta program and feedback integration]
+- Technical requirements: [Infrastructure and security]
+
+## Go-to-Market Strategy
+### Customer Acquisition
+#### Primary Channels
+1. **Content Marketing**
+   - Blog strategy: [Topics and publishing schedule]
+   - SEO focus: [Target keywords and content gaps]
+   - Lead magnets: [Free resources to capture leads]
+
+2. **Paid Advertising**
+   - Google Ads: [Campaign structure and budget]
+   - Social media ads: [Platform selection and targeting]
+   - Budget allocation: [Monthly spend by channel]
+
+3. **Partnership Marketing**
+   - Integration partners: [Technical partnerships]
+   - Referral program: [Partner incentive structure]
+   - Industry associations: [Speaking and sponsorship opportunities]
+
+### Sales Process
+- Lead qualification: [BANT criteria or similar framework]
+- Sales funnel: [Stages from lead to customer]
+- Demo process: [Product demonstration strategy]
+- Pricing negotiations: [Discount policies and approval process]
+
+## Launch Timeline
+### 3 Months Before Launch
+- Finalize product features and pricing
+- Build marketing website and landing pages
+- Start content marketing and SEO efforts
+- Begin partnership discussions
+
+### 1 Month Before Launch
+- Complete beta testing and incorporate feedback
+- Launch paid advertising campaigns
+- Begin PR and media outreach
+- Train sales team on positioning and demo
+
+### Launch Week
+- Product announcement across all channels
+- Press release distribution
+- Customer success team activation
+- Monitor metrics and respond to feedback
+
+### Post-Launch (First 90 Days)
+- Daily monitoring of key metrics
+- Weekly optimization of marketing campaigns
+- Monthly business review and strategy adjustment
+- Quarterly product roadmap updates
+
+## Success Metrics
+### Product Metrics
+- Monthly active users: [Target growth rate]
+- User retention: [30, 60, 90-day retention rates]
+- Feature adoption: [Core feature usage rates]
+
+### Business Metrics
+- Monthly recurring revenue: [Growth targets]
+- Customer acquisition cost: [Target CAC by channel]
+- Lifetime value: [LTV targets and cohort analysis]
+- Churn rate: [Acceptable churn thresholds]
+
+### Marketing Metrics
+- Website traffic: [Organic and paid traffic goals]
+- Conversion rates: [Landing page and trial conversions]
+- Lead quality: [SQL and MQL targets]
+
+## Risk Management
+### Technical Risks
+- Scalability issues: [Mitigation strategies]
+- Security vulnerabilities: [Security protocols]
+- Integration failures: [Backup plans]
+
+### Market Risks
+- Competitive responses: [Monitoring and response plans]
+- Economic conditions: [Scenario planning]
+- Customer feedback: [Issue resolution processes]
+
+## Team Responsibilities
+### Product Team
+- Feature development and bug fixes
+- User experience optimization
+- Technical documentation
+
+### Marketing Team
+- Campaign execution and optimization
+- Content creation and distribution
+- Lead generation and nurturing
+
+### Sales Team
+- Lead qualification and conversion
+- Customer onboarding
+- Expansion revenue opportunities
+
+### Customer Success Team
+- User onboarding and training
+- Customer support and retention
+- Feedback collection and analysis`,
+    topicCategory: "Web/App",
+    category: "Product Launch"
+  }
 ];
 
-// Strategies data
+// Strategies data with structured information
 const strategies: Strategy[] = [
-  { name: "AI-First Content Strategy", description: "Leverage AI throughout the content lifecycle", approach: "Integrate AI tools at every stage: ideation with GPT-4, creation with specialized tools, optimization with analytics AI, and distribution with automation platforms.", category: "Content Marketing" },
-  { name: "Multimodal AI Strategy", description: "Combine text, image, and video AI tools", approach: "Create cohesive campaigns using text AI for copy, image AI for visuals, and video AI for dynamic content, ensuring consistent brand voice across all modalities.", category: "Brand Strategy" },
-  { name: "AI-Powered Research Strategy", description: "Systematic approach to AI-enhanced research", approach: "Use AI for data collection, analysis, and synthesis. Combine multiple AI sources for comprehensive insights, always verify with human expertise.", category: "Research Strategy" },
-  { name: "Automation-First Operations", description: "Streamline operations with AI automation", approach: "Identify repetitive tasks, implement AI solutions for automation, maintain human oversight for quality control, and continuously optimize processes.", category: "Operations Strategy" },
-  { name: "AI Governance Strategy", description: "Responsible AI implementation framework", approach: "Establish clear AI usage guidelines, implement security measures, train teams on best practices, and regularly audit AI outputs for quality and compliance.", category: "Governance" },
-  { name: "Performance Marketing with AI", description: "Data-driven marketing optimization", approach: "Use AI for audience analysis, content personalization, campaign optimization, and performance prediction. Combine multiple AI insights for better ROI.", category: "Marketing Strategy" },
-  { name: "n8n-Powered Business Automation Strategy", description: "Comprehensive automation transformation using n8n", approach: "Audit current manual processes, design n8n workflows for repetitive tasks, integrate AI services for intelligent automation, implement monitoring and optimization systems, train teams on workflow management, and scale automation across the organization.", category: "Process Automation" },
-  { name: "AI-First Workflow Strategy with n8n", description: "Transform business operations with intelligent automation", approach: "Map business processes for automation opportunities, design n8n workflows with AI decision-making capabilities, integrate multiple AI services for comprehensive intelligence, implement feedback loops for continuous learning, establish governance and quality controls, and measure ROI through automation metrics.", category: "AI Strategy" },
-  { name: "n8n Enterprise Integration Strategy", description: "Large-scale workflow automation for enterprise environments", approach: "Assess enterprise system landscape, design n8n hub-and-spoke architecture, implement security and compliance frameworks, create center of excellence for workflow development, establish governance and change management processes, and build scalable automation infrastructure.", category: "Enterprise Strategy" },
-  
-  // PRO CONTENT - Professional Strategies
-  { name: "Digital Transformation Strategy", description: "Comprehensive organizational digital evolution", approach: "Assess current digital maturity, define target state architecture, prioritize transformation initiatives based on business impact, implement agile transformation with continuous measurement and optimization. Focus on customer experience, operational efficiency, and competitive advantage.", category: "Digital Strategy" },
-  { name: "Market Expansion Strategy", description: "Strategic geographic and demographic growth", approach: "Conduct thorough market analysis including cultural, regulatory, and competitive factors. Develop localization strategy for products, marketing, and operations. Establish partnerships and distribution channels. Implement phased expansion with performance monitoring and local adaptation.", category: "Growth Strategy" },
-  { name: "Customer-Centric Transformation", description: "Organization-wide customer experience optimization", approach: "Map comprehensive customer journey across all touchpoints. Redesign processes and systems around customer needs. Implement customer feedback loops and real-time personalization. Train organization on customer-first mindset with incentive alignment.", category: "Customer Experience" },
-  { name: "Innovation Ecosystem Strategy", description: "Building sustainable innovation capabilities", approach: "Create innovation framework combining internal R&D, external partnerships, and acquisition strategy. Establish innovation labs, accelerator programs, and venture partnerships. Implement idea management systems with clear evaluation and scaling processes.", category: "Innovation Strategy" },
-  { name: "Sustainability & ESG Strategy", description: "Environmental, social, and governance excellence", approach: "Conduct ESG assessment and materiality analysis. Set science-based targets for environmental impact. Develop social impact programs and governance frameworks. Integrate ESG metrics into business operations and stakeholder reporting.", category: "ESG Strategy" },
-  { name: "Data-Driven Culture Strategy", description: "Organization-wide analytics and insights adoption", approach: "Establish data governance and quality frameworks. Implement self-service analytics platforms and democratize data access. Develop data literacy programs across all functions. Create data-driven decision-making processes with clear success metrics.", category: "Data Strategy" },
-  { name: "Agile Organization Strategy", description: "Organizational agility and responsiveness enhancement", approach: "Transform organizational structure to cross-functional teams. Implement agile methodologies across business functions. Develop rapid decision-making processes and feedback loops. Create continuous learning and adaptation culture with performance metrics.", category: "Organizational Strategy" },
-  { name: "Platform Business Strategy", description: "Multi-sided platform development and scaling", approach: "Design platform architecture with network effects consideration. Develop multi-sided value propositions and monetization models. Implement platform governance and ecosystem management. Scale through strategic partnerships and platform extensions.", category: "Platform Strategy" },
-  { name: "Cybersecurity Strategy", description: "Comprehensive security posture and risk management", approach: "Conduct security risk assessment and gap analysis. Implement zero-trust security architecture with multi-layered protection. Develop incident response and business continuity plans. Create security awareness culture with regular training and simulations.", category: "Security Strategy" },
-  { name: "Talent Strategy & Future of Work", description: "Workforce transformation and capability building", approach: "Assess future skill requirements and capability gaps. Develop comprehensive talent acquisition, development, and retention strategies. Implement flexible work models and performance management systems. Create continuous learning and career development programs.", category: "Talent Strategy" },
-  { name: "Supply Chain Resilience Strategy", description: "End-to-end supply chain optimization and risk mitigation", approach: "Map supply chain dependencies and vulnerability points. Diversify supplier base and develop alternative sourcing strategies. Implement supply chain visibility and predictive analytics. Create risk management protocols and contingency plans.", category: "Supply Chain Strategy" },
-  { name: "Customer Acquisition Strategy", description: "Systematic customer acquisition and growth optimization", approach: "Develop ideal customer profile and buyer personas with detailed segmentation. Create multi-channel acquisition funnel with content marketing, paid acquisition, and partnership channels. Implement customer acquisition cost optimization and lifetime value maximization strategies.", category: "Acquisition Strategy" },
-  { name: "Pricing Strategy Optimization", description: "Value-based pricing and revenue optimization", approach: "Conduct price sensitivity analysis and competitive benchmarking. Develop value-based pricing models with segmentation strategies. Implement dynamic pricing and bundling optimization. Create pricing governance and regular optimization processes.", category: "Pricing Strategy" },
-  { name: "Strategic Partnership Ecosystem", description: "Alliance and partnership strategy development", approach: "Map strategic partnership opportunities across the value chain. Develop partnership framework with clear value propositions and success metrics. Implement partner enablement and joint go-to-market strategies. Create ecosystem governance and performance management systems.", category: "Partnership Strategy" },
-  { name: "Crisis Management & Business Continuity", description: "Organizational resilience and crisis response capability", approach: "Develop comprehensive risk assessment and scenario planning. Create crisis management protocols with clear escalation procedures. Implement business continuity plans with alternative operations models. Establish crisis communication and stakeholder management frameworks.", category: "Risk Management" },
+  // Text Strategies
+  {
+    name: "Content-First Growth Strategy",
+    whatItIs: "Systematic approach to building business growth through valuable content creation",
+    whatItsFor: "Companies looking to establish thought leadership and drive organic growth",
+    desiredOutcome: "Sustainable growth through content that attracts, engages, and converts ideal customers",
+    approach: "Create valuable, educational content that addresses customer pain points, optimized for search and social sharing, with clear conversion paths to turn readers into leads and customers",
+    topicCategory: "Text",
+    category: "Growth Marketing"
+  },
+  {
+    name: "SEO-Driven Organic Growth",
+    whatItIs: "Long-term strategy for building organic search traffic and brand visibility",
+    whatItsFor: "Businesses wanting to reduce paid advertising dependency and build sustainable traffic",
+    desiredOutcome: "Dominant search rankings for key terms driving qualified traffic and conversions",
+    approach: "Comprehensive keyword research, technical SEO optimization, content cluster creation, and authority building through high-quality backlinks and thought leadership content",
+    topicCategory: "Text",
+    category: "Search Marketing"
+  },
+
+  // Image Strategies
+  {
+    name: "Visual Storytelling Strategy",
+    whatItIs: "Brand building approach through compelling visual narratives and consistent imagery",
+    whatItsFor: "Brands looking to create emotional connections and memorable experiences",
+    desiredOutcome: "Strong brand recognition and emotional engagement leading to customer loyalty",
+    approach: "Develop cohesive visual identity, create story-driven imagery that resonates with target audience, and maintain consistency across all touchpoints to build brand recognition and trust",
+    topicCategory: "Image",
+    category: "Brand Strategy"
+  },
+  {
+    name: "Social Visual Engagement",
+    whatItIs: "Strategy for maximizing social media engagement through optimized visual content",
+    whatItsFor: "Businesses looking to build social media presence and community engagement",
+    desiredOutcome: "Increased social media following, engagement rates, and social-driven conversions",
+    approach: "Create platform-specific visual content, use trending formats and aesthetics, engage with community through visual storytelling, and optimize posting times and frequency for maximum reach",
+    topicCategory: "Image",
+    category: "Social Media Strategy"
+  },
+
+  // Video Strategies
+  {
+    name: "Video-First Marketing Approach",
+    whatItIs: "Comprehensive strategy prioritizing video content across all marketing channels",
+    whatItsFor: "Brands wanting to maximize engagement and conversion through video content",
+    desiredOutcome: "Higher engagement rates, improved conversion metrics, and stronger brand connection",
+    approach: "Develop video content for each stage of customer journey, optimize for platform-specific requirements, create series and campaigns that build audience, and track performance metrics to optimize strategy",
+    topicCategory: "Video",
+    category: "Content Marketing"
+  },
+  {
+    name: "Educational Video Series Strategy",
+    whatItIs: "Long-form strategy using educational video content to build authority and trust",
+    whatItsFor: "B2B companies and service providers looking to demonstrate expertise",
+    desiredOutcome: "Established thought leadership, improved sales cycle, and higher-quality leads",
+    approach: "Create comprehensive educational content addressing customer challenges, structure as ongoing series to build viewership, integrate with sales process, and measure impact on lead quality and conversion",
+    topicCategory: "Video",
+    category: "Thought Leadership"
+  },
+
+  // Audio Strategies
+  {
+    name: "Podcast Authority Building",
+    whatItIs: "Long-term strategy using podcast content to establish industry leadership",
+    whatItsFor: "Executives and companies looking to build thought leadership and network",
+    desiredOutcome: "Recognized industry authority, expanded professional network, and business opportunities",
+    approach: "Develop podcast focusing on industry insights, interview key industry figures, share valuable perspectives regularly, and leverage content across multiple channels to amplify reach and impact",
+    topicCategory: "Audio",
+    category: "Thought Leadership"
+  },
+  {
+    name: "Audio Content Repurposing",
+    whatItIs: "Strategy for maximizing value from audio content across multiple formats and channels",
+    whatItsFor: "Content creators looking to efficiently scale their content production",
+    desiredOutcome: "Increased content output and reach without proportional increase in production effort",
+    approach: "Create primary audio content, then systematically repurpose into blog posts, social media content, email newsletters, and video content to maximize reach and engagement across all channels",
+    topicCategory: "Audio",
+    category: "Content Strategy"
+  },
+
+  // Web/App Strategies
+  {
+    name: "Product-Led Growth Strategy",
+    whatItIs: "Growth strategy where the product itself drives user acquisition, expansion, and retention",
+    whatItsFor: "SaaS companies and digital products looking to scale efficiently",
+    desiredOutcome: "Sustainable growth with lower customer acquisition costs and higher lifetime value",
+    approach: "Optimize product for viral sharing, create self-service onboarding, implement usage-based expansion opportunities, and use in-product messaging to drive upgrades and referrals",
+    topicCategory: "Web/App",
+    category: "Growth Strategy"
+  },
+  {
+    name: "User Experience Optimization",
+    whatItIs: "Systematic approach to improving user experience for increased conversions and retention",
+    whatItsFor: "Digital products looking to improve user satisfaction and business metrics",
+    desiredOutcome: "Higher user engagement, improved conversion rates, and reduced churn",
+    approach: "Conduct user research, identify friction points in user journey, implement A/B testing framework, make data-driven improvements, and continuously monitor and optimize based on user behavior and feedback",
+    topicCategory: "Web/App",
+    category: "User Experience"
+  }
 ];
+
+// Helper function to get topic icon
+const getTopicIcon = (topic: TopicCategory) => {
+  switch (topic) {
+    case 'Text': return Type;
+    case 'Image': return Image;
+    case 'Video': return Video;
+    case 'Audio': return Headphones;
+    case 'Web/App': return Globe;
+    default: return Type;
+  }
+};
+
+// Helper function to filter items by topic category
+const filterByTopicCategory = <T extends { topicCategory: TopicCategory }>(items: T[], category: TopicCategory) => {
+  return items.filter(item => item.topicCategory === category);
+};
 
 export default function Resources() {
   const { isAuthenticated, subscription } = useAuth();
   const [activeTab, setActiveTab] = useState("tools");
+  const [activeTopicTab, setActiveTopicTab] = useState<TopicCategory>("Text");
+  
+  // Modal states
   const [selectedWorkflow, setSelectedWorkflow] = useState<Workflow | null>(null);
   const [selectedBlueprint, setSelectedBlueprint] = useState<Blueprint | null>(null);
   const [selectedStrategy, setSelectedStrategy] = useState<Strategy | null>(null);
@@ -169,15 +1006,14 @@ export default function Resources() {
   const [isBlueprintModalOpen, setIsBlueprintModalOpen] = useState(false);
   const [isStrategyModalOpen, setIsStrategyModalOpen] = useState(false);
 
-  // Use cached subscription data - no API call needed!
-  const showAllContent = subscription?.subscribed || false;
+  // Show all content if user has Pro subscription
+  const showAllContent = subscription?.subscribed && subscription.subscription_tier === 'JumpinAI Pro';
 
-  // Universal upgrade section component
   const UpgradeSection = ({ message }: { message: string }) => (
     <div className="bg-muted/50 border border-border rounded-lg p-8 text-center mt-8">
       <Lock className="h-8 w-8 text-muted-foreground mb-3 mx-auto" />
       <p className="text-lg font-medium mb-2">{message}</p>
-      <p className="text-muted-foreground mb-4">Upgrade to Pro to gain access to all premium content</p>
+      <p className="text-muted-foreground mb-4">Upgrade to Pro to unlock all premium resources</p>
       <Button 
         onClick={() => {
           if (!isAuthenticated) {
@@ -193,292 +1029,368 @@ export default function Resources() {
     </div>
   );
 
-  // Tool Card Component (always visible)
-  const ToolCard = ({ tool }: { tool: Tool }) => (
-    <Card className="h-full hover:shadow-lg transition-shadow">
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-lg">{tool.name}</CardTitle>
-          <Badge variant="secondary">{tool.category}</Badge>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <p className="text-muted-foreground mb-4">{tool.description}</p>
-        <Button asChild className="w-full">
-          <a href={tool.url} target="_blank" rel="noopener noreferrer">
-            Visit Tool <ExternalLink className="ml-2 h-4 w-4" />
-          </a>
-        </Button>
-      </CardContent>
-    </Card>
-  );
+  // Component for rendering resource cards with new structure
+  const ResourceCard = ({ item, type, isBlurred = false }: { 
+    item: Tool | PromptTemplate | Workflow | Blueprint | Strategy; 
+    type: string;
+    isBlurred?: boolean;
+  }) => {
+    const handleCardClick = () => {
+      if (isBlurred) return;
+      
+      if (type === 'workflow' && 'steps' in item) {
+        setSelectedWorkflow(item as Workflow);
+        setIsWorkflowModalOpen(true);
+      } else if (type === 'blueprint' && 'template' in item) {
+        setSelectedBlueprint(item as Blueprint);
+        setIsBlueprintModalOpen(true);
+      } else if (type === 'strategy' && 'approach' in item) {
+        setSelectedStrategy(item as Strategy);
+        setIsStrategyModalOpen(true);
+      } else if (type === 'tool' && 'url' in item) {
+        window.open((item as Tool).url, '_blank');
+      }
+    };
 
-  // Prompt Card Component (first 4 visible, rest blurred)
-  const PromptCard = ({ prompt, isBlurred }: { prompt: PromptTemplate; isBlurred?: boolean }) => (
-    <Card className={`h-full ${isBlurred ? 'filter blur-[2px] pointer-events-none' : ''}`}>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-lg">{prompt.name}</CardTitle>
-          <Badge variant="secondary">{prompt.category}</Badge>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <p className="text-muted-foreground mb-4">{prompt.description}</p>
-        <div>
-          <h4 className="font-semibold mb-2">Template:</h4>
-          <p className="text-sm bg-muted p-3 rounded italic">
-            {prompt.prompt}
-          </p>
-        </div>
-      </CardContent>
-    </Card>
-  );
+    return (
+      <Card 
+        className={`h-full cursor-pointer hover:shadow-lg transition-all ${isBlurred ? 'filter blur-[2px] pointer-events-none' : ''}`}
+        onClick={handleCardClick}
+      >
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-lg">{item.name}</CardTitle>
+            <Badge variant="secondary">{item.category}</Badge>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div>
+            <h4 className="font-semibold text-sm text-primary mb-1">What it is:</h4>
+            <p className="text-sm text-muted-foreground">{item.whatItIs}</p>
+          </div>
+          
+          <div>
+            <h4 className="font-semibold text-sm text-primary mb-1">What it's for:</h4>
+            <p className="text-sm text-muted-foreground">{item.whatItsFor}</p>
+          </div>
+          
+          <div>
+            <h4 className="font-semibold text-sm text-primary mb-1">Desired outcome:</h4>
+            <p className="text-sm text-muted-foreground">{item.desiredOutcome}</p>
+          </div>
 
-  // Workflow Card Component (first 4 visible, rest blurred)
-  const WorkflowCard = ({ workflow, isBlurred }: { workflow: Workflow; isBlurred: boolean }) => (
-    <Card 
-      className={`h-full cursor-pointer hover:shadow-lg transition-shadow ${isBlurred ? 'filter blur-[2px] pointer-events-none' : ''}`}
-      onClick={() => {
-        if (!isBlurred) {
-          setSelectedWorkflow(workflow);
-          setIsWorkflowModalOpen(true);
-        }
-      }}
-    >
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-lg">{workflow.name}</CardTitle>
-          <Badge variant="secondary">{workflow.category}</Badge>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <p className="text-muted-foreground mb-4">{workflow.description}</p>
-        <div>
-          <h4 className="font-semibold mb-2">Steps Preview:</h4>
-          <ol className="text-sm space-y-1">
-            {workflow.steps.slice(0, 2).map((step, index) => (
-              <li key={index} className="flex">
-                <span className="font-medium mr-2">{index + 1}.</span>
-                <span>{step.length > 60 ? step.substring(0, 60) + '...' : step}</span>
-              </li>
-            ))}
-            {workflow.steps.length > 2 && (
-              <li className="text-muted-foreground text-xs">+ {workflow.steps.length - 2} more steps...</li>
-            )}
-          </ol>
-        </div>
-        <Button size="sm" className="mt-4 w-full" variant="outline">
-          <Play className="h-4 w-4 mr-2" />
-          View Detailed Guide
-        </Button>
-      </CardContent>
-    </Card>
-  );
+          {type === 'tool' && 'url' in item && (
+            <div className="flex items-center justify-between pt-2">
+              <Button variant="outline" size="sm" onClick={(e) => {
+                e.stopPropagation();
+                window.open((item as Tool).url, '_blank');
+              }}>
+                <ExternalLink className="h-3 w-3 mr-1" />
+                Visit
+              </Button>
+            </div>
+          )}
 
-  // Blueprint Card Component (first 4 visible, rest blurred)
-  const BlueprintCard = ({ blueprint, isBlurred }: { blueprint: Blueprint; isBlurred: boolean }) => (
-    <Card 
-      className={`h-full cursor-pointer hover:shadow-lg transition-shadow ${isBlurred ? 'filter blur-[2px] pointer-events-none' : ''}`}
-      onClick={() => {
-        if (!isBlurred) {
-          setSelectedBlueprint(blueprint);
-          setIsBlueprintModalOpen(true);
-        }
-      }}
-    >
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-lg">{blueprint.name}</CardTitle>
-          <Badge variant="secondary">{blueprint.category}</Badge>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <p className="text-muted-foreground mb-4">{blueprint.description}</p>
-        <div>
-          <h4 className="font-semibold mb-2">Template Preview:</h4>
-          <pre className="text-xs bg-muted p-2 rounded text-muted-foreground overflow-hidden max-h-16">
-            {blueprint.template.substring(0, 120)}...
-          </pre>
-        </div>
-        <Button size="sm" className="mt-4 w-full" variant="outline">
-          <FileText className="h-4 w-4 mr-2" />
-          View Full Blueprint
-        </Button>
-      </CardContent>
-    </Card>
-  );
-
-  // Strategy Card Component (first 4 visible, rest blurred)
-  const StrategyCard = ({ strategy, isBlurred }: { strategy: Strategy; isBlurred: boolean }) => (
-    <Card 
-      className={`h-full cursor-pointer hover:shadow-lg transition-shadow ${isBlurred ? 'filter blur-[2px] pointer-events-none' : ''}`}
-      onClick={() => {
-        if (!isBlurred) {
-          setSelectedStrategy(strategy);
-          setIsStrategyModalOpen(true);
-        }
-      }}
-    >
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-lg">{strategy.name}</CardTitle>
-          <Badge variant="secondary">{strategy.category}</Badge>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <p className="text-muted-foreground mb-4">{strategy.description}</p>
-        <div>
-          <h4 className="font-semibold mb-2">Strategic Approach:</h4>
-          <p className="text-sm bg-muted p-3 rounded line-clamp-3">
-            {strategy.approach.length > 150 ? strategy.approach.substring(0, 150) + '...' : strategy.approach}
-          </p>
-        </div>
-        <Button size="sm" className="mt-4 w-full" variant="outline">
-          <Target className="h-4 w-4 mr-2" />
-          View Strategic Framework
-        </Button>
-      </CardContent>
-    </Card>
-  );
+          {type === 'prompt' && 'prompt' in item && (
+            <div>
+              <h4 className="font-semibold text-sm mb-2">Template Preview:</h4>
+              <p className="text-xs bg-muted p-2 rounded italic line-clamp-2">
+                {(item as PromptTemplate).prompt}
+              </p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    );
+  };
 
   return (
-    <div className="min-h-screen bg-background">
+    <>
       <Helmet>
-        <title>AI Resources - Tools, Prompts & Workflows | Jumps in AI</title>
-        <meta
-          name="description"
-          content="Discover the best AI tools, prompt templates, and workflows. Access curated resources for text generation, image creation, video production, and more."
-        />
-        <meta name="keywords" content="AI tools, prompts, workflows, ChatGPT, Midjourney, AI resources, artificial intelligence" />
-        <link rel="canonical" href="https://jumpsinai.com/resources" />
+        <title>AI Resources - Tools, Prompts, Workflows & Strategies | JumpinAI</title>
+        <meta name="description" content="Comprehensive collection of AI tools, prompt templates, workflows, blueprints, and strategies organized by topic: Text, Image, Video, Audio, and Web/App development." />
+        <link rel="canonical" href={`${window.location.origin}/resources`} />
       </Helmet>
-
+      
       <Navigation />
+      
+      <main className="min-h-screen bg-background pt-20">
+        <div className="max-w-7xl mx-auto px-4 py-12">
+          {/* Header */}
+          <div className="text-center mb-12">
+            <h1 className="text-4xl font-bold mb-4">AI Resources Hub</h1>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Comprehensive collection of AI tools, templates, and strategies organized by topic to accelerate your projects
+            </p>
+          </div>
 
-      <main className="container mx-auto px-4 pt-24 pb-16">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold mb-4">AI Resources</h1>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Discover the best AI tools, prompt templates, workflows, blueprints, and strategies to supercharge your productivity.
-          </p>
-        </div>
+          {/* Two-row tab system */}
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            {/* First row: Resource type tabs */}
+            <TabsList className="grid w-full grid-cols-5 mb-6">
+              <TabsTrigger value="tools" className="flex items-center gap-2">
+                <Zap className="h-4 w-4" />
+                Tools
+              </TabsTrigger>
+              <TabsTrigger value="prompts" className="flex items-center gap-2">
+                <FileText className="h-4 w-4" />
+                Prompts
+              </TabsTrigger>
+              <TabsTrigger value="workflows" className="flex items-center gap-2">
+                <GitBranch className="h-4 w-4" />
+                Workflows
+              </TabsTrigger>
+              <TabsTrigger value="blueprints" className="flex items-center gap-2">
+                <Layers className="h-4 w-4" />
+                Blueprints
+              </TabsTrigger>
+              <TabsTrigger value="strategies" className="flex items-center gap-2">
+                <Target className="h-4 w-4" />
+                Strategies
+              </TabsTrigger>
+            </TabsList>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-5 mb-8">
-            <TabsTrigger value="tools">Tools</TabsTrigger>
-            <TabsTrigger value="prompts">Prompts</TabsTrigger>
-            <TabsTrigger value="workflows">Workflows</TabsTrigger>
-            <TabsTrigger value="blueprints">Blueprints</TabsTrigger>
-            <TabsTrigger value="strategies">Strategies</TabsTrigger>
-          </TabsList>
+            {/* Second row: Topic category tabs */}
+            <div className="mb-8">
+              <Tabs value={activeTopicTab} onValueChange={setActiveTopicTab as (value: string) => void}>
+                <TabsList className="grid w-full grid-cols-5">
+                  <TabsTrigger value="Text" className="flex items-center gap-2">
+                    <Type className="h-4 w-4" />
+                    Text
+                  </TabsTrigger>
+                  <TabsTrigger value="Image" className="flex items-center gap-2">
+                    <Image className="h-4 w-4" />
+                    Image
+                  </TabsTrigger>
+                  <TabsTrigger value="Video" className="flex items-center gap-2">
+                    <Video className="h-4 w-4" />
+                    Video
+                  </TabsTrigger>
+                  <TabsTrigger value="Audio" className="flex items-center gap-2">
+                    <Headphones className="h-4 w-4" />
+                    Audio
+                  </TabsTrigger>
+                  <TabsTrigger value="Web/App" className="flex items-center gap-2">
+                    <Globe className="h-4 w-4" />
+                    Web/App
+                  </TabsTrigger>
+                </TabsList>
 
-            <TabsContent value="tools" className="space-y-8">
-              <div className="text-center mb-8">
-                <h2 className="text-2xl font-semibold mb-2">AI Tools</h2>
-                <p className="text-muted-foreground">Curated collection of the best AI tools for every use case</p>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {tools.map((tool, index) => (
-                  <ToolCard key={index} tool={tool} />
-                ))}
-              </div>
-            </TabsContent>
+                {/* Content for each resource type */}
+                <TabsContent value="tools" className="mt-8">
+                  {(['Text', 'Image', 'Video', 'Audio', 'Web/App'] as TopicCategory[]).map(topic => (
+                    <TabsContent key={topic} value={topic}>
+                      <div className="space-y-6">
+                        <div className="flex items-center gap-3 mb-6">
+                          {(() => {
+                            const IconComponent = getTopicIcon(topic);
+                            return <IconComponent className="h-6 w-6 text-primary" />;
+                          })()}
+                          <h2 className="text-2xl font-semibold">{topic} Tools</h2>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                          {filterByTopicCategory(tools, topic).map((tool, index) => (
+                            <ResourceCard 
+                              key={index} 
+                              item={tool} 
+                              type="tool"
+                            />
+                          ))}
+                        </div>
+                        
+                        {filterByTopicCategory(tools, topic).length === 0 && (
+                          <div className="text-center py-12">
+                            <p className="text-muted-foreground">No {topic.toLowerCase()} tools available yet. Check back soon!</p>
+                          </div>
+                        )}
+                      </div>
+                    </TabsContent>
+                  ))}
+                </TabsContent>
 
-            <TabsContent value="prompts" className="space-y-8">
-              <div className="text-center mb-8">
-                <h2 className="text-2xl font-semibold mb-2">Prompt Templates</h2>
-                <p className="text-muted-foreground">Ready-to-use prompt templates for maximum AI effectiveness</p>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {(showAllContent ? promptTemplates : promptTemplates.slice(0, 12)).map((prompt, index) => (
-                  <PromptCard key={index} prompt={prompt} isBlurred={!showAllContent && index >= 10} />
-                ))}
-              </div>
-              {!showAllContent && <UpgradeSection message="View more professional prompts" />}
-            </TabsContent>
+                <TabsContent value="prompts" className="mt-8">
+                  {(['Text', 'Image', 'Video', 'Audio', 'Web/App'] as TopicCategory[]).map(topic => (
+                    <TabsContent key={topic} value={topic}>
+                      <div className="space-y-6">
+                        <div className="flex items-center gap-3 mb-6">
+                          {(() => {
+                            const IconComponent = getTopicIcon(topic);
+                            return <IconComponent className="h-6 w-6 text-primary" />;
+                          })()}
+                          <h2 className="text-2xl font-semibold">{topic} Prompts</h2>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                          {filterByTopicCategory(promptTemplates, topic).slice(0, showAllContent ? undefined : 6).map((prompt, index) => (
+                            <ResourceCard 
+                              key={index} 
+                              item={prompt} 
+                              type="prompt"
+                              isBlurred={!showAllContent && index >= 4}
+                            />
+                          ))}
+                        </div>
+                        
+                        {filterByTopicCategory(promptTemplates, topic).length === 0 && (
+                          <div className="text-center py-12">
+                            <p className="text-muted-foreground">No {topic.toLowerCase()} prompts available yet. Check back soon!</p>
+                          </div>
+                        )}
+                        
+                        {!showAllContent && filterByTopicCategory(promptTemplates, topic).length > 4 && (
+                          <UpgradeSection message={`Unlock all ${topic} prompts`} />
+                        )}
+                      </div>
+                    </TabsContent>
+                  ))}
+                </TabsContent>
 
-            <TabsContent value="workflows" className="space-y-8">
-              <div className="text-center mb-8">
-                <h2 className="text-2xl font-semibold mb-2">AI Workflows</h2>
-                <p className="text-muted-foreground">Step-by-step processes for consistent AI results</p>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {(showAllContent ? workflows : workflows.slice(0, 6)).map((workflow, index) => (
-                  <WorkflowCard 
-                    key={index} 
-                    workflow={workflow} 
-                    isBlurred={!showAllContent && index >= 4}
-                  />
-                ))}
-              </div>
-              {!showAllContent && workflows.length > 4 && <UpgradeSection message="View more professional workflows" />}
-            </TabsContent>
+                <TabsContent value="workflows" className="mt-8">
+                  {(['Text', 'Image', 'Video', 'Audio', 'Web/App'] as TopicCategory[]).map(topic => (
+                    <TabsContent key={topic} value={topic}>
+                      <div className="space-y-6">
+                        <div className="flex items-center gap-3 mb-6">
+                          {(() => {
+                            const IconComponent = getTopicIcon(topic);
+                            return <IconComponent className="h-6 w-6 text-primary" />;
+                          })()}
+                          <h2 className="text-2xl font-semibold">{topic} Workflows</h2>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                          {filterByTopicCategory(workflows, topic).slice(0, showAllContent ? undefined : 4).map((workflow, index) => (
+                            <ResourceCard 
+                              key={index} 
+                              item={workflow} 
+                              type="workflow"
+                              isBlurred={!showAllContent && index >= 2}
+                            />
+                          ))}
+                        </div>
+                        
+                        {filterByTopicCategory(workflows, topic).length === 0 && (
+                          <div className="text-center py-12">
+                            <p className="text-muted-foreground">No {topic.toLowerCase()} workflows available yet. Check back soon!</p>
+                          </div>
+                        )}
+                        
+                        {!showAllContent && filterByTopicCategory(workflows, topic).length > 2 && (
+                          <UpgradeSection message={`Unlock all ${topic} workflows`} />
+                        )}
+                      </div>
+                    </TabsContent>
+                  ))}
+                </TabsContent>
 
-            <TabsContent value="blueprints" className="space-y-8">
-              <div className="text-center mb-8">
-                <h2 className="text-2xl font-semibold mb-2">AI Blueprints</h2>
-                <p className="text-muted-foreground">Proven templates and frameworks for AI implementation</p>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {(showAllContent ? blueprints : blueprints.slice(0, 6)).map((blueprint, index) => (
-                  <BlueprintCard 
-                    key={index} 
-                    blueprint={blueprint} 
-                    isBlurred={!showAllContent && index >= 4}
-                  />
-                ))}
-              </div>
-              {!showAllContent && blueprints.length > 4 && <UpgradeSection message="View more professional blueprints" />}
-            </TabsContent>
+                <TabsContent value="blueprints" className="mt-8">
+                  {(['Text', 'Image', 'Video', 'Audio', 'Web/App'] as TopicCategory[]).map(topic => (
+                    <TabsContent key={topic} value={topic}>
+                      <div className="space-y-6">
+                        <div className="flex items-center gap-3 mb-6">
+                          {(() => {
+                            const IconComponent = getTopicIcon(topic);
+                            return <IconComponent className="h-6 w-6 text-primary" />;
+                          })()}
+                          <h2 className="text-2xl font-semibold">{topic} Blueprints</h2>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                          {filterByTopicCategory(blueprints, topic).slice(0, showAllContent ? undefined : 4).map((blueprint, index) => (
+                            <ResourceCard 
+                              key={index} 
+                              item={blueprint} 
+                              type="blueprint"
+                              isBlurred={!showAllContent && index >= 2}
+                            />
+                          ))}
+                        </div>
+                        
+                        {filterByTopicCategory(blueprints, topic).length === 0 && (
+                          <div className="text-center py-12">
+                            <p className="text-muted-foreground">No {topic.toLowerCase()} blueprints available yet. Check back soon!</p>
+                          </div>
+                        )}
+                        
+                        {!showAllContent && filterByTopicCategory(blueprints, topic).length > 2 && (
+                          <UpgradeSection message={`Unlock all ${topic} blueprints`} />
+                        )}
+                      </div>
+                    </TabsContent>
+                  ))}
+                </TabsContent>
 
-            <TabsContent value="strategies" className="space-y-8">
-              <div className="text-center mb-8">
-                <h2 className="text-2xl font-semibold mb-2">AI Strategies</h2>
-                <p className="text-muted-foreground">Strategic approaches to AI adoption and implementation</p>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {(showAllContent ? strategies : strategies.slice(0, 6)).map((strategy, index) => (
-                  <StrategyCard 
-                    key={index} 
-                    strategy={strategy} 
-                    isBlurred={!showAllContent && index >= 4}
-                  />
-                ))}
-              </div>
-              {!showAllContent && strategies.length > 4 && <UpgradeSection message="View more professional strategies" />}
-            </TabsContent>
+                <TabsContent value="strategies" className="mt-8">
+                  {(['Text', 'Image', 'Video', 'Audio', 'Web/App'] as TopicCategory[]).map(topic => (
+                    <TabsContent key={topic} value={topic}>
+                      <div className="space-y-6">
+                        <div className="flex items-center gap-3 mb-6">
+                          {(() => {
+                            const IconComponent = getTopicIcon(topic);
+                            return <IconComponent className="h-6 w-6 text-primary" />;
+                          })()}
+                          <h2 className="text-2xl font-semibold">{topic} Strategies</h2>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                          {filterByTopicCategory(strategies, topic).slice(0, showAllContent ? undefined : 4).map((strategy, index) => (
+                            <ResourceCard 
+                              key={index} 
+                              item={strategy} 
+                              type="strategy"
+                              isBlurred={!showAllContent && index >= 2}
+                            />
+                          ))}
+                        </div>
+                        
+                        {filterByTopicCategory(strategies, topic).length === 0 && (
+                          <div className="text-center py-12">
+                            <p className="text-muted-foreground">No {topic.toLowerCase()} strategies available yet. Check back soon!</p>
+                          </div>
+                        )}
+                        
+                        {!showAllContent && filterByTopicCategory(strategies, topic).length > 2 && (
+                          <UpgradeSection message={`Unlock all ${topic} strategies`} />
+                        )}
+                      </div>
+                    </TabsContent>
+                  ))}
+                </TabsContent>
+              </Tabs>
+            </div>
           </Tabs>
-        </main>
+        </div>
+      </main>
 
-        <Footer />
+      <Footer />
 
-        {/* Modal Components */}
-        <WorkflowDetailModal 
-          workflow={selectedWorkflow}
-          isOpen={isWorkflowModalOpen}
-          onClose={() => {
-            setIsWorkflowModalOpen(false);
-            setSelectedWorkflow(null);
-          }}
-        />
+      {/* Modals */}
+      <WorkflowDetailModal
+        workflow={selectedWorkflow}
+        isOpen={isWorkflowModalOpen}
+        onClose={() => {
+          setIsWorkflowModalOpen(false);
+          setSelectedWorkflow(null);
+        }}
+      />
 
-        <BlueprintDetailModal 
-          blueprint={selectedBlueprint}
-          isOpen={isBlueprintModalOpen}
-          onClose={() => {
-            setIsBlueprintModalOpen(false);
-            setSelectedBlueprint(null);
-          }}
-        />
+      <BlueprintDetailModal
+        blueprint={selectedBlueprint}
+        isOpen={isBlueprintModalOpen}
+        onClose={() => {
+          setIsBlueprintModalOpen(false);
+          setSelectedBlueprint(null);
+        }}
+      />
 
-        <StrategyDetailModal 
-          strategy={selectedStrategy}
-          isOpen={isStrategyModalOpen}
-          onClose={() => {
-            setIsStrategyModalOpen(false);
-            setSelectedStrategy(null);
-          }}
-        />
-      </div>
-    );
-  }
+      <StrategyDetailModal
+        strategy={selectedStrategy}
+        isOpen={isStrategyModalOpen}
+        onClose={() => {
+          setIsStrategyModalOpen(false);
+          setSelectedStrategy(null);
+        }}
+      />
+    </>
+  );
+}

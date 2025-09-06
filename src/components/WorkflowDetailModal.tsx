@@ -5,8 +5,11 @@ import { CheckCircle, Clock, Users, Wrench, AlertTriangle, BookOpen } from "luci
 
 type Workflow = {
   name: string;
-  description: string;
+  whatItIs: string;
+  whatItsFor: string;
+  desiredOutcome: string;
   steps: string[];
+  topicCategory: 'Text' | 'Image' | 'Video' | 'Audio' | 'Web/App';
   category: string;
 };
 

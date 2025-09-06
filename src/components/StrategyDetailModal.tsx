@@ -5,8 +5,11 @@ import { CheckCircle, Clock, TrendingUp, Target, AlertTriangle, BookOpen } from 
 
 type Strategy = {
   name: string;
-  description: string;
+  whatItIs: string;
+  whatItsFor: string;
+  desiredOutcome: string;
   approach: string;
+  topicCategory: 'Text' | 'Image' | 'Video' | 'Audio' | 'Web/App';
   category: string;
 };
 

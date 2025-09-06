@@ -7,8 +7,11 @@ import { useState } from "react";
 
 type Blueprint = {
   name: string;
-  description: string;
+  whatItIs: string;
+  whatItsFor: string;
+  desiredOutcome: string;
   template: string;
+  topicCategory: 'Text' | 'Image' | 'Video' | 'Audio' | 'Web/App';
   category: string;
 };
 
