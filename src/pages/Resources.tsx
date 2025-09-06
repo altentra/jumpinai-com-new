@@ -37,7 +37,7 @@ type Tool = {
   whatItIs: string;
   whatItsFor: string;
   desiredOutcome: string;
-  topicCategory: 'Text' | 'Image' | 'Video' | 'Audio' | 'Web/App';
+  topicCategory: 'Text' | 'Image' | 'Video' | 'Audio' | 'Web/App Dev' | 'Workflow/AI Agents';
   category: string;
 };
 
@@ -47,7 +47,7 @@ type PromptTemplate = {
   whatItsFor: string;
   desiredOutcome: string;
   prompt: string;
-  topicCategory: 'Text' | 'Image' | 'Video' | 'Audio' | 'Web/App';
+  topicCategory: 'Text' | 'Image' | 'Video' | 'Audio' | 'Web/App Dev' | 'Workflow/AI Agents';
   category: string;
 };
 
@@ -57,7 +57,7 @@ type Workflow = {
   whatItsFor: string;
   desiredOutcome: string;
   steps: string[];
-  topicCategory: 'Text' | 'Image' | 'Video' | 'Audio' | 'Web/App';
+  topicCategory: 'Text' | 'Image' | 'Video' | 'Audio' | 'Web/App Dev' | 'Workflow/AI Agents';
   category: string;
 };
 
@@ -67,7 +67,7 @@ type Blueprint = {
   whatItsFor: string;
   desiredOutcome: string;
   template: string;
-  topicCategory: 'Text' | 'Image' | 'Video' | 'Audio' | 'Web/App';
+  topicCategory: 'Text' | 'Image' | 'Video' | 'Audio' | 'Web/App Dev' | 'Workflow/AI Agents';
   category: string;
 };
 
@@ -77,11 +77,11 @@ type Strategy = {
   whatItsFor: string;
   desiredOutcome: string;
   approach: string;
-  topicCategory: 'Text' | 'Image' | 'Video' | 'Audio' | 'Web/App';
+  topicCategory: 'Text' | 'Image' | 'Video' | 'Audio' | 'Web/App Dev' | 'Workflow/AI Agents';
   category: string;
 };
 
-type TopicCategory = 'Text' | 'Image' | 'Video' | 'Audio' | 'Web/App';
+type TopicCategory = 'Text' | 'Image' | 'Video' | 'Audio' | 'Web/App Dev' | 'Workflow/AI Agents';
 
 // Tools data with structured information
 const tools: Tool[] = [
@@ -122,6 +122,24 @@ const tools: Tool[] = [
     topicCategory: "Text",
     category: "Research"
   },
+  { 
+    name: "Jasper", 
+    url: "https://www.jasper.ai/", 
+    whatItIs: "AI-powered content creation platform for marketing teams",
+    whatItsFor: "Creating blog posts, social media content, and marketing copy at scale",
+    desiredOutcome: "High-converting marketing content optimized for brand voice and SEO",
+    topicCategory: "Text",
+    category: "Content Creation"
+  },
+  { 
+    name: "Copy.ai", 
+    url: "https://www.copy.ai/", 
+    whatItIs: "AI writing assistant focused on marketing and sales copy",
+    whatItsFor: "Generating persuasive copy for ads, emails, and landing pages",
+    desiredOutcome: "Compelling copy that drives conversions and engagement",
+    topicCategory: "Text",
+    category: "Copywriting"
+  },
 
   // Image Tools
   { 
@@ -150,6 +168,33 @@ const tools: Tool[] = [
     desiredOutcome: "Precise visual representations that match detailed prompts",
     topicCategory: "Image",
     category: "Image Generation"
+  },
+  { 
+    name: "Fotor", 
+    url: "https://www.fotor.com/", 
+    whatItIs: "Online photo editor and design platform with AI features",
+    whatItsFor: "Editing photos and creating graphic designs with AI assistance",
+    desiredOutcome: "Professional-quality images and designs without complex software",
+    topicCategory: "Image",
+    category: "Photo Editing"
+  },
+  { 
+    name: "PicsArt", 
+    url: "https://picsart.com/", 
+    whatItIs: "Creative platform with AI-powered photo and video editing tools",
+    whatItsFor: "Creating social media content, photo edits, and creative designs",
+    desiredOutcome: "Engaging visual content optimized for social media platforms",
+    topicCategory: "Image",
+    category: "Creative Design"
+  },
+  { 
+    name: "Canva", 
+    url: "https://www.canva.com/", 
+    whatItIs: "Design platform with AI-powered templates and editing tools",
+    whatItsFor: "Creating presentations, social media graphics, and marketing materials",
+    desiredOutcome: "Professional designs that maintain brand consistency across channels",
+    topicCategory: "Image",
+    category: "Graphic Design"
   },
 
   // Video Tools
@@ -180,6 +225,69 @@ const tools: Tool[] = [
     topicCategory: "Video",
     category: "Video Generation"
   },
+  { 
+    name: "Descript", 
+    url: "https://www.descript.com/", 
+    whatItIs: "All-in-one video and podcast editing platform with AI transcription",
+    whatItsFor: "Editing videos and podcasts through text-based editing interface",
+    desiredOutcome: "Streamlined video editing with automated transcription and voice cloning",
+    topicCategory: "Video",
+    category: "Video Editing"
+  },
+  { 
+    name: "InVideo", 
+    url: "https://invideo.io/", 
+    whatItIs: "Online video creation platform with AI-powered templates",
+    whatItsFor: "Creating marketing videos, social media content, and presentations",
+    desiredOutcome: "Professional videos created quickly using templates and automation",
+    topicCategory: "Video",
+    category: "Video Creation"
+  },
+  { 
+    name: "Pictory", 
+    url: "https://pictory.ai/", 
+    whatItIs: "AI video creation platform that turns text and articles into videos",
+    whatItsFor: "Converting blog posts, scripts, and articles into engaging video content",
+    desiredOutcome: "Automated video creation from existing written content",
+    topicCategory: "Video",
+    category: "Video Generation"
+  },
+  { 
+    name: "HeyGen", 
+    url: "https://www.heygen.com/", 
+    whatItIs: "AI avatar video generation platform with multilingual support",
+    whatItsFor: "Creating personalized video messages and presentations with AI avatars",
+    desiredOutcome: "Scalable video content with realistic AI presenters in multiple languages",
+    topicCategory: "Video",
+    category: "AI Avatars"
+  },
+  { 
+    name: "Kapwing", 
+    url: "https://www.kapwing.com/", 
+    whatItIs: "Collaborative online video editor with AI-powered features",
+    whatItsFor: "Creating and editing videos for social media, marketing, and education",
+    desiredOutcome: "Professional video content with team collaboration and AI enhancements",
+    topicCategory: "Video",
+    category: "Video Editing"
+  },
+  { 
+    name: "Pika", 
+    url: "https://pika.art/", 
+    whatItIs: "AI-powered video generation platform creating videos from text prompts",
+    whatItsFor: "Generating short video clips and animations from text descriptions",
+    desiredOutcome: "Creative video content generated entirely through AI from text prompts",
+    topicCategory: "Video",
+    category: "AI Video Generation"
+  },
+  { 
+    name: "Kling AI", 
+    url: "https://klingai.com/", 
+    whatItIs: "Advanced AI video generation model for creating realistic video content",
+    whatItsFor: "Producing high-quality video content from text and image inputs",
+    desiredOutcome: "Professional-grade AI-generated videos with realistic motion and details",
+    topicCategory: "Video",
+    category: "AI Video Generation"
+  },
 
   // Audio Tools
   { 
@@ -209,15 +317,51 @@ const tools: Tool[] = [
     topicCategory: "Audio",
     category: "Music Generation"
   },
+  { 
+    name: "Murf AI", 
+    url: "https://murf.ai/", 
+    whatItIs: "AI voice generator with realistic human-like voices",
+    whatItsFor: "Creating professional voiceovers for videos, presentations, and podcasts",
+    desiredOutcome: "Natural-sounding voiceovers that enhance content engagement and accessibility",
+    topicCategory: "Audio",
+    category: "Voice Generation"
+  },
+  { 
+    name: "Play.ht", 
+    url: "https://play.ht/", 
+    whatItIs: "AI voice generation platform with ultra-realistic speech synthesis",
+    whatItsFor: "Generating high-quality voiceovers and speech for various media formats",
+    desiredOutcome: "Indistinguishable AI voices for professional audio content creation",
+    topicCategory: "Audio",
+    category: "Voice Synthesis"
+  },
+  { 
+    name: "LOVO", 
+    url: "https://lovo.ai/", 
+    whatItIs: "AI voice generator and text-to-speech platform with emotion control",
+    whatItsFor: "Creating expressive voiceovers with emotional nuance and character voices",
+    desiredOutcome: "Emotionally rich audio content that connects with audiences",
+    topicCategory: "Audio",
+    category: "Voice Generation"
+  },
+  { 
+    name: "Suno", 
+    url: "https://suno.ai/", 
+    whatItIs: "AI music creation platform that generates songs from text prompts",
+    whatItsFor: "Creating original music tracks, jingles, and background music",
+    desiredOutcome: "Custom music compositions tailored to specific moods and requirements",
+    topicCategory: "Audio",
+    category: "Music Generation"
+  },
 
-  // Web/App Tools
+  // Web/App Dev Tools
   { 
     name: "n8n", 
     url: "https://n8n.io/", 
     whatItIs: "Open-source workflow automation platform",
     whatItsFor: "Building automated workflows connecting apps and AI services",
     desiredOutcome: "Streamlined business processes with AI-powered automation",
-    topicCategory: "Web/App",
+    topicCategory: "Web/App Dev",
     category: "Automation"
   },
   { 
@@ -226,7 +370,7 @@ const tools: Tool[] = [
     whatItIs: "No-code automation platform connecting thousands of apps",
     whatItsFor: "Automating repetitive tasks between different web applications",
     desiredOutcome: "Increased productivity through seamless app integrations",
-    topicCategory: "Web/App",
+    topicCategory: "Web/App Dev",
     category: "Automation"
   },
   { 
@@ -235,7 +379,7 @@ const tools: Tool[] = [
     whatItIs: "No-code platform for building web applications",
     whatItsFor: "Creating full-featured web apps without traditional coding",
     desiredOutcome: "Functional web applications built through visual programming",
-    topicCategory: "Web/App",
+    topicCategory: "Web/App Dev",
     category: "No-Code Development"
   }
 ];
@@ -329,7 +473,7 @@ const promptTemplates: PromptTemplate[] = [
     whatItsFor: "Identifying and fixing user experience issues in digital products",
     desiredOutcome: "Improved user satisfaction, conversion rates, and product usability",
     prompt: "Conduct UX audit for [WEBSITE/APP]. Analyze: 1) User journey and pain points, 2) Interface usability issues, 3) Conversion funnel optimization, 4) Accessibility compliance, 5) Mobile responsiveness, 6) Performance recommendations.",
-    topicCategory: "Web/App",
+  topicCategory: "Web/App Dev",
     category: "User Experience"
   }
 ];
@@ -440,7 +584,7 @@ const workflows: Workflow[] = [
       "Iterate based on user feedback and metrics",
       "Launch with marketing and user acquisition strategy"
     ],
-    topicCategory: "Web/App",
+    topicCategory: "Web/App Dev",
     category: "Product Development"
   }
 ];
@@ -868,7 +1012,7 @@ const blueprints: Blueprint[] = [
 - User onboarding and training
 - Customer support and retention
 - Feedback collection and analysis`,
-    topicCategory: "Web/App",
+    topicCategory: "Web/App Dev",
     category: "Product Launch"
   }
 ];
@@ -962,7 +1106,7 @@ const strategies: Strategy[] = [
     whatItsFor: "SaaS companies and digital products looking to scale efficiently",
     desiredOutcome: "Sustainable growth with lower customer acquisition costs and higher lifetime value",
     approach: "Optimize product for viral sharing, create self-service onboarding, implement usage-based expansion opportunities, and use in-product messaging to drive upgrades and referrals",
-    topicCategory: "Web/App",
+    topicCategory: "Web/App Dev",
     category: "Growth Strategy"
   },
   {
@@ -971,7 +1115,7 @@ const strategies: Strategy[] = [
     whatItsFor: "Digital products looking to improve user satisfaction and business metrics",
     desiredOutcome: "Higher user engagement, improved conversion rates, and reduced churn",
     approach: "Conduct user research, identify friction points in user journey, implement A/B testing framework, make data-driven improvements, and continuously monitor and optimize based on user behavior and feedback",
-    topicCategory: "Web/App",
+    topicCategory: "Web/App Dev",
     category: "User Experience"
   }
 ];
@@ -983,7 +1127,8 @@ const getTopicIcon = (topic: TopicCategory) => {
     case 'Image': return Image;
     case 'Video': return Video;
     case 'Audio': return Headphones;
-    case 'Web/App': return Globe;
+    case 'Web/App Dev': return Globe;
+    case 'Workflow/AI Agents': return Zap;
     default: return Type;
   }
 };
@@ -1175,9 +1320,13 @@ export default function Resources() {
                     <Headphones className="h-3 w-3" />
                     Audio
                   </TabsTrigger>
-                  <TabsTrigger value="Web/App" className="flex items-center gap-2 text-sm">
+                  <TabsTrigger value="Web/App Dev" className="flex items-center gap-2 text-sm">
                     <Globe className="h-3 w-3" />
-                    Web/App
+                    Web/App Dev
+                  </TabsTrigger>
+                  <TabsTrigger value="Workflow/AI Agents" className="flex items-center gap-2 text-sm">
+                    <Zap className="h-3 w-3" />
+                    Workflow/AI Agents
                   </TabsTrigger>
                 </TabsList>
 

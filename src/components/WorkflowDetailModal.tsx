@@ -9,7 +9,7 @@ type Workflow = {
   whatItsFor: string;
   desiredOutcome: string;
   steps: string[];
-  topicCategory: 'Text' | 'Image' | 'Video' | 'Audio' | 'Web/App';
+  topicCategory: 'Text' | 'Image' | 'Video' | 'Audio' | 'Web/App Dev' | 'Workflow/AI Agents';
   category: string;
 };
 

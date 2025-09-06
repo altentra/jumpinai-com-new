@@ -14,7 +14,7 @@ type Workflow = {
   whatItsFor: string;
   desiredOutcome: string;
   steps: string[];
-  topicCategory: 'Text' | 'Image' | 'Video' | 'Audio' | 'Web/App';
+  topicCategory: 'Text' | 'Image' | 'Video' | 'Audio' | 'Web/App Dev' | 'Workflow/AI Agents';
   category: string;
 };
 
@@ -55,7 +55,7 @@ const proWorkflows: Workflow[] = [
     whatItsFor: "Building intelligent, scalable business process automation", 
     desiredOutcome: "Fully automated workflows that scale business operations",
     steps: ["Map current processes and identify automation opportunities", "Integrate AI services with workflow platforms", "Test and optimize automated processes"], 
-    topicCategory: "Web/App",
+    topicCategory: "Web/App Dev",
     category: "Automation" 
   },
 ];
@@ -99,7 +99,7 @@ export default function Workflows() {
         </div>
       </CardHeader>
       <CardContent>
-        <p className="text-muted-foreground mb-4">{workflow.description}</p>
+        <p className="text-muted-foreground mb-4">{workflow.whatItIs}</p>
         <div>
           <h4 className="font-semibold mb-2">Steps:</h4>
           <ol className="text-sm space-y-1">

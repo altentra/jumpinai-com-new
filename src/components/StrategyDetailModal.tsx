@@ -9,7 +9,7 @@ type Strategy = {
   whatItsFor: string;
   desiredOutcome: string;
   approach: string;
-  topicCategory: 'Text' | 'Image' | 'Video' | 'Audio' | 'Web/App';
+  topicCategory: 'Text' | 'Image' | 'Video' | 'Audio' | 'Web/App Dev' | 'Workflow/AI Agents';
   category: string;
 };
 

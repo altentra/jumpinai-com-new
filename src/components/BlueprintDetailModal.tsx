@@ -11,7 +11,7 @@ type Blueprint = {
   whatItsFor: string;
   desiredOutcome: string;
   template: string;
-  topicCategory: 'Text' | 'Image' | 'Video' | 'Audio' | 'Web/App';
+  topicCategory: 'Text' | 'Image' | 'Video' | 'Audio' | 'Web/App Dev' | 'Workflow/AI Agents';
   category: string;
 };
 

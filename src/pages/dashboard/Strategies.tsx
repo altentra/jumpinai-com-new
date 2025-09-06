@@ -14,7 +14,7 @@ type Strategy = {
   whatItsFor: string;
   desiredOutcome: string;
   approach: string;
-  topicCategory: 'Text' | 'Image' | 'Video' | 'Audio' | 'Web/App';
+  topicCategory: 'Text' | 'Image' | 'Video' | 'Audio' | 'Web/App Dev' | 'Workflow/AI Agents';
   category: string;
 };
 
@@ -46,7 +46,7 @@ const proStrategies: Strategy[] = [
     whatItsFor: "SaaS companies and digital products looking to scale efficiently", 
     desiredOutcome: "Sustainable growth with lower customer acquisition costs and higher lifetime value",
     approach: "Optimize product for viral sharing, create self-service onboarding, implement usage-based expansion opportunities, and use in-product messaging to drive upgrades and referrals", 
-    topicCategory: "Web/App",
+    topicCategory: "Web/App Dev",
     category: "Growth Strategy" 
   },
 ];
@@ -98,7 +98,7 @@ export default function Strategies() {
         </div>
       </CardHeader>
       <CardContent>
-        <p className="text-muted-foreground mb-4">{strategy.description}</p>
+        <p className="text-muted-foreground mb-4">{strategy.whatItIs}</p>
         <div>
           <h4 className="font-semibold mb-2">Strategic Approach:</h4>
           <p className="text-sm bg-muted p-3 rounded line-clamp-3">

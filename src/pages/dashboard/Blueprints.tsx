@@ -80,12 +80,12 @@ export default function Blueprints() {
   const BlueprintCard = ({ blueprint, isBlurred }: { blueprint: Blueprint; isBlurred: boolean }) => (
     <Card 
       className={`h-full cursor-pointer hover:shadow-lg transition-shadow ${isBlurred ? 'filter blur-[2px] pointer-events-none' : ''}`}
-      onClick={() => {
-        if (!isBlurred) {
-          setSelectedBlueprint(blueprint);
-          setIsModalOpen(true);
-        }
-      }}
+        onClick={() => {
+          if (!isBlurred) {
+            setSelectedBlueprint(blueprint);
+            setIsModalOpen(true);
+          }
+        }}
     >
       <CardHeader>
         <div className="flex items-center justify-between">
@@ -185,7 +185,13 @@ export default function Blueprints() {
       </div>
 
       <BlueprintDetailModal 
-        blueprint={selectedBlueprint}
+        blueprint={selectedBlueprint ? {
+          ...selectedBlueprint,
+          whatItIs: selectedBlueprint.description,
+          whatItsFor: `Designed for ${selectedBlueprint.category.toLowerCase()} use cases`,
+          desiredOutcome: "Structured template for consistent results",
+          topicCategory: "Text" as const
+        } : null}
         isOpen={isModalOpen}
         onClose={() => {
           setIsModalOpen(false);
