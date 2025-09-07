@@ -879,6 +879,57 @@ const workflows: Workflow[] = [
     topicCategory: "Text",
     category: "Business Intelligence"
   },
+  {
+    name: "Blog Writing Process",
+    whatItIs: "Step-by-step methodology for creating SEO-optimized blog content",
+    whatItsFor: "Writers and marketers creating search-engine friendly blog posts",
+    desiredOutcome: "High-ranking blog posts that drive organic traffic and conversions",
+    steps: [
+      "Conduct keyword research and identify target terms",
+      "Analyze competitor content and identify content gaps",
+      "Create comprehensive content outline with H2/H3 structure",
+      "Write engaging introduction with hook and value proposition",
+      "Develop body content with actionable insights and examples",
+      "Optimize for on-page SEO including meta descriptions and alt tags",
+      "Proofread, fact-check, and publish with internal linking strategy"
+    ],
+    topicCategory: "Text",
+    category: "SEO Content"
+  },
+  {
+    name: "Email Marketing Campaign",
+    whatItIs: "Comprehensive workflow for creating effective email marketing campaigns",
+    whatItsFor: "Marketers building nurture sequences and promotional campaigns",
+    desiredOutcome: "High-converting email campaigns that drive engagement and sales",
+    steps: [
+      "Define campaign objectives and success metrics",
+      "Segment audience based on behavior and demographics",
+      "Create compelling subject lines and preview text",
+      "Design email template with clear call-to-action",
+      "Write persuasive copy that addresses customer pain points",
+      "Set up automation triggers and follow-up sequences",
+      "Test, analyze performance, and optimize based on results"
+    ],
+    topicCategory: "Text",
+    category: "Email Marketing"
+  },
+  {
+    name: "Technical Documentation Process",
+    whatItIs: "Structured approach to creating clear and comprehensive technical documentation",
+    whatItsFor: "Technical writers and developers documenting software and processes",
+    desiredOutcome: "User-friendly documentation that reduces support tickets and improves adoption",
+    steps: [
+      "Analyze user personas and documentation needs",
+      "Create information architecture and navigation structure",
+      "Write step-by-step procedures with screenshots",
+      "Include code examples and troubleshooting guides",
+      "Review with subject matter experts and end users",
+      "Implement feedback and maintain documentation currency",
+      "Track usage analytics and continuously improve content"
+    ],
+    topicCategory: "Text",
+    category: "Technical Writing"
+  },
 
   // Image Workflows
   {
@@ -896,6 +947,74 @@ const workflows: Workflow[] = [
     ],
     topicCategory: "Image",
     category: "Brand Management"
+  },
+  {
+    name: "Social Media Visual Content Creation",
+    whatItIs: "Systematic approach to creating engaging visual content for social platforms",
+    whatItsFor: "Social media managers and content creators building online presence",
+    desiredOutcome: "Consistent, platform-optimized visuals that increase engagement and reach",
+    steps: [
+      "Research platform-specific visual requirements and trends",
+      "Create content calendar with visual themes and campaigns",
+      "Design templates for different content types and formats",
+      "Create original graphics, photos, or source stock images",
+      "Optimize images for each platform's specifications",
+      "Add brand elements, text overlays, and call-to-actions",
+      "Schedule posts and monitor engagement metrics for optimization"
+    ],
+    topicCategory: "Image",
+    category: "Social Media"
+  },
+  {
+    name: "Product Photography Workflow",
+    whatItIs: "Professional process for capturing high-quality product images for e-commerce",
+    whatItsFor: "E-commerce businesses and photographers showcasing products effectively",
+    desiredOutcome: "Professional product images that increase conversion rates and sales",
+    steps: [
+      "Set up professional lighting and backdrop environment",
+      "Clean and prepare products for optimal presentation",
+      "Capture multiple angles including detail and lifestyle shots",
+      "Edit images for color correction and background removal",
+      "Optimize file sizes for web performance",
+      "Create consistent naming convention and organize asset library",
+      "Upload to e-commerce platform with SEO-friendly alt text"
+    ],
+    topicCategory: "Image",
+    category: "E-commerce"
+  },
+  {
+    name: "Infographic Design Process",
+    whatItIs: "Step-by-step method for creating informative and visually appealing infographics",
+    whatItsFor: "Marketers and designers communicating complex information visually",
+    desiredOutcome: "Engaging infographics that simplify complex data and drive sharing",
+    steps: [
+      "Research topic and gather accurate data and statistics",
+      "Define target audience and key message to communicate",
+      "Create wireframe layout organizing information hierarchy",
+      "Design visual elements including icons, charts, and illustrations",
+      "Choose color scheme and typography that supports readability",
+      "Add final touches and ensure visual flow tells a story",
+      "Export in multiple formats and promote across relevant channels"
+    ],
+    topicCategory: "Image",
+    category: "Data Visualization"
+  },
+  {
+    name: "Logo Design Development",
+    whatItIs: "Comprehensive process for creating memorable and effective brand logos",
+    whatItsFor: "Designers and businesses developing new brand identities",
+    desiredOutcome: "Distinctive logo that effectively represents brand values and appeals to target audience",
+    steps: [
+      "Conduct brand discovery and competitive analysis",
+      "Develop multiple concept sketches and directions",
+      "Create digital versions of strongest concepts",
+      "Test logo across different applications and sizes",
+      "Refine chosen concept based on feedback",
+      "Finalize logo with complete brand guidelines",
+      "Deliver logo files in all necessary formats and variations"
+    ],
+    topicCategory: "Image",
+    category: "Brand Design"
   },
 
   // Video Workflows
@@ -916,6 +1035,74 @@ const workflows: Workflow[] = [
     topicCategory: "Video",
     category: "Content Production"
   },
+  {
+    name: "YouTube Channel Optimization",
+    whatItIs: "Strategic workflow for growing and optimizing YouTube channel performance",
+    whatItsFor: "Content creators and businesses building YouTube presence",
+    desiredOutcome: "Increased subscribers, views, and engagement leading to monetization opportunities",
+    steps: [
+      "Research target audience and competitor channels for insights",
+      "Optimize channel art, description, and playlist organization",
+      "Develop content strategy with consistent upload schedule",
+      "Create compelling thumbnails and titles for each video",
+      "Optimize video descriptions with keywords and timestamps",
+      "Engage with community through comments and collaborations",
+      "Analyze YouTube Analytics to refine strategy and content"
+    ],
+    topicCategory: "Video",
+    category: "YouTube Strategy"
+  },
+  {
+    name: "Educational Video Series Creation",
+    whatItIs: "Structured approach to creating comprehensive educational video content",
+    whatItsFor: "Educators and businesses creating training or instructional content",
+    desiredOutcome: "Engaging educational videos that effectively teach concepts and skills",
+    steps: [
+      "Define learning objectives and target skill level",
+      "Break down complex topics into digestible lesson segments",
+      "Create detailed curriculum outline with progression structure",
+      "Script each video with clear explanations and examples",
+      "Record content using appropriate visual aids and demonstrations",
+      "Edit for clarity and add captions for accessibility",
+      "Test with sample audience and gather feedback for improvements"
+    ],
+    topicCategory: "Video",
+    category: "Education"
+  },
+  {
+    name: "Live Streaming Setup and Management",
+    whatItIs: "Complete workflow for professional live streaming across platforms",
+    whatItsFor: "Content creators and businesses engaging audiences through live content",
+    desiredOutcome: "Professional live streams that engage viewers and build community",
+    steps: [
+      "Set up streaming software and test technical equipment",
+      "Plan content structure with engaging segments and interactions",
+      "Promote upcoming stream across social media and email",
+      "Conduct pre-stream technical check and backup preparations",
+      "Go live with engaging introduction and clear agenda",
+      "Monitor chat and engage with audience throughout stream",
+      "Save recording for repurposing and analyze stream metrics"
+    ],
+    topicCategory: "Video",
+    category: "Live Streaming"
+  },
+  {
+    name: "Corporate Video Production",
+    whatItIs: "Professional workflow for creating business and corporate video content",
+    whatItsFor: "Companies producing internal training, marketing, or communication videos",
+    desiredOutcome: "Polished corporate videos that effectively communicate business messages",
+    steps: [
+      "Meet with stakeholders to define project scope and messaging",
+      "Develop creative brief and obtain necessary approvals",
+      "Coordinate filming logistics including locations and talent",
+      "Conduct professional filming with appropriate equipment",
+      "Edit video with corporate branding and professional graphics",
+      "Review with stakeholders and incorporate feedback",
+      "Deliver final video in required formats for distribution"
+    ],
+    topicCategory: "Video",
+    category: "Corporate Communications"
+  },
 
   // Audio Workflows
   {
@@ -934,8 +1121,76 @@ const workflows: Workflow[] = [
     topicCategory: "Audio",
     category: "Content Creation"
   },
+  {
+    name: "Audiobook Production Process",
+    whatItIs: "Professional workflow for creating and publishing audiobooks",
+    whatItsFor: "Authors and publishers expanding into audiobook market",
+    desiredOutcome: "High-quality audiobook that meets industry standards and engages listeners",
+    steps: [
+      "Prepare manuscript with pronunciation guides and notes",
+      "Set up professional recording environment with quality equipment",
+      "Record chapters with consistent pacing and tone",
+      "Edit audio for clarity, removing errors and long pauses",
+      "Master audio to meet audiobook platform specifications",
+      "Create chapter markers and metadata for easy navigation",
+      "Submit to audiobook platforms with compelling cover and description"
+    ],
+    topicCategory: "Audio",
+    category: "Publishing"
+  },
+  {
+    name: "Music Production Workflow",
+    whatItIs: "Step-by-step process for creating original music from concept to final master",
+    whatItsFor: "Musicians and producers creating professional music recordings",
+    desiredOutcome: "Professional-quality music ready for distribution and streaming platforms",
+    steps: [
+      "Develop musical concept and create basic song structure",
+      "Record foundational tracks including drums, bass, and rhythm elements",
+      "Layer additional instruments and melodic elements",
+      "Record and edit vocal tracks with proper timing and pitch",
+      "Mix all elements together balancing levels and effects",
+      "Master final track for optimal playback across all systems",
+      "Distribute to streaming platforms and promote to target audience"
+    ],
+    topicCategory: "Audio",
+    category: "Music Production"
+  },
+  {
+    name: "Voice-Over Recording Process",
+    whatItIs: "Professional workflow for creating high-quality voice-over recordings",
+    whatItsFor: "Voice actors and businesses creating audio content and advertisements",
+    desiredOutcome: "Clear, professional voice recordings that effectively deliver the intended message",
+    steps: [
+      "Review script and practice delivery with proper emphasis",
+      "Set up recording environment minimizing background noise",
+      "Warm up voice and conduct test recordings for optimal levels",
+      "Record multiple takes focusing on clarity and emotion",
+      "Edit recordings removing mistakes and optimizing timing",
+      "Apply audio processing for consistency and professional sound",
+      "Deliver final audio in client-specified formats and quality"
+    ],
+    topicCategory: "Audio",
+    category: "Voice Acting"
+  },
+  {
+    name: "Audio Branding Development",
+    whatItIs: "Comprehensive process for creating cohesive audio brand identity",
+    whatItsFor: "Brands developing consistent audio elements across all touchpoints",
+    desiredOutcome: "Distinctive audio identity that reinforces brand recognition and emotional connection",
+    steps: [
+      "Analyze brand personality and translate into audio characteristics",
+      "Develop audio logo and signature sound elements",
+      "Create music library reflecting brand mood and values",
+      "Design sound effects and notification sounds for digital products",
+      "Establish voice guidelines including tone, pace, and style",
+      "Create audio brand guidelines for consistent implementation",
+      "Test audio elements across different contexts and refine as needed"
+    ],
+    topicCategory: "Audio",
+    category: "Brand Development"
+  },
 
-  // Web/App Workflows
+  // Web/App Dev Workflows
   {
     name: "App Development Lifecycle",
     whatItIs: "Structured approach to building and launching digital applications",
@@ -951,6 +1206,178 @@ const workflows: Workflow[] = [
     ],
     topicCategory: "Web/App Dev",
     category: "Product Development"
+  },
+  {
+    name: "Website Development Process",
+    whatItIs: "Complete workflow for building professional websites from concept to launch",
+    whatItsFor: "Developers and agencies creating custom websites for clients",
+    desiredOutcome: "High-performing website that meets business objectives and user needs",
+    steps: [
+      "Conduct discovery session to understand business goals and requirements",
+      "Create sitemap and wireframes for user experience planning",
+      "Design visual mockups and get client approval on aesthetics",
+      "Develop responsive website with modern coding standards",
+      "Implement SEO best practices and performance optimizations",
+      "Test functionality across devices and browsers",
+      "Launch website and set up analytics and monitoring tools"
+    ],
+    topicCategory: "Web/App Dev",
+    category: "Web Development"
+  },
+  {
+    name: "E-commerce Platform Setup",
+    whatItIs: "Systematic approach to launching online stores with full functionality",
+    whatItsFor: "Businesses transitioning to online sales or expanding e-commerce presence",
+    desiredOutcome: "Fully functional online store that drives sales and provides excellent customer experience",
+    steps: [
+      "Research and select appropriate e-commerce platform",
+      "Set up product catalog with descriptions, images, and pricing",
+      "Configure payment processing and shipping options",
+      "Customize store design to match brand identity",
+      "Set up inventory management and order fulfillment systems",
+      "Test checkout process and payment security",
+      "Launch store with marketing campaign and customer support systems"
+    ],
+    topicCategory: "Web/App Dev",
+    category: "E-commerce"
+  },
+  {
+    name: "API Development and Integration",
+    whatItIs: "Professional workflow for creating and integrating application programming interfaces",
+    whatItsFor: "Developers building connected applications and third-party integrations",
+    desiredOutcome: "Robust API that enables seamless data exchange and system integration",
+    steps: [
+      "Define API requirements and data structure specifications",
+      "Design RESTful endpoints with proper HTTP methods and status codes",
+      "Implement authentication and authorization security measures",
+      "Develop API with proper error handling and validation",
+      "Create comprehensive documentation with code examples",
+      "Test API functionality and performance under load",
+      "Deploy to production with monitoring and version management"
+    ],
+    topicCategory: "Web/App Dev",
+    category: "Backend Development"
+  },
+  {
+    name: "Progressive Web App Development",
+    whatItIs: "Modern workflow for creating app-like web experiences with offline capabilities",
+    whatItsFor: "Developers creating fast, reliable web applications that work offline",
+    desiredOutcome: "High-performance web app that provides native app experience across devices",
+    steps: [
+      "Set up service worker for offline functionality and caching",
+      "Implement responsive design for optimal mobile experience",
+      "Add web app manifest for home screen installation",
+      "Optimize performance with code splitting and lazy loading",
+      "Implement push notifications for user engagement",
+      "Test PWA features across different devices and browsers",
+      "Deploy with HTTPS and monitor performance metrics"
+    ],
+    topicCategory: "Web/App Dev",
+    category: "Progressive Web Apps"
+  },
+  {
+    name: "Database Design and Optimization",
+    whatItIs: "Comprehensive approach to designing efficient and scalable database systems",
+    whatItsFor: "Database administrators and developers building data-driven applications",
+    desiredOutcome: "Optimized database that supports application requirements with excellent performance",
+    steps: [
+      "Analyze data requirements and relationships between entities",
+      "Create normalized database schema with proper indexing strategy",
+      "Implement data validation rules and constraints",
+      "Set up backup and recovery procedures for data protection",
+      "Optimize queries and database performance tuning",
+      "Establish security measures and access controls",
+      "Monitor database performance and plan for scalability"
+    ],
+    topicCategory: "Web/App Dev",
+    category: "Database Management"
+  },
+
+  // Workflow/AI Agents Workflows
+  {
+    name: "Business Process Automation Setup",
+    whatItIs: "Systematic approach to identifying and automating repetitive business processes",
+    whatItsFor: "Businesses looking to increase efficiency and reduce manual work",
+    desiredOutcome: "Automated workflows that save time and reduce human error in business operations",
+    steps: [
+      "Map current business processes and identify automation opportunities",
+      "Select appropriate automation tools based on requirements and budget",
+      "Design automated workflows with proper trigger conditions",
+      "Set up integrations between different business applications",
+      "Test automation workflows with real data scenarios",
+      "Train team members on new automated processes",
+      "Monitor automation performance and optimize based on results"
+    ],
+    topicCategory: "Workflow/AI Agents",
+    category: "Process Automation"
+  },
+  {
+    name: "AI Chatbot Development",
+    whatItIs: "Complete workflow for creating intelligent chatbots for customer service and engagement",
+    whatItsFor: "Businesses wanting to automate customer interactions and provide 24/7 support",
+    desiredOutcome: "Intelligent chatbot that effectively handles customer queries and improves satisfaction",
+    steps: [
+      "Define chatbot objectives and identify common customer queries",
+      "Choose AI platform and design conversation flow architecture",
+      "Train chatbot with relevant data and response scenarios",
+      "Integrate chatbot with existing customer service systems",
+      "Test chatbot responses and refine natural language understanding",
+      "Deploy chatbot across chosen communication channels",
+      "Monitor chatbot performance and continuously improve responses"
+    ],
+    topicCategory: "Workflow/AI Agents",
+    category: "AI Customer Service"
+  },
+  {
+    name: "CRM Automation Workflow",
+    whatItIs: "Strategic approach to automating customer relationship management processes",
+    whatItsFor: "Sales teams and businesses looking to streamline customer management",
+    desiredOutcome: "Automated CRM system that nurtures leads and improves sales conversion rates",
+    steps: [
+      "Audit current CRM processes and identify automation opportunities",
+      "Set up lead scoring and qualification automation rules",
+      "Create automated email sequences for different customer segments",
+      "Configure task assignments and follow-up reminders",
+      "Integrate CRM with marketing automation and sales tools",
+      "Set up reporting dashboards for sales performance tracking",
+      "Train sales team on automated workflows and optimize based on feedback"
+    ],
+    topicCategory: "Workflow/AI Agents",
+    category: "Sales Automation"
+  },
+  {
+    name: "Social Media Management Automation",
+    whatItIs: "Comprehensive workflow for automating social media posting and engagement",
+    whatItsFor: "Marketing teams managing multiple social media accounts efficiently",
+    desiredOutcome: "Consistent social media presence with automated posting and engagement tracking",
+    steps: [
+      "Develop content calendar and categorize content by platform and audience",
+      "Set up social media scheduling tools with automated posting",
+      "Create engagement monitoring and response automation rules",
+      "Implement social listening for brand mentions and sentiment tracking",
+      "Automate cross-platform content distribution and formatting",
+      "Set up performance analytics and reporting dashboards",
+      "Monitor automation effectiveness and adjust strategy based on engagement data"
+    ],
+    topicCategory: "Workflow/AI Agents",
+    category: "Social Media Automation"
+  },
+  {
+    name: "Email Marketing Automation Funnel",
+    whatItIs: "Strategic workflow for creating automated email marketing campaigns and sequences",
+    whatItsFor: "Marketers building scalable email campaigns that nurture leads automatically",
+    desiredOutcome: "High-converting email automation that moves prospects through sales funnel",
+    steps: [
+      "Segment email list based on customer behavior and preferences",
+      "Design email sequence with compelling subject lines and content",
+      "Set up trigger-based automation rules for different customer actions",
+      "Create personalized email templates for different audience segments",
+      "Configure A/B testing for subject lines and email content",
+      "Implement lead scoring and automated follow-up sequences",
+      "Analyze email performance metrics and optimize campaigns continuously"
+    ],
+    topicCategory: "Workflow/AI Agents",
+    category: "Email Automation"
   }
 ];
 
@@ -1579,20 +2006,12 @@ export default function Resources() {
     };
 
     const getGradientClass = () => {
-      switch (item.topicCategory) {
-        case 'Text': return 'from-blue-500/10 to-indigo-500/10 border-blue-200/20 dark:border-blue-800/20';
-        case 'Image': return 'from-purple-500/10 to-pink-500/10 border-purple-200/20 dark:border-purple-800/20';
-        case 'Video': return 'from-green-500/10 to-emerald-500/10 border-green-200/20 dark:border-green-800/20';
-        case 'Audio': return 'from-orange-500/10 to-red-500/10 border-orange-200/20 dark:border-orange-800/20';
-        case 'Web/App Dev': return 'from-cyan-500/10 to-teal-500/10 border-cyan-200/20 dark:border-cyan-800/20';
-        case 'Workflow/AI Agents': return 'from-violet-500/10 to-purple-500/10 border-violet-200/20 dark:border-violet-800/20';
-        default: return 'from-gray-500/10 to-slate-500/10 border-gray-200/20 dark:border-gray-800/20';
-      }
+      return 'from-primary/5 via-background to-primary/10 border-primary/10 dark:border-primary/20 shadow-lg shadow-primary/5';
     };
 
     return (
       <Card 
-        className={`group relative h-full cursor-pointer border-2 bg-gradient-to-br ${getGradientClass()} hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1 ${isBlurred ? 'filter blur-[2px] pointer-events-none opacity-60' : ''}`}
+        className={`group relative overflow-hidden h-full cursor-pointer border bg-gradient-to-br ${getGradientClass()} hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 hover:scale-[1.03] hover:-translate-y-2 backdrop-blur-sm ${isBlurred ? 'filter blur-[2px] pointer-events-none opacity-60' : ''}`}
         onClick={handleCardClick}
       >
         <CardHeader className="pb-4">
