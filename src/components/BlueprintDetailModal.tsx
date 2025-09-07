@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -1532,6 +1532,9 @@ export default function BlueprintDetailModal({ blueprint, isOpen, onClose }: Blu
             {blueprint.name}
             <Badge variant="secondary">{blueprint.category}</Badge>
           </DialogTitle>
+          <DialogDescription className="sr-only">
+            Detailed blueprint information and template preview
+          </DialogDescription>
         </DialogHeader>
 
         {detailedBlueprint ? (
@@ -1672,13 +1675,36 @@ export default function BlueprintDetailModal({ blueprint, isOpen, onClose }: Blu
             </TabsContent>
           </Tabs>
         ) : (
-          <div className="text-center py-12">
-            <AlertTriangle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-lg font-semibold mb-2">Detailed Guide Coming Soon</h3>
-            <p className="text-muted-foreground">
-              We're working on comprehensive implementation guides for this blueprint. 
-              Check back soon for detailed instructions and examples!
-            </p>
+          <div className="mt-4 space-y-6">
+            <div className="bg-muted/30 p-4 rounded-lg">
+              <h3 className="font-semibold mb-2">What It Is</h3>
+              <p className="text-muted-foreground">{blueprint.whatItIs}</p>
+            </div>
+            <div className="bg-muted/30 p-4 rounded-lg">
+              <h3 className="font-semibold mb-2">What It's For</h3>
+              <p className="text-muted-foreground">{blueprint.whatItsFor}</p>
+            </div>
+            <div className="bg-muted/30 p-4 rounded-lg">
+              <h3 className="font-semibold mb-2">Desired Outcome</h3>
+              <p className="text-muted-foreground">{blueprint.desiredOutcome}</p>
+            </div>
+
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold">Blueprint Template</h3>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => copyToClipboard(blueprint.template)}
+                >
+                  {copied ? <CheckCircle className="h-4 w-4 mr-2" /> : <Copy className="h-4 w-4 mr-2" />}
+                  {copied ? 'Copied!' : 'Copy Template'}
+                </Button>
+              </div>
+              <div className="bg-muted/30 rounded-lg p-4 font-mono text-sm overflow-x-auto">
+                <pre className="whitespace-pre-wrap">{blueprint.template}</pre>
+              </div>
+            </div>
           </div>
         )}
       </DialogContent>
