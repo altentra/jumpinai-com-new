@@ -5,7 +5,8 @@ import { Badge } from '@/components/ui/badge';
 
 type Workflow = {
   name: string;
-  description: string;
+  description?: string;
+  whatItIs?: string;
   steps: string[];
   category: string;
 };

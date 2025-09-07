@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect, useState } from "react";
-import WorkflowDetailModal from "@/components/WorkflowDetailModal";
+import { WorkflowDetailModal } from "@/components/WorkflowDetailModal";
 
 type Workflow = {
   name: string;
@@ -16,6 +16,7 @@ type Workflow = {
   steps: string[];
   topicCategory: 'Text' | 'Image' | 'Video' | 'Audio' | 'Web/App Dev' | 'Workflow/AI Agents';
   category: string;
+  description?: string;
 };
 
 const freeWorkflows: Workflow[] = [
