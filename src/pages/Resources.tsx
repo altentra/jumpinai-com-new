@@ -29,6 +29,7 @@ import { supabase } from "@/integrations/supabase/client";
 import WorkflowDetailModal from "@/components/WorkflowDetailModal";
 import BlueprintDetailModal from "@/components/BlueprintDetailModal";
 import StrategyDetailModal from "@/components/StrategyDetailModal";
+import PromptDetailModal from "@/components/PromptDetailModal";
 
 // Updated data models with structured information
 type Tool = {
@@ -1511,7 +1512,9 @@ export default function Resources() {
   const [selectedWorkflow, setSelectedWorkflow] = useState<Workflow | null>(null);
   const [selectedBlueprint, setSelectedBlueprint] = useState<Blueprint | null>(null);
   const [selectedStrategy, setSelectedStrategy] = useState<Strategy | null>(null);
+  const [selectedPrompt, setSelectedPrompt] = useState<PromptTemplate | null>(null);
   const [isWorkflowModalOpen, setIsWorkflowModalOpen] = useState(false);
+  const [isPromptModalOpen, setIsPromptModalOpen] = useState(false);
   const [isBlueprintModalOpen, setIsBlueprintModalOpen] = useState(false);
   const [isStrategyModalOpen, setIsStrategyModalOpen] = useState(false);
 
@@ -1556,56 +1559,129 @@ export default function Resources() {
       } else if (type === 'strategy' && 'approach' in item) {
         setSelectedStrategy(item as Strategy);
         setIsStrategyModalOpen(true);
+      } else if (type === 'prompt' && 'prompt' in item) {
+        setSelectedPrompt(item as PromptTemplate);
+        setIsPromptModalOpen(true);
       } else if (type === 'tool' && 'url' in item) {
         window.open((item as Tool).url, '_blank');
       }
     };
 
+    const getCardIcon = () => {
+      switch (type) {
+        case 'tool': return <Zap className="h-5 w-5 text-primary" />;
+        case 'prompt': return <FileText className="h-5 w-5 text-primary" />;
+        case 'workflow': return <GitBranch className="h-5 w-5 text-primary" />;
+        case 'blueprint': return <Layers className="h-5 w-5 text-primary" />;
+        case 'strategy': return <Target className="h-5 w-5 text-primary" />;
+        default: return <Star className="h-5 w-5 text-primary" />;
+      }
+    };
+
+    const getGradientClass = () => {
+      switch (item.topicCategory) {
+        case 'Text': return 'from-blue-500/10 to-indigo-500/10 border-blue-200/20 dark:border-blue-800/20';
+        case 'Image': return 'from-purple-500/10 to-pink-500/10 border-purple-200/20 dark:border-purple-800/20';
+        case 'Video': return 'from-green-500/10 to-emerald-500/10 border-green-200/20 dark:border-green-800/20';
+        case 'Audio': return 'from-orange-500/10 to-red-500/10 border-orange-200/20 dark:border-orange-800/20';
+        case 'Web/App Dev': return 'from-cyan-500/10 to-teal-500/10 border-cyan-200/20 dark:border-cyan-800/20';
+        case 'Workflow/AI Agents': return 'from-violet-500/10 to-purple-500/10 border-violet-200/20 dark:border-violet-800/20';
+        default: return 'from-gray-500/10 to-slate-500/10 border-gray-200/20 dark:border-gray-800/20';
+      }
+    };
+
     return (
       <Card 
-        className={`h-full cursor-pointer hover:shadow-lg transition-all ${isBlurred ? 'filter blur-[2px] pointer-events-none' : ''}`}
+        className={`group relative h-full cursor-pointer border-2 bg-gradient-to-br ${getGradientClass()} hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1 ${isBlurred ? 'filter blur-[2px] pointer-events-none opacity-60' : ''}`}
         onClick={handleCardClick}
       >
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-lg">{item.name}</CardTitle>
-            <Badge variant="secondary">{item.category}</Badge>
+        <CardHeader className="pb-4">
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex items-center gap-3 min-w-0 flex-1">
+              {getCardIcon()}
+              <CardTitle className="text-lg font-semibold leading-tight line-clamp-2 group-hover:text-primary transition-colors">
+                {item.name}
+              </CardTitle>
+            </div>
+            <Badge variant="secondary" className="shrink-0 bg-primary/10 text-primary border-primary/20">
+              {item.category}
+            </Badge>
           </div>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
-            <h4 className="font-semibold text-sm text-primary mb-1">What it is:</h4>
-            <p className="text-sm text-muted-foreground">{item.whatItIs}</p>
-          </div>
-          
-          <div>
-            <h4 className="font-semibold text-sm text-primary mb-1">What it's for:</h4>
-            <p className="text-sm text-muted-foreground">{item.whatItsFor}</p>
-          </div>
-          
-          <div>
-            <h4 className="font-semibold text-sm text-primary mb-1">Desired outcome:</h4>
-            <p className="text-sm text-muted-foreground">{item.desiredOutcome}</p>
+        
+        <CardContent className="space-y-4 pb-6">
+          <div className="space-y-3">
+            <div>
+              <h4 className="font-medium text-sm text-primary/80 mb-1.5 flex items-center gap-1">
+                <div className="w-1 h-1 bg-primary rounded-full"></div>
+                What it is
+              </h4>
+              <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">{item.whatItIs}</p>
+            </div>
+            
+            <div>
+              <h4 className="font-medium text-sm text-primary/80 mb-1.5 flex items-center gap-1">
+                <div className="w-1 h-1 bg-primary rounded-full"></div>
+                What it's for
+              </h4>
+              <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">{item.whatItsFor}</p>
+            </div>
+            
+            <div>
+              <h4 className="font-medium text-sm text-primary/80 mb-1.5 flex items-center gap-1">
+                <div className="w-1 h-1 bg-primary rounded-full"></div>
+                Desired outcome
+              </h4>
+              <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">{item.desiredOutcome}</p>
+            </div>
           </div>
 
           {type === 'tool' && 'url' in item && (
-            <div className="flex items-center justify-between pt-2">
-              <Button variant="outline" size="sm" onClick={(e) => {
-                e.stopPropagation();
-                window.open((item as Tool).url, '_blank');
-              }}>
-                <ExternalLink className="h-3 w-3 mr-1" />
-                Visit
+            <div className="flex items-center justify-between pt-3 border-t border-border/50">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  window.open((item as Tool).url, '_blank');
+                }}
+                className="group/btn hover:bg-primary hover:text-primary-foreground transition-all duration-200"
+              >
+                <ExternalLink className="h-3 w-3 mr-1.5 group-hover/btn:rotate-12 transition-transform" />
+                Visit Tool
               </Button>
+              <div className="text-xs text-muted-foreground">Click to explore</div>
             </div>
           )}
 
           {type === 'prompt' && 'prompt' in item && (
-            <div>
-              <h4 className="font-semibold text-sm mb-2">Template Preview:</h4>
-              <p className="text-xs bg-muted p-2 rounded italic line-clamp-2">
-                {(item as PromptTemplate).prompt}
-              </p>
+            <div className="pt-3 border-t border-border/50">
+              <div className="flex items-center justify-between mb-2">
+                <h4 className="font-medium text-sm text-primary/80">Template Preview</h4>
+                <div className="text-xs text-muted-foreground">Click for full prompt</div>
+              </div>
+              <div className="bg-muted/50 border border-muted-foreground/10 rounded-lg p-3">
+                <p className="text-xs text-muted-foreground font-mono line-clamp-3 leading-relaxed">
+                  {(item as PromptTemplate).prompt}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {(type === 'workflow' || type === 'blueprint' || type === 'strategy') && (
+            <div className="pt-3 border-t border-border/50">
+              <div className="flex items-center justify-between">
+                <div className="text-xs text-muted-foreground">
+                  {type === 'workflow' && 'Click to view workflow steps'}
+                  {type === 'blueprint' && 'Click to view template'}
+                  {type === 'strategy' && 'Click to view strategy details'}
+                </div>
+                <div className="text-primary/60">
+                  <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+              </div>
             </div>
           )}
         </CardContent>
@@ -1899,6 +1975,15 @@ export default function Resources() {
         onClose={() => {
           setIsStrategyModalOpen(false);
           setSelectedStrategy(null);
+        }}
+      />
+
+      <PromptDetailModal
+        prompt={selectedPrompt}
+        isOpen={isPromptModalOpen}
+        onClose={() => {
+          setIsPromptModalOpen(false);
+          setSelectedPrompt(null);
         }}
       />
     </>
