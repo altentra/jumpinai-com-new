@@ -27,7 +27,7 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
 import { WorkflowDetailModal } from "@/components/WorkflowDetailModal";
-import BlueprintDetailModal from "@/components/BlueprintDetailModal";
+import ResourceBlueprintModal from "@/components/ResourceBlueprintModal";
 import StrategyDetailModal from "@/components/StrategyDetailModal";
 import PromptDetailModal from "@/components/PromptDetailModal";
 
@@ -2380,7 +2380,7 @@ export default function Resources() {
         }}
       />
 
-      <BlueprintDetailModal
+      <ResourceBlueprintModal
         blueprint={selectedBlueprint}
         isOpen={isBlueprintModalOpen}
         onClose={() => {
