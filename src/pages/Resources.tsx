@@ -2079,8 +2079,8 @@ export default function Resources() {
                 <h4 className="font-medium text-sm text-primary/80">Template Preview</h4>
                 <div className="text-xs text-muted-foreground">Click for full prompt</div>
               </div>
-              <div className="bg-muted/50 border border-muted-foreground/10 rounded-lg p-3">
-                <p className="text-xs text-muted-foreground font-mono line-clamp-3 leading-relaxed">
+              <div className="bg-muted/30 border border-primary/20 rounded-lg p-3">
+                <p className="text-xs text-foreground/80 font-mono line-clamp-3 leading-relaxed font-medium">
                   {(item as PromptTemplate).prompt}
                 </p>
               </div>
