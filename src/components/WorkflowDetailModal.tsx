@@ -1,16 +1,34 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CheckCircle, Clock, Users, Wrench, AlertTriangle, BookOpen } from "lucide-react";
+import React from 'react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
 
 type Workflow = {
   name: string;
-  whatItIs: string;
-  whatItsFor: string;
-  desiredOutcome: string;
+  description: string;
   steps: string[];
-  topicCategory: 'Text' | 'Image' | 'Video' | 'Audio' | 'Web/App Dev' | 'Workflow/AI Agents';
   category: string;
+};
+
+type DetailedStep = {
+  title: string;
+  description: string;
+  actions: string[];
+};
+
+type Variation = {
+  name: string;
+  description: string;
+};
+
+type TroubleshootingItem = {
+  problem: string;
+  solution: string;
+};
+
+type Resource = {
+  name: string;
+  url: string;
 };
 
 type DetailedWorkflow = {
@@ -23,825 +41,885 @@ type DetailedWorkflow = {
   timeEstimate: string;
   difficulty: string;
   tools: string[];
-  detailedSteps: {
-    title: string;
-    description: string;
-    actions: string[];
-  }[];
-  variations: {
-    name: string;
-    description: string;
-  }[];
-  troubleshooting: {
-    issue: string;
-    solution: string;
-  }[];
-  resources: { name: string; url: string; }[];
+  detailedSteps: DetailedStep[];
+  variations: Variation[];
+  troubleshooting: TroubleshootingItem[];
+  resources: Resource[];
 };
 
 const workflowDetails: Record<string, DetailedWorkflow> = {
-  "Content Creation Workflow": {
-    name: "Content Creation Workflow",
-    description: "Systematic approach to creating high-quality content",
-    steps: ["Define role, audience, constraints, and deliverable length.", "Ask for a structured outline first; iterate on sections.", "Request variations and finalize with style and brand guardrails."],
-    category: "Content",
-    overview: "This comprehensive workflow transforms ideas into compelling content through systematic AI collaboration. Perfect for marketers, content creators, and business professionals who need consistent, high-quality output.",
-    prerequisites: ["Access to AI writing tools (ChatGPT, Claude, etc.)", "Clear understanding of target audience", "Brand guidelines and style preferences", "Content objectives and KPIs"],
-    timeEstimate: "30-90 minutes per piece",
+  // TEXT WORKFLOWS
+  "Content Creation Pipeline": {
+    name: "Content Creation Pipeline",
+    description: "Systematic approach to producing high-quality written content",
+    steps: ["Define target audience, goals, and key messages", "Research topic thoroughly and gather supporting data", "Create detailed outline with clear structure", "Write first draft focusing on core message", "Review and optimize for brand voice and SEO", "Get feedback and iterate based on input", "Finalize and schedule for publication"],
+    category: "Content Marketing",
+    overview: "This comprehensive workflow transforms ideas into compelling content through systematic AI collaboration. Perfect for marketers, content creators, and business professionals who need consistent, high-quality output across multiple channels and formats.",
+    prerequisites: ["Access to AI writing tools (ChatGPT, Claude, etc.)", "Clear understanding of target audience", "Brand guidelines and style preferences", "Content objectives and KPIs", "Basic SEO knowledge"],
+    timeEstimate: "2-4 hours per piece",
     difficulty: "Beginner",
-    tools: ["ChatGPT/Claude/Gemini", "Content calendar", "Brand style guide", "Analytics tools"],
+    tools: ["ChatGPT/Claude/Gemini", "Content calendar", "Brand style guide", "Analytics tools", "SEO tools", "Grammar checkers"],
     detailedSteps: [
       {
-        title: "Step 1: Content Foundation Setup",
+        title: "Step 1: Audience and Goal Definition",
         description: "Establish the fundamental parameters that will guide your entire content creation process.",
         actions: [
-          "Define your role context: 'Act as a [specific role] with expertise in [domain]'",
-          "Identify target audience: demographics, pain points, preferred communication style",
-          "Set clear constraints: word count, format requirements, publication timeline",
-          "Establish success metrics: engagement goals, conversion targets, brand alignment"
+          "Define target audience: demographics, pain points, preferred communication style",
+          "Set clear content objectives: awareness, education, conversion, engagement",
+          "Identify key messages and value propositions to communicate",
+          "Establish success metrics: traffic, engagement, conversions, brand awareness"
         ]
       },
       {
-        title: "Step 2: Strategic Outline Development",
-        description: "Create a structured framework that ensures comprehensive coverage and logical flow.",
+        title: "Step 2: Research and Data Gathering",
+        description: "Collect comprehensive information to ensure content accuracy and depth.",
         actions: [
-          "Request a detailed outline with main sections and subsections",
-          "Iterate on structure based on audience journey and content objectives",
-          "Validate outline against SEO requirements and keyword strategy", 
-          "Confirm logical flow and ensure all key points are covered"
+          "Conduct keyword research for SEO optimization",
+          "Analyze competitor content and identify gaps",
+          "Gather supporting statistics, case studies, and expert quotes",
+          "Review industry trends and current events for relevance"
         ]
       },
       {
-        title: "Step 3: Content Creation & Iteration",
-        description: "Generate the actual content with multiple variations and refinements.",
+        title: "Step 3: Content Structure Development",
+        description: "Create a logical framework that ensures comprehensive coverage and reader engagement.",
         actions: [
-          "Create initial content draft following the approved outline",
-          "Generate 2-3 variations of key sections for testing and optimization",
-          "Apply brand voice guidelines and style consistency checks",
-          "Optimize for readability, engagement, and conversion goals"
+          "Develop compelling headline and subheadings",
+          "Create detailed outline with main sections and subsections",
+          "Plan content flow to guide reader through logical progression",
+          "Identify opportunities for visuals, examples, and interactive elements"
         ]
       },
       {
-        title: "Step 4: Quality Assurance & Finalization",
-        description: "Ensure content meets all requirements and brand standards before publication.",
+        title: "Step 4: First Draft Creation",
+        description: "Generate initial content focusing on core message delivery.",
         actions: [
-          "Conduct thorough review for accuracy, tone, and brand alignment",
-          "Verify all facts, statistics, and claims with reliable sources",
-          "Optimize for SEO with appropriate keywords and meta descriptions",
-          "Prepare final version with calls-to-action and distribution strategy"
+          "Write engaging introduction that hooks the reader",
+          "Develop body content with clear, actionable insights",
+          "Use storytelling techniques and real examples",
+          "Create strong conclusion with clear call-to-action"
+        ]
+      },
+      {
+        title: "Step 5: Optimization and Refinement",
+        description: "Enhance content for brand consistency, SEO, and reader engagement.",
+        actions: [
+          "Review for brand voice and tone consistency",
+          "Optimize for target keywords without keyword stuffing",
+          "Improve readability with shorter sentences and paragraphs",
+          "Add internal and external links for authority and user experience"
+        ]
+      },
+      {
+        title: "Step 6: Feedback and Iteration",
+        description: "Gather input and refine content based on stakeholder feedback.",
+        actions: [
+          "Share draft with subject matter experts for accuracy review",
+          "Get feedback from target audience representatives",
+          "Incorporate suggestions while maintaining content integrity",
+          "Conduct final proofread for grammar and factual accuracy"
+        ]
+      },
+      {
+        title: "Step 7: Publication and Promotion",
+        description: "Finalize content and execute distribution strategy.",
+        actions: [
+          "Format content for chosen platform or medium",
+          "Schedule publication at optimal times for audience",
+          "Prepare social media promotion and email announcements",
+          "Set up tracking for performance metrics and engagement"
         ]
       }
     ],
     variations: [
-      { name: "Blog Post Variation", description: "Optimized for long-form educational content with SEO focus" },
-      { name: "Social Media Variation", description: "Adapted for platform-specific content with engagement optimization" },
-      { name: "Email Campaign Variation", description: "Tailored for email marketing with personalization and conversion focus" }
+      { name: "Blog Post Creation", description: "Long-form educational content optimized for search engines and thought leadership" },
+      { name: "Social Media Content", description: "Platform-specific content adapted for engagement and shareability" },
+      { name: "Email Campaign Content", description: "Personalized content designed for direct communication and conversion" },
+      { name: "Video Script Writing", description: "Conversational content structured for video presentation and engagement" }
     ],
     troubleshooting: [
-      { issue: "Content lacks originality", solution: "Add more specific context about your unique perspective, include personal examples, and request multiple angles on the same topic" },
-      { issue: "AI output is too generic", solution: "Provide more detailed audience information, include competitor analysis, and specify exact tone and style requirements" },
-      { issue: "Content doesn't match brand voice", solution: "Include 3-5 examples of your existing content, create a detailed brand voice document, and iterate with feedback" }
+      { problem: "Content lacks engagement", solution: "Add more storytelling elements, personal anecdotes, and interactive questions" },
+      { problem: "SEO performance is poor", solution: "Revisit keyword research, improve meta descriptions, and add more relevant internal links" },
+      { problem: "Brand voice inconsistency", solution: "Create detailed brand voice guidelines and use them as prompts for AI tools" },
+      { problem: "Content production too slow", solution: "Develop templates and content frameworks to streamline the creation process" }
     ],
     resources: [
-      { name: "Content Marketing Guide", url: "#" },
-      { name: "Brand Voice Templates", url: "#" },
-      { name: "SEO Best Practices", url: "#" }
+      { name: "Content Strategy Guide", url: "https://contentmarketinginstitute.com/articles/content-strategy-guide/" },
+      { name: "AI Writing Tools Comparison", url: "https://blog.hubspot.com/marketing/ai-writing-tools" },
+      { name: "Brand Voice Development", url: "https://blog.hootsuite.com/brand-voice/" },
+      { name: "SEO Content Optimization", url: "https://moz.com/learn/seo/on-page-factors" }
     ]
   },
 
   "Document Analysis Workflow": {
     name: "Document Analysis Workflow",
-    description: "Process for analyzing and summarizing documents",
-    steps: ["Upload/reference source docs; ask for structured SOP.", "Iterate to add owners/SLAs; request ambiguity list.", "Export final SOP with version and change log."],
-    category: "Analysis",
-    overview: "A systematic approach to transforming complex documents into actionable insights and structured procedures. Essential for legal review, policy analysis, and knowledge extraction.",
-    prerequisites: ["Document access and upload capability", "Clear analysis objectives", "Stakeholder identification", "Output format requirements"],
-    timeEstimate: "45-120 minutes per document",
-    difficulty: "Intermediate",
-    tools: ["AI document analysis tools", "OCR software", "Collaboration platforms", "Version control systems"],
-    detailedSteps: [
-      {
-        title: "Step 1: Document Ingestion & Initial Analysis",
-        description: "Upload and perform initial assessment of the document structure and content.",
-        actions: [
-          "Upload or reference source documents with proper security protocols",
-          "Perform initial document structure analysis and content mapping",
-          "Identify key sections, stakeholders, and decision points",
-          "Extract metadata, dates, and version information for tracking"
-        ]
-      },
-      {
-        title: "Step 2: Structured Content Extraction",
-        description: "Convert document content into organized, actionable information.",
-        actions: [
-          "Request structured SOP format with clear sections and hierarchy",
-          "Extract key processes, procedures, and business rules",
-          "Identify dependencies, prerequisites, and success criteria",
-          "Create summary sections with executive overview and key takeaways"
-        ]
-      },
-      {
-        title: "Step 3: Stakeholder & Accountability Mapping",
-        description: "Add ownership structure and service level agreements to extracted content.",
-        actions: [
-          "Identify and assign process owners for each section or procedure",
-          "Define Service Level Agreements (SLAs) and performance metrics",
-          "Add approval workflows and escalation procedures",
-          "Create responsibility matrices (RACI) for complex processes"
-        ]
-      },
-      {
-        title: "Step 4: Quality Assurance & Finalization",
-        description: "Ensure accuracy, completeness, and usability of the final output.",
-        actions: [
-          "Generate comprehensive ambiguity list highlighting unclear areas",
-          "Validate extracted information against source documents",
-          "Create final SOP with proper versioning and change management",
-          "Export in required formats with distribution and maintenance plans"
-        ]
-      }
-    ],
-    variations: [
-      { name: "Legal Document Analysis", description: "Specialized for contracts, compliance documents, and legal texts" },
-      { name: "Technical Documentation Review", description: "Optimized for technical manuals, specifications, and procedures" },
-      { name: "Policy Document Extraction", description: "Focused on organizational policies, guidelines, and governance documents" }
-    ],
-    troubleshooting: [
-      { issue: "Poor document quality or formatting", solution: "Use OCR preprocessing, manual cleanup, or request better quality source documents" },
-      { issue: "Complex multi-section documents", solution: "Break into smaller sections, analyze incrementally, and maintain cross-references" },
-      { issue: "Ambiguous or contradictory content", solution: "Flag all ambiguities, seek clarification from stakeholders, and document assumptions" }
-    ],
-    resources: [
-      { name: "Document Analysis Templates", url: "#" },
-      { name: "SOP Creation Guidelines", url: "#" },
-      { name: "Process Mapping Tools", url: "#" }
-    ]
-  },
-
-  "Executive Reporting Workflow": {
-    name: "Executive Reporting Workflow", 
-    description: "Create executive-ready reports from data",
-    steps: ["Provide table/context; request bullet executive summary.", "Probe on anomalies; ask for 3 hypotheses with tests.", "Finalize with risks, opportunities, and next steps."],
+    description: "Structured process for analyzing and extracting insights from documents",
+    steps: ["Upload and digitize source documents", "Identify key sections and data points", "Extract and categorize important information", "Analyze patterns and trends in the data", "Create executive summary with recommendations", "Validate findings with stakeholders"],
     category: "Business Intelligence",
-    overview: "Transform raw data and complex analysis into concise, actionable executive reports that drive strategic decision-making and organizational alignment.",
-    prerequisites: ["Access to relevant data sources", "Understanding of business context", "Executive audience insights", "Strategic objectives clarity"],
-    timeEstimate: "60-180 minutes per report",
+    overview: "Transform complex documents into actionable business intelligence through systematic analysis. Ideal for executives, analysts, and researchers who need to quickly extract insights from large volumes of documentation.",
+    prerequisites: ["Document scanning/digitization tools", "Data analysis software", "Understanding of business context", "Stakeholder access for validation"],
+    timeEstimate: "3-6 hours per document set",
     difficulty: "Intermediate",
-    tools: ["Business intelligence platforms", "Data visualization tools", "Statistical analysis software", "Executive presentation templates"],
+    tools: ["AI document analysis tools", "Excel/Google Sheets", "OCR software", "Data visualization tools", "PDF readers with annotation"],
     detailedSteps: [
       {
-        title: "Step 1: Data Contextualization & Executive Summary",
-        description: "Transform raw data into executive-level insights with proper business context.",
+        title: "Step 1: Document Preparation and Digitization",
+        description: "Convert physical documents to digital format and organize for analysis.",
         actions: [
-          "Provide comprehensive data tables with proper context and methodology",
-          "Request structured executive summary with key findings in bullet format",
-          "Highlight the most critical 3-5 insights that require executive attention",
-          "Include performance against established KPIs and benchmarks"
+          "Scan physical documents using high-quality OCR technology",
+          "Organize documents by type, date, or relevance",
+          "Create backup copies and establish version control",
+          "Ensure all text is searchable and accessible"
         ]
       },
       {
-        title: "Step 2: Anomaly Investigation & Hypothesis Development",
-        description: "Deep-dive into data anomalies and develop testable hypotheses for unusual patterns.",
+        title: "Step 2: Initial Document Review",
+        description: "Conduct preliminary assessment to understand document scope and content.",
         actions: [
-          "Identify and probe significant variances, outliers, and unexpected trends",
-          "Generate 3 testable hypotheses for each major anomaly or insight",
-          "Design verification tests and validation methods for each hypothesis",
-          "Prioritize investigations based on potential business impact and feasibility"
+          "Skim through documents to understand overall content and structure",
+          "Identify different document types and their purposes",
+          "Note potential areas of interest or concern",
+          "Create a high-level categorization system"
         ]
       },
       {
-        title: "Step 3: Strategic Risk & Opportunity Assessment",
-        description: "Evaluate implications and develop actionable recommendations for executive decision-making.",
+        title: "Step 3: Key Information Extraction",
+        description: "Systematically extract relevant data points and information.",
         actions: [
-          "Conduct comprehensive risk analysis with likelihood and impact assessment",
-          "Identify strategic opportunities with market timing and resource requirements",
-          "Develop scenario planning with best/worst/most likely case projections",
-          "Quantify potential financial impact of identified risks and opportunities"
+          "Use AI tools to extract key entities, dates, and numbers",
+          "Identify recurring themes and important concepts",
+          "Highlight critical decisions, recommendations, and action items",
+          "Create structured data tables from unstructured information"
         ]
       },
       {
-        title: "Step 4: Action Planning & Next Steps",
-        description: "Create concrete action plan with clear accountability and timeline for implementation.",
+        title: "Step 4: Pattern and Trend Analysis",
+        description: "Analyze extracted data to identify meaningful patterns and insights.",
         actions: [
-          "Define specific next steps with assigned owners and realistic timelines",
-          "Establish success metrics and monitoring protocols for recommended actions",
-          "Create executive decision framework with clear options and trade-offs", 
-          "Schedule follow-up reviews and progress checkpoints"
+          "Look for trends over time in financial, operational, or performance data",
+          "Identify correlations between different data points",
+          "Compare findings against industry benchmarks or standards",
+          "Note any anomalies or unexpected patterns"
+        ]
+      },
+      {
+        title: "Step 5: Synthesis and Recommendations",
+        description: "Combine insights into actionable recommendations and executive summary.",
+        actions: [
+          "Synthesize key findings into major themes and insights",
+          "Develop specific, actionable recommendations based on analysis",
+          "Create executive summary highlighting most critical findings",
+          "Prepare supporting data and evidence for each recommendation"
+        ]
+      },
+      {
+        title: "Step 6: Validation and Refinement",
+        description: "Validate findings with stakeholders and refine analysis based on feedback.",
+        actions: [
+          "Present preliminary findings to subject matter experts",
+          "Gather feedback on accuracy and completeness of analysis",
+          "Refine recommendations based on stakeholder input",
+          "Finalize report with validated insights and action items"
         ]
       }
     ],
     variations: [
-      { name: "Financial Performance Report", description: "Focused on financial metrics, variance analysis, and fiscal performance" },
-      { name: "Operational Dashboard Report", description: "Operational KPIs, efficiency metrics, and process performance analysis" },
-      { name: "Market Intelligence Report", description: "Competitive analysis, market trends, and strategic positioning insights" }
+      { name: "Financial Document Analysis", description: "Specialized analysis of financial statements, reports, and related documents" },
+      { name: "Legal Document Review", description: "Systematic review of contracts, agreements, and legal documentation" },
+      { name: "Research Paper Analysis", description: "Academic or scientific document analysis for research synthesis" },
+      { name: "Competitive Intelligence", description: "Analysis of competitor documents and market intelligence materials" }
     ],
     troubleshooting: [
-      { issue: "Data quality or completeness issues", solution: "Clearly document data limitations, provide confidence intervals, and recommend data improvement initiatives" },
-      { issue: "Too much technical detail for executives", solution: "Use executive summary format, focus on implications rather than methodology, provide technical appendix" },
-      { issue: "Conflicting or unclear insights", solution: "Present multiple scenarios, highlight uncertainties, and provide decision frameworks for ambiguous situations" }
+      { problem: "Poor OCR quality affects analysis", solution: "Use higher resolution scanning and multiple OCR tools for comparison" },
+      { problem: "Information overload from too many documents", solution: "Prioritize documents by relevance and analyze in focused batches" },
+      { problem: "Difficulty extracting structured data", solution: "Use AI-powered document parsing tools and create custom extraction templates" },
+      { problem: "Stakeholders disagree with findings", solution: "Provide detailed methodology and supporting evidence for all conclusions" }
     ],
     resources: [
-      { name: "Executive Report Templates", url: "#" },
-      { name: "Data Visualization Best Practices", url: "#" },
-      { name: "Strategic Analysis Frameworks", url: "#" }
+      { name: "Document Analysis Best Practices", url: "https://www.archives.gov/research/genealogy/charts-forms" },
+      { name: "AI Document Processing Tools", url: "https://blog.nanonets.com/document-ai-tools/" },
+      { name: "Business Intelligence Frameworks", url: "https://www.tableau.com/learn/articles/business-intelligence" },
+      { name: "Data Visualization Techniques", url: "https://www.storytellingwithdata.com/" }
     ]
   },
 
-  "Research Workflow": {
-    name: "Research Workflow",
-    description: "Comprehensive research with citations",
-    steps: ["Ask for current, cited sources; set timeframe.", "Request a pros/cons table and action checklist.", "Deliver an executive brief plus 3 tweet‑length summaries."],
-    category: "Research",
-    overview: "A systematic approach to conducting thorough research that delivers credible, actionable insights with proper attribution and multiple output formats for different audiences.",
-    prerequisites: ["Access to research databases and sources", "Clear research objectives", "Target audience definition", "Timeline and scope parameters"],
-    timeEstimate: "2-8 hours depending on scope",
+  "Blog Writing Process": {
+    name: "Blog Writing Process",
+    description: "Step-by-step methodology for creating SEO-optimized blog content",
+    steps: ["Conduct keyword research and identify target terms", "Analyze competitor content and identify content gaps", "Create comprehensive content outline with H2/H3 structure", "Write engaging introduction with hook and value proposition", "Develop body content with actionable insights and examples", "Optimize for on-page SEO including meta descriptions and alt tags", "Proofread, fact-check, and publish with internal linking strategy"],
+    category: "SEO Content",
+    overview: "Master the art of creating search-engine optimized blog content that ranks well and engages readers. This workflow combines SEO best practices with engaging storytelling to drive organic traffic and build authority.",
+    prerequisites: ["SEO tool access (Ahrefs, SEMrush, etc.)", "Understanding of target audience", "Basic knowledge of HTML and WordPress", "Content management system access"],
+    timeEstimate: "4-6 hours per blog post",
     difficulty: "Intermediate",
-    tools: ["Academic databases", "Web research tools", "Citation management", "Content synthesis platforms"],
+    tools: ["SEO research tools", "Google Analytics", "WordPress/CMS", "Grammarly", "Canva for images", "Schema markup tools"],
     detailedSteps: [
       {
-        title: "Step 1: Research Scoping & Source Identification", 
-        description: "Define research parameters and identify current, credible sources with proper citations.",
+        title: "Step 1: Keyword Research and Topic Selection",
+        description: "Identify high-potential keywords and topics that align with your audience's search intent.",
         actions: [
-          "Establish clear research questions and success criteria",
-          "Set specific timeframe constraints for source currency (typically 1-3 years)",
-          "Identify and access appropriate databases, journals, and expert sources",
-          "Create initial source list with proper citation format and credibility assessment"
+          "Use SEO tools to find keywords with good search volume and manageable competition",
+          "Analyze search intent behind target keywords (informational, commercial, navigational)",
+          "Group related keywords into topic clusters for comprehensive coverage",
+          "Validate topic relevance with your target audience and business goals"
         ]
       },
       {
-        title: "Step 2: Comprehensive Analysis & Synthesis",
-        description: "Conduct thorough analysis and create structured comparison frameworks.",
+        title: "Step 2: Competitive Content Analysis",
+        description: "Study top-ranking content to identify opportunities for differentiation and improvement.",
         actions: [
-          "Extract key findings, methodologies, and conclusions from each source",
-          "Create detailed pros/cons analysis table with weighted criteria",
-          "Develop comprehensive action checklist with prioritized recommendations", 
-          "Cross-reference findings to identify consensus, conflicts, and gaps"
+          "Analyze top 10 search results for your target keyword",
+          "Identify content gaps and opportunities for unique angles",
+          "Note the structure, length, and format of successful competitors",
+          "Look for outdated information you can update and improve upon"
         ]
       },
       {
-        title: "Step 3: Multi-Format Output Creation",
-        description: "Transform research into multiple formats optimized for different stakeholder needs.",
+        title: "Step 3: Content Structure and Outline Creation",
+        description: "Build a comprehensive outline that covers all important aspects of the topic.",
         actions: [
-          "Develop comprehensive executive brief with methodology and full findings",
-          "Create 3 tweet-length summaries highlighting key insights for social sharing",
-          "Include complete bibliography with accessible links and source quality ratings",
-          "Add visual summaries, infographics, or data visualizations where appropriate"
+          "Create H1 title that includes primary keyword naturally",
+          "Develop H2 and H3 structure covering subtopics and related keywords",
+          "Plan introduction that hooks readers with compelling opening",
+          "Outline conclusion with clear takeaways and call-to-action"
         ]
       },
       {
-        title: "Step 4: Quality Assurance & Distribution Strategy",
-        description: "Validate findings and prepare for effective dissemination across channels.",
+        title: "Step 4: Content Writing and Development",
+        description: "Create engaging, informative content that provides real value to readers.",
         actions: [
-          "Conduct peer review and fact-checking of all claims and citations",
-          "Verify all links, sources, and data accuracy before distribution",
-          "Create distribution strategy tailored to different audience segments",
-          "Establish update schedule and monitoring for ongoing developments"
+          "Write compelling meta title and description under character limits",
+          "Craft introduction that immediately addresses reader's search intent",
+          "Develop body sections with actionable insights, examples, and data",
+          "Use formatting (bullet points, numbered lists, bold text) for readability"
+        ]
+      },
+      {
+        title: "Step 5: SEO Optimization",
+        description: "Optimize content for search engines while maintaining readability and user experience.",
+        actions: [
+          "Include target keyword in title, first paragraph, and naturally throughout content",
+          "Add relevant internal links to other valuable content on your site",
+          "Include external links to authoritative sources for credibility",
+          "Optimize images with descriptive alt text and file names"
+        ]
+      },
+      {
+        title: "Step 6: Quality Assurance and Publishing",
+        description: "Review, refine, and publish content with proper technical setup.",
+        actions: [
+          "Proofread for grammar, spelling, and factual accuracy",
+          "Check that all links work correctly and open appropriately",
+          "Add schema markup for rich snippets if applicable",
+          "Set up social media sharing and email promotion"
+        ]
+      },
+      {
+        title: "Step 7: Performance Monitoring and Optimization",
+        description: "Track content performance and make improvements based on data.",
+        actions: [
+          "Monitor rankings, traffic, and engagement in Google Analytics",
+          "Update content regularly with new information and insights",
+          "Respond to comments and engage with readers",
+          "Repurpose successful content into other formats (videos, social posts)"
         ]
       }
     ],
     variations: [
-      { name: "Academic Research Synthesis", description: "Peer-reviewed academic sources with rigorous methodology focus" },
-      { name: "Market Research Analysis", description: "Industry reports, market data, and competitive intelligence gathering" },
-      { name: "Policy Research Brief", description: "Government sources, policy documents, and regulatory analysis" }
+      { name: "How-to Blog Posts", description: "Step-by-step instructional content that solves specific problems" },
+      { name: "Listicle Articles", description: "Numbered or bulleted lists that are easy to scan and share" },
+      { name: "Comparison Posts", description: "Side-by-side evaluations of products, services, or solutions" },
+      { name: "Industry News Analysis", description: "Commentary and insights on current events in your field" }
     ],
     troubleshooting: [
-      { issue: "Limited access to premium sources", solution: "Utilize institutional access, open-access alternatives, and government/NGO publications" },
-      { issue: "Conflicting information across sources", solution: "Document all perspectives, analyze source credibility, and present balanced view with uncertainty noted" },
-      { issue: "Information overload or scope creep", solution: "Return to original research questions, create clear inclusion/exclusion criteria, and set firm boundaries" }
+      { problem: "Low search rankings despite good content", solution: "Build more high-quality backlinks and improve site technical SEO" },
+      { problem: "High bounce rate on blog posts", solution: "Improve page loading speed and ensure content matches search intent" },
+      { problem: "Difficulty finding unique angles", solution: "Survey your audience for specific questions and pain points" },
+      { problem: "Content not converting readers", solution: "Add more compelling calls-to-action and lead magnets throughout content" }
     ],
     resources: [
-      { name: "Research Methodology Guide", url: "#" },
-      { name: "Citation and Source Evaluation", url: "#" },
-      { name: "Research Synthesis Templates", url: "#" }
+      { name: "Google's SEO Starter Guide", url: "https://developers.google.com/search/docs/fundamentals/seo-starter-guide" },
+      { name: "Ahrefs Blog Writing Guide", url: "https://ahrefs.com/blog/how-to-write-a-blog-post/" },
+      { name: "Content Marketing Institute", url: "https://contentmarketinginstitute.com/" },
+      { name: "Yoast SEO Blog", url: "https://yoast.com/seo-blog/" }
     ]
   },
 
-  "n8n AI Content Generation Pipeline": {
-    name: "n8n AI Content Generation Pipeline",
-    description: "Enterprise-scale content automation with multiple AI models",
-    steps: ["Set up content brief intake via forms or API with validation rules", "Route requests through n8n based on content type and complexity", "Orchestrate multiple AI models (GPT-5, Claude, Gemini) for content creation", "Implement quality control with AI-powered review and human approval", "Distribute content across platforms with analytics tracking", "Create feedback loops for continuous pipeline optimization"],
-    category: "AI Content Automation",
-    overview: "This advanced automation pipeline revolutionizes content creation by orchestrating multiple AI models through n8n workflows. Perfect for enterprises managing high-volume content production with consistent quality standards.",
-    prerequisites: ["n8n Pro subscription with AI integrations", "API access to multiple AI services", "Content management system", "Analytics platform integration", "Content approval workflow"],
-    timeEstimate: "2-4 weeks implementation",
-    difficulty: "Advanced", 
-    tools: ["n8n Pro", "OpenAI API", "Claude API", "Google Gemini", "Content CMS", "Analytics tools"],
+  "Email Marketing Campaign": {
+    name: "Email Marketing Campaign",
+    description: "Comprehensive workflow for creating effective email marketing campaigns",
+    steps: ["Define campaign objectives and success metrics", "Segment audience based on behavior and demographics", "Create compelling subject lines and preview text", "Design email template with clear call-to-action", "Write persuasive copy that addresses customer pain points", "Set up automation triggers and follow-up sequences", "Test, analyze performance, and optimize based on results"],
+    category: "Email Marketing",
+    overview: "Build high-converting email campaigns that nurture leads and drive sales through strategic messaging and automation. Perfect for marketers looking to maximize email ROI and customer engagement.",
+    prerequisites: ["Email marketing platform (Mailchimp, ConvertKit, etc.)", "Segmented email list", "Brand guidelines", "Clear campaign objectives", "Analytics tracking setup"],
+    timeEstimate: "6-10 hours per campaign",
+    difficulty: "Intermediate",
+    tools: ["Email marketing platform", "Design tools (Canva, Figma)", "A/B testing tools", "Analytics platforms", "CRM system", "Automation tools"],
     detailedSteps: [
       {
-        title: "Step 1: Content Request System Setup",
-        description: "Build the intake system that captures content requirements and validates requests.",
+        title: "Step 1: Campaign Strategy and Goal Setting",
+        description: "Define clear objectives and success metrics for your email campaign.",
         actions: [
-          "Create n8n webhook trigger for content requests from forms or API",
-          "Set up data validation nodes to ensure required fields are present",
-          "Implement content type classification (blog, social, email, etc.)",
-          "Add priority scoring based on urgency and content type",
-          "Create database storage for request tracking and audit trails"
+          "Set specific, measurable goals (open rates, click rates, conversions)",
+          "Define target audience and create detailed buyer personas",
+          "Choose campaign type (newsletter, promotional, nurture sequence, etc.)",
+          "Establish timeline and frequency for email sends"
         ]
       },
       {
-        title: "Step 2: AI Model Selection Logic", 
-        description: "Implement intelligent routing to the most appropriate AI model based on content requirements.",
+        title: "Step 2: Audience Segmentation",
+        description: "Divide your email list into targeted segments for personalized messaging.",
         actions: [
-          "Build conditional logic for AI model selection based on content type",
-          "Configure GPT-4 for creative and long-form content",
-          "Route technical content to Claude for accuracy and depth",
-          "Use Gemini for data analysis and research-heavy content",
-          "Implement fallback logic if primary AI service is unavailable",
-          "Add cost optimization rules to balance quality and budget"
+          "Segment by demographics, behavior, purchase history, and engagement level",
+          "Create dynamic segments that update automatically based on criteria",
+          "Develop personalized messaging angles for each segment",
+          "Test segment sizes to ensure statistical significance for testing"
         ]
       },
       {
-        title: "Step 3: Content Generation Orchestration",
-        description: "Execute the content creation process with multiple AI models working in coordination.",
+        title: "Step 3: Subject Line and Preview Text Creation",
+        description: "Craft compelling subject lines that maximize open rates.",
         actions: [
-          "Trigger primary AI model with optimized prompts and context",
-          "Generate multiple content variations for A/B testing",
-          "Implement secondary AI review for quality assessment",
-          "Add fact-checking nodes using search APIs or knowledge bases", 
-          "Create content enhancement workflows for SEO optimization",
-          "Generate metadata, tags, and categorization automatically"
+          "Write multiple subject line variations using different psychological triggers",
+          "Keep subject lines under 50 characters for mobile optimization",
+          "Create preview text that complements and extends the subject line",
+          "Avoid spam trigger words and excessive punctuation"
         ]
       },
       {
-        title: "Step 4: Quality Control & Approval Workflow",
-        description: "Implement automated quality checks and human approval processes.",
+        title: "Step 4: Email Template Design",
+        description: "Design visually appealing emails that work across all devices and email clients.",
         actions: [
-          "Run AI-powered quality scoring based on brand guidelines",
-          "Check for plagiarism and originality using specialized APIs",
-          "Validate SEO requirements and readability scores",
-          "Route content through appropriate approval chains",
-          "Send notifications to reviewers with editing suggestions",
-          "Track approval times and bottlenecks for optimization"
+          "Choose responsive template that displays well on mobile devices",
+          "Include clear branding elements and consistent visual hierarchy",
+          "Design prominent, action-oriented call-to-action buttons",
+          "Ensure accessibility with alt text for images and proper contrast ratios"
         ]
       },
       {
-        title: "Step 5: Multi-Platform Distribution",
-        description: "Automatically distribute approved content across multiple channels and platforms.",
+        title: "Step 5: Email Copy Development",
+        description: "Write persuasive email content that drives action and engagement.",
         actions: [
-          "Format content for different platforms (WordPress, social media, email)",
-          "Schedule publication based on optimal timing algorithms",
-          "Generate platform-specific variations (Twitter threads, LinkedIn articles)",
-          "Add tracking parameters for analytics and attribution",
-          "Trigger cross-platform promotion workflows",
-          "Update content calendars and stakeholder notifications"
+          "Start with attention-grabbing opening that connects with reader's needs",
+          "Focus on benefits rather than features in your messaging",
+          "Use storytelling and social proof to build credibility",
+          "Include clear, single call-to-action that guides readers to next step"
         ]
       },
       {
-        title: "Step 6: Performance Analytics & Optimization",
-        description: "Continuously monitor content performance and optimize the pipeline.",
+        title: "Step 6: Automation and Sequence Setup",
+        description: "Configure email automation to deliver the right message at the right time.",
         actions: [
-          "Collect performance data from all distribution channels",
-          "Analyze engagement patterns and content effectiveness",
-          "Generate automated reports for content teams and executives",
-          "Identify high-performing content patterns for future use",
-          "Optimize AI prompts based on performance data",
-          "Update model selection algorithms based on success metrics"
+          "Set up trigger-based automation for behavior-driven emails",
+          "Create drip sequences for lead nurturing and onboarding",
+          "Configure follow-up emails based on engagement and actions",
+          "Test automation flows with different scenarios and edge cases"
+        ]
+      },
+      {
+        title: "Step 7: Testing and Optimization",
+        description: "Continuously test and improve campaign performance through data-driven optimization.",
+        actions: [
+          "A/B test subject lines, send times, and content variations",
+          "Monitor key metrics: open rates, click rates, conversion rates, unsubscribes",
+          "Analyze heatmaps and click tracking data for optimization insights",
+          "Implement winning variations and document learnings for future campaigns"
         ]
       }
     ],
     variations: [
-      { name: "Blog Content Pipeline", description: "Specialized for long-form educational and thought leadership content" },
-      { name: "Social Media Content Factory", description: "High-volume social content production with platform optimization" },
-      { name: "Email Marketing Automation", description: "Personalized email content generation with segmentation" }
+      { name: "Welcome Email Series", description: "Automated sequence for new subscribers to introduce your brand and build relationships" },
+      { name: "Product Launch Campaign", description: "Multi-email sequence building anticipation and driving sales for new products" },
+      { name: "Re-engagement Campaign", description: "Targeted emails to win back inactive subscribers and reduce list churn" },
+      { name: "Event Promotion Series", description: "Time-sensitive campaign promoting webinars, conferences, or special events" }
     ],
     troubleshooting: [
-      { issue: "AI model selection not optimal", solution: "Analyze content performance by model, adjust selection criteria, implement A/B testing for model performance" },
-      { issue: "Quality control bottlenecks", solution: "Implement parallel review processes, add automated pre-screening, optimize approval workflows" },
-      { issue: "High API costs", solution: "Implement intelligent caching, optimize prompt efficiency, add cost monitoring and budget controls" }
+      { problem: "Low open rates", solution: "Test different subject lines, sender names, and send times; clean inactive subscribers" },
+      { problem: "High unsubscribe rates", solution: "Review email frequency, ensure content relevance, and improve list opt-in process" },
+      { problem: "Poor deliverability", solution: "Authenticate your domain, maintain good sender reputation, and avoid spam triggers" },
+      { problem: "Low click-through rates", solution: "Improve call-to-action design, reduce friction, and ensure mobile optimization" }
     ],
     resources: [
-      { name: "n8n AI Integrations Guide", url: "#" },
-      { name: "Content Automation Best Practices", url: "#" },
-      { name: "Multi-AI Orchestration Patterns", url: "#" }
+      { name: "Email Marketing Best Practices", url: "https://mailchimp.com/resources/email-marketing-best-practices/" },
+      { name: "Campaign Monitor Email Guide", url: "https://www.campaignmonitor.com/resources/guides/" },
+      { name: "Really Good Emails Gallery", url: "https://reallygoodemails.com/" },
+      { name: "Email Marketing Benchmarks", url: "https://www.mailchimp.com/resources/email-marketing-benchmarks/" }
     ]
   },
 
-  "n8n Intelligent Customer Support Workflow": {
-    name: "n8n Intelligent Customer Support Workflow",
-    description: "AI-powered customer service automation and escalation",
-    steps: ["Capture customer inquiries from multiple channels (email, chat, tickets)", "Use AI to categorize and prioritize support requests automatically", "Route to appropriate AI models for response generation and sentiment analysis", "Implement escalation logic based on complexity and customer tier", "Track resolution times and customer satisfaction scores", "Generate insights and recommendations for support improvement"],
-    category: "Customer Service Automation",
-    overview: "Transform customer support operations with intelligent automation that handles inquiries, provides AI-powered responses, and optimizes human agent workflows. This system delivers 24/7 support while improving response times and customer satisfaction.",
-    prerequisites: ["n8n Pro subscription", "Customer support platform API access", "AI service integrations (OpenAI, Claude)", "Customer database access", "Email/chat platform integrations"],
-    timeEstimate: "3-5 weeks implementation",
+  "Technical Documentation Process": {
+    name: "Technical Documentation Process",
+    description: "Structured approach to creating clear and comprehensive technical documentation",
+    steps: ["Analyze user personas and documentation needs", "Create information architecture and navigation structure", "Write step-by-step procedures with screenshots", "Include code examples and troubleshooting guides", "Review with subject matter experts and end users", "Implement feedback and maintain documentation currency", "Track usage analytics and continuously improve content"],
+    category: "Technical Writing",
+    overview: "Create user-friendly technical documentation that reduces support tickets and improves product adoption. Essential for software companies, API providers, and technical teams who need clear communication with users.",
+    prerequisites: ["Access to product/system being documented", "Understanding of user personas", "Documentation platform setup", "Screen capture tools", "Subject matter expert availability"],
+    timeEstimate: "8-12 hours per major feature/section",
     difficulty: "Advanced",
-    tools: ["n8n Pro", "Zendesk/Freshdesk API", "OpenAI API", "Slack/Teams", "Customer CRM", "Analytics platforms"],
+    tools: ["Documentation platforms (GitBook, Notion, Confluence)", "Screen recording/capture tools", "Code editors", "Diagramming tools", "Analytics tools", "Version control systems"],
     detailedSteps: [
       {
-        title: "Multi-Channel Inquiry Capture",
-        description: "Set up comprehensive intake system that captures customer inquiries from all support channels.",
+        title: "Step 1: User Research and Requirements Analysis",
+        description: "Understand your documentation users and their specific needs and contexts.",
         actions: [
-          "Configure webhooks for email, chat, and ticket system integrations",
-          "Implement data standardization across different channel formats",
-          "Add customer identification and account linking logic",
-          "Create unified inquiry format with metadata extraction",
-          "Set up deduplication logic to prevent duplicate processing"
+          "Survey existing users about their documentation pain points and preferences",
+          "Create detailed user personas including technical skill levels and use cases",
+          "Analyze support tickets to identify common questions and confusion points",
+          "Define success metrics for documentation effectiveness"
         ]
       },
       {
-        title: "AI-Powered Categorization & Prioritization",
-        description: "Implement intelligent classification system to route and prioritize support requests.",
+        title: "Step 2: Information Architecture Design",
+        description: "Create logical structure and navigation that helps users find information quickly.",
         actions: [
-          "Deploy AI models for automatic ticket categorization and tagging",
-          "Create priority scoring based on customer tier, issue type, and urgency",
-          "Implement sentiment analysis to identify frustrated or angry customers",
-          "Add business impact assessment for technical and billing issues",
-          "Create escalation triggers for high-value or complex issues"
+          "Organize content by user journey and task-based categories",
+          "Create hierarchical structure with clear categories and subcategories",
+          "Design intuitive navigation with search functionality and filtering",
+          "Plan content relationships and cross-referencing strategy"
         ]
       },
       {
-        title: "Intelligent Response Generation",
-        description: "Generate contextual AI responses while maintaining quality and brand consistency.",
+        title: "Step 3: Content Creation and Writing",
+        description: "Write clear, actionable documentation with appropriate detail level for your audience.",
         actions: [
-          "Configure AI models with company knowledge base and policy information",
-          "Implement response templates for common inquiry types",
-          "Add personalization based on customer history and preferences",
-          "Create multi-language support for international customers",
-          "Establish quality control checks before response delivery"
+          "Use clear, concise language avoiding unnecessary jargon",
+          "Write step-by-step procedures with numbered lists and clear actions",
+          "Include relevant screenshots, diagrams, and visual aids",
+          "Provide context and explain the 'why' behind procedures when helpful"
         ]
       },
       {
-        title: "Smart Escalation & Routing",
-        description: "Implement sophisticated logic to route complex issues to appropriate human agents.",
+        title: "Step 4: Code Examples and Technical Details",
+        description: "Include comprehensive code samples and technical specifications that developers need.",
         actions: [
-          "Define escalation criteria based on issue complexity and customer value",
-          "Create agent skill matching and workload balancing logic",
-          "Implement SLA monitoring and deadline tracking systems",
-          "Add supervisor notification for high-priority escalations",
-          "Create handoff protocols with full context preservation"
+          "Provide working code examples in multiple programming languages where applicable",
+          "Include complete request/response examples for APIs",
+          "Document all parameters, options, and configuration details",
+          "Create interactive code samples where possible for better user experience"
         ]
       },
       {
-        title: "Performance Tracking & Analytics",
-        description: "Monitor support metrics and generate insights for continuous improvement.",
+        title: "Step 5: Troubleshooting and FAQ Development",
+        description: "Anticipate common issues and provide solutions to reduce support burden.",
         actions: [
-          "Track resolution times, customer satisfaction, and first-contact resolution rates",
-          "Monitor AI response accuracy and customer feedback on automated responses",
-          "Generate agent performance reports and coaching recommendations",
-          "Create executive dashboards with key support metrics and trends",
-          "Implement predictive analytics for support volume forecasting"
+          "Document common error messages and their solutions",
+          "Create troubleshooting flowcharts for complex issues",
+          "Include FAQ section addressing frequently asked questions",
+          "Provide debugging tips and diagnostic procedures"
+        ]
+      },
+      {
+        title: "Step 6: Review and Quality Assurance",
+        description: "Ensure accuracy and usability through comprehensive review process.",
+        actions: [
+          "Conduct technical review with subject matter experts for accuracy",
+          "Test all procedures and code examples to ensure they work correctly",
+          "Get feedback from representative end users on clarity and completeness",
+          "Review for consistency in style, terminology, and formatting"
+        ]
+      },
+      {
+        title: "Step 7: Maintenance and Continuous Improvement",
+        description: "Keep documentation current and improve based on user behavior and feedback.",
+        actions: [
+          "Set up analytics to track page views, search queries, and user behavior",
+          "Establish regular review cycles to update content for product changes",
+          "Monitor user feedback and support tickets for documentation gaps",
+          "Continuously optimize based on user data and changing needs"
         ]
       }
     ],
     variations: [
-      { name: "Technical Support Automation", description: "Specialized for technical product support with diagnostic capabilities" },
-      { name: "E-commerce Support Pipeline", description: "Optimized for order inquiries, returns, and billing questions" },
-      { name: "SaaS Customer Success", description: "Focused on onboarding, feature usage, and subscription management" }
+      { name: "API Documentation", description: "Technical reference for developers integrating with APIs and SDKs" },
+      { name: "User Manuals", description: "End-user guides for software applications and digital products" },
+      { name: "Installation Guides", description: "Step-by-step setup and configuration instructions" },
+      { name: "Developer Tutorials", description: "Educational content teaching concepts and implementation patterns" }
     ],
     troubleshooting: [
-      { issue: "AI responses lack context or accuracy", solution: "Enhance knowledge base training data, implement feedback loops, and add human review checkpoints for quality improvement" },
-      { issue: "Escalation overload to human agents", solution: "Refine escalation criteria, improve AI response quality, and add more self-service options for common issues" },
-      { issue: "Integration failures with support platforms", solution: "Implement robust error handling, add backup routing options, and monitor API health with automatic retries" }
+      { problem: "Users still contacting support despite documentation", solution: "Analyze support tickets to identify gaps and improve content discoverability" },
+      { problem: "Documentation quickly becomes outdated", solution: "Integrate documentation updates into your product development workflow" },
+      { problem: "Low user engagement with documentation", solution: "Improve information architecture and add interactive elements like search and filtering" },
+      { problem: "Inconsistent quality across different sections", solution: "Create style guides and templates for consistent documentation standards" }
     ],
     resources: [
-      { name: "Customer Support Automation Guide", url: "#" },
-      { name: "AI Integration Best Practices", url: "#" },
-      { name: "Support Metrics Dashboard", url: "#" }
+      { name: "Write the Docs Community", url: "https://www.writethedocs.org/" },
+      { name: "Technical Writing Best Practices", url: "https://developers.google.com/tech-writing" },
+      { name: "Documentation Style Guides", url: "https://github.com/styleguide/templates" },
+      { name: "API Documentation Examples", url: "https://github.com/Redocly/awesome-openapi3" }
     ]
   },
 
-  "n8n Data Intelligence & Reporting System": {
-    name: "n8n Data Intelligence & Reporting System", 
-    description: "Automated business intelligence with AI-powered insights",
-    steps: ["Connect to multiple data sources (CRM, analytics, databases) with scheduling", "Implement data cleaning and transformation using n8n functions", "Apply AI analysis for trend detection and predictive insights", "Generate automated reports with natural language summaries", "Distribute reports to stakeholders via email, Slack, or dashboards", "Monitor data quality and alert on anomalies or significant changes"],
-    category: "Business Intelligence",
-    overview: "Create an intelligent data processing pipeline that automatically collects, analyzes, and reports on business metrics with AI-generated insights. This system transforms raw data into actionable intelligence for strategic decision-making.",
-    prerequisites: ["n8n Pro subscription", "Database and API access to data sources", "AI service accounts", "Business intelligence tools", "Stakeholder communication channels"],
-    timeEstimate: "4-6 weeks implementation", 
+  // IMAGE WORKFLOWS
+  "Visual Brand Asset Creation": {
+    name: "Visual Brand Asset Creation",
+    description: "Comprehensive process for creating consistent visual brand materials",
+    steps: ["Define brand visual guidelines and standards", "Create mood boards and style references", "Design primary visual assets and templates", "Test assets across different platforms and contexts", "Create usage guidelines and asset library", "Distribute assets to relevant teams"],
+    category: "Brand Management",
+    overview: "Establish a cohesive visual identity that strengthens brand recognition across all touchpoints. Essential for businesses building consistent brand presence across digital and print media.",
+    prerequisites: ["Brand strategy documentation", "Design software proficiency", "Understanding of brand values", "Access to design tools", "Stakeholder feedback process"],
+    timeEstimate: "2-4 weeks for complete brand system",
     difficulty: "Advanced",
-    tools: ["n8n Pro", "Database connectors", "OpenAI/Claude APIs", "Tableau/Power BI", "Slack/Email", "Google Sheets"],
+    tools: ["Adobe Creative Suite", "Figma/Sketch", "Brand management platforms", "Color palette tools", "Font management software", "Asset management systems"],
     detailedSteps: [
       {
-        title: "Multi-Source Data Integration",
-        description: "Establish connections to all relevant data sources with automated scheduling.",
+        title: "Step 1: Brand Foundation and Guidelines",
+        description: "Establish the visual foundation based on brand strategy and positioning.",
         actions: [
-          "Configure secure connections to CRM, ERP, analytics platforms, and databases",
-          "Set up scheduled data extraction with incremental loading capabilities",
-          "Implement data source monitoring and health checks",
-          "Create data lineage tracking for audit and troubleshooting",
-          "Add error handling and retry logic for failed data pulls"
+          "Review brand strategy documents and core values",
+          "Define brand personality traits that should be reflected visually",
+          "Research visual trends in your industry and competitive landscape",
+          "Create comprehensive brand guidelines document with visual standards"
         ]
       },
       {
-        title: "Data Processing & Transformation", 
-        description: "Clean, validate, and transform raw data into analysis-ready formats.",
+        title: "Step 2: Visual Research and Mood Boarding",
+        description: "Gather visual inspiration and create mood boards to guide design direction.",
         actions: [
-          "Implement data quality checks and validation rules",
-          "Create data standardization and normalization processes",
-          "Add calculated fields and derived metrics computation",
-          "Establish master data management for consistent dimensions",
-          "Build data warehouse staging and historical data management"
+          "Collect visual references that align with brand personality",
+          "Create mood boards exploring different aesthetic directions",
+          "Test mood boards with stakeholders to validate direction",
+          "Refine visual direction based on feedback and brand requirements"
         ]
       },
       {
-        title: "AI-Powered Analytics & Insights",
-        description: "Apply artificial intelligence to detect patterns, trends, and generate predictive insights.",
+        title: "Step 3: Primary Asset Development",
+        description: "Design core visual elements that will form the foundation of your brand identity.",
         actions: [
-          "Deploy AI models for trend detection and anomaly identification",
-          "Implement predictive analytics for forecasting and scenario planning",
-          "Generate natural language insights and commentary on data patterns",
-          "Create automated hypothesis testing and statistical analysis",
-          "Add competitive benchmarking and industry comparison capabilities"
+          "Design logo variations for different use cases and contexts",
+          "Develop comprehensive color palette with primary and secondary colors",
+          "Select and specify typography system with hierarchy and pairing rules",
+          "Create iconography system with consistent style and meaning"
         ]
       },
       {
-        title: "Automated Report Generation",
-        description: "Create comprehensive reports with visualizations and AI-generated narratives.",
+        title: "Step 4: Template and Application Design",
+        description: "Create templates and guidelines for consistent application across materials.",
         actions: [
-          "Build dynamic report templates with interactive visualizations",
-          "Generate executive summaries with key insights and recommendations",
-          "Create drill-down capabilities for detailed analysis",
-          "Add personalized reports based on recipient roles and interests",
-          "Implement version control and report approval workflows"
+          "Design business card, letterhead, and basic stationery templates",
+          "Create social media templates for consistent posting across platforms",
+          "Develop presentation templates and document formatting guidelines",
+          "Design email signature templates and digital application guidelines"
         ]
       },
       {
-        title: "Intelligent Distribution & Alerting",
-        description: "Deliver reports and insights through appropriate channels with smart notifications.",
+        title: "Step 5: Cross-Platform Testing and Optimization",
+        description: "Test visual assets across different contexts to ensure consistent quality.",
         actions: [
-          "Set up automated report distribution via email, Slack, and dashboards",
-          "Create intelligent alerting for significant changes or anomalies",
-          "Implement recipient preferences and delivery optimization",
-          "Add interactive elements for stakeholder feedback and requests",
-          "Build mobile-friendly formats for executive accessibility"
+          "Test logo legibility at various sizes from favicon to billboard scale",
+          "Verify color accuracy across digital screens and print materials",
+          "Check typography readability in different contexts and sizes",
+          "Ensure visual consistency across web, mobile, and print applications"
+        ]
+      },
+      {
+        title: "Step 6: Asset Library and Documentation",
+        description: "Organize assets and create comprehensive usage guidelines.",
+        actions: [
+          "Create organized digital asset library with naming conventions",
+          "Document usage guidelines including do's and don'ts for each asset",
+          "Specify file formats and technical requirements for different uses",
+          "Create brand guidelines document with visual examples and specifications"
+        ]
+      },
+      {
+        title: "Step 7: Distribution and Team Training",
+        description: "Ensure proper implementation across the organization.",
+        actions: [
+          "Set up shared access to brand assets for relevant team members",
+          "Train teams on proper brand asset usage and guidelines",
+          "Establish approval processes for new brand applications",
+          "Create system for maintaining and updating brand assets over time"
         ]
       }
     ],
     variations: [
-      { name: "Financial Performance Intelligence", description: "Specialized for financial metrics, budgets, and profitability analysis" },
-      { name: "Sales & Marketing Analytics", description: "Focused on pipeline, conversion, and campaign performance metrics" },
-      { name: "Operational KPI Monitoring", description: "Real-time operational metrics with predictive maintenance insights" }
+      { name: "Logo Design Focus", description: "Concentrated development of logo and primary brand mark variations" },
+      { name: "Digital Brand System", description: "Brand assets optimized specifically for digital applications and platforms" },
+      { name: "Print Brand Materials", description: "Traditional print-focused brand assets including business cards and stationery" },
+      { name: "Brand Refresh Project", description: "Updating and modernizing existing brand assets while maintaining recognition" }
     ],
     troubleshooting: [
-      { issue: "Data quality inconsistencies", solution: "Implement comprehensive data validation rules, source system monitoring, and establish data governance protocols" },
-      { issue: "AI insights lack business relevance", solution: "Improve AI model training with business context, add domain expertise, and implement feedback mechanisms" },
-      { issue: "Report delivery failures or delays", solution: "Add redundant delivery methods, implement retry logic, and create backup reporting procedures" }
+      { problem: "Brand assets look inconsistent across applications", solution: "Create more detailed usage guidelines and provide design templates for common applications" },
+      { problem: "Team members not using brand assets correctly", solution: "Improve training and create simplified asset packs for non-designers" },
+      { problem: "Brand assets don't work well in all contexts", solution: "Develop more logo variations and alternative color schemes for different backgrounds" },
+      { problem: "Brand feels outdated quickly", solution: "Build flexibility into the system and establish regular review cycles for updates" }
     ],
     resources: [
-      { name: "Business Intelligence Architecture", url: "#" },
-      { name: "AI Analytics Implementation", url: "#" },
-      { name: "Data Quality Management", url: "#" }
+      { name: "Brand Identity Design Best Practices", url: "https://www.smashingmagazine.com/2010/06/design-better-brand-identity/" },
+      { name: "Logo Design Guidelines", url: "https://logogeek.uk/logo-design/logo-design-process/" },
+      { name: "Color Theory for Brands", url: "https://blog.hubspot.com/marketing/color-theory-for-marketers" },
+      { name: "Typography in Branding", url: "https://www.canva.com/learn/typography-branding/" }
     ]
   },
 
-  "n8n Sales Process Automation": {
-    name: "n8n Sales Process Automation",
-    description: "Complete sales pipeline automation with AI lead scoring", 
-    steps: ["Capture leads from multiple sources with deduplication and enrichment", "Score leads using AI analysis of behavior, demographics, and interactions", "Trigger personalized nurture campaigns based on lead scoring and segment", "Automate follow-up sequences with AI-generated personalized content", "Route qualified leads to appropriate sales representatives automatically", "Track conversion metrics and optimize the pipeline based on performance"],
-    category: "Sales Automation",
-    overview: "Revolutionize your sales process with intelligent automation that captures, scores, nurtures, and converts leads while optimizing sales team performance. This system increases conversion rates and sales efficiency through AI-powered personalization and workflow automation.",
-    prerequisites: ["n8n Pro subscription", "CRM system access", "Marketing automation platform", "AI service integrations", "Lead source integrations"],
-    timeEstimate: "3-5 weeks implementation",
-    difficulty: "Intermediate to Advanced", 
-    tools: ["n8n Pro", "Salesforce/HubSpot CRM", "OpenAI/Claude APIs", "Email marketing platforms", "Lead generation tools"],
+  "Social Media Visual Content Creation": {
+    name: "Social Media Visual Content Creation",
+    description: "Systematic approach to creating engaging visual content for social platforms",
+    steps: ["Research platform-specific visual requirements and trends", "Create content calendar with visual themes and campaigns", "Design templates for different content types and formats", "Create original graphics, photos, or source stock images", "Optimize images for each platform's specifications", "Add brand elements, text overlays, and call-to-actions", "Schedule posts and monitor engagement metrics for optimization"],
+    category: "Social Media",
+    overview: "Build a consistent visual presence across social media platforms that engages your audience and drives brand awareness. Perfect for social media managers and content creators building online communities.",
+    prerequisites: ["Social media platform knowledge", "Basic design skills", "Brand guidelines", "Content planning tools", "Design software access"],
+    timeEstimate: "3-5 hours per week for ongoing content",
+    difficulty: "Beginner to Intermediate",
+    tools: ["Canva or Adobe Creative Suite", "Social media scheduling tools", "Stock photo platforms", "Analytics tools", "Phone camera or professional photography equipment", "Content planning platforms"],
     detailedSteps: [
       {
-        title: "Multi-Channel Lead Capture & Enrichment",
-        description: "Establish comprehensive lead intake system with automated data enrichment.",
+        title: "Step 1: Platform Research and Requirements Analysis",
+        description: "Understand each social media platform's unique visual requirements and audience preferences.",
         actions: [
-          "Integrate lead sources: website forms, social media, events, referrals, and partnerships",
-          "Implement deduplication logic to prevent duplicate lead creation",
-          "Add automated lead enrichment using external data providers",
-          "Create lead source tracking and attribution for ROI analysis", 
-          "Set up real-time lead notification and routing systems"
+          "Research optimal image dimensions for each platform (Instagram, Facebook, Twitter, LinkedIn, TikTok)",
+          "Study successful content in your industry to identify trends and engagement patterns",
+          "Analyze your audience demographics and content preferences on each platform",
+          "Document platform-specific best practices for visual content"
         ]
       },
       {
-        title: "AI-Powered Lead Scoring & Qualification",
-        description: "Deploy intelligent scoring system to identify and prioritize high-value prospects.",
+        title: "Step 2: Content Calendar and Theme Development",
+        description: "Plan visual content themes and campaigns that align with business goals and seasonal trends.",
         actions: [
-          "Implement AI models analyzing demographic, firmographic, and behavioral data",
-          "Create dynamic scoring based on website activity, email engagement, and content consumption",
-          "Add predictive analytics for lead conversion probability",
-          "Establish lead grading system combining fit and interest scores",
-          "Create automated qualification workflows with progressive profiling"
+          "Create monthly content themes tied to business objectives and seasonal events",
+          "Plan content mix including educational, entertaining, promotional, and behind-the-scenes content",
+          "Establish consistent posting frequency and optimal timing for each platform",
+          "Coordinate visual content with overall marketing campaigns and product launches"
         ]
       },
       {
-        title: "Personalized Nurture Campaign Automation",
-        description: "Execute targeted nurture sequences based on lead characteristics and behavior.",
+        title: "Step 3: Template Design and Brand Consistency",
+        description: "Create reusable templates that maintain brand consistency while allowing for content variety.",
         actions: [
-          "Design segmentation logic based on industry, company size, and buyer persona",
-          "Create personalized email sequences with dynamic content insertion",
-          "Implement behavioral triggers for content delivery and campaign progression",
-          "Add multi-channel nurturing including email, social, and retargeting",
-          "Build lead lifecycle management with stage progression tracking"
+          "Design template variations for quotes, tips, product features, and announcements",
+          "Establish consistent color schemes, fonts, and brand element placement",
+          "Create templates for Stories, feed posts, and platform-specific formats",
+          "Design templates that can be easily customized for different content topics"
         ]
       },
       {
-        title: "AI-Generated Follow-up & Content Personalization",
-        description: "Create intelligent follow-up sequences with AI-powered personalization.",
+        title: "Step 4: Content Creation and Asset Development",
+        description: "Produce original visual content including graphics, photos, and multimedia assets.",
         actions: [
-          "Generate personalized email content based on lead profile and interests",
-          "Create dynamic proposals and sales collateral tailored to prospect needs",
-          "Implement AI-powered optimal timing for outreach and follow-up",
-          "Add sentiment analysis for email responses and engagement optimization",
-          "Build conversation intelligence to improve messaging effectiveness"
+          "Take high-quality photos of products, team members, and behind-the-scenes content",
+          "Create original graphics using brand templates and visual elements",
+          "Source appropriate stock photos that align with brand aesthetic",
+          "Develop video content and animated graphics for enhanced engagement"
         ]
       },
       {
-        title: "Intelligent Lead Routing & Assignment",
-        description: "Optimize lead distribution to sales team members based on various criteria.",
+        title: "Step 5: Platform Optimization and Formatting",
+        description: "Optimize visual content for each platform's specific requirements and best practices.",
         actions: [
-          "Create territory and account-based routing rules",
-          "Implement rep capacity and workload balancing algorithms",
-          "Add skill-based matching for complex or specialized leads",
-          "Create round-robin and priority-based assignment logic", 
-          "Build escalation procedures for unworked leads and missed follow-ups"
+          "Resize and format images for optimal display on each platform",
+          "Add appropriate hashtags and platform-specific elements",
+          "Optimize image file sizes for fast loading while maintaining quality",
+          "Create platform-specific variations of the same content when beneficial"
         ]
       },
       {
-        title: "Performance Analytics & Pipeline Optimization",
-        description: "Monitor sales metrics and continuously optimize the automation system.",
+        title: "Step 6: Brand Integration and Call-to-Action Addition",
+        description: "Enhance visuals with brand elements and strategic calls-to-action.",
         actions: [
-          "Track conversion rates at each stage of the sales funnel",
-          "Monitor lead quality scores and sales team feedback",
-          "Analyze campaign performance and ROI by source and segment",
-          "Generate sales forecasting reports with predictive analytics",
-          "Create optimization recommendations based on performance data"
+          "Add brand logos, watermarks, or subtle branding elements to protect content",
+          "Include clear, action-oriented text overlays and calls-to-action",
+          "Ensure all text is readable on mobile devices and various screen sizes",
+          "Balance promotional content with value-driven educational content"
+        ]
+      },
+      {
+        title: "Step 7: Scheduling, Publishing, and Performance Monitoring",
+        description: "Deploy content strategically and monitor performance for continuous improvement.",
+        actions: [
+          "Use scheduling tools to post content at optimal times for audience engagement",
+          "Monitor engagement metrics including likes, shares, comments, and reach",
+          "A/B test different visual styles and formats to identify top performers",
+          "Adjust content strategy based on performance data and audience feedback"
         ]
       }
     ],
     variations: [
-      { name: "B2B Enterprise Sales", description: "Complex sales cycles with account-based marketing and multi-stakeholder engagement" },
-      { name: "SaaS Sales Automation", description: "Product-led growth with trial conversion and expansion revenue focus" }, 
-      { name: "E-commerce Sales Pipeline", description: "High-volume transactional sales with abandoned cart recovery and upselling" }
+      { name: "Instagram-First Strategy", description: "Visual content optimized primarily for Instagram feed and Stories" },
+      { name: "LinkedIn Professional Content", description: "Business-focused visual content for professional networking and B2B marketing" },
+      { name: "TikTok Video Graphics", description: "Eye-catching graphics designed for video content and trending formats" },
+      { name: "Multi-Platform Campaigns", description: "Coordinated visual campaigns adapted for multiple social media platforms" }
     ],
     troubleshooting: [
-      { issue: "Low lead quality or poor scoring accuracy", solution: "Refine scoring algorithms with sales feedback, improve data sources, and implement continuous model training" },
-      { issue: "Sales team adoption challenges", solution: "Provide comprehensive training, create intuitive workflows, and demonstrate clear value through metrics" },
-      { issue: "Integration complexity with existing systems", solution: "Use middleware platforms, implement gradual rollout, and ensure robust error handling and monitoring" }
+      { problem: "Low engagement on visual posts", solution: "Test different content types, posting times, and increase use of trending hashtags and topics" },
+      { problem: "Inconsistent brand appearance", solution: "Create more detailed brand guidelines and use template systems for consistency" },
+      { problem: "Time-consuming content creation", solution: "Batch create content and use templates to streamline the production process" },
+      { problem: "Poor image quality on mobile", solution: "Optimize image resolution and test display on various mobile devices" }
     ],
     resources: [
-      { name: "Sales Automation Best Practices", url: "#" },
-      { name: "Lead Scoring Model Guide", url: "#" },
-      { name: "Sales Pipeline Optimization", url: "#" }
+      { name: "Social Media Image Size Guide", url: "https://blog.hootsuite.com/social-media-image-sizes-guide/" },
+      { name: "Visual Content Marketing Statistics", url: "https://blog.hubspot.com/marketing/visual-content-marketing-statistics" },
+      { name: "Canva Design School", url: "https://www.canva.com/designschool/" },
+      { name: "Instagram Business Resources", url: "https://business.instagram.com/getting-started" }
     ]
-  }
+  },
 };
 
-interface WorkflowDetailModalProps {
+export interface WorkflowDetailModalProps {
   workflow: Workflow | null;
   isOpen: boolean;
   onClose: () => void;
 }
 
-export default function WorkflowDetailModal({ workflow, isOpen, onClose }: WorkflowDetailModalProps) {
+export const WorkflowDetailModal: React.FC<WorkflowDetailModalProps> = ({
+  workflow,
+  isOpen,
+  onClose,
+}) => {
   if (!workflow) return null;
 
   const detailedWorkflow = workflowDetails[workflow.name];
 
+  if (!detailedWorkflow) {
+    return (
+      <Dialog open={isOpen} onOpenChange={onClose}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-3">
+              {workflow.name}
+              <Badge variant="secondary">{workflow.category}</Badge>
+            </DialogTitle>
+          </DialogHeader>
+          <div className="text-center py-8">
+            <h3 className="text-lg font-semibold mb-2">Coming Soon</h3>
+            <p className="text-muted-foreground">
+              Detailed workflow documentation for "{workflow.name}" is being prepared.
+              Check back soon for comprehensive step-by-step guidance.
+            </p>
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-3">
-            {workflow.name}
-            <Badge variant="secondary">{workflow.category}</Badge>
+            {detailedWorkflow.name}
+            <Badge variant="secondary">{detailedWorkflow.category}</Badge>
           </DialogTitle>
         </DialogHeader>
 
-        {detailedWorkflow ? (
-          <Tabs defaultValue="overview" className="mt-4">
-            <TabsList className="grid w-full grid-cols-6">
-              <TabsTrigger value="overview">Overview</TabsTrigger>
-              <TabsTrigger value="prerequisites">Prerequisites</TabsTrigger>
-              <TabsTrigger value="steps">Steps</TabsTrigger>
-              <TabsTrigger value="variations">Variations</TabsTrigger>
-              <TabsTrigger value="troubleshooting">Troubleshooting</TabsTrigger>
-              <TabsTrigger value="resources">Resources</TabsTrigger>
-            </TabsList>
+        <Tabs defaultValue="overview" className="w-full">
+          <TabsList className="grid w-full grid-cols-6">
+            <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="prerequisites">Prerequisites</TabsTrigger>
+            <TabsTrigger value="steps">Steps</TabsTrigger>
+            <TabsTrigger value="variations">Variations</TabsTrigger>  
+            <TabsTrigger value="troubleshooting">Troubleshooting</TabsTrigger>
+            <TabsTrigger value="resources">Resources</TabsTrigger>
+          </TabsList>
 
-            <TabsContent value="overview" className="mt-6 space-y-6">
-              <div>
-                <h3 className="text-lg font-semibold mb-3">Workflow Overview</h3>
-                <p className="text-muted-foreground leading-relaxed">{detailedWorkflow.overview}</p>
+          <TabsContent value="overview" className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+              <div className="bg-muted/30 p-4 rounded-lg">
+                <h4 className="font-semibold text-sm text-primary mb-1">Time Estimate</h4>
+                <p className="text-sm">{detailedWorkflow.timeEstimate}</p>
               </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="flex items-center gap-3 p-4 border rounded-lg">
-                  <Clock className="h-5 w-5 text-primary" />
-                  <div>
-                    <p className="font-medium">Time Estimate</p>
-                    <p className="text-sm text-muted-foreground">{detailedWorkflow.timeEstimate}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 p-4 border rounded-lg">
-                  <Users className="h-5 w-5 text-primary" />
-                  <div>
-                    <p className="font-medium">Difficulty</p>
-                    <p className="text-sm text-muted-foreground">{detailedWorkflow.difficulty}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 p-4 border rounded-lg">
-                  <Wrench className="h-5 w-5 text-primary" />
-                  <div>
-                    <p className="font-medium">Primary Tools</p>
-                    <p className="text-sm text-muted-foreground">{detailedWorkflow.tools.slice(0, 2).join(", ")}</p>
-                  </div>
-                </div>
+              <div className="bg-muted/30 p-4 rounded-lg">
+                <h4 className="font-semibold text-sm text-primary mb-1">Difficulty</h4>
+                <p className="text-sm">{detailedWorkflow.difficulty}</p>
               </div>
-            </TabsContent>
+              <div className="bg-muted/30 p-4 rounded-lg">
+                <h4 className="font-semibold text-sm text-primary mb-1">Category</h4>
+                <p className="text-sm">{detailedWorkflow.category}</p>
+              </div>
+            </div>
+            
+            <div>
+              <h3 className="text-lg font-semibold mb-3">Overview</h3>
+              <p className="text-muted-foreground leading-relaxed">{detailedWorkflow.overview}</p>
+            </div>
 
-            <TabsContent value="prerequisites" className="mt-6 space-y-4">
-              <h3 className="text-lg font-semibold">Prerequisites & Requirements</h3>
-              <div className="space-y-3">
-                {detailedWorkflow.prerequisites.map((prereq, index) => (
-                  <div key={index} className="flex items-start gap-3 p-3 bg-muted/50 rounded-lg">
-                    <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
-                    <span className="text-sm">{prereq}</span>
-                  </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-3">Tools Required</h3>
+              <div className="flex flex-wrap gap-2">
+                {detailedWorkflow.tools.map((tool, index) => (
+                  <Badge key={index} variant="outline" className="text-xs">
+                    {tool}
+                  </Badge>
                 ))}
               </div>
-              
-              <div className="mt-6">
-                <h4 className="font-semibold mb-3">Required Tools & Platforms</h4>
-                <div className="grid grid-cols-2 gap-2">
-                  {detailedWorkflow.tools.map((tool, index) => (
-                    <div key={index} className="flex items-center gap-2 p-2 border rounded">
-                      <Wrench className="h-4 w-4 text-primary" />
-                      <span className="text-sm">{tool}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </TabsContent>
+            </div>
+          </TabsContent>
 
-            <TabsContent value="steps" className="mt-6 space-y-6">
-              <h3 className="text-lg font-semibold">Detailed Implementation Steps</h3>
-              {detailedWorkflow.detailedSteps.map((step, stepIndex) => (
-                <div key={stepIndex} className="border rounded-lg p-6 space-y-4">
-                  <div>
-                    <h4 className="font-semibold text-primary mb-2">{step.title}</h4>
-                    <p className="text-muted-foreground mb-4">{step.description}</p>
-                  </div>
-                  <div className="space-y-2">
-                    <h5 className="font-medium">Action Items:</h5>
-                    {step.actions.map((action, actionIndex) => (
-                      <div key={actionIndex} className="flex items-start gap-3 ml-4">
-                        <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
-                        <span className="text-sm">{action}</span>
-                      </div>
-                    ))}
-                  </div>
+          <TabsContent value="prerequisites" className="space-y-4">
+            <h3 className="text-lg font-semibold mb-4">Prerequisites</h3>
+            <ul className="space-y-3">
+              {detailedWorkflow.prerequisites.map((prerequisite, index) => (
+                <li key={index} className="flex items-start gap-3">
+                  <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
+                  <span className="text-sm text-muted-foreground">{prerequisite}</span>
+                </li>
+              ))}
+            </ul>
+          </TabsContent>
+
+          <TabsContent value="steps" className="space-y-6">
+            <h3 className="text-lg font-semibold mb-4">Detailed Steps</h3>
+            {detailedWorkflow.detailedSteps.map((step, index) => (
+              <div key={index} className="border border-border rounded-lg p-6">
+                <h4 className="font-semibold text-primary mb-2">{step.title}</h4>
+                <p className="text-sm text-muted-foreground mb-4">{step.description}</p>
+                <ul className="space-y-2">
+                  {step.actions.map((action, actionIndex) => (
+                    <li key={actionIndex} className="flex items-start gap-3">
+                      <div className="w-1.5 h-1.5 bg-muted-foreground rounded-full mt-2 flex-shrink-0" />
+                      <span className="text-sm">{action}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </TabsContent>
+
+          <TabsContent value="variations" className="space-y-4">
+            <h3 className="text-lg font-semibold mb-4">Workflow Variations</h3>
+            <div className="grid gap-4">
+              {detailedWorkflow.variations.map((variation, index) => (
+                <div key={index} className="border border-border rounded-lg p-4">
+                  <h4 className="font-semibold text-primary mb-2">{variation.name}</h4>
+                  <p className="text-sm text-muted-foreground">{variation.description}</p>
                 </div>
               ))}
-            </TabsContent>
+            </div>
+          </TabsContent>
 
-            <TabsContent value="variations" className="mt-6 space-y-4">
-              <h3 className="text-lg font-semibold">Workflow Variations</h3>
-              <div className="grid gap-4">
-                {detailedWorkflow.variations.map((variation, index) => (
-                  <div key={index} className="p-4 border rounded-lg">
-                    <h4 className="font-semibold mb-2">{variation.name}</h4>
-                    <p className="text-sm text-muted-foreground">{variation.description}</p>
-                  </div>
-                ))}
-              </div>
-            </TabsContent>
+          <TabsContent value="troubleshooting" className="space-y-4">
+            <h3 className="text-lg font-semibold mb-4">Common Issues & Solutions</h3>
+            <div className="space-y-4">
+              {detailedWorkflow.troubleshooting.map((item, index) => (
+                <div key={index} className="border border-border rounded-lg p-4">
+                  <h4 className="font-semibold text-red-600 mb-2">Problem: {item.problem}</h4>
+                  <p className="text-sm text-green-700"><strong>Solution:</strong> {item.solution}</p>
+                </div>
+              ))}
+            </div>
+          </TabsContent>
 
-            <TabsContent value="troubleshooting" className="mt-6 space-y-4">
-              <h3 className="text-lg font-semibold">Common Issues & Solutions</h3>
-              <div className="space-y-4">
-                {detailedWorkflow.troubleshooting.map((item, index) => (
-                  <div key={index} className="p-4 border rounded-lg space-y-2">
-                    <div className="flex items-start gap-3">
-                      <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5 flex-shrink-0" />
-                      <div className="space-y-2">
-                        <h4 className="font-semibold text-red-700 dark:text-red-400">Issue: {item.issue}</h4>
-                        <p className="text-sm text-muted-foreground"><strong>Solution:</strong> {item.solution}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </TabsContent>
-
-            <TabsContent value="resources" className="mt-6 space-y-4">
-              <h3 className="text-lg font-semibold">Additional Resources</h3>
-              <div className="grid gap-3">
-                {detailedWorkflow.resources.map((resource, index) => (
-                  <div key={index} className="flex items-center gap-3 p-3 border rounded-lg hover:bg-muted/50 transition-colors">
-                    <BookOpen className="h-5 w-5 text-primary" />
-                    <a href={resource.url} className="font-medium hover:underline" target="_blank" rel="noopener noreferrer">
-                      {resource.name}
-                    </a>
-                  </div>
-                ))}
-              </div>
-            </TabsContent>
-          </Tabs>
-        ) : (
-          <div className="text-center py-12">
-            <AlertTriangle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-lg font-semibold mb-2">Detailed Guide Coming Soon</h3>
-            <p className="text-muted-foreground">
-              We're working on comprehensive step-by-step guides for this workflow. 
-              Check back soon for detailed implementation instructions!
-            </p>
-          </div>
-        )}
+          <TabsContent value="resources" className="space-y-4">
+            <h3 className="text-lg font-semibold mb-4">Additional Resources</h3>
+            <div className="grid gap-3">
+              {detailedWorkflow.resources.map((resource, index) => (
+                <a
+                  key={index}
+                  href={resource.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-between p-3 border border-border rounded-lg hover:bg-muted/50 transition-colors"
+                >
+                  <span className="font-medium text-primary">{resource.name}</span>
+                  <svg className="w-4 h-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                </a>
+              ))}
+            </div>
+          </TabsContent>
+        </Tabs>
       </DialogContent>
     </Dialog>
   );
-}
+};
