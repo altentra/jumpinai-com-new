@@ -1206,131 +1206,180 @@ export const WorkflowDetailModal: React.FC<WorkflowDetailModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-3">
-            {detailedWorkflow.name}
-            <Badge variant="secondary">{detailedWorkflow.category}</Badge>
-          </DialogTitle>
+      <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto bg-card border-border shadow-modern-lg animate-scale-in">
+        <DialogHeader className="pb-6 border-b border-border">
+          <div className="flex items-center gap-3 mb-4">
+            <DialogTitle className="text-2xl font-display font-bold gradient-text-primary">
+              {detailedWorkflow.name}
+            </DialogTitle>
+            <Badge variant="secondary" className="bg-primary/10 text-primary font-medium px-3 py-1">
+              {detailedWorkflow.category}
+            </Badge>
+          </div>
         </DialogHeader>
 
-        <Tabs defaultValue="overview" className="w-full">
-          <TabsList className="grid w-full grid-cols-6">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="prerequisites">Prerequisites</TabsTrigger>
-            <TabsTrigger value="steps">Steps</TabsTrigger>
-            <TabsTrigger value="variations">Variations</TabsTrigger>  
-            <TabsTrigger value="troubleshooting">Troubleshooting</TabsTrigger>
-            <TabsTrigger value="resources">Resources</TabsTrigger>
-          </TabsList>
+        <div className="pt-6">
+          <Tabs defaultValue="overview" className="w-full">
+            <TabsList className="grid w-full grid-cols-6 mb-8 bg-muted/30 p-1 rounded-lg">
+              <TabsTrigger value="overview" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Overview</TabsTrigger>
+              <TabsTrigger value="prerequisites" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Prerequisites</TabsTrigger>
+              <TabsTrigger value="steps" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Steps</TabsTrigger>
+              <TabsTrigger value="variations" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Variations</TabsTrigger>
+              <TabsTrigger value="troubleshooting" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Troubleshooting</TabsTrigger>
+              <TabsTrigger value="resources" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Resources</TabsTrigger>
+            </TabsList>
 
-          <TabsContent value="overview" className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-              <div className="bg-muted/30 p-4 rounded-lg">
-                <h4 className="font-semibold text-sm text-primary mb-1">Time Estimate</h4>
-                <p className="text-sm">{detailedWorkflow.timeEstimate}</p>
-              </div>
-              <div className="bg-muted/30 p-4 rounded-lg">
-                <h4 className="font-semibold text-sm text-primary mb-1">Difficulty</h4>
-                <p className="text-sm">{detailedWorkflow.difficulty}</p>
-              </div>
-              <div className="bg-muted/30 p-4 rounded-lg">
-                <h4 className="font-semibold text-sm text-primary mb-1">Category</h4>
-                <p className="text-sm">{detailedWorkflow.category}</p>
-              </div>
-            </div>
-            
-            <div>
-              <h3 className="text-lg font-semibold mb-3">Overview</h3>
-              <p className="text-muted-foreground leading-relaxed">{detailedWorkflow.overview}</p>
-            </div>
+            <TabsContent value="overview" className="animate-fade-in-up">
+              <div className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="bg-muted/30 border border-border p-6 rounded-lg shadow-modern">
+                    <h4 className="font-display font-semibold text-primary mb-2 flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-primary"></div>
+                      Time Estimate
+                    </h4>
+                    <p className="text-foreground font-medium">{detailedWorkflow.timeEstimate}</p>
+                  </div>
+                  <div className="bg-muted/30 border border-border p-6 rounded-lg shadow-modern">
+                    <h4 className="font-display font-semibold text-primary mb-2 flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-primary"></div>
+                      Difficulty
+                    </h4>
+                    <Badge variant="outline" className="bg-primary/10 text-primary">{detailedWorkflow.difficulty}</Badge>
+                  </div>
+                  <div className="bg-muted/30 border border-border p-6 rounded-lg shadow-modern">
+                    <h4 className="font-display font-semibold text-primary mb-2 flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-primary"></div>
+                      Category
+                    </h4>
+                    <p className="text-foreground font-medium">{detailedWorkflow.category}</p>
+                  </div>
+                </div>
+                
+                <div className="bg-gradient-to-r from-primary/5 to-primary/10 border border-primary/20 rounded-lg p-6 shadow-modern">
+                  <h3 className="text-lg font-display font-semibold text-primary mb-3">Overview</h3>
+                  <p className="text-muted-foreground leading-relaxed">{detailedWorkflow.overview}</p>
+                </div>
 
-            <div>
-              <h3 className="text-lg font-semibold mb-3">Tools Required</h3>
-              <div className="flex flex-wrap gap-2">
-                {detailedWorkflow.tools.map((tool, index) => (
-                  <Badge key={index} variant="outline" className="text-xs">
-                    {tool}
-                  </Badge>
-                ))}
+                <div className="bg-muted/30 border border-border rounded-lg p-6">
+                  <h3 className="text-lg font-display font-semibold text-foreground mb-4 flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-primary"></div>
+                    Tools Required
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {detailedWorkflow.tools.map((tool, index) => (
+                      <Badge key={index} variant="secondary" className="bg-secondary/50 text-secondary-foreground px-3 py-1">
+                        {tool}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
               </div>
-            </div>
-          </TabsContent>
+            </TabsContent>
 
-          <TabsContent value="prerequisites" className="space-y-4">
-            <h3 className="text-lg font-semibold mb-4">Prerequisites</h3>
-            <ul className="space-y-3">
-              {detailedWorkflow.prerequisites.map((prerequisite, index) => (
-                <li key={index} className="flex items-start gap-3">
-                  <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
-                  <span className="text-sm text-muted-foreground">{prerequisite}</span>
-                </li>
-              ))}
-            </ul>
-          </TabsContent>
-
-          <TabsContent value="steps" className="space-y-6">
-            <h3 className="text-lg font-semibold mb-4">Detailed Steps</h3>
-            {detailedWorkflow.detailedSteps.map((step, index) => (
-              <div key={index} className="border border-border rounded-lg p-6">
-                <h4 className="font-semibold text-primary mb-2">{step.title}</h4>
-                <p className="text-sm text-muted-foreground mb-4">{step.description}</p>
-                <ul className="space-y-2">
-                  {step.actions.map((action, actionIndex) => (
-                    <li key={actionIndex} className="flex items-start gap-3">
-                      <div className="w-1.5 h-1.5 bg-muted-foreground rounded-full mt-2 flex-shrink-0" />
-                      <span className="text-sm">{action}</span>
+            <TabsContent value="prerequisites" className="animate-fade-in-up">
+              <div className="bg-muted/30 border border-border rounded-lg p-6">
+                <h3 className="text-lg font-display font-semibold text-foreground mb-4 flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-primary"></div>
+                  Prerequisites
+                </h3>
+                <ul className="space-y-3">
+                  {detailedWorkflow.prerequisites.map((prerequisite, index) => (
+                    <li key={index} className="flex items-start gap-3">
+                      <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0" />
+                      <span className="text-muted-foreground leading-relaxed">{prerequisite}</span>
                     </li>
                   ))}
                 </ul>
               </div>
-            ))}
-          </TabsContent>
+            </TabsContent>
 
-          <TabsContent value="variations" className="space-y-4">
-            <h3 className="text-lg font-semibold mb-4">Workflow Variations</h3>
-            <div className="grid gap-4">
-              {detailedWorkflow.variations.map((variation, index) => (
-                <div key={index} className="border border-border rounded-lg p-4">
-                  <h4 className="font-semibold text-primary mb-2">{variation.name}</h4>
-                  <p className="text-sm text-muted-foreground">{variation.description}</p>
-                </div>
-              ))}
-            </div>
-          </TabsContent>
+            <TabsContent value="steps" className="animate-fade-in-up">
+              <div className="space-y-6">
+                {detailedWorkflow.detailedSteps.map((step, index) => (
+                  <div key={index} className="bg-card border border-border rounded-lg p-6 shadow-modern animate-fade-in-up" style={{animationDelay: `${index * 0.1}s`}}>
+                    <h4 className="text-lg font-display font-semibold text-foreground mb-3 flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-semibold">
+                        {index + 1}
+                      </div>
+                      {step.title}
+                    </h4>
+                    <p className="text-muted-foreground mb-4 leading-relaxed">{step.description}</p>
+                    <div className="space-y-2">
+                      <h5 className="font-medium text-foreground">Actions:</h5>
+                      <ul className="space-y-2">
+                        {step.actions.map((action, actionIndex) => (
+                          <li key={actionIndex} className="flex items-start gap-3">
+                            <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0" />
+                            <span className="text-sm text-muted-foreground leading-relaxed">{action}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </TabsContent>
 
-          <TabsContent value="troubleshooting" className="space-y-4">
-            <h3 className="text-lg font-semibold mb-4">Common Issues & Solutions</h3>
-            <div className="space-y-4">
-              {detailedWorkflow.troubleshooting.map((item, index) => (
-                <div key={index} className="border border-border rounded-lg p-4">
-                  <h4 className="font-semibold text-red-600 mb-2">Problem: {item.problem}</h4>
-                  <p className="text-sm text-green-700"><strong>Solution:</strong> {item.solution}</p>
-                </div>
-              ))}
-            </div>
-          </TabsContent>
+            <TabsContent value="variations" className="animate-fade-in-up">
+              <div className="space-y-4">
+                {detailedWorkflow.variations.map((variation, index) => (
+                  <div key={index} className="bg-muted/30 border border-border rounded-lg p-6 hover:bg-muted/40 transition-colors">
+                    <h4 className="font-display font-semibold text-foreground mb-3 flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-primary"></div>
+                      {variation.name}
+                    </h4>
+                    <p className="text-muted-foreground leading-relaxed">{variation.description}</p>
+                  </div>
+                ))}
+              </div>
+            </TabsContent>
 
-          <TabsContent value="resources" className="space-y-4">
-            <h3 className="text-lg font-semibold mb-4">Additional Resources</h3>
-            <div className="grid gap-3">
-              {detailedWorkflow.resources.map((resource, index) => (
-                <a
-                  key={index}
-                  href={resource.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-between p-3 border border-border rounded-lg hover:bg-muted/50 transition-colors"
-                >
-                  <span className="font-medium text-primary">{resource.name}</span>
-                  <svg className="w-4 h-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                  </svg>
-                </a>
-              ))}
-            </div>
-          </TabsContent>
-        </Tabs>
+            <TabsContent value="troubleshooting" className="animate-fade-in-up">
+              <div className="space-y-4">
+                {detailedWorkflow.troubleshooting.map((item, index) => (
+                  <div key={index} className="bg-card border border-border rounded-lg p-6 shadow-modern">
+                    <h4 className="font-display font-semibold text-destructive mb-3 flex items-center gap-2">
+                      <span className="text-lg">⚠️</span>
+                      Problem: {item.problem}
+                    </h4>
+                    <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
+                      <h5 className="font-medium text-primary mb-2 flex items-center gap-2">
+                        <span className="text-lg">💡</span>
+                        Solution:
+                      </h5>
+                      <p className="text-muted-foreground leading-relaxed">{item.solution}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="resources" className="animate-fade-in-up">
+              <div className="grid md:grid-cols-2 gap-4">
+                {detailedWorkflow.resources.map((resource, index) => (
+                  <a
+                    key={index}
+                    href={resource.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-muted/30 border border-border rounded-lg p-6 hover:bg-muted/40 transition-colors group modern-button flex items-center justify-between"
+                  >
+                    <div>
+                      <h4 className="font-display font-semibold text-foreground mb-1 group-hover:text-primary transition-colors flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-primary"></div>
+                        {resource.name}
+                      </h4>
+                      <p className="text-sm text-muted-foreground truncate">{resource.url}</p>
+                    </div>
+                    <svg className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </a>
+                ))}
+              </div>
+            </TabsContent>
+          </Tabs>
+        </div>
       </DialogContent>
     </Dialog>
   );
