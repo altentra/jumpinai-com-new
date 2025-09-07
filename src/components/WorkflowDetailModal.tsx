@@ -754,6 +754,417 @@ const workflowDetails: Record<string, DetailedWorkflow> = {
       { name: "Instagram Business Resources", url: "https://business.instagram.com/getting-started" }
     ]
   },
+
+  // VIDEO WORKFLOWS
+  "AI Video Creation Pipeline": {
+    name: "AI Video Creation Pipeline",
+    description: "Complete workflow for creating professional videos using AI tools",
+    steps: ["Define video concept and target audience", "Create script and storyboard", "Generate or source visual assets", "Produce video using AI tools", "Edit and enhance with effects", "Optimize for platform distribution", "Publish and promote across channels"],
+    category: "Video Production",
+    overview: "Transform ideas into professional video content using cutting-edge AI video generation tools. Perfect for content creators, marketers, and businesses looking to scale video production efficiently while maintaining high quality output.",
+    prerequisites: ["Access to AI video tools (Runway, Synthesia, etc.)", "Basic understanding of video storytelling", "Content strategy and brand guidelines", "Platform-specific requirements knowledge"],
+    timeEstimate: "4-8 hours per video",
+    difficulty: "Intermediate",
+    tools: ["Runway ML", "Synthesia", "Luma Dream Machine", "Descript", "Canva", "Video editing software"],
+    detailedSteps: [
+      {
+        title: "Step 1: Concept Development and Planning",
+        description: "Define the video's purpose, audience, and core message before production begins.",
+        actions: [
+          "Identify target audience demographics and viewing preferences",
+          "Define video objectives: education, entertainment, promotion, or conversion",
+          "Develop core message and key takeaways viewers should retain",
+          "Research platform-specific requirements and optimal formats"
+        ]
+      },
+      {
+        title: "Step 2: Script Writing and Storyboarding",
+        description: "Create detailed script and visual plan to guide the production process.",
+        actions: [
+          "Write engaging script with clear narrative structure and pacing",
+          "Create detailed storyboard showing key scenes and transitions",
+          "Plan dialogue, voiceover, and on-screen text elements",
+          "Identify music, sound effects, and ambient audio needs"
+        ]
+      },
+      {
+        title: "Step 3: Asset Generation and Collection",
+        description: "Gather or create all visual and audio elements needed for production.",
+        actions: [
+          "Generate AI avatars or characters using Synthesia or HeyGen",
+          "Create background scenes and environments with Runway or Luma",
+          "Source or generate music tracks using AI music tools",
+          "Collect brand assets, logos, and supporting graphics"
+        ]
+      },
+      {
+        title: "Step 4: Video Production and Assembly",
+        description: "Combine all elements using AI video generation tools.",
+        actions: [
+          "Generate primary video content using chosen AI platform",
+          "Create multiple variations for A/B testing if needed",
+          "Ensure consistent quality and style across all segments",
+          "Review generated content for accuracy and brand alignment"
+        ]
+      },
+      {
+        title: "Step 5: Post-Production Enhancement",
+        description: "Refine and polish the video with editing and effects.",
+        actions: [
+          "Edit footage for pacing, transitions, and flow",
+          "Add text overlays, captions, and graphic elements",
+          "Color correct and enhance visual quality",
+          "Integrate background music and sound effects"
+        ]
+      },
+      {
+        title: "Step 6: Platform Optimization",
+        description: "Prepare video versions optimized for different distribution channels.",
+        actions: [
+          "Create platform-specific versions (YouTube, Instagram, TikTok)",
+          "Optimize video length and format for each platform",
+          "Generate engaging thumbnails and preview clips",
+          "Prepare video descriptions, tags, and metadata"
+        ]
+      },
+      {
+        title: "Step 7: Distribution and Analytics",
+        description: "Publish video content and monitor performance metrics.",
+        actions: [
+          "Schedule publication across chosen platforms",
+          "Promote through social media and email marketing",
+          "Monitor engagement metrics and audience feedback",
+          "Analyze performance data to improve future videos"
+        ]
+      }
+    ],
+    variations: [
+      { name: "Educational Video Series", description: "Multi-part instructional content with consistent branding and progressive learning" },
+      { name: "Product Demo Videos", description: "Showcase product features and benefits through AI-generated demonstrations" },
+      { name: "Social Media Shorts", description: "Quick, engaging vertical videos optimized for TikTok, Instagram Reels, and YouTube Shorts" },
+      { name: "Corporate Training Videos", description: "Professional training content with AI avatars for scalable employee education" }
+    ],
+    troubleshooting: [
+      { problem: "AI-generated video quality is inconsistent", solution: "Use more detailed prompts and generate multiple versions to select the best output" },
+      { problem: "Lip sync issues with AI avatars", solution: "Use professional avatar services like Synthesia and provide clear, well-paced scripts" },
+      { problem: "Video takes too long to generate", solution: "Break longer videos into shorter segments and use batch processing when available" },
+      { problem: "Platform-specific formatting issues", solution: "Create templates for each platform and use automated resizing tools" }
+    ],
+    resources: [
+      { name: "AI Video Tools Comparison", url: "https://blog.runwayml.com/introducing-gen-2/" },
+      { name: "Video Marketing Best Practices", url: "https://blog.hubspot.com/marketing/video-marketing" },
+      { name: "Platform Video Specifications", url: "https://blog.hootsuite.com/social-media-video-specs-guide/" },
+      { name: "Storytelling for Video", url: "https://www.masterclass.com/articles/video-storytelling-guide" }
+    ]
+  },
+
+  "Podcast Production Workflow": {
+    name: "Podcast Production Workflow",
+    description: "End-to-end process for creating professional podcast episodes with AI assistance",
+    steps: ["Plan episode content and guest coordination", "Record high-quality audio", "Use AI for transcription and editing", "Enhance audio with AI voice processing", "Create show notes and promotional content", "Publish across podcast platforms", "Analyze performance and engage with audience"],
+    category: "Audio Content",
+    overview: "Streamline podcast production from concept to publication using AI-powered tools for editing, transcription, and content enhancement. Ideal for podcasters, content creators, and businesses building audio content strategies.",
+    prerequisites: ["Recording equipment or software", "Understanding of audio basics", "Podcast hosting platform account", "Content planning and guest coordination skills"],
+    timeEstimate: "6-10 hours per episode",
+    difficulty: "Intermediate",
+    tools: ["Descript", "ElevenLabs", "Riverside.fm", "Anchor", "Canva", "Social media scheduling tools"],
+    detailedSteps: [
+      {
+        title: "Step 1: Content Planning and Preparation",
+        description: "Develop episode concept, outline, and coordinate with guests or co-hosts.",
+        actions: [
+          "Define episode topic, key messages, and target audience value",
+          "Research topic thoroughly and prepare talking points",
+          "Create detailed episode outline with time allocations",
+          "Coordinate with guests on scheduling, tech setup, and expectations"
+        ]
+      },
+      {
+        title: "Step 2: Recording Setup and Execution",
+        description: "Capture high-quality audio using proper recording techniques.",
+        actions: [
+          "Test audio equipment and recording environment",
+          "Conduct pre-recording sound checks with all participants",
+          "Record episode following prepared outline while maintaining natural conversation",
+          "Create backup recordings and monitor audio levels throughout"
+        ]
+      },
+      {
+        title: "Step 3: AI-Powered Transcription and Initial Edit",
+        description: "Use AI tools to transcribe and perform initial editing passes.",
+        actions: [
+          "Upload recording to Descript for automatic transcription",
+          "Review and correct transcription for accuracy",
+          "Remove filler words, long pauses, and false starts using AI editing",
+          "Identify and mark sections for potential removal or enhancement"
+        ]
+      },
+      {
+        title: "Step 4: Audio Enhancement and Processing",
+        description: "Improve audio quality using AI voice processing and effects.",
+        actions: [
+          "Apply noise reduction and audio leveling",
+          "Use ElevenLabs or similar tools to enhance voice clarity",
+          "Add intro/outro music and transition sounds",
+          "Ensure consistent volume levels across all speakers"
+        ]
+      },
+      {
+        title: "Step 5: Content Repurposing and Show Notes",
+        description: "Create supporting content and promotional materials from the episode.",
+        actions: [
+          "Generate show notes from transcription using AI summarization",
+          "Create quotable clips and audiograms for social media",
+          "Extract key insights for blog posts or newsletter content",
+          "Design episode artwork and promotional graphics"
+        ]
+      },
+      {
+        title: "Step 6: Publishing and Distribution",
+        description: "Upload episode to platforms and implement distribution strategy.",
+        actions: [
+          "Upload to podcast hosting platform with optimized metadata",
+          "Distribute to major podcast directories (Apple, Spotify, Google)",
+          "Share promotional content across social media channels",
+          "Send episode announcement to email subscribers"
+        ]
+      },
+      {
+        title: "Step 7: Performance Analysis and Community Engagement",
+        description: "Monitor episode performance and engage with audience feedback.",
+        actions: [
+          "Track download numbers, engagement metrics, and listener feedback",
+          "Respond to comments and reviews across platforms",
+          "Identify successful content themes for future episodes",
+          "Use insights to improve content and production quality"
+        ]
+      }
+    ],
+    variations: [
+      { name: "Interview Podcast", description: "Guest-focused format with structured interviews and follow-up questions" },
+      { name: "Solo Commentary", description: "Single-host format for thought leadership and expertise sharing" },
+      { name: "Panel Discussion", description: "Multi-host format for diverse perspectives on topics" },
+      { name: "Narrative Storytelling", description: "Scripted, story-driven format with high production values" }
+    ],
+    troubleshooting: [
+      { problem: "Poor audio quality from remote guests", solution: "Use platforms like Riverside.fm that record locally and provide tech support" },
+      { problem: "Transcription accuracy issues", solution: "Use multiple AI transcription services and manually review critical sections" },
+      { problem: "Inconsistent episode publishing schedule", solution: "Batch record episodes and use scheduling tools for consistent release" },
+      { problem: "Low listener engagement", solution: "Create more interactive content and actively promote on social media" }
+    ],
+    resources: [
+      { name: "Podcast Production Guide", url: "https://blog.anchor.fm/resources/podcast-production-guide" },
+      { name: "Audio Quality Best Practices", url: "https://descript.com/blog/article/podcast-audio-quality" },
+      { name: "Podcast Marketing Strategies", url: "https://blog.hubspot.com/marketing/how-to-start-a-podcast" },
+      { name: "AI Audio Tools Review", url: "https://elevenlabs.io/blog/ai-voice-generation-for-podcasts" }
+    ]
+  },
+
+  // WEB/APP DEVELOPMENT WORKFLOWS
+  "Full-Stack App Development": {
+    name: "Full-Stack App Development",
+    description: "Complete process for building modern web applications using AI-assisted development",
+    steps: ["Define requirements and architecture", "Set up development environment", "Design UI/UX with AI assistance", "Implement frontend with AI code generation", "Develop backend APIs and database", "Integrate AI features and services", "Test, deploy, and monitor application"],
+    category: "Software Development",
+    overview: "Build complete web applications efficiently using AI-powered development tools and methodologies. Perfect for developers, startups, and businesses creating digital products with modern technology stacks.",
+    prerequisites: ["Programming fundamentals", "Understanding of web technologies", "Development environment setup", "Version control knowledge (Git)"],
+    timeEstimate: "2-8 weeks depending on complexity",
+    difficulty: "Advanced",
+    tools: ["Lovable", "GitHub Copilot", "Cursor", "Supabase", "Vercel", "React", "TypeScript"],
+    detailedSteps: [
+      {
+        title: "Step 1: Requirements Analysis and Architecture Planning",
+        description: "Define project scope, technical requirements, and system architecture.",
+        actions: [
+          "Gather and document functional and non-functional requirements",
+          "Create user stories and acceptance criteria",
+          "Design system architecture and choose technology stack",
+          "Plan database schema and API structure"
+        ]
+      },
+      {
+        title: "Step 2: Development Environment Setup",
+        description: "Configure development tools and establish project foundation.",
+        actions: [
+          "Set up version control repository and branching strategy",
+          "Configure development environment with AI coding assistants",
+          "Initialize project with chosen framework and dependencies",
+          "Set up continuous integration and deployment pipelines"
+        ]
+      },
+      {
+        title: "Step 3: UI/UX Design and Prototyping",
+        description: "Create user interface designs and interactive prototypes.",
+        actions: [
+          "Design wireframes and user interface mockups",
+          "Create interactive prototypes for user testing",
+          "Establish design system and component library",
+          "Use AI tools to generate design variations and assets"
+        ]
+      },
+      {
+        title: "Step 4: Frontend Development",
+        description: "Build user interface using modern frontend technologies and AI assistance.",
+        actions: [
+          "Implement responsive UI components using React/Vue/Angular",
+          "Use AI code generation for boilerplate and common patterns",
+          "Integrate state management and routing solutions",
+          "Implement user authentication and authorization flows"
+        ]
+      },
+      {
+        title: "Step 5: Backend Development and Database Design",
+        description: "Create server-side logic, APIs, and data persistence layer.",
+        actions: [
+          "Design and implement RESTful or GraphQL APIs",
+          "Set up database with proper indexing and relationships",
+          "Implement business logic and data validation",
+          "Add security measures and rate limiting"
+        ]
+      },
+      {
+        title: "Step 6: AI Integration and Advanced Features",
+        description: "Integrate AI services and implement advanced application features.",
+        actions: [
+          "Integrate AI APIs for features like image generation, text analysis",
+          "Implement real-time features using WebSockets or Server-Sent Events",
+          "Add analytics and monitoring capabilities",
+          "Implement caching strategies for performance optimization"
+        ]
+      },
+      {
+        title: "Step 7: Testing, Deployment, and Monitoring",
+        description: "Ensure quality through testing and deploy to production environment.",
+        actions: [
+          "Write and run unit, integration, and end-to-end tests",
+          "Deploy application to cloud platform with CI/CD",
+          "Set up monitoring, logging, and error tracking",
+          "Monitor performance and user feedback for continuous improvement"
+        ]
+      }
+    ],
+    variations: [
+      { name: "E-commerce Platform", description: "Online store with payment processing and inventory management" },
+      { name: "SaaS Application", description: "Subscription-based software with user management and billing" },
+      { name: "Content Management System", description: "Platform for creating and managing digital content" },
+      { name: "Mobile-First PWA", description: "Progressive web app optimized for mobile devices" }
+    ],
+    troubleshooting: [
+      { problem: "AI code suggestions are inconsistent", solution: "Provide more context in comments and use consistent naming conventions" },
+      { problem: "Performance issues in production", solution: "Implement proper caching, optimize database queries, and use CDN" },
+      { problem: "Complex state management", solution: "Use established patterns like Redux or Zustand with clear data flow" },
+      { problem: "Authentication and security concerns", solution: "Use established auth solutions like Auth0 or implement OAuth properly" }
+    ],
+    resources: [
+      { name: "Modern Web Development Guide", url: "https://web.dev/learn/" },
+      { name: "React Best Practices", url: "https://react.dev/learn" },
+      { name: "API Design Guidelines", url: "https://docs.microsoft.com/en-us/azure/architecture/best-practices/api-design" },
+      { name: "Deployment Strategies", url: "https://vercel.com/docs/concepts/deployments" }
+    ]
+  },
+
+  // WORKFLOW/AI AGENTS
+  "Automated Business Process Workflow": {
+    name: "Automated Business Process Workflow",
+    description: "Design and implement intelligent automation for business operations",
+    steps: ["Map current business processes", "Identify automation opportunities", "Design workflow architecture", "Implement automation with AI agents", "Test and validate automated processes", "Deploy and monitor performance", "Optimize and scale automation"],
+    category: "Process Automation",
+    overview: "Transform manual business operations into intelligent, automated workflows using AI agents and integration platforms. Ideal for business operations managers, process improvement specialists, and organizations seeking efficiency gains.",
+    prerequisites: ["Understanding of business processes", "Access to automation platforms", "Integration permissions for business systems", "Change management capabilities"],
+    timeEstimate: "3-6 weeks per process",
+    difficulty: "Advanced",
+    tools: ["Zapier", "Make.com", "n8n", "Microsoft Power Automate", "AI APIs", "Webhook tools"],
+    detailedSteps: [
+      {
+        title: "Step 1: Process Discovery and Mapping",
+        description: "Analyze current business processes to identify automation opportunities.",
+        actions: [
+          "Document existing processes with step-by-step workflows",
+          "Identify pain points, bottlenecks, and manual tasks",
+          "Map data flow and system interactions",
+          "Calculate time and resource costs of current processes"
+        ]
+      },
+      {
+        title: "Step 2: Automation Opportunity Assessment",
+        description: "Evaluate which processes are best suited for automation.",
+        actions: [
+          "Assess process complexity and decision-making requirements",
+          "Identify rule-based tasks suitable for automation",
+          "Evaluate potential ROI and impact of automation",
+          "Prioritize processes based on effort vs. benefit analysis"
+        ]
+      },
+      {
+        title: "Step 3: Workflow Architecture Design",
+        description: "Design the technical architecture for automated workflows.",
+        actions: [
+          "Choose appropriate automation platform based on requirements",
+          "Design data flow and integration points between systems",
+          "Plan error handling and exception management",
+          "Create workflow diagrams and technical specifications"
+        ]
+      },
+      {
+        title: "Step 4: AI Agent Implementation",
+        description: "Build and configure AI agents to handle intelligent tasks.",
+        actions: [
+          "Implement AI-powered decision making and data processing",
+          "Configure natural language processing for document analysis",
+          "Set up machine learning models for pattern recognition",
+          "Create intelligent routing and escalation rules"
+        ]
+      },
+      {
+        title: "Step 5: Integration and Testing",
+        description: "Connect systems and thoroughly test automated workflows.",
+        actions: [
+          "Integrate with existing business systems and databases",
+          "Configure security and access controls",
+          "Conduct comprehensive testing with real data scenarios",
+          "Validate business rules and exception handling"
+        ]
+      },
+      {
+        title: "Step 6: Deployment and Change Management",
+        description: "Deploy automation and manage organizational change.",
+        actions: [
+          "Deploy automation in staged rollout approach",
+          "Train team members on new processes and tools",
+          "Establish monitoring and alerting systems",
+          "Create documentation and standard operating procedures"
+        ]
+      },
+      {
+        title: "Step 7: Performance Optimization",
+        description: "Monitor performance and continuously improve automation.",
+        actions: [
+          "Track key performance indicators and efficiency metrics",
+          "Identify optimization opportunities through data analysis",
+          "Scale successful automations to additional processes",
+          "Implement feedback loops for continuous improvement"
+        ]
+      }
+    ],
+    variations: [
+      { name: "Customer Service Automation", description: "Automated ticket routing, responses, and escalation management" },
+      { name: "Financial Process Automation", description: "Invoice processing, expense approvals, and financial reporting" },
+      { name: "HR Workflow Automation", description: "Employee onboarding, performance reviews, and compliance tracking" },
+      { name: "Marketing Automation", description: "Lead nurturing, campaign management, and customer segmentation" }
+    ],
+    troubleshooting: [
+      { problem: "Automation fails with edge cases", solution: "Implement comprehensive error handling and manual fallback procedures" },
+      { problem: "Integration issues between systems", solution: "Use middleware platforms and establish proper API connections" },
+      { problem: "User resistance to automated processes", solution: "Involve users in design process and provide comprehensive training" },
+      { problem: "Performance bottlenecks in complex workflows", solution: "Optimize workflow logic and implement parallel processing where possible" }
+    ],
+    resources: [
+      { name: "Process Automation Best Practices", url: "https://zapier.com/blog/process-automation/" },
+      { name: "Business Process Management Guide", url: "https://www.nintex.com/process-management/" },
+      { name: "AI in Business Automation", url: "https://www.microsoft.com/en-us/ai/ai-business-value" },
+      { name: "Integration Platform Comparison", url: "https://blog.zapier.com/zapier-vs-microsoft-power-automate/" }
+    ]
+  }
 };
 
 export interface WorkflowDetailModalProps {
