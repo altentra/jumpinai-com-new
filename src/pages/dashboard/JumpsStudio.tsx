@@ -14,10 +14,9 @@ export default function JumpsStudio() {
   const [isProfileFormOpen, setIsProfileFormOpen] = useState(true);
 
   const handleProfileSubmit = async (profile: UserProfile) => {
-    setIsLoading(true);
     setUserProfile(profile);
     setIsProfileFormOpen(false);
-    setIsLoading(false);
+    setShowChat(true); // Show chat immediately
   };
 
   const handlePlanGenerated = (plan: string) => {
@@ -142,17 +141,10 @@ export default function JumpsStudio() {
         <UserProfileForm onSubmit={handleProfileSubmit} isLoading={isLoading} />
       )}
 
-      {/* Jump Plan Display - Shows after profile submission */}
+      {/* Jump Plan Display and Chat - Shows after profile submission */}
       {userProfile && (
         <div className="space-y-6">
-          {!jumpPlan && !showChat && (
-            <AICoachChat 
-              userProfile={userProfile} 
-              onPlanGenerated={handlePlanGenerated}
-              hideChat={true}
-            />
-          )}
-          
+          {/* Jump Plan Display - Shows once generated */}
           {jumpPlan && (
             <JumpPlanDisplay 
               planContent={jumpPlan}
@@ -161,13 +153,14 @@ export default function JumpsStudio() {
             />
           )}
           
-          {/* Chat Interface - For refinements */}
-          {showChat && jumpPlan && (
+          {/* Chat Interface - Shows immediately after profile submission */}
+          {showChat && (
             <AICoachChat 
               userProfile={userProfile} 
               onPlanGenerated={handlePlanGenerated}
               initialPlan={jumpPlan}
-              isRefinementMode={true}
+              isRefinementMode={!!jumpPlan}
+              hideChat={false}
             />
           )}
         </div>

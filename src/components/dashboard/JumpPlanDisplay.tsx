@@ -58,8 +58,31 @@ export default function JumpPlanDisplay({ planContent, onEdit, onDownload }: Jum
         </div>
       </CardHeader>
       <CardContent>
-        <div className="prose prose-sm max-w-none dark:prose-invert">
-          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+        <div className="prose prose-lg max-w-none dark:prose-invert 
+                        prose-headings:text-foreground prose-headings:font-semibold 
+                        prose-h1:text-2xl prose-h1:mb-6 prose-h1:mt-8 prose-h1:border-b prose-h1:pb-2
+                        prose-h2:text-xl prose-h2:mb-4 prose-h2:mt-6 
+                        prose-h3:text-lg prose-h3:mb-3 prose-h3:mt-5
+                        prose-p:mb-4 prose-p:leading-relaxed
+                        prose-ul:mb-4 prose-ul:space-y-2
+                        prose-li:mb-2
+                        prose-strong:text-primary prose-strong:font-semibold
+                        prose-code:bg-muted prose-code:px-1 prose-code:py-0.5 prose-code:rounded
+                        space-y-4">
+          <ReactMarkdown 
+            remarkPlugins={[remarkGfm]}
+            components={{
+              h1: ({ children }) => <h1 className="text-2xl font-semibold text-foreground border-b pb-2 mb-6 mt-8">{children}</h1>,
+              h2: ({ children }) => <h2 className="text-xl font-semibold text-foreground mb-4 mt-6">{children}</h2>,
+              h3: ({ children }) => <h3 className="text-lg font-semibold text-foreground mb-3 mt-5">{children}</h3>,
+              p: ({ children }) => <p className="mb-4 leading-relaxed text-foreground">{children}</p>,
+              ul: ({ children }) => <ul className="mb-4 space-y-2 pl-6">{children}</ul>,
+              ol: ({ children }) => <ol className="mb-4 space-y-2 pl-6">{children}</ol>,
+              li: ({ children }) => <li className="mb-2 text-foreground">{children}</li>,
+              strong: ({ children }) => <strong className="text-primary font-semibold">{children}</strong>,
+              code: ({ children }) => <code className="bg-muted px-1 py-0.5 rounded text-sm">{children}</code>,
+            }}
+          >
             {planContent}
           </ReactMarkdown>
         </div>

@@ -7,10 +7,11 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { Bot, User, Send, Sparkles, Download, Copy } from 'lucide-react';
+import { Bot, User, Send, Sparkles, Download, Copy, Lock } from 'lucide-react';
 import type { UserProfile } from './UserProfileForm';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { useAuth } from '@/hooks/useAuth';
 
 interface Message {
   id: string;
@@ -41,6 +42,9 @@ export default function AICoachChat({
   const [isLoading, setIsLoading] = useState(false);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+  const { subscription } = useAuth();
+  
+  const isPaidUser = subscription?.subscribed || false;
   const invokeWithTimeout = async (payload: any, ms = 60000): Promise<any> => {
     return await Promise.race([
       supabase.functions.invoke('jumps-ai-coach', { body: payload }),
@@ -174,6 +178,15 @@ export default function AICoachChat({
 
   const sendMessage = async () => {
     if (!input.trim() || isLoading) return;
+    
+    if (!isPaidUser) {
+      toast({
+        title: 'Premium Feature',
+        description: 'Chat refinement is available for premium subscribers only.',
+        variant: 'destructive'
+      });
+      return;
+    }
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -390,23 +403,46 @@ export default function AICoachChat({
           </ScrollArea>
 
           <div className="p-6 border-t">
-            <div className="flex gap-2">
-              <Textarea
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="Ask about AI tools, strategies, implementation plans, or request a comprehensive transformation roadmap..."
-                className="min-h-[60px] resize-none"
-                disabled={isLoading}
-              />
-              <Button
-                onClick={sendMessage}
-                disabled={!input.trim() || isLoading}
-                className="self-end"
-              >
-                <Send className="h-4 w-4" />
-              </Button>
-            </div>
+            {!isPaidUser ? (
+              <div className="text-center py-4 space-y-3">
+                <div className="flex justify-center">
+                  <div className="p-3 rounded-full bg-muted">
+                    <Lock className="h-6 w-6 text-muted-foreground" />
+                  </div>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-foreground">Premium Feature</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Chat refinement is available for premium subscribers only.
+                  </p>
+                </div>
+                <Button 
+                  variant="default" 
+                  onClick={() => window.location.href = '/pricing'}
+                  className="mt-2"
+                >
+                  Upgrade to Premium
+                </Button>
+              </div>
+            ) : (
+              <div className="flex gap-2">
+                <Textarea
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Ask about AI tools, strategies, implementation plans, or request a comprehensive transformation roadmap..."
+                  className="min-h-[60px] resize-none"
+                  disabled={isLoading}
+                />
+                <Button
+                  onClick={sendMessage}
+                  disabled={!input.trim() || isLoading}
+                  className="self-end"
+                >
+                  <Send className="h-4 w-4" />
+                </Button>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>
