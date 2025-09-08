@@ -1636,6 +1636,41 @@ const workflowDetails: Record<string, DetailedWorkflow> = {
   }
 };
 
+// Map Resource workflow names to existing detailed templates to avoid "Coming Soon" for equivalent flows
+const workflowNameAliases: Record<string, string> = {
+  // Video
+  "Video Content Production": "AI Video Creation Pipeline",
+  "YouTube Channel Optimization": "AI Video Creation Pipeline",
+  "Educational Video Series Creation": "AI Video Creation Pipeline",
+  "Live Streaming Setup and Management": "AI Video Creation Pipeline",
+  "Corporate Video Production": "AI Video Creation Pipeline",
+  
+  // Audio
+  "Podcast Production Pipeline": "Podcast Production Pipeline",
+  "Audiobook Production Process": "Podcast Production Pipeline",
+  "Music Production Workflow": "Podcast Production Pipeline",
+  "Voice-Over Recording Process": "Podcast Production Pipeline",
+  "Audio Branding Development": "Podcast Production Pipeline",
+  
+  // Web/App Dev
+  "App Development Lifecycle": "AI-Powered App Development",
+  "Website Development Process": "AI-Powered App Development",
+  "E-commerce Platform Setup": "AI-Powered App Development",
+  "API Development and Integration": "AI-Powered App Development",
+  "Progressive Web App Development": "AI-Powered App Development",
+  "Database Design and Optimization": "AI-Powered App Development",
+  
+  // Workflow/AI Agents
+  "Business Process Automation Setup": "Multi-Agent Workflow Orchestration",
+  "AI Chatbot Development": "Custom AI Agent Development",
+  "CRM Automation Workflow": "Multi-Agent Workflow Orchestration",
+  "Social Media Management Automation": "Multi-Agent Workflow Orchestration",
+  "Email Marketing Automation Funnel": "Multi-Agent Workflow Orchestration",
+
+  // Dashboard Workflows naming alignment
+  "Document Analysis Process": "Document Analysis Workflow",
+};
+
 export interface WorkflowDetailModalProps {
   workflow: Workflow | null;
   isOpen: boolean;
@@ -1649,7 +1684,8 @@ export const WorkflowDetailModal: React.FC<WorkflowDetailModalProps> = ({
 }) => {
   if (!workflow) return null;
 
-  const detailedWorkflow = workflowDetails[workflow.name];
+  const alias = (workflowNameAliases as Record<string, string | undefined>)[workflow.name];
+  const detailedWorkflow = workflowDetails[workflow.name] ?? (alias ? workflowDetails[alias] : undefined);
 
   if (!detailedWorkflow) {
     return (
@@ -1679,10 +1715,10 @@ export const WorkflowDetailModal: React.FC<WorkflowDetailModalProps> = ({
         <DialogHeader className="pb-6 border-b border-border">
           <div className="flex items-center gap-3 mb-4">
             <DialogTitle className="text-2xl font-display font-bold gradient-text-primary">
-              {detailedWorkflow.name}
+              {workflow.name}
             </DialogTitle>
             <Badge variant="secondary" className="bg-primary/10 text-primary font-medium px-3 py-1">
-              {detailedWorkflow.category}
+              {workflow.category}
             </Badge>
           </div>
         </DialogHeader>
@@ -1715,13 +1751,13 @@ export const WorkflowDetailModal: React.FC<WorkflowDetailModalProps> = ({
                     </h4>
                     <Badge variant="outline" className="bg-primary/10 text-primary">{detailedWorkflow.difficulty}</Badge>
                   </div>
-                  <div className="bg-muted/30 border border-border p-6 rounded-lg shadow-modern">
-                    <h4 className="font-display font-semibold text-primary mb-2 flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-primary"></div>
-                      Category
-                    </h4>
-                    <p className="text-foreground font-medium">{detailedWorkflow.category}</p>
-                  </div>
+          <div className="bg-muted/30 border border-border p-6 rounded-lg shadow-modern">
+            <h4 className="font-display font-semibold text-primary mb-2 flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-primary"></div>
+              Category
+            </h4>
+            <p className="text-foreground font-medium">{workflow.category}</p>
+          </div>
                 </div>
                 
                 <div className="bg-gradient-to-r from-primary/5 to-primary/10 border border-primary/20 rounded-lg p-6 shadow-modern">
