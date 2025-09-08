@@ -9,6 +9,8 @@ import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { Bot, User, Send, Sparkles, Download, Copy } from 'lucide-react';
 import type { UserProfile } from './UserProfileForm';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface Message {
   id: string;
@@ -30,7 +32,7 @@ const AICoachChat: React.FC<AICoachChatProps> = ({ userProfile, onBack }) => {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Welcome message when chat starts
+    // Welcome message when chat starts and auto-generate initial plan
     const welcomeMessage: Message = {
       id: '1',
       role: 'assistant',
@@ -38,18 +40,47 @@ const AICoachChat: React.FC<AICoachChatProps> = ({ userProfile, onBack }) => {
 
 I've reviewed your profile and I'm excited to help you create your custom "Jump" plan. Based on your role as a ${userProfile.currentRole} in ${userProfile.industry}, I can see tremendous opportunities for AI integration.
 
-Let's start by discussing your specific situation. I can help you with:
-
-✨ **Personalized Strategy Development**
-🛠️ **AI Tool Recommendations**  
-📈 **Implementation Roadmaps**
-🎯 **Goal Achievement Plans**
-⚡ **Workflow Optimization**
-
-What would you like to focus on first? Or would you like me to create a comprehensive transformation plan based on your profile?`,
+I'll generate a comprehensive plan for you now. You can refine it with chat after.`,
       timestamp: new Date()
     };
     setMessages([welcomeMessage]);
+
+    // Auto-generate an initial comprehensive Jump plan
+    const generateInitialPlan = async () => {
+      setIsLoading(true);
+      try {
+        const initialPrompt =
+          "Using the provided profile context, generate a fully comprehensive, professional, elite-level, actionable 'Jump' plan following the RESPONSE STRUCTURE from the system prompt. Be specific with tools, steps, timelines, and metrics. Tailor everything to the user's role, industry, experience, time, and budget. Use clear headings and bullet points.";
+        const payload = {
+          messages: [{ role: 'user', content: initialPrompt }],
+          userProfile
+        };
+        console.log('[AICoachChat] Auto-invoking jumps-ai-coach with payload:', payload);
+        const response = await supabase.functions.invoke('jumps-ai-coach', { body: payload });
+        console.log('[AICoachChat] Auto-generation response:', response);
+        if (response.error) {
+          throw new Error(response.error.message || 'Failed to generate initial plan');
+        }
+        const assistantMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          content: response.data?.message || 'No response received from AI.',
+          timestamp: new Date()
+        };
+        setMessages(prev => [...prev, assistantMessage]);
+      } catch (error: any) {
+        console.error('Error generating initial plan:', error);
+        toast({
+          title: 'Generation error',
+          description: error?.message || 'Failed to generate your plan. You can try again by sending a message.',
+          variant: 'destructive'
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    generateInitialPlan();
   }, [userProfile]);
 
   useEffect(() => {
@@ -112,7 +143,7 @@ What would you like to focus on first? Or would you like me to create a comprehe
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       sendMessage();
@@ -152,17 +183,17 @@ What would you like to focus on first? Or would you like me to create a comprehe
     <div className="max-w-6xl mx-auto h-[calc(100vh-200px)] flex flex-col">
       <Card className="flex-1 flex flex-col">
         <CardHeader className="flex-row items-center justify-between space-y-0 pb-4">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-full bg-gradient-to-br from-primary/10 to-primary/5">
-              <Sparkles className="h-5 w-5 text-primary" />
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-full bg-gradient-to-br from-primary/10 to-primary/5">
+                <Sparkles className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <CardTitle className="text-xl">AI Transformation Coach</CardTitle>
+                <p className="text-sm text-muted-foreground">
+                  Powered by ChatGPT-5 • {userProfile.currentRole} in {userProfile.industry}
+                </p>
+              </div>
             </div>
-            <div>
-              <CardTitle className="text-xl">AI Transformation Coach</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Powered by ChatGPT-5 • {userProfile.currentRole} in {userProfile.industry}
-              </p>
-            </div>
-          </div>
           <div className="flex gap-2">
             <Button variant="outline" size="sm" onClick={downloadPlan}>
               <Download className="h-4 w-4 mr-2" />
@@ -197,9 +228,17 @@ What would you like to focus on first? Or would you like me to create a comprehe
                         : 'bg-muted'
                     }`}
                   >
-                    <div className="whitespace-pre-wrap text-sm leading-relaxed">
-                      {message.content}
-                    </div>
+                    {message.role === 'assistant' ? (
+                      <div className="text-sm leading-relaxed">
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                          {message.content}
+                        </ReactMarkdown>
+                      </div>
+                    ) : (
+                      <div className="whitespace-pre-wrap text-sm leading-relaxed">
+                        {message.content}
+                      </div>
+                    )}
                     <div className="flex items-center justify-between mt-2">
                       <div className="text-xs opacity-70">
                         {message.timestamp.toLocaleTimeString()}
@@ -251,7 +290,7 @@ What would you like to focus on first? Or would you like me to create a comprehe
               <Textarea
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                onKeyPress={handleKeyPress}
+                onKeyDown={handleKeyDown}
                 placeholder="Ask about AI tools, strategies, implementation plans, or request a comprehensive transformation roadmap..."
                 className="min-h-[60px] resize-none"
                 disabled={isLoading}
