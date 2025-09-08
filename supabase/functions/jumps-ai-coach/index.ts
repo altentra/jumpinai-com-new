@@ -102,12 +102,12 @@ Be conversational, insightful, and highly practical. Ask clarifying questions wh
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-5-mini-2025-08-07',
+        model: 'gpt-4.1-2025-04-14',
         messages: [
           { role: 'system', content: systemPrompt },
           ...messages
         ],
-        max_completion_tokens: 2000,
+        max_completion_tokens: 1200,
         stream: false
       }),
     });
@@ -119,11 +119,24 @@ Be conversational, insightful, and highly practical. Ask clarifying questions wh
     }
 
     const data = await response.json();
-    console.log('OpenAI response received successfully');
+    // Try to robustly extract content from various possible response shapes
+    const content = (
+      data?.choices?.[0]?.message?.content ??
+      data?.choices?.[0]?.text ??
+      (Array.isArray(data?.output_text) ? data.output_text.join('\n') : data?.output_text) ??
+      ''
+    );
+
+    const finishReason = data?.choices?.[0]?.finish_reason ?? 'unknown';
+    if (!content || typeof content !== 'string' || content.trim() === '') {
+      console.error('OpenAI returned empty content', { finishReason, model: data?.model });
+      console.error('OpenAI raw (truncated):', JSON.stringify(data).slice(0, 4000));
+    }
 
     return new Response(JSON.stringify({ 
-      message: data.choices[0].message.content,
-      usage: data.usage 
+      message: content || '',
+      usage: data?.usage,
+      debug: { finish_reason: finishReason, model: data?.model }
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
