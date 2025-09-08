@@ -13,6 +13,16 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  // Ensure OpenAI API key is configured
+  if (!openAIApiKey) {
+    console.error('OPENAI_API_KEY is not set');
+    return new Response(JSON.stringify({ 
+      error: 'Missing OpenAI API key. Please set OPENAI_API_KEY in Supabase Edge Function secrets.'
+    }), {
+      status: 400,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  }
   try {
     const { messages, userProfile } = await req.json();
 

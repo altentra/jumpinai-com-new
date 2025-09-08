@@ -73,15 +73,20 @@ What would you like to focus on first? Or would you like me to create a comprehe
     setIsLoading(true);
 
     try {
+      const payload = {
+        messages: [
+          ...messages.map(m => ({ role: m.role, content: m.content })),
+          { role: 'user', content: input }
+        ],
+        userProfile
+      };
+      console.log('[AICoachChat] Invoking jumps-ai-coach with payload:', payload);
+
       const response = await supabase.functions.invoke('jumps-ai-coach', {
-        body: {
-          messages: [
-            ...messages.map(m => ({ role: m.role, content: m.content })),
-            { role: 'user', content: input }
-          ],
-          userProfile
-        }
+        body: payload
       });
+
+      console.log('[AICoachChat] Function response:', response);
 
       if (response.error) {
         throw new Error(response.error.message || 'Failed to get response');
@@ -90,16 +95,16 @@ What would you like to focus on first? Or would you like me to create a comprehe
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: response.data.message,
+        content: response.data?.message || 'No response received from AI.',
         timestamp: new Date()
       };
 
       setMessages(prev => [...prev, assistantMessage]);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error sending message:', error);
       toast({
-        title: 'Error',
-        description: 'Failed to send message. Please try again.',
+        title: 'Chat error',
+        description: error?.message || 'Failed to send message. Please try again.',
         variant: 'destructive'
       });
     } finally {
@@ -113,7 +118,6 @@ What would you like to focus on first? Or would you like me to create a comprehe
       sendMessage();
     }
   };
-
   const copyMessage = (content: string) => {
     navigator.clipboard.writeText(content);
     toast({
