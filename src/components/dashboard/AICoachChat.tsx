@@ -37,6 +37,27 @@ const AICoachChat: React.FC<AICoachChatProps> = ({ userProfile, onBack }) => {
     ]);
   };
   
+  // Normalize various possible response shapes from the Edge Function/Supabase client
+  const extractAiMessage = (resp: any): string => {
+    try {
+      if (resp?.data?.message) return resp.data.message;
+      if (typeof resp?.data === 'string') {
+        try {
+          const parsed = JSON.parse(resp.data);
+          if (parsed?.message) return parsed.message;
+          return resp.data;
+        } catch {
+          return resp.data;
+        }
+      }
+      if (resp?.message) return resp.message; // sometimes direct body
+      if (resp?.data?.choices?.[0]?.message?.content) return resp.data.choices[0].message.content;
+      return '';
+    } catch {
+      return '';
+    }
+  };
+  
   useEffect(() => {
     // Welcome message when chat starts and auto-generate initial plan
     const welcomeMessage: Message = {
@@ -67,12 +88,21 @@ I'll generate a comprehensive plan for you now. You can refine it with chat afte
         if (response.error) {
           throw new Error(response.error.message || 'Failed to generate initial plan');
         }
+        const aiText = extractAiMessage(response);
         const assistantMessage: Message = {
           id: (Date.now() + 1).toString(),
           role: 'assistant',
-          content: response.data?.message || 'No response received from AI.',
+          content: aiText || 'No response received from AI.',
           timestamp: new Date()
         };
+        if (!aiText) {
+          console.warn('[AICoachChat] Unexpected AI response shape:', response);
+          toast({
+            title: 'AI response issue',
+            description: 'Received an unexpected response from the AI. Please try again.',
+            variant: 'destructive'
+          });
+        }
         setMessages(prev => [...prev, assistantMessage]);
       } catch (error: any) {
         console.error('Error generating initial plan:', error);
@@ -127,12 +157,21 @@ I'll generate a comprehensive plan for you now. You can refine it with chat afte
         throw new Error(response.error.message || 'Failed to get response');
       }
 
+      const aiText = extractAiMessage(response);
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: response.data?.message || 'No response received from AI.',
+        content: aiText || 'No response received from AI.',
         timestamp: new Date()
       };
+      if (!aiText) {
+        console.warn('[AICoachChat] Unexpected AI response shape:', response);
+        toast({
+          title: 'AI response issue',
+          description: 'Received an unexpected response from the AI. Please try again.',
+          variant: 'destructive'
+        });
+      }
 
       setMessages(prev => [...prev, assistantMessage]);
     } catch (error: any) {
@@ -194,7 +233,7 @@ I'll generate a comprehensive plan for you now. You can refine it with chat afte
               <div>
                 <CardTitle className="text-xl">AI Transformation Coach</CardTitle>
                 <p className="text-sm text-muted-foreground">
-                  Powered by ChatGPT-5 • {userProfile.currentRole} in {userProfile.industry}
+                  Powered by ChatGPT-5-mini • {userProfile.currentRole} in {userProfile.industry}
                 </p>
               </div>
             </div>
