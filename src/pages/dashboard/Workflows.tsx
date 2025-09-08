@@ -92,7 +92,13 @@ export default function Workflows() {
   );
 
   const WorkflowCard = ({ workflow, isBlurred }: { workflow: Workflow; isBlurred: boolean }) => (
-    <Card className={`h-full ${isBlurred ? 'filter blur-[2px] pointer-events-none' : ''}`}>
+    <Card className={`h-full cursor-pointer hover:shadow-lg transition-all duration-200 ${isBlurred ? 'filter blur-[2px] pointer-events-none' : ''}`}
+          onClick={() => {
+            if (!isBlurred) {
+              setSelectedWorkflow(workflow);
+              setIsModalOpen(true);
+            }
+          }}>
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg">{workflow.name}</CardTitle>
@@ -112,6 +118,9 @@ export default function Workflows() {
             ))}
           </ol>
         </div>
+        <Button className="w-full mt-4" variant="outline" size="sm">
+          View Detailed Workflow
+        </Button>
       </CardContent>
     </Card>
   );
