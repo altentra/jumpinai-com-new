@@ -30,30 +30,49 @@ const AICoachChat: React.FC<AICoachChatProps> = ({ userProfile, onBack }) => {
   const [isLoading, setIsLoading] = useState(false);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
-  const invokeWithTimeout = async (payload: any, ms = 45000): Promise<any> => {
+  const invokeWithTimeout = async (payload: any, ms = 60000): Promise<any> => {
     return await Promise.race([
       supabase.functions.invoke('jumps-ai-coach', { body: payload }),
-      new Promise((_, reject) => setTimeout(() => reject(new Error('Generation timed out. Please try again.')), ms))
+      new Promise((_, reject) => setTimeout(() => reject(new Error('Generation timed out. Please try again within ~60s.')), ms))
     ]);
   };
   
   // Normalize various possible response shapes from the Edge Function/Supabase client
   const extractAiMessage = (resp: any): string => {
     try {
-      if (resp?.data?.message) return resp.data.message;
+      // Supabase Functions usual shape
+      if (resp?.data?.message && typeof resp.data.message === 'string') return resp.data.message as string;
+      // Common alternative keys
+      if (resp?.data?.generatedText) return resp.data.generatedText;
+      if (resp?.data?.plan) return resp.data.plan;
+      if (resp?.data?.content) return resp.data.content;
+      // Sometimes the data is a JSON string
       if (typeof resp?.data === 'string') {
         try {
           const parsed = JSON.parse(resp.data);
           if (parsed?.message) return parsed.message;
-          return resp.data;
+          if (parsed?.generatedText) return parsed.generatedText;
+          if (parsed?.plan) return parsed.plan;
+          if (parsed?.choices?.[0]?.message?.content) return parsed.choices[0].message.content;
+          return typeof parsed === 'string' ? parsed : '';
         } catch {
           return resp.data;
         }
       }
-      if (resp?.message) return resp.message; // sometimes direct body
+      // Some clients return body at the root
+      if (resp?.message) return resp.message;
+      // Raw OpenAI passthrough just in case
       if (resp?.data?.choices?.[0]?.message?.content) return resp.data.choices[0].message.content;
+      // Last resort: stringify object if small
+      if (resp?.data && typeof resp.data === 'object') {
+        try {
+          const s = JSON.stringify(resp.data);
+          if (s && s.length < 5000) return s;
+        } catch {}
+      }
       return '';
-    } catch {
+    } catch (e) {
+      console.warn('[AICoachChat] extractAiMessage error:', e, resp);
       return '';
     }
   };
