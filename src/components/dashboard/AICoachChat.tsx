@@ -89,6 +89,7 @@ export default function AICoachChat({
   };
   
   useEffect(() => {
+    // If refining an existing plan, seed a helper message and skip auto-generation
     if (isRefinementMode && initialPlan) {
       setMessages([
         {
@@ -101,22 +102,7 @@ export default function AICoachChat({
       return;
     }
 
-    if (hideChat) return;
-
-    // Welcome message when chat starts and auto-generate initial plan
-    const welcomeMessage: Message = {
-      id: '1',
-      role: 'assistant',
-      content: `Welcome to your personalized AI Transformation Coach! 🚀
-
-I've reviewed your profile and I'm excited to help you create your custom "Jump" plan. Based on your role as a ${userProfile.currentRole} in ${userProfile.industry}, I can see tremendous opportunities for AI integration.
-
-I'll generate a comprehensive plan for you now. You can refine it with chat after.`,
-      timestamp: new Date()
-    };
-    setMessages([welcomeMessage]);
-
-    // Auto-generate an initial comprehensive Jump plan
+    // Define generator first so we can call it for both hidden and visible chat modes
     const generateInitialPlan = async () => {
       setIsLoading(true);
       try {
@@ -148,8 +134,6 @@ I'll generate a comprehensive plan for you now. You can refine it with chat afte
           });
         }
         setMessages(prev => [...prev, assistantMessage]);
-        
-        // Notify parent about generated plan
         if (onPlanGenerated && aiText) {
           onPlanGenerated(aiText);
         }
@@ -165,6 +149,20 @@ I'll generate a comprehensive plan for you now. You can refine it with chat afte
       }
     };
 
+    // If chat UI is hidden, still generate the plan in the background
+    if (hideChat) {
+      generateInitialPlan();
+      return;
+    }
+
+    // Otherwise, show welcome message and then generate
+    const welcomeMessage: Message = {
+      id: '1',
+      role: 'assistant',
+      content: `Welcome to your personalized AI Transformation Coach! 🚀\n\nI've reviewed your profile and I'm excited to help you create your custom "Jump" plan. Based on your role as a ${userProfile.currentRole} in ${userProfile.industry}, I can see tremendous opportunities for AI integration.\n\nI'll generate a comprehensive plan for you now. You can refine it with chat after.`,
+      timestamp: new Date()
+    };
+    setMessages([welcomeMessage]);
     generateInitialPlan();
   }, [userProfile, hideChat, isRefinementMode, initialPlan, onPlanGenerated]);
 
