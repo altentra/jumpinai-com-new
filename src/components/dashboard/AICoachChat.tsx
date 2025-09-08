@@ -30,7 +30,13 @@ const AICoachChat: React.FC<AICoachChatProps> = ({ userProfile, onBack }) => {
   const [isLoading, setIsLoading] = useState(false);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
-
+  const invokeWithTimeout = async (payload: any, ms = 45000): Promise<any> => {
+    return await Promise.race([
+      supabase.functions.invoke('jumps-ai-coach', { body: payload }),
+      new Promise((_, reject) => setTimeout(() => reject(new Error('Generation timed out. Please try again.')), ms))
+    ]);
+  };
+  
   useEffect(() => {
     // Welcome message when chat starts and auto-generate initial plan
     const welcomeMessage: Message = {
@@ -56,7 +62,7 @@ I'll generate a comprehensive plan for you now. You can refine it with chat afte
           userProfile
         };
         console.log('[AICoachChat] Auto-invoking jumps-ai-coach with payload:', payload);
-        const response = await supabase.functions.invoke('jumps-ai-coach', { body: payload });
+        const response: any = await invokeWithTimeout(payload);
         console.log('[AICoachChat] Auto-generation response:', response);
         if (response.error) {
           throw new Error(response.error.message || 'Failed to generate initial plan');
@@ -113,9 +119,7 @@ I'll generate a comprehensive plan for you now. You can refine it with chat afte
       };
       console.log('[AICoachChat] Invoking jumps-ai-coach with payload:', payload);
 
-      const response = await supabase.functions.invoke('jumps-ai-coach', {
-        body: payload
-      });
+      const response: any = await invokeWithTimeout(payload);
 
       console.log('[AICoachChat] Function response:', response);
 
