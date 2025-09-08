@@ -7,6 +7,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import AppSidebar from "@/components/dashboard/AppSidebar";
 import DashboardHome from "./dashboard/DashboardHome";
 import MyJumpsNew from "./dashboard/MyJumpsNew";
+import JumpsStudio from "./dashboard/JumpsStudio";
 import JumpsGuides from "./dashboard/JumpsGuides";
 import Prompts from "./dashboard/Prompts";
 import Workflows from "./dashboard/Workflows";
@@ -55,6 +56,7 @@ export default function Dashboard() {
               <Routes>
                 <Route index element={<DashboardHome />} />
                 <Route path="jumps" element={<MyJumpsNew />} />
+                <Route path="jumps-studio" element={<JumpsStudio />} />
                 <Route path="jumps-guides" element={<JumpsGuides />} />
                 <Route path="prompts" element={<Prompts />} />
                 <Route path="workflows" element={<Workflows />} />

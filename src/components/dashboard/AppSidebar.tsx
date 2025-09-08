@@ -12,7 +12,8 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import { User, Settings, Home, FileText, Workflow, Lightbulb, Boxes, ChevronDown, CreditCard } from "lucide-react";
+import { User, Settings, Home, FileText, Workflow, Lightbulb, Boxes, ChevronDown, CreditCard, Palette } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 import { useAuth0Token } from "@/hooks/useAuth0Token";
 
 interface SubscriberInfo {
@@ -118,6 +119,17 @@ export default function AppSidebar() {
           </Link>
 
           <Link 
+            to="/dashboard/jumps-studio" 
+            className={cn(
+              "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
+              getNavCls({ isActive: currentPath === "/dashboard/jumps-studio" })
+            )}
+          >
+            <Palette className="h-4 w-4" />
+            Jumps Studio
+          </Link>
+
+          <Link 
             to="/dashboard/jumps-guides" 
             className={cn(
               "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
@@ -127,6 +139,8 @@ export default function AppSidebar() {
             <FileText className="h-4 w-4" />
             Jumps in AI Guides
           </Link>
+
+          <Separator className="my-2" />
 
           <Link 
             to="/dashboard/prompts" 
@@ -171,6 +185,8 @@ export default function AppSidebar() {
             <Lightbulb className="h-4 w-4" />
             My Strategies
           </Link>
+
+          <Separator className="my-2" />
 
           {/* Profile & Settings */}
           <Link 
