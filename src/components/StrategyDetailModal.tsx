@@ -732,6 +732,18 @@ const strategyDetails: Record<string, DetailedStrategy> = {
   }
 };
 
+const strategyNameAliases: Record<string, string> = {
+  "Content-First Growth Strategy": "Content-First Growth",
+  "SEO-Driven Organic Growth": "SEO-Driven Strategy",
+  "Visual Storytelling Strategy": "Visual Brand Identity System",
+  "Social Visual Engagement": "Social Media Visual Strategy",
+  "Video-First Marketing Approach": "AI-Enhanced Video Marketing",
+  "Educational Video Series Strategy": "Educational Video Systems",
+  "Podcast Authority Building": "Podcast Empire Strategy",
+  "Audio Content Repurposing": "Podcast Empire Strategy",
+  "User Experience Optimization": "AI-First Development Strategy"
+};
+
 export interface StrategyDetailModalProps {
   strategy: Strategy | null;
   isOpen: boolean;
@@ -745,7 +757,8 @@ const StrategyDetailModal: React.FC<StrategyDetailModalProps> = ({
 }) => {
   if (!strategy) return null;
 
-  const detailedStrategy = strategyDetails[strategy.name];
+  const canonicalName = strategyNameAliases[strategy.name] || strategy.name.replace(/\s*Strategy$/i, '').replace(/\s*Approach$/i, '').trim();
+  const detailedStrategy = strategyDetails[canonicalName];
 
   if (!detailedStrategy) {
     return (
