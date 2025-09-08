@@ -21,10 +21,21 @@ interface Message {
 
 interface AICoachChatProps {
   userProfile: UserProfile;
-  onBack: () => void;
+  onBack?: () => void;
+  onPlanGenerated?: (plan: string) => void;
+  hideChat?: boolean;
+  initialPlan?: string;
+  isRefinementMode?: boolean;
 }
 
-const AICoachChat: React.FC<AICoachChatProps> = ({ userProfile, onBack }) => {
+export default function AICoachChat({ 
+  userProfile, 
+  onBack,
+  onPlanGenerated,
+  hideChat = false,
+  initialPlan = '',
+  isRefinementMode = false
+}: AICoachChatProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -78,6 +89,20 @@ const AICoachChat: React.FC<AICoachChatProps> = ({ userProfile, onBack }) => {
   };
   
   useEffect(() => {
+    if (isRefinementMode && initialPlan) {
+      setMessages([
+        {
+          id: '1',
+          role: 'assistant',
+          content: `I can see your current Jump Plan. How would you like to refine or improve it? You can ask me to:\n\n• Add more details to specific sections\n• Adjust timelines or priorities\n• Include additional strategies\n• Modify recommendations\n• Focus on particular areas\n\nWhat would you like to change?`,
+          timestamp: new Date()
+        }
+      ]);
+      return;
+    }
+
+    if (hideChat) return;
+
     // Welcome message when chat starts and auto-generate initial plan
     const welcomeMessage: Message = {
       id: '1',
@@ -123,6 +148,11 @@ I'll generate a comprehensive plan for you now. You can refine it with chat afte
           });
         }
         setMessages(prev => [...prev, assistantMessage]);
+        
+        // Notify parent about generated plan
+        if (onPlanGenerated && aiText) {
+          onPlanGenerated(aiText);
+        }
       } catch (error: any) {
         console.error('Error generating initial plan:', error);
         toast({
@@ -136,7 +166,7 @@ I'll generate a comprehensive plan for you now. You can refine it with chat afte
     };
 
     generateInitialPlan();
-  }, [userProfile]);
+  }, [userProfile, hideChat, isRefinementMode, initialPlan, onPlanGenerated]);
 
   useEffect(() => {
     if (scrollAreaRef.current) {
@@ -241,6 +271,18 @@ I'll generate a comprehensive plan for you now. You can refine it with chat afte
     });
   };
 
+  // If hideChat is true, just run the initial generation without showing chat UI
+  if (hideChat) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="text-center space-y-4">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+          <p className="text-sm text-muted-foreground">Generating your personalized Jump Plan...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-6xl mx-auto h-[calc(100vh-200px)] flex flex-col">
       <Card className="flex-1 flex flex-col">
@@ -252,7 +294,7 @@ I'll generate a comprehensive plan for you now. You can refine it with chat afte
               <div>
                 <CardTitle className="text-xl">AI Transformation Coach</CardTitle>
                 <p className="text-sm text-muted-foreground">
-                  Powered by ChatGPT-5-mini • {userProfile.currentRole} in {userProfile.industry}
+                  Powered by GPT-4.1 • {userProfile.currentRole} in {userProfile.industry}
                 </p>
               </div>
             </div>
@@ -261,9 +303,11 @@ I'll generate a comprehensive plan for you now. You can refine it with chat afte
               <Download className="h-4 w-4 mr-2" />
               Download Plan
             </Button>
-            <Button variant="outline" size="sm" onClick={onBack}>
-              New Profile
-            </Button>
+            {onBack && (
+              <Button variant="outline" size="sm" onClick={onBack}>
+                New Profile
+              </Button>
+            )}
           </div>
         </CardHeader>
 
@@ -370,6 +414,4 @@ I'll generate a comprehensive plan for you now. You can refine it with chat afte
       </Card>
     </div>
   );
-};
-
-export default AICoachChat;
+}

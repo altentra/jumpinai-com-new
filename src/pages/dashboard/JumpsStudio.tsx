@@ -1,28 +1,54 @@
 import React, { useState } from 'react';
-import { Sparkles, Brain, Target, Rocket } from 'lucide-react';
+import { Sparkles, Brain, Target, Rocket, ChevronUp, ChevronDown } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import UserProfileForm, { type UserProfile } from '@/components/dashboard/UserProfileForm';
 import AICoachChat from '@/components/dashboard/AICoachChat';
+import JumpPlanDisplay from '@/components/dashboard/JumpPlanDisplay';
 
 export default function JumpsStudio() {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [jumpPlan, setJumpPlan] = useState<string>('');
+  const [showChat, setShowChat] = useState(false);
+  const [isProfileFormOpen, setIsProfileFormOpen] = useState(true);
 
   const handleProfileSubmit = async (profile: UserProfile) => {
     setIsLoading(true);
-    // Simulate a brief loading state for better UX
-    setTimeout(() => {
-      setUserProfile(profile);
-      setIsLoading(false);
-    }, 1000);
+    setUserProfile(profile);
+    setIsProfileFormOpen(false);
+    setIsLoading(false);
   };
 
-  const handleBack = () => {
+  const handlePlanGenerated = (plan: string) => {
+    setJumpPlan(plan);
+  };
+
+  const handleStartChat = () => {
+    setShowChat(true);
+  };
+
+  const downloadPlan = () => {
+    if (!jumpPlan.trim()) return;
+    
+    const blob = new Blob([jumpPlan], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'my-jump-plan.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleNewProfile = () => {
     setUserProfile(null);
+    setJumpPlan('');
+    setShowChat(false);
+    setIsProfileFormOpen(true);
   };
 
-  if (userProfile) {
-    return <AICoachChat userProfile={userProfile} onBack={handleBack} />;
-  }
 
   if (isLoading) {
     return (
@@ -40,7 +66,7 @@ export default function JumpsStudio() {
 
   return (
     <div className="space-y-8">
-      {/* Hero Section */}
+      {/* Hero Section - Always visible */}
       <div className="text-center space-y-4">
         <div className="flex items-center justify-center gap-3 mb-6">
           <div className="p-3 rounded-full bg-gradient-to-br from-primary/10 to-primary/5">
@@ -55,7 +81,7 @@ export default function JumpsStudio() {
         <div className="max-w-3xl mx-auto">
           <p className="text-lg leading-relaxed text-muted-foreground">
             Get your personalized "Jump" - a comprehensive AI transformation plan tailored to your unique situation, 
-            goals, and industry. Powered by ChatGPT-5 for world-class strategic guidance.
+            goals, and industry. Powered by GPT-4.1 for world-class strategic guidance.
           </p>
         </div>
 
@@ -93,8 +119,59 @@ export default function JumpsStudio() {
         </div>
       </div>
 
-      {/* Profile Form */}
-      <UserProfileForm onSubmit={handleProfileSubmit} isLoading={isLoading} />
+      {/* Profile Form - Collapsible after submission */}
+      {userProfile ? (
+        <Collapsible open={isProfileFormOpen} onOpenChange={setIsProfileFormOpen}>
+          <CollapsibleTrigger asChild>
+            <Button variant="outline" className="w-full gap-2">
+              {isProfileFormOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+              {isProfileFormOpen ? 'Hide' : 'Show'} Profile Details
+            </Button>
+          </CollapsibleTrigger>
+          <CollapsibleContent className="space-y-4 mt-4">
+            <UserProfileForm 
+              onSubmit={handleProfileSubmit} 
+              isLoading={isLoading} 
+              initialData={userProfile}
+              showNewProfileButton={true}
+              onNewProfile={handleNewProfile}
+            />
+          </CollapsibleContent>
+        </Collapsible>
+      ) : (
+        <UserProfileForm onSubmit={handleProfileSubmit} isLoading={isLoading} />
+      )}
+
+      {/* Jump Plan Display - Shows after profile submission */}
+      {userProfile && (
+        <div className="space-y-6">
+          {!jumpPlan && !showChat && (
+            <AICoachChat 
+              userProfile={userProfile} 
+              onPlanGenerated={handlePlanGenerated}
+              hideChat={true}
+            />
+          )}
+          
+          {jumpPlan && (
+            <JumpPlanDisplay 
+              planContent={jumpPlan}
+              onEdit={handleStartChat}
+              onDownload={downloadPlan}
+            />
+          )}
+          
+          {/* Chat Interface - For refinements */}
+          {showChat && jumpPlan && (
+            <AICoachChat 
+              userProfile={userProfile} 
+              onPlanGenerated={handlePlanGenerated}
+              initialPlan={jumpPlan}
+              isRefinementMode={true}
+            />
+          )}
+        </div>
+      )}
     </div>
   );
 }

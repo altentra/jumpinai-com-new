@@ -21,10 +21,19 @@ export interface UserProfile {
 interface UserProfileFormProps {
   onSubmit: (profile: UserProfile) => void;
   isLoading?: boolean;
+  initialData?: UserProfile;
+  showNewProfileButton?: boolean;
+  onNewProfile?: () => void;
 }
 
-const UserProfileForm: React.FC<UserProfileFormProps> = ({ onSubmit, isLoading }) => {
-  const [profile, setProfile] = useState<UserProfile>({
+const UserProfileForm: React.FC<UserProfileFormProps> = ({ 
+  onSubmit, 
+  isLoading, 
+  initialData,
+  showNewProfileButton,
+  onNewProfile 
+}) => {
+  const [profile, setProfile] = useState<UserProfile>(initialData || {
     currentRole: '',
     industry: '',
     experienceLevel: '',
@@ -192,13 +201,24 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ onSubmit, isLoading }
             </div>
           </div>
 
-          <Button 
-            type="submit" 
-            className="w-full"
-            disabled={isLoading}
-          >
-            {isLoading ? 'Creating Your Profile...' : 'Start My AI Transformation Journey'}
-          </Button>
+          <div className="flex gap-3">
+            <Button 
+              type="submit" 
+              className="flex-1"
+              disabled={isLoading}
+            >
+              {isLoading ? 'Creating Your Profile...' : 'Start My AI Transformation Journey'}
+            </Button>
+            {showNewProfileButton && onNewProfile && (
+              <Button 
+                type="button" 
+                variant="outline"
+                onClick={onNewProfile}
+              >
+                New Profile
+              </Button>
+            )}
+          </div>
         </form>
       </CardContent>
     </Card>
