@@ -150,38 +150,67 @@ async function callOpenAI(
 }
 
 async function generateComponents(userProfile: any): Promise<GeneratedComponents> {
-  const prompt = `Generate 4 personalized AI components for each category based on this user profile. No emojis or special symbols.
+  // Helper: robust JSON parser with extraction fallback
+  const safeParse = (text: string): any | null => {
+    try { return JSON.parse(text); } catch (_) {}
+    try {
+      const start = text.indexOf('{');
+      const end = text.lastIndexOf('}');
+      if (start !== -1 && end !== -1 && end > start) {
+        const sliced = text.slice(start, end + 1);
+        return JSON.parse(sliced);
+      }
+    } catch (_) {}
+    return null;
+  };
 
+  type Key = 'prompts' | 'workflows' | 'blueprints' | 'strategies';
+
+  const buildPromptFor = (key: Key) => {
+    const base = `Generate exactly 4 high-quality ${key} based on this user profile.
+No emojis or special symbols. Return ONLY valid JSON for the "${key}" key.
 User: ${userProfile.currentRole} in ${userProfile.industry}
 Goals: ${userProfile.goals}
 AI Knowledge: ${userProfile.aiKnowledge}
+`;
 
-Return valid JSON with this structure:
-{
-  "prompts": [{"title": "", "description": "", "prompt_text": "", "category": "productivity", "ai_tools": ["ChatGPT"], "use_cases": [""], "instructions": "", "tags": [""]}],
-  "workflows": [{"title": "", "description": "", "workflow_steps": [{"step": 1, "title": "", "description": "", "tools": [], "estimated_time": ""}], "category": "productivity", "ai_tools": [], "duration_estimate": "", "complexity_level": "beginner", "prerequisites": [], "expected_outcomes": [], "instructions": "", "tags": []}],
-  "blueprints": [{"title": "", "description": "", "blueprint_content": {"overview": "", "components": [], "structure": "", "implementation": ""}, "category": "productivity", "ai_tools": [], "implementation_time": "", "difficulty_level": "beginner", "resources_needed": [], "deliverables": [], "instructions": "", "tags": []}],
-  "strategies": [{"title": "", "description": "", "strategy_framework": {"overview": "", "phases": [], "objectives": [], "approach": ""}, "category": "productivity", "ai_tools": [], "timeline": "", "success_metrics": [], "key_actions": [], "potential_challenges": [], "mitigation_strategies": [], "instructions": "", "tags": []}]
-}`;
+    // Minimal per-key schema
+    const schemas: Record<Key, string> = {
+      prompts: `{"prompts": [{"title":"","description":"","prompt_text":"","category":"productivity","ai_tools":["ChatGPT"],"use_cases":[""],"instructions":"","tags":[""]}]}`,
+      workflows: `{"workflows": [{"title":"","description":"","workflow_steps":[{"step":1,"title":"","description":"","tools":[],"estimated_time":""}],"category":"productivity","ai_tools":[],"duration_estimate":"","complexity_level":"beginner","prerequisites":[],"expected_outcomes":[],"instructions":"","tags":[]}]}`,
+      blueprints: `{"blueprints": [{"title":"","description":"","blueprint_content":{"overview":"","components":[],"structure":"","implementation":""},"category":"productivity","ai_tools":[],"implementation_time":"","difficulty_level":"beginner","resources_needed":[],"deliverables":[],"instructions":"","tags":[]}]}`,
+      strategies: `{"strategies": [{"title":"","description":"","strategy_framework":{"overview":"","phases":[],"objectives":[],"approach":""},"category":"productivity","ai_tools":[],"timeline":"","success_metrics":[],"key_actions":[],"potential_challenges":[],"mitigation_strategies":[],"instructions":"","tags":[]}]}`
+    };
 
-  let { content, usage, finish_reason } = await callOpenAI([{ role: 'user', content: prompt }], 2200, true);
-  
-  // If cut off or empty, request a concise continuation
-  if (!content || content.trim() === '' || finish_reason === 'length') {
-    const cont = await callOpenAI([
-      { role: 'user', content: prompt },
-      { role: 'user', content: 'Complete the JSON response. Ensure valid JSON format.' }
-    ], 2000, true, 'gpt-5-2025-08-07');
-    if (cont.content && cont.content.trim() !== '') {
-      content = cont.content;
-    } else {
-      // Fallback to GPT-4.1 if GPT-5 still fails
-      const fb = await callOpenAI([{ role: 'user', content: prompt }], 2500, true, 'gpt-4.1-2025-04-14');
-      content = fb.content || '{}';
+    return `${base}\nUse this JSON shape (example with 1 item). Output 4 items in the array:\n${schemas[key]}`;
+  };
+
+  const generateForKey = async (key: Key) => {
+    const prompt = buildPromptFor(key);
+    // First attempt with GPT-5 JSON mode, small token budget to reduce latency
+    let res = await callOpenAI([{ role: 'user', content: prompt }], 900, true, 'gpt-5-2025-08-07');
+    let obj = safeParse(res.content);
+
+    // If parsing failed or key missing, try a compact repair with GPT-4.1
+    if (!obj || !Array.isArray(obj[key])) {
+      const repair = await callOpenAI([
+        { role: 'user', content: `${prompt}\nIf malformed, FIX strictly to valid JSON. Return only JSON with the \"${key}\" array.` }
+      ], 700, true, 'gpt-4.1-2025-04-14');
+      obj = safeParse(repair.content);
     }
-  }
 
-  return JSON.parse(content);
+    const arr = (obj && Array.isArray(obj[key])) ? obj[key] : [];
+    return arr;
+  };
+
+  const [prompts, workflows, blueprints, strategies] = await Promise.all([
+    generateForKey('prompts'),
+    generateForKey('workflows'),
+    generateForKey('blueprints'),
+    generateForKey('strategies'),
+  ]);
+
+  return { prompts, workflows, blueprints, strategies };
 }
 
 async function saveComponents(components: GeneratedComponents, userId: string, jumpId: string) {
@@ -203,7 +232,7 @@ async function saveComponents(components: GeneratedComponents, userId: string, j
   }
   if (errors.length) {
     console.error('Errors while saving generated components:', errors);
-    throw new Error('Some component inserts failed');
+    // Do not throw; proceed so successfully inserted items are kept
   }
 }
 

@@ -58,59 +58,57 @@ export default function JumpPlanDisplay({ planContent, onEdit, onDownload }: Jum
         </div>
       </CardHeader>
       <CardContent>
-        <div className="prose prose-lg max-w-none dark:prose-invert font-['Inter',system-ui,sans-serif] text-foreground/90 leading-relaxed">
+        <div className="max-w-none font-sans text-foreground leading-7 text-base space-y-5">
           <ReactMarkdown 
             remarkPlugins={[remarkGfm]}
             components={{
               h1: ({ children }) => (
-                <h1 className="text-3xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent border-b-2 border-primary/20 pb-4 mb-8 mt-10 tracking-tight">
+                <h1 className="text-3xl font-bold tracking-tight border-b border-border pb-3 mb-6 mt-8">
                   {children}
                 </h1>
               ),
               h2: ({ children }) => (
-                <h2 className="text-2xl font-bold text-foreground mb-6 mt-8 flex items-center gap-3">
-                  <div className="w-1 h-6 bg-gradient-to-b from-primary to-primary/60 rounded-full"></div>
+                <h2 className="text-2xl font-semibold text-foreground mb-4 mt-8">
                   {children}
                 </h2>
               ),
               h3: ({ children }) => (
-                <h3 className="text-xl font-semibold text-foreground/90 mb-4 mt-6 pl-4 border-l-3 border-primary/40">
+                <h3 className="text-xl font-semibold text-foreground/90 mb-3 mt-6">
                   {children}
                 </h3>
               ),
               h4: ({ children }) => (
-                <h4 className="text-lg font-semibold text-primary mb-3 mt-5">
+                <h4 className="text-lg font-medium text-foreground mb-2 mt-5">
                   {children}
                 </h4>
               ),
               p: ({ children }) => (
-                <p className="mb-5 leading-relaxed text-foreground/90 text-base">
+                <p className="mb-4 leading-7 text-foreground/90">
                   {children}
                 </p>
               ),
               ul: ({ children }) => (
-                <ul className="mb-6 space-y-3 pl-0">
+                <ul className="list-disc marker:text-muted-foreground pl-6 space-y-2 mb-4">
                   {children}
                 </ul>
               ),
               ol: ({ children }) => (
-                <ol className="mb-6 space-y-3 pl-0 counter-reset-[list-counter]">
+                <ol className="list-decimal marker:text-muted-foreground pl-6 space-y-2 mb-4">
                   {children}
                 </ol>
               ),
               li: ({ children }) => (
-                <li className="flex items-start gap-4 mb-3 text-foreground/90 group">
-                  <div className="w-2 h-2 bg-gradient-to-br from-primary to-primary/60 rounded-full mt-2.5 flex-shrink-0 group-hover:scale-125 transition-transform"></div>
-                  <span className="flex-1 leading-relaxed">{children}</span>
+                <li className="leading-7">
+                  {children}
                 </li>
               ),
               strong: ({ children }) => (
-                <strong className="font-bold text-primary bg-primary/10 px-1 py-0.5 rounded">
+                <strong className="font-semibold text-foreground">
                   {children}
                 </strong>
               ),
               em: ({ children }) => (
-                <em className="italic text-primary/80 font-medium">
+                <em className="italic text-foreground/80">
                   {children}
                 </em>
               ),
@@ -120,7 +118,7 @@ export default function JumpPlanDisplay({ planContent, onEdit, onDownload }: Jum
                 </code>
               ),
               blockquote: ({ children }) => (
-                <blockquote className="border-l-4 border-primary/60 pl-6 py-4 my-6 bg-primary/5 rounded-r-lg italic text-foreground/80">
+                <blockquote className="border-l-2 border-border pl-4 italic text-foreground/80 my-4">
                   {children}
                 </blockquote>
               ),
