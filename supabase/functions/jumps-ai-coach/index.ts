@@ -98,15 +98,55 @@ async function callOpenAI(
   }
 
   const data = await response.json();
-  const extracted = (
-    data?.choices?.[0]?.message?.content ??
-    data?.choices?.[0]?.text ??
-    (Array.isArray(data?.output_text) ? data.output_text.join('\n') : data?.output_text) ??
-    ''
-  );
-  const content = typeof extracted === 'string' ? extracted : '';
-  const finish_reason = data?.choices?.[0]?.finish_reason;
+  const choice = data?.choices?.[0];
+  const msg = choice?.message;
+  let content = '';
+
+  if (typeof msg?.content === 'string') {
+    content = msg.content;
+  } else if (Array.isArray(msg?.content)) {
+    content = msg.content
+      .map((part: any) => {
+        if (typeof part === 'string') return part;
+        if (typeof part?.text === 'string') return part.text;
+        if (typeof part?.content === 'string') return part.content;
+        if (Array.isArray(part?.content)) return part.content.map((p: any) => p?.text || p?.content || '').join('');
+        return '';
+      })
+      .filter(Boolean)
+      .join('\n')
+      .trim();
+  }
+
+  if (!content && typeof choice?.text === 'string') {
+    content = choice.text;
+  }
+
+  if (!content) {
+    const ot = (data as any)?.output_text;
+    if (Array.isArray(ot)) content = ot.join('\n');
+    else if (typeof ot === 'string') content = ot;
+  }
+
+  if (!content && typeof (data as any)?.message === 'string') {
+    content = (data as any).message;
+  }
+
+  const finish_reason = choice?.finish_reason;
   
+  if (!content || content.trim() === '') {
+    console.error('OpenAI response contained no textual content. Debug snapshot:', {
+      finish_reason,
+      usage: data?.usage,
+      hasMessage: !!msg,
+      types: {
+        messageContentType: typeof msg?.content,
+        outputTextType: Array.isArray((data as any)?.output_text) ? 'array' : typeof (data as any)?.output_text,
+      },
+    });
+  }
+
+  return { content, usage: data.usage, finish_reason };
   return { content, usage: data.usage, finish_reason };
 }
 async function generateComponents(userProfile: any): Promise<GeneratedComponents> {
