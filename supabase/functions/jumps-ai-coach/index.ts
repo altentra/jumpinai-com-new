@@ -67,6 +67,99 @@ interface GeneratedComponents {
   }>;
 }
 
+// ---------- Helper: OpenAI Chat wrapper with retry/fallback ----------
+async function openAIChatOnce(params: {
+  model: string;
+  messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }>;
+  maxCompletionTokens: number;
+  responseFormat?: { type: 'json_object' } | undefined;
+}) {
+  const { model, messages, maxCompletionTokens, responseFormat } = params;
+  const body: Record<string, unknown> = {
+    model,
+    messages,
+    max_completion_tokens: maxCompletionTokens,
+    stream: false,
+  };
+  if (responseFormat) body.response_format = responseFormat;
+
+  const resp = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${openAIApiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  });
+
+  const data = await resp.json();
+  if (!resp.ok) {
+    console.error('OpenAI API error:', data);
+    throw new Error(`OpenAI API error: ${resp.status}`);
+  }
+
+  const content = (
+    data?.choices?.[0]?.message?.content ??
+    data?.choices?.[0]?.text ??
+    (Array.isArray(data?.output_text) ? data.output_text.join('\n') : data?.output_text) ??
+    ''
+  );
+  const finishReason = data?.choices?.[0]?.finish_reason ?? 'unknown';
+  return { content: typeof content === 'string' ? content : '', data, finishReason };
+}
+
+async function openAIChatSmart(params: {
+  primaryModel: string;
+  fallbackModel: string;
+  messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }>;
+  maxCompletionTokens: number;
+  responseFormat?: { type: 'json_object' } | undefined;
+  conciseContinuationInstruction?: string;
+}) {
+  const { primaryModel, fallbackModel, messages, maxCompletionTokens, responseFormat, conciseContinuationInstruction } = params;
+
+  let { content, data, finishReason } = await openAIChatOnce({
+    model: primaryModel,
+    messages,
+    maxCompletionTokens,
+    responseFormat,
+  });
+
+  if (content && content.trim() !== '') {
+    return { content, data, finishReason, model: primaryModel };
+  }
+
+  console.error('Primary model returned empty content', { finishReason, model: primaryModel });
+
+  const retryMessages = [...messages];
+  if (conciseContinuationInstruction) {
+    retryMessages.push({ role: 'user', content: conciseContinuationInstruction });
+  }
+  try {
+    const retry = await openAIChatOnce({
+      model: primaryModel,
+      messages: retryMessages,
+      maxCompletionTokens,
+      responseFormat,
+    });
+    if (retry.content && retry.content.trim() !== '') {
+      return { content: retry.content, data: retry.data, finishReason: retry.finishReason, model: primaryModel };
+    }
+    console.error('Primary model retry also returned empty content', { finishReason: retry.finishReason, model: primaryModel });
+  } catch (e) {
+    console.error('Primary model retry failed:', e);
+  }
+
+  const fallback = await openAIChatOnce({
+    model: fallbackModel,
+    messages,
+    maxCompletionTokens,
+    responseFormat,
+  });
+  return { content: fallback.content, data: fallback.data, finishReason: fallback.finishReason, model: fallbackModel };
+}
+// --------------------------------------------------------------------
+
 async function generateComponents(userProfile: any, userId: string): Promise<GeneratedComponents> {
   const componentPrompt = `You are an expert AI transformation coach. Based on this user profile, generate personalized AI implementation components.
 
@@ -165,33 +258,18 @@ Generate exactly 4 components for each category, tailored to this user's profile
 
 Make components highly specific to the user's role, industry, and goals. Focus on practical, actionable content.`;
 
-  const response = await fetch('https://api.openai.com/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${openAIApiKey}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      model: 'gpt-5-2025-08-07',
-      messages: [
-        { role: 'system', content: componentPrompt }
-      ],
-      response_format: { type: 'json_object' },
-      max_completion_tokens: 5000,
-      stream: false
-    }),
-  });
-
-  if (!response.ok) {
-    const errorData = await response.json();
-    console.error('OpenAI API error:', errorData);
-    throw new Error(`OpenAI API error: ${response.status}`);
-  }
-
-  const data = await response.json();
-  const content = data?.choices?.[0]?.message?.content || '';
-  
   try {
+    const { content } = await openAIChatSmart({
+      primaryModel: 'gpt-5-2025-08-07',
+      fallbackModel: 'gpt-4.1-2025-04-14',
+      messages: [
+        { role: 'system', content: componentPrompt },
+      ],
+      maxCompletionTokens: 4000,
+      responseFormat: { type: 'json_object' },
+      conciseContinuationInstruction: 'Your previous response seems to have been cut off. Please return ONLY a valid JSON object following the exact schema, with exactly 4 items per array, and no extra text. Keep it concise and under 1200 words.',
+    });
+
     // First, try parsing the content directly (JSON mode should return a pure JSON string)
     let components: GeneratedComponents | null = null;
     try {
@@ -218,7 +296,6 @@ Make components highly specific to the user's role, industry, and goals. Focus o
     return components;
   } catch (error) {
     console.error('Error parsing components JSON:', error);
-    console.error('Raw content:', content);
     throw new Error('Failed to parse generated components');
   }
 }
@@ -311,6 +388,9 @@ serve(async (req) => {
   try {
     const { messages, userProfile, userId, jumpId, generateComponents: shouldGenerateComponents } = await req.json();
 
+    // Trim very long conversations to last 8 messages to avoid token overruns
+    const safeMessages = Array.isArray(messages) && messages.length > 8 ? messages.slice(-8) : messages;
+
     // System prompt for personalized AI transformation coaching (main plan)
     const systemPrompt = `You are an expert AI transformation coach and strategist. Your role is to create personalized "Jumps" - comprehensive transformation plans that help individuals and businesses successfully adapt to and implement AI in their daily operations.
 
@@ -382,42 +462,24 @@ POTENTIAL CHALLENGES & SOLUTIONS
 
 Be conversational, insightful, and highly practical. Ask clarifying questions when needed. Always provide specific, actionable advice rather than generic suggestions.`;
 
-    // Generate main transformation plan
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${openAIApiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'gpt-5-2025-08-07',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          ...messages
-        ],
-        max_completion_tokens: 1500,
-        stream: false
-      }),
+    // Generate main transformation plan with robust retry/fallback
+    const smart = await openAIChatSmart({
+      primaryModel: 'gpt-5-2025-08-07',
+      fallbackModel: 'gpt-4.1-2025-04-14',
+      messages: [
+        { role: 'system', content: systemPrompt },
+        ...(safeMessages || []),
+      ],
+      maxCompletionTokens: 3000,
+      conciseContinuationInstruction: 'Your previous response appears to have been cut off. Please produce a concise, complete plan under 1200 words. Plain text only, no emojis or special symbols.',
     });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error('OpenAI API error:', errorData);
-      throw new Error(`OpenAI API error: ${response.status}`);
-    }
+    const data = smart.data;
+    const content = smart.content;
+    const finishReason = smart.finishReason;
 
-    const data = await response.json();
-    const content = (
-      data?.choices?.[0]?.message?.content ??
-      data?.choices?.[0]?.text ??
-      (Array.isArray(data?.output_text) ? data.output_text.join('\n') : data?.output_text) ??
-      ''
-    );
-
-    const finishReason = data?.choices?.[0]?.finish_reason ?? 'unknown';
     if (!content || typeof content !== 'string' || content.trim() === '') {
-      console.error('OpenAI returned empty content', { finishReason, model: data?.model });
-      console.error('OpenAI raw (truncated):', JSON.stringify(data).slice(0, 4000));
+      console.error('OpenAI returned empty content even after fallback', { finishReason, modelTried: smart?.data?.model });
     }
 
     // Generate components if requested
