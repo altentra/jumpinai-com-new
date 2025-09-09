@@ -124,7 +124,10 @@ export default function AICoachChat({
           "Using the provided profile context, generate a fully comprehensive, professional, elite-level, actionable 'Jump' plan following the RESPONSE STRUCTURE from the system prompt. Be specific with tools, steps, timelines, and metrics. Tailor everything to the user's role, industry, experience, time, and budget. Use clear headings and bullet points.";
         const payload = {
           messages: [{ role: 'user', content: initialPrompt }],
-          userProfile
+          userProfile,
+          userId: userProfile?.user_id,
+          jumpId: currentJumpId,
+          generateComponents: isNewJump // Generate components for new jumps
         };
         console.log('[AICoachChat] Auto-invoking jumps-ai-coach with payload:', payload);
         const response: any = await invokeWithTimeout(payload);

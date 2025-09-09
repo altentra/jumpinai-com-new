@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "12.2.12 (cd3cf9e)"
+    PostgrestVersion: "13.0.4"
   }
   public: {
     Tables: {
@@ -309,6 +309,71 @@ export type Database = {
         }
         Relationships: []
       }
+      user_blueprints: {
+        Row: {
+          ai_tools: string[] | null
+          blueprint_content: Json
+          category: string | null
+          created_at: string
+          deliverables: string[] | null
+          description: string | null
+          difficulty_level: string | null
+          id: string
+          implementation_time: string | null
+          instructions: string | null
+          jump_id: string | null
+          resources_needed: string[] | null
+          tags: string[] | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ai_tools?: string[] | null
+          blueprint_content: Json
+          category?: string | null
+          created_at?: string
+          deliverables?: string[] | null
+          description?: string | null
+          difficulty_level?: string | null
+          id?: string
+          implementation_time?: string | null
+          instructions?: string | null
+          jump_id?: string | null
+          resources_needed?: string[] | null
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ai_tools?: string[] | null
+          blueprint_content?: Json
+          category?: string | null
+          created_at?: string
+          deliverables?: string[] | null
+          description?: string | null
+          difficulty_level?: string | null
+          id?: string
+          implementation_time?: string | null
+          instructions?: string | null
+          jump_id?: string | null
+          resources_needed?: string[] | null
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_user_blueprints_jump_id"
+            columns: ["jump_id"]
+            isOneToOne: false
+            referencedRelation: "user_jumps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_jumps: {
         Row: {
           created_at: string
@@ -400,6 +465,195 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      user_prompts: {
+        Row: {
+          ai_tools: string[] | null
+          category: string | null
+          created_at: string
+          description: string | null
+          id: string
+          instructions: string | null
+          jump_id: string | null
+          prompt_text: string
+          tags: string[] | null
+          title: string
+          updated_at: string
+          use_cases: string[] | null
+          user_id: string
+        }
+        Insert: {
+          ai_tools?: string[] | null
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          instructions?: string | null
+          jump_id?: string | null
+          prompt_text: string
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+          use_cases?: string[] | null
+          user_id: string
+        }
+        Update: {
+          ai_tools?: string[] | null
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          instructions?: string | null
+          jump_id?: string | null
+          prompt_text?: string
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+          use_cases?: string[] | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_user_prompts_jump_id"
+            columns: ["jump_id"]
+            isOneToOne: false
+            referencedRelation: "user_jumps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_strategies: {
+        Row: {
+          ai_tools: string[] | null
+          category: string | null
+          created_at: string
+          description: string | null
+          id: string
+          instructions: string | null
+          jump_id: string | null
+          key_actions: string[] | null
+          mitigation_strategies: string[] | null
+          potential_challenges: string[] | null
+          strategy_framework: Json
+          success_metrics: string[] | null
+          tags: string[] | null
+          timeline: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ai_tools?: string[] | null
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          instructions?: string | null
+          jump_id?: string | null
+          key_actions?: string[] | null
+          mitigation_strategies?: string[] | null
+          potential_challenges?: string[] | null
+          strategy_framework: Json
+          success_metrics?: string[] | null
+          tags?: string[] | null
+          timeline?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ai_tools?: string[] | null
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          instructions?: string | null
+          jump_id?: string | null
+          key_actions?: string[] | null
+          mitigation_strategies?: string[] | null
+          potential_challenges?: string[] | null
+          strategy_framework?: Json
+          success_metrics?: string[] | null
+          tags?: string[] | null
+          timeline?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_user_strategies_jump_id"
+            columns: ["jump_id"]
+            isOneToOne: false
+            referencedRelation: "user_jumps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_workflows: {
+        Row: {
+          ai_tools: string[] | null
+          category: string | null
+          complexity_level: string | null
+          created_at: string
+          description: string | null
+          duration_estimate: string | null
+          expected_outcomes: string[] | null
+          id: string
+          instructions: string | null
+          jump_id: string | null
+          prerequisites: string[] | null
+          tags: string[] | null
+          title: string
+          updated_at: string
+          user_id: string
+          workflow_steps: Json
+        }
+        Insert: {
+          ai_tools?: string[] | null
+          category?: string | null
+          complexity_level?: string | null
+          created_at?: string
+          description?: string | null
+          duration_estimate?: string | null
+          expected_outcomes?: string[] | null
+          id?: string
+          instructions?: string | null
+          jump_id?: string | null
+          prerequisites?: string[] | null
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+          user_id: string
+          workflow_steps: Json
+        }
+        Update: {
+          ai_tools?: string[] | null
+          category?: string | null
+          complexity_level?: string | null
+          created_at?: string
+          description?: string | null
+          duration_estimate?: string | null
+          expected_outcomes?: string[] | null
+          id?: string
+          instructions?: string | null
+          jump_id?: string | null
+          prerequisites?: string[] | null
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+          workflow_steps?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_user_workflows_jump_id"
+            columns: ["jump_id"]
+            isOneToOne: false
+            referencedRelation: "user_jumps"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
