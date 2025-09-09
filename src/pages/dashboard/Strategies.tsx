@@ -22,6 +22,17 @@ export default function Strategies() {
     loadStrategies();
   }, []);
 
+  // Add visibility change listener to refresh data when user returns to tab
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden && !isLoading) {
+        loadStrategies();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, [isLoading]);
+
   const loadStrategies = async () => {
     try {
       const data = await strategiesService.getUserStrategies();

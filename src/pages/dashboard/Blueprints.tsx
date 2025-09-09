@@ -22,6 +22,17 @@ export default function Blueprints() {
     loadBlueprints();
   }, []);
 
+  // Add visibility change listener to refresh data when user returns to tab
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden && !isLoading) {
+        loadBlueprints();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, [isLoading]);
+
   const loadBlueprints = async () => {
     try {
       const data = await blueprintsService.getUserBlueprints();

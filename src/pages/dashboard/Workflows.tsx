@@ -22,6 +22,17 @@ export default function Workflows() {
     loadWorkflows();
   }, []);
 
+  // Add visibility change listener to refresh data when user returns to tab
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden && !isLoading) {
+        loadWorkflows();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, [isLoading]);
+
   const loadWorkflows = async () => {
     try {
       const data = await workflowsService.getUserWorkflows();
