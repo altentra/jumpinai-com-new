@@ -39,18 +39,25 @@ function promoteHeadings(text: string) {
       return `\n\n### ${k[0].toUpperCase() + k.slice(1).toLowerCase()} ${n}${title ? `: ${title}` : ''}`;
     });
 
-  // Standalone lines that look like titles (short, no period, surrounded by blank lines) → H2
-  t = t.replace(/(^|\n)\s*([^\n:.]{4,80})\s*(?=\n\n)/g, (match, p1, line) => {
-    const trimmed = String(line).trim();
-    if (!trimmed) return match;
-    const hasPunctuation = /[.:!?]$/.test(trimmed);
-    const hasSpaces = /\s/.test(trimmed);
-    const looksTitleCase = /^(?:[A-Z][^a-z]*|[A-Z][a-z]+)(?:\s+[A-Z][a-z]+|\s+[A-Za-z]+)*$/.test(trimmed);
-    if (!hasPunctuation && hasSpaces && looksTitleCase && trimmed.length < 80) {
-      return `${p1}## ${trimmed}`;
-    }
-    return match;
+  // Enhanced title detection - catch more business/strategy terms
+  const titlePatterns = [
+    /^\s*(executive summary|overview|introduction|conclusion|key findings|recommendations|next steps|action items|deliverables|timeline|budget|resources|analysis|strategy|approach|methodology|implementation|execution|goals|objectives|metrics|kpis|outcomes|results)[\s:]*$/gim,
+    /^\s*([A-Z][A-Z\s&]{10,60})\s*$/gm, // ALL CAPS titles
+    /^\s*([A-Z][a-z]+(?:\s+[A-Z][a-z]+){1,6})\s*(?=\n\n)/gm // Title Case lines before paragraphs
+  ];
+
+  titlePatterns.forEach(pattern => {
+    t = t.replace(pattern, (match, title) => {
+      const cleanTitle = String(title).trim();
+      if (cleanTitle.length > 5 && cleanTitle.length < 80) {
+        return `\n\n## ${cleanTitle}`;
+      }
+      return match;
+    });
   });
+
+  // Numbered sections like "1. Introduction" → "### 1. Introduction"
+  t = t.replace(/^\s*(\d+)\.\s+([A-Z][a-zA-Z\s]{8,50})\s*(?=\n)/gm, '\n\n### $1. $2');
 
   return t;
 }
@@ -65,6 +72,13 @@ export function formatAIText(input: string): string {
   let t = normalize(input);
   t = boldLabels(t);
   t = promoteHeadings(t);
+
+  // Enhanced text formatting
+  // Make key phrases italic for emphasis
+  t = t.replace(/\b(important|key|critical|essential|significant|major|primary|fundamental|crucial)\b/gi, '*$1*');
+  
+  // Bold action words
+  t = t.replace(/\b(implement|execute|develop|create|establish|achieve|optimize|enhance|improve|analyze|evaluate|monitor|measure|track|assess|review)\b/gi, '**$1**');
 
   // Ensure paragraph spacing: add a blank line before lists/headings when missing
   t = t

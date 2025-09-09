@@ -61,7 +61,7 @@ export default function JumpPlanDisplay({ planContent, onEdit, onDownload }: Jum
         </div>
       </CardHeader>
       <CardContent>
-        <div className="max-w-none font-sans text-foreground leading-relaxed text-base space-y-4">
+        <div className="max-w-none font-display text-foreground leading-relaxed text-base space-y-4">
           <ReactMarkdown 
             remarkPlugins={[remarkGfm]}
             components={{
@@ -101,17 +101,17 @@ export default function JumpPlanDisplay({ planContent, onEdit, onDownload }: Jum
                 </p>
               ),
               ul: ({ children }) => (
-                <ul className="list-disc marker:text-primary/70 pl-6 space-y-1.5 mb-5 text-foreground/90">
+                <ul className="list-disc marker:text-primary/70 pl-5 space-y-1 mb-4 text-foreground/90">
                   {children}
                 </ul>
               ),
               ol: ({ children }) => (
-                <ol className="list-decimal marker:text-primary/70 pl-6 space-y-1.5 mb-5 text-foreground/90">
+                <ol className="list-decimal marker:text-primary/70 pl-5 space-y-1 mb-4 text-foreground/90">
                   {children}
                 </ol>
               ),
               li: ({ children }) => (
-                <li className="leading-relaxed pl-1 text-base">
+                <li className="leading-relaxed pl-0.5 text-base">
                   {children}
                 </li>
               ),
