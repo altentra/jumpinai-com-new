@@ -92,12 +92,12 @@ export default function Prompts() {
             }, {} as Record<string, UserPrompt[]>)
           )
             .sort(([jumpIdA], [jumpIdB]) => {
-              // Sort by jump number, with unassigned last
+              // Sort by jump number descending (latest first), with unassigned last
               if (jumpIdA === 'unassigned') return 1;
               if (jumpIdB === 'unassigned') return -1;
               const jumpA = jumpIdA && jumpsInfo[jumpIdA];
               const jumpB = jumpIdB && jumpsInfo[jumpIdB];
-              return (jumpA?.jumpNumber || 0) - (jumpB?.jumpNumber || 0);
+              return (jumpB?.jumpNumber || 0) - (jumpA?.jumpNumber || 0);
             })
             .map(([jumpId, jumpPrompts]) => (
             <div key={jumpId} className="border rounded-lg p-6 bg-card">
