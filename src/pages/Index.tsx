@@ -1,6 +1,7 @@
 
 import Navigation from "@/components/Navigation";
 import Hero from "@/components/Hero";
+import Features from "@/components/Features";
 import LeadMagnet from "@/components/LeadMagnet";
 import BookPromotion from "@/components/BookPromotion";
 import Newsletter from "@/components/Newsletter";
@@ -17,6 +18,7 @@ const Index = () => {
     <div className="min-h-screen scroll-snap-container">
       <Navigation />
       <Hero />
+      <Features />
       <LeadMagnet />
       <BookPromotion />
       
