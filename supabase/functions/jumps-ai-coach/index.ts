@@ -70,8 +70,8 @@ async function callOpenAI(
   messages: Array<{ role: string; content: string }>,
   maxTokens = 2000,
   isJSON = false,
-  model = 'gpt-5-2025-08-07'
-) {
+  model = 'gpt-4.1-2025-04-14'
+ ) {
   const body: any = {
     model,
     messages,
@@ -190,29 +190,80 @@ AI Knowledge: ${userProfile.aiKnowledge}
 
   const generateForKey = async (key: Key) => {
     const prompt = buildPromptFor(key);
-    // Use GPT-4.1 with larger token budget for reliable JSON generation
-    let res = await callOpenAI([{ role: 'user', content: prompt }], 1500, true, 'gpt-4.1-2025-04-14');
-    let obj = safeParse(res.content);
 
-    // If parsing failed or key missing, try once more with explicit instructions
-    if (!obj || !Array.isArray(obj[key])) {
-      const repair = await callOpenAI([
-        { role: 'user', content: `${prompt}\n\nIMPORTANT: Return ONLY valid JSON in this exact format with the \"${key}\" array containing exactly 4 items. No other text.` }
-      ], 1500, true, 'gpt-4.1-2025-04-14');
-      obj = safeParse(repair.content);
+    const systemJSON = 'Return ONLY a single valid JSON object with the requested top-level key. No markdown, no code fences, no commentary.';
+    // First attempt
+    let res = await callOpenAI([
+      { role: 'system', content: systemJSON },
+      { role: 'user', content: prompt },
+    ], 1500, true, 'gpt-4.1-2025-04-14');
+
+    let obj = safeParse(res.content);
+    if (!obj) {
+      console.warn(`[gen:${key}] parse failed (attempt 1). First 400 chars:`, res.content?.slice(0, 400));
     }
 
-    const arr = (obj && Array.isArray(obj[key])) ? obj[key] : [];
+    // Repair attempt
+    if (!obj || (!Array.isArray((obj as any)[key]))) {
+      const repair = await callOpenAI([
+        { role: 'system', content: systemJSON },
+        { role: 'user', content: `${prompt}\n\nIMPORTANT: Return ONLY valid JSON in this exact format with the "${key}" array containing exactly 4 items. No other text.` },
+      ], 1500, true, 'gpt-4.1-2025-04-14');
+      obj = safeParse(repair.content);
+      if (!obj) {
+        console.warn(`[gen:${key}] parse failed (attempt 2). First 400 chars:`, repair.content?.slice(0, 400));
+      }
+    }
+
+    // Extract array with alt-key fallback
+    const altKeysMap: Record<Key, string[]> = {
+      prompts: ['prompt', 'prompts_list'],
+      workflows: ['workflow', 'processes', 'pipeline', 'workflows_list'],
+      blueprints: ['blueprint', 'templates', 'blueprints_list'],
+      strategies: ['strategy', 'plan', 'roadmaps', 'strategies_list'],
+    };
+    let arr: any[] = [];
+    if (obj && typeof obj === 'object') {
+      const keysToCheck = [key, ...altKeysMap[key]];
+      for (const k of keysToCheck) {
+        if (Array.isArray((obj as any)[k])) {
+          if (k !== key) console.warn(`[gen:${key}] used fallback key "${k}" from model output.`);
+          arr = (obj as any)[k];
+          break;
+        }
+      }
+    }
+
+    // Compact fallback attempt if still empty
+    if (!arr || arr.length === 0) {
+      const compactSchema: Record<Key, string> = {
+        prompts: `{"prompts":[{"title":"","description":"","prompt_text":"","category":"productivity","ai_tools":["ChatGPT"],"use_cases":[""],"instructions":"","tags":[""]}]}`,
+        workflows: `{"workflows":[{"title":"","description":"","workflow_steps":[{"step":1,"title":"","description":""}],"category":"productivity","ai_tools":[],"duration_estimate":"","complexity_level":"beginner","prerequisites":[],"expected_outcomes":[],"instructions":"","tags":[]}]}`,
+        blueprints: `{"blueprints":[{"title":"","description":"","blueprint_content":{"overview":"","components":[],"implementation":""},"category":"productivity","ai_tools":[],"implementation_time":"","difficulty_level":"beginner","resources_needed":[],"deliverables":[],"instructions":"","tags":[]}]}`,
+        strategies: `{"strategies":[{"title":"","description":"","strategy_framework":{"overview":"","phases":[],"objectives":[]},"category":"productivity","ai_tools":[],"timeline":"","success_metrics":[],"key_actions":[],"potential_challenges":[],"mitigation_strategies":[],"instructions":"","tags":[]}]}`,
+      };
+      const compactPrompt = `${buildPromptFor(key)}\n\nMake each item concise (2-3 sentences per field).`;
+      const compact = await callOpenAI([
+        { role: 'system', content: systemJSON },
+        { role: 'user', content: `${compactPrompt}\n\nReturn ONLY JSON. Use this minimal example shape:\n${compactSchema[key]}` },
+      ], 1200, true, 'gpt-4.1-2025-04-14');
+      const compactObj = safeParse(compact.content);
+      if (compactObj && Array.isArray(compactObj[key])) {
+        arr = compactObj[key];
+      } else {
+        console.warn(`[gen:${key}] compact attempt also failed. First 400 chars:`, compact.content?.slice(0, 400));
+        arr = [];
+      }
+    }
+
     console.log(`Generated ${key}: ${arr.length} items`);
     return arr;
   };
 
-  const [prompts, workflows, blueprints, strategies] = await Promise.all([
-    generateForKey('prompts'),
-    generateForKey('workflows'),
-    generateForKey('blueprints'),
-    generateForKey('strategies'),
-  ]);
+  const prompts = await generateForKey('prompts');
+  const workflows = await generateForKey('workflows');
+  const blueprints = await generateForKey('blueprints');
+  const strategies = await generateForKey('strategies');
 
   return { prompts, workflows, blueprints, strategies };
 }
