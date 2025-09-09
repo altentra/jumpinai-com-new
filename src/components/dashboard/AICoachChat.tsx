@@ -485,7 +485,7 @@ export default function AICoachChat({
                   className={`flex gap-3 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   {message.role === 'assistant' && (
-                    <Avatar className="h-8 w-8 bg-gradient-to-br from-primary/10 to-primary/5">
+<Avatar className="h-8 w-8 bg-gradient-to-br from-primary/10 to-primary/5 border border-border ring-1 ring-ring shadow-modern">
                       <AvatarFallback className="p-0">
                         <img 
                           src="/lovable-uploads/156b282b-1e93-436c-914a-a886a6a5cdfd.png" 
@@ -543,7 +543,7 @@ export default function AICoachChat({
 
               {isLoading && (
                 <div className="flex gap-3 justify-start">
-                  <Avatar className="h-8 w-8 bg-gradient-to-br from-primary/10 to-primary/5">
+                  <Avatar className="h-8 w-8 bg-gradient-to-br from-primary/10 to-primary/5 border border-border ring-1 ring-ring shadow-modern">
                     <AvatarFallback className="p-0">
                       <img 
                         src="/lovable-uploads/156b282b-1e93-436c-914a-a886a6a5cdfd.png" 

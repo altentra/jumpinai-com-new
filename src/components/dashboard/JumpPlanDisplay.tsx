@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Download, Edit, Sparkles } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { formatAIText } from '@/utils/aiTextFormatter';
 
 interface JumpPlanDisplayProps {
   planContent: string;
@@ -16,6 +17,8 @@ export default function JumpPlanDisplay({ planContent, onEdit, onDownload }: Jum
   if (!planContent.trim()) {
     return null;
   }
+
+  const enhancedContent = React.useMemo(() => formatAIText(planContent), [planContent]);
 
   return (
     <Card className="w-full bg-card border-border">
@@ -134,7 +137,7 @@ export default function JumpPlanDisplay({ planContent, onEdit, onDownload }: Jum
               ),
             }}
           >
-            {planContent}
+            {enhancedContent}
           </ReactMarkdown>
         </div>
       </CardContent>
