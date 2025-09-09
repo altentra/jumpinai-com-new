@@ -4,15 +4,17 @@ import { Button } from '@/components/ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import UserProfileForm from '@/components/dashboard/UserProfileForm';
 import { UserProfile } from '@/services/userProfileService';
 import AICoachChat from '@/components/dashboard/AICoachChat';
 import JumpPlanDisplay from '@/components/dashboard/JumpPlanDisplay';
 import { UserJump, getUserJumps } from '@/services/jumpService';
+import { useOptimizedAuth } from '@/hooks/useOptimizedAuth';
+import MiniJumpCard from '@/components/dashboard/MiniJumpCard';
 import { toast } from 'sonner';
 
 export default function JumpsStudio() {
+  const { userDisplay } = useOptimizedAuth();
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [jumpPlan, setJumpPlan] = useState<string>('');
@@ -37,9 +39,20 @@ export default function JumpsStudio() {
     loadExistingJumps();
   }, []);
 
+  // Generate automatic jump name
+  const generateJumpName = () => {
+    const userName = userDisplay?.name || 'User';
+    const jumpNumber = existingJumps.length + 1;
+    return `${userName}'s Jump #${jumpNumber}`;
+  };
+
   const handleProfileSubmit = async (profile: UserProfile) => {
     setUserProfile(profile);
     setIsProfileFormOpen(false);
+    // Auto-generate jump name for new jumps
+    if (isNewJump && !jumpName) {
+      setJumpName(generateJumpName());
+    }
     setShowChat(true); // Show chat immediately
   };
 
@@ -83,19 +96,16 @@ export default function JumpsStudio() {
     setJumpName('');
   };
 
-  const handleSelectExistingJump = (jumpId: string) => {
-    const jump = existingJumps.find(j => j.id === jumpId);
-    if (jump) {
-      setSelectedJump(jump);
-      setCurrentJumpId(jump.id);
-      setJumpPlan(jump.full_content);
-      setJumpName(jump.title);
-      setIsNewJump(false);
-      setShowChat(true); // Always show chat for existing jumps
-      // Don't require profile form for existing jumps
-      if (!userProfile) {
-        setIsProfileFormOpen(false);
-      }
+  const handleSelectExistingJump = (jump: UserJump) => {
+    setSelectedJump(jump);
+    setCurrentJumpId(jump.id);
+    setJumpPlan(jump.full_content);
+    setJumpName(jump.title);
+    setIsNewJump(false);
+    setShowChat(true); // Always show chat for existing jumps
+    // Don't require profile form for existing jumps
+    if (!userProfile) {
+      setIsProfileFormOpen(false);
     }
   };
 
@@ -103,7 +113,7 @@ export default function JumpsStudio() {
     setSelectedJump(null);
     setCurrentJumpId(null);
     setJumpPlan('');
-    setJumpName('');
+    setJumpName(generateJumpName());
     setIsNewJump(true);
     setShowChat(false);
     setIsProfileFormOpen(true);
@@ -157,24 +167,17 @@ export default function JumpsStudio() {
           {existingJumps.length > 0 && (
             <div className="space-y-4">
               <div>
-                <Label htmlFor="jump-select">Continue Existing Jump</Label>
-                <Select onValueChange={handleSelectExistingJump}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select an existing jump to continue..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {existingJumps.map((jump) => (
-                      <SelectItem key={jump.id} value={jump.id}>
-                        <div className="flex flex-col items-start">
-                          <span className="font-medium">{jump.title}</span>
-                          <span className="text-xs text-muted-foreground">
-                            Created {new Date(jump.created_at).toLocaleDateString()}
-                          </span>
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Label>Continue Existing Jump</Label>
+                <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-muted scrollbar-track-transparent">
+                  {existingJumps.map((jump) => (
+                    <MiniJumpCard
+                      key={jump.id}
+                      jump={jump}
+                      onClick={handleSelectExistingJump}
+                      isSelected={selectedJump?.id === jump.id}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
           )}
