@@ -53,6 +53,7 @@ export default function AICoachChat({
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const hasGeneratedRef = useRef(false);
   const { toast } = useToast();
   const { subscription } = useAuth();
   
@@ -199,10 +200,11 @@ export default function AICoachChat({
                       title: 'Generating Jump Components',
                       description: 'Creating prompts, workflows, blueprints, and strategies...',
                     });
+                    const { data: { user: authUser } } = await supabase.auth.getUser();
                     const compPayload = {
                       messages: [{ role: 'user', content: 'Generate Jump components for this profile.' }],
                       userProfile,
-                      userId: user?.id,
+                      userId: authUser?.id,
                       jumpId: savedJump.id,
                       generateComponents: true,
                     };

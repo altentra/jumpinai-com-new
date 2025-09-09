@@ -222,18 +222,24 @@ async function saveComponents(components: GeneratedComponents, userId: string, j
   ];
 
   const results = await Promise.allSettled(saves);
+  let saved = 0;
   const errors: Array<any> = [];
   for (const r of results) {
-    if (r.status === 'rejected') {
-      errors.push({ type: 'rejected', reason: r.reason });
-    } else if ((r as any).value?.error) {
-      errors.push({ type: 'fulfilled-error', error: (r as any).value.error });
+    if (r.status === 'fulfilled') {
+      const val: any = (r as any).value;
+      if (val?.error) {
+        errors.push({ type: 'fulfilled-error', error: val.error });
+      } else {
+        saved++;
+      }
+    } else {
+      errors.push({ type: 'rejected', reason: (r as any).reason });
     }
   }
   if (errors.length) {
     console.error('Errors while saving generated components:', errors);
-    // Do not throw; proceed so successfully inserted items are kept
   }
+  return { total: saves.length, saved, errors };
 }
 
 
@@ -320,17 +326,27 @@ Be conversational, specific, and actionable.`;
 
 
     // Handle component generation
-    let componentsStatus = 'Not requested';
-    if (shouldGenerateComponents && userProfile && userId && jumpId) {
-      try {
-        console.log('Generating components...');
-        const components = await generateComponents(userProfile);
-        await saveComponents(components, userId, jumpId);
-        componentsStatus = 'Generated and saved successfully';
-        console.log('Components saved successfully');
-      } catch (error) {
-        console.error('Component generation failed:', error);
-        componentsStatus = 'Failed to generate';
+    let componentsStatus: string | object = 'Not requested';
+    if (shouldGenerateComponents) {
+      if (!userProfile || !userId || !jumpId) {
+        componentsStatus = 'Missing userProfile, userId, or jumpId';
+      } else {
+        try {
+          console.log('Generating components...');
+          const components = await generateComponents(userProfile);
+          const summary = await saveComponents(components, userId, jumpId);
+          if (summary.saved === 0) {
+            componentsStatus = 'Failed to save';
+          } else if (summary.saved < summary.total) {
+            componentsStatus = `Partially saved (${summary.saved}/${summary.total})`;
+          } else {
+            componentsStatus = 'Generated and saved successfully';
+          }
+          console.log('Components save summary:', summary);
+        } catch (error) {
+          console.error('Component generation failed:', error);
+          componentsStatus = 'Failed to generate';
+        }
       }
     }
 

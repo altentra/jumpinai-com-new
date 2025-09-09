@@ -18,7 +18,7 @@ export default function JumpPlanDisplay({ planContent, onEdit, onDownload }: Jum
   }
 
   return (
-    <Card className="w-full bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
+    <Card className="w-full bg-card border-border">
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
