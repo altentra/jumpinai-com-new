@@ -81,55 +81,86 @@ export default function Prompts() {
           </CardContent>
         </Card>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {prompts.map((prompt) => (
-            <Card 
-              key={prompt.id} 
-              className="cursor-pointer hover:shadow-lg transition-shadow"
-              onClick={() => setSelectedPrompt(prompt)}
-            >
-              <CardHeader>
-                <div className="flex items-start justify-between gap-2">
-                  <CardTitle className="text-lg line-clamp-2">{prompt.title}</CardTitle>
-                  <div className="flex flex-col gap-1 shrink-0">
-                    {prompt.jump_id && jumpsInfo[prompt.jump_id] && (
-                      <Badge variant="default" className="text-xs">
-                        <Rocket className="w-3 h-3 mr-1" />
-                        Jump #{jumpsInfo[prompt.jump_id].jumpNumber}
-                      </Badge>
-                    )}
-                    {prompt.category && (
-                      <Badge variant="outline" className="text-xs">
-                        {prompt.category}
-                      </Badge>
-                    )}
-                  </div>
-                </div>
-                {prompt.description && (
-                  <CardDescription className="line-clamp-3">
-                    {prompt.description}
-                  </CardDescription>
-                )}
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  {prompt.ai_tools && prompt.ai_tools.length > 0 && (
-                    <div className="flex flex-wrap gap-1">
-                      {prompt.ai_tools.slice(0, 3).map((tool, index) => (
-                        <Badge key={index} variant="secondary" className="text-xs">
-                          {tool}
-                        </Badge>
-                      ))}
-                      {prompt.ai_tools.length > 3 && (
-                        <Badge variant="secondary" className="text-xs">
-                          +{prompt.ai_tools.length - 3}
-                        </Badge>
+        <div className="space-y-8">
+          {/* Group prompts by Jump */}
+          {Object.entries(
+            prompts.reduce((groups, prompt) => {
+              const jumpId = prompt.jump_id || 'unassigned';
+              if (!groups[jumpId]) groups[jumpId] = [];
+              groups[jumpId].push(prompt);
+              return groups;
+            }, {} as Record<string, UserPrompt[]>)
+          )
+            .sort(([jumpIdA], [jumpIdB]) => {
+              // Sort by jump number, with unassigned last
+              if (jumpIdA === 'unassigned') return 1;
+              if (jumpIdB === 'unassigned') return -1;
+              const jumpA = jumpIdA && jumpsInfo[jumpIdA];
+              const jumpB = jumpIdB && jumpsInfo[jumpIdB];
+              return (jumpA?.jumpNumber || 0) - (jumpB?.jumpNumber || 0);
+            })
+            .map(([jumpId, jumpPrompts]) => (
+            <div key={jumpId} className="border rounded-lg p-6 bg-card">
+              <div className="flex items-center gap-2 mb-4 pb-3 border-b">
+                <Rocket className="w-5 h-5 text-primary" />
+                <h3 className="text-xl font-semibold">
+                  {jumpId === 'unassigned' 
+                    ? 'Unassigned Prompts' 
+                    : jumpsInfo[jumpId] 
+                      ? `Jump #${jumpsInfo[jumpId].jumpNumber} - ${jumpsInfo[jumpId].title}` 
+                      : 'Loading Jump Info...'}
+                </h3>
+                <Badge variant="secondary" className="ml-auto">
+                  {jumpPrompts.length} prompt{jumpPrompts.length !== 1 ? 's' : ''}
+                </Badge>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {jumpPrompts.map((prompt) => (
+                  <Card 
+                    key={prompt.id} 
+                    className="cursor-pointer hover:shadow-lg transition-shadow"
+                    onClick={() => setSelectedPrompt(prompt)}
+                  >
+                    <CardHeader>
+                      <div className="flex items-start justify-between gap-2">
+                        <CardTitle className="text-lg line-clamp-2">{prompt.title}</CardTitle>
+                        <div className="flex flex-col gap-1 shrink-0">
+                          {prompt.category && (
+                            <Badge variant="outline" className="text-xs">
+                              {prompt.category}
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
+                      {prompt.description && (
+                        <CardDescription className="line-clamp-3">
+                          {prompt.description}
+                        </CardDescription>
                       )}
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-2">
+                        {prompt.ai_tools && prompt.ai_tools.length > 0 && (
+                          <div className="flex flex-wrap gap-1">
+                            {prompt.ai_tools.slice(0, 3).map((tool, index) => (
+                              <Badge key={index} variant="secondary" className="text-xs">
+                                {tool}
+                              </Badge>
+                            ))}
+                            {prompt.ai_tools.length > 3 && (
+                              <Badge variant="secondary" className="text-xs">
+                                +{prompt.ai_tools.length - 3}
+                              </Badge>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
           ))}
         </div>
       )}

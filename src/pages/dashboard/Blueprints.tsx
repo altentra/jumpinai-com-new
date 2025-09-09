@@ -78,76 +78,107 @@ export default function Blueprints() {
           </CardContent>
         </Card>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {blueprints.map((blueprint) => (
-            <Card 
-              key={blueprint.id} 
-              className="cursor-pointer hover:shadow-lg transition-shadow"
-              onClick={() => setSelectedBlueprint(blueprint)}
-            >
-              <CardHeader>
-                <div className="flex items-start justify-between gap-2">
-                  <CardTitle className="text-lg line-clamp-2">{blueprint.title}</CardTitle>
-                  <div className="flex flex-col gap-1 shrink-0">
-                    {blueprint.jump_id && jumpsInfo[blueprint.jump_id] && (
-                      <Badge variant="default" className="text-xs">
-                        <Rocket className="w-3 h-3 mr-1" />
-                        Jump #{jumpsInfo[blueprint.jump_id].jumpNumber}
-                      </Badge>
-                    )}
-                    {blueprint.category && (
-                      <Badge variant="outline" className="text-xs">
-                        {blueprint.category}
-                      </Badge>
-                    )}
-                  </div>
-                </div>
-                {blueprint.description && (
-                  <CardDescription className="line-clamp-3">
-                    {blueprint.description}
-                  </CardDescription>
-                )}
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                    {blueprint.implementation_time && (
-                      <div className="flex items-center gap-1">
-                        <Clock className="w-4 h-4" />
-                        {blueprint.implementation_time}
+        <div className="space-y-8">
+          {/* Group blueprints by Jump */}
+          {Object.entries(
+            blueprints.reduce((groups, blueprint) => {
+              const jumpId = blueprint.jump_id || 'unassigned';
+              if (!groups[jumpId]) groups[jumpId] = [];
+              groups[jumpId].push(blueprint);
+              return groups;
+            }, {} as Record<string, UserBlueprint[]>)
+          )
+            .sort(([jumpIdA], [jumpIdB]) => {
+              // Sort by jump number, with unassigned last
+              if (jumpIdA === 'unassigned') return 1;
+              if (jumpIdB === 'unassigned') return -1;
+              const jumpA = jumpIdA && jumpsInfo[jumpIdA];
+              const jumpB = jumpIdB && jumpsInfo[jumpIdB];
+              return (jumpA?.jumpNumber || 0) - (jumpB?.jumpNumber || 0);
+            })
+            .map(([jumpId, jumpBlueprints]) => (
+            <div key={jumpId} className="border rounded-lg p-6 bg-card">
+              <div className="flex items-center gap-2 mb-4 pb-3 border-b">
+                <Rocket className="w-5 h-5 text-primary" />
+                <h3 className="text-xl font-semibold">
+                  {jumpId === 'unassigned' 
+                    ? 'Unassigned Blueprints' 
+                    : jumpsInfo[jumpId] 
+                      ? `Jump #${jumpsInfo[jumpId].jumpNumber} - ${jumpsInfo[jumpId].title}` 
+                      : 'Loading Jump Info...'}
+                </h3>
+                <Badge variant="secondary" className="ml-auto">
+                  {jumpBlueprints.length} blueprint{jumpBlueprints.length !== 1 ? 's' : ''}
+                </Badge>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {jumpBlueprints.map((blueprint) => (
+                  <Card 
+                    key={blueprint.id} 
+                    className="cursor-pointer hover:shadow-lg transition-shadow"
+                    onClick={() => setSelectedBlueprint(blueprint)}
+                  >
+                    <CardHeader>
+                      <div className="flex items-start justify-between gap-2">
+                        <CardTitle className="text-lg line-clamp-2">{blueprint.title}</CardTitle>
+                        <div className="flex flex-col gap-1 shrink-0">
+                          {blueprint.category && (
+                            <Badge variant="outline" className="text-xs">
+                              {blueprint.category}
+                            </Badge>
+                          )}
+                        </div>
                       </div>
-                    )}
-                    {blueprint.difficulty_level && (
-                      <Badge className={`text-xs ${getDifficultyColor(blueprint.difficulty_level)}`}>
-                        {blueprint.difficulty_level}
-                      </Badge>
-                    )}
-                  </div>
-                  
-                  {blueprint.deliverables && blueprint.deliverables.length > 0 && (
-                    <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                      <Layers className="w-4 h-4" />
-                      <span>{blueprint.deliverables.length} deliverable{blueprint.deliverables.length > 1 ? 's' : ''}</span>
-                    </div>
-                  )}
-                  
-                  {blueprint.ai_tools && blueprint.ai_tools.length > 0 && (
-                    <div className="flex flex-wrap gap-1">
-                      {blueprint.ai_tools.slice(0, 3).map((tool, index) => (
-                        <Badge key={index} variant="secondary" className="text-xs">
-                          {tool}
-                        </Badge>
-                      ))}
-                      {blueprint.ai_tools.length > 3 && (
-                        <Badge variant="secondary" className="text-xs">
-                          +{blueprint.ai_tools.length - 3}
-                        </Badge>
+                      {blueprint.description && (
+                        <CardDescription className="line-clamp-3">
+                          {blueprint.description}
+                        </CardDescription>
                       )}
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                          {blueprint.implementation_time && (
+                            <div className="flex items-center gap-1">
+                              <Clock className="w-4 h-4" />
+                              {blueprint.implementation_time}
+                            </div>
+                          )}
+                          {blueprint.difficulty_level && (
+                            <Badge className={`text-xs ${getDifficultyColor(blueprint.difficulty_level)}`}>
+                              {blueprint.difficulty_level}
+                            </Badge>
+                          )}
+                        </div>
+                        
+                        {blueprint.deliverables && blueprint.deliverables.length > 0 && (
+                          <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                            <Layers className="w-4 h-4" />
+                            <span>{blueprint.deliverables.length} deliverable{blueprint.deliverables.length > 1 ? 's' : ''}</span>
+                          </div>
+                        )}
+                        
+                        {blueprint.ai_tools && blueprint.ai_tools.length > 0 && (
+                          <div className="flex flex-wrap gap-1">
+                            {blueprint.ai_tools.slice(0, 3).map((tool, index) => (
+                              <Badge key={index} variant="secondary" className="text-xs">
+                                {tool}
+                              </Badge>
+                            ))}
+                            {blueprint.ai_tools.length > 3 && (
+                              <Badge variant="secondary" className="text-xs">
+                                +{blueprint.ai_tools.length - 3}
+                              </Badge>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
           ))}
         </div>
       )}

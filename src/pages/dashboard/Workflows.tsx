@@ -78,69 +78,100 @@ export default function Workflows() {
           </CardContent>
         </Card>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {workflows.map((workflow) => (
-            <Card 
-              key={workflow.id} 
-              className="cursor-pointer hover:shadow-lg transition-shadow"
-              onClick={() => setSelectedWorkflow(workflow)}
-            >
-              <CardHeader>
-                <div className="flex items-start justify-between gap-2">
-                  <CardTitle className="text-lg line-clamp-2">{workflow.title}</CardTitle>
-                  <div className="flex flex-col gap-1 shrink-0">
-                    {workflow.jump_id && jumpsInfo[workflow.jump_id] && (
-                      <Badge variant="default" className="text-xs">
-                        <Rocket className="w-3 h-3 mr-1" />
-                        Jump #{jumpsInfo[workflow.jump_id].jumpNumber}
-                      </Badge>
-                    )}
-                    {workflow.category && (
-                      <Badge variant="outline" className="text-xs">
-                        {workflow.category}
-                      </Badge>
-                    )}
-                  </div>
-                </div>
-                {workflow.description && (
-                  <CardDescription className="line-clamp-3">
-                    {workflow.description}
-                  </CardDescription>
-                )}
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                    {workflow.duration_estimate && (
-                      <div className="flex items-center gap-1">
-                        <Clock className="w-4 h-4" />
-                        {workflow.duration_estimate}
+        <div className="space-y-8">
+          {/* Group workflows by Jump */}
+          {Object.entries(
+            workflows.reduce((groups, workflow) => {
+              const jumpId = workflow.jump_id || 'unassigned';
+              if (!groups[jumpId]) groups[jumpId] = [];
+              groups[jumpId].push(workflow);
+              return groups;
+            }, {} as Record<string, UserWorkflow[]>)
+          )
+            .sort(([jumpIdA], [jumpIdB]) => {
+              // Sort by jump number, with unassigned last
+              if (jumpIdA === 'unassigned') return 1;
+              if (jumpIdB === 'unassigned') return -1;
+              const jumpA = jumpIdA && jumpsInfo[jumpIdA];
+              const jumpB = jumpIdB && jumpsInfo[jumpIdB];
+              return (jumpA?.jumpNumber || 0) - (jumpB?.jumpNumber || 0);
+            })
+            .map(([jumpId, jumpWorkflows]) => (
+            <div key={jumpId} className="border rounded-lg p-6 bg-card">
+              <div className="flex items-center gap-2 mb-4 pb-3 border-b">
+                <Rocket className="w-5 h-5 text-primary" />
+                <h3 className="text-xl font-semibold">
+                  {jumpId === 'unassigned' 
+                    ? 'Unassigned Workflows' 
+                    : jumpsInfo[jumpId] 
+                      ? `Jump #${jumpsInfo[jumpId].jumpNumber} - ${jumpsInfo[jumpId].title}` 
+                      : 'Loading Jump Info...'}
+                </h3>
+                <Badge variant="secondary" className="ml-auto">
+                  {jumpWorkflows.length} workflow{jumpWorkflows.length !== 1 ? 's' : ''}
+                </Badge>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {jumpWorkflows.map((workflow) => (
+                  <Card 
+                    key={workflow.id} 
+                    className="cursor-pointer hover:shadow-lg transition-shadow"
+                    onClick={() => setSelectedWorkflow(workflow)}
+                  >
+                    <CardHeader>
+                      <div className="flex items-start justify-between gap-2">
+                        <CardTitle className="text-lg line-clamp-2">{workflow.title}</CardTitle>
+                        <div className="flex flex-col gap-1 shrink-0">
+                          {workflow.category && (
+                            <Badge variant="outline" className="text-xs">
+                              {workflow.category}
+                            </Badge>
+                          )}
+                        </div>
                       </div>
-                    )}
-                    {workflow.complexity_level && (
-                      <Badge className={`text-xs ${getDifficultyColor(workflow.complexity_level)}`}>
-                        {workflow.complexity_level}
-                      </Badge>
-                    )}
-                  </div>
-                  
-                  {workflow.ai_tools && workflow.ai_tools.length > 0 && (
-                    <div className="flex flex-wrap gap-1">
-                      {workflow.ai_tools.slice(0, 3).map((tool, index) => (
-                        <Badge key={index} variant="secondary" className="text-xs">
-                          {tool}
-                        </Badge>
-                      ))}
-                      {workflow.ai_tools.length > 3 && (
-                        <Badge variant="secondary" className="text-xs">
-                          +{workflow.ai_tools.length - 3}
-                        </Badge>
+                      {workflow.description && (
+                        <CardDescription className="line-clamp-3">
+                          {workflow.description}
+                        </CardDescription>
                       )}
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                          {workflow.duration_estimate && (
+                            <div className="flex items-center gap-1">
+                              <Clock className="w-4 h-4" />
+                              {workflow.duration_estimate}
+                            </div>
+                          )}
+                          {workflow.complexity_level && (
+                            <Badge className={`text-xs ${getDifficultyColor(workflow.complexity_level)}`}>
+                              {workflow.complexity_level}
+                            </Badge>
+                          )}
+                        </div>
+                        
+                        {workflow.ai_tools && workflow.ai_tools.length > 0 && (
+                          <div className="flex flex-wrap gap-1">
+                            {workflow.ai_tools.slice(0, 3).map((tool, index) => (
+                              <Badge key={index} variant="secondary" className="text-xs">
+                                {tool}
+                              </Badge>
+                            ))}
+                            {workflow.ai_tools.length > 3 && (
+                              <Badge variant="secondary" className="text-xs">
+                                +{workflow.ai_tools.length - 3}
+                              </Badge>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
           ))}
         </div>
       )}

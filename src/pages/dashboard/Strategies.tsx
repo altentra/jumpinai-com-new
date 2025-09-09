@@ -69,71 +69,102 @@ export default function Strategies() {
           </CardContent>
         </Card>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {strategies.map((strategy) => (
-            <Card 
-              key={strategy.id} 
-              className="cursor-pointer hover:shadow-lg transition-shadow"
-              onClick={() => setSelectedStrategy(strategy)}
-            >
-              <CardHeader>
-                <div className="flex items-start justify-between gap-2">
-                  <CardTitle className="text-lg line-clamp-2">{strategy.title}</CardTitle>
-                  <div className="flex flex-col gap-1 shrink-0">
-                    {strategy.jump_id && jumpsInfo[strategy.jump_id] && (
-                      <Badge variant="default" className="text-xs">
-                        <Rocket className="w-3 h-3 mr-1" />
-                        Jump #{jumpsInfo[strategy.jump_id].jumpNumber}
-                      </Badge>
-                    )}
-                    {strategy.category && (
-                      <Badge variant="outline" className="text-xs">
-                        {strategy.category}
-                      </Badge>
-                    )}
-                  </div>
-                </div>
-                {strategy.description && (
-                  <CardDescription className="line-clamp-3">
-                    {strategy.description}
-                  </CardDescription>
-                )}
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                    {strategy.timeline && (
-                      <div className="flex items-center gap-1">
-                        <Calendar className="w-4 h-4" />
-                        {strategy.timeline}
+        <div className="space-y-8">
+          {/* Group strategies by Jump */}
+          {Object.entries(
+            strategies.reduce((groups, strategy) => {
+              const jumpId = strategy.jump_id || 'unassigned';
+              if (!groups[jumpId]) groups[jumpId] = [];
+              groups[jumpId].push(strategy);
+              return groups;
+            }, {} as Record<string, UserStrategy[]>)
+          )
+            .sort(([jumpIdA], [jumpIdB]) => {
+              // Sort by jump number, with unassigned last
+              if (jumpIdA === 'unassigned') return 1;
+              if (jumpIdB === 'unassigned') return -1;
+              const jumpA = jumpIdA && jumpsInfo[jumpIdA];
+              const jumpB = jumpIdB && jumpsInfo[jumpIdB];
+              return (jumpA?.jumpNumber || 0) - (jumpB?.jumpNumber || 0);
+            })
+            .map(([jumpId, jumpStrategies]) => (
+            <div key={jumpId} className="border rounded-lg p-6 bg-card">
+              <div className="flex items-center gap-2 mb-4 pb-3 border-b">
+                <Rocket className="w-5 h-5 text-primary" />
+                <h3 className="text-xl font-semibold">
+                  {jumpId === 'unassigned' 
+                    ? 'Unassigned Strategies' 
+                    : jumpsInfo[jumpId] 
+                      ? `Jump #${jumpsInfo[jumpId].jumpNumber} - ${jumpsInfo[jumpId].title}` 
+                      : 'Loading Jump Info...'}
+                </h3>
+                <Badge variant="secondary" className="ml-auto">
+                  {jumpStrategies.length} strateg{jumpStrategies.length !== 1 ? 'ies' : 'y'}
+                </Badge>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {jumpStrategies.map((strategy) => (
+                  <Card 
+                    key={strategy.id} 
+                    className="cursor-pointer hover:shadow-lg transition-shadow"
+                    onClick={() => setSelectedStrategy(strategy)}
+                  >
+                    <CardHeader>
+                      <div className="flex items-start justify-between gap-2">
+                        <CardTitle className="text-lg line-clamp-2">{strategy.title}</CardTitle>
+                        <div className="flex flex-col gap-1 shrink-0">
+                          {strategy.category && (
+                            <Badge variant="outline" className="text-xs">
+                              {strategy.category}
+                            </Badge>
+                          )}
+                        </div>
                       </div>
-                    )}
-                  </div>
-                  
-                  {strategy.key_actions && strategy.key_actions.length > 0 && (
-                    <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                      <Target className="w-4 h-4" />
-                      <span>{strategy.key_actions.length} action{strategy.key_actions.length > 1 ? 's' : ''}</span>
-                    </div>
-                  )}
-                  
-                  {strategy.ai_tools && strategy.ai_tools.length > 0 && (
-                    <div className="flex flex-wrap gap-1">
-                      {strategy.ai_tools.slice(0, 3).map((tool, index) => (
-                        <Badge key={index} variant="secondary" className="text-xs">
-                          {tool}
-                        </Badge>
-                      ))}
-                      {strategy.ai_tools.length > 3 && (
-                        <Badge variant="secondary" className="text-xs">
-                          +{strategy.ai_tools.length - 3}
-                        </Badge>
+                      {strategy.description && (
+                        <CardDescription className="line-clamp-3">
+                          {strategy.description}
+                        </CardDescription>
                       )}
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                          {strategy.timeline && (
+                            <div className="flex items-center gap-1">
+                              <Calendar className="w-4 h-4" />
+                              {strategy.timeline}
+                            </div>
+                          )}
+                        </div>
+                        
+                        {strategy.key_actions && strategy.key_actions.length > 0 && (
+                          <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                            <Target className="w-4 h-4" />
+                            <span>{strategy.key_actions.length} action{strategy.key_actions.length > 1 ? 's' : ''}</span>
+                          </div>
+                        )}
+                        
+                        {strategy.ai_tools && strategy.ai_tools.length > 0 && (
+                          <div className="flex flex-wrap gap-1">
+                            {strategy.ai_tools.slice(0, 3).map((tool, index) => (
+                              <Badge key={index} variant="secondary" className="text-xs">
+                                {tool}
+                              </Badge>
+                            ))}
+                            {strategy.ai_tools.length > 3 && (
+                              <Badge variant="secondary" className="text-xs">
+                                +{strategy.ai_tools.length - 3}
+                              </Badge>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
           ))}
         </div>
       )}
