@@ -83,7 +83,7 @@ export default function Strategies() {
                     {strategy.jump_id && jumpsInfo[strategy.jump_id] && (
                       <Badge variant="default" className="text-xs">
                         <Rocket className="w-3 h-3 mr-1" />
-                        {jumpsInfo[strategy.jump_id].title}
+                        Jump #{jumpsInfo[strategy.jump_id].jumpNumber}
                       </Badge>
                     )}
                     {strategy.category && (

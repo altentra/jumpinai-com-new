@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getJumpById, UserJump } from '@/services/jumpService';
+import { getJumpById, getUserJumps, UserJump } from '@/services/jumpService';
 
 export const useJumpInfo = (jumpId?: string) => {
   const [jumpInfo, setJumpInfo] = useState<UserJump | null>(null);
@@ -30,9 +30,9 @@ export const useJumpInfo = (jumpId?: string) => {
   return { jumpInfo, isLoading };
 };
 
-// Hook to fetch multiple jump infos at once
+// Hook to fetch multiple jump infos at once with jump numbers
 export const useJumpsInfo = (jumpIds: (string | undefined)[]) => {
-  const [jumpsInfo, setJumpsInfo] = useState<Record<string, UserJump>>({});
+  const [jumpsInfo, setJumpsInfo] = useState<Record<string, UserJump & { jumpNumber: number }>>({});
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -45,17 +45,32 @@ export const useJumpsInfo = (jumpIds: (string | undefined)[]) => {
     const fetchJumpsInfo = async () => {
       setIsLoading(true);
       try {
+        // Get all user jumps to determine jump numbers
+        const allJumps = await getUserJumps();
+        
+        // Sort by creation date to assign consistent numbers
+        const sortedJumps = allJumps.sort((a, b) => 
+          new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+        );
+        
+        // Create a mapping of jump ID to jump number
+        const jumpNumberMap: Record<string, number> = {};
+        sortedJumps.forEach((jump, index) => {
+          jumpNumberMap[jump.id] = index + 1;
+        });
+        
+        // Fetch specific jump details for requested IDs
         const promises = validJumpIds.map(async (jumpId) => {
           const jump = await getJumpById(jumpId);
-          return { jumpId, jump };
+          return { jumpId, jump, jumpNumber: jumpNumberMap[jumpId] || 0 };
         });
         
         const results = await Promise.all(promises);
-        const jumpsMap: Record<string, UserJump> = {};
+        const jumpsMap: Record<string, UserJump & { jumpNumber: number }> = {};
         
-        results.forEach(({ jumpId, jump }) => {
+        results.forEach(({ jumpId, jump, jumpNumber }) => {
           if (jump) {
-            jumpsMap[jumpId] = jump;
+            jumpsMap[jumpId] = { ...jump, jumpNumber };
           }
         });
         

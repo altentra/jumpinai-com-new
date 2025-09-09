@@ -95,7 +95,7 @@ export default function Prompts() {
                     {prompt.jump_id && jumpsInfo[prompt.jump_id] && (
                       <Badge variant="default" className="text-xs">
                         <Rocket className="w-3 h-3 mr-1" />
-                        {jumpsInfo[prompt.jump_id].title}
+                        Jump #{jumpsInfo[prompt.jump_id].jumpNumber}
                       </Badge>
                     )}
                     {prompt.category && (

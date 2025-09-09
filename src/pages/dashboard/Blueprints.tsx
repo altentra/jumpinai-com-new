@@ -92,7 +92,7 @@ export default function Blueprints() {
                     {blueprint.jump_id && jumpsInfo[blueprint.jump_id] && (
                       <Badge variant="default" className="text-xs">
                         <Rocket className="w-3 h-3 mr-1" />
-                        {jumpsInfo[blueprint.jump_id].title}
+                        Jump #{jumpsInfo[blueprint.jump_id].jumpNumber}
                       </Badge>
                     )}
                     {blueprint.category && (

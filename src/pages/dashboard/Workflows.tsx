@@ -92,7 +92,7 @@ export default function Workflows() {
                     {workflow.jump_id && jumpsInfo[workflow.jump_id] && (
                       <Badge variant="default" className="text-xs">
                         <Rocket className="w-3 h-3 mr-1" />
-                        {jumpsInfo[workflow.jump_id].title}
+                        Jump #{jumpsInfo[workflow.jump_id].jumpNumber}
                       </Badge>
                     )}
                     {workflow.category && (
