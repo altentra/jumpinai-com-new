@@ -152,21 +152,121 @@ async function callOpenAI(
   return { content, usage: data.usage, finish_reason };
 }
 
-async function generateComponents(userProfile: any): Promise<GeneratedComponents> {
-  // Helper: robust JSON parser with extraction fallback
-  const safeParse = (text: string): any | null => {
-    try { return JSON.parse(text); } catch (_) {}
-    try {
-      const start = text.indexOf('{');
-      const end = text.lastIndexOf('}');
-      if (start !== -1 && end !== -1 && end > start) {
-        const sliced = text.slice(start, end + 1);
-        return JSON.parse(sliced);
-      }
-    } catch (_) {}
-    return null;
-  };
+// Helper: robust JSON parser with extraction fallback
+const safeParse = (text: string): any | null => {
+  try { return JSON.parse(text); } catch (_) {}
+  try {
+    const start = text.indexOf('{');
+    const end = text.lastIndexOf('}');
+    if (start !== -1 && end !== -1 && end > start) {
+      const sliced = text.slice(start, end + 1);
+      return JSON.parse(sliced);
+    }
+  } catch (_) {}
+  return null;
+};
 
+// Helper function to format structured jump plan back to text for backward compatibility
+function formatJumpPlanToText(plan: any): string {
+  let text = '';
+  
+  if (plan.title) {
+    text += `# ${plan.title}\n\n`;
+  }
+  
+  if (plan.executive_summary) {
+    text += `## Executive Summary\n\n${plan.executive_summary}\n\n`;
+  }
+  
+  if (plan.current_state_analysis) {
+    text += `## Current State Analysis\n\n${plan.current_state_analysis}\n\n`;
+  }
+  
+  if (plan.transformation_goal) {
+    text += `## Transformation Goal\n\n${plan.transformation_goal}\n\n`;
+  }
+  
+  if (plan.phases && Array.isArray(plan.phases)) {
+    text += `## The Jump Plan\n\n`;
+    plan.phases.forEach((phase: any, index: number) => {
+      text += `### Phase ${phase.phase_number || index + 1}: ${phase.title}\n\n`;
+      if (phase.description) text += `${phase.description}\n\n`;
+      if (phase.timeline) text += `**Timeline:** ${phase.timeline}\n\n`;
+      
+      if (phase.key_actions && Array.isArray(phase.key_actions)) {
+        text += `**Key Actions:**\n`;
+        phase.key_actions.forEach((action: string) => {
+          text += `- ${action}\n`;
+        });
+        text += '\n';
+      }
+      
+      if (phase.deliverables && Array.isArray(phase.deliverables)) {
+        text += `**Deliverables:**\n`;
+        phase.deliverables.forEach((deliverable: string) => {
+          text += `- ${deliverable}\n`;
+        });
+        text += '\n';
+      }
+      
+      if (phase.success_criteria && Array.isArray(phase.success_criteria)) {
+        text += `**Success Criteria:**\n`;
+        phase.success_criteria.forEach((criteria: string) => {
+          text += `- ${criteria}\n`;
+        });
+        text += '\n';
+      }
+    });
+  }
+  
+  if (plan.recommended_tools && Array.isArray(plan.recommended_tools)) {
+    text += `## Recommended Tools & Resources\n\n`;
+    plan.recommended_tools.forEach((tool: string) => {
+      text += `- ${tool}\n`;
+    });
+    text += '\n';
+  }
+  
+  if (plan.success_metrics && Array.isArray(plan.success_metrics)) {
+    text += `## Success Metrics\n\n`;
+    plan.success_metrics.forEach((metric: string) => {
+      text += `- ${metric}\n`;
+    });
+    text += '\n';
+  }
+  
+  if (plan.potential_challenges && Array.isArray(plan.potential_challenges)) {
+    text += `## Potential Challenges & Solutions\n\n`;
+    plan.potential_challenges.forEach((challenge: string, index: number) => {
+      text += `**Challenge:** ${challenge}\n`;
+      if (plan.mitigation_strategies && plan.mitigation_strategies[index]) {
+        text += `**Solution:** ${plan.mitigation_strategies[index]}\n\n`;
+      } else {
+        text += '\n';
+      }
+    });
+  }
+  
+  if (plan.next_immediate_steps && Array.isArray(plan.next_immediate_steps)) {
+    text += `## Next Immediate Steps\n\n`;
+    plan.next_immediate_steps.forEach((step: string, index: number) => {
+      text += `${index + 1}. ${step}\n`;
+    });
+    text += '\n';
+  }
+  
+  if (plan.estimated_timeline) {
+    text += `## Timeline\n\n${plan.estimated_timeline}\n\n`;
+  }
+  
+  if (plan.investment_required) {
+    text += `## Investment Required\n\n${plan.investment_required}\n\n`;
+  }
+  
+  return text.trim();
+}
+
+async function generateComponents(userProfile: any): Promise<GeneratedComponents> {
   type Key = 'prompts' | 'workflows' | 'blueprints' | 'strategies';
 
   const buildPromptFor = (key: Key) => {
@@ -297,7 +397,6 @@ async function saveComponents(components: GeneratedComponents, userId: string, j
   return { total: saves.length, saved, errors };
 }
 
-
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -313,10 +412,10 @@ serve(async (req) => {
   try {
     const { messages, userProfile, userId, jumpId, generateComponents: shouldGenerateComponents } = await req.json();
 
-    // Create system prompt
+    // Create system prompt for structured JSON response
     const systemPrompt = `You are Jumps Studio, an expert AI transformation coach. Create personalized transformation plans called "Jumps".
 
-IMPORTANT: Use only plain text - no emojis, special symbols, or decorative characters for better PDF compatibility.
+IMPORTANT: Return ONLY a valid JSON object. Use plain text in all fields - no emojis, special symbols, or decorative characters.
 
 User Profile:
 - Role: ${userProfile?.currentRole || 'Not specified'}
@@ -328,57 +427,79 @@ User Profile:
 - Time Available: ${userProfile?.timeCommitment || 'Not specified'}
 - Budget: ${userProfile?.budget || 'Not specified'}
 
-Structure your response as a comprehensive transformation plan with:
-1. Transformation Overview
-2. Current State Analysis  
-3. The Jump Plan (3 phases with specific actions)
-4. Recommended Tools & Resources
-5. Success Metrics & Milestones
-6. Potential Challenges & Solutions
-
-Be conversational, specific, and actionable.`;
+Return JSON with this structure:
+{
+  "title": "Personalized transformation plan title",
+  "executive_summary": "2-3 sentence overview of the transformation journey",
+  "current_state_analysis": "Assessment of user's current situation and readiness",
+  "transformation_goal": "Clear statement of the desired end state",
+  "phases": [
+    {
+      "phase_number": 1,
+      "title": "Phase title",
+      "description": "What this phase accomplishes",
+      "timeline": "Duration estimate",
+      "key_actions": ["Action 1", "Action 2", "Action 3"],
+      "deliverables": ["Deliverable 1", "Deliverable 2"],
+      "success_criteria": ["Criteria 1", "Criteria 2"]
+    }
+  ],
+  "recommended_tools": ["Tool 1", "Tool 2", "Tool 3"],
+  "required_resources": ["Resource 1", "Resource 2", "Resource 3"],
+  "success_metrics": ["Metric 1", "Metric 2", "Metric 3"],
+  "potential_challenges": ["Challenge 1", "Challenge 2"],
+  "mitigation_strategies": ["Strategy 1", "Strategy 2"],
+  "estimated_timeline": "Overall timeline",
+  "investment_required": "Budget/time investment summary",
+  "next_immediate_steps": ["Step 1", "Step 2", "Step 3"]
+}`;
 
     // Get recent messages (last 6 to avoid token limits)
     const recentMessages = Array.isArray(messages) ? messages.slice(-6) : [];
     
-    // If this request is only for component generation, skip plan generation to reduce latency and failures
+    // Generate structured jump plan
     let content = '';
+    let jumpPlan: any = null;
     let usage: any = undefined;
     let finish_reason: any = undefined;
+    
     if (!shouldGenerateComponents) {
+      const systemJSON = 'Return ONLY a single valid JSON object with the requested structure. No markdown, no code fences, no commentary.';
+      
       const res1 = await callOpenAI([
-        { role: 'system', content: systemPrompt },
+        { role: 'system', content: systemJSON },
+        { role: 'user', content: systemPrompt },
         ...recentMessages
-      ], 1600, false, 'gpt-4.1-2025-04-14');
-      content = res1.content;
+      ], 1800, true, 'gpt-4.1-2025-04-14');
+      
       usage = res1.usage;
       finish_reason = res1.finish_reason;
-
-      // If cut off or empty, request a concise continuation; fallback to GPT-4.1 only if still empty
-      if (!content || content.trim() === '' || finish_reason === 'length') {
-        const cont = await callOpenAI([
-          { role: 'system', content: systemPrompt },
-          ...recentMessages,
-          { role: 'user', content: 'Continue and deliver the complete plan in under 1200 words. Plain text only. No emojis or special symbols.' }
-        ], 1200, false, 'gpt-4.1-2025-04-14');
-        if (cont.content && cont.content.trim() !== '') {
-          content = (content && content.trim() !== '') ? `${content}\n\n${cont.content}` : cont.content;
-          finish_reason = cont.finish_reason;
-        } else {
-          const fb = await callOpenAI([
-            { role: 'system', content: systemPrompt },
-            ...recentMessages
-          ], 1600, false, 'gpt-4.1-2025-04-14');
-          content = fb.content || '';
-          finish_reason = fb.finish_reason;
+      
+      jumpPlan = safeParse(res1.content);
+      
+      // If parsing failed, try repair attempt
+      if (!jumpPlan) {
+        console.warn('[jump-plan] parse failed (attempt 1). First 400 chars:', res1.content?.slice(0, 400));
+        
+        const repair = await callOpenAI([
+          { role: 'system', content: systemJSON },
+          { role: 'user', content: `${systemPrompt}\n\nIMPORTANT: Return ONLY valid JSON in the exact format specified. No other text. Create exactly 3 phases in the phases array.` },
+          ...recentMessages
+        ], 1800, true, 'gpt-4.1-2025-04-14');
+        
+        jumpPlan = safeParse(repair.content);
+        if (!jumpPlan) {
+          console.warn('[jump-plan] parse failed (attempt 2). First 400 chars:', repair.content?.slice(0, 400));
         }
       }
 
-      if (!content || content.trim() === '') {
-        content = 'Sorry, I couldn’t complete the plan this time. Please try again in a moment.';
+      // Convert structured plan back to formatted text for backward compatibility
+      if (jumpPlan) {
+        content = formatJumpPlanToText(jumpPlan);
+      } else {
+        content = 'Sorry, I couldn't complete the plan this time. Please try again in a moment.';
       }
     }
-
 
     // Handle component generation
     let componentsStatus: string | object = 'Not requested';
@@ -417,6 +538,7 @@ Be conversational, specific, and actionable.`;
 
     return new Response(JSON.stringify({
       message: content,
+      structured_plan: jumpPlan, // Include structured data for enhanced display
       usage,
       debug: { finish_reason, model: 'gpt-4.1-2025-04-14' },
       components: componentsStatus,

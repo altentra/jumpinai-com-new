@@ -9,11 +9,12 @@ import { formatAIText } from '@/utils/aiTextFormatter';
 
 interface JumpPlanDisplayProps {
   planContent: string;
+  structuredPlan?: any; // Optional structured data for enhanced display
   onEdit: () => void;
   onDownload: () => void;
 }
 
-export default function JumpPlanDisplay({ planContent, onEdit, onDownload }: JumpPlanDisplayProps) {
+export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, onDownload }: JumpPlanDisplayProps) {
   if (!planContent.trim()) {
     return null;
   }
