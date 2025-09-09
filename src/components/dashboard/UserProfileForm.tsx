@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -6,17 +6,9 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { User, Briefcase, Target, Clock, DollarSign } from 'lucide-react';
-
-export interface UserProfile {
-  currentRole: string;
-  industry: string;
-  experienceLevel: string;
-  aiKnowledge: string;
-  goals: string;
-  challenges: string;
-  timeCommitment: string;
-  budget: string;
-}
+import { useOptimizedAuth } from '@/hooks/useOptimizedAuth';
+import { userProfileService, UserProfile } from '@/services/userProfileService';
+import { toast } from 'sonner';
 
 interface UserProfileFormProps {
   onSubmit: (profile: UserProfile) => void;
@@ -33,6 +25,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
   showNewProfileButton,
   onNewProfile 
 }) => {
+  const { user } = useOptimizedAuth();
   const [profile, setProfile] = useState<UserProfile>(initialData || {
     currentRole: '',
     industry: '',
@@ -43,10 +36,53 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
     timeCommitment: '',
     budget: ''
   });
+  const [isSaving, setIsSaving] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Load user's existing profile on component mount
+  useEffect(() => {
+    const loadProfile = async () => {
+      if (user?.id && !initialData) {
+        try {
+          const existingProfile = await userProfileService.getActiveProfile(user.id);
+          if (existingProfile) {
+            setProfile(existingProfile);
+          }
+        } catch (error) {
+          console.error('Error loading profile:', error);
+        }
+      }
+    };
+
+    loadProfile();
+  }, [user?.id, initialData]);
+
+  // Update profile when initialData changes
+  useEffect(() => {
+    if (initialData) {
+      setProfile(initialData);
+    }
+  }, [initialData]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(profile);
+    
+    if (!user?.id) {
+      toast.error('You must be logged in to save your profile');
+      return;
+    }
+
+    setIsSaving(true);
+    
+    try {
+      const savedProfile = await userProfileService.saveProfile(profile, user.id);
+      toast.success('Profile saved successfully!');
+      onSubmit(savedProfile);
+    } catch (error) {
+      console.error('Error saving profile:', error);
+      toast.error('Failed to save profile. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const updateProfile = (field: keyof UserProfile, value: string) => {
@@ -83,7 +119,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
 
             <div className="space-y-2">
               <Label htmlFor="industry">Industry/Sector</Label>
-              <Select onValueChange={(value) => updateProfile('industry', value)} required>
+              <Select onValueChange={(value) => updateProfile('industry', value)} value={profile.industry} required>
                 <SelectTrigger>
                   <SelectValue placeholder="Select your industry" />
                 </SelectTrigger>
@@ -104,7 +140,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
 
             <div className="space-y-2">
               <Label htmlFor="experienceLevel">Professional Experience Level</Label>
-              <Select onValueChange={(value) => updateProfile('experienceLevel', value)} required>
+              <Select onValueChange={(value) => updateProfile('experienceLevel', value)} value={profile.experienceLevel} required>
                 <SelectTrigger>
                   <SelectValue placeholder="Select experience level" />
                 </SelectTrigger>
@@ -120,7 +156,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
 
             <div className="space-y-2">
               <Label htmlFor="aiKnowledge">Current AI Knowledge</Label>
-              <Select onValueChange={(value) => updateProfile('aiKnowledge', value)} required>
+              <Select onValueChange={(value) => updateProfile('aiKnowledge', value)} value={profile.aiKnowledge} required>
                 <SelectTrigger>
                   <SelectValue placeholder="Select AI knowledge level" />
                 </SelectTrigger>
@@ -139,7 +175,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
                 <Clock className="h-4 w-4" />
                 Time Commitment (per week)
               </Label>
-              <Select onValueChange={(value) => updateProfile('timeCommitment', value)} required>
+              <Select onValueChange={(value) => updateProfile('timeCommitment', value)} value={profile.timeCommitment} required>
                 <SelectTrigger>
                   <SelectValue placeholder="How much time can you dedicate?" />
                 </SelectTrigger>
@@ -157,7 +193,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
                 <DollarSign className="h-4 w-4" />
                 Budget for AI Tools/Training
               </Label>
-              <Select onValueChange={(value) => updateProfile('budget', value)} required>
+              <Select onValueChange={(value) => updateProfile('budget', value)} value={profile.budget} required>
                 <SelectTrigger>
                   <SelectValue placeholder="Select budget range" />
                 </SelectTrigger>
@@ -205,9 +241,9 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
             <Button 
               type="submit" 
               className="flex-1"
-              disabled={isLoading}
+              disabled={isLoading || isSaving}
             >
-              {isLoading ? 'Creating Your Profile...' : 'Start My AI Transformation Journey'}
+              {isLoading || isSaving ? 'Saving Your Profile...' : 'Start My AI Transformation Journey'}
             </Button>
             {showNewProfileButton && onNewProfile && (
               <Button 

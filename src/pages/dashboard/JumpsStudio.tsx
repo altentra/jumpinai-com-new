@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { ChevronUp, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import UserProfileForm, { type UserProfile } from '@/components/dashboard/UserProfileForm';
+import UserProfileForm from '@/components/dashboard/UserProfileForm';
+import { UserProfile } from '@/services/userProfileService';
 import AICoachChat from '@/components/dashboard/AICoachChat';
 import JumpPlanDisplay from '@/components/dashboard/JumpPlanDisplay';
 

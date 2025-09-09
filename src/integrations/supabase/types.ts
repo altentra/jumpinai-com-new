@@ -309,6 +309,57 @@ export type Database = {
         }
         Relationships: []
       }
+      user_profiles: {
+        Row: {
+          ai_knowledge: string | null
+          budget: string | null
+          challenges: string | null
+          created_at: string
+          current_role_value: string | null
+          experience_level: string | null
+          goals: string | null
+          id: string
+          industry: string | null
+          is_active: boolean
+          profile_name: string
+          time_commitment: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ai_knowledge?: string | null
+          budget?: string | null
+          challenges?: string | null
+          created_at?: string
+          current_role_value?: string | null
+          experience_level?: string | null
+          goals?: string | null
+          id?: string
+          industry?: string | null
+          is_active?: boolean
+          profile_name?: string
+          time_commitment?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ai_knowledge?: string | null
+          budget?: string | null
+          challenges?: string | null
+          created_at?: string
+          current_role_value?: string | null
+          experience_level?: string | null
+          goals?: string | null
+          id?: string
+          industry?: string | null
+          is_active?: boolean
+          profile_name?: string
+          time_commitment?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
