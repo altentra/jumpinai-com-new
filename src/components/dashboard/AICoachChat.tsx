@@ -383,7 +383,8 @@ export default function AICoachChat({
           });
           
           if (onPlanGenerated) {
-            onPlanGenerated(aiText);
+            const structuredPlan = (response as any)?.data?.structured_plan || null;
+            onPlanGenerated(aiText, structuredPlan);
           }
         } catch (error) {
           console.error('Error updating jump during chat:', error);
