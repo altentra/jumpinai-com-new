@@ -228,16 +228,31 @@ export default function AICoachChat({
                     };
                     const compResp: any = await invokeWithTimeout(compPayload, 240000);
                     console.log('[AICoachChat] Components generation response:', compResp);
-                    const status = compResp?.data?.components;
+                    const status = compResp?.data?.components as string | undefined;
+                    const detail = compResp?.data?.components_detail as any;
+                    const expected = detail?.expectedCounts || {};
+                    const saveSummary = detail?.saveSummary || {};
+
                     if (status && typeof status === 'string' && status.toLowerCase().includes('generated')) {
+                      const msg = `Saved ${saveSummary.saved ?? '?'} of ${saveSummary.total ?? '?'} items`;
+                      const counts = `Prompts: ${expected.prompts ?? 0}, Workflows: ${expected.workflows ?? 0}, Blueprints: ${expected.blueprints ?? 0}, Strategies: ${expected.strategies ?? 0}`;
                       toast({
                         title: 'Components Ready',
-                        description: 'Prompts, workflows, blueprints, and strategies were generated for your Jump.',
+                        description: `${msg}. ${counts}. If you don’t see them yet, hit refresh in their tabs in ~10–20s.`,
                       });
                     } else {
                       toast({
                         title: 'Components Requested',
                         description: "Generation requested. If items don’t appear, refresh the page in a few seconds.",
+                      });
+                    }
+
+                    // Extra hint if any category came back empty
+                    if (expected && (expected.workflows === 0 || expected.blueprints === 0 || expected.strategies === 0)) {
+                      console.warn('[AICoachChat] Some component categories were empty:', expected);
+                      toast({
+                        title: 'Heads up',
+                        description: 'Some categories returned empty. You can retry generation from Jumps Studio.',
                       });
                     }
                   } catch (genErr) {
@@ -283,7 +298,7 @@ export default function AICoachChat({
     const welcomeMessage: Message = {
       id: '1',
       role: 'assistant',
-      content: `Welcome to JumpinAI Studio.\n\nI've reviewed your profile and I'm ready to create your custom "Jump" plan. Based on your role as a ${userProfile.currentRole} in ${userProfile.industry}, there are strong opportunities for AI integration.\n\nI'll generate a comprehensive plan now. You can refine it with chat after.`,
+      content: `Welcome to Jumps Studio.\n\nI've reviewed your profile and I'm ready to create your custom "Jump" plan. Based on your role as a ${userProfile.currentRole} in ${userProfile.industry}, there are strong opportunities for AI integration.\n\nI'll generate a comprehensive plan now. You can refine it with chat after.`,
       timestamp: new Date()
     };
     setMessages([welcomeMessage]);
