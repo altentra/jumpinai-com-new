@@ -101,17 +101,17 @@ export default function JumpPlanDisplay({ planContent, onEdit, onDownload }: Jum
                 </p>
               ),
               ul: ({ children }) => (
-                <ul className="list-disc marker:text-primary/70 pl-5 space-y-1 mb-4 text-foreground/90">
+                <ul className="list-disc marker:text-primary/70 pl-4 space-y-0 mb-3 text-foreground/90">
                   {children}
                 </ul>
               ),
               ol: ({ children }) => (
-                <ol className="list-decimal marker:text-primary/70 pl-5 space-y-1 mb-4 text-foreground/90">
+                <ol className="list-decimal marker:text-primary/70 pl-4 space-y-0 mb-3 text-foreground/90">
                   {children}
                 </ol>
               ),
               li: ({ children }) => (
-                <li className="leading-relaxed pl-0.5 text-base">
+                <li className="leading-normal pl-0 text-base mb-1">
                   {children}
                 </li>
               ),

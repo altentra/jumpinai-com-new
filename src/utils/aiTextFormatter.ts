@@ -5,7 +5,9 @@ const LABELS = [
   'goal', 'goals', 'objective', 'objectives', 'kpi', 'kpis', 'metrics', 'milestones',
   'timeline', 'resources', 'risks', 'deliverables', 'outcomes', 'success criteria',
   'tools', 'budget', 'roi', 'owner', 'priority', 'actions', 'next steps', 'approach',
-  'strategy', 'tactics', 'implementation', 'execution', 'overview', 'summary', 'analysis'
+  'strategy', 'tactics', 'implementation', 'execution', 'overview', 'summary', 'analysis',
+  'requirements', 'stakeholders', 'scope', 'assumptions', 'constraints', 'benefits',
+  'challenges', 'opportunities', 'recommendations', 'findings', 'conclusion', 'results'
 ];
 
 function normalize(text: string) {
@@ -73,17 +75,46 @@ export function formatAIText(input: string): string {
   t = boldLabels(t);
   t = promoteHeadings(t);
 
-  // Enhanced text formatting
+  // Enhanced text formatting for premium appearance
+  
   // Make key phrases italic for emphasis
-  t = t.replace(/\b(important|key|critical|essential|significant|major|primary|fundamental|crucial)\b/gi, '*$1*');
+  t = t.replace(/\b(important|key|critical|essential|significant|major|primary|fundamental|crucial|vital|strategic|core)\b/gi, '*$1*');
   
   // Bold action words
-  t = t.replace(/\b(implement|execute|develop|create|establish|achieve|optimize|enhance|improve|analyze|evaluate|monitor|measure|track|assess|review)\b/gi, '**$1**');
+  t = t.replace(/\b(implement|execute|develop|create|establish|achieve|optimize|enhance|improve|analyze|evaluate|monitor|measure|track|assess|review|design|build|launch|deploy|test|validate)\b/gi, '**$1**');
+
+  // Bold quantitative terms and metrics
+  t = t.replace(/\b(\d+%|\$\d+[kmb]?|\d+[kmb]?\s*(?:users|customers|revenue|profit|growth|increase|decrease))\b/gi, '**$1**');
+
+  // Italicize time-related phrases
+  t = t.replace(/\b(within \d+\s*(?:days|weeks|months|years)|by (?:q\d|quarter \d|\w+ \d{4})|short[- ]?term|long[- ]?term|immediate|ongoing)\b/gi, '*$1*');
+
+  // Create callout boxes for important sections
+  t = t.replace(/^(⚠️|❗|💡|🔥|⭐)\s*(.+)$/gm, '\n> **$1 $2**\n');
+  
+  // Convert success metrics to highlighted format
+  t = t.replace(/^(Success Criteria|Success Metrics|Key Results):\s*(.+)$/gim, '\n### 🎯 $1\n\n$2\n');
+  
+  // Highlight warning or risk sections
+  t = t.replace(/^(Risks?|Challenges?|Potential Issues?):\s*(.+)$/gim, '\n### ⚠️ $1\n\n$2\n');
+  
+  // Highlight action items
+  t = t.replace(/^(Action Items?|Next Steps?):\s*(.+)$/gim, '\n### 🚀 $1\n\n$2\n');
+
+  // Format numbered phases/stages more beautifully
+  t = t.replace(/^(\d+)\.\s*(Phase|Stage|Sprint|Milestone)\s*(\d*)[:\-\s]*(.*)$/gim, '\n### 📋 $2 $1$3: $4\n');
+
+  // Convert ALL CAPS words to bold (but preserve existing markdown)
+  t = t.replace(/\b([A-Z]{3,})\b/g, '**$1**');
+
+  // Add subtle formatting to bullet points with specific prefixes
+  t = t.replace(/^(\s*)-\s*(Action|Task|Goal|Objective|Deliverable|Requirement):\s*(.+)$/gim, '$1- **$2:** $3');
 
   // Ensure paragraph spacing: add a blank line before lists/headings when missing
   t = t
     .replace(/([^\n])\n(\s*[-\d])/g, '$1\n\n$2')
-    .replace(/([^\n])\n(\s*##?#+\s)/g, '$1\n\n$2');
+    .replace(/([^\n])\n(\s*##?#+\s)/g, '$1\n\n$2')
+    .replace(/([^\n])\n(\s*>\s)/g, '$1\n\n$2'); // spacing before blockquotes
 
   return t.trim();
 }
