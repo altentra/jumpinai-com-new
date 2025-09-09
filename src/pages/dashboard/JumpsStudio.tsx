@@ -19,6 +19,7 @@ export default function JumpsStudio() {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [jumpPlan, setJumpPlan] = useState<string>('');
+  const [structuredPlan, setStructuredPlan] = useState<any>(null);
   const [showChat, setShowChat] = useState(false);
   const [isProfileFormOpen, setIsProfileFormOpen] = useState(true);
   const [existingJumps, setExistingJumps] = useState<UserJump[]>([]);
@@ -57,8 +58,9 @@ export default function JumpsStudio() {
     setShowChat(true); // Show chat immediately
   };
 
-  const handlePlanGenerated = (plan: string) => {
+  const handlePlanGenerated = (plan: string, structuredPlanData?: any) => {
     setJumpPlan(plan);
+    setStructuredPlan(structuredPlanData);
   };
 
   const handleJumpSaved = (jumpId: string) => {
@@ -90,6 +92,7 @@ export default function JumpsStudio() {
   const handleNewProfile = () => {
     setUserProfile(null);
     setJumpPlan('');
+    setStructuredPlan(null);
     setShowChat(false);
     setIsProfileFormOpen(true);
     setSelectedJump(null);
@@ -102,6 +105,7 @@ export default function JumpsStudio() {
     setSelectedJump(jump);
     setCurrentJumpId(jump.id);
     setJumpPlan(jump.full_content);
+    setStructuredPlan(null); // Reset structured plan for existing jumps
     setJumpName(jump.title);
     setIsNewJump(false);
     setShowChat(true); // Always show chat for existing jumps
@@ -115,6 +119,7 @@ export default function JumpsStudio() {
     setSelectedJump(null);
     setCurrentJumpId(null);
     setJumpPlan('');
+    setStructuredPlan(null);
     setJumpName(generateJumpName());
     setIsNewJump(true);
     setShowChat(false);
@@ -259,6 +264,7 @@ export default function JumpsStudio() {
           {jumpPlan && (
             <JumpPlanDisplay 
               planContent={jumpPlan}
+              structuredPlan={structuredPlan}
               onEdit={handleStartChat}
               onDownload={downloadPlan}
             />

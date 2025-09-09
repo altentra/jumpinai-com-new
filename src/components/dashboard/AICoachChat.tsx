@@ -26,7 +26,7 @@ interface Message {
 interface AICoachChatProps {
   userProfile: UserProfile;
   onBack?: () => void;
-  onPlanGenerated?: (plan: string) => void;
+  onPlanGenerated?: (plan: string, structuredPlan?: any) => void;
   onJumpSaved?: (jumpId: string) => void;
   hideChat?: boolean;
   initialPlan?: string;
@@ -173,7 +173,9 @@ export default function AICoachChat({
         }
         setMessages(prev => [...prev, assistantMessage]);
         if (onPlanGenerated && aiText) {
-          onPlanGenerated(aiText);
+          // Extract structured plan if available
+          const structuredPlan = response?.data?.structured_plan || null;
+          onPlanGenerated(aiText, structuredPlan);
           
           // Auto-save or update the jump to database
           if (aiText.trim()) {
