@@ -66,9 +66,14 @@ interface GeneratedComponents {
   }>;
 }
 
-async function callOpenAI(messages: Array<{ role: string; content: string }>, maxTokens = 2000, isJSON = false) {
+async function callOpenAI(
+  messages: Array<{ role: string; content: string }>,
+  maxTokens = 2000,
+  isJSON = false,
+  model = 'gpt-5-2025-08-07'
+) {
   const body: any = {
-    model: 'gpt-5-2025-08-07',
+    model,
     messages,
     max_completion_tokens: maxTokens,
   };
@@ -87,16 +92,23 @@ async function callOpenAI(messages: Array<{ role: string; content: string }>, ma
   });
 
   if (!response.ok) {
-    console.error('OpenAI API error:', response.status);
+    const err = await response.text();
+    console.error('OpenAI API error:', response.status, err);
     throw new Error(`OpenAI API error: ${response.status}`);
   }
 
   const data = await response.json();
-  const content = data?.choices?.[0]?.message?.content || '';
+  const extracted = (
+    data?.choices?.[0]?.message?.content ??
+    data?.choices?.[0]?.text ??
+    (Array.isArray(data?.output_text) ? data.output_text.join('\n') : data?.output_text) ??
+    ''
+  );
+  const content = typeof extracted === 'string' ? extracted : '';
+  const finish_reason = data?.choices?.[0]?.finish_reason;
   
-  return { content, usage: data.usage, finish_reason: data?.choices?.[0]?.finish_reason };
+  return { content, usage: data.usage, finish_reason };
 }
-
 async function generateComponents(userProfile: any): Promise<GeneratedComponents> {
   const prompt = `Generate 4 personalized AI components for each category based on this user profile. No emojis or special symbols.
 
@@ -170,11 +182,31 @@ Be conversational, specific, and actionable.`;
     // Get recent messages (last 6 to avoid token limits)
     const recentMessages = Array.isArray(messages) ? messages.slice(-6) : [];
     
-    // Call OpenAI
-    const { content, usage, finish_reason } = await callOpenAI([
+    // Call OpenAI (GPT-5) with higher token limit
+    let { content, usage, finish_reason } = await callOpenAI([
       { role: 'system', content: systemPrompt },
       ...recentMessages
-    ], 2500);
+    ], 3200);
+
+    // If cut off or empty, request a concise continuation; fallback to GPT-4.1 only if still empty
+    if (!content || content.trim() === '' || finish_reason === 'length') {
+      const cont = await callOpenAI([
+        { role: 'system', content: systemPrompt },
+        ...recentMessages,
+        { role: 'user', content: 'Continue and deliver the complete plan in under 1200 words. Plain text only. No emojis or special symbols.' }
+      ], 1200, false, 'gpt-5-2025-08-07');
+      if (cont.content && cont.content.trim() !== '') {
+        content = (content && content.trim() !== '') ? `${content}\n\n${cont.content}` : cont.content;
+        finish_reason = cont.finish_reason;
+      } else {
+        const fb = await callOpenAI([
+          { role: 'system', content: systemPrompt },
+          ...recentMessages
+        ], 2000, false, 'gpt-4.1-2025-04-14');
+        content = fb.content || '';
+        finish_reason = fb.finish_reason;
+      }
+    }
 
     // Handle component generation
     let componentsStatus = 'Not requested';
