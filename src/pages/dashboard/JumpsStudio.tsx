@@ -1,11 +1,15 @@
-import React, { useState } from 'react';
-import { ChevronUp, ChevronDown } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ChevronUp, ChevronDown, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import UserProfileForm from '@/components/dashboard/UserProfileForm';
 import { UserProfile } from '@/services/userProfileService';
 import AICoachChat from '@/components/dashboard/AICoachChat';
 import JumpPlanDisplay from '@/components/dashboard/JumpPlanDisplay';
+import { UserJump, getUserJumps } from '@/services/jumpService';
 import { toast } from 'sonner';
 
 export default function JumpsStudio() {
@@ -14,6 +18,24 @@ export default function JumpsStudio() {
   const [jumpPlan, setJumpPlan] = useState<string>('');
   const [showChat, setShowChat] = useState(false);
   const [isProfileFormOpen, setIsProfileFormOpen] = useState(true);
+  const [existingJumps, setExistingJumps] = useState<UserJump[]>([]);
+  const [selectedJump, setSelectedJump] = useState<UserJump | null>(null);
+  const [currentJumpId, setCurrentJumpId] = useState<string | null>(null);
+  const [jumpName, setJumpName] = useState<string>('');
+  const [isNewJump, setIsNewJump] = useState(true);
+
+  // Load existing jumps when component mounts
+  useEffect(() => {
+    const loadExistingJumps = async () => {
+      try {
+        const jumps = await getUserJumps();
+        setExistingJumps(jumps);
+      } catch (error) {
+        console.error('Error loading jumps:', error);
+      }
+    };
+    loadExistingJumps();
+  }, []);
 
   const handleProfileSubmit = async (profile: UserProfile) => {
     setUserProfile(profile);
@@ -27,7 +49,9 @@ export default function JumpsStudio() {
 
   const handleJumpSaved = (jumpId: string) => {
     console.log('Jump saved with ID:', jumpId);
-    // Optionally show a notification or navigate to My Jumps
+    setCurrentJumpId(jumpId);
+    // Refresh the jumps list
+    getUserJumps().then(setExistingJumps).catch(console.error);
   };
 
   const handleStartChat = () => {
@@ -51,6 +75,36 @@ export default function JumpsStudio() {
   const handleNewProfile = () => {
     setUserProfile(null);
     setJumpPlan('');
+    setShowChat(false);
+    setIsProfileFormOpen(true);
+    setSelectedJump(null);
+    setCurrentJumpId(null);
+    setIsNewJump(true);
+    setJumpName('');
+  };
+
+  const handleSelectExistingJump = (jumpId: string) => {
+    const jump = existingJumps.find(j => j.id === jumpId);
+    if (jump) {
+      setSelectedJump(jump);
+      setCurrentJumpId(jump.id);
+      setJumpPlan(jump.full_content);
+      setJumpName(jump.title);
+      setIsNewJump(false);
+      setShowChat(true); // Always show chat for existing jumps
+      // Don't require profile form for existing jumps
+      if (!userProfile) {
+        setIsProfileFormOpen(false);
+      }
+    }
+  };
+
+  const handleCreateNewJump = () => {
+    setSelectedJump(null);
+    setCurrentJumpId(null);
+    setJumpPlan('');
+    setJumpName('');
+    setIsNewJump(true);
     setShowChat(false);
     setIsProfileFormOpen(true);
   };
@@ -84,55 +138,117 @@ export default function JumpsStudio() {
         </div>
       </div>
 
-      {/* Information Collection Section */}
-      <div className="max-w-4xl mx-auto">
-        <div className="text-center space-y-4 mb-8">
-          <h2 className="text-2xl font-semibold">Let's Create Your Personalized Jump</h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            To craft a transformation plan that truly fits your unique situation, we'll need to gather 
-            some key information about your goals, current position, and aspirations. This takes just 
-            a few minutes and enables us to create a highly tailored roadmap for your success.
-          </p>
-        </div>
-
-        {/* Profile Form - Collapsible after submission */}
+      {/* Jump Selection Section */}
+      <div className="max-w-4xl mx-auto mb-8">
         <div className="bg-gradient-to-br from-card to-muted/20 rounded-lg border border-border/50 p-6 shadow-sm">
-          {userProfile ? (
-            <Collapsible open={isProfileFormOpen} onOpenChange={setIsProfileFormOpen}>
-              <CollapsibleTrigger asChild>
-                <Button variant="outline" className="w-full gap-2">
-                  {isProfileFormOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                  {isProfileFormOpen ? 'Hide' : 'Show'} Profile Details
-                </Button>
-              </CollapsibleTrigger>
-              <CollapsibleContent className="space-y-4 mt-4">
-                <UserProfileForm 
-                  onSubmit={handleProfileSubmit} 
-                  isLoading={isLoading} 
-                  initialData={userProfile}
-                  showNewProfileButton={true}
-                  onNewProfile={handleNewProfile}
-                />
-              </CollapsibleContent>
-            </Collapsible>
-          ) : (
-            <UserProfileForm onSubmit={handleProfileSubmit} isLoading={isLoading} />
-          )}
-          
-          {/* Privacy Notice */}
-          <div className="mt-6 pt-4 border-t border-border/30">
-            <p className="text-xs text-muted-foreground text-center">
-              All information is kept strictly confidential and private. We do not sell or share your data.{' '}
-              <a href="/privacy-policy" className="underline hover:text-foreground transition-colors">
-                Privacy Policy
-              </a>
-            </p>
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h2 className="text-xl font-semibold">Choose Your Jump</h2>
+              <p className="text-muted-foreground text-sm mt-1">
+                Start a new transformation plan or continue working on an existing one
+              </p>
+            </div>
+            <Button onClick={handleCreateNewJump} variant="outline" className="gap-2">
+              <Plus className="h-4 w-4" />
+              New Jump
+            </Button>
           </div>
+          
+          {existingJumps.length > 0 && (
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="jump-select">Continue Existing Jump</Label>
+                <Select onValueChange={handleSelectExistingJump}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select an existing jump to continue..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {existingJumps.map((jump) => (
+                      <SelectItem key={jump.id} value={jump.id}>
+                        <div className="flex flex-col items-start">
+                          <span className="font-medium">{jump.title}</span>
+                          <span className="text-xs text-muted-foreground">
+                            Created {new Date(jump.created_at).toLocaleDateString()}
+                          </span>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Jump Plan Display and Chat - Shows after profile submission */}
-      {userProfile && (
+      {/* Information Collection Section */}
+      <div className="max-w-4xl mx-auto">
+        <div className="text-center space-y-4 mb-8">
+          <h2 className="text-2xl font-semibold">
+            {selectedJump ? `Working on: ${selectedJump.title}` : "Let's Create Your Personalized Jump"}
+          </h2>
+          <p className="text-muted-foreground max-w-2xl mx-auto">
+            {selectedJump 
+              ? "Continue refining your transformation plan with AI-powered insights and guidance."
+              : "To craft a transformation plan that truly fits your unique situation, we'll need to gather some key information about your goals, current position, and aspirations. This takes just a few minutes and enables us to create a highly tailored roadmap for your success."
+            }
+          </p>
+        </div>
+
+        {/* Jump Name Input for New Jumps */}
+        {isNewJump && userProfile && (
+          <div className="mb-6">
+            <Label htmlFor="jump-name">Jump Name</Label>
+            <Input
+              id="jump-name"
+              value={jumpName}
+              onChange={(e) => setJumpName(e.target.value)}
+              placeholder="Enter a name for your transformation plan..."
+              className="mt-2"
+            />
+          </div>
+        )}
+
+        {/* Profile Form - Only show for new jumps or when no jump is selected */}
+        {(!selectedJump || isNewJump) && (
+          <div className="bg-gradient-to-br from-card to-muted/20 rounded-lg border border-border/50 p-6 shadow-sm">
+            {userProfile ? (
+              <Collapsible open={isProfileFormOpen} onOpenChange={setIsProfileFormOpen}>
+                <CollapsibleTrigger asChild>
+                  <Button variant="outline" className="w-full gap-2">
+                    {isProfileFormOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                    {isProfileFormOpen ? 'Hide' : 'Show'} Profile Details
+                  </Button>
+                </CollapsibleTrigger>
+                <CollapsibleContent className="space-y-4 mt-4">
+                  <UserProfileForm 
+                    onSubmit={handleProfileSubmit} 
+                    isLoading={isLoading} 
+                    initialData={userProfile}
+                    showNewProfileButton={true}
+                    onNewProfile={handleNewProfile}
+                  />
+                </CollapsibleContent>
+              </Collapsible>
+            ) : (
+              <UserProfileForm onSubmit={handleProfileSubmit} isLoading={isLoading} />
+            )}
+            
+            {/* Privacy Notice */}
+            <div className="mt-6 pt-4 border-t border-border/30">
+              <p className="text-xs text-muted-foreground text-center">
+                All information is kept strictly confidential and private. We do not sell or share your data.{' '}
+                <a href="/privacy-policy" className="underline hover:text-foreground transition-colors">
+                  Privacy Policy
+                </a>
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Jump Plan Display and Chat - Shows after profile submission or jump selection */}
+      {(userProfile || selectedJump) && (
         <div className="space-y-6">
           {/* Jump Plan Display - Shows once generated */}
           {jumpPlan && (
@@ -143,15 +259,18 @@ export default function JumpsStudio() {
             />
           )}
           
-          {/* Chat Interface - Shows immediately after profile submission */}
+          {/* Chat Interface - Shows for new jumps after profile or always for existing jumps */}
           {showChat && (
             <AICoachChat 
-              userProfile={userProfile} 
+              userProfile={userProfile || ({ currentRole: 'Professional' } as UserProfile)} 
               onPlanGenerated={handlePlanGenerated}
               onJumpSaved={handleJumpSaved}
               initialPlan={jumpPlan}
-              isRefinementMode={!!jumpPlan}
+              isRefinementMode={!!jumpPlan || !!selectedJump}
               hideChat={false}
+              currentJumpId={currentJumpId}
+              jumpName={jumpName}
+              isNewJump={isNewJump}
             />
           )}
         </div>

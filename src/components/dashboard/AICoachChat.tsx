@@ -9,7 +9,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { Bot, User, Send, Sparkles, Download, Copy, Lock } from 'lucide-react';
 import { UserProfile } from '@/services/userProfileService';
-import { createJump, extractTitle, extractSummary } from '@/services/jumpService';
+import { createJump, updateJump, extractTitle, extractSummary } from '@/services/jumpService';
 import { toast } from 'sonner';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -30,6 +30,9 @@ interface AICoachChatProps {
   hideChat?: boolean;
   initialPlan?: string;
   isRefinementMode?: boolean;
+  currentJumpId?: string | null;
+  jumpName?: string;
+  isNewJump?: boolean;
 }
 
 export default function AICoachChat({ 
@@ -39,7 +42,10 @@ export default function AICoachChat({
   onJumpSaved,
   hideChat = false,
   initialPlan = '',
-  isRefinementMode = false
+  isRefinementMode = false,
+  currentJumpId = null,
+  jumpName = '',
+  isNewJump = true
 }: AICoachChatProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
@@ -145,28 +151,46 @@ export default function AICoachChat({
         if (onPlanGenerated && aiText) {
           onPlanGenerated(aiText);
           
-          // Auto-save the jump to database for new plans
-          if (!isRefinementMode && aiText.trim()) {
+          // Auto-save or update the jump to database
+          if (aiText.trim()) {
             try {
-              const title = extractTitle(aiText);
-              const summary = extractSummary(aiText);
-              
-              const savedJump = await createJump({
-                profile_id: userProfile.id,
-                title,
-                summary,
-                full_content: aiText
-              });
-              
-              if (savedJump && onJumpSaved) {
-                onJumpSaved(savedJump.id);
-                toast({
-                  title: 'Jump Saved!',
-                  description: 'Your AI transformation plan has been saved to your library.',
+              if (currentJumpId && !isNewJump) {
+                // Update existing jump
+                const updatedJump = await updateJump(currentJumpId, {
+                  title: jumpName || extractTitle(aiText),
+                  summary: extractSummary(aiText),
+                  full_content: aiText
                 });
+                
+                if (updatedJump && onJumpSaved) {
+                  onJumpSaved(updatedJump.id);
+                  toast({
+                    title: 'Jump Updated!',
+                    description: 'Your AI transformation plan has been updated.',
+                  });
+                }
+              } else if (isNewJump) {
+                // Create new jump
+                const title = jumpName || extractTitle(aiText);
+                const summary = extractSummary(aiText);
+                
+                const savedJump = await createJump({
+                  profile_id: userProfile.id,
+                  title,
+                  summary,
+                  full_content: aiText
+                });
+                
+                if (savedJump && onJumpSaved) {
+                  onJumpSaved(savedJump.id);
+                  toast({
+                    title: 'Jump Saved!',
+                    description: 'Your AI transformation plan has been saved to your library.',
+                  });
+                }
               }
             } catch (error) {
-              console.error('Error saving jump:', error);
+              console.error('Error saving/updating jump:', error);
               toast({
                 title: 'Save Error',
                 description: 'Jump generated but failed to save to library',
@@ -268,6 +292,23 @@ export default function AICoachChat({
       }
 
       setMessages(prev => [...prev, assistantMessage]);
+      
+      // Update existing jump with chat refinements
+      if (currentJumpId && aiText.trim()) {
+        try {
+          await updateJump(currentJumpId, {
+            title: jumpName || extractTitle(aiText),
+            summary: extractSummary(aiText),
+            full_content: aiText
+          });
+          
+          if (onPlanGenerated) {
+            onPlanGenerated(aiText);
+          }
+        } catch (error) {
+          console.error('Error updating jump during chat:', error);
+        }
+      }
     } catch (error: any) {
       console.error('Error sending message:', error);
       toast({
