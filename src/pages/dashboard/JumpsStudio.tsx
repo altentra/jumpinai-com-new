@@ -11,6 +11,7 @@ import JumpPlanDisplay from '@/components/dashboard/JumpPlanDisplay';
 import { UserJump, getUserJumps } from '@/services/jumpService';
 import { useOptimizedAuth } from '@/hooks/useOptimizedAuth';
 import MiniJumpCard from '@/components/dashboard/MiniJumpCard';
+import { generateJumpPDF } from '@/utils/pdfGenerator';
 import { toast } from 'sonner';
 
 export default function JumpsStudio() {
@@ -74,15 +75,16 @@ export default function JumpsStudio() {
   const downloadPlan = () => {
     if (!jumpPlan.trim()) return;
     
-    const blob = new Blob([jumpPlan], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'my-jump-plan.txt';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    const jumpTitle = jumpName || selectedJump?.title || 'My Jump Plan';
+    const jumpSummary = selectedJump?.summary;
+    const createdAt = selectedJump?.created_at || new Date().toISOString();
+    
+    generateJumpPDF({
+      title: jumpTitle,
+      summary: jumpSummary,
+      content: jumpPlan,
+      createdAt: createdAt
+    });
   };
 
   const handleNewProfile = () => {

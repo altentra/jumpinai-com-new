@@ -6,6 +6,7 @@ import { UserJump } from "@/services/jumpService";
 import { format } from "date-fns";
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { generateJumpPDF } from '@/utils/pdfGenerator';
 
 interface JumpDetailModalProps {
   jump: UserJump | null;
@@ -21,15 +22,12 @@ export default function JumpDetailModal({ jump, isOpen, onClose }: JumpDetailMod
   };
 
   const downloadPlan = () => {
-    const blob = new Blob([jump.full_content], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${jump.title.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase()}.txt`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    generateJumpPDF({
+      title: jump.title,
+      summary: jump.summary,
+      content: jump.full_content,
+      createdAt: jump.created_at
+    });
   };
 
   return (
