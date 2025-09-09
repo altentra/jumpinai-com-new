@@ -76,21 +76,22 @@ const Features = () => {
         </div>
 
         {/* Features Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-16">
           {features.map((feature, index) => {
             const Icon = feature.icon;
             return (
-              <div key={index} className="group relative p-6 rounded-2xl bg-gradient-to-br from-card to-card/50 border border-border/20 hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5 transition-all duration-500 hover:-translate-y-1 backdrop-blur-sm">
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                <div className="relative">
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-primary/10 to-primary/5 rounded-xl flex items-center justify-center group-hover:from-primary/15 group-hover:to-primary/10 transition-all duration-300 shadow-sm">
-                      <Icon className="w-6 h-6 text-primary" />
-                    </div>
-                    <h3 className="font-semibold text-lg text-foreground group-hover:text-primary/90 transition-colors duration-300">{feature.title}</h3>
+              <div key={index} className="group relative p-4 rounded-xl bg-gradient-to-br from-card/80 via-card to-card/60 border border-border/10 hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-400 backdrop-blur-sm overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.01] via-transparent to-primary/[0.02] opacity-0 group-hover:opacity-100 transition-opacity duration-400" />
+                <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-primary/[0.03] to-transparent rounded-full -translate-y-10 translate-x-10 opacity-0 group-hover:opacity-100 transition-all duration-500" />
+                
+                <div className="relative flex items-center gap-3 mb-2">
+                  <div className="flex-shrink-0 w-9 h-9 bg-gradient-to-br from-primary/8 to-primary/4 rounded-lg flex items-center justify-center group-hover:from-primary/12 group-hover:to-primary/6 transition-all duration-300 shadow-sm border border-primary/5">
+                    <Icon className="w-4 h-4 text-primary" />
                   </div>
-                  <p className="text-muted-foreground text-sm leading-relaxed">{feature.description}</p>
+                  <h3 className="font-semibold text-base text-foreground group-hover:text-primary/90 transition-colors duration-300 leading-tight">{feature.title}</h3>
                 </div>
+                
+                <p className="text-muted-foreground/90 text-xs leading-relaxed ml-12 group-hover:text-muted-foreground transition-colors duration-300">{feature.description}</p>
               </div>
             );
           })}
