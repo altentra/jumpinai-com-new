@@ -190,19 +190,20 @@ AI Knowledge: ${userProfile.aiKnowledge}
 
   const generateForKey = async (key: Key) => {
     const prompt = buildPromptFor(key);
-    // First attempt with GPT-5 JSON mode, small token budget to reduce latency
-    let res = await callOpenAI([{ role: 'user', content: prompt }], 900, true, 'gpt-5-2025-08-07');
+    // Use GPT-4.1 with larger token budget for reliable JSON generation
+    let res = await callOpenAI([{ role: 'user', content: prompt }], 1500, true, 'gpt-4.1-2025-04-14');
     let obj = safeParse(res.content);
 
-    // If parsing failed or key missing, try a compact repair with GPT-4.1
+    // If parsing failed or key missing, try once more with explicit instructions
     if (!obj || !Array.isArray(obj[key])) {
       const repair = await callOpenAI([
-        { role: 'user', content: `${prompt}\nIf malformed, FIX strictly to valid JSON. Return only JSON with the \"${key}\" array.` }
-      ], 700, true, 'gpt-4.1-2025-04-14');
+        { role: 'user', content: `${prompt}\n\nIMPORTANT: Return ONLY valid JSON in this exact format with the \"${key}\" array containing exactly 4 items. No other text.` }
+      ], 1500, true, 'gpt-4.1-2025-04-14');
       obj = safeParse(repair.content);
     }
 
     const arr = (obj && Array.isArray(obj[key])) ? obj[key] : [];
+    console.log(`Generated ${key}: ${arr.length} items`);
     return arr;
   };
 
