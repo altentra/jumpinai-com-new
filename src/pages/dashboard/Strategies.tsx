@@ -3,15 +3,20 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Calendar, Target, AlertTriangle, ExternalLink } from "lucide-react";
+import { Calendar, Target, AlertTriangle, ExternalLink, Rocket } from "lucide-react";
 import { strategiesService, UserStrategy } from "@/services/strategiesService";
 import { useToast } from "@/hooks/use-toast";
+import { useJumpsInfo } from "@/hooks/useJumpInfo";
 
 export default function Strategies() {
   const [strategies, setStrategies] = useState<UserStrategy[]>([]);
   const [selectedStrategy, setSelectedStrategy] = useState<UserStrategy | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
+  
+  // Get jump information for all strategies
+  const jumpIds = strategies.map(strategy => strategy.jump_id);
+  const { jumpsInfo } = useJumpsInfo(jumpIds);
 
   useEffect(() => {
     loadStrategies();
@@ -74,11 +79,19 @@ export default function Strategies() {
               <CardHeader>
                 <div className="flex items-start justify-between gap-2">
                   <CardTitle className="text-lg line-clamp-2">{strategy.title}</CardTitle>
-                  {strategy.category && (
-                    <Badge variant="outline" className="shrink-0">
-                      {strategy.category}
-                    </Badge>
-                  )}
+                  <div className="flex flex-col gap-1 shrink-0">
+                    {strategy.jump_id && jumpsInfo[strategy.jump_id] && (
+                      <Badge variant="default" className="text-xs">
+                        <Rocket className="w-3 h-3 mr-1" />
+                        {jumpsInfo[strategy.jump_id].title}
+                      </Badge>
+                    )}
+                    {strategy.category && (
+                      <Badge variant="outline" className="text-xs">
+                        {strategy.category}
+                      </Badge>
+                    )}
+                  </div>
                 </div>
                 {strategy.description && (
                   <CardDescription className="line-clamp-3">

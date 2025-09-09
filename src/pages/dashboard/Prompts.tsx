@@ -3,15 +3,20 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Copy, ExternalLink } from "lucide-react";
+import { Copy, ExternalLink, Rocket } from "lucide-react";
 import { promptsService, UserPrompt } from "@/services/promptsService";
 import { useToast } from "@/hooks/use-toast";
+import { useJumpsInfo } from "@/hooks/useJumpInfo";
 
 export default function Prompts() {
   const [prompts, setPrompts] = useState<UserPrompt[]>([]);
   const [selectedPrompt, setSelectedPrompt] = useState<UserPrompt | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
+  
+  // Get jump information for all prompts
+  const jumpIds = prompts.map(prompt => prompt.jump_id);
+  const { jumpsInfo } = useJumpsInfo(jumpIds);
 
   useEffect(() => {
     loadPrompts();
@@ -86,11 +91,19 @@ export default function Prompts() {
               <CardHeader>
                 <div className="flex items-start justify-between gap-2">
                   <CardTitle className="text-lg line-clamp-2">{prompt.title}</CardTitle>
-                  {prompt.category && (
-                    <Badge variant="outline" className="shrink-0">
-                      {prompt.category}
-                    </Badge>
-                  )}
+                  <div className="flex flex-col gap-1 shrink-0">
+                    {prompt.jump_id && jumpsInfo[prompt.jump_id] && (
+                      <Badge variant="default" className="text-xs">
+                        <Rocket className="w-3 h-3 mr-1" />
+                        {jumpsInfo[prompt.jump_id].title}
+                      </Badge>
+                    )}
+                    {prompt.category && (
+                      <Badge variant="outline" className="text-xs">
+                        {prompt.category}
+                      </Badge>
+                    )}
+                  </div>
                 </div>
                 {prompt.description && (
                   <CardDescription className="line-clamp-3">
