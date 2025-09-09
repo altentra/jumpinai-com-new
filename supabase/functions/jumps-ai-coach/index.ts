@@ -174,7 +174,8 @@ Make components highly specific to the user's role, industry, and goals. Focus o
       messages: [
         { role: 'system', content: componentPrompt }
       ],
-      max_completion_tokens: 4000,
+      response_format: { type: 'json_object' },
+      max_completion_tokens: 5000,
       stream: false
     }),
   });
@@ -189,14 +190,29 @@ Make components highly specific to the user's role, industry, and goals. Focus o
   const content = data?.choices?.[0]?.message?.content || '';
   
   try {
-    // Clean the content to extract JSON
-    const jsonMatch = content.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) {
-      throw new Error('No JSON found in response');
+    // First, try parsing the content directly (JSON mode should return a pure JSON string)
+    let components: GeneratedComponents | null = null;
+    try {
+      components = JSON.parse(content);
+    } catch (_directErr) {
+      // Fallback: extract the first JSON object from the content if any wrappers slipped in
+      const jsonMatch = typeof content === 'string' ? content.match(/\{[\s\S]*\}/) : null;
+      if (!jsonMatch) throw new Error('No JSON found in response');
+      components = JSON.parse(jsonMatch[0]);
     }
-    
-    const components = JSON.parse(jsonMatch[0]);
-    console.log('Generated components:', components);
+
+    // Basic validation to ensure expected keys exist
+    if (!components || !Array.isArray(components.prompts) || !Array.isArray(components.workflows) || !Array.isArray(components.blueprints) || !Array.isArray(components.strategies)) {
+      throw new Error('Generated JSON missing required arrays');
+    }
+
+    console.log('Generated components count:', {
+      prompts: components.prompts.length,
+      workflows: components.workflows.length,
+      blueprints: components.blueprints.length,
+      strategies: components.strategies.length,
+    });
+
     return components;
   } catch (error) {
     console.error('Error parsing components JSON:', error);
