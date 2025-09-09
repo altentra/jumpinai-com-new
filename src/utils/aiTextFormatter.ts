@@ -89,20 +89,17 @@ export function formatAIText(input: string): string {
   // Italicize time-related phrases
   t = t.replace(/\b(within \d+\s*(?:days|weeks|months|years)|by (?:q\d|quarter \d|\w+ \d{4})|short[- ]?term|long[- ]?term|immediate|ongoing)\b/gi, '*$1*');
 
-  // Create callout boxes for important sections
-  t = t.replace(/^(⚠️|❗|💡|🔥|⭐)\s*(.+)$/gm, '\n> **$1 $2**\n');
-  
   // Convert success metrics to highlighted format
-  t = t.replace(/^(Success Criteria|Success Metrics|Key Results):\s*(.+)$/gim, '\n### 🎯 $1\n\n$2\n');
+  t = t.replace(/^(Success Criteria|Success Metrics|Key Results):\s*(.+)$/gim, '\n### $1\n\n$2\n');
   
   // Highlight warning or risk sections
-  t = t.replace(/^(Risks?|Challenges?|Potential Issues?):\s*(.+)$/gim, '\n### ⚠️ $1\n\n$2\n');
+  t = t.replace(/^(Risks?|Challenges?|Potential Issues?):\s*(.+)$/gim, '\n### $1\n\n$2\n');
   
   // Highlight action items
-  t = t.replace(/^(Action Items?|Next Steps?):\s*(.+)$/gim, '\n### 🚀 $1\n\n$2\n');
+  t = t.replace(/^(Action Items?|Next Steps?):\s*(.+)$/gim, '\n### $1\n\n$2\n');
 
   // Format numbered phases/stages more beautifully
-  t = t.replace(/^(\d+)\.\s*(Phase|Stage|Sprint|Milestone)\s*(\d*)[:\-\s]*(.*)$/gim, '\n### 📋 $2 $1$3: $4\n');
+  t = t.replace(/^(\d+)\.\s*(Phase|Stage|Sprint|Milestone)\s*(\d*)[:\-\s]*(.*)$/gim, '\n### $2 $1$3: $4\n');
 
   // Convert ALL CAPS words to bold (but preserve existing markdown)
   t = t.replace(/\b([A-Z]{3,})\b/g, '**$1**');
