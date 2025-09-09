@@ -3,7 +3,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Calendar, Target, AlertTriangle, ExternalLink, Rocket, RefreshCw } from "lucide-react";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { Calendar, Target, AlertTriangle, ExternalLink, Rocket, RefreshCw, Trash2 } from "lucide-react";
 import { strategiesService, UserStrategy } from "@/services/strategiesService";
 import { useToast } from "@/hooks/use-toast";
 import { useJumpsInfo } from "@/hooks/useJumpInfo";
@@ -12,6 +13,7 @@ export default function Strategies() {
   const [strategies, setStrategies] = useState<UserStrategy[]>([]);
   const [selectedStrategy, setSelectedStrategy] = useState<UserStrategy | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const { toast } = useToast();
   
   // Get jump information for all strategies
@@ -46,6 +48,27 @@ export default function Strategies() {
       });
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleDelete = async (strategyId: string) => {
+    try {
+      setDeletingId(strategyId);
+      await strategiesService.deleteStrategy(strategyId);
+      setStrategies(strategies.filter(s => s.id !== strategyId));
+      toast({
+        title: "Deleted",
+        description: "Strategy deleted successfully",
+      });
+    } catch (error) {
+      console.error('Error deleting strategy:', error);
+      toast({
+        title: "Error",
+        description: "Failed to delete strategy. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -124,22 +147,52 @@ export default function Strategies() {
                 </Badge>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {jumpStrategies.map((strategy) => (
                   <Card 
                     key={strategy.id} 
-                    className="cursor-pointer hover:shadow-lg transition-shadow"
+                    className="group cursor-pointer hover:shadow-lg transition-shadow relative"
                     onClick={() => setSelectedStrategy(strategy)}
                   >
                     <CardHeader>
                       <div className="flex items-start justify-between gap-2">
                         <CardTitle className="text-lg line-clamp-2">{strategy.title}</CardTitle>
-                        <div className="flex flex-col gap-1 shrink-0">
+                        <div className="flex items-center gap-2">
                           {strategy.category && (
                             <Badge variant="outline" className="text-xs">
                               {strategy.category}
                             </Badge>
                           )}
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="opacity-0 group-hover:opacity-100 transition-opacity p-1 h-6 w-6 hover:bg-destructive/10"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <Trash2 className="h-3 w-3 text-destructive" />
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>Delete Strategy</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  Are you sure you want to delete "{strategy.title}"? This action cannot be undone.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={() => handleDelete(strategy.id)}
+                                  className="bg-destructive hover:bg-destructive/90"
+                                  disabled={deletingId === strategy.id}
+                                >
+                                  {deletingId === strategy.id ? "Deleting..." : "Delete"}
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
                         </div>
                       </div>
                       {strategy.description && (

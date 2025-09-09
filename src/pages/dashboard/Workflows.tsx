@@ -3,7 +3,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Clock, Users, ExternalLink, Rocket, RefreshCw } from "lucide-react";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { Clock, Users, ExternalLink, Rocket, RefreshCw, Trash2 } from "lucide-react";
 import { workflowsService, UserWorkflow } from "@/services/workflowsService";
 import { useToast } from "@/hooks/use-toast";
 import { useJumpsInfo } from "@/hooks/useJumpInfo";
@@ -12,6 +13,7 @@ export default function Workflows() {
   const [workflows, setWorkflows] = useState<UserWorkflow[]>([]);
   const [selectedWorkflow, setSelectedWorkflow] = useState<UserWorkflow | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const { toast } = useToast();
   
   // Get jump information for all workflows
@@ -55,6 +57,27 @@ export default function Workflows() {
       case 'intermediate': return 'bg-yellow-100 text-yellow-800';
       case 'advanced': return 'bg-red-100 text-red-800';
       default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const handleDelete = async (workflowId: string) => {
+    try {
+      setDeletingId(workflowId);
+      await workflowsService.deleteWorkflow(workflowId);
+      setWorkflows(workflows.filter(w => w.id !== workflowId));
+      toast({
+        title: "Deleted",
+        description: "Workflow deleted successfully",
+      });
+    } catch (error) {
+      console.error('Error deleting workflow:', error);
+      toast({
+        title: "Error",
+        description: "Failed to delete workflow. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -133,22 +156,52 @@ export default function Workflows() {
                 </Badge>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {jumpWorkflows.map((workflow) => (
                   <Card 
                     key={workflow.id} 
-                    className="cursor-pointer hover:shadow-lg transition-shadow"
+                    className="group cursor-pointer hover:shadow-lg transition-shadow relative"
                     onClick={() => setSelectedWorkflow(workflow)}
                   >
                     <CardHeader>
                       <div className="flex items-start justify-between gap-2">
                         <CardTitle className="text-lg line-clamp-2">{workflow.title}</CardTitle>
-                        <div className="flex flex-col gap-1 shrink-0">
+                        <div className="flex items-center gap-2">
                           {workflow.category && (
                             <Badge variant="outline" className="text-xs">
                               {workflow.category}
                             </Badge>
                           )}
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="opacity-0 group-hover:opacity-100 transition-opacity p-1 h-6 w-6 hover:bg-destructive/10"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <Trash2 className="h-3 w-3 text-destructive" />
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>Delete Workflow</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  Are you sure you want to delete "{workflow.title}"? This action cannot be undone.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={() => handleDelete(workflow.id)}
+                                  className="bg-destructive hover:bg-destructive/90"
+                                  disabled={deletingId === workflow.id}
+                                >
+                                  {deletingId === workflow.id ? "Deleting..." : "Delete"}
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
                         </div>
                       </div>
                       {workflow.description && (

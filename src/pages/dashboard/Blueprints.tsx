@@ -3,7 +3,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Clock, Layers, ExternalLink, Rocket, RefreshCw } from "lucide-react";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { Clock, Layers, ExternalLink, Rocket, RefreshCw, Trash2 } from "lucide-react";
 import { blueprintsService, UserBlueprint } from "@/services/blueprintsService";
 import { useToast } from "@/hooks/use-toast";
 import { useJumpsInfo } from "@/hooks/useJumpInfo";
@@ -12,6 +13,7 @@ export default function Blueprints() {
   const [blueprints, setBlueprints] = useState<UserBlueprint[]>([]);
   const [selectedBlueprint, setSelectedBlueprint] = useState<UserBlueprint | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const { toast } = useToast();
   
   // Get jump information for all blueprints
@@ -55,6 +57,27 @@ export default function Blueprints() {
       case 'intermediate': return 'bg-yellow-100 text-yellow-800';
       case 'advanced': return 'bg-red-100 text-red-800';
       default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const handleDelete = async (blueprintId: string) => {
+    try {
+      setDeletingId(blueprintId);
+      await blueprintsService.deleteBlueprint(blueprintId);
+      setBlueprints(blueprints.filter(b => b.id !== blueprintId));
+      toast({
+        title: "Deleted",
+        description: "Blueprint deleted successfully",
+      });
+    } catch (error) {
+      console.error('Error deleting blueprint:', error);
+      toast({
+        title: "Error",
+        description: "Failed to delete blueprint. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -133,22 +156,52 @@ export default function Blueprints() {
                 </Badge>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {jumpBlueprints.map((blueprint) => (
                   <Card 
                     key={blueprint.id} 
-                    className="cursor-pointer hover:shadow-lg transition-shadow"
+                    className="group cursor-pointer hover:shadow-lg transition-shadow relative"
                     onClick={() => setSelectedBlueprint(blueprint)}
                   >
                     <CardHeader>
                       <div className="flex items-start justify-between gap-2">
                         <CardTitle className="text-lg line-clamp-2">{blueprint.title}</CardTitle>
-                        <div className="flex flex-col gap-1 shrink-0">
+                        <div className="flex items-center gap-2">
                           {blueprint.category && (
                             <Badge variant="outline" className="text-xs">
                               {blueprint.category}
                             </Badge>
                           )}
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="opacity-0 group-hover:opacity-100 transition-opacity p-1 h-6 w-6 hover:bg-destructive/10"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <Trash2 className="h-3 w-3 text-destructive" />
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>Delete Blueprint</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  Are you sure you want to delete "{blueprint.title}"? This action cannot be undone.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={() => handleDelete(blueprint.id)}
+                                  className="bg-destructive hover:bg-destructive/90"
+                                  disabled={deletingId === blueprint.id}
+                                >
+                                  {deletingId === blueprint.id ? "Deleting..." : "Delete"}
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
                         </div>
                       </div>
                       {blueprint.description && (
