@@ -4,7 +4,8 @@
 const LABELS = [
   'goal', 'goals', 'objective', 'objectives', 'kpi', 'kpis', 'metrics', 'milestones',
   'timeline', 'resources', 'risks', 'deliverables', 'outcomes', 'success criteria',
-  'tools', 'budget', 'roi', 'owner', 'priority', 'actions', 'next steps'
+  'tools', 'budget', 'roi', 'owner', 'priority', 'actions', 'next steps', 'approach',
+  'strategy', 'tactics', 'implementation', 'execution', 'overview', 'summary', 'analysis'
 ];
 
 function normalize(text: string) {
@@ -15,6 +16,14 @@ function normalize(text: string) {
   t = t.replace(/^\s*[•*]\s+/gm, '- ');
   // normalize numbered lists like "1)" → "1."
   t = t.replace(/^(\s*)(\d+)\)\s+/gm, '$1$2. ');
+  // reduce excessive bullet points - convert nested bullets to simple text
+  t = t.replace(/^(\s*-\s+.*\n)(\s*-\s+.*\n){4,}/gm, (match) => {
+    const lines = match.split('\n').filter(line => line.trim());
+    // Keep first 3 bullets, convert rest to regular paragraphs
+    const bullets = lines.slice(0, 3);
+    const rest = lines.slice(3).map(line => line.replace(/^\s*-\s+/, ''));
+    return bullets.join('\n') + '\n' + rest.join(' ') + '\n';
+  });
   return t.trim();
 }
 
