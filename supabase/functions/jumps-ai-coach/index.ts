@@ -68,7 +68,9 @@ interface GeneratedComponents {
 }
 
 async function generateComponents(userProfile: any, userId: string): Promise<GeneratedComponents> {
-  const componentPrompt = `You are an expert AI transformation coach. Based on this user profile, generate personalized AI implementation components:
+  const componentPrompt = `You are an expert AI transformation coach. Based on this user profile, generate personalized AI implementation components.
+
+IMPORTANT: Do not use any emojis, special symbols, or decorative characters in your response. Use only plain text for better formatting and PDF compatibility.
 
 USER PROFILE:
 - Current Role: ${userProfile.currentRole || 'Not specified'}
@@ -170,7 +172,7 @@ Make components highly specific to the user's role, industry, and goals. Focus o
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      model: 'gpt-4.1-2025-04-14',
+      model: 'gpt-5-2025-08-07',
       messages: [
         { role: 'system', content: componentPrompt }
       ],
@@ -312,6 +314,8 @@ serve(async (req) => {
     // System prompt for personalized AI transformation coaching (main plan)
     const systemPrompt = `You are an expert AI transformation coach and strategist. Your role is to create personalized "Jumps" - comprehensive transformation plans that help individuals and businesses successfully adapt to and implement AI in their daily operations.
 
+IMPORTANT: Do not use any emojis, special symbols, or decorative characters in your response. Use only plain text for better formatting and PDF compatibility.
+
 CONTEXT ABOUT THE USER:
 ${userProfile ? `
 - Current Role: ${userProfile.currentRole || 'Not specified'}
@@ -335,17 +339,17 @@ YOUR COACHING APPROACH:
 RESPONSE STRUCTURE for "Jumps" plans:
 When creating a comprehensive transformation plan, structure it as:
 
-**🎯 TRANSFORMATION OVERVIEW**
+TRANSFORMATION OVERVIEW
 - Personalized vision statement
 - Key transformation areas
 - Expected timeline and outcomes
 
-**📊 CURRENT STATE ANALYSIS**
+CURRENT STATE ANALYSIS
 - Strengths to leverage
 - Gaps to address
 - Opportunities to capture
 
-**🚀 THE JUMP PLAN**
+THE JUMP PLAN
 Phase 1: Foundation (Weeks 1-4)
 - Specific actions and tools
 - Learning resources
@@ -361,17 +365,17 @@ Phase 3: Mastery & Scale (Weeks 13-24)
 - Team/organization scaling
 - Continuous improvement
 
-**🛠️ RECOMMENDED TOOLS & RESOURCES**
+RECOMMENDED TOOLS & RESOURCES
 - Specific AI tools with use cases
 - Learning platforms and courses
 - Communities and networks
 
-**📈 SUCCESS METRICS & MILESTONES**
+SUCCESS METRICS & MILESTONES
 - Weekly/monthly checkpoints
 - Key performance indicators
 - Long-term success measures
 
-**⚠️ POTENTIAL CHALLENGES & SOLUTIONS**
+POTENTIAL CHALLENGES & SOLUTIONS
 - Common obstacles
 - Mitigation strategies
 - Support resources
@@ -386,7 +390,7 @@ Be conversational, insightful, and highly practical. Ask clarifying questions wh
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4.1-2025-04-14',
+        model: 'gpt-5-2025-08-07',
         messages: [
           { role: 'system', content: systemPrompt },
           ...messages
