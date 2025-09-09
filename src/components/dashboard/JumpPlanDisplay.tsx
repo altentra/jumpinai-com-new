@@ -58,57 +58,67 @@ export default function JumpPlanDisplay({ planContent, onEdit, onDownload }: Jum
         </div>
       </CardHeader>
       <CardContent>
-        <div className="max-w-none font-sans text-foreground leading-7 text-base space-y-5">
+        <div className="max-w-none font-display text-foreground leading-8 text-base space-y-6">
           <ReactMarkdown 
             remarkPlugins={[remarkGfm]}
             components={{
               h1: ({ children }) => (
-                <h1 className="text-3xl font-bold tracking-tight border-b border-border pb-3 mb-6 mt-8">
+                <h1 className="text-4xl font-black tracking-tight gradient-text-primary border-b-2 border-primary/20 pb-4 mb-8 mt-10">
                   {children}
                 </h1>
               ),
               h2: ({ children }) => (
-                <h2 className="text-2xl font-semibold text-foreground mb-4 mt-8">
+                <h2 className="text-3xl font-bold text-foreground mb-6 mt-10 tracking-tight">
                   {children}
                 </h2>
               ),
               h3: ({ children }) => (
-                <h3 className="text-xl font-semibold text-foreground/90 mb-3 mt-6">
+                <h3 className="text-2xl font-semibold text-foreground/95 mb-4 mt-8 tracking-tight">
                   {children}
                 </h3>
               ),
               h4: ({ children }) => (
-                <h4 className="text-lg font-medium text-foreground mb-2 mt-5">
+                <h4 className="text-xl font-medium text-foreground mb-3 mt-6 tracking-tight">
                   {children}
                 </h4>
               ),
+              h5: ({ children }) => (
+                <h5 className="text-lg font-medium text-foreground/90 mb-2 mt-5">
+                  {children}
+                </h5>
+              ),
+              h6: ({ children }) => (
+                <h6 className="text-base font-medium text-foreground/80 mb-2 mt-4">
+                  {children}
+                </h6>
+              ),
               p: ({ children }) => (
-                <p className="mb-4 leading-7 text-foreground/90">
+                <p className="mb-5 leading-8 text-foreground/90 font-normal">
                   {children}
                 </p>
               ),
               ul: ({ children }) => (
-                <ul className="list-disc marker:text-muted-foreground pl-6 space-y-2 mb-4">
+                <ul className="list-disc marker:text-primary/70 pl-7 space-y-3 mb-6 text-foreground/90">
                   {children}
                 </ul>
               ),
               ol: ({ children }) => (
-                <ol className="list-decimal marker:text-muted-foreground pl-6 space-y-2 mb-4">
+                <ol className="list-decimal marker:text-primary/70 pl-7 space-y-3 mb-6 text-foreground/90">
                   {children}
                 </ol>
               ),
               li: ({ children }) => (
-                <li className="leading-7">
+                <li className="leading-8 pl-1">
                   {children}
                 </li>
               ),
               strong: ({ children }) => (
-                <strong className="font-semibold text-foreground">
+                <strong className="font-bold text-foreground">
                   {children}
                 </strong>
               ),
               em: ({ children }) => (
-                <em className="italic text-foreground/80">
+                <em className="italic font-medium text-foreground/85">
                   {children}
                 </em>
               ),

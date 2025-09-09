@@ -459,7 +459,7 @@ export default function AICoachChat({
               <div>
                 <CardTitle className="text-xl">Jumps Studio</CardTitle>
                 <p className="text-sm text-muted-foreground">
-                  Powered by ChatGPT-5 • {userProfile.currentRole} in {userProfile.industry}
+                  Powered by ChatGPT • {userProfile.currentRole} in {userProfile.industry}
                 </p>
               </div>
             </div>
@@ -486,8 +486,12 @@ export default function AICoachChat({
                 >
                   {message.role === 'assistant' && (
                     <Avatar className="h-8 w-8 bg-gradient-to-br from-primary/10 to-primary/5">
-                      <AvatarFallback>
-                        <Bot className="h-4 w-4 text-primary" />
+                      <AvatarFallback className="p-0">
+                        <img 
+                          src="/lovable-uploads/156b282b-1e93-436c-914a-a886a6a5cdfd.png" 
+                          alt="JumpinAI" 
+                          className="w-full h-full object-cover rounded-full"
+                        />
                       </AvatarFallback>
                     </Avatar>
                   )}
@@ -540,8 +544,12 @@ export default function AICoachChat({
               {isLoading && (
                 <div className="flex gap-3 justify-start">
                   <Avatar className="h-8 w-8 bg-gradient-to-br from-primary/10 to-primary/5">
-                    <AvatarFallback>
-                      <Bot className="h-4 w-4 text-primary" />
+                    <AvatarFallback className="p-0">
+                      <img 
+                        src="/lovable-uploads/156b282b-1e93-436c-914a-a886a6a5cdfd.png" 
+                        alt="JumpinAI" 
+                        className="w-full h-full object-cover rounded-full"
+                      />
                     </AvatarFallback>
                   </Avatar>
                   <div className="bg-muted/50 rounded-2xl px-4 py-3 flex items-center gap-3">
