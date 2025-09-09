@@ -6,6 +6,7 @@ import UserProfileForm from '@/components/dashboard/UserProfileForm';
 import { UserProfile } from '@/services/userProfileService';
 import AICoachChat from '@/components/dashboard/AICoachChat';
 import JumpPlanDisplay from '@/components/dashboard/JumpPlanDisplay';
+import { toast } from 'sonner';
 
 export default function JumpsStudio() {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
@@ -22,6 +23,11 @@ export default function JumpsStudio() {
 
   const handlePlanGenerated = (plan: string) => {
     setJumpPlan(plan);
+  };
+
+  const handleJumpSaved = (jumpId: string) => {
+    console.log('Jump saved with ID:', jumpId);
+    // Optionally show a notification or navigate to My Jumps
   };
 
   const handleStartChat = () => {
@@ -142,6 +148,7 @@ export default function JumpsStudio() {
             <AICoachChat 
               userProfile={userProfile} 
               onPlanGenerated={handlePlanGenerated}
+              onJumpSaved={handleJumpSaved}
               initialPlan={jumpPlan}
               isRefinementMode={!!jumpPlan}
               hideChat={false}

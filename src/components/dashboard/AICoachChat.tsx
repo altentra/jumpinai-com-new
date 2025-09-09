@@ -9,6 +9,8 @@ import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { Bot, User, Send, Sparkles, Download, Copy, Lock } from 'lucide-react';
 import { UserProfile } from '@/services/userProfileService';
+import { createJump, extractTitle, extractSummary } from '@/services/jumpService';
+import { toast } from 'sonner';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { useAuth } from '@/hooks/useAuth';
@@ -24,6 +26,7 @@ interface AICoachChatProps {
   userProfile: UserProfile;
   onBack?: () => void;
   onPlanGenerated?: (plan: string) => void;
+  onJumpSaved?: (jumpId: string) => void;
   hideChat?: boolean;
   initialPlan?: string;
   isRefinementMode?: boolean;
@@ -33,6 +36,7 @@ export default function AICoachChat({
   userProfile, 
   onBack,
   onPlanGenerated,
+  onJumpSaved,
   hideChat = false,
   initialPlan = '',
   isRefinementMode = false
@@ -140,6 +144,36 @@ export default function AICoachChat({
         setMessages(prev => [...prev, assistantMessage]);
         if (onPlanGenerated && aiText) {
           onPlanGenerated(aiText);
+          
+          // Auto-save the jump to database for new plans
+          if (!isRefinementMode && aiText.trim()) {
+            try {
+              const title = extractTitle(aiText);
+              const summary = extractSummary(aiText);
+              
+              const savedJump = await createJump({
+                profile_id: userProfile.id,
+                title,
+                summary,
+                full_content: aiText
+              });
+              
+              if (savedJump && onJumpSaved) {
+                onJumpSaved(savedJump.id);
+                toast({
+                  title: 'Jump Saved!',
+                  description: 'Your AI transformation plan has been saved to your library.',
+                });
+              }
+            } catch (error) {
+              console.error('Error saving jump:', error);
+              toast({
+                title: 'Save Error',
+                description: 'Jump generated but failed to save to library',
+                variant: 'destructive'
+              });
+            }
+          }
         }
       } catch (error: any) {
         console.error('Error generating initial plan:', error);
