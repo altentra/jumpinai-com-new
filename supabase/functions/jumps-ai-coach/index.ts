@@ -78,8 +78,11 @@ async function callOpenAI(
     max_completion_tokens: maxTokens,
   };
   
+  // Explicitly request text outputs for reasoning models to avoid empty responses
   if (isJSON) {
     body.response_format = { type: 'json_object' };
+  } else {
+    body.response_format = { type: 'text' };
   }
 
   const response = await fetch('https://api.openai.com/v1/chat/completions', {
