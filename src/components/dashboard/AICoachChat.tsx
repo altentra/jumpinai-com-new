@@ -129,7 +129,7 @@ export default function AICoachChat({
           userProfile,
           userId: user?.id,
           jumpId: currentJumpId,
-          generateComponents: isNewJump // Generate components for new jumps
+          generateComponents: false // Defer component generation until after jump is saved
         };
         console.log('[AICoachChat] Auto-invoking jumps-ai-coach with payload:', payload);
         const response: any = await invokeWithTimeout(payload);
@@ -208,10 +208,18 @@ export default function AICoachChat({
                     };
                     const compResp: any = await invokeWithTimeout(compPayload, 120000);
                     console.log('[AICoachChat] Components generation response:', compResp);
-                    toast({
-                      title: 'Components Ready',
-                      description: 'Prompts, workflows, blueprints, and strategies were generated for your Jump.',
-                    });
+                    const status = compResp?.data?.components;
+                    if (status && typeof status === 'string' && status.toLowerCase().includes('generated')) {
+                      toast({
+                        title: 'Components Ready',
+                        description: 'Prompts, workflows, blueprints, and strategies were generated for your Jump.',
+                      });
+                    } else {
+                      toast({
+                        title: 'Components Requested',
+                        description: "Generation requested. If items don’t appear, refresh the page in a few seconds.",
+                      });
+                    }
                   } catch (genErr) {
                     console.error('Error generating Jump components:', genErr);
                     toast({
