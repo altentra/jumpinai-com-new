@@ -164,7 +164,23 @@ Return valid JSON with this structure:
   "strategies": [{"title": "", "description": "", "strategy_framework": {"overview": "", "phases": [], "objectives": [], "approach": ""}, "category": "productivity", "ai_tools": [], "timeline": "", "success_metrics": [], "key_actions": [], "potential_challenges": [], "mitigation_strategies": [], "instructions": "", "tags": []}]
 }`;
 
-  const { content } = await callOpenAI([{ role: 'user', content: prompt }], 3000, true);
+  let { content, usage, finish_reason } = await callOpenAI([{ role: 'user', content: prompt }], 3000, true);
+  
+  // If cut off or empty, request a concise continuation
+  if (!content || content.trim() === '' || finish_reason === 'length') {
+    const cont = await callOpenAI([
+      { role: 'user', content: prompt },
+      { role: 'user', content: 'Complete the JSON response. Ensure valid JSON format.' }
+    ], 2000, true, 'gpt-5-2025-08-07');
+    if (cont.content && cont.content.trim() !== '') {
+      content = cont.content;
+    } else {
+      // Fallback to GPT-4.1 if GPT-5 still fails
+      const fb = await callOpenAI([{ role: 'user', content: prompt }], 2500, true, 'gpt-4.1-2025-04-14');
+      content = fb.content || '{}';
+    }
+  }
+
   return JSON.parse(content);
 }
 

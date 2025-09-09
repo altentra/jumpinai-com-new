@@ -58,29 +58,72 @@ export default function JumpPlanDisplay({ planContent, onEdit, onDownload }: Jum
         </div>
       </CardHeader>
       <CardContent>
-        <div className="prose prose-lg max-w-none dark:prose-invert 
-                        prose-headings:text-foreground prose-headings:font-semibold 
-                        prose-h1:text-2xl prose-h1:mb-6 prose-h1:mt-8 prose-h1:border-b prose-h1:pb-2
-                        prose-h2:text-xl prose-h2:mb-4 prose-h2:mt-6 
-                        prose-h3:text-lg prose-h3:mb-3 prose-h3:mt-5
-                        prose-p:mb-4 prose-p:leading-relaxed
-                        prose-ul:mb-4 prose-ul:space-y-2
-                        prose-li:mb-2
-                        prose-strong:text-primary prose-strong:font-semibold
-                        prose-code:bg-muted prose-code:px-1 prose-code:py-0.5 prose-code:rounded
-                        space-y-4">
+        <div className="prose prose-lg max-w-none dark:prose-invert font-['Inter',system-ui,sans-serif] text-foreground/90 leading-relaxed">
           <ReactMarkdown 
             remarkPlugins={[remarkGfm]}
             components={{
-              h1: ({ children }) => <h1 className="text-2xl font-semibold text-foreground border-b pb-2 mb-6 mt-8">{children}</h1>,
-              h2: ({ children }) => <h2 className="text-xl font-semibold text-foreground mb-4 mt-6">{children}</h2>,
-              h3: ({ children }) => <h3 className="text-lg font-semibold text-foreground mb-3 mt-5">{children}</h3>,
-              p: ({ children }) => <p className="mb-4 leading-relaxed text-foreground">{children}</p>,
-              ul: ({ children }) => <ul className="mb-4 space-y-2 pl-6">{children}</ul>,
-              ol: ({ children }) => <ol className="mb-4 space-y-2 pl-6">{children}</ol>,
-              li: ({ children }) => <li className="mb-2 text-foreground">{children}</li>,
-              strong: ({ children }) => <strong className="text-primary font-semibold">{children}</strong>,
-              code: ({ children }) => <code className="bg-muted px-1 py-0.5 rounded text-sm">{children}</code>,
+              h1: ({ children }) => (
+                <h1 className="text-3xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent border-b-2 border-primary/20 pb-4 mb-8 mt-10 tracking-tight">
+                  {children}
+                </h1>
+              ),
+              h2: ({ children }) => (
+                <h2 className="text-2xl font-bold text-foreground mb-6 mt-8 flex items-center gap-3">
+                  <div className="w-1 h-6 bg-gradient-to-b from-primary to-primary/60 rounded-full"></div>
+                  {children}
+                </h2>
+              ),
+              h3: ({ children }) => (
+                <h3 className="text-xl font-semibold text-foreground/90 mb-4 mt-6 pl-4 border-l-3 border-primary/40">
+                  {children}
+                </h3>
+              ),
+              h4: ({ children }) => (
+                <h4 className="text-lg font-semibold text-primary mb-3 mt-5">
+                  {children}
+                </h4>
+              ),
+              p: ({ children }) => (
+                <p className="mb-5 leading-relaxed text-foreground/90 text-base">
+                  {children}
+                </p>
+              ),
+              ul: ({ children }) => (
+                <ul className="mb-6 space-y-3 pl-0">
+                  {children}
+                </ul>
+              ),
+              ol: ({ children }) => (
+                <ol className="mb-6 space-y-3 pl-0 counter-reset-[list-counter]">
+                  {children}
+                </ol>
+              ),
+              li: ({ children }) => (
+                <li className="flex items-start gap-4 mb-3 text-foreground/90 group">
+                  <div className="w-2 h-2 bg-gradient-to-br from-primary to-primary/60 rounded-full mt-2.5 flex-shrink-0 group-hover:scale-125 transition-transform"></div>
+                  <span className="flex-1 leading-relaxed">{children}</span>
+                </li>
+              ),
+              strong: ({ children }) => (
+                <strong className="font-bold text-primary bg-primary/10 px-1 py-0.5 rounded">
+                  {children}
+                </strong>
+              ),
+              em: ({ children }) => (
+                <em className="italic text-primary/80 font-medium">
+                  {children}
+                </em>
+              ),
+              code: ({ children }) => (
+                <code className="bg-muted/80 px-2 py-1 rounded-md text-sm font-mono border border-border/50">
+                  {children}
+                </code>
+              ),
+              blockquote: ({ children }) => (
+                <blockquote className="border-l-4 border-primary/60 pl-6 py-4 my-6 bg-primary/5 rounded-r-lg italic text-foreground/80">
+                  {children}
+                </blockquote>
+              ),
             }}
           >
             {planContent}
