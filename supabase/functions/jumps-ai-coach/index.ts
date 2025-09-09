@@ -330,6 +330,7 @@ Be conversational, specific, and actionable.`;
 
     // Handle component generation
     let componentsStatus: string | object = 'Not requested';
+    let componentsDetail: any = null;
     if (shouldGenerateComponents) {
       if (!userProfile || !userId || !jumpId) {
         componentsStatus = 'Missing userProfile, userId, or jumpId';
@@ -337,6 +338,13 @@ Be conversational, specific, and actionable.`;
         try {
           console.log('Generating components...');
           const components = await generateComponents(userProfile);
+          const expectedCounts = {
+            prompts: components.prompts?.length || 0,
+            workflows: components.workflows?.length || 0,
+            blueprints: components.blueprints?.length || 0,
+            strategies: components.strategies?.length || 0,
+            total: (components.prompts?.length || 0) + (components.workflows?.length || 0) + (components.blueprints?.length || 0) + (components.strategies?.length || 0),
+          };
           const summary = await saveComponents(components, userId, jumpId);
           if (summary.saved === 0) {
             componentsStatus = 'Failed to save';
@@ -345,10 +353,12 @@ Be conversational, specific, and actionable.`;
           } else {
             componentsStatus = 'Generated and saved successfully';
           }
-          console.log('Components save summary:', summary);
+          componentsDetail = { expectedCounts, saveSummary: summary };
+          console.log('Components save summary:', summary, 'Expected counts:', expectedCounts);
         } catch (error) {
           console.error('Component generation failed:', error);
           componentsStatus = 'Failed to generate';
+          componentsDetail = { error: String(error) };
         }
       }
     }
@@ -357,7 +367,8 @@ Be conversational, specific, and actionable.`;
       message: content,
       usage,
       debug: { finish_reason, model: 'gpt-5-2025-08-07' },
-      components: componentsStatus
+      components: componentsStatus,
+      components_detail: componentsDetail
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
