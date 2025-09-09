@@ -236,46 +236,8 @@ export default function Strategies() {
           </Button>
         </div>
         
-        <div className="flex items-center space-x-4">
-          <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-            <Input 
-              placeholder="Search your strategies..." 
-              className="pl-10"
-            />
-          </div>
-          <Button variant="outline" size="sm">
-            <Star className="h-4 w-4 mr-2" />
-            Favorites
-          </Button>
-          <Button variant="outline" size="sm">
-            <Target className="h-4 w-4 mr-2" />
-            Active
-          </Button>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <Card className="border-2 border-dashed border-muted-foreground/25 hover:border-primary/50 transition-colors">
-            <CardContent className="flex flex-col items-center justify-center py-12 text-center">
-              <Plus className="h-12 w-12 text-muted-foreground mb-4" />
-              <h3 className="font-semibold mb-2">Create Your First Strategy</h3>
-              <p className="text-sm text-muted-foreground mb-4">
-                Plan and execute your AI transformation
-              </p>
-              <Button variant="outline" size="sm">Get Started</Button>
-            </CardContent>
-          </Card>
-        </div>
-
-        <div className="bg-muted/30 rounded-lg p-6">
-          <h3 className="font-semibold mb-2">✨ Coming Soon</h3>
-          <ul className="text-sm text-muted-foreground space-y-1">
-            <li>• Strategic planning tools and frameworks</li>
-            <li>• Goal tracking and milestone management</li>
-            <li>• Performance metrics and ROI analysis</li>
-            <li>• Team alignment and collaboration features</li>
-            <li>• Expert strategy consultation</li>
-          </ul>
+        <div className="text-center py-16">
+          <h3 className="text-lg font-medium text-muted-foreground">There will be your strategies</h3>
         </div>
       </div>
 
