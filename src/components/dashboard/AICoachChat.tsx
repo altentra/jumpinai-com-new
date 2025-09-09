@@ -6,6 +6,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/components/ui/use-toast';
+import { useOptimizedAuth } from '@/hooks/useOptimizedAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { Bot, User, Send, Sparkles, Download, Copy, Lock } from 'lucide-react';
 import { UserProfile } from '@/services/userProfileService';
@@ -47,6 +48,7 @@ export default function AICoachChat({
   jumpName = '',
   isNewJump = true
 }: AICoachChatProps) {
+  const { user } = useOptimizedAuth();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -125,7 +127,7 @@ export default function AICoachChat({
         const payload = {
           messages: [{ role: 'user', content: initialPrompt }],
           userProfile,
-          userId: userProfile?.user_id,
+          userId: user?.id,
           jumpId: currentJumpId,
           generateComponents: isNewJump // Generate components for new jumps
         };

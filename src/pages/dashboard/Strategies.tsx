@@ -1,16 +1,280 @@
+import { useState, useEffect } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Calendar, Target, AlertTriangle, ExternalLink } from "lucide-react";
+import { strategiesService, UserStrategy } from "@/services/strategiesService";
+import { useToast } from "@/hooks/use-toast";
+
 export default function Strategies() {
-  return (
-    <div className="space-y-12">
-      {/* My Strategies Section */}
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-semibold">My Strategies</h2>
-        </div>
-        
-        <div className="text-center py-16">
-          <h3 className="text-lg font-medium text-muted-foreground">There will be your strategies</h3>
-        </div>
+  const [strategies, setStrategies] = useState<UserStrategy[]>([]);
+  const [selectedStrategy, setSelectedStrategy] = useState<UserStrategy | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    loadStrategies();
+  }, []);
+
+  const loadStrategies = async () => {
+    try {
+      const data = await strategiesService.getUserStrategies();
+      setStrategies(data);
+    } catch (error) {
+      console.error('Error loading strategies:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load strategies. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-16">
+        <div className="animate-pulse">Loading your strategies...</div>
       </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-semibold">My Strategies</h2>
+        <Badge variant="secondary">{strategies.length} strategies</Badge>
+      </div>
+
+      {strategies.length === 0 ? (
+        <Card className="text-center py-16">
+          <CardContent>
+            <h3 className="text-lg font-medium text-muted-foreground mb-2">
+              No strategies yet
+            </h3>
+            <p className="text-muted-foreground mb-4">
+              Generate your personalized AI transformation plan in Jumps Studio to get custom strategies
+            </p>
+            <Button variant="outline">
+              <ExternalLink className="w-4 h-4 mr-2" />
+              Visit Jumps Studio
+            </Button>
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {strategies.map((strategy) => (
+            <Card 
+              key={strategy.id} 
+              className="cursor-pointer hover:shadow-lg transition-shadow"
+              onClick={() => setSelectedStrategy(strategy)}
+            >
+              <CardHeader>
+                <div className="flex items-start justify-between gap-2">
+                  <CardTitle className="text-lg line-clamp-2">{strategy.title}</CardTitle>
+                  {strategy.category && (
+                    <Badge variant="outline" className="shrink-0">
+                      {strategy.category}
+                    </Badge>
+                  )}
+                </div>
+                {strategy.description && (
+                  <CardDescription className="line-clamp-3">
+                    {strategy.description}
+                  </CardDescription>
+                )}
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                    {strategy.timeline && (
+                      <div className="flex items-center gap-1">
+                        <Calendar className="w-4 h-4" />
+                        {strategy.timeline}
+                      </div>
+                    )}
+                  </div>
+                  
+                  {strategy.key_actions && strategy.key_actions.length > 0 && (
+                    <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                      <Target className="w-4 h-4" />
+                      <span>{strategy.key_actions.length} action{strategy.key_actions.length > 1 ? 's' : ''}</span>
+                    </div>
+                  )}
+                  
+                  {strategy.ai_tools && strategy.ai_tools.length > 0 && (
+                    <div className="flex flex-wrap gap-1">
+                      {strategy.ai_tools.slice(0, 3).map((tool, index) => (
+                        <Badge key={index} variant="secondary" className="text-xs">
+                          {tool}
+                        </Badge>
+                      ))}
+                      {strategy.ai_tools.length > 3 && (
+                        <Badge variant="secondary" className="text-xs">
+                          +{strategy.ai_tools.length - 3}
+                        </Badge>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
+
+      <Dialog open={!!selectedStrategy} onOpenChange={() => setSelectedStrategy(null)}>
+        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center justify-between">
+              {selectedStrategy?.title}
+              {selectedStrategy?.timeline && (
+                <Badge variant="outline">
+                  {selectedStrategy.timeline}
+                </Badge>
+              )}
+            </DialogTitle>
+          </DialogHeader>
+          
+          {selectedStrategy && (
+            <div className="space-y-6">
+              {selectedStrategy.description && (
+                <div>
+                  <h4 className="font-semibold mb-2">Description</h4>
+                  <p className="text-muted-foreground">{selectedStrategy.description}</p>
+                </div>
+              )}
+
+              {selectedStrategy.strategy_framework && (
+                <div>
+                  <h4 className="font-semibold mb-4">Strategy Framework</h4>
+                  <div className="bg-muted p-4 rounded-lg space-y-4">
+                    {selectedStrategy.strategy_framework.overview && (
+                      <div>
+                        <h5 className="font-medium mb-2">Overview</h5>
+                        <p className="text-muted-foreground text-sm">{selectedStrategy.strategy_framework.overview}</p>
+                      </div>
+                    )}
+                    
+                    {selectedStrategy.strategy_framework.phases && Array.isArray(selectedStrategy.strategy_framework.phases) && (
+                      <div>
+                        <h5 className="font-medium mb-2">Phases</h5>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                          {selectedStrategy.strategy_framework.phases.map((phase: string, index: number) => (
+                            <div key={index} className="flex items-center gap-2">
+                              <Badge variant="outline" className="text-xs">Phase {index + 1}</Badge>
+                              <span className="text-sm">{phase}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    
+                    {selectedStrategy.strategy_framework.objectives && Array.isArray(selectedStrategy.strategy_framework.objectives) && (
+                      <div>
+                        <h5 className="font-medium mb-2">Objectives</h5>
+                        <ul className="list-disc list-inside space-y-1">
+                          {selectedStrategy.strategy_framework.objectives.map((objective: string, index: number) => (
+                            <li key={index} className="text-muted-foreground text-sm">{objective}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    
+                    {selectedStrategy.strategy_framework.approach && (
+                      <div>
+                        <h5 className="font-medium mb-2">Approach</h5>
+                        <p className="text-muted-foreground text-sm">{selectedStrategy.strategy_framework.approach}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {selectedStrategy.key_actions && selectedStrategy.key_actions.length > 0 && (
+                <div>
+                  <h4 className="font-semibold mb-2 flex items-center gap-2">
+                    <Target className="w-4 h-4" />
+                    Key Actions
+                  </h4>
+                  <ul className="list-disc list-inside space-y-1">
+                    {selectedStrategy.key_actions.map((action, index) => (
+                      <li key={index} className="text-muted-foreground">{action}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {selectedStrategy.success_metrics && selectedStrategy.success_metrics.length > 0 && (
+                <div>
+                  <h4 className="font-semibold mb-2">Success Metrics</h4>
+                  <ul className="list-disc list-inside space-y-1">
+                    {selectedStrategy.success_metrics.map((metric, index) => (
+                      <li key={index} className="text-muted-foreground">{metric}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {selectedStrategy.potential_challenges && selectedStrategy.potential_challenges.length > 0 && (
+                <div>
+                  <h4 className="font-semibold mb-2 flex items-center gap-2">
+                    <AlertTriangle className="w-4 h-4 text-yellow-600" />
+                    Potential Challenges
+                  </h4>
+                  <ul className="list-disc list-inside space-y-1">
+                    {selectedStrategy.potential_challenges.map((challenge, index) => (
+                      <li key={index} className="text-muted-foreground">{challenge}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {selectedStrategy.mitigation_strategies && selectedStrategy.mitigation_strategies.length > 0 && (
+                <div>
+                  <h4 className="font-semibold mb-2">Mitigation Strategies</h4>
+                  <ul className="list-disc list-inside space-y-1">
+                    {selectedStrategy.mitigation_strategies.map((mitigation, index) => (
+                      <li key={index} className="text-muted-foreground">{mitigation}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {selectedStrategy.instructions && (
+                <div>
+                  <h4 className="font-semibold mb-2">Execution Instructions</h4>
+                  <p className="text-muted-foreground whitespace-pre-wrap">{selectedStrategy.instructions}</p>
+                </div>
+              )}
+
+              {selectedStrategy.ai_tools && selectedStrategy.ai_tools.length > 0 && (
+                <div>
+                  <h4 className="font-semibold mb-2">Recommended AI Tools</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedStrategy.ai_tools.map((tool, index) => (
+                      <Badge key={index} variant="secondary">{tool}</Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {selectedStrategy.tags && selectedStrategy.tags.length > 0 && (
+                <div>
+                  <h4 className="font-semibold mb-2">Tags</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedStrategy.tags.map((tag, index) => (
+                      <Badge key={index} variant="outline">{tag}</Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
