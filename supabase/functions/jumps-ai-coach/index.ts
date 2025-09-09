@@ -147,8 +147,8 @@ async function callOpenAI(
   }
 
   return { content, usage: data.usage, finish_reason };
-  return { content, usage: data.usage, finish_reason };
 }
+
 async function generateComponents(userProfile: any): Promise<GeneratedComponents> {
   const prompt = `Generate 4 personalized AI components for each category based on this user profile. No emojis or special symbols.
 
@@ -164,7 +164,7 @@ Return valid JSON with this structure:
   "strategies": [{"title": "", "description": "", "strategy_framework": {"overview": "", "phases": [], "objectives": [], "approach": ""}, "category": "productivity", "ai_tools": [], "timeline": "", "success_metrics": [], "key_actions": [], "potential_challenges": [], "mitigation_strategies": [], "instructions": "", "tags": []}]
 }`;
 
-  let { content, usage, finish_reason } = await callOpenAI([{ role: 'user', content: prompt }], 3000, true);
+  let { content, usage, finish_reason } = await callOpenAI([{ role: 'user', content: prompt }], 2200, true);
   
   // If cut off or empty, request a concise continuation
   if (!content || content.trim() === '' || finish_reason === 'length') {
@@ -191,9 +191,22 @@ async function saveComponents(components: GeneratedComponents, userId: string, j
     ...components.blueprints.map(b => supabase.from('user_blueprints').insert({ user_id: userId, jump_id: jumpId, ...b })),
     ...components.strategies.map(s => supabase.from('user_strategies').insert({ user_id: userId, jump_id: jumpId, ...s }))
   ];
-  
-  await Promise.all(saves);
+
+  const results = await Promise.allSettled(saves);
+  const errors: Array<any> = [];
+  for (const r of results) {
+    if (r.status === 'rejected') {
+      errors.push({ type: 'rejected', reason: r.reason });
+    } else if ((r as any).value?.error) {
+      errors.push({ type: 'fulfilled-error', error: (r as any).value.error });
+    }
+  }
+  if (errors.length) {
+    console.error('Errors while saving generated components:', errors);
+    throw new Error('Some component inserts failed');
+  }
 }
+
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -238,31 +251,44 @@ Be conversational, specific, and actionable.`;
     // Get recent messages (last 6 to avoid token limits)
     const recentMessages = Array.isArray(messages) ? messages.slice(-6) : [];
     
-    // Call OpenAI (GPT-5) with higher token limit
-    let { content, usage, finish_reason } = await callOpenAI([
-      { role: 'system', content: systemPrompt },
-      ...recentMessages
-    ], 3200);
-
-    // If cut off or empty, request a concise continuation; fallback to GPT-4.1 only if still empty
-    if (!content || content.trim() === '' || finish_reason === 'length') {
-      const cont = await callOpenAI([
+    // If this request is only for component generation, skip plan generation to reduce latency and failures
+    let content = '';
+    let usage: any = undefined;
+    let finish_reason: any = undefined;
+    if (!shouldGenerateComponents) {
+      const res1 = await callOpenAI([
         { role: 'system', content: systemPrompt },
-        ...recentMessages,
-        { role: 'user', content: 'Continue and deliver the complete plan in under 1200 words. Plain text only. No emojis or special symbols.' }
-      ], 1200, false, 'gpt-5-2025-08-07');
-      if (cont.content && cont.content.trim() !== '') {
-        content = (content && content.trim() !== '') ? `${content}\n\n${cont.content}` : cont.content;
-        finish_reason = cont.finish_reason;
-      } else {
-        const fb = await callOpenAI([
+        ...recentMessages
+      ], 2800);
+      content = res1.content;
+      usage = res1.usage;
+      finish_reason = res1.finish_reason;
+
+      // If cut off or empty, request a concise continuation; fallback to GPT-4.1 only if still empty
+      if (!content || content.trim() === '' || finish_reason === 'length') {
+        const cont = await callOpenAI([
           { role: 'system', content: systemPrompt },
-          ...recentMessages
-        ], 2000, false, 'gpt-4.1-2025-04-14');
-        content = fb.content || '';
-        finish_reason = fb.finish_reason;
+          ...recentMessages,
+          { role: 'user', content: 'Continue and deliver the complete plan in under 1200 words. Plain text only. No emojis or special symbols.' }
+        ], 1200, false, 'gpt-5-2025-08-07');
+        if (cont.content && cont.content.trim() !== '') {
+          content = (content && content.trim() !== '') ? `${content}\n\n${cont.content}` : cont.content;
+          finish_reason = cont.finish_reason;
+        } else {
+          const fb = await callOpenAI([
+            { role: 'system', content: systemPrompt },
+            ...recentMessages
+          ], 1600, false, 'gpt-4.1-2025-04-14');
+          content = fb.content || '';
+          finish_reason = fb.finish_reason;
+        }
+      }
+
+      if (!content || content.trim() === '') {
+        content = 'Sorry, I couldn’t complete the plan this time. Please try again in a moment.';
       }
     }
+
 
     // Handle component generation
     let componentsStatus = 'Not requested';

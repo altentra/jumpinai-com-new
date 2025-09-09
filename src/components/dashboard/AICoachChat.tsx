@@ -57,10 +57,10 @@ export default function AICoachChat({
   const { subscription } = useAuth();
   
   const isPaidUser = subscription?.subscribed || false;
-  const invokeWithTimeout = async (payload: any, ms = 180000): Promise<any> => {
+  const invokeWithTimeout = async (payload: any, ms = 240000): Promise<any> => {
     return await Promise.race([
       supabase.functions.invoke('jumps-ai-coach', { body: payload }),
-      new Promise((_, reject) => setTimeout(() => reject(new Error('Generation timed out. Please try again within ~180s.')), ms))
+      new Promise((_, reject) => setTimeout(() => reject(new Error('Generation timed out. Please try again within ~240s.')), ms))
     ]);
   };
   
@@ -206,7 +206,7 @@ export default function AICoachChat({
                       jumpId: savedJump.id,
                       generateComponents: true,
                     };
-                    const compResp: any = await invokeWithTimeout(compPayload, 180000);
+                    const compResp: any = await invokeWithTimeout(compPayload, 240000);
                     console.log('[AICoachChat] Components generation response:', compResp);
                     const status = compResp?.data?.components;
                     if (status && typeof status === 'string' && status.toLowerCase().includes('generated')) {
