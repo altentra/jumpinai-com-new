@@ -192,6 +192,34 @@ export default function AICoachChat({
                     title: 'Jump Saved!',
                     description: 'Your AI transformation plan has been saved to your library.',
                   });
+
+                  // After creating a new Jump, trigger background generation of components
+                  try {
+                    toast({
+                      title: 'Generating Jump Components',
+                      description: 'Creating prompts, workflows, blueprints, and strategies...',
+                    });
+                    const compPayload = {
+                      messages: [{ role: 'user', content: 'Generate Jump components for this profile.' }],
+                      userProfile,
+                      userId: user?.id,
+                      jumpId: savedJump.id,
+                      generateComponents: true,
+                    };
+                    const compResp: any = await invokeWithTimeout(compPayload, 120000);
+                    console.log('[AICoachChat] Components generation response:', compResp);
+                    toast({
+                      title: 'Components Ready',
+                      description: 'Prompts, workflows, blueprints, and strategies were generated for your Jump.',
+                    });
+                  } catch (genErr) {
+                    console.error('Error generating Jump components:', genErr);
+                    toast({
+                      title: 'Component generation failed',
+                      description: 'Your plan is saved, but components failed to generate. You can retry from Jumps Studio.',
+                      variant: 'destructive',
+                    });
+                  }
                 }
               }
             } catch (error) {
