@@ -128,7 +128,7 @@ export default function JumpsStudio() {
         <div className="text-center space-y-4">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
           <div className="space-y-2">
-            <h3 className="text-lg font-medium">Preparing Your AI Coach...</h3>
+            <h3 className="text-lg font-medium">Preparing JumpinAI Studio...</h3>
             <p className="text-muted-foreground">Analyzing your profile and customizing your experience</p>
           </div>
         </div>

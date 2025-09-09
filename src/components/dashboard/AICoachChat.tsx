@@ -57,10 +57,10 @@ export default function AICoachChat({
   const { subscription } = useAuth();
   
   const isPaidUser = subscription?.subscribed || false;
-  const invokeWithTimeout = async (payload: any, ms = 60000): Promise<any> => {
+  const invokeWithTimeout = async (payload: any, ms = 180000): Promise<any> => {
     return await Promise.race([
       supabase.functions.invoke('jumps-ai-coach', { body: payload }),
-      new Promise((_, reject) => setTimeout(() => reject(new Error('Generation timed out. Please try again within ~60s.')), ms))
+      new Promise((_, reject) => setTimeout(() => reject(new Error('Generation timed out. Please try again within ~180s.')), ms))
     ]);
   };
   
@@ -206,7 +206,7 @@ export default function AICoachChat({
                       jumpId: savedJump.id,
                       generateComponents: true,
                     };
-                    const compResp: any = await invokeWithTimeout(compPayload, 120000);
+                    const compResp: any = await invokeWithTimeout(compPayload, 180000);
                     console.log('[AICoachChat] Components generation response:', compResp);
                     const status = compResp?.data?.components;
                     if (status && typeof status === 'string' && status.toLowerCase().includes('generated')) {
@@ -262,7 +262,7 @@ export default function AICoachChat({
     const welcomeMessage: Message = {
       id: '1',
       role: 'assistant',
-      content: `Welcome to your personalized AI Transformation Coach! 🚀\n\nI've reviewed your profile and I'm excited to help you create your custom "Jump" plan. Based on your role as a ${userProfile.currentRole} in ${userProfile.industry}, I can see tremendous opportunities for AI integration.\n\nI'll generate a comprehensive plan for you now. You can refine it with chat after.`,
+      content: `Welcome to JumpinAI Studio.\n\nI've reviewed your profile and I'm ready to create your custom "Jump" plan. Based on your role as a ${userProfile.currentRole} in ${userProfile.industry}, there are strong opportunities for AI integration.\n\nI'll generate a comprehensive plan now. You can refine it with chat after.`,
       timestamp: new Date()
     };
     setMessages([welcomeMessage]);
@@ -419,9 +419,9 @@ export default function AICoachChat({
                 <Sparkles className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <CardTitle className="text-xl">AI Transformation Coach</CardTitle>
+                <CardTitle className="text-xl">JumpinAI Studio</CardTitle>
                 <p className="text-sm text-muted-foreground">
-                  Powered by GPT-4.1 • {userProfile.currentRole} in {userProfile.industry}
+                  Powered by ChatGPT-5 • {userProfile.currentRole} in {userProfile.industry}
                 </p>
               </div>
             </div>
