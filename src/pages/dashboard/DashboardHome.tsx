@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Rocket, Sparkles, GitBranch, Boxes, Lightbulb, ChevronRight, Crown } from "lucide-react";
+import { Rocket, Sparkles, GitBranch, Boxes, Lightbulb, ChevronRight, Crown, Palette, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
@@ -114,6 +114,28 @@ const DashboardHome = () => {
           Your AI-powered dashboard is ready. Explore your tools, manage your projects, and accelerate your AI journey.
         </p>
       </div>
+
+      {/* Jumps Studio Invitation */}
+      <Card className="border-primary/20 bg-gradient-to-r from-primary/5 to-primary/10 animate-fade-in-up">
+        <CardContent className="p-8 text-center">
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <Palette className="h-8 w-8 text-primary" />
+            <h2 className="text-2xl font-bold gradient-text-primary">Ready to Design Your Next Big Jump?</h2>
+          </div>
+          <p className="text-lg text-muted-foreground mb-6 max-w-3xl mx-auto">
+            Create a comprehensive AI transformation plan tailored to your life and business. 
+            Jumps Studio helps you build complete roadmaps with all the necessary tools, prompts, 
+            workflows, and strategies for your success journey.
+          </p>
+          <Button 
+            onClick={() => navigate("/dashboard/jumps-studio")}
+            className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 text-lg font-semibold"
+          >
+            Start in Jumps Studio
+            <ArrowRight className="ml-2 h-5 w-5" />
+          </Button>
+        </CardContent>
+      </Card>
 
       {/* Pro Subscription Card - Only show if not subscribed */}
       {subscription && !subscription.subscribed && (
