@@ -108,6 +108,17 @@ export default function AppSidebar() {
           </Link>
 
           <Link 
+            to="/dashboard/jumps-studio" 
+            className={cn(
+              "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-semibold transition-colors border border-primary/20 bg-primary/5",
+              getNavCls({ isActive: currentPath === "/dashboard/jumps-studio" })
+            )}
+          >
+            <Palette className="h-4 w-4 text-primary" />
+            Jumps Studio
+          </Link>
+
+          <Link 
             to="/dashboard/jumps" 
             className={cn(
               "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
@@ -116,17 +127,6 @@ export default function AppSidebar() {
           >
             <FileText className="h-4 w-4" />
             My Jumps
-          </Link>
-
-          <Link 
-            to="/dashboard/jumps-studio" 
-            className={cn(
-              "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
-              getNavCls({ isActive: currentPath === "/dashboard/jumps-studio" })
-            )}
-          >
-            <Palette className="h-4 w-4" />
-            Jumps Studio
           </Link>
 
           <Link 
