@@ -1,44 +1,60 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight, Target, Zap, Users, Rocket, BookOpen, Settings } from "lucide-react";
+import { useOptimizedAuth } from "@/hooks/useOptimizedAuth";
+import { useNavigate } from "react-router-dom";
 
 const Features = () => {
+  const { isAuthenticated } = useOptimizedAuth();
+  const navigate = useNavigate();
+
   const features = [
     {
       icon: Target,
       title: "Personalized AI Analysis",
-      description: "Deep assessment of your current situation, goals, and unique circumstances"
+      description: "Deep assessment tailored to your unique goals and circumstances"
     },
     {
       icon: Rocket,
       title: "Step-by-Step Journey",
-      description: "Phase-by-phase implementation roadmap tailored specifically to your path"
+      description: "Phase-by-phase implementation roadmap for your transformation"
     },
     {
       icon: BookOpen,
       title: "Complete Toolkit",
-      description: "Prompts, workflows, blueprints, and strategies - everything you need in one place"
+      description: "Prompts, workflows, blueprints, and strategies in one package"
     },
     {
       icon: Settings,
       title: "AI-Powered Optimization",
-      description: "Continuously refined plans that adapt to your progress and feedback"
+      description: "Continuously refined plans that adapt to your progress"
     }
   ];
+
+  const handleGetStarted = () => {
+    if (isAuthenticated) {
+      navigate('/dashboard/jumps-studio');
+    } else {
+      navigate('/auth');
+    }
+  };
+
+  const handleViewPricing = () => {
+    navigate('/pricing');
+  };
 
   return (
     <section className="py-24 bg-gradient-to-b from-background to-muted/20">
       <div className="container mx-auto px-4 max-w-7xl">
         {/* Header */}
         <div className="text-center mb-16 max-w-4xl mx-auto">
-          <div className="inline-flex items-center gap-2 bg-primary/5 text-primary px-4 py-2 rounded-full text-sm font-medium mb-6">
-            <Zap className="w-4 h-4" />
-            Introducing Jumps Studio
-          </div>
-          
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-            What is a <span className="bg-gradient-to-r from-primary via-primary/80 to-primary bg-clip-text text-transparent">Jump</span>?
+          <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+            Introducing <span className="bg-gradient-to-r from-primary via-primary/80 to-primary bg-clip-text text-transparent">Jumps Studio</span>
           </h2>
+          
+          <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-foreground">
+            What is a <span className="bg-gradient-to-r from-primary via-primary/80 to-primary bg-clip-text text-transparent">Jump</span>?
+          </h3>
           
           <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed mb-8">
             A Jump is your personalized AI transformation plan - a complete, step-by-step journey 
@@ -49,26 +65,30 @@ const Features = () => {
             <p className="text-lg text-foreground/90 leading-relaxed">
               Unlike generic advice or one-size-fits-all solutions, Jumps Studio creates an 
               <strong className="text-primary"> individually tailored implementation journey</strong> that 
-              evolves with you. Each Jump includes personalized prompts, custom workflows, proven blueprints, 
-              and strategic guidance - all orchestrated by AI to maximize your transformation success.
+              helps you <strong className="text-primary">implement AI in your life and business</strong>. 
+              Each Jump includes personalized prompts, custom workflows, proven blueprints, 
+              and strategic guidance - everything you need to <strong className="text-primary">literally Jump into AI fast</strong> and 
+              start using it to your advantage ASAP in the most professional, efficient, and transformative way possible.
             </p>
           </div>
         </div>
 
         {/* Features Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-16">
           {features.map((feature, index) => {
             const Icon = feature.icon;
             return (
-              <Card key={index} className="group hover:shadow-lg transition-all duration-300 border-border/50 hover:border-primary/20">
-                <CardContent className="p-6 text-center">
-                  <div className="inline-flex items-center justify-center w-12 h-12 bg-primary/10 rounded-full mb-4 group-hover:bg-primary/15 transition-colors">
-                    <Icon className="w-6 h-6 text-primary" />
+              <div key={index} className="group p-6 rounded-xl bg-card/50 border border-border/30 hover:border-primary/30 hover:bg-card/80 transition-all duration-300 hover:shadow-md">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center group-hover:bg-primary/15 transition-colors">
+                    <Icon className="w-5 h-5 text-primary" />
                   </div>
-                  <h3 className="font-semibold text-lg mb-2">{feature.title}</h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed">{feature.description}</p>
-                </CardContent>
-              </Card>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-base mb-1 text-foreground">{feature.title}</h3>
+                    <p className="text-muted-foreground text-sm leading-relaxed">{feature.description}</p>
+                  </div>
+                </div>
+              </div>
             );
           })}
         </div>
@@ -76,11 +96,20 @@ const Features = () => {
         {/* Call to Action */}
         <div className="text-center">
           <div className="inline-flex flex-col sm:flex-row gap-4 items-center justify-center">
-            <Button size="lg" className="group bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 text-lg font-medium">
-              Create Your Jump
+            <Button 
+              size="lg" 
+              onClick={handleGetStarted}
+              className="group bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 text-lg font-medium"
+            >
+              Get Started
               <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Button>
-            <Button variant="outline" size="lg" className="px-8 py-6 text-lg font-medium border-primary/20 hover:border-primary/40">
+            <Button 
+              variant="outline" 
+              size="lg" 
+              onClick={handleViewPricing}
+              className="px-8 py-6 text-lg font-medium border-primary/20 hover:border-primary/40"
+            >
               View Pricing
             </Button>
           </div>
