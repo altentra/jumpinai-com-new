@@ -262,7 +262,7 @@ serve(async (req) => {
     const { messages, userProfile, userId, jumpId, generateComponents: shouldGenerateComponents } = await req.json();
 
     // Create system prompt
-    const systemPrompt = `You are JumpinAI Studio, an expert AI transformation coach. Create personalized transformation plans called "Jumps".
+    const systemPrompt = `You are Jumps Studio, an expert AI transformation coach. Create personalized transformation plans called "Jumps".
 
 IMPORTANT: Use only plain text - no emojis, special symbols, or decorative characters for better PDF compatibility.
 
@@ -297,7 +297,7 @@ Be conversational, specific, and actionable.`;
       const res1 = await callOpenAI([
         { role: 'system', content: systemPrompt },
         ...recentMessages
-      ], 2800);
+      ], 1600, false, 'gpt-4.1-2025-04-14');
       content = res1.content;
       usage = res1.usage;
       finish_reason = res1.finish_reason;
@@ -308,7 +308,7 @@ Be conversational, specific, and actionable.`;
           { role: 'system', content: systemPrompt },
           ...recentMessages,
           { role: 'user', content: 'Continue and deliver the complete plan in under 1200 words. Plain text only. No emojis or special symbols.' }
-        ], 1200, false, 'gpt-5-2025-08-07');
+        ], 1200, false, 'gpt-4.1-2025-04-14');
         if (cont.content && cont.content.trim() !== '') {
           content = (content && content.trim() !== '') ? `${content}\n\n${cont.content}` : cont.content;
           finish_reason = cont.finish_reason;
@@ -366,7 +366,7 @@ Be conversational, specific, and actionable.`;
     return new Response(JSON.stringify({
       message: content,
       usage,
-      debug: { finish_reason, model: 'gpt-5-2025-08-07' },
+      debug: { finish_reason, model: 'gpt-4.1-2025-04-14' },
       components: componentsStatus,
       components_detail: componentsDetail
     }), {
