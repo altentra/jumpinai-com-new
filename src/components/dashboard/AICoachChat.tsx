@@ -52,11 +52,28 @@ export default function AICoachChat({
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [loadingTime, setLoadingTime] = useState(0);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const hasGeneratedRef = useRef(false);
+  const loadingTimerRef = useRef<NodeJS.Timeout | null>(null);
   const { toast } = useToast();
   const { subscription } = useAuth();
   
+  const startLoadingTimer = () => {
+    setLoadingTime(0);
+    loadingTimerRef.current = setInterval(() => {
+      setLoadingTime(prev => prev + 1);
+    }, 1000);
+  };
+
+  const stopLoadingTimer = () => {
+    if (loadingTimerRef.current) {
+      clearInterval(loadingTimerRef.current);
+      loadingTimerRef.current = null;
+    }
+    setLoadingTime(0);
+  };
+
   const isPaidUser = subscription?.subscribed || false;
   const invokeWithTimeout = async (payload: any, ms = 240000): Promise<any> => {
     return await Promise.race([
@@ -122,6 +139,7 @@ export default function AICoachChat({
     // Define generator first so we can call it for both hidden and visible chat modes
     const generateInitialPlan = async () => {
       setIsLoading(true);
+      startLoadingTimer();
       try {
         const initialPrompt =
           "Using the provided profile context, generate a fully comprehensive, professional, elite-level, actionable 'Jump' plan following the RESPONSE STRUCTURE from the system prompt. Be specific with tools, steps, timelines, and metrics. Tailor everything to the user's role, industry, experience, time, and budget. Use clear headings and bullet points.";
@@ -251,6 +269,7 @@ export default function AICoachChat({
         });
       } finally {
         setIsLoading(false);
+        stopLoadingTimer();
       }
     };
 
@@ -299,6 +318,7 @@ export default function AICoachChat({
     setMessages(prev => [...prev, userMessage]);
     setInput('');
     setIsLoading(true);
+    startLoadingTimer();
 
     try {
       const payload = {
@@ -361,6 +381,7 @@ export default function AICoachChat({
       });
     } finally {
       setIsLoading(false);
+      stopLoadingTimer();
     }
   };
 
@@ -421,7 +442,7 @@ export default function AICoachChat({
                 <Sparkles className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <CardTitle className="text-xl">JumpinAI Studio</CardTitle>
+                <CardTitle className="text-xl">Jumps Studio</CardTitle>
                 <p className="text-sm text-muted-foreground">
                   Powered by ChatGPT-5 • {userProfile.currentRole} in {userProfile.industry}
                 </p>
@@ -505,14 +526,15 @@ export default function AICoachChat({
                 <div className="flex gap-3 justify-start">
                   <Avatar className="h-8 w-8 bg-gradient-to-br from-primary/10 to-primary/5">
                     <AvatarFallback>
-                      <Bot className="h-4 w-4 text-primary animate-pulse" />
+                      <Bot className="h-4 w-4 text-primary" />
                     </AvatarFallback>
                   </Avatar>
-                  <div className="bg-muted rounded-lg px-4 py-3">
-                    <div className="flex gap-1">
-                      <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce"></div>
-                      <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                      <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                  <div className="bg-muted/50 rounded-2xl px-4 py-3 flex items-center gap-3">
+                    <div className="flex items-center gap-2">
+                      <div className="animate-spin rounded-full h-4 w-4 border-2 border-primary border-t-transparent"></div>
+                      <span className="text-sm text-muted-foreground">
+                        Thinking for {loadingTime}s...
+                      </span>
                     </div>
                   </div>
                 </div>
