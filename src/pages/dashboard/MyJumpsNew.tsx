@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Rocket, Plus } from "lucide-react";
+import { Rocket, Plus, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getUserJumps, deleteJump, UserJump } from "@/services/jumpService";
 import { useOptimizedAuth } from "@/hooks/useOptimizedAuth";
@@ -17,24 +17,35 @@ export default function MyJumpsNew() {
   const { isAuthenticated, isLoading: authLoading } = useOptimizedAuth();
 
   // Load user jumps
-  useEffect(() => {
-    const loadJumps = async () => {
-      if (!isAuthenticated || authLoading) return;
-      
-      try {
-        setLoading(true);
-        const userJumps = await getUserJumps();
-        setJumps(userJumps);
-      } catch (error) {
-        console.error('Error loading jumps:', error);
-        toast.error('Failed to load your jumps');
-      } finally {
-        setLoading(false);
-      }
-    };
+  const loadJumps = async () => {
+    if (!isAuthenticated || authLoading) return;
+    
+    try {
+      setLoading(true);
+      const userJumps = await getUserJumps();
+      setJumps(userJumps);
+    } catch (error) {
+      console.error('Error loading jumps:', error);
+      toast.error('Failed to load your jumps');
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     loadJumps();
   }, [isAuthenticated, authLoading]);
+
+  // Add visibility change listener to refresh data when user returns to tab
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden && !loading && isAuthenticated) {
+        loadJumps();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, [loading, isAuthenticated]);
 
   const handleViewJump = (jump: UserJump) => {
     setSelectedJump(jump);
@@ -87,12 +98,22 @@ export default function MyJumpsNew() {
           </div>
         </div>
         
-        <Link to="/dashboard/jumps-studio">
-          <Button className="gap-2">
-            <Plus className="h-4 w-4" />
-            Create New Jump
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => loadJumps()}
+            disabled={loading}
+          >
+            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
           </Button>
-        </Link>
+          <Link to="/dashboard/jumps-studio">
+            <Button className="gap-2">
+              <Plus className="h-4 w-4" />
+              Create New Jump
+            </Button>
+          </Link>
+        </div>
       </div>
 
       {/* Jumps Grid */}

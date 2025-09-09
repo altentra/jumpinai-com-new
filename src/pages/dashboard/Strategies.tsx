@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Calendar, Target, AlertTriangle, ExternalLink, Rocket } from "lucide-react";
+import { Calendar, Target, AlertTriangle, ExternalLink, Rocket, RefreshCw } from "lucide-react";
 import { strategiesService, UserStrategy } from "@/services/strategiesService";
 import { useToast } from "@/hooks/use-toast";
 import { useJumpsInfo } from "@/hooks/useJumpInfo";
@@ -61,7 +61,17 @@ export default function Strategies() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-semibold">My Strategies</h2>
-        <Badge variant="secondary">{strategies.length} strategies</Badge>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => loadStrategies()}
+            disabled={isLoading}
+          >
+            <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+          </Button>
+          <Badge variant="secondary">{strategies.length} strategies</Badge>
+        </div>
       </div>
 
       {strategies.length === 0 ? (

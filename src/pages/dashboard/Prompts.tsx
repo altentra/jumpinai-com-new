@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Copy, ExternalLink, Rocket } from "lucide-react";
+import { Copy, ExternalLink, Rocket, RefreshCw } from "lucide-react";
 import { promptsService, UserPrompt } from "@/services/promptsService";
 import { useToast } from "@/hooks/use-toast";
 import { useJumpsInfo } from "@/hooks/useJumpInfo";
@@ -17,10 +17,6 @@ export default function Prompts() {
   // Get jump information for all prompts
   const jumpIds = prompts.map(prompt => prompt.jump_id);
   const { jumpsInfo } = useJumpsInfo(jumpIds);
-
-  useEffect(() => {
-    loadPrompts();
-  }, []);
 
   const loadPrompts = async () => {
     try {
@@ -37,6 +33,21 @@ export default function Prompts() {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    loadPrompts();
+  }, []);
+
+  // Add visibility change listener to refresh data when user returns to tab
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden && !isLoading) {
+        loadPrompts();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, [isLoading]);
 
   const copyToClipboard = async (text: string) => {
     try {
@@ -62,7 +73,17 @@ export default function Prompts() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-semibold">My Prompts</h2>
-        <Badge variant="secondary">{prompts.length} prompts</Badge>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => loadPrompts()}
+            disabled={isLoading}
+          >
+            <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+          </Button>
+          <Badge variant="secondary">{prompts.length} prompts</Badge>
+        </div>
       </div>
 
       {prompts.length === 0 ? (
