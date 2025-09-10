@@ -220,7 +220,7 @@ export default function JumpsStudio() {
       {/* Jump Selection Section */}
       <div className="max-w-5xl mx-auto mb-6 md:mb-12">
         <div className="glass backdrop-blur-xl bg-gradient-to-br from-card/95 to-primary/5 rounded-3xl border border-primary/20 p-6 md:p-8 shadow-2xl shadow-primary/10 hover:shadow-primary/20 transition-all duration-500 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-secondary/5 opacity-50"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-secondary/5 opacity-50 pointer-events-none"></div>
           <div className="relative z-10">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 md:gap-6 mb-6 md:mb-8">
               <div className="space-y-2">
@@ -245,7 +245,7 @@ export default function JumpsStudio() {
             <div className="space-y-3 md:space-y-4">
               <div>
                 <Label className="text-sm font-medium text-foreground/90 mb-3 block">Continue Existing Jump</Label>
-                <div className="flex gap-3 md:gap-4 overflow-x-auto pb-4 pt-1 scrollbar-thin scrollbar-thumb-muted-foreground/20 scrollbar-track-transparent" style={{ scrollbarWidth: 'thin' }}>
+                <div className="flex gap-3 md:gap-4 overflow-x-auto pb-4 pt-1 scrollbar-thin scrollbar-thumb-muted-foreground/20 scrollbar-track-transparent touch-pan-x pointer-events-auto" style={{ scrollbarWidth: 'thin' }}>
                   {existingJumps.map((jump) => (
                     <MiniJumpCard
                       key={jump.id}
