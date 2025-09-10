@@ -66,21 +66,27 @@ export default function JumpDetailModal({ jump, isOpen, onClose }: JumpDetailMod
 
         <div className="flex-1 overflow-y-auto py-4">
           {(() => {
+            const parseMaybe = (v: any) => (typeof v === 'string' ? safeParseJSON(v) : v);
+            const isComp = (p: any) => p && typeof p === 'object' && p.overview && p.analysis && p.action_plan && Array.isArray(p.action_plan?.phases);
+
             // Prefer stored structured/comprehensive plans
-            if (jump.comprehensive_plan) {
+            const comp = parseMaybe(jump.comprehensive_plan);
+            if (isComp(comp)) {
               return (
                 <ComprehensiveJumpDisplay
-                  jump={jump.comprehensive_plan}
+                  jump={comp}
                   onEdit={() => {}}
                   onDownload={downloadPlan}
                 />
               );
             }
-            if (jump.structured_plan) {
+
+            const struct = parseMaybe(jump.structured_plan);
+            if (struct && typeof struct === 'object') {
               return (
                 <JumpPlanDisplay
                   planContent={jump.full_content}
-                  structuredPlan={jump.structured_plan}
+                  structuredPlan={struct}
                   onEdit={() => {}}
                   onDownload={downloadPlan}
                 />
@@ -89,8 +95,7 @@ export default function JumpDetailModal({ jump, isOpen, onClose }: JumpDetailMod
 
             // Try parsing raw content into structure on the fly
             const parsed = safeParseJSON(jump.full_content);
-            const isComprehensive = parsed && parsed.overview && parsed.analysis && parsed.action_plan;
-            if (isComprehensive) {
+            if (isComp(parsed)) {
               return (
                 <ComprehensiveJumpDisplay
                   jump={parsed}

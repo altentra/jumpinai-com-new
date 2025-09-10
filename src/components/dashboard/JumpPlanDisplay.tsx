@@ -26,13 +26,166 @@ function isComprehensiveStructure(plan: any): boolean {
     Array.isArray(plan.action_plan?.phases);
 }
 
+// Build a default comprehensive plan template
+function buildDefaultPlan(title: string = 'Your Jump Plan') {
+  return {
+    title,
+    executive_summary: '',
+    overview: {
+      vision_statement: '',
+      transformation_scope: '',
+      expected_outcomes: [] as string[],
+      timeline_overview: ''
+    },
+    analysis: {
+      current_state: {
+        strengths: [] as string[],
+        weaknesses: [] as string[],
+        opportunities: [] as string[],
+        threats: [] as string[]
+      },
+      gap_analysis: [] as string[],
+      readiness_assessment: { score: 0, factors: [] as any[] },
+      market_context: ''
+    },
+    action_plan: {
+      phases: [1,2,3].map((n) => ({
+        phase_number: n,
+        title: `Phase ${n}`,
+        description: '',
+        duration: '',
+        objectives: [] as string[],
+        key_actions: [] as any[],
+        milestones: [] as any[],
+        deliverables: [] as string[],
+        risks: [] as any[]
+      }))
+    },
+    tools_prompts: {
+      recommended_ai_tools: [] as any[],
+      custom_prompts: [] as any[],
+      templates: [] as any[]
+    },
+    workflows_strategies: {
+      workflows: [] as any[],
+      strategies: [] as any[]
+    },
+    metrics_tracking: {
+      kpis: [] as any[],
+      tracking_methods: [] as any[],
+      reporting_schedule: { daily: [] as string[], weekly: [] as string[], monthly: [] as string[], quarterly: [] as string[] },
+      success_criteria: [] as any[]
+    },
+    investment: {
+      time_investment: { total_hours: '', weekly_commitment: '', phase_breakdown: [] as any[] },
+      financial_investment: { total_budget: '', categories: [] as any[] },
+      roi_projection: { timeframe: '', expected_roi: '', break_even_point: '' }
+    }
+  };
+}
+
+// Normalize any partial/legacy plan into the comprehensive structure
+function normalizeToComprehensive(input: any): any {
+  const source = input && typeof input === 'string' ? safeParseJSON(input) : input;
+  const base = buildDefaultPlan(source?.title || 'Your Jump Plan');
+
+  if (!source || typeof source !== 'object') return base;
+
+  // Direct fields
+  if (typeof source.executive_summary === 'string') base.executive_summary = source.executive_summary;
+
+  // Overview
+  const ov = source.overview || {};
+  if (typeof ov.vision_statement === 'string') base.overview.vision_statement = ov.vision_statement;
+  if (typeof ov.transformation_scope === 'string') base.overview.transformation_scope = ov.transformation_scope;
+  if (Array.isArray(ov.expected_outcomes)) base.overview.expected_outcomes = ov.expected_outcomes;
+  if (typeof ov.timeline_overview === 'string') base.overview.timeline_overview = ov.timeline_overview;
+  if (!base.overview.timeline_overview && typeof (source.timeline || source.timeline_overview) === 'string') base.overview.timeline_overview = source.timeline || source.timeline_overview;
+
+  // Analysis
+  const an = source.analysis || {};
+  const cs = an.current_state || {};
+  if (Array.isArray(cs.strengths)) base.analysis.current_state.strengths = cs.strengths;
+  if (Array.isArray(cs.weaknesses)) base.analysis.current_state.weaknesses = cs.weaknesses;
+  if (Array.isArray(cs.opportunities)) base.analysis.current_state.opportunities = cs.opportunities;
+  if (Array.isArray(cs.threats)) base.analysis.current_state.threats = cs.threats;
+  if (Array.isArray(an.gap_analysis)) base.analysis.gap_analysis = an.gap_analysis;
+  if (an.readiness_assessment && typeof an.readiness_assessment === 'object') base.analysis.readiness_assessment = {
+    score: typeof an.readiness_assessment.score === 'number' ? an.readiness_assessment.score : 0,
+    factors: Array.isArray(an.readiness_assessment.factors) ? an.readiness_assessment.factors : []
+  };
+  if (typeof an.market_context === 'string') base.analysis.market_context = an.market_context;
+
+  // Phases (accept either root phases[] or action_plan.phases[])
+  const phases = Array.isArray(source?.action_plan?.phases) ? source.action_plan.phases : (Array.isArray(source?.phases) ? source.phases : []);
+  if (Array.isArray(phases) && phases.length) {
+    base.action_plan.phases = phases.map((p: any, idx: number) => ({
+      phase_number: typeof p.phase_number === 'number' ? p.phase_number : (idx + 1),
+      title: p.title || `Phase ${idx + 1}`,
+      description: p.description || '',
+      duration: p.duration || p.timeline || '',
+      objectives: Array.isArray(p.objectives) ? p.objectives : [],
+      key_actions: Array.isArray(p.key_actions) ? p.key_actions : [],
+      milestones: Array.isArray(p.milestones) ? p.milestones : [],
+      deliverables: Array.isArray(p.deliverables) ? p.deliverables : [],
+      risks: Array.isArray(p.risks) ? p.risks : []
+    }));
+  }
+
+  // Tools & Prompts
+  const tp = source.tools_prompts || {};
+  if (Array.isArray(tp.recommended_ai_tools)) base.tools_prompts.recommended_ai_tools = tp.recommended_ai_tools;
+  if (Array.isArray(tp.custom_prompts)) base.tools_prompts.custom_prompts = tp.custom_prompts;
+  if (Array.isArray(tp.templates)) base.tools_prompts.templates = tp.templates;
+
+  // Workflows & Strategies
+  const ws = source.workflows_strategies || {};
+  if (Array.isArray(ws.workflows)) base.workflows_strategies.workflows = ws.workflows;
+  if (Array.isArray(ws.strategies)) base.workflows_strategies.strategies = ws.strategies;
+
+  // Metrics tracking
+  const mt = source.metrics_tracking || {};
+  if (Array.isArray(mt.kpis)) base.metrics_tracking.kpis = mt.kpis;
+  if (Array.isArray(mt.tracking_methods)) base.metrics_tracking.tracking_methods = mt.tracking_methods;
+  if (mt.reporting_schedule && typeof mt.reporting_schedule === 'object') base.metrics_tracking.reporting_schedule = {
+    daily: Array.isArray(mt.reporting_schedule.daily) ? mt.reporting_schedule.daily : [],
+    weekly: Array.isArray(mt.reporting_schedule.weekly) ? mt.reporting_schedule.weekly : [],
+    monthly: Array.isArray(mt.reporting_schedule.monthly) ? mt.reporting_schedule.monthly : [],
+    quarterly: Array.isArray(mt.reporting_schedule.quarterly) ? mt.reporting_schedule.quarterly : []
+  };
+  if (Array.isArray(mt.success_criteria)) base.metrics_tracking.success_criteria = mt.success_criteria;
+
+  // Investment
+  const inv = source.investment || {};
+  if (inv.time_investment && typeof inv.time_investment === 'object') base.investment.time_investment = {
+    total_hours: inv.time_investment.total_hours || '',
+    weekly_commitment: inv.time_investment.weekly_commitment || '',
+    phase_breakdown: Array.isArray(inv.time_investment.phase_breakdown) ? inv.time_investment.phase_breakdown : []
+  };
+  if (inv.financial_investment && typeof inv.financial_investment === 'object') base.investment.financial_investment = {
+    total_budget: inv.financial_investment.total_budget || '',
+    categories: Array.isArray(inv.financial_investment.categories) ? inv.financial_investment.categories : []
+  };
+  if (inv.roi_projection && typeof inv.roi_projection === 'object') base.investment.roi_projection = {
+    timeframe: inv.roi_projection.timeframe || '',
+    expected_roi: inv.roi_projection.expected_roi || '',
+    break_even_point: inv.roi_projection.break_even_point || ''
+  };
+
+  return base;
+}
+
 export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, onDownload }: JumpPlanDisplayProps) {
   if (!planContent.trim() && !structuredPlan) {
     return null;
   }
 
-  const effectivePlan = React.useMemo(() => structuredPlan || safeParseJSON(planContent), [structuredPlan, planContent]);
-  const enhancedContent = React.useMemo(() => formatAIText(planContent), [planContent]);
+const candidate = React.useMemo(() => {
+  const parsedStructured = typeof structuredPlan === 'string' ? safeParseJSON(structuredPlan) : structuredPlan;
+  return parsedStructured || safeParseJSON(planContent);
+}, [structuredPlan, planContent]);
+const comprehensivePlan = React.useMemo(() => candidate ? normalizeToComprehensive(candidate) : null, [candidate]);
+const enhancedContent = React.useMemo(() => formatAIText(planContent), [planContent]);
 
   return (
     <Card className="w-full bg-card border-border">
@@ -75,62 +228,13 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
         </div>
       </CardHeader>
       <CardContent className="p-0">
-        {effectivePlan && isComprehensiveStructure(effectivePlan) ? (
-          // Use the comprehensive display for the new structured format
+        {comprehensivePlan ? (
           <ComprehensiveJumpDisplay 
-            jump={effectivePlan} 
+            jump={comprehensivePlan} 
             onEdit={onEdit}
             onDownload={onDownload}
             className="border-0 shadow-none"
           />
-        ) : effectivePlan ? (
-          // Fallback for simpler structured plans (legacy format)
-          <div className="p-6 space-y-6">
-            {/* Title */}
-            {effectivePlan.title && (
-              <div className="text-center pb-6 border-b border-border">
-                <h1 className="text-3xl font-bold gradient-text-primary mb-2">{effectivePlan.title}</h1>
-              </div>
-            )}
-
-            {/* Executive Summary */}
-            {effectivePlan.executive_summary && (
-              <div className="bg-gradient-to-r from-primary/5 to-primary/10 rounded-lg p-6 border border-primary/20">
-                <h2 className="text-xl font-semibold text-primary mb-3 flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-primary"></div>
-                  Executive Summary
-                </h2>
-                <p className="text-muted-foreground leading-relaxed">{effectivePlan.executive_summary}</p>
-              </div>
-            )}
-
-            {/* Simple Phases Display */}
-            {effectivePlan.phases && Array.isArray(effectivePlan.phases) && (
-              <div className="space-y-4">
-                <h2 className="text-2xl font-semibold text-foreground mb-4 flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-primary"></div>
-                  The Jump Plan
-                </h2>
-                {effectivePlan.phases.map((phase: any, index: number) => (
-                  <div key={index} className="bg-card rounded-lg border border-border p-6 shadow-lg">
-                    <div className="flex items-start justify-between mb-4">
-                      <h3 className="text-xl font-semibold text-primary">
-                        Phase {phase.phase_number || index + 1}: {phase.title}
-                      </h3>
-                      {phase.timeline && (
-                        <span className="text-sm bg-primary/10 text-primary px-3 py-1 rounded-full">
-                          {phase.timeline}
-                        </span>
-                      )}
-                    </div>
-                    {phase.description && (
-                      <p className="text-muted-foreground mb-4 leading-relaxed">{phase.description}</p>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
         ) : (
           // Fallback to markdown display for backward compatibility or when no structured data
           <div className="p-6 max-w-none font-display text-foreground leading-relaxed text-base space-y-4">
