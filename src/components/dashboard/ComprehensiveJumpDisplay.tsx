@@ -947,21 +947,21 @@ export default function ComprehensiveJumpDisplay({ jump, onEdit, onDownload, cla
     <div className={`w-full max-w-6xl mx-auto px-4 sm:px-6 ${className}`}>
       {/* Header */}
       <div className="mb-6 sm:mb-8">
-        <div className="flex flex-col gap-4 sm:gap-6">
+        <div className="flex flex-col gap-3 sm:gap-4">
           <div className="w-full max-w-full overflow-hidden">
-            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground mb-2 sm:mb-3 break-words hyphens-auto leading-tight max-w-full">{jump.title}</h1>
-            <p className="text-sm sm:text-base lg:text-lg text-muted-foreground leading-relaxed break-words max-w-full overflow-wrap-anywhere">{jump.executive_summary}</p>
+            <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground mb-2 break-words hyphens-auto leading-tight max-w-full">{jump.title}</h1>
+            <p className="text-xs sm:text-sm lg:text-base text-muted-foreground leading-relaxed break-words max-w-full overflow-wrap-anywhere">{jump.executive_summary}</p>
           </div>
-          <div className="flex flex-wrap gap-2 justify-start sm:justify-end">
+          <div className="flex flex-wrap gap-1 justify-start sm:justify-end">
             {onEdit && (
-              <Button variant="outline" onClick={onEdit} size="sm" className="whitespace-nowrap text-xs sm:text-sm">
-                Edit Plan
+              <Button variant="outline" onClick={onEdit} size="sm" className="whitespace-nowrap text-xs px-2 py-1 h-7">
+                Edit
               </Button>
             )}
             {onDownload && (
-              <Button onClick={onDownload} size="sm" className="gap-2 whitespace-nowrap text-xs sm:text-sm">
-                <Download className="h-4 w-4" />
-                Download
+              <Button onClick={onDownload} size="sm" className="gap-1 whitespace-nowrap text-xs px-2 py-1 h-7">
+                <Download className="h-3 w-3" />
+                Save
               </Button>
             )}
           </div>
