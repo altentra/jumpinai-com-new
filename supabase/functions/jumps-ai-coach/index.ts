@@ -640,7 +640,7 @@ serve(async (req) => {
       if (jumpPlan) {
         content = formatJumpPlanToText(jumpPlan);
       } else {
-        content = 'Sorry, I couldn't complete the plan this time. Please try again in a moment.';
+        content = "Sorry, I couldn't complete the plan this time. Please try again in a moment.";
       }
     }
 
