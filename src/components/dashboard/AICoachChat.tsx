@@ -485,26 +485,26 @@ export default function AICoachChat({
 
   return (
     <div className="max-w-6xl mx-auto h-[calc(100vh-200px)] flex flex-col">
-      <Card className="flex-1 flex flex-col">
-        <CardHeader className="flex-row items-center justify-between space-y-0 pb-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-full bg-gradient-to-br from-primary/10 to-primary/5">
-                <Sparkles className="h-5 w-5 text-primary" />
+      <Card className="flex-1 flex flex-col bg-gradient-to-br from-card/95 to-primary/5 backdrop-blur-xl rounded-3xl border border-primary/20 shadow-2xl shadow-primary/10 overflow-hidden">
+        <CardHeader className="flex-row items-center justify-between space-y-0 pb-6 bg-gradient-to-r from-primary/10 via-secondary/5 to-primary/10 backdrop-blur-sm border-b border-primary/20">
+            <div className="flex items-center gap-4">
+              <div className="p-3 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/10 shadow-lg backdrop-blur-sm">
+                <Sparkles className="h-6 w-6 text-primary" />
               </div>
               <div>
-                <CardTitle className="text-xl">Jumps Studio</CardTitle>
+                <CardTitle className="text-xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">Jumps Studio</CardTitle>
                 <p className="text-sm text-muted-foreground">
                   Powered by ChatGPT • {userProfile.currentRole} in {userProfile.industry}
                 </p>
               </div>
             </div>
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm" onClick={downloadPlan}>
+          <div className="flex gap-3">
+            <Button variant="outline" size="sm" onClick={downloadPlan} className="rounded-2xl border-primary/30 hover:bg-primary/10 hover:border-primary/40 transition-all duration-300 hover:scale-105">
               <Download className="h-4 w-4 mr-2" />
               Download Plan
             </Button>
             {onBack && (
-              <Button variant="outline" size="sm" onClick={onBack}>
+              <Button variant="outline" size="sm" onClick={onBack} className="rounded-2xl border-primary/30 hover:bg-primary/10 hover:border-primary/40 transition-all duration-300 hover:scale-105">
                 New Profile
               </Button>
             )}
@@ -512,15 +512,15 @@ export default function AICoachChat({
         </CardHeader>
 
         <CardContent className="flex-1 flex flex-col p-0">
-          <ScrollArea className="flex-1 px-6" ref={scrollAreaRef}>
-            <div className="space-y-6 py-4">
+          <ScrollArea className="flex-1 px-8 py-6" ref={scrollAreaRef}>
+            <div className="space-y-8">
               {messages.map((message) => (
                 <div
                   key={message.id}
-                  className={`flex gap-3 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                  className={`flex gap-4 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   {message.role === 'assistant' && (
-<Avatar className="h-8 w-8 bg-gradient-to-br from-primary/10 to-primary/5 border border-border ring-1 ring-ring shadow-modern">
+<Avatar className="h-10 w-10 bg-gradient-to-br from-primary/20 to-primary/10 border-2 border-primary/20 shadow-lg backdrop-blur-sm">
                       <AvatarFallback className="p-0">
                         <img 
                           src="/lovable-uploads/156b282b-1e93-436c-914a-a886a6a5cdfd.png" 
@@ -532,26 +532,29 @@ export default function AICoachChat({
                   )}
                   
                   <div
-                    className={`max-w-[80%] rounded-lg px-4 py-3 ${
+                    className={`max-w-[80%] rounded-3xl p-6 shadow-lg backdrop-blur-sm border transition-all duration-300 hover:shadow-xl ${
                       message.role === 'user'
-                        ? 'bg-primary text-primary-foreground'
-                        : 'bg-muted'
+                        ? 'bg-gradient-to-br from-primary/90 to-primary/70 text-primary-foreground border-primary/30 shadow-primary/20'
+                        : 'bg-gradient-to-br from-card/90 to-primary/5 border-primary/20 shadow-primary/10'
                     }`}
                   >
                     {message.role === 'assistant' ? (
-                      <div className="text-sm leading-relaxed">
+                      <div className="text-sm leading-relaxed prose prose-sm max-w-none dark:prose-invert">
                         {(() => {
                           const parsed = safeParseJSON(message.content);
                           const looksLikeJSON = !!parsed || /\s*```/.test(message.content) || /^[{\[]/.test(message.content.trim());
                           if (looksLikeJSON) {
                             return (
-                              <div className="space-y-1">
-                                <div className="font-medium text-foreground">Structured Jump Plan received</div>
+                              <div className="space-y-3 bg-primary/5 p-4 rounded-2xl border border-primary/20">
+                                <div className="font-semibold text-foreground flex items-center gap-2">
+                                  <Sparkles className="h-4 w-4 text-primary" />
+                                  Structured Jump Plan received
+                                </div>
                                 <div className="text-muted-foreground">Your plan is applied to the tabbed view above.</div>
                                 <Button
                                   variant="ghost"
                                   size="sm"
-                                  className="h-7 px-2"
+                                  className="h-8 px-3 rounded-xl bg-primary/10 hover:bg-primary/20 transition-all duration-300"
                                   onClick={() => {
                                     try { scrollAreaRef.current?.scrollTo({ top: 0, behavior: 'smooth' }); } catch {}
                                   }}
@@ -562,7 +565,20 @@ export default function AICoachChat({
                             );
                           }
                           return (
-                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                            <ReactMarkdown 
+                              remarkPlugins={[remarkGfm]}
+                              components={{
+                                p: ({children}) => <p className="mb-3 last:mb-0 leading-relaxed">{children}</p>,
+                                ul: ({children}) => <ul className="space-y-1 my-3">{children}</ul>,
+                                ol: ({children}) => <ol className="space-y-1 my-3">{children}</ol>,
+                                li: ({children}) => <li className="leading-relaxed">{children}</li>,
+                                h1: ({children}) => <h1 className="text-lg font-bold mb-3 text-foreground">{children}</h1>,
+                                h2: ({children}) => <h2 className="text-base font-semibold mb-2 text-foreground">{children}</h2>,
+                                h3: ({children}) => <h3 className="text-sm font-semibold mb-2 text-foreground">{children}</h3>,
+                                blockquote: ({children}) => <blockquote className="border-l-4 border-primary/30 pl-4 my-3 italic bg-primary/5 rounded-r-lg p-3">{children}</blockquote>,
+                                code: ({children}) => <code className="bg-primary/10 px-2 py-1 rounded text-xs font-mono">{children}</code>,
+                              }}
+                            >
                               {message.content}
                             </ReactMarkdown>
                           );
@@ -573,7 +589,7 @@ export default function AICoachChat({
                         {message.content}
                       </div>
                     )}
-                    <div className="flex items-center justify-between mt-2">
+                    <div className="flex items-center justify-between mt-4 pt-3 border-t border-primary/20">
                       <div className="text-xs opacity-70">
                         {message.timestamp.toLocaleTimeString()}
                       </div>
@@ -582,7 +598,7 @@ export default function AICoachChat({
                           variant="ghost"
                           size="sm"
                           onClick={() => copyMessage(message.content)}
-                          className="h-6 w-6 p-0 opacity-70 hover:opacity-100"
+                          className="h-8 w-8 p-0 opacity-70 hover:opacity-100 hover:bg-primary/10 rounded-full transition-all duration-300"
                         >
                           <Copy className="h-3 w-3" />
                         </Button>
@@ -591,9 +607,9 @@ export default function AICoachChat({
                   </div>
 
                   {message.role === 'user' && (
-                    <Avatar className="h-8 w-8 bg-primary">
+                    <Avatar className="h-10 w-10 bg-gradient-to-br from-primary/90 to-primary/70 border-2 border-primary/30 shadow-lg">
                       <AvatarFallback>
-                        <User className="h-4 w-4 text-primary-foreground" />
+                        <User className="h-5 w-5 text-primary-foreground" />
                       </AvatarFallback>
                     </Avatar>
                   )}
@@ -601,8 +617,8 @@ export default function AICoachChat({
               ))}
 
               {isLoading && (
-                <div className="flex gap-3 justify-start">
-                  <Avatar className="h-8 w-8 bg-gradient-to-br from-primary/10 to-primary/5 border border-border ring-1 ring-ring shadow-modern">
+                <div className="flex gap-4 justify-start">
+                  <Avatar className="h-10 w-10 bg-gradient-to-br from-primary/20 to-primary/10 border-2 border-primary/20 shadow-lg backdrop-blur-sm">
                     <AvatarFallback className="p-0">
                       <img 
                         src="/lovable-uploads/156b282b-1e93-436c-914a-a886a6a5cdfd.png" 
@@ -611,9 +627,9 @@ export default function AICoachChat({
                       />
                     </AvatarFallback>
                   </Avatar>
-                  <div className="bg-muted/50 rounded-2xl px-4 py-3 flex items-center gap-3">
-                    <div className="flex items-center gap-2">
-                      <div className="animate-spin rounded-full h-4 w-4 border-2 border-primary border-t-transparent"></div>
+                  <div className="bg-gradient-to-br from-card/90 to-primary/5 rounded-3xl p-6 shadow-lg backdrop-blur-sm border border-primary/20 flex items-center gap-3">
+                    <div className="flex items-center gap-3">
+                      <div className="animate-spin rounded-full h-5 w-5 border-2 border-primary border-t-transparent"></div>
                       <span className="text-sm text-muted-foreground">
                         Thinking for {loadingTime}s...
                       </span>
@@ -624,44 +640,45 @@ export default function AICoachChat({
             </div>
           </ScrollArea>
 
-          <div className="p-6 border-t">
+          <div className="p-8 border-t border-primary/20 bg-gradient-to-r from-primary/5 via-secondary/5 to-primary/5 backdrop-blur-sm">
             {!isPaidUser ? (
-              <div className="text-center py-4 space-y-3">
+              <div className="text-center py-6 space-y-4">
                 <div className="flex justify-center">
-                  <div className="p-3 rounded-full bg-muted">
-                    <Lock className="h-6 w-6 text-muted-foreground" />
+                  <div className="p-4 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 shadow-lg backdrop-blur-sm">
+                    <Lock className="h-8 w-8 text-primary" />
                   </div>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-foreground">Premium Feature</h3>
-                  <p className="text-sm text-muted-foreground">
+                  <h3 className="font-bold text-lg text-foreground mb-2">Premium Feature</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
                     Chat refinement is available for premium subscribers only.
                   </p>
                 </div>
                 <Button 
                   variant="default" 
                   onClick={() => window.location.href = '/pricing'}
-                  className="mt-2"
+                  className="mt-4 rounded-2xl bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 px-8"
                 >
                   Upgrade to Premium
                 </Button>
               </div>
             ) : (
-              <div className="flex gap-2">
+              <div className="flex gap-3">
                 <Textarea
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder="Ask about AI tools, strategies, implementation plans, or request a comprehensive transformation roadmap..."
-                  className="min-h-[60px] resize-none"
+                  className="min-h-[80px] resize-none rounded-2xl border-primary/30 bg-background/50 backdrop-blur-sm focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all duration-300"
                   disabled={isLoading}
                 />
                 <Button
                   onClick={sendMessage}
                   disabled={!input.trim() || isLoading}
-                  className="self-end"
+                  className="self-end h-20 px-8 rounded-2xl bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 gap-2"
                 >
-                  <Send className="h-4 w-4" />
+                  <Send className="h-5 w-5" />
+                  Send
                 </Button>
               </div>
             )}

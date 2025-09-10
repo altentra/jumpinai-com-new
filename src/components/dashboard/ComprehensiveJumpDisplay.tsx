@@ -173,21 +173,21 @@ export default function ComprehensiveJumpDisplay({ jump, onEdit, onDownload, cla
   const [activeTab, setActiveTab] = useState("overview");
 
   const TabCard: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className = "" }) => (
-    <Card className={`border-border/50 ${className}`}>
-      <CardContent className="p-6 space-y-6">
+    <Card className={`border-primary/20 bg-gradient-to-br from-card/90 to-primary/5 backdrop-blur-sm shadow-xl shadow-primary/5 rounded-3xl overflow-hidden ${className}`}>
+      <CardContent className="p-8 space-y-8">
         {children}
       </CardContent>
     </Card>
   );
 
   const SectionHeader: React.FC<{ icon: React.ReactNode; title: string; description?: string }> = ({ icon, title, description }) => (
-    <div className="flex items-start gap-3 mb-4">
-      <div className="p-2 bg-primary/10 rounded-lg text-primary">
+    <div className="flex items-start gap-4 mb-6">
+      <div className="p-3 bg-gradient-to-br from-primary/20 to-primary/10 rounded-2xl text-primary shadow-lg backdrop-blur-sm">
         {icon}
       </div>
       <div>
-        <h3 className="text-lg font-semibold text-foreground">{title}</h3>
-        {description && <p className="text-sm text-muted-foreground">{description}</p>}
+        <h3 className="text-xl font-bold text-foreground mb-2">{title}</h3>
+        {description && <p className="text-sm text-muted-foreground leading-relaxed">{description}</p>}
       </div>
     </div>
   );
@@ -970,37 +970,37 @@ export default function ComprehensiveJumpDisplay({ jump, onEdit, onDownload, cla
 
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <div className="overflow-x-auto">
-          <TabsList className="grid w-full min-w-[600px] grid-cols-6 mb-6">
-            <TabsTrigger value="overview" className="flex items-center gap-2 text-xs sm:text-sm">
+        <div className="overflow-x-auto pb-2">
+          <TabsList className="grid w-full min-w-[600px] grid-cols-6 mb-8 bg-gradient-to-r from-primary/10 via-secondary/5 to-primary/10 backdrop-blur-sm rounded-3xl p-2 shadow-lg border border-primary/20">
+            <TabsTrigger value="overview" className="flex items-center gap-2 text-xs sm:text-sm rounded-2xl data-[state=active]:bg-white/80 data-[state=active]:shadow-lg data-[state=active]:text-primary transition-all duration-300">
               <Star className="h-3 w-3 sm:h-4 sm:w-4" />
-              <span className="hidden sm:inline">Overview</span>
-              <span className="sm:hidden">Over</span>
+              <span className="hidden sm:inline font-medium">Overview</span>
+              <span className="sm:hidden font-medium">Over</span>
             </TabsTrigger>
-            <TabsTrigger value="analysis" className="flex items-center gap-2 text-xs sm:text-sm">
+            <TabsTrigger value="analysis" className="flex items-center gap-2 text-xs sm:text-sm rounded-2xl data-[state=active]:bg-white/80 data-[state=active]:shadow-lg data-[state=active]:text-primary transition-all duration-300">
               <BarChart3 className="h-3 w-3 sm:h-4 sm:w-4" />
-              <span className="hidden sm:inline">Analysis</span>
-              <span className="sm:hidden">Ana</span>
+              <span className="hidden sm:inline font-medium">Analysis</span>
+              <span className="sm:hidden font-medium">Ana</span>
             </TabsTrigger>
-            <TabsTrigger value="plan" className="flex items-center gap-2 text-xs sm:text-sm">
+            <TabsTrigger value="plan" className="flex items-center gap-2 text-xs sm:text-sm rounded-2xl data-[state=active]:bg-white/80 data-[state=active]:shadow-lg data-[state=active]:text-primary transition-all duration-300">
               <Target className="h-3 w-3 sm:h-4 sm:w-4" />
-              <span className="hidden sm:inline">Action Plan</span>
-              <span className="sm:hidden">Plan</span>
+              <span className="hidden sm:inline font-medium">Action Plan</span>
+              <span className="sm:hidden font-medium">Plan</span>
             </TabsTrigger>
-            <TabsTrigger value="tools" className="flex items-center gap-2 text-xs sm:text-sm">
+            <TabsTrigger value="tools" className="flex items-center gap-2 text-xs sm:text-sm rounded-2xl data-[state=active]:bg-white/80 data-[state=active]:shadow-lg data-[state=active]:text-primary transition-all duration-300">
               <Zap className="h-3 w-3 sm:h-4 sm:w-4" />
-              <span className="hidden sm:inline">Tools</span>
-              <span className="sm:hidden">Tool</span>
+              <span className="hidden sm:inline font-medium">Tools</span>
+              <span className="sm:hidden font-medium">Tool</span>
             </TabsTrigger>
-            <TabsTrigger value="workflows" className="flex items-center gap-2 text-xs sm:text-sm">
+            <TabsTrigger value="workflows" className="flex items-center gap-2 text-xs sm:text-sm rounded-2xl data-[state=active]:bg-white/80 data-[state=active]:shadow-lg data-[state=active]:text-primary transition-all duration-300">
               <Workflow className="h-3 w-3 sm:h-4 sm:w-4" />
-              <span className="hidden sm:inline">Workflows</span>
-              <span className="sm:hidden">Work</span>
+              <span className="hidden sm:inline font-medium">Workflows</span>
+              <span className="sm:hidden font-medium">Work</span>
             </TabsTrigger>
-            <TabsTrigger value="metrics" className="flex items-center gap-2 text-xs sm:text-sm">
+            <TabsTrigger value="metrics" className="flex items-center gap-2 text-xs sm:text-sm rounded-2xl data-[state=active]:bg-white/80 data-[state=active]:shadow-lg data-[state=active]:text-primary transition-all duration-300">
               <BarChart3 className="h-3 w-3 sm:h-4 sm:w-4" />
-              <span className="hidden sm:inline">Metrics</span>
-              <span className="sm:hidden">Met</span>
+              <span className="hidden sm:inline font-medium">Metrics</span>
+              <span className="sm:hidden font-medium">Met</span>
             </TabsTrigger>
           </TabsList>
         </div>
