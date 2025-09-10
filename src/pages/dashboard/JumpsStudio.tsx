@@ -203,12 +203,12 @@ export default function JumpsStudio() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 md:space-y-8 px-4 md:px-6">
       {/* Hero Section - Always visible */}
-      <div className="text-center space-y-6">
-        <div className="space-y-4">
-          <h1 className="text-4xl font-bold gradient-text-primary">Jumps Studio</h1>
-          <p className="text-xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
+      <div className="text-center space-y-4 md:space-y-6 py-6 md:py-8">
+        <div className="space-y-3 md:space-y-4">
+          <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold gradient-text-primary tracking-tight">Jumps Studio</h1>
+          <p className="text-base md:text-xl text-muted-foreground max-w-3xl md:max-w-4xl mx-auto leading-relaxed px-2">
             Transform your vision into reality with AI-powered strategic planning. 
             Create your personalized transformation journey that bridges where you are today 
             with where you want to be tomorrow.
@@ -217,26 +217,31 @@ export default function JumpsStudio() {
       </div>
 
       {/* Jump Selection Section */}
-      <div className="max-w-4xl mx-auto mb-8">
-        <div className="bg-gradient-to-br from-card to-muted/20 rounded-lg border border-border/50 p-6 shadow-sm">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h2 className="text-xl font-semibold">Choose Your Jump</h2>
-              <p className="text-muted-foreground text-sm mt-1">
+      <div className="max-w-4xl mx-auto mb-6 md:mb-8">
+        <div className="bg-gradient-to-br from-card/80 to-muted/30 backdrop-blur-sm rounded-2xl border border-border/30 p-4 md:p-6 shadow-lg shadow-primary/5">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+            <div className="space-y-1">
+              <h2 className="text-lg md:text-xl font-semibold">Choose Your Jump</h2>
+              <p className="text-muted-foreground text-xs md:text-sm">
                 Start a new transformation plan or continue working on an existing one
               </p>
             </div>
-            <Button onClick={handleCreateNewJump} variant="outline" className="gap-2">
+            <Button 
+              onClick={handleCreateNewJump} 
+              variant="outline" 
+              className="gap-2 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 shrink-0 w-full sm:w-auto"
+            >
               <Plus className="h-4 w-4" />
-              New Jump
+              <span className="hidden sm:inline">New Jump</span>
+              <span className="sm:hidden">Create New</span>
             </Button>
           </div>
           
           {existingJumps.length > 0 && (
-            <div className="space-y-4">
+            <div className="space-y-3 md:space-y-4">
               <div>
-                <Label>Continue Existing Jump</Label>
-                <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-muted scrollbar-track-transparent">
+                <Label className="text-sm font-medium">Continue Existing Jump</Label>
+                <div className="flex gap-3 md:gap-4 overflow-x-auto pb-3 pt-2 scrollbar-thin scrollbar-thumb-muted scrollbar-track-transparent">
                   {existingJumps.map((jump) => (
                     <MiniJumpCard
                       key={jump.id}
@@ -254,11 +259,11 @@ export default function JumpsStudio() {
 
       {/* Information Collection Section */}
       <div className="max-w-4xl mx-auto">
-        <div className="text-center space-y-4 mb-8">
-          <h2 className="text-2xl font-semibold">
+        <div className="text-center space-y-3 md:space-y-4 mb-6 md:mb-8">
+          <h2 className="text-xl md:text-2xl font-semibold px-2">
             {selectedJump ? `Working on: ${selectedJump.title}` : "Let's Create Your Personalized Jump"}
           </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-sm md:text-base text-muted-foreground max-w-xl md:max-w-2xl mx-auto px-4">
             {selectedJump 
               ? "Continue refining your transformation plan with AI-powered insights and guidance."
               : "To craft a transformation plan that truly fits your unique situation, we'll need to gather some key information about your goals, current position, and aspirations. This takes just a few minutes and enables us to create a highly tailored roadmap for your success."
@@ -268,27 +273,31 @@ export default function JumpsStudio() {
 
         {/* Jump Name Input for New Jumps */}
         {isNewJump && userProfile && (
-          <div className="mb-6">
-            <Label htmlFor="jump-name">Jump Name</Label>
+          <div className="mb-4 md:mb-6 p-4 md:p-6 bg-gradient-to-r from-primary/5 to-secondary/5 rounded-2xl border border-border/20 shadow-md">
+            <Label htmlFor="jump-name" className="text-sm font-medium">Jump Name</Label>
             <Input
               id="jump-name"
               value={jumpName}
               onChange={(e) => setJumpName(e.target.value)}
               placeholder="Enter a name for your transformation plan..."
-              className="mt-2"
+              className="mt-2 rounded-xl border-border/30 focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-200"
             />
           </div>
         )}
 
         {/* Profile Form - Only show for new jumps or when no jump is selected */}
         {(!selectedJump || isNewJump) && (
-          <div className="bg-gradient-to-br from-card to-muted/20 rounded-lg border border-border/50 p-6 shadow-sm">
+          <div className="bg-gradient-to-br from-card/90 to-muted/30 backdrop-blur-sm rounded-2xl border border-border/30 p-4 md:p-6 shadow-lg shadow-primary/10">
             {userProfile ? (
               <Collapsible open={isProfileFormOpen} onOpenChange={setIsProfileFormOpen}>
                 <CollapsibleTrigger asChild>
-                  <Button variant="outline" className="w-full gap-2">
+                  <Button 
+                    variant="outline" 
+                    className="w-full gap-2 rounded-xl shadow-sm hover:shadow-md transition-all duration-200"
+                  >
                     {isProfileFormOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                    {isProfileFormOpen ? 'Hide' : 'Show'} Profile Details
+                    <span className="hidden sm:inline">{isProfileFormOpen ? 'Hide' : 'Show'} Profile Details</span>
+                    <span className="sm:hidden">{isProfileFormOpen ? 'Hide' : 'Show'} Profile</span>
                   </Button>
                 </CollapsibleTrigger>
                 <CollapsibleContent className="space-y-4 mt-4">
@@ -306,10 +315,10 @@ export default function JumpsStudio() {
             )}
             
             {/* Privacy Notice */}
-            <div className="mt-6 pt-4 border-t border-border/30">
-              <p className="text-xs text-muted-foreground text-center">
+            <div className="mt-4 md:mt-6 pt-3 md:pt-4 border-t border-border/20">
+              <p className="text-xs text-muted-foreground text-center leading-relaxed">
                 All information is kept strictly confidential and private. We do not sell or share your data.{' '}
-                <a href="/privacy-policy" className="underline hover:text-foreground transition-colors">
+                <a href="/privacy-policy" className="underline hover:text-foreground transition-colors font-medium">
                   Privacy Policy
                 </a>
               </p>
@@ -320,36 +329,40 @@ export default function JumpsStudio() {
 
       {/* Jump Plan Display and Chat - Shows after profile submission or jump selection */}
       {(userProfile || selectedJump) && (
-        <div className="space-y-6">
+        <div className="space-y-4 md:space-y-6">
           {/* Jump Plan Display - Always show the module */}
-          {jumpPlan || structuredPlan ? (
-            <JumpPlanDisplay 
-              planContent={jumpPlan}
-              structuredPlan={structuredPlan}
-              onEdit={handleStartChat}
-              onDownload={downloadPlan}
-            />
-          ) : (
-            <ComprehensiveJumpDisplay
-              jump={emptyPlan}
-              onEdit={handleStartChat}
-              onDownload={() => {}}
-            />
-          )}
+          <div className="rounded-2xl overflow-hidden shadow-lg shadow-primary/5">
+            {jumpPlan || structuredPlan ? (
+              <JumpPlanDisplay 
+                planContent={jumpPlan}
+                structuredPlan={structuredPlan}
+                onEdit={handleStartChat}
+                onDownload={downloadPlan}
+              />
+            ) : (
+              <ComprehensiveJumpDisplay
+                jump={emptyPlan}
+                onEdit={handleStartChat}
+                onDownload={() => {}}
+              />
+            )}
+          </div>
           
           {/* Chat Interface - Shows for new jumps after profile or always for existing jumps */}
           {showChat && (
-            <AICoachChat 
-              userProfile={userProfile || ({ currentRole: 'Professional' } as UserProfile)} 
-              onPlanGenerated={handlePlanGenerated}
-              onJumpSaved={handleJumpSaved}
-              initialPlan={jumpPlan}
-              isRefinementMode={!!jumpPlan || !!selectedJump}
-              hideChat={false}
-              currentJumpId={currentJumpId}
-              jumpName={jumpName}
-              isNewJump={isNewJump}
-            />
+            <div className="rounded-2xl overflow-hidden shadow-lg shadow-primary/5">
+              <AICoachChat 
+                userProfile={userProfile || ({ currentRole: 'Professional' } as UserProfile)} 
+                onPlanGenerated={handlePlanGenerated}
+                onJumpSaved={handleJumpSaved}
+                initialPlan={jumpPlan}
+                isRefinementMode={!!jumpPlan || !!selectedJump}
+                hideChat={false}
+                currentJumpId={currentJumpId}
+                jumpName={jumpName}
+                isNewJump={isNewJump}
+              />
+            </div>
           )}
         </div>
       )}
