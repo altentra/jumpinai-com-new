@@ -16,11 +16,26 @@ export const safeParseJSON = (text: string): any | null => {
   // Strip common code fences (single or multi)
   cleaned = cleaned.replace(/^```(?:json)?\s*/i, '').replace(/```$/i, '').trim();
 
+  // Attempt parse again
+  obj = tryParse(cleaned);
+  if (obj) return obj;
+
   // Extract largest object slice
-  const startIdx = cleaned.indexOf('{');
-  const endIdx = cleaned.lastIndexOf('}');
-  if (startIdx !== -1 && endIdx !== -1 && endIdx > startIdx) {
-    cleaned = cleaned.slice(startIdx, endIdx + 1);
+  const firstBrace = cleaned.indexOf('{');
+  const lastBrace = cleaned.lastIndexOf('}');
+  if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+    const sliceObj = cleaned.slice(firstBrace, lastBrace + 1);
+    obj = tryParse(sliceObj);
+    if (obj) return obj;
+  }
+
+  // Extract largest array slice (in case the model returned an array)
+  const firstBracket = cleaned.indexOf('[');
+  const lastBracket = cleaned.lastIndexOf(']');
+  if (firstBracket !== -1 && lastBracket !== -1 && lastBracket > firstBracket) {
+    const sliceArr = cleaned.slice(firstBracket, lastBracket + 1);
+    obj = tryParse(sliceArr);
+    if (obj) return obj;
   }
 
   // Remove BOM if present
@@ -56,8 +71,8 @@ export const safeParseJSON = (text: string): any | null => {
   const stack: number[] = [];
   for (let i = 0; i < cleaned.length; i++) {
     const ch = cleaned[i];
-    if (ch === '{') stack.push(i);
-    if (ch === '}' && stack.length) {
+    if (ch === '{' || ch === '[') stack.push(i);
+    if ((ch === '}' || ch === ']') && stack.length) {
       const s = stack.pop()!;
       if (stack.length === 0) candidates.push(cleaned.slice(s, i + 1));
     }
