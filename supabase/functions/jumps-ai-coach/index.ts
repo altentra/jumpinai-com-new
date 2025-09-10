@@ -797,7 +797,7 @@ serve(async (req) => {
       } else {
         console.log('[jump-plan] Successfully parsed on attempt 1');
       }
-      }
+      // Removed stray brace to keep content generation inside this block
 
       // Convert structured plan back to formatted text for backward compatibility
       if (jumpPlan) {
