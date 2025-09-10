@@ -115,7 +115,26 @@ export default function JumpDetailModal({ jump, isOpen, onClose }: JumpDetailMod
               );
             }
 
-            // Fallback to markdown view
+            // Fallback when no structured plan detected
+            const looksLikeJson = typeof jump.full_content === 'string'
+              && /[\{\[][\s\S]*[\}\]]/.test(jump.full_content)
+              && /\"title\"|\"overview\"|\"action_plan\"|\"metrics_tracking\"/.test(jump.full_content);
+
+            if (looksLikeJson) {
+              return (
+                <div className="p-6 border border-border/30 rounded-lg bg-muted/20 text-center">
+                  <h3 className="text-lg font-semibold text-foreground mb-2">Structured plan is being processed</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    We detected JSON-like content from the AI. We're normalizing it into your 6-tab plan. Please reopen this jump in Jumps Studio or refresh.
+                  </p>
+                  <Button variant="outline" size="sm" onClick={() => (window.location.href = '/dashboard/jumps-studio')}>
+                    Open in Jumps Studio
+                  </Button>
+                </div>
+              );
+            }
+
+            // Markdown fallback
             return (
               <div className="prose prose-slate dark:prose-invert max-w-none">
                 <ReactMarkdown 

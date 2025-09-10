@@ -14,6 +14,7 @@ import { useOptimizedAuth } from '@/hooks/useOptimizedAuth';
 import MiniJumpCard from '@/components/dashboard/MiniJumpCard';
 import { generateJumpPDF } from '@/utils/pdfGenerator';
 import { toast } from 'sonner';
+import { safeParseJSON } from '@/utils/safeJson';
 
 export default function JumpsStudio() {
   const { userDisplay } = useOptimizedAuth();
@@ -116,7 +117,12 @@ export default function JumpsStudio() {
 
   const handlePlanGenerated = (data: { content: string; structuredPlan?: any; comprehensivePlan?: any }) => {
     setJumpPlan(data.content);
-    setStructuredPlan(data.structuredPlan || data.comprehensivePlan);
+    if (data.structuredPlan || data.comprehensivePlan) {
+      setStructuredPlan(data.structuredPlan || data.comprehensivePlan);
+    } else {
+      const parsed = safeParseJSON(data.content);
+      if (parsed) setStructuredPlan(parsed);
+    }
   };
 
   const handleJumpSaved = (jumpId: string) => {

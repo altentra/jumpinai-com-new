@@ -187,7 +187,13 @@ const enhancedContent = React.useMemo(() => formatAIText(planContent), [planCont
 const finalPlan = React.useMemo(() => {
   if (comprehensivePlan) return comprehensivePlan;
   const fallback = buildDefaultPlan();
-  if (planContent && planContent.trim()) {
+
+  // Avoid dumping raw JSON into the executive summary if parsing failed
+  const isJSONish = typeof planContent === 'string'
+    && /[{\[][\s\S]*[}\]]/.test(planContent)
+    && /"title"|"overview"|"action_plan"|"metrics_tracking"/.test(planContent);
+
+  if (planContent && planContent.trim() && !isJSONish) {
     const text = enhancedContent.replace(/[#>*`]/g, '').trim();
     fallback.executive_summary = text;
   }
