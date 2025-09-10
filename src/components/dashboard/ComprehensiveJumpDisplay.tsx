@@ -452,30 +452,62 @@ export default function ComprehensiveJumpDisplay({ jump, onEdit, onDownload, cla
         <SectionHeader 
           icon={<Zap className="h-5 w-5" />} 
           title="Recommended AI Tools"
-          description="Tools specifically selected for your transformation"
+          description="Essential AI tools for your transformation journey"
         />
-        <div className="grid gap-4">
-          {jump.tools_prompts.recommended_ai_tools.map((tool, index) => (
-            <Card key={index} className="border-border/30">
-              <CardContent className="p-4">
-                <div className="flex items-start justify-between mb-2">
-                  <h5 className="font-medium text-foreground">{tool.tool}</h5>
-                  <div className="flex gap-2">
-                    <Badge variant="outline" className="text-xs">{tool.category}</Badge>
-                    <Badge variant={tool.integration_priority === 'High' ? 'destructive' : tool.integration_priority === 'Medium' ? 'default' : 'secondary'} className="text-xs">
-                      {tool.integration_priority}
-                    </Badge>
+        {jump.tools_prompts.recommended_ai_tools.length > 0 ? (
+          <div className="grid gap-4">
+            {jump.tools_prompts.recommended_ai_tools.map((tool, index) => (
+              <Card key={index} className="border-border/30">
+                <CardContent className="p-4">
+                  <div className="flex items-start justify-between mb-2">
+                    <h5 className="font-medium text-foreground">{tool.tool}</h5>
+                    <div className="flex gap-2">
+                      <Badge variant="outline" className="text-xs">{tool.category}</Badge>
+                      <Badge variant={tool.integration_priority === 'High' ? 'destructive' : tool.integration_priority === 'Medium' ? 'default' : 'secondary'} className="text-xs">
+                        {tool.integration_priority}
+                      </Badge>
+                    </div>
                   </div>
-                </div>
-                <p className="text-sm text-muted-foreground mb-2">{tool.use_case}</p>
-                <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                  <span><strong>Learning:</strong> {tool.learning_curve}</span>
-                  <span><strong>Cost:</strong> {tool.cost_estimate}</span>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                  <p className="text-sm text-muted-foreground mb-2">{tool.use_case}</p>
+                  <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                    <span><strong>Learning:</strong> {tool.learning_curve}</span>
+                    <span><strong>Cost:</strong> {tool.cost_estimate}</span>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <div className="grid gap-4">
+            {/* Popular AI Tools */}
+            {[
+              { name: "ChatGPT", category: "General AI", url: "https://chat.openai.com", description: "Conversational AI for ideation, writing, and problem-solving" },
+              { name: "Claude", category: "AI Assistant", url: "https://claude.ai", description: "Advanced AI for analysis, writing, and complex reasoning" },
+              { name: "Midjourney", category: "Image Generation", url: "https://midjourney.com", description: "AI-powered image creation and visual content" },
+              { name: "Notion AI", category: "Productivity", url: "https://notion.so", description: "AI-enhanced note-taking and knowledge management" },
+              { name: "Perplexity", category: "Research", url: "https://perplexity.ai", description: "AI-powered search and research assistant" },
+              { name: "GitHub Copilot", category: "Development", url: "https://github.com/features/copilot", description: "AI pair programmer for code generation" }
+            ].map((tool, index) => (
+              <Card key={index} className="border-border/30 hover:border-primary/30 transition-colors">
+                <CardContent className="p-4">
+                  <div className="flex items-start justify-between mb-2">
+                    <h5 className="font-medium text-foreground">{tool.name}</h5>
+                    <Badge variant="outline" className="text-xs">{tool.category}</Badge>
+                  </div>
+                  <p className="text-sm text-muted-foreground mb-3">{tool.description}</p>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="w-full" 
+                    onClick={() => window.open(tool.url, '_blank')}
+                  >
+                    Visit {tool.name}
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
       </TabCard>
 
       {/* Custom Prompts */}
@@ -510,50 +542,95 @@ export default function ComprehensiveJumpDisplay({ jump, onEdit, onDownload, cla
 
   const renderWorkflowsStrategies = () => (
     <div className="space-y-6">
-      {/* Workflows */}
+      {/* Quick Access to Resources */}
       <TabCard>
         <SectionHeader 
-          icon={<Workflow className="h-5 w-5" />} 
-          title="Workflows"
-          description="Step-by-step processes for consistent execution"
+          icon={<BookOpen className="h-5 w-5" />} 
+          title="Your Resource Library"
+          description="Access all your generated prompts, workflows, and strategies"
         />
-        <div className="space-y-4">
-          {jump.workflows_strategies.workflows.map((workflow, index) => (
-            <Card key={index} className="border-border/30">
-              <CardContent className="p-4">
-                <div className="flex items-start justify-between mb-2">
-                  <h5 className="font-medium text-foreground">{workflow.title}</h5>
-                  <div className="flex gap-2">
-                    <Badge variant="outline" className="text-xs">{workflow.automation_level}</Badge>
-                    <Badge variant="secondary" className="text-xs">{workflow.frequency}</Badge>
-                  </div>
-                </div>
-                <p className="text-sm text-muted-foreground mb-3">{workflow.description}</p>
-                <div className="text-xs text-muted-foreground mb-3">
-                  <strong>Trigger:</strong> {workflow.trigger}
-                </div>
-                <div className="space-y-2">
-                  {workflow.steps.map((step, stepIndex) => (
-                    <div key={stepIndex} className="flex items-start gap-3 p-2 bg-muted/20 rounded">
-                      <div className="flex items-center justify-center w-6 h-6 bg-primary text-primary-foreground rounded-full text-xs font-bold">
-                        {stepIndex + 1}
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-sm font-medium text-foreground">{step.step}</p>
-                        <p className="text-xs text-muted-foreground">{step.description}</p>
-                        <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
-                          <span>Tools: {step.tools_used.join(', ')}</span>
-                          <span>Time: {step.estimated_time}</span>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+        <div className="grid md:grid-cols-3 gap-4">
+          <Card className="border-border/30 hover:border-primary/30 transition-colors cursor-pointer" onClick={() => window.location.href = '/dashboard/prompts'}>
+            <CardContent className="p-6 text-center">
+              <BookOpen className="h-8 w-8 text-primary mx-auto mb-3" />
+              <h5 className="font-medium text-foreground mb-2">My Prompts</h5>
+              <p className="text-sm text-muted-foreground mb-4">Access your custom AI prompts</p>
+              <Button variant="outline" size="sm" className="w-full">
+                View Prompts
+              </Button>
+            </CardContent>
+          </Card>
+          
+          <Card className="border-border/30 hover:border-primary/30 transition-colors cursor-pointer" onClick={() => window.location.href = '/dashboard/workflows'}>
+            <CardContent className="p-6 text-center">
+              <Workflow className="h-8 w-8 text-primary mx-auto mb-3" />
+              <h5 className="font-medium text-foreground mb-2">My Workflows</h5>
+              <p className="text-sm text-muted-foreground mb-4">View your process workflows</p>
+              <Button variant="outline" size="sm" className="w-full">
+                View Workflows
+              </Button>
+            </CardContent>
+          </Card>
+          
+          <Card className="border-border/30 hover:border-primary/30 transition-colors cursor-pointer" onClick={() => window.location.href = '/dashboard/strategies'}>
+            <CardContent className="p-6 text-center">
+              <Lightbulb className="h-8 w-8 text-primary mx-auto mb-3" />
+              <h5 className="font-medium text-foreground mb-2">My Strategies</h5>
+              <p className="text-sm text-muted-foreground mb-4">Explore strategic approaches</p>
+              <Button variant="outline" size="sm" className="w-full">
+                View Strategies
+              </Button>
+            </CardContent>
+          </Card>
         </div>
       </TabCard>
+
+      {/* Workflows */}
+      {jump.workflows_strategies.workflows.length > 0 && (
+        <TabCard>
+          <SectionHeader 
+            icon={<Workflow className="h-5 w-5" />} 
+            title="Workflows"
+            description="Step-by-step processes for consistent execution"
+          />
+          <div className="space-y-4">
+            {jump.workflows_strategies.workflows.map((workflow, index) => (
+              <Card key={index} className="border-border/30">
+                <CardContent className="p-4">
+                  <div className="flex items-start justify-between mb-2">
+                    <h5 className="font-medium text-foreground">{workflow.title}</h5>
+                    <div className="flex gap-2">
+                      <Badge variant="outline" className="text-xs">{workflow.automation_level}</Badge>
+                      <Badge variant="secondary" className="text-xs">{workflow.frequency}</Badge>
+                    </div>
+                  </div>
+                  <p className="text-sm text-muted-foreground mb-3">{workflow.description}</p>
+                  <div className="text-xs text-muted-foreground mb-3">
+                    <strong>Trigger:</strong> {workflow.trigger}
+                  </div>
+                  <div className="space-y-2">
+                    {workflow.steps.map((step, stepIndex) => (
+                      <div key={stepIndex} className="flex items-start gap-3 p-2 bg-muted/20 rounded">
+                        <div className="flex items-center justify-center w-6 h-6 bg-primary text-primary-foreground rounded-full text-xs font-bold">
+                          {stepIndex + 1}
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-sm font-medium text-foreground">{step.step}</p>
+                          <p className="text-xs text-muted-foreground">{step.description}</p>
+                          <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
+                            <span>Tools: {step.tools_used.join(', ')}</span>
+                            <span>Time: {step.estimated_time}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </TabCard>
+      )}
 
       {/* Strategies */}
       <TabCard>
@@ -610,31 +687,76 @@ export default function ComprehensiveJumpDisplay({ jump, onEdit, onDownload, cla
 
   const renderMetricsTracking = () => (
     <div className="space-y-6">
-      {/* KPIs */}
+      {/* Progress Dashboard */}
       <TabCard>
         <SectionHeader 
-          icon={<BarChart3 className="h-5 w-5" />} 
-          title="Key Performance Indicators"
-          description="Metrics to measure your transformation success"
+          icon={<TrendingUp className="h-5 w-5" />} 
+          title="Transformation Progress Dashboard"
+          description="Track your AI journey and learning milestones"
         />
-        <div className="grid gap-4">
-          {jump.metrics_tracking.kpis.map((kpi, index) => (
-            <Card key={index} className="border-border/30">
-              <CardContent className="p-4">
-                <div className="flex items-start justify-between mb-2">
-                  <h5 className="font-medium text-foreground">{kpi.metric}</h5>
-                  <Badge variant="outline" className="text-xs">{kpi.measurement_frequency}</Badge>
-                </div>
-                <p className="text-sm text-muted-foreground mb-2">{kpi.description}</p>
-                <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                  <span><strong>Target:</strong> {kpi.target}</span>
-                  <span><strong>Source:</strong> {kpi.data_source}</span>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+        <div className="grid md:grid-cols-3 gap-6 mb-6">
+          <Card className="border-border/30">
+            <CardContent className="p-6 text-center">
+              <div className="text-3xl font-bold text-primary mb-2">0%</div>
+              <p className="text-sm text-muted-foreground">Overall Progress</p>
+              <Progress value={0} className="mt-3" />
+            </CardContent>
+          </Card>
+          
+          <Card className="border-border/30">
+            <CardContent className="p-6 text-center">
+              <div className="text-3xl font-bold text-green-600 mb-2">0</div>
+              <p className="text-sm text-muted-foreground">Skills Mastered</p>
+            </CardContent>
+          </Card>
+          
+          <Card className="border-border/30">
+            <CardContent className="p-6 text-center">
+              <div className="text-3xl font-bold text-blue-600 mb-2">0h</div>
+              <p className="text-sm text-muted-foreground">Time Invested</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Coming Soon Notice */}
+        <div className="text-center p-8 bg-muted/20 rounded-lg">
+          <BarChart3 className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+          <h4 className="text-lg font-medium text-foreground mb-2">Progress Tracking Coming Soon</h4>
+          <p className="text-muted-foreground mb-4">
+            We're building advanced analytics to help you track your learning progress, 
+            skill development, and transformation milestones with interactive charts and insights.
+          </p>
+          <Badge variant="secondary">Feature in Development</Badge>
         </div>
       </TabCard>
+
+      {/* KPIs */}
+      {jump.metrics_tracking.kpis.length > 0 && (
+        <TabCard>
+          <SectionHeader 
+            icon={<BarChart3 className="h-5 w-5" />} 
+            title="Key Performance Indicators"
+            description="Metrics to measure your transformation success"
+          />
+          <div className="grid gap-4">
+            {jump.metrics_tracking.kpis.map((kpi, index) => (
+              <Card key={index} className="border-border/30">
+                <CardContent className="p-4">
+                  <div className="flex items-start justify-between mb-2">
+                    <h5 className="font-medium text-foreground">{kpi.metric}</h5>
+                    <Badge variant="outline" className="text-xs">{kpi.measurement_frequency}</Badge>
+                  </div>
+                  <p className="text-sm text-muted-foreground mb-2">{kpi.description}</p>
+                  <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                    <span><strong>Target:</strong> {kpi.target}</span>
+                    <span><strong>Source:</strong> {kpi.data_source}</span>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </TabCard>
+      )}
 
       {/* Reporting Schedule */}
       <TabCard>
