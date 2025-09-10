@@ -398,11 +398,7 @@ export default function AICoachChat({
         try {
           let structuredPlan = (response as any)?.data?.structured_plan || null;
           if (!structuredPlan) {
-            // Try to parse assistant text as JSON
-            try { structuredPlan = JSON.parse(aiText); } catch {
-              const cleaned = aiText.replace(/^```(?:json)?\s*/i, '').replace(/```$/i, '').trim();
-              try { structuredPlan = JSON.parse(cleaned); } catch { /* keep null */ }
-            }
+            structuredPlan = safeParseJSON(aiText);
           }
           await updateJump(currentJumpId, {
             title: jumpName || extractTitle(aiText),

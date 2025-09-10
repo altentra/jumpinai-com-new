@@ -74,7 +74,7 @@ verify_jwt = true
 verify_jwt = false
 
 [functions.jumps-ai-coach]
-verify_jwt = true
+verify_jwt = false
 
 [realtime]
 enabled = true
