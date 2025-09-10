@@ -23,10 +23,16 @@ interface Message {
   timestamp: Date;
 }
 
+interface PlanGeneratedData {
+  content: string;
+  structuredPlan?: any;
+  comprehensivePlan?: any;
+}
+
 interface AICoachChatProps {
   userProfile: UserProfile;
   onBack?: () => void;
-  onPlanGenerated?: (plan: string, structuredPlan?: any) => void;
+  onPlanGenerated?: (data: PlanGeneratedData) => void;
   onJumpSaved?: (jumpId: string) => void;
   hideChat?: boolean;
   initialPlan?: string;
@@ -175,7 +181,12 @@ export default function AICoachChat({
         if (onPlanGenerated && aiText) {
           // Extract structured plan if available
           const structuredPlan = response?.data?.structured_plan || null;
-          onPlanGenerated(aiText, structuredPlan);
+          
+          onPlanGenerated({
+            content: aiText,
+            structuredPlan: structuredPlan,
+            comprehensivePlan: structuredPlan // The new format is comprehensive by default
+          });
           
           // Auto-save or update the jump to database
           if (aiText.trim()) {
@@ -186,7 +197,9 @@ export default function AICoachChat({
                   title: jumpName || extractTitle(aiText),
                   summary: extractSummary(aiText),
                   full_content: aiText,
-                  structured_plan: structuredPlan
+                  structured_plan: structuredPlan,
+                  comprehensive_plan: structuredPlan, // Save as comprehensive plan
+                  jump_type: 'comprehensive'
                 });
                 
                 if (updatedJump && onJumpSaved) {
@@ -384,11 +397,17 @@ export default function AICoachChat({
             title: jumpName || extractTitle(aiText),
             summary: extractSummary(aiText),
             full_content: aiText,
-            structured_plan: structuredPlan
+            structured_plan: structuredPlan,
+            comprehensive_plan: structuredPlan,
+            jump_type: 'comprehensive'
           });
           
           if (onPlanGenerated) {
-            onPlanGenerated(aiText, structuredPlan);
+            onPlanGenerated({
+              content: aiText,
+              structuredPlan: structuredPlan,
+              comprehensivePlan: structuredPlan
+            });
           }
         } catch (error) {
           console.error('Error updating jump during chat:', error);

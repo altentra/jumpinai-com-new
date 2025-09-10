@@ -376,10 +376,14 @@ export type Database = {
       }
       user_jumps: {
         Row: {
+          completion_percentage: number | null
+          comprehensive_plan: Json | null
           created_at: string
           full_content: string
           id: string
+          jump_type: string | null
           profile_id: string | null
+          status: string | null
           structured_plan: Json | null
           summary: string | null
           title: string
@@ -387,10 +391,14 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          completion_percentage?: number | null
+          comprehensive_plan?: Json | null
           created_at?: string
           full_content: string
           id?: string
+          jump_type?: string | null
           profile_id?: string | null
+          status?: string | null
           structured_plan?: Json | null
           summary?: string | null
           title: string
@@ -398,10 +406,14 @@ export type Database = {
           user_id: string
         }
         Update: {
+          completion_percentage?: number | null
+          comprehensive_plan?: Json | null
           created_at?: string
           full_content?: string
           id?: string
+          jump_type?: string | null
           profile_id?: string | null
+          status?: string | null
           structured_plan?: Json | null
           summary?: string | null
           title?: string

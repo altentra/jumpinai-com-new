@@ -8,6 +8,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { generateJumpPDF } from '@/utils/pdfGenerator';
 import JumpPlanDisplay from './JumpPlanDisplay';
+import ComprehensiveJumpDisplay from './ComprehensiveJumpDisplay';
 
 interface JumpDetailModalProps {
   jump: UserJump | null;
@@ -63,7 +64,13 @@ export default function JumpDetailModal({ jump, isOpen, onClose }: JumpDetailMod
         </DialogHeader>
 
         <div className="flex-1 overflow-y-auto py-4">
-          {jump.structured_plan ? (
+          {jump.comprehensive_plan ? (
+            <ComprehensiveJumpDisplay
+              jump={jump.comprehensive_plan}
+              onEdit={() => {}}
+              onDownload={downloadPlan}
+            />
+          ) : jump.structured_plan ? (
             <JumpPlanDisplay
               planContent={jump.full_content}
               structuredPlan={jump.structured_plan}

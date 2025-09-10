@@ -58,9 +58,9 @@ export default function JumpsStudio() {
     setShowChat(true); // Show chat immediately
   };
 
-  const handlePlanGenerated = (plan: string, structuredPlanData?: any) => {
-    setJumpPlan(plan);
-    setStructuredPlan(structuredPlanData);
+  const handlePlanGenerated = (data: { content: string; structuredPlan?: any; comprehensivePlan?: any }) => {
+    setJumpPlan(data.content);
+    setStructuredPlan(data.structuredPlan || data.comprehensivePlan);
   };
 
   const handleJumpSaved = (jumpId: string) => {

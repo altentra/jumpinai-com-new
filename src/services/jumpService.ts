@@ -8,6 +8,10 @@ export interface UserJump {
   summary: string | null;
   full_content: string;
   structured_plan?: any;
+  comprehensive_plan?: any;
+  jump_type?: string;
+  status?: string;
+  completion_percentage?: number;
   created_at: string;
   updated_at: string;
 }
@@ -18,6 +22,10 @@ export interface CreateJumpData {
   summary?: string;
   full_content: string;
   structured_plan?: any;
+  comprehensive_plan?: any;
+  jump_type?: string;
+  status?: string;
+  completion_percentage?: number;
 }
 
 // Create a new jump
@@ -36,7 +44,11 @@ export const createJump = async (jumpData: CreateJumpData): Promise<UserJump | n
       title: jumpData.title,
       summary: jumpData.summary || null,
       full_content: jumpData.full_content,
-      structured_plan: jumpData.structured_plan || null
+      structured_plan: jumpData.structured_plan || null,
+      comprehensive_plan: jumpData.comprehensive_plan || null,
+      jump_type: jumpData.jump_type || 'comprehensive',
+      status: jumpData.status || 'active',
+      completion_percentage: jumpData.completion_percentage || 0
     })
     .select()
     .single();
