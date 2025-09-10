@@ -152,17 +152,76 @@ async function callOpenAI(
   return { content, usage: data.usage, finish_reason };
 }
 
-// Helper: robust JSON parser with extraction fallback
+// Helper: robust JSON parser with extraction + repair attempts
 const safeParse = (text: string): any | null => {
-  try { return JSON.parse(text); } catch (_) {}
-  try {
-    const start = text.indexOf('{');
-    const end = text.lastIndexOf('}');
-    if (start !== -1 && end !== -1 && end > start) {
-      const sliced = text.slice(start, end + 1);
-      return JSON.parse(sliced);
+  if (!text || typeof text !== 'string') return null;
+
+  const tryParse = (t: string) => {
+    try { return JSON.parse(t); } catch { return null; }
+  };
+
+  // 1) Direct parse
+  let obj = tryParse(text);
+  if (obj) return obj;
+
+  // 2) Normalize/clean input
+  let cleaned = text.trim();
+
+  // Strip code fences
+  cleaned = cleaned.replace(/^```(?:json)?\s*/i, '').replace(/```$/i, '').trim();
+
+  // Extract largest object slice
+  const startIdx = cleaned.indexOf('{');
+  const endIdx = cleaned.lastIndexOf('}');
+  if (startIdx !== -1 && endIdx !== -1 && endIdx > startIdx) {
+    cleaned = cleaned.slice(startIdx, endIdx + 1);
+  }
+
+  // Remove BOM if present
+  cleaned = cleaned.replace(/^\uFEFF/, '');
+
+  // Normalize smart quotes
+  cleaned = cleaned.replace(/[\u201C\u201D]/g, '"').replace(/[\u2018\u2019]/g, "'");
+
+  // Remove JS-style comments
+  cleaned = cleaned.replace(/\/\*[\s\S]*?\*\//g, '').replace(/(^|\s)\/\/.*$/gm, '');
+
+  // Remove trailing commas
+  cleaned = cleaned.replace(/,(\s*[}\]])/g, '$1');
+
+  obj = tryParse(cleaned);
+  if (obj) return obj;
+
+  // 3) Attempt single-quoted JSON repair (cautious)
+  const singleCount = (cleaned.match(/'/g) || []).length;
+  const doubleCount = (cleaned.match(/\"/g) || []).length;
+  if (doubleCount < singleCount) {
+    const singleToDouble = cleaned
+      // property names
+      .replace(/'([^'\\]*(\\.[^'\\]*)*)'\s*:/g, '"$1":')
+      // string values
+      .replace(/:\s*'([^'\\]*(\\.[^'\\]*)*)'/g, ': "$1"');
+    obj = tryParse(singleToDouble);
+    if (obj) return obj;
+  }
+
+  // 4) Try parsing candidate top-level objects greedily
+  const candidates: string[] = [];
+  const stack: number[] = [];
+  for (let i = 0; i < cleaned.length; i++) {
+    const ch = cleaned[i];
+    if (ch === '{') stack.push(i);
+    if (ch === '}' && stack.length) {
+      const s = stack.pop()!;
+      if (stack.length === 0) candidates.push(cleaned.slice(s, i + 1));
     }
-  } catch (_) {}
+  }
+  for (const cand of candidates) {
+    const fixed = cand.replace(/,(\s*[}\]])/g, '$1');
+    obj = tryParse(fixed);
+    if (obj) return obj;
+  }
+
   return null;
 };
 
@@ -609,6 +668,7 @@ serve(async (req) => {
     if (!shouldGenerateComponents) {
       const systemJSON = 'Return ONLY a single valid JSON object with the requested structure. No markdown, no code fences, no commentary.';
       
+      let rawContent = '';
       const res1 = await callOpenAI([
         { role: 'system', content: systemJSON },
         { role: 'user', content: systemPrompt },
@@ -617,6 +677,7 @@ serve(async (req) => {
       
       usage = res1.usage;
       finish_reason = res1.finish_reason;
+      rawContent = res1.content;
       
       jumpPlan = safeParse(res1.content);
       
@@ -630,6 +691,7 @@ serve(async (req) => {
           ...recentMessages
         ], 1800, true, 'gpt-4.1-2025-04-14');
         
+        rawContent = repair.content || rawContent;
         jumpPlan = safeParse(repair.content);
         if (!jumpPlan) {
           console.warn('[jump-plan] parse failed (attempt 2). First 400 chars:', repair.content?.slice(0, 400));
@@ -640,7 +702,7 @@ serve(async (req) => {
       if (jumpPlan) {
         content = formatJumpPlanToText(jumpPlan);
       } else {
-        content = "Sorry, I couldn't complete the plan this time. Please try again in a moment.";
+        content = rawContent?.trim() ? rawContent : "Sorry, I couldn't complete the plan this time. Please try again in a moment.";
       }
     }
 
