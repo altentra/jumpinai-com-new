@@ -946,11 +946,11 @@ export default function ComprehensiveJumpDisplay({ jump, onEdit, onDownload, cla
   return (
     <div className={`w-full max-w-6xl mx-auto px-4 sm:px-6 ${className}`}>
       {/* Header */}
-      <div className="mb-6 sm:mb-8">
+      <div className="mb-6 sm:mb-8 pt-4 sm:pt-6">
         <div className="flex flex-col gap-3 sm:gap-4">
           <div className="w-full max-w-full overflow-hidden">
-            <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground mb-2 break-words hyphens-auto leading-tight max-w-full">{jump.title}</h1>
-            <p className="text-xs sm:text-sm lg:text-base text-muted-foreground leading-relaxed break-words max-w-full overflow-wrap-anywhere">{jump.executive_summary}</p>
+            <h1 className="text-base sm:text-lg lg:text-xl font-bold text-foreground mb-2 break-words hyphens-auto leading-tight max-w-full">{jump.title}</h1>
+            <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed break-words max-w-full overflow-wrap-anywhere">{jump.executive_summary}</p>
           </div>
           <div className="flex flex-wrap gap-1 justify-start sm:justify-end">
             {onEdit && (
@@ -971,35 +971,35 @@ export default function ComprehensiveJumpDisplay({ jump, onEdit, onDownload, cla
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <div className="overflow-x-auto pb-2">
-          <TabsList className="grid w-full min-w-[600px] grid-cols-6 mb-8 bg-gradient-to-r from-primary/10 via-secondary/5 to-primary/10 backdrop-blur-sm rounded-3xl p-2 shadow-lg border border-primary/20">
-            <TabsTrigger value="overview" className="flex items-center gap-2 text-xs sm:text-sm rounded-2xl data-[state=active]:bg-white/80 data-[state=active]:shadow-lg data-[state=active]:text-primary transition-all duration-300">
-              <Star className="h-3 w-3 sm:h-4 sm:w-4" />
-              <span className="hidden sm:inline font-medium">Overview</span>
+          <TabsList className="grid w-full min-w-[600px] grid-cols-6 mb-8 bg-gradient-to-r from-primary/10 via-secondary/5 to-primary/10 backdrop-blur-sm rounded-2xl p-1 shadow-lg border border-primary/20 h-12">
+            <TabsTrigger value="overview" className="flex items-center gap-1 text-xs sm:text-sm rounded-xl data-[state=active]:bg-white/80 data-[state=active]:shadow-lg data-[state=active]:text-primary transition-all duration-300 px-2 py-2 h-10">
+              <Star className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+              <span className="hidden sm:inline font-medium truncate">Overview</span>
               <span className="sm:hidden font-medium">Over</span>
             </TabsTrigger>
-            <TabsTrigger value="analysis" className="flex items-center gap-2 text-xs sm:text-sm rounded-2xl data-[state=active]:bg-white/80 data-[state=active]:shadow-lg data-[state=active]:text-primary transition-all duration-300">
-              <BarChart3 className="h-3 w-3 sm:h-4 sm:w-4" />
-              <span className="hidden sm:inline font-medium">Analysis</span>
+            <TabsTrigger value="analysis" className="flex items-center gap-1 text-xs sm:text-sm rounded-xl data-[state=active]:bg-white/80 data-[state=active]:shadow-lg data-[state=active]:text-primary transition-all duration-300 px-2 py-2 h-10">
+              <BarChart3 className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+              <span className="hidden sm:inline font-medium truncate">Analysis</span>
               <span className="sm:hidden font-medium">Ana</span>
             </TabsTrigger>
-            <TabsTrigger value="plan" className="flex items-center gap-2 text-xs sm:text-sm rounded-2xl data-[state=active]:bg-white/80 data-[state=active]:shadow-lg data-[state=active]:text-primary transition-all duration-300">
-              <Target className="h-3 w-3 sm:h-4 sm:w-4" />
-              <span className="hidden sm:inline font-medium">Action Plan</span>
+            <TabsTrigger value="plan" className="flex items-center gap-1 text-xs sm:text-sm rounded-xl data-[state=active]:bg-white/80 data-[state=active]:shadow-lg data-[state=active]:text-primary transition-all duration-300 px-2 py-2 h-10">
+              <Target className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+              <span className="hidden sm:inline font-medium truncate">Action Plan</span>
               <span className="sm:hidden font-medium">Plan</span>
             </TabsTrigger>
-            <TabsTrigger value="tools" className="flex items-center gap-2 text-xs sm:text-sm rounded-2xl data-[state=active]:bg-white/80 data-[state=active]:shadow-lg data-[state=active]:text-primary transition-all duration-300">
-              <Zap className="h-3 w-3 sm:h-4 sm:w-4" />
-              <span className="hidden sm:inline font-medium">Tools</span>
+            <TabsTrigger value="tools" className="flex items-center gap-1 text-xs sm:text-sm rounded-xl data-[state=active]:bg-white/80 data-[state=active]:shadow-lg data-[state=active]:text-primary transition-all duration-300 px-2 py-2 h-10">
+              <Zap className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+              <span className="hidden sm:inline font-medium truncate">Tools</span>
               <span className="sm:hidden font-medium">Tool</span>
             </TabsTrigger>
-            <TabsTrigger value="workflows" className="flex items-center gap-2 text-xs sm:text-sm rounded-2xl data-[state=active]:bg-white/80 data-[state=active]:shadow-lg data-[state=active]:text-primary transition-all duration-300">
-              <Workflow className="h-3 w-3 sm:h-4 sm:w-4" />
-              <span className="hidden sm:inline font-medium">Workflows</span>
+            <TabsTrigger value="workflows" className="flex items-center gap-1 text-xs sm:text-sm rounded-xl data-[state=active]:bg-white/80 data-[state=active]:shadow-lg data-[state=active]:text-primary transition-all duration-300 px-2 py-2 h-10">
+              <Workflow className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+              <span className="hidden sm:inline font-medium truncate">Workflows</span>
               <span className="sm:hidden font-medium">Work</span>
             </TabsTrigger>
-            <TabsTrigger value="metrics" className="flex items-center gap-2 text-xs sm:text-sm rounded-2xl data-[state=active]:bg-white/80 data-[state=active]:shadow-lg data-[state=active]:text-primary transition-all duration-300">
-              <BarChart3 className="h-3 w-3 sm:h-4 sm:w-4" />
-              <span className="hidden sm:inline font-medium">Metrics</span>
+            <TabsTrigger value="metrics" className="flex items-center gap-1 text-xs sm:text-sm rounded-xl data-[state=active]:bg-white/80 data-[state=active]:shadow-lg data-[state=active]:text-primary transition-all duration-300 px-2 py-2 h-10">
+              <BarChart3 className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+              <span className="hidden sm:inline font-medium truncate">Metrics</span>
               <span className="sm:hidden font-medium">Met</span>
             </TabsTrigger>
           </TabsList>
