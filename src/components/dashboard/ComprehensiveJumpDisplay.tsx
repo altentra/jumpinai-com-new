@@ -944,22 +944,22 @@ export default function ComprehensiveJumpDisplay({ jump, onEdit, onDownload, cla
   );
 
   return (
-    <div className={`max-w-6xl mx-auto ${className}`}>
+    <div className={`w-full max-w-6xl mx-auto px-4 sm:px-6 ${className}`}>
       {/* Header */}
-      <div className="mb-8 space-y-4">
-        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
-          <div className="flex-1 min-w-0">
-            <h1 className="text-2xl lg:text-3xl font-bold text-foreground mb-3 break-words hyphens-auto">{jump.title}</h1>
-            <p className="text-base lg:text-lg text-muted-foreground leading-relaxed break-words">{jump.executive_summary}</p>
+      <div className="mb-6 sm:mb-8">
+        <div className="flex flex-col gap-4 sm:gap-6">
+          <div className="w-full max-w-full overflow-hidden">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground mb-2 sm:mb-3 break-words hyphens-auto leading-tight max-w-full">{jump.title}</h1>
+            <p className="text-sm sm:text-base lg:text-lg text-muted-foreground leading-relaxed break-words max-w-full overflow-wrap-anywhere">{jump.executive_summary}</p>
           </div>
-          <div className="flex gap-2 shrink-0">
+          <div className="flex flex-wrap gap-2 justify-start sm:justify-end">
             {onEdit && (
-              <Button variant="outline" onClick={onEdit} size="sm" className="whitespace-nowrap">
+              <Button variant="outline" onClick={onEdit} size="sm" className="whitespace-nowrap text-xs sm:text-sm">
                 Edit Plan
               </Button>
             )}
             {onDownload && (
-              <Button onClick={onDownload} size="sm" className="gap-2 whitespace-nowrap">
+              <Button onClick={onDownload} size="sm" className="gap-2 whitespace-nowrap text-xs sm:text-sm">
                 <Download className="h-4 w-4" />
                 Download
               </Button>
