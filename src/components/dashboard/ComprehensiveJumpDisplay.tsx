@@ -202,7 +202,7 @@ export default function ComprehensiveJumpDisplay({ jump, onEdit, onDownload, cla
             title="Executive Summary"
             description="Your transformation journey at a glance"
           />
-          <p className="text-foreground leading-relaxed text-lg">{jump.executive_summary}</p>
+          <p className="text-xs sm:text-sm text-foreground leading-relaxed">{jump.executive_summary}</p>
         </div>
 
         <Separator />
