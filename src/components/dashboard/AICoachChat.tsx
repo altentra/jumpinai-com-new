@@ -224,7 +224,9 @@ export default function AICoachChat({
                   title,
                   summary,
                   full_content: aiText,
-                  structured_plan: structuredPlan
+                  structured_plan: structuredPlan,
+                  comprehensive_plan: structuredPlan,
+                  jump_type: 'comprehensive'
                 });
                 
                 if (savedJump && onJumpSaved) {
@@ -538,9 +540,33 @@ export default function AICoachChat({
                   >
                     {message.role === 'assistant' ? (
                       <div className="text-sm leading-relaxed">
-                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                          {message.content}
-                        </ReactMarkdown>
+                        {(() => {
+                          const parsed = safeParseJSON(message.content);
+                          const isStructured = parsed && typeof parsed === 'object' && parsed.overview && parsed.action_plan;
+                          if (isStructured) {
+                            return (
+                              <div className="space-y-1">
+                                <div className="font-medium text-foreground">Structured Jump Plan received</div>
+                                <div className="text-muted-foreground">Your plan has been parsed and applied to the tabbed view above.</div>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-7 px-2"
+                                  onClick={() => {
+                                    try { scrollAreaRef.current?.scrollTo({ top: 0, behavior: 'smooth' }); } catch {}
+                                  }}
+                                >
+                                  View Plan
+                                </Button>
+                              </div>
+                            );
+                          }
+                          return (
+                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                              {message.content}
+                            </ReactMarkdown>
+                          );
+                        })()}
                       </div>
                     ) : (
                       <div className="whitespace-pre-wrap text-sm leading-relaxed">
