@@ -7,6 +7,7 @@ export interface UserJump {
   title: string;
   summary: string | null;
   full_content: string;
+  structured_plan?: any;
   created_at: string;
   updated_at: string;
 }
@@ -16,6 +17,7 @@ export interface CreateJumpData {
   title: string;
   summary?: string;
   full_content: string;
+  structured_plan?: any;
 }
 
 // Create a new jump
@@ -33,7 +35,8 @@ export const createJump = async (jumpData: CreateJumpData): Promise<UserJump | n
       profile_id: jumpData.profile_id || null,
       title: jumpData.title,
       summary: jumpData.summary || null,
-      full_content: jumpData.full_content
+      full_content: jumpData.full_content,
+      structured_plan: jumpData.structured_plan || null
     })
     .select()
     .single();

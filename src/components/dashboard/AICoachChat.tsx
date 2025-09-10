@@ -185,7 +185,8 @@ export default function AICoachChat({
                 const updatedJump = await updateJump(currentJumpId, {
                   title: jumpName || extractTitle(aiText),
                   summary: extractSummary(aiText),
-                  full_content: aiText
+                  full_content: aiText,
+                  structured_plan: structuredPlan
                 });
                 
                 if (updatedJump && onJumpSaved) {
@@ -204,7 +205,8 @@ export default function AICoachChat({
                   profile_id: userProfile.id,
                   title,
                   summary,
-                  full_content: aiText
+                  full_content: aiText,
+                  structured_plan: structuredPlan
                 });
                 
                 if (savedJump && onJumpSaved) {
@@ -376,14 +378,16 @@ export default function AICoachChat({
       // Update existing jump with chat refinements
       if (currentJumpId && aiText.trim()) {
         try {
+          const structuredPlan = (response as any)?.data?.structured_plan || null;
+          
           await updateJump(currentJumpId, {
             title: jumpName || extractTitle(aiText),
             summary: extractSummary(aiText),
-            full_content: aiText
+            full_content: aiText,
+            structured_plan: structuredPlan
           });
           
           if (onPlanGenerated) {
-            const structuredPlan = (response as any)?.data?.structured_plan || null;
             onPlanGenerated(aiText, structuredPlan);
           }
         } catch (error) {

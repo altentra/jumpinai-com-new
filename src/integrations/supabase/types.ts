@@ -380,6 +380,7 @@ export type Database = {
           full_content: string
           id: string
           profile_id: string | null
+          structured_plan: Json | null
           summary: string | null
           title: string
           updated_at: string
@@ -390,6 +391,7 @@ export type Database = {
           full_content: string
           id?: string
           profile_id?: string | null
+          structured_plan?: Json | null
           summary?: string | null
           title: string
           updated_at?: string
@@ -400,6 +402,7 @@ export type Database = {
           full_content?: string
           id?: string
           profile_id?: string | null
+          structured_plan?: Json | null
           summary?: string | null
           title?: string
           updated_at?: string
