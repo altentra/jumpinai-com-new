@@ -161,7 +161,7 @@ export default function JumpsStudio() {
     setSelectedJump(jump);
     setCurrentJumpId(jump.id);
     setJumpPlan(jump.full_content);
-    setStructuredPlan(null); // Reset structured plan for existing jumps
+    setStructuredPlan(jump.comprehensive_plan || jump.structured_plan || null);
     setJumpName(jump.title);
     setIsNewJump(false);
     setShowChat(true); // Always show chat for existing jumps
@@ -315,13 +315,19 @@ export default function JumpsStudio() {
       {/* Jump Plan Display and Chat - Shows after profile submission or jump selection */}
       {(userProfile || selectedJump) && (
         <div className="space-y-6">
-          {/* Jump Plan Display - Shows once generated */}
-          {jumpPlan && (
+          {/* Jump Plan Display - Always show the module */}
+          {jumpPlan || structuredPlan ? (
             <JumpPlanDisplay 
               planContent={jumpPlan}
               structuredPlan={structuredPlan}
               onEdit={handleStartChat}
               onDownload={downloadPlan}
+            />
+          ) : (
+            <ComprehensiveJumpDisplay
+              jump={emptyPlan}
+              onEdit={handleStartChat}
+              onDownload={() => {}}
             />
           )}
           
