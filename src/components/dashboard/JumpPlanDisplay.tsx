@@ -6,6 +6,7 @@ import { Download, Edit, Sparkles } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { formatAIText } from '@/utils/aiTextFormatter';
+import { safeParseJSON } from '@/utils/safeJson';
 import ComprehensiveJumpDisplay from './ComprehensiveJumpDisplay';
 
 interface JumpPlanDisplayProps {
@@ -30,13 +31,7 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
     return null;
   }
 
-  const tryParseJSON = (text: string): any | null => {
-    try { return JSON.parse(text); } catch { /* ignore */ }
-    const cleaned = text.replace(/^```(?:json)?\s*/i, '').replace(/```$/i, '').trim();
-    try { return JSON.parse(cleaned); } catch { return null; }
-  };
-
-  const effectivePlan = React.useMemo(() => structuredPlan || tryParseJSON(planContent), [structuredPlan, planContent]);
+  const effectivePlan = React.useMemo(() => structuredPlan || safeParseJSON(planContent), [structuredPlan, planContent]);
   const enhancedContent = React.useMemo(() => formatAIText(planContent), [planContent]);
 
   return (

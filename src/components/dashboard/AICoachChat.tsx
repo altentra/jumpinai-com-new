@@ -15,6 +15,7 @@ import { createJump, updateJump, extractTitle, extractSummary } from '@/services
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { useAuth } from '@/hooks/useAuth';
+import { safeParseJSON } from '@/utils/safeJson';
 
 interface Message {
   id: string;
@@ -142,12 +143,7 @@ export default function AICoachChat({
       return;
     }
 
-    const tryParseJSON = (text: string): any | null => {
-      try { return JSON.parse(text); } catch { /* ignore */ }
-      // Strip common code fences
-      const cleaned = text.replace(/^```(?:json)?\s*/i, '').replace(/```$/i, '').trim();
-      try { return JSON.parse(cleaned); } catch { return null; }
-    };
+    const tryParseJSON = (text: string): any | null => safeParseJSON(text);
 
     // Define generator first so we can call it for both hidden and visible chat modes
     const generateInitialPlan = async () => {
