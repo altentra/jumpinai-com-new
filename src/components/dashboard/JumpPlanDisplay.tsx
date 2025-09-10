@@ -6,12 +6,23 @@ import { Download, Edit, Sparkles } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { formatAIText } from '@/utils/aiTextFormatter';
+import ComprehensiveJumpDisplay from './ComprehensiveJumpDisplay';
 
 interface JumpPlanDisplayProps {
   planContent: string;
   structuredPlan?: any; // Optional structured data for enhanced display
   onEdit: () => void;
   onDownload: () => void;
+}
+
+// Helper function to check if structured plan matches comprehensive format
+function isComprehensiveStructure(plan: any): boolean {
+  return plan && 
+    typeof plan === 'object' && 
+    plan.overview && 
+    plan.analysis && 
+    plan.action_plan && 
+    Array.isArray(plan.action_plan?.phases);
 }
 
 export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, onDownload }: JumpPlanDisplayProps) {
@@ -61,10 +72,18 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
           </Button>
         </div>
       </CardHeader>
-      <CardContent>
-        {structuredPlan ? (
-          // Enhanced structured display when structured data is available
-          <div className="space-y-6">
+      <CardContent className="p-0">
+        {structuredPlan && isComprehensiveStructure(structuredPlan) ? (
+          // Use the comprehensive display for the new structured format
+          <ComprehensiveJumpDisplay 
+            jump={structuredPlan} 
+            onEdit={onEdit}
+            onDownload={onDownload}
+            className="border-0 shadow-none"
+          />
+        ) : structuredPlan ? (
+          // Fallback for simpler structured plans (legacy format)
+          <div className="p-6 space-y-6">
             {/* Title */}
             {structuredPlan.title && (
               <div className="text-center pb-6 border-b border-border">
@@ -83,29 +102,7 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
               </div>
             )}
 
-            {/* Current State Analysis */}
-            {structuredPlan.current_state_analysis && (
-              <div className="bg-muted/30 rounded-lg p-6 border border-border">
-                <h2 className="text-xl font-semibold text-foreground mb-3 flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-secondary"></div>
-                  Current State Analysis
-                </h2>
-                <p className="text-muted-foreground leading-relaxed">{structuredPlan.current_state_analysis}</p>
-              </div>
-            )}
-
-            {/* Transformation Goal */}
-            {structuredPlan.transformation_goal && (
-              <div className="bg-gradient-to-r from-secondary/5 to-secondary/10 rounded-lg p-6 border border-secondary/20">
-                <h2 className="text-xl font-semibold text-secondary mb-3 flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-secondary"></div>
-                  Transformation Goal
-                </h2>
-                <p className="text-muted-foreground leading-relaxed">{structuredPlan.transformation_goal}</p>
-              </div>
-            )}
-
-            {/* Phases */}
+            {/* Simple Phases Display */}
             {structuredPlan.phases && Array.isArray(structuredPlan.phases) && (
               <div className="space-y-4">
                 <h2 className="text-2xl font-semibold text-foreground mb-4 flex items-center gap-2">
@@ -127,170 +124,15 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
                     {phase.description && (
                       <p className="text-muted-foreground mb-4 leading-relaxed">{phase.description}</p>
                     )}
-                    
-                    <div className="grid md:grid-cols-3 gap-4">
-                      {phase.key_actions && Array.isArray(phase.key_actions) && (
-                        <div>
-                          <h4 className="font-medium text-foreground mb-2">Key Actions</h4>
-                          <ul className="space-y-1">
-                            {phase.key_actions.map((action: string, actionIndex: number) => (
-                              <li key={actionIndex} className="text-sm text-muted-foreground flex items-start gap-2">
-                                <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2 flex-shrink-0"></div>
-                                {action}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                      
-                      {phase.deliverables && Array.isArray(phase.deliverables) && (
-                        <div>
-                          <h4 className="font-medium text-foreground mb-2">Deliverables</h4>
-                          <ul className="space-y-1">
-                            {phase.deliverables.map((deliverable: string, delIndex: number) => (
-                              <li key={delIndex} className="text-sm text-muted-foreground flex items-start gap-2">
-                                <div className="w-1.5 h-1.5 rounded-full bg-secondary mt-2 flex-shrink-0"></div>
-                                {deliverable}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                      
-                      {phase.success_criteria && Array.isArray(phase.success_criteria) && (
-                        <div>
-                          <h4 className="font-medium text-foreground mb-2">Success Criteria</h4>
-                          <ul className="space-y-1">
-                            {phase.success_criteria.map((criteria: string, critIndex: number) => (
-                              <li key={critIndex} className="text-sm text-muted-foreground flex items-start gap-2">
-                                <div className="w-1.5 h-1.5 rounded-full bg-green-500 mt-2 flex-shrink-0"></div>
-                                {criteria}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                    </div>
                   </div>
                 ))}
               </div>
             )}
-
-            {/* Tools, Metrics, and Challenges Grid */}
-            <div className="grid md:grid-cols-2 gap-6">
-              {/* Recommended Tools */}
-              {structuredPlan.recommended_tools && Array.isArray(structuredPlan.recommended_tools) && (
-                <div className="bg-blue-50/50 dark:bg-blue-950/20 rounded-lg p-6 border border-blue-200/50">
-                  <h2 className="text-xl font-semibold text-blue-700 dark:text-blue-400 mb-4 flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-blue-500"></div>
-                    Recommended Tools
-                  </h2>
-                  <ul className="space-y-2">
-                    {structuredPlan.recommended_tools.map((tool: string, index: number) => (
-                      <li key={index} className="text-sm text-muted-foreground flex items-center gap-2">
-                        <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
-                        {tool}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {/* Success Metrics */}
-              {structuredPlan.success_metrics && Array.isArray(structuredPlan.success_metrics) && (
-                <div className="bg-green-50/50 dark:bg-green-950/20 rounded-lg p-6 border border-green-200/50">
-                  <h2 className="text-xl font-semibold text-green-700 dark:text-green-400 mb-4 flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                    Success Metrics
-                  </h2>
-                  <ul className="space-y-2">
-                    {structuredPlan.success_metrics.map((metric: string, index: number) => (
-                      <li key={index} className="text-sm text-muted-foreground flex items-center gap-2">
-                        <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
-                        {metric}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-
-            {/* Challenges and Next Steps Grid */}
-            <div className="grid md:grid-cols-2 gap-6">
-              {/* Potential Challenges */}
-              {structuredPlan.potential_challenges && Array.isArray(structuredPlan.potential_challenges) && (
-                <div className="bg-orange-50/50 dark:bg-orange-950/20 rounded-lg p-6 border border-orange-200/50">
-                  <h2 className="text-xl font-semibold text-orange-700 dark:text-orange-400 mb-4 flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-orange-500"></div>
-                    Potential Challenges
-                  </h2>
-                  <div className="space-y-3">
-                    {structuredPlan.potential_challenges.map((challenge: string, index: number) => (
-                      <div key={index} className="text-sm">
-                        <p className="text-muted-foreground mb-1">
-                          <strong>Challenge:</strong> {challenge}
-                        </p>
-                        {structuredPlan.mitigation_strategies && structuredPlan.mitigation_strategies[index] && (
-                          <p className="text-muted-foreground text-xs">
-                            <strong>Solution:</strong> {structuredPlan.mitigation_strategies[index]}
-                          </p>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Next Immediate Steps */}
-              {structuredPlan.next_immediate_steps && Array.isArray(structuredPlan.next_immediate_steps) && (
-                <div className="bg-purple-50/50 dark:bg-purple-950/20 rounded-lg p-6 border border-purple-200/50">
-                  <h2 className="text-xl font-semibold text-purple-700 dark:text-purple-400 mb-4 flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-purple-500"></div>
-                    Next Immediate Steps
-                  </h2>
-                  <ol className="space-y-2">
-                    {structuredPlan.next_immediate_steps.map((step: string, index: number) => (
-                      <li key={index} className="text-sm text-muted-foreground flex items-start gap-3">
-                        <span className="bg-purple-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center flex-shrink-0 mt-0.5">
-                          {index + 1}
-                        </span>
-                        {step}
-                      </li>
-                    ))}
-                  </ol>
-                </div>
-              )}
-            </div>
-
-            {/* Timeline and Investment */}
-            {(structuredPlan.estimated_timeline || structuredPlan.investment_required) && (
-              <div className="grid md:grid-cols-2 gap-6">
-                {structuredPlan.estimated_timeline && (
-                  <div className="bg-muted/30 rounded-lg p-6 border border-border">
-                    <h2 className="text-xl font-semibold text-foreground mb-3 flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-primary"></div>
-                      Timeline
-                    </h2>
-                    <p className="text-muted-foreground leading-relaxed">{structuredPlan.estimated_timeline}</p>
-                  </div>
-                )}
-
-                {structuredPlan.investment_required && (
-                  <div className="bg-muted/30 rounded-lg p-6 border border-border">
-                    <h2 className="text-xl font-semibold text-foreground mb-3 flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-secondary"></div>
-                      Investment Required
-                    </h2>
-                    <p className="text-muted-foreground leading-relaxed">{structuredPlan.investment_required}</p>
-                  </div>
-                )}
-              </div>
-            )}
           </div>
         ) : (
-          // Fallback to markdown display for backward compatibility
-          <div className="max-w-none font-display text-foreground leading-relaxed text-base space-y-4">
-            <ReactMarkdown 
+          // Fallback to markdown display for backward compatibility or when no structured data
+          <div className="p-6 max-w-none font-display text-foreground leading-relaxed text-base space-y-4">
+            <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               components={{
                 h1: ({ children }) => (

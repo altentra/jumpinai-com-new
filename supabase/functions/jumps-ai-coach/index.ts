@@ -488,8 +488,9 @@ serve(async (req) => {
       `- Time Commitment: ${userProfile?.timeCommitment || 'Not specified'}`,
       `- Budget Range: ${userProfile?.budget || 'Not specified'}`,
       "",
-      "Create a COMPREHENSIVE transformation plan with this EXACT JSON structure:",
-      "",
+       "Create a COMPREHENSIVE transformation plan with this EXACT JSON structure:",
+       "IMPORTANT: Generate exactly 3 phases in the action_plan.phases array. Each phase should be detailed and actionable.",
+       "",
       JSON.stringify({
         "title": "Compelling, specific transformation plan title",
         "executive_summary": "Compelling 3-4 sentence overview of the complete transformation journey and expected outcomes",
@@ -549,8 +550,72 @@ serve(async (req) => {
                   "probability": "Medium",
                   "mitigation": "Specific mitigation strategy"
                 }
-              ]
-            }
+               ]
+             },
+             {
+               "phase_number": 2,
+               "title": "Implementation Phase",
+               "description": "Core implementation of AI tools and processes",
+               "duration": "6-8 weeks",
+               "objectives": ["Implementation objective 1", "Implementation objective 2"],
+               "key_actions": [
+                 {
+                   "action": "Deploy core AI tools",
+                   "description": "Implementation details",
+                   "priority": "High",
+                   "effort_level": "High",
+                   "dependencies": ["Foundation Phase completion"]
+                 }
+               ],
+               "milestones": [
+                 {
+                   "milestone": "Core systems deployed",
+                   "target_date": "Week 6",
+                   "success_criteria": ["System operational", "Team trained"]
+                 }
+               ],
+               "deliverables": ["Working AI systems", "Training documentation"],
+               "risks": [
+                 {
+                   "risk": "Integration challenges",
+                   "impact": "Medium",
+                   "probability": "Medium",
+                   "mitigation": "Phased rollout approach"
+                 }
+               ]
+             },
+             {
+               "phase_number": 3,
+               "title": "Optimization & Scale Phase",
+               "description": "Optimize performance and scale successful implementations",
+               "duration": "4-6 weeks",
+               "objectives": ["Optimization objective 1", "Scale objective 2"],
+               "key_actions": [
+                 {
+                   "action": "Performance optimization",
+                   "description": "Fine-tune and optimize all systems",
+                   "priority": "Medium",
+                   "effort_level": "Medium",
+                   "dependencies": ["Implementation Phase completion"]
+                 }
+               ],
+               "milestones": [
+                 {
+                   "milestone": "Full optimization achieved",
+                   "target_date": "Week 4",
+                   "success_criteria": ["Performance targets met", "ROI targets achieved"]
+                 }
+               ],
+               "deliverables": ["Optimized systems", "Scale playbook"],
+               "risks": [
+                 {
+                   "risk": "Performance bottlenecks",
+                   "impact": "Low",
+                   "probability": "Low",
+                   "mitigation": "Continuous monitoring and adjustment"
+                 }
+               ]
+             }
           ]
         },
         "tools_prompts": {
@@ -572,8 +637,24 @@ serve(async (req) => {
               "ai_tool": "ChatGPT/Claude",
               "expected_output": "Structured strategic plan with analysis"
             }
-          ]
-        },
+           ],
+           "templates": [
+             {
+               "name": "Strategic Planning Template",
+               "type": "Business Plan",
+               "description": "Comprehensive template for strategic planning",
+               "use_case": "Long-term business strategy development"
+             }
+           ],
+           "templates": [
+             {
+               "name": "Strategic Planning Template",
+               "type": "Business Plan", 
+               "description": "Comprehensive template for strategic planning",
+               "use_case": "Long-term business strategy development"
+             }
+           ]
+         },
         "workflows_strategies": {
           "workflows": [
             {
@@ -681,9 +762,19 @@ serve(async (req) => {
       
       jumpPlan = safeParse(res1.content);
       
-      // If parsing failed, try repair attempt
+      // Enhanced debugging for parsing failures
       if (!jumpPlan) {
-        console.warn('[jump-plan] parse failed (attempt 1). First 400 chars:', res1.content?.slice(0, 400));
+        console.warn('[jump-plan] parse failed (attempt 1). Response length:', res1.content?.length);
+        console.warn('[jump-plan] First 200 chars:', res1.content?.slice(0, 200));
+        console.warn('[jump-plan] Last 200 chars:', res1.content?.slice(-200));
+        
+        // Try to identify the issue
+        if (res1.content?.includes('```json')) {
+          console.warn('[jump-plan] Content appears to have markdown code fences');
+        }
+        if (res1.content?.includes("'")) {
+          console.warn('[jump-plan] Content contains single quotes that may need conversion');
+        }
         
         const repair = await callOpenAI([
           { role: 'system', content: systemJSON },
@@ -694,13 +785,32 @@ serve(async (req) => {
         rawContent = repair.content || rawContent;
         jumpPlan = safeParse(repair.content);
         if (!jumpPlan) {
-          console.warn('[jump-plan] parse failed (attempt 2). First 400 chars:', repair.content?.slice(0, 400));
+          console.warn('[jump-plan] parse failed (attempt 2). Response length:', repair.content?.length);
+          console.warn('[jump-plan] First 200 chars:', repair.content?.slice(0, 200));
+          console.warn('[jump-plan] Last 200 chars:', repair.content?.slice(-200));
+          
+          // Log the entire failed content for debugging (truncated)
+          console.warn('[jump-plan] Full failed content (first 1000 chars):', repair.content?.slice(0, 1000));
+        } else {
+          console.log('[jump-plan] Successfully parsed on attempt 2');
         }
+      } else {
+        console.log('[jump-plan] Successfully parsed on attempt 1');
+      }
       }
 
       // Convert structured plan back to formatted text for backward compatibility
       if (jumpPlan) {
-        content = formatJumpPlanToText(jumpPlan);
+        // Check if this is a comprehensive structure
+        const isComprehensive = jumpPlan.overview && jumpPlan.analysis && jumpPlan.action_plan;
+        if (isComprehensive) {
+          // For comprehensive plans, create a simple title + summary text for backward compatibility
+          // The actual structured display will use the jumpPlan object
+          content = `# ${jumpPlan.title || 'Your AI-Generated Jump Plan'}\n\n${jumpPlan.executive_summary || 'Your personalized transformation roadmap has been generated.'}`;
+        } else {
+          // For simpler plans, convert to full text format
+          content = formatJumpPlanToText(jumpPlan);
+        }
       } else {
         content = rawContent?.trim() ? rawContent : "Sorry, I couldn't complete the plan this time. Please try again in a moment.";
       }
