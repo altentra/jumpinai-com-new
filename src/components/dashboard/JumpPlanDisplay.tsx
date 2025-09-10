@@ -3,8 +3,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Download, Edit, Sparkles } from 'lucide-react';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
 import { formatAIText } from '@/utils/aiTextFormatter';
 import { safeParseJSON } from '@/utils/safeJson';
 import ComprehensiveJumpDisplay from './ComprehensiveJumpDisplay';
@@ -186,6 +184,15 @@ const candidate = React.useMemo(() => {
 }, [structuredPlan, planContent]);
 const comprehensivePlan = React.useMemo(() => candidate ? normalizeToComprehensive(candidate) : null, [candidate]);
 const enhancedContent = React.useMemo(() => formatAIText(planContent), [planContent]);
+const finalPlan = React.useMemo(() => {
+  if (comprehensivePlan) return comprehensivePlan;
+  const fallback = buildDefaultPlan();
+  if (planContent && planContent.trim()) {
+    const text = enhancedContent.replace(/[#>*`]/g, '').trim();
+    fallback.executive_summary = text;
+  }
+  return fallback;
+}, [comprehensivePlan, planContent, enhancedContent]);
 
   return (
     <Card className="w-full bg-card border-border">
@@ -228,95 +235,12 @@ const enhancedContent = React.useMemo(() => formatAIText(planContent), [planCont
         </div>
       </CardHeader>
       <CardContent className="p-0">
-        {comprehensivePlan ? (
-          <ComprehensiveJumpDisplay 
-            jump={comprehensivePlan} 
-            onEdit={onEdit}
-            onDownload={onDownload}
-            className="border-0 shadow-none"
-          />
-        ) : (
-          // Fallback to markdown display for backward compatibility or when no structured data
-          <div className="p-6 max-w-none font-display text-foreground leading-relaxed text-base space-y-4">
-            <ReactMarkdown
-              remarkPlugins={[remarkGfm]}
-              components={{
-                h1: ({ children }) => (
-                  <h1 className="font-display text-5xl font-black tracking-tight gradient-text-primary border-b border-primary/20 pb-6 mb-8 mt-10 leading-tight">
-                    {children}
-                  </h1>
-                ),
-                h2: ({ children }) => (
-                  <h2 className="font-display text-3xl font-bold text-foreground mb-6 mt-10 tracking-tight leading-tight">
-                    {children}
-                  </h2>
-                ),
-                h3: ({ children }) => (
-                  <h3 className="font-display text-2xl font-semibold text-foreground/95 mb-4 mt-8 tracking-tight leading-snug">
-                    {children}
-                  </h3>
-                ),
-                h4: ({ children }) => (
-                  <h4 className="font-display text-xl font-semibold text-foreground mb-3 mt-6 tracking-tight leading-snug">
-                    {children}
-                  </h4>
-                ),
-                h5: ({ children }) => (
-                  <h5 className="font-display text-lg font-semibold text-foreground/90 mb-3 mt-5 leading-snug">
-                    {children}
-                  </h5>
-                ),
-                h6: ({ children }) => (
-                  <h6 className="font-display text-base font-semibold text-foreground/80 mb-2 mt-4 leading-snug">
-                    {children}
-                  </h6>
-                ),
-                p: ({ children }) => (
-                  <p className="mb-4 leading-relaxed text-foreground/90 font-normal text-base">
-                    {children}
-                  </p>
-                ),
-                ul: ({ children }) => (
-                  <ul className="list-disc marker:text-primary/70 pl-4 space-y-0 mb-3 text-foreground/90">
-                    {children}
-                  </ul>
-                ),
-                ol: ({ children }) => (
-                  <ol className="list-decimal marker:text-primary/70 pl-4 space-y-0 mb-3 text-foreground/90">
-                    {children}
-                  </ol>
-                ),
-                li: ({ children }) => (
-                  <li className="leading-normal pl-0 text-base mb-1">
-                    {children}
-                  </li>
-                ),
-                strong: ({ children }) => (
-                  <strong className="font-semibold text-foreground font-display">
-                    {children}
-                  </strong>
-                ),
-                em: ({ children }) => (
-                  <em className="italic font-medium text-foreground/85 font-display">
-                    {children}
-                  </em>
-                ),
-                code: ({ children }) => (
-                  <code className="bg-muted/80 px-2 py-1 rounded-md text-sm font-mono border border-border/50">
-                    {children}
-                  </code>
-                ),
-                blockquote: ({ children }) => (
-                  <blockquote className="border-l-2 border-border pl-4 italic text-foreground/80 my-4">
-                    {children}
-                  </blockquote>
-                ),
-              }}
-            >
-              {enhancedContent}
-            </ReactMarkdown>
-          </div>
-        )}
+        <ComprehensiveJumpDisplay 
+          jump={finalPlan}
+          onEdit={onEdit}
+          onDownload={onDownload}
+          className="border-0 shadow-none"
+        />
       </CardContent>
     </Card>
   );
