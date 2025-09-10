@@ -27,7 +27,7 @@ function isComprehensiveStructure(plan: any): boolean {
 }
 
 export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, onDownload }: JumpPlanDisplayProps) {
-  if (!planContent.trim()) {
+  if (!planContent.trim() && !structuredPlan) {
     return null;
   }
 

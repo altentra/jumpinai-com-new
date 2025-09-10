@@ -542,12 +542,12 @@ export default function AICoachChat({
                       <div className="text-sm leading-relaxed">
                         {(() => {
                           const parsed = safeParseJSON(message.content);
-                          const isStructured = parsed && typeof parsed === 'object' && parsed.overview && parsed.action_plan;
-                          if (isStructured) {
+                          const looksLikeJSON = !!parsed || /\s*```/.test(message.content) || /^[{\[]/.test(message.content.trim());
+                          if (looksLikeJSON) {
                             return (
                               <div className="space-y-1">
                                 <div className="font-medium text-foreground">Structured Jump Plan received</div>
-                                <div className="text-muted-foreground">Your plan has been parsed and applied to the tabbed view above.</div>
+                                <div className="text-muted-foreground">Your plan is applied to the tabbed view above.</div>
                                 <Button
                                   variant="ghost"
                                   size="sm"

@@ -8,6 +8,7 @@ import UserProfileForm from '@/components/dashboard/UserProfileForm';
 import { UserProfile } from '@/services/userProfileService';
 import AICoachChat from '@/components/dashboard/AICoachChat';
 import JumpPlanDisplay from '@/components/dashboard/JumpPlanDisplay';
+import ComprehensiveJumpDisplay from '@/components/dashboard/ComprehensiveJumpDisplay';
 import { UserJump, getUserJumps } from '@/services/jumpService';
 import { useOptimizedAuth } from '@/hooks/useOptimizedAuth';
 import MiniJumpCard from '@/components/dashboard/MiniJumpCard';
@@ -27,6 +28,61 @@ export default function JumpsStudio() {
   const [currentJumpId, setCurrentJumpId] = useState<string | null>(null);
   const [jumpName, setJumpName] = useState<string>('');
   const [isNewJump, setIsNewJump] = useState(true);
+
+  const emptyPlan = React.useMemo(() => ({
+    title: jumpName || 'Your Jump Plan',
+    executive_summary: '',
+    overview: {
+      vision_statement: '',
+      transformation_scope: '',
+      expected_outcomes: [],
+      timeline_overview: ''
+    },
+    analysis: {
+      current_state: {
+        strengths: [],
+        weaknesses: [],
+        opportunities: [],
+        threats: []
+      },
+      gap_analysis: [],
+      readiness_assessment: { score: 0, factors: [] },
+      market_context: ''
+    },
+    action_plan: {
+      phases: [1,2,3].map((n) => ({
+        phase_number: n,
+        title: `Phase ${n}`,
+        description: '',
+        duration: '',
+        objectives: [],
+        key_actions: [],
+        milestones: [],
+        deliverables: [],
+        risks: []
+      }))
+    },
+    tools_prompts: {
+      recommended_ai_tools: [],
+      custom_prompts: [],
+      templates: []
+    },
+    workflows_strategies: {
+      workflows: [],
+      strategies: []
+    },
+    metrics_tracking: {
+      kpis: [],
+      tracking_methods: [],
+      reporting_schedule: { daily: [], weekly: [], monthly: [], quarterly: [] },
+      success_criteria: []
+    },
+    investment: {
+      time_investment: { total_hours: '', weekly_commitment: '', phase_breakdown: [] },
+      financial_investment: { total_budget: '', categories: [] },
+      roi_projection: { timeframe: '', expected_roi: '', break_even_point: '' }
+    }
+  }), [jumpName]);
 
   // Load existing jumps when component mounts
   useEffect(() => {
@@ -125,7 +181,6 @@ export default function JumpsStudio() {
     setShowChat(false);
     setIsProfileFormOpen(true);
   };
-
 
   if (isLoading) {
     return (
