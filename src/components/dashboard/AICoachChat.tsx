@@ -142,6 +142,13 @@ export default function AICoachChat({
       return;
     }
 
+    const tryParseJSON = (text: string): any | null => {
+      try { return JSON.parse(text); } catch { /* ignore */ }
+      // Strip common code fences
+      const cleaned = text.replace(/^```(?:json)?\s*/i, '').replace(/```$/i, '').trim();
+      try { return JSON.parse(cleaned); } catch { return null; }
+    };
+
     // Define generator first so we can call it for both hidden and visible chat modes
     const generateInitialPlan = async () => {
       setIsLoading(true);
@@ -179,13 +186,15 @@ export default function AICoachChat({
         }
         setMessages(prev => [...prev, assistantMessage]);
         if (onPlanGenerated && aiText) {
-          // Extract structured plan if available
-          const structuredPlan = response?.data?.structured_plan || null;
-          
+          // Extract structured plan if available, else try to parse the assistant text
+          let structuredPlan = response?.data?.structured_plan || null;
+          if (!structuredPlan) {
+            structuredPlan = tryParseJSON(aiText);
+          }
           onPlanGenerated({
             content: aiText,
-            structuredPlan: structuredPlan,
-            comprehensivePlan: structuredPlan // The new format is comprehensive by default
+            structuredPlan,
+            comprehensivePlan: structuredPlan
           });
           
           // Auto-save or update the jump to database
@@ -198,7 +207,7 @@ export default function AICoachChat({
                   summary: extractSummary(aiText),
                   full_content: aiText,
                   structured_plan: structuredPlan,
-                  comprehensive_plan: structuredPlan, // Save as comprehensive plan
+                  comprehensive_plan: structuredPlan,
                   jump_type: 'comprehensive'
                 });
                 
@@ -391,8 +400,14 @@ export default function AICoachChat({
       // Update existing jump with chat refinements
       if (currentJumpId && aiText.trim()) {
         try {
-          const structuredPlan = (response as any)?.data?.structured_plan || null;
-          
+          let structuredPlan = (response as any)?.data?.structured_plan || null;
+          if (!structuredPlan) {
+            // Try to parse assistant text as JSON
+            try { structuredPlan = JSON.parse(aiText); } catch {
+              const cleaned = aiText.replace(/^```(?:json)?\s*/i, '').replace(/```$/i, '').trim();
+              try { structuredPlan = JSON.parse(cleaned); } catch { /* keep null */ }
+            }
+          }
           await updateJump(currentJumpId, {
             title: jumpName || extractTitle(aiText),
             summary: extractSummary(aiText),

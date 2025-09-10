@@ -30,6 +30,13 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
     return null;
   }
 
+  const tryParseJSON = (text: string): any | null => {
+    try { return JSON.parse(text); } catch { /* ignore */ }
+    const cleaned = text.replace(/^```(?:json)?\s*/i, '').replace(/```$/i, '').trim();
+    try { return JSON.parse(cleaned); } catch { return null; }
+  };
+
+  const effectivePlan = React.useMemo(() => structuredPlan || tryParseJSON(planContent), [structuredPlan, planContent]);
   const enhancedContent = React.useMemo(() => formatAIText(planContent), [planContent]);
 
   return (
@@ -73,43 +80,43 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
         </div>
       </CardHeader>
       <CardContent className="p-0">
-        {structuredPlan && isComprehensiveStructure(structuredPlan) ? (
+        {effectivePlan && isComprehensiveStructure(effectivePlan) ? (
           // Use the comprehensive display for the new structured format
           <ComprehensiveJumpDisplay 
-            jump={structuredPlan} 
+            jump={effectivePlan} 
             onEdit={onEdit}
             onDownload={onDownload}
             className="border-0 shadow-none"
           />
-        ) : structuredPlan ? (
+        ) : effectivePlan ? (
           // Fallback for simpler structured plans (legacy format)
           <div className="p-6 space-y-6">
             {/* Title */}
-            {structuredPlan.title && (
+            {effectivePlan.title && (
               <div className="text-center pb-6 border-b border-border">
-                <h1 className="text-3xl font-bold gradient-text-primary mb-2">{structuredPlan.title}</h1>
+                <h1 className="text-3xl font-bold gradient-text-primary mb-2">{effectivePlan.title}</h1>
               </div>
             )}
 
             {/* Executive Summary */}
-            {structuredPlan.executive_summary && (
+            {effectivePlan.executive_summary && (
               <div className="bg-gradient-to-r from-primary/5 to-primary/10 rounded-lg p-6 border border-primary/20">
                 <h2 className="text-xl font-semibold text-primary mb-3 flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-primary"></div>
                   Executive Summary
                 </h2>
-                <p className="text-muted-foreground leading-relaxed">{structuredPlan.executive_summary}</p>
+                <p className="text-muted-foreground leading-relaxed">{effectivePlan.executive_summary}</p>
               </div>
             )}
 
             {/* Simple Phases Display */}
-            {structuredPlan.phases && Array.isArray(structuredPlan.phases) && (
+            {effectivePlan.phases && Array.isArray(effectivePlan.phases) && (
               <div className="space-y-4">
                 <h2 className="text-2xl font-semibold text-foreground mb-4 flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-primary"></div>
                   The Jump Plan
                 </h2>
-                {structuredPlan.phases.map((phase: any, index: number) => (
+                {effectivePlan.phases.map((phase: any, index: number) => (
                   <div key={index} className="bg-card rounded-lg border border-border p-6 shadow-lg">
                     <div className="flex items-start justify-between mb-4">
                       <h3 className="text-xl font-semibold text-primary">
