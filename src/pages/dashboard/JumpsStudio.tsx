@@ -244,8 +244,8 @@ export default function JumpsStudio() {
           {existingJumps.length > 0 && (
             <div className="space-y-3 md:space-y-4">
               <div>
-                <Label className="text-sm font-medium">Continue Existing Jump</Label>
-                <div className="flex gap-3 md:gap-4 overflow-x-auto pb-3 pt-2 scrollbar-thin scrollbar-thumb-muted scrollbar-track-transparent">
+                <Label className="text-sm font-medium text-foreground/90 mb-3 block">Continue Existing Jump</Label>
+                <div className="flex gap-3 md:gap-4 overflow-x-auto pb-4 pt-1 scrollbar-thin scrollbar-thumb-muted-foreground/20 scrollbar-track-transparent" style={{ scrollbarWidth: 'thin' }}>
                   {existingJumps.map((jump) => (
                     <MiniJumpCard
                       key={jump.id}

@@ -90,22 +90,22 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
   };
 
   return (
-    <Card className="max-w-4xl mx-auto">
-      <CardHeader className="text-center">
-        <div className="mx-auto mb-4 p-3 rounded-full bg-gradient-to-br from-primary/10 to-primary/5 w-fit">
-          <User className="h-6 w-6 text-primary" />
+    <Card className="max-w-4xl mx-auto backdrop-blur-xl bg-gradient-to-br from-card/95 to-primary/5 rounded-3xl border border-primary/20 shadow-2xl shadow-primary/10">
+      <CardHeader className="text-center pb-8">
+        <div className="mx-auto mb-6 p-4 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/10 backdrop-blur-sm w-fit shadow-lg">
+          <User className="h-8 w-8 text-primary" />
         </div>
-        <CardTitle className="text-2xl">Tell Us About Yourself</CardTitle>
-        <CardDescription className="text-lg">
-          Help us create your personalized AI transformation plan
+        <CardTitle className="text-3xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">Tell Us About Yourself</CardTitle>
+        <CardDescription className="text-lg mt-4 text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+          Help us create your personalized AI transformation plan with comprehensive insights
         </CardDescription>
       </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label htmlFor="currentRole" className="flex items-center gap-2">
-                <Briefcase className="h-4 w-4" />
+      <CardContent className="p-8">
+        <form onSubmit={handleSubmit} className="space-y-8">
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="space-y-3">
+              <Label htmlFor="currentRole" className="flex items-center gap-2 text-sm font-semibold">
+                <Briefcase className="h-4 w-4 text-primary" />
                 Current Role/Position
               </Label>
               <Input
@@ -113,14 +113,15 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
                 value={profile.currentRole}
                 onChange={(e) => updateProfile('currentRole', e.target.value)}
                 placeholder="e.g., Marketing Manager, CEO, Freelancer"
+                className="rounded-2xl border-primary/20 bg-background/50 backdrop-blur-sm h-12 px-4 focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all duration-300"
                 required
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="industry">Industry/Sector</Label>
+            <div className="space-y-3">
+              <Label htmlFor="industry" className="text-sm font-semibold">Industry/Sector</Label>
               <Select onValueChange={(value) => updateProfile('industry', value)} value={profile.industry} required>
-                <SelectTrigger>
+                <SelectTrigger className="rounded-2xl border-primary/20 bg-background/50 backdrop-blur-sm h-12 focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all duration-300">
                   <SelectValue placeholder="Select your industry" />
                 </SelectTrigger>
                 <SelectContent>
@@ -138,10 +139,10 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
               </Select>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="experienceLevel">Professional Experience Level</Label>
+            <div className="space-y-3">
+              <Label htmlFor="experienceLevel" className="text-sm font-semibold">Professional Experience Level</Label>
               <Select onValueChange={(value) => updateProfile('experienceLevel', value)} value={profile.experienceLevel} required>
-                <SelectTrigger>
+                <SelectTrigger className="rounded-2xl border-primary/20 bg-background/50 backdrop-blur-sm h-12 focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all duration-300">
                   <SelectValue placeholder="Select experience level" />
                 </SelectTrigger>
                 <SelectContent>
@@ -154,10 +155,10 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
               </Select>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="aiKnowledge">Current AI Knowledge</Label>
+            <div className="space-y-3">
+              <Label htmlFor="aiKnowledge" className="text-sm font-semibold">Current AI Knowledge</Label>
               <Select onValueChange={(value) => updateProfile('aiKnowledge', value)} value={profile.aiKnowledge} required>
-                <SelectTrigger>
+                <SelectTrigger className="rounded-2xl border-primary/20 bg-background/50 backdrop-blur-sm h-12 focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all duration-300">
                   <SelectValue placeholder="Select AI knowledge level" />
                 </SelectTrigger>
                 <SelectContent>
@@ -170,13 +171,13 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
               </Select>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="timeCommitment" className="flex items-center gap-2">
-                <Clock className="h-4 w-4" />
+            <div className="space-y-3">
+              <Label htmlFor="timeCommitment" className="flex items-center gap-2 text-sm font-semibold">
+                <Clock className="h-4 w-4 text-primary" />
                 Time Commitment (per week)
               </Label>
               <Select onValueChange={(value) => updateProfile('timeCommitment', value)} value={profile.timeCommitment} required>
-                <SelectTrigger>
+                <SelectTrigger className="rounded-2xl border-primary/20 bg-background/50 backdrop-blur-sm h-12 focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all duration-300">
                   <SelectValue placeholder="How much time can you dedicate?" />
                 </SelectTrigger>
                 <SelectContent>
@@ -188,13 +189,13 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
               </Select>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="budget" className="flex items-center gap-2">
-                <DollarSign className="h-4 w-4" />
+            <div className="space-y-3">
+              <Label htmlFor="budget" className="flex items-center gap-2 text-sm font-semibold">
+                <DollarSign className="h-4 w-4 text-primary" />
                 Budget for AI Tools/Training
               </Label>
               <Select onValueChange={(value) => updateProfile('budget', value)} value={profile.budget} required>
-                <SelectTrigger>
+                <SelectTrigger className="rounded-2xl border-primary/20 bg-background/50 backdrop-blur-sm h-12 focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all duration-300">
                   <SelectValue placeholder="Select budget range" />
                 </SelectTrigger>
                 <SelectContent>
@@ -208,10 +209,10 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
             </div>
           </div>
 
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="goals" className="flex items-center gap-2">
-                <Target className="h-4 w-4" />
+          <div className="space-y-6">
+            <div className="space-y-3">
+              <Label htmlFor="goals" className="flex items-center gap-2 text-sm font-semibold">
+                <Target className="h-4 w-4 text-primary" />
                 Primary Goals & Objectives
               </Label>
               <Textarea
@@ -219,28 +220,30 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
                 value={profile.goals}
                 onChange={(e) => updateProfile('goals', e.target.value)}
                 placeholder="What do you want to achieve with AI? (e.g., increase productivity, automate processes, improve decision-making)"
-                rows={3}
+                rows={4}
+                className="rounded-2xl border-primary/20 bg-background/50 backdrop-blur-sm p-4 focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all duration-300 resize-none"
                 required
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="challenges">Biggest Challenges & Pain Points</Label>
+            <div className="space-y-3">
+              <Label htmlFor="challenges" className="text-sm font-semibold">Biggest Challenges & Pain Points</Label>
               <Textarea
                 id="challenges"
                 value={profile.challenges}
                 onChange={(e) => updateProfile('challenges', e.target.value)}
                 placeholder="What are your current biggest challenges that AI could help solve?"
-                rows={3}
+                rows={4}
+                className="rounded-2xl border-primary/20 bg-background/50 backdrop-blur-sm p-4 focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all duration-300 resize-none"
                 required
               />
             </div>
           </div>
 
-          <div className="flex gap-3">
+          <div className="flex gap-4 pt-6">
             <Button 
               type="submit" 
-              className="flex-1"
+              className="flex-1 h-14 rounded-2xl bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300 text-lg font-semibold"
               disabled={isLoading || isSaving}
             >
               {isLoading || isSaving ? 'Saving Your Profile...' : 'Start My AI Transformation Journey'}
@@ -250,6 +253,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
                 type="button" 
                 variant="outline"
                 onClick={onNewProfile}
+                className="h-14 px-8 rounded-2xl border-primary/30 hover:bg-primary/10 transition-all duration-300"
               >
                 New Profile
               </Button>

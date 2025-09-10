@@ -947,19 +947,19 @@ export default function ComprehensiveJumpDisplay({ jump, onEdit, onDownload, cla
     <div className={`max-w-6xl mx-auto ${className}`}>
       {/* Header */}
       <div className="mb-8 space-y-4">
-        <div className="flex items-start justify-between gap-4">
-          <div className="flex-1">
-            <h1 className="text-3xl font-bold text-foreground mb-2">{jump.title}</h1>
-            <p className="text-lg text-muted-foreground leading-relaxed">{jump.executive_summary}</p>
+        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
+          <div className="flex-1 min-w-0">
+            <h1 className="text-2xl lg:text-3xl font-bold text-foreground mb-3 break-words hyphens-auto">{jump.title}</h1>
+            <p className="text-base lg:text-lg text-muted-foreground leading-relaxed break-words">{jump.executive_summary}</p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 shrink-0">
             {onEdit && (
-              <Button variant="outline" onClick={onEdit} size="sm">
+              <Button variant="outline" onClick={onEdit} size="sm" className="whitespace-nowrap">
                 Edit Plan
               </Button>
             )}
             {onDownload && (
-              <Button onClick={onDownload} size="sm" className="gap-2">
+              <Button onClick={onDownload} size="sm" className="gap-2 whitespace-nowrap">
                 <Download className="h-4 w-4" />
                 Download
               </Button>
@@ -970,32 +970,40 @@ export default function ComprehensiveJumpDisplay({ jump, onEdit, onDownload, cla
 
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-6 mb-6">
-          <TabsTrigger value="overview" className="flex items-center gap-2">
-            <Star className="h-4 w-4" />
-            <span className="hidden sm:inline">Overview</span>
-          </TabsTrigger>
-          <TabsTrigger value="analysis" className="flex items-center gap-2">
-            <BarChart3 className="h-4 w-4" />
-            <span className="hidden sm:inline">Analysis</span>
-          </TabsTrigger>
-          <TabsTrigger value="plan" className="flex items-center gap-2">
-            <Target className="h-4 w-4" />
-            <span className="hidden sm:inline">Action Plan</span>
-          </TabsTrigger>
-          <TabsTrigger value="tools" className="flex items-center gap-2">
-            <Zap className="h-4 w-4" />
-            <span className="hidden sm:inline">Tools</span>
-          </TabsTrigger>
-          <TabsTrigger value="workflows" className="flex items-center gap-2">
-            <Workflow className="h-4 w-4" />
-            <span className="hidden sm:inline">Workflows</span>
-          </TabsTrigger>
-          <TabsTrigger value="metrics" className="flex items-center gap-2">
-            <BarChart3 className="h-4 w-4" />
-            <span className="hidden sm:inline">Metrics</span>
-          </TabsTrigger>
-        </TabsList>
+        <div className="overflow-x-auto">
+          <TabsList className="grid w-full min-w-[600px] grid-cols-6 mb-6">
+            <TabsTrigger value="overview" className="flex items-center gap-2 text-xs sm:text-sm">
+              <Star className="h-3 w-3 sm:h-4 sm:w-4" />
+              <span className="hidden sm:inline">Overview</span>
+              <span className="sm:hidden">Over</span>
+            </TabsTrigger>
+            <TabsTrigger value="analysis" className="flex items-center gap-2 text-xs sm:text-sm">
+              <BarChart3 className="h-3 w-3 sm:h-4 sm:w-4" />
+              <span className="hidden sm:inline">Analysis</span>
+              <span className="sm:hidden">Ana</span>
+            </TabsTrigger>
+            <TabsTrigger value="plan" className="flex items-center gap-2 text-xs sm:text-sm">
+              <Target className="h-3 w-3 sm:h-4 sm:w-4" />
+              <span className="hidden sm:inline">Action Plan</span>
+              <span className="sm:hidden">Plan</span>
+            </TabsTrigger>
+            <TabsTrigger value="tools" className="flex items-center gap-2 text-xs sm:text-sm">
+              <Zap className="h-3 w-3 sm:h-4 sm:w-4" />
+              <span className="hidden sm:inline">Tools</span>
+              <span className="sm:hidden">Tool</span>
+            </TabsTrigger>
+            <TabsTrigger value="workflows" className="flex items-center gap-2 text-xs sm:text-sm">
+              <Workflow className="h-3 w-3 sm:h-4 sm:w-4" />
+              <span className="hidden sm:inline">Workflows</span>
+              <span className="sm:hidden">Work</span>
+            </TabsTrigger>
+            <TabsTrigger value="metrics" className="flex items-center gap-2 text-xs sm:text-sm">
+              <BarChart3 className="h-3 w-3 sm:h-4 sm:w-4" />
+              <span className="hidden sm:inline">Metrics</span>
+              <span className="sm:hidden">Met</span>
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
         <TabsContent value="overview" className="mt-0">
           {renderOverview()}
