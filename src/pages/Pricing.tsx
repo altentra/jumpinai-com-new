@@ -170,16 +170,21 @@ export default function Pricing() {
                 </ul>
               </CardContent>
               
-              <CardFooter className="p-3 md:p-5 pt-0">
+              <CardFooter className="p-3 md:p-5 pt-0 mt-auto">
                 <div className="w-full">
                   {!isAuthenticated ? (
-                    <Button 
-                      onClick={() => login('/pricing')}
-                      variant="outline" 
-                      className="w-full py-2.5 text-xs md:text-sm rounded-xl border-2 hover:scale-105 transition-all duration-300 font-semibold hover:border-primary/50 hover:bg-primary/5"
-                    >
-                      Get Started Free
-                    </Button>
+                    <div className="space-y-2">
+                      <Button 
+                        onClick={() => login('/pricing')}
+                        variant="outline" 
+                        className="w-full py-2.5 text-xs md:text-sm rounded-xl border-2 hover:scale-105 transition-all duration-300 font-semibold hover:border-primary/50 hover:bg-primary/5"
+                      >
+                        Get Started Free
+                      </Button>
+                      <p className="text-xs text-center text-muted-foreground invisible" aria-hidden="true">
+                        helper
+                      </p>
+                    </div>
                   ) : (
                     <div className="text-center py-2.5 text-muted-foreground text-xs font-medium">
                       {subInfo?.subscribed ? 'Always available as fallback' : 'Currently active plan'}
@@ -230,7 +235,7 @@ export default function Pricing() {
                 </ul>
               </CardContent>
               
-              <CardFooter className="p-3 md:p-5 pt-0">
+              <CardFooter className="p-3 md:p-5 pt-0 mt-auto">
                 {!isAuthenticated ? (
                   <div className="w-full space-y-2">
                     <Button 
