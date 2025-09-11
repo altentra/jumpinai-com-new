@@ -17,7 +17,7 @@ export default function JumpCard({ jump, onView, onDelete }: JumpCardProps) {
   };
 
   return (
-    <Card className="hover:shadow-md transition-shadow duration-200 border-border/50">
+    <Card className="bg-gradient-to-br from-card/95 to-primary/5 border border-primary/20 rounded-3xl shadow-2xl shadow-primary/10 backdrop-blur-xl hover:shadow-primary/20 hover-scale">
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1 min-w-0">
@@ -47,7 +47,7 @@ export default function JumpCard({ jump, onView, onDelete }: JumpCardProps) {
             onClick={() => onView(jump)}
             variant="default"
             size="sm"
-            className="flex-1"
+            className="flex-1 rounded-2xl shadow-md hover:shadow-lg"
           >
             <Eye className="h-4 w-4 mr-2" />
             View Full Plan
@@ -57,7 +57,7 @@ export default function JumpCard({ jump, onView, onDelete }: JumpCardProps) {
             onClick={() => onDelete(jump.id)}
             variant="outline"
             size="sm"
-            className="text-destructive hover:text-destructive"
+            className="rounded-2xl border-primary/30 text-destructive hover:text-destructive"
           >
             <Trash2 className="h-4 w-4" />
           </Button>

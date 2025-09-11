@@ -57,7 +57,7 @@ export default function JumpDetailModal({ jump, isOpen, onClose }: JumpDetailMod
               onClick={downloadPlan}
               variant="outline"
               size="sm"
-              className="gap-2"
+              className="gap-2 rounded-2xl border-primary/30 hover:bg-primary/10 hover:border-primary/40 transition-all duration-300 hover:scale-105"
             >
               <Download className="h-4 w-4" />
               Download
@@ -65,8 +65,9 @@ export default function JumpDetailModal({ jump, isOpen, onClose }: JumpDetailMod
           </div>
         </DialogHeader>
 
-        <div className="flex-1 overflow-y-auto py-4">
+        <div className="flex-1 overflow-y-auto py-4 animate-enter">
           {(() => {
+            try {
             const parseMaybe = (v: any) => (typeof v === 'string' ? safeParseJSON(v) : v);
             const isComp = (p: any) => p && typeof p === 'object' && p.overview && p.analysis && p.action_plan && Array.isArray(p.action_plan?.phases);
 
@@ -209,6 +210,16 @@ export default function JumpDetailModal({ jump, isOpen, onClose }: JumpDetailMod
                 </ReactMarkdown>
               </div>
             );
+            } catch (err) {
+              console.error('Error rendering JumpDetailModal:', err);
+              return (
+                <div className="p-6 border border-destructive/30 rounded-lg bg-destructive/5 text-center">
+                  <h3 className="text-lg font-semibold mb-2">We hit a snag rendering this jump</h3>
+                  <p className="text-sm text-muted-foreground mb-4">Open it in Jumps Studio or try again.</p>
+                  <Button variant="outline" size="sm" onClick={() => (window.location.href = '/dashboard/jumps-studio')}>Open in Jumps Studio</Button>
+                </div>
+              );
+            }
           })()}
         </div>
       </DialogContent>
