@@ -125,12 +125,21 @@ const Newsletter = () => {
   };
 
   return (
-    <section id="newsletter" className="relative py-12 px-4 sm:px-6 lg:px-8 scroll-snap-section">
+    <section id="newsletter" className="relative py-12 px-4 sm:px-6 lg:px-8 scroll-snap-section overflow-hidden">
+      {/* Premium Background */}
+      <div className="absolute inset-0 bg-gradient-to-b from-background via-muted/5 to-background"></div>
+      <div className="absolute inset-0 bg-gradient-to-r from-primary/[0.02] via-transparent to-primary/[0.02]"></div>
+      
+      {/* Glass morphism overlay */}
+      <div className="absolute inset-0 opacity-30">
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-radial from-primary/10 via-primary/5 to-transparent rounded-full blur-3xl"></div>
+      </div>
+      
       <div className="relative z-10 max-w-4xl mx-auto text-center">
-        <div className="relative border-2 border-border/40 dark:border-border/60 rounded-3xl p-8 sm:p-10 shadow-modern-lg animate-fade-in-up bg-background/80 backdrop-blur-sm hover:border-border/60 dark:hover:border-border/80 transition-all duration-500 hover:shadow-2xl dark:hover:shadow-[0_25px_50px_-12px_rgba(255,255,255,0.1)]">
+        <div className="relative border-2 border-border/40 dark:border-border/60 rounded-3xl p-8 sm:p-10 shadow-2xl animate-fade-in-up glass-dark backdrop-blur-xl bg-background/80 dark:bg-background/60 hover:border-primary/30 dark:hover:border-primary/40 transition-all duration-500 hover:shadow-3xl group">
           {/* Enhanced Border Glow Effect */}
-          <div className="absolute -inset-0.5 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 rounded-3xl opacity-30 dark:opacity-50 blur-sm"></div>
-          <div className="absolute inset-0 bg-background rounded-3xl"></div>
+          <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 via-primary/30 to-primary/20 dark:from-primary/30 dark:via-primary/40 dark:to-primary/30 rounded-3xl opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-500"></div>
+          <div className="absolute inset-0 bg-background/90 dark:bg-background/80 rounded-3xl"></div>
           
           {/* Content */}
           <div className="relative z-10">
@@ -162,14 +171,14 @@ const Newsletter = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="w-full px-5 py-3 text-base rounded-2xl border-border bg-background text-foreground placeholder-muted-foreground focus:bg-background transition-all duration-300 focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
+                    className="w-full px-5 py-3 text-base rounded-3xl border-border bg-background/80 backdrop-blur-sm text-foreground placeholder-muted-foreground focus:bg-background transition-all duration-300 focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
                   />
                 </div>
                 <Button 
                   type="submit"
                   size="lg"
                   disabled={isSubmitting}
-                  className="modern-button group bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-3 text-base font-semibold rounded-2xl transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
+                  className="modern-button group bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-3 text-base font-semibold rounded-3xl transition-all duration-300 hover:scale-105 shadow-2xl hover:shadow-3xl backdrop-blur-sm"
                 >
                   {isSubmitting ? "Processing..." : "Join Now"}
                   <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />

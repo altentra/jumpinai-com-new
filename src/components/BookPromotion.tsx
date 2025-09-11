@@ -111,11 +111,20 @@ const BookPromotion = () => {
   };
 
   return (
-    <section className="relative py-14 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
-        <article className="relative border-2 border-border/40 dark:border-border/60 rounded-3xl p-8 sm:p-10 bg-background/80 backdrop-blur-sm shadow-modern-lg hover:border-border/60 transition-all duration-500">
+    <section className="relative py-14 px-4 sm:px-6 lg:px-8 overflow-hidden">
+      {/* Premium Background */}
+      <div className="absolute inset-0 bg-gradient-to-b from-background via-muted/5 to-background"></div>
+      <div className="absolute inset-0 bg-gradient-to-l from-primary/[0.02] via-transparent to-primary/[0.02]"></div>
+      
+      {/* Glass morphism overlay */}
+      <div className="absolute inset-0 opacity-30">
+        <div className="absolute top-1/3 left-1/3 w-80 h-80 bg-gradient-radial from-primary/8 via-primary/4 to-transparent rounded-full blur-3xl"></div>
+      </div>
+      
+      <div className="max-w-4xl mx-auto relative z-10">
+        <article className="relative border-2 border-border/40 dark:border-border/60 rounded-3xl p-8 sm:p-10 glass-dark backdrop-blur-xl bg-background/80 dark:bg-background/60 shadow-2xl hover:border-primary/30 dark:hover:border-primary/40 transition-all duration-500 hover:shadow-3xl group">
           <header className="text-center mb-6">
-            <div className="inline-flex items-center px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
+            <div className="inline-flex items-center px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 backdrop-blur-sm">
               <Book className="h-4 w-4 text-primary mr-2" />
               <span className="text-xs font-semibold text-primary">Digital Guide</span>
             </div>
@@ -147,7 +156,7 @@ const BookPromotion = () => {
                   <Button
                     size="lg"
                     disabled={loadingProduct || !product}
-                    className="min-w-[240px] px-8 rounded-2xl transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl group"
+                    className="min-w-[240px] px-8 rounded-3xl transition-all duration-300 hover:scale-105 shadow-2xl hover:shadow-3xl group backdrop-blur-sm"
                   >
                     <ShoppingCart className="h-4 w-4 mr-2" />
                     {loadingProduct ? "Loading..." : `Buy Now — $${priceDisplay}`}
@@ -203,7 +212,7 @@ const BookPromotion = () => {
                 </DialogContent>
               </Dialog>
 
-              <Button asChild variant="outline" size="lg" className="min-w-[240px] px-8 rounded-2xl transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl group">
+              <Button asChild variant="outline" size="lg" className="min-w-[240px] px-8 rounded-3xl transition-all duration-300 hover:scale-105 shadow-2xl hover:shadow-3xl group glass-dark backdrop-blur-sm border-2">
                 <a href="https://www.amazon.com/dp/B0FHCM3VQ8" target="_blank" rel="noopener noreferrer">
                   Buy on Amazon — $15.99
                 </a>

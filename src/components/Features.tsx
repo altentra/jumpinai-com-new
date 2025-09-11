@@ -71,15 +71,15 @@ const Features = () => {
             designed specifically for <em>your</em> unique goals, challenges, and circumstances.
           </p>
           
-          <div className="glass-dark border border-white/10 dark:border-white/20 rounded-3xl p-8 shadow-2xl backdrop-blur-xl bg-white/5 dark:bg-white/10 hover:bg-white/8 dark:hover:bg-white/15 transition-all duration-500 group">
+          <div className="glass-dark border border-border/20 dark:border-border/30 rounded-3xl p-8 shadow-2xl backdrop-blur-xl bg-background/80 dark:bg-background/60 hover:bg-background/90 dark:hover:bg-background/70 transition-all duration-500 group">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.02] via-transparent to-primary/[0.03] rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             <div className="relative">
-              <p className="text-lg text-foreground/90 leading-relaxed mb-4">
+              <p className="text-lg text-foreground leading-relaxed mb-4">
                 Unlike generic advice or one-size-fits-all solutions, Jumps Studio creates an 
                 <strong className="text-primary"> individually tailored implementation journey</strong> that 
                 helps you <strong className="text-primary">implement AI in your life and business</strong>.
               </p>
-              <p className="text-lg text-foreground/90 leading-relaxed">
+              <p className="text-lg text-foreground leading-relaxed">
                 Each Jump includes personalized prompts, custom workflows, proven blueprints, 
                 and strategic guidance - everything you need to <strong className="text-primary">literally Jump into AI fast</strong> and 
                 start using it to your advantage ASAP in the most professional, efficient, and transformative way possible.
@@ -93,7 +93,7 @@ const Features = () => {
           {features.map((feature, index) => {
             const Icon = feature.icon;
             return (
-              <div key={index} className="group relative p-6 rounded-3xl glass-dark border border-white/10 dark:border-white/20 hover:border-primary/30 dark:hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 backdrop-blur-xl bg-white/5 dark:bg-white/10 hover:bg-white/10 dark:hover:bg-white/15 overflow-hidden hover:scale-105">
+              <div key={index} className="group relative p-6 rounded-3xl glass-dark border border-border/20 dark:border-border/30 hover:border-primary/30 dark:hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 backdrop-blur-xl bg-background/60 dark:bg-background/40 hover:bg-background/70 dark:hover:bg-background/50 overflow-hidden hover:scale-105">
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.03] via-transparent to-primary/[0.05] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-primary/[0.06] to-transparent rounded-full -translate-y-12 translate-x-12 opacity-0 group-hover:opacity-100 transition-all duration-700" />
                 
@@ -104,7 +104,7 @@ const Features = () => {
                   <h3 className="font-bold text-lg text-foreground group-hover:text-primary/90 transition-colors duration-300 leading-tight">{feature.title}</h3>
                 </div>
                 
-                <p className="text-muted-foreground/90 text-sm leading-relaxed ml-16 group-hover:text-muted-foreground transition-colors duration-300">{feature.description}</p>
+                <p className="text-muted-foreground text-sm leading-relaxed ml-16 group-hover:text-foreground/80 transition-colors duration-300">{feature.description}</p>
               </div>
             );
           })}

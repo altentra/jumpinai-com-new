@@ -115,11 +115,21 @@ const LeadMagnet = () => {
   };
 
   return (
-    <section className="relative py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-background via-background to-muted/20">
-      <div className="max-w-4xl mx-auto">
+    <section className="relative py-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
+      {/* Premium Background */}
+      <div className="absolute inset-0 bg-gradient-to-b from-background via-muted/5 to-background"></div>
+      <div className="absolute inset-0 bg-gradient-to-r from-primary/[0.02] via-transparent to-primary/[0.02]"></div>
+      
+      {/* Glass morphism overlay */}
+      <div className="absolute inset-0 opacity-30">
+        <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-gradient-radial from-primary/10 via-primary/5 to-transparent rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/3 left-1/4 w-80 h-80 bg-gradient-radial from-secondary/8 via-secondary/4 to-transparent rounded-full blur-2xl"></div>
+      </div>
+      
+      <div className="max-w-4xl mx-auto relative z-10">
         <div className="text-center space-y-8">
           
-          <div className="inline-flex items-center px-4 py-2 bg-primary/10 rounded-full border border-primary/20">
+          <div className="inline-flex items-center px-4 py-2 bg-primary/10 rounded-full border border-primary/20 backdrop-blur-sm">
             <Zap className="h-4 w-4 text-primary mr-2" />
             <span className="text-sm font-semibold text-primary">Free Download</span>
           </div>
@@ -138,7 +148,7 @@ const LeadMagnet = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
-                <Button size="lg" className="modern-button bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 text-lg font-semibold rounded-2xl transition-all duration-300 hover:scale-105 shadow-lg">
+                <Button size="lg" className="modern-button bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 text-lg font-semibold rounded-3xl transition-all duration-300 hover:scale-105 shadow-2xl backdrop-blur-sm">
                   <Download className="h-5 w-5 mr-2" />
                   Get Your Free PDF
                 </Button>
