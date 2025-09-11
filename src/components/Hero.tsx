@@ -269,7 +269,7 @@ const Hero = () => {
                 variant="outline" 
                 size="lg" 
                 onClick={() => scrollToSection('newsletter')}
-                className="modern-button group glass-dark border-2 border-white/20 hover:border-white/40 dark:border-white/30 dark:hover:border-white/50 px-12 py-6 text-lg font-semibold rounded-3xl transition-all duration-500 hover:scale-105 backdrop-blur-md text-foreground hover:text-foreground shadow-xl hover:shadow-2xl bg-white/5 dark:bg-white/10 hover:bg-white/10 dark:hover:bg-white/15"
+                className="modern-button group border-2 border-border hover:border-primary/50 px-12 py-6 text-lg font-semibold rounded-3xl transition-all duration-500 hover:scale-105 backdrop-blur-md text-foreground hover:text-foreground shadow-xl hover:shadow-2xl bg-background hover:bg-muted"
               >
                 Stay ahead with AI
                 <ArrowRight className="ml-3 h-5 w-5 group-hover:translate-x-1 transition-transform" />
@@ -279,7 +279,7 @@ const Hero = () => {
                 variant="outline" 
                 size="lg" 
                 asChild
-                className="modern-button group glass-dark border-2 border-white/20 hover:border-white/40 dark:border-white/30 dark:hover:border-white/50 px-12 py-6 text-lg font-semibold rounded-3xl transition-all duration-500 hover:scale-105 backdrop-blur-md text-foreground hover:text-foreground shadow-xl hover:shadow-2xl bg-white/5 dark:bg-white/10 hover:bg-white/10 dark:hover:bg-white/15"
+                className="modern-button group border-2 border-border hover:border-primary/50 px-12 py-6 text-lg font-semibold rounded-3xl transition-all duration-500 hover:scale-105 backdrop-blur-md text-foreground hover:text-foreground shadow-xl hover:shadow-2xl bg-background hover:bg-muted"
               >
                 <Link to="/auth">
                   Create account

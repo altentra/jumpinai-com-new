@@ -58,28 +58,28 @@ const Features = () => {
       <div className="container mx-auto px-4 max-w-7xl relative z-10">
         {/* Header */}
         <div className="text-center mb-16 max-w-4xl mx-auto">
-          <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
             Introducing <span className="bg-gradient-to-r from-primary via-primary/80 to-primary bg-clip-text text-transparent">Jumps Studio</span>
           </h2>
           
-          <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-foreground">
+          <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4 text-foreground">
             What is a <span className="bg-gradient-to-r from-primary via-primary/80 to-primary bg-clip-text text-transparent">Jump</span>?
           </h3>
           
-          <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed mb-8">
+          <p className="text-lg md:text-xl text-muted-foreground leading-relaxed mb-6">
             A Jump is your personalized AI transformation plan - a complete, step-by-step journey 
             designed specifically for <em>your</em> unique goals, challenges, and circumstances.
           </p>
           
-          <div className="glass-dark border border-border/30 rounded-3xl p-8 shadow-2xl backdrop-blur-xl bg-background/95 hover:bg-background transition-all duration-500 group">
+          <div className="border border-border/30 rounded-3xl p-6 shadow-2xl backdrop-blur-xl bg-background hover:bg-background transition-all duration-500 group">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.02] via-transparent to-primary/[0.03] rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             <div className="relative">
-              <p className="text-lg text-foreground leading-relaxed mb-4">
+              <p className="text-base text-foreground leading-relaxed mb-3">
                 Unlike generic advice or one-size-fits-all solutions, Jumps Studio creates an 
                 <strong className="text-primary"> individually tailored implementation journey</strong> that 
                 helps you <strong className="text-primary">implement AI in your life and business</strong>.
               </p>
-              <p className="text-lg text-foreground leading-relaxed">
+              <p className="text-base text-foreground leading-relaxed">
                 Each Jump includes personalized prompts, custom workflows, proven blueprints, 
                 and strategic guidance - everything you need to <strong className="text-primary">literally Jump into AI fast</strong> and 
                 start using it to your advantage ASAP in the most professional, efficient, and transformative way possible.
