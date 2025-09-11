@@ -132,7 +132,12 @@ const ContactUs = () => {
                       <h3 className="font-bold text-sm mb-2 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">
                         Email Us
                       </h3>
-                      <p className="text-base font-semibold text-primary mb-1">info@jumpinai.com</p>
+                      <a 
+                        href="mailto:info@jumpinai.com" 
+                        className="text-base font-semibold text-primary mb-1 hover:text-primary/80 transition-colors duration-200 cursor-pointer"
+                      >
+                        info@jumpinai.com
+                      </a>
                       <p className="text-xs text-muted-foreground">Your gateway to AI transformation</p>
                     </div>
                   </div>
