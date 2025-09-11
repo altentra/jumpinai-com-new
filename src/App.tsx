@@ -13,7 +13,6 @@ const AboutUs = lazy(() => import("./pages/AboutUs"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const TermsOfUse = lazy(() => import("./pages/TermsOfUse"));
 const ContactUs = lazy(() => import("./pages/ContactUs"));
-const FAQ = lazy(() => import("./pages/FAQ"));
 const TestSync = lazy(() => import("./pages/TestSync"));
 const Jumps = lazy(() => import("./pages/Jumps"));
 const PaymentSuccess = lazy(() => import("./pages/PaymentSuccess"));
@@ -75,7 +74,6 @@ const App = () => {
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/terms-of-use" element={<TermsOfUse />} />
               <Route path="/contact-us" element={<ContactUs />} />
-              <Route path="/faq" element={<FAQ />} />
               <Route path="/resources" element={<Resources />} />
               <Route path="/pricing" element={<Pricing />} />
               <Route path="/test-sync" element={<TestSync />} />
