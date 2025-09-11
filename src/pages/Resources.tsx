@@ -1946,10 +1946,10 @@ export default function Resources() {
   const showAllContent = subscription?.subscribed && subscription.subscription_tier === 'JumpinAI Pro';
 
   const UpgradeSection = ({ message }: { message: string }) => (
-    <div className="bg-muted/50 border border-border rounded-lg p-8 text-center mt-8">
-      <Lock className="h-8 w-8 text-muted-foreground mb-3 mx-auto" />
-      <p className="text-lg font-medium mb-2">{message}</p>
-      <p className="text-muted-foreground mb-4">Upgrade to Pro to unlock all premium resources</p>
+    <div className="glass rounded-2xl border border-white/10 p-6 text-center mt-6 shadow-modern">
+      <Lock className="h-6 w-6 text-primary mb-3 mx-auto" />
+      <p className="text-base font-medium mb-2">{message}</p>
+      <p className="text-sm text-muted-foreground mb-4">Upgrade to Pro to unlock all premium resources</p>
       <Button 
         onClick={() => {
           if (!isAuthenticated) {
@@ -1958,7 +1958,8 @@ export default function Resources() {
             window.location.href = '/pricing';
           }
         }}
-        className="text-sm"
+        size="sm"
+        className="text-xs"
       >
         {!isAuthenticated ? 'Login to Subscribe' : 'Upgrade to Pro'} - $10/month
       </Button>
@@ -2008,18 +2009,18 @@ export default function Resources() {
 
     return (
       <Card 
-        className={`group relative overflow-hidden h-full cursor-pointer border bg-gradient-to-br ${getGradientClass()} hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 hover:scale-[1.03] hover:-translate-y-2 backdrop-blur-sm ${isBlurred ? 'filter blur-[2px] pointer-events-none opacity-60' : ''}`}
+        className={`glass rounded-xl border-white/10 group relative overflow-hidden h-full cursor-pointer shadow-modern hover:shadow-modern-lg transition-all duration-300 hover:scale-[1.02] ${isBlurred ? 'filter blur-[2px] pointer-events-none opacity-60' : ''}`}
         onClick={handleCardClick}
       >
         <CardHeader className="pb-4">
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-3 min-w-0 flex-1">
               {getCardIcon()}
-              <CardTitle className="text-lg font-semibold leading-tight line-clamp-2 group-hover:text-primary transition-colors">
+              <CardTitle className="text-base font-semibold leading-tight line-clamp-2 group-hover:text-primary transition-colors">
                 {item.name}
               </CardTitle>
             </div>
-            <Badge variant="secondary" className="shrink-0 bg-primary/10 text-primary border-primary/20">
+            <Badge variant="secondary" className="shrink-0 bg-primary/10 text-primary border-primary/20 text-xs">
               {item.category}
             </Badge>
           </div>
@@ -2126,16 +2127,16 @@ export default function Resources() {
         </div>
         <div className="max-w-7xl mx-auto px-4 py-12">
           {/* Header */}
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold mb-4">AI Resources</h1>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+          <div className="text-center mb-8 glass rounded-2xl border border-white/10 p-6 shadow-modern">
+            <h1 className="text-3xl font-bold mb-3">AI Resources</h1>
+            <p className="text-base text-muted-foreground max-w-2xl mx-auto">
               Your complete toolkit for AI-powered productivity. Discover curated tools, proven prompts, and strategic frameworks across all creative and business domains.
             </p>
           </div>
 
           {/* Resource type tabs */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-5 mb-8">
+            <TabsList className="grid w-full grid-cols-5 mb-6 glass border-white/10 shadow-modern">
               <TabsTrigger value="tools" className="flex items-center gap-2">
                 <Zap className="h-4 w-4" />
                 Tools
@@ -2159,15 +2160,15 @@ export default function Resources() {
             </TabsList>
 
             {/* Second row: Topic category tabs (shown after first selection) */}
-            <div className="mb-8">
-              <div className="text-center mb-6">
-                <p className="text-muted-foreground">
+            <div className="mb-6">
+              <div className="text-center mb-4">
+                <p className="text-sm text-muted-foreground">
                   Choose a topic category for {activeTab}:
                 </p>
               </div>
               
               <Tabs value={activeTopicTab} onValueChange={setActiveTopicTab as (value: string) => void} className="w-full">
-                <TabsList className="flex flex-wrap justify-center w-full bg-muted/30 h-auto p-1 gap-1">
+                <TabsList className="flex flex-wrap justify-center w-full glass border-white/10 shadow-modern h-auto p-1 gap-1">
                   <TabsTrigger value="Text" className="flex items-center gap-2 text-sm flex-shrink-0">
                     <Type className="h-3 w-3" />
                     Text
