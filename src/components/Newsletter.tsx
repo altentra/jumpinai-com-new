@@ -136,10 +136,10 @@ const Newsletter = () => {
       </div>
       
       <div className="relative z-10 max-w-4xl mx-auto text-center">
-        <div className="relative border-2 border-border/40 dark:border-border/60 rounded-3xl p-8 sm:p-10 shadow-2xl animate-fade-in-up glass-dark backdrop-blur-xl bg-background/80 dark:bg-background/60 hover:border-primary/30 dark:hover:border-primary/40 transition-all duration-500 hover:shadow-3xl group">
+        <div className="relative border-2 border-border/40 rounded-3xl p-8 sm:p-10 shadow-2xl animate-fade-in-up backdrop-blur-xl bg-background/95 hover:border-primary/30 transition-all duration-500 hover:shadow-3xl group">
           {/* Enhanced Border Glow Effect */}
-          <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 via-primary/30 to-primary/20 dark:from-primary/30 dark:via-primary/40 dark:to-primary/30 rounded-3xl opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-500"></div>
-          <div className="absolute inset-0 bg-background/90 dark:bg-background/80 rounded-3xl"></div>
+          <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 via-primary/30 to-primary/20 rounded-3xl opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-500"></div>
+          <div className="absolute inset-0 bg-background rounded-3xl"></div>
           
           {/* Content */}
           <div className="relative z-10">
@@ -171,7 +171,7 @@ const Newsletter = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="w-full px-5 py-3 text-base rounded-3xl border-border bg-background/80 backdrop-blur-sm text-foreground placeholder-muted-foreground focus:bg-background transition-all duration-300 focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
+                    className="w-full px-5 py-3 text-base rounded-3xl border-border bg-background backdrop-blur-sm text-foreground placeholder-muted-foreground focus:bg-background transition-all duration-300 focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
                   />
                 </div>
                 <Button 

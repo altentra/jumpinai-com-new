@@ -122,7 +122,7 @@ const BookPromotion = () => {
       </div>
       
       <div className="max-w-4xl mx-auto relative z-10">
-        <article className="relative border-2 border-border/40 dark:border-border/60 rounded-3xl p-8 sm:p-10 glass-dark backdrop-blur-xl bg-background/80 dark:bg-background/60 shadow-2xl hover:border-primary/30 dark:hover:border-primary/40 transition-all duration-500 hover:shadow-3xl group">
+        <article className="relative border-2 border-border/40 rounded-3xl p-8 sm:p-10 backdrop-blur-xl bg-background/95 shadow-2xl hover:border-primary/30 transition-all duration-500 hover:shadow-3xl group">
           <header className="text-center mb-6">
             <div className="inline-flex items-center px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 backdrop-blur-sm">
               <Book className="h-4 w-4 text-primary mr-2" />
@@ -212,7 +212,7 @@ const BookPromotion = () => {
                 </DialogContent>
               </Dialog>
 
-              <Button asChild variant="outline" size="lg" className="min-w-[240px] px-8 rounded-3xl transition-all duration-300 hover:scale-105 shadow-2xl hover:shadow-3xl group glass-dark backdrop-blur-sm border-2">
+              <Button asChild variant="outline" size="lg" className="min-w-[240px] px-8 rounded-3xl transition-all duration-300 hover:scale-105 shadow-2xl hover:shadow-3xl group backdrop-blur-sm border-2 border-border hover:border-primary/50 bg-background hover:bg-muted">
                 <a href="https://www.amazon.com/dp/B0FHCM3VQ8" target="_blank" rel="noopener noreferrer">
                   Buy on Amazon — $15.99
                 </a>
