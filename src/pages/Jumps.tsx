@@ -429,21 +429,52 @@ const Jumps = () => {
           {/* All-Access CTA - Only show if user is not subscribed to Pro */}
           {!(subInfo?.subscribed && subInfo?.subscription_tier === "JumpinAI Pro") && (
             <div className="mt-16">
-              <div className="relative glass backdrop-blur-xl p-8 md:p-12 rounded-3xl border border-white/20 text-center overflow-hidden">
+              <div className="relative bg-gradient-to-br from-primary/10 via-primary/5 to-secondary/10 p-8 md:p-12 rounded-3xl border-2 border-primary/20 text-center overflow-hidden shadow-xl">
                 {/* Floating background elements */}
-                <div className="absolute -top-10 -left-10 w-32 h-32 bg-primary/10 rounded-full blur-2xl animate-pulse"></div>
-                <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-secondary/10 rounded-full blur-2xl animate-pulse" style={{animationDelay: '1s'}}></div>
+                <div className="absolute -top-10 -left-10 w-32 h-32 bg-primary/20 rounded-full blur-2xl animate-pulse"></div>
+                <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-secondary/20 rounded-full blur-2xl animate-pulse" style={{animationDelay: '1s'}}></div>
                 
-                <div className="relative z-10">
-                  <h2 className="text-2xl md:text-3xl font-semibold mb-4 gradient-text">Get access to all guides</h2>
-                  <p className="text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
-                    Want everything in one place? Join our Whop for just $19.99 and unlock all products together.
+                <div className="relative z-10 bg-background/80 backdrop-blur-sm rounded-2xl p-8 border border-border/50">
+                  <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-2xl mb-6">
+                    <Sparkles className="h-8 w-8 text-primary" />
+                  </div>
+                  
+                  <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+                    Get Access to <span className="text-primary">All Guides</span>
+                  </h2>
+                  
+                  <p className="text-lg text-foreground/80 mb-8 max-w-2xl mx-auto leading-relaxed">
+                    Want everything in one place? Join our Whop for just <span className="font-bold text-primary">$19.99</span> and unlock all products together with lifetime access.
                   </p>
-                  <Button size="lg" className="w-full sm:w-auto hover-scale rounded-2xl glass backdrop-blur-sm border border-white/20 hover:scale-110 transition-all duration-500" asChild>
-                    <a href="https://whop.com/jumpinai/" target="_blank" rel="noopener noreferrer">
-                      Join on Whop — $19.99
-                    </a>
-                  </Button>
+                  
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    <Button 
+                      size="lg" 
+                      className="w-full sm:w-auto text-lg px-8 py-4 rounded-2xl bg-primary hover:bg-primary/90 text-primary-foreground font-semibold hover:scale-105 transition-all duration-300 shadow-lg" 
+                      asChild
+                    >
+                      <a href="https://whop.com/jumpinai/" target="_blank" rel="noopener noreferrer">
+                        <ShoppingCart className="mr-2 h-5 w-5" />
+                        Join on Whop — $19.99
+                      </a>
+                    </Button>
+                    
+                    <div className="flex items-center gap-2 text-sm text-foreground/70">
+                      <CheckCircle className="h-4 w-4 text-green-500" />
+                      <span>Lifetime Access</span>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-6 flex flex-wrap justify-center gap-4 text-sm text-foreground/60">
+                    <div className="flex items-center gap-1">
+                      <Download className="h-4 w-4" />
+                      <span>Instant Downloads</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <FileText className="h-4 w-4" />
+                      <span>All Current & Future Guides</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
