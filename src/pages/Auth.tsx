@@ -177,7 +177,7 @@ export default function Auth() {
                 disabled={loading}
                 aria-label="Continue with Apple"
                 variant="outline"
-                className="w-full h-12 mt-3 text-base font-medium bg-white hover:bg-gray-50 dark:bg-black dark:hover:bg-gray-950 border-2 border-gray-200 dark:border-gray-800 text-gray-700 dark:text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
+                className="w-full h-12 mt-2 text-base font-medium bg-white hover:bg-gray-50 dark:bg-black dark:hover:bg-gray-950 border-2 border-gray-200 dark:border-gray-800 text-gray-700 dark:text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
               >
                 <svg
                   className="mr-3 h-5 w-5"
