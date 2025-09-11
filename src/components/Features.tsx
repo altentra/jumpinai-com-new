@@ -57,9 +57,16 @@ const Features = () => {
       
       <div className="container mx-auto px-4 max-w-7xl relative z-10">
         {/* Header */}
-        <div className="text-center mb-16 max-w-4xl mx-auto">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-            Introducing <span className="bg-gradient-to-r from-primary via-primary/80 to-primary bg-clip-text text-transparent">Jumps Studio</span>
+        <div className="text-center mb-16 max-w-5xl mx-auto">
+          {/* Premium floating elements */}
+          <div className="absolute -top-8 left-1/4 w-24 h-24 bg-gradient-to-br from-primary/20 via-primary/10 to-transparent rounded-full blur-2xl animate-pulse opacity-60"></div>
+          <div className="absolute -top-4 right-1/3 w-16 h-16 bg-gradient-to-bl from-secondary/15 via-secondary/8 to-transparent rounded-full blur-xl animate-pulse opacity-50" style={{ animationDelay: '1s' }}></div>
+          
+          <h2 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-8 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent animate-fade-in">
+            Introducing <span className="bg-gradient-to-r from-primary via-primary/80 to-primary bg-clip-text text-transparent relative">
+              Jumps Studio
+              <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-primary/10 to-primary/20 rounded-lg blur-lg opacity-30 animate-pulse"></div>
+            </span>
           </h2>
           
           <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4 text-foreground">
@@ -71,17 +78,27 @@ const Features = () => {
             designed specifically for <em>your</em> unique goals, challenges, and circumstances.
           </p>
           
-          <div className="border border-border/30 rounded-3xl p-6 shadow-2xl backdrop-blur-xl bg-background hover:bg-background transition-all duration-500 group">
+          <div className="relative border border-border/30 rounded-3xl p-8 shadow-2xl backdrop-blur-xl bg-background hover:bg-background transition-all duration-500 group overflow-hidden">
+            {/* Premium animated border */}
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-transparent to-primary/20 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+            <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-primary/10 to-primary/30 rounded-3xl blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+            
+            {/* Floating premium elements */}
+            <div className="absolute top-4 right-4 w-12 h-12 bg-gradient-to-br from-primary/10 to-transparent rounded-full blur-lg opacity-50 group-hover:opacity-80 transition-opacity duration-500"></div>
+            <div className="absolute bottom-4 left-4 w-8 h-8 bg-gradient-to-tl from-secondary/15 to-transparent rounded-full blur-md opacity-40 group-hover:opacity-70 transition-opacity duration-500"></div>
+            
+            {/* Content overlay */}
             <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.02] via-transparent to-primary/[0.03] rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            
             <div className="relative">
-              <p className="text-base text-foreground leading-relaxed mb-3">
+              <p className="text-base text-foreground leading-relaxed mb-4">
                 Unlike generic advice or one-size-fits-all solutions, Jumps Studio creates an 
-                <strong className="text-primary"> individually tailored implementation journey</strong> that 
-                helps you <strong className="text-primary">implement AI in your life and business</strong>.
+                <strong className="text-primary bg-primary/10 px-1 rounded"> individually tailored implementation journey</strong> that 
+                helps you <strong className="text-primary bg-primary/10 px-1 rounded">implement AI in your life and business</strong>.
               </p>
               <p className="text-base text-foreground leading-relaxed">
                 Each Jump includes personalized prompts, custom workflows, proven blueprints, 
-                and strategic guidance - everything you need to <strong className="text-primary">literally Jump into AI fast</strong> and 
+                and strategic guidance - everything you need to <strong className="text-primary bg-primary/10 px-1 rounded">literally Jump into AI fast</strong> and 
                 start using it to your advantage ASAP in the most professional, efficient, and transformative way possible.
               </p>
             </div>
