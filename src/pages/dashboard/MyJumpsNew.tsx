@@ -89,7 +89,7 @@ export default function MyJumpsNew() {
   return (
     <div className="space-y-5">
       {/* Header */}
-      <div className="glass rounded-xl p-4 shadow-modern">
+      <div className="bg-gradient-to-br from-card/95 to-primary/5 rounded-3xl border border-primary/20 p-4 shadow-2xl shadow-primary/10 backdrop-blur-xl">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Rocket className="h-7 w-7 text-primary" />
@@ -131,7 +131,7 @@ export default function MyJumpsNew() {
           ))}
         </div>
       ) : (
-        <Card className="glass border-border rounded-xl shadow-modern">
+        <Card className="bg-gradient-to-br from-card/95 to-primary/5 border border-primary/20 rounded-3xl shadow-2xl shadow-primary/10 backdrop-blur-xl">
           <CardHeader className="text-center">
             <div className="mx-auto mb-3 p-3 rounded-full bg-muted w-fit">
               <Rocket className="h-7 w-7 text-muted-foreground" />

@@ -35,8 +35,9 @@ export default function JumpDetailModal({ jump, isOpen, onClose }: JumpDetailMod
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
-        <DialogHeader className="pb-4 border-b border-border/30">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden flex flex-col bg-gradient-to-br from-card/95 to-primary/5 border border-primary/20 shadow-2xl shadow-primary/10 backdrop-blur-xl rounded-3xl">
+        <DialogHeader className="pb-4 border-b border-primary/20">
+          <DialogDescription className="sr-only">Detailed view of your AI-generated Jump plan with download option.</DialogDescription>
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1 min-w-0">
               <DialogTitle className="text-2xl mb-2 line-clamp-2">
