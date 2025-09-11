@@ -14,20 +14,20 @@ const DashboardCard = React.memo(({ section, onClick }: {
   onClick: () => void;
 }) => (
   <Card 
-    className="border-border hover:shadow-modern transition-all duration-300 cursor-pointer group"
+    className="glass border-border hover:shadow-modern-lg transition-all duration-300 cursor-pointer group rounded-xl"
     onClick={onClick}
   >
-    <CardHeader className="pb-3">
-      <CardTitle className="flex items-center justify-between text-lg">
-        <div className="flex items-center gap-3">
-          <section.icon className={`h-5 w-5 ${section.color}`} />
+    <CardHeader className="pb-2">
+      <CardTitle className="flex items-center justify-between text-base">
+        <div className="flex items-center gap-2.5">
+          <section.icon className={`h-4 w-4 ${section.color}`} />
           <span>{section.title}</span>
         </div>
         <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors" />
       </CardTitle>
     </CardHeader>
-    <CardContent>
-      <CardDescription className="text-sm">
+    <CardContent className="pt-0">
+      <CardDescription className="text-xs">
         {section.description}
       </CardDescription>
     </CardContent>
@@ -97,65 +97,65 @@ const DashboardHome = () => {
   ];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Welcome Header */}
-      <div className="text-center py-8 animate-fade-in-down">
+      <div className="glass rounded-xl p-6 text-center animate-fade-in-down shadow-modern">
         <div className="flex items-center justify-center gap-3 mb-3">
-          <h1 className="text-4xl font-bold gradient-text-primary">
+          <h1 className="text-3xl font-bold gradient-text-primary">
             Welcome{user?.display_name ? `, ${user.display_name}` : ""}, to JumpinAI!
           </h1>
           {subscription && (
             <Badge className={subscription.subscribed ? "bg-primary/10 text-primary border-primary/20" : "bg-muted text-muted-foreground"}>
-              {subscription.subscribed ? subscription.subscription_tier || 'Pro Plan' : 'Free Plan'}
+              {subscription.subscribed ? subscription.subscription_tier || 'Pro' : 'Free'}
             </Badge>
           )}
         </div>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+        <p className="text-base text-muted-foreground max-w-2xl mx-auto">
           Your AI-powered dashboard is ready. Explore your tools, manage your projects, and accelerate your AI journey.
         </p>
       </div>
 
       {/* Jumps Studio Invitation */}
-      <Card className="border-primary/20 bg-gradient-to-r from-primary/5 to-primary/10 animate-fade-in-up">
-        <CardContent className="p-8 text-center">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <Palette className="h-8 w-8 text-primary" />
-            <h2 className="text-2xl font-bold gradient-text-primary">Ready to Design Your Next Big Jump?</h2>
+      <Card className="glass border-primary/20 bg-gradient-to-r from-primary/5 to-primary/10 animate-fade-in-up rounded-xl shadow-modern">
+        <CardContent className="p-6 text-center">
+          <div className="flex items-center justify-center gap-3 mb-3">
+            <Palette className="h-7 w-7 text-primary" />
+            <h2 className="text-xl font-bold gradient-text-primary">Ready to Design Your Next Big Jump?</h2>
           </div>
-          <p className="text-lg text-muted-foreground mb-6 max-w-3xl mx-auto">
+          <p className="text-sm text-muted-foreground mb-5 max-w-3xl mx-auto">
             Create a comprehensive AI transformation plan tailored to your life and business. 
             Jumps Studio helps you build complete roadmaps with all the necessary tools, prompts, 
             workflows, and strategies for your success journey.
           </p>
           <Button 
             onClick={() => navigate("/dashboard/jumps-studio")}
-            className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 text-lg font-semibold"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-2 text-base font-medium"
           >
             Start in Jumps Studio
-            <ArrowRight className="ml-2 h-5 w-5" />
+            <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </CardContent>
       </Card>
 
       {/* Pro Subscription Card - Only show if not subscribed */}
       {subscription && !subscription.subscribed && (
-        <Card className="border-border glass animate-fade-in-up">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <Card className="glass border-border animate-fade-in-up rounded-xl shadow-modern">
+          <CardHeader className="pb-3">
+            <CardTitle className="flex items-center gap-2 text-lg">
               <Crown className="h-5 w-5 text-primary" /> Upgrade to JumpinAI Pro
             </CardTitle>
           </CardHeader>
-          <CardContent className="text-muted-foreground">
+          <CardContent className="text-sm text-muted-foreground pb-3">
             Get all digital products with ongoing updates for just $10/month.
           </CardContent>
-          <CardFooter>
-            <Button onClick={subscribe} className="modern-button">Get Pro</Button>
+          <CardFooter className="pt-0">
+            <Button onClick={subscribe} className="modern-button text-sm">Get Pro</Button>
           </CardFooter>
         </Card>
       )}
 
       {/* Dashboard Sections Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in-up animate-delay-200">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 animate-fade-in-up animate-delay-200">
         {dashboardSections.map((section, index) => (
           <DashboardCard 
             key={section.title}

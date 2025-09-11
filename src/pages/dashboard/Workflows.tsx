@@ -90,39 +90,41 @@ export default function Workflows() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-semibold">My Workflows</h2>
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => loadWorkflows()}
-            disabled={isLoading}
-          >
-            <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
-          </Button>
-          <Badge variant="secondary">{workflows.length} workflows</Badge>
+    <div className="space-y-5">
+      <div className="glass rounded-xl p-4 shadow-modern">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-semibold">My Workflows</h2>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => loadWorkflows()}
+              disabled={isLoading}
+            >
+              <RefreshCw className={`w-3 h-3 ${isLoading ? 'animate-spin' : ''}`} />
+            </Button>
+            <Badge variant="secondary" className="text-xs">{workflows.length} workflows</Badge>
+          </div>
         </div>
       </div>
 
       {workflows.length === 0 ? (
-        <Card className="text-center py-16">
+        <Card className="glass text-center py-12 rounded-xl shadow-modern">
           <CardContent>
-            <h3 className="text-lg font-medium text-muted-foreground mb-2">
+            <h3 className="text-base font-medium text-muted-foreground mb-2">
               No workflows yet
             </h3>
-            <p className="text-muted-foreground mb-4">
+            <p className="text-sm text-muted-foreground mb-4">
               Generate your personalized AI transformation plan in Jumps Studio to get custom workflows
             </p>
-            <Button variant="outline">
-              <ExternalLink className="w-4 h-4 mr-2" />
+            <Button variant="outline" className="text-sm">
+              <ExternalLink className="w-3 h-3 mr-2" />
               Visit Jumps Studio
             </Button>
           </CardContent>
         </Card>
       ) : (
-        <div className="space-y-8">
+        <div className="space-y-6">
           {/* Group workflows by Jump */}
           {Object.entries(
             workflows.reduce((groups, workflow) => {
@@ -141,31 +143,31 @@ export default function Workflows() {
               return (jumpB?.jumpNumber || 0) - (jumpA?.jumpNumber || 0);
             })
             .map(([jumpId, jumpWorkflows]) => (
-            <div key={jumpId} className="border rounded-lg p-6 bg-card">
-              <div className="flex items-center gap-2 mb-4 pb-3 border-b">
-                <Rocket className="w-5 h-5 text-primary" />
-                <h3 className="text-xl font-semibold">
+            <div key={jumpId} className="glass border rounded-xl p-5 bg-card shadow-modern">
+              <div className="flex items-center gap-2 mb-3 pb-3 border-b">
+                <Rocket className="w-4 h-4 text-primary" />
+                <h3 className="text-lg font-semibold">
                   {jumpId === 'unassigned' 
                     ? 'Unassigned Workflows' 
                     : jumpsInfo[jumpId] 
                       ? `Jump #${jumpsInfo[jumpId].jumpNumber} - ${jumpsInfo[jumpId].title}` 
                       : 'Loading Jump Info...'}
                 </h3>
-                <Badge variant="secondary" className="ml-auto">
+                <Badge variant="secondary" className="ml-auto text-xs">
                   {jumpWorkflows.length} workflow{jumpWorkflows.length !== 1 ? 's' : ''}
                 </Badge>
               </div>
               
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                 {jumpWorkflows.map((workflow) => (
                   <Card 
                     key={workflow.id} 
-                    className="group cursor-pointer hover:shadow-lg transition-shadow relative"
+                    className="group cursor-pointer hover:shadow-modern-lg transition-shadow relative rounded-lg"
                     onClick={() => setSelectedWorkflow(workflow)}
                   >
-                    <CardHeader>
+                    <CardHeader className="pb-2">
                       <div className="flex items-start justify-between gap-2">
-                        <CardTitle className="text-lg line-clamp-2">{workflow.title}</CardTitle>
+                        <CardTitle className="text-base line-clamp-2">{workflow.title}</CardTitle>
                         <div className="flex items-center gap-2">
                           {workflow.category && (
                             <Badge variant="outline" className="text-xs">
@@ -205,12 +207,12 @@ export default function Workflows() {
                         </div>
                       </div>
                       {workflow.description && (
-                        <CardDescription className="line-clamp-3">
+                        <CardDescription className="line-clamp-3 text-xs">
                           {workflow.description}
                         </CardDescription>
                       )}
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="pt-0">
                       <div className="space-y-3">
                         <div className="flex items-center gap-4 text-sm text-muted-foreground">
                           {workflow.duration_estimate && (

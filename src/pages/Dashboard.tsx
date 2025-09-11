@@ -53,10 +53,10 @@ export default function Dashboard() {
           <AppSidebar />
 
           <main className="flex-1 relative z-10">
-            <header className="h-14 flex items-center justify-between border-b px-4">
+            <header className="h-12 flex items-center justify-between border-b px-3">
               <div className="flex items-center">
                 <SidebarTrigger className="mr-2 hover:bg-muted/50 transition-colors rounded-md p-1" />
-                <h1 className="text-lg font-semibold">My Dashboard</h1>
+                <h1 className="text-base font-medium">My Dashboard</h1>
               </div>
             </header>
 

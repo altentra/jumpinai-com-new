@@ -87,38 +87,40 @@ export default function MyJumpsNew() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <Rocket className="h-8 w-8 text-primary" />
-          <div>
-            <h1 className="text-3xl font-bold">My Jumps</h1>
-            <p className="text-muted-foreground">Your personal AI transformation plans</p>
+      <div className="glass rounded-xl p-4 shadow-modern">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Rocket className="h-7 w-7 text-primary" />
+            <div>
+              <h1 className="text-2xl font-bold">My Jumps</h1>
+              <p className="text-sm text-muted-foreground">Your personal AI transformation plans</p>
+            </div>
           </div>
-        </div>
-        
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => loadJumps()}
-            disabled={loading}
-          >
-            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-          </Button>
-          <Link to="/dashboard/jumps-studio">
-            <Button className="gap-2">
-              <Plus className="h-4 w-4" />
-              Create New Jump
+          
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => loadJumps()}
+              disabled={loading}
+            >
+              <RefreshCw className={`w-3 h-3 ${loading ? 'animate-spin' : ''}`} />
             </Button>
-          </Link>
+            <Link to="/dashboard/jumps-studio">
+              <Button className="gap-2 text-sm px-3 py-1.5">
+                <Plus className="h-3 w-3" />
+                Create New Jump
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
 
       {/* Jumps Grid */}
       {jumps.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {jumps.map((jump) => (
             <JumpCard
               key={jump.id}
@@ -129,22 +131,22 @@ export default function MyJumpsNew() {
           ))}
         </div>
       ) : (
-        <Card className="border-border">
+        <Card className="glass border-border rounded-xl shadow-modern">
           <CardHeader className="text-center">
-            <div className="mx-auto mb-4 p-4 rounded-full bg-muted w-fit">
-              <Rocket className="h-8 w-8 text-muted-foreground" />
+            <div className="mx-auto mb-3 p-3 rounded-full bg-muted w-fit">
+              <Rocket className="h-7 w-7 text-muted-foreground" />
             </div>
-            <CardTitle className="text-2xl">No Jumps Yet</CardTitle>
-            <CardDescription className="text-lg">
+            <CardTitle className="text-xl">No Jumps Yet</CardTitle>
+            <CardDescription className="text-sm">
               Create your first AI transformation plan to get started
             </CardDescription>
           </CardHeader>
           <CardContent className="text-center">
-            <p className="text-muted-foregoing mb-6">
+            <p className="text-sm text-muted-foreground mb-5">
               Head to Jumps Studio to create personalized transformation plans powered by AI.
             </p>
             <Link to="/dashboard/jumps-studio">
-              <Button size="lg" className="gap-2">
+              <Button className="gap-2 text-sm">
                 <Plus className="h-4 w-4" />
                 Create Your First Jump
               </Button>

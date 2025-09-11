@@ -69,12 +69,12 @@ export default function AppSidebar() {
     isActive ? "bg-muted text-primary font-medium" : "hover:bg-muted/50";
 
   return (
-    <Sidebar className="w-64 mt-20">
-      <SidebarHeader className="border-b border-border">
-        <div className="text-center text-base text-muted-foreground mb-1">
+    <Sidebar className="w-52 mt-20">
+      <SidebarHeader className="border-b border-border px-3 py-2">
+        <div className="text-center text-sm text-muted-foreground mb-1">
           Welcome{userName ? (
             <>
-              , <span className="font-bold text-foreground">{userName}</span>!
+              , <span className="font-medium text-foreground">{userName}</span>!
             </>
           ) : "!"}
         </div>
@@ -83,11 +83,11 @@ export default function AppSidebar() {
             <Badge 
               variant="outline" 
               className={cn(
-                "text-xs w-fit",
+                "text-xs w-fit px-2 py-0.5",
                 subInfo.subscribed ? "border-primary/20 text-primary" : "border-muted text-muted-foreground"
               )}
             >
-              {subInfo.subscribed ? subInfo.subscription_tier || 'JumpinAI Pro' : 'Free Plan'}
+              {subInfo.subscribed ? subInfo.subscription_tier || 'Pro' : 'Free'}
             </Badge>
           </div>
         )}
@@ -95,11 +95,11 @@ export default function AppSidebar() {
 
       <SidebarContent>
         {/* Navigation Links */}
-        <nav className="p-4 space-y-2">
+        <nav className="p-3 space-y-1.5">
           <Link 
             to="/dashboard" 
             className={cn(
-              "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
+              "flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm transition-colors",
               getNavCls({ isActive: currentPath === "/dashboard" })
             )}
           >
@@ -110,7 +110,7 @@ export default function AppSidebar() {
           <Link 
             to="/dashboard/jumps-studio" 
             className={cn(
-              "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-semibold transition-colors border border-primary/20 bg-primary/5",
+              "flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm font-medium transition-colors border border-primary/20 bg-primary/5",
               getNavCls({ isActive: currentPath === "/dashboard/jumps-studio" })
             )}
           >
@@ -121,7 +121,7 @@ export default function AppSidebar() {
           <Link 
             to="/dashboard/jumps" 
             className={cn(
-              "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
+              "flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm transition-colors",
               getNavCls({ isActive: currentPath === "/dashboard/jumps" })
             )}
           >
@@ -132,20 +132,20 @@ export default function AppSidebar() {
           <Link 
             to="/dashboard/jumps-guides" 
             className={cn(
-              "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
+              "flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm transition-colors",
               getNavCls({ isActive: currentPath === "/dashboard/jumps-guides" })
             )}
           >
             <FileText className="h-4 w-4" />
-            Jumps in AI Guides
+            Jumps Guides
           </Link>
 
-          <Separator className="my-2" />
+          <Separator className="my-1.5" />
 
           <Link 
             to="/dashboard/prompts" 
             className={cn(
-              "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
+              "flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm transition-colors",
               getNavCls({ isActive: currentPath === "/dashboard/prompts" })
             )}
           >
@@ -156,7 +156,7 @@ export default function AppSidebar() {
           <Link 
             to="/dashboard/workflows" 
             className={cn(
-              "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
+              "flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm transition-colors",
               getNavCls({ isActive: currentPath === "/dashboard/workflows" })
             )}
           >
@@ -167,7 +167,7 @@ export default function AppSidebar() {
           <Link 
             to="/dashboard/blueprints" 
             className={cn(
-              "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
+              "flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm transition-colors",
               getNavCls({ isActive: currentPath === "/dashboard/blueprints" })
             )}
           >
@@ -178,7 +178,7 @@ export default function AppSidebar() {
           <Link 
             to="/dashboard/strategies" 
             className={cn(
-              "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
+              "flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm transition-colors",
               getNavCls({ isActive: currentPath === "/dashboard/strategies" })
             )}
           >
@@ -186,25 +186,25 @@ export default function AppSidebar() {
             My Strategies
           </Link>
 
-          <Separator className="my-2" />
+          <Separator className="my-1.5" />
 
           {/* Profile & Settings */}
           <Link 
             to="/dashboard/profile" 
             className={cn(
-              "flex items-center gap-3 rounded-lg px-3 py-2 text-sm hover:bg-muted/50 transition-colors",
+              "flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm hover:bg-muted/50 transition-colors",
               getNavCls({ isActive: currentPath === "/dashboard/profile" })
             )}
           >
             <User className="h-4 w-4" />
-            Profile & Settings
+            Profile
           </Link>
 
           {/* Subscription */}
           <Link 
             to="/dashboard/subscription" 
             className={cn(
-              "flex items-center gap-3 rounded-lg px-3 py-2 text-sm hover:bg-muted/50 transition-colors",
+              "flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm hover:bg-muted/50 transition-colors",
               getNavCls({ isActive: currentPath === "/dashboard/subscription" })
             )}
           >
