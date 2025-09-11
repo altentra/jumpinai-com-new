@@ -111,12 +111,12 @@ export default function Pricing() {
       
       <Navigation />
       
-      <main className="min-h-screen pt-20 pb-12 bg-gradient-to-br from-background via-background/95 to-primary/5">
-        {/* Floating background elements */}
+      <main className="min-h-screen pt-20 pb-12 bg-gradient-to-br from-background via-background/90 to-primary/5 dark:from-slate-950 dark:via-slate-900/95 dark:to-slate-800/10">
+        {/* Enhanced floating background elements */}
         <div className="fixed inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-40 -right-40 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-secondary/10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '2s'}}></div>
-          <div className="absolute top-1/3 left-1/2 transform -translate-x-1/2 w-64 h-64 bg-accent/5 rounded-full blur-2xl animate-pulse" style={{animationDelay: '4s'}}></div>
+          <div className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-primary/20 to-primary/5 rounded-full blur-3xl"></div>
+          <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-tr from-secondary/15 to-secondary/5 rounded-full blur-3xl"></div>
+          <div className="absolute top-1/3 left-1/2 transform -translate-x-1/2 w-64 h-64 bg-accent/10 rounded-full blur-2xl"></div>
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -142,46 +142,46 @@ export default function Pricing() {
           </header>
 
           {/* Pricing Cards */}
-          <div className="grid grid-cols-2 gap-4 md:gap-6 lg:gap-8 max-w-5xl mx-auto mb-16">
+          <div className="grid grid-cols-2 gap-3 md:gap-4 lg:gap-6 max-w-4xl mx-auto mb-16">
             {/* Free Plan */}
-            <Card className="relative h-full glass backdrop-blur-xl border border-border/50 hover:border-primary/30 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/10 rounded-2xl overflow-hidden animate-fade-in-up group">
-              {/* Floating elements */}
+            <Card className="relative flex flex-col h-full glass backdrop-blur-xl border border-border/40 hover:border-primary/30 transition-all duration-500 hover:shadow-xl hover:shadow-primary/10 dark:shadow-2xl dark:shadow-black/20 rounded-2xl overflow-hidden animate-fade-in-up group bg-background/50 dark:bg-slate-900/50">
+              {/* Subtle floating elements */}
               <div className="absolute -top-6 -right-6 w-16 h-16 bg-primary/5 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               <div className="absolute -bottom-6 -left-6 w-20 h-20 bg-secondary/5 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{transitionDelay: '200ms'}}></div>
               
-              <CardHeader className="text-center p-4 md:p-6 pb-3">
-                <div className="space-y-3">
-                  <CardTitle className="text-lg md:text-xl font-bold text-foreground">Free Starter</CardTitle>
+              <CardHeader className="text-center p-3 md:p-5 pb-2">
+                <div className="space-y-2">
+                  <CardTitle className="text-base md:text-lg font-bold text-foreground">Free Starter</CardTitle>
                   <div className="space-y-1">
-                    <div className="text-2xl md:text-3xl font-bold text-foreground">$0</div>
-                    <p className="text-muted-foreground text-sm">Perfect for getting started</p>
+                    <div className="text-xl md:text-2xl font-bold text-foreground">$0</div>
+                    <p className="text-muted-foreground text-xs">Perfect for getting started</p>
                   </div>
                 </div>
               </CardHeader>
               
-              <CardContent className="px-4 md:px-6 pb-4">
-                <ul className="space-y-2 md:space-y-3">
+              <CardContent className="px-3 md:px-5 pb-3 flex-1">
+                <ul className="space-y-1.5 md:space-y-2">
                   {planFeatures.free.map((feature, index) => (
-                    <li key={index} className="flex items-start gap-2 animate-fade-in-up text-sm" style={{animationDelay: `${index * 100}ms`}}>
-                      <Check className="h-4 w-4 text-green-500 flex-shrink-0 mt-0.5" />
+                    <li key={index} className="flex items-start gap-2 animate-fade-in-up text-xs" style={{animationDelay: `${index * 100}ms`}}>
+                      <Check className="h-3.5 w-3.5 text-green-500 flex-shrink-0 mt-0.5" />
                       <span className="text-foreground/90 leading-tight">{feature}</span>
                     </li>
                   ))}
                 </ul>
               </CardContent>
               
-              <CardFooter className="p-4 md:p-6 pt-0 mt-auto">
+              <CardFooter className="p-3 md:p-5 pt-0">
                 <div className="w-full">
                   {!isAuthenticated ? (
                     <Button 
                       onClick={() => login('/pricing')}
                       variant="outline" 
-                      className="w-full py-3 text-sm md:text-base rounded-xl border-2 hover:scale-105 transition-all duration-300 font-semibold hover:border-primary/50 hover:bg-primary/5"
+                      className="w-full py-2.5 text-xs md:text-sm rounded-xl border-2 hover:scale-105 transition-all duration-300 font-semibold hover:border-primary/50 hover:bg-primary/5"
                     >
                       Get Started Free
                     </Button>
                   ) : (
-                    <div className="text-center py-3 text-muted-foreground text-sm font-medium">
+                    <div className="text-center py-2.5 text-muted-foreground text-xs font-medium">
                       {subInfo?.subscribed ? 'Always available as fallback' : 'Currently active plan'}
                     </div>
                   )}
@@ -190,55 +190,55 @@ export default function Pricing() {
             </Card>
 
             {/* Pro Plan */}
-            <Card className={`relative h-full transition-all duration-500 rounded-2xl overflow-hidden animate-fade-in-up animate-delay-200 group ${
+            <Card className={`relative flex flex-col h-full transition-all duration-500 rounded-2xl overflow-hidden animate-fade-in-up animate-delay-200 group ${
               subInfo?.subscribed 
-                ? 'ring-2 ring-primary/30 border-primary/50 glass backdrop-blur-xl shadow-2xl shadow-primary/20' 
-                : 'glass backdrop-blur-xl border border-primary/30 hover:border-primary/50 hover:shadow-2xl hover:shadow-primary/20 hover:ring-2 hover:ring-primary/20'
-            }`}>
-              {/* Premium badge */}
-              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-20">
-                <Badge className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground px-3 md:px-4 py-1 text-xs md:text-sm font-semibold rounded-xl shadow-lg animate-pulse">
-                  {subInfo?.subscribed ? '✨ Your Plan' : '🚀 Most Popular'}
+                ? 'ring-2 ring-primary/40 border-primary/60 glass backdrop-blur-xl shadow-2xl shadow-primary/25 dark:shadow-primary/10' 
+                : 'glass backdrop-blur-xl border border-primary/40 hover:border-primary/60 hover:shadow-2xl hover:shadow-primary/25 dark:hover:shadow-primary/10 hover:ring-2 hover:ring-primary/30'
+            } bg-gradient-to-br from-background/60 to-primary/5 dark:from-slate-900/60 dark:to-slate-800/20`}>
+              {/* Premium badge - Fixed positioning */}
+              <div className="absolute top-2 left-1/2 transform -translate-x-1/2 z-20">
+                <Badge className="bg-gradient-to-r from-primary to-primary/90 text-primary-foreground px-2 md:px-3 py-0.5 text-xs font-semibold rounded-lg shadow-lg border-0">
+                  {subInfo?.subscribed ? '✨ Your Plan' : 'Most Popular'}
                 </Badge>
               </div>
 
-              {/* Enhanced floating elements */}
-              <div className="absolute -top-8 -right-8 w-20 h-20 bg-primary/20 rounded-full blur-2xl animate-pulse"></div>
-              <div className="absolute -bottom-8 -left-8 w-24 h-24 bg-secondary/15 rounded-full blur-2xl animate-pulse" style={{animationDelay: '1s'}}></div>
-
-              <CardHeader className="text-center p-4 md:p-6 pb-3 pt-8 md:pt-10">
-                <div className="space-y-3">
-                  <CardTitle className="text-lg md:text-xl font-bold text-primary flex items-center justify-center gap-2">
-                    <Crown className="h-5 w-5" />
+              {/* Enhanced floating elements - no pulse */}
+              <div className="absolute -top-8 -right-8 w-20 h-20 bg-primary/15 rounded-full blur-2xl"></div>
+              <div className="absolute -bottom-8 -left-8 w-24 h-24 bg-secondary/10 rounded-full blur-2xl"></div>
+              
+              <CardHeader className="text-center p-3 md:p-5 pb-2 pt-8 md:pt-9">
+                <div className="space-y-2">
+                  <CardTitle className="text-base md:text-lg font-bold text-primary flex items-center justify-center gap-1.5">
+                    <Crown className="h-4 w-4" />
                     JumpinAI Pro
                   </CardTitle>
                   <div className="space-y-1">
-                    <div className="text-2xl md:text-3xl font-bold text-primary">$10</div>
-                    <p className="text-muted-foreground text-sm">per month • Unlimited AI power</p>
+                    <div className="text-xl md:text-2xl font-bold text-primary">$10</div>
+                    <p className="text-muted-foreground text-xs">per month • Unlimited AI power</p>
                   </div>
                 </div>
               </CardHeader>
               
-              <CardContent className="px-4 md:px-6 pb-4">
-                <ul className="space-y-2 md:space-y-3">
+              <CardContent className="px-3 md:px-5 pb-3 flex-1">
+                <ul className="space-y-1.5 md:space-y-2">
                   {planFeatures.pro.map((feature, index) => (
-                    <li key={index} className="flex items-start gap-2 animate-fade-in-up text-sm" style={{animationDelay: `${index * 100 + 200}ms`}}>
-                      <Check className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
+                    <li key={index} className="flex items-start gap-2 animate-fade-in-up text-xs" style={{animationDelay: `${index * 100 + 200}ms`}}>
+                      <Check className="h-3.5 w-3.5 text-primary flex-shrink-0 mt-0.5" />
                       <span className="text-foreground/90 font-medium leading-tight">{feature}</span>
                     </li>
                   ))}
                 </ul>
               </CardContent>
               
-              <CardFooter className="p-4 md:p-6 pt-0 mt-auto">
+              <CardFooter className="p-3 md:p-5 pt-0">
                 {!isAuthenticated ? (
-                  <div className="w-full space-y-3">
+                  <div className="w-full space-y-2">
                     <Button 
                       onClick={handleSubscribe}
                       disabled={loading}
-                      className="w-full bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary/80 text-primary-foreground text-sm md:text-base py-3 rounded-xl font-semibold hover:scale-105 transition-all duration-300 shadow-lg"
+                      className="w-full bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary/80 text-primary-foreground text-xs md:text-sm py-2.5 rounded-xl font-semibold hover:scale-105 transition-all duration-300 shadow-lg"
                     >
-                      <Crown className="mr-2 h-4 w-4" />
+                      <Crown className="mr-1.5 h-3.5 w-3.5" />
                       {loading ? 'Processing...' : 'Start Pro Journey'}
                     </Button>
                     <p className="text-xs text-center text-muted-foreground">
@@ -246,13 +246,13 @@ export default function Pricing() {
                     </p>
                   </div>
                 ) : !subInfo?.subscribed ? (
-                  <div className="w-full space-y-3">
+                  <div className="w-full space-y-2">
                     <Button 
                       onClick={handleSubscribe}
                       disabled={loading}
-                      className="w-full bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary/80 text-primary-foreground text-sm md:text-base py-3 rounded-xl font-semibold hover:scale-105 transition-all duration-300 shadow-lg"
+                      className="w-full bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary/80 text-primary-foreground text-xs md:text-sm py-2.5 rounded-xl font-semibold hover:scale-105 transition-all duration-300 shadow-lg"
                     >
-                      <Crown className="mr-2 h-4 w-4" />
+                      <Crown className="mr-1.5 h-3.5 w-3.5" />
                       {loading ? 'Processing...' : 'Upgrade to Pro'}
                     </Button>
                     <p className="text-xs text-center text-muted-foreground">
@@ -260,11 +260,11 @@ export default function Pricing() {
                     </p>
                   </div>
                 ) : (
-                  <div className="w-full space-y-3">
+                  <div className="w-full space-y-2">
                     <Button 
                       onClick={handleManageDashboard}
                       variant="secondary"
-                      className="w-full text-sm md:text-base py-3 rounded-xl font-semibold hover:scale-105 transition-all duration-300"
+                      className="w-full text-xs md:text-sm py-2.5 rounded-xl font-semibold hover:scale-105 transition-all duration-300"
                     >
                       Manage Subscription
                     </Button>
@@ -289,33 +289,33 @@ export default function Pricing() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="text-center p-6 glass backdrop-blur-xl rounded-2xl border border-border/50 hover:border-primary/30 transition-all duration-500 hover:shadow-xl hover:shadow-primary/10 animate-fade-in-up">
-                <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mx-auto mb-4">
-                  <Rocket className="h-6 w-6 text-primary" />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
+              <div className="text-center p-4 md:p-5 glass backdrop-blur-xl rounded-3xl border border-border/40 hover:border-primary/30 transition-all duration-500 hover:shadow-xl hover:shadow-primary/10 dark:shadow-lg dark:shadow-black/10 animate-fade-in-up bg-background/50 dark:bg-slate-900/50">
+                <div className="w-10 h-10 bg-gradient-to-br from-primary/15 to-primary/5 rounded-2xl flex items-center justify-center mx-auto mb-3">
+                  <Rocket className="h-5 w-5 text-primary" />
                 </div>
-                <h3 className="text-lg font-bold mb-2 text-foreground">AI-Powered Planning</h3>
-                <p className="text-muted-foreground text-sm">
+                <h3 className="text-base font-bold mb-2 text-foreground">AI-Powered Planning</h3>
+                <p className="text-muted-foreground text-xs leading-relaxed">
                   Create comprehensive transformation plans with AI that understands your unique situation and goals.
                 </p>
               </div>
 
-              <div className="text-center p-6 glass backdrop-blur-xl rounded-2xl border border-border/50 hover:border-primary/30 transition-all duration-500 hover:shadow-xl hover:shadow-primary/10 animate-fade-in-up animate-delay-200">
-                <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mx-auto mb-4">
-                  <Sparkles className="h-6 w-6 text-primary" />
+              <div className="text-center p-4 md:p-5 glass backdrop-blur-xl rounded-3xl border border-border/40 hover:border-primary/30 transition-all duration-500 hover:shadow-xl hover:shadow-primary/10 dark:shadow-lg dark:shadow-black/10 animate-fade-in-up animate-delay-200 bg-background/50 dark:bg-slate-900/50">
+                <div className="w-10 h-10 bg-gradient-to-br from-primary/15 to-primary/5 rounded-2xl flex items-center justify-center mx-auto mb-3">
+                  <Sparkles className="h-5 w-5 text-primary" />
                 </div>
-                <h3 className="text-lg font-bold mb-2 text-foreground">Complete Toolkit</h3>
-                <p className="text-muted-foreground text-sm">
+                <h3 className="text-base font-bold mb-2 text-foreground">Complete Toolkit</h3>
+                <p className="text-muted-foreground text-xs leading-relaxed">
                   Get prompts, workflows, blueprints, and strategies all integrated into your personalized Jump plan.
                 </p>
               </div>
 
-              <div className="text-center p-6 glass backdrop-blur-xl rounded-2xl border border-border/50 hover:border-primary/30 transition-all duration-500 hover:shadow-xl hover:shadow-primary/10 animate-fade-in-up animate-delay-400">
-                <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mx-auto mb-4">
-                  <Crown className="h-6 w-6 text-primary" />
+              <div className="text-center p-4 md:p-5 glass backdrop-blur-xl rounded-3xl border border-border/40 hover:border-primary/30 transition-all duration-500 hover:shadow-xl hover:shadow-primary/10 dark:shadow-lg dark:shadow-black/10 animate-fade-in-up animate-delay-400 bg-background/50 dark:bg-slate-900/50">
+                <div className="w-10 h-10 bg-gradient-to-br from-primary/15 to-primary/5 rounded-2xl flex items-center justify-center mx-auto mb-3">
+                  <Crown className="h-5 w-5 text-primary" />
                 </div>
-                <h3 className="text-lg font-bold mb-2 text-foreground">Continuous Refinement</h3>
-                <p className="text-muted-foreground text-sm">
+                <h3 className="text-base font-bold mb-2 text-foreground">Continuous Refinement</h3>
+                <p className="text-muted-foreground text-xs leading-relaxed">
                   Pro users get AI Chat to continuously refine and optimize their transformation plans in real-time.
                 </p>
               </div>
