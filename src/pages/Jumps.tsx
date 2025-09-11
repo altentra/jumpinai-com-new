@@ -281,8 +281,8 @@ const Jumps = () => {
               </h1>
               <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-transparent to-primary/20 blur-xl rounded-3xl opacity-30"></div>
             </div>
-            <div className="glass rounded-3xl p-8 max-w-4xl mx-auto backdrop-blur-xl border border-white/10">
-              <p className="text-xl text-muted-foreground leading-relaxed">
+            <div className="glass rounded-2xl p-6 max-w-3xl mx-auto backdrop-blur-xl border border-white/10">
+              <p className="text-lg text-muted-foreground leading-relaxed">
                 Take your first steps into AI mastery across different areas. Each guide provides clear insights and practical steps to build your AI skills.
               </p>
             </div>
@@ -297,7 +297,7 @@ const Jumps = () => {
               return (
                 <div key={product.id} className="w-full sm:w-[320px] md:w-[340px]">
                   <Card className={`group glass hover:shadow-2xl transition-all duration-500 border-white/20 hover:border-primary/30 h-full flex flex-col rounded-3xl backdrop-blur-xl hover:scale-[1.02] ${hasPurchased ? 'ring-2 ring-green-500/30 border-green-500/50 shadow-green-500/10' : ''}`}>
-                    <CardHeader className="pb-4">
+                    <CardHeader className="pb-3 p-5">
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-3">
                           {getProductBadge(product.name)}
@@ -315,7 +315,7 @@ const Jumps = () => {
                       </CardDescription>
                     </CardHeader>
                     
-                    <CardContent className="pb-4 flex-grow">
+                    <CardContent className="pb-3 px-5 flex-grow">
                       <div className="flex items-center gap-2 mb-4">
                         <CheckCircle className="h-4 w-4 text-green-500" />
                         <span className="text-sm text-muted-foreground">Instant Download</span>
@@ -326,7 +326,7 @@ const Jumps = () => {
                       </div>
                     </CardContent>
                     
-                    <CardFooter className="pt-0 mt-auto">
+                    <CardFooter className="pt-0 px-5 pb-5 mt-auto">
                       <div className="w-full">
                         {/* Only show price for non-Pro subscribers */}
                         {!(subInfo?.subscribed && subInfo?.subscription_tier === "JumpinAI Pro") && (
@@ -365,17 +365,17 @@ const Jumps = () => {
                                 </Button>
                               </DialogTrigger>
                         
-                              <DialogContent className="sm:max-w-md glass backdrop-blur-xl border border-white/20 rounded-3xl">
-                                <DialogHeader>
-                                  <DialogTitle className="text-xl">Complete Your Purchase</DialogTitle>
-                                  <DialogDescription className="text-muted-foreground">
-                                    You're about to purchase "{selectedProduct?.name}" for ${selectedProduct ? formatPrice(selectedProduct.price) : '0.00'}
+                              <DialogContent className="sm:max-w-md bg-background/95 backdrop-blur-xl border-2 border-primary/20 rounded-3xl shadow-2xl">
+                                <DialogHeader className="text-center space-y-3 pb-6">
+                                  <DialogTitle className="text-2xl font-bold text-foreground">Complete Your Purchase</DialogTitle>
+                                  <DialogDescription className="text-lg text-foreground/80 font-medium">
+                                    You're about to purchase "{selectedProduct?.name}" for <span className="text-primary font-bold text-xl">${selectedProduct ? formatPrice(selectedProduct.price) : '0.00'}</span>
                                   </DialogDescription>
                                 </DialogHeader>
                                 
                                 <div className="space-y-6">
-                                  <div className="space-y-3">
-                                    <Label htmlFor="email" className="text-sm font-medium">Email Address</Label>
+                                  <div className="space-y-4">
+                                    <Label htmlFor="email" className="text-base font-semibold text-foreground">Email Address</Label>
                                     <Input
                                       id="email"
                                       type="email"
@@ -383,30 +383,32 @@ const Jumps = () => {
                                       value={customerEmail}
                                       onChange={(e) => setCustomerEmail(e.target.value)}
                                       required
-                                      className="rounded-2xl glass backdrop-blur-sm border border-white/20"
+                                      className="rounded-2xl h-12 text-base border-2 border-primary/30 bg-background/50 text-foreground placeholder:text-foreground/50 focus:border-primary focus:bg-background/80 transition-all duration-300"
                                     />
-                                    <p className="text-xs text-muted-foreground glass backdrop-blur-sm rounded-xl p-2 border border-white/10">
-                                      We'll send your download link to this email
-                                    </p>
+                                    <div className="bg-primary/10 text-foreground/90 rounded-xl p-3 border border-primary/20">
+                                      <p className="text-sm font-medium">
+                                        📧 We'll send your download link to this email address
+                                      </p>
+                                    </div>
                                   </div>
                                   
-                                  <div className="flex gap-3">
+                                  <div className="flex gap-4 pt-4">
                                     <Button 
                                       variant="outline" 
                                       onClick={() => setIsDialogOpen(false)}
-                                      className="flex-1 rounded-2xl glass backdrop-blur-sm border border-white/20"
+                                      className="flex-1 h-12 rounded-2xl text-base font-semibold border-2 border-muted-foreground/30 text-foreground hover:bg-muted/20 hover:border-muted-foreground/50 transition-all duration-300"
                                     >
                                       Cancel
                                     </Button>
                                     <Button 
                                       onClick={handlePurchase}
                                       disabled={!customerEmail || isProcessing}
-                                      className="flex-1 rounded-2xl hover:scale-105 transition-all duration-300"
+                                      className="flex-1 h-12 rounded-2xl text-base font-semibold bg-primary hover:bg-primary/90 text-primary-foreground hover:scale-105 transition-all duration-300 shadow-lg"
                                     >
                                       {isProcessing ? (
-                                        <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                                        <Loader2 className="h-5 w-5 animate-spin mr-2" />
                                       ) : (
-                                        <ShoppingCart className="h-4 w-4 mr-2" />
+                                        <ShoppingCart className="h-5 w-5 mr-2" />
                                       )}
                                       {isProcessing ? "Processing..." : "Continue to Payment"}
                                     </Button>
