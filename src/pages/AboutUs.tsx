@@ -4,6 +4,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -193,6 +195,17 @@ const LeadMagnetButton = () => {
 };
 
 const AboutUs = () => {
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+
+  const handleStartBuilding = () => {
+    if (isAuthenticated) {
+      navigate('/dashboard');
+    } else {
+      navigate('/auth');
+    }
+  };
+
   const beliefs = [
     {
       title: "AI is for Everyone",
@@ -267,11 +280,13 @@ const AboutUs = () => {
               <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6 bg-gradient-to-br from-foreground via-foreground to-primary/70 bg-clip-text text-transparent">About JumpinAI</h1>
               <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-8">For creators, founders, and teams who want results—not research. Learn the right tools, then ship real automations in days.</p>
               <div className="flex justify-center">
-                <Button size="lg" className="text-lg px-8 py-4 bg-gradient-to-r from-primary/90 to-primary hover:from-primary hover:to-primary/80 text-primary-foreground border border-primary/30 rounded-2xl shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 hover:scale-105 group backdrop-blur-sm" asChild>
-                  <a href="https://whop.com/jumpinai/" target="_blank" rel="noopener noreferrer">
-                    Start Building Now
-                    <ArrowRight className="ml-2 w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
-                  </a>
+                <Button 
+                  size="lg" 
+                  onClick={handleStartBuilding}
+                  className="text-lg px-8 py-4 bg-gradient-to-r from-primary/90 to-primary hover:from-primary hover:to-primary/80 text-primary-foreground border border-primary/30 rounded-2xl shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 hover:scale-105 group backdrop-blur-sm"
+                >
+                  Start Building Now
+                  <ArrowRight className="ml-2 w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
                 </Button>
               </div>
             </div>
@@ -437,13 +452,11 @@ const AboutUs = () => {
             <div className="flex justify-center">
               <Button 
                 size="lg" 
+                onClick={handleStartBuilding}
                 className="text-lg px-8 py-4 bg-gradient-to-r from-primary/90 to-primary hover:from-primary hover:to-primary/80 text-primary-foreground border border-primary/30 rounded-2xl shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 hover:scale-105 group backdrop-blur-sm"
-                asChild
               >
-                <a href="https://whop.com/jumpinai/" target="_blank" rel="noopener noreferrer">
-                  Join Our Whop
-                  <ArrowRight className="ml-2 w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
-                </a>
+                {isAuthenticated ? 'Go to Dashboard' : 'Start Building Now'}
+                <ArrowRight className="ml-2 w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
               </Button>
             </div>
           </div>
