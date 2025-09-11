@@ -177,7 +177,7 @@ export default function Pricing() {
                       <Button 
                         onClick={() => login('/pricing')}
                         variant="outline" 
-                        className="w-full py-2.5 text-xs md:text-sm rounded-xl border-2 hover:scale-105 transition-all duration-300 font-semibold hover:border-primary/50 hover:bg-primary/5"
+                        className="w-full py-2.5 text-xs md:text-sm rounded-full border-2 hover:scale-105 transition-all duration-300 font-semibold hover:border-primary/50 hover:bg-primary/5"
                       >
                         Get Started Free
                       </Button>
@@ -241,7 +241,7 @@ export default function Pricing() {
                     <Button 
                       onClick={handleSubscribe}
                       disabled={loading}
-                      className="w-full bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary/80 text-primary-foreground text-xs md:text-sm py-2.5 rounded-xl font-semibold hover:scale-105 transition-all duration-300 shadow-lg"
+                      className="w-full bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary/80 text-primary-foreground text-xs md:text-sm py-2.5 rounded-full font-semibold hover:scale-105 transition-all duration-300 shadow-lg"
                     >
                       <Crown className="mr-1.5 h-3.5 w-3.5" />
                       {loading ? 'Processing...' : 'Start Pro Journey'}
@@ -255,7 +255,7 @@ export default function Pricing() {
                     <Button 
                       onClick={handleSubscribe}
                       disabled={loading}
-                      className="w-full bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary/80 text-primary-foreground text-xs md:text-sm py-2.5 rounded-xl font-semibold hover:scale-105 transition-all duration-300 shadow-lg"
+                      className="w-full bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary/80 text-primary-foreground text-xs md:text-sm py-2.5 rounded-full font-semibold hover:scale-105 transition-all duration-300 shadow-lg"
                     >
                       <Crown className="mr-1.5 h-3.5 w-3.5" />
                       {loading ? 'Processing...' : 'Upgrade to Pro'}
@@ -269,7 +269,7 @@ export default function Pricing() {
                     <Button 
                       onClick={handleManageDashboard}
                       variant="secondary"
-                      className="w-full text-xs md:text-sm py-2.5 rounded-xl font-semibold hover:scale-105 transition-all duration-300"
+                      className="w-full text-xs md:text-sm py-2.5 rounded-full font-semibold hover:scale-105 transition-all duration-300"
                     >
                       Manage Subscription
                     </Button>
