@@ -117,18 +117,18 @@ export default function Auth() {
       <main className="min-h-screen pt-28 pb-24 bg-gradient-to-br from-background via-muted/50 to-background">
         <section className="max-w-xl mx-auto px-6">
           <Card className="animate-fade-in backdrop-blur-xl bg-background/80 border-2 border-border/50 shadow-2xl rounded-2xl overflow-hidden">
-            <CardHeader className="text-center space-y-4 pb-8">
-              <CardTitle className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
+            <CardHeader className="text-center space-y-2 pb-4">
+              <CardTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
                 Access your JumpinAI account
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-8">
+            <CardContent className="space-y-6">
               {/* Google Login Button */}
               <Button 
                 onClick={handleGoogleLogin} 
                 disabled={loading} 
                 variant="outline" 
-                className="w-full h-14 text-base font-medium bg-white/90 hover:bg-white border-2 border-gray-200 hover:border-gray-300 text-gray-700 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
+                className="w-full h-12 text-base font-medium bg-white hover:bg-gray-50 dark:bg-gray-900 dark:hover:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 text-gray-700 dark:text-gray-200 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
               >
                 <svg 
                   className="mr-3 h-6 w-6" 
@@ -182,8 +182,8 @@ export default function Auth() {
                   </TabsTrigger>
                 </TabsList>
 
-                <TabsContent value="signup" className="mt-8 space-y-6">
-                  <div className="space-y-3">
+                <TabsContent value="signup" className="mt-6 space-y-4">
+                  <div className="space-y-2">
                     <Label htmlFor="signup-name" className="text-sm font-medium text-foreground">Name</Label>
                     <Input 
                       id="signup-name" 
@@ -191,10 +191,10 @@ export default function Auth() {
                       value={signupName} 
                       onChange={(e) => setSignupName(e.target.value)} 
                       placeholder="Enter your full name" 
-                      className="h-12 bg-background/50 backdrop-blur-sm border-2 border-border/50 rounded-xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
+                      className="h-11 bg-background/50 backdrop-blur-sm border-2 border-border/50 rounded-xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
                     />
                   </div>
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     <Label htmlFor="signup-email" className="text-sm font-medium text-foreground">Email</Label>
                     <Input 
                       id="signup-email" 
@@ -202,10 +202,10 @@ export default function Auth() {
                       value={signupEmail} 
                       onChange={(e) => setSignupEmail(e.target.value)} 
                       placeholder="Enter your email" 
-                      className="h-12 bg-background/50 backdrop-blur-sm border-2 border-border/50 rounded-xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
+                      className="h-11 bg-background/50 backdrop-blur-sm border-2 border-border/50 rounded-xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
                     />
                   </div>
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     <Label htmlFor="signup-password" className="text-sm font-medium text-foreground">Password</Label>
                     <Input 
                       id="signup-password" 
@@ -213,25 +213,25 @@ export default function Auth() {
                       value={signupPassword} 
                       onChange={(e) => setSignupPassword(e.target.value)} 
                       placeholder="Create a password" 
-                      className="h-12 bg-background/50 backdrop-blur-sm border-2 border-border/50 rounded-xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
+                      className="h-11 bg-background/50 backdrop-blur-sm border-2 border-border/50 rounded-xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
                     />
                   </div>
                   <Button 
                     onClick={handleSignup} 
                     disabled={loading} 
-                    className="w-full h-12 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
+                    className="w-full h-11 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
                   >
                     {loading ? "Creating account..." : "Create account"}
                   </Button>
-                  <p className="text-xs text-muted-foreground text-center bg-muted/20 backdrop-blur-sm px-4 py-2 rounded-lg">
+                  <p className="text-xs text-muted-foreground text-center bg-muted/20 backdrop-blur-sm px-3 py-1.5 rounded-lg">
                     Start using JumpinAI immediately after signup!
                   </p>
                 </TabsContent>
 
-                <TabsContent value="login" className="mt-8 space-y-6">
+                <TabsContent value="login" className="mt-6 space-y-4">
                   {!showForgotPassword ? (
                     <>
-                      <div className="space-y-3">
+                      <div className="space-y-2">
                         <Label htmlFor="login-email" className="text-sm font-medium text-foreground">Email</Label>
                         <Input 
                           id="login-email" 
@@ -239,10 +239,10 @@ export default function Auth() {
                           value={loginEmail} 
                           onChange={(e) => setLoginEmail(e.target.value)} 
                           placeholder="Enter your email" 
-                          className="h-12 bg-background/50 backdrop-blur-sm border-2 border-border/50 rounded-xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
+                          className="h-11 bg-background/50 backdrop-blur-sm border-2 border-border/50 rounded-xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
                         />
                       </div>
-                      <div className="space-y-3">
+                      <div className="space-y-2">
                         <Label htmlFor="login-password" className="text-sm font-medium text-foreground">Password</Label>
                         <Input 
                           id="login-password" 
@@ -250,13 +250,13 @@ export default function Auth() {
                           value={loginPassword} 
                           onChange={(e) => setLoginPassword(e.target.value)} 
                           placeholder="Enter your password" 
-                          className="h-12 bg-background/50 backdrop-blur-sm border-2 border-border/50 rounded-xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
+                          className="h-11 bg-background/50 backdrop-blur-sm border-2 border-border/50 rounded-xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
                         />
                       </div>
                       <Button 
                         onClick={handleLogin} 
                         disabled={loading} 
-                        className="w-full h-12 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
+                        className="w-full h-11 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
                       >
                         {loading ? "Logging in..." : "Login"}
                       </Button>
@@ -273,7 +273,7 @@ export default function Auth() {
                     </>
                   ) : (
                     <>
-                      <div className="space-y-3">
+                      <div className="space-y-2">
                         <Label htmlFor="forgot-email" className="text-sm font-medium text-foreground">Email address</Label>
                         <Input 
                           id="forgot-email" 
@@ -281,13 +281,13 @@ export default function Auth() {
                           value={forgotPasswordEmail} 
                           onChange={(e) => setForgotPasswordEmail(e.target.value)} 
                           placeholder="Enter your email to reset password"
-                          className="h-12 bg-background/50 backdrop-blur-sm border-2 border-border/50 rounded-xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
+                          className="h-11 bg-background/50 backdrop-blur-sm border-2 border-border/50 rounded-xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
                         />
                       </div>
                       <Button 
                         onClick={handleForgotPassword} 
                         disabled={loading} 
-                        className="w-full h-12 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
+                        className="w-full h-11 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
                       >
                         {loading ? "Sending reset email..." : "Send reset email"}
                       </Button>
@@ -309,8 +309,8 @@ export default function Auth() {
                 </TabsContent>
               </Tabs>
             </CardContent>
-            <CardFooter className="justify-center pt-8 pb-6">
-              <p className="text-sm text-muted-foreground text-center bg-muted/10 backdrop-blur-sm px-6 py-3 rounded-full border border-border/30">
+            <CardFooter className="justify-center pt-4 pb-4">
+              <p className="text-sm text-muted-foreground text-center bg-muted/10 backdrop-blur-sm px-4 py-2 rounded-full border border-border/30">
                 By continuing you agree to our{" "}
                 <Link 
                   to="/terms-of-use" 
