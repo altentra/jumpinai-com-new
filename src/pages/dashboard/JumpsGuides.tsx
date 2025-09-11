@@ -116,41 +116,54 @@ export default function MyJumps() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
+      {/* Header */}
+      <div className="glass rounded-xl p-4 shadow-modern">
+        <div className="flex items-center gap-3">
+          <Download className="h-7 w-7 text-primary" />
+          <div>
+            <h1 className="text-2xl font-bold">Jumps Guides</h1>
+            <p className="text-sm text-muted-foreground">Explore and purchase AI guide products</p>
+          </div>
+        </div>
+      </div>
+
       {/* Only show upgrade CTA if user is not subscribed to Pro */}
       {!(subInfo?.subscribed && subInfo?.subscription_tier === "JumpinAI Pro") && (
-        <Card className="animate-fade-in">
-          <CardContent className="py-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <Card className="glass animate-fade-in rounded-xl shadow-modern border-primary/20 bg-gradient-to-r from-primary/5 to-primary/10">
+          <CardContent className="py-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
                 <Crown className="h-5 w-5 text-primary" />
-                <h2 className="text-base font-semibold">Unlock all Jumps with JumpinAI Pro</h2>
+                <h2 className="text-base font-medium">Unlock all Jumps with JumpinAI Pro</h2>
               </div>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-xs text-muted-foreground">
                 Purchase Jumps individually on the Free plan. For unlimited access to all current and future Jumps with continuous updates, upgrade to JumpinAI Pro.
               </p>
             </div>
             <div className="flex gap-2">
-              <Button onClick={upgradeToPro}>Join JumpinAI Pro for $10/month</Button>
+              <Button onClick={upgradeToPro} className="text-sm px-4 py-2">Join JumpinAI Pro for $10/month</Button>
             </div>
           </CardContent>
         </Card>
       )}
 
-      <div id="jumps-list" className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div id="jumps-list" className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {products.map((p) => {
           const order = purchasedByProduct.get(p.id);
           return (
-            <Card key={p.id} className="flex flex-col">
-              <CardHeader>
-                <CardTitle className="text-base">{p.name}</CardTitle>
+            <Card key={p.id} className="glass flex flex-col rounded-xl shadow-modern hover:shadow-modern-lg transition-all duration-300 group">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-base leading-tight">{p.name}</CardTitle>
               </CardHeader>
-              <CardContent className="text-sm text-muted-foreground flex-1">
+              <CardContent className="text-xs text-muted-foreground flex-1 pt-0">
                 {p.description}
               </CardContent>
-              <CardFooter className="flex items-center justify-between gap-3">
+              <CardFooter className="flex items-center justify-between gap-2 pt-3">
                 {order || (subInfo?.subscribed && subInfo?.subscription_tier === "JumpinAI Pro") ? (
                   <Button 
+                    size="sm"
+                    className="text-sm px-3 py-1.5"
                     onClick={() => {
                       if (order?.download_token) {
                         window.location.href = `/download/${order.download_token}`;
@@ -159,16 +172,22 @@ export default function MyJumps() {
                       }
                     }}
                   >
-                    <Download className="mr-2 h-4 w-4" /> Access
+                    <Download className="mr-1.5 h-3 w-3" /> Access
                   </Button>
                 ) : (
-                  <Button onClick={() => buy(p.id)}>
-                    <ShoppingCart className="mr-2 h-4 w-4" /> Buy ${formatPrice(p.price)}
+                  <Button 
+                    size="sm" 
+                    className="text-sm px-3 py-1.5"
+                    onClick={() => buy(p.id)}
+                  >
+                    <ShoppingCart className="mr-1.5 h-3 w-3" /> Buy ${formatPrice(p.price)}
                   </Button>
                 )}
                 <div className="text-xs text-muted-foreground flex items-center gap-1">
-                  <CheckCircle className="h-3.5 w-3.5" /> 
-                  {order || (subInfo?.subscribed && subInfo?.subscription_tier === "JumpinAI Pro") ? "Included with Pro" : "Instant download"}
+                  <CheckCircle className="h-3 w-3" /> 
+                  <span className="text-xs">
+                    {order || (subInfo?.subscribed && subInfo?.subscription_tier === "JumpinAI Pro") ? "Pro" : "Download"}
+                  </span>
                 </div>
               </CardFooter>
             </Card>
