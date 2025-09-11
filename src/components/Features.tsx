@@ -44,8 +44,18 @@ const Features = () => {
   };
 
   return (
-    <section className="py-24 bg-gradient-to-b from-background to-muted/20">
-      <div className="container mx-auto px-4 max-w-7xl">
+    <section className="py-24 relative overflow-hidden">
+      {/* Premium Background */}
+      <div className="absolute inset-0 bg-gradient-to-b from-background via-muted/5 to-background"></div>
+      <div className="absolute inset-0 bg-gradient-to-r from-primary/[0.02] via-transparent to-primary/[0.02]"></div>
+      
+      {/* Glass morphism overlay */}
+      <div className="absolute inset-0 opacity-30">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-radial from-primary/10 via-primary/5 to-transparent rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/3 right-1/4 w-80 h-80 bg-gradient-radial from-secondary/8 via-secondary/4 to-transparent rounded-full blur-2xl"></div>
+      </div>
+      
+      <div className="container mx-auto px-4 max-w-7xl relative z-10">
         {/* Header */}
         <div className="text-center mb-16 max-w-4xl mx-auto">
           <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
@@ -61,37 +71,40 @@ const Features = () => {
             designed specifically for <em>your</em> unique goals, challenges, and circumstances.
           </p>
           
-          <div className="bg-card border rounded-2xl p-8 shadow-lg">
-            <p className="text-lg text-foreground/90 leading-relaxed mb-4">
-              Unlike generic advice or one-size-fits-all solutions, Jumps Studio creates an 
-              <strong className="text-primary"> individually tailored implementation journey</strong> that 
-              helps you <strong className="text-primary">implement AI in your life and business</strong>.
-            </p>
-            <p className="text-lg text-foreground/90 leading-relaxed">
-              Each Jump includes personalized prompts, custom workflows, proven blueprints, 
-              and strategic guidance - everything you need to <strong className="text-primary">literally Jump into AI fast</strong> and 
-              start using it to your advantage ASAP in the most professional, efficient, and transformative way possible.
-            </p>
+          <div className="glass-dark border border-white/10 dark:border-white/20 rounded-3xl p-8 shadow-2xl backdrop-blur-xl bg-white/5 dark:bg-white/10 hover:bg-white/8 dark:hover:bg-white/15 transition-all duration-500 group">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.02] via-transparent to-primary/[0.03] rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div className="relative">
+              <p className="text-lg text-foreground/90 leading-relaxed mb-4">
+                Unlike generic advice or one-size-fits-all solutions, Jumps Studio creates an 
+                <strong className="text-primary"> individually tailored implementation journey</strong> that 
+                helps you <strong className="text-primary">implement AI in your life and business</strong>.
+              </p>
+              <p className="text-lg text-foreground/90 leading-relaxed">
+                Each Jump includes personalized prompts, custom workflows, proven blueprints, 
+                and strategic guidance - everything you need to <strong className="text-primary">literally Jump into AI fast</strong> and 
+                start using it to your advantage ASAP in the most professional, efficient, and transformative way possible.
+              </p>
+            </div>
           </div>
         </div>
 
         {/* Features Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-16">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
           {features.map((feature, index) => {
             const Icon = feature.icon;
             return (
-              <div key={index} className="group relative p-4 rounded-xl bg-gradient-to-br from-card/80 via-card to-card/60 border border-border/10 hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-400 backdrop-blur-sm overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.01] via-transparent to-primary/[0.02] opacity-0 group-hover:opacity-100 transition-opacity duration-400" />
-                <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-primary/[0.03] to-transparent rounded-full -translate-y-10 translate-x-10 opacity-0 group-hover:opacity-100 transition-all duration-500" />
+              <div key={index} className="group relative p-6 rounded-3xl glass-dark border border-white/10 dark:border-white/20 hover:border-primary/30 dark:hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 backdrop-blur-xl bg-white/5 dark:bg-white/10 hover:bg-white/10 dark:hover:bg-white/15 overflow-hidden hover:scale-105">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.03] via-transparent to-primary/[0.05] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-primary/[0.06] to-transparent rounded-full -translate-y-12 translate-x-12 opacity-0 group-hover:opacity-100 transition-all duration-700" />
                 
-                <div className="relative flex items-center gap-3 mb-2">
-                  <div className="flex-shrink-0 w-9 h-9 bg-gradient-to-br from-primary/8 to-primary/4 rounded-lg flex items-center justify-center group-hover:from-primary/12 group-hover:to-primary/6 transition-all duration-300 shadow-sm border border-primary/5">
-                    <Icon className="w-4 h-4 text-primary" />
+                <div className="relative flex items-center gap-4 mb-3">
+                  <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-primary/12 to-primary/6 rounded-2xl flex items-center justify-center group-hover:from-primary/18 group-hover:to-primary/9 transition-all duration-300 shadow-lg border border-primary/10 group-hover:scale-110">
+                    <Icon className="w-5 h-5 text-primary" />
                   </div>
-                  <h3 className="font-semibold text-base text-foreground group-hover:text-primary/90 transition-colors duration-300 leading-tight">{feature.title}</h3>
+                  <h3 className="font-bold text-lg text-foreground group-hover:text-primary/90 transition-colors duration-300 leading-tight">{feature.title}</h3>
                 </div>
                 
-                <p className="text-muted-foreground/90 text-xs leading-relaxed ml-12 group-hover:text-muted-foreground transition-colors duration-300">{feature.description}</p>
+                <p className="text-muted-foreground/90 text-sm leading-relaxed ml-16 group-hover:text-muted-foreground transition-colors duration-300">{feature.description}</p>
               </div>
             );
           })}
@@ -99,26 +112,26 @@ const Features = () => {
 
         {/* Call to Action */}
         <div className="text-center">
-          <div className="inline-flex flex-col sm:flex-row gap-4 items-center justify-center">
+          <div className="inline-flex flex-col sm:flex-row gap-6 items-center justify-center">
             <Button 
               size="lg" 
               onClick={handleGetStarted}
-              className="group bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 text-lg font-medium"
+              className="group bg-gradient-to-r from-gray-800 to-black hover:from-gray-900 hover:to-gray-800 dark:from-white dark:to-gray-300 dark:hover:from-gray-100 dark:hover:to-gray-400 text-white dark:text-black px-10 py-6 text-lg font-semibold rounded-3xl transition-all duration-500 hover:scale-105 shadow-2xl hover:shadow-3xl border border-white/10 dark:border-black/10"
             >
               Get Started
-              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="ml-3 w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Button>
             <Button 
               variant="outline" 
               size="lg" 
               onClick={handleViewPricing}
-              className="px-8 py-6 text-lg font-medium border-primary/20 hover:border-primary/40"
+              className="glass-dark border-2 border-white/20 hover:border-white/40 dark:border-white/30 dark:hover:border-white/50 px-10 py-6 text-lg font-semibold rounded-3xl transition-all duration-500 hover:scale-105 backdrop-blur-md text-foreground hover:text-foreground shadow-xl hover:shadow-2xl bg-white/5 dark:bg-white/10 hover:bg-white/10 dark:hover:bg-white/15"
             >
               View Pricing
             </Button>
           </div>
           
-          <p className="text-sm text-muted-foreground mt-4">
+          <p className="text-sm text-muted-foreground mt-6 font-medium">
             Join thousands who've transformed their lives with personalized AI guidance
           </p>
         </div>

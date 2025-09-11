@@ -76,7 +76,7 @@ const Navigation = React.memo(() => {
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
       isScrolled 
-        ? 'glass border-b border-border shadow-modern' 
+        ? 'glass-dark border-b border-white/10 dark:border-white/20 shadow-2xl backdrop-blur-xl bg-white/5 dark:bg-white/10' 
         : 'bg-transparent'
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -84,8 +84,8 @@ const Navigation = React.memo(() => {
           {/* Logo */}
           <Link to="/" className="flex items-center group cursor-pointer">
             <div className="relative">
-              <div className="pointer-events-none absolute -inset-1 rounded-2xl bg-white/25 dark:bg-white/35 blur-md opacity-0 dark:opacity-60 transition-opacity duration-300"></div>
-              <div className="relative w-10 h-10 rounded-xl overflow-hidden group-hover:scale-105 transition-transform duration-300 ring-1 ring-white/10 dark:ring-white/20">
+              <div className="pointer-events-none absolute -inset-1 rounded-3xl bg-white/25 dark:bg-white/35 blur-md opacity-0 dark:opacity-60 transition-opacity duration-300"></div>
+              <div className="relative w-10 h-10 rounded-2xl overflow-hidden group-hover:scale-105 transition-transform duration-300 ring-1 ring-white/10 dark:ring-white/20 shadow-lg">
                 <img 
                   src="/lovable-uploads/156b282b-1e93-436c-914a-a886a6a5cdfd.png" 
                   alt="JumpinAI Logo" 
@@ -124,7 +124,7 @@ const Navigation = React.memo(() => {
                     <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-gray-800 to-black dark:from-white dark:to-gray-300 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="min-w-[150px] z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 border border-border shadow-lg rounded-xl">
+                <DropdownMenuContent align="start" className="min-w-[150px] z-50 glass-dark backdrop-blur-xl bg-white/10 dark:bg-white/15 border border-white/20 dark:border-white/30 shadow-2xl rounded-2xl">
                   {companyItems.map((item) => (
                     <DropdownMenuItem key={item.name} onSelect={() => handleNavClick(item.href)}>
                       {item.name}
@@ -142,12 +142,12 @@ const Navigation = React.memo(() => {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button 
-                    className="modern-button bg-gradient-to-r from-gray-800 to-black hover:from-gray-900 hover:to-gray-800 dark:from-white dark:to-gray-300 dark:hover:from-gray-100 dark:hover:to-gray-400 text-white dark:text-black px-6 py-2.5 rounded-xl font-semibold transition-all duration-300 hover:scale-105"
+                    className="modern-button bg-gradient-to-r from-gray-800 to-black hover:from-gray-900 hover:to-gray-800 dark:from-white dark:to-gray-300 dark:hover:from-gray-100 dark:hover:to-gray-400 text-white dark:text-black px-6 py-2.5 rounded-2xl font-semibold transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
                   >
                     My Account <ChevronDown className="ml-2 h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="min-w-[200px] z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 border border-border shadow-lg rounded-xl">
+                <DropdownMenuContent align="end" className="min-w-[200px] z-50 glass-dark backdrop-blur-xl bg-white/10 dark:bg-white/15 border border-white/20 dark:border-white/30 shadow-2xl rounded-2xl">
                   <DropdownMenuItem onSelect={() => navigate('/dashboard')}>Dashboard</DropdownMenuItem>
                   <DropdownMenuItem onSelect={() => logout()}>Log Out</DropdownMenuItem>
                 </DropdownMenuContent>
@@ -155,7 +155,7 @@ const Navigation = React.memo(() => {
             ) : (
               <Button 
                 onClick={handleCtaClick}
-                className="modern-button bg-gradient-to-r from-gray-800 to-black hover:from-gray-900 hover:to-gray-800 dark:from-white dark:to-gray-300 dark:hover:from-gray-100 dark:hover:to-gray-400 text-white dark:text-black px-6 py-2.5 rounded-xl font-semibold transition-all duration-300 hover:scale-105"
+                className="modern-button bg-gradient-to-r from-gray-800 to-black hover:from-gray-900 hover:to-gray-800 dark:from-white dark:to-gray-300 dark:hover:from-gray-100 dark:hover:to-gray-400 text-white dark:text-black px-6 py-2.5 rounded-2xl font-semibold transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
               >
                 Log In
               </Button>
@@ -177,12 +177,12 @@ const Navigation = React.memo(() => {
         {/* Mobile Navigation */}
         {isOpen && (
           <div className="md:hidden animate-fade-in-down">
-            <div className="px-2 pt-2 pb-3 space-y-1 glass rounded-2xl mt-2 border border-border">
+            <div className="px-2 pt-2 pb-3 space-y-1 glass-dark rounded-3xl mt-2 border border-white/20 dark:border-white/30 backdrop-blur-xl bg-white/10 dark:bg-white/15 shadow-2xl">
               {navItems.map((item) => (
                 <button
                   key={item.name}
                   onClick={() => handleNavClick(item.href)}
-                  className="text-muted-foreground hover:text-foreground block w-full text-left px-4 py-3 rounded-xl text-base font-medium hover:bg-accent transition-all duration-300"
+                  className="text-muted-foreground hover:text-foreground block w-full text-left px-4 py-3 rounded-2xl text-base font-medium hover:bg-white/10 dark:hover:bg-white/20 transition-all duration-300"
                 >
                   {item.name}
                 </button>
@@ -191,7 +191,7 @@ const Navigation = React.memo(() => {
                 <button
                   key={item.name}
                   onClick={() => handleNavClick(item.href)}
-                  className="text-muted-foreground hover:text-foreground block w-full text-left px-4 py-3 rounded-xl text-base font-medium hover:bg-accent transition-all duration-300"
+                  className="text-muted-foreground hover:text-foreground block w-full text-left px-4 py-3 rounded-2xl text-base font-medium hover:bg-white/10 dark:hover:bg-white/20 transition-all duration-300"
                 >
                   {item.name}
                 </button>
@@ -199,7 +199,7 @@ const Navigation = React.memo(() => {
               <div className="pt-2">
                 <Button 
                   onClick={handleCtaClick}
-                  className="w-full modern-button bg-gradient-to-r from-gray-800 to-black hover:from-gray-900 hover:to-gray-800 dark:from-white dark:to-gray-300 dark:hover:from-gray-100 dark:hover:to-gray-400 text-white dark:text-black py-3 rounded-xl font-semibold"
+                  className="w-full modern-button bg-gradient-to-r from-gray-800 to-black hover:from-gray-900 hover:to-gray-800 dark:from-white dark:to-gray-300 dark:hover:from-gray-100 dark:hover:to-gray-400 text-white dark:text-black py-3 rounded-2xl font-semibold shadow-lg hover:shadow-xl"
                 >
                   {isAuthenticated ? 'My Account' : 'Log In'}
                 </Button>

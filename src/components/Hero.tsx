@@ -255,12 +255,12 @@ const Hero = () => {
             <Button 
               size="lg" 
               asChild
-              className="modern-button group bg-gradient-to-r from-gray-800 to-black hover:from-gray-900 hover:to-gray-800 dark:from-white dark:to-gray-300 dark:hover:from-gray-100 dark:hover:to-gray-400 text-white dark:text-black px-10 py-6 text-lg font-semibold rounded-2xl transition-all duration-500 hover:scale-105 shadow-steel"
+              className="modern-button group bg-gradient-to-r from-gray-800 to-black hover:from-gray-900 hover:to-gray-800 dark:from-white dark:to-gray-300 dark:hover:from-gray-100 dark:hover:to-gray-400 text-white dark:text-black px-12 py-6 text-lg font-semibold rounded-3xl transition-all duration-500 hover:scale-105 shadow-2xl hover:shadow-3xl border border-white/10 dark:border-black/10"
             >
               <Link to="/jumps">
-                <Sparkles className="mr-2 h-5 w-5 group-hover:animate-spin" />
+                <Sparkles className="mr-3 h-5 w-5 group-hover:animate-spin" />
                 Get Started
-                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="ml-3 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Link>
             </Button>
             
@@ -269,21 +269,21 @@ const Hero = () => {
                 variant="outline" 
                 size="lg" 
                 onClick={() => scrollToSection('newsletter')}
-                className="modern-button group glass border-2 border-border hover:border-foreground px-10 py-6 text-lg font-semibold rounded-2xl transition-all duration-500 hover:scale-105 backdrop-blur-sm text-foreground hover:text-foreground"
+                className="modern-button group glass-dark border-2 border-white/20 hover:border-white/40 dark:border-white/30 dark:hover:border-white/50 px-12 py-6 text-lg font-semibold rounded-3xl transition-all duration-500 hover:scale-105 backdrop-blur-md text-foreground hover:text-foreground shadow-xl hover:shadow-2xl bg-white/5 dark:bg-white/10 hover:bg-white/10 dark:hover:bg-white/15"
               >
                 Stay ahead with AI
-                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="ml-3 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
             ) : (
               <Button 
                 variant="outline" 
                 size="lg" 
                 asChild
-                className="modern-button group glass border-2 border-border hover:border-foreground px-10 py-6 text-lg font-semibold rounded-2xl transition-all duration-500 hover:scale-105 backdrop-blur-sm text-foreground hover:text-foreground"
+                className="modern-button group glass-dark border-2 border-white/20 hover:border-white/40 dark:border-white/30 dark:hover:border-white/50 px-12 py-6 text-lg font-semibold rounded-3xl transition-all duration-500 hover:scale-105 backdrop-blur-md text-foreground hover:text-foreground shadow-xl hover:shadow-2xl bg-white/5 dark:bg-white/10 hover:bg-white/10 dark:hover:bg-white/15"
               >
                 <Link to="/auth">
                   Create account
-                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="ml-3 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </Button>
             )}
