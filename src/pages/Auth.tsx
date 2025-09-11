@@ -175,14 +175,17 @@ export default function Auth() {
               <Button
                 onClick={handleAppleLogin}
                 disabled={loading}
+                aria-label="Continue with Apple"
                 variant="outline"
-                className="w-full h-12 mt-3 text-base font-medium bg-black hover:bg-black/90 text-white border-2 border-gray-900 dark:border-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
+                className="w-full h-12 mt-3 text-base font-medium bg-white hover:bg-gray-50 dark:bg-black dark:hover:bg-gray-950 border-2 border-gray-200 dark:border-gray-800 text-gray-700 dark:text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
               >
                 <svg
                   className="mr-3 h-6 w-6"
                   viewBox="0 0 24 24"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="currentColor"
+                  aria-hidden="true"
+                  focusable="false"
                 >
                   <path d="M16.365 1.43c0 1.14-.463 2.197-1.235 2.994-.79.814-2.084 1.456-3.1 1.363-.135-1.086.417-2.243 1.17-3.025.773-.8 2.124-1.39 3.165-1.332zM21.175 17.668c-.624 1.438-1.371 2.866-2.473 2.886-1.076.02-1.423-.694-2.654-.694-1.231 0-1.616.673-2.643.714-1.061.04-1.872-1.316-2.503-2.748-1.355-3.06-1.393-6.63.29-8.499.86-.94 2.07-1.356 3.183-1.356 1.247 0 2.035.74 3.07.74 1.014 0 1.586-.74 3.04-.74.995 0 2.055.537 2.812 1.46-2.483 1.35-2.082 4.24-.122 6.037z" />
                 </svg>
