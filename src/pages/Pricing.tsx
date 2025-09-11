@@ -111,12 +111,12 @@ export default function Pricing() {
       
       <Navigation />
       
-      <main className="min-h-screen pt-20 pb-12 bg-gradient-to-br from-background via-background/90 to-primary/5 dark:from-black dark:via-slate-950/95 dark:to-blue-950/50">
+      <main className="min-h-screen pt-20 pb-12 bg-gradient-to-br from-background via-background/90 to-primary/5 dark:from-black dark:via-neutral-950/95 dark:to-neutral-900/60">
         {/* Enhanced floating background elements */}
         <div className="fixed inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-primary/20 to-primary/5 dark:from-blue-950/40 dark:to-slate-900/20 rounded-full blur-3xl"></div>
-          <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-tr from-secondary/15 to-secondary/5 dark:from-slate-900/35 dark:to-blue-900/20 rounded-full blur-3xl"></div>
-          <div className="absolute top-1/3 left-1/2 transform -translate-x-1/2 w-64 h-64 bg-accent/10 dark:bg-blue-950/30 rounded-full blur-2xl"></div>
+          <div className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-primary/20 to-primary/5 dark:from-neutral-900/40 dark:to-neutral-800/20 rounded-full blur-3xl"></div>
+          <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-tr from-secondary/15 to-secondary/5 dark:from-neutral-800/35 dark:to-neutral-700/20 rounded-full blur-3xl"></div>
+          <div className="absolute top-1/3 left-1/2 transform -translate-x-1/2 w-64 h-64 bg-accent/10 dark:bg-neutral-900/35 rounded-full blur-2xl"></div>
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -144,10 +144,10 @@ export default function Pricing() {
           {/* Pricing Cards */}
           <div className="grid grid-cols-2 gap-3 md:gap-4 lg:gap-6 max-w-4xl mx-auto mb-16">
             {/* Free Plan */}
-            <Card className="relative flex flex-col h-full glass backdrop-blur-xl border border-border/40 hover:border-primary/30 transition-all duration-500 hover:shadow-xl hover:shadow-primary/10 dark:shadow-2xl dark:shadow-black/20 rounded-2xl overflow-hidden animate-fade-in-up group bg-background/50 dark:bg-slate-900/50">
+            <Card className="relative flex flex-col h-full glass backdrop-blur-xl border border-border/40 hover:border-primary/30 transition-all duration-500 hover:shadow-xl hover:shadow-primary/10 dark:shadow-2xl dark:shadow-black/20 rounded-2xl overflow-hidden animate-fade-in-up group bg-background/50 dark:bg-neutral-950/50">
               {/* Subtle floating elements */}
-              <div className="absolute -top-6 -right-6 w-16 h-16 bg-primary/5 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              <div className="absolute -bottom-6 -left-6 w-20 h-20 bg-secondary/5 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{transitionDelay: '200ms'}}></div>
+              <div className="absolute -top-6 -right-6 w-16 h-16 bg-primary/5 dark:bg-neutral-700/15 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <div className="absolute -bottom-6 -left-6 w-20 h-20 bg-secondary/5 dark:bg-neutral-700/15 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{transitionDelay: '200ms'}}></div>
               
               <CardHeader className="text-center p-3 md:p-5 pb-2">
                 <div className="space-y-2">
@@ -199,7 +199,7 @@ export default function Pricing() {
               subInfo?.subscribed 
                 ? 'ring-2 ring-primary/40 border-primary/60 glass backdrop-blur-xl shadow-2xl shadow-primary/25 dark:shadow-primary/10' 
                 : 'glass backdrop-blur-xl border border-primary/40 hover:border-primary/60 hover:shadow-2xl hover:shadow-primary/25 dark:hover:shadow-primary/10 hover:ring-2 hover:ring-primary/30'
-            } bg-gradient-to-br from-background/60 to-primary/5 dark:from-slate-900/60 dark:to-slate-800/20`}>
+            } bg-gradient-to-br from-background/60 to-primary/5 dark:from-neutral-950/60 dark:to-neutral-900/20`}>
               {/* Premium badge - Fixed positioning */}
               <div className="absolute top-2 left-1/2 transform -translate-x-1/2 z-20">
                 <Badge className="bg-gradient-to-r from-primary to-primary/90 text-primary-foreground px-2 md:px-3 py-0.5 text-xs font-semibold rounded-lg shadow-lg border-0">
@@ -208,8 +208,8 @@ export default function Pricing() {
               </div>
 
               {/* Enhanced floating elements - no pulse */}
-              <div className="absolute -top-8 -right-8 w-20 h-20 bg-primary/15 rounded-full blur-2xl"></div>
-              <div className="absolute -bottom-8 -left-8 w-24 h-24 bg-secondary/10 rounded-full blur-2xl"></div>
+              <div className="absolute -top-8 -right-8 w-20 h-20 bg-primary/15 dark:bg-neutral-700/25 rounded-full blur-2xl"></div>
+              <div className="absolute -bottom-8 -left-8 w-24 h-24 bg-secondary/10 dark:bg-neutral-700/20 rounded-full blur-2xl"></div>
               
               <CardHeader className="text-center p-3 md:p-5 pb-2 pt-8 md:pt-9">
                 <div className="space-y-2">
@@ -295,7 +295,7 @@ export default function Pricing() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
-              <div className="text-center p-4 md:p-5 glass backdrop-blur-xl rounded-3xl border border-border/40 hover:border-primary/30 transition-all duration-500 hover:shadow-xl hover:shadow-primary/10 dark:shadow-lg dark:shadow-black/10 animate-fade-in-up bg-background/50 dark:bg-slate-900/50">
+              <div className="text-center p-4 md:p-5 glass backdrop-blur-xl rounded-3xl border border-border/40 hover:border-primary/30 transition-all duration-500 hover:shadow-xl hover:shadow-primary/10 dark:shadow-lg dark:shadow-black/10 animate-fade-in-up bg-background/50 dark:bg-neutral-950/50">
                 <div className="w-10 h-10 bg-gradient-to-br from-primary/15 to-primary/5 rounded-2xl flex items-center justify-center mx-auto mb-3">
                   <Rocket className="h-5 w-5 text-primary" />
                 </div>
@@ -305,7 +305,7 @@ export default function Pricing() {
                 </p>
               </div>
 
-              <div className="text-center p-4 md:p-5 glass backdrop-blur-xl rounded-3xl border border-border/40 hover:border-primary/30 transition-all duration-500 hover:shadow-xl hover:shadow-primary/10 dark:shadow-lg dark:shadow-black/10 animate-fade-in-up animate-delay-200 bg-background/50 dark:bg-slate-900/50">
+              <div className="text-center p-4 md:p-5 glass backdrop-blur-xl rounded-3xl border border-border/40 hover:border-primary/30 transition-all duration-500 hover:shadow-xl hover:shadow-primary/10 dark:shadow-lg dark:shadow-black/10 animate-fade-in-up animate-delay-200 bg-background/50 dark:bg-neutral-950/50">
                 <div className="w-10 h-10 bg-gradient-to-br from-primary/15 to-primary/5 rounded-2xl flex items-center justify-center mx-auto mb-3">
                   <Sparkles className="h-5 w-5 text-primary" />
                 </div>
@@ -315,7 +315,7 @@ export default function Pricing() {
                 </p>
               </div>
 
-              <div className="text-center p-4 md:p-5 glass backdrop-blur-xl rounded-3xl border border-border/40 hover:border-primary/30 transition-all duration-500 hover:shadow-xl hover:shadow-primary/10 dark:shadow-lg dark:shadow-black/10 animate-fade-in-up animate-delay-400 bg-background/50 dark:bg-slate-900/50">
+              <div className="text-center p-4 md:p-5 glass backdrop-blur-xl rounded-3xl border border-border/40 hover:border-primary/30 transition-all duration-500 hover:shadow-xl hover:shadow-primary/10 dark:shadow-lg dark:shadow-black/10 animate-fade-in-up animate-delay-400 bg-background/50 dark:bg-neutral-950/50">
                 <div className="w-10 h-10 bg-gradient-to-br from-primary/15 to-primary/5 rounded-2xl flex items-center justify-center mx-auto mb-3">
                   <Crown className="h-5 w-5 text-primary" />
                 </div>
