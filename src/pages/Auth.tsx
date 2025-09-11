@@ -114,22 +114,24 @@ export default function Auth() {
       </Helmet>
       <Navigation />
 
-      <main className="min-h-screen pt-28 pb-24">
+      <main className="min-h-screen pt-28 pb-24 bg-gradient-to-br from-background via-muted/50 to-background">
         <section className="max-w-xl mx-auto px-6">
-          <Card className="animate-fade-in">
-            <CardHeader>
-              <CardTitle className="text-2xl font-bold">Access your JumpinAI account</CardTitle>
+          <Card className="animate-fade-in backdrop-blur-xl bg-background/80 border-2 border-border/50 shadow-2xl rounded-2xl overflow-hidden">
+            <CardHeader className="text-center space-y-4 pb-8">
+              <CardTitle className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
+                Access your JumpinAI account
+              </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-8">
               {/* Google Login Button */}
               <Button 
                 onClick={handleGoogleLogin} 
                 disabled={loading} 
                 variant="outline" 
-                className="w-full mb-6 h-12 text-base font-medium border-input hover:bg-accent"
+                className="w-full h-14 text-base font-medium bg-white/90 hover:bg-white border-2 border-gray-200 hover:border-gray-300 text-gray-700 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
               >
                 <svg 
-                  className="mr-3 h-5 w-5" 
+                  className="mr-3 h-6 w-6" 
                   viewBox="0 0 24 24"
                   xmlns="http://www.w3.org/2000/svg"
                 >
@@ -153,52 +155,109 @@ export default function Auth() {
                 Continue with Google
               </Button>
 
-              <div className="relative mb-6">
+              <div className="relative">
                 <div className="absolute inset-0 flex items-center">
-                  <Separator className="w-full" />
+                  <Separator className="w-full bg-gradient-to-r from-transparent via-border to-transparent" />
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
+                  <span className="bg-background/90 backdrop-blur-sm px-4 py-2 rounded-full text-muted-foreground font-medium border border-border/50">
+                    Or continue with
+                  </span>
                 </div>
               </div>
 
               <Tabs defaultValue="signup" className="w-full">
-                <TabsList className="grid grid-cols-2 w-full">
-                  <TabsTrigger value="signup">Sign Up</TabsTrigger>
-                  <TabsTrigger value="login">Login</TabsTrigger>
+                <TabsList className="grid grid-cols-2 w-full bg-muted/30 backdrop-blur-sm p-1 rounded-xl border border-border/30">
+                  <TabsTrigger 
+                    value="signup" 
+                    className="rounded-lg data-[state=active]:bg-background/80 data-[state=active]:shadow-lg data-[state=active]:text-foreground transition-all duration-300"
+                  >
+                    Sign Up
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="login" 
+                    className="rounded-lg data-[state=active]:bg-background/80 data-[state=active]:shadow-lg data-[state=active]:text-foreground transition-all duration-300"
+                  >
+                    Login
+                  </TabsTrigger>
                 </TabsList>
 
-                <TabsContent value="signup" className="mt-6 space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-name">Name</Label>
-                    <Input id="signup-name" type="text" value={signupName} onChange={(e) => setSignupName(e.target.value)} placeholder="Enter your full name" />
+                <TabsContent value="signup" className="mt-8 space-y-6">
+                  <div className="space-y-3">
+                    <Label htmlFor="signup-name" className="text-sm font-medium text-foreground">Name</Label>
+                    <Input 
+                      id="signup-name" 
+                      type="text" 
+                      value={signupName} 
+                      onChange={(e) => setSignupName(e.target.value)} 
+                      placeholder="Enter your full name" 
+                      className="h-12 bg-background/50 backdrop-blur-sm border-2 border-border/50 rounded-xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
+                    />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-email">Email</Label>
-                    <Input id="signup-email" type="email" value={signupEmail} onChange={(e) => setSignupEmail(e.target.value)} placeholder="Enter your email" />
+                  <div className="space-y-3">
+                    <Label htmlFor="signup-email" className="text-sm font-medium text-foreground">Email</Label>
+                    <Input 
+                      id="signup-email" 
+                      type="email" 
+                      value={signupEmail} 
+                      onChange={(e) => setSignupEmail(e.target.value)} 
+                      placeholder="Enter your email" 
+                      className="h-12 bg-background/50 backdrop-blur-sm border-2 border-border/50 rounded-xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
+                    />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-password">Password</Label>
-                    <Input id="signup-password" type="password" value={signupPassword} onChange={(e) => setSignupPassword(e.target.value)} placeholder="Create a password" />
+                  <div className="space-y-3">
+                    <Label htmlFor="signup-password" className="text-sm font-medium text-foreground">Password</Label>
+                    <Input 
+                      id="signup-password" 
+                      type="password" 
+                      value={signupPassword} 
+                      onChange={(e) => setSignupPassword(e.target.value)} 
+                      placeholder="Create a password" 
+                      className="h-12 bg-background/50 backdrop-blur-sm border-2 border-border/50 rounded-xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
+                    />
                   </div>
-                  <Button onClick={handleSignup} disabled={loading} className="w-full">
+                  <Button 
+                    onClick={handleSignup} 
+                    disabled={loading} 
+                    className="w-full h-12 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
+                  >
                     {loading ? "Creating account..." : "Create account"}
                   </Button>
-                  <p className="text-xs text-muted-foreground text-center">Start using JumpinAI immediately after signup!</p>
+                  <p className="text-xs text-muted-foreground text-center bg-muted/20 backdrop-blur-sm px-4 py-2 rounded-lg">
+                    Start using JumpinAI immediately after signup!
+                  </p>
                 </TabsContent>
 
-                <TabsContent value="login" className="mt-6 space-y-4">
+                <TabsContent value="login" className="mt-8 space-y-6">
                   {!showForgotPassword ? (
                     <>
-                      <div className="space-y-2">
-                        <Label htmlFor="login-email">Email</Label>
-                        <Input id="login-email" type="email" value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} placeholder="Enter your email" />
+                      <div className="space-y-3">
+                        <Label htmlFor="login-email" className="text-sm font-medium text-foreground">Email</Label>
+                        <Input 
+                          id="login-email" 
+                          type="email" 
+                          value={loginEmail} 
+                          onChange={(e) => setLoginEmail(e.target.value)} 
+                          placeholder="Enter your email" 
+                          className="h-12 bg-background/50 backdrop-blur-sm border-2 border-border/50 rounded-xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
+                        />
                       </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="login-password">Password</Label>
-                        <Input id="login-password" type="password" value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} placeholder="Enter your password" />
+                      <div className="space-y-3">
+                        <Label htmlFor="login-password" className="text-sm font-medium text-foreground">Password</Label>
+                        <Input 
+                          id="login-password" 
+                          type="password" 
+                          value={loginPassword} 
+                          onChange={(e) => setLoginPassword(e.target.value)} 
+                          placeholder="Enter your password" 
+                          className="h-12 bg-background/50 backdrop-blur-sm border-2 border-border/50 rounded-xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
+                        />
                       </div>
-                      <Button onClick={handleLogin} disabled={loading} className="w-full">
+                      <Button 
+                        onClick={handleLogin} 
+                        disabled={loading} 
+                        className="w-full h-12 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
+                      >
                         {loading ? "Logging in..." : "Login"}
                       </Button>
                       <div className="text-center">
@@ -206,7 +265,7 @@ export default function Auth() {
                           variant="link" 
                           size="sm" 
                           onClick={() => setShowForgotPassword(true)}
-                          className="text-primary hover:text-primary/80"
+                          className="text-primary hover:text-primary/80 font-medium rounded-lg px-4 py-2 hover:bg-primary/10 transition-all duration-300"
                         >
                           Forgot password?
                         </Button>
@@ -214,17 +273,22 @@ export default function Auth() {
                     </>
                   ) : (
                     <>
-                      <div className="space-y-2">
-                        <Label htmlFor="forgot-email">Email address</Label>
+                      <div className="space-y-3">
+                        <Label htmlFor="forgot-email" className="text-sm font-medium text-foreground">Email address</Label>
                         <Input 
                           id="forgot-email" 
                           type="email" 
                           value={forgotPasswordEmail} 
                           onChange={(e) => setForgotPasswordEmail(e.target.value)} 
                           placeholder="Enter your email to reset password"
+                          className="h-12 bg-background/50 backdrop-blur-sm border-2 border-border/50 rounded-xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
                         />
                       </div>
-                      <Button onClick={handleForgotPassword} disabled={loading} className="w-full">
+                      <Button 
+                        onClick={handleForgotPassword} 
+                        disabled={loading} 
+                        className="w-full h-12 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
+                      >
                         {loading ? "Sending reset email..." : "Send reset email"}
                       </Button>
                       <div className="text-center">
@@ -235,7 +299,7 @@ export default function Auth() {
                             setShowForgotPassword(false);
                             setForgotPasswordEmail("");
                           }}
-                          className="text-muted-foreground hover:text-primary"
+                          className="text-muted-foreground hover:text-primary font-medium rounded-lg px-4 py-2 hover:bg-muted/20 transition-all duration-300"
                         >
                           Back to login
                         </Button>
@@ -245,14 +309,20 @@ export default function Auth() {
                 </TabsContent>
               </Tabs>
             </CardContent>
-            <CardFooter className="justify-center">
-              <p className="text-sm text-muted-foreground">
+            <CardFooter className="justify-center pt-8 pb-6">
+              <p className="text-sm text-muted-foreground text-center bg-muted/10 backdrop-blur-sm px-6 py-3 rounded-full border border-border/30">
                 By continuing you agree to our{" "}
-                <Link to="/terms-of-use" className="underline hover:text-foreground transition-colors">
+                <Link 
+                  to="/terms-of-use" 
+                  className="text-primary hover:text-primary/80 underline underline-offset-2 font-medium transition-colors duration-300"
+                >
                   Terms
                 </Link>{" "}
                 and{" "}
-                <Link to="/privacy-policy" className="underline hover:text-foreground transition-colors">
+                <Link 
+                  to="/privacy-policy" 
+                  className="text-primary hover:text-primary/80 underline underline-offset-2 font-medium transition-colors duration-300"
+                >
                   Privacy Policy
                 </Link>
                 .
