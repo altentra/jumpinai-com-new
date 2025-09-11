@@ -9,10 +9,11 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Mail, MapPin, Clock, Send } from "lucide-react";
+import { Mail, MapPin, Clock, Send, MessageCircle, Phone, Globe } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { Helmet } from "react-helmet-async";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -68,6 +69,12 @@ const ContactUs = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background/90 to-primary/5 dark:bg-gradient-to-br dark:from-black dark:via-gray-950/90 dark:to-gray-900/60">
+      <Helmet>
+        <title>Contact JumpinAI | Get AI Strategy & Implementation Support</title>
+        <meta name="description" content="Contact JumpinAI for AI strategy consultation, implementation support, and expert guidance. Get in touch with our team to transform your business with AI." />
+        <link rel="canonical" href={`${window.location.origin}/contact-us`} />
+      </Helmet>
+      
       {/* Enhanced floating background elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-primary/20 to-primary/5 dark:bg-gradient-to-br dark:from-gray-800/30 dark:to-gray-700/15 rounded-full blur-3xl"></div>
@@ -76,106 +83,150 @@ const ContactUs = () => {
         <div className="absolute top-20 right-20 w-32 h-32 bg-gradient-to-br from-primary/10 to-transparent dark:bg-gradient-to-br dark:from-gray-700/20 dark:to-transparent rounded-full blur-xl"></div>
         <div className="absolute bottom-20 left-20 w-40 h-40 bg-gradient-to-tr from-secondary/8 to-transparent dark:bg-gradient-to-tr dark:from-gray-600/15 dark:to-transparent rounded-full blur-xl"></div>
       </div>
+      
       <Navigation />
       
-      {/* Hero Section */}
-      <section className="pt-32 pb-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="flex justify-center mb-6">
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-gray-600 to-gray-800 rounded-2xl blur-lg opacity-75 dark:from-gray-400 dark:to-gray-200"></div>
-              <div className="relative bg-gradient-to-r from-gray-600 to-gray-800 p-4 rounded-2xl dark:from-gray-400 dark:to-gray-200">
-                <Mail className="h-10 w-10 text-white dark:text-black" />
+      {/* Premium Hero Section - Glass Morphism */}
+      <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="max-w-6xl mx-auto">
+          <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-3xl p-8 md:p-16 shadow-2xl shadow-primary/10 hover:shadow-3xl hover:shadow-primary/15 transition-all duration-500">
+            <div className="text-center max-w-4xl mx-auto">
+              {/* Icon with enhanced glass effect */}
+              <div className="flex justify-center mb-8">
+                <div className="glass backdrop-blur-sm bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-3xl p-6 shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/25 transition-all duration-300 hover:scale-110">
+                  <MessageCircle className="h-12 w-12 text-primary" />
+                </div>
+              </div>
+              
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-br from-foreground via-foreground to-primary/70 bg-clip-text text-transparent animate-fade-in-up">
+                Let's Start a Conversation
+              </h1>
+              
+              <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-8 animate-fade-in-up animate-delay-100">
+                Ready to transform your business with AI? We're here to guide you through every step of your AI journey.
+              </p>
+              
+              <div className="glass backdrop-blur-sm bg-background/20 dark:bg-background/10 border border-primary/20 rounded-2xl p-6 shadow-lg shadow-primary/10 animate-fade-in-up animate-delay-200">
+                <p className="text-lg text-muted-foreground">
+                  Whether you need strategic guidance, implementation support, or custom AI solutions, 
+                  our team of AI experts is ready to help you unlock your potential.
+                </p>
               </div>
             </div>
           </div>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black gradient-text-primary mb-6 animate-fade-in-up">
-            Get in Touch
-          </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto animate-fade-in-up animate-delay-100">
-            Ready to transform your AI strategy? Let's start a conversation about your goals and how we can help you achieve them.
-          </p>
         </div>
       </section>
 
-      {/* Contact Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
-          <div className="grid lg:grid-cols-3 gap-12 items-start">
+      {/* Premium Contact Section - Glass Morphism */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-12 gap-8 xl:gap-12">
             
-            {/* Contact Information - Sidebar */}
-            <div className="lg:col-span-1 space-y-6 animate-fade-in-left">
-              <div>
-                <h2 className="text-xl font-bold mb-4 font-display text-foreground">Let's Connect</h2>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  We're here to help you navigate the world of AI.
+            {/* Contact Information - Enhanced Glass Cards */}
+            <div className="lg:col-span-4 space-y-6">
+              <div className="glass backdrop-blur-md bg-background/25 dark:bg-background/15 border border-primary/20 rounded-3xl p-8 shadow-2xl shadow-primary/10 hover:shadow-3xl hover:shadow-primary/15 transition-all duration-500">
+                <h2 className="text-2xl md:text-3xl font-bold mb-6 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">
+                  Get in Touch
+                </h2>
+                <p className="text-lg text-muted-foreground leading-relaxed mb-8">
+                  We're here to help you navigate the world of AI and turn your vision into reality.
                 </p>
-              </div>
 
-              <div className="space-y-4">
-                {/* Main Email - Emphasized */}
-                <div className="group p-4 rounded-xl bg-gradient-to-br from-muted/80 to-muted/40 hover:from-muted hover:to-muted/60 transition-all duration-300 border border-border/50">
-                  <div className="flex items-start space-x-3">
-                    <div className="bg-gradient-to-r from-gray-600 to-gray-800 dark:from-gray-400 dark:to-gray-200 p-2 rounded-lg flex-shrink-0">
-                      <Mail className="h-4 w-4 text-white dark:text-black" />
+                <div className="space-y-4">
+                  {/* Main Email - Premium Glass Card */}
+                  <div className="glass backdrop-blur-sm bg-gradient-to-br from-primary/10 via-background/30 to-secondary/5 border border-primary/30 rounded-2xl p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/20 hover:border-primary/40 transition-all duration-300 group hover:scale-105 hover:-translate-y-1">
+                    <div className="flex items-start space-x-4">
+                      <div className="glass backdrop-blur-sm bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 p-3 rounded-2xl flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                        <Mail className="h-5 w-5 text-primary" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-bold text-base mb-2 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">
+                          Email Us
+                        </h3>
+                        <p className="text-lg font-semibold text-primary mb-1">info@jumpinai.com</p>
+                        <p className="text-sm text-muted-foreground">Your gateway to AI transformation</p>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="font-semibold text-sm mb-1 text-foreground">Email Us</h3>
-                      <p className="text-base font-semibold gradient-text-primary">info@jumpinai.com</p>
-                      <p className="text-xs text-muted-foreground mt-1">Your gateway to AI transformation</p>
+                  </div>
+
+                  {/* Response Time & Location - Enhanced Cards */}
+                  <div className="grid grid-cols-1 gap-4">
+                    <div className="glass backdrop-blur-sm bg-background/20 dark:bg-background/10 border border-primary/20 rounded-2xl p-4 shadow-lg shadow-primary/10 hover:shadow-xl hover:shadow-primary/15 hover:border-primary/30 transition-all duration-300 group">
+                      <div className="flex items-center space-x-3">
+                        <div className="glass backdrop-blur-sm bg-gradient-to-br from-primary/15 to-primary/5 border border-primary/25 p-2 rounded-xl group-hover:scale-110 transition-transform duration-300">
+                          <Clock className="h-4 w-4 text-primary" />
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-sm text-foreground">Response Time</h4>
+                          <p className="text-sm text-muted-foreground">Within 24 hours</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="glass backdrop-blur-sm bg-background/20 dark:bg-background/10 border border-primary/20 rounded-2xl p-4 shadow-lg shadow-primary/10 hover:shadow-xl hover:shadow-primary/15 hover:border-primary/30 transition-all duration-300 group">
+                      <div className="flex items-center space-x-3">
+                        <div className="glass backdrop-blur-sm bg-gradient-to-br from-primary/15 to-primary/5 border border-primary/25 p-2 rounded-xl group-hover:scale-110 transition-transform duration-300">
+                          <Globe className="h-4 w-4 text-primary" />
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-sm text-foreground">Our Reach</h4>
+                          <p className="text-sm text-muted-foreground">Global - Remote Team</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Secondary Info - Smaller */}
-                <div className="grid grid-cols-1 gap-2">
-                  <div className="group flex items-center space-x-2 p-2 rounded-lg bg-muted/20 hover:bg-muted/30 transition-all duration-300">
-                    <div className="bg-gradient-to-r from-gray-600 to-gray-800 dark:from-gray-400 dark:to-gray-200 p-1.5 rounded-md">
-                      <Clock className="h-3 w-3 text-white dark:text-black" />
-                    </div>
-                    <div>
-                      <h4 className="font-medium text-xs text-foreground">Response Time</h4>
-                      <p className="text-xs text-muted-foreground">Within 24 hours</p>
-                    </div>
-                  </div>
-
-                  <div className="group flex items-center space-x-2 p-2 rounded-lg bg-muted/20 hover:bg-muted/30 transition-all duration-300">
-                    <div className="bg-gradient-to-r from-gray-600 to-gray-800 dark:from-gray-400 dark:to-gray-200 p-1.5 rounded-md">
-                      <MapPin className="h-3 w-3 text-white dark:text-black" />
-                    </div>
-                    <div>
-                      <h4 className="font-medium text-xs text-foreground">Our Reach</h4>
-                      <p className="text-xs text-muted-foreground">Global - Remote Team</p>
+                {/* Contact Methods - Additional Premium Cards */}
+                <div className="mt-8 space-y-4">
+                  <h3 className="text-lg font-bold bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">
+                    Other Ways to Connect
+                  </h3>
+                  
+                  <div className="glass backdrop-blur-sm bg-background/15 dark:bg-background/10 border border-primary/20 rounded-2xl p-4 shadow-lg shadow-primary/10 hover:shadow-xl hover:shadow-primary/15 transition-all duration-300">
+                    <div className="flex items-center space-x-3">
+                      <div className="glass backdrop-blur-sm bg-gradient-to-br from-secondary/15 to-secondary/5 border border-secondary/25 p-2 rounded-xl">
+                        <Phone className="h-4 w-4 text-secondary" />
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-sm text-foreground">Schedule a Call</h4>
+                        <p className="text-sm text-muted-foreground">Book a consultation call</p>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Contact Form - Main Content */}
-            <div className="lg:col-span-2 animate-fade-in-right">
-              <div className="max-w-xl mx-auto">
-                <Card className="relative shadow-2xl backdrop-blur-xl bg-gradient-to-br from-background/95 via-background/90 to-muted/10 border-2 border-gray-200/30 dark:border-gray-700/50 before:absolute before:inset-0 before:rounded-2xl before:border-2 before:border-gray-300/20 dark:before:border-gray-600/40 before:bg-gradient-to-br before:from-background/80 before:to-background/40 before:backdrop-blur-xl before:-z-10 dark:before:from-background/60 dark:before:to-background/20">
-                  <CardHeader className="pb-6 text-center relative z-10">
-                    <CardTitle className="text-2xl font-bold font-display text-foreground mb-3">Send us a Message</CardTitle>
-                    <CardDescription className="text-base text-muted-foreground">
-                      Fill out the form below and we'll get back to you as soon as possible.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-6 relative z-10">
+            {/* Contact Form - Premium Glass Design */}
+            <div className="lg:col-span-8">
+              <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-3xl p-8 md:p-12 shadow-2xl shadow-primary/10 hover:shadow-3xl hover:shadow-primary/15 transition-all duration-500">
+                <div className="max-w-2xl mx-auto">
+                  {/* Form Header */}
+                  <div className="text-center mb-8">
+                    <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-br from-foreground via-foreground to-primary/70 bg-clip-text text-transparent">
+                      Send us a Message
+                    </h2>
+                    <p className="text-lg text-muted-foreground leading-relaxed">
+                      Fill out the form below and we'll get back to you as soon as possible with personalized insights for your AI journey.
+                    </p>
+                  </div>
+
+                  {/* Form Container */}
+                  <div className="glass backdrop-blur-sm bg-background/20 dark:bg-background/10 border border-primary/25 rounded-2xl p-8 shadow-xl shadow-primary/15">
                     <Form {...form}>
                       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                           <FormField
                             control={form.control}
                             name="name"
                             render={({ field }) => (
                               <FormItem className="space-y-2">
-                                <FormLabel className="text-sm font-semibold">Full Name</FormLabel>
+                                <FormLabel className="text-sm font-bold text-foreground">Full Name</FormLabel>
                                 <FormControl>
                                   <Input 
                                     placeholder="Your full name" 
-                                    className="h-10 text-sm bg-background/50 border-border/50 focus:border-foreground/20 focus:bg-background transition-all duration-300 rounded-lg"
+                                    className="h-12 text-base glass backdrop-blur-sm bg-background/50 dark:bg-background/30 border-primary/30 focus:border-primary/50 focus:bg-background/70 dark:focus:bg-background/50 transition-all duration-300 rounded-xl shadow-lg shadow-primary/5 focus:shadow-xl focus:shadow-primary/10"
                                     {...field} 
                                   />
                                 </FormControl>
@@ -189,12 +240,12 @@ const ContactUs = () => {
                             name="email"
                             render={({ field }) => (
                               <FormItem className="space-y-2">
-                                <FormLabel className="text-sm font-semibold">Email Address</FormLabel>
+                                <FormLabel className="text-sm font-bold text-foreground">Email Address</FormLabel>
                                 <FormControl>
                                   <Input 
                                     placeholder="your.email@example.com" 
                                     type="email" 
-                                    className="h-10 text-sm bg-background/50 border-border/50 focus:border-foreground/20 focus:bg-background transition-all duration-300 rounded-lg"
+                                    className="h-12 text-base glass backdrop-blur-sm bg-background/50 dark:bg-background/30 border-primary/30 focus:border-primary/50 focus:bg-background/70 dark:focus:bg-background/50 transition-all duration-300 rounded-xl shadow-lg shadow-primary/5 focus:shadow-xl focus:shadow-primary/10"
                                     {...field} 
                                   />
                                 </FormControl>
@@ -209,11 +260,11 @@ const ContactUs = () => {
                           name="subject"
                           render={({ field }) => (
                             <FormItem className="space-y-2">
-                              <FormLabel className="text-sm font-semibold">Subject</FormLabel>
+                              <FormLabel className="text-sm font-bold text-foreground">Subject</FormLabel>
                               <FormControl>
                                 <Input 
                                   placeholder="What would you like to discuss?" 
-                                  className="h-10 text-sm bg-background/50 border-border/50 focus:border-foreground/20 focus:bg-background transition-all duration-300 rounded-lg"
+                                  className="h-12 text-base glass backdrop-blur-sm bg-background/50 dark:bg-background/30 border-primary/30 focus:border-primary/50 focus:bg-background/70 dark:focus:bg-background/50 transition-all duration-300 rounded-xl shadow-lg shadow-primary/5 focus:shadow-xl focus:shadow-primary/10"
                                   {...field} 
                                 />
                               </FormControl>
@@ -227,11 +278,11 @@ const ContactUs = () => {
                           name="message"
                           render={({ field }) => (
                             <FormItem className="space-y-2">
-                              <FormLabel className="text-sm font-semibold">Message</FormLabel>
+                              <FormLabel className="text-sm font-bold text-foreground">Message</FormLabel>
                               <FormControl>
                                 <Textarea 
-                                  placeholder="Tell us about your AI goals, challenges, or how we can help you..."
-                                  className="min-h-[120px] text-sm bg-background/50 border-border/50 focus:border-foreground/20 focus:bg-background transition-all duration-300 rounded-lg resize-none"
+                                  placeholder="Tell us about your AI goals, challenges, or how we can help you transform your business..."
+                                  className="min-h-[140px] text-base glass backdrop-blur-sm bg-background/50 dark:bg-background/30 border-primary/30 focus:border-primary/50 focus:bg-background/70 dark:focus:bg-background/50 transition-all duration-300 rounded-xl resize-none shadow-lg shadow-primary/5 focus:shadow-xl focus:shadow-primary/10"
                                   {...field}
                                 />
                               </FormControl>
@@ -240,20 +291,20 @@ const ContactUs = () => {
                           )}
                         />
 
-                        <div className="pt-4">
+                        <div className="pt-6">
                           <Button 
                             type="submit" 
                             disabled={isSubmitting}
-                            className="w-full h-12 text-base font-semibold bg-gradient-to-r from-gray-800 to-black hover:from-gray-900 hover:to-gray-800 dark:from-white dark:to-gray-300 dark:hover:from-gray-100 dark:hover:to-gray-400 text-white dark:text-black rounded-lg transition-all duration-300 hover:scale-[1.02] hover:shadow-modern group"
+                            className="w-full h-14 text-lg font-bold bg-gradient-to-r from-primary/90 to-primary hover:from-primary hover:to-primary/80 text-primary-foreground border border-primary/30 rounded-2xl shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 hover:scale-105 group backdrop-blur-sm"
                           >
-                            <Send className="mr-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                            {isSubmitting ? "Sending..." : "Send Message"}
+                            <Send className="mr-3 h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
+                            {isSubmitting ? "Sending Message..." : "Send Message"}
                           </Button>
                         </div>
                       </form>
                     </Form>
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
