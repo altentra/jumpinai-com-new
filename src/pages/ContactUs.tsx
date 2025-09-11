@@ -154,20 +154,6 @@ const ContactUs = () => {
                     </div>
                   </div>
                 </div>
-
-                {/* Contact Methods - Additional Premium Cards */}
-                <div className="mt-6 space-y-3">
-                  <h3 className="text-base font-bold bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">
-                    Other Ways to Connect
-                  </h3>
-                  
-                  <div className="glass backdrop-blur-sm bg-background/15 dark:bg-background/10 border border-primary/20 rounded-2xl p-3 shadow-lg shadow-primary/10 hover:shadow-xl hover:shadow-primary/15 transition-all duration-300">
-                    <div>
-                      <h4 className="font-bold text-xs text-foreground mb-1">Schedule a Call</h4>
-                      <p className="text-xs text-muted-foreground">Book a consultation call</p>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
 
