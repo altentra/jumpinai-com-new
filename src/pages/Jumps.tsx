@@ -238,10 +238,10 @@ const Jumps = () => {
     }
 
     return (
-      <div className="relative w-14 h-14 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center shadow-sm">
+      <div className="relative w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center shadow-lg glass backdrop-blur-sm border border-white/20">
         <Primary className="h-6 w-6 text-primary" />
         {Secondary ? (
-          <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-md bg-background/90 border border-border flex items-center justify-center">
+          <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-xl glass backdrop-blur-sm border border-white/30 flex items-center justify-center">
             <Secondary className="h-3.5 w-3.5 text-muted-foreground" />
           </div>
         ) : null}
@@ -265,15 +265,27 @@ const Jumps = () => {
       <Navigation />
       
       {/* Hero Section */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto max-w-6xl">
+      <section className="relative py-20 px-4 overflow-hidden">
+        {/* Floating Elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute -top-10 -left-10 w-72 h-72 bg-primary/5 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute -top-20 -right-20 w-96 h-96 bg-secondary/5 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
+          <div className="absolute -bottom-10 left-1/2 transform -translate-x-1/2 w-80 h-80 bg-accent/5 rounded-full blur-3xl animate-pulse" style={{animationDelay: '2s'}}></div>
+        </div>
+        
+        <div className="container mx-auto max-w-6xl relative z-10">
           <div className="text-center mb-16">
-            <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent mb-6">
-              Jumps in AI. Guides.
-            </h1>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Take your first steps into AI mastery across different areas. Each guide provides clear insights and practical steps to build your AI skills.
-            </p>
+            <div className="relative inline-block mb-6">
+              <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
+                Jumps in AI. Guides.
+              </h1>
+              <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-transparent to-primary/20 blur-xl rounded-3xl opacity-30"></div>
+            </div>
+            <div className="glass rounded-3xl p-8 max-w-4xl mx-auto backdrop-blur-xl border border-white/10">
+              <p className="text-xl text-muted-foreground leading-relaxed">
+                Take your first steps into AI mastery across different areas. Each guide provides clear insights and practical steps to build your AI skills.
+              </p>
+            </div>
           </div>
 
           {/* Products Grid */}
@@ -284,7 +296,7 @@ const Jumps = () => {
               
               return (
                 <div key={product.id} className="w-full sm:w-[320px] md:w-[340px]">
-                  <Card className={`group hover:shadow-lg transition-all duration-300 border-muted/50 hover:border-primary/20 h-full flex flex-col ${hasPurchased ? 'ring-2 ring-green-500/30 border-green-500/50' : ''}`}>
+                  <Card className={`group glass hover:shadow-2xl transition-all duration-500 border-white/20 hover:border-primary/30 h-full flex flex-col rounded-3xl backdrop-blur-xl hover:scale-[1.02] ${hasPurchased ? 'ring-2 ring-green-500/30 border-green-500/50 shadow-green-500/10' : ''}`}>
                     <CardHeader className="pb-4">
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-3">
@@ -329,7 +341,7 @@ const Jumps = () => {
                         )}
                         
                         {hasPurchased || (subInfo?.subscribed && subInfo?.subscription_tier === "JumpinAI Pro") ? (
-                          <Button asChild={false} className="w-full bg-green-600 hover:bg-green-700 text-white" onClick={() => {
+                          <Button asChild={false} className="w-full bg-green-600 hover:bg-green-700 text-white rounded-2xl glass backdrop-blur-sm border border-green-500/20" onClick={() => {
                             if (order?.download_token) {
                               window.location.href = `/download/${order.download_token}`;
                             } else {
@@ -345,7 +357,7 @@ const Jumps = () => {
                             <Dialog open={isDialogOpen && selectedProduct?.id === product.id} onOpenChange={setIsDialogOpen}>
                               <DialogTrigger asChild>
                                 <Button 
-                                  className="w-full group-hover:bg-primary/90 transition-colors duration-300"
+                                  className="w-full group-hover:bg-primary/90 transition-all duration-500 rounded-2xl hover:scale-105"
                                   onClick={() => handleBuyClick(product)}
                                 >
                                   <ShoppingCart className="h-4 w-4 mr-2" />
@@ -353,17 +365,17 @@ const Jumps = () => {
                                 </Button>
                               </DialogTrigger>
                         
-                              <DialogContent className="sm:max-w-md">
+                              <DialogContent className="sm:max-w-md glass backdrop-blur-xl border border-white/20 rounded-3xl">
                                 <DialogHeader>
-                                  <DialogTitle>Complete Your Purchase</DialogTitle>
-                                  <DialogDescription>
+                                  <DialogTitle className="text-xl">Complete Your Purchase</DialogTitle>
+                                  <DialogDescription className="text-muted-foreground">
                                     You're about to purchase "{selectedProduct?.name}" for ${selectedProduct ? formatPrice(selectedProduct.price) : '0.00'}
                                   </DialogDescription>
                                 </DialogHeader>
                                 
-                                <div className="space-y-4">
-                                  <div className="space-y-2">
-                                    <Label htmlFor="email">Email Address</Label>
+                                <div className="space-y-6">
+                                  <div className="space-y-3">
+                                    <Label htmlFor="email" className="text-sm font-medium">Email Address</Label>
                                     <Input
                                       id="email"
                                       type="email"
@@ -371,8 +383,9 @@ const Jumps = () => {
                                       value={customerEmail}
                                       onChange={(e) => setCustomerEmail(e.target.value)}
                                       required
+                                      className="rounded-2xl glass backdrop-blur-sm border border-white/20"
                                     />
-                                    <p className="text-xs text-muted-foreground">
+                                    <p className="text-xs text-muted-foreground glass backdrop-blur-sm rounded-xl p-2 border border-white/10">
                                       We'll send your download link to this email
                                     </p>
                                   </div>
@@ -381,14 +394,14 @@ const Jumps = () => {
                                     <Button 
                                       variant="outline" 
                                       onClick={() => setIsDialogOpen(false)}
-                                      className="flex-1"
+                                      className="flex-1 rounded-2xl glass backdrop-blur-sm border border-white/20"
                                     >
                                       Cancel
                                     </Button>
                                     <Button 
                                       onClick={handlePurchase}
                                       disabled={!customerEmail || isProcessing}
-                                      className="flex-1"
+                                      className="flex-1 rounded-2xl hover:scale-105 transition-all duration-300"
                                     >
                                       {isProcessing ? (
                                         <Loader2 className="h-4 w-4 animate-spin mr-2" />
@@ -414,16 +427,22 @@ const Jumps = () => {
           {/* All-Access CTA - Only show if user is not subscribed to Pro */}
           {!(subInfo?.subscribed && subInfo?.subscription_tier === "JumpinAI Pro") && (
             <div className="mt-16">
-              <div className="p-6 md:p-8 rounded-xl border border-muted/50 bg-muted/30 text-center">
-                <h2 className="text-2xl md:text-3xl font-semibold mb-3">Get access to all guides</h2>
-                <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-                  Want everything in one place? Join our Whop for just $19.99 and unlock all products together.
-                </p>
-                <Button size="lg" className="w-full sm:w-auto hover-scale" asChild>
-                  <a href="https://whop.com/jumpinai/" target="_blank" rel="noopener noreferrer">
-                    Join on Whop — $19.99
-                  </a>
-                </Button>
+              <div className="relative glass backdrop-blur-xl p-8 md:p-12 rounded-3xl border border-white/20 text-center overflow-hidden">
+                {/* Floating background elements */}
+                <div className="absolute -top-10 -left-10 w-32 h-32 bg-primary/10 rounded-full blur-2xl animate-pulse"></div>
+                <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-secondary/10 rounded-full blur-2xl animate-pulse" style={{animationDelay: '1s'}}></div>
+                
+                <div className="relative z-10">
+                  <h2 className="text-2xl md:text-3xl font-semibold mb-4 gradient-text">Get access to all guides</h2>
+                  <p className="text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
+                    Want everything in one place? Join our Whop for just $19.99 and unlock all products together.
+                  </p>
+                  <Button size="lg" className="w-full sm:w-auto hover-scale rounded-2xl glass backdrop-blur-sm border border-white/20 hover:scale-110 transition-all duration-500" asChild>
+                    <a href="https://whop.com/jumpinai/" target="_blank" rel="noopener noreferrer">
+                      Join on Whop — $19.99
+                    </a>
+                  </Button>
+                </div>
               </div>
             </div>
           )}
