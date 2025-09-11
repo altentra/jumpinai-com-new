@@ -111,12 +111,12 @@ export default function Pricing() {
       
       <Navigation />
       
-      <main className="min-h-screen pt-20 pb-12 bg-gradient-to-br from-background via-background/90 to-primary/5 dark:from-slate-950 dark:via-slate-900/90 dark:to-slate-800/20">
+      <main className="min-h-screen pt-20 pb-12 bg-gradient-to-br from-background via-background/90 to-primary/5 dark:from-black dark:via-slate-950/95 dark:to-slate-900/30">
         {/* Enhanced floating background elements */}
         <div className="fixed inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-primary/20 to-primary/5 dark:from-blue-900/40 dark:to-primary/15 rounded-full blur-3xl"></div>
-          <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-tr from-secondary/15 to-secondary/5 dark:from-blue-800/35 dark:to-secondary/15 rounded-full blur-3xl"></div>
-          <div className="absolute top-1/3 left-1/2 transform -translate-x-1/2 w-64 h-64 bg-accent/10 dark:bg-blue-900/25 rounded-full blur-2xl"></div>
+          <div className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-primary/20 to-primary/5 dark:from-slate-800/20 dark:to-slate-900/10 rounded-full blur-3xl"></div>
+          <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-tr from-secondary/15 to-secondary/5 dark:from-slate-700/15 dark:to-slate-800/10 rounded-full blur-3xl"></div>
+          <div className="absolute top-1/3 left-1/2 transform -translate-x-1/2 w-64 h-64 bg-accent/10 dark:bg-slate-800/15 rounded-full blur-2xl"></div>
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
