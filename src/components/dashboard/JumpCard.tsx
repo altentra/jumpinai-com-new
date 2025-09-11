@@ -17,7 +17,7 @@ export default function JumpCard({ jump, onView, onDelete }: JumpCardProps) {
   };
 
   return (
-    <Card className="bg-gradient-to-br from-card/95 to-primary/5 border border-primary/20 rounded-3xl shadow-2xl shadow-primary/10 backdrop-blur-xl hover:shadow-primary/20 hover-scale">
+    <Card className="bg-gradient-to-br from-card/95 to-primary/5 border border-primary/20 rounded-3xl shadow-2xl shadow-primary/10 backdrop-blur-xl hover:shadow-primary/20 hover:border-primary/30 transition-all duration-300 hover-scale">
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1 min-w-0">
