@@ -71,85 +71,98 @@ async function callOpenAI(
   maxTokens = 2000,
   isJSON = false,
   model = 'gpt-4.1-2025-04-14'
- ) {
-  const body: any = {
-    model,
-    messages,
-    max_completion_tokens: maxTokens,
+) {
+  // Helper to perform a timed request and normalize the response
+  const makeRequest = async (mdl: string, tokens: number, timeoutMs: number) => {
+    const body: any = {
+      model: mdl,
+      messages,
+      max_completion_tokens: tokens,
+    };
+    // Explicitly request text outputs for reasoning models to avoid empty responses
+    body.response_format = isJSON ? { type: 'json_object' } : { type: 'text' };
+
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort('timeout'), timeoutMs);
+    try {
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${openAIApiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+        signal: controller.signal,
+      });
+
+      if (!response.ok) {
+        const err = await response.text().catch(() => '');
+        console.error('OpenAI API error:', response.status, err);
+        throw new Error(`OpenAI API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const choice = data?.choices?.[0];
+      const msg = choice?.message;
+      let content = '';
+
+      if (typeof msg?.content === 'string') {
+        content = msg.content;
+      } else if (Array.isArray(msg?.content)) {
+        content = msg.content
+          .map((part: any) => {
+            if (typeof part === 'string') return part;
+            if (typeof part?.text === 'string') return part.text;
+            if (typeof part?.content === 'string') return part.content;
+            if (Array.isArray(part?.content)) return part.content.map((p: any) => p?.text || p?.content || '').join('');
+            return '';
+          })
+          .filter(Boolean)
+          .join('\n')
+          .trim();
+      }
+
+      if (!content && typeof choice?.text === 'string') {
+        content = choice.text;
+      }
+
+      if (!content) {
+        const ot = (data as any)?.output_text;
+        if (Array.isArray(ot)) content = ot.join('\n');
+        else if (typeof ot === 'string') content = ot;
+      }
+
+      if (!content && typeof (data as any)?.message === 'string') {
+        content = (data as any).message;
+      }
+
+      const finish_reason = choice?.finish_reason;
+
+      if (!content || content.trim() === '') {
+        console.error('OpenAI response contained no textual content. Debug snapshot:', {
+          finish_reason,
+          usage: data?.usage,
+          hasMessage: !!msg,
+          types: {
+            messageContentType: typeof msg?.content,
+            outputTextType: Array.isArray((data as any)?.output_text) ? 'array' : typeof (data as any)?.output_text,
+          },
+        });
+      }
+
+      return { content, usage: data.usage, finish_reason };
+    } finally {
+      clearTimeout(timer);
+    }
   };
-  
-  // Explicitly request text outputs for reasoning models to avoid empty responses
-  if (isJSON) {
-    body.response_format = { type: 'json_object' };
-  } else {
-    body.response_format = { type: 'text' };
+
+  // Try primary model, then fallback quickly if it fails or times out
+  try {
+    return await makeRequest(model, Math.min(maxTokens, 1600), 110_000);
+  } catch (primaryErr) {
+    console.warn('Primary model failed/timed out, retrying with fallback (gpt-5-mini-2025-08-07):', String(primaryErr));
+    return await makeRequest('gpt-5-mini-2025-08-07', Math.min(maxTokens, 1200), 110_000);
   }
-
-  const response = await fetch('https://api.openai.com/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${openAIApiKey}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(body),
-  });
-
-  if (!response.ok) {
-    const err = await response.text();
-    console.error('OpenAI API error:', response.status, err);
-    throw new Error(`OpenAI API error: ${response.status}`);
-  }
-
-  const data = await response.json();
-  const choice = data?.choices?.[0];
-  const msg = choice?.message;
-  let content = '';
-
-  if (typeof msg?.content === 'string') {
-    content = msg.content;
-  } else if (Array.isArray(msg?.content)) {
-    content = msg.content
-      .map((part: any) => {
-        if (typeof part === 'string') return part;
-        if (typeof part?.text === 'string') return part.text;
-        if (typeof part?.content === 'string') return part.content;
-        if (Array.isArray(part?.content)) return part.content.map((p: any) => p?.text || p?.content || '').join('');
-        return '';
-      })
-      .filter(Boolean)
-      .join('\n')
-      .trim();
-  }
-
-  if (!content && typeof choice?.text === 'string') {
-    content = choice.text;
-  }
-
-  if (!content) {
-    const ot = (data as any)?.output_text;
-    if (Array.isArray(ot)) content = ot.join('\n');
-    else if (typeof ot === 'string') content = ot;
-  }
-
-  if (!content && typeof (data as any)?.message === 'string') {
-    content = (data as any).message;
-  }
-
-  const finish_reason = choice?.finish_reason;
-  
-  if (!content || content.trim() === '') {
-    console.error('OpenAI response contained no textual content. Debug snapshot:', {
-      finish_reason,
-      usage: data?.usage,
-      hasMessage: !!msg,
-      types: {
-        messageContentType: typeof msg?.content,
-        outputTextType: Array.isArray((data as any)?.output_text) ? 'array' : typeof (data as any)?.output_text,
-      },
-    });
-  }
-
-  return { content, usage: data.usage, finish_reason };
 }
 
 // Helper: robust JSON parser with extraction + repair attempts

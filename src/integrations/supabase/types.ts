@@ -319,12 +319,15 @@ export type Database = {
           description: string | null
           difficulty_level: string | null
           id: string
+          implementation: string | null
           implementation_time: string | null
           instructions: string | null
           jump_id: string | null
+          requirements: string[] | null
           resources_needed: string[] | null
           tags: string[] | null
           title: string
+          tools_used: string[] | null
           updated_at: string
           user_id: string
         }
@@ -337,12 +340,15 @@ export type Database = {
           description?: string | null
           difficulty_level?: string | null
           id?: string
+          implementation?: string | null
           implementation_time?: string | null
           instructions?: string | null
           jump_id?: string | null
+          requirements?: string[] | null
           resources_needed?: string[] | null
           tags?: string[] | null
           title: string
+          tools_used?: string[] | null
           updated_at?: string
           user_id: string
         }
@@ -355,12 +361,15 @@ export type Database = {
           description?: string | null
           difficulty_level?: string | null
           id?: string
+          implementation?: string | null
           implementation_time?: string | null
           instructions?: string | null
           jump_id?: string | null
+          requirements?: string[] | null
           resources_needed?: string[] | null
           tags?: string[] | null
           title?: string
+          tools_used?: string[] | null
           updated_at?: string
           user_id?: string
         }
@@ -487,6 +496,8 @@ export type Database = {
           category: string | null
           created_at: string
           description: string | null
+          difficulty: string | null
+          estimated_time: string | null
           id: string
           instructions: string | null
           jump_id: string | null
@@ -502,6 +513,8 @@ export type Database = {
           category?: string | null
           created_at?: string
           description?: string | null
+          difficulty?: string | null
+          estimated_time?: string | null
           id?: string
           instructions?: string | null
           jump_id?: string | null
@@ -517,6 +530,8 @@ export type Database = {
           category?: string | null
           created_at?: string
           description?: string | null
+          difficulty?: string | null
+          estimated_time?: string | null
           id?: string
           instructions?: string | null
           jump_id?: string | null
@@ -549,6 +564,8 @@ export type Database = {
           key_actions: string[] | null
           mitigation_strategies: string[] | null
           potential_challenges: string[] | null
+          priority_level: string | null
+          resource_requirements: string[] | null
           strategy_framework: Json
           success_metrics: string[] | null
           tags: string[] | null
@@ -568,6 +585,8 @@ export type Database = {
           key_actions?: string[] | null
           mitigation_strategies?: string[] | null
           potential_challenges?: string[] | null
+          priority_level?: string | null
+          resource_requirements?: string[] | null
           strategy_framework: Json
           success_metrics?: string[] | null
           tags?: string[] | null
@@ -587,6 +606,8 @@ export type Database = {
           key_actions?: string[] | null
           mitigation_strategies?: string[] | null
           potential_challenges?: string[] | null
+          priority_level?: string | null
+          resource_requirements?: string[] | null
           strategy_framework?: Json
           success_metrics?: string[] | null
           tags?: string[] | null
@@ -618,8 +639,10 @@ export type Database = {
           instructions: string | null
           jump_id: string | null
           prerequisites: string[] | null
+          skill_level: string | null
           tags: string[] | null
           title: string
+          tools_needed: string[] | null
           updated_at: string
           user_id: string
           workflow_steps: Json
@@ -636,8 +659,10 @@ export type Database = {
           instructions?: string | null
           jump_id?: string | null
           prerequisites?: string[] | null
+          skill_level?: string | null
           tags?: string[] | null
           title: string
+          tools_needed?: string[] | null
           updated_at?: string
           user_id: string
           workflow_steps: Json
@@ -654,8 +679,10 @@ export type Database = {
           instructions?: string | null
           jump_id?: string | null
           prerequisites?: string[] | null
+          skill_level?: string | null
           tags?: string[] | null
           title?: string
+          tools_needed?: string[] | null
           updated_at?: string
           user_id?: string
           workflow_steps?: Json
