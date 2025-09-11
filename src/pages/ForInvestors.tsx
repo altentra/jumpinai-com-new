@@ -9,6 +9,7 @@ import { InvestmentDeckModal } from "@/components/InvestmentDeckModal";
 import { TrendingUp, Users, Globe, DollarSign, Target, Lightbulb, Rocket, Mail, Loader2, ExternalLink } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { sendInvestorContactEmail } from "@/services/investorService";
+import { Helmet } from "react-helmet-async";
 
 const ForInvestors = () => {
   const [formData, setFormData] = useState({
@@ -77,6 +78,12 @@ const ForInvestors = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background/90 to-primary/5 dark:bg-gradient-to-br dark:from-black dark:via-gray-950/90 dark:to-gray-900/60">
+      <Helmet>
+        <title>For Investors | JumpinAI Investment Opportunities</title>
+        <meta name="description" content="Invest in JumpinAI - the future of AI education. Positioned at the intersection of AI, education, and the future of work with high growth potential." />
+        <link rel="canonical" href={`${window.location.origin}/for-investors`} />
+      </Helmet>
+      
       {/* Enhanced floating background elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-primary/20 to-primary/5 dark:bg-gradient-to-br dark:from-gray-800/30 dark:to-gray-700/15 rounded-full blur-3xl"></div>
@@ -87,162 +94,166 @@ const ForInvestors = () => {
       </div>
       <Navigation />
       
-      {/* Hero Section */}
-      <section className="relative py-20 px-4 bg-gradient-to-br from-primary/5 via-background to-secondary/5">
+      {/* Premium Hero Section - Glass Morphism */}
+      <section className="relative py-24 px-4 bg-gradient-to-br from-primary/5 via-background to-secondary/5">
         <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:50px_50px]" />
-        <div className="relative max-w-6xl mx-auto text-center">
-          <div className="space-y-8">
-            <div className="space-y-4">
-              <h1 className="text-5xl md:text-6xl font-bold text-foreground leading-tight">
-                Invest in the Future of
-                <span className="block bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
-                  Everyday AI Education
-                </span>
-              </h1>
-              <p className="text-xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-                JumpinAI empowers everyday people to harness AI tools for income, productivity, and opportunity.
+        <div className="relative max-w-6xl mx-auto">
+          <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-3xl p-8 md:p-16 shadow-2xl shadow-primary/10 hover:shadow-3xl hover:shadow-primary/15 transition-all duration-500">
+            <div className="text-center space-y-8">
+              <div className="space-y-6">
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight">
+                  Invest in the Future of
+                  <span className="block bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
+                    Everyday AI Education
+                  </span>
+                </h1>
+                <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+                  JumpinAI empowers everyday people to harness AI tools for income, productivity, and opportunity.
+                </p>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button 
+                  size="lg" 
+                  className="text-base px-8 py-3 bg-gradient-to-r from-primary/90 to-primary hover:from-primary hover:to-primary/80 text-primary-foreground border border-primary/30 rounded-2xl shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 hover:scale-105 group backdrop-blur-sm"
+                  onClick={() => setIsDeckModalOpen(true)}
+                >
+                  Explore Investment Deck
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="lg" 
+                  className="text-base px-8 py-3 glass backdrop-blur-sm bg-background/20 border-primary/30 hover:bg-primary/10 hover:border-primary/40 rounded-2xl shadow-lg shadow-primary/10 hover:shadow-xl hover:shadow-primary/15 transition-all duration-300"
+                  onClick={scrollToContactForm}
+                >
+                  Contact Our Team
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Why Invest Section - Premium Glass Morphism */}
+      <section className="py-20 px-4 relative z-10">
+        <div className="max-w-6xl mx-auto">
+          <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-3xl p-8 md:p-12 shadow-2xl shadow-primary/10 hover:shadow-3xl hover:shadow-primary/15 transition-all duration-500">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-br from-foreground via-foreground to-primary/70 bg-clip-text text-transparent">
+                Why Invest in JumpinAI
+              </h2>
+              <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+                Positioned at the intersection of AI, education, and the future of work
               </p>
             </div>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                size="lg" 
-                className="text-lg px-8 py-3"
-                onClick={() => setIsDeckModalOpen(true)}
-              >
-                <Target className="mr-2 h-5 w-5" />
-                Explore Investment Deck
-              </Button>
-              <Button 
-                variant="outline" 
-                size="lg" 
-                className="text-lg px-8 py-3"
-                onClick={scrollToContactForm}
-              >
-                <Mail className="mr-2 h-5 w-5" />
-                Contact Our Team
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Why Invest Section */}
-      <section className="py-20 px-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-foreground mb-4">
-              Why Invest in JumpinAI
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Positioned at the intersection of AI, education, and the future of work
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <Card className="border-0 shadow-lg bg-gradient-to-br from-background to-secondary/5">
-              <CardContent className="p-6 text-center">
-                <TrendingUp className="h-12 w-12 text-primary mx-auto mb-4" />
-                <h3 className="text-xl font-semibold mb-3">Growing Market</h3>
-                <p className="text-muted-foreground">
+            
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-2xl p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/40 transition-all duration-300 group hover:scale-105 hover:-translate-y-2 text-center">
+                <TrendingUp className="h-10 w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
+                <h3 className="text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Growing Market</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
                   The AI education market is projected to reach $25.7B by 2030, growing at 32% annually.
                 </p>
-              </CardContent>
-            </Card>
-            
-            <Card className="border-0 shadow-lg bg-gradient-to-br from-background to-secondary/5">
-              <CardContent className="p-6 text-center">
-                <Target className="h-12 w-12 text-primary mx-auto mb-4" />
-                <h3 className="text-xl font-semibold mb-3">Clear Problem</h3>
-                <p className="text-muted-foreground">
+              </div>
+              
+              <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-2xl p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/40 transition-all duration-300 group hover:scale-105 hover:-translate-y-2 text-center">
+                <Target className="h-10 w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
+                <h3 className="text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Clear Problem</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
                   Millions need practical AI skills but find existing resources too technical or theoretical.
                 </p>
-              </CardContent>
-            </Card>
-            
-            <Card className="border-0 shadow-lg bg-gradient-to-br from-background to-secondary/5">
-              <CardContent className="p-6 text-center">
-                <DollarSign className="h-12 w-12 text-primary mx-auto mb-4" />
-                <h3 className="text-xl font-semibold mb-3">High Margins</h3>
-                <p className="text-muted-foreground">
+              </div>
+              
+              <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-2xl p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/40 transition-all duration-300 group hover:scale-105 hover:-translate-y-2 text-center">
+                <DollarSign className="h-10 w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
+                <h3 className="text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">High Margins</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
                   Digital-first model with scalable content delivery and low operational overhead.
                 </p>
-              </CardContent>
-            </Card>
-            
-            <Card className="border-0 shadow-lg bg-gradient-to-br from-background to-secondary/5">
-              <CardContent className="p-6 text-center">
-                <Rocket className="h-12 w-12 text-primary mx-auto mb-4" />
-                <h3 className="text-xl font-semibold mb-3">Perfect Timing</h3>
-                <p className="text-muted-foreground">
+              </div>
+              
+              <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-2xl p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/40 transition-all duration-300 group hover:scale-105 hover:-translate-y-2 text-center">
+                <Rocket className="h-10 w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
+                <h3 className="text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Perfect Timing</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
                   AI adoption is accelerating, creating massive demand for accessible education.
                 </p>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* What Makes Us Unique */}
-      <section className="py-20 px-4 bg-gradient-to-br from-secondary/5 to-background">
+      {/* What Makes Us Unique - Premium Glass Morphism */}
+      <section className="py-20 px-4 relative z-10">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-foreground mb-4">
-              What Makes Us Unique
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Our differentiated approach to AI education sets us apart in the market
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="space-y-8">
-              <div className="flex items-start space-x-4">
-                <div className="flex-shrink-0 w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                  <Users className="h-6 w-6 text-primary" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold mb-2">Beginner-First Approach</h3>
-                  <p className="text-muted-foreground">
-                    Designed for everyday people, not tech experts. We make AI accessible to everyone.
-                  </p>
-                </div>
-              </div>
-              
-              <div className="flex items-start space-x-4">
-                <div className="flex-shrink-0 w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                  <Globe className="h-6 w-6 text-primary" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold mb-2">Digital-First Model</h3>
-                  <p className="text-muted-foreground">
-                    Low overhead, high scalability. Our platform reaches global audiences efficiently.
-                  </p>
-                </div>
-              </div>
+          <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-3xl p-8 md:p-12 shadow-2xl shadow-primary/10 hover:shadow-3xl hover:shadow-primary/15 transition-all duration-500">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-br from-foreground via-foreground to-primary/70 bg-clip-text text-transparent">
+                What Makes Us Unique
+              </h2>
+              <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+                Our differentiated approach to AI education sets us apart in the market
+              </p>
             </div>
             
-            <div className="space-y-8">
-              <div className="flex items-start space-x-4">
-                <div className="flex-shrink-0 w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                  <Users className="h-6 w-6 text-primary" />
+            <div className="grid md:grid-cols-2 gap-8 items-start">
+              <div className="space-y-6">
+                <div className="glass backdrop-blur-sm bg-background/20 dark:bg-background/10 border border-primary/25 rounded-2xl p-6 shadow-lg shadow-primary/10 hover:shadow-xl hover:shadow-primary/15 transition-all duration-300 group">
+                  <div className="flex items-start space-x-4">
+                    <div className="flex-shrink-0 w-12 h-12 glass backdrop-blur-sm bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <Users className="h-6 w-6 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold mb-2 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Beginner-First Approach</h3>
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        Designed for everyday people, not tech experts. We make AI accessible to everyone.
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-xl font-semibold mb-2">Community-Driven Growth</h3>
-                  <p className="text-muted-foreground">
-                    Our users become advocates, driving organic growth and engagement.
-                  </p>
+                
+                <div className="glass backdrop-blur-sm bg-background/20 dark:bg-background/10 border border-primary/25 rounded-2xl p-6 shadow-lg shadow-primary/10 hover:shadow-xl hover:shadow-primary/15 transition-all duration-300 group">
+                  <div className="flex items-start space-x-4">
+                    <div className="flex-shrink-0 w-12 h-12 glass backdrop-blur-sm bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <Globe className="h-6 w-6 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold mb-2 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Digital-First Model</h3>
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        Low overhead, high scalability. Our platform reaches global audiences efficiently.
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
               
-              <div className="flex items-start space-x-4">
-                <div className="flex-shrink-0 w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                  <Lightbulb className="h-6 w-6 text-primary" />
+              <div className="space-y-6">
+                <div className="glass backdrop-blur-sm bg-background/20 dark:bg-background/10 border border-primary/25 rounded-2xl p-6 shadow-lg shadow-primary/10 hover:shadow-xl hover:shadow-primary/15 transition-all duration-300 group">
+                  <div className="flex items-start space-x-4">
+                    <div className="flex-shrink-0 w-12 h-12 glass backdrop-blur-sm bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <Users className="h-6 w-6 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold mb-2 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Community-Driven Growth</h3>
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        Our users become advocates, driving organic growth and engagement.
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-xl font-semibold mb-2">Real-World Application</h3>
-                  <p className="text-muted-foreground">
-                    Practical skills that translate directly to income and productivity gains.
-                  </p>
+                
+                <div className="glass backdrop-blur-sm bg-background/20 dark:bg-background/10 border border-primary/25 rounded-2xl p-6 shadow-lg shadow-primary/10 hover:shadow-xl hover:shadow-primary/15 transition-all duration-300 group">
+                  <div className="flex items-start space-x-4">
+                    <div className="flex-shrink-0 w-12 h-12 glass backdrop-blur-sm bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <Lightbulb className="h-6 w-6 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold mb-2 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Real-World Application</h3>
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        Practical skills that translate directly to income and productivity gains.
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -250,114 +261,109 @@ const ForInvestors = () => {
         </div>
       </section>
 
-      {/* Use of Funds */}
-      <section className="py-20 px-4">
+      {/* Use of Funds - Premium Glass Morphism */}
+      <section className="py-20 px-4 relative z-10">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-foreground mb-4">
-              Use of Funds
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Strategic investment in growth, innovation, and community impact
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <Card className="border-2 border-primary/20 hover:border-primary/40 transition-colors">
-              <CardContent className="p-6 text-center">
-                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Rocket className="h-8 w-8 text-primary" />
+          <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-3xl p-8 md:p-12 shadow-2xl shadow-primary/10 hover:shadow-3xl hover:shadow-primary/15 transition-all duration-500">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-br from-foreground via-foreground to-primary/70 bg-clip-text text-transparent">
+                Use of Funds
+              </h2>
+              <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+                Strategic investment in growth, innovation, and community impact
+              </p>
+            </div>
+            
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-2xl p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/40 transition-all duration-300 group hover:scale-105 hover:-translate-y-2 text-center">
+                <div className="w-14 h-14 glass backdrop-blur-sm bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <Rocket className="h-7 w-7 text-primary" />
                 </div>
-                <h3 className="text-xl font-semibold mb-3">Product Development</h3>
-                <p className="text-muted-foreground mb-4">
+                <h3 className="text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Product Development</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed mb-4">
                   Enhanced platform features, mobile apps, and AI-powered personalization
                 </p>
                 <div className="text-2xl font-bold text-primary">40%</div>
-              </CardContent>
-            </Card>
-            
-            <Card className="border-2 border-primary/20 hover:border-primary/40 transition-colors">
-              <CardContent className="p-6 text-center">
-                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <TrendingUp className="h-8 w-8 text-primary" />
+              </div>
+              
+              <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-2xl p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/40 transition-all duration-300 group hover:scale-105 hover:-translate-y-2 text-center">
+                <div className="w-14 h-14 glass backdrop-blur-sm bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <TrendingUp className="h-7 w-7 text-primary" />
                 </div>
-                <h3 className="text-xl font-semibold mb-3">Marketing & Content</h3>
-                <p className="text-muted-foreground mb-4">
+                <h3 className="text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Marketing & Content</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed mb-4">
                   Content production, influencer partnerships, and growth marketing
                 </p>
                 <div className="text-2xl font-bold text-primary">30%</div>
-              </CardContent>
-            </Card>
-            
-            <Card className="border-2 border-primary/20 hover:border-primary/40 transition-colors">
-              <CardContent className="p-6 text-center">
-                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Globe className="h-8 w-8 text-primary" />
+              </div>
+              
+              <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-2xl p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/40 transition-all duration-300 group hover:scale-105 hover:-translate-y-2 text-center">
+                <div className="w-14 h-14 glass backdrop-blur-sm bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <Globe className="h-7 w-7 text-primary" />
                 </div>
-                <h3 className="text-xl font-semibold mb-3">Platform Expansion</h3>
-                <p className="text-muted-foreground mb-4">
+                <h3 className="text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Platform Expansion</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed mb-4">
                   New markets, language localization, and enterprise solutions
                 </p>
                 <div className="text-2xl font-bold text-primary">20%</div>
-              </CardContent>
-            </Card>
-            
-            <Card className="border-2 border-primary/20 hover:border-primary/40 transition-colors">
-              <CardContent className="p-6 text-center">
-                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Users className="h-8 w-8 text-primary" />
+              </div>
+              
+              <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-2xl p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/40 transition-all duration-300 group hover:scale-105 hover:-translate-y-2 text-center">
+                <div className="w-14 h-14 glass backdrop-blur-sm bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <Users className="h-7 w-7 text-primary" />
                 </div>
-                <h3 className="text-xl font-semibold mb-3">Community & Access</h3>
-                <p className="text-muted-foreground mb-4">
+                <h3 className="text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Community & Access</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed mb-4">
                   Scholarships, community programs, and accessibility initiatives
                 </p>
                 <div className="text-2xl font-bold text-primary">10%</div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Crunchbase Profile */}
-      <section className="py-8 px-4">
-        <div className="max-w-2xl mx-auto text-center">
-          <div className="flex items-center justify-center gap-4 p-4 border border-border rounded-lg bg-background/50 backdrop-blur-sm">
-            <Globe className="h-5 w-5 text-primary flex-shrink-0" />
-            <div className="text-left">
-              <p className="text-sm font-medium text-foreground">View our company profile</p>
-              <p className="text-xs text-muted-foreground">Detailed metrics on Crunchbase</p>
+              </div>
             </div>
-            <Button 
-              size="sm" 
-              variant="outline"
-              className="text-sm px-4 py-2 border-primary/30 hover:border-primary hover:bg-primary/10"
-              onClick={() => window.open('https://www.crunchbase.com/organization/jumpinai', '_blank')}
-            >
-              <ExternalLink className="mr-1 h-3 w-3" />
-              View
-            </Button>
           </div>
         </div>
       </section>
 
-      {/* Call to Action */}
-      <section id="contact-form-section" className="py-20 px-4 bg-gradient-to-br from-primary/5 via-background to-secondary/5">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-foreground mb-4">
-              Ready to Support a Smarter Future?
-            </h2>
-            <p className="text-xl text-muted-foreground">
-              Join us in democratizing AI education and empowering the next generation of AI-savvy professionals.
-            </p>
+      {/* Crunchbase Profile - Premium Glass */}
+      <section className="py-8 px-4 relative z-10">
+        <div className="max-w-2xl mx-auto">
+          <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-2xl p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/20 transition-all duration-300 hover:scale-105">
+            <div className="flex items-center justify-center gap-4">
+              <Globe className="h-5 w-5 text-primary flex-shrink-0" />
+              <div className="text-left">
+                <p className="text-sm font-bold text-foreground">View our company profile</p>
+                <p className="text-xs text-muted-foreground">Detailed metrics on Crunchbase</p>
+              </div>
+              <Button 
+                size="sm" 
+                variant="outline"
+                className="text-sm px-4 py-2 glass backdrop-blur-sm bg-background/20 border-primary/30 hover:border-primary hover:bg-primary/10 rounded-xl shadow-lg shadow-primary/10 hover:shadow-xl hover:shadow-primary/15 transition-all duration-300"
+                onClick={() => window.open('https://www.crunchbase.com/organization/jumpinai', '_blank')}
+              >
+                View
+              </Button>
+            </div>
           </div>
-          
-          <Card className="shadow-2xl border-0 bg-background/50 backdrop-blur-sm">
-            <CardContent className="p-8">
+        </div>
+      </section>
+
+      {/* Call to Action - Premium Glass Morphism */}
+      <section id="contact-form-section" className="py-20 px-4 relative z-10">
+        <div className="max-w-5xl mx-auto">
+          <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-3xl p-8 md:p-12 shadow-2xl shadow-primary/10 hover:shadow-3xl hover:shadow-primary/15 transition-all duration-500">
+            <div className="text-center mb-10">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-br from-foreground via-foreground to-primary/70 bg-clip-text text-transparent">
+                Ready to Support a Smarter Future?
+              </h2>
+              <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
+                Join us in democratizing AI education and empowering the next generation of AI-savvy professionals.
+              </p>
+            </div>
+            
+            <div className="glass backdrop-blur-sm bg-background/20 dark:bg-background/10 border border-primary/25 rounded-2xl p-8 shadow-xl shadow-primary/15">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-foreground mb-2">
+                    <label htmlFor="name" className="block text-sm font-bold text-foreground mb-2">
                       Full Name *
                     </label>
                     <Input
@@ -367,11 +373,11 @@ const ForInvestors = () => {
                       required
                       value={formData.name}
                       onChange={handleInputChange}
-                      className="w-full"
+                      className="w-full h-10 glass backdrop-blur-sm bg-background/50 dark:bg-background/30 border-primary/30 focus:border-primary/50 focus:bg-background/70 dark:focus:bg-background/50 transition-all duration-300 rounded-xl shadow-lg shadow-primary/5 focus:shadow-xl focus:shadow-primary/10"
                     />
                   </div>
                   <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
+                    <label htmlFor="email" className="block text-sm font-bold text-foreground mb-2">
                       Email Address *
                     </label>
                     <Input
@@ -381,13 +387,13 @@ const ForInvestors = () => {
                       required
                       value={formData.email}
                       onChange={handleInputChange}
-                      className="w-full"
+                      className="w-full h-10 glass backdrop-blur-sm bg-background/50 dark:bg-background/30 border-primary/30 focus:border-primary/50 focus:bg-background/70 dark:focus:bg-background/50 transition-all duration-300 rounded-xl shadow-lg shadow-primary/5 focus:shadow-xl focus:shadow-primary/10"
                     />
                   </div>
                 </div>
                 
                 <div>
-                  <label htmlFor="investmentLevel" className="block text-sm font-medium text-foreground mb-2">
+                  <label htmlFor="investmentLevel" className="block text-sm font-bold text-foreground mb-2">
                     Investment Interest Level
                   </label>
                   <select
@@ -395,7 +401,7 @@ const ForInvestors = () => {
                     name="investmentLevel"
                     value={formData.investmentLevel}
                     onChange={handleInputChange}
-                    className="w-full h-10 px-3 py-2 border border-input bg-background rounded-md text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    className="w-full h-10 px-3 py-2 glass backdrop-blur-sm bg-background/50 dark:bg-background/30 border border-primary/30 rounded-xl text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 shadow-lg shadow-primary/5 focus:shadow-xl focus:shadow-primary/10 transition-all duration-300"
                   >
                     <option value="">Select an option</option>
                     <option value="angel">Angel Investor ($25K - $100K)</option>
@@ -407,7 +413,7 @@ const ForInvestors = () => {
                 </div>
                 
                 <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-foreground mb-2">
+                  <label htmlFor="message" className="block text-sm font-bold text-foreground mb-2">
                     Message (Optional)
                   </label>
                   <Textarea
@@ -417,12 +423,17 @@ const ForInvestors = () => {
                     value={formData.message}
                     onChange={handleInputChange}
                     placeholder="Tell us about your investment interests and any questions you have..."
-                    className="w-full"
+                    className="w-full glass backdrop-blur-sm bg-background/50 dark:bg-background/30 border-primary/30 focus:border-primary/50 focus:bg-background/70 dark:focus:bg-background/50 transition-all duration-300 rounded-xl resize-none shadow-lg shadow-primary/5 focus:shadow-xl focus:shadow-primary/10"
                   />
                 </div>
                 
                 <div className="text-center">
-                  <Button type="submit" size="lg" className="text-lg px-12 py-3" disabled={isSubmitting}>
+                  <Button 
+                    type="submit" 
+                    size="lg" 
+                    className="text-base px-12 py-3 bg-gradient-to-r from-primary/90 to-primary hover:from-primary hover:to-primary/80 text-primary-foreground border border-primary/30 rounded-2xl shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 hover:scale-105 group backdrop-blur-sm" 
+                    disabled={isSubmitting}
+                  >
                     {isSubmitting ? (
                       <>
                         <Loader2 className="mr-2 h-5 w-5 animate-spin" />
@@ -430,7 +441,6 @@ const ForInvestors = () => {
                       </>
                     ) : (
                       <>
-                        <DollarSign className="mr-2 h-5 w-5" />
                         Invest or Partner With Us
                       </>
                     )}
@@ -440,8 +450,8 @@ const ForInvestors = () => {
                   </p>
                 </div>
               </form>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
       </section>
 
