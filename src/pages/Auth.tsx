@@ -132,7 +132,7 @@ export default function Auth() {
 
       <main className="min-h-screen pt-28 pb-24 bg-gradient-to-br from-background via-muted/50 to-background">
         <section className="max-w-xl mx-auto px-6">
-          <Card className="animate-fade-in backdrop-blur-xl bg-background/80 border-2 border-border/50 shadow-2xl rounded-2xl overflow-hidden">
+          <Card className="animate-fade-in backdrop-blur-xl bg-background/80 border-2 border-border/50 shadow-2xl rounded-3xl overflow-hidden">
             <CardHeader className="text-center space-y-2 pb-4">
               <CardTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
                 Access your JumpinAI account
@@ -144,7 +144,7 @@ export default function Auth() {
                 onClick={handleGoogleLogin} 
                 disabled={loading} 
                 variant="outline" 
-                className="w-full h-11 text-base font-medium bg-white hover:bg-gray-50 dark:bg-black dark:hover:bg-gray-950 border-2 border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700 text-gray-700 dark:text-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02]"
+                className="w-full h-11 text-base font-medium bg-white hover:bg-gray-50 dark:bg-black dark:hover:bg-gray-950 border-2 border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700 text-gray-700 dark:text-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02]"
               >
                 <svg 
                   className="mr-3 h-6 w-6" 
@@ -177,7 +177,7 @@ export default function Auth() {
                 disabled={loading}
                 aria-label="Continue with Apple"
                 variant="outline"
-                className="w-full h-11 mt-2 text-base font-medium bg-white hover:bg-gray-50 dark:bg-black dark:hover:bg-gray-950 border-2 border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700 text-gray-700 dark:text-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02]"
+                className="w-full h-11 mt-2 text-base font-medium bg-white hover:bg-gray-50 dark:bg-black dark:hover:bg-gray-950 border-2 border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700 text-gray-700 dark:text-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02]"
               >
                 <svg
                   className="mr-3 h-5 w-5"
@@ -204,16 +204,16 @@ export default function Auth() {
               </div>
 
               <Tabs defaultValue="signup" className="w-full">
-                <TabsList className="grid grid-cols-2 w-full bg-muted/30 backdrop-blur-sm p-1 rounded-xl border border-border/30">
+                <TabsList className="grid grid-cols-2 w-full bg-muted/30 backdrop-blur-sm p-1 rounded-2xl border border-border/30">
                   <TabsTrigger 
                     value="signup" 
-                    className="rounded-lg data-[state=active]:bg-background/80 data-[state=active]:shadow-lg data-[state=active]:text-foreground transition-all duration-300"
+                    className="rounded-xl data-[state=active]:bg-background/80 data-[state=active]:shadow-lg data-[state=active]:text-foreground transition-all duration-300"
                   >
                     Sign Up
                   </TabsTrigger>
                   <TabsTrigger 
                     value="login" 
-                    className="rounded-lg data-[state=active]:bg-background/80 data-[state=active]:shadow-lg data-[state=active]:text-foreground transition-all duration-300"
+                    className="rounded-xl data-[state=active]:bg-background/80 data-[state=active]:shadow-lg data-[state=active]:text-foreground transition-all duration-300"
                   >
                     Login
                   </TabsTrigger>
@@ -228,7 +228,7 @@ export default function Auth() {
                       value={signupName} 
                       onChange={(e) => setSignupName(e.target.value)} 
                       placeholder="Enter your full name" 
-                      className="h-10 bg-background/50 backdrop-blur-sm border-2 border-border/50 rounded-xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
+                      className="h-10 bg-background/50 backdrop-blur-sm border-2 border-border/50 rounded-2xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
                     />
                   </div>
                   <div className="space-y-1.5">
@@ -239,7 +239,7 @@ export default function Auth() {
                       value={signupEmail} 
                       onChange={(e) => setSignupEmail(e.target.value)} 
                       placeholder="Enter your email" 
-                      className="h-10 bg-background/50 backdrop-blur-sm border-2 border-border/50 rounded-xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
+                      className="h-10 bg-background/50 backdrop-blur-sm border-2 border-border/50 rounded-2xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
                     />
                   </div>
                   <div className="space-y-1.5">
@@ -250,17 +250,17 @@ export default function Auth() {
                       value={signupPassword} 
                       onChange={(e) => setSignupPassword(e.target.value)} 
                       placeholder="Create a password" 
-                      className="h-10 bg-background/50 backdrop-blur-sm border-2 border-border/50 rounded-xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
+                      className="h-10 bg-background/50 backdrop-blur-sm border-2 border-border/50 rounded-2xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
                     />
                   </div>
                   <Button 
                     onClick={handleSignup} 
                     disabled={loading} 
-                    className="w-full h-10 mt-4 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
+                    className="w-full h-10 mt-4 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground font-medium rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
                   >
                     {loading ? "Creating account..." : "Create account"}
                   </Button>
-                  <p className="text-xs text-muted-foreground text-center bg-muted/20 backdrop-blur-sm px-3 py-1 rounded-lg mt-2">
+                  <p className="text-xs text-muted-foreground text-center bg-muted/20 backdrop-blur-sm px-3 py-1 rounded-xl mt-2">
                     Start using JumpinAI immediately after signup!
                   </p>
                 </TabsContent>
@@ -276,7 +276,7 @@ export default function Auth() {
                           value={loginEmail} 
                           onChange={(e) => setLoginEmail(e.target.value)} 
                           placeholder="Enter your email" 
-                          className="h-10 bg-background/50 backdrop-blur-sm border-2 border-border/50 rounded-xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
+                          className="h-10 bg-background/50 backdrop-blur-sm border-2 border-border/50 rounded-2xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
                         />
                       </div>
                       <div className="space-y-1.5">
@@ -287,13 +287,13 @@ export default function Auth() {
                           value={loginPassword} 
                           onChange={(e) => setLoginPassword(e.target.value)} 
                           placeholder="Enter your password" 
-                          className="h-10 bg-background/50 backdrop-blur-sm border-2 border-border/50 rounded-xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
+                          className="h-10 bg-background/50 backdrop-blur-sm border-2 border-border/50 rounded-2xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
                         />
                       </div>
                       <Button 
                         onClick={handleLogin} 
                         disabled={loading} 
-                        className="w-full h-10 mt-4 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
+                        className="w-full h-10 mt-4 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground font-medium rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
                       >
                         {loading ? "Logging in..." : "Login"}
                       </Button>
@@ -302,7 +302,7 @@ export default function Auth() {
                           variant="link" 
                           size="sm" 
                           onClick={() => setShowForgotPassword(true)}
-                          className="text-primary hover:text-primary/80 font-medium rounded-lg px-3 py-1 hover:bg-primary/10 transition-all duration-300 text-sm"
+                          className="text-primary hover:text-primary/80 font-medium rounded-2xl px-3 py-1 hover:bg-primary/10 transition-all duration-300 text-sm"
                         >
                           Forgot password?
                         </Button>
@@ -318,13 +318,13 @@ export default function Auth() {
                           value={forgotPasswordEmail} 
                           onChange={(e) => setForgotPasswordEmail(e.target.value)} 
                           placeholder="Enter your email to reset password"
-                          className="h-10 bg-background/50 backdrop-blur-sm border-2 border-border/50 rounded-xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
+                          className="h-10 bg-background/50 backdrop-blur-sm border-2 border-border/50 rounded-2xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
                         />
                       </div>
                       <Button 
                         onClick={handleForgotPassword} 
                         disabled={loading} 
-                        className="w-full h-10 mt-4 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
+                        className="w-full h-10 mt-4 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground font-medium rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
                       >
                         {loading ? "Sending reset email..." : "Send reset email"}
                       </Button>
@@ -336,7 +336,7 @@ export default function Auth() {
                             setShowForgotPassword(false);
                             setForgotPasswordEmail("");
                           }}
-                          className="text-muted-foreground hover:text-primary font-medium rounded-lg px-3 py-1 hover:bg-muted/20 transition-all duration-300 text-sm"
+                          className="text-muted-foreground hover:text-primary font-medium rounded-2xl px-3 py-1 hover:bg-muted/20 transition-all duration-300 text-sm"
                         >
                           Back to login
                         </Button>
