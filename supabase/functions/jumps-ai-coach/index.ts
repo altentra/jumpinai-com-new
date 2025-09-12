@@ -748,11 +748,74 @@ async function generateComponents(userProfile: any): Promise<GeneratedComponents
 }
 
 async function saveComponents(components: GeneratedComponents, userId: string, jumpId: string) {
+  // Sanitize payloads to include only valid DB columns (avoid unknown keys like 'steps')
+  const sanitizePrompt = (p: any) => ({
+    user_id: userId,
+    jump_id: jumpId,
+    title: p.title ?? '',
+    description: p.description ?? null,
+    prompt_text: p.prompt_text ?? '',
+    category: p.category ?? null,
+    ai_tools: Array.isArray(p.ai_tools) ? p.ai_tools : (p.ai_tools ? [p.ai_tools] : []),
+    use_cases: Array.isArray(p.use_cases) ? p.use_cases : (p.use_cases ? [p.use_cases] : []),
+    instructions: p.instructions ?? null,
+    tags: Array.isArray(p.tags) ? p.tags : (p.tags ? [p.tags] : []),
+  });
+
+  const sanitizeWorkflow = (w: any) => ({
+    user_id: userId,
+    jump_id: jumpId,
+    title: w.title ?? '',
+    description: w.description ?? null,
+    workflow_steps: Array.isArray(w.workflow_steps) ? w.workflow_steps : [],
+    category: w.category ?? null,
+    ai_tools: Array.isArray(w.ai_tools) ? w.ai_tools : (w.ai_tools ? [w.ai_tools] : []),
+    duration_estimate: w.duration_estimate ?? null,
+    complexity_level: w.complexity_level ?? null,
+    prerequisites: Array.isArray(w.prerequisites) ? w.prerequisites : [],
+    expected_outcomes: Array.isArray(w.expected_outcomes) ? w.expected_outcomes : [],
+    instructions: w.instructions ?? null,
+    tags: Array.isArray(w.tags) ? w.tags : (w.tags ? [w.tags] : []),
+  });
+
+  const sanitizeBlueprint = (b: any) => ({
+    user_id: userId,
+    jump_id: jumpId,
+    title: b.title ?? '',
+    description: b.description ?? null,
+    blueprint_content: typeof b.blueprint_content === 'object' && b.blueprint_content !== null ? b.blueprint_content : {},
+    category: b.category ?? null,
+    ai_tools: Array.isArray(b.ai_tools) ? b.ai_tools : (b.ai_tools ? [b.ai_tools] : []),
+    implementation_time: b.implementation_time ?? null,
+    difficulty_level: b.difficulty_level ?? null,
+    resources_needed: Array.isArray(b.resources_needed) ? b.resources_needed : [],
+    deliverables: Array.isArray(b.deliverables) ? b.deliverables : [],
+    instructions: b.instructions ?? null,
+    tags: Array.isArray(b.tags) ? b.tags : (b.tags ? [b.tags] : []),
+  });
+
+  const sanitizeStrategy = (s: any) => ({
+    user_id: userId,
+    jump_id: jumpId,
+    title: s.title ?? '',
+    description: s.description ?? null,
+    strategy_framework: typeof s.strategy_framework === 'object' && s.strategy_framework !== null ? s.strategy_framework : {},
+    category: s.category ?? null,
+    ai_tools: Array.isArray(s.ai_tools) ? s.ai_tools : (s.ai_tools ? [s.ai_tools] : []),
+    timeline: s.timeline ?? null,
+    success_metrics: Array.isArray(s.success_metrics) ? s.success_metrics : [],
+    key_actions: Array.isArray(s.key_actions) ? s.key_actions : [],
+    potential_challenges: Array.isArray(s.potential_challenges) ? s.potential_challenges : [],
+    mitigation_strategies: Array.isArray(s.mitigation_strategies) ? s.mitigation_strategies : [],
+    instructions: s.instructions ?? null,
+    tags: Array.isArray(s.tags) ? s.tags : (s.tags ? [s.tags] : []),
+  });
+
   const saves = [
-    ...components.prompts.map(p => supabase.from('user_prompts').insert({ user_id: userId, jump_id: jumpId, ...p })),
-    ...components.workflows.map(w => supabase.from('user_workflows').insert({ user_id: userId, jump_id: jumpId, ...w })),
-    ...components.blueprints.map(b => supabase.from('user_blueprints').insert({ user_id: userId, jump_id: jumpId, ...b })),
-    ...components.strategies.map(s => supabase.from('user_strategies').insert({ user_id: userId, jump_id: jumpId, ...s }))
+    ...components.prompts.map(p => supabase.from('user_prompts').insert(sanitizePrompt(p))),
+    ...components.workflows.map(w => supabase.from('user_workflows').insert(sanitizeWorkflow(w))),
+    ...components.blueprints.map(b => supabase.from('user_blueprints').insert(sanitizeBlueprint(b))),
+    ...components.strategies.map(s => supabase.from('user_strategies').insert(sanitizeStrategy(s)))
   ];
 
   const results = await Promise.allSettled(saves);
