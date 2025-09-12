@@ -89,6 +89,17 @@ export default function AICoachChat({
     ]);
   };
   
+  // Format a structured plan into a concise readable text (fallback display + saving)
+  const formatPlanToText = (plan: any): string => {
+    if (!plan || typeof plan !== 'object') return '';
+    const title = plan.title || 'Your AI-Generated Jump Plan';
+    const summary = plan.executive_summary || '';
+    // Prefer a short header + summary to keep UI responsive
+    let out = `# ${title}`;
+    if (summary) out += `\n\n${summary}`;
+    return out.trim();
+  };
+  
   // Normalize various possible response shapes from the Edge Function/Supabase client
   const extractAiMessage = (resp: any): string => {
     try {
@@ -115,6 +126,14 @@ export default function AICoachChat({
       if (resp?.message) return resp.message;
       // Raw OpenAI passthrough just in case
       if (resp?.data?.choices?.[0]?.message?.content) return resp.data.choices[0].message.content;
+      
+      // If we have a structured plan but no message, synthesize a minimal text
+      const sp = resp?.data?.structured_plan;
+      if (sp && typeof sp === 'object') {
+        const text = formatPlanToText(sp);
+        if (text) return text;
+      }
+      
       // Last resort: stringify object if small
       if (resp?.data && typeof resp.data === 'object') {
         try {
@@ -165,13 +184,24 @@ export default function AICoachChat({
         if (response.error) {
           throw new Error(response.error.message || 'Failed to generate initial plan');
         }
-        const aiText = extractAiMessage(response);
+        let aiText = extractAiMessage(response);
+        // Try to get structured plan directly or parse from text
+        let structuredPlan = response?.data?.structured_plan || null;
+        if (!structuredPlan && aiText) {
+          structuredPlan = tryParseJSON(aiText);
+        }
+        // If no text but we did get a structured plan, synthesize minimal readable text
+        if ((!aiText || !aiText.trim()) && structuredPlan) {
+          aiText = formatPlanToText(structuredPlan);
+        }
+
         const assistantMessage: Message = {
           id: (Date.now() + 1).toString(),
           role: 'assistant',
-          content: aiText || 'No response received from AI.',
+          content: (aiText && aiText.trim()) ? aiText : 'No response received from AI.',
           timestamp: new Date()
         };
+
         if (!aiText) {
           console.warn('[AICoachChat] Unexpected AI response shape:', response);
           toast({
@@ -181,53 +211,51 @@ export default function AICoachChat({
           });
         }
         setMessages(prev => [...prev, assistantMessage]);
-        if (onPlanGenerated && aiText) {
-          // Extract structured plan if available, else try to parse the assistant text
-          let structuredPlan = response?.data?.structured_plan || null;
-          if (!structuredPlan) {
-            structuredPlan = tryParseJSON(aiText);
-          }
+
+        if (onPlanGenerated) {
           onPlanGenerated({
-            content: aiText,
-            structuredPlan,
-            comprehensivePlan: structuredPlan
+            content: aiText || '',
+            structuredPlan: structuredPlan || null,
+            comprehensivePlan: structuredPlan || null
           });
-          
-          // Auto-save or update the jump to database
-          if (aiText.trim()) {
-            try {
-              if (currentJumpId && !isNewJump) {
-                // Update existing jump
-                const updatedJump = await updateJump(currentJumpId, {
-                  title: jumpName || extractTitle(aiText),
-                  summary: extractSummary(aiText),
-                  full_content: aiText,
-                  structured_plan: structuredPlan,
-                  comprehensive_plan: structuredPlan,
-                  jump_type: 'comprehensive'
+        }
+        
+        // Auto-save or update the jump to database
+        if ((aiText && aiText.trim()) || structuredPlan) {
+          try {
+            if (currentJumpId && !isNewJump) {
+              // Update existing jump
+              const updatedJump = await updateJump(currentJumpId, {
+                title: jumpName || extractTitle(aiText || formatPlanToText(structuredPlan)),
+                summary: extractSummary(aiText || formatPlanToText(structuredPlan)),
+                full_content: aiText || formatPlanToText(structuredPlan),
+                structured_plan: structuredPlan || null,
+                comprehensive_plan: structuredPlan || null,
+                jump_type: 'comprehensive'
+              });
+              
+              if (updatedJump && onJumpSaved) {
+                onJumpSaved(updatedJump.id);
+                toast({
+                  title: 'Jump Updated!',
+                  description: 'Your AI transformation plan has been updated.',
                 });
-                
-                if (updatedJump && onJumpSaved) {
-                  onJumpSaved(updatedJump.id);
-                  toast({
-                    title: 'Jump Updated!',
-                    description: 'Your AI transformation plan has been updated.',
-                  });
-                }
-              } else if (isNewJump) {
-                // Create new jump
-                const title = jumpName || extractTitle(aiText);
-                const summary = extractSummary(aiText);
-                
-                const savedJump = await createJump({
-                  profile_id: userProfile.id,
-                  title,
-                  summary,
-                  full_content: aiText,
-                  structured_plan: structuredPlan,
-                  comprehensive_plan: structuredPlan,
-                  jump_type: 'comprehensive'
-                });
+              }
+            } else if (isNewJump) {
+              // Create new jump
+              const textForMeta = aiText || formatPlanToText(structuredPlan);
+              const title = jumpName || extractTitle(textForMeta);
+              const summary = extractSummary(textForMeta);
+              
+              const savedJump = await createJump({
+                profile_id: userProfile.id,
+                title,
+                summary,
+                full_content: textForMeta,
+                structured_plan: structuredPlan || null,
+                comprehensive_plan: structuredPlan || null,
+                jump_type: 'comprehensive'
+              });
                 
                 if (savedJump && onJumpSaved) {
                   onJumpSaved(savedJump.id);
@@ -377,7 +405,16 @@ export default function AICoachChat({
         throw new Error(response.error.message || 'Failed to get response');
       }
 
-      const aiText = extractAiMessage(response);
+      let aiText = extractAiMessage(response);
+      // Try structured plan extraction
+      let structuredPlan = (response as any)?.data?.structured_plan || null;
+      if (!structuredPlan && aiText) {
+        structuredPlan = safeParseJSON(aiText);
+      }
+      if ((!aiText || !aiText.trim()) && structuredPlan) {
+        aiText = formatPlanToText(structuredPlan);
+      }
+
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
@@ -396,26 +433,22 @@ export default function AICoachChat({
       setMessages(prev => [...prev, assistantMessage]);
       
       // Update existing jump with chat refinements
-      if (currentJumpId && aiText.trim()) {
+      if (currentJumpId && (aiText?.trim() || structuredPlan)) {
         try {
-          let structuredPlan = (response as any)?.data?.structured_plan || null;
-          if (!structuredPlan) {
-            structuredPlan = safeParseJSON(aiText);
-          }
           await updateJump(currentJumpId, {
-            title: jumpName || extractTitle(aiText),
-            summary: extractSummary(aiText),
-            full_content: aiText,
-            structured_plan: structuredPlan,
-            comprehensive_plan: structuredPlan,
+            title: jumpName || extractTitle(aiText || formatPlanToText(structuredPlan)),
+            summary: extractSummary(aiText || formatPlanToText(structuredPlan)),
+            full_content: aiText || formatPlanToText(structuredPlan),
+            structured_plan: structuredPlan || null,
+            comprehensive_plan: structuredPlan || null,
             jump_type: 'comprehensive'
           });
           
           if (onPlanGenerated) {
             onPlanGenerated({
-              content: aiText,
-              structuredPlan: structuredPlan,
-              comprehensivePlan: structuredPlan
+              content: aiText || '',
+              structuredPlan: structuredPlan || null,
+              comprehensivePlan: structuredPlan || null
             });
           }
         } catch (error) {
