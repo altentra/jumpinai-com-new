@@ -136,12 +136,25 @@ async function callOpenAI(
             if (typeof part === 'string') return part;
             if (typeof part?.text === 'string') return part.text;
             if (typeof part?.content === 'string') return part.content;
+            // New: handle JSON/content parts from newer APIs
+            if (part?.type === 'output_json' && part?.json) {
+              try { return JSON.stringify(part.json); } catch { return ''; }
+            }
+            if (part?.type === 'json' && part?.json) {
+              try { return JSON.stringify(part.json); } catch { return ''; }
+            }
             if (Array.isArray(part?.content)) return part.content.map((p: any) => p?.text || p?.content || '').join('');
             return '';
           })
           .filter(Boolean)
           .join('\n')
           .trim();
+      } else if (msg?.content && typeof msg.content === 'object') {
+        // New: some SDKs put JSON result directly in content.json
+        const maybeJson = (msg as any).content?.json;
+        if (maybeJson) {
+          try { content = JSON.stringify(maybeJson); } catch { /* ignore */ }
+        }
       }
 
       // 2) Tool/function call arguments (common in JSON modes)
@@ -491,23 +504,12 @@ async function generateComponents(userProfile: any): Promise<GeneratedComponents
       }
     }
 
-    // Regex-based tolerant extraction: match "key": [ ... ] with smart/normal quotes
+    // Robust extraction: locate the first '[' after the key and do manual bracket matching
     const quoteGroup = `[\"\u201C\u201D]`;
     for (const k of keys) {
-      const re = new RegExp(`${quoteGroup}${k}${quoteGroup}\\s*:\\s*(\\[([\\s\\S]*?)\\])`, 'i');
-      const m = cleaned.match(re);
-      if (m && m[1]) {
-        const slice = m[1];
-        const arr = safeParse(slice);
-        if (Array.isArray(arr)) return arr;
-      }
-    }
-
-    // Last resort: manual bracket matching from the first occurrence of the key (tolerant to quotes)
-    for (const k of keys) {
-      const idx = cleaned.search(new RegExp(`${quoteGroup}${k}${quoteGroup}`, 'i'));
-      if (idx === -1) continue;
-      const startArr = cleaned.indexOf('[', idx);
+      const keyIdx = cleaned.search(new RegExp(`${quoteGroup}${k}${quoteGroup}`, 'i'));
+      if (keyIdx === -1) continue;
+      const startArr = cleaned.indexOf('[', keyIdx);
       if (startArr === -1) continue;
       let depth = 0, endArr = -1, inStr = false, esc = false;
       for (let i = startArr; i < cleaned.length; i++) {
@@ -521,6 +523,17 @@ async function generateComponents(userProfile: any): Promise<GeneratedComponents
       }
       if (endArr > startArr) {
         const slice = cleaned.slice(startArr, endArr + 1);
+        const arr = safeParse(slice);
+        if (Array.isArray(arr)) return arr;
+      }
+    }
+
+    // As a last resort, try a tolerant regex-based extraction
+    for (const k of keys) {
+      const re = new RegExp(`${quoteGroup}${k}${quoteGroup}\\s*:\\s*(\\[([\\s\\S]*?)\\])`, 'i');
+      const m = cleaned.match(re);
+      if (m && m[1]) {
+        const slice = m[1];
         const arr = safeParse(slice);
         if (Array.isArray(arr)) return arr;
       }
