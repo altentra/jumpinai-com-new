@@ -700,7 +700,40 @@ async function generateComponents(userProfile: any): Promise<GeneratedComponents
       }
     }
 
-    arr = normalizeItems(key, arr).slice(0, 4);
+    arr = normalizeItems(key, arr);
+
+    // Ensure exactly 4 items by topping up if needed
+    if (arr.length < 4) {
+      const missing = 4 - arr.length;
+      const existingTitles = new Set(arr.map((i: any) => (i.title || '').toLowerCase()));
+      const fillPrompt = `Generate exactly ${missing} additional unique ${key} that complement the previous ones. Titles must be distinct from this list: ${[...existingTitles].join(', ')}.\nReturn ONLY valid JSON with a single object containing the "${key}" array (length=${missing}).`;
+      const systemJSON = 'Return ONLY a single valid JSON object with the requested top-level key. No markdown, no code fences, no commentary.';
+      try {
+        const fillRes = await callOpenAI([
+          { role: 'system', content: systemJSON },
+          { role: 'user', content: fillPrompt },
+        ], 500, true, 'gpt-4.1-2025-04-14');
+        let fillObj = safeParse(fillRes.content);
+        let fillArr: any[] = [];
+        if (fillObj && Array.isArray(fillObj[key])) {
+          fillArr = fillObj[key];
+        } else {
+          fillArr = extractArrayByKey(fillRes.content, key, altKeysMap[key]);
+        }
+        const normalizedFill = normalizeItems(key, fillArr);
+        for (const item of normalizedFill) {
+          const t = (item.title || '').toLowerCase();
+          if (!existingTitles.has(t) && arr.length < 4) {
+            arr.push(item);
+            existingTitles.add(t);
+          }
+        }
+      } catch (e) {
+        console.warn(`[gen:${key}] top-up generation failed:`, e);
+      }
+    }
+
+    if (arr.length > 4) arr = arr.slice(0, 4);
 
     console.log(`Generated ${key}: ${arr.length} items`);
     return arr;
@@ -815,7 +848,7 @@ serve(async (req) => {
         { role: 'system', content: systemJSON },
         { role: 'user', content: systemPrompt },
         ...recentMessages
-      ], 800, true, 'gpt-4.1-2025-04-14');
+      ], 1500, true, 'gpt-4.1-2025-04-14');
       
       usage = res1.usage;
       finish_reason = res1.finish_reason;
@@ -840,9 +873,10 @@ serve(async (req) => {
         
         const repair = await callOpenAI([
           { role: 'system', content: systemJSON },
-          { role: 'user', content: `${systemPrompt}\n\nIMPORTANT: Return ONLY valid JSON in the exact format specified. No other text. Create exactly 3 phases in the phases array.` },
+          { role: 'user', content: `${systemPrompt}\n\nIMPORTANT: Return ONLY valid JSON in the exact format specified. No other text. Create exactly 3 phases in the phases array.\n\nHere is the draft to normalize (may include markdown fences or invalid JSON):` },
+          { role: 'user', content: rawContent || res1.content || '' },
           ...recentMessages
-        ], 800, true, 'gpt-4.1-2025-04-14');
+        ], 1500, true, 'gpt-4.1-2025-04-14');
         
         rawContent = repair.content || rawContent;
         jumpPlan = safeParse(repair.content);
