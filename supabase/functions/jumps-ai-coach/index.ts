@@ -127,7 +127,8 @@ async function callOpenAI(
       const msg = choice?.message;
       let content = '';
 
-      if (typeof msg?.content === 'string') {
+      // 1) Standard text content
+      if (typeof msg?.content === 'string' && msg.content.trim()) {
         content = msg.content;
       } else if (Array.isArray(msg?.content)) {
         content = msg.content
@@ -143,16 +144,31 @@ async function callOpenAI(
           .trim();
       }
 
-      if (!content && typeof choice?.text === 'string') {
-        content = choice.text;
+      // 2) Tool/function call arguments (common in JSON modes)
+      if (!content && Array.isArray((msg as any)?.tool_calls) && (msg as any).tool_calls.length) {
+        try {
+          const args = (msg as any).tool_calls
+            .map((tc: any) => tc?.function?.arguments || '')
+            .filter((s: string) => typeof s === 'string' && s.trim())
+            .join('\n');
+          if (args && args.trim()) content = args.trim();
+        } catch (_) {}
       }
 
+      // 3) Legacy single function_call
+      if (!content && (msg as any)?.function_call?.arguments) {
+        const args = (msg as any).function_call.arguments;
+        if (typeof args === 'string' && args.trim()) content = args.trim();
+      }
+
+      // 4) Responses API shape
       if (!content) {
         const ot = (data as any)?.output_text;
         if (Array.isArray(ot)) content = ot.join('\n');
         else if (typeof ot === 'string') content = ot;
       }
 
+      // 5) Fallbacks
       if (!content && typeof (data as any)?.message === 'string') {
         content = (data as any).message;
       }
@@ -164,6 +180,7 @@ async function callOpenAI(
           finish_reason,
           usage: data?.usage,
           hasMessage: !!msg,
+          hasToolCalls: Array.isArray((msg as any)?.tool_calls) ? (msg as any).tool_calls.length : 0,
           types: {
             messageContentType: typeof msg?.content,
             outputTextType: Array.isArray((data as any)?.output_text) ? 'array' : typeof (data as any)?.output_text,
@@ -186,7 +203,12 @@ async function callOpenAI(
       return await makeRequest('gpt-5-nano-2025-08-07', Math.min(maxTokens, 800), 45_000);
     } catch (nanoErr) {
       console.warn('Nano fallback also failed, retrying with 4o-mini (legacy param)...', String(nanoErr));
-      return await makeRequest('gpt-4o-mini', Math.min(maxTokens, 700), 45_000);
+      try {
+        return await makeRequest('gpt-4o-mini', Math.min(maxTokens, 700), 45_000);
+      } catch (miniErr) {
+        console.warn('4o-mini failed, retrying with gpt-4.1...', String(miniErr));
+        return await makeRequest('gpt-4.1-2025-04-14', Math.min(maxTokens, 900), 75_000);
+      }
     }
   }
 }
