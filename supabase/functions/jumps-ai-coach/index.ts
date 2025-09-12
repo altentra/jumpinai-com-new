@@ -70,7 +70,7 @@ async function callOpenAI(
   messages: Array<{ role: string; content: string }>,
   maxTokens = 1200,
   isJSON = false,
-  model = 'gpt-5-mini-2025-08-07'
+  model = 'gpt-4.1-2025-04-14'
 ) {
   // Helper to detect param style per model family
   const isNewerModel = (m: string) => /(gpt-5|gpt-4\.1|o3|o4)/.test(m);
@@ -196,19 +196,14 @@ async function callOpenAI(
 
   // Try fast model first, then fallback if needed
   try {
-    return await makeRequest(model, Math.min(maxTokens, 1200), 60_000);
+    return await makeRequest(model, Math.min(maxTokens, 800), 60_000);
   } catch (primaryErr) {
-    console.warn('Primary model failed/timed out, retrying with nano fallback:', String(primaryErr));
+    console.warn('Primary model failed/timed out, retrying with 4o-mini fallback:', String(primaryErr));
     try {
-      return await makeRequest('gpt-5-nano-2025-08-07', Math.min(maxTokens, 800), 45_000);
-    } catch (nanoErr) {
-      console.warn('Nano fallback also failed, retrying with 4o-mini (legacy param)...', String(nanoErr));
-      try {
-        return await makeRequest('gpt-4o-mini', Math.min(maxTokens, 700), 45_000);
-      } catch (miniErr) {
-        console.warn('4o-mini failed, retrying with gpt-4.1...', String(miniErr));
-        return await makeRequest('gpt-4.1-2025-04-14', Math.min(maxTokens, 900), 75_000);
-      }
+      return await makeRequest('gpt-4o-mini', Math.min(maxTokens, 600), 45_000);
+    } catch (miniErr) {
+      console.warn('4o-mini failed, retrying with gpt-4.1 (reduced tokens)...', String(miniErr));
+      return await makeRequest('gpt-4.1-2025-04-14', Math.min(maxTokens, 600), 75_000);
     }
   }
 }
@@ -502,7 +497,7 @@ AI Knowledge: ${userProfile.aiKnowledge}
     let res = await callOpenAI([
       { role: 'system', content: systemJSON },
       { role: 'user', content: prompt },
-    ], 800, true, 'gpt-5-mini-2025-08-07');
+    ], 700, true, 'gpt-4.1-2025-04-14');
 
     let obj = safeParse(res.content);
     if (!obj) {
@@ -514,7 +509,7 @@ AI Knowledge: ${userProfile.aiKnowledge}
       const repair = await callOpenAI([
         { role: 'system', content: systemJSON },
         { role: 'user', content: `${prompt}\n\nIMPORTANT: Return ONLY valid JSON in this exact format with the "${key}" array containing exactly 4 items. No other text.` },
-      ], 800, true, 'gpt-5-mini-2025-08-07');
+      ], 700, true, 'gpt-4.1-2025-04-14');
       obj = safeParse(repair.content);
       if (!obj) {
         console.warn(`[gen:${key}] parse failed (attempt 2). First 400 chars:`, repair.content?.slice(0, 400));
@@ -552,7 +547,7 @@ AI Knowledge: ${userProfile.aiKnowledge}
       const compact = await callOpenAI([
         { role: 'system', content: systemJSON },
         { role: 'user', content: `${compactPrompt}\n\nReturn ONLY JSON. Use this minimal example shape:\n${compactSchema[key]}` },
-      ], 800, true, 'gpt-5-mini-2025-08-07');
+      ], 700, true, 'gpt-4.1-2025-04-14');
       const compactObj = safeParse(compact.content);
       if (compactObj && Array.isArray(compactObj[key])) {
         arr = compactObj[key];
@@ -620,98 +615,41 @@ serve(async (req) => {
 
     // Streamlined system prompt for faster generation
     const systemPrompt = [
-      "You are an AI transformation strategist. Create a comprehensive 'Jump' plan as JSON.",
-      "",
-      "User Context:",
-      `Role: ${userProfile?.currentRole || 'Professional'} | Industry: ${userProfile?.industry || 'General'}`,
-      `Goals: ${userProfile?.goals || 'AI Integration'} | Experience: ${userProfile?.experienceLevel || 'Beginner'}`,
-      `Time: ${userProfile?.timeCommitment || 'Flexible'} | Budget: ${userProfile?.budget || 'Moderate'}`,
-      "",
-      "Return ONLY valid JSON with this structure (3 phases required):",
+      "You are an AI transformation strategist. Create a comprehensive 'Jump' plan.",
+      `User Context: Role=${userProfile?.currentRole || 'Professional'} | Industry=${userProfile?.industry || 'General'} | Goals=${userProfile?.goals || 'AI Integration'} | Experience=${userProfile?.experienceLevel || 'Beginner'} | Time=${userProfile?.timeCommitment || 'Flexible'} | Budget=${userProfile?.budget || 'Moderate'}`,
+      "Return ONLY valid JSON matching this schema (exact keys, exactly 3 phases):",
       JSON.stringify({
-        "title": "AI Transformation Plan",
-        "executive_summary": "Strategic roadmap for AI integration and business transformation",
-        "overview": {
-          "vision_statement": "Transform operations through strategic AI adoption",
-          "transformation_scope": "Comprehensive AI integration across key business functions",
-          "expected_outcomes": ["Increased efficiency", "Enhanced decision-making", "Competitive advantage"],
-          "timeline_overview": "3-phase implementation over 4-6 months"
+        title: "AI Transformation Plan",
+        executive_summary: "",
+        overview: {
+          vision_statement: "",
+          transformation_scope: "",
+          expected_outcomes: [],
+          timeline_overview: ""
         },
-        "analysis": {
-          "current_state": {
-            "strengths": ["Existing expertise", "Available resources"],
-            "weaknesses": ["Limited AI experience", "Change management needs"],
-            "opportunities": ["AI automation", "Data-driven insights"],
-            "threats": ["Competitor adoption", "Technology gaps"]
+        analysis: {
+          current_state: {
+            strengths: [],
+            weaknesses: [],
+            opportunities: [],
+            threats: []
           },
-          "gap_analysis": ["Technical skills", "Process optimization", "Tool integration"],
-          "readiness_assessment": {
-            "score": 7,
-            "factors": [
-              {"factor": "Technical Readiness", "level": "Medium", "description": "Foundation exists"},
-              {"factor": "Resource Availability", "level": "High", "description": "Resources committed"}
-            ]
-          },
-          "market_context": "Rapid AI adoption creates opportunities and competitive pressure"
+          gap_analysis: [],
+          readiness_assessment: { score: 0, factors: [] },
+          market_context: ""
         },
-        "action_plan": {
-          "phases": [
-            {
-              "phase_number": 1,
-              "title": "Foundation Phase",
-              "description": "Establish AI foundation and initial tools",
-              "duration": "4-6 weeks",
-              "objectives": ["Setup core tools", "Build initial capabilities"],
-              "key_actions": [{"action": "Deploy ChatGPT", "description": "Implement for content creation", "priority": "High", "effort_level": "Low", "dependencies": []}],
-              "milestones": [{"milestone": "Core tools active", "target_date": "Week 4", "success_criteria": ["Tools deployed", "Team trained"]}],
-              "deliverables": ["AI tool setup", "Initial workflows"],
-              "risks": [{"risk": "Adoption resistance", "impact": "Medium", "probability": "Low", "mitigation": "Change management"}]
-            },
-            {
-              "phase_number": 2,
-              "title": "Implementation Phase", 
-              "description": "Scale AI tools across operations",
-              "duration": "6-8 weeks",
-              "objectives": ["Integrate advanced tools", "Optimize processes"],
-              "key_actions": [{"action": "Deploy automation", "description": "Implement workflow automation", "priority": "High", "effort_level": "Medium", "dependencies": ["Foundation complete"]}],
-              "milestones": [{"milestone": "Full deployment", "target_date": "Week 6", "success_criteria": ["All tools active", "Processes optimized"]}],
-              "deliverables": ["Automated workflows", "Performance metrics"],
-              "risks": [{"risk": "Integration issues", "impact": "Medium", "probability": "Medium", "mitigation": "Phased rollout"}]
-            },
-            {
-              "phase_number": 3,
-              "title": "Optimization Phase",
-              "description": "Fine-tune and scale successful implementations", 
-              "duration": "4-6 weeks",
-              "objectives": ["Optimize performance", "Scale operations"],
-              "key_actions": [{"action": "Performance tuning", "description": "Optimize all systems", "priority": "Medium", "effort_level": "Medium", "dependencies": ["Implementation complete"]}],
-              "milestones": [{"milestone": "Optimization complete", "target_date": "Week 4", "success_criteria": ["Targets met", "ROI achieved"]}],
-              "deliverables": ["Optimized systems", "Scale playbook"],
-              "risks": [{"risk": "Performance issues", "impact": "Low", "probability": "Low", "mitigation": "Monitoring"}]
-            }
+        action_plan: {
+          phases: [
+            { phase_number: 1, title: "", description: "", duration: "", objectives: [], key_actions: [], milestones: [], deliverables: [], risks: [] },
+            { phase_number: 2, title: "", description: "", duration: "", objectives: [], key_actions: [], milestones: [], deliverables: [], risks: [] },
+            { phase_number: 3, title: "", description: "", duration: "", objectives: [], key_actions: [], milestones: [], deliverables: [], risks: [] }
           ]
         },
-        "tools_prompts": {
-          "recommended_ai_tools": [{"tool": "ChatGPT", "category": "Content", "use_case": "Content creation", "learning_curve": "Low", "cost_estimate": "$20/month", "integration_priority": "High"}],
-          "custom_prompts": [{"title": "Strategy Prompt", "purpose": "Strategic planning", "prompt": "Act as strategist...", "ai_tool": "ChatGPT", "expected_output": "Strategic plan"}],
-          "templates": [{"name": "Planning Template", "type": "Strategy", "description": "Strategic planning template", "use_case": "Business strategy"}]
-        },
-        "workflows_strategies": {
-          "workflows": [{"title": "Content Creation", "description": "AI-powered content workflow", "trigger": "Daily", "steps": [{"step": "Ideation", "description": "Generate ideas", "tools_used": ["ChatGPT"], "estimated_time": "15 min"}], "automation_level": "Semi-automated", "frequency": "Daily"}],
-          "strategies": [{"strategy": "Gradual Integration", "description": "Phased AI adoption", "success_factors": ["Start simple"], "implementation_tips": ["Begin with content"], "monitoring_approach": "Weekly reviews"}]
-        },
-        "metrics_tracking": {
-          "kpis": [{"metric": "Adoption Rate", "description": "Tool adoption percentage", "target": "80% in 90 days", "measurement_frequency": "Weekly", "data_source": "Usage analytics"}],
-          "tracking_methods": [{"method": "Dashboard", "tools": ["Analytics"], "setup_complexity": "Medium", "cost": "$50/month"}],
-          "reporting_schedule": {"daily": ["Usage metrics"], "weekly": ["Progress review"], "monthly": ["ROI analysis"], "quarterly": ["Strategic review"]},
-          "success_criteria": [{"timeframe": "30 days", "criteria": ["Tools deployed", "Training complete"]}]
-        },
-        "investment": {
-          "time_investment": {"total_hours": "100-120 hours", "weekly_commitment": "5-8 hours", "phase_breakdown": [{"phase": "Foundation", "hours": "30-40 hours"}]},
-          "financial_investment": {"total_budget": "$1,500-3,000", "categories": [{"category": "AI Subscriptions", "amount": "$500-1,000", "description": "Tool subscriptions"}]},
-          "roi_projection": {"timeframe": "6 months", "expected_roi": "200-400%", "break_even_point": "4 months"}
-        }
-      }, null, 2)
+        tools_prompts: { recommended_ai_tools: [], custom_prompts: [], templates: [] },
+        workflows_strategies: { workflows: [], strategies: [] },
+        metrics_tracking: { kpis: [], tracking_methods: [], reporting_schedule: {}, success_criteria: [] },
+        investment: { time_investment: {}, financial_investment: {}, roi_projection: {} }
+      }, null, 0)
     ].join('\n');
 
     // Get recent messages (last 6 to avoid token limits)
@@ -732,7 +670,7 @@ serve(async (req) => {
         { role: 'system', content: systemJSON },
         { role: 'user', content: systemPrompt },
         ...recentMessages
-      ], 1000, true, 'gpt-5-mini-2025-08-07');
+      ], 800, true, 'gpt-4.1-2025-04-14');
       
       usage = res1.usage;
       finish_reason = res1.finish_reason;
@@ -759,7 +697,7 @@ serve(async (req) => {
           { role: 'system', content: systemJSON },
           { role: 'user', content: `${systemPrompt}\n\nIMPORTANT: Return ONLY valid JSON in the exact format specified. No other text. Create exactly 3 phases in the phases array.` },
           ...recentMessages
-        ], 1000, true, 'gpt-5-mini-2025-08-07');
+        ], 800, true, 'gpt-4.1-2025-04-14');
         
         rawContent = repair.content || rawContent;
         jumpPlan = safeParse(repair.content);
