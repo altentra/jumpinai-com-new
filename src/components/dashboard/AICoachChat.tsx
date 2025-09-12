@@ -476,7 +476,7 @@ export default function AICoachChat({
   }
 
   return (
-    <div className="max-w-6xl mx-auto h-[calc(100vh-200px)] flex flex-col">
+    <div id="ai-chat" className="max-w-6xl mx-auto h-[calc(100vh-200px)] flex flex-col">
       <Card className="flex-1 flex flex-col bg-gradient-to-br from-card/95 to-primary/5 backdrop-blur-xl rounded-3xl border border-primary/20 shadow-2xl shadow-primary/10 overflow-hidden">
         <CardHeader className="flex-row items-center justify-between space-y-0 pb-6 bg-gradient-to-r from-primary/10 via-secondary/5 to-primary/10 backdrop-blur-sm border-b border-primary/20">
             <div className="flex items-center gap-4">
@@ -622,9 +622,17 @@ export default function AICoachChat({
                   <div className="bg-gradient-to-br from-card/90 to-primary/5 rounded-3xl p-6 shadow-lg backdrop-blur-sm border border-primary/20 flex items-center gap-3">
                     <div className="flex items-center gap-3">
                       <div className="animate-spin rounded-full h-5 w-5 border-2 border-primary border-t-transparent"></div>
-                      <span className="text-sm text-muted-foreground">
-                        Thinking for {loadingTime}s...
-                      </span>
+                        <span className="text-sm text-muted-foreground">
+                          {loadingTime < 10
+                            ? 'Analyzing your profile...'
+                            : loadingTime < 30
+                            ? 'Drafting your personalized plan...'
+                            : loadingTime < 50
+                            ? 'Structuring into phases...'
+                            : loadingTime < 80
+                            ? 'Saving to your library (if logged in)...'
+                            : 'Generating components (prompts, workflows, blueprints, strategies)...'} ({loadingTime}s)
+                        </span>
                     </div>
                   </div>
                 </div>
@@ -662,11 +670,11 @@ export default function AICoachChat({
                   onKeyDown={handleKeyDown}
                   placeholder="Ask about AI tools, strategies, implementation plans, or request a comprehensive transformation roadmap..."
                   className="min-h-[80px] resize-none rounded-2xl border-primary/30 bg-background/50 backdrop-blur-sm focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all duration-300"
-                  disabled={isLoading}
+                  disabled={false}
                 />
                 <Button
                   onClick={sendMessage}
-                  disabled={!input.trim() || isLoading}
+                  disabled={!input.trim()}
                   className="self-end h-20 px-8 rounded-2xl bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 gap-2"
                 >
                   <Send className="h-5 w-5" />

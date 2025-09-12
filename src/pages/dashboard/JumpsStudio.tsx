@@ -30,6 +30,12 @@ export default function JumpsStudio() {
   const [jumpName, setJumpName] = useState<string>('');
   const [isNewJump, setIsNewJump] = useState(true);
 
+  const scrollToChat = () => {
+    try {
+      setTimeout(() => document.getElementById('ai-chat')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+    } catch {}
+  };
+
   const emptyPlan = React.useMemo(() => ({
     title: jumpName || 'Your Jump Plan',
     executive_summary: '',
@@ -113,6 +119,7 @@ export default function JumpsStudio() {
       setJumpName(generateJumpName());
     }
     setShowChat(true); // Show chat immediately
+    scrollToChat();
   };
 
   const handlePlanGenerated = (data: { content: string; structuredPlan?: any; comprehensivePlan?: any }) => {
@@ -175,6 +182,7 @@ export default function JumpsStudio() {
     if (!userProfile) {
       setIsProfileFormOpen(false);
     }
+    scrollToChat();
   };
 
   const handleCreateNewJump = () => {
