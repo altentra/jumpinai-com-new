@@ -68,9 +68,9 @@ interface GeneratedComponents {
 
 async function callOpenAI(
   messages: Array<{ role: string; content: string }>,
-  maxTokens = 2000,
+  maxTokens = 1200,
   isJSON = false,
-  model = 'gpt-4.1-2025-04-14'
+  model = 'gpt-5-mini-2025-08-07'
 ) {
   // Helper to perform a timed request and normalize the response
   const makeRequest = async (mdl: string, tokens: number, timeoutMs: number) => {
@@ -156,12 +156,12 @@ async function callOpenAI(
     }
   };
 
-  // Try primary model, then fallback quickly if it fails or times out
+  // Try fast model first, then fallback if needed
   try {
-    return await makeRequest(model, Math.min(maxTokens, 1600), 75_000);
+    return await makeRequest(model, Math.min(maxTokens, 1200), 45_000);
   } catch (primaryErr) {
-    console.warn('Primary model failed/timed out, retrying with fallback (gpt-5-mini-2025-08-07):', String(primaryErr));
-    return await makeRequest('gpt-5-mini-2025-08-07', Math.min(maxTokens, 1200), 70_000);
+    console.warn('Primary model failed/timed out, retrying with nano fallback:', String(primaryErr));
+    return await makeRequest('gpt-5-nano-2025-08-07', Math.min(maxTokens, 800), 30_000);
   }
 }
 
@@ -454,7 +454,7 @@ AI Knowledge: ${userProfile.aiKnowledge}
     let res = await callOpenAI([
       { role: 'system', content: systemJSON },
       { role: 'user', content: prompt },
-    ], 1500, true, 'gpt-4.1-2025-04-14');
+    ], 800, true, 'gpt-5-mini-2025-08-07');
 
     let obj = safeParse(res.content);
     if (!obj) {
@@ -466,7 +466,7 @@ AI Knowledge: ${userProfile.aiKnowledge}
       const repair = await callOpenAI([
         { role: 'system', content: systemJSON },
         { role: 'user', content: `${prompt}\n\nIMPORTANT: Return ONLY valid JSON in this exact format with the "${key}" array containing exactly 4 items. No other text.` },
-      ], 1500, true, 'gpt-4.1-2025-04-14');
+      ], 800, true, 'gpt-5-mini-2025-08-07');
       obj = safeParse(repair.content);
       if (!obj) {
         console.warn(`[gen:${key}] parse failed (attempt 2). First 400 chars:`, repair.content?.slice(0, 400));
@@ -504,7 +504,7 @@ AI Knowledge: ${userProfile.aiKnowledge}
       const compact = await callOpenAI([
         { role: 'system', content: systemJSON },
         { role: 'user', content: `${compactPrompt}\n\nReturn ONLY JSON. Use this minimal example shape:\n${compactSchema[key]}` },
-      ], 1200, true, 'gpt-4.1-2025-04-14');
+      ], 800, true, 'gpt-5-mini-2025-08-07');
       const compactObj = safeParse(compact.content);
       if (compactObj && Array.isArray(compactObj[key])) {
         arr = compactObj[key];
@@ -570,268 +570,98 @@ serve(async (req) => {
   try {
     const { messages, userProfile, userId, jumpId, generateComponents: shouldGenerateComponents } = await req.json();
 
-    // Create comprehensive system prompt for structured JSON response
+    // Streamlined system prompt for faster generation
     const systemPrompt = [
-      "You are Jumps Studio, an elite AI transformation strategist and business consultant.",
-      "Create comprehensive, deeply personalized transformation plans called 'Jumps' that are actionable roadmaps for professional and business transformation.",
+      "You are an AI transformation strategist. Create a comprehensive 'Jump' plan as JSON.",
       "",
-      "CRITICAL: Return ONLY a valid JSON object. Use professional language - no emojis, special symbols, or decorative characters.",
+      "User Context:",
+      `Role: ${userProfile?.currentRole || 'Professional'} | Industry: ${userProfile?.industry || 'General'}`,
+      `Goals: ${userProfile?.goals || 'AI Integration'} | Experience: ${userProfile?.experienceLevel || 'Beginner'}`,
+      `Time: ${userProfile?.timeCommitment || 'Flexible'} | Budget: ${userProfile?.budget || 'Moderate'}`,
       "",
-      "User Profile Analysis:",
-      `- Current Role: ${userProfile?.currentRole || 'Not specified'}`,
-      `- Industry: ${userProfile?.industry || 'Not specified'}`,
-      `- Experience Level: ${userProfile?.experienceLevel || 'Not specified'}`,
-      `- AI Knowledge: ${userProfile?.aiKnowledge || 'Not specified'}`,
-      `- Transformation Goals: ${userProfile?.goals || 'Not specified'}`,
-      `- Key Challenges: ${userProfile?.challenges || 'Not specified'}`,
-      `- Time Commitment: ${userProfile?.timeCommitment || 'Not specified'}`,
-      `- Budget Range: ${userProfile?.budget || 'Not specified'}`,
-      "",
-       "Create a COMPREHENSIVE transformation plan with this EXACT JSON structure:",
-       "IMPORTANT: Generate exactly 3 phases in the action_plan.phases array. Each phase should be detailed and actionable.",
-       "",
+      "Return ONLY valid JSON with this structure (3 phases required):",
       JSON.stringify({
-        "title": "Compelling, specific transformation plan title",
-        "executive_summary": "Compelling 3-4 sentence overview of the complete transformation journey and expected outcomes",
+        "title": "AI Transformation Plan",
+        "executive_summary": "Strategic roadmap for AI integration and business transformation",
         "overview": {
-          "vision_statement": "Inspirational vision of the user's transformed state",
-          "transformation_scope": "Detailed scope of what will be transformed",
-          "expected_outcomes": ["Specific outcome 1", "Specific outcome 2", "Specific outcome 3", "Specific outcome 4"],
-          "timeline_overview": "High-level timeline summary"
+          "vision_statement": "Transform operations through strategic AI adoption",
+          "transformation_scope": "Comprehensive AI integration across key business functions",
+          "expected_outcomes": ["Increased efficiency", "Enhanced decision-making", "Competitive advantage"],
+          "timeline_overview": "3-phase implementation over 4-6 months"
         },
         "analysis": {
           "current_state": {
-            "strengths": ["Key strength 1", "Key strength 2", "Key strength 3", "Key strength 4"],
-            "weaknesses": ["Area for improvement 1", "Area for improvement 2", "Area for improvement 3"],
-            "opportunities": ["Market opportunity 1", "Growth opportunity 2", "Technology opportunity 3"],
-            "threats": ["Potential threat 1", "Market threat 2", "Technology threat 3"]
+            "strengths": ["Existing expertise", "Available resources"],
+            "weaknesses": ["Limited AI experience", "Change management needs"],
+            "opportunities": ["AI automation", "Data-driven insights"],
+            "threats": ["Competitor adoption", "Technology gaps"]
           },
-          "gap_analysis": ["Critical gap 1", "Strategic gap 2", "Skills gap 3", "Technology gap 4"],
+          "gap_analysis": ["Technical skills", "Process optimization", "Tool integration"],
           "readiness_assessment": {
-            "score": 8,
+            "score": 7,
             "factors": [
-              {"factor": "Technical Readiness", "level": "High", "description": "Strong foundation for implementation"},
-              {"factor": "Resource Availability", "level": "Medium", "description": "Adequate resources with some constraints"},
-              {"factor": "Change Management", "level": "High", "description": "Good adaptability to change"}
+              {"factor": "Technical Readiness", "level": "Medium", "description": "Foundation exists"},
+              {"factor": "Resource Availability", "level": "High", "description": "Resources committed"}
             ]
           },
-          "market_context": "Analysis of market conditions and competitive landscape"
+          "market_context": "Rapid AI adoption creates opportunities and competitive pressure"
         },
         "action_plan": {
           "phases": [
             {
               "phase_number": 1,
               "title": "Foundation Phase",
-              "description": "Detailed description of what this phase accomplishes",
+              "description": "Establish AI foundation and initial tools",
               "duration": "4-6 weeks",
-              "objectives": ["Clear objective 1", "Clear objective 2", "Clear objective 3"],
-              "key_actions": [
-                {
-                  "action": "Specific actionable task",
-                  "description": "Detailed description of how to execute this action",
-                  "priority": "High",
-                  "effort_level": "Medium", 
-                  "dependencies": ["Prerequisite 1", "Prerequisite 2"]
-                }
-              ],
-              "milestones": [
-                {
-                  "milestone": "Key milestone name",
-                  "target_date": "Week 4",
-                  "success_criteria": ["Measurable criterion 1", "Measurable criterion 2"]
-                }
-              ],
-              "deliverables": ["Tangible deliverable 1", "Tangible deliverable 2"],
-              "risks": [
-                {
-                  "risk": "Potential risk description",
-                  "impact": "High",
-                  "probability": "Medium",
-                  "mitigation": "Specific mitigation strategy"
-                }
-               ]
-             },
-             {
-               "phase_number": 2,
-               "title": "Implementation Phase",
-               "description": "Core implementation of AI tools and processes",
-               "duration": "6-8 weeks",
-               "objectives": ["Implementation objective 1", "Implementation objective 2"],
-               "key_actions": [
-                 {
-                   "action": "Deploy core AI tools",
-                   "description": "Implementation details",
-                   "priority": "High",
-                   "effort_level": "High",
-                   "dependencies": ["Foundation Phase completion"]
-                 }
-               ],
-               "milestones": [
-                 {
-                   "milestone": "Core systems deployed",
-                   "target_date": "Week 6",
-                   "success_criteria": ["System operational", "Team trained"]
-                 }
-               ],
-               "deliverables": ["Working AI systems", "Training documentation"],
-               "risks": [
-                 {
-                   "risk": "Integration challenges",
-                   "impact": "Medium",
-                   "probability": "Medium",
-                   "mitigation": "Phased rollout approach"
-                 }
-               ]
-             },
-             {
-               "phase_number": 3,
-               "title": "Optimization & Scale Phase",
-               "description": "Optimize performance and scale successful implementations",
-               "duration": "4-6 weeks",
-               "objectives": ["Optimization objective 1", "Scale objective 2"],
-               "key_actions": [
-                 {
-                   "action": "Performance optimization",
-                   "description": "Fine-tune and optimize all systems",
-                   "priority": "Medium",
-                   "effort_level": "Medium",
-                   "dependencies": ["Implementation Phase completion"]
-                 }
-               ],
-               "milestones": [
-                 {
-                   "milestone": "Full optimization achieved",
-                   "target_date": "Week 4",
-                   "success_criteria": ["Performance targets met", "ROI targets achieved"]
-                 }
-               ],
-               "deliverables": ["Optimized systems", "Scale playbook"],
-               "risks": [
-                 {
-                   "risk": "Performance bottlenecks",
-                   "impact": "Low",
-                   "probability": "Low",
-                   "mitigation": "Continuous monitoring and adjustment"
-                 }
-               ]
-             }
+              "objectives": ["Setup core tools", "Build initial capabilities"],
+              "key_actions": [{"action": "Deploy ChatGPT", "description": "Implement for content creation", "priority": "High", "effort_level": "Low", "dependencies": []}],
+              "milestones": [{"milestone": "Core tools active", "target_date": "Week 4", "success_criteria": ["Tools deployed", "Team trained"]}],
+              "deliverables": ["AI tool setup", "Initial workflows"],
+              "risks": [{"risk": "Adoption resistance", "impact": "Medium", "probability": "Low", "mitigation": "Change management"}]
+            },
+            {
+              "phase_number": 2,
+              "title": "Implementation Phase", 
+              "description": "Scale AI tools across operations",
+              "duration": "6-8 weeks",
+              "objectives": ["Integrate advanced tools", "Optimize processes"],
+              "key_actions": [{"action": "Deploy automation", "description": "Implement workflow automation", "priority": "High", "effort_level": "Medium", "dependencies": ["Foundation complete"]}],
+              "milestones": [{"milestone": "Full deployment", "target_date": "Week 6", "success_criteria": ["All tools active", "Processes optimized"]}],
+              "deliverables": ["Automated workflows", "Performance metrics"],
+              "risks": [{"risk": "Integration issues", "impact": "Medium", "probability": "Medium", "mitigation": "Phased rollout"}]
+            },
+            {
+              "phase_number": 3,
+              "title": "Optimization Phase",
+              "description": "Fine-tune and scale successful implementations", 
+              "duration": "4-6 weeks",
+              "objectives": ["Optimize performance", "Scale operations"],
+              "key_actions": [{"action": "Performance tuning", "description": "Optimize all systems", "priority": "Medium", "effort_level": "Medium", "dependencies": ["Implementation complete"]}],
+              "milestones": [{"milestone": "Optimization complete", "target_date": "Week 4", "success_criteria": ["Targets met", "ROI achieved"]}],
+              "deliverables": ["Optimized systems", "Scale playbook"],
+              "risks": [{"risk": "Performance issues", "impact": "Low", "probability": "Low", "mitigation": "Monitoring"}]
+            }
           ]
         },
         "tools_prompts": {
-          "recommended_ai_tools": [
-            {
-              "tool": "ChatGPT/GPT-4",
-              "category": "Content Creation",
-              "use_case": "Specific use case for this user's goals",
-              "learning_curve": "Low",
-              "cost_estimate": "$20/month",
-              "integration_priority": "High"
-            }
-          ],
-          "custom_prompts": [
-            {
-              "title": "Strategic Planning Prompt",
-              "purpose": "Generate strategic business plans",
-              "prompt": "Act as a strategic business consultant...",
-              "ai_tool": "ChatGPT/Claude",
-              "expected_output": "Structured strategic plan with analysis"
-            }
-           ],
-           "templates": [
-             {
-               "name": "Strategic Planning Template",
-               "type": "Business Plan",
-               "description": "Comprehensive template for strategic planning",
-               "use_case": "Long-term business strategy development"
-             }
-           ],
-           "templates": [
-             {
-               "name": "Strategic Planning Template",
-               "type": "Business Plan", 
-               "description": "Comprehensive template for strategic planning",
-               "use_case": "Long-term business strategy development"
-             }
-           ]
-         },
+          "recommended_ai_tools": [{"tool": "ChatGPT", "category": "Content", "use_case": "Content creation", "learning_curve": "Low", "cost_estimate": "$20/month", "integration_priority": "High"}],
+          "custom_prompts": [{"title": "Strategy Prompt", "purpose": "Strategic planning", "prompt": "Act as strategist...", "ai_tool": "ChatGPT", "expected_output": "Strategic plan"}],
+          "templates": [{"name": "Planning Template", "type": "Strategy", "description": "Strategic planning template", "use_case": "Business strategy"}]
+        },
         "workflows_strategies": {
-          "workflows": [
-            {
-              "title": "Daily AI-Powered Content Creation",
-              "description": "Streamlined process for creating high-quality content",
-              "trigger": "Daily content planning session",
-              "steps": [
-                {
-                  "step": "Content ideation",
-                  "description": "Generate content ideas using AI brainstorming prompts",
-                  "tools_used": ["ChatGPT", "Claude"],
-                  "estimated_time": "15 minutes"
-                }
-              ],
-              "automation_level": "Semi-automated",
-              "frequency": "Daily"
-            }
-          ],
-          "strategies": [
-            {
-              "strategy": "Gradual AI Integration Strategy",
-              "description": "Phase-by-phase approach to integrating AI tools",
-              "success_factors": ["Start with low-risk applications", "Train team incrementally"],
-              "implementation_tips": ["Begin with content creation tasks", "Document all processes"],
-              "monitoring_approach": "Weekly assessment of adoption rates"
-            }
-          ]
+          "workflows": [{"title": "Content Creation", "description": "AI-powered content workflow", "trigger": "Daily", "steps": [{"step": "Ideation", "description": "Generate ideas", "tools_used": ["ChatGPT"], "estimated_time": "15 min"}], "automation_level": "Semi-automated", "frequency": "Daily"}],
+          "strategies": [{"strategy": "Gradual Integration", "description": "Phased AI adoption", "success_factors": ["Start simple"], "implementation_tips": ["Begin with content"], "monitoring_approach": "Weekly reviews"}]
         },
         "metrics_tracking": {
-          "kpis": [
-            {
-              "metric": "AI Tool Adoption Rate",
-              "description": "Percentage of recommended AI tools successfully integrated",
-              "target": "80% within 90 days",
-              "measurement_frequency": "Weekly",
-              "data_source": "Usage analytics and team reports"
-            }
-          ],
-          "tracking_methods": [
-            {
-              "method": "Automated Dashboard Monitoring",
-              "tools": ["Google Analytics", "Custom dashboards"],
-              "setup_complexity": "Medium",
-              "cost": "$50-100/month"
-            }
-          ],
-          "reporting_schedule": {
-            "daily": ["AI tool usage metrics", "Content output tracking"],
-            "weekly": ["Team productivity metrics", "Goal progress assessment"],
-            "monthly": ["Comprehensive performance review", "ROI analysis"],
-            "quarterly": ["Strategic goal assessment", "Long-term planning review"]
-          },
-          "success_criteria": [
-            {
-              "timeframe": "30 days",
-              "criteria": ["All Phase 1 tools implemented", "Team training completed"]
-            }
-          ]
+          "kpis": [{"metric": "Adoption Rate", "description": "Tool adoption percentage", "target": "80% in 90 days", "measurement_frequency": "Weekly", "data_source": "Usage analytics"}],
+          "tracking_methods": [{"method": "Dashboard", "tools": ["Analytics"], "setup_complexity": "Medium", "cost": "$50/month"}],
+          "reporting_schedule": {"daily": ["Usage metrics"], "weekly": ["Progress review"], "monthly": ["ROI analysis"], "quarterly": ["Strategic review"]},
+          "success_criteria": [{"timeframe": "30 days", "criteria": ["Tools deployed", "Training complete"]}]
         },
         "investment": {
-          "time_investment": {
-            "total_hours": "120-150 hours over 6 months",
-            "weekly_commitment": "5-8 hours per week",
-            "phase_breakdown": [
-              {"phase": "Foundation", "hours": "40-50 hours"}
-            ]
-          },
-          "financial_investment": {
-            "total_budget": "$2,000-4,000 over 6 months",
-            "categories": [
-              {"category": "AI Tool Subscriptions", "amount": "$500-1,200", "description": "Monthly subscriptions for AI platforms"}
-            ]
-          },
-          "roi_projection": {
-            "timeframe": "6-12 months",
-            "expected_roi": "300-500%",
-            "break_even_point": "4-6 months"
-          }
+          "time_investment": {"total_hours": "100-120 hours", "weekly_commitment": "5-8 hours", "phase_breakdown": [{"phase": "Foundation", "hours": "30-40 hours"}]},
+          "financial_investment": {"total_budget": "$1,500-3,000", "categories": [{"category": "AI Subscriptions", "amount": "$500-1,000", "description": "Tool subscriptions"}]},
+          "roi_projection": {"timeframe": "6 months", "expected_roi": "200-400%", "break_even_point": "4 months"}
         }
       }, null, 2)
     ].join('\n');
@@ -853,7 +683,7 @@ serve(async (req) => {
         { role: 'system', content: systemJSON },
         { role: 'user', content: systemPrompt },
         ...recentMessages
-      ], 1800, true, 'gpt-4.1-2025-04-14');
+      ], 1000, true, 'gpt-5-mini-2025-08-07');
       
       usage = res1.usage;
       finish_reason = res1.finish_reason;
@@ -879,7 +709,7 @@ serve(async (req) => {
           { role: 'system', content: systemJSON },
           { role: 'user', content: `${systemPrompt}\n\nIMPORTANT: Return ONLY valid JSON in the exact format specified. No other text. Create exactly 3 phases in the phases array.` },
           ...recentMessages
-        ], 1800, true, 'gpt-4.1-2025-04-14');
+        ], 1000, true, 'gpt-5-mini-2025-08-07');
         
         rawContent = repair.content || rawContent;
         jumpPlan = safeParse(repair.content);
