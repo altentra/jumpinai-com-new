@@ -72,33 +72,54 @@ async function callOpenAI(
   isJSON = false,
   model = 'gpt-5-mini-2025-08-07'
 ) {
+  // Helper to detect param style per model family
+  const isNewerModel = (m: string) => /(gpt-5|gpt-4\.1|o3|o4)/.test(m);
+
   // Helper to perform a timed request and normalize the response
   const makeRequest = async (mdl: string, tokens: number, timeoutMs: number) => {
-    const body: any = {
-      model: mdl,
-      messages,
-      max_completion_tokens: tokens,
-    };
-    // Explicitly request text outputs for reasoning models to avoid empty responses
-    body.response_format = isJSON ? { type: 'json_object' } : { type: 'text' };
-
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort('timeout'), timeoutMs);
     try {
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      // Build request body with correct token param key
+      const body: any = {
+        model: mdl,
+        messages,
+      };
+      if (isNewerModel(mdl)) {
+        body.max_completion_tokens = tokens; // Newer models param
+      } else {
+        body.max_tokens = tokens; // Legacy models param
+      }
+      body.response_format = isJSON ? { type: 'json_object' } : { type: 'text' };
+
+      const doFetch = async (b: any) => fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${openAIApiKey}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(body),
+        body: JSON.stringify(b),
         signal: controller.signal,
       });
 
+      let response = await doFetch(body);
+
+      // Auto-retry once if token param key is rejected by the endpoint
       if (!response.ok) {
-        const err = await response.text().catch(() => '');
-        console.error('OpenAI API error:', response.status, err);
-        throw new Error(`OpenAI API error: ${response.status}`);
+        const errTxt = await response.text().catch(() => '');
+        const needsSwapToMaxTokens = /max_completion_tokens/i.test(errTxt);
+        const needsSwapToMaxCompletion = /max_tokens/i.test(errTxt) && isNewerModel(mdl);
+        if (needsSwapToMaxTokens || needsSwapToMaxCompletion) {
+          const swapped: any = { ...body };
+          delete swapped.max_completion_tokens;
+          delete swapped.max_tokens;
+          if (needsSwapToMaxTokens) swapped.max_tokens = tokens; else swapped.max_completion_tokens = tokens;
+          response = await doFetch(swapped);
+        }
+        if (!response.ok) {
+          console.error('OpenAI API error:', response.status, errTxt);
+          throw new Error(`OpenAI API error: ${response.status}`);
+        }
       }
 
       const data = await response.json();
@@ -150,7 +171,7 @@ async function callOpenAI(
         });
       }
 
-      return { content, usage: data.usage, finish_reason };
+      return { content, usage: data.usage, finish_reason, modelUsed: mdl };
     } finally {
       clearTimeout(timer);
     }
@@ -158,10 +179,15 @@ async function callOpenAI(
 
   // Try fast model first, then fallback if needed
   try {
-    return await makeRequest(model, Math.min(maxTokens, 1200), 45_000);
+    return await makeRequest(model, Math.min(maxTokens, 1200), 60_000);
   } catch (primaryErr) {
     console.warn('Primary model failed/timed out, retrying with nano fallback:', String(primaryErr));
-    return await makeRequest('gpt-5-nano-2025-08-07', Math.min(maxTokens, 800), 30_000);
+    try {
+      return await makeRequest('gpt-5-nano-2025-08-07', Math.min(maxTokens, 800), 45_000);
+    } catch (nanoErr) {
+      console.warn('Nano fallback also failed, retrying with 4o-mini (legacy param)...', String(nanoErr));
+      return await makeRequest('gpt-4o-mini', Math.min(maxTokens, 700), 45_000);
+    }
   }
 }
 
@@ -674,6 +700,7 @@ serve(async (req) => {
     let jumpPlan: any = null;
     let usage: any = undefined;
     let finish_reason: any = undefined;
+    let modelUsed: string | undefined = undefined;
     
     if (!shouldGenerateComponents) {
       const systemJSON = 'Return ONLY a single valid JSON object with the requested structure. No markdown, no code fences, no commentary.';
@@ -688,6 +715,7 @@ serve(async (req) => {
       usage = res1.usage;
       finish_reason = res1.finish_reason;
       rawContent = res1.content;
+      modelUsed = res1.modelUsed;
       
       jumpPlan = safeParse(res1.content);
       
@@ -713,6 +741,7 @@ serve(async (req) => {
         
         rawContent = repair.content || rawContent;
         jumpPlan = safeParse(repair.content);
+        modelUsed = repair.modelUsed;
         if (!jumpPlan) {
           console.warn('[jump-plan] parse failed (attempt 2). Response length:', repair.content?.length);
           console.warn('[jump-plan] First 200 chars:', repair.content?.slice(0, 200));
@@ -784,7 +813,7 @@ serve(async (req) => {
       message: content,
       structured_plan: jumpPlan, // Include structured data for enhanced display
       usage,
-      debug: { finish_reason, model: 'gpt-4.1-2025-04-14' },
+      debug: { finish_reason, model: modelUsed || 'unknown' },
       components: componentsStatus,
       components_detail: componentsDetail
     }), {
