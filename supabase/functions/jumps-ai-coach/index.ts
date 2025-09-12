@@ -158,10 +158,10 @@ async function callOpenAI(
 
   // Try primary model, then fallback quickly if it fails or times out
   try {
-    return await makeRequest(model, Math.min(maxTokens, 1600), 110_000);
+    return await makeRequest(model, Math.min(maxTokens, 1600), 75_000);
   } catch (primaryErr) {
     console.warn('Primary model failed/timed out, retrying with fallback (gpt-5-mini-2025-08-07):', String(primaryErr));
-    return await makeRequest('gpt-5-mini-2025-08-07', Math.min(maxTokens, 1200), 110_000);
+    return await makeRequest('gpt-5-mini-2025-08-07', Math.min(maxTokens, 1200), 70_000);
   }
 }
 
