@@ -176,21 +176,20 @@ export default function AICoachChat({
           userProfile,
           userId: user?.id,
           jumpId: currentJumpId,
-          generateComponents: false // Defer component generation until after jump is saved
+          generateComponents: false
         };
         console.log('[AICoachChat] Auto-invoking jumps-ai-coach with payload:', payload);
         const response: any = await invokeWithTimeout(payload);
         console.log('[AICoachChat] Auto-generation response:', response);
-        if (response.error) {
+        if (response?.error) {
           throw new Error(response.error.message || 'Failed to generate initial plan');
         }
+
         let aiText = extractAiMessage(response);
-        // Try to get structured plan directly or parse from text
-        let structuredPlan = response?.data?.structured_plan || null;
+        let structuredPlan: any = response?.data?.structured_plan || null;
         if (!structuredPlan && aiText) {
           structuredPlan = tryParseJSON(aiText);
         }
-        // If no text but we did get a structured plan, synthesize minimal readable text
         if ((!aiText || !aiText.trim()) && structuredPlan) {
           aiText = formatPlanToText(structuredPlan);
         }
@@ -198,10 +197,9 @@ export default function AICoachChat({
         const assistantMessage: Message = {
           id: (Date.now() + 1).toString(),
           role: 'assistant',
-          content: (aiText && aiText.trim()) ? aiText : 'No response received from AI.',
+          content: aiText && aiText.trim() ? aiText : 'No response received from AI.',
           timestamp: new Date()
         };
-
         if (!aiText) {
           console.warn('[AICoachChat] Unexpected AI response shape:', response);
           toast({
@@ -210,43 +208,37 @@ export default function AICoachChat({
             variant: 'destructive'
           });
         }
-        setMessages(prev => [...prev, assistantMessage]);
+        setMessages((prev) => [...prev, assistantMessage]);
 
         if (onPlanGenerated) {
           onPlanGenerated({
             content: aiText || '',
             structuredPlan: structuredPlan || null,
-            comprehensivePlan: structuredPlan || null
+            comprehensivePlan: structuredPlan || null,
           });
         }
-        
-        // Auto-save or update the jump to database
+
+        // Save or update Jump if we have useful data
         if ((aiText && aiText.trim()) || structuredPlan) {
           try {
             if (currentJumpId && !isNewJump) {
-              // Update existing jump
+              const textForMeta = aiText || formatPlanToText(structuredPlan);
               const updatedJump = await updateJump(currentJumpId, {
-                title: jumpName || extractTitle(aiText || formatPlanToText(structuredPlan)),
-                summary: extractSummary(aiText || formatPlanToText(structuredPlan)),
-                full_content: aiText || formatPlanToText(structuredPlan),
+                title: jumpName || extractTitle(textForMeta),
+                summary: extractSummary(textForMeta),
+                full_content: textForMeta,
                 structured_plan: structuredPlan || null,
                 comprehensive_plan: structuredPlan || null,
-                jump_type: 'comprehensive'
+                jump_type: 'comprehensive',
               });
-              
               if (updatedJump && onJumpSaved) {
                 onJumpSaved(updatedJump.id);
-                toast({
-                  title: 'Jump Updated!',
-                  description: 'Your AI transformation plan has been updated.',
-                });
+                toast({ title: 'Jump Updated!', description: 'Your AI transformation plan has been updated.' });
               }
             } else if (isNewJump) {
-              // Create new jump
               const textForMeta = aiText || formatPlanToText(structuredPlan);
               const title = jumpName || extractTitle(textForMeta);
               const summary = extractSummary(textForMeta);
-              
               const savedJump = await createJump({
                 profile_id: userProfile.id,
                 title,
@@ -254,86 +246,53 @@ export default function AICoachChat({
                 full_content: textForMeta,
                 structured_plan: structuredPlan || null,
                 comprehensive_plan: structuredPlan || null,
-                jump_type: 'comprehensive'
+                jump_type: 'comprehensive',
               });
-                
-                if (savedJump && onJumpSaved) {
-                  onJumpSaved(savedJump.id);
-                  toast({
-                    title: 'Jump Saved!',
-                    description: 'Your AI transformation plan has been saved to your library.',
-                  });
-
-                  // After creating a new Jump, trigger background generation of components
-                  try {
-                    toast({
-                      title: 'Generating Jump Components',
-                      description: 'Creating prompts, workflows, blueprints, and strategies...',
-                    });
-                    const { data: { user: authUser } } = await supabase.auth.getUser();
-                    const compPayload = {
-                      messages: [{ role: 'user', content: 'Generate Jump components for this profile.' }],
-                      userProfile,
-                      userId: authUser?.id,
-                      jumpId: savedJump.id,
-                      generateComponents: true,
-                    };
-                    const compResp: any = await invokeWithTimeout(compPayload, 240000);
-                    console.log('[AICoachChat] Components generation response:', compResp);
-                    const status = compResp?.data?.components as string | undefined;
-                    const detail = compResp?.data?.components_detail as any;
-                    const expected = detail?.expectedCounts || {};
-                    const saveSummary = detail?.saveSummary || {};
-
-                    if (status && typeof status === 'string' && status.toLowerCase().includes('generated')) {
-                      const msg = `Saved ${saveSummary.saved ?? '?'} of ${saveSummary.total ?? '?'} items`;
-                      const counts = `Prompts: ${expected.prompts ?? 0}, Workflows: ${expected.workflows ?? 0}, Blueprints: ${expected.blueprints ?? 0}, Strategies: ${expected.strategies ?? 0}`;
-                      toast({
-                        title: 'Components Ready',
-                        description: `${msg}. ${counts}. If you don’t see them yet, hit refresh in their tabs in ~10–20s.`,
-                      });
-                    } else {
-                      toast({
-                        title: 'Components Requested',
-                        description: "Generation requested. If items don’t appear, refresh the page in a few seconds.",
-                      });
-                    }
-
-                    // Extra hint if any category came back empty
-                    if (expected && (expected.workflows === 0 || expected.blueprints === 0 || expected.strategies === 0)) {
-                      console.warn('[AICoachChat] Some component categories were empty:', expected);
-                      toast({
-                        title: 'Heads up',
-                        description: 'Some categories returned empty. You can retry generation from Jumps Studio.',
-                      });
-                    }
-                  } catch (genErr) {
-                    console.error('Error generating Jump components:', genErr);
-                    toast({
-                      title: 'Component generation failed',
-                      description: 'Your plan is saved, but components failed to generate. You can retry from Jumps Studio.',
-                      variant: 'destructive',
-                    });
+              if (savedJump && onJumpSaved) {
+                onJumpSaved(savedJump.id);
+                toast({ title: 'Jump Saved!', description: 'Your AI transformation plan has been saved to your library.' });
+                // Kick off components generation in background
+                try {
+                  toast({ title: 'Generating Jump Components', description: 'Creating prompts, workflows, blueprints, and strategies...' });
+                  const { data: { user: authUser } } = await supabase.auth.getUser();
+                  const compPayload = {
+                    messages: [{ role: 'user', content: 'Generate Jump components for this profile.' }],
+                    userProfile,
+                    userId: authUser?.id,
+                    jumpId: savedJump.id,
+                    generateComponents: true,
+                  };
+                  const compResp: any = await invokeWithTimeout(compPayload, 240000);
+                  console.log('[AICoachChat] Components generation response:', compResp);
+                  const status = compResp?.data?.components as string | undefined;
+                  const detail = compResp?.data?.components_detail as any;
+                  const expected = detail?.expectedCounts || {};
+                  const saveSummary = detail?.saveSummary || {};
+                  if (status && typeof status === 'string' && status.toLowerCase().includes('generated')) {
+                    const msg = `Saved ${saveSummary.saved ?? '?'} of ${saveSummary.total ?? '?'} items`;
+                    const counts = `Prompts: ${expected.prompts ?? 0}, Workflows: ${expected.workflows ?? 0}, Blueprints: ${expected.blueprints ?? 0}, Strategies: ${expected.strategies ?? 0}`;
+                    toast({ title: 'Components Ready', description: `${msg}. ${counts}. If you don’t see them yet, hit refresh in their tabs in ~10–20s.` });
+                  } else {
+                    toast({ title: 'Components Requested', description: "Generation requested. If items don’t appear, refresh the page in a few seconds." });
                   }
+                  if (expected && (expected.workflows === 0 || expected.blueprints === 0 || expected.strategies === 0)) {
+                    console.warn('[AICoachChat] Some component categories were empty:', expected);
+                    toast({ title: 'Heads up', description: 'Some categories returned empty. You can retry generation from Jumps Studio.' });
+                  }
+                } catch (genErr) {
+                  console.error('Error generating Jump components:', genErr);
+                  toast({ title: 'Component generation failed', description: 'Your plan is saved, but components failed to generate. You can retry from Jumps Studio.', variant: 'destructive' });
                 }
               }
-            } catch (error) {
-              console.error('Error saving/updating jump:', error);
-              toast({
-                title: 'Save Error',
-                description: 'Jump generated but failed to save to library',
-                variant: 'destructive'
-              });
             }
+          } catch (saveErr) {
+            console.error('Error saving/updating jump:', saveErr);
+            toast({ title: 'Save Error', description: 'Jump generated but failed to save to library', variant: 'destructive' });
           }
         }
-      } catch (error: any) {
-        console.error('Error generating initial plan:', error);
-        toast({
-          title: 'Generation error',
-          description: error?.message || 'Failed to generate your plan. You can try again by sending a message.',
-          variant: 'destructive'
-        });
+      } catch (err) {
+        console.error('Error generating initial plan:', err);
+        toast({ title: 'Generation error', description: (err as any)?.message || 'Failed to generate your plan. You can try again by sending a message.', variant: 'destructive' });
       } finally {
         setIsLoading(false);
         stopLoadingTimer();
