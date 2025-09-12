@@ -473,37 +473,60 @@ async function generateComponents(userProfile: any): Promise<GeneratedComponents
   // Extract an array by top-level key directly from raw text, even if wrapped with extra text
   const extractArrayByKey = (text: string, key: Key, altKeys: string[] = []): any[] => {
     if (!text || typeof text !== 'string') return [];
+    // Pre-clean: strip code fences, normalize smart quotes, remove BOM
+    let cleaned = text
+      .replace(/^```(?:json)?\s*/i, '')
+      .replace(/```$/i, '')
+      .replace(/^\uFEFF/, '')
+      .replace(/[\u201C\u201D]/g, '"')
+      .replace(/[\u2018\u2019]/g, "'");
+
+    // Try parsing whole cleaned text first
+    const parsedWhole = safeParse(cleaned);
     const keys = [key, ...altKeys];
+    if (parsedWhole && typeof parsedWhole === 'object') {
+      for (const k of keys) {
+        const arr = (parsedWhole as any)[k];
+        if (Array.isArray(arr)) return arr;
+      }
+    }
+
+    // Regex-based tolerant extraction: match "key": [ ... ] with smart/normal quotes
+    const quoteGroup = `[\"\u201C\u201D]`;
     for (const k of keys) {
-      const idx = text.indexOf(`"${k}"`);
+      const re = new RegExp(`${quoteGroup}${k}${quoteGroup}\\s*:\\s*(\\[([\\s\\S]*?)\\])`, 'i');
+      const m = cleaned.match(re);
+      if (m && m[1]) {
+        const slice = m[1];
+        const arr = safeParse(slice);
+        if (Array.isArray(arr)) return arr;
+      }
+    }
+
+    // Last resort: manual bracket matching from the first occurrence of the key (tolerant to quotes)
+    for (const k of keys) {
+      const idx = cleaned.search(new RegExp(`${quoteGroup}${k}${quoteGroup}`, 'i'));
       if (idx === -1) continue;
-      const startArr = text.indexOf('[', idx);
+      const startArr = cleaned.indexOf('[', idx);
       if (startArr === -1) continue;
-      let depth = 0;
-      let endArr = -1;
-      let inStr = false;
-      let esc = false;
-      for (let i = startArr; i < text.length; i++) {
-        const ch = text[i];
+      let depth = 0, endArr = -1, inStr = false, esc = false;
+      for (let i = startArr; i < cleaned.length; i++) {
+        const ch = cleaned[i];
         if (esc) { esc = false; continue; }
         if (ch === '\\') { esc = true; continue; }
         if (ch === '"') { inStr = !inStr; continue; }
         if (inStr) continue;
         if (ch === '[') depth++;
-        if (ch === ']') {
-          depth--;
-          if (depth === 0) { endArr = i; break; }
-        }
+        if (ch === ']') { depth--; if (depth === 0) { endArr = i; break; } }
       }
       if (endArr > startArr) {
-        const slice = text.slice(startArr, endArr + 1);
-        const parsed = safeParse(slice);
-        if (Array.isArray(parsed)) return parsed;
+        const slice = cleaned.slice(startArr, endArr + 1);
+        const arr = safeParse(slice);
+        if (Array.isArray(arr)) return arr;
       }
     }
     return [];
   };
-
   // Normalize items to match our DB schemas per key
   const normalizeItems = (key: Key, arr: any[]): any[] => {
     const toArray = (v: any) => Array.isArray(v) ? v : (v ? [v] : []);
