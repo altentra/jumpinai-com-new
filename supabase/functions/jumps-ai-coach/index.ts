@@ -470,42 +470,158 @@ function formatJumpPlanToText(plan: any): string {
 async function generateComponents(userProfile: any): Promise<GeneratedComponents> {
   type Key = 'prompts' | 'workflows' | 'blueprints' | 'strategies';
 
-  const buildPromptFor = (key: Key) => {
-    const base = `Generate exactly 4 high-quality ${key} based on this user profile.
-No emojis or special symbols. Return ONLY valid JSON for the "${key}" key.
-User: ${userProfile.currentRole} in ${userProfile.industry}
-Goals: ${userProfile.goals}
-AI Knowledge: ${userProfile.aiKnowledge}
-`;
+  // Extract an array by top-level key directly from raw text, even if wrapped with extra text
+  const extractArrayByKey = (text: string, key: Key, altKeys: string[] = []): any[] => {
+    if (!text || typeof text !== 'string') return [];
+    const keys = [key, ...altKeys];
+    for (const k of keys) {
+      const idx = text.indexOf(`"${k}"`);
+      if (idx === -1) continue;
+      const startArr = text.indexOf('[', idx);
+      if (startArr === -1) continue;
+      let depth = 0;
+      let endArr = -1;
+      let inStr = false;
+      let esc = false;
+      for (let i = startArr; i < text.length; i++) {
+        const ch = text[i];
+        if (esc) { esc = false; continue; }
+        if (ch === '\\') { esc = true; continue; }
+        if (ch === '"') { inStr = !inStr; continue; }
+        if (inStr) continue;
+        if (ch === '[') depth++;
+        if (ch === ']') {
+          depth--;
+          if (depth === 0) { endArr = i; break; }
+        }
+      }
+      if (endArr > startArr) {
+        const slice = text.slice(startArr, endArr + 1);
+        const parsed = safeParse(slice);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    }
+    return [];
+  };
 
-    // Minimal per-key schema
+  // Normalize items to match our DB schemas per key
+  const normalizeItems = (key: Key, arr: any[]): any[] => {
+    const toArray = (v: any) => Array.isArray(v) ? v : (v ? [v] : []);
+    return (arr || []).map((item: any) => {
+      const it = typeof item === 'object' && item !== null ? { ...item } : { title: String(item || '') };
+      if (key === 'prompts') {
+        it.prompt_text = it.prompt_text || it.prompt || it.text || '';
+        it.ai_tools = toArray(it.ai_tools);
+        it.use_cases = toArray(it.use_cases);
+        it.tags = toArray(it.tags);
+        it.category = it.category || 'productivity';
+      }
+      if (key === 'workflows') {
+        const steps = it.workflow_steps || it.steps || it.workflow || it.tasks || [];
+        it.workflow_steps = Array.isArray(steps) ? steps : toArray(steps);
+        it.workflow_steps = it.workflow_steps.map((s: any, idx: number) => {
+          if (typeof s === 'string') return { step: idx + 1, title: s, description: s };
+          const so = typeof s === 'object' && s !== null ? s : {};
+          return {
+            step: so.step ?? idx + 1,
+            title: so.title || so.name || `Step ${idx + 1}`,
+            description: so.description || so.details || '',
+            tools: toArray(so.tools || so.ai_tools || []),
+            estimated_time: so.estimated_time || so.duration || ''
+          };
+        });
+        it.ai_tools = toArray(it.ai_tools);
+        it.prerequisites = toArray(it.prerequisites);
+        it.expected_outcomes = toArray(it.expected_outcomes);
+        it.tags = toArray(it.tags);
+        it.category = it.category || 'productivity';
+        it.complexity_level = it.complexity_level || 'beginner';
+      }
+      if (key === 'blueprints') {
+        if (!it.blueprint_content || typeof it.blueprint_content !== 'object') {
+          it.blueprint_content = {
+            overview: it.overview || '',
+            components: toArray(it.components || it.modules || []),
+            structure: it.structure || '',
+            implementation: it.implementation || it.instructions || ''
+          };
+        }
+        it.ai_tools = toArray(it.ai_tools);
+        it.resources_needed = toArray(it.resources_needed);
+        it.deliverables = toArray(it.deliverables);
+        it.tags = toArray(it.tags);
+        it.category = it.category || 'productivity';
+        it.difficulty_level = it.difficulty_level || 'beginner';
+      }
+      if (key === 'strategies') {
+        if (!it.strategy_framework || typeof it.strategy_framework !== 'object') {
+          it.strategy_framework = {
+            overview: it.overview || '',
+            phases: toArray(it.phases || []),
+            objectives: toArray(it.objectives || []),
+            approach: it.approach || ''
+          };
+        }
+        it.ai_tools = toArray(it.ai_tools);
+        it.success_metrics = toArray(it.success_metrics);
+        it.key_actions = toArray(it.key_actions);
+        it.potential_challenges = toArray(it.potential_challenges);
+        it.mitigation_strategies = toArray(it.mitigation_strategies);
+        it.tags = toArray(it.tags);
+        it.category = it.category || 'productivity';
+      }
+      return it;
+    }).filter((it: any) => !!it && typeof it.title === 'string' && it.title.trim().length > 0);
+  };
+
+  const buildPromptFor = (key: Key) => {
+    const base = `Generate exactly 4 high-quality ${key} based on this user profile.\nReturn ONLY valid JSON with a single top-level object containing the \"${key}\" array (length=4). No markdown, no fences, no commentary.\nUser: ${userProfile.currentRole} in ${userProfile.industry}\nGoals: ${userProfile.goals}\nAI Knowledge: ${userProfile.aiKnowledge}`;
+
     const schemas: Record<Key, string> = {
-      prompts: `{"prompts": [{"title":"","description":"","prompt_text":"","category":"productivity","ai_tools":["ChatGPT"],"use_cases":[""],"instructions":"","tags":[""]}]}`,
-      workflows: `{"workflows": [{"title":"","description":"","workflow_steps":[{"step":1,"title":"","description":"","tools":[],"estimated_time":""}],"category":"productivity","ai_tools":[],"duration_estimate":"","complexity_level":"beginner","prerequisites":[],"expected_outcomes":[],"instructions":"","tags":[]}]}`,
-      blueprints: `{"blueprints": [{"title":"","description":"","blueprint_content":{"overview":"","components":[],"structure":"","implementation":""},"category":"productivity","ai_tools":[],"implementation_time":"","difficulty_level":"beginner","resources_needed":[],"deliverables":[],"instructions":"","tags":[]}]}`,
-      strategies: `{"strategies": [{"title":"","description":"","strategy_framework":{"overview":"","phases":[],"objectives":[],"approach":""},"category":"productivity","ai_tools":[],"timeline":"","success_metrics":[],"key_actions":[],"potential_challenges":[],"mitigation_strategies":[],"instructions":"","tags":[]}]}`
+      prompts: `{"prompts":[{"title":"","description":"","prompt_text":"","category":"productivity","ai_tools":["ChatGPT"],"use_cases":[""],"instructions":"","tags":[""]}]}`,
+      workflows: `{"workflows":[{"title":"","description":"","workflow_steps":[{"step":1,"title":"","description":"","tools":[],"estimated_time":""}],"category":"productivity","ai_tools":[],"duration_estimate":"","complexity_level":"beginner","prerequisites":[],"expected_outcomes":[],"instructions":"","tags":[]}]}`,
+      blueprints: `{"blueprints":[{"title":"","description":"","blueprint_content":{"overview":"","components":[],"structure":"","implementation":""},"category":"productivity","ai_tools":[],"implementation_time":"","difficulty_level":"beginner","resources_needed":[],"deliverables":[],"instructions":"","tags":[]}]}`,
+      strategies: `{"strategies":[{"title":"","description":"","strategy_framework":{"overview":"","phases":[],"objectives":[],"approach":""},"category":"productivity","ai_tools":[],"timeline":"","success_metrics":[],"key_actions":[],"potential_challenges":[],"mitigation_strategies":[],"instructions":"","tags":[]}]}`
     };
 
-    return `${base}\nUse this JSON shape (example with 1 item). Output 4 items in the array:\n${schemas[key]}`;
+    return `${base}\nUse this JSON shape (single object, array length 4):\n${schemas[key]}`;
   };
 
   const generateForKey = async (key: Key) => {
     const prompt = buildPromptFor(key);
-
     const systemJSON = 'Return ONLY a single valid JSON object with the requested top-level key. No markdown, no code fences, no commentary.';
-    // First attempt
-    let res = await callOpenAI([
+
+    const res = await callOpenAI([
       { role: 'system', content: systemJSON },
       { role: 'user', content: prompt },
     ], 700, true, 'gpt-4.1-2025-04-14');
+
+    const altKeysMap: Record<Key, string[]> = {
+      prompts: ['prompt', 'prompts_list'],
+      workflows: ['workflow', 'processes', 'pipeline', 'workflows_list'],
+      blueprints: ['blueprint', 'templates', 'blueprints_list'],
+      strategies: ['strategy', 'plan', 'roadmaps', 'strategies_list'],
+    };
 
     let obj = safeParse(res.content);
     if (!obj) {
       console.warn(`[gen:${key}] parse failed (attempt 1). First 400 chars:`, res.content?.slice(0, 400));
     }
 
-    // Repair attempt
-    if (!obj || (!Array.isArray((obj as any)[key]))) {
+    let arr: any[] = [];
+    if (!obj) {
+      arr = extractArrayByKey(res.content, key, altKeysMap[key]);
+      if (arr.length) console.warn(`[gen:${key}] recovered array via raw extraction on attempt 1.`);
+    }
+
+    if ((!arr || arr.length === 0) && obj && typeof obj === 'object') {
+      const keysToCheck = [key, ...altKeysMap[key]];
+      for (const k of keysToCheck) {
+        if (Array.isArray((obj as any)[k])) { arr = (obj as any)[k]; break; }
+      }
+    }
+
+    if (!arr || arr.length === 0) {
       const repair = await callOpenAI([
         { role: 'system', content: systemJSON },
         { role: 'user', content: `${prompt}\n\nIMPORTANT: Return ONLY valid JSON in this exact format with the "${key}" array containing exactly 4 items. No other text.` },
@@ -513,29 +629,17 @@ AI Knowledge: ${userProfile.aiKnowledge}
       obj = safeParse(repair.content);
       if (!obj) {
         console.warn(`[gen:${key}] parse failed (attempt 2). First 400 chars:`, repair.content?.slice(0, 400));
+        arr = extractArrayByKey(repair.content, key, altKeysMap[key]);
+        if (arr.length) console.warn(`[gen:${key}] recovered array via raw extraction on attempt 2.`);
       }
-    }
-
-    // Extract array with alt-key fallback
-    const altKeysMap: Record<Key, string[]> = {
-      prompts: ['prompt', 'prompts_list'],
-      workflows: ['workflow', 'processes', 'pipeline', 'workflows_list'],
-      blueprints: ['blueprint', 'templates', 'blueprints_list'],
-      strategies: ['strategy', 'plan', 'roadmaps', 'strategies_list'],
-    };
-    let arr: any[] = [];
-    if (obj && typeof obj === 'object') {
-      const keysToCheck = [key, ...altKeysMap[key]];
-      for (const k of keysToCheck) {
-        if (Array.isArray((obj as any)[k])) {
-          if (k !== key) console.warn(`[gen:${key}] used fallback key "${k}" from model output.`);
-          arr = (obj as any)[k];
-          break;
+      if ((!arr || arr.length === 0) && obj && typeof obj === 'object') {
+        const keysToCheck = [key, ...altKeysMap[key]];
+        for (const k of keysToCheck) {
+          if (Array.isArray((obj as any)[k])) { arr = (obj as any)[k]; break; }
         }
       }
     }
 
-    // Compact fallback attempt if still empty
     if (!arr || arr.length === 0) {
       const compactSchema: Record<Key, string> = {
         prompts: `{"prompts":[{"title":"","description":"","prompt_text":"","category":"productivity","ai_tools":["ChatGPT"],"use_cases":[""],"instructions":"","tags":[""]}]}`,
@@ -552,10 +656,15 @@ AI Knowledge: ${userProfile.aiKnowledge}
       if (compactObj && Array.isArray(compactObj[key])) {
         arr = compactObj[key];
       } else {
-        console.warn(`[gen:${key}] compact attempt also failed. First 400 chars:`, compact.content?.slice(0, 400));
-        arr = [];
+        arr = extractArrayByKey(compact.content, key, altKeysMap[key]);
+        if (!arr || arr.length === 0) {
+          console.warn(`[gen:${key}] compact attempt also failed. First 400 chars:`, compact.content?.slice(0, 400));
+          arr = [];
+        }
       }
     }
+
+    arr = normalizeItems(key, arr).slice(0, 4);
 
     console.log(`Generated ${key}: ${arr.length} items`);
     return arr;
