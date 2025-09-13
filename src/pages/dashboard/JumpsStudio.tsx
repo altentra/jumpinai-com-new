@@ -213,11 +213,11 @@ export default function JumpsStudio() {
   return (
     <div className="space-y-6 md:space-y-12 px-4 md:px-6 py-8">
       {/* Hero Section - Always visible */}
-      <div className="text-center space-y-4 md:space-y-8 py-6 md:py-12">
-        <div className="space-y-3 md:space-y-6 relative">
+      <div className="text-center space-y-2 md:space-y-3 py-3 md:py-6">
+        <div className="space-y-2 md:space-y-3 relative">
           <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-3xl blur-3xl opacity-30 -z-10"></div>
-          <h1 className="text-2xl md:text-5xl lg:text-6xl font-bold gradient-text-primary tracking-tight drop-shadow-sm">Jumps Studio</h1>
-          <p className="text-base md:text-xl lg:text-2xl text-muted-foreground max-w-3xl md:max-w-5xl mx-auto leading-relaxed px-2 font-medium">
+          <h1 className="text-xl md:text-3xl lg:text-4xl font-bold gradient-text-primary tracking-tight drop-shadow-sm">Jumps Studio</h1>
+          <p className="text-sm md:text-base lg:text-lg text-muted-foreground max-w-2xl md:max-w-4xl mx-auto leading-relaxed px-2 font-medium">
             Transform your vision into reality with AI-powered strategic planning. 
             Create your personalized transformation journey that bridges where you are today 
             with where you want to be tomorrow.
@@ -226,14 +226,14 @@ export default function JumpsStudio() {
       </div>
 
       {/* Jump Selection Section */}
-      <div className="max-w-5xl mx-auto mb-6 md:mb-12">
-        <div className="glass backdrop-blur-xl bg-gradient-to-br from-card/95 to-primary/5 rounded-3xl border border-primary/20 p-6 md:p-8 shadow-2xl shadow-primary/10 hover:shadow-primary/20 transition-all duration-500 relative overflow-hidden">
+      <div className="max-w-5xl mx-auto mb-4 md:mb-6">
+        <div className="glass backdrop-blur-xl bg-gradient-to-br from-card/95 to-primary/5 rounded-2xl border border-primary/20 p-4 md:p-5 shadow-xl shadow-primary/8 hover:shadow-primary/15 transition-all duration-500 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-secondary/5 opacity-50 pointer-events-none"></div>
           <div className="relative z-10">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 md:gap-6 mb-6 md:mb-8">
-              <div className="space-y-2">
-                <h2 className="text-xl md:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">Choose Your Jump</h2>
-                <p className="text-muted-foreground text-sm md:text-base max-w-md">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 md:gap-4 mb-4 md:mb-5">
+              <div className="space-y-1">
+                <h2 className="text-lg md:text-xl lg:text-2xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">Choose Your Jump</h2>
+                <p className="text-muted-foreground text-xs md:text-sm max-w-md">
                   Start a new transformation plan or continue working on an existing one
                 </p>
               </div>
@@ -250,10 +250,10 @@ export default function JumpsStudio() {
             </div></div>
           
           {existingJumps.length > 0 && (
-            <div className="space-y-3 md:space-y-4">
+            <div className="space-y-2 md:space-y-3">
               <div>
-                <Label className="text-sm font-medium text-foreground/90 mb-3 block">Continue Existing Jump</Label>
-                <div className="flex gap-3 md:gap-4 overflow-x-auto pb-4 pt-1 scrollbar-thin scrollbar-thumb-muted-foreground/20 scrollbar-track-transparent touch-pan-x pointer-events-auto" style={{ scrollbarWidth: 'thin' }}>
+                <Label className="text-xs md:text-sm font-medium text-foreground/90 mb-2 block">Continue Existing Jump</Label>
+                <div className="flex gap-2 md:gap-3 overflow-x-auto pb-3 pt-1 scrollbar-thin scrollbar-thumb-muted-foreground/20 scrollbar-track-transparent touch-pan-x pointer-events-auto" style={{ scrollbarWidth: 'thin' }}>
                   {existingJumps.map((jump) => (
                     <MiniJumpCard
                       key={jump.id}
