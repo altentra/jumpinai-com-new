@@ -90,19 +90,16 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
   };
 
   return (
-    <Card className="max-w-4xl mx-auto backdrop-blur-xl bg-gradient-to-br from-card/95 to-primary/5 rounded-3xl border border-primary/20 shadow-2xl shadow-primary/10">
-      <CardHeader className="text-center pb-8">
-        <div className="mx-auto mb-6 p-4 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/10 backdrop-blur-sm w-fit shadow-lg">
-          <User className="h-8 w-8 text-primary" />
-        </div>
-        <CardTitle className="text-3xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">Tell Us About Yourself</CardTitle>
-        <CardDescription className="text-lg mt-4 text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-          Help us create your personalized AI transformation plan with comprehensive insights
+    <Card className="max-w-4xl mx-auto backdrop-blur-xl bg-background/50 border-0 shadow-none rounded-2xl">
+      <CardHeader className="text-center pb-4">
+        <CardTitle className="text-xl font-bold gradient-text-primary">Tell Us About Yourself</CardTitle>
+        <CardDescription className="text-sm mt-2 text-muted-foreground max-w-xl mx-auto leading-relaxed">
+          Help us create your personalized AI transformation plan
         </CardDescription>
       </CardHeader>
-      <CardContent className="p-8">
-        <form onSubmit={handleSubmit} className="space-y-8">
-          <div className="grid md:grid-cols-2 gap-8">
+      <CardContent className="p-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid md:grid-cols-2 gap-4">
             <div className="space-y-3">
               <Label htmlFor="currentRole" className="flex items-center gap-2 text-sm font-semibold">
                 <Briefcase className="h-4 w-4 text-primary" />
@@ -209,7 +206,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
             </div>
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-4">
             <div className="space-y-3">
               <Label htmlFor="goals" className="flex items-center gap-2 text-sm font-semibold">
                 <Target className="h-4 w-4 text-primary" />
@@ -240,20 +237,20 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
             </div>
           </div>
 
-          <div className="flex gap-4 pt-6">
+          <div className="flex gap-3 pt-4">
             <Button 
               type="submit" 
-              className="flex-1 h-14 rounded-2xl bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300 text-lg font-semibold"
+              className="flex-1 h-12 rounded-xl bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-md hover:shadow-lg hover:scale-[1.01] transition-all duration-300 font-semibold"
               disabled={isLoading || isSaving}
             >
-              {isLoading || isSaving ? 'Saving Your Profile...' : 'Start My AI Transformation Journey'}
+              {isLoading || isSaving ? 'Saving Profile...' : 'Start AI Journey'}
             </Button>
             {showNewProfileButton && onNewProfile && (
               <Button 
                 type="button" 
                 variant="outline"
                 onClick={onNewProfile}
-                className="h-14 px-8 rounded-2xl border-primary/30 hover:bg-primary/10 transition-all duration-300"
+                className="h-12 px-6 rounded-xl border-primary/30 hover:bg-primary/10 transition-all duration-300"
               >
                 New Profile
               </Button>

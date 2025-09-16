@@ -302,8 +302,8 @@ export default function JumpsStudio() {
 
         {/* Profile Form - Only show for new jumps or when no jump is selected */}
         {(!selectedJump || isNewJump) && (
-          <div className="glass backdrop-blur-xl bg-gradient-to-br from-card/50 to-primary/5 rounded-2xl border border-primary/20 p-4 md:p-6 shadow-xl shadow-primary/8 hover:shadow-primary/15 transition-all duration-500 relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-secondary/5 opacity-50 pointer-events-none"></div>
+          <div className="backdrop-blur-xl bg-background/50 rounded-2xl border border-primary/10 p-3 md:p-4 shadow-lg shadow-primary/5 hover:shadow-primary/8 transition-all duration-300 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/3 to-secondary/3 opacity-60 pointer-events-none"></div>
             <div className="relative z-10">
               {userProfile ? (
                 <Collapsible open={isProfileFormOpen} onOpenChange={setIsProfileFormOpen}>
