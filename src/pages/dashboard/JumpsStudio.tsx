@@ -302,8 +302,8 @@ export default function JumpsStudio() {
 
         {/* Profile Form - Only show for new jumps or when no jump is selected */}
         {(!selectedJump || isNewJump) && (
-          <div className="glass backdrop-blur-xl bg-gradient-to-br from-card/95 to-primary/10 rounded-3xl border border-primary/20 p-6 md:p-10 shadow-2xl shadow-primary/15 hover:shadow-primary/25 transition-all duration-500 relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5"></div>
+          <div className="glass backdrop-blur-xl bg-gradient-to-br from-card/50 to-primary/5 rounded-2xl border border-primary/20 p-4 md:p-6 shadow-xl shadow-primary/8 hover:shadow-primary/15 transition-all duration-500 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-secondary/5 opacity-50 pointer-events-none"></div>
             <div className="relative z-10">
               {userProfile ? (
                 <Collapsible open={isProfileFormOpen} onOpenChange={setIsProfileFormOpen}>
@@ -311,14 +311,14 @@ export default function JumpsStudio() {
                     <Button 
                       variant="outline" 
                       size="lg"
-                      className="w-full gap-3 rounded-2xl shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300 border-primary/20 bg-background/80 backdrop-blur-sm py-4"
+                      className="w-full gap-2 rounded-xl shadow-md hover:shadow-lg hover:scale-[1.01] transition-all duration-300 border-primary/20 bg-background/60 backdrop-blur-sm py-3"
                     >
-                      {isProfileFormOpen ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
-                      <span className="hidden sm:inline text-base font-semibold">{isProfileFormOpen ? 'Hide' : 'Show'} Profile Details</span>
-                      <span className="sm:hidden text-base font-semibold">{isProfileFormOpen ? 'Hide' : 'Show'} Profile</span>
+                      {isProfileFormOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                      <span className="hidden sm:inline text-sm font-semibold">{isProfileFormOpen ? 'Hide' : 'Show'} Profile Details</span>
+                      <span className="sm:hidden text-sm font-semibold">{isProfileFormOpen ? 'Hide' : 'Show'} Profile</span>
                     </Button>
                   </CollapsibleTrigger>
-                <CollapsibleContent className="space-y-4 mt-4">
+                <CollapsibleContent className="space-y-3 mt-3">
                   <UserProfileForm 
                     onSubmit={handleProfileSubmit} 
                     isLoading={isLoading} 
@@ -333,10 +333,10 @@ export default function JumpsStudio() {
             )}
             
               {/* Privacy Notice */}
-              <div className="mt-6 md:mt-8 pt-4 md:pt-6 border-t border-primary/20">
-                <p className="text-xs md:text-sm text-muted-foreground text-center leading-relaxed">
+              <div className="mt-4 md:mt-5 pt-3 md:pt-4 border-t border-primary/20">
+                <p className="text-xs text-muted-foreground text-center leading-relaxed">
                   All information is kept strictly confidential and private. We do not sell or share your data.{' '}
-                  <a href="/privacy-policy" className="underline hover:text-foreground transition-colors font-semibold hover:text-primary">
+                  <a href="/privacy-policy" className="underline hover:text-foreground transition-colors font-medium hover:text-primary">
                     Privacy Policy
                   </a>
                 </p>
