@@ -211,7 +211,7 @@ export default function JumpsStudio() {
   }
 
   return (
-    <div className="space-y-6 md:space-y-12 px-2 md:px-3 py-8">
+    <div className="space-y-6 md:space-y-12 px-1 md:px-2 py-8">
       {/* Hero Section - Always visible */}
       <div className="text-center space-y-1 md:space-y-2 py-1 md:py-2 mb-2">
         <div className="space-y-1 md:space-y-2 relative">
@@ -225,8 +225,8 @@ export default function JumpsStudio() {
       </div>
 
       {/* Jump Selection Section - Wider and more compact */}
-      <div className="mx-1 md:mx-2 mb-3 md:mb-4">
-        <div className="glass backdrop-blur-xl bg-gradient-to-br from-card/95 to-primary/5 rounded-2xl border border-primary/20 p-2 md:p-3 shadow-xl shadow-primary/8 hover:shadow-primary/15 transition-all duration-500 relative overflow-hidden">
+      <div className="px-1 md:px-2 mb-3 md:mb-4">
+        <div className="glass backdrop-blur-xl bg-gradient-to-br from-card/95 to-primary/5 rounded-2xl border border-primary/20 p-3 md:p-4 shadow-xl shadow-primary/8 hover:shadow-primary/15 transition-all duration-500 relative overflow-hidden max-w-full">
           <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-secondary/5 opacity-50 pointer-events-none"></div>
           <div className="relative z-10">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2 md:mb-3">
@@ -246,21 +246,24 @@ export default function JumpsStudio() {
                 <span className="hidden sm:inline font-semibold">New Jump</span>
                 <span className="sm:hidden font-semibold">Create New</span>
               </Button>
-            </div></div>
+            </div>
+          </div>
           
           {existingJumps.length > 0 && (
-            <div className="space-y-2 md:space-y-3">
-              <div>
+            <div className="space-y-2 md:space-y-3 relative z-10">
+              <div className="w-full">
                 <Label className="text-xs md:text-sm font-medium text-foreground/90 mb-2 block">Continue Existing Jump</Label>
-                <div className="flex gap-2 md:gap-3 overflow-x-auto pb-3 pt-1 scrollbar-thin scrollbar-thumb-muted-foreground/20 scrollbar-track-transparent touch-pan-x pointer-events-auto" style={{ scrollbarWidth: 'thin' }}>
-                  {existingJumps.map((jump) => (
-                    <MiniJumpCard
-                      key={jump.id}
-                      jump={jump}
-                      onClick={handleSelectExistingJump}
-                      isSelected={selectedJump?.id === jump.id}
-                    />
-                  ))}
+                <div className="w-full overflow-hidden">
+                  <div className="flex gap-2 md:gap-3 overflow-x-auto pb-3 pt-1 scrollbar-thin scrollbar-thumb-muted-foreground/20 scrollbar-track-transparent touch-pan-x" style={{ scrollbarWidth: 'thin' }}>
+                    {existingJumps.map((jump) => (
+                      <MiniJumpCard
+                        key={jump.id}
+                        jump={jump}
+                        onClick={handleSelectExistingJump}
+                        isSelected={selectedJump?.id === jump.id}
+                      />
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
@@ -269,7 +272,7 @@ export default function JumpsStudio() {
       </div>
 
       {/* Information Collection Section */}
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-5xl mx-auto px-1 md:px-2">
         {selectedJump && (
           <div className="text-center space-y-2 md:space-y-3 mb-4 md:mb-6 p-3 md:p-4 rounded-2xl bg-gradient-to-br from-secondary/10 to-primary/10 backdrop-blur-sm">
             <h2 className="text-lg md:text-xl lg:text-2xl font-bold gradient-text-primary px-2">
@@ -300,7 +303,7 @@ export default function JumpsStudio() {
 
         {/* Profile Form - Only show for new jumps or when no jump is selected */}
         {(!selectedJump || isNewJump) && (
-          <div className="backdrop-blur-xl bg-background/50 rounded-2xl border border-primary/10 p-3 md:p-4 shadow-lg shadow-primary/5 hover:shadow-primary/8 transition-all duration-300 relative overflow-hidden">
+          <div className="backdrop-blur-xl bg-background/50 rounded-2xl border border-primary/10 p-3 md:p-4 shadow-lg shadow-primary/5 hover:shadow-primary/8 transition-all duration-300 relative overflow-hidden max-w-full">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/3 to-secondary/3 opacity-60 pointer-events-none"></div>
             <div className="relative z-10">
               {userProfile ? (
