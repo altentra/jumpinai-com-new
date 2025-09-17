@@ -90,8 +90,8 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
   };
 
   return (
-    <Card className="max-w-4xl mx-auto glass backdrop-blur-xl bg-gradient-to-br from-card/95 to-primary/5 rounded-3xl border border-primary/20 shadow-2xl shadow-primary/10 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-secondary/5 opacity-50 pointer-events-none"></div>
+    <Card className="max-w-4xl mx-auto glass backdrop-blur-xl bg-gradient-to-br from-card/95 to-card/95 rounded-3xl border border-primary/20 shadow-2xl shadow-primary/10 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-r from-primary/3 to-primary/3 opacity-30 pointer-events-none"></div>
       <CardHeader className="text-center pb-6 relative z-10">
         <CardTitle className="text-2xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">Tell Us About Yourself</CardTitle>
         <CardDescription className="text-base mt-3 text-muted-foreground max-w-2xl mx-auto leading-relaxed">
@@ -100,6 +100,39 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
       </CardHeader>
       <CardContent className="p-6 relative z-10">
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Primary fields first - Goals and Challenges */}
+          <div className="space-y-6">
+            <div className="space-y-3">
+              <Label htmlFor="goals" className="flex items-center gap-2 text-sm font-semibold">
+                <Target className="h-4 w-4 text-primary" />
+                Primary Goals & Objectives
+              </Label>
+              <Textarea
+                id="goals"
+                value={profile.goals}
+                onChange={(e) => updateProfile('goals', e.target.value)}
+                placeholder="What do you want to achieve with AI? (e.g., increase productivity, automate processes, improve decision-making)"
+                rows={4}
+                className="rounded-2xl border-primary/20 bg-background/50 backdrop-blur-sm p-4 focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all duration-300 resize-none"
+                required
+              />
+            </div>
+
+            <div className="space-y-3">
+              <Label htmlFor="challenges" className="text-sm font-semibold">Biggest Challenges & Pain Points</Label>
+              <Textarea
+                id="challenges"
+                value={profile.challenges}
+                onChange={(e) => updateProfile('challenges', e.target.value)}
+                placeholder="What are your current biggest challenges that AI could help solve?"
+                rows={4}
+                className="rounded-2xl border-primary/20 bg-background/50 backdrop-blur-sm p-4 focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all duration-300 resize-none"
+                required
+              />
+            </div>
+          </div>
+
+          {/* Secondary fields */}
           <div className="grid md:grid-cols-2 gap-6">
             <div className="space-y-3">
               <Label htmlFor="currentRole" className="flex items-center gap-2 text-sm font-semibold">
@@ -207,36 +240,6 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
             </div>
           </div>
 
-          <div className="space-y-4">
-            <div className="space-y-3">
-              <Label htmlFor="goals" className="flex items-center gap-2 text-sm font-semibold">
-                <Target className="h-4 w-4 text-primary" />
-                Primary Goals & Objectives
-              </Label>
-              <Textarea
-                id="goals"
-                value={profile.goals}
-                onChange={(e) => updateProfile('goals', e.target.value)}
-                placeholder="What do you want to achieve with AI? (e.g., increase productivity, automate processes, improve decision-making)"
-                rows={4}
-                className="rounded-2xl border-primary/20 bg-background/50 backdrop-blur-sm p-4 focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all duration-300 resize-none"
-                required
-              />
-            </div>
-
-            <div className="space-y-3">
-              <Label htmlFor="challenges" className="text-sm font-semibold">Biggest Challenges & Pain Points</Label>
-              <Textarea
-                id="challenges"
-                value={profile.challenges}
-                onChange={(e) => updateProfile('challenges', e.target.value)}
-                placeholder="What are your current biggest challenges that AI could help solve?"
-                rows={4}
-                className="rounded-2xl border-primary/20 bg-background/50 backdrop-blur-sm p-4 focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all duration-300 resize-none"
-                required
-              />
-            </div>
-          </div>
 
           <div className="flex gap-4 pt-6">
             <Button 
