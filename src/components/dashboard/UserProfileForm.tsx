@@ -90,8 +90,8 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
   };
 
   return (
-    <Card className="max-w-4xl mx-auto glass backdrop-blur-xl bg-gradient-to-br from-card/95 to-card/95 rounded-3xl border border-primary/20 shadow-2xl shadow-primary/10 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-r from-primary/3 to-primary/3 opacity-30 pointer-events-none"></div>
+    <Card className="max-w-4xl mx-auto glass backdrop-blur-xl bg-gradient-to-br from-card/95 to-primary/5 rounded-2xl border border-primary/20 shadow-xl shadow-primary/8 hover:shadow-primary/15 transition-all duration-500 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-secondary/5 opacity-50 pointer-events-none"></div>
       <CardHeader className="text-center pb-6 relative z-10">
         <CardTitle className="text-2xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">Tell Us About Yourself</CardTitle>
         <CardDescription className="text-base mt-3 text-muted-foreground max-w-2xl mx-auto leading-relaxed">

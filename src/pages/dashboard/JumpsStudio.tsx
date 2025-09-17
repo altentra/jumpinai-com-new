@@ -211,7 +211,7 @@ export default function JumpsStudio() {
   }
 
   return (
-    <div className="space-y-6 md:space-y-12 px-4 md:px-6 py-8">
+    <div className="space-y-6 md:space-y-12 px-2 md:px-3 py-8">
       {/* Hero Section - Always visible */}
       <div className="text-center space-y-1 md:space-y-2 py-1 md:py-2 mb-2">
         <div className="space-y-1 md:space-y-2 relative">
@@ -225,7 +225,7 @@ export default function JumpsStudio() {
       </div>
 
       {/* Jump Selection Section - Wider and more compact */}
-      <div className="mx-2 md:mx-4 mb-3 md:mb-4">
+      <div className="mx-1 md:mx-2 mb-3 md:mb-4">
         <div className="glass backdrop-blur-xl bg-gradient-to-br from-card/95 to-primary/5 rounded-2xl border border-primary/20 p-3 md:p-4 shadow-xl shadow-primary/8 hover:shadow-primary/15 transition-all duration-500 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-secondary/5 opacity-50 pointer-events-none"></div>
           <div className="relative z-10">
@@ -270,14 +270,14 @@ export default function JumpsStudio() {
 
       {/* Information Collection Section */}
       <div className="max-w-5xl mx-auto">
-        <div className="text-center space-y-4 md:space-y-6 mb-8 md:mb-12 p-6 md:p-8 rounded-3xl bg-gradient-to-br from-secondary/10 to-primary/10 backdrop-blur-sm">
-          <h2 className="text-xl md:text-3xl lg:text-4xl font-bold gradient-text-primary px-2">
-            {selectedJump ? `Working on: ${selectedJump.title}` : "Let's Create Your Personalized Jump"}
+        <div className="text-center space-y-2 md:space-y-3 mb-4 md:mb-6 p-3 md:p-4 rounded-2xl bg-gradient-to-br from-secondary/10 to-primary/10 backdrop-blur-sm">
+          <h2 className="text-lg md:text-xl lg:text-2xl font-bold gradient-text-primary px-2">
+            {selectedJump ? `Working on: ${selectedJump.title}` : "Build Your AI Transformation Plan"}
           </h2>
-          <p className="text-sm md:text-lg text-muted-foreground max-w-xl md:max-w-3xl mx-auto px-4 leading-relaxed">
+          <p className="text-xs md:text-sm text-muted-foreground max-w-lg md:max-w-xl mx-auto px-2 leading-relaxed">
             {selectedJump 
-              ? "Continue refining your transformation plan with AI-powered insights and guidance."
-              : "To craft a transformation plan that truly fits your unique situation, we'll need to gather some key information about your goals, current position, and aspirations. This takes just a few minutes and enables us to create a highly tailored roadmap for your success."
+              ? "Continue refining your plan with AI guidance."
+              : "Quick setup to create your personalized roadmap."
             }
           </p>
         </div>
