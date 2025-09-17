@@ -90,16 +90,17 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
   };
 
   return (
-    <Card className="max-w-4xl mx-auto backdrop-blur-xl bg-background/50 border-0 shadow-none rounded-2xl">
-      <CardHeader className="text-center pb-4">
-        <CardTitle className="text-xl font-bold gradient-text-primary">Tell Us About Yourself</CardTitle>
-        <CardDescription className="text-sm mt-2 text-muted-foreground max-w-xl mx-auto leading-relaxed">
+    <Card className="max-w-4xl mx-auto glass backdrop-blur-xl bg-gradient-to-br from-card/95 to-primary/5 rounded-3xl border border-primary/20 shadow-2xl shadow-primary/10 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-secondary/5 opacity-50 pointer-events-none"></div>
+      <CardHeader className="text-center pb-6 relative z-10">
+        <CardTitle className="text-2xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">Tell Us About Yourself</CardTitle>
+        <CardDescription className="text-base mt-3 text-muted-foreground max-w-2xl mx-auto leading-relaxed">
           Help us create your personalized AI transformation plan
         </CardDescription>
       </CardHeader>
-      <CardContent className="p-4">
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid md:grid-cols-2 gap-4">
+      <CardContent className="p-6 relative z-10">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid md:grid-cols-2 gap-6">
             <div className="space-y-3">
               <Label htmlFor="currentRole" className="flex items-center gap-2 text-sm font-semibold">
                 <Briefcase className="h-4 w-4 text-primary" />
@@ -237,20 +238,20 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
             </div>
           </div>
 
-          <div className="flex gap-3 pt-4">
+          <div className="flex gap-4 pt-6">
             <Button 
               type="submit" 
-              className="flex-1 h-12 rounded-xl bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-md hover:shadow-lg hover:scale-[1.01] transition-all duration-300 font-semibold"
+              className="flex-1 h-14 rounded-3xl bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300 text-lg font-semibold"
               disabled={isLoading || isSaving}
             >
-              {isLoading || isSaving ? 'Saving Profile...' : 'Start AI Journey'}
+              {isLoading || isSaving ? 'Saving Your Profile...' : 'Start My AI Transformation Journey'}
             </Button>
             {showNewProfileButton && onNewProfile && (
               <Button 
                 type="button" 
                 variant="outline"
                 onClick={onNewProfile}
-                className="h-12 px-6 rounded-xl border-primary/30 hover:bg-primary/10 transition-all duration-300"
+                className="h-14 px-8 rounded-3xl border-primary/30 hover:bg-primary/10 transition-all duration-300 text-lg font-semibold"
               >
                 New Profile
               </Button>
