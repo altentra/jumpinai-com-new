@@ -211,10 +211,10 @@ export default function JumpsStudio() {
   }
 
   return (
-    <div className="min-h-screen w-full overflow-x-hidden">
-      <div className="space-y-6 md:space-y-12 px-1 md:px-2 py-8 max-w-full">
+    <div className="min-h-screen w-full max-w-full overflow-x-hidden">
+      <div className="space-y-6 md:space-y-12 px-1 md:px-2 py-8 w-full max-w-full min-w-0">
         {/* Hero Section - Always visible */}
-        <div className="text-center space-y-1 md:space-y-2 py-1 md:py-2 mb-2">
+        <div className="text-center space-y-1 md:space-y-2 py-1 md:py-2 mb-2 w-full">
           <div className="space-y-1 md:space-y-2 relative">
             <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-3xl blur-3xl opacity-30 -z-10"></div>
             <h1 className="text-lg md:text-2xl lg:text-3xl font-bold gradient-text-primary tracking-tight drop-shadow-sm">Jumps Studio</h1>
@@ -226,12 +226,12 @@ export default function JumpsStudio() {
         </div>
 
         {/* Jump Selection Section - Wider and more compact */}
-        <div className="w-full mb-3 md:mb-4">
-          <div className="glass backdrop-blur-xl bg-gradient-to-br from-card/95 to-primary/5 rounded-2xl border border-primary/20 p-3 md:p-4 shadow-xl shadow-primary/8 hover:shadow-primary/15 transition-all duration-500 relative overflow-hidden">
+        <div className="w-full mb-3 md:mb-4 min-w-0">
+          <div className="glass backdrop-blur-xl bg-gradient-to-br from-card/95 to-primary/5 rounded-2xl border border-primary/20 p-3 md:p-4 shadow-xl shadow-primary/8 hover:shadow-primary/15 transition-all duration-500 relative overflow-hidden w-full min-w-0">
             <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-secondary/5 opacity-50 pointer-events-none"></div>
-            <div className="relative z-10">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2 md:mb-3">
-                <div className="space-y-1 min-w-0">
+            <div className="relative z-10 min-w-0">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2 md:mb-3 min-w-0">
+                <div className="space-y-1 min-w-0 flex-1">
                   <h2 className="text-lg md:text-xl lg:text-2xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">Choose Your Jump</h2>
                   <p className="text-muted-foreground text-xs md:text-sm">
                     Start a new transformation plan or continue working on an existing one
@@ -250,30 +250,30 @@ export default function JumpsStudio() {
               </div>
             </div>
             
-            {existingJumps.length > 0 && (
-              <div className="space-y-2 md:space-y-3 relative z-10">
-                <div className="w-full min-w-0">
-                  <Label className="text-xs md:text-sm font-medium text-foreground/90 mb-2 block">Continue Existing Jump</Label>
-                  <div className="w-full overflow-hidden">
-                    <div className="flex gap-2 md:gap-3 overflow-x-auto pb-3 pt-1 scrollbar-thin scrollbar-thumb-muted-foreground/20 scrollbar-track-transparent touch-pan-x" style={{ scrollbarWidth: 'thin' }}>
-                      {existingJumps.map((jump) => (
-                        <MiniJumpCard
-                          key={jump.id}
-                          jump={jump}
-                          onClick={handleSelectExistingJump}
-                          isSelected={selectedJump?.id === jump.id}
-                        />
-                      ))}
-                    </div>
+          {existingJumps.length > 0 && (
+            <div className="space-y-2 md:space-y-3 relative z-10">
+              <div className="w-full min-w-0">
+                <Label className="text-xs md:text-sm font-medium text-foreground/90 mb-2 block">Continue Existing Jump</Label>
+                <div className="w-full min-w-0 overflow-hidden">
+                  <div className="flex gap-2 md:gap-3 overflow-x-auto overflow-y-hidden pb-3 pt-1 scrollbar-thin scrollbar-thumb-muted-foreground/20 scrollbar-track-transparent touch-pan-x min-w-0" style={{ scrollbarWidth: 'thin', width: '100%' }}>
+                    {existingJumps.map((jump) => (
+                      <MiniJumpCard
+                        key={jump.id}
+                        jump={jump}
+                        onClick={handleSelectExistingJump}
+                        isSelected={selectedJump?.id === jump.id}
+                      />
+                    ))}
                   </div>
                 </div>
               </div>
-            )}
+            </div>
+          )}
           </div>
         </div>
 
         {/* Information Collection Section */}
-        <div className="max-w-5xl mx-auto px-1 md:px-2">
+        <div className="max-w-5xl mx-auto px-1 md:px-2 w-full min-w-0">
           {selectedJump && (
             <div className="text-center space-y-2 md:space-y-3 mb-4 md:mb-6 p-3 md:p-4 rounded-2xl bg-gradient-to-br from-secondary/10 to-primary/10 backdrop-blur-sm">
               <h2 className="text-lg md:text-xl lg:text-2xl font-bold gradient-text-primary px-2">
