@@ -553,51 +553,81 @@ async function generateComponents(userProfile: any): Promise<GeneratedComponents
         it.category = it.category || 'productivity';
       }
       if (key === 'workflows') {
+        // Ensure workflow_steps is properly structured
         const steps = it.workflow_steps || it.steps || it.workflow || it.tasks || [];
         it.workflow_steps = Array.isArray(steps) ? steps : toArray(steps);
-        it.workflow_steps = it.workflow_steps.map((s: any, idx: number) => {
-          if (typeof s === 'string') return { step: idx + 1, title: s, description: s };
-          const so = typeof s === 'object' && s !== null ? s : {};
-          return {
-            step: so.step ?? idx + 1,
-            title: so.title || so.name || `Step ${idx + 1}`,
-            description: so.description || so.details || '',
-            tools: toArray(so.tools || so.ai_tools || []),
-            estimated_time: so.estimated_time || so.duration || ''
-          };
-        });
+        if (it.workflow_steps.length === 0) {
+          // Create at least one default step
+          it.workflow_steps = [{
+            step: 1,
+            title: it.title || 'Initial Step',
+            description: it.description || 'Start implementing this workflow',
+            tools: toArray(it.ai_tools || ['ChatGPT']),
+            estimated_time: '30 minutes'
+          }];
+        } else {
+          it.workflow_steps = it.workflow_steps.map((s: any, idx: number) => {
+            if (typeof s === 'string') return { step: idx + 1, title: s, description: s, tools: [], estimated_time: '15 minutes' };
+            const so = typeof s === 'object' && s !== null ? s : {};
+            return {
+              step: so.step ?? idx + 1,
+              title: so.title || so.name || `Step ${idx + 1}`,
+              description: so.description || so.details || 'Complete this step',
+              tools: toArray(so.tools || so.ai_tools || []),
+              estimated_time: so.estimated_time || so.duration || '15 minutes'
+            };
+          });
+        }
         it.ai_tools = toArray(it.ai_tools);
         it.prerequisites = toArray(it.prerequisites);
         it.expected_outcomes = toArray(it.expected_outcomes);
         it.tags = toArray(it.tags);
         it.category = it.category || 'productivity';
         it.complexity_level = it.complexity_level || 'beginner';
+        it.duration_estimate = it.duration_estimate || '1-2 hours';
+        it.tools_needed = toArray(it.tools_needed || it.ai_tools || []);
+        it.skill_level = it.skill_level || 'beginner';
       }
       if (key === 'blueprints') {
         if (!it.blueprint_content || typeof it.blueprint_content !== 'object') {
           it.blueprint_content = {
-            overview: it.overview || '',
-            components: toArray(it.components || it.modules || []),
-            structure: it.structure || '',
-            implementation: it.implementation || it.instructions || ''
+            overview: it.overview || it.description || 'Blueprint overview',
+            components: toArray(it.components || it.modules || ['Core component']),
+            structure: it.structure || 'Blueprint structure and organization',
+            implementation: it.implementation || it.instructions || 'Implementation guidance'
           };
         }
+        // Ensure blueprint_content has required structure
+        if (!it.blueprint_content.overview) it.blueprint_content.overview = it.description || 'Blueprint overview';
+        if (!Array.isArray(it.blueprint_content.components)) it.blueprint_content.components = ['Core component'];
+        if (!it.blueprint_content.implementation) it.blueprint_content.implementation = it.instructions || 'Follow the blueprint steps';
+        
         it.ai_tools = toArray(it.ai_tools);
         it.resources_needed = toArray(it.resources_needed);
         it.deliverables = toArray(it.deliverables);
         it.tags = toArray(it.tags);
         it.category = it.category || 'productivity';
         it.difficulty_level = it.difficulty_level || 'beginner';
+        it.implementation_time = it.implementation_time || '1-2 weeks';
+        it.implementation = it.implementation || it.instructions || '';
+        it.requirements = toArray(it.requirements || it.prerequisites || []);
+        it.tools_used = toArray(it.tools_used || it.ai_tools || []);
       }
       if (key === 'strategies') {
         if (!it.strategy_framework || typeof it.strategy_framework !== 'object') {
           it.strategy_framework = {
-            overview: it.overview || '',
-            phases: toArray(it.phases || []),
-            objectives: toArray(it.objectives || []),
-            approach: it.approach || ''
+            overview: it.overview || it.description || 'Strategic approach and methodology',
+            phases: toArray(it.phases || ['Planning', 'Execution', 'Review']),
+            objectives: toArray(it.objectives || ['Primary objective']),
+            approach: it.approach || it.description || 'Strategic implementation approach'
           };
         }
+        // Ensure strategy_framework has required structure
+        if (!it.strategy_framework.overview) it.strategy_framework.overview = it.description || 'Strategic overview';
+        if (!Array.isArray(it.strategy_framework.phases)) it.strategy_framework.phases = ['Planning', 'Execution'];
+        if (!Array.isArray(it.strategy_framework.objectives)) it.strategy_framework.objectives = ['Primary objective'];
+        if (!it.strategy_framework.approach) it.strategy_framework.approach = 'Systematic approach';
+        
         it.ai_tools = toArray(it.ai_tools);
         it.success_metrics = toArray(it.success_metrics);
         it.key_actions = toArray(it.key_actions);
@@ -605,22 +635,36 @@ async function generateComponents(userProfile: any): Promise<GeneratedComponents
         it.mitigation_strategies = toArray(it.mitigation_strategies);
         it.tags = toArray(it.tags);
         it.category = it.category || 'productivity';
+        it.timeline = it.timeline || '3-6 months';
+        it.priority_level = it.priority_level || 'medium';
+        it.resource_requirements = toArray(it.resource_requirements || it.resources_needed || []);
       }
       return it;
     }).filter((it: any) => !!it && typeof it.title === 'string' && it.title.trim().length > 0);
   };
 
   const buildPromptFor = (key: Key) => {
-    const base = `Generate exactly 4 high-quality ${key} based on this user profile.\nReturn ONLY valid JSON with a single top-level object containing the \"${key}\" array (length=4). No markdown, no fences, no commentary.\nUser: ${userProfile.currentRole} in ${userProfile.industry}\nGoals: ${userProfile.goals}\nAI Knowledge: ${userProfile.aiKnowledge}`;
+    const base = `Generate exactly 4 high-quality, detailed ${key} based on this user profile.
+Return ONLY valid JSON with a single top-level object containing the "${key}" array (length=4). 
+Make each item comprehensive and actionable.
+No markdown, no fences, no commentary.
+
+User Profile:
+- Role: ${userProfile.currentRole} in ${userProfile.industry}
+- Experience: ${userProfile.experienceLevel}
+- Goals: ${userProfile.goals}
+- AI Knowledge: ${userProfile.aiKnowledge}
+- Time: ${userProfile.timeCommitment}
+- Budget: ${userProfile.budget}`;
 
     const schemas: Record<Key, string> = {
-      prompts: `{"prompts":[{"title":"","description":"","prompt_text":"","category":"productivity","ai_tools":["ChatGPT"],"use_cases":[""],"instructions":"","tags":[""]}]}`,
-      workflows: `{"workflows":[{"title":"","description":"","workflow_steps":[{"step":1,"title":"","description":"","tools":[],"estimated_time":""}],"category":"productivity","ai_tools":[],"duration_estimate":"","complexity_level":"beginner","prerequisites":[],"expected_outcomes":[],"instructions":"","tags":[]}]}`,
-      blueprints: `{"blueprints":[{"title":"","description":"","blueprint_content":{"overview":"","components":[],"structure":"","implementation":""},"category":"productivity","ai_tools":[],"implementation_time":"","difficulty_level":"beginner","resources_needed":[],"deliverables":[],"instructions":"","tags":[]}]}`,
-      strategies: `{"strategies":[{"title":"","description":"","strategy_framework":{"overview":"","phases":[],"objectives":[],"approach":""},"category":"productivity","ai_tools":[],"timeline":"","success_metrics":[],"key_actions":[],"potential_challenges":[],"mitigation_strategies":[],"instructions":"","tags":[]}]}`
+      prompts: `{"prompts":[{"title":"Specific prompt title","description":"What this prompt accomplishes","prompt_text":"Detailed prompt text ready to use","category":"productivity","ai_tools":["ChatGPT","Claude"],"use_cases":["specific use case 1","use case 2"],"instructions":"How to use this prompt effectively","tags":["relevant","tags"],"difficulty":"beginner","estimated_time":"5-10 minutes"}]}`,
+      workflows: `{"workflows":[{"title":"Complete workflow name","description":"What this workflow achieves","workflow_steps":[{"step":1,"title":"Step name","description":"Detailed step description","tools":["required tool"],"estimated_time":"10 minutes"}],"category":"productivity","ai_tools":["specific AI tools"],"duration_estimate":"2-4 hours","complexity_level":"beginner","prerequisites":["requirement"],"expected_outcomes":["outcome 1","outcome 2"],"instructions":"Implementation guidance","tags":["workflow","automation"],"tools_needed":["tool"],"skill_level":"beginner"}]}`,
+      blueprints: `{"blueprints":[{"title":"Comprehensive blueprint name","description":"What this blueprint creates","blueprint_content":{"overview":"Detailed overview","components":["component 1","component 2"],"structure":"Implementation structure","implementation":"Step-by-step implementation"},"category":"productivity","ai_tools":["specific tools"],"implementation_time":"1-2 weeks","difficulty_level":"beginner","resources_needed":["resource 1"],"deliverables":["deliverable 1","deliverable 2"],"instructions":"Complete implementation guide","tags":["blueprint","framework"],"implementation":"Detailed implementation steps","requirements":["requirement"],"tools_used":["tool"]}]}`,
+      strategies: `{"strategies":[{"title":"Strategic plan name","description":"Strategic objective and approach","strategy_framework":{"overview":"Strategy overview","phases":["phase 1","phase 2"],"objectives":["objective 1"],"approach":"Implementation approach"},"category":"productivity","ai_tools":["strategic tools"],"timeline":"3-6 months","success_metrics":["metric 1","metric 2"],"key_actions":["action 1","action 2"],"potential_challenges":["challenge 1"],"mitigation_strategies":["solution 1"],"instructions":"Strategic implementation guide","tags":["strategy","planning"],"priority_level":"high","resource_requirements":["resource"]}]}`
     };
 
-    return `${base}\nUse this JSON shape (single object, array length 4):\n${schemas[key]}`;
+    return `${base}\n\nUse this JSON structure (ensure array has exactly 4 detailed items):\n${schemas[key]}`;
   };
 
   const generateForKey = async (key: Key) => {
@@ -748,67 +792,95 @@ async function generateComponents(userProfile: any): Promise<GeneratedComponents
 }
 
 async function saveComponents(components: GeneratedComponents, userId: string, jumpId: string) {
-  // Sanitize payloads to include only valid DB columns (avoid unknown keys like 'steps')
-  const sanitizePrompt = (p: any) => ({
-    user_id: userId,
-    jump_id: jumpId,
-    title: p.title ?? '',
-    description: p.description ?? null,
-    prompt_text: p.prompt_text ?? '',
-    category: p.category ?? null,
-    ai_tools: Array.isArray(p.ai_tools) ? p.ai_tools : (p.ai_tools ? [p.ai_tools] : []),
-    use_cases: Array.isArray(p.use_cases) ? p.use_cases : (p.use_cases ? [p.use_cases] : []),
-    instructions: p.instructions ?? null,
-    tags: Array.isArray(p.tags) ? p.tags : (p.tags ? [p.tags] : []),
-  });
+  // Sanitize payloads to match exact database schema
+  const sanitizePrompt = (p: any) => {
+    console.log('Sanitizing prompt:', p.title);
+    return {
+      user_id: userId,
+      jump_id: jumpId,
+      title: p.title ?? '',
+      description: p.description ?? null,
+      prompt_text: p.prompt_text ?? '',
+      category: p.category ?? null,
+      ai_tools: Array.isArray(p.ai_tools) ? p.ai_tools : (p.ai_tools ? [p.ai_tools] : []),
+      use_cases: Array.isArray(p.use_cases) ? p.use_cases : (p.use_cases ? [p.use_cases] : []),
+      instructions: p.instructions ?? null,
+      tags: Array.isArray(p.tags) ? p.tags : (p.tags ? [p.tags] : []),
+      difficulty: p.difficulty ?? null,
+      estimated_time: p.estimated_time ?? null
+    };
+  };
 
-  const sanitizeWorkflow = (w: any) => ({
-    user_id: userId,
-    jump_id: jumpId,
-    title: w.title ?? '',
-    description: w.description ?? null,
-    workflow_steps: Array.isArray(w.workflow_steps) ? w.workflow_steps : [],
-    category: w.category ?? null,
-    ai_tools: Array.isArray(w.ai_tools) ? w.ai_tools : (w.ai_tools ? [w.ai_tools] : []),
-    duration_estimate: w.duration_estimate ?? null,
-    complexity_level: w.complexity_level ?? null,
-    prerequisites: Array.isArray(w.prerequisites) ? w.prerequisites : [],
-    expected_outcomes: Array.isArray(w.expected_outcomes) ? w.expected_outcomes : [],
-    instructions: w.instructions ?? null,
-    tags: Array.isArray(w.tags) ? w.tags : (w.tags ? [w.tags] : []),
-  });
+  const sanitizeWorkflow = (w: any) => {
+    console.log('Sanitizing workflow:', w.title);
+    return {
+      user_id: userId,
+      jump_id: jumpId,
+      title: w.title ?? '',
+      description: w.description ?? null,
+      workflow_steps: Array.isArray(w.workflow_steps) ? w.workflow_steps : [],
+      category: w.category ?? null,
+      ai_tools: Array.isArray(w.ai_tools) ? w.ai_tools : (w.ai_tools ? [w.ai_tools] : []),
+      duration_estimate: w.duration_estimate ?? null,
+      complexity_level: w.complexity_level ?? null,
+      prerequisites: Array.isArray(w.prerequisites) ? w.prerequisites : [],
+      expected_outcomes: Array.isArray(w.expected_outcomes) ? w.expected_outcomes : [],
+      instructions: w.instructions ?? null,
+      tags: Array.isArray(w.tags) ? w.tags : (w.tags ? [w.tags] : []),
+      tools_needed: Array.isArray(w.tools_needed) ? w.tools_needed : [],
+      skill_level: w.skill_level ?? null
+    };
+  };
 
-  const sanitizeBlueprint = (b: any) => ({
-    user_id: userId,
-    jump_id: jumpId,
-    title: b.title ?? '',
-    description: b.description ?? null,
-    blueprint_content: typeof b.blueprint_content === 'object' && b.blueprint_content !== null ? b.blueprint_content : {},
-    category: b.category ?? null,
-    ai_tools: Array.isArray(b.ai_tools) ? b.ai_tools : (b.ai_tools ? [b.ai_tools] : []),
-    implementation_time: b.implementation_time ?? null,
-    difficulty_level: b.difficulty_level ?? null,
-    resources_needed: Array.isArray(b.resources_needed) ? b.resources_needed : [],
-    deliverables: Array.isArray(b.deliverables) ? b.deliverables : [],
-    instructions: b.instructions ?? null,
-    tags: Array.isArray(b.tags) ? b.tags : (b.tags ? [b.tags] : []),
-  });
+  const sanitizeBlueprint = (b: any) => {
+    console.log('Sanitizing blueprint:', b.title);
+    return {
+      user_id: userId,
+      jump_id: jumpId,
+      title: b.title ?? '',
+      description: b.description ?? null,
+      blueprint_content: typeof b.blueprint_content === 'object' && b.blueprint_content !== null ? b.blueprint_content : {},
+      category: b.category ?? null,
+      ai_tools: Array.isArray(b.ai_tools) ? b.ai_tools : (b.ai_tools ? [b.ai_tools] : []),
+      implementation_time: b.implementation_time ?? null,
+      difficulty_level: b.difficulty_level ?? null,
+      resources_needed: Array.isArray(b.resources_needed) ? b.resources_needed : [],
+      deliverables: Array.isArray(b.deliverables) ? b.deliverables : [],
+      instructions: b.instructions ?? null,
+      tags: Array.isArray(b.tags) ? b.tags : (b.tags ? [b.tags] : []),
+      implementation: b.implementation ?? null,
+      requirements: Array.isArray(b.requirements) ? b.requirements : [],
+      tools_used: Array.isArray(b.tools_used) ? b.tools_used : []
+    };
+  };
 
-  const sanitizeStrategy = (s: any) => ({
-    user_id: userId,
-    jump_id: jumpId,
-    title: s.title ?? '',
-    description: s.description ?? null,
-    strategy_framework: typeof s.strategy_framework === 'object' && s.strategy_framework !== null ? s.strategy_framework : {},
-    category: s.category ?? null,
-    ai_tools: Array.isArray(s.ai_tools) ? s.ai_tools : (s.ai_tools ? [s.ai_tools] : []),
-    timeline: s.timeline ?? null,
-    success_metrics: Array.isArray(s.success_metrics) ? s.success_metrics : [],
-    key_actions: Array.isArray(s.key_actions) ? s.key_actions : [],
-    potential_challenges: Array.isArray(s.potential_challenges) ? s.potential_challenges : [],
-    mitigation_strategies: Array.isArray(s.mitigation_strategies) ? s.mitigation_strategies : [],
-    instructions: s.instructions ?? null,
-    tags: Array.isArray(s.tags) ? s.tags : (s.tags ? [s.tags] : []),
+  const sanitizeStrategy = (s: any) => {
+    console.log('Sanitizing strategy:', s.title);
+    return {
+      user_id: userId,
+      jump_id: jumpId,
+      title: s.title ?? '',
+      description: s.description ?? null,
+      strategy_framework: typeof s.strategy_framework === 'object' && s.strategy_framework !== null ? s.strategy_framework : {},
+      category: s.category ?? null,
+      ai_tools: Array.isArray(s.ai_tools) ? s.ai_tools : (s.ai_tools ? [s.ai_tools] : []),
+      timeline: s.timeline ?? null,
+      success_metrics: Array.isArray(s.success_metrics) ? s.success_metrics : [],
+      key_actions: Array.isArray(s.key_actions) ? s.key_actions : [],
+      potential_challenges: Array.isArray(s.potential_challenges) ? s.potential_challenges : [],
+      mitigation_strategies: Array.isArray(s.mitigation_strategies) ? s.mitigation_strategies : [],
+      instructions: s.instructions ?? null,
+      tags: Array.isArray(s.tags) ? s.tags : (s.tags ? [s.tags] : []),
+      priority_level: s.priority_level ?? null,
+      resource_requirements: Array.isArray(s.resource_requirements) ? s.resource_requirements : []
+    };
+  };
+
+  console.log('Saving components - counts:', {
+    prompts: components.prompts?.length || 0,
+    workflows: components.workflows?.length || 0,
+    blueprints: components.blueprints?.length || 0,
+    strategies: components.strategies?.length || 0
   });
 
   const saves = [
@@ -821,21 +893,27 @@ async function saveComponents(components: GeneratedComponents, userId: string, j
   const results = await Promise.allSettled(saves);
   let saved = 0;
   const errors: Array<any> = [];
+  
   for (const r of results) {
     if (r.status === 'fulfilled') {
       const val: any = (r as any).value;
       if (val?.error) {
+        console.error('Database insert error:', val.error);
         errors.push({ type: 'fulfilled-error', error: val.error });
       } else {
         saved++;
       }
     } else {
+      console.error('Promise rejected:', (r as any).reason);
       errors.push({ type: 'rejected', reason: (r as any).reason });
     }
   }
+  
   if (errors.length) {
     console.error('Errors while saving generated components:', errors);
   }
+  
+  console.log('Components save result:', { total: saves.length, saved, errors: errors.length });
   return { total: saves.length, saved, errors };
 }
 
@@ -858,38 +936,94 @@ serve(async (req) => {
     const systemPrompt = [
       "You are an AI transformation strategist. Create a comprehensive 'Jump' plan.",
       `User Context: Role=${userProfile?.currentRole || 'Professional'} | Industry=${userProfile?.industry || 'General'} | Goals=${userProfile?.goals || 'AI Integration'} | Experience=${userProfile?.experienceLevel || 'Beginner'} | Time=${userProfile?.timeCommitment || 'Flexible'} | Budget=${userProfile?.budget || 'Moderate'}`,
-      "Return ONLY valid JSON matching this schema (exact keys, exactly 3 phases):",
+      "CRITICAL: Return ONLY valid JSON matching this EXACT structure with COMPLETE data in ALL fields:",
+      "IMPORTANT: The 'phases' array MUST contain exactly 3 phases with detailed, actionable content for each phase.",
       JSON.stringify({
         title: "AI Transformation Plan",
-        executive_summary: "",
+        executive_summary: "Comprehensive summary of the transformation plan with specific goals and expected outcomes",
         overview: {
-          vision_statement: "",
-          transformation_scope: "",
-          expected_outcomes: [],
-          timeline_overview: ""
+          vision_statement: "Clear vision statement for the transformation",
+          transformation_scope: "Detailed scope of what will be transformed",
+          expected_outcomes: ["specific outcome 1", "specific outcome 2", "specific outcome 3"],
+          timeline_overview: "Overall timeline and phases breakdown"
         },
         analysis: {
           current_state: {
-            strengths: [],
-            weaknesses: [],
-            opportunities: [],
-            threats: []
+            strengths: ["strength 1", "strength 2"],
+            weaknesses: ["weakness 1", "weakness 2"],
+            opportunities: ["opportunity 1", "opportunity 2"],
+            threats: ["threat 1", "threat 2"]
           },
-          gap_analysis: [],
-          readiness_assessment: { score: 0, factors: [] },
-          market_context: ""
+          gap_analysis: ["gap 1", "gap 2", "gap 3"],
+          readiness_assessment: { 
+            score: 75, 
+            factors: [{"factor": "factor name", "level": "high", "description": "detailed description"}] 
+          },
+          market_context: "Detailed market analysis and context"
         },
         action_plan: {
           phases: [
-            { phase_number: 1, title: "", description: "", duration: "", objectives: [], key_actions: [], milestones: [], deliverables: [], risks: [] },
-            { phase_number: 2, title: "", description: "", duration: "", objectives: [], key_actions: [], milestones: [], deliverables: [], risks: [] },
-            { phase_number: 3, title: "", description: "", duration: "", objectives: [], key_actions: [], milestones: [], deliverables: [], risks: [] }
+            { 
+              phase_number: 1, 
+              title: "Foundation Phase", 
+              description: "Detailed phase 1 description with specific objectives", 
+              duration: "4-6 weeks", 
+              objectives: ["objective 1", "objective 2"], 
+              key_actions: [
+                {"action": "specific action", "description": "detailed description", "priority": "high", "effort_level": "medium", "dependencies": []}
+              ], 
+              milestones: [{"milestone": "milestone name", "target_date": "Week 4", "success_criteria": ["criteria"]}], 
+              deliverables: ["deliverable 1", "deliverable 2"], 
+              risks: [{"risk": "risk description", "impact": "medium", "probability": "low", "mitigation": "mitigation strategy"}] 
+            },
+            { 
+              phase_number: 2, 
+              title: "Implementation Phase", 
+              description: "Detailed phase 2 description with specific objectives", 
+              duration: "6-8 weeks", 
+              objectives: ["objective 1", "objective 2"], 
+              key_actions: [
+                {"action": "specific action", "description": "detailed description", "priority": "high", "effort_level": "medium", "dependencies": []}
+              ], 
+              milestones: [{"milestone": "milestone name", "target_date": "Week 8", "success_criteria": ["criteria"]}], 
+              deliverables: ["deliverable 1", "deliverable 2"], 
+              risks: [{"risk": "risk description", "impact": "medium", "probability": "low", "mitigation": "mitigation strategy"}] 
+            },
+            { 
+              phase_number: 3, 
+              title: "Optimization Phase", 
+              description: "Detailed phase 3 description with specific objectives", 
+              duration: "4-6 weeks", 
+              objectives: ["objective 1", "objective 2"], 
+              key_actions: [
+                {"action": "specific action", "description": "detailed description", "priority": "high", "effort_level": "medium", "dependencies": []}
+              ], 
+              milestones: [{"milestone": "milestone name", "target_date": "Week 12", "success_criteria": ["criteria"]}], 
+              deliverables: ["deliverable 1", "deliverable 2"], 
+              risks: [{"risk": "risk description", "impact": "medium", "probability": "low", "mitigation": "mitigation strategy"}] 
+            }
           ]
         },
-        tools_prompts: { recommended_ai_tools: [], custom_prompts: [], templates: [] },
-        workflows_strategies: { workflows: [], strategies: [] },
-        metrics_tracking: { kpis: [], tracking_methods: [], reporting_schedule: {}, success_criteria: [] },
-        investment: { time_investment: {}, financial_investment: {}, roi_projection: {} }
+        tools_prompts: { 
+          recommended_ai_tools: [{"tool": "ChatGPT", "category": "content", "use_case": "content creation", "learning_curve": "easy", "cost_estimate": "$20/month", "integration_priority": "high"}], 
+          custom_prompts: [{"title": "prompt title", "purpose": "prompt purpose", "prompt": "detailed prompt text", "ai_tool": "ChatGPT", "expected_output": "expected result"}], 
+          templates: [{"name": "template name", "type": "template type", "description": "template description", "use_case": "when to use"}] 
+        },
+        workflows_strategies: { 
+          workflows: [{"title": "workflow name", "description": "workflow description", "trigger": "when to start", "steps": [{"step": "step name", "description": "step description", "tools_used": ["tool"], "estimated_time": "30 min"}], "automation_level": "semi-automated", "frequency": "daily"}], 
+          strategies: [{"strategy": "strategy name", "description": "strategy description", "success_factors": ["factor"], "implementation_tips": ["tip"], "monitoring_approach": "how to monitor"}] 
+        },
+        metrics_tracking: { 
+          kpis: [{"metric": "conversion rate", "description": "tracks effectiveness", "target": "25%", "measurement_frequency": "weekly", "data_source": "analytics"}], 
+          tracking_methods: [{"method": "method name", "tools": ["tool"], "setup_complexity": "low", "cost": "free"}], 
+          reporting_schedule: {"daily": ["task 1"], "weekly": ["task 2"], "monthly": ["task 3"], "quarterly": ["task 4"]}, 
+          success_criteria: [{"timeframe": "3 months", "criteria": ["criteria 1", "criteria 2"]}] 
+        },
+        investment: { 
+          time_investment: {"total_hours": "40-60 hours", "weekly_commitment": "8-10 hours", "phase_breakdown": [{"phase": "Phase 1", "hours": "20 hours"}]}, 
+          financial_investment: {"total_budget": "$500-1000", "categories": [{"category": "Tools", "amount": "$300", "description": "AI subscriptions"}]}, 
+          roi_projection: {"timeframe": "6 months", "expected_roi": "300%", "break_even_point": "3 months"} 
+        }
       }, null, 0)
     ].join('\n');
 
@@ -920,43 +1054,59 @@ serve(async (req) => {
       
       jumpPlan = safeParse(res1.content);
       
-      // Enhanced debugging for parsing failures
-      if (!jumpPlan) {
-        console.warn('[jump-plan] parse failed (attempt 1). Response length:', res1.content?.length);
-        console.warn('[jump-plan] First 200 chars:', res1.content?.slice(0, 200));
-        console.warn('[jump-plan] Last 200 chars:', res1.content?.slice(-200));
-        
-        // Try to identify the issue
-        if (res1.content?.includes('```json')) {
-          console.warn('[jump-plan] Content appears to have markdown code fences');
-        }
-        if (res1.content?.includes("'")) {
-          console.warn('[jump-plan] Content contains single quotes that may need conversion');
-        }
-        
-        const repair = await callOpenAI([
-          { role: 'system', content: systemJSON },
-          { role: 'user', content: `${systemPrompt}\n\nIMPORTANT: Return ONLY valid JSON in the exact format specified. No other text. Create exactly 3 phases in the phases array.\n\nHere is the draft to normalize (may include markdown fences or invalid JSON):` },
-          { role: 'user', content: rawContent || res1.content || '' },
-          ...recentMessages
-        ], 1500, true, 'gpt-4.1-2025-04-14');
-        
-        rawContent = repair.content || rawContent;
-        jumpPlan = safeParse(repair.content);
-        modelUsed = repair.modelUsed;
+        // Enhanced debugging for parsing failures
         if (!jumpPlan) {
-          console.warn('[jump-plan] parse failed (attempt 2). Response length:', repair.content?.length);
-          console.warn('[jump-plan] First 200 chars:', repair.content?.slice(0, 200));
-          console.warn('[jump-plan] Last 200 chars:', repair.content?.slice(-200));
+          console.warn('[jump-plan] parse failed (attempt 1). Response length:', res1.content?.length);
+          console.warn('[jump-plan] First 200 chars:', res1.content?.slice(0, 200));
+          console.warn('[jump-plan] Last 200 chars:', res1.content?.slice(-200));
           
-          // Log the entire failed content for debugging (truncated)
-          console.warn('[jump-plan] Full failed content (first 1000 chars):', repair.content?.slice(0, 1000));
+          // Try to identify the issue
+          if (res1.content?.includes('```json')) {
+            console.warn('[jump-plan] Content appears to have markdown code fences');
+          }
+          if (res1.content?.includes("'")) {
+            console.warn('[jump-plan] Content contains single quotes that may need conversion');
+          }
+          
+          // Attempt direct repair without another AI call first
+          let repairedContent = res1.content;
+          if (repairedContent) {
+            // Remove markdown fences
+            repairedContent = repairedContent.replace(/```(?:json)?\s*/gi, '').replace(/```$/g, '');
+            // Try parsing the cleaned content
+            const directParse = safeParse(repairedContent);
+            if (directParse) {
+              console.log('[jump-plan] Successfully parsed after direct cleanup');
+              jumpPlan = directParse;
+            }
+          }
+          
+          // If direct repair failed, use AI to fix it
+          if (!jumpPlan) {
+            const repair = await callOpenAI([
+              { role: 'system', content: systemJSON },
+              { role: 'user', content: `${systemPrompt}\n\nIMPORTANT: Return ONLY valid JSON in the exact format specified. No other text. Create exactly 3 phases in the phases array with complete data.\n\nHere is the draft to normalize (may include markdown fences or invalid JSON):` },
+              { role: 'user', content: rawContent || res1.content || '' },
+              ...recentMessages
+            ], 1500, true, 'gpt-4.1-2025-04-14');
+            
+            rawContent = repair.content || rawContent;
+            jumpPlan = safeParse(repair.content);
+            modelUsed = repair.modelUsed;
+            if (!jumpPlan) {
+              console.warn('[jump-plan] parse failed (attempt 2). Response length:', repair.content?.length);
+              console.warn('[jump-plan] First 200 chars:', repair.content?.slice(0, 200));
+              console.warn('[jump-plan] Last 200 chars:', repair.content?.slice(-200));
+              
+              // Log the entire failed content for debugging (truncated)
+              console.warn('[jump-plan] Full failed content (first 1000 chars):', repair.content?.slice(0, 1000));
+            } else {
+              console.log('[jump-plan] Successfully parsed on attempt 2');
+            }
+          }
         } else {
-          console.log('[jump-plan] Successfully parsed on attempt 2');
+          console.log('[jump-plan] Successfully parsed on attempt 1');
         }
-      } else {
-        console.log('[jump-plan] Successfully parsed on attempt 1');
-      }
       // Removed stray brace to keep content generation inside this block
 
       // Convert structured plan back to formatted text for backward compatibility

@@ -100,53 +100,53 @@ export default function AICoachChat({
     return out.trim();
   };
   
-  // Normalize various possible response shapes from the Edge Function/Supabase client
-  const extractAiMessage = (resp: any): string => {
-    try {
-      // Supabase Functions usual shape
-      if (resp?.data?.message && typeof resp.data.message === 'string') return resp.data.message as string;
-      // Common alternative keys
-      if (resp?.data?.generatedText) return resp.data.generatedText;
-      if (resp?.data?.plan) return resp.data.plan;
-      if (resp?.data?.content) return resp.data.content;
-      // Sometimes the data is a JSON string
-      if (typeof resp?.data === 'string') {
+      // Normalize various possible response shapes from the Edge Function/Supabase client
+      const extractAiMessage = (resp: any): string => {
         try {
-          const parsed = JSON.parse(resp.data);
-          if (parsed?.message) return parsed.message;
-          if (parsed?.generatedText) return parsed.generatedText;
-          if (parsed?.plan) return parsed.plan;
-          if (parsed?.choices?.[0]?.message?.content) return parsed.choices[0].message.content;
-          return typeof parsed === 'string' ? parsed : '';
-        } catch {
-          return resp.data;
+          // Supabase Functions usual shape
+          if (resp?.data?.message && typeof resp.data.message === 'string') return resp.data.message as string;
+          // Common alternative keys
+          if (resp?.data?.generatedText) return resp.data.generatedText;
+          if (resp?.data?.plan) return resp.data.plan;
+          if (resp?.data?.content) return resp.data.content;
+          // Sometimes the data is a JSON string
+          if (typeof resp?.data === 'string') {
+            try {
+              const parsed = JSON.parse(resp.data);
+              if (parsed?.message) return parsed.message;
+              if (parsed?.generatedText) return parsed.generatedText;
+              if (parsed?.plan) return parsed.plan;
+              if (parsed?.choices?.[0]?.message?.content) return parsed.choices[0].message.content;
+              return typeof parsed === 'string' ? parsed : '';
+            } catch {
+              return resp.data;
+            }
+          }
+          // Some clients return body at the root
+          if (resp?.message) return resp.message;
+          // Raw OpenAI passthrough just in case
+          if (resp?.data?.choices?.[0]?.message?.content) return resp.data.choices[0].message.content;
+          
+          // If we have a structured plan but no message, synthesize a minimal text
+          const sp = resp?.data?.structured_plan;
+          if (sp && typeof sp === 'object') {
+            const text = formatPlanToText(sp);
+            if (text) return text;
+          }
+          
+          // Last resort: stringify object if small
+          if (resp?.data && typeof resp.data === 'object') {
+            try {
+              const s = JSON.stringify(resp.data);
+              if (s && s.length < 5000) return s;
+            } catch {}
+          }
+          return '';
+        } catch (e) {
+          console.warn('[AICoachChat] extractAiMessage error:', e, resp);
+          return '';
         }
-      }
-      // Some clients return body at the root
-      if (resp?.message) return resp.message;
-      // Raw OpenAI passthrough just in case
-      if (resp?.data?.choices?.[0]?.message?.content) return resp.data.choices[0].message.content;
-      
-      // If we have a structured plan but no message, synthesize a minimal text
-      const sp = resp?.data?.structured_plan;
-      if (sp && typeof sp === 'object') {
-        const text = formatPlanToText(sp);
-        if (text) return text;
-      }
-      
-      // Last resort: stringify object if small
-      if (resp?.data && typeof resp.data === 'object') {
-        try {
-          const s = JSON.stringify(resp.data);
-          if (s && s.length < 5000) return s;
-        } catch {}
-      }
-      return '';
-    } catch (e) {
-      console.warn('[AICoachChat] extractAiMessage error:', e, resp);
-      return '';
-    }
-  };
+      };
   
   useEffect(() => {
     // If refining an existing plan, seed a helper message and skip auto-generation
