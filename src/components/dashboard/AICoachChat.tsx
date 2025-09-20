@@ -189,11 +189,25 @@ export default function AICoachChat({
 
         let aiText = extractAiMessage(response);
         let structuredPlan: any = response?.data?.structured_plan || null;
+        
+        console.log('[AICoachChat] Extracted aiText length:', aiText?.length || 0);
+        console.log('[AICoachChat] Structured plan exists:', !!structuredPlan);
+        
         if (!structuredPlan && aiText) {
+          console.log('[AICoachChat] Attempting to parse aiText as JSON...');
           structuredPlan = tryParseJSON(aiText);
+          console.log('[AICoachChat] Parse result:', !!structuredPlan);
         }
+        
         if ((!aiText || !aiText.trim()) && structuredPlan) {
+          console.log('[AICoachChat] Converting structured plan to text...');
           aiText = formatPlanToText(structuredPlan);
+        }
+        
+        // Ensure we have content to display
+        if (!aiText && !structuredPlan) {
+          console.error('[AICoachChat] No content generated! Response:', response);
+          throw new Error('No content was generated. Please try again.');
         }
 
         const assistantMessage: Message = {

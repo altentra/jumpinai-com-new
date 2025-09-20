@@ -70,318 +70,102 @@ async function callOpenAI(
   messages: Array<{ role: string; content: string }>,
   maxTokens = 1200,
   isJSON = false,
-  model = 'gpt-4.1-2025-04-14'
+  model = 'gpt-4o'
 ) {
-  // Helper to detect param style per model family
-  const isNewerModel = (m: string) => /(gpt-5|gpt-4\.1|o3|o4)/.test(m);
-
-  // Helper to perform a timed request and normalize the response
-  const makeRequest = async (mdl: string, tokens: number, timeoutMs: number) => {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort('timeout'), timeoutMs);
-    try {
-      // Build request body with correct token param key
-      const body: any = {
-        model: mdl,
-        messages,
-      };
-      if (isNewerModel(mdl)) {
-        body.max_completion_tokens = tokens; // Newer models param
-      } else {
-        body.max_tokens = tokens; // Legacy models param
-      }
-      body.response_format = isJSON ? { type: 'json_object' } : { type: 'text' };
-
-      const doFetch = async (b: any) => fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${openAIApiKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(b),
-        signal: controller.signal,
-      });
-
-      let response = await doFetch(body);
-
-      // Auto-retry once if token param key is rejected by the endpoint
-      if (!response.ok) {
-        const errTxt = await response.text().catch(() => '');
-        const needsSwapToMaxTokens = /max_completion_tokens/i.test(errTxt);
-        const needsSwapToMaxCompletion = /max_tokens/i.test(errTxt) && isNewerModel(mdl);
-        if (needsSwapToMaxTokens || needsSwapToMaxCompletion) {
-          const swapped: any = { ...body };
-          delete swapped.max_completion_tokens;
-          delete swapped.max_tokens;
-          if (needsSwapToMaxTokens) swapped.max_tokens = tokens; else swapped.max_completion_tokens = tokens;
-          response = await doFetch(swapped);
-        }
-        if (!response.ok) {
-          console.error('OpenAI API error:', response.status, errTxt);
-          throw new Error(`OpenAI API error: ${response.status}`);
-        }
-      }
-
-      const data = await response.json();
-      const choice = data?.choices?.[0];
-      const msg = choice?.message;
-      let content = '';
-
-      // 1) Standard text content
-      if (typeof msg?.content === 'string' && msg.content.trim()) {
-        content = msg.content;
-      } else if (Array.isArray(msg?.content)) {
-        content = msg.content
-          .map((part: any) => {
-            if (typeof part === 'string') return part;
-            if (typeof part?.text === 'string') return part.text;
-            if (typeof part?.content === 'string') return part.content;
-            // New: handle JSON/content parts from newer APIs
-            if (part?.type === 'output_json' && part?.json) {
-              try { return JSON.stringify(part.json); } catch { return ''; }
-            }
-            if (part?.type === 'json' && part?.json) {
-              try { return JSON.stringify(part.json); } catch { return ''; }
-            }
-            if (Array.isArray(part?.content)) return part.content.map((p: any) => p?.text || p?.content || '').join('');
-            return '';
-          })
-          .filter(Boolean)
-          .join('\n')
-          .trim();
-      } else if (msg?.content && typeof msg.content === 'object') {
-        // New: some SDKs put JSON result directly in content.json
-        const maybeJson = (msg as any).content?.json;
-        if (maybeJson) {
-          try { content = JSON.stringify(maybeJson); } catch { /* ignore */ }
-        }
-      }
-
-      // 2) Tool/function call arguments (common in JSON modes)
-      if (!content && Array.isArray((msg as any)?.tool_calls) && (msg as any).tool_calls.length) {
-        try {
-          const args = (msg as any).tool_calls
-            .map((tc: any) => tc?.function?.arguments || '')
-            .filter((s: string) => typeof s === 'string' && s.trim())
-            .join('\n');
-          if (args && args.trim()) content = args.trim();
-        } catch (_) {}
-      }
-
-      // 3) Legacy single function_call
-      if (!content && (msg as any)?.function_call?.arguments) {
-        const args = (msg as any).function_call.arguments;
-        if (typeof args === 'string' && args.trim()) content = args.trim();
-      }
-
-      // 4) Responses API shape
-      if (!content) {
-        const ot = (data as any)?.output_text;
-        if (Array.isArray(ot)) content = ot.join('\n');
-        else if (typeof ot === 'string') content = ot;
-      }
-
-      // 5) Fallbacks
-      if (!content && typeof (data as any)?.message === 'string') {
-        content = (data as any).message;
-      }
-
-      const finish_reason = choice?.finish_reason;
-
-      if (!content || content.trim() === '') {
-        console.error('OpenAI response contained no textual content. Debug snapshot:', {
-          finish_reason,
-          usage: data?.usage,
-          hasMessage: !!msg,
-          hasToolCalls: Array.isArray((msg as any)?.tool_calls) ? (msg as any).tool_calls.length : 0,
-          types: {
-            messageContentType: typeof msg?.content,
-            outputTextType: Array.isArray((data as any)?.output_text) ? 'array' : typeof (data as any)?.output_text,
-          },
-        });
-      }
-
-      return { content, usage: data.usage, finish_reason, modelUsed: mdl };
-    } finally {
-      clearTimeout(timer);
-    }
-  };
-
-  // Try fast model first, then fallback if needed
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort('timeout'), 60000);
+  
   try {
-    return await makeRequest(model, Math.min(maxTokens, 800), 60_000);
-  } catch (primaryErr) {
-    console.warn('Primary model failed/timed out, retrying with 4o-mini fallback:', String(primaryErr));
+    // Use gpt-4o for reliability - it supports both max_tokens and temperature
+    const body: any = {
+      model: 'gpt-4o',
+      messages,
+      max_tokens: maxTokens,
+      temperature: 0.7,
+    };
+    
+    if (isJSON) {
+      body.response_format = { type: 'json_object' };
+    }
+
+    console.log(`[OpenAI] Calling ${body.model} with ${messages.length} messages, max_tokens: ${maxTokens}, JSON: ${isJSON}`);
+
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${openAIApiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+      signal: controller.signal,
+    });
+
+    clearTimeout(timer);
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`[OpenAI] API error (${response.status}):`, errorText);
+      throw new Error(`OpenAI API error (${response.status}): ${errorText}`);
+    }
+
+    const data = await response.json();
+    console.log(`[OpenAI] Response received. Usage:`, data.usage);
+    
+    if (data.error) {
+      throw new Error(`OpenAI returned error: ${data.error.message || data.error}`);
+    }
+
+    const content = data.choices?.[0]?.message?.content || '';
+    const usage = data.usage || {};
+    const finish_reason = data.choices?.[0]?.finish_reason || 'unknown';
+
+    if (!content && isJSON) {
+      console.warn('[OpenAI] Empty content returned for JSON request. Full response:', data);
+    }
+
+    return { content, usage, finish_reason, modelUsed: 'gpt-4o' };
+    
+  } catch (err: any) {
+    clearTimeout(timer);
+    console.error('[OpenAI] Request failed:', err.message);
+    if (err.name === 'AbortError' || err.message?.includes('timeout')) {
+      throw new Error('OpenAI request timeout');
+    }
+    throw err;
+  }
+}
+
+// Simplified JSON parsing with better error handling
+function safeParse(text: string): any {
+  if (!text || typeof text !== 'string') return null;
+  
+  // Clean the text first
+  let cleaned = text.trim()
+    .replace(/^```(?:json)?\s*/i, '')
+    .replace(/```\s*$/i, '')
+    .replace(/^\uFEFF/, ''); // Remove BOM
+
+  try {
+    return JSON.parse(cleaned);
+  } catch {
+    // Try fixing common issues
     try {
-      return await makeRequest('gpt-4o-mini', Math.min(maxTokens, 600), 45_000);
-    } catch (miniErr) {
-      console.warn('4o-mini failed, retrying with gpt-4.1 (reduced tokens)...', String(miniErr));
-      return await makeRequest('gpt-4.1-2025-04-14', Math.min(maxTokens, 600), 75_000);
+      // Fix single quotes to double quotes
+      cleaned = cleaned.replace(/'/g, '"');
+      // Fix trailing commas
+      cleaned = cleaned.replace(/,(\s*[}\]])/g, '$1');
+      return JSON.parse(cleaned);
+    } catch {
+      console.warn('[JSON] Failed to parse:', cleaned.slice(0, 200));
+      return null;
     }
   }
 }
 
-// Helper: robust JSON parser with extraction + repair attempts
-const safeParse = (text: string): any | null => {
-  if (!text || typeof text !== 'string') return null;
-
-  const tryParse = (t: string) => {
-    try { return JSON.parse(t); } catch { return null; }
-  };
-
-  // 1) Direct parse
-  let obj = tryParse(text);
-  if (obj) return obj;
-
-  // 2) Normalize/clean input
-  let cleaned = text.trim();
-
-  // Strip common code fences (single or multi)
-  cleaned = cleaned.replace(/^```(?:json)?\s*/i, '').replace(/```$/i, '').trim();
-
-  // Attempt parse again
-  obj = tryParse(cleaned);
-  if (obj) return obj;
-
-  // Extract largest object slice
-  const firstBrace = cleaned.indexOf('{');
-  const lastBrace = cleaned.lastIndexOf('}');
-  if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
-    const sliceObj = cleaned.slice(firstBrace, lastBrace + 1);
-    obj = tryParse(sliceObj);
-    if (obj) return obj;
-  }
-
-  // Extract largest array slice (in case the model returned an array)
-  const firstBracket = cleaned.indexOf('[');
-  const lastBracket = cleaned.lastIndexOf(']');
-  if (firstBracket !== -1 && lastBracket !== -1 && lastBracket > firstBracket) {
-    const sliceArr = cleaned.slice(firstBracket, lastBracket + 1);
-    obj = tryParse(sliceArr);
-    if (obj) return obj;
-  }
-
-  // Remove BOM if present
-  cleaned = cleaned.replace(/^\uFEFF/, '');
-
-  // Normalize smart quotes
-  cleaned = cleaned.replace(/[\u201C\u201D]/g, '"').replace(/[\u2018\u2019]/g, "'");
-
-  // Remove JS-style comments
-  cleaned = cleaned.replace(/\/\*[\s\S]*?\*\//g, '').replace(/(^|\s)\/\/.*$/gm, '');
-
-  // Remove trailing commas
-  cleaned = cleaned.replace(/,(\s*[}\]])/g, '$1');
-
-  obj = tryParse(cleaned);
-  if (obj) return obj;
-
-  // 3) Attempt single-quoted JSON repair (cautious)
-  const singleCount = (cleaned.match(/'/g) || []).length;
-  const doubleCount = (cleaned.match(/\"/g) || []).length;
-  if (doubleCount < singleCount) {
-    const singleToDouble = cleaned
-      // property names
-      .replace(/'([^'\\]*(\\.[^'\\]*)*)'\s*:/g, '"$1":')
-      // string values
-      .replace(/:\s*'([^'\\]*(\\.[^'\\]*)*)'/g, ': "$1"');
-    obj = tryParse(singleToDouble);
-    if (obj) return obj;
-  }
-
-  // 4) Try parsing candidate top-level objects greedily
-  const candidates: string[] = [];
-  const stack: number[] = [];
-  let inString = false;
-  let escape = false;
-  for (let i = 0; i < cleaned.length; i++) {
-    const ch = cleaned[i];
-    if (escape) { escape = false; continue; }
-    if (ch === '\\') { escape = true; continue; }
-    if (ch === '"') { inString = !inString; continue; }
-    if (inString) continue;
-    if (ch === '{' || ch === '[') stack.push(i);
-    if ((ch === '}' || ch === ']') && stack.length) {
-      const s = stack.pop()!;
-      if (stack.length === 0) candidates.push(cleaned.slice(s, i + 1));
-    }
-  }
-  for (const cand of candidates) {
-    const fixed = cand.replace(/,(\s*[}\]])/g, '$1');
-    obj = tryParse(fixed);
-    if (obj) return obj;
-  }
-
-  // 5) Slice to last balanced position if any
-  const sliceToLastBalanced = (t: string): string => {
-    let resEnd = -1;
-    let inStr = false;
-    let esc = false;
-    const st: number[] = [];
-    for (let i = 0; i < t.length; i++) {
-      const c = t[i];
-      if (esc) { esc = false; continue; }
-      if (c === '\\') { esc = true; continue; }
-      if (c === '"') { inStr = !inStr; continue; }
-      if (inStr) continue;
-      if (c === '{') st.push(1);
-      else if (c === '[') st.push(2);
-      else if (c === '}' || c === ']') {
-        if (st.length && ((st[st.length - 1] === 1 && c === '}') || (st[st.length - 1] === 2 && c === ']'))) {
-          st.pop();
-          if (st.length === 0) resEnd = i;
-        }
-      }
-    }
-    return resEnd >= 0 ? t.slice(0, resEnd + 1) : t;
-  };
-
-  const lastBalanced = sliceToLastBalanced(cleaned);
-  if (lastBalanced && lastBalanced !== cleaned) {
-    obj = tryParse(lastBalanced);
-    if (obj) return obj;
-  }
-
-  // 6) Balance unclosed braces/brackets by appending necessary closers
-  const balanceAndClose = (t: string): string => {
-    let inStr = false;
-    let esc = false;
-    const st: string[] = [];
-    let out = '';
-    for (let i = 0; i < t.length; i++) {
-      const c = t[i];
-      out += c;
-      if (esc) { esc = false; continue; }
-      if (c === '\\') { esc = true; continue; }
-      if (c === '"') { inStr = !inStr; continue; }
-      if (inStr) continue;
-      if (c === '{' || c === '[') st.push(c);
-      else if (c === '}' || c === ']') {
-        if (st.length && ((st[st.length - 1] === '{' && c === '}') || (st[st.length - 1] === '[' && c === ']'))) {
-          st.pop();
-        } else {
-          // ignore unmatched closer
-        }
-      }
-    }
-    while (st.length) {
-      const open = st.pop()!;
-      out += open === '{' ? '}' : ']';
-    }
-    return out;
-  };
-
-  const balanced = balanceAndClose(cleaned);
-  if (balanced && balanced !== cleaned) {
-    obj = tryParse(balanced);
-    if (obj) return obj;
-  }
-
-  return null;
-};
-
-// Helper function to format structured jump plan back to text for backward compatibility
+// Convert structured plan to readable text format
 function formatJumpPlanToText(plan: any): string {
+  if (!plan) return '';
+  
   let text = '';
   
   if (plan.title) {
@@ -392,89 +176,75 @@ function formatJumpPlanToText(plan: any): string {
     text += `## Executive Summary\n\n${plan.executive_summary}\n\n`;
   }
   
-  if (plan.current_state_analysis) {
-    text += `## Current State Analysis\n\n${plan.current_state_analysis}\n\n`;
+  if (plan.overview) {
+    text += `## Overview\n\n`;
+    if (plan.overview.vision_statement) {
+      text += `**Vision:** ${plan.overview.vision_statement}\n\n`;
+    }
+    if (plan.overview.transformation_scope) {
+      text += `**Scope:** ${plan.overview.transformation_scope}\n\n`;
+    }
+    if (plan.overview.expected_outcomes && Array.isArray(plan.overview.expected_outcomes)) {
+      text += `**Expected Outcomes:**\n${plan.overview.expected_outcomes.map((o: string) => `• ${o}`).join('\n')}\n\n`;
+    }
   }
   
-  if (plan.transformation_goal) {
-    text += `## Transformation Goal\n\n${plan.transformation_goal}\n\n`;
+  if (plan.analysis) {
+    text += `## Analysis\n\n`;
+    if (plan.analysis.current_state) {
+      const cs = plan.analysis.current_state;
+      if (cs.strengths && Array.isArray(cs.strengths)) {
+        text += `**Strengths:**\n${cs.strengths.map((s: string) => `• ${s}`).join('\n')}\n\n`;
+      }
+      if (cs.weaknesses && Array.isArray(cs.weaknesses)) {
+        text += `**Areas for Improvement:**\n${cs.weaknesses.map((w: string) => `• ${w}`).join('\n')}\n\n`;
+      }
+      if (cs.opportunities && Array.isArray(cs.opportunities)) {
+        text += `**Opportunities:**\n${cs.opportunities.map((o: string) => `• ${o}`).join('\n')}\n\n`;
+      }
+    }
   }
   
-  if (plan.phases && Array.isArray(plan.phases)) {
-    text += `## The Jump Plan\n\n`;
-    plan.phases.forEach((phase: any, index: number) => {
-      text += `### Phase ${phase.phase_number || index + 1}: ${phase.title}\n\n`;
-      if (phase.description) text += `${phase.description}\n\n`;
-      if (phase.timeline) text += `**Timeline:** ${phase.timeline}\n\n`;
-      
+  if (plan.action_plan && plan.action_plan.phases && Array.isArray(plan.action_plan.phases)) {
+    text += `## Action Plan\n\n`;
+    plan.action_plan.phases.forEach((phase: any, index: number) => {
+      text += `### Phase ${phase.phase_number || index + 1}: ${phase.title || 'Phase'}\n\n`;
+      if (phase.description) {
+        text += `${phase.description}\n\n`;
+      }
+      if (phase.duration) {
+        text += `**Duration:** ${phase.duration}\n\n`;
+      }
+      if (phase.objectives && Array.isArray(phase.objectives)) {
+        text += `**Objectives:**\n${phase.objectives.map((o: string) => `• ${o}`).join('\n')}\n\n`;
+      }
       if (phase.key_actions && Array.isArray(phase.key_actions)) {
         text += `**Key Actions:**\n`;
-        phase.key_actions.forEach((action: string) => {
-          text += `- ${action}\n`;
+        phase.key_actions.forEach((action: any) => {
+          if (typeof action === 'string') {
+            text += `• ${action}\n`;
+          } else if (action.action) {
+            text += `• ${action.action}`;
+            if (action.description) text += ` - ${action.description}`;
+            text += `\n`;
+          }
         });
-        text += '\n';
+        text += `\n`;
       }
-      
-      if (phase.deliverables && Array.isArray(phase.deliverables)) {
-        text += `**Deliverables:**\n`;
-        phase.deliverables.forEach((deliverable: string) => {
-          text += `- ${deliverable}\n`;
-        });
-        text += '\n';
-      }
-      
-      if (phase.success_criteria && Array.isArray(phase.success_criteria)) {
-        text += `**Success Criteria:**\n`;
-        phase.success_criteria.forEach((criteria: string) => {
-          text += `- ${criteria}\n`;
-        });
-        text += '\n';
+      if (phase.milestones && Array.isArray(phase.milestones)) {
+        text += `**Milestones:**\n${phase.milestones.map((m: any) => {
+          if (typeof m === 'string') return `• ${m}`;
+          return `• ${m.milestone || 'Milestone'} (${m.target_date || 'TBD'})`;
+        }).join('\n')}\n\n`;
       }
     });
   }
   
-  if (plan.recommended_tools && Array.isArray(plan.recommended_tools)) {
-    text += `## Recommended Tools & Resources\n\n`;
-    plan.recommended_tools.forEach((tool: string) => {
-      text += `- ${tool}\n`;
-    });
-    text += '\n';
-  }
-  
-  if (plan.success_metrics && Array.isArray(plan.success_metrics)) {
-    text += `## Success Metrics\n\n`;
-    plan.success_metrics.forEach((metric: string) => {
-      text += `- ${metric}\n`;
-    });
-    text += '\n';
-  }
-  
-  if (plan.potential_challenges && Array.isArray(plan.potential_challenges)) {
-    text += `## Potential Challenges & Solutions\n\n`;
-    plan.potential_challenges.forEach((challenge: string, index: number) => {
-      text += `**Challenge:** ${challenge}\n`;
-      if (plan.mitigation_strategies && plan.mitigation_strategies[index]) {
-        text += `**Solution:** ${plan.mitigation_strategies[index]}\n\n`;
-      } else {
-        text += '\n';
-      }
-    });
-  }
-  
-  if (plan.next_immediate_steps && Array.isArray(plan.next_immediate_steps)) {
-    text += `## Next Immediate Steps\n\n`;
-    plan.next_immediate_steps.forEach((step: string, index: number) => {
-      text += `${index + 1}. ${step}\n`;
-    });
-    text += '\n';
-  }
-  
-  if (plan.estimated_timeline) {
-    text += `## Timeline\n\n${plan.estimated_timeline}\n\n`;
-  }
-  
-  if (plan.investment_required) {
-    text += `## Investment Required\n\n${plan.investment_required}\n\n`;
+  if (plan.metrics_tracking) {
+    text += `## Metrics & Tracking\n\n`;
+    if (plan.metrics_tracking.kpis && Array.isArray(plan.metrics_tracking.kpis)) {
+      text += `**Key Performance Indicators:**\n${plan.metrics_tracking.kpis.map((k: string) => `• ${k}`).join('\n')}\n\n`;
+    }
   }
   
   return text.trim();
@@ -483,9 +253,10 @@ function formatJumpPlanToText(plan: any): string {
 async function generateComponents(userProfile: any): Promise<GeneratedComponents> {
   type Key = 'prompts' | 'workflows' | 'blueprints' | 'strategies';
 
-  // Extract an array by top-level key directly from raw text, even if wrapped with extra text
+  // Extract an array by top-level key directly from raw text
   const extractArrayByKey = (text: string, key: Key, altKeys: string[] = []): any[] => {
     if (!text || typeof text !== 'string') return [];
+    
     // Pre-clean: strip code fences, normalize smart quotes, remove BOM
     let cleaned = text
       .replace(/^```(?:json)?\s*/i, '')
@@ -504,13 +275,14 @@ async function generateComponents(userProfile: any): Promise<GeneratedComponents
       }
     }
 
-    // Robust extraction: locate the first '[' after the key and do manual bracket matching
+    // Robust extraction: locate the first '[' after the key
     const quoteGroup = `[\"\u201C\u201D]`;
     for (const k of keys) {
       const keyIdx = cleaned.search(new RegExp(`${quoteGroup}${k}${quoteGroup}`, 'i'));
       if (keyIdx === -1) continue;
       const startArr = cleaned.indexOf('[', keyIdx);
       if (startArr === -1) continue;
+      
       let depth = 0, endArr = -1, inStr = false, esc = false;
       for (let i = startArr; i < cleaned.length; i++) {
         const ch = cleaned[i];
@@ -521,6 +293,7 @@ async function generateComponents(userProfile: any): Promise<GeneratedComponents
         if (ch === '[') depth++;
         if (ch === ']') { depth--; if (depth === 0) { endArr = i; break; } }
       }
+      
       if (endArr > startArr) {
         const slice = cleaned.slice(startArr, endArr + 1);
         const arr = safeParse(slice);
@@ -528,34 +301,32 @@ async function generateComponents(userProfile: any): Promise<GeneratedComponents
       }
     }
 
-    // As a last resort, try a tolerant regex-based extraction
-    for (const k of keys) {
-      const re = new RegExp(`${quoteGroup}${k}${quoteGroup}\\s*:\\s*(\\[([\\s\\S]*?)\\])`, 'i');
-      const m = cleaned.match(re);
-      if (m && m[1]) {
-        const slice = m[1];
-        const arr = safeParse(slice);
-        if (Array.isArray(arr)) return arr;
-      }
-    }
     return [];
   };
-  // Normalize items to match our DB schemas per key
+
+  // Normalize items to match our DB schemas
   const normalizeItems = (key: Key, arr: any[]): any[] => {
     const toArray = (v: any) => Array.isArray(v) ? v : (v ? [v] : []);
+    
     return (arr || []).map((item: any) => {
       const it = typeof item === 'object' && item !== null ? { ...item } : { title: String(item || '') };
+      
       if (key === 'prompts') {
         it.prompt_text = it.prompt_text || it.prompt || it.text || '';
         it.ai_tools = toArray(it.ai_tools);
         it.use_cases = toArray(it.use_cases);
         it.tags = toArray(it.tags);
         it.category = it.category || 'productivity';
+        it.difficulty = it.difficulty || 'beginner';
+        it.estimated_time = it.estimated_time || '5-10 minutes';
+        it.instructions = it.instructions || 'Use this prompt with your preferred AI tool';
       }
+      
       if (key === 'workflows') {
         // Ensure workflow_steps is properly structured
         const steps = it.workflow_steps || it.steps || it.workflow || it.tasks || [];
         it.workflow_steps = Array.isArray(steps) ? steps : toArray(steps);
+        
         if (it.workflow_steps.length === 0) {
           // Create at least one default step
           it.workflow_steps = [{
@@ -567,7 +338,14 @@ async function generateComponents(userProfile: any): Promise<GeneratedComponents
           }];
         } else {
           it.workflow_steps = it.workflow_steps.map((s: any, idx: number) => {
-            if (typeof s === 'string') return { step: idx + 1, title: s, description: s, tools: [], estimated_time: '15 minutes' };
+            if (typeof s === 'string') return { 
+              step: idx + 1, 
+              title: s, 
+              description: s, 
+              tools: [], 
+              estimated_time: '15 minutes' 
+            };
+            
             const so = typeof s === 'object' && s !== null ? s : {};
             return {
               step: so.step ?? idx + 1,
@@ -578,6 +356,7 @@ async function generateComponents(userProfile: any): Promise<GeneratedComponents
             };
           });
         }
+        
         it.ai_tools = toArray(it.ai_tools);
         it.prerequisites = toArray(it.prerequisites);
         it.expected_outcomes = toArray(it.expected_outcomes);
@@ -587,7 +366,9 @@ async function generateComponents(userProfile: any): Promise<GeneratedComponents
         it.duration_estimate = it.duration_estimate || '1-2 hours';
         it.tools_needed = toArray(it.tools_needed || it.ai_tools || []);
         it.skill_level = it.skill_level || 'beginner';
+        it.instructions = it.instructions || 'Follow the workflow steps in order';
       }
+      
       if (key === 'blueprints') {
         if (!it.blueprint_content || typeof it.blueprint_content !== 'object') {
           it.blueprint_content = {
@@ -597,6 +378,7 @@ async function generateComponents(userProfile: any): Promise<GeneratedComponents
             implementation: it.implementation || it.instructions || 'Implementation guidance'
           };
         }
+        
         // Ensure blueprint_content has required structure
         if (!it.blueprint_content.overview) it.blueprint_content.overview = it.description || 'Blueprint overview';
         if (!Array.isArray(it.blueprint_content.components)) it.blueprint_content.components = ['Core component'];
@@ -613,6 +395,7 @@ async function generateComponents(userProfile: any): Promise<GeneratedComponents
         it.requirements = toArray(it.requirements || it.prerequisites || []);
         it.tools_used = toArray(it.tools_used || it.ai_tools || []);
       }
+      
       if (key === 'strategies') {
         if (!it.strategy_framework || typeof it.strategy_framework !== 'object') {
           it.strategy_framework = {
@@ -622,6 +405,7 @@ async function generateComponents(userProfile: any): Promise<GeneratedComponents
             approach: it.approach || it.description || 'Strategic implementation approach'
           };
         }
+        
         // Ensure strategy_framework has required structure
         if (!it.strategy_framework.overview) it.strategy_framework.overview = it.description || 'Strategic overview';
         if (!Array.isArray(it.strategy_framework.phases)) it.strategy_framework.phases = ['Planning', 'Execution'];
@@ -638,7 +422,9 @@ async function generateComponents(userProfile: any): Promise<GeneratedComponents
         it.timeline = it.timeline || '3-6 months';
         it.priority_level = it.priority_level || 'medium';
         it.resource_requirements = toArray(it.resource_requirements || it.resources_needed || []);
+        it.instructions = it.instructions || 'Implement this strategy systematically';
       }
+      
       return it;
     }).filter((it: any) => !!it && typeof it.title === 'string' && it.title.trim().length > 0);
   };
@@ -646,35 +432,36 @@ async function generateComponents(userProfile: any): Promise<GeneratedComponents
   const buildPromptFor = (key: Key) => {
     const base = `Generate exactly 4 high-quality, detailed ${key} based on this user profile.
 Return ONLY valid JSON with a single top-level object containing the "${key}" array (length=4). 
-Make each item comprehensive and actionable.
+Make each item comprehensive and actionable with realistic, useful content.
 No markdown, no fences, no commentary.
 
 User Profile:
-- Role: ${userProfile.currentRole} in ${userProfile.industry}
-- Experience: ${userProfile.experienceLevel}
-- Goals: ${userProfile.goals}
-- AI Knowledge: ${userProfile.aiKnowledge}
-- Time: ${userProfile.timeCommitment}
-- Budget: ${userProfile.budget}`;
+- Role: ${userProfile.currentRole || 'Professional'} in ${userProfile.industry || 'General'}
+- Experience: ${userProfile.experienceLevel || 'Intermediate'}
+- Goals: ${userProfile.goals || 'AI Integration'}
+- AI Knowledge: ${userProfile.aiKnowledge || 'Basic'}
+- Time: ${userProfile.timeCommitment || '1-3 hours/week'}
+- Budget: ${userProfile.budget || '$0-100'}`;
 
     const schemas: Record<Key, string> = {
-      prompts: `{"prompts":[{"title":"Specific prompt title","description":"What this prompt accomplishes","prompt_text":"Detailed prompt text ready to use","category":"productivity","ai_tools":["ChatGPT","Claude"],"use_cases":["specific use case 1","use case 2"],"instructions":"How to use this prompt effectively","tags":["relevant","tags"],"difficulty":"beginner","estimated_time":"5-10 minutes"}]}`,
-      workflows: `{"workflows":[{"title":"Complete workflow name","description":"What this workflow achieves","workflow_steps":[{"step":1,"title":"Step name","description":"Detailed step description","tools":["required tool"],"estimated_time":"10 minutes"}],"category":"productivity","ai_tools":["specific AI tools"],"duration_estimate":"2-4 hours","complexity_level":"beginner","prerequisites":["requirement"],"expected_outcomes":["outcome 1","outcome 2"],"instructions":"Implementation guidance","tags":["workflow","automation"],"tools_needed":["tool"],"skill_level":"beginner"}]}`,
-      blueprints: `{"blueprints":[{"title":"Comprehensive blueprint name","description":"What this blueprint creates","blueprint_content":{"overview":"Detailed overview","components":["component 1","component 2"],"structure":"Implementation structure","implementation":"Step-by-step implementation"},"category":"productivity","ai_tools":["specific tools"],"implementation_time":"1-2 weeks","difficulty_level":"beginner","resources_needed":["resource 1"],"deliverables":["deliverable 1","deliverable 2"],"instructions":"Complete implementation guide","tags":["blueprint","framework"],"implementation":"Detailed implementation steps","requirements":["requirement"],"tools_used":["tool"]}]}`,
-      strategies: `{"strategies":[{"title":"Strategic plan name","description":"Strategic objective and approach","strategy_framework":{"overview":"Strategy overview","phases":["phase 1","phase 2"],"objectives":["objective 1"],"approach":"Implementation approach"},"category":"productivity","ai_tools":["strategic tools"],"timeline":"3-6 months","success_metrics":["metric 1","metric 2"],"key_actions":["action 1","action 2"],"potential_challenges":["challenge 1"],"mitigation_strategies":["solution 1"],"instructions":"Strategic implementation guide","tags":["strategy","planning"],"priority_level":"high","resource_requirements":["resource"]}]}`
+      prompts: `{"prompts":[{"title":"Specific actionable prompt title","description":"Clear description of what this accomplishes","prompt_text":"Detailed, ready-to-use prompt text that gets results","category":"productivity","ai_tools":["ChatGPT","Claude"],"use_cases":["specific use case 1","use case 2"],"instructions":"Step-by-step instructions for best results","tags":["relevant","actionable","tags"],"difficulty":"beginner","estimated_time":"5-10 minutes"}]}`,
+      workflows: `{"workflows":[{"title":"Complete workflow name with clear objective","description":"What this workflow achieves and why it's valuable","workflow_steps":[{"step":1,"title":"Descriptive step name","description":"Detailed explanation of what to do","tools":["specific tool name"],"estimated_time":"10 minutes"}],"category":"productivity","ai_tools":["specific AI tools needed"],"duration_estimate":"2-4 hours","complexity_level":"beginner","prerequisites":["specific requirement"],"expected_outcomes":["measurable outcome 1","measurable outcome 2"],"instructions":"Clear implementation guidance","tags":["workflow","automation"],"tools_needed":["required tool"],"skill_level":"beginner"}]}`,
+      blueprints: `{"blueprints":[{"title":"Comprehensive blueprint name","description":"What this blueprint creates and its value","blueprint_content":{"overview":"Detailed overview of the blueprint","components":["component 1","component 2","component 3"],"structure":"Clear structure and organization","implementation":"Step-by-step implementation guide"},"category":"productivity","ai_tools":["specific tools needed"],"implementation_time":"1-2 weeks","difficulty_level":"beginner","resources_needed":["resource 1","resource 2"],"deliverables":["deliverable 1","deliverable 2"],"instructions":"Complete implementation guide","tags":["blueprint","framework"],"implementation":"Detailed implementation steps","requirements":["requirement 1"],"tools_used":["tool 1"]}]}`,
+      strategies: `{"strategies":[{"title":"Strategic plan name with clear goal","description":"Strategic objective and comprehensive approach","strategy_framework":{"overview":"Strategy overview and methodology","phases":["phase 1","phase 2","phase 3"],"objectives":["objective 1","objective 2"],"approach":"Detailed implementation approach"},"category":"productivity","ai_tools":["strategic tools needed"],"timeline":"3-6 months","success_metrics":["metric 1","metric 2"],"key_actions":["action 1","action 2","action 3"],"potential_challenges":["challenge 1","challenge 2"],"mitigation_strategies":["solution 1","solution 2"],"instructions":"Strategic implementation guide","tags":["strategy","planning"],"priority_level":"high","resource_requirements":["resource 1"]}]}`
     };
 
-    return `${base}\n\nUse this JSON structure (ensure array has exactly 4 detailed items):\n${schemas[key]}`;
+    return `${base}\n\nUse this JSON structure (ensure array has exactly 4 detailed items with realistic content):\n${schemas[key]}`;
   };
 
   const generateForKey = async (key: Key) => {
+    console.log(`[Components] Generating ${key}...`);
     const prompt = buildPromptFor(key);
     const systemJSON = 'Return ONLY a single valid JSON object with the requested top-level key. No markdown, no code fences, no commentary.';
 
     const res = await callOpenAI([
       { role: 'system', content: systemJSON },
       { role: 'user', content: prompt },
-    ], 700, true, 'gpt-4.1-2025-04-14');
+    ], 1000, true);
 
     const altKeysMap: Record<Key, string[]> = {
       prompts: ['prompt', 'prompts_list'],
@@ -697,73 +484,63 @@ User Profile:
     if ((!arr || arr.length === 0) && obj && typeof obj === 'object') {
       const keysToCheck = [key, ...altKeysMap[key]];
       for (const k of keysToCheck) {
-        if (Array.isArray((obj as any)[k])) { arr = (obj as any)[k]; break; }
+        if (Array.isArray((obj as any)[k])) { 
+          arr = (obj as any)[k]; 
+          break; 
+        }
       }
     }
 
+    // If still no results, try repair
     if (!arr || arr.length === 0) {
+      console.log(`[Components] Attempting repair for ${key}...`);
       const repair = await callOpenAI([
         { role: 'system', content: systemJSON },
-        { role: 'user', content: `${prompt}\n\nIMPORTANT: Return ONLY valid JSON in this exact format with the "${key}" array containing exactly 4 items. No other text.` },
-      ], 700, true, 'gpt-4.1-2025-04-14');
+        { role: 'user', content: `${prompt}\n\nIMPORTANT: Return ONLY valid JSON in this exact format with the "${key}" array containing exactly 4 detailed items. No other text.` },
+      ], 1000, true);
+      
       obj = safeParse(repair.content);
       if (!obj) {
         console.warn(`[gen:${key}] parse failed (attempt 2). First 400 chars:`, repair.content?.slice(0, 400));
         arr = extractArrayByKey(repair.content, key, altKeysMap[key]);
         if (arr.length) console.warn(`[gen:${key}] recovered array via raw extraction on attempt 2.`);
       }
+      
       if ((!arr || arr.length === 0) && obj && typeof obj === 'object') {
         const keysToCheck = [key, ...altKeysMap[key]];
         for (const k of keysToCheck) {
-          if (Array.isArray((obj as any)[k])) { arr = (obj as any)[k]; break; }
-        }
-      }
-    }
-
-    if (!arr || arr.length === 0) {
-      const compactSchema: Record<Key, string> = {
-        prompts: `{"prompts":[{"title":"","description":"","prompt_text":"","category":"productivity","ai_tools":["ChatGPT"],"use_cases":[""],"instructions":"","tags":[""]}]}`,
-        workflows: `{"workflows":[{"title":"","description":"","workflow_steps":[{"step":1,"title":"","description":""}],"category":"productivity","ai_tools":[],"duration_estimate":"","complexity_level":"beginner","prerequisites":[],"expected_outcomes":[],"instructions":"","tags":[]}]}`,
-        blueprints: `{"blueprints":[{"title":"","description":"","blueprint_content":{"overview":"","components":[],"implementation":""},"category":"productivity","ai_tools":[],"implementation_time":"","difficulty_level":"beginner","resources_needed":[],"deliverables":[],"instructions":"","tags":[]}]}`,
-        strategies: `{"strategies":[{"title":"","description":"","strategy_framework":{"overview":"","phases":[],"objectives":[]},"category":"productivity","ai_tools":[],"timeline":"","success_metrics":[],"key_actions":[],"potential_challenges":[],"mitigation_strategies":[],"instructions":"","tags":[]}]}`,
-      };
-      const compactPrompt = `${buildPromptFor(key)}\n\nMake each item concise (2-3 sentences per field).`;
-      const compact = await callOpenAI([
-        { role: 'system', content: systemJSON },
-        { role: 'user', content: `${compactPrompt}\n\nReturn ONLY JSON. Use this minimal example shape:\n${compactSchema[key]}` },
-      ], 700, true, 'gpt-4.1-2025-04-14');
-      const compactObj = safeParse(compact.content);
-      if (compactObj && Array.isArray(compactObj[key])) {
-        arr = compactObj[key];
-      } else {
-        arr = extractArrayByKey(compact.content, key, altKeysMap[key]);
-        if (!arr || arr.length === 0) {
-          console.warn(`[gen:${key}] compact attempt also failed. First 400 chars:`, compact.content?.slice(0, 400));
-          arr = [];
+          if (Array.isArray((obj as any)[k])) { 
+            arr = (obj as any)[k]; 
+            break; 
+          }
         }
       }
     }
 
     arr = normalizeItems(key, arr);
 
-    // Ensure exactly 4 items by topping up if needed
+    // Ensure we have 4 items by generating more if needed
     if (arr.length < 4) {
       const missing = 4 - arr.length;
       const existingTitles = new Set(arr.map((i: any) => (i.title || '').toLowerCase()));
       const fillPrompt = `Generate exactly ${missing} additional unique ${key} that complement the previous ones. Titles must be distinct from this list: ${[...existingTitles].join(', ')}.\nReturn ONLY valid JSON with a single object containing the "${key}" array (length=${missing}).`;
-      const systemJSON = 'Return ONLY a single valid JSON object with the requested top-level key. No markdown, no code fences, no commentary.';
+      
       try {
+        console.log(`[Components] Filling missing ${key} items...`);
         const fillRes = await callOpenAI([
           { role: 'system', content: systemJSON },
           { role: 'user', content: fillPrompt },
-        ], 500, true, 'gpt-4.1-2025-04-14');
+        ], 800, true);
+        
         let fillObj = safeParse(fillRes.content);
         let fillArr: any[] = [];
+        
         if (fillObj && Array.isArray(fillObj[key])) {
           fillArr = fillObj[key];
         } else {
           fillArr = extractArrayByKey(fillRes.content, key, altKeysMap[key]);
         }
+        
         const normalizedFill = normalizeItems(key, fillArr);
         for (const item of normalizedFill) {
           const t = (item.title || '').toLowerCase();
@@ -798,16 +575,16 @@ async function saveComponents(components: GeneratedComponents, userId: string, j
     return {
       user_id: userId,
       jump_id: jumpId,
-      title: p.title ?? '',
-      description: p.description ?? null,
-      prompt_text: p.prompt_text ?? '',
-      category: p.category ?? null,
-      ai_tools: Array.isArray(p.ai_tools) ? p.ai_tools : (p.ai_tools ? [p.ai_tools] : []),
-      use_cases: Array.isArray(p.use_cases) ? p.use_cases : (p.use_cases ? [p.use_cases] : []),
-      instructions: p.instructions ?? null,
-      tags: Array.isArray(p.tags) ? p.tags : (p.tags ? [p.tags] : []),
-      difficulty: p.difficulty ?? null,
-      estimated_time: p.estimated_time ?? null
+      title: p.title || 'Untitled Prompt',
+      description: p.description || '',
+      prompt_text: p.prompt_text || '',
+      category: p.category || 'productivity',
+      ai_tools: p.ai_tools || [],
+      use_cases: p.use_cases || [],
+      instructions: p.instructions || '',
+      tags: p.tags || [],
+      difficulty: p.difficulty || 'beginner',
+      estimated_time: p.estimated_time || '5-10 minutes'
     };
   };
 
@@ -816,19 +593,19 @@ async function saveComponents(components: GeneratedComponents, userId: string, j
     return {
       user_id: userId,
       jump_id: jumpId,
-      title: w.title ?? '',
-      description: w.description ?? null,
-      workflow_steps: Array.isArray(w.workflow_steps) ? w.workflow_steps : [],
-      category: w.category ?? null,
-      ai_tools: Array.isArray(w.ai_tools) ? w.ai_tools : (w.ai_tools ? [w.ai_tools] : []),
-      duration_estimate: w.duration_estimate ?? null,
-      complexity_level: w.complexity_level ?? null,
-      prerequisites: Array.isArray(w.prerequisites) ? w.prerequisites : [],
-      expected_outcomes: Array.isArray(w.expected_outcomes) ? w.expected_outcomes : [],
-      instructions: w.instructions ?? null,
-      tags: Array.isArray(w.tags) ? w.tags : (w.tags ? [w.tags] : []),
-      tools_needed: Array.isArray(w.tools_needed) ? w.tools_needed : [],
-      skill_level: w.skill_level ?? null
+      title: w.title || 'Untitled Workflow',
+      description: w.description || '',
+      workflow_steps: w.workflow_steps || [],
+      category: w.category || 'productivity',
+      ai_tools: w.ai_tools || [],
+      duration_estimate: w.duration_estimate || '1-2 hours',
+      complexity_level: w.complexity_level || 'beginner',
+      prerequisites: w.prerequisites || [],
+      expected_outcomes: w.expected_outcomes || [],
+      instructions: w.instructions || '',
+      tags: w.tags || [],
+      tools_needed: w.tools_needed || [],
+      skill_level: w.skill_level || 'beginner'
     };
   };
 
@@ -837,20 +614,20 @@ async function saveComponents(components: GeneratedComponents, userId: string, j
     return {
       user_id: userId,
       jump_id: jumpId,
-      title: b.title ?? '',
-      description: b.description ?? null,
-      blueprint_content: typeof b.blueprint_content === 'object' && b.blueprint_content !== null ? b.blueprint_content : {},
-      category: b.category ?? null,
-      ai_tools: Array.isArray(b.ai_tools) ? b.ai_tools : (b.ai_tools ? [b.ai_tools] : []),
-      implementation_time: b.implementation_time ?? null,
-      difficulty_level: b.difficulty_level ?? null,
-      resources_needed: Array.isArray(b.resources_needed) ? b.resources_needed : [],
-      deliverables: Array.isArray(b.deliverables) ? b.deliverables : [],
-      instructions: b.instructions ?? null,
-      tags: Array.isArray(b.tags) ? b.tags : (b.tags ? [b.tags] : []),
-      implementation: b.implementation ?? null,
-      requirements: Array.isArray(b.requirements) ? b.requirements : [],
-      tools_used: Array.isArray(b.tools_used) ? b.tools_used : []
+      title: b.title || 'Untitled Blueprint',
+      description: b.description || '',
+      blueprint_content: b.blueprint_content || {},
+      category: b.category || 'productivity',
+      ai_tools: b.ai_tools || [],
+      implementation_time: b.implementation_time || '1-2 weeks',
+      difficulty_level: b.difficulty_level || 'beginner',
+      resources_needed: b.resources_needed || [],
+      deliverables: b.deliverables || [],
+      instructions: b.instructions || '',
+      tags: b.tags || [],
+      implementation: b.implementation || '',
+      requirements: b.requirements || [],
+      tools_used: b.tools_used || []
     };
   };
 
@@ -859,20 +636,20 @@ async function saveComponents(components: GeneratedComponents, userId: string, j
     return {
       user_id: userId,
       jump_id: jumpId,
-      title: s.title ?? '',
-      description: s.description ?? null,
-      strategy_framework: typeof s.strategy_framework === 'object' && s.strategy_framework !== null ? s.strategy_framework : {},
-      category: s.category ?? null,
-      ai_tools: Array.isArray(s.ai_tools) ? s.ai_tools : (s.ai_tools ? [s.ai_tools] : []),
-      timeline: s.timeline ?? null,
-      success_metrics: Array.isArray(s.success_metrics) ? s.success_metrics : [],
-      key_actions: Array.isArray(s.key_actions) ? s.key_actions : [],
-      potential_challenges: Array.isArray(s.potential_challenges) ? s.potential_challenges : [],
-      mitigation_strategies: Array.isArray(s.mitigation_strategies) ? s.mitigation_strategies : [],
-      instructions: s.instructions ?? null,
-      tags: Array.isArray(s.tags) ? s.tags : (s.tags ? [s.tags] : []),
-      priority_level: s.priority_level ?? null,
-      resource_requirements: Array.isArray(s.resource_requirements) ? s.resource_requirements : []
+      title: s.title || 'Untitled Strategy',
+      description: s.description || '',
+      strategy_framework: s.strategy_framework || {},
+      category: s.category || 'productivity',
+      ai_tools: s.ai_tools || [],
+      timeline: s.timeline || '3-6 months',
+      success_metrics: s.success_metrics || [],
+      key_actions: s.key_actions || [],
+      potential_challenges: s.potential_challenges || [],
+      mitigation_strategies: s.mitigation_strategies || [],
+      instructions: s.instructions || '',
+      tags: s.tags || [],
+      priority_level: s.priority_level || 'medium',
+      resource_requirements: s.resource_requirements || []
     };
   };
 
@@ -880,41 +657,103 @@ async function saveComponents(components: GeneratedComponents, userId: string, j
     prompts: components.prompts?.length || 0,
     workflows: components.workflows?.length || 0,
     blueprints: components.blueprints?.length || 0,
-    strategies: components.strategies?.length || 0
+    strategies: components.strategies?.length || 0,
   });
 
-  const saves = [
-    ...components.prompts.map(p => supabase.from('user_prompts').insert(sanitizePrompt(p))),
-    ...components.workflows.map(w => supabase.from('user_workflows').insert(sanitizeWorkflow(w))),
-    ...components.blueprints.map(b => supabase.from('user_blueprints').insert(sanitizeBlueprint(b))),
-    ...components.strategies.map(s => supabase.from('user_strategies').insert(sanitizeStrategy(s)))
-  ];
-
-  const results = await Promise.allSettled(saves);
   let saved = 0;
-  const errors: Array<any> = [];
-  
-  for (const r of results) {
-    if (r.status === 'fulfilled') {
-      const val: any = (r as any).value;
-      if (val?.error) {
-        console.error('Database insert error:', val.error);
-        errors.push({ type: 'fulfilled-error', error: val.error });
-      } else {
-        saved++;
+  let total = 0;
+  const errors: string[] = [];
+
+  // Save prompts
+  if (components.prompts && components.prompts.length > 0) {
+    for (const prompt of components.prompts) {
+      try {
+        total++;
+        const sanitized = sanitizePrompt(prompt);
+        const { error } = await supabase.from('user_prompts').insert(sanitized);
+        if (error) {
+          console.error('Error saving prompt:', error);
+          errors.push(`Prompt: ${error.message}`);
+        } else {
+          saved++;
+        }
+      } catch (e) {
+        console.error('Error processing prompt:', e);
+        errors.push(`Prompt processing: ${String(e)}`);
       }
-    } else {
-      console.error('Promise rejected:', (r as any).reason);
-      errors.push({ type: 'rejected', reason: (r as any).reason });
     }
   }
-  
-  if (errors.length) {
-    console.error('Errors while saving generated components:', errors);
+
+  // Save workflows
+  if (components.workflows && components.workflows.length > 0) {
+    for (const workflow of components.workflows) {
+      try {
+        total++;
+        const sanitized = sanitizeWorkflow(workflow);
+        const { error } = await supabase.from('user_workflows').insert(sanitized);
+        if (error) {
+          console.error('Error saving workflow:', error);
+          errors.push(`Workflow: ${error.message}`);
+        } else {
+          saved++;
+        }
+      } catch (e) {
+        console.error('Error processing workflow:', e);
+        errors.push(`Workflow processing: ${String(e)}`);
+      }
+    }
   }
-  
-  console.log('Components save result:', { total: saves.length, saved, errors: errors.length });
-  return { total: saves.length, saved, errors };
+
+  // Save blueprints
+  if (components.blueprints && components.blueprints.length > 0) {
+    for (const blueprint of components.blueprints) {
+      try {
+        total++;
+        const sanitized = sanitizeBlueprint(blueprint);
+        const { error } = await supabase.from('user_blueprints').insert(sanitized);
+        if (error) {
+          console.error('Error saving blueprint:', error);
+          errors.push(`Blueprint: ${error.message}`);
+        } else {
+          saved++;
+        }
+      } catch (e) {
+        console.error('Error processing blueprint:', e);
+        errors.push(`Blueprint processing: ${String(e)}`);
+      }
+    }
+  }
+
+  // Save strategies
+  if (components.strategies && components.strategies.length > 0) {
+    for (const strategy of components.strategies) {
+      try {
+        total++;
+        const sanitized = sanitizeStrategy(strategy);
+        const { error } = await supabase.from('user_strategies').insert(sanitized);
+        if (error) {
+          console.error('Error saving strategy:', error);
+          errors.push(`Strategy: ${error.message}`);
+        } else {
+          saved++;
+        }
+      } catch (e) {
+        console.error('Error processing strategy:', e);
+        errors.push(`Strategy processing: ${String(e)}`);
+      }
+    }
+  }
+
+  console.log('Components save result:', { total, saved, errors: errors.length });
+  console.log('Components save summary:', { total, saved, errors }, 'Expected counts:', {
+    prompts: components.prompts?.length || 0,
+    workflows: components.workflows?.length || 0,
+    blueprints: components.blueprints?.length || 0,
+    strategies: components.strategies?.length || 0,
+    total: (components.prompts?.length || 0) + (components.workflows?.length || 0) + (components.blueprints?.length || 0) + (components.strategies?.length || 0)
+  });
+
+  return { total, saved, errors };
 }
 
 serve(async (req) => {
@@ -981,7 +820,7 @@ serve(async (req) => {
             { 
               phase_number: 2, 
               title: "Implementation Phase", 
-              description: "Detailed phase 2 description with specific objectives", 
+              description: "Detailed phase 2 description", 
               duration: "6-8 weeks", 
               objectives: ["objective 1", "objective 2"], 
               key_actions: [
@@ -994,7 +833,7 @@ serve(async (req) => {
             { 
               phase_number: 3, 
               title: "Optimization Phase", 
-              description: "Detailed phase 3 description with specific objectives", 
+              description: "Detailed phase 3 description", 
               duration: "4-6 weeks", 
               objectives: ["objective 1", "objective 2"], 
               key_actions: [
@@ -1002,34 +841,49 @@ serve(async (req) => {
               ], 
               milestones: [{"milestone": "milestone name", "target_date": "Week 12", "success_criteria": ["criteria"]}], 
               deliverables: ["deliverable 1", "deliverable 2"], 
-              risks: [{"risk": "risk description", "impact": "medium", "probability": "low", "mitigation": "mitigation strategy"}] 
+              risks: [{"risk": "risk description", "impact": "low", "probability": "low", "mitigation": "mitigation strategy"}] 
             }
           ]
         },
-        tools_prompts: { 
-          recommended_ai_tools: [{"tool": "ChatGPT", "category": "content", "use_case": "content creation", "learning_curve": "easy", "cost_estimate": "$20/month", "integration_priority": "high"}], 
-          custom_prompts: [{"title": "prompt title", "purpose": "prompt purpose", "prompt": "detailed prompt text", "ai_tool": "ChatGPT", "expected_output": "expected result"}], 
-          templates: [{"name": "template name", "type": "template type", "description": "template description", "use_case": "when to use"}] 
+        tools_prompts: {
+          recommended_ai_tools: ["tool 1", "tool 2"],
+          custom_prompts: ["prompt 1", "prompt 2"],
+          templates: ["template 1", "template 2"]
         },
-        workflows_strategies: { 
-          workflows: [{"title": "workflow name", "description": "workflow description", "trigger": "when to start", "steps": [{"step": "step name", "description": "step description", "tools_used": ["tool"], "estimated_time": "30 min"}], "automation_level": "semi-automated", "frequency": "daily"}], 
-          strategies: [{"strategy": "strategy name", "description": "strategy description", "success_factors": ["factor"], "implementation_tips": ["tip"], "monitoring_approach": "how to monitor"}] 
+        workflows_strategies: {
+          workflows: ["workflow 1", "workflow 2"],
+          strategies: ["strategy 1", "strategy 2"]
         },
-        metrics_tracking: { 
-          kpis: [{"metric": "conversion rate", "description": "tracks effectiveness", "target": "25%", "measurement_frequency": "weekly", "data_source": "analytics"}], 
-          tracking_methods: [{"method": "method name", "tools": ["tool"], "setup_complexity": "low", "cost": "free"}], 
-          reporting_schedule: {"daily": ["task 1"], "weekly": ["task 2"], "monthly": ["task 3"], "quarterly": ["task 4"]}, 
-          success_criteria: [{"timeframe": "3 months", "criteria": ["criteria 1", "criteria 2"]}] 
+        metrics_tracking: {
+          kpis: ["kpi 1", "kpi 2"],
+          tracking_methods: ["method 1", "method 2"],
+          reporting_schedule: { 
+            daily: ["daily task 1"], 
+            weekly: ["weekly task 1"], 
+            monthly: ["monthly task 1"], 
+            quarterly: ["quarterly task 1"] 
+          },
+          success_criteria: ["criteria 1", "criteria 2"]
         },
-        investment: { 
-          time_investment: {"total_hours": "40-60 hours", "weekly_commitment": "8-10 hours", "phase_breakdown": [{"phase": "Phase 1", "hours": "20 hours"}]}, 
-          financial_investment: {"total_budget": "$500-1000", "categories": [{"category": "Tools", "amount": "$300", "description": "AI subscriptions"}]}, 
-          roi_projection: {"timeframe": "6 months", "expected_roi": "300%", "break_even_point": "3 months"} 
+        investment: {
+          time_investment: { 
+            total_hours: "40-60 hours", 
+            weekly_commitment: "3-5 hours", 
+            phase_breakdown: ["Phase 1: 20 hours", "Phase 2: 25 hours", "Phase 3: 15 hours"] 
+          },
+          financial_investment: { 
+            total_budget: "$500-1000", 
+            categories: [{"category": "Tools", "amount": "$200"}, {"category": "Training", "amount": "$300"}] 
+          },
+          roi_projection: { 
+            timeframe: "6-12 months", 
+            expected_roi: "300-500%", 
+            break_even_point: "4-6 months" 
+          }
         }
-      }, null, 0)
+      })
     ].join('\n');
 
-    // Get recent messages (last 6 to avoid token limits)
     const recentMessages = Array.isArray(messages) ? messages.slice(-6) : [];
     
     // Generate structured jump plan
@@ -1040,14 +894,15 @@ serve(async (req) => {
     let modelUsed: string | undefined = undefined;
     
     if (!shouldGenerateComponents) {
-      const systemJSON = 'Return ONLY a single valid JSON object with the requested structure. No markdown, no code fences, no commentary.';
+      console.log('[Jump Generation] Starting jump plan generation...');
+      const systemJSON = 'Return ONLY a single valid JSON object with the requested structure. No markdown, no code fences, no commentary. Make sure to include all required fields with realistic, detailed content.';
       
       let rawContent = '';
       const res1 = await callOpenAI([
         { role: 'system', content: systemJSON },
         { role: 'user', content: systemPrompt },
         ...recentMessages
-      ], 1500, true, 'gpt-4.1-2025-04-14');
+      ], 2000, true);
       
       usage = res1.usage;
       finish_reason = res1.finish_reason;
@@ -1056,60 +911,60 @@ serve(async (req) => {
       
       jumpPlan = safeParse(res1.content);
       
-        // Enhanced debugging for parsing failures
-        if (!jumpPlan) {
-          console.warn('[jump-plan] parse failed (attempt 1). Response length:', res1.content?.length);
-          console.warn('[jump-plan] First 200 chars:', res1.content?.slice(0, 200));
-          console.warn('[jump-plan] Last 200 chars:', res1.content?.slice(-200));
-          
-          // Try to identify the issue
-          if (res1.content?.includes('```json')) {
-            console.warn('[jump-plan] Content appears to have markdown code fences');
-          }
-          if (res1.content?.includes("'")) {
-            console.warn('[jump-plan] Content contains single quotes that may need conversion');
-          }
-          
-          // Attempt direct repair without another AI call first
-          let repairedContent = res1.content;
-          if (repairedContent) {
-            // Remove markdown fences
-            repairedContent = repairedContent.replace(/```(?:json)?\s*/gi, '').replace(/```$/g, '');
-            // Try parsing the cleaned content
-            const directParse = safeParse(repairedContent);
-            if (directParse) {
-              console.log('[jump-plan] Successfully parsed after direct cleanup');
-              jumpPlan = directParse;
-            }
-          }
-          
-          // If direct repair failed, use AI to fix it
-          if (!jumpPlan) {
-            const repair = await callOpenAI([
-              { role: 'system', content: systemJSON },
-              { role: 'user', content: `${systemPrompt}\n\nIMPORTANT: Return ONLY valid JSON in the exact format specified. No other text. Create exactly 3 phases in the phases array with complete data.\n\nHere is the draft to normalize (may include markdown fences or invalid JSON):` },
-              { role: 'user', content: rawContent || res1.content || '' },
-              ...recentMessages
-            ], 1500, true, 'gpt-4.1-2025-04-14');
-            
-            rawContent = repair.content || rawContent;
-            jumpPlan = safeParse(repair.content);
-            modelUsed = repair.modelUsed;
-            if (!jumpPlan) {
-              console.warn('[jump-plan] parse failed (attempt 2). Response length:', repair.content?.length);
-              console.warn('[jump-plan] First 200 chars:', repair.content?.slice(0, 200));
-              console.warn('[jump-plan] Last 200 chars:', repair.content?.slice(-200));
-              
-              // Log the entire failed content for debugging (truncated)
-              console.warn('[jump-plan] Full failed content (first 1000 chars):', repair.content?.slice(0, 1000));
-            } else {
-              console.log('[jump-plan] Successfully parsed on attempt 2');
-            }
-          }
-        } else {
-          console.log('[jump-plan] Successfully parsed on attempt 1');
+      // Enhanced debugging for parsing failures
+      if (!jumpPlan) {
+        console.warn('[jump-plan] parse failed (attempt 1). Response length:', res1.content?.length);
+        console.warn('[jump-plan] First 200 chars:', res1.content?.slice(0, 200));
+        console.warn('[jump-plan] Last 200 chars:', res1.content?.slice(-200));
+        
+        // Try to identify the issue
+        if (res1.content?.includes('```json')) {
+          console.warn('[jump-plan] Content appears to have markdown code fences');
         }
-      // Removed stray brace to keep content generation inside this block
+        if (res1.content?.includes("'")) {
+          console.warn('[jump-plan] Content contains single quotes that may need conversion');
+        }
+        
+        // Attempt direct repair without another AI call first
+        let repairedContent = res1.content;
+        if (repairedContent) {
+          // Remove markdown fences
+          repairedContent = repairedContent.replace(/```(?:json)?\s*/gi, '').replace(/```$/g, '');
+          // Try parsing the cleaned content
+          const directParse = safeParse(repairedContent);
+          if (directParse) {
+            console.log('[jump-plan] Successfully parsed after direct cleanup');
+            jumpPlan = directParse;
+          }
+        }
+        
+        // If direct repair failed, use AI to fix it
+        if (!jumpPlan) {
+          console.log('[Jump Generation] Attempting AI repair of JSON...');
+          const repair = await callOpenAI([
+            { role: 'system', content: systemJSON },
+            { role: 'user', content: `${systemPrompt}\n\nIMPORTANT: Return ONLY valid JSON in the exact format specified. No other text. Create exactly 3 phases in the phases array with complete data.\n\nHere is the draft to normalize (may include markdown fences or invalid JSON):` },
+            { role: 'user', content: rawContent || res1.content || '' },
+            ...recentMessages
+          ], 2000, true);
+          
+          rawContent = repair.content || rawContent;
+          jumpPlan = safeParse(repair.content);
+          modelUsed = repair.modelUsed;
+          if (!jumpPlan) {
+            console.warn('[jump-plan] parse failed (attempt 2). Response length:', repair.content?.length);
+            console.warn('[jump-plan] First 200 chars:', repair.content?.slice(0, 200));
+            console.warn('[jump-plan] Last 200 chars:', repair.content?.slice(-200));
+            
+            // Log the entire failed content for debugging (truncated)
+            console.warn('[jump-plan] Full failed content (first 1000 chars):', repair.content?.slice(0, 1000));
+          } else {
+            console.log('[jump-plan] Successfully parsed on attempt 2');
+          }
+        }
+      } else {
+        console.log('[jump-plan] Successfully parsed on attempt 1');
+      }
 
       // Convert structured plan back to formatted text for backward compatibility
       if (jumpPlan) {
