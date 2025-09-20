@@ -112,13 +112,17 @@ export default function JumpsStudio() {
   };
 
   const handleProfileSubmit = async (profile: UserProfile) => {
+    console.log('[JumpsStudio] Profile submitted:', profile);
     setUserProfile(profile);
     setIsProfileFormOpen(false);
     // Auto-generate jump name for new jumps
     if (isNewJump && !jumpName) {
-      setJumpName(generateJumpName());
+      const newJumpName = generateJumpName();
+      console.log('[JumpsStudio] Auto-generated jump name:', newJumpName);
+      setJumpName(newJumpName);
     }
     setShowChat(true); // Show chat immediately
+    console.log('[JumpsStudio] About to scroll to chat, showChat set to true');
     scrollToChat();
   };
 

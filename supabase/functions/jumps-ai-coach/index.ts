@@ -930,7 +930,9 @@ serve(async (req) => {
   }
 
   try {
-    const { messages, userProfile, userId, jumpId, generateComponents: shouldGenerateComponents } = await req.json();
+    const body = await req.json();
+    console.log('Edge function called with body:', JSON.stringify(body, null, 2));
+    const { messages, userProfile, userId, jumpId, generateComponents: shouldGenerateComponents } = body;
 
     // Streamlined system prompt for faster generation
     const systemPrompt = [
@@ -1174,9 +1176,11 @@ serve(async (req) => {
 
   } catch (error) {
     console.error('Edge function error:', error);
+    console.error('Error stack:', error.stack);
     return new Response(JSON.stringify({ 
       error: 'Generation failed',
-      details: error.message 
+      details: error.message,
+      stack: error.stack 
     }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },

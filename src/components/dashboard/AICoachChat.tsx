@@ -166,6 +166,7 @@ export default function AICoachChat({
 
     // Define generator first so we can call it for both hidden and visible chat modes
     const generateInitialPlan = async () => {
+      console.log('[AICoachChat] Starting generateInitialPlan, userProfile:', userProfile, 'user:', user?.id);
       setIsLoading(true);
       startLoadingTimer();
       try {
@@ -182,7 +183,8 @@ export default function AICoachChat({
         const response: any = await invokeWithTimeout(payload);
         console.log('[AICoachChat] Auto-generation response:', response);
         if (response?.error) {
-          throw new Error(response.error.message || 'Failed to generate initial plan');
+          console.error('[AICoachChat] Error in response:', response.error);
+          throw new Error(response.error.message || response.error.details || 'Failed to generate initial plan');
         }
 
         let aiText = extractAiMessage(response);
