@@ -63,6 +63,8 @@ export default function AICoachChat({
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const hasGeneratedRef = useRef(false);
   const loadingTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const isMountedRef = useRef(true);
+  const generationInProgressRef = useRef(false);
   const { toast } = useToast();
   const { subscription } = useAuth();
   
@@ -149,11 +151,16 @@ export default function AICoachChat({
       };
   
   useEffect(() => {
-    let isMounted = true;
+    isMountedRef.current = true;
+    
+    // Prevent multiple generations
+    if (hasGeneratedRef.current || generationInProgressRef.current) {
+      return;
+    }
     
     // If refining an existing plan, seed a helper message and skip auto-generation
     if (isRefinementMode && initialPlan) {
-      if (isMounted) {
+      if (isMountedRef.current) {
         setMessages([
           {
             id: '1',
@@ -163,18 +170,22 @@ export default function AICoachChat({
           }
         ]);
       }
-      return () => { isMounted = false; };
+      return;
     }
 
     const tryParseJSON = (text: string): any | null => safeParseJSON(text);
 
     // Define generator first so we can call it for both hidden and visible chat modes
     const generateInitialPlan = async () => {
-      if (!isMounted) return;
+      if (!isMountedRef.current || generationInProgressRef.current) return;
       
+      generationInProgressRef.current = true;
       console.log('[AICoachChat] Starting generateInitialPlan, userProfile:', userProfile, 'user:', user?.id);
-      setIsLoading(true);
-      startLoadingTimer();
+      
+      if (isMountedRef.current) {
+        setIsLoading(true);
+        startLoadingTimer();
+      }
       try {
         const initialPrompt =
           "Using the provided profile context, generate a fully comprehensive, professional, elite-level, actionable 'Jump' plan following the RESPONSE STRUCTURE from the system prompt. Be specific with tools, steps, timelines, and metrics. Tailor everything to the user's role, industry, experience, time, and budget. Use clear headings and bullet points.";
@@ -188,7 +199,7 @@ export default function AICoachChat({
         console.log('[AICoachChat] Auto-invoking jumps-ai-coach with payload:', payload);
         const response: any = await invokeWithTimeout(payload);
         console.log('[AICoachChat] Auto-generation response:', response);
-        if (!isMounted) return;
+        if (!isMountedRef.current) return;
         
         if (response?.error) {
           console.error('[AICoachChat] Error in response:', response.error);
@@ -218,9 +229,7 @@ export default function AICoachChat({
           throw new Error('No content was generated. Please try again.');
         }
 
-        if (!isMounted) return;
-
-        if (!isMounted) return;
+        if (!isMountedRef.current) return;
         
         const assistantMessage: Message = {
           id: (Date.now() + 1).toString(),
@@ -231,7 +240,7 @@ export default function AICoachChat({
         
         if (!aiText) {
           console.warn('[AICoachChat] Unexpected AI response shape:', response);
-          if (isMounted) {
+          if (isMountedRef.current) {
             toast({
               title: 'AI response issue',
               description: 'Received an unexpected response from the AI. Please try again.',
@@ -240,7 +249,7 @@ export default function AICoachChat({
           }
         }
         
-        if (isMounted) {
+        if (isMountedRef.current) {
           setMessages((prev) => [...prev, assistantMessage]);
 
           if (onPlanGenerated) {
@@ -326,9 +335,12 @@ export default function AICoachChat({
         }
       } catch (err) {
         console.error('Error generating initial plan:', err);
-        toast({ title: 'Generation error', description: (err as any)?.message || 'Failed to generate your plan. You can try again by sending a message.', variant: 'destructive' });
+        if (isMountedRef.current) {
+          toast({ title: 'Generation error', description: (err as any)?.message || 'Failed to generate your plan. You can try again by sending a message.', variant: 'destructive' });
+        }
       } finally {
-        if (isMounted) {
+        generationInProgressRef.current = false;
+        if (isMountedRef.current) {
           setIsLoading(false);
           stopLoadingTimer();
         }
@@ -339,7 +351,7 @@ export default function AICoachChat({
     if (hideChat) {
       generateInitialPlan();
       return () => { 
-        isMounted = false;
+        isMountedRef.current = false;
         stopLoadingTimer();
       };
     }
@@ -352,22 +364,32 @@ export default function AICoachChat({
       timestamp: new Date()
     };
     
-    if (isMounted) {
+    if (isMountedRef.current) {
       setMessages([welcomeMessage]);
+      hasGeneratedRef.current = true;
       generateInitialPlan();
     }
     
     return () => { 
-      isMounted = false;
+      isMountedRef.current = false;
+      generationInProgressRef.current = false;
       stopLoadingTimer();
     };
-  }, [userProfile, hideChat, isRefinementMode, initialPlan]);
+  }, []);
 
   useEffect(() => {
-    if (scrollAreaRef.current) {
+    if (scrollAreaRef.current && isMountedRef.current) {
       scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight;
     }
   }, [messages]);
+
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false;
+      generationInProgressRef.current = false;
+      stopLoadingTimer();
+    };
+  }, []);
 
   const sendMessage = async () => {
     if (!input.trim() || isLoading) return;
