@@ -149,23 +149,29 @@ export default function AICoachChat({
       };
   
   useEffect(() => {
+    let isMounted = true;
+    
     // If refining an existing plan, seed a helper message and skip auto-generation
     if (isRefinementMode && initialPlan) {
-      setMessages([
-        {
-          id: '1',
-          role: 'assistant',
-          content: `I can see your current Jump Plan. How would you like to refine or improve it? You can ask me to:\n\n• Add more details to specific sections\n• Adjust timelines or priorities\n• Include additional strategies\n• Modify recommendations\n• Focus on particular areas\n\nWhat would you like to change?`,
-          timestamp: new Date()
-        }
-      ]);
-      return;
+      if (isMounted) {
+        setMessages([
+          {
+            id: '1',
+            role: 'assistant',
+            content: `I can see your current Jump Plan. How would you like to refine or improve it? You can ask me to:\n\n• Add more details to specific sections\n• Adjust timelines or priorities\n• Include additional strategies\n• Modify recommendations\n• Focus on particular areas\n\nWhat would you like to change?`,
+            timestamp: new Date()
+          }
+        ]);
+      }
+      return () => { isMounted = false; };
     }
 
     const tryParseJSON = (text: string): any | null => safeParseJSON(text);
 
     // Define generator first so we can call it for both hidden and visible chat modes
     const generateInitialPlan = async () => {
+      if (!isMounted) return;
+      
       console.log('[AICoachChat] Starting generateInitialPlan, userProfile:', userProfile, 'user:', user?.id);
       setIsLoading(true);
       startLoadingTimer();
@@ -182,6 +188,8 @@ export default function AICoachChat({
         console.log('[AICoachChat] Auto-invoking jumps-ai-coach with payload:', payload);
         const response: any = await invokeWithTimeout(payload);
         console.log('[AICoachChat] Auto-generation response:', response);
+        if (!isMounted) return;
+        
         if (response?.error) {
           console.error('[AICoachChat] Error in response:', response.error);
           throw new Error(response.error.message || response.error.details || 'Failed to generate initial plan');
@@ -210,28 +218,38 @@ export default function AICoachChat({
           throw new Error('No content was generated. Please try again.');
         }
 
+        if (!isMounted) return;
+
+        if (!isMounted) return;
+        
         const assistantMessage: Message = {
           id: (Date.now() + 1).toString(),
           role: 'assistant',
           content: aiText && aiText.trim() ? aiText : 'No response received from AI.',
           timestamp: new Date()
         };
+        
         if (!aiText) {
           console.warn('[AICoachChat] Unexpected AI response shape:', response);
-          toast({
-            title: 'AI response issue',
-            description: 'Received an unexpected response from the AI. Please try again.',
-            variant: 'destructive'
-          });
+          if (isMounted) {
+            toast({
+              title: 'AI response issue',
+              description: 'Received an unexpected response from the AI. Please try again.',
+              variant: 'destructive'
+            });
+          }
         }
-        setMessages((prev) => [...prev, assistantMessage]);
+        
+        if (isMounted) {
+          setMessages((prev) => [...prev, assistantMessage]);
 
-        if (onPlanGenerated) {
-          onPlanGenerated({
-            content: aiText || '',
-            structuredPlan: structuredPlan || null,
-            comprehensivePlan: structuredPlan || null,
-          });
+          if (onPlanGenerated) {
+            onPlanGenerated({
+              content: aiText || '',
+              structuredPlan: structuredPlan || null,
+              comprehensivePlan: structuredPlan || null,
+            });
+          }
         }
 
         // Save or update Jump if we have useful data
@@ -310,15 +328,20 @@ export default function AICoachChat({
         console.error('Error generating initial plan:', err);
         toast({ title: 'Generation error', description: (err as any)?.message || 'Failed to generate your plan. You can try again by sending a message.', variant: 'destructive' });
       } finally {
-        setIsLoading(false);
-        stopLoadingTimer();
+        if (isMounted) {
+          setIsLoading(false);
+          stopLoadingTimer();
+        }
       }
     };
 
     // If chat UI is hidden, still generate the plan in the background
     if (hideChat) {
       generateInitialPlan();
-      return;
+      return () => { 
+        isMounted = false;
+        stopLoadingTimer();
+      };
     }
 
     // Otherwise, show welcome message and then generate
@@ -328,9 +351,17 @@ export default function AICoachChat({
       content: `Welcome to Jumps Studio.\n\nI've reviewed your profile and I'm ready to create your custom "Jump" plan. Based on your role as a ${userProfile.currentRole} in ${userProfile.industry}, there are strong opportunities for AI integration.\n\nI'll generate a comprehensive plan now. You can refine it with chat after.`,
       timestamp: new Date()
     };
-    setMessages([welcomeMessage]);
-    generateInitialPlan();
-  }, [userProfile, hideChat, isRefinementMode, initialPlan, onPlanGenerated]);
+    
+    if (isMounted) {
+      setMessages([welcomeMessage]);
+      generateInitialPlan();
+    }
+    
+    return () => { 
+      isMounted = false;
+      stopLoadingTimer();
+    };
+  }, [userProfile, hideChat, isRefinementMode, initialPlan]);
 
   useEffect(() => {
     if (scrollAreaRef.current) {
