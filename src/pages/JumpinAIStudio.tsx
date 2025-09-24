@@ -11,8 +11,7 @@ import { toast } from 'sonner';
 import { Sparkles, Clock, User, Lock, CheckCircle, Zap, Target, Brain, Rocket, ChevronRight } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { guestLimitService } from '@/services/guestLimitService';
-import ProgressiveJumpDisplay from '@/components/ProgressiveJumpDisplay';
-import { useRealtimeGeneration } from '@/hooks/useRealtimeGeneration';
+import JumpResultDisplay from '@/components/JumpResultDisplay';
 import { supabase } from '@/integrations/supabase/client';
 import Navigation from '@/components/Navigation';
 import MiniFooter from '@/components/MiniFooter';
@@ -39,34 +38,10 @@ const JumpinAIStudio: React.FC = () => {
   const [guestCanUse, setGuestCanUse] = useState(true);
   const [guestUsageCount, setGuestUsageCount] = useState(0);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [jumpResult, setJumpResult] = useState<any>(null);
   const [showResult, setShowResult] = useState(false);
 
   const { user, isAuthenticated } = useAuth();
-
-  // Realtime generation hook
-  const {
-    isConnected,
-    isGenerating: realtimeIsGenerating,
-    status,
-    generationData,
-    timer,
-    jumpId,
-    connect,
-    startGeneration
-  } = useRealtimeGeneration({
-    onComplete: (data) => {
-      setIsGenerating(false);
-      if (jumpId) {
-        toast.success('Your Jump in AI has been saved to your dashboard!');
-      } else if (!isAuthenticated) {
-        toast.success('Your Jump in AI is ready! Sign up to save and access more features.');
-      }
-    },
-    onError: (error) => {
-      setIsGenerating(false);
-      setShowResult(false);
-    }
-  });
 
   useEffect(() => {
     checkGuestLimits();
@@ -78,11 +53,6 @@ const JumpinAIStudio: React.FC = () => {
       loadSavedFormData();
     }
   }, [isAuthenticated, user]);
-
-  // Connect to realtime generation service
-  useEffect(() => {
-    connect();
-  }, [connect]);
 
   const loadSavedFormData = async () => {
     // SECURITY: Only load data for authenticated users with verified user ID
@@ -184,7 +154,7 @@ const JumpinAIStudio: React.FC = () => {
 
     try {
       setIsGenerating(true);
-      setShowResult(true); // Show progressive display immediately
+      setShowResult(false);
       
       // Save form data for logged-in users
       if (isAuthenticated && user?.id) {
@@ -196,8 +166,20 @@ const JumpinAIStudio: React.FC = () => {
         await guestLimitService.recordGuestUsage();
       }
 
-      // Start realtime generation
-      startGeneration(formData, user?.id);
+      // Generate Jump using jumpinai-coach edge function
+      const { data: result, error } = await supabase.functions.invoke('jumps-ai-coach', {
+        body: { 
+          profile: formData,
+          userId: user?.id || null
+        }
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      setJumpResult(result);
+      setShowResult(true);
 
       // Update guest limits
       if (!isAuthenticated) {
@@ -205,11 +187,18 @@ const JumpinAIStudio: React.FC = () => {
         setGuestUsageCount(1);
       }
 
+      if (result?.jump_id && isAuthenticated) {
+        toast.success('Your Jump in AI has been saved to your dashboard!');
+      } else if (!isAuthenticated) {
+        toast.success('Your Jump in AI is ready! Sign up to save and access more features.');
+      }
+
     } catch (error) {
-      console.error('Error starting generation:', error);
-      toast.error('Failed to start generation. Please try again.');
-      setIsGenerating(false);
+      console.error('Error generating Jump:', error);
+      toast.error('Failed to generate your Jump in AI. Please try again.');
       setShowResult(false);
+    } finally {
+      setIsGenerating(false);
     }
   };
 
@@ -441,18 +430,13 @@ const JumpinAIStudio: React.FC = () => {
               <div className="pt-6">
                 <Button
                   onClick={handleGenerate}
-                  disabled={realtimeIsGenerating || (!isAuthenticated && !guestCanUse) || !isConnected}
+                  disabled={isGenerating || (!isAuthenticated && !guestCanUse)}
                   className="w-full h-14 text-lg font-semibold bg-gradient-to-r from-primary via-primary-glow to-primary-bright hover:opacity-90 transition-all duration-300 shadow-glow hover:shadow-glow-intense disabled:opacity-50"
                 >
-                  {realtimeIsGenerating ? (
+                  {isGenerating ? (
                     <div className="flex items-center gap-3">
                       <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                      <span>Generating... {timer}</span>
-                    </div>
-                  ) : !isConnected ? (
-                    <div className="flex items-center gap-3">
-                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                      <span>Connecting...</span>
+                      <span>Generating Your Jump in AI...</span>
                     </div>
                   ) : (
                     <div className="flex items-center gap-3">
@@ -465,65 +449,21 @@ const JumpinAIStudio: React.FC = () => {
             </CardContent>
           </Card>
 
-          {/* Status Display During Generation */}
-          {realtimeIsGenerating && (
-            <div className="bg-gradient-to-r from-primary/20 to-primary-glow/20 p-6 rounded-lg border border-primary/30 glass mb-8">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 border-2 border-primary border-t-primary-glow rounded-full animate-spin"></div>
-                  <div>
-                    <h3 className="font-semibold text-lg">Creating Your Jump in AI</h3>
-                    <p className="text-muted-foreground">{status.message || 'Initializing AI generation...'}</p>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <div className="font-mono text-xl font-semibold text-primary">
-                    {timer}
-                  </div>
-                  <p className="text-sm text-muted-foreground">Elapsed time</p>
-                </div>
-              </div>
-              <div className="text-sm text-muted-foreground">
-                ✨ Progress: {status.progress}% - Real-time AI generation with progressive content delivery
-              </div>
-            </div>
-          )}
-
-          {/* Guest Sign-up Prompt */}
-          {!isAuthenticated && (
-            <Card className="glass border-white/20 mb-8">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="p-3 bg-primary/20 rounded-full">
-                      <User className="w-6 h-6 text-primary" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-lg">Get More with an Account</h3>
-                      <p className="text-muted-foreground">
-                        Save your Jumps, access unlimited generations, and get exclusive features
-                      </p>
-                    </div>
-                  </div>
-                  <Button variant="outline" className="gap-2 border-primary/30 text-primary hover:bg-primary/10">
-                    Sign Up Free
-                    <ChevronRight className="w-4 h-4" />
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Progressive Result Display */}
-          {showResult && (
+          {/* Result Display */}
+          {showResult && jumpResult && (
             <div className="mt-8">
-              <ProgressiveJumpDisplay
-                isGenerating={realtimeIsGenerating}
-                status={status}
-                generationData={generationData}
-                timer={timer}
-                jumpId={jumpId}
+              <JumpResultDisplay 
+                fullContent={jumpResult.full_content || jumpResult.fullContent || ''} 
+                structuredPlan={jumpResult.structured_plan || jumpResult.structuredPlan}
+                comprehensivePlan={jumpResult.comprehensive_plan || jumpResult.comprehensivePlan}
+                components={{
+                  prompts: jumpResult.prompts || [],
+                  workflows: jumpResult.workflows || [],
+                  blueprints: jumpResult.blueprints || [], 
+                  strategies: jumpResult.strategies || []
+                }}
                 isAuthenticated={isAuthenticated}
+                jumpId={jumpResult.jump_id || jumpResult.jumpId}
               />
             </div>
           )}
