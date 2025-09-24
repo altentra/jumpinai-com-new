@@ -399,22 +399,6 @@ const JumpinAIStudio = () => {
                         Send
                       </button>
                     </div>
-                    
-                    {/* Quick Actions */}
-                    <div className="flex flex-wrap gap-2 mt-4">
-                      <button className="glass px-4 py-2 rounded-full text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 hover:bg-white/10">
-                        💡 Generate Ideas
-                      </button>
-                      <button className="glass px-4 py-2 rounded-full text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 hover:bg-white/10">
-                        🎯 Set Goals
-                      </button>
-                      <button className="glass px-4 py-2 rounded-full text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 hover:bg-white/10">
-                        📋 Create Plan
-                      </button>
-                      <button className="glass px-4 py-2 rounded-full text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 hover:bg-white/10">
-                        🚀 Get Started
-                      </button>
-                    </div>
                   </div>
                   
                 </div>
