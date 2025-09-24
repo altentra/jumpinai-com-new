@@ -1,21 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Send, User, AlertCircle, CheckCircle, Loader2, LogIn } from 'lucide-react';
+import { User, AlertCircle, Loader2, LogIn } from 'lucide-react';
 import Navigation from '@/components/Navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { guestLimitService } from '@/services/guestLimitService';
 import { jumpinAIStudioService, type StudioFormData, type GenerationResult } from '@/services/jumpinAIStudioService';
 import { toast } from 'sonner';
 import JumpResultDisplay from '@/components/JumpResultDisplay';
+import { supabase } from '@/integrations/supabase/client';
 
 const JumpinAIStudio = () => {
   const { user, isAuthenticated, login } = useAuth();
-  const [message, setMessage] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [guestCanUse, setGuestCanUse] = useState(true);
   const [guestUsageCount, setGuestUsageCount] = useState(0);
   const [generationResult, setGenerationResult] = useState<GenerationResult | null>(null);
   const [showResult, setShowResult] = useState(false);
+  const [generationTimer, setGenerationTimer] = useState(0);
+  const [generationStatus, setGenerationStatus] = useState('');
   
   // Form data state
   const [formData, setFormData] = useState<StudioFormData>({
@@ -27,12 +29,68 @@ const JumpinAIStudio = () => {
     budget: ''
   });
 
-  // Check guest limits on component mount
+  // Check guest limits on component mount and load saved form data
   useEffect(() => {
     if (!isAuthenticated) {
       checkGuestLimits();
+    } else {
+      loadSavedFormData();
     }
   }, [isAuthenticated]);
+
+  // Timer effect for generation
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isGenerating) {
+      interval = setInterval(() => {
+        setGenerationTimer(prev => prev + 1);
+      }, 1000);
+    } else {
+      setGenerationTimer(0);
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isGenerating]);
+
+  const loadSavedFormData = async () => {
+    if (!user?.id) return;
+    
+    try {
+      // Try to load the most recent user profile data
+      const { data: profiles } = await supabase
+        .from('user_profiles')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('updated_at', { ascending: false })
+        .limit(1);
+      
+      if (profiles && profiles.length > 0) {
+        const profile = profiles[0];
+        setFormData(prev => ({
+          ...prev,
+          goals: profile.goals || prev.goals,
+          challenges: profile.challenges || prev.challenges,
+          industry: profile.industry || prev.industry,
+          aiExperience: profile.ai_knowledge || prev.aiExperience,
+          urgency: profile.time_commitment || prev.urgency,
+          budget: profile.budget || prev.budget,
+        }));
+      }
+    } catch (error) {
+      console.error('Error loading saved form data:', error);
+    }
+  };
+
+  const saveFormData = async (data: StudioFormData) => {
+    if (!isAuthenticated || !user?.id) return;
+
+    try {
+      await jumpinAIStudioService.saveFormData(data, user.id);
+    } catch (error) {
+      console.error('Error saving form data:', error);
+    }
+  };
 
   const checkGuestLimits = async () => {
     try {
@@ -60,6 +118,33 @@ const JumpinAIStudio = () => {
     try {
       setIsGenerating(true);
       setShowResult(false);
+      setGenerationTimer(0);
+      
+      // Status updates during generation
+      const statusUpdates = [
+        { time: 2, status: 'Analyzing your goals and challenges...' },
+        { time: 8, status: 'Researching AI tools and technologies...' },
+        { time: 15, status: 'Creating your strategic action plan...' },
+        { time: 22, status: 'Generating custom prompts and workflows...' },
+        { time: 28, status: 'Building blueprints and strategies...' },
+        { time: 35, status: 'Finalizing your Jump package...' }
+      ];
+
+      // Status update timer
+      const statusTimer = setInterval(() => {
+        const currentTime = generationTimer;
+        const currentStatus = statusUpdates.find(s => 
+          currentTime >= s.time && currentTime < s.time + 5
+        );
+        if (currentStatus) {
+          setGenerationStatus(currentStatus.status);
+        }
+      }, 1000);
+
+      // Save form data for logged-in users
+      if (isAuthenticated && user?.id) {
+        await saveFormData(formData);
+      }
 
       // Record guest usage if not authenticated
       if (!isAuthenticated) {
@@ -69,6 +154,7 @@ const JumpinAIStudio = () => {
       // Generate the Jump
       const result = await jumpinAIStudioService.generateJump(formData, user?.id);
       
+      clearInterval(statusTimer);
       setGenerationResult(result);
       setShowResult(true);
       
@@ -89,23 +175,10 @@ const JumpinAIStudio = () => {
       toast.error('Failed to generate your Jump. Please try again.');
     } finally {
       setIsGenerating(false);
+      setGenerationStatus('');
     }
   };
 
-  const handleSend = () => {
-    if (message.trim()) {
-      // TODO: Handle chat message sending
-      console.log('Sending message:', message);
-      setMessage('');
-    }
-  };
-
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSend();
-    }
-  };
 
   return (
     <>
@@ -287,10 +360,15 @@ const JumpinAIStudio = () => {
                       className="w-full modern-button bg-gradient-to-r from-primary via-primary/90 to-primary/80 hover:from-primary/90 hover:via-primary/80 hover:to-primary/70 disabled:from-muted disabled:to-muted text-primary-foreground disabled:text-muted-foreground px-8 py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-[1.02] shadow-lg hover:shadow-xl backdrop-blur-sm border border-white/20 dark:border-white/30 mt-2 flex items-center justify-center gap-2"
                     >
                       {isGenerating ? (
-                        <>
-                          <Loader2 className="w-5 h-5 animate-spin" />
-                          Generating Your Jump...
-                        </>
+                        <div className="flex flex-col items-center gap-2">
+                          <div className="flex items-center gap-2">
+                            <Loader2 className="w-5 h-5 animate-spin" />
+                            Generating Your Jump...
+                          </div>
+                          <div className="text-sm opacity-80">
+                            {generationTimer}s - {generationStatus}
+                          </div>
+                        </div>
                       ) : (
                         'Generate My Jump in AI'
                       )}
@@ -362,34 +440,24 @@ const JumpinAIStudio = () => {
                     </div>
                   </div>
                   
-                  {/* Chat Input Area */}
-                  <div className="p-6 border-t border-white/10 dark:border-white/20 bg-gradient-to-r from-white/5 to-white/10 dark:from-black/20 dark:to-black/30">
-                    <div className="flex gap-4 items-end">
-                      <div className="flex-1">
-                        <textarea
-                          value={message}
-                          onChange={(e) => setMessage(e.target.value)}
-                          onKeyPress={handleKeyPress}
-                          placeholder="Ask me anything about your transformation journey..."
-                          className="w-full min-h-[80px] max-h-[200px] p-4 glass rounded-2xl resize-none focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-300 placeholder:text-muted-foreground/60 text-foreground bg-white/10 dark:bg-black/20 border border-white/20 dark:border-white/30"
-                          rows={3}
-                        />
-                      </div>
-                      <button 
-                        onClick={handleSend}
-                        disabled={!message.trim()}
-                        className="modern-button bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 disabled:from-muted disabled:to-muted text-primary-foreground disabled:text-muted-foreground px-6 py-4 rounded-2xl font-semibold transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center gap-2"
-                      >
-                        <Send className="w-5 h-5" />
-                        Send
-                      </button>
-                    </div>
-                  </div>
-                  
                 </div>
                 
               </div>
             </div>
+
+            {/* Results Display */}
+            {showResult && generationResult && (
+              <div className="mt-12 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
+                <JumpResultDisplay 
+                  fullContent={generationResult.fullContent}
+                  structuredPlan={generationResult.structuredPlan}
+                  comprehensivePlan={generationResult.comprehensivePlan}
+                  components={generationResult.components}
+                  isAuthenticated={isAuthenticated}
+                  jumpId={generationResult.jumpId}
+                />
+              </div>
+            )}
           </div>
         </main>
       </div>

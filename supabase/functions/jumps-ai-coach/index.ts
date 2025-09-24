@@ -206,10 +206,25 @@ Make sure all content is practical, actionable, and tailored to the specific goa
     let generatedContent;
     try {
       // Try to parse the JSON response from OpenAI
-      const content = data.choices[0].message.content;
+      let content = data.choices[0].message.content;
+      
+      // Remove markdown code blocks if present
+      if (content.includes('```json')) {
+        content = content.replace(/```json\n?/g, '').replace(/```\n?/g, '');
+      } else if (content.includes('```')) {
+        content = content.replace(/```\n?/g, '');
+      }
+      
+      // Clean up any extra whitespace
+      content = content.trim();
+      
+      console.log('Cleaned content before parsing:', content.substring(0, 200) + '...');
+      
       generatedContent = JSON.parse(content);
+      console.log('Successfully parsed JSON response');
     } catch (parseError) {
       console.error('Error parsing OpenAI JSON response:', parseError);
+      console.error('Raw content:', data.choices[0].message.content);
       // Fallback response if JSON parsing fails
       generatedContent = {
         full_content: data.choices[0].message.content,
