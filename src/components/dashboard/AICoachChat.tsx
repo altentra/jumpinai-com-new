@@ -61,17 +61,23 @@ export default function AICoachChat({
   const [isLoading, setIsLoading] = useState(false);
   const [loadingTime, setLoadingTime] = useState(0);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
-  const hasGeneratedRef = useRef(false);
   const loadingTimerRef = useRef<NodeJS.Timeout | null>(null);
   const isMountedRef = useRef(true);
   const generationInProgressRef = useRef(false);
+  const initializationRef = useRef(false);
   const { toast } = useToast();
   const { subscription } = useAuth();
   
   const startLoadingTimer = () => {
+    if (!isMountedRef.current) return;
     setLoadingTime(0);
+    if (loadingTimerRef.current) {
+      clearInterval(loadingTimerRef.current);
+    }
     loadingTimerRef.current = setInterval(() => {
-      setLoadingTime(prev => prev + 1);
+      if (isMountedRef.current) {
+        setLoadingTime(prev => prev + 1);
+      }
     }, 1000);
   };
 
@@ -80,10 +86,13 @@ export default function AICoachChat({
       clearInterval(loadingTimerRef.current);
       loadingTimerRef.current = null;
     }
-    setLoadingTime(0);
+    if (isMountedRef.current) {
+      setLoadingTime(0);
+    }
   };
 
   const isPaidUser = subscription?.subscribed || false;
+  
   const invokeWithTimeout = async (payload: any, ms = 240000): Promise<any> => {
     return await Promise.race([
       supabase.functions.invoke('jumps-ai-coach', { body: payload }),
@@ -102,64 +111,65 @@ export default function AICoachChat({
     return out.trim();
   };
   
-      // Normalize various possible response shapes from the Edge Function/Supabase client
-      const extractAiMessage = (resp: any): string => {
+  // Normalize various possible response shapes from the Edge Function/Supabase client
+  const extractAiMessage = (resp: any): string => {
+    try {
+      // Supabase Functions usual shape
+      if (resp?.data?.message && typeof resp.data.message === 'string') return resp.data.message as string;
+      // Common alternative keys
+      if (resp?.data?.generatedText) return resp.data.generatedText;
+      if (resp?.data?.plan) return resp.data.plan;
+      if (resp?.data?.content) return resp.data.content;
+      // Sometimes the data is a JSON string
+      if (typeof resp?.data === 'string') {
         try {
-          // Supabase Functions usual shape
-          if (resp?.data?.message && typeof resp.data.message === 'string') return resp.data.message as string;
-          // Common alternative keys
-          if (resp?.data?.generatedText) return resp.data.generatedText;
-          if (resp?.data?.plan) return resp.data.plan;
-          if (resp?.data?.content) return resp.data.content;
-          // Sometimes the data is a JSON string
-          if (typeof resp?.data === 'string') {
-            try {
-              const parsed = JSON.parse(resp.data);
-              if (parsed?.message) return parsed.message;
-              if (parsed?.generatedText) return parsed.generatedText;
-              if (parsed?.plan) return parsed.plan;
-              if (parsed?.choices?.[0]?.message?.content) return parsed.choices[0].message.content;
-              return typeof parsed === 'string' ? parsed : '';
-            } catch {
-              return resp.data;
-            }
-          }
-          // Some clients return body at the root
-          if (resp?.message) return resp.message;
-          // Raw OpenAI passthrough just in case
-          if (resp?.data?.choices?.[0]?.message?.content) return resp.data.choices[0].message.content;
-          
-          // If we have a structured plan but no message, synthesize a minimal text
-          const sp = resp?.data?.structured_plan;
-          if (sp && typeof sp === 'object') {
-            const text = formatPlanToText(sp);
-            if (text) return text;
-          }
-          
-          // Last resort: stringify object if small
-          if (resp?.data && typeof resp.data === 'object') {
-            try {
-              const s = JSON.stringify(resp.data);
-              if (s && s.length < 5000) return s;
-            } catch {}
-          }
-          return '';
-        } catch (e) {
-          console.warn('[AICoachChat] extractAiMessage error:', e, resp);
-          return '';
+          const parsed = JSON.parse(resp.data);
+          if (parsed?.message) return parsed.message;
+          if (parsed?.generatedText) return parsed.generatedText;
+          if (parsed?.plan) return parsed.plan;
+          if (parsed?.choices?.[0]?.message?.content) return parsed.choices[0].message.content;
+          return typeof parsed === 'string' ? parsed : '';
+        } catch {
+          return resp.data;
         }
-      };
-  
+      }
+      // Some clients return body at the root
+      if (resp?.message) return resp.message;
+      // Raw OpenAI passthrough just in case
+      if (resp?.data?.choices?.[0]?.message?.content) return resp.data.choices[0].message.content;
+      
+      // If we have a structured plan but no message, synthesize a minimal text
+      const sp = resp?.data?.structured_plan;
+      if (sp && typeof sp === 'object') {
+        const text = formatPlanToText(sp);
+        if (text) return text;
+      }
+      
+      // Last resort: stringify object if small
+      if (resp?.data && typeof resp.data === 'object') {
+        try {
+          const s = JSON.stringify(resp.data);
+          if (s && s.length < 5000) return s;
+        } catch {}
+      }
+      return '';
+    } catch (e) {
+      console.warn('[AICoachChat] extractAiMessage error:', e, resp);
+      return '';
+    }
+  };
+
+  // Initialization effect - runs only once
   useEffect(() => {
+    if (initializationRef.current) return;
+    initializationRef.current = true;
     isMountedRef.current = true;
     
-    // Prevent multiple generations
-    if (hasGeneratedRef.current || generationInProgressRef.current) {
-      return;
-    }
+    console.log('[AICoachChat] Initializing component, isRefinementMode:', isRefinementMode, 'hideChat:', hideChat);
     
     // If refining an existing plan, seed a helper message and skip auto-generation
     if (isRefinementMode && initialPlan) {
+      console.log('[AICoachChat] Setting up refinement mode');
       if (isMountedRef.current) {
         setMessages([
           {
@@ -173,216 +183,247 @@ export default function AICoachChat({
       return;
     }
 
-    const tryParseJSON = (text: string): any | null => safeParseJSON(text);
-
-    // Define generator first so we can call it for both hidden and visible chat modes
-    const generateInitialPlan = async () => {
-      if (!isMountedRef.current || generationInProgressRef.current) return;
+    // Start auto-generation
+    const initializeChat = async () => {
+      if (generationInProgressRef.current || !isMountedRef.current) {
+        console.log('[AICoachChat] Skipping initialization - already in progress');
+        return;
+      }
       
       generationInProgressRef.current = true;
-      console.log('[AICoachChat] Starting generateInitialPlan, userProfile:', userProfile, 'user:', user?.id);
       
-      if (isMountedRef.current) {
-        setIsLoading(true);
-        startLoadingTimer();
-      }
+      console.log('[AICoachChat] Starting initialization, userProfile:', userProfile?.currentRole, 'user:', user?.id);
+      
       try {
-        const initialPrompt =
-          "Using the provided profile context, generate a fully comprehensive, professional, elite-level, actionable 'Jump' plan following the RESPONSE STRUCTURE from the system prompt. Be specific with tools, steps, timelines, and metrics. Tailor everything to the user's role, industry, experience, time, and budget. Use clear headings and bullet points.";
-        const payload = {
-          messages: [{ role: 'user', content: initialPrompt }],
-          userProfile,
-          userId: user?.id,
-          jumpId: currentJumpId,
-          generateComponents: false
-        };
-        console.log('[AICoachChat] Auto-invoking jumps-ai-coach with payload:', payload);
-        const response: any = await invokeWithTimeout(payload);
-        console.log('[AICoachChat] Auto-generation response:', response);
-        if (!isMountedRef.current) return;
-        
-        if (response?.error) {
-          console.error('[AICoachChat] Error in response:', response.error);
-          throw new Error(response.error.message || response.error.details || 'Failed to generate initial plan');
+        // Show welcome message first (unless hidden)
+        if (!hideChat && isMountedRef.current) {
+          const welcomeMessage: Message = {
+            id: '1',
+            role: 'assistant',
+            content: `Welcome to Jumps Studio.\n\nI've reviewed your profile and I'm ready to create your custom "Jump" plan. Based on your role as a ${userProfile.currentRole} in ${userProfile.industry}, there are strong opportunities for AI integration.\n\nI'll generate a comprehensive plan now. You can refine it with chat after.`,
+            timestamp: new Date()
+          };
+          setMessages([welcomeMessage]);
         }
 
-        let aiText = extractAiMessage(response);
-        let structuredPlan: any = response?.data?.structured_plan || null;
+        // Start generation
+        await generateInitialPlan();
         
-        console.log('[AICoachChat] Extracted aiText length:', aiText?.length || 0);
-        console.log('[AICoachChat] Structured plan exists:', !!structuredPlan);
-        
-        if (!structuredPlan && aiText) {
-          console.log('[AICoachChat] Attempting to parse aiText as JSON...');
-          structuredPlan = tryParseJSON(aiText);
-          console.log('[AICoachChat] Parse result:', !!structuredPlan);
-        }
-        
-        if ((!aiText || !aiText.trim()) && structuredPlan) {
-          console.log('[AICoachChat] Converting structured plan to text...');
-          aiText = formatPlanToText(structuredPlan);
-        }
-        
-        // Ensure we have content to display
-        if (!aiText && !structuredPlan) {
-          console.error('[AICoachChat] No content generated! Response:', response);
-          throw new Error('No content was generated. Please try again.');
-        }
-
-        if (!isMountedRef.current) return;
-        
-        const assistantMessage: Message = {
-          id: (Date.now() + 1).toString(),
-          role: 'assistant',
-          content: aiText && aiText.trim() ? aiText : 'No response received from AI.',
-          timestamp: new Date()
-        };
-        
-        if (!aiText) {
-          console.warn('[AICoachChat] Unexpected AI response shape:', response);
-          if (isMountedRef.current) {
-            toast({
-              title: 'AI response issue',
-              description: 'Received an unexpected response from the AI. Please try again.',
-              variant: 'destructive'
-            });
-          }
-        }
-        
-        if (isMountedRef.current) {
-          setMessages((prev) => [...prev, assistantMessage]);
-
-          if (onPlanGenerated) {
-            onPlanGenerated({
-              content: aiText || '',
-              structuredPlan: structuredPlan || null,
-              comprehensivePlan: structuredPlan || null,
-            });
-          }
-        }
-
-        // Save or update Jump if we have useful data
-        if ((aiText && aiText.trim()) || structuredPlan) {
-          try {
-            if (currentJumpId && !isNewJump) {
-              const textForMeta = aiText || formatPlanToText(structuredPlan);
-              const updatedJump = await updateJump(currentJumpId, {
-                title: jumpName || extractTitle(textForMeta),
-                summary: extractSummary(textForMeta),
-                full_content: textForMeta,
-                structured_plan: structuredPlan || null,
-                comprehensive_plan: structuredPlan || null,
-                jump_type: 'comprehensive',
-              });
-              if (updatedJump && onJumpSaved) {
-                onJumpSaved(updatedJump.id);
-                toast({ title: 'Jump Updated!', description: 'Your AI transformation plan has been updated.' });
-              }
-            } else if (isNewJump) {
-              const textForMeta = aiText || formatPlanToText(structuredPlan);
-              const title = jumpName || extractTitle(textForMeta);
-              const summary = extractSummary(textForMeta);
-              const savedJump = await createJump({
-                profile_id: userProfile.id,
-                title,
-                summary,
-                full_content: textForMeta,
-                structured_plan: structuredPlan || null,
-                comprehensive_plan: structuredPlan || null,
-                jump_type: 'comprehensive',
-              });
-              if (savedJump && onJumpSaved) {
-                onJumpSaved(savedJump.id);
-                toast({ title: 'Jump Saved!', description: 'Your AI transformation plan has been saved to your library.' });
-                // Kick off components generation in background
-                try {
-                  toast({ title: 'Generating Jump Components', description: 'Creating prompts, workflows, blueprints, and strategies...' });
-                  const { data: { user: authUser } } = await supabase.auth.getUser();
-                  const compPayload = {
-                    messages: [{ role: 'user', content: 'Generate Jump components for this profile.' }],
-                    userProfile,
-                    userId: authUser?.id,
-                    jumpId: savedJump.id,
-                    generateComponents: true,
-                  };
-                  const compResp: any = await invokeWithTimeout(compPayload, 240000);
-                  console.log('[AICoachChat] Components generation response:', compResp);
-                  const status = compResp?.data?.components as string | undefined;
-                  const detail = compResp?.data?.components_detail as any;
-                  const expected = detail?.expectedCounts || {};
-                  const saveSummary = detail?.saveSummary || {};
-                  if (status && typeof status === 'string' && status.toLowerCase().includes('generated')) {
-                    const msg = `Saved ${saveSummary.saved ?? '?'} of ${saveSummary.total ?? '?'} items`;
-                    const counts = `Prompts: ${expected.prompts ?? 0}, Workflows: ${expected.workflows ?? 0}, Blueprints: ${expected.blueprints ?? 0}, Strategies: ${expected.strategies ?? 0}`;
-                    toast({ title: 'Components Ready', description: `${msg}. ${counts}. If you don’t see them yet, hit refresh in their tabs in ~10–20s.` });
-                  } else {
-                    toast({ title: 'Components Requested', description: "Generation requested. If items don’t appear, refresh the page in a few seconds." });
-                  }
-                  if (expected && (expected.workflows === 0 || expected.blueprints === 0 || expected.strategies === 0)) {
-                    console.warn('[AICoachChat] Some component categories were empty:', expected);
-                    toast({ title: 'Heads up', description: 'Some categories returned empty. You can retry generation from Jumps Studio.' });
-                  }
-                } catch (genErr) {
-                  console.error('Error generating Jump components:', genErr);
-                  toast({ title: 'Component generation failed', description: 'Your plan is saved, but components failed to generate. You can retry from Jumps Studio.', variant: 'destructive' });
-                }
-              }
-            }
-          } catch (saveErr) {
-            console.error('Error saving/updating jump:', saveErr);
-            toast({ title: 'Save Error', description: 'Jump generated but failed to save to library', variant: 'destructive' });
-          }
-        }
-      } catch (err) {
-        console.error('Error generating initial plan:', err);
-        if (isMountedRef.current) {
-          toast({ title: 'Generation error', description: (err as any)?.message || 'Failed to generate your plan. You can try again by sending a message.', variant: 'destructive' });
-        }
-      } finally {
+      } catch (error) {
+        console.error('[AICoachChat] Initialization error:', error);
         generationInProgressRef.current = false;
         if (isMountedRef.current) {
-          setIsLoading(false);
-          stopLoadingTimer();
+          toast({
+            title: 'Initialization Error',
+            description: 'Failed to initialize chat. Please refresh and try again.',
+            variant: 'destructive'
+          });
         }
       }
     };
 
-    // If chat UI is hidden, still generate the plan in the background
-    if (hideChat) {
-      generateInitialPlan();
-      return () => { 
-        isMountedRef.current = false;
-        stopLoadingTimer();
-      };
-    }
-
-    // Otherwise, show welcome message and then generate
-    const welcomeMessage: Message = {
-      id: '1',
-      role: 'assistant',
-      content: `Welcome to Jumps Studio.\n\nI've reviewed your profile and I'm ready to create your custom "Jump" plan. Based on your role as a ${userProfile.currentRole} in ${userProfile.industry}, there are strong opportunities for AI integration.\n\nI'll generate a comprehensive plan now. You can refine it with chat after.`,
-      timestamp: new Date()
-    };
+    initializeChat();
     
-    if (isMountedRef.current) {
-      setMessages([welcomeMessage]);
-      hasGeneratedRef.current = true;
-      generateInitialPlan();
-    }
-    
-    return () => { 
+    return () => {
+      console.log('[AICoachChat] Cleanup on unmount');
       isMountedRef.current = false;
       generationInProgressRef.current = false;
+      initializationRef.current = false;
       stopLoadingTimer();
     };
-  }, []);
+  }, []); // Empty dependency array - runs only once
 
+  // Separate function to handle the actual generation
+  const generateInitialPlan = async () => {
+    if (!isMountedRef.current || generationInProgressRef.current) {
+      console.log('[AICoachChat] Skipping generation - component unmounted or generation in progress');
+      return;
+    }
+    
+    console.log('[AICoachChat] Starting generateInitialPlan');
+    
+    if (isMountedRef.current) {
+      setIsLoading(true);
+      startLoadingTimer();
+    }
+
+    try {
+      const initialPrompt = "Using the provided profile context, generate a fully comprehensive, professional, elite-level, actionable 'Jump' plan following the RESPONSE STRUCTURE from the system prompt. Be specific with tools, steps, timelines, and metrics. Tailor everything to the user's role, industry, experience, time, and budget. Use clear headings and bullet points.";
+      
+      const payload = {
+        messages: [{ role: 'user', content: initialPrompt }],
+        userProfile,
+        userId: user?.id,
+        jumpId: currentJumpId,
+        generateComponents: false
+      };
+      
+      console.log('[AICoachChat] Invoking jumps-ai-coach with payload');
+      const response: any = await invokeWithTimeout(payload);
+      
+      if (!isMountedRef.current) {
+        console.log('[AICoachChat] Component unmounted during generation, aborting');
+        return;
+      }
+      
+      console.log('[AICoachChat] Auto-generation response received');
+      
+      if (response?.error) {
+        console.error('[AICoachChat] Error in response:', response.error);
+        throw new Error(response.error.message || response.error.details || 'Failed to generate initial plan');
+      }
+
+      let aiText = extractAiMessage(response);
+      let structuredPlan: any = response?.data?.structured_plan || null;
+      
+      if (!structuredPlan && aiText) {
+        structuredPlan = safeParseJSON(aiText);
+      }
+      
+      if ((!aiText || !aiText.trim()) && structuredPlan) {
+        aiText = formatPlanToText(structuredPlan);
+      }
+      
+      if (!aiText && !structuredPlan) {
+        console.error('[AICoachChat] No content generated! Response:', response);
+        throw new Error('No content was generated. Please try again.');
+      }
+
+      if (!isMountedRef.current) return;
+      
+      const assistantMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: aiText && aiText.trim() ? aiText : 'No response received from AI.',
+        timestamp: new Date()
+      };
+      
+      setMessages(prev => [...prev, assistantMessage]);
+
+      if (onPlanGenerated && isMountedRef.current) {
+        onPlanGenerated({
+          content: aiText || '',
+          structuredPlan: structuredPlan || null,
+          comprehensivePlan: structuredPlan || null,
+        });
+      }
+
+      // Save the jump
+      await saveJumpPlan(aiText, structuredPlan);
+      
+    } catch (err) {
+      console.error('[AICoachChat] Error generating initial plan:', err);
+      if (isMountedRef.current) {
+        toast({
+          title: 'Generation error',
+          description: (err as any)?.message || 'Failed to generate your plan. You can try again by sending a message.',
+          variant: 'destructive'
+        });
+      }
+    } finally {
+      generationInProgressRef.current = false;
+      if (isMountedRef.current) {
+        setIsLoading(false);
+        stopLoadingTimer();
+      }
+    }
+  };
+
+  // Separate function to handle saving
+  const saveJumpPlan = async (aiText: string, structuredPlan: any) => {
+    if (!((aiText && aiText.trim()) || structuredPlan) || !isMountedRef.current) return;
+
+    try {
+      if (currentJumpId && !isNewJump) {
+        const textForMeta = aiText || formatPlanToText(structuredPlan);
+        const updatedJump = await updateJump(currentJumpId, {
+          title: jumpName || extractTitle(textForMeta),
+          summary: extractSummary(textForMeta),
+          full_content: textForMeta,
+          structured_plan: structuredPlan || null,
+          comprehensive_plan: structuredPlan || null,
+          jump_type: 'comprehensive',
+        });
+        if (updatedJump && onJumpSaved && isMountedRef.current) {
+          onJumpSaved(updatedJump.id);
+          toast({ title: 'Jump Updated!', description: 'Your AI transformation plan has been updated.' });
+        }
+      } else if (isNewJump) {
+        const textForMeta = aiText || formatPlanToText(structuredPlan);
+        const title = jumpName || extractTitle(textForMeta);
+        const summary = extractSummary(textForMeta);
+        const savedJump = await createJump({
+          profile_id: userProfile.id,
+          title,
+          summary,
+          full_content: textForMeta,
+          structured_plan: structuredPlan || null,
+          comprehensive_plan: structuredPlan || null,
+          jump_type: 'comprehensive',
+        });
+        if (savedJump && onJumpSaved && isMountedRef.current) {
+          onJumpSaved(savedJump.id);
+          toast({ title: 'Jump Saved!', description: 'Your AI transformation plan has been saved to your library.' });
+          
+          // Generate components in background without blocking
+          generateComponentsInBackground(savedJump.id);
+        }
+      }
+    } catch (saveErr) {
+      console.error('[AICoachChat] Error saving/updating jump:', saveErr);
+      if (isMountedRef.current) {
+        toast({ title: 'Save Error', description: 'Jump generated but failed to save to library', variant: 'destructive' });
+      }
+    }
+  };
+
+  // Separate function for background component generation
+  const generateComponentsInBackground = async (jumpId: string) => {
+    if (!isMountedRef.current) return;
+    
+    try {
+      toast({ title: 'Generating Jump Components', description: 'Creating prompts, workflows, blueprints, and strategies...' });
+      const { data: { user: authUser } } = await supabase.auth.getUser();
+      const compPayload = {
+        messages: [{ role: 'user', content: 'Generate Jump components for this profile.' }],
+        userProfile,
+        userId: authUser?.id,
+        jumpId,
+        generateComponents: true,
+      };
+      const compResp: any = await invokeWithTimeout(compPayload, 240000);
+      
+      if (!isMountedRef.current) return;
+      
+      console.log('[AICoachChat] Components generation response:', compResp);
+      const status = compResp?.data?.components as string | undefined;
+      const detail = compResp?.data?.components_detail as any;
+      const expected = detail?.expectedCounts || {};
+      const saveSummary = detail?.saveSummary || {};
+      
+      if (status && typeof status === 'string' && status.toLowerCase().includes('generated')) {
+        const msg = `Saved ${saveSummary.saved ?? '?'} of ${saveSummary.total ?? '?'} items`;
+        const counts = `Prompts: ${expected.prompts ?? 0}, Workflows: ${expected.workflows ?? 0}, Blueprints: ${expected.blueprints ?? 0}, Strategies: ${expected.strategies ?? 0}`;
+        toast({ title: 'Components Ready', description: `${msg}. ${counts}. If you don't see them yet, hit refresh in their tabs in ~10–20s.` });
+      } else {
+        toast({ title: 'Components Requested', description: "Generation requested. If items don't appear, refresh the page in a few seconds." });
+      }
+    } catch (genErr) {
+      console.error('[AICoachChat] Error generating Jump components:', genErr);
+      if (isMountedRef.current) {
+        toast({ title: 'Component generation failed', description: 'Your plan is saved, but components failed to generate. You can retry from Jumps Studio.', variant: 'destructive' });
+      }
+    }
+  };
+
+  // Scroll effect
   useEffect(() => {
     if (scrollAreaRef.current && isMountedRef.current) {
       scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight;
     }
   }, [messages]);
 
+  // Cleanup effect
   useEffect(() => {
     return () => {
       isMountedRef.current = false;
@@ -392,7 +433,7 @@ export default function AICoachChat({
   }, []);
 
   const sendMessage = async () => {
-    if (!input.trim() || isLoading) return;
+    if (!input.trim() || isLoading || !isMountedRef.current) return;
     
     if (!isPaidUser) {
       toast({
@@ -458,41 +499,47 @@ export default function AICoachChat({
         });
       }
 
-      setMessages(prev => [...prev, assistantMessage]);
-      
-      // Update existing jump with chat refinements
-      if (currentJumpId && (aiText?.trim() || structuredPlan)) {
-        try {
-          await updateJump(currentJumpId, {
-            title: jumpName || extractTitle(aiText || formatPlanToText(structuredPlan)),
-            summary: extractSummary(aiText || formatPlanToText(structuredPlan)),
-            full_content: aiText || formatPlanToText(structuredPlan),
-            structured_plan: structuredPlan || null,
-            comprehensive_plan: structuredPlan || null,
-            jump_type: 'comprehensive'
-          });
-          
-          if (onPlanGenerated) {
-            onPlanGenerated({
-              content: aiText || '',
-              structuredPlan: structuredPlan || null,
-              comprehensivePlan: structuredPlan || null
+      if (isMountedRef.current) {
+        setMessages(prev => [...prev, assistantMessage]);
+        
+        // Update existing jump with chat refinements
+        if (currentJumpId && (aiText?.trim() || structuredPlan)) {
+          try {
+            await updateJump(currentJumpId, {
+              title: jumpName || extractTitle(aiText || formatPlanToText(structuredPlan)),
+              summary: extractSummary(aiText || formatPlanToText(structuredPlan)),
+              full_content: aiText || formatPlanToText(structuredPlan),
+              structured_plan: structuredPlan || null,
+              comprehensive_plan: structuredPlan || null,
+              jump_type: 'comprehensive'
             });
+            
+            if (onPlanGenerated) {
+              onPlanGenerated({
+                content: aiText || '',
+                structuredPlan: structuredPlan || null,
+                comprehensivePlan: structuredPlan || null
+              });
+            }
+          } catch (error) {
+            console.error('Error updating jump during chat:', error);
           }
-        } catch (error) {
-          console.error('Error updating jump during chat:', error);
         }
       }
     } catch (error: any) {
       console.error('Error sending message:', error);
-      toast({
-        title: 'Chat error',
-        description: error?.message || 'Failed to send message. Please try again.',
-        variant: 'destructive'
-      });
+      if (isMountedRef.current) {
+        toast({
+          title: 'Chat error',
+          description: error?.message || 'Failed to send message. Please try again.',
+          variant: 'destructive'
+        });
+      }
     } finally {
-      setIsLoading(false);
-      stopLoadingTimer();
+      if (isMountedRef.current) {
+        setIsLoading(false);
+        stopLoadingTimer();
+      }
     }
   };
 
@@ -502,6 +549,7 @@ export default function AICoachChat({
       sendMessage();
     }
   };
+
   const copyMessage = (content: string) => {
     navigator.clipboard.writeText(content);
     toast({
