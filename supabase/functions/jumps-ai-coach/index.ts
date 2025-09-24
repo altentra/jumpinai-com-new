@@ -235,7 +235,7 @@ Make sure all content is practical, actionable, and tailored to the specific goa
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt }
       ],
-      max_completion_tokens: 80000, // Increased to 80k (GPT-5 supports up to 128k)
+      max_completion_tokens: 15000, // Optimized for comprehensive but processable responses
     };
 
     console.log('Request body prepared:', {
@@ -285,119 +285,55 @@ Make sure all content is practical, actionable, and tailored to the specific goa
     
     try {
       console.log('Raw OpenAI response length:', rawContent.length);
-      console.log('Raw OpenAI response preview:', rawContent.substring(0, 300));
+      console.log('Raw OpenAI response preview:', rawContent.substring(0, 200));
       
-      // Multiple parsing attempts with different strategies
-      let content = rawContent;
-      let parsed = false;
-      
-      // Strategy 1: Direct JSON parsing
+      // Simplified parsing - try direct JSON first, then basic cleanup
       try {
-        generatedContent = JSON.parse(content);
-        parsed = true;
+        generatedContent = JSON.parse(rawContent);
         console.log('SUCCESS: Direct JSON parsing worked');
       } catch (e) {
-        console.log('Direct parsing failed, trying cleanup...');
-      }
-      
-      if (!parsed) {
-        // Strategy 2: Remove markdown code blocks
-        content = rawContent.replace(/```json\s*/gi, '').replace(/```\s*/gi, '');
-        try {
-          generatedContent = JSON.parse(content);
-          parsed = true;
-          console.log('SUCCESS: Markdown cleanup worked');
-        } catch (e) {
-          console.log('Markdown cleanup failed, trying brace extraction...');
-        }
-      }
-      
-      if (!parsed) {
-        // Strategy 3: Extract JSON between braces
-        const startBrace = content.indexOf('{');
-        const lastBrace = content.lastIndexOf('}');
+        console.log('Direct parsing failed, trying basic cleanup...');
+        // Basic cleanup: remove markdown code blocks and extract JSON
+        let cleanContent = rawContent
+          .replace(/```json\s*/gi, '')
+          .replace(/```\s*/gi, '')
+          .trim();
+        
+        // Extract JSON between first { and last }
+        const startBrace = cleanContent.indexOf('{');
+        const lastBrace = cleanContent.lastIndexOf('}');
         
         if (startBrace !== -1 && lastBrace !== -1 && lastBrace > startBrace) {
-          content = content.substring(startBrace, lastBrace + 1);
-          try {
-            generatedContent = JSON.parse(content);
-            parsed = true;
-            console.log('SUCCESS: Brace extraction worked');
-          } catch (e) {
-            console.log('Brace extraction failed, trying regex cleanup...');
-          }
+          cleanContent = cleanContent.substring(startBrace, lastBrace + 1);
+          generatedContent = JSON.parse(cleanContent);
+          console.log('SUCCESS: Basic cleanup and extraction worked');
+        } else {
+          throw new Error('No valid JSON structure found');
         }
       }
       
-      if (!parsed) {
-        // Strategy 4: More aggressive cleaning
-        content = rawContent
-          .replace(/```json/gi, '')
-          .replace(/```/g, '')
-          .replace(/`+/g, '')
-          .replace(/^\s*[\w\s]*?{/, '{') // Remove any text before first brace
-          .replace(/}\s*[\w\s]*?$/, '}'); // Remove any text after last brace
-        
-        try {
-          generatedContent = JSON.parse(content);
-          parsed = true;
-          console.log('SUCCESS: Aggressive cleanup worked');
-        } catch (e) {
-          console.log('Aggressive cleanup failed');
-        }
+      // Quick validation and ensure required fields
+      if (!generatedContent.full_content) {
+        generatedContent.full_content = rawContent;
+      }
+      if (!generatedContent.components) {
+        generatedContent.components = { prompts: [], workflows: [], blueprints: [], strategies: [] };
       }
       
-      if (parsed) {
-        // Validate the structure
-        console.log('Parsed content structure:', {
-          hasFullContent: !!generatedContent.full_content,
-          hasStructuredPlan: !!generatedContent.structured_plan,
-          hasComprehensivePlan: !!generatedContent.comprehensive_plan,
-          hasComponents: !!generatedContent.components,
-          componentsStructure: generatedContent.components ? {
-            prompts: generatedContent.components.prompts?.length || 0,
-            workflows: generatedContent.components.workflows?.length || 0,
-            blueprints: generatedContent.components.blueprints?.length || 0,
-            strategies: generatedContent.components.strategies?.length || 0
-          } : 'NO COMPONENTS'
-        });
-        
-        // Ensure all required fields exist
-        if (!generatedContent.full_content) {
-          generatedContent.full_content = rawContent;
-        }
-        if (!generatedContent.components) {
-          generatedContent.components = { prompts: [], workflows: [], blueprints: [], strategies: [] };
-        }
-      } else {
-        throw new Error('All parsing strategies failed');
-      }
+      console.log('Parsed content successfully with components:', {
+        prompts: generatedContent.components?.prompts?.length || 0,
+        workflows: generatedContent.components?.workflows?.length || 0,
+        blueprints: generatedContent.components?.blueprints?.length || 0,
+        strategies: generatedContent.components?.strategies?.length || 0
+      });
       
     } catch (parseError) {
-      console.error('CRITICAL: All JSON parsing attempts failed:', parseError);
-      console.error('Raw response sample:', rawContent.substring(0, 1000));
+      console.error('JSON parsing failed:', parseError);
+      console.error('Raw response sample:', rawContent.substring(0, 500));
       
-      // Try to extract any JSON-like content as a last resort
-      const jsonMatch = rawContent.match(/{[\s\S]*}/);
-      if (jsonMatch) {
-        try {
-          generatedContent = JSON.parse(jsonMatch[0]);
-          console.log('RECOVERY: Regex extraction succeeded');
-        } catch (e) {
-          console.error('RECOVERY: Regex extraction also failed');
-          generatedContent = createFallbackResponse(rawContent);
-        }
-      } else {
-        console.error('RECOVERY: No JSON structure found');
-        generatedContent = createFallbackResponse(rawContent);
-      }
-    }
-
-    // Helper function for fallback response
-    function createFallbackResponse(content: string) {
-      console.log('Creating fallback response');
-      return {
-        full_content: content,
+      // Fallback response
+      generatedContent = {
+        full_content: rawContent,
         structured_plan: null,
         comprehensive_plan: {
           executive_summary: "AI transformation plan generated successfully. Please review the full content for details.",
