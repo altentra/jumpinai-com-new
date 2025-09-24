@@ -15,7 +15,7 @@ import ProgressiveJumpDisplay from '@/components/ProgressiveJumpDisplay';
 import { useRealtimeGeneration } from '@/hooks/useRealtimeGeneration';
 import { supabase } from '@/integrations/supabase/client';
 import Navigation from '@/components/Navigation';
-import Footer from '@/components/Footer';
+import MiniFooter from '@/components/MiniFooter';
 
 interface StudioFormData {
   goals: string;
@@ -530,7 +530,7 @@ const JumpinAIStudio: React.FC = () => {
         </div>
       </main>
       
-      <Footer />
+      <MiniFooter />
     </>
   );
 };

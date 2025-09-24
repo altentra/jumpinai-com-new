@@ -66,7 +66,7 @@ export const useRealtimeGeneration = ({ onComplete, onError }: UseRealtimeGenera
     }
 
     const projectId = 'cieczaajcgkgdgenfdzi'; // Your Supabase project ID
-    const wsUrl = `wss://${projectId}.functions.supabase.co/jumps-realtime-generation`;
+    const wsUrl = `wss://${projectId}.functions.supabase.co/functions/v1/jumps-realtime-generation`;
     
     wsRef.current = new WebSocket(wsUrl);
 
