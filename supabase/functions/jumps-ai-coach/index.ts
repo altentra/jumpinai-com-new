@@ -242,16 +242,15 @@ Make sure all content is practical, actionable, and tailored to the specific goa
 
     console.log('📡 Sending request to OpenAI API...');
 
-    console.log('🤖 Making OpenAI API request with model: gpt-4o');
+    console.log('🤖 Making OpenAI API request with model: gpt-5-2025-08-07');
     
     const requestBody = {
-      model: 'gpt-4o',
+      model: 'gpt-5-2025-08-07',
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt }
       ],
-      max_tokens: 16000, // Using max_tokens for gpt-4o
-      temperature: 0.7,
+      max_completion_tokens: 30000, // GPT-5 uses max_completion_tokens
     };
 
     console.log('📋 Request body prepared:', {
@@ -259,15 +258,15 @@ Make sure all content is practical, actionable, and tailored to the specific goa
       messageCount: requestBody.messages.length,
       systemPromptLength: systemPrompt.length,
       userPromptLength: userPrompt.length,
-      maxTokens: requestBody.max_tokens
+      maxTokens: requestBody.max_completion_tokens
     });
     
     // Create AbortController for timeout handling
     const controller = new AbortController();
     const timeoutId = setTimeout(() => {
-      console.error('⏰ Request timed out after 2 minutes');
+      console.error('⏰ Request timed out after 5 minutes');
       controller.abort();
-    }, 120000); // 2 minute timeout
+    }, 300000); // 5 minute timeout for 30k tokens
     
     console.log('🌐 Initiating fetch to OpenAI...');
     
@@ -298,8 +297,8 @@ Make sure all content is practical, actionable, and tailored to the specific goa
         status: response.status,
         statusText: response.statusText,
         error: errorText,
-        model: 'gpt-4o',
-        maxTokens: 16000,
+        model: 'gpt-5-2025-08-07',
+        maxTokens: 30000,
         headers: response.headers,
         url: response.url
       });
