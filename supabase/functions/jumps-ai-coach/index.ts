@@ -229,21 +229,33 @@ Make sure all content is practical, actionable, and tailored to the specific goa
 
     console.log('Making OpenAI API request with model: gpt-5-2025-08-07');
     
+    const requestBody = {
+      model: 'gpt-5-2025-08-07',
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userPrompt }
+      ],
+      max_completion_tokens: 80000, // Increased to 80k (GPT-5 supports up to 128k)
+    };
+
+    console.log('Request body prepared:', {
+      model: requestBody.model,
+      messageCount: requestBody.messages.length,
+      systemPromptLength: systemPrompt.length,
+      userPromptLength: userPrompt.length,
+      maxTokens: requestBody.max_completion_tokens
+    });
+    
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${openAIApiKey}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        model: 'gpt-5-2025-08-07',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt }
-        ],
-        max_completion_tokens: 16000,
-      }),
+      body: JSON.stringify(requestBody),
     });
+
+    console.log('OpenAI response status:', response.status, response.statusText);
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -252,7 +264,9 @@ Make sure all content is practical, actionable, and tailored to the specific goa
         statusText: response.statusText,
         error: errorText,
         model: 'gpt-5-2025-08-07',
-        maxTokens: 16000
+        maxTokens: 80000,
+        headers: response.headers,
+        url: response.url
       });
       throw new Error(`OpenAI API error: ${response.status} - ${errorText}`);
     }
@@ -261,7 +275,9 @@ Make sure all content is practical, actionable, and tailored to the specific goa
     console.log('OpenAI response received successfully:', {
       usage: data.usage,
       model: data.model,
-      finishReason: data.choices?.[0]?.finish_reason
+      finishReason: data.choices?.[0]?.finish_reason,
+      hasContent: !!data.choices?.[0]?.message?.content,
+      contentLength: data.choices?.[0]?.message?.content?.length || 0
     });
 
     let generatedContent;
