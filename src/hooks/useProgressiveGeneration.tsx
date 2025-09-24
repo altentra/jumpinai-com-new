@@ -180,6 +180,8 @@ export const useProgressiveGeneration = () => {
     formData: StudioFormData,
     userId?: string
   ): Promise<ProgressiveResult> => {
+    console.log('generateWithProgression called with:', { formData, userId });
+    
     setIsGenerating(true);
     setResult(null);
     setProcessingStatus({
@@ -209,11 +211,15 @@ export const useProgressiveGeneration = () => {
       };
       setResult(emptyResult);
 
+      console.log('Calling jumpinAIStudioService.generateJump...');
       // Generate with OpenAI
       const rawResponse = await jumpinAIStudioService.generateJump(formData, userId);
+      console.log('Raw response received:', rawResponse);
       
       // Process the response progressively
+      console.log('Processing response in chunks...');
       const finalResult = await processResponseInChunks(rawResponse);
+      console.log('Final result processed:', finalResult);
       
       return finalResult;
     } catch (error) {
@@ -221,11 +227,12 @@ export const useProgressiveGeneration = () => {
       setProcessingStatus({
         stage: 'Error',
         progress: 0,
-        currentTask: 'Generation failed',
+        currentTask: `Generation failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
         isComplete: false
       });
       throw error;
     } finally {
+      console.log('Generation process finished, setting isGenerating to false');
       setIsGenerating(false);
     }
   }, [processResponseInChunks]);

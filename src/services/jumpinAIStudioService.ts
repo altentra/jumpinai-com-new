@@ -72,23 +72,34 @@ export const jumpinAIStudioService = {
 
       console.log('Generating Jump with data:', requestData);
 
-      // Call the jumps-ai-coach edge function
+      // Call the jumps-ai-coach edge function with increased timeout
       const { data, error } = await supabase.functions.invoke('jumps-ai-coach', {
-        body: requestData
+        body: requestData,
+        headers: {
+          'Content-Type': 'application/json',
+        }
       });
+
+      console.log('Edge function response:', { data, error });
 
       if (error) {
         console.error('Edge function error:', error);
         throw new Error(error.message || 'Failed to generate Jump');
       }
 
-      console.log('Generated Jump data:', data);
+      if (!data) {
+        console.error('No data received from edge function');
+        throw new Error('No data received from AI generation service');
+      }
+
+      console.log('Generated Jump data keys:', Object.keys(data));
 
       let jumpId: string | undefined;
 
       // If user is logged in, save the jump to database
-      if (userId && data.full_content) {
+      if (userId && data && data.full_content) {
         try {
+          console.log('Saving jump to database for user:', userId);
           // Save form data as profile
           await this.saveFormData(formData, userId);
 
@@ -119,7 +130,7 @@ export const jumpinAIStudioService = {
         }
       }
 
-      return {
+      const result = {
         jumpId,
         fullContent: data.full_content || '',
         structuredPlan: data.structured_plan,
@@ -131,6 +142,9 @@ export const jumpinAIStudioService = {
           strategies: []
         }
       };
+
+      console.log('Returning result:', Object.keys(result));
+      return result;
 
     } catch (error) {
       console.error('Error generating Jump:', error);

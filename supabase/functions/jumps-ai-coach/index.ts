@@ -248,7 +248,7 @@ Make sure all content is practical, actionable, and tailored to the specific goa
     
     // Create AbortController for timeout handling
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 120000); // 120 second timeout
+    const timeoutId = setTimeout(() => controller.abort(), 300000); // 5 minute timeout for 30k tokens
     
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -364,8 +364,15 @@ Make sure all content is practical, actionable, and tailored to the specific goa
 
   } catch (error: any) {
     console.error("Error in jumps-ai-coach function:", error);
+    
+    // Log more details about the error
+    if (error.name === 'AbortError') {
+      console.error("Request timed out after 5 minutes");
+    }
+    
     return new Response(JSON.stringify({ 
       error: error.message,
+      errorType: error.name || 'UnknownError',
       full_content: 'Sorry, there was an error generating your Jump in AI plan. Please try again.',
       structured_plan: null,
       comprehensive_plan: null,
