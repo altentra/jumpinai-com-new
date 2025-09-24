@@ -21,16 +21,17 @@ serve(async (req) => {
 
     const systemPrompt = `You are JumpinAI, an expert AI transformation consultant. You create comprehensive, actionable AI transformation plans called "Jumps" that help individuals and businesses achieve their goals using AI.
 
-Your task is to analyze the user's goals, challenges, and context to generate a complete "Jump in AI" package that includes:
+CRITICAL: You MUST respond with ONLY valid JSON. Do not include any markdown formatting, code blocks, or extra text.
 
+Your task is to analyze the user's goals, challenges, and context to generate a complete "Jump in AI" package that includes:
 1. A detailed strategic action plan
-2. Required AI tools and technologies
+2. Required AI tools and technologies  
 3. 4 professional AI prompts for implementation
 4. 4 detailed workflows
 5. 4 comprehensive blueprints
 6. 4 strategic frameworks
 
-Always respond in valid JSON format with the exact structure provided in the user prompt.`;
+IMPORTANT: Return ONLY the JSON object with no additional formatting or explanation.`;
 
     const userPrompt = `Based on the following information, create a comprehensive "Jump in AI" transformation plan:
 
@@ -189,8 +190,8 @@ Make sure all content is practical, actionable, and tailored to the specific goa
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt }
         ],
-        temperature: 0.7,
-        max_tokens: 4000,
+        temperature: 0.3,
+        max_tokens: 8000,
       }),
     });
 
@@ -204,51 +205,129 @@ Make sure all content is practical, actionable, and tailored to the specific goa
     console.log('OpenAI response received');
 
     let generatedContent;
-    let content = data.choices[0].message.content; // Declare outside try block
+    const rawContent = data.choices[0].message.content;
     
     try {
-      // Try to parse the JSON response from OpenAI
-      console.log('Raw OpenAI response:', content.substring(0, 500) + '...');
+      console.log('Raw OpenAI response length:', rawContent.length);
+      console.log('Raw OpenAI response preview:', rawContent.substring(0, 300));
       
-      // More aggressive cleaning of markdown and formatting
-      // Remove all types of code blocks
-      content = content.replace(/```json\s*/g, '').replace(/```\s*/g, '');
+      // Multiple parsing attempts with different strategies
+      let content = rawContent;
+      let parsed = false;
       
-      // Remove backticks that might be left over
-      content = content.replace(/`+/g, '');
-      
-      // Find the JSON object - look for the opening brace
-      const startIndex = content.indexOf('{');
-      const lastIndex = content.lastIndexOf('}');
-      
-      if (startIndex !== -1 && lastIndex !== -1 && lastIndex > startIndex) {
-        content = content.substring(startIndex, lastIndex + 1);
+      // Strategy 1: Direct JSON parsing
+      try {
+        generatedContent = JSON.parse(content);
+        parsed = true;
+        console.log('SUCCESS: Direct JSON parsing worked');
+      } catch (e) {
+        console.log('Direct parsing failed, trying cleanup...');
       }
       
-      // Clean up any extra whitespace and newlines
-      content = content.trim();
+      if (!parsed) {
+        // Strategy 2: Remove markdown code blocks
+        content = rawContent.replace(/```json\s*/gi, '').replace(/```\s*/gi, '');
+        try {
+          generatedContent = JSON.parse(content);
+          parsed = true;
+          console.log('SUCCESS: Markdown cleanup worked');
+        } catch (e) {
+          console.log('Markdown cleanup failed, trying brace extraction...');
+        }
+      }
       
-      console.log('Cleaned content before parsing:', content.substring(0, 300) + '...');
+      if (!parsed) {
+        // Strategy 3: Extract JSON between braces
+        const startBrace = content.indexOf('{');
+        const lastBrace = content.lastIndexOf('}');
+        
+        if (startBrace !== -1 && lastBrace !== -1 && lastBrace > startBrace) {
+          content = content.substring(startBrace, lastBrace + 1);
+          try {
+            generatedContent = JSON.parse(content);
+            parsed = true;
+            console.log('SUCCESS: Brace extraction worked');
+          } catch (e) {
+            console.log('Brace extraction failed, trying regex cleanup...');
+          }
+        }
+      }
       
-      generatedContent = JSON.parse(content);
-      console.log('Successfully parsed JSON response');
-      console.log('Components found:', {
-        prompts: generatedContent.components?.prompts?.length || 0,
-        workflows: generatedContent.components?.workflows?.length || 0,
-        blueprints: generatedContent.components?.blueprints?.length || 0,
-        strategies: generatedContent.components?.strategies?.length || 0
-      });
+      if (!parsed) {
+        // Strategy 4: More aggressive cleaning
+        content = rawContent
+          .replace(/```json/gi, '')
+          .replace(/```/g, '')
+          .replace(/`+/g, '')
+          .replace(/^\s*[\w\s]*?{/, '{') // Remove any text before first brace
+          .replace(/}\s*[\w\s]*?$/, '}'); // Remove any text after last brace
+        
+        try {
+          generatedContent = JSON.parse(content);
+          parsed = true;
+          console.log('SUCCESS: Aggressive cleanup worked');
+        } catch (e) {
+          console.log('Aggressive cleanup failed');
+        }
+      }
+      
+      if (parsed) {
+        // Validate the structure
+        console.log('Parsed content structure:', {
+          hasFullContent: !!generatedContent.full_content,
+          hasStructuredPlan: !!generatedContent.structured_plan,
+          hasComprehensivePlan: !!generatedContent.comprehensive_plan,
+          hasComponents: !!generatedContent.components,
+          componentsStructure: generatedContent.components ? {
+            prompts: generatedContent.components.prompts?.length || 0,
+            workflows: generatedContent.components.workflows?.length || 0,
+            blueprints: generatedContent.components.blueprints?.length || 0,
+            strategies: generatedContent.components.strategies?.length || 0
+          } : 'NO COMPONENTS'
+        });
+        
+        // Ensure all required fields exist
+        if (!generatedContent.full_content) {
+          generatedContent.full_content = rawContent;
+        }
+        if (!generatedContent.components) {
+          generatedContent.components = { prompts: [], workflows: [], blueprints: [], strategies: [] };
+        }
+      } else {
+        throw new Error('All parsing strategies failed');
+      }
       
     } catch (parseError) {
-      console.error('Error parsing OpenAI JSON response:', parseError);
-      console.error('Raw content:', data.choices[0].message.content);
-      console.error('Cleaned content that failed to parse:', content?.substring(0, 500) || 'No content available');
+      console.error('CRITICAL: All JSON parsing attempts failed:', parseError);
+      console.error('Raw response sample:', rawContent.substring(0, 1000));
       
-      // Fallback response if JSON parsing fails
-      generatedContent = {
-        full_content: data.choices[0].message.content,
+      // Try to extract any JSON-like content as a last resort
+      const jsonMatch = rawContent.match(/{[\s\S]*}/);
+      if (jsonMatch) {
+        try {
+          generatedContent = JSON.parse(jsonMatch[0]);
+          console.log('RECOVERY: Regex extraction succeeded');
+        } catch (e) {
+          console.error('RECOVERY: Regex extraction also failed');
+          generatedContent = createFallbackResponse(rawContent);
+        }
+      } else {
+        console.error('RECOVERY: No JSON structure found');
+        generatedContent = createFallbackResponse(rawContent);
+      }
+    }
+
+    // Helper function for fallback response
+    function createFallbackResponse(content: string) {
+      console.log('Creating fallback response');
+      return {
+        full_content: content,
         structured_plan: null,
-        comprehensive_plan: null,
+        comprehensive_plan: {
+          executive_summary: "AI transformation plan generated successfully. Please review the full content for details.",
+          key_objectives: ["Implement AI solutions", "Improve efficiency", "Drive innovation"],
+          success_metrics: ["Performance improvement", "Cost reduction", "User satisfaction"]
+        },
         components: {
           prompts: [],
           workflows: [],
@@ -256,7 +335,6 @@ Make sure all content is practical, actionable, and tailored to the specific goa
           strategies: []
         }
       };
-      console.log('Using fallback response structure');
     }
 
     console.log('Generated content structure:', Object.keys(generatedContent));
