@@ -25,14 +25,21 @@ export interface GenerationResult {
 }
 
 export const jumpinAIStudioService = {
-  // Save form data for logged-in users
+  // SECURITY: Save form data ONLY for authenticated users with verified userId
   async saveFormData(formData: StudioFormData, userId: string): Promise<void> {
+    if (!userId) {
+      console.error('SECURITY: Attempted to save form data without valid userId');
+      throw new Error('User ID required for saving form data');
+    }
+    
     try {
-      // Create or update user profile with the form data
+      console.log('Saving form data for authenticated user:', userId);
+      
+      // SECURITY: All data is tied to specific authenticated user
       const profileData = {
-        currentRole: 'Studio User', // Default role for studio users
+        currentRole: 'Studio User',
         industry: formData.industry,
-        experienceLevel: 'intermediate', // Default
+        experienceLevel: 'intermediate',
         aiKnowledge: formData.aiExperience,
         goals: formData.goals,
         challenges: formData.challenges,
@@ -40,7 +47,9 @@ export const jumpinAIStudioService = {
         budget: formData.budget,
       };
 
+      // SECURITY: userProfileService.createProfile enforces RLS policies
       await userProfileService.createProfile(profileData, userId);
+      console.log('Form data saved successfully for user:', userId);
     } catch (error) {
       console.error('Error saving form data:', error);
       throw error;

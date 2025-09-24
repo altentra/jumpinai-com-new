@@ -19,7 +19,7 @@ const JumpinAIStudio = () => {
   const [generationTimer, setGenerationTimer] = useState(0);
   const [generationStatus, setGenerationStatus] = useState('');
   
-  // Form data state
+  // Form data state - ALWAYS starts empty for security
   const [formData, setFormData] = useState<StudioFormData>({
     goals: '',
     challenges: '',
@@ -54,28 +54,44 @@ const JumpinAIStudio = () => {
   }, [isGenerating]);
 
   const loadSavedFormData = async () => {
-    if (!user?.id) return;
+    // SECURITY: Only load data for authenticated users with verified user ID
+    if (!isAuthenticated || !user?.id) {
+      console.log('No authenticated user - keeping empty form fields');
+      return;
+    }
     
     try {
-      // Try to load the most recent user profile data
-      const { data: profiles } = await supabase
+      console.log('Loading saved form data for authenticated user:', user.id);
+      
+      // SECURITY: Query with explicit user_id filter to ensure data isolation
+      const { data: profiles, error } = await supabase
         .from('user_profiles')
         .select('*')
-        .eq('user_id', user.id)
+        .eq('user_id', user.id) // CRITICAL: Only get data for THIS specific user
         .order('updated_at', { ascending: false })
         .limit(1);
       
+      if (error) {
+        console.error('Database error loading user profile:', error);
+        return;
+      }
+      
+      // Only populate fields if user has previously saved data
       if (profiles && profiles.length > 0) {
         const profile = profiles[0];
-        setFormData(prev => ({
-          ...prev,
-          goals: profile.goals || prev.goals,
-          challenges: profile.challenges || prev.challenges,
-          industry: profile.industry || prev.industry,
-          aiExperience: profile.ai_knowledge || prev.aiExperience,
-          urgency: profile.time_commitment || prev.urgency,
-          budget: profile.budget || prev.budget,
-        }));
+        console.log('Populating form with user saved data');
+        
+        // SECURITY: Only update with saved data, never expose other users' data
+        setFormData({
+          goals: profile.goals || '',
+          challenges: profile.challenges || '',
+          industry: profile.industry || '',
+          aiExperience: profile.ai_knowledge || '',
+          urgency: profile.time_commitment || '',
+          budget: profile.budget || '',
+        });
+      } else {
+        console.log('No saved data found - keeping empty fields');
       }
     } catch (error) {
       console.error('Error loading saved form data:', error);
