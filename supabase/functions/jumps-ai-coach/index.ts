@@ -227,6 +227,8 @@ Make sure all content is practical, actionable, and tailored to the specific goa
 
     console.log('Sending request to OpenAI...');
 
+    console.log('Making OpenAI API request with model: gpt-5-2025-08-07');
+    
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -239,18 +241,28 @@ Make sure all content is practical, actionable, and tailored to the specific goa
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt }
         ],
-        max_completion_tokens: 50000,
+        max_completion_tokens: 16000,
       }),
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('OpenAI API error:', response.status, errorText);
-      throw new Error(`OpenAI API error: ${response.status} ${errorText}`);
+      console.error('OpenAI API error details:', {
+        status: response.status,
+        statusText: response.statusText,
+        error: errorText,
+        model: 'gpt-5-2025-08-07',
+        maxTokens: 16000
+      });
+      throw new Error(`OpenAI API error: ${response.status} - ${errorText}`);
     }
 
     const data = await response.json();
-    console.log('OpenAI response received');
+    console.log('OpenAI response received successfully:', {
+      usage: data.usage,
+      model: data.model,
+      finishReason: data.choices?.[0]?.finish_reason
+    });
 
     let generatedContent;
     const rawContent = data.choices[0].message.content;
