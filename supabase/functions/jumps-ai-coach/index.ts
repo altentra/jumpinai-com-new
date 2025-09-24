@@ -235,7 +235,7 @@ Make sure all content is practical, actionable, and tailored to the specific goa
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt }
       ],
-      max_completion_tokens: 8000, // Reduced to prevent timeouts while maintaining quality
+      max_completion_tokens: 30000, // High token limit for comprehensive responses
     };
 
     console.log('Request body prepared:', {

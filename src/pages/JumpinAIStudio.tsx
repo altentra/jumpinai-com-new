@@ -4,22 +4,24 @@ import { User, AlertCircle, Loader2, LogIn } from 'lucide-react';
 import Navigation from '@/components/Navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { guestLimitService } from '@/services/guestLimitService';
-import { jumpinAIStudioService, type StudioFormData, type GenerationResult } from '@/services/jumpinAIStudioService';
+import { jumpinAIStudioService, type StudioFormData } from '@/services/jumpinAIStudioService';
 import { toast } from 'sonner';
-import JumpResultDisplay from '@/components/JumpResultDisplay';
+import ProgressiveJumpDisplay from '@/components/ProgressiveJumpDisplay';
+import { useProgressiveGeneration } from '@/hooks/useProgressiveGeneration';
 import { supabase } from '@/integrations/supabase/client';
 
 const JumpinAIStudio = () => {
   const { user, isAuthenticated, login } = useAuth();
-  const [isGenerating, setIsGenerating] = useState(false);
+  const { isGenerating, result, processingStatus, generateWithProgression } = useProgressiveGeneration();
   const [guestCanUse, setGuestCanUse] = useState(true);
   const [guestUsageCount, setGuestUsageCount] = useState(0);
-  const [generationResult, setGenerationResult] = useState<GenerationResult | null>(null);
-  const [showResult, setShowResult] = useState(false);
   const [generationTimer, setGenerationTimer] = useState(0);
-  const [generationStatus, setGenerationStatus] = useState('');
-  
-  // Form data state - ALWAYS starts empty for security
+  // Helper function to format time
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
   const [formData, setFormData] = useState<StudioFormData>({
     goals: '',
     challenges: '',
@@ -132,31 +134,6 @@ const JumpinAIStudio = () => {
     }
 
     try {
-      setIsGenerating(true);
-      setShowResult(false);
-      setGenerationTimer(0);
-      
-      // Status updates during generation
-      const statusUpdates = [
-        { time: 2, status: 'Analyzing your goals and challenges...' },
-        { time: 8, status: 'Researching AI tools and technologies...' },
-        { time: 15, status: 'Creating your strategic action plan...' },
-        { time: 22, status: 'Generating custom prompts and workflows...' },
-        { time: 28, status: 'Building blueprints and strategies...' },
-        { time: 35, status: 'Finalizing your Jump package...' }
-      ];
-
-      // Status update timer
-      const statusTimer = setInterval(() => {
-        const currentTime = generationTimer;
-        const currentStatus = statusUpdates.find(s => 
-          currentTime >= s.time && currentTime < s.time + 5
-        );
-        if (currentStatus) {
-          setGenerationStatus(currentStatus.status);
-        }
-      }, 1000);
-
       // Save form data for logged-in users
       if (isAuthenticated && user?.id) {
         await saveFormData(formData);
@@ -167,12 +144,8 @@ const JumpinAIStudio = () => {
         await guestLimitService.recordGuestUsage();
       }
 
-      // Generate the Jump
-      const result = await jumpinAIStudioService.generateJump(formData, user?.id);
-      
-      clearInterval(statusTimer);
-      setGenerationResult(result);
-      setShowResult(true);
+      // Generate with progressive display
+      const result = await generateWithProgression(formData, user?.id);
       
       if (result.jumpId) {
         toast.success('Your Jump in AI has been saved to your dashboard!');
@@ -189,9 +162,6 @@ const JumpinAIStudio = () => {
     } catch (error) {
       console.error('Error generating Jump:', error);
       toast.error('Failed to generate your Jump. Please try again.');
-    } finally {
-      setIsGenerating(false);
-      setGenerationStatus('');
     }
   };
 
@@ -381,9 +351,9 @@ const JumpinAIStudio = () => {
                             <Loader2 className="w-5 h-5 animate-spin" />
                             Generating Your Jump...
                           </div>
-                          <div className="text-sm opacity-80">
-                            {generationTimer}s - {generationStatus}
-                          </div>
+                           <div className="text-sm opacity-80">
+                             {formatTime(generationTimer)} - {processingStatus.currentTask}
+                           </div>
                         </div>
                       ) : (
                         'Generate My Jump in AI'
@@ -416,16 +386,12 @@ const JumpinAIStudio = () => {
             </div>
 
 
-            {/* Results Display */}
-            {showResult && generationResult && (
+            {/* Progressive Results Display */}
+            {result && (
               <div className="mt-12 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
-                <JumpResultDisplay 
-                  fullContent={generationResult.fullContent}
-                  structuredPlan={generationResult.structuredPlan}
-                  comprehensivePlan={generationResult.comprehensivePlan}
-                  components={generationResult.components}
-                  isAuthenticated={isAuthenticated}
-                  jumpId={generationResult.jumpId}
+                <ProgressiveJumpDisplay 
+                  result={result}
+                  generationTimer={generationTimer}
                 />
               </div>
             )}
