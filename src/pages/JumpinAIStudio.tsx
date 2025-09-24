@@ -14,6 +14,8 @@ import { guestLimitService } from '@/services/guestLimitService';
 import ProgressiveJumpDisplay from '@/components/ProgressiveJumpDisplay';
 import { useRealtimeGeneration } from '@/hooks/useRealtimeGeneration';
 import { supabase } from '@/integrations/supabase/client';
+import Navigation from '@/components/Navigation';
+import Footer from '@/components/Footer';
 
 interface StudioFormData {
   goals: string;
@@ -253,15 +255,19 @@ const JumpinAIStudio: React.FC = () => {
         </script>
       </Helmet>
 
-      <div className="min-h-screen relative overflow-hidden">
-        {/* Animated Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-background via-background/95 to-primary/5">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(120,119,198,0.1),transparent_70%)]"></div>
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-primary-glow/10 rounded-full blur-3xl animate-pulse animation-delay-2000"></div>
+      <Navigation />
+      
+      <main className="min-h-screen pt-20 pb-12 bg-gradient-to-br from-background via-background/90 to-primary/5 dark:bg-gradient-to-br dark:from-black dark:via-gray-950/90 dark:to-gray-900/60">
+        {/* Enhanced floating background elements */}
+        <div className="fixed inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-primary/20 to-primary/5 dark:bg-gradient-to-br dark:from-gray-800/30 dark:to-gray-700/15 rounded-full blur-3xl"></div>
+          <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-tr from-secondary/15 to-secondary/5 dark:bg-gradient-to-tr dark:from-gray-700/25 dark:to-gray-600/15 rounded-full blur-3xl"></div>
+          <div className="absolute top-1/3 left-1/2 transform -translate-x-1/2 w-64 h-64 bg-accent/10 dark:bg-gradient-radial dark:from-gray-800/20 dark:to-transparent rounded-full blur-2xl"></div>
+          <div className="absolute top-20 right-20 w-32 h-32 bg-gradient-to-br from-primary/10 to-transparent dark:bg-gradient-to-br dark:from-gray-700/20 dark:to-transparent rounded-full blur-xl"></div>
+          <div className="absolute bottom-20 left-20 w-40 h-40 bg-gradient-to-tr from-secondary/8 to-transparent dark:bg-gradient-to-tr dark:from-gray-600/15 dark:to-transparent rounded-full blur-xl"></div>
         </div>
 
-        <div className="relative z-10 container mx-auto px-4 py-12 max-w-4xl">
+        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Authentication Status Bar */}
           <div className="mb-8 flex items-center justify-between p-4 glass rounded-lg border border-white/20">
             <div className="flex items-center gap-3">
@@ -522,7 +528,9 @@ const JumpinAIStudio: React.FC = () => {
             </div>
           )}
         </div>
-      </div>
+      </main>
+      
+      <Footer />
     </>
   );
 };
