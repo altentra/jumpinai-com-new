@@ -25,8 +25,6 @@ export type ProgressiveResult = {
 };
 
 export const useProgressiveGeneration = () => {
-  console.log('useProgressiveGeneration hook initializing...');
-  
   const [isGenerating, setIsGenerating] = useState(false);
   const [result, setResult] = useState<ProgressiveResult | null>(null);
   const [processingStatus, setProcessingStatus] = useState<ProcessingStatus>({
@@ -35,8 +33,6 @@ export const useProgressiveGeneration = () => {
     currentTask: '',
     isComplete: false
   });
-
-  console.log('useProgressiveGeneration state:', { isGenerating, hasResult: !!result, processingStatus });
 
   const processResponseInChunks = useCallback(async (rawResponse: GenerationResult): Promise<ProgressiveResult> => {
     const progressiveResult: ProgressiveResult = {
@@ -245,9 +241,6 @@ export const useProgressiveGeneration = () => {
     isGenerating,
     result,
     processingStatus,
-    generateWithProgression: generateWithProgression || (() => {
-      console.error('generateWithProgression is not defined!');
-      throw new Error('Generation function not available');
-    })
+    generateWithProgression
   };
 };

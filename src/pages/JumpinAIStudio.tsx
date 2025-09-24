@@ -12,18 +12,7 @@ import { supabase } from '@/integrations/supabase/client';
 
 const JumpinAIStudio = () => {
   const { user, isAuthenticated, login } = useAuth();
-  
-  console.log('JumpinAIStudio rendering:', { isAuthenticated, user: user?.id });
-  
   const { isGenerating, result, processingStatus, generateWithProgression } = useProgressiveGeneration();
-  
-  console.log('Progressive generation state:', { 
-    isGenerating, 
-    hasResult: !!result, 
-    processingStatus,
-    generateWithProgression: typeof generateWithProgression 
-  });
-  
   const [guestCanUse, setGuestCanUse] = useState(true);
   const [guestUsageCount, setGuestUsageCount] = useState(0);
   const [generationTimer, setGenerationTimer] = useState(0);
@@ -132,64 +121,47 @@ const JumpinAIStudio = () => {
   };
 
   const handleGenerate = async () => {
+    // Validate required fields
+    if (!formData.goals.trim() || !formData.challenges.trim()) {
+      toast.error('Please fill in your goals and challenges');
+      return;
+    }
+
+    // Check guest limits
+    if (!isAuthenticated && !guestCanUse) {
+      toast.error('You\'ve reached the guest limit. Please sign up to continue.');
+      return;
+    }
+
     try {
-      console.log('HandleGenerate called with form data:', formData);
-      console.log('Form validation - goals:', formData.goals?.trim().length || 0);
-      console.log('Form validation - challenges:', formData.challenges?.trim().length || 0);
+      // Save form data for logged-in users
+      if (isAuthenticated && user?.id) {
+        await saveFormData(formData);
+      }
+
+      // Record guest usage if not authenticated
+      if (!isAuthenticated) {
+        await guestLimitService.recordGuestUsage();
+      }
+
+      // Generate with progressive display
+      const result = await generateWithProgression(formData, user?.id);
       
-      // Validate required fields
-      if (!formData.goals.trim() || !formData.challenges.trim()) {
-        console.log('Validation failed: missing goals or challenges');
-        toast.error('Please fill in your goals and challenges');
-        return;
+      if (result.jumpId) {
+        toast.success('Your Jump in AI has been saved to your dashboard!');
+      } else if (!isAuthenticated) {
+        toast.success('Your Jump in AI is ready! Sign up to save and access more features.');
       }
 
-      // Check guest limits
-      if (!isAuthenticated && !guestCanUse) {
-        console.log('Guest limit reached');
-        toast.error('You\'ve reached the guest limit. Please sign up to continue.');
-        return;
+      // Update guest limits
+      if (!isAuthenticated) {
+        setGuestCanUse(false);
+        setGuestUsageCount(1);
       }
 
-      console.log('Starting generation process...');
-
-      try {
-        // Save form data for logged-in users
-        if (isAuthenticated && user?.id) {
-          console.log('Saving form data for authenticated user');
-          await saveFormData(formData);
-        }
-
-        // Record guest usage if not authenticated
-        if (!isAuthenticated) {
-          console.log('Recording guest usage');
-          await guestLimitService.recordGuestUsage();
-        }
-
-        console.log('Calling generateWithProgression...');
-        // Generate with progressive display
-        const result = await generateWithProgression(formData, user?.id);
-        console.log('Generation completed successfully:', result);
-        
-        if (result.jumpId) {
-          toast.success('Your Jump in AI has been saved to your dashboard!');
-        } else if (!isAuthenticated) {
-          toast.success('Your Jump in AI is ready! Sign up to save and access more features.');
-        }
-
-        // Update guest limits
-        if (!isAuthenticated) {
-          setGuestCanUse(false);
-          setGuestUsageCount(1);
-        }
-
-      } catch (error) {
-        console.error('Error in generation process:', error);
-        toast.error(`Failed to generate your Jump: ${error instanceof Error ? error.message : 'Unknown error'}`);
-      }
     } catch (error) {
-      console.error('Error in handleGenerate wrapper:', error);
-      toast.error('An unexpected error occurred. Please try again.');
+      console.error('Error generating Jump:', error);
+      toast.error('Failed to generate your Jump. Please try again.');
     }
   };
 
@@ -370,29 +342,8 @@ const JumpinAIStudio = () => {
 
                     <button 
                       type="button"
-                      onClick={(e) => {
-                        console.log('=== BUTTON CLICKED ===');
-                        e.preventDefault();
-                        e.stopPropagation();
-                        
-                        try {
-                          console.log('Generate button clicked');
-                          console.log('Current form data:', formData);
-                          console.log('Is authenticated:', isAuthenticated);
-                          console.log('Guest can use:', guestCanUse);
-                          console.log('Is generating:', isGenerating);
-                          console.log('handleGenerate type:', typeof handleGenerate);
-                          
-                          handleGenerate();
-                        } catch (error) {
-                          console.error('Error in button click handler:', error);
-                        }
-                      }}
-                      disabled={false} // Temporarily disable the disabled check to test
-                      style={{ 
-                        opacity: (isGenerating || (!isAuthenticated && !guestCanUse)) ? 0.5 : 1,
-                        pointerEvents: 'auto'
-                      }}
+                      onClick={handleGenerate}
+                      disabled={isGenerating}
                       className="w-full modern-button bg-gradient-to-r from-primary via-primary/90 to-primary/80 hover:from-primary/90 hover:via-primary/80 hover:to-primary/70 disabled:from-muted disabled:to-muted text-primary-foreground disabled:text-muted-foreground px-8 py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-[1.02] shadow-lg hover:shadow-xl backdrop-blur-sm border border-white/20 dark:border-white/30 mt-2 flex items-center justify-center gap-2"
                     >
                       {isGenerating ? (
@@ -401,9 +352,9 @@ const JumpinAIStudio = () => {
                             <Loader2 className="w-5 h-5 animate-spin" />
                             Generating Your Jump...
                           </div>
-                           <div className="text-sm opacity-80">
-                             {formatTime(generationTimer)} - {processingStatus?.currentTask || 'Preparing...'}
-                           </div>
+                          <div className="text-sm opacity-80">
+                            {formatTime(generationTimer)} - {processingStatus?.currentTask || 'Preparing...'}
+                          </div>
                         </div>
                       ) : (
                         'Generate My Jump in AI'
