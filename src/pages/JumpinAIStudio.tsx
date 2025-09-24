@@ -1,14 +1,99 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Send } from 'lucide-react';
+import { Send, User, AlertCircle, CheckCircle, Loader2, LogIn } from 'lucide-react';
 import Navigation from '@/components/Navigation';
+import { useAuth } from '@/hooks/useAuth';
+import { guestLimitService } from '@/services/guestLimitService';
+import { jumpinAIStudioService, type StudioFormData } from '@/services/jumpinAIStudioService';
+import { toast } from 'sonner';
 
 const JumpinAIStudio = () => {
+  const { user, isAuthenticated, login } = useAuth();
   const [message, setMessage] = useState('');
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [guestCanUse, setGuestCanUse] = useState(true);
+  const [guestUsageCount, setGuestUsageCount] = useState(0);
+  const [generatedContent, setGeneratedContent] = useState<string>('');
+  const [showResult, setShowResult] = useState(false);
+  
+  // Form data state
+  const [formData, setFormData] = useState<StudioFormData>({
+    goals: '',
+    challenges: '',
+    industry: '',
+    aiExperience: '',
+    urgency: '',
+    budget: ''
+  });
+
+  // Check guest limits on component mount
+  useEffect(() => {
+    if (!isAuthenticated) {
+      checkGuestLimits();
+    }
+  }, [isAuthenticated]);
+
+  const checkGuestLimits = async () => {
+    try {
+      const { canUse, usageCount } = await guestLimitService.checkGuestLimit();
+      setGuestCanUse(canUse);
+      setGuestUsageCount(usageCount);
+    } catch (error) {
+      console.error('Error checking guest limits:', error);
+    }
+  };
+
+  const handleGenerate = async () => {
+    // Validate required fields
+    if (!formData.goals.trim() || !formData.challenges.trim()) {
+      toast.error('Please fill in your goals and challenges');
+      return;
+    }
+
+    // Check guest limits
+    if (!isAuthenticated && !guestCanUse) {
+      toast.error('You\'ve reached the guest limit. Please sign up to continue.');
+      return;
+    }
+
+    try {
+      setIsGenerating(true);
+      setShowResult(false);
+
+      // Record guest usage if not authenticated
+      if (!isAuthenticated) {
+        await guestLimitService.recordGuestUsage();
+      }
+
+      // Generate the Jump
+      const result = await jumpinAIStudioService.generateJump(formData, user?.id);
+      
+      setGeneratedContent(result.fullContent);
+      setShowResult(true);
+      
+      if (result.jumpId) {
+        toast.success('Your Jump in AI has been saved to your dashboard!');
+      } else if (!isAuthenticated) {
+        toast.success('Your Jump in AI is ready! Sign up to save and access more features.');
+      }
+
+      // Update guest limits
+      if (!isAuthenticated) {
+        setGuestCanUse(false);
+        setGuestUsageCount(1);
+      }
+
+    } catch (error) {
+      console.error('Error generating Jump:', error);
+      toast.error('Failed to generate your Jump. Please try again.');
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   const handleSend = () => {
     if (message.trim()) {
-      // TODO: Handle message sending
+      // TODO: Handle chat message sending
       console.log('Sending message:', message);
       setMessage('');
     }
@@ -38,6 +123,23 @@ const JumpinAIStudio = () => {
         </div>
         
         <Navigation />
+        
+        {/* Auth Status Bar */}
+        <div className="fixed top-20 right-4 z-50">
+          <div className="glass-dark rounded-xl p-3 text-sm">
+            {isAuthenticated ? (
+              <div className="flex items-center gap-2 text-green-400">
+                <User className="w-4 h-4" />
+                <span>Logged in as {user?.display_name || user?.email}</span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 text-orange-400">
+                <AlertCircle className="w-4 h-4" />
+                <span>Guest user - {guestCanUse ? '1 free try remaining' : 'limit reached'}</span>
+              </div>
+            )}
+          </div>
+        </div>
         
         <main className="relative pt-24 px-4 sm:px-6 lg:px-8">
           <div className="max-w-6xl mx-auto">
@@ -90,6 +192,8 @@ const JumpinAIStudio = () => {
                           What are you after? *
                         </label>
                         <textarea
+                          value={formData.goals}
+                          onChange={(e) => setFormData(prev => ({ ...prev, goals: e.target.value }))}
                           className="w-full min-h-[80px] p-3 glass rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-300 placeholder:text-muted-foreground/60 text-foreground bg-white/10 dark:bg-black/20 border border-white/20 dark:border-white/30 backdrop-blur-sm"
                           placeholder="Your main goals & projects with AI..."
                         />
@@ -100,6 +204,8 @@ const JumpinAIStudio = () => {
                           What prevents you? *
                         </label>
                         <textarea
+                          value={formData.challenges}
+                          onChange={(e) => setFormData(prev => ({ ...prev, challenges: e.target.value }))}
                           className="w-full min-h-[80px] p-3 glass rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-300 placeholder:text-muted-foreground/60 text-foreground bg-white/10 dark:bg-black/20 border border-white/20 dark:border-white/30 backdrop-blur-sm"
                           placeholder="Your obstacles & challenges..."
                         />
@@ -113,6 +219,8 @@ const JumpinAIStudio = () => {
                         </label>
                         <input
                           type="text"
+                          value={formData.industry}
+                          onChange={(e) => setFormData(prev => ({ ...prev, industry: e.target.value }))}
                           className="w-full p-3 glass rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-300 placeholder:text-muted-foreground/60 text-foreground bg-white/10 dark:bg-black/20 border border-white/20 dark:border-white/30 backdrop-blur-sm"
                           placeholder="Marketing, Tech, Finance..."
                         />
@@ -122,7 +230,11 @@ const JumpinAIStudio = () => {
                         <label className="block text-sm font-medium text-foreground/90 mb-2">
                           AI Experience
                         </label>
-                        <select className="w-full p-3 glass rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-300 text-foreground bg-white/10 dark:bg-black/20 border border-white/20 dark:border-white/30 backdrop-blur-sm">
+                        <select 
+                          value={formData.aiExperience}
+                          onChange={(e) => setFormData(prev => ({ ...prev, aiExperience: e.target.value }))}
+                          className="w-full p-3 glass rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-300 text-foreground bg-white/10 dark:bg-black/20 border border-white/20 dark:border-white/30 backdrop-blur-sm"
+                        >
                           <option value="">Select level</option>
                           <option value="beginner">Beginner</option>
                           <option value="intermediate">Intermediate</option>
@@ -137,7 +249,11 @@ const JumpinAIStudio = () => {
                         <label className="block text-sm font-medium text-foreground/90 mb-2">
                           Urgency
                         </label>
-                        <select className="w-full p-3 glass rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-300 text-foreground bg-white/10 dark:bg-black/20 border border-white/20 dark:border-white/30 backdrop-blur-sm">
+                        <select 
+                          value={formData.urgency}
+                          onChange={(e) => setFormData(prev => ({ ...prev, urgency: e.target.value }))}
+                          className="w-full p-3 glass rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-300 text-foreground bg-white/10 dark:bg-black/20 border border-white/20 dark:border-white/30 backdrop-blur-sm"
+                        >
                           <option value="">Select urgency</option>
                           <option value="asap">ASAP - Need immediate results</option>
                           <option value="weeks">Within few weeks</option>
@@ -150,7 +266,11 @@ const JumpinAIStudio = () => {
                         <label className="block text-sm font-medium text-foreground/90 mb-2">
                           Budget
                         </label>
-                        <select className="w-full p-3 glass rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-300 text-foreground bg-white/10 dark:bg-black/20 border border-white/20 dark:border-white/30 backdrop-blur-sm">
+                        <select 
+                          value={formData.budget}
+                          onChange={(e) => setFormData(prev => ({ ...prev, budget: e.target.value }))}
+                          className="w-full p-3 glass rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-300 text-foreground bg-white/10 dark:bg-black/20 border border-white/20 dark:border-white/30 backdrop-blur-sm"
+                        >
                           <option value="">Select budget</option>
                           <option value="minimal">Minimal ($0-500)</option>
                           <option value="moderate">Moderate ($500-2K)</option>
@@ -160,9 +280,41 @@ const JumpinAIStudio = () => {
                       </div>
                     </div>
 
-                    <button className="w-full modern-button bg-gradient-to-r from-primary via-primary/90 to-primary/80 hover:from-primary/90 hover:via-primary/80 hover:to-primary/70 text-primary-foreground px-8 py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-[1.02] shadow-lg hover:shadow-xl backdrop-blur-sm border border-white/20 dark:border-white/30 mt-2">
-                      Generate My Jump in AI
+                    <button 
+                      onClick={handleGenerate}
+                      disabled={isGenerating || (!isAuthenticated && !guestCanUse)}
+                      className="w-full modern-button bg-gradient-to-r from-primary via-primary/90 to-primary/80 hover:from-primary/90 hover:via-primary/80 hover:to-primary/70 disabled:from-muted disabled:to-muted text-primary-foreground disabled:text-muted-foreground px-8 py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-[1.02] shadow-lg hover:shadow-xl backdrop-blur-sm border border-white/20 dark:border-white/30 mt-2 flex items-center justify-center gap-2"
+                    >
+                      {isGenerating ? (
+                        <>
+                          <Loader2 className="w-5 h-5 animate-spin" />
+                          Generating Your Jump...
+                        </>
+                      ) : (
+                        'Generate My Jump in AI'
+                      )}
                     </button>
+                    
+                    {!isAuthenticated && (
+                      <div className="mt-4 p-4 glass rounded-xl border border-orange-200/20">
+                        <div className="flex items-start gap-3">
+                          <AlertCircle className="w-5 h-5 text-orange-400 flex-shrink-0 mt-0.5" />
+                          <div className="text-sm">
+                            <p className="text-orange-400 font-medium mb-2">Want to save your data and get unlimited access?</p>
+                            <p className="text-muted-foreground mb-3">
+                              Sign up to save your inputs, access your generated content anytime, and get unlimited generations.
+                            </p>
+                            <button 
+                              onClick={() => login()}
+                              className="flex items-center gap-2 text-primary hover:text-primary/80 font-medium"
+                            >
+                              <LogIn className="w-4 h-4" />
+                              Sign Up / Login
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -179,18 +331,48 @@ const JumpinAIStudio = () => {
                   <div className="h-[600px] p-8 overflow-y-auto">
                     <div className="flex flex-col space-y-6">
                       
-                      {/* Welcome Message */}
-                      <div className="flex justify-center">
-                        <div className="glass rounded-2xl p-6 max-w-md text-center animate-scale-in">
-                          <div className="w-12 h-12 rounded-full bg-gradient-to-r from-primary/20 to-primary/10 dark:from-white/20 dark:to-white/10 flex items-center justify-center mx-auto mb-4">
-                            <div className="w-6 h-6 rounded-full bg-primary/60 dark:bg-white/60 animate-pulse"></div>
+                      {!showResult ? (
+                        /* Welcome Message */
+                        <div className="flex justify-center">
+                          <div className="glass rounded-2xl p-6 max-w-md text-center animate-scale-in">
+                            <div className="w-12 h-12 rounded-full bg-gradient-to-r from-primary/20 to-primary/10 dark:from-white/20 dark:to-white/10 flex items-center justify-center mx-auto mb-4">
+                              <div className="w-6 h-6 rounded-full bg-primary/60 dark:bg-white/60 animate-pulse"></div>
+                            </div>
+                            <p className="text-foreground/90 font-medium mb-2">Welcome to JumpinAI Studio</p>
+                            <p className="text-muted-foreground text-sm">
+                              Fill out the form above and click "Generate My Jump in AI" to get started!
+                            </p>
                           </div>
-                          <p className="text-foreground/90 font-medium mb-2">Welcome to JumpinAI Studio</p>
-                          <p className="text-muted-foreground text-sm">
-                            Your AI-powered workspace is ready. What would you like to create today?
-                          </p>
                         </div>
-                      </div>
+                      ) : (
+                        /* Generated Result */
+                        <div className="space-y-4">
+                          <div className="flex items-center gap-2 text-green-400 mb-4">
+                            <CheckCircle className="w-5 h-5" />
+                            <span className="font-medium">Your Jump in AI is ready!</span>
+                          </div>
+                          
+                          <div className="glass rounded-2xl p-6">
+                            <div className="prose prose-invert max-w-none">
+                              <div className="whitespace-pre-wrap text-foreground/90 leading-relaxed">
+                                {generatedContent}
+                              </div>
+                            </div>
+                          </div>
+                          
+                          {isAuthenticated && (
+                            <div className="text-center">
+                              <p className="text-green-400 text-sm mb-2">✓ Saved to your dashboard</p>
+                              <button 
+                                onClick={() => window.location.href = '/dashboard'}
+                                className="text-primary hover:text-primary/80 font-medium text-sm"
+                              >
+                                View in Dashboard →
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      )}
                       
                     </div>
                   </div>
