@@ -121,44 +121,29 @@ const JumpinAIStudio = () => {
   };
 
   const handleGenerate = async () => {
-    console.log('🔥 GENERATE BUTTON CLICKED - handleGenerate started');
-    
     // Validate required fields
-    console.log('📝 Validating form data:', formData);
     if (!formData.goals.trim() || !formData.challenges.trim()) {
-      console.log('❌ Form validation failed');
       toast.error('Please fill in your goals and challenges');
       return;
     }
-    console.log('✅ Form validation passed');
 
     // Check guest limits
-    console.log('👤 Checking auth status:', { isAuthenticated, guestCanUse });
     if (!isAuthenticated && !guestCanUse) {
-      console.log('❌ Guest limit reached');
       toast.error('You\'ve reached the guest limit. Please sign up to continue.');
       return;
     }
-    console.log('✅ Auth/guest check passed');
 
     try {
-      console.log('💾 Starting data saving phase...');
-      
       // Save form data for logged-in users
       if (isAuthenticated && user?.id) {
-        console.log('💾 Saving form data for authenticated user:', user.id);
         await saveFormData(formData);
-        console.log('✅ Form data saved successfully');
       }
 
       // Record guest usage if not authenticated
       if (!isAuthenticated) {
-        console.log('📊 Recording guest usage...');
         await guestLimitService.recordGuestUsage();
-        console.log('✅ Guest usage recorded');
       }
 
-      console.log('🚀 Starting AI generation...');
       // Generate with progressive display
       const result = await generateWithProgression(formData, user?.id);
       

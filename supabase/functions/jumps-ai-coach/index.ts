@@ -15,9 +15,24 @@ serve(async (req) => {
   }
 
   try {
+    // Validate OpenAI API key first
+    if (!openAIApiKey) {
+      console.error('❌ CRITICAL: OpenAI API key is not set in environment variables');
+      return new Response(JSON.stringify({ 
+        error: 'OpenAI API key not configured',
+        full_content: 'Service configuration error. Please contact support.',
+        components: { prompts: [], workflows: [], blueprints: [], strategies: [] }
+      }), {
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    console.log('✅ OpenAI API key is available');
+
     const { goals, challenges, industry, ai_experience, urgency, budget, generate_components } = await req.json();
 
-    console.log('Generating Jump with parameters:', { goals, challenges, industry, ai_experience, urgency, budget });
+    console.log('🚀 Generating Jump with parameters:', { goals, challenges, industry, ai_experience, urgency, budget });
 
     const systemPrompt = `You are JumpinAI, the world's leading AI transformation consultant with expertise across all industries. You create comprehensive, detailed, professional-grade AI transformation plans called "Jumps" that serve as complete business transformation guides.
 
@@ -225,9 +240,9 @@ RESPONSE FORMAT - EXACT JSON STRUCTURE REQUIRED:
 
 Make sure all content is practical, actionable, and tailored to the specific goals and challenges provided. Each component should be distinct and valuable on its own.`;
 
-    console.log('Sending request to OpenAI...');
+    console.log('📡 Sending request to OpenAI API...');
 
-    console.log('Making OpenAI API request with model: gpt-5-2025-08-07');
+    console.log('🤖 Making OpenAI API request with model: gpt-5-2025-08-07');
     
     const requestBody = {
       model: 'gpt-5-2025-08-07',
@@ -235,10 +250,10 @@ Make sure all content is practical, actionable, and tailored to the specific goa
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt }
       ],
-      max_completion_tokens: 30000, // High token limit for comprehensive responses
+      max_completion_tokens: 25000, // Reduced for reliability
     };
 
-    console.log('Request body prepared:', {
+    console.log('📋 Request body prepared:', {
       model: requestBody.model,
       messageCount: requestBody.messages.length,
       systemPromptLength: systemPrompt.length,
@@ -248,7 +263,12 @@ Make sure all content is practical, actionable, and tailored to the specific goa
     
     // Create AbortController for timeout handling
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 300000); // 5 minute timeout for 30k tokens
+    const timeoutId = setTimeout(() => {
+      console.error('⏰ Request timed out after 4 minutes');
+      controller.abort();
+    }, 240000); // 4 minute timeout
+    
+    console.log('🌐 Initiating fetch to OpenAI...');
     
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -258,9 +278,16 @@ Make sure all content is practical, actionable, and tailored to the specific goa
       },
       body: JSON.stringify(requestBody),
       signal: controller.signal,
+    }).catch(fetchError => {
+      console.error('🚨 Fetch error occurred:', fetchError.name, fetchError.message);
+      if (fetchError.name === 'AbortError') {
+        throw new Error('Request timed out - OpenAI took too long to respond');
+      }
+      throw new Error(`Network error: ${fetchError.message}`);
     });
     
     clearTimeout(timeoutId);
+    console.log('✅ Response received from OpenAI');
 
     console.log('OpenAI response status:', response.status, response.statusText);
 
