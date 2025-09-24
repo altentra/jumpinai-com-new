@@ -72,12 +72,9 @@ export const jumpinAIStudioService = {
 
       console.log('Generating Jump with data:', requestData);
 
-      // Call the jumps-ai-coach edge function with increased timeout
+      // Call the jumps-ai-coach edge function 
       const { data, error } = await supabase.functions.invoke('jumps-ai-coach', {
-        body: requestData,
-        headers: {
-          'Content-Type': 'application/json',
-        }
+        body: requestData
       });
 
       console.log('Edge function response:', { data, error });
