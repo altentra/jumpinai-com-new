@@ -1,57 +1,86 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { User, AlertCircle, Loader2, LogIn } from 'lucide-react';
-import Navigation from '@/components/Navigation';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { toast } from 'sonner';
+import { Sparkles, Clock, User, Lock, CheckCircle, Zap, Target, Brain, Rocket, ChevronRight } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { guestLimitService } from '@/services/guestLimitService';
-import { jumpinAIStudioService, type StudioFormData, type GenerationResult } from '@/services/jumpinAIStudioService';
-import { toast } from 'sonner';
-import JumpResultDisplay from '@/components/JumpResultDisplay';
+import ProgressiveJumpDisplay from '@/components/ProgressiveJumpDisplay';
+import { useRealtimeGeneration } from '@/hooks/useRealtimeGeneration';
 import { supabase } from '@/integrations/supabase/client';
 
-const JumpinAIStudio = () => {
-  const { user, isAuthenticated, login } = useAuth();
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [guestCanUse, setGuestCanUse] = useState(true);
-  const [guestUsageCount, setGuestUsageCount] = useState(0);
-  const [generationResult, setGenerationResult] = useState<GenerationResult | null>(null);
-  const [showResult, setShowResult] = useState(false);
-  const [generationTimer, setGenerationTimer] = useState(0);
-  const [generationStatus, setGenerationStatus] = useState('');
-  
-  // Form data state - ALWAYS starts empty for security
+interface StudioFormData {
+  goals: string;
+  challenges: string;
+  industry: string;
+  ai_experience: string;
+  urgency: string;
+  budget: string;
+}
+
+const JumpinAIStudio: React.FC = () => {
   const [formData, setFormData] = useState<StudioFormData>({
     goals: '',
     challenges: '',
     industry: '',
-    aiExperience: '',
+    ai_experience: '',
     urgency: '',
     budget: ''
   });
 
-  // Check guest limits on component mount and load saved form data
+  const [guestCanUse, setGuestCanUse] = useState(true);
+  const [guestUsageCount, setGuestUsageCount] = useState(0);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [showResult, setShowResult] = useState(false);
+
+  const { user, isAuthenticated } = useAuth();
+
+  // Realtime generation hook
+  const {
+    isConnected,
+    isGenerating: realtimeIsGenerating,
+    status,
+    generationData,
+    timer,
+    jumpId,
+    connect,
+    startGeneration
+  } = useRealtimeGeneration({
+    onComplete: (data) => {
+      setIsGenerating(false);
+      if (jumpId) {
+        toast.success('Your Jump in AI has been saved to your dashboard!');
+      } else if (!isAuthenticated) {
+        toast.success('Your Jump in AI is ready! Sign up to save and access more features.');
+      }
+    },
+    onError: (error) => {
+      setIsGenerating(false);
+      setShowResult(false);
+    }
+  });
+
   useEffect(() => {
-    if (!isAuthenticated) {
-      checkGuestLimits();
-    } else {
+    checkGuestLimits();
+  }, []);
+
+  // Load saved form data for authenticated users
+  useEffect(() => {
+    if (isAuthenticated && user?.id) {
       loadSavedFormData();
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, user]);
 
-  // Timer effect for generation
+  // Connect to realtime generation service
   useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (isGenerating) {
-      interval = setInterval(() => {
-        setGenerationTimer(prev => prev + 1);
-      }, 1000);
-    } else {
-      setGenerationTimer(0);
-    }
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [isGenerating]);
+    connect();
+  }, [connect]);
 
   const loadSavedFormData = async () => {
     // SECURITY: Only load data for authenticated users with verified user ID
@@ -68,43 +97,63 @@ const JumpinAIStudio = () => {
         .from('user_profiles')
         .select('*')
         .eq('user_id', user.id) // CRITICAL: Only get data for THIS specific user
-        .order('updated_at', { ascending: false })
-        .limit(1);
-      
-      if (error) {
-        console.error('Database error loading user profile:', error);
+        .limit(1)
+        .single();
+
+      if (error && error.code !== 'PGRST116') { // PGRST116 = no rows returned
+        console.error('Error loading saved form data:', error);
         return;
       }
-      
-      // Only populate fields if user has previously saved data
-      if (profiles && profiles.length > 0) {
-        const profile = profiles[0];
+
+      if (profiles) {
         console.log('Populating form with user saved data');
-        
-        // SECURITY: Only update with saved data, never expose other users' data
-        setFormData({
-          goals: profile.goals || '',
-          challenges: profile.challenges || '',
-          industry: profile.industry || '',
-          aiExperience: profile.ai_knowledge || '',
-          urgency: profile.time_commitment || '',
-          budget: profile.budget || '',
-        });
-      } else {
-        console.log('No saved data found - keeping empty fields');
+        setFormData(prev => ({
+          goals: profiles.goals || prev.goals,
+          challenges: profiles.challenges || prev.challenges,
+          industry: profiles.industry || prev.industry,
+          ai_experience: profiles.experience_level || prev.ai_experience,
+          urgency: profiles.time_commitment || prev.urgency,
+          budget: profiles.budget || prev.budget
+        }));
       }
     } catch (error) {
-      console.error('Error loading saved form data:', error);
+      console.error('Unexpected error loading saved form data:', error);
     }
   };
 
   const saveFormData = async (data: StudioFormData) => {
-    if (!isAuthenticated || !user?.id) return;
+    // SECURITY: Only save data for authenticated users with verified user ID
+    if (!isAuthenticated || !user?.id) {
+      console.log('No authenticated user - not saving form data');
+      return;
+    }
 
     try {
-      await jumpinAIStudioService.saveFormData(data, user.id);
+      console.log('Saving form data for authenticated user:', user.id);
+      
+      // SECURITY: Always set user_id explicitly to prevent data leakage
+      const { error } = await supabase
+        .from('user_profiles')
+        .upsert({
+          user_id: user.id, // CRITICAL: Explicit user_id ensures data belongs to current user
+          goals: data.goals,
+          challenges: data.challenges,
+          industry: data.industry,
+          ai_experience: data.ai_experience,
+          urgency: data.urgency,
+          budget: data.budget,
+          updated_at: new Date().toISOString()
+        }, {
+          onConflict: 'user_id'
+        });
+
+      if (error) {
+        console.error('Error saving form data:', error);
+      } else {
+        console.log('Form data saved successfully');
+      }
     } catch (error) {
-      console.error('Error saving form data:', error);
+      console.error('Unexpected error saving form data:', error);
     }
   };
 
@@ -133,30 +182,8 @@ const JumpinAIStudio = () => {
 
     try {
       setIsGenerating(true);
-      setShowResult(false);
-      setGenerationTimer(0);
+      setShowResult(true); // Show progressive display immediately
       
-      // Status updates during generation
-      const statusUpdates = [
-        { time: 2, status: 'Analyzing your goals and challenges...' },
-        { time: 8, status: 'Researching AI tools and technologies...' },
-        { time: 15, status: 'Creating your strategic action plan...' },
-        { time: 22, status: 'Generating custom prompts and workflows...' },
-        { time: 28, status: 'Building blueprints and strategies...' },
-        { time: 35, status: 'Finalizing your Jump package...' }
-      ];
-
-      // Status update timer
-      const statusTimer = setInterval(() => {
-        const currentTime = generationTimer;
-        const currentStatus = statusUpdates.find(s => 
-          currentTime >= s.time && currentTime < s.time + 5
-        );
-        if (currentStatus) {
-          setGenerationStatus(currentStatus.status);
-        }
-      }, 1000);
-
       // Save form data for logged-in users
       if (isAuthenticated && user?.id) {
         await saveFormData(formData);
@@ -167,18 +194,8 @@ const JumpinAIStudio = () => {
         await guestLimitService.recordGuestUsage();
       }
 
-      // Generate the Jump
-      const result = await jumpinAIStudioService.generateJump(formData, user?.id);
-      
-      clearInterval(statusTimer);
-      setGenerationResult(result);
-      setShowResult(true);
-      
-      if (result.jumpId) {
-        toast.success('Your Jump in AI has been saved to your dashboard!');
-      } else if (!isAuthenticated) {
-        toast.success('Your Jump in AI is ready! Sign up to save and access more features.');
-      }
+      // Start realtime generation
+      startGeneration(formData, user?.id);
 
       // Update guest limits
       if (!isAuthenticated) {
@@ -187,250 +204,324 @@ const JumpinAIStudio = () => {
       }
 
     } catch (error) {
-      console.error('Error generating Jump:', error);
-      toast.error('Failed to generate your Jump. Please try again.');
-    } finally {
+      console.error('Error starting generation:', error);
+      toast.error('Failed to start generation. Please try again.');
       setIsGenerating(false);
-      setGenerationStatus('');
+      setShowResult(false);
     }
   };
 
+  const handleInputChange = (field: keyof StudioFormData, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
 
   return (
     <>
       <Helmet>
-        <title>JumpinAI Studio - AI-Powered Transformation Workspace</title>
-        <meta name="description" content="Your AI-powered workspace for creating and managing strategic transformations with intelligent guidance." />
+        <title>Jump in AI Studio - AI Transformation Studio | Create Your Jump</title>
+        <meta name="description" content="Create your personalized AI transformation plan with our intelligent studio. Get custom prompts, workflows, blueprints, and strategies tailored to your goals and challenges." />
+        <meta name="keywords" content="AI transformation, AI studio, business automation, AI strategy, custom AI prompts, AI workflows, AI blueprints" />
+        <link rel="canonical" href="https://jumpinai.com/jumpinai-studio" />
+        
+        {/* Open Graph Tags */}
+        <meta property="og:title" content="Jump in AI Studio - Create Your AI Transformation Plan" />
+        <meta property="og:description" content="Get a personalized AI transformation plan with custom prompts, workflows, and strategies. Transform your business with AI in minutes." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://jumpinai.com/jumpinai-studio" />
+        
+        {/* Twitter Tags */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Jump in AI Studio - AI Transformation Studio" />
+        <meta name="twitter:description" content="Create your personalized AI transformation plan with custom prompts, workflows, and strategies." />
+        
+        {/* Schema.org markup */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "Jump in AI Studio",
+            "description": "AI transformation studio for creating personalized business automation plans",
+            "url": "https://jumpinai.com/jumpinai-studio",
+            "applicationCategory": "BusinessApplication",
+            "operatingSystem": "Web",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
+            }
+          })}
+        </script>
       </Helmet>
-      
-      <div className="min-h-screen scroll-snap-container bg-gradient-to-br from-background via-background/90 to-primary/5 dark:bg-gradient-to-br dark:from-black dark:via-gray-950/90 dark:to-gray-900/60">
-        {/* Enhanced floating background elements */}
-        <div className="fixed inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-primary/20 to-primary/5 dark:bg-gradient-to-br dark:from-gray-800/30 dark:to-gray-700/15 rounded-full blur-3xl"></div>
-          <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-tr from-secondary/15 to-secondary/5 dark:bg-gradient-to-tr dark:from-gray-700/25 dark:to-gray-600/15 rounded-full blur-3xl"></div>
-          <div className="absolute top-1/3 left-1/2 transform -translate-x-1/2 w-64 h-64 bg-accent/10 dark:bg-gradient-radial dark:from-gray-800/20 dark:to-transparent rounded-full blur-2xl"></div>
-          <div className="absolute bottom-20 left-20 w-40 h-40 bg-gradient-to-tr from-secondary/8 to-transparent dark:bg-gradient-to-tr dark:from-gray-600/15 dark:to-transparent rounded-full blur-xl"></div>
+
+      <div className="min-h-screen relative overflow-hidden">
+        {/* Animated Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-background via-background/95 to-primary/5">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(120,119,198,0.1),transparent_70%)]"></div>
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-primary-glow/10 rounded-full blur-3xl animate-pulse animation-delay-2000"></div>
         </div>
-        
-        <Navigation />
-        
-        {/* Auth Status Bar */}
-        <div className="fixed top-20 right-4 z-50">
-          <div className="glass-dark rounded-xl p-3 text-sm">
-            {isAuthenticated ? (
-              <div className="flex items-center gap-2 text-green-400">
-                <User className="w-4 h-4" />
-                <span>Logged in as {user?.display_name || user?.email}</span>
+
+        <div className="relative z-10 container mx-auto px-4 py-12 max-w-4xl">
+          {/* Authentication Status Bar */}
+          <div className="mb-8 flex items-center justify-between p-4 glass rounded-lg border border-white/20">
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
+                <User className="w-5 h-5 text-primary" />
+                <span className="font-medium">
+                  {isAuthenticated ? `Welcome, ${user?.email}` : 'Guest User'}
+                </span>
               </div>
-            ) : (
-              <div className="flex items-center gap-2 text-orange-400">
-                <AlertCircle className="w-4 h-4" />
-                <span>Guest user - {guestCanUse ? '1 free try remaining' : 'limit reached'}</span>
+              {isAuthenticated ? (
+                <Badge className="bg-green-500/20 text-green-400 border-green-500/30">
+                  <CheckCircle className="w-3 h-3 mr-1" />
+                  Authenticated
+                </Badge>
+              ) : (
+                <Badge variant="outline" className="text-yellow-400 border-yellow-400/30">
+                  <Lock className="w-3 h-3 mr-1" />
+                  Guest (Limited)
+                </Badge>
+              )}
+            </div>
+            {!isAuthenticated && (
+              <div className="text-sm text-muted-foreground">
+                {guestCanUse ? `${1 - guestUsageCount} generations remaining` : 'Sign up for unlimited access'}
               </div>
             )}
           </div>
-        </div>
-        
-        <main className="relative pt-24 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-6xl mx-auto">
-            {/* Hero Section */}
-            <div className="text-center mb-16 animate-fade-in-up">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-foreground via-foreground/90 to-foreground/80 bg-clip-text text-transparent leading-tight">
-                Jump in AI Studio
-              </h1>
-              <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-4xl mx-auto leading-relaxed">
-                Tell us your goals and challenges, and we'll generate your personalized <span className="font-semibold text-primary">Jump in AI</span>: 
-                a clear step-by-step plan, essential resources, custom prompts, workflows, blueprints, and strategies.
-              </p>
-              <div className="flex flex-wrap justify-center gap-4 text-sm text-muted-foreground/80">
-                <span className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-primary/60"></div>
-                  Strategic Action Plan
-                </span>
-                <span className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-primary/60"></div>
-                  4 Custom Prompts
-                </span>
-                <span className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-primary/60"></div>
-                  4 Workflows
-                </span>
-                <span className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-primary/60"></div>
-                  4 Blueprints
-                </span>
-                <span className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-primary/60"></div>
-                  4 Strategies
-                </span>
+
+          {/* Hero Section */}
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 bg-primary/20 text-primary px-4 py-2 rounded-full text-sm font-medium mb-6">
+              <Zap className="w-4 h-4" />
+              AI-Powered Transformation Studio
+            </div>
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-foreground via-primary to-primary-bright bg-clip-text text-transparent">
+              Create Your Jump in AI
+            </h1>
+            <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
+              Get a personalized AI transformation plan with custom prompts, workflows, blueprints, and strategies. 
+              Tell us about your goals and challenges, and our AI will create a comprehensive implementation guide just for you.
+            </p>
+            <div className="flex flex-wrap justify-center gap-4 mb-8">
+              <div className="flex items-center gap-2 text-primary">
+                <Target className="w-5 h-5" />
+                <span className="font-medium">Personalized Strategy</span>
+              </div>
+              <div className="flex items-center gap-2 text-primary">
+                <Brain className="w-5 h-5" />
+                <span className="font-medium">AI-Generated Content</span>
+              </div>
+              <div className="flex items-center gap-2 text-primary">
+                <Rocket className="w-5 h-5" />
+                <span className="font-medium">Ready to Implement</span>
               </div>
             </div>
+          </div>
 
-            {/* Goals & Challenges Form */}
-            <div className="mb-12 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-              <div className="relative glass-dark rounded-3xl p-6 shadow-modern-lg border border-white/20 dark:border-white/30 backdrop-blur-xl bg-gradient-to-br from-white/10 via-white/5 to-transparent dark:from-black/20 dark:via-black/10 dark:to-transparent overflow-hidden">
-                {/* Liquid glass effect overlay */}
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 dark:from-primary/10 dark:via-transparent dark:to-secondary/10 rounded-3xl"></div>
-                <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/30 to-transparent dark:via-white/20"></div>
-                
-                <div className="relative z-10">
-                  <h2 className="text-xl font-semibold mb-5 text-foreground text-center">Let's understand your goals</h2>
-                  <div className="grid gap-4">
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-foreground/90 mb-2">
-                          What are you after? *
-                        </label>
-                        <textarea
-                          value={formData.goals}
-                          onChange={(e) => setFormData(prev => ({ ...prev, goals: e.target.value }))}
-                          className="w-full min-h-[80px] p-3 glass rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-300 placeholder:text-muted-foreground/60 text-foreground bg-white/10 dark:bg-black/20 border border-white/20 dark:border-white/30 backdrop-blur-sm"
-                          placeholder="Your main goals & projects with AI..."
-                        />
-                      </div>
-                      
-                      <div>
-                        <label className="block text-sm font-medium text-foreground/90 mb-2">
-                          What prevents you? *
-                        </label>
-                        <textarea
-                          value={formData.challenges}
-                          onChange={(e) => setFormData(prev => ({ ...prev, challenges: e.target.value }))}
-                          className="w-full min-h-[80px] p-3 glass rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-300 placeholder:text-muted-foreground/60 text-foreground bg-white/10 dark:bg-black/20 border border-white/20 dark:border-white/30 backdrop-blur-sm"
-                          placeholder="Your obstacles & challenges..."
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid md:grid-cols-2 gap-4 mb-4">
-                      <div>
-                        <label className="block text-sm font-medium text-foreground/90 mb-2">
-                          Industry
-                        </label>
-                        <input
-                          type="text"
-                          value={formData.industry}
-                          onChange={(e) => setFormData(prev => ({ ...prev, industry: e.target.value }))}
-                          className="w-full p-3 glass rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-300 placeholder:text-muted-foreground/60 text-foreground bg-white/10 dark:bg-black/20 border border-white/20 dark:border-white/30 backdrop-blur-sm"
-                          placeholder="Marketing, Tech, Finance..."
-                        />
-                      </div>
-                      
-                      <div>
-                        <label className="block text-sm font-medium text-foreground/90 mb-2">
-                          AI Experience
-                        </label>
-                        <select 
-                          value={formData.aiExperience}
-                          onChange={(e) => setFormData(prev => ({ ...prev, aiExperience: e.target.value }))}
-                          className="w-full p-3 glass rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-300 text-foreground bg-white/10 dark:bg-black/20 border border-white/20 dark:border-white/30 backdrop-blur-sm"
-                        >
-                          <option value="">Select level</option>
-                          <option value="beginner">Beginner</option>
-                          <option value="intermediate">Intermediate</option>
-                          <option value="advanced">Advanced</option>
-                          <option value="expert">Expert</option>
-                        </select>
-                      </div>
-                    </div>
-
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-foreground/90 mb-2">
-                          Urgency
-                        </label>
-                        <select 
-                          value={formData.urgency}
-                          onChange={(e) => setFormData(prev => ({ ...prev, urgency: e.target.value }))}
-                          className="w-full p-3 glass rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-300 text-foreground bg-white/10 dark:bg-black/20 border border-white/20 dark:border-white/30 backdrop-blur-sm"
-                        >
-                          <option value="">Select urgency</option>
-                          <option value="asap">ASAP - Need immediate results</option>
-                          <option value="weeks">Within few weeks</option>
-                          <option value="months">Within few months</option>
-                          <option value="exploring">Just exploring</option>
-                        </select>
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-foreground/90 mb-2">
-                          Budget
-                        </label>
-                        <select 
-                          value={formData.budget}
-                          onChange={(e) => setFormData(prev => ({ ...prev, budget: e.target.value }))}
-                          className="w-full p-3 glass rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-300 text-foreground bg-white/10 dark:bg-black/20 border border-white/20 dark:border-white/30 backdrop-blur-sm"
-                        >
-                          <option value="">Select budget</option>
-                          <option value="minimal">Minimal ($0-500)</option>
-                          <option value="moderate">Moderate ($500-2K)</option>
-                          <option value="substantial">Substantial ($2K-10K)</option>
-                          <option value="enterprise">Enterprise ($10K+)</option>
-                        </select>
-                      </div>
-                    </div>
-
-                    <button 
-                      onClick={handleGenerate}
-                      disabled={isGenerating || (!isAuthenticated && !guestCanUse)}
-                      className="w-full modern-button bg-gradient-to-r from-primary via-primary/90 to-primary/80 hover:from-primary/90 hover:via-primary/80 hover:to-primary/70 disabled:from-muted disabled:to-muted text-primary-foreground disabled:text-muted-foreground px-8 py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-[1.02] shadow-lg hover:shadow-xl backdrop-blur-sm border border-white/20 dark:border-white/30 mt-2 flex items-center justify-center gap-2"
-                    >
-                      {isGenerating ? (
-                        <div className="flex flex-col items-center gap-2">
-                          <div className="flex items-center gap-2">
-                            <Loader2 className="w-5 h-5 animate-spin" />
-                            Generating Your Jump...
-                          </div>
-                          <div className="text-sm opacity-80">
-                            {generationTimer}s - {generationStatus}
-                          </div>
-                        </div>
-                      ) : (
-                        'Generate My Jump in AI'
-                      )}
-                    </button>
-                    
-                    {!isAuthenticated && (
-                      <div className="mt-4 p-4 glass rounded-xl border border-orange-200/20">
-                        <div className="flex items-start gap-3">
-                          <AlertCircle className="w-5 h-5 text-orange-400 flex-shrink-0 mt-0.5" />
-                          <div className="text-sm">
-                            <p className="text-orange-400 font-medium mb-2">Want to save your data and get unlimited access?</p>
-                            <p className="text-muted-foreground mb-3">
-                              Sign up to save your inputs, access your generated content anytime, and get unlimited generations.
-                            </p>
-                            <button 
-                              onClick={() => login()}
-                              className="flex items-center gap-2 text-primary hover:text-primary/80 font-medium"
-                            >
-                              <LogIn className="w-4 h-4" />
-                              Sign Up / Login
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
+          {/* Main Form */}
+          <Card className="glass border-white/20 mb-8">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-2xl">
+                <Sparkles className="w-6 h-6 text-primary" />
+                Tell Us About Your AI Transformation Goals
+              </CardTitle>
+              <CardDescription className="text-lg">
+                The more specific you are, the better we can tailor your Jump in AI plan
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="goals" className="text-base font-medium">
+                    What are your main goals? *
+                  </Label>
+                  <Textarea
+                    id="goals"
+                    placeholder="e.g., Automate customer service, improve sales processes, streamline operations..."
+                    value={formData.goals}
+                    onChange={(e) => handleInputChange('goals', e.target.value)}
+                    className="min-h-[120px] glass border-white/20 resize-none"
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="challenges" className="text-base font-medium">
+                    What challenges are you facing? *
+                  </Label>
+                  <Textarea
+                    id="challenges"
+                    placeholder="e.g., Manual processes taking too much time, inconsistent customer experience, data scattered across systems..."
+                    value={formData.challenges}
+                    onChange={(e) => handleInputChange('challenges', e.target.value)}
+                    className="min-h-[120px] glass border-white/20 resize-none"
+                    required
+                  />
                 </div>
               </div>
-            </div>
 
-
-            {/* Results Display */}
-            {showResult && generationResult && (
-              <div className="mt-12 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
-                <JumpResultDisplay 
-                  fullContent={generationResult.fullContent}
-                  structuredPlan={generationResult.structuredPlan}
-                  comprehensivePlan={generationResult.comprehensivePlan}
-                  components={generationResult.components}
-                  isAuthenticated={isAuthenticated}
-                  jumpId={generationResult.jumpId}
-                />
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="industry" className="text-base font-medium">Industry</Label>
+                  <Select value={formData.industry} onValueChange={(value) => handleInputChange('industry', value)}>
+                    <SelectTrigger className="glass border-white/20">
+                      <SelectValue placeholder="Select your industry" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="technology">Technology</SelectItem>
+                      <SelectItem value="healthcare">Healthcare</SelectItem>
+                      <SelectItem value="finance">Finance</SelectItem>
+                      <SelectItem value="retail">Retail/E-commerce</SelectItem>
+                      <SelectItem value="manufacturing">Manufacturing</SelectItem>
+                      <SelectItem value="education">Education</SelectItem>
+                      <SelectItem value="real-estate">Real Estate</SelectItem>
+                      <SelectItem value="consulting">Consulting</SelectItem>
+                      <SelectItem value="marketing">Marketing/Advertising</SelectItem>
+                      <SelectItem value="legal">Legal Services</SelectItem>
+                      <SelectItem value="hospitality">Hospitality</SelectItem>
+                      <SelectItem value="non-profit">Non-Profit</SelectItem>
+                      <SelectItem value="other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="ai_experience" className="text-base font-medium">AI Experience Level</Label>
+                  <Select value={formData.ai_experience} onValueChange={(value) => handleInputChange('ai_experience', value)}>
+                    <SelectTrigger className="glass border-white/20">
+                      <SelectValue placeholder="Select your AI experience" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="beginner">Beginner (New to AI)</SelectItem>
+                      <SelectItem value="intermediate">Intermediate (Some AI experience)</SelectItem>
+                      <SelectItem value="advanced">Advanced (Regular AI user)</SelectItem>
+                      <SelectItem value="expert">Expert (AI implementation experience)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
-            )}
-          </div>
-        </main>
+
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="urgency" className="text-base font-medium">Timeline Urgency</Label>
+                  <Select value={formData.urgency} onValueChange={(value) => handleInputChange('urgency', value)}>
+                    <SelectTrigger className="glass border-white/20">
+                      <SelectValue placeholder="How quickly do you need results?" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="immediate">Immediate (This week)</SelectItem>
+                      <SelectItem value="urgent">Urgent (This month)</SelectItem>
+                      <SelectItem value="standard">Standard (Within 3 months)</SelectItem>
+                      <SelectItem value="flexible">Flexible (When ready)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="budget" className="text-base font-medium">Budget Range</Label>
+                  <Select value={formData.budget} onValueChange={(value) => handleInputChange('budget', value)}>
+                    <SelectTrigger className="glass border-white/20">
+                      <SelectValue placeholder="What's your budget range?" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="minimal">Minimal (Under $1,000)</SelectItem>
+                      <SelectItem value="small">Small ($1,000 - $5,000)</SelectItem>
+                      <SelectItem value="moderate">Moderate ($5,000 - $15,000)</SelectItem>
+                      <SelectItem value="substantial">Substantial ($15,000 - $50,000)</SelectItem>
+                      <SelectItem value="enterprise">Enterprise ($50,000+)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="pt-6">
+                <Button
+                  onClick={handleGenerate}
+                  disabled={realtimeIsGenerating || (!isAuthenticated && !guestCanUse) || !isConnected}
+                  className="w-full h-14 text-lg font-semibold bg-gradient-to-r from-primary via-primary-glow to-primary-bright hover:opacity-90 transition-all duration-300 shadow-glow hover:shadow-glow-intense disabled:opacity-50"
+                >
+                  {realtimeIsGenerating ? (
+                    <div className="flex items-center gap-3">
+                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                      <span>Generating... {timer}</span>
+                    </div>
+                  ) : !isConnected ? (
+                    <div className="flex items-center gap-3">
+                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                      <span>Connecting...</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-3">
+                      <Sparkles className="w-6 h-6" />
+                      Generate My Jump in AI
+                    </div>
+                  )}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Status Display During Generation */}
+          {realtimeIsGenerating && (
+            <div className="bg-gradient-to-r from-primary/20 to-primary-glow/20 p-6 rounded-lg border border-primary/30 glass mb-8">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 border-2 border-primary border-t-primary-glow rounded-full animate-spin"></div>
+                  <div>
+                    <h3 className="font-semibold text-lg">Creating Your Jump in AI</h3>
+                    <p className="text-muted-foreground">{status.message || 'Initializing AI generation...'}</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="font-mono text-xl font-semibold text-primary">
+                    {timer}
+                  </div>
+                  <p className="text-sm text-muted-foreground">Elapsed time</p>
+                </div>
+              </div>
+              <div className="text-sm text-muted-foreground">
+                ✨ Progress: {status.progress}% - Real-time AI generation with progressive content delivery
+              </div>
+            </div>
+          )}
+
+          {/* Guest Sign-up Prompt */}
+          {!isAuthenticated && (
+            <Card className="glass border-white/20 mb-8">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="p-3 bg-primary/20 rounded-full">
+                      <User className="w-6 h-6 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-lg">Get More with an Account</h3>
+                      <p className="text-muted-foreground">
+                        Save your Jumps, access unlimited generations, and get exclusive features
+                      </p>
+                    </div>
+                  </div>
+                  <Button variant="outline" className="gap-2 border-primary/30 text-primary hover:bg-primary/10">
+                    Sign Up Free
+                    <ChevronRight className="w-4 h-4" />
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Progressive Result Display */}
+          {showResult && (
+            <div className="mt-8">
+              <ProgressiveJumpDisplay
+                isGenerating={realtimeIsGenerating}
+                status={status}
+                generationData={generationData}
+                timer={timer}
+                jumpId={jumpId}
+                isAuthenticated={isAuthenticated}
+              />
+            </div>
+          )}
+        </div>
       </div>
     </>
   );
