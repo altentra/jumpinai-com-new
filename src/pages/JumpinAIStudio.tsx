@@ -44,7 +44,7 @@ const JumpinAIStudio = () => {
             {/* Hero Section */}
             <div className="text-center mb-16 animate-fade-in-up">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-foreground via-foreground/90 to-foreground/80 bg-clip-text text-transparent leading-tight">
-                Your AI Transformation Studio
+                Jump in AI Studio
               </h1>
               <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-4xl mx-auto leading-relaxed">
                 Tell us your goals and challenges, and we'll generate your personalized <span className="font-semibold text-primary">Jump in AI</span>: 
