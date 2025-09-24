@@ -17,7 +17,12 @@ const JumpinAIStudio = () => {
   
   const { isGenerating, result, processingStatus, generateWithProgression } = useProgressiveGeneration();
   
-  console.log('Progressive generation state:', { isGenerating, hasResult: !!result, processingStatus });
+  console.log('Progressive generation state:', { 
+    isGenerating, 
+    hasResult: !!result, 
+    processingStatus,
+    generateWithProgression: typeof generateWithProgression 
+  });
   
   const [guestCanUse, setGuestCanUse] = useState(true);
   const [guestUsageCount, setGuestUsageCount] = useState(0);
@@ -364,16 +369,30 @@ const JumpinAIStudio = () => {
                     </div>
 
                     <button 
+                      type="button"
                       onClick={(e) => {
+                        console.log('=== BUTTON CLICKED ===');
                         e.preventDefault();
-                        console.log('Generate button clicked');
-                        console.log('Current form data:', formData);
-                        console.log('Is authenticated:', isAuthenticated);
-                        console.log('Guest can use:', guestCanUse);
-                        console.log('Is generating:', isGenerating);
-                        handleGenerate();
+                        e.stopPropagation();
+                        
+                        try {
+                          console.log('Generate button clicked');
+                          console.log('Current form data:', formData);
+                          console.log('Is authenticated:', isAuthenticated);
+                          console.log('Guest can use:', guestCanUse);
+                          console.log('Is generating:', isGenerating);
+                          console.log('handleGenerate type:', typeof handleGenerate);
+                          
+                          handleGenerate();
+                        } catch (error) {
+                          console.error('Error in button click handler:', error);
+                        }
                       }}
-                      disabled={isGenerating || (!isAuthenticated && !guestCanUse)}
+                      disabled={false} // Temporarily disable the disabled check to test
+                      style={{ 
+                        opacity: (isGenerating || (!isAuthenticated && !guestCanUse)) ? 0.5 : 1,
+                        pointerEvents: 'auto'
+                      }}
                       className="w-full modern-button bg-gradient-to-r from-primary via-primary/90 to-primary/80 hover:from-primary/90 hover:via-primary/80 hover:to-primary/70 disabled:from-muted disabled:to-muted text-primary-foreground disabled:text-muted-foreground px-8 py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-[1.02] shadow-lg hover:shadow-xl backdrop-blur-sm border border-white/20 dark:border-white/30 mt-2 flex items-center justify-center gap-2"
                     >
                       {isGenerating ? (
