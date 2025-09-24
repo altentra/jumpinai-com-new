@@ -64,9 +64,9 @@ const Navigation = React.memo(() => {
 
   const navItems = [
     { name: "JumpinAI Studio", href: "/jumpinai-studio" },
-    { name: "Jumps in AI", href: "/jumps" },
-    { name: "Resources", href: "/resources" },
     { name: "Pricing", href: "/pricing" },
+    { name: "Guides", href: "/jumps" },
+    { name: "Resources", href: "/resources" },
   ];
 
   const companyItems = [
