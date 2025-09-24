@@ -234,13 +234,12 @@ Make sure all content is practical, actionable, and tailored to the specific goa
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4o',
+        model: 'gpt-5-2025-08-07',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt }
         ],
-        temperature: 0.2,
-        max_tokens: 32000,
+        max_completion_tokens: 50000,
       }),
     });
 
