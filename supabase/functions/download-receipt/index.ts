@@ -125,16 +125,7 @@ serve(async (req) => {
     console.error("No payment intent or invoice found for session:", sessionId);
     throw new Error("No receipt available for this session");
 
-    console.log("Success! Receipt URL:", charge.receipt_url);
-    return new Response(JSON.stringify({ 
-      receiptUrl: charge.receipt_url,
-      success: true 
-    }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-      status: 200,
-    });
-
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error downloading receipt:", error);
     return new Response(JSON.stringify({ 
       error: error.message,

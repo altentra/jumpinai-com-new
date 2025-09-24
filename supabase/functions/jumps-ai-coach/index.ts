@@ -230,8 +230,8 @@ Make sure all content is practical, actionable, and tailored to the specific goa
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
 
-  } catch (error) {
-    console.error('Error in jumps-ai-coach function:', error);
+  } catch (error: any) {
+    console.error("Error in jumps-ai-coach function:", error);
     return new Response(JSON.stringify({ 
       error: error.message,
       full_content: 'Sorry, there was an error generating your Jump in AI plan. Please try again.',

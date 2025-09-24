@@ -1,5 +1,5 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { Resend } from "npm:resend@2.0.0";
+import { Resend } from "https://esm.sh/resend@2.0.0";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
@@ -56,7 +56,7 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     // Create verification URL
-    const verificationUrl = `${Deno.env.get("SUPABASE_URL").replace('//', '//').replace('supabase.co', 'supabase.co')}/functions/v1/verify-email?token=${verificationToken}`;
+    const verificationUrl = `${Deno.env.get("SUPABASE_URL")?.replace('//', '//').replace('supabase.co', 'supabase.co')}/functions/v1/verify-email?token=${verificationToken}`;
 
     // Send verification email
     const emailResponse = await resend.emails.send({
