@@ -4,8 +4,9 @@ import { Send, User, AlertCircle, CheckCircle, Loader2, LogIn } from 'lucide-rea
 import Navigation from '@/components/Navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { guestLimitService } from '@/services/guestLimitService';
-import { jumpinAIStudioService, type StudioFormData } from '@/services/jumpinAIStudioService';
+import { jumpinAIStudioService, type StudioFormData, type GenerationResult } from '@/services/jumpinAIStudioService';
 import { toast } from 'sonner';
+import JumpResultDisplay from '@/components/JumpResultDisplay';
 
 const JumpinAIStudio = () => {
   const { user, isAuthenticated, login } = useAuth();
@@ -13,7 +14,7 @@ const JumpinAIStudio = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [guestCanUse, setGuestCanUse] = useState(true);
   const [guestUsageCount, setGuestUsageCount] = useState(0);
-  const [generatedContent, setGeneratedContent] = useState<string>('');
+  const [generationResult, setGenerationResult] = useState<GenerationResult | null>(null);
   const [showResult, setShowResult] = useState(false);
   
   // Form data state
@@ -68,7 +69,7 @@ const JumpinAIStudio = () => {
       // Generate the Jump
       const result = await jumpinAIStudioService.generateJump(formData, user?.id);
       
-      setGeneratedContent(result.fullContent);
+      setGenerationResult(result);
       setShowResult(true);
       
       if (result.jumpId) {
@@ -346,32 +347,16 @@ const JumpinAIStudio = () => {
                         </div>
                       ) : (
                         /* Generated Result */
-                        <div className="space-y-4">
-                          <div className="flex items-center gap-2 text-green-400 mb-4">
-                            <CheckCircle className="w-5 h-5" />
-                            <span className="font-medium">Your Jump in AI is ready!</span>
-                          </div>
-                          
-                          <div className="glass rounded-2xl p-6">
-                            <div className="prose prose-invert max-w-none">
-                              <div className="whitespace-pre-wrap text-foreground/90 leading-relaxed">
-                                {generatedContent}
-                              </div>
-                            </div>
-                          </div>
-                          
-                          {isAuthenticated && (
-                            <div className="text-center">
-                              <p className="text-green-400 text-sm mb-2">✓ Saved to your dashboard</p>
-                              <button 
-                                onClick={() => window.location.href = '/dashboard'}
-                                className="text-primary hover:text-primary/80 font-medium text-sm"
-                              >
-                                View in Dashboard →
-                              </button>
-                            </div>
-                          )}
-                        </div>
+                        generationResult && (
+                          <JumpResultDisplay
+                            fullContent={generationResult.fullContent}
+                            structuredPlan={generationResult.structuredPlan}
+                            comprehensivePlan={generationResult.comprehensivePlan}
+                            components={generationResult.components}
+                            isAuthenticated={isAuthenticated}
+                            jumpId={generationResult.jumpId}
+                          />
+                        )
                       )}
                       
                     </div>
