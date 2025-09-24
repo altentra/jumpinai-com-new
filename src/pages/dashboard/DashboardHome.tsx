@@ -115,7 +115,7 @@ const DashboardHome = () => {
         </p>
       </div>
 
-      {/* Jumps Studio Invitation */}
+      {/* JumpinAI Studio Invitation */}
       <Card className="glass border-primary/20 bg-gradient-to-r from-primary/5 to-primary/10 animate-fade-in-up rounded-xl shadow-modern">
         <CardContent className="p-6 text-center">
           <div className="flex items-center justify-center gap-3 mb-3">
@@ -124,14 +124,14 @@ const DashboardHome = () => {
           </div>
           <p className="text-sm text-muted-foreground mb-5 max-w-3xl mx-auto">
             Create a comprehensive AI transformation plan tailored to your life and business. 
-            Jumps Studio helps you build complete roadmaps with all the necessary tools, prompts, 
+            JumpinAI Studio helps you build complete roadmaps with all the necessary tools, prompts, 
             workflows, and strategies for your success journey.
           </p>
           <Button 
-            onClick={() => navigate("/dashboard/jumps-studio")}
+            onClick={() => navigate("/jumpinai-studio")}
             className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-2 text-base font-medium"
           >
-            Start in Jumps Studio
+            Start in JumpinAI Studio
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </CardContent>

@@ -106,11 +106,11 @@ export default function Strategies() {
               No strategies yet
             </h3>
             <p className="text-sm text-muted-foreground mb-4">
-              Generate your personalized AI transformation plan in Jumps Studio to get custom strategies
+              Generate your personalized AI transformation plan in JumpinAI Studio to get custom strategies
             </p>
-            <Button variant="outline" className="text-sm">
+            <Button variant="outline" className="text-sm" onClick={() => window.location.href = '/jumpinai-studio'}>
               <ExternalLink className="w-3 h-3 mr-2" />
-              Visit Jumps Studio
+              Visit JumpinAI Studio
             </Button>
           </CardContent>
         </Card>

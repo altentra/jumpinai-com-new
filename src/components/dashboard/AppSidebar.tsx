@@ -107,16 +107,6 @@ export default function AppSidebar() {
             Overview
           </Link>
 
-          <Link 
-            to="/dashboard/jumps-studio" 
-            className={cn(
-              "flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm font-medium transition-colors border border-primary/20 bg-primary/5",
-              getNavCls({ isActive: currentPath === "/dashboard/jumps-studio" })
-            )}
-          >
-            <Palette className="h-4 w-4 text-primary" />
-            Jumps Studio
-          </Link>
 
           <Link 
             to="/dashboard/jumps" 

@@ -200,7 +200,7 @@ export default function AICoachChat({
           const welcomeMessage: Message = {
             id: '1',
             role: 'assistant',
-            content: `Welcome to Jumps Studio.\n\nI've reviewed your profile and I'm ready to create your custom "Jump" plan. Based on your role as a ${userProfile.currentRole} in ${userProfile.industry}, there are strong opportunities for AI integration.\n\nI'll generate a comprehensive plan now. You can refine it with chat after.`,
+            content: `Welcome to JumpinAI Studio.\n\nI've reviewed your profile and I'm ready to create your custom "Jump" plan. Based on your role as a ${userProfile.currentRole} in ${userProfile.industry}, there are strong opportunities for AI integration.\n\nI'll generate a comprehensive plan now. You can refine it with chat after.`,
             timestamp: new Date()
           };
           setMessages([welcomeMessage]);
@@ -411,7 +411,7 @@ export default function AICoachChat({
     } catch (genErr) {
       console.error('[AICoachChat] Error generating Jump components:', genErr);
       if (isMountedRef.current) {
-        toast({ title: 'Component generation failed', description: 'Your plan is saved, but components failed to generate. You can retry from Jumps Studio.', variant: 'destructive' });
+        toast({ title: 'Component generation failed', description: 'Your plan is saved, but components failed to generate. You can retry from JumpinAI Studio.', variant: 'destructive' });
       }
     }
   };
@@ -601,7 +601,7 @@ export default function AICoachChat({
                 <Sparkles className="h-6 w-6 text-primary" />
               </div>
               <div>
-                <CardTitle className="text-xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">Jumps Studio</CardTitle>
+                <CardTitle className="text-xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">JumpinAI Studio</CardTitle>
                 <p className="text-sm text-muted-foreground">
                   Powered by ChatGPT • {userProfile.currentRole} in {userProfile.industry}
                 </p>

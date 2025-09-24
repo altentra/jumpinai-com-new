@@ -33,7 +33,7 @@ const Features = () => {
 
   const handleGetStarted = () => {
     if (isAuthenticated) {
-      navigate('/dashboard/jumps-studio');
+      navigate('/jumpinai-studio');
     } else {
       navigate('/auth');
     }
@@ -64,7 +64,7 @@ const Features = () => {
           
           <h2 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-8 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent animate-fade-in">
             Introducing <span className="bg-gradient-to-r from-primary via-primary/80 to-primary bg-clip-text text-transparent relative">
-              Jumps Studio
+              JumpinAI Studio
               <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-primary/10 to-primary/20 rounded-lg blur-lg opacity-30 animate-pulse"></div>
             </span>
           </h2>
@@ -92,7 +92,7 @@ const Features = () => {
             
             <div className="relative">
               <p className="text-base text-foreground leading-relaxed mb-4">
-                Unlike generic advice or one-size-fits-all solutions, Jumps Studio creates an 
+                Unlike generic advice or one-size-fits-all solutions, JumpinAI Studio creates an 
                 <strong className="text-primary bg-primary/10 px-1 rounded"> individually tailored implementation journey</strong> that 
                 helps you <strong className="text-primary bg-primary/10 px-1 rounded">implement AI in your life and business</strong>.
               </p>

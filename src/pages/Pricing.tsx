@@ -21,7 +21,7 @@ interface SubscriberInfo {
 const planFeatures = {
   free: [
     "Create 1 comprehensive Jump plan",
-    "Access to Jumps Studio",
+    "Access to JumpinAI Studio",
     "Basic AI transformation planning",
     "Download your Jump as PDF",
     "Community support forum",
@@ -129,7 +129,7 @@ export default function Pricing() {
                 Choose Your AI Journey
               </h1>
               <p className="text-base md:text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-                Transform your vision into reality with our AI-powered Jumps Studio. 
+                Transform your vision into reality with our AI-powered JumpinAI Studio. 
                 Start creating comprehensive transformation plans today.
               </p>
             </div>
@@ -288,7 +288,7 @@ export default function Pricing() {
           <div className="mb-16">
             <div className="text-center mb-10 animate-fade-in-up">
               <h2 className="text-2xl md:text-3xl font-bold gradient-text-primary mb-3">
-                What makes Jumps Studio special?
+                What makes JumpinAI Studio special?
               </h2>
               <p className="text-base text-muted-foreground max-w-2xl mx-auto">
                 Our AI-powered transformation planning goes beyond simple advice. Create comprehensive, 

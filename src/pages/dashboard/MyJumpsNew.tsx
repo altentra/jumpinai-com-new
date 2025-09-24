@@ -108,7 +108,7 @@ export default function MyJumpsNew() {
             >
               <RefreshCw className={`w-3 h-3 ${loading ? 'animate-spin' : ''}`} />
             </Button>
-            <Link to="/dashboard/jumps-studio">
+            <Link to="/jumpinai-studio">
               <Button className="gap-2 text-sm px-3 py-1.5">
                 <Plus className="h-3 w-3" />
                 Create New Jump
@@ -143,9 +143,9 @@ export default function MyJumpsNew() {
           </CardHeader>
           <CardContent className="text-center">
             <p className="text-sm text-muted-foreground mb-5">
-              Head to Jumps Studio to create personalized transformation plans powered by AI.
+              Head to JumpinAI Studio to create personalized transformation plans powered by AI.
             </p>
-            <Link to="/dashboard/jumps-studio">
+            <Link to="/jumpinai-studio">
               <Button className="gap-2 text-sm">
                 <Plus className="h-4 w-4" />
                 Create Your First Jump

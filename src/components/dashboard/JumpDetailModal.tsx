@@ -71,8 +71,8 @@ export default function JumpDetailModal({ jump, isOpen, onClose }: JumpDetailMod
             fallback={
               <div className="p-6 border border-destructive/30 rounded-lg bg-destructive/5 text-center">
                 <h3 className="text-lg font-semibold mb-2">We hit a snag rendering this jump</h3>
-                <p className="text-sm text-muted-foreground mb-4">Open it in Jumps Studio or try again.</p>
-                <Button variant="outline" size="sm" onClick={() => (window.location.href = '/dashboard/jumps-studio')}>Open in Jumps Studio</Button>
+                <p className="text-sm text-muted-foreground mb-4">Open it in JumpinAI Studio or try again.</p>
+                <Button variant="outline" size="sm" onClick={() => (window.location.href = '/jumpinai-studio')}>Open in JumpinAI Studio</Button>
               </div>
             }
           >
@@ -138,10 +138,10 @@ export default function JumpDetailModal({ jump, isOpen, onClose }: JumpDetailMod
                   <div className="p-6 border border-border/30 rounded-lg bg-muted/20 text-center">
                     <h3 className="text-lg font-semibold text-foreground mb-2">Structured plan is being processed</h3>
                     <p className="text-sm text-muted-foreground mb-4">
-                      We detected JSON-like content from the AI. We're normalizing it into your 6-tab plan. Please reopen this jump in Jumps Studio or refresh.
+                      We detected JSON-like content from the AI. We're normalizing it into your 6-tab plan. Please reopen this jump in JumpinAI Studio or refresh.
                     </p>
-                    <Button variant="outline" size="sm" onClick={() => (window.location.href = '/dashboard/jumps-studio')}>
-                      Open in Jumps Studio
+                    <Button variant="outline" size="sm" onClick={() => (window.location.href = '/jumpinai-studio')}>
+                      Open in JumpinAI Studio
                     </Button>
                   </div>
                 );

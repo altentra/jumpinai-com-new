@@ -15,9 +15,6 @@ export const preloadPage = (pageName: string) => {
       case 'dashboard':
         import('../pages/Dashboard');
         break;
-      case 'jumps-studio':
-        import('../pages/dashboard/JumpsStudio');
-        break;
       case 'profile':
         import('../pages/Profile');
         break;

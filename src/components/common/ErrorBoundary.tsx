@@ -28,8 +28,8 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
       return this.props.fallback || (
         <div className="p-6 border border-destructive/30 rounded-lg bg-destructive/5 text-center">
           <h3 className="text-lg font-semibold mb-2">We hit a snag rendering this jump</h3>
-          <p className="text-sm text-muted-foreground mb-4">Open it in Jumps Studio or try again.</p>
-          <a href="/dashboard/jumps-studio" className="inline-flex items-center justify-center rounded-2xl border border-primary/30 px-3 py-2 text-sm hover:bg-primary/10 transition-colors">Open in Jumps Studio</a>
+          <p className="text-sm text-muted-foreground mb-4">Open it in JumpinAI Studio or try again.</p>
+          <a href="/jumpinai-studio" className="inline-flex items-center justify-center rounded-2xl border border-primary/30 px-3 py-2 text-sm hover:bg-primary/10 transition-colors">Open in JumpinAI Studio</a>
         </div>
       );
     }
