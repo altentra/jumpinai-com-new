@@ -47,7 +47,7 @@ const JumpinAIStudio = () => {
                 Your AI Transformation Studio
               </h1>
               <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-4xl mx-auto leading-relaxed">
-                Tell us your goals and challenges, and we'll generate your personalized AI implementation package: 
+                Tell us your goals and challenges, and we'll generate your personalized <span className="font-semibold text-primary">Jump in AI</span>: 
                 a clear step-by-step plan, essential resources, custom prompts, workflows, blueprints, and strategies.
               </p>
               <div className="flex flex-wrap justify-center gap-4 text-sm text-muted-foreground/80">
@@ -76,69 +76,77 @@ const JumpinAIStudio = () => {
 
             {/* Goals & Challenges Form */}
             <div className="mb-12 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-              <div className="glass-dark rounded-3xl p-8 shadow-modern-lg border border-white/10 dark:border-white/20">
-                <h2 className="text-2xl font-semibold mb-6 text-foreground">Let's understand your goals</h2>
-                <div className="grid gap-6">
-                  <div>
-                    <label className="block text-sm font-medium text-foreground mb-2">
-                      What are you after? What do you want to achieve? *
-                    </label>
-                    <textarea
-                      className="w-full min-h-[100px] p-4 glass rounded-2xl resize-none focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-300 placeholder:text-muted-foreground/60 text-foreground bg-white/10 dark:bg-black/20 border border-white/20 dark:border-white/30"
-                      placeholder="Describe your main goals, projects, or missions you want to accomplish with AI..."
-                    />
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-foreground mb-2">
-                      What prevents you from achieving it? What are the obstacles? *
-                    </label>
-                    <textarea
-                      className="w-full min-h-[100px] p-4 glass rounded-2xl resize-none focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-300 placeholder:text-muted-foreground/60 text-foreground bg-white/10 dark:bg-black/20 border border-white/20 dark:border-white/30"
-                      placeholder="What challenges, limitations, or roadblocks are you facing?"
-                    />
-                  </div>
-
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-medium text-foreground mb-2">
-                        Your industry/field
-                      </label>
-                      <input
-                        type="text"
-                        className="w-full p-4 glass rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-300 placeholder:text-muted-foreground/60 text-foreground bg-white/10 dark:bg-black/20 border border-white/20 dark:border-white/30"
-                        placeholder="e.g., Marketing, Healthcare, Finance..."
-                      />
+              <div className="relative glass-dark rounded-3xl p-6 shadow-modern-lg border border-white/20 dark:border-white/30 backdrop-blur-xl bg-gradient-to-br from-white/10 via-white/5 to-transparent dark:from-black/20 dark:via-black/10 dark:to-transparent overflow-hidden">
+                {/* Liquid glass effect overlay */}
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 dark:from-primary/10 dark:via-transparent dark:to-secondary/10 rounded-3xl"></div>
+                <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/30 to-transparent dark:via-white/20"></div>
+                
+                <div className="relative z-10">
+                  <h2 className="text-xl font-semibold mb-5 text-foreground text-center">Let's understand your goals</h2>
+                  <div className="grid gap-4">
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-foreground/90 mb-2">
+                          What are you after? *
+                        </label>
+                        <textarea
+                          className="w-full min-h-[80px] p-3 glass rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-300 placeholder:text-muted-foreground/60 text-foreground bg-white/10 dark:bg-black/20 border border-white/20 dark:border-white/30 backdrop-blur-sm"
+                          placeholder="Your main goals & projects with AI..."
+                        />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium text-foreground/90 mb-2">
+                          What prevents you? *
+                        </label>
+                        <textarea
+                          className="w-full min-h-[80px] p-3 glass rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-300 placeholder:text-muted-foreground/60 text-foreground bg-white/10 dark:bg-black/20 border border-white/20 dark:border-white/30 backdrop-blur-sm"
+                          placeholder="Your obstacles & challenges..."
+                        />
+                      </div>
                     </div>
-                    
-                    <div>
-                      <label className="block text-sm font-medium text-foreground mb-2">
-                        Your role/position
-                      </label>
-                      <input
-                        type="text"
-                        className="w-full p-4 glass rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-300 placeholder:text-muted-foreground/60 text-foreground bg-white/10 dark:bg-black/20 border border-white/20 dark:border-white/30"
-                        placeholder="e.g., CEO, Manager, Freelancer..."
-                      />
+
+                    <div className="grid md:grid-cols-3 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-foreground/90 mb-2">
+                          Industry
+                        </label>
+                        <input
+                          type="text"
+                          className="w-full p-3 glass rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-300 placeholder:text-muted-foreground/60 text-foreground bg-white/10 dark:bg-black/20 border border-white/20 dark:border-white/30 backdrop-blur-sm"
+                          placeholder="Marketing, Tech..."
+                        />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium text-foreground/90 mb-2">
+                          Role
+                        </label>
+                        <input
+                          type="text"
+                          className="w-full p-3 glass rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-300 placeholder:text-muted-foreground/60 text-foreground bg-white/10 dark:bg-black/20 border border-white/20 dark:border-white/30 backdrop-blur-sm"
+                          placeholder="CEO, Manager..."
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-foreground/90 mb-2">
+                          AI Experience
+                        </label>
+                        <select className="w-full p-3 glass rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-300 text-foreground bg-white/10 dark:bg-black/20 border border-white/20 dark:border-white/30 backdrop-blur-sm">
+                          <option value="">Select level</option>
+                          <option value="beginner">Beginner</option>
+                          <option value="intermediate">Intermediate</option>
+                          <option value="advanced">Advanced</option>
+                          <option value="expert">Expert</option>
+                        </select>
+                      </div>
                     </div>
-                  </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-foreground mb-2">
-                      Current AI experience level
-                    </label>
-                    <select className="w-full p-4 glass rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-300 text-foreground bg-white/10 dark:bg-black/20 border border-white/20 dark:border-white/30">
-                      <option value="">Select your level</option>
-                      <option value="beginner">Beginner - Just getting started</option>
-                      <option value="intermediate">Intermediate - Some basic experience</option>
-                      <option value="advanced">Advanced - Regular AI user</option>
-                      <option value="expert">Expert - Deep AI knowledge</option>
-                    </select>
+                    <button className="w-full modern-button bg-gradient-to-r from-primary via-primary/90 to-primary/80 hover:from-primary/90 hover:via-primary/80 hover:to-primary/70 text-primary-foreground px-8 py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-[1.02] shadow-lg hover:shadow-xl backdrop-blur-sm border border-white/20 dark:border-white/30 mt-2">
+                      🚀 Generate My Jump in AI
+                    </button>
                   </div>
-
-                  <button className="w-full modern-button bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground px-8 py-4 rounded-2xl font-semibold transition-all duration-300 hover:scale-[1.02] shadow-lg hover:shadow-xl">
-                    Generate My AI Package
-                  </button>
                 </div>
               </div>
             </div>
