@@ -257,72 +257,39 @@ const JumpinAIStudio: React.FC = () => {
         </div>
 
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Authentication Status Bar */}
-          <div className="mb-8 flex items-center justify-between p-4 glass rounded-lg border border-white/20">
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2">
-                <User className="w-5 h-5 text-primary" />
-                <span className="font-medium">
-                  {isAuthenticated ? `Welcome, ${user?.email}` : 'Guest User'}
-                </span>
-              </div>
-              {isAuthenticated ? (
-                <Badge className="bg-green-500/20 text-green-400 border-green-500/30">
-                  <CheckCircle className="w-3 h-3 mr-1" />
-                  Authenticated
-                </Badge>
-              ) : (
-                <Badge variant="outline" className="text-yellow-400 border-yellow-400/30">
-                  <Lock className="w-3 h-3 mr-1" />
-                  Guest (Limited)
-                </Badge>
-              )}
-            </div>
-            {!isAuthenticated && (
-              <div className="text-sm text-muted-foreground">
-                {guestCanUse ? `${1 - guestUsageCount} generations remaining` : 'Sign up for unlimited access'}
-              </div>
+          {/* Authentication Status - Compact Corner Display */}
+          <div className="fixed top-24 right-4 z-20 flex items-center gap-2 p-2 glass rounded-lg border border-white/20 text-sm">
+            {isAuthenticated ? (
+              <Badge className="bg-green-500/20 text-green-400 border-green-500/30">
+                <CheckCircle className="w-3 h-3 mr-1" />
+                Authenticated
+              </Badge>
+            ) : (
+              <Badge variant="outline" className="text-yellow-400 border-yellow-400/30">
+                <Lock className="w-3 h-3 mr-1" />
+                Guest ({guestCanUse ? `${1 - guestUsageCount} left` : 'Sign up'})
+              </Badge>
             )}
           </div>
 
           {/* Hero Section */}
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 bg-primary/20 text-primary px-4 py-2 rounded-full text-sm font-medium mb-6">
-              <Zap className="w-4 h-4" />
-              AI-Powered Transformation Studio
-            </div>
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-foreground via-primary to-primary-bright bg-clip-text text-transparent">
-              Create Your Jump in AI
+          <div className="text-center mb-8">
+            <h1 className="text-3xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-foreground via-primary to-primary-bright bg-clip-text text-transparent">
+              JumpinAI Studio
             </h1>
-            <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
-              Get a personalized AI transformation plan with custom prompts, workflows, blueprints, and strategies. 
-              Tell us about your goals and challenges, and our AI will create a comprehensive implementation guide just for you.
+            <p className="text-lg text-muted-foreground mb-6 max-w-2xl mx-auto">
+              Generate your personalized Jump that includes: A step-by-step strategic action plan, set of 4 prompts, set of 4 workflows, set of 4 blueprints, set of 4 strategies.
             </p>
-            <div className="flex flex-wrap justify-center gap-4 mb-8">
-              <div className="flex items-center gap-2 text-primary">
-                <Target className="w-5 h-5" />
-                <span className="font-medium">Personalized Strategy</span>
-              </div>
-              <div className="flex items-center gap-2 text-primary">
-                <Brain className="w-5 h-5" />
-                <span className="font-medium">AI-Generated Content</span>
-              </div>
-              <div className="flex items-center gap-2 text-primary">
-                <Rocket className="w-5 h-5" />
-                <span className="font-medium">Ready to Implement</span>
-              </div>
-            </div>
           </div>
 
           {/* Main Form */}
           <Card className="glass border-white/20 mb-8">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-2xl">
-                <Sparkles className="w-6 h-6 text-primary" />
-                Tell Us About Your AI Transformation Goals
+              <CardTitle className="text-xl text-center">
+                Tell Us About Your Goals
               </CardTitle>
-              <CardDescription className="text-lg">
-                The more specific you are, the better we can tailor your Jump in AI plan
+              <CardDescription className="text-center">
+                The more specific you are, the better we can tailor your Jump
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
