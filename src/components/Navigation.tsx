@@ -63,6 +63,7 @@ const Navigation = React.memo(() => {
   }, [isAuthenticated, navigate, login]);
 
   const navItems = [
+    { name: "JumpinAI Studio", href: "/jumpinai-studio" },
     { name: "Jumps in AI", href: "/jumps" },
     { name: "Resources", href: "/resources" },
     { name: "Pricing", href: "/pricing" },

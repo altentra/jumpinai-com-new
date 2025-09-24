@@ -27,6 +27,7 @@ const Profile = lazy(() => import("./pages/Profile"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Auth = lazy(() => import("./pages/Auth"));
 const Pricing = lazy(() => import("./pages/Pricing"));
+const JumpinAIStudio = lazy(() => import("./pages/JumpinAIStudio"));
 
 // Loading component for Suspense
 const PageLoader = () => (
@@ -70,6 +71,7 @@ const App = () => {
           <Suspense fallback={<PageLoader />}>
             <Routes>
               <Route path="/" element={<Index />} />
+              <Route path="/jumpinai-studio" element={<JumpinAIStudio />} />
               <Route path="/about-us" element={<AboutUs />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/terms-of-use" element={<TermsOfUse />} />
