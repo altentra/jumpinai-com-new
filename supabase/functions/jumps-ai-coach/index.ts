@@ -235,7 +235,7 @@ Make sure all content is practical, actionable, and tailored to the specific goa
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt }
       ],
-      max_completion_tokens: 15000, // Optimized for comprehensive but processable responses
+      max_completion_tokens: 8000, // Reduced to prevent timeouts while maintaining quality
     };
 
     console.log('Request body prepared:', {
@@ -246,6 +246,10 @@ Make sure all content is practical, actionable, and tailored to the specific goa
       maxTokens: requestBody.max_completion_tokens
     });
     
+    // Create AbortController for timeout handling
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 120000); // 120 second timeout
+    
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -253,7 +257,10 @@ Make sure all content is practical, actionable, and tailored to the specific goa
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(requestBody),
+      signal: controller.signal,
     });
+    
+    clearTimeout(timeoutId);
 
     console.log('OpenAI response status:', response.status, response.statusText);
 
