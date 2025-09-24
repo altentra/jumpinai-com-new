@@ -106,7 +106,7 @@ const JumpinAIStudio = () => {
                       </div>
                     </div>
 
-                    <div className="grid md:grid-cols-3 gap-4">
+                    <div className="grid md:grid-cols-2 gap-4 mb-4">
                       <div>
                         <label className="block text-sm font-medium text-foreground/90 mb-2">
                           Industry
@@ -114,21 +114,10 @@ const JumpinAIStudio = () => {
                         <input
                           type="text"
                           className="w-full p-3 glass rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-300 placeholder:text-muted-foreground/60 text-foreground bg-white/10 dark:bg-black/20 border border-white/20 dark:border-white/30 backdrop-blur-sm"
-                          placeholder="Marketing, Tech..."
+                          placeholder="Marketing, Tech, Finance..."
                         />
                       </div>
                       
-                      <div>
-                        <label className="block text-sm font-medium text-foreground/90 mb-2">
-                          Role
-                        </label>
-                        <input
-                          type="text"
-                          className="w-full p-3 glass rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-300 placeholder:text-muted-foreground/60 text-foreground bg-white/10 dark:bg-black/20 border border-white/20 dark:border-white/30 backdrop-blur-sm"
-                          placeholder="CEO, Manager..."
-                        />
-                      </div>
-
                       <div>
                         <label className="block text-sm font-medium text-foreground/90 mb-2">
                           AI Experience
@@ -143,8 +132,36 @@ const JumpinAIStudio = () => {
                       </div>
                     </div>
 
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-foreground/90 mb-2">
+                          Urgency
+                        </label>
+                        <select className="w-full p-3 glass rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-300 text-foreground bg-white/10 dark:bg-black/20 border border-white/20 dark:border-white/30 backdrop-blur-sm">
+                          <option value="">Select urgency</option>
+                          <option value="asap">ASAP - Need immediate results</option>
+                          <option value="weeks">Within few weeks</option>
+                          <option value="months">Within few months</option>
+                          <option value="exploring">Just exploring</option>
+                        </select>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-foreground/90 mb-2">
+                          Budget
+                        </label>
+                        <select className="w-full p-3 glass rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-300 text-foreground bg-white/10 dark:bg-black/20 border border-white/20 dark:border-white/30 backdrop-blur-sm">
+                          <option value="">Select budget</option>
+                          <option value="minimal">Minimal ($0-500)</option>
+                          <option value="moderate">Moderate ($500-2K)</option>
+                          <option value="substantial">Substantial ($2K-10K)</option>
+                          <option value="enterprise">Enterprise ($10K+)</option>
+                        </select>
+                      </div>
+                    </div>
+
                     <button className="w-full modern-button bg-gradient-to-r from-primary via-primary/90 to-primary/80 hover:from-primary/90 hover:via-primary/80 hover:to-primary/70 text-primary-foreground px-8 py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-[1.02] shadow-lg hover:shadow-xl backdrop-blur-sm border border-white/20 dark:border-white/30 mt-2">
-                      🚀 Generate My Jump in AI
+                      Generate My Jump in AI
                     </button>
                   </div>
                 </div>
