@@ -27,6 +27,20 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
     return <Clock className="w-4 h-4 text-gray-400" />;
   };
 
+  // Add null safety checks
+  if (!result || !result.processing_status) {
+    return (
+      <div className="w-full space-y-6">
+        <div className="glass-dark rounded-xl p-4 border border-white/20">
+          <div className="flex items-center justify-center h-32 text-muted-foreground">
+            <Loader2 className="w-6 h-6 animate-spin mr-2" />
+            Initializing generation system...
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full space-y-6">
       {/* Progress Header */}
@@ -41,20 +55,20 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
               {formatTime(generationTimer)}
             </Badge>
             <Badge 
-              variant={result.processing_status.isComplete ? "default" : "secondary"}
+              variant={result.processing_status?.isComplete ? "default" : "secondary"}
               className="text-sm"
             >
-              {result.processing_status.stage}
+              {result.processing_status?.stage || 'Initializing...'}
             </Badge>
           </div>
         </div>
         
         <div className="space-y-2">
           <div className="flex items-center justify-between text-sm">
-            <span className="text-muted-foreground">{result.processing_status.currentTask}</span>
-            <span className="text-foreground font-medium">{result.processing_status.progress}%</span>
+            <span className="text-muted-foreground">{result.processing_status?.currentTask || 'Starting...'}</span>
+            <span className="text-foreground font-medium">{result.processing_status?.progress || 0}%</span>
           </div>
-          <Progress value={result.processing_status.progress} className="h-2" />
+          <Progress value={result.processing_status?.progress || 0} className="h-2" />
         </div>
       </div>
 
@@ -62,28 +76,28 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
       <Tabs defaultValue="overview" className="w-full">
         <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="overview" className="flex items-center gap-2">
-            {getStatusIcon(result.processing_status.isComplete, !!result.full_content)}
+            {getStatusIcon(result.processing_status?.isComplete || false, !!result.full_content)}
             Overview
           </TabsTrigger>
           <TabsTrigger value="plan" className="flex items-center gap-2">
-            {getStatusIcon(result.processing_status.isComplete, !!result.structured_plan)}
+            {getStatusIcon(result.processing_status?.isComplete || false, !!result.structured_plan)}
             Plan
           </TabsTrigger>
           <TabsTrigger value="prompts" className="flex items-center gap-2">
-            {getStatusIcon(result.processing_status.isComplete, result.components.prompts.length > 0)}
-            Prompts ({result.components.prompts.length}/4)
+            {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.prompts?.length || 0) > 0)}
+            Prompts ({result.components?.prompts?.length || 0}/4)
           </TabsTrigger>
           <TabsTrigger value="workflows" className="flex items-center gap-2">
-            {getStatusIcon(result.processing_status.isComplete, result.components.workflows.length > 0)}
-            Workflows ({result.components.workflows.length}/4)
+            {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.workflows?.length || 0) > 0)}
+            Workflows ({result.components?.workflows?.length || 0}/4)
           </TabsTrigger>
           <TabsTrigger value="blueprints" className="flex items-center gap-2">
-            {getStatusIcon(result.processing_status.isComplete, result.components.blueprints.length > 0)}
-            Blueprints ({result.components.blueprints.length}/4)
+            {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.blueprints?.length || 0) > 0)}
+            Blueprints ({result.components?.blueprints?.length || 0}/4)
           </TabsTrigger>
           <TabsTrigger value="strategies" className="flex items-center gap-2">
-            {getStatusIcon(result.processing_status.isComplete, result.components.strategies.length > 0)}
-            Strategies ({result.components.strategies.length}/4)
+            {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.strategies?.length || 0) > 0)}
+            Strategies ({result.components?.strategies?.length || 0}/4)
           </TabsTrigger>
         </TabsList>
 

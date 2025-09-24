@@ -99,7 +99,7 @@ export const useProgressiveGeneration = () => {
     const components = rawResponse.components || { prompts: [], workflows: [], blueprints: [], strategies: [] };
     
     // Process prompts
-    if (components.prompts?.length > 0) {
+    if (components.prompts && Array.isArray(components.prompts) && components.prompts.length > 0) {
       for (let i = 0; i < components.prompts.length; i++) {
         await new Promise(resolve => setTimeout(resolve, 400));
         progressiveResult.components.prompts.push(components.prompts[i]);
@@ -115,7 +115,7 @@ export const useProgressiveGeneration = () => {
     }
 
     // Process workflows
-    if (components.workflows?.length > 0) {
+    if (components.workflows && Array.isArray(components.workflows) && components.workflows.length > 0) {
       for (let i = 0; i < components.workflows.length; i++) {
         await new Promise(resolve => setTimeout(resolve, 400));
         progressiveResult.components.workflows.push(components.workflows[i]);
@@ -131,7 +131,7 @@ export const useProgressiveGeneration = () => {
     }
 
     // Process blueprints
-    if (components.blueprints?.length > 0) {
+    if (components.blueprints && Array.isArray(components.blueprints) && components.blueprints.length > 0) {
       for (let i = 0; i < components.blueprints.length; i++) {
         await new Promise(resolve => setTimeout(resolve, 400));
         progressiveResult.components.blueprints.push(components.blueprints[i]);
@@ -147,7 +147,7 @@ export const useProgressiveGeneration = () => {
     }
 
     // Process strategies
-    if (components.strategies?.length > 0) {
+    if (components.strategies && Array.isArray(components.strategies) && components.strategies.length > 0) {
       for (let i = 0; i < components.strategies.length; i++) {
         await new Promise(resolve => setTimeout(resolve, 400));
         progressiveResult.components.strategies.push(components.strategies[i]);

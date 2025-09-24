@@ -12,7 +12,13 @@ import { supabase } from '@/integrations/supabase/client';
 
 const JumpinAIStudio = () => {
   const { user, isAuthenticated, login } = useAuth();
+  
+  console.log('JumpinAIStudio rendering:', { isAuthenticated, user: user?.id });
+  
   const { isGenerating, result, processingStatus, generateWithProgression } = useProgressiveGeneration();
+  
+  console.log('Progressive generation state:', { isGenerating, hasResult: !!result, processingStatus });
+  
   const [guestCanUse, setGuestCanUse] = useState(true);
   const [guestUsageCount, setGuestUsageCount] = useState(0);
   const [generationTimer, setGenerationTimer] = useState(0);
@@ -352,7 +358,7 @@ const JumpinAIStudio = () => {
                             Generating Your Jump...
                           </div>
                            <div className="text-sm opacity-80">
-                             {formatTime(generationTimer)} - {processingStatus.currentTask}
+                             {formatTime(generationTimer)} - {processingStatus?.currentTask || 'Preparing...'}
                            </div>
                         </div>
                       ) : (
