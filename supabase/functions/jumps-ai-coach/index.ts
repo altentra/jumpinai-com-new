@@ -204,27 +204,46 @@ Make sure all content is practical, actionable, and tailored to the specific goa
     console.log('OpenAI response received');
 
     let generatedContent;
+    let content = data.choices[0].message.content; // Declare outside try block
+    
     try {
       // Try to parse the JSON response from OpenAI
-      let content = data.choices[0].message.content;
+      console.log('Raw OpenAI response:', content.substring(0, 500) + '...');
       
-      // Remove markdown code blocks if present
-      if (content.includes('```json')) {
-        content = content.replace(/```json\n?/g, '').replace(/```\n?/g, '');
-      } else if (content.includes('```')) {
-        content = content.replace(/```\n?/g, '');
+      // More aggressive cleaning of markdown and formatting
+      // Remove all types of code blocks
+      content = content.replace(/```json\s*/g, '').replace(/```\s*/g, '');
+      
+      // Remove backticks that might be left over
+      content = content.replace(/`+/g, '');
+      
+      // Find the JSON object - look for the opening brace
+      const startIndex = content.indexOf('{');
+      const lastIndex = content.lastIndexOf('}');
+      
+      if (startIndex !== -1 && lastIndex !== -1 && lastIndex > startIndex) {
+        content = content.substring(startIndex, lastIndex + 1);
       }
       
-      // Clean up any extra whitespace
+      // Clean up any extra whitespace and newlines
       content = content.trim();
       
-      console.log('Cleaned content before parsing:', content.substring(0, 200) + '...');
+      console.log('Cleaned content before parsing:', content.substring(0, 300) + '...');
       
       generatedContent = JSON.parse(content);
       console.log('Successfully parsed JSON response');
+      console.log('Components found:', {
+        prompts: generatedContent.components?.prompts?.length || 0,
+        workflows: generatedContent.components?.workflows?.length || 0,
+        blueprints: generatedContent.components?.blueprints?.length || 0,
+        strategies: generatedContent.components?.strategies?.length || 0
+      });
+      
     } catch (parseError) {
       console.error('Error parsing OpenAI JSON response:', parseError);
       console.error('Raw content:', data.choices[0].message.content);
+      console.error('Cleaned content that failed to parse:', content?.substring(0, 500) || 'No content available');
+      
       // Fallback response if JSON parsing fails
       generatedContent = {
         full_content: data.choices[0].message.content,
@@ -237,6 +256,7 @@ Make sure all content is practical, actionable, and tailored to the specific goa
           strategies: []
         }
       };
+      console.log('Using fallback response structure');
     }
 
     console.log('Generated content structure:', Object.keys(generatedContent));

@@ -415,51 +415,6 @@ const JumpinAIStudio = () => {
               </div>
             </div>
 
-            {/* Main Chat Interface */}
-            <div className="flex items-center justify-center animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
-              <div className="w-full max-w-4xl">
-                
-                {/* Glass Morphism Chat Container */}
-                <div className="glass-dark rounded-3xl shadow-modern-lg border border-white/10 dark:border-white/20 overflow-hidden">
-                  
-                  {/* Chat Messages Area */}
-                  <div className="h-[600px] p-8 overflow-y-auto">
-                    <div className="flex flex-col space-y-6">
-                      
-                      {!showResult ? (
-                        /* Welcome Message */
-                        <div className="flex justify-center">
-                          <div className="glass rounded-2xl p-6 max-w-md text-center animate-scale-in">
-                            <div className="w-12 h-12 rounded-full bg-gradient-to-r from-primary/20 to-primary/10 dark:from-white/20 dark:to-white/10 flex items-center justify-center mx-auto mb-4">
-                              <div className="w-6 h-6 rounded-full bg-primary/60 dark:bg-white/60 animate-pulse"></div>
-                            </div>
-                            <p className="text-foreground/90 font-medium mb-2">Welcome to JumpinAI Studio</p>
-                            <p className="text-muted-foreground text-sm">
-                              Fill out the form above and click "Generate My Jump in AI" to get started!
-                            </p>
-                          </div>
-                        </div>
-                      ) : (
-                        /* Generated Result */
-                        generationResult && (
-                          <JumpResultDisplay
-                            fullContent={generationResult.fullContent}
-                            structuredPlan={generationResult.structuredPlan}
-                            comprehensivePlan={generationResult.comprehensivePlan}
-                            components={generationResult.components}
-                            isAuthenticated={isAuthenticated}
-                            jumpId={generationResult.jumpId}
-                          />
-                        )
-                      )}
-                      
-                    </div>
-                  </div>
-                  
-                </div>
-                
-              </div>
-            </div>
 
             {/* Results Display */}
             {showResult && generationResult && (
