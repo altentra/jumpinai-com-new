@@ -352,7 +352,7 @@ RESPONSE FORMAT - EXACT JSON STRUCTURE REQUIRED:
 }
 
 IMPORTANT: Generate between 2-12+ tools depending on the complexity of the goals. Simple goals = 2-4 tools. Complex multi-faceted goals involving video, audio, images, apps, etc. = 8-12+ tools. Focus on quality and relevance over quantity.`,
-        expectedTokens: 4000
+        expectedTokens: 7000
       };
 
     case 3: // Prompts
