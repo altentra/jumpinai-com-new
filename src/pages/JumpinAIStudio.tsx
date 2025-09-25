@@ -260,6 +260,8 @@ const JumpinAIStudio = () => {
               <div className="flex flex-wrap justify-center gap-4 text-sm text-muted-foreground/70">
                 <span>Strategic Action Plan</span>
                 <span>•</span>
+                <span>List of AI tools</span>
+                <span>•</span>
                 <span>4 Custom Prompts</span> 
                 <span>•</span>
                 <span>4 Workflows</span>
