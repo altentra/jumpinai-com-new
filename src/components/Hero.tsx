@@ -3,11 +3,9 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { useOptimizedAuth } from "@/hooks/useOptimizedAuth";
 
 const Hero = () => {
   const [isDark, setIsDark] = useState(false);
-  const { isAuthenticated } = useOptimizedAuth();
 
   useEffect(() => {
     const checkTheme = () => {
@@ -250,43 +248,19 @@ const Hero = () => {
             Discover curated AI tools, practical use-cases, and smart workflows that empower creators, entrepreneurs, and innovators to harness the power of artificial intelligence.
           </p>
           
-          {/* Call to Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+          {/* Call to Action Button */}
+          <div className="flex justify-center">
             <Button 
               size="lg" 
               asChild
               className="modern-button group bg-gradient-to-r from-gray-800 to-black hover:from-gray-900 hover:to-gray-800 dark:from-white dark:to-gray-300 dark:hover:from-gray-100 dark:hover:to-gray-400 text-white dark:text-black px-12 py-6 text-lg font-semibold rounded-3xl transition-all duration-500 hover:scale-105 shadow-2xl hover:shadow-3xl border border-white/10 dark:border-black/10"
             >
-              <Link to="/jumps">
+              <Link to="/jumpinai-studio">
                 <Sparkles className="mr-3 h-5 w-5 group-hover:animate-spin" />
                 Get Started
                 <ArrowRight className="ml-3 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Link>
             </Button>
-            
-            {isAuthenticated ? (
-              <Button 
-                variant="outline" 
-                size="lg" 
-                onClick={() => scrollToSection('newsletter')}
-                className="modern-button group border-2 border-border hover:border-primary/50 px-12 py-6 text-lg font-semibold rounded-3xl transition-all duration-500 hover:scale-105 backdrop-blur-md text-foreground hover:text-foreground shadow-xl hover:shadow-2xl bg-background hover:bg-muted"
-              >
-                Stay ahead with AI
-                <ArrowRight className="ml-3 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-              </Button>
-            ) : (
-              <Button 
-                variant="outline" 
-                size="lg" 
-                asChild
-                className="modern-button group border-2 border-border hover:border-primary/50 px-12 py-6 text-lg font-semibold rounded-3xl transition-all duration-500 hover:scale-105 backdrop-blur-md text-foreground hover:text-foreground shadow-xl hover:shadow-2xl bg-background hover:bg-muted"
-              >
-                <Link to="/auth">
-                  Create account
-                  <ArrowRight className="ml-3 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </Button>
-            )}
           </div>
         </div>
         
