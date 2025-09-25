@@ -101,28 +101,28 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
 
       {/* Content Tabs */}
       <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="grid w-full grid-cols-6">
-          <TabsTrigger value="overview" className="flex items-center gap-2">
+        <TabsList className="grid w-full grid-cols-6 p-1 bg-background/60 backdrop-blur-sm rounded-2xl border border-border/40 shadow-inner">
+          <TabsTrigger value="overview" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
             {getStatusIcon(result.processing_status?.isComplete || false, !!result.full_content)}
             Overview
           </TabsTrigger>
-          <TabsTrigger value="plan" className="flex items-center gap-2">
+          <TabsTrigger value="plan" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
             {getStatusIcon(result.processing_status?.isComplete || false, !!result.structured_plan)}
             Plan
           </TabsTrigger>
-          <TabsTrigger value="prompts" className="flex items-center gap-2">
+          <TabsTrigger value="prompts" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
             {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.prompts?.length || 0) > 0)}
             Prompts ({result.components?.prompts?.length || 0}/4)
           </TabsTrigger>
-          <TabsTrigger value="workflows" className="flex items-center gap-2">
+          <TabsTrigger value="workflows" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
             {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.workflows?.length || 0) > 0)}
             Workflows ({result.components?.workflows?.length || 0}/4)
           </TabsTrigger>
-          <TabsTrigger value="blueprints" className="flex items-center gap-2">
+          <TabsTrigger value="blueprints" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
             {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.blueprints?.length || 0) > 0)}
             Blueprints ({result.components?.blueprints?.length || 0}/4)
           </TabsTrigger>
-          <TabsTrigger value="strategies" className="flex items-center gap-2">
+          <TabsTrigger value="strategies" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
             {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.strategies?.length || 0) > 0)}
             Strategies ({result.components?.strategies?.length || 0}/4)
           </TabsTrigger>
@@ -130,38 +130,38 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
 
         <TabsContent value="overview" className="mt-6">
           <div className="relative group">
-            <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 dark:from-primary/15 dark:via-accent/12 dark:to-secondary/15 rounded-2xl blur-xl opacity-40"></div>
-            <Card className="relative glass backdrop-blur-xl border border-border/40 hover:border-primary/30 transition-all duration-500 rounded-2xl shadow-xl hover:shadow-2xl hover:shadow-primary/10 bg-gradient-to-br from-background/60 to-background/30 dark:bg-gradient-to-br dark:from-gray-950/70 dark:to-gray-900/40">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/3 via-transparent to-secondary/3 dark:from-primary/2 dark:via-transparent dark:to-secondary/2 rounded-2xl"></div>
+            <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 dark:from-primary/15 dark:via-accent/12 dark:to-secondary/15 rounded-3xl blur-xl opacity-40"></div>
+            <Card className="relative glass backdrop-blur-xl border border-border/40 hover:border-primary/30 transition-all duration-500 rounded-3xl shadow-xl hover:shadow-2xl hover:shadow-primary/10 bg-gradient-to-br from-background/80 to-background/60 dark:bg-gradient-to-br dark:from-gray-950/80 dark:to-gray-900/60">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/3 via-transparent to-secondary/3 dark:from-primary/2 dark:via-transparent dark:to-secondary/2 rounded-3xl"></div>
               <CardHeader className="pb-4">
-                <CardTitle className="flex items-center gap-2 text-lg">
+                <CardTitle className="flex items-center gap-2 text-lg text-foreground">
                   <Zap className="w-5 h-5 text-primary" />
                   Strategic Action Plan
                 </CardTitle>
               </CardHeader>
               <CardContent className="pt-0">
               {result.full_content ? (
-                <div className="prose prose-slate dark:prose-invert max-w-none">
+                <div className="prose prose-sm max-w-none dark:prose-invert prose-headings:text-foreground prose-p:text-foreground prose-li:text-foreground prose-strong:text-foreground">
                   <ReactMarkdown
                     remarkPlugins={[remarkGfm]}
                     className="text-foreground"
                     components={{
-                      h1: ({ children }) => <h1 className="text-2xl font-bold text-primary mb-4">{children}</h1>,
+                      h1: ({ children }) => <h1 className="text-2xl font-bold text-foreground mb-4">{children}</h1>,
                       h2: ({ children }) => <h2 className="text-xl font-semibold text-foreground mb-3 mt-6">{children}</h2>,
                       h3: ({ children }) => <h3 className="text-lg font-medium text-foreground mb-2 mt-4">{children}</h3>,
-                      p: ({ children }) => <p className="text-muted-foreground mb-3 leading-relaxed">{children}</p>,
-                      ul: ({ children }) => <ul className="list-disc pl-6 mb-4 text-muted-foreground space-y-2">{children}</ul>,
-                      ol: ({ children }) => <ol className="list-decimal pl-6 mb-4 text-muted-foreground space-y-2">{children}</ol>,
-                      li: ({ children }) => <li className="leading-relaxed">{children}</li>,
+                      p: ({ children }) => <p className="text-foreground mb-3 leading-relaxed">{children}</p>,
+                      ul: ({ children }) => <ul className="list-disc pl-6 mb-4 text-foreground space-y-2">{children}</ul>,
+                      ol: ({ children }) => <ol className="list-decimal pl-6 mb-4 text-foreground space-y-2">{children}</ol>,
+                      li: ({ children }) => <li className="leading-relaxed text-foreground">{children}</li>,
                       strong: ({ children }) => <strong className="font-semibold text-foreground">{children}</strong>,
                       em: ({ children }) => <em className="italic text-primary">{children}</em>,
                       blockquote: ({ children }) => (
-                        <blockquote className="border-l-4 border-primary pl-4 py-2 my-4 glass backdrop-blur-sm bg-primary/5 rounded-r-xl">
+                        <blockquote className="border-l-4 border-primary pl-4 py-2 my-4 glass backdrop-blur-sm bg-primary/10 rounded-r-xl">
                           {children}
                         </blockquote>
                       ),
                       code: ({ children }) => (
-                        <code className="glass backdrop-blur-sm bg-muted/50 px-2 py-1 rounded text-sm font-mono text-foreground border border-border/30">{children}</code>
+                        <code className="glass backdrop-blur-sm bg-muted px-2 py-1 rounded text-sm font-mono text-foreground border border-border/30">{children}</code>
                       ),
                     }}
                   >
@@ -181,22 +181,22 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
 
         <TabsContent value="plan" className="mt-4">
           <div className="relative group">
-            <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/15 via-accent/10 to-secondary/15 dark:from-primary/10 dark:via-accent/8 dark:to-secondary/10 rounded-lg blur-sm opacity-25"></div>
-            <Card className="relative glass-dark border-white/15 dark:border-white/10 backdrop-blur-xl bg-gradient-to-br from-white/5 via-white/2 to-white/1 dark:from-black/12 dark:via-black/6 dark:to-black/3">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/2 via-transparent to-secondary/2 dark:from-primary/1.5 dark:via-transparent dark:to-secondary/1.5 rounded-lg"></div>
+            <div className="absolute -inset-1 bg-gradient-to-r from-primary/15 via-accent/10 to-secondary/15 dark:from-primary/10 dark:via-accent/8 dark:to-secondary/10 rounded-3xl blur-xl opacity-40"></div>
+            <Card className="relative glass backdrop-blur-xl border border-border/40 hover:border-primary/30 transition-all duration-500 rounded-3xl shadow-xl hover:shadow-2xl hover:shadow-primary/10 bg-gradient-to-br from-background/80 to-background/60 dark:bg-gradient-to-br dark:from-gray-950/80 dark:to-gray-900/60">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/2 via-transparent to-secondary/2 dark:from-primary/1.5 dark:via-transparent dark:to-secondary/1.5 rounded-3xl"></div>
               <CardHeader className="pb-3">
-                <CardTitle className="text-base">Implementation Plan</CardTitle>
+                <CardTitle className="text-base text-foreground">Implementation Plan</CardTitle>
               </CardHeader>
               <CardContent className="pt-0">
               {result.structured_plan ? (
                 <div className="space-y-4">
-                  <p className="text-muted-foreground">{result.structured_plan.overview}</p>
+                  <p className="text-foreground">{result.structured_plan.overview}</p>
                   <div className="grid gap-4">
                     {result.structured_plan.phases?.map((phase: any, index: number) => (
-                      <div key={index} className="border rounded-lg p-4">
-                        <h3 className="font-semibold mb-2">Phase {phase.phase_number}: {phase.title}</h3>
-                        <p className="text-sm text-muted-foreground mb-2">Duration: {phase.duration}</p>
-                        <p className="text-sm">{phase.description}</p>
+                      <div key={index} className="glass backdrop-blur-sm border border-border/30 rounded-2xl p-4 bg-background/50">
+                        <h3 className="font-semibold mb-2 text-foreground">Phase {phase.phase_number}: {phase.title}</h3>
+                        <p className="text-sm text-foreground mb-2">Duration: {phase.duration}</p>
+                        <p className="text-sm text-foreground">{phase.description}</p>
                       </div>
                     ))}
                   </div>

@@ -288,7 +288,7 @@ const JumpinAIStudio = () => {
                             <textarea
                               value={formData.goals}
                               onChange={(e) => setFormData(prev => ({ ...prev, goals: e.target.value }))}
-                              className="w-full min-h-[90px] p-3 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl focus:shadow-2xl focus:shadow-primary/10 resize-none placeholder:text-muted-foreground/60 text-foreground bg-gradient-to-br from-background/60 to-background/30 dark:bg-gradient-to-br dark:from-gray-950/70 dark:to-gray-900/40"
+                              className="w-full h-32 p-4 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-3xl shadow-xl hover:shadow-2xl focus:shadow-2xl focus:shadow-primary/10 resize-none placeholder:text-muted-foreground/60 text-foreground bg-gradient-to-br from-background/60 to-background/40 dark:bg-gradient-to-br dark:from-gray-950/60 dark:to-gray-900/40"
                               placeholder="Your main goals & projects with AI..."
                             />
                           </div>
@@ -302,7 +302,7 @@ const JumpinAIStudio = () => {
                             <textarea
                               value={formData.challenges}
                               onChange={(e) => setFormData(prev => ({ ...prev, challenges: e.target.value }))}
-                              className="w-full min-h-[90px] p-3 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl focus:shadow-2xl focus:shadow-primary/10 resize-none placeholder:text-muted-foreground/60 text-foreground bg-gradient-to-br from-background/60 to-background/30 dark:bg-gradient-to-br dark:from-gray-950/70 dark:to-gray-900/40"
+                              className="w-full h-32 p-4 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-3xl shadow-xl hover:shadow-2xl focus:shadow-2xl focus:shadow-primary/10 resize-none placeholder:text-muted-foreground/60 text-foreground bg-gradient-to-br from-background/60 to-background/40 dark:bg-gradient-to-br dark:from-gray-950/60 dark:to-gray-900/40"
                               placeholder="Your obstacles & challenges..."
                             />
                           </div>
@@ -394,7 +394,7 @@ const JumpinAIStudio = () => {
                           <button
                             onClick={handleGenerate}
                             disabled={isGenerating || (!isAuthenticated && !guestCanUse)}
-                            className="relative w-full max-w-lg px-12 py-4 bg-gradient-to-r from-primary via-primary/95 to-primary text-primary-foreground rounded-3xl font-semibold shadow-2xl border border-primary/20 dark:border-primary/30 backdrop-blur-xl hover:scale-[1.02] hover:shadow-3xl hover:shadow-primary/40 active:scale-98 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 transition-all duration-500 overflow-hidden group"
+                            className="relative w-full max-w-2xl px-16 py-6 bg-gradient-to-r from-primary via-primary/95 to-primary text-primary-foreground rounded-3xl font-semibold text-lg shadow-2xl border border-primary/20 dark:border-primary/30 backdrop-blur-xl hover:scale-[1.02] hover:shadow-3xl hover:shadow-primary/40 active:scale-98 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 transition-all duration-500 overflow-hidden group"
                           >
                             {/* Enhanced inner effects */}
                             <div className="absolute inset-0 bg-gradient-to-r from-white/20 via-transparent to-white/20 dark:from-white/15 dark:via-transparent dark:to-white/15 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -407,8 +407,11 @@ const JumpinAIStudio = () => {
                                     <Loader2 className="w-5 h-5 animate-spin" />
                                     <span className="font-medium">{processingStatus.stage}</span>
                                   </div>
-                                  <div className="text-sm opacity-90 text-center max-w-md">
-                                    {processingStatus.currentTask}
+                                  <div className="flex items-center gap-2 text-sm opacity-90">
+                                    <span>{processingStatus.currentTask}</span>
+                                    {generationTimer > 0 && (
+                                      <span className="text-primary-foreground/80">({formatTime(generationTimer)})</span>
+                                    )}
                                   </div>
                                 </div>
                               ) : (
