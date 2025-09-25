@@ -173,12 +173,8 @@ serve(async (req) => {
               .replace(/,(\s*[\]}])/g, '$1')
               // Fix missing commas between array elements
               .replace(/}(\s*){/g, '},\n$1{')
-              // Fix missing commas between object properties
-              .replace(/}(\s*)"([^"]+)":/g, '},\n$1"$2":')
               // Fix incomplete array elements
               .replace(/,(\s*)$/, '$1')
-              // Fix incomplete string values (common in tools responses)
-              .replace(/"([^"]*)\n/g, '"$1",\n')
               .trim();
               
             // Ensure it ends properly
