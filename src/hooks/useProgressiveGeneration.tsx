@@ -100,7 +100,23 @@ export const useProgressiveGeneration = () => {
     setResult({ ...progressiveResult });
 
     // Process components one by one
-    const components = rawResponse.components || { prompts: [], workflows: [], blueprints: [], strategies: [] };
+    const components = rawResponse.components || { tools: [], prompts: [], workflows: [], blueprints: [], strategies: [] };
+    
+    // Process tools first
+    if (components.tools && Array.isArray(components.tools) && components.tools.length > 0) {
+      for (let i = 0; i < components.tools.length; i++) {
+        await new Promise(resolve => setTimeout(resolve, 400));
+        progressiveResult.components.tools.push(components.tools[i]);
+        progressiveResult.processing_status = {
+          stage: 'Processing Tools',
+          progress: 40 + (i * 3),
+          currentTask: `Processing AI tool ${i + 1} of ${components.tools.length}...`,
+          isComplete: false
+        };
+        setProcessingStatus(progressiveResult.processing_status);
+        setResult({ ...progressiveResult });
+      }
+    }
     
     // Process prompts
     if (components.prompts && Array.isArray(components.prompts) && components.prompts.length > 0) {
@@ -109,7 +125,7 @@ export const useProgressiveGeneration = () => {
         progressiveResult.components.prompts.push(components.prompts[i]);
         progressiveResult.processing_status = {
           stage: 'Processing Prompts',
-          progress: 40 + (i * 5),
+          progress: 52 + (i * 3),
           currentTask: `Processing AI prompt ${i + 1} of ${components.prompts.length}...`,
           isComplete: false
         };
@@ -125,7 +141,7 @@ export const useProgressiveGeneration = () => {
         progressiveResult.components.workflows.push(components.workflows[i]);
         progressiveResult.processing_status = {
           stage: 'Processing Workflows',
-          progress: 55 + (i * 5),
+          progress: 64 + (i * 3),
           currentTask: `Processing workflow ${i + 1} of ${components.workflows.length}...`,
           isComplete: false
         };
@@ -141,7 +157,7 @@ export const useProgressiveGeneration = () => {
         progressiveResult.components.blueprints.push(components.blueprints[i]);
         progressiveResult.processing_status = {
           stage: 'Processing Blueprints',
-          progress: 70 + (i * 5),
+          progress: 76 + (i * 3),
           currentTask: `Processing blueprint ${i + 1} of ${components.blueprints.length}...`,
           isComplete: false
         };
@@ -157,7 +173,7 @@ export const useProgressiveGeneration = () => {
         progressiveResult.components.strategies.push(components.strategies[i]);
         progressiveResult.processing_status = {
           stage: 'Processing Strategies',
-          progress: 85 + (i * 3),
+          progress: 88 + (i * 3),
           currentTask: `Processing strategy ${i + 1} of ${components.strategies.length}...`,
           isComplete: false
         };
@@ -234,14 +250,15 @@ export const useProgressiveGeneration = () => {
           currentStepStartTime = stepEndTime; // Reset for next step
           
           const progressMap = {
-            1: { progress: 20, task: `Generated strategic overview and comprehensive plan (${stepDuration}s)` },
-            2: { progress: 40, task: `Generated AI prompts for your transformation (${stepDuration}s)` },
-            3: { progress: 60, task: `Generated workflow processes and procedures (${stepDuration}s)` },
-            4: { progress: 80, task: `Generated implementation blueprints (${stepDuration}s)` },
-            5: { progress: 100, task: `Generated strategic frameworks - Complete! (${stepDuration}s)` }
+            1: { progress: 16, task: `Generated strategic overview and comprehensive plan (${stepDuration}s)` },
+            2: { progress: 33, task: `Generated AI tools recommendations (${stepDuration}s)` },
+            3: { progress: 50, task: `Generated AI prompts for your transformation (${stepDuration}s)` },
+            4: { progress: 66, task: `Generated workflow processes and procedures (${stepDuration}s)` },
+            5: { progress: 83, task: `Generated implementation blueprints (${stepDuration}s)` },
+            6: { progress: 100, task: `Generated strategic frameworks - Complete! (${stepDuration}s)` }
           };
           
-          const stepProgress = progressMap[step] || { progress: step * 20, task: `Completed step ${step} (${stepDuration}s)` };
+          const stepProgress = progressMap[step] || { progress: Math.round((step / 6) * 100), task: `Completed step ${step} (${stepDuration}s)` };
           
           // Update progressive result with new data
           if (step === 1 && stepData.full_content) {
@@ -252,6 +269,9 @@ export const useProgressiveGeneration = () => {
           }
           
           if (stepData.components) {
+            if (stepData.components.tools && stepData.components.tools.length > 0) {
+              progressiveResult.components.tools = stepData.components.tools;
+            }
             if (stepData.components.prompts && stepData.components.prompts.length > 0) {
               progressiveResult.components.prompts = stepData.components.prompts;
             }
@@ -271,7 +291,7 @@ export const useProgressiveGeneration = () => {
             stage: `Step ${step} Complete`,
             progress: stepProgress.progress,
             currentTask: stepProgress.task,
-            isComplete: step === 5
+            isComplete: step === 6
           };
           progressiveResult.stepTimes = { ...stepTimes };
           
