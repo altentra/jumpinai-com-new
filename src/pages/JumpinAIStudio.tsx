@@ -122,6 +122,16 @@ const JumpinAIStudio = () => {
     }
   };
 
+  const handleCancel = () => {
+    // Show confirmation toast
+    toast.info('Generation cancelled. You can start a new request anytime.');
+    
+    // Reset the generation state
+    // Note: The actual implementation would depend on your useProgressiveGeneration hook
+    // You might need to add a cancel method to that hook
+    window.location.reload(); // Simple approach - reload to reset state
+  };
+
   const handleGenerate = async () => {
     // Validate required fields
     if (!formData.goals.trim() || !formData.challenges.trim()) {
@@ -431,6 +441,30 @@ const JumpinAIStudio = () => {
                               )}
                             </div>
                           </button>
+                          
+                          {/* Cancel Button - only visible during processing */}
+                          {isGenerating && (
+                            <div className="absolute left-full ml-6 top-1/2 transform -translate-y-1/2 animate-fade-in">
+                              <div className="relative group">
+                                {/* Subtle backdrop for cancel button */}
+                                <div className="absolute -inset-0.5 bg-gradient-to-r from-muted-foreground/10 via-muted-foreground/5 to-muted-foreground/10 rounded-full blur-lg opacity-40 group-hover:opacity-60 transition-all duration-300"></div>
+                                
+                                <button
+                                  onClick={handleCancel}
+                                  className="relative px-6 py-3 glass backdrop-blur-xl border border-border/30 hover:border-muted-foreground/40 transition-all duration-300 rounded-full shadow-lg hover:shadow-xl bg-gradient-to-br from-background/70 to-background/50 dark:bg-gradient-to-br dark:from-gray-950/70 dark:to-gray-900/50 hover:scale-105 active:scale-95 group overflow-hidden"
+                                >
+                                  {/* Subtle glass overlay */}
+                                  <div className="absolute inset-0 bg-gradient-to-br from-muted-foreground/5 via-transparent to-muted-foreground/3 rounded-full"></div>
+                                  <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/20 dark:via-white/15 to-transparent"></div>
+                                  <div className="absolute inset-0 bg-gradient-to-r from-white/8 via-transparent to-white/8 dark:from-white/6 dark:via-transparent dark:to-white/6 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                  
+                                  <div className="relative z-10 flex items-center justify-center">
+                                    <span className="font-medium text-muted-foreground group-hover:text-foreground text-sm tracking-wide transition-colors duration-300">Cancel</span>
+                                  </div>
+                                </button>
+                              </div>
+                            </div>
+                          )}
                         </div>
                       </div>
                       
