@@ -336,12 +336,12 @@ RESPONSE FORMAT - EXACT JSON STRUCTURE REQUIRED:
         "id": 1,
         "name": "Specific AI Tool Name",
         "category": "Tool category (e.g., 'Language Models', 'Computer Vision', 'Data Analytics')",
-        "description": "Brief, concise tool overview (30-50 words maximum) - focus on core functionality only",
+        "description": "Tool overview in 2-3 concise sentences (50-80 words) - describe core functionality and main benefits clearly",
         "website_url": "https://official-tool-website.com (provide actual working URL to the tool)",
         "primary_use_case": "Primary use case within the strategic plan with specific applications",
-        "when_to_use": "Detailed explanation (150+ words) of WHEN this tool should be used in the jump implementation - be specific about phases, triggers, and optimal timing",
-        "how_to_integrate": "Comprehensive integration guidance (200+ words) explaining HOW to implement this tool in the workflow - include setup steps, configuration, API integration, and workflow positioning",
-        "why_this_tool": "Detailed rationale (150+ words) explaining WHY this specific tool was chosen over alternatives - include unique advantages, cost-benefit analysis, and competitive comparison",
+        "when_to_use": "Clear explanation (4-6 sentences, 60-100 words) of WHEN this tool should be used - be specific about phases and optimal timing",
+        "how_to_integrate": "Practical integration guidance (4-6 sentences, 60-100 words) explaining HOW to implement this tool - include key setup steps and workflow positioning",
+        "why_this_tool": "Clear rationale (4-6 sentences, 60-100 words) explaining WHY this specific tool was chosen - include main advantages and key benefits",
         "alternatives": ["Alternative tool 1 with working URL and brief comparison", "Alternative tool 2 with working URL and pros/cons"],
         "cost_model": "Pricing structure and cost considerations with specific numbers if possible",
         "skill_level": "Required skill level and learning curve with training recommendations",
@@ -351,7 +351,9 @@ RESPONSE FORMAT - EXACT JSON STRUCTURE REQUIRED:
   }
 }
 
-IMPORTANT: Generate between 2-12+ tools depending on the complexity of the goals. Simple goals = 2-4 tools. Complex multi-faceted goals involving video, audio, images, apps, etc. = 8-12+ tools. Focus on quality and relevance over quantity.`,
+IMPORTANT: Generate between 2-12+ tools depending on the complexity of the goals. Simple goals = 2-4 tools. Complex multi-faceted goals involving video, audio, images, apps, etc. = 8-12+ tools. Focus on quality and relevance over quantity.
+
+CRITICAL: Ensure ALL tools have balanced content - each tool should have consistently similar amounts of text in each section. Do not write extensive details for the first few tools and brief content for the later ones. Maintain consistent quality and detail level across ALL generated tools.`,
         expectedTokens: 7000
       };
 

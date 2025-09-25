@@ -244,53 +244,58 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
               result.components.tools.map((tool: any, index: number) => (
                 <div key={index} className="relative group">
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/12 via-accent/8 to-secondary/12 dark:from-primary/8 dark:via-accent/6 dark:to-secondary/8 rounded-lg blur-sm opacity-20"></div>
-                  <Card className="relative glass-dark border-white/12 dark:border-white/8 backdrop-blur-lg bg-gradient-to-br from-white/4 via-white/2 to-white/1 dark:from-black/10 dark:via-black/5 dark:to-black/2">
+                  <Card className="relative glass-dark border-white/12 dark:border-white/8 backdrop-blur-lg bg-gradient-to-br from-white/4 via-white/2 to-white/1 dark:from-black/10 dark:via-black/5 dark:to-black/2 hover:border-primary/30 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10">
                     <div className="absolute inset-0 bg-gradient-to-br from-primary/1.5 via-transparent to-secondary/1.5 dark:from-primary/1 dark:via-transparent dark:to-secondary/1 rounded-lg"></div>
-                    <CardHeader className="pb-2">
-                      <CardTitle className="flex items-center gap-2 text-sm">
-                        <Wrench className="w-4 h-4 text-primary" />
+                    <CardHeader className="pb-3">
+                      <CardTitle className="flex items-center gap-2 text-base">
+                        <Wrench className="w-5 h-5 text-primary" />
                         {tool.website_url ? (
                           <a 
                             href={tool.website_url} 
                             target="_blank" 
                             rel="noopener noreferrer"
-                            className="hover:text-primary transition-colors underline"
+                            className="hover:text-primary transition-colors underline text-foreground font-semibold hover:underline-offset-4"
                           >
                             {tool.name}
                           </a>
                         ) : (
-                          tool.name
+                          <span className="text-foreground font-semibold">{tool.name}</span>
                         )}
                         <Badge variant="outline" className="ml-auto text-xs">{tool.category}</Badge>
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="pt-0">
-                      <div className="space-y-2">
-                        <p className="text-sm text-muted-foreground">{tool.description}</p>
-                        <div className="grid grid-cols-2 gap-2 text-xs">
-                          <div>
-                            <span className="font-medium text-foreground">When to use:</span>
-                            <p className="text-muted-foreground">{tool.when_to_use}</p>
+                      <div className="space-y-4">
+                        <p className="text-sm text-muted-foreground leading-relaxed">{tool.description}</p>
+                        
+                        <div className="space-y-3 text-sm">
+                          <div className="p-3 bg-muted/20 rounded-lg">
+                            <span className="font-medium text-foreground block mb-1">When to use:</span>
+                            <p className="text-muted-foreground leading-relaxed">{tool.when_to_use}</p>
                           </div>
-                          <div>
-                            <span className="font-medium text-foreground">Why this tool:</span>
-                            <p className="text-muted-foreground">{tool.why_this_tool}</p>
+                          
+                          <div className="p-3 bg-muted/20 rounded-lg">
+                            <span className="font-medium text-foreground block mb-1">Why this tool:</span>
+                            <p className="text-muted-foreground leading-relaxed">{tool.why_this_tool}</p>
+                          </div>
+                          
+                          <div className="p-3 bg-muted/20 rounded-lg">
+                            <span className="font-medium text-foreground block mb-1">How to integrate:</span>
+                            <p className="text-muted-foreground leading-relaxed">{tool.how_to_integrate || tool.integration_notes}</p>
                           </div>
                         </div>
-                        <div className="text-xs">
-                          <span className="font-medium text-foreground">How to integrate:</span>
-                          <p className="text-muted-foreground">{tool.how_to_integrate || tool.integration_notes}</p>
-                        </div>
+
                         {tool.alternatives && tool.alternatives.length > 0 && (
-                          <div className="text-xs">
-                            <span className="font-medium text-foreground">Alternatives:</span>
+                          <div className="text-sm">
+                            <span className="font-medium text-foreground block mb-1">Alternatives:</span>
                             <p className="text-muted-foreground">{tool.alternatives.join(', ')}</p>
                           </div>
                         )}
-                        <div className="flex gap-2 text-xs flex-wrap">
-                          <Badge variant="secondary">{tool.skill_level}</Badge>
-                          <Badge variant="outline">{tool.cost_model}</Badge>
-                          <Badge variant="outline">{tool.implementation_timeline || tool.implementation_time}</Badge>
+                        
+                        <div className="flex gap-2 text-xs flex-wrap pt-2 border-t border-border/30">
+                          <Badge variant="secondary" className="text-xs">{tool.skill_level}</Badge>
+                          <Badge variant="outline" className="text-xs">{tool.cost_model}</Badge>
+                          <Badge variant="outline" className="text-xs">{tool.implementation_timeline || tool.implementation_time}</Badge>
                         </div>
                       </div>
                     </CardContent>
