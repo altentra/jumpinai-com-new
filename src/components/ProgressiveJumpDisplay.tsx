@@ -265,7 +265,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                             href={tool.website_url || tool.url || tool.website || '#'} 
                             target="_blank" 
                             rel="noopener noreferrer"
-                            className="hover:text-primary transition-colors text-foreground font-semibold hover:underline decoration-2 underline-offset-2 decoration-primary/60 hover:decoration-primary cursor-pointer select-text"
+                            className="text-primary transition-all duration-300 font-semibold underline decoration-2 underline-offset-2 decoration-primary/60 hover:decoration-primary hover:text-primary/80 hover:scale-[1.02] cursor-pointer select-text"
                           >
                             {tool.name}
                           </a>
