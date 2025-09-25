@@ -16,14 +16,38 @@ export default function JumpCard({ jump, onView, onDelete }: JumpCardProps) {
     return format(new Date(dateString), 'MMM dd, yyyy');
   };
 
+  // Extract jump number and name from title (e.g., "Jump #1: AI Marketing Automation")
+  const parseJumpTitle = (title: string) => {
+    const match = title.match(/^Jump #(\d+): (.+)$/);
+    if (match) {
+      return {
+        number: parseInt(match[1]),
+        name: match[2]
+      };
+    }
+    return {
+      number: null,
+      name: title
+    };
+  };
+
+  const { number, name } = parseJumpTitle(jump.title);
+
   return (
     <Card className="bg-gradient-to-br from-card/95 to-primary/5 border border-primary/20 rounded-3xl shadow-2xl shadow-primary/10 backdrop-blur-xl hover:shadow-primary/20 hover:border-primary/30 transition-all duration-300 hover-scale">
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1 min-w-0">
-            <CardTitle className="text-lg line-clamp-2 mb-2">
-              {jump.title}
-            </CardTitle>
+            <div className="flex items-center gap-2 mb-2">
+              {number && (
+                <Badge variant="outline" className="bg-primary/10 text-primary border-primary/30 text-xs">
+                  #{number}
+                </Badge>
+              )}
+              <CardTitle className="text-lg line-clamp-2">
+                {name}
+              </CardTitle>
+            </div>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Calendar className="h-4 w-4" />
               <span>Created {formatDate(jump.created_at)}</span>
