@@ -46,54 +46,54 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
 
   return (
     <div className="w-full space-y-4">
-      {/* Compact Glass Progress Header */}
+      {/* Compact Glass Progress Header with enhanced glass morphism */}
       <div className="relative group">
-        <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 dark:from-primary/15 dark:via-accent/10 dark:to-secondary/15 rounded-xl blur-sm opacity-30"></div>
-        <div className="relative glass-dark rounded-xl p-4 border border-white/15 dark:border-white/10 backdrop-blur-xl bg-gradient-to-br from-white/5 via-white/3 to-white/1 dark:from-black/15 dark:via-black/8 dark:to-black/3">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/3 via-transparent to-secondary/3 dark:from-primary/2 dark:via-transparent dark:to-secondary/2 rounded-xl"></div>
-          <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/25 dark:via-white/15 to-transparent"></div>
+        <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 dark:from-primary/15 dark:via-accent/12 dark:to-secondary/15 rounded-2xl blur-xl opacity-40"></div>
+        <div className="relative glass backdrop-blur-xl border border-border/40 hover:border-primary/30 transition-all duration-500 rounded-2xl p-5 shadow-xl hover:shadow-2xl hover:shadow-primary/10 bg-gradient-to-br from-background/60 to-background/30 dark:bg-gradient-to-br dark:from-gray-950/70 dark:to-gray-900/40">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/4 via-transparent to-secondary/4 dark:from-primary/3 dark:via-transparent dark:to-secondary/3 rounded-2xl"></div>
+          <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/30 dark:via-white/20 to-transparent"></div>
           
           <div className="relative z-10">
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-2">
-                <Zap className="w-4 h-4 text-primary" />
-                <h2 className="text-lg font-medium text-foreground">{result.title}</h2>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <Zap className="w-5 h-5 text-primary" />
+                <h2 className="text-xl font-semibold text-foreground">{result.title}</h2>
               </div>
               <div className="flex items-center gap-3">
-                <Badge variant="outline" className="text-xs flex items-center gap-1 border-white/20 dark:border-white/15">
+                <Badge variant="outline" className="text-xs flex items-center gap-1.5 border-border/40 bg-background/50 backdrop-blur-sm">
                   <Timer className="w-3 h-3" />
                   {formatTime(generationTimer)}
                 </Badge>
                 <Badge 
                   variant={result.processing_status?.isComplete ? "default" : "secondary"}
-                  className="text-xs"
+                  className="text-xs bg-primary/10 text-primary border-primary/20"
                 >
                   {result.processing_status?.stage || 'Initializing...'}
                 </Badge>
               </div>
             </div>
             
-            {/* Compact Generation Timing Summary */}
+            {/* Enhanced Generation Timing Summary */}
             {result.processing_status?.isComplete && result.stepTimes && (
-              <div className="mb-3 p-2 bg-muted/20 rounded-lg border border-white/10 dark:border-white/8">
-                <div className="text-xs font-medium mb-1.5 text-muted-foreground">Generation Performance</div>
-                <div className="grid grid-cols-5 gap-1.5 text-xs">
+              <div className="mb-4 p-3 glass backdrop-blur-sm bg-background/30 dark:bg-background/20 rounded-xl border border-border/30">
+                <div className="text-xs font-medium mb-2 text-muted-foreground">Generation Performance</div>
+                <div className="grid grid-cols-5 gap-2 text-xs">
                   {Object.entries(result.stepTimes).map(([step, time]) => (
-                    <div key={step} className="text-center">
+                    <div key={step} className="text-center p-2 glass backdrop-blur-sm bg-primary/5 rounded-lg border border-primary/20">
                       <div className="font-medium text-foreground">Step {step}</div>
-                      <div className="text-muted-foreground">{time}s</div>
+                      <div className="text-primary font-semibold">{time}s</div>
                     </div>
                   ))}
                 </div>
               </div>
             )}
             
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between text-xs">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">{result.processing_status?.currentTask || 'Starting...'}</span>
-                <span className="text-foreground font-medium">{result.processing_status?.progress || 0}%</span>
+                <span className="text-foreground font-semibold">{result.processing_status?.progress || 0}%</span>
               </div>
-              <Progress value={result.processing_status?.progress || 0} className="h-1.5" />
+              <Progress value={result.processing_status?.progress || 0} className="h-2" />
             </div>
           </div>
         </div>
@@ -128,14 +128,14 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="overview" className="mt-4">
+        <TabsContent value="overview" className="mt-6">
           <div className="relative group">
-            <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/15 via-accent/10 to-secondary/15 dark:from-primary/10 dark:via-accent/8 dark:to-secondary/10 rounded-lg blur-sm opacity-25"></div>
-            <Card className="relative glass-dark border-white/15 dark:border-white/10 backdrop-blur-xl bg-gradient-to-br from-white/5 via-white/2 to-white/1 dark:from-black/12 dark:via-black/6 dark:to-black/3">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/2 via-transparent to-secondary/2 dark:from-primary/1.5 dark:via-transparent dark:to-secondary/1.5 rounded-lg"></div>
-              <CardHeader className="pb-3">
-                <CardTitle className="flex items-center gap-2 text-base">
-                  <Zap className="w-4 h-4 text-primary" />
+            <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 dark:from-primary/15 dark:via-accent/12 dark:to-secondary/15 rounded-2xl blur-xl opacity-40"></div>
+            <Card className="relative glass backdrop-blur-xl border border-border/40 hover:border-primary/30 transition-all duration-500 rounded-2xl shadow-xl hover:shadow-2xl hover:shadow-primary/10 bg-gradient-to-br from-background/60 to-background/30 dark:bg-gradient-to-br dark:from-gray-950/70 dark:to-gray-900/40">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/3 via-transparent to-secondary/3 dark:from-primary/2 dark:via-transparent dark:to-secondary/2 rounded-2xl"></div>
+              <CardHeader className="pb-4">
+                <CardTitle className="flex items-center gap-2 text-lg">
+                  <Zap className="w-5 h-5 text-primary" />
                   Strategic Action Plan
                 </CardTitle>
               </CardHeader>
@@ -156,12 +156,12 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                       strong: ({ children }) => <strong className="font-semibold text-foreground">{children}</strong>,
                       em: ({ children }) => <em className="italic text-primary">{children}</em>,
                       blockquote: ({ children }) => (
-                        <blockquote className="border-l-4 border-primary pl-4 py-2 my-4 bg-muted/30 rounded-r-lg">
+                        <blockquote className="border-l-4 border-primary pl-4 py-2 my-4 glass backdrop-blur-sm bg-primary/5 rounded-r-xl">
                           {children}
                         </blockquote>
                       ),
                       code: ({ children }) => (
-                        <code className="bg-muted px-2 py-1 rounded text-sm font-mono text-foreground">{children}</code>
+                        <code className="glass backdrop-blur-sm bg-muted/50 px-2 py-1 rounded text-sm font-mono text-foreground border border-border/30">{children}</code>
                       ),
                     }}
                   >

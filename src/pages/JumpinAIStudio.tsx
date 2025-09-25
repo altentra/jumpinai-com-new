@@ -281,39 +281,37 @@ const JumpinAIStudio = () => {
                     <div className="grid gap-5">
                       <div className="grid md:grid-cols-2 gap-5">
                         <div className="group">
-                          <label className="block text-sm font-medium text-foreground/80 mb-2 transition-colors duration-300 group-focus-within:text-primary">
+                          <label className="block text-sm font-medium text-foreground/90 mb-3 transition-colors duration-300 group-focus-within:text-primary">
                             What are you after? *
                           </label>
                           <div className="relative">
                             <textarea
                               value={formData.goals}
                               onChange={(e) => setFormData(prev => ({ ...prev, goals: e.target.value }))}
-                              className="w-full min-h-[90px] p-3 glass rounded-xl resize-none focus:outline-none focus:ring-1 focus:ring-primary/40 focus:border-primary/40 transition-all duration-300 placeholder:text-muted-foreground/50 text-foreground bg-white/8 dark:bg-black/15 border border-white/20 dark:border-white/15 backdrop-blur-xl hover:bg-white/10 dark:hover:bg-black/20"
+                              className="w-full min-h-[90px] p-3 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl focus:shadow-2xl focus:shadow-primary/10 resize-none placeholder:text-muted-foreground/60 text-foreground bg-gradient-to-br from-background/60 to-background/30 dark:bg-gradient-to-br dark:from-gray-950/70 dark:to-gray-900/40"
                               placeholder="Your main goals & projects with AI..."
                             />
-                            <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary/3 via-transparent to-accent/3 dark:from-primary/2 dark:via-transparent dark:to-accent/2 pointer-events-none"></div>
                           </div>
                         </div>
                         
                         <div className="group">
-                          <label className="block text-sm font-semibold text-foreground/90 mb-3 transition-colors duration-300 group-focus-within:text-primary">
+                          <label className="block text-sm font-medium text-foreground/90 mb-3 transition-colors duration-300 group-focus-within:text-primary">
                             What prevents you? *
                           </label>
                           <div className="relative">
                             <textarea
                               value={formData.challenges}
                               onChange={(e) => setFormData(prev => ({ ...prev, challenges: e.target.value }))}
-                              className="w-full min-h-[100px] p-4 glass rounded-2xl resize-none focus:outline-none focus:ring-2 focus:ring-primary/60 focus:border-primary/60 transition-all duration-300 placeholder:text-muted-foreground/60 text-foreground bg-white/12 dark:bg-black/25 border border-white/25 dark:border-white/20 backdrop-blur-xl hover:bg-white/15 dark:hover:bg-black/30 hover:border-white/30 dark:hover:border-white/25"
+                              className="w-full min-h-[90px] p-3 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl focus:shadow-2xl focus:shadow-primary/10 resize-none placeholder:text-muted-foreground/60 text-foreground bg-gradient-to-br from-background/60 to-background/30 dark:bg-gradient-to-br dark:from-gray-950/70 dark:to-gray-900/40"
                               placeholder="Your obstacles & challenges..."
                             />
-                            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/5 via-transparent to-accent/5 dark:from-primary/3 dark:via-transparent dark:to-accent/3 pointer-events-none"></div>
                           </div>
                         </div>
                       </div>
 
-                      <div className="grid md:grid-cols-2 gap-6">
+                      <div className="grid md:grid-cols-2 gap-5">
                         <div className="group">
-                          <label className="block text-sm font-semibold text-foreground/90 mb-3 transition-colors duration-300 group-focus-within:text-primary">
+                          <label className="block text-sm font-medium text-foreground/90 mb-3 transition-colors duration-300 group-focus-within:text-primary">
                             Industry
                           </label>
                           <div className="relative">
@@ -321,22 +319,21 @@ const JumpinAIStudio = () => {
                               type="text"
                               value={formData.industry}
                               onChange={(e) => setFormData(prev => ({ ...prev, industry: e.target.value }))}
-                              className="w-full p-4 glass rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/60 focus:border-primary/60 transition-all duration-300 placeholder:text-muted-foreground/60 text-foreground bg-white/12 dark:bg-black/25 border border-white/25 dark:border-white/20 backdrop-blur-xl hover:bg-white/15 dark:hover:bg-black/30 hover:border-white/30 dark:hover:border-white/25"
+                              className="w-full p-3 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl focus:shadow-2xl focus:shadow-primary/10 placeholder:text-muted-foreground/60 text-foreground bg-gradient-to-br from-background/60 to-background/30 dark:bg-gradient-to-br dark:from-gray-950/70 dark:to-gray-900/40"
                               placeholder="Marketing, Tech, Finance..."
                             />
-                            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/5 via-transparent to-accent/5 dark:from-primary/3 dark:via-transparent dark:to-accent/3 pointer-events-none"></div>
                           </div>
                         </div>
                         
                         <div className="group">
-                          <label className="block text-sm font-semibold text-foreground/90 mb-3 transition-colors duration-300 group-focus-within:text-primary">
+                          <label className="block text-sm font-medium text-foreground/90 mb-3 transition-colors duration-300 group-focus-within:text-primary">
                             AI Experience
                           </label>
                           <div className="relative">
                             <select 
                               value={formData.aiExperience}
                               onChange={(e) => setFormData(prev => ({ ...prev, aiExperience: e.target.value }))}
-                              className="w-full p-4 glass rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/60 focus:border-primary/60 transition-all duration-300 text-foreground bg-white/12 dark:bg-black/25 border border-white/25 dark:border-white/20 backdrop-blur-xl hover:bg-white/15 dark:hover:bg-black/30 hover:border-white/30 dark:hover:border-white/25"
+                              className="w-full p-3 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl focus:shadow-2xl focus:shadow-primary/10 text-foreground bg-gradient-to-br from-background/60 to-background/30 dark:bg-gradient-to-br dark:from-gray-950/70 dark:to-gray-900/40"
                             >
                               <option value="">Select level</option>
                               <option value="beginner">Beginner</option>
@@ -344,21 +341,20 @@ const JumpinAIStudio = () => {
                               <option value="advanced">Advanced</option>
                               <option value="expert">Expert</option>
                             </select>
-                            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/5 via-transparent to-accent/5 dark:from-primary/3 dark:via-transparent dark:to-accent/3 pointer-events-none"></div>
                           </div>
                         </div>
                       </div>
 
-                      <div className="grid md:grid-cols-2 gap-6">
+                      <div className="grid md:grid-cols-2 gap-5">
                         <div className="group">
-                          <label className="block text-sm font-semibold text-foreground/90 mb-3 transition-colors duration-300 group-focus-within:text-primary">
+                          <label className="block text-sm font-medium text-foreground/90 mb-3 transition-colors duration-300 group-focus-within:text-primary">
                             Urgency
                           </label>
                           <div className="relative">
                             <select 
                               value={formData.urgency}
                               onChange={(e) => setFormData(prev => ({ ...prev, urgency: e.target.value }))}
-                              className="w-full p-4 glass rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/60 focus:border-primary/60 transition-all duration-300 text-foreground bg-white/12 dark:bg-black/25 border border-white/25 dark:border-white/20 backdrop-blur-xl hover:bg-white/15 dark:hover:bg-black/30 hover:border-white/30 dark:hover:border-white/25"
+                              className="w-full p-3 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl focus:shadow-2xl focus:shadow-primary/10 text-foreground bg-gradient-to-br from-background/60 to-background/30 dark:bg-gradient-to-br dark:from-gray-950/70 dark:to-gray-900/40"
                             >
                               <option value="">Select urgency</option>
                               <option value="asap">ASAP - Need immediate results</option>
@@ -366,19 +362,18 @@ const JumpinAIStudio = () => {
                               <option value="months">Within few months</option>
                               <option value="exploring">Just exploring</option>
                             </select>
-                            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/5 via-transparent to-accent/5 dark:from-primary/3 dark:via-transparent dark:to-accent/3 pointer-events-none"></div>
                           </div>
                         </div>
 
                         <div className="group">
-                          <label className="block text-sm font-semibold text-foreground/90 mb-3 transition-colors duration-300 group-focus-within:text-primary">
+                          <label className="block text-sm font-medium text-foreground/90 mb-3 transition-colors duration-300 group-focus-within:text-primary">
                             Budget
                           </label>
                           <div className="relative">
                             <select 
                               value={formData.budget}
                               onChange={(e) => setFormData(prev => ({ ...prev, budget: e.target.value }))}
-                              className="w-full p-4 glass rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/60 focus:border-primary/60 transition-all duration-300 text-foreground bg-white/12 dark:bg-black/25 border border-white/25 dark:border-white/20 backdrop-blur-xl hover:bg-white/15 dark:hover:bg-black/30 hover:border-white/30 dark:hover:border-white/25"
+                              className="w-full p-3 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl focus:shadow-2xl focus:shadow-primary/10 text-foreground bg-gradient-to-br from-background/60 to-background/30 dark:bg-gradient-to-br dark:from-gray-950/70 dark:to-gray-900/40"
                             >
                               <option value="">Select budget</option>
                               <option value="minimal">Minimal ($0-500)</option>
@@ -386,37 +381,41 @@ const JumpinAIStudio = () => {
                               <option value="substantial">Substantial ($2K-10K)</option>
                               <option value="enterprise">Enterprise ($10K+)</option>
                             </select>
-                            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/5 via-transparent to-accent/5 dark:from-primary/3 dark:via-transparent dark:to-accent/3 pointer-events-none"></div>
                           </div>
                         </div>
                       </div>
 
-                      {/* Premium Generate Button */}
-                      <div className="text-center mt-6">
+                      {/* Premium Generate Button with Progress Display */}
+                      <div className="text-center mt-8">
                         <div className="relative inline-block group">
-                          {/* Subtle glow */}
-                          <div className="absolute -inset-1 bg-gradient-to-r from-primary/30 via-primary/40 to-primary/30 dark:from-primary/25 dark:via-primary/35 dark:to-primary/25 rounded-full blur-lg opacity-50 group-hover:opacity-70 transition-all duration-500"></div>
+                          {/* Enhanced glow effect */}
+                          <div className="absolute -inset-2 bg-gradient-to-r from-primary/40 via-primary/50 to-primary/40 dark:from-primary/30 dark:via-primary/40 dark:to-primary/30 rounded-3xl blur-xl opacity-60 group-hover:opacity-80 transition-all duration-500"></div>
                           
                           <button
                             onClick={handleGenerate}
                             disabled={isGenerating || (!isAuthenticated && !guestCanUse)}
-                            className="relative px-8 py-3 bg-gradient-to-r from-primary via-primary/95 to-primary text-primary-foreground rounded-full font-medium shadow-xl border border-primary/20 dark:border-primary/30 backdrop-blur-xl hover:scale-105 hover:shadow-2xl active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 transition-all duration-300 overflow-hidden"
+                            className="relative w-full max-w-lg px-12 py-4 bg-gradient-to-r from-primary via-primary/95 to-primary text-primary-foreground rounded-3xl font-semibold shadow-2xl border border-primary/20 dark:border-primary/30 backdrop-blur-xl hover:scale-[1.02] hover:shadow-3xl hover:shadow-primary/40 active:scale-98 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 transition-all duration-500 overflow-hidden group"
                           >
-                            {/* Inner highlight */}
-                            <div className="absolute inset-0 bg-gradient-to-r from-white/15 via-transparent to-white/15 dark:from-white/10 dark:via-transparent dark:to-white/10 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                            <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/40 dark:via-white/30 to-transparent"></div>
+                            {/* Enhanced inner effects */}
+                            <div className="absolute inset-0 bg-gradient-to-r from-white/20 via-transparent to-white/20 dark:from-white/15 dark:via-transparent dark:to-white/15 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                            <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/50 dark:via-white/40 to-transparent"></div>
                             
-                            <div className="relative z-10 flex items-center gap-2">
+                            <div className="relative z-10 flex items-center justify-center gap-3">
                               {isGenerating ? (
-                                <>
-                                  <Loader2 className="w-4 h-4 animate-spin" />
-                                  Generating Your Jump...
-                                </>
+                                <div className="flex flex-col items-center gap-2 min-h-[40px]">
+                                  <div className="flex items-center gap-3">
+                                    <Loader2 className="w-5 h-5 animate-spin" />
+                                    <span className="font-medium">{processingStatus.stage}</span>
+                                  </div>
+                                  <div className="text-sm opacity-90 text-center max-w-md">
+                                    {processingStatus.currentTask}
+                                  </div>
+                                </div>
                               ) : (
-                                <>
-                                  <Zap className="w-4 h-4" />
-                                  Generate My Jump
-                                </>
+                                <div className="flex items-center gap-3">
+                                  <Zap className="w-5 h-5" />
+                                  <span>Generate My Jump</span>
+                                </div>
                               )}
                             </div>
                           </button>
