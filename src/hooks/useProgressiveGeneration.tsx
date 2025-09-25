@@ -11,6 +11,9 @@ export type ProcessingStatus = {
 
 export type ProgressiveResult = {
   jumpId?: string;
+  jumpName?: string;
+  jumpNumber?: number;
+  fullTitle?: string;
   title: string;
   full_content: string;
   structured_plan?: any;
@@ -40,7 +43,10 @@ export const useProgressiveGeneration = () => {
   const processResponseInChunks = useCallback(async (rawResponse: GenerationResult): Promise<ProgressiveResult> => {
     const progressiveResult: ProgressiveResult = {
       jumpId: rawResponse.jumpId,
-      title: rawResponse.jumpId ? 'AI Transformation Jump' : 'AI Transformation Jump',
+      jumpName: rawResponse.jumpName,
+      jumpNumber: rawResponse.jumpNumber,
+      fullTitle: rawResponse.fullTitle,
+      title: rawResponse.fullTitle || 'AI Transformation Jump',
       full_content: '',
       structured_plan: null,
       comprehensive_plan: null,
@@ -216,7 +222,7 @@ export const useProgressiveGeneration = () => {
       
       // Show initial empty structure immediately
       let progressiveResult: ProgressiveResult = {
-        title: 'AI Transformation Jump',
+        title: 'Generating Jump...',
         full_content: '',
         components: {
           tools: [],
@@ -228,7 +234,7 @@ export const useProgressiveGeneration = () => {
         processing_status: {
           stage: 'Generating',
           progress: 5,
-          currentTask: 'AI is analyzing your requirements...',
+          currentTask: 'AI is analyzing your requirements and generating jump name...',
           isComplete: false
         },
         stepTimes: {}
@@ -263,6 +269,10 @@ export const useProgressiveGeneration = () => {
           // Update progressive result with new data
           if (step === 1 && stepData.full_content) {
             progressiveResult.jumpId = stepData.jumpId;
+            progressiveResult.jumpName = stepData.jumpName;
+            progressiveResult.jumpNumber = stepData.jumpNumber;
+            progressiveResult.fullTitle = stepData.fullTitle;
+            progressiveResult.title = stepData.fullTitle || 'AI Transformation Jump';
             progressiveResult.full_content = stepData.full_content;
             progressiveResult.structured_plan = stepData.structured_plan;
             progressiveResult.comprehensive_plan = stepData.comprehensive_plan;
@@ -306,7 +316,10 @@ export const useProgressiveGeneration = () => {
       // Final update with complete data
       const finalResult: ProgressiveResult = {
         jumpId: rawResponse.jumpId,
-        title: 'AI Transformation Jump',
+        jumpName: rawResponse.jumpName,
+        jumpNumber: rawResponse.jumpNumber,
+        fullTitle: rawResponse.fullTitle,
+        title: rawResponse.fullTitle || 'AI Transformation Jump',
         full_content: rawResponse.fullContent,
         structured_plan: rawResponse.structuredPlan,
         comprehensive_plan: rawResponse.comprehensivePlan,

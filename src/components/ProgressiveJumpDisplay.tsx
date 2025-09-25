@@ -79,7 +79,18 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
                 <Zap className="w-5 h-5 text-primary" />
-                <h2 className="text-xl font-semibold text-foreground">{result.title}</h2>
+                <div>
+                  <h2 className="text-xl font-semibold text-foreground">
+                    {result.fullTitle || result.title}
+                  </h2>
+                  {result.jumpNumber && result.jumpName && (
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground/70 mt-1">
+                      <span>Jump #{result.jumpNumber}</span>
+                      <span>•</span>
+                      <span>{result.jumpName}</span>
+                    </div>
+                  )}
+                </div>
               </div>
               <div className="flex items-center gap-3">
                 <Badge variant="outline" className="text-xs flex items-center gap-1.5 border-border/40 bg-background/50 backdrop-blur-sm">

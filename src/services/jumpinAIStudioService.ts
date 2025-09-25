@@ -1,6 +1,7 @@
 import { supabase } from '@/integrations/supabase/client';
 import { createJump } from './jumpService';
 import { userProfileService } from './userProfileService';
+import { jumpNamingService } from '@/utils/jumpNamingService';
 
 export interface StudioFormData {
   goals: string;
@@ -13,6 +14,9 @@ export interface StudioFormData {
 
 export interface GenerationResult {
   jumpId?: string;
+  jumpName?: string;
+  jumpNumber?: number;
+  fullTitle?: string;
   fullContent: string;
   structuredPlan?: any;
   comprehensivePlan?: any;
@@ -90,6 +94,14 @@ export const jumpinAIStudioService = {
         finalResult.comprehensivePlan = step1Data.comprehensive_plan;
         overviewContent = step1Data.full_content || '';
 
+        // Generate jump name and number
+        const jumpNameInfo = await jumpNamingService.generateFullJumpTitle(formData, userId);
+        finalResult.jumpName = jumpNameInfo.name;
+        finalResult.jumpNumber = jumpNameInfo.number;
+        finalResult.fullTitle = jumpNameInfo.fullTitle;
+        
+        console.log('Generated jump name info:', jumpNameInfo);
+
         // Save the jump to database if user is logged in
         if (userId && step1Data.full_content) {
           try {
@@ -97,7 +109,7 @@ export const jumpinAIStudioService = {
             await this.saveFormData(formData, userId);
 
             const jumpData = {
-              title: this.extractTitle(step1Data.full_content),
+              title: jumpNameInfo.fullTitle, // Use generated title instead of extracted
               summary: this.extractSummary(step1Data.full_content),
               full_content: step1Data.full_content,
               structured_plan: step1Data.structured_plan,
@@ -110,15 +122,24 @@ export const jumpinAIStudioService = {
             const createdJump = await createJump(jumpData);
             jumpId = createdJump?.id;
             finalResult.jumpId = jumpId;
-            console.log('Created Jump with ID:', jumpId);
+            console.log('Created Jump with ID:', jumpId, 'and title:', jumpNameInfo.fullTitle);
           } catch (saveError) {
             console.error('Error saving jump to database:', saveError);
           }
+        } else if (!userId) {
+          // For guest users, still generate the name for display
+          console.log('Guest user - showing generated jump name:', jumpNameInfo.fullTitle);
         }
 
         // Report progress
         if (onProgress) {
-          onProgress(1, { ...step1Data, jumpId });
+          onProgress(1, { 
+            ...step1Data, 
+            jumpId,
+            jumpName: finalResult.jumpName,
+            jumpNumber: finalResult.jumpNumber,
+            fullTitle: finalResult.fullTitle
+          });
         }
       } else {
         throw new Error(`Step 1 failed: ${step1Data.error}`);
