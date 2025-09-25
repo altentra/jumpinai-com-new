@@ -250,8 +250,8 @@ const JumpinAIStudio = () => {
               
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent/5 to-transparent blur-2xl"></div>
-                <p className="relative text-xl md:text-2xl text-muted-foreground/90 mb-12 max-w-4xl mx-auto leading-relaxed font-light">
-                  Tell us your goals and challenges, and we'll generate your personalized <span className="font-semibold text-primary bg-gradient-to-r from-primary via-primary/80 to-primary bg-clip-text text-transparent">Jump in AI</span>: 
+                <p className="relative text-lg md:text-xl text-muted-foreground/90 mb-12 max-w-4xl mx-auto leading-relaxed font-light">
+                  Tell us your goals and challenges, and we'll generate your personalized <span className="font-semibold text-primary bg-gradient-to-r from-primary via-primary/80 to-primary bg-clip-text text-transparent whitespace-nowrap">Jump in AI</span>: 
                   a clear step-by-step plan, essential resources, custom prompts, workflows, blueprints, and strategies.
                 </p>
               </div>
