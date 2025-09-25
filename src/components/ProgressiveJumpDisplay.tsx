@@ -45,49 +45,57 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
   }
 
   return (
-    <div className="w-full space-y-6">
-      {/* Progress Header */}
-      <div className="glass-dark rounded-xl p-4 border border-white/20">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <Zap className="w-5 h-5 text-primary" />
-            <h2 className="text-xl font-semibold text-foreground">{result.title}</h2>
-          </div>
-          <div className="flex items-center gap-4">
-            <Badge variant="outline" className="text-sm flex items-center gap-1">
-              <Timer className="w-3 h-3" />
-              {formatTime(generationTimer)}
-            </Badge>
-            <Badge 
-              variant={result.processing_status?.isComplete ? "default" : "secondary"}
-              className="text-sm"
-            >
-              {result.processing_status?.stage || 'Initializing...'}
-            </Badge>
-          </div>
-        </div>
-        
-        {/* Generation Timing Summary */}
-        {result.processing_status?.isComplete && result.stepTimes && (
-          <div className="mb-4 p-3 bg-muted/30 rounded-lg border">
-            <div className="text-xs font-medium mb-2 text-muted-foreground">Generation Performance</div>
-            <div className="grid grid-cols-5 gap-2 text-xs">
-              {Object.entries(result.stepTimes).map(([step, time]) => (
-                <div key={step} className="text-center">
-                  <div className="font-medium text-foreground">Step {step}</div>
-                  <div className="text-muted-foreground">{time}s</div>
+    <div className="w-full space-y-4">
+      {/* Compact Glass Progress Header */}
+      <div className="relative group">
+        <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 dark:from-primary/15 dark:via-accent/10 dark:to-secondary/15 rounded-xl blur-sm opacity-30"></div>
+        <div className="relative glass-dark rounded-xl p-4 border border-white/15 dark:border-white/10 backdrop-blur-xl bg-gradient-to-br from-white/5 via-white/3 to-white/1 dark:from-black/15 dark:via-black/8 dark:to-black/3">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/3 via-transparent to-secondary/3 dark:from-primary/2 dark:via-transparent dark:to-secondary/2 rounded-xl"></div>
+          <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/25 dark:via-white/15 to-transparent"></div>
+          
+          <div className="relative z-10">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <Zap className="w-4 h-4 text-primary" />
+                <h2 className="text-lg font-medium text-foreground">{result.title}</h2>
+              </div>
+              <div className="flex items-center gap-3">
+                <Badge variant="outline" className="text-xs flex items-center gap-1 border-white/20 dark:border-white/15">
+                  <Timer className="w-3 h-3" />
+                  {formatTime(generationTimer)}
+                </Badge>
+                <Badge 
+                  variant={result.processing_status?.isComplete ? "default" : "secondary"}
+                  className="text-xs"
+                >
+                  {result.processing_status?.stage || 'Initializing...'}
+                </Badge>
+              </div>
+            </div>
+            
+            {/* Compact Generation Timing Summary */}
+            {result.processing_status?.isComplete && result.stepTimes && (
+              <div className="mb-3 p-2 bg-muted/20 rounded-lg border border-white/10 dark:border-white/8">
+                <div className="text-xs font-medium mb-1.5 text-muted-foreground">Generation Performance</div>
+                <div className="grid grid-cols-5 gap-1.5 text-xs">
+                  {Object.entries(result.stepTimes).map(([step, time]) => (
+                    <div key={step} className="text-center">
+                      <div className="font-medium text-foreground">Step {step}</div>
+                      <div className="text-muted-foreground">{time}s</div>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
+            )}
+            
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-muted-foreground">{result.processing_status?.currentTask || 'Starting...'}</span>
+                <span className="text-foreground font-medium">{result.processing_status?.progress || 0}%</span>
+              </div>
+              <Progress value={result.processing_status?.progress || 0} className="h-1.5" />
             </div>
           </div>
-        )}
-        
-        <div className="space-y-2">
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-muted-foreground">{result.processing_status?.currentTask || 'Starting...'}</span>
-            <span className="text-foreground font-medium">{result.processing_status?.progress || 0}%</span>
-          </div>
-          <Progress value={result.processing_status?.progress || 0} className="h-2" />
         </div>
       </div>
 
@@ -120,15 +128,18 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="overview" className="mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Zap className="w-5 h-5 text-primary" />
-                Strategic Action Plan
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
+        <TabsContent value="overview" className="mt-4">
+          <div className="relative group">
+            <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/15 via-accent/10 to-secondary/15 dark:from-primary/10 dark:via-accent/8 dark:to-secondary/10 rounded-lg blur-sm opacity-25"></div>
+            <Card className="relative glass-dark border-white/15 dark:border-white/10 backdrop-blur-xl bg-gradient-to-br from-white/5 via-white/2 to-white/1 dark:from-black/12 dark:via-black/6 dark:to-black/3">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/2 via-transparent to-secondary/2 dark:from-primary/1.5 dark:via-transparent dark:to-secondary/1.5 rounded-lg"></div>
+              <CardHeader className="pb-3">
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <Zap className="w-4 h-4 text-primary" />
+                  Strategic Action Plan
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pt-0">
               {result.full_content ? (
                 <div className="prose prose-slate dark:prose-invert max-w-none">
                   <ReactMarkdown
@@ -163,16 +174,20 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                   Generating strategic action plan...
                 </div>
               )}
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
 
-        <TabsContent value="plan" className="mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Implementation Plan</CardTitle>
-            </CardHeader>
-            <CardContent>
+        <TabsContent value="plan" className="mt-4">
+          <div className="relative group">
+            <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/15 via-accent/10 to-secondary/15 dark:from-primary/10 dark:via-accent/8 dark:to-secondary/10 rounded-lg blur-sm opacity-25"></div>
+            <Card className="relative glass-dark border-white/15 dark:border-white/10 backdrop-blur-xl bg-gradient-to-br from-white/5 via-white/2 to-white/1 dark:from-black/12 dark:via-black/6 dark:to-black/3">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/2 via-transparent to-secondary/2 dark:from-primary/1.5 dark:via-transparent dark:to-secondary/1.5 rounded-lg"></div>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-base">Implementation Plan</CardTitle>
+              </CardHeader>
+              <CardContent className="pt-0">
               {result.structured_plan ? (
                 <div className="space-y-4">
                   <p className="text-muted-foreground">{result.structured_plan.overview}</p>
@@ -192,23 +207,27 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                   Creating implementation plan...
                 </div>
               )}
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
 
-        <TabsContent value="prompts" className="mt-6">
-          <div className="grid gap-4">
+        <TabsContent value="prompts" className="mt-4">
+          <div className="grid gap-3">
             {[...Array(4)].map((_, index) => {
               const prompt = result.components.prompts[index];
               return (
-                <Card key={index}>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      {getStatusIcon(result.processing_status.isComplete, !!prompt)}
-                      {prompt ? prompt.title : `AI Prompt ${index + 1}`}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
+                <div key={index} className="relative group">
+                  <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/12 via-accent/8 to-secondary/12 dark:from-primary/8 dark:via-accent/6 dark:to-secondary/8 rounded-lg blur-sm opacity-20"></div>
+                  <Card className="relative glass-dark border-white/12 dark:border-white/8 backdrop-blur-lg bg-gradient-to-br from-white/4 via-white/2 to-white/1 dark:from-black/10 dark:via-black/5 dark:to-black/2">
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/1.5 via-transparent to-secondary/1.5 dark:from-primary/1 dark:via-transparent dark:to-secondary/1 rounded-lg"></div>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="flex items-center gap-2 text-sm">
+                        {getStatusIcon(result.processing_status.isComplete, !!prompt)}
+                        {prompt ? prompt.title : `AI Prompt ${index + 1}`}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="pt-0">
                     {prompt ? (
                       <div className="space-y-2">
                         <p className="text-sm text-muted-foreground">{prompt.description}</p>
@@ -229,26 +248,30 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                         Waiting for generation...
                       </div>
                     )}
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                </div>
               );
             })}
           </div>
         </TabsContent>
 
-        <TabsContent value="workflows" className="mt-6">
-          <div className="grid gap-4">
+        <TabsContent value="workflows" className="mt-4">
+          <div className="grid gap-3">
             {[...Array(4)].map((_, index) => {
               const workflow = result.components.workflows[index];
               return (
-                <Card key={index}>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      {getStatusIcon(result.processing_status.isComplete, !!workflow)}
-                      {workflow ? workflow.title : `Workflow ${index + 1}`}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
+                <div key={index} className="relative group">
+                  <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/12 via-accent/8 to-secondary/12 dark:from-primary/8 dark:via-accent/6 dark:to-secondary/8 rounded-lg blur-sm opacity-20"></div>
+                  <Card className="relative glass-dark border-white/12 dark:border-white/8 backdrop-blur-lg bg-gradient-to-br from-white/4 via-white/2 to-white/1 dark:from-black/10 dark:via-black/5 dark:to-black/2">
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/1.5 via-transparent to-secondary/1.5 dark:from-primary/1 dark:via-transparent dark:to-secondary/1 rounded-lg"></div>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="flex items-center gap-2 text-sm">
+                        {getStatusIcon(result.processing_status.isComplete, !!workflow)}
+                        {workflow ? workflow.title : `Workflow ${index + 1}`}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="pt-0">
                     {workflow ? (
                       <div className="space-y-2">
                         <p className="text-sm text-muted-foreground">{workflow.description}</p>
@@ -274,26 +297,30 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                         Waiting for generation...
                       </div>
                     )}
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                </div>
               );
             })}
           </div>
         </TabsContent>
 
-        <TabsContent value="blueprints" className="mt-6">
-          <div className="grid gap-4">
+        <TabsContent value="blueprints" className="mt-4">
+          <div className="grid gap-3">
             {[...Array(4)].map((_, index) => {
               const blueprint = result.components.blueprints[index];
               return (
-                <Card key={index}>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      {getStatusIcon(result.processing_status.isComplete, !!blueprint)}
-                      {blueprint ? blueprint.title : `Blueprint ${index + 1}`}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
+                <div key={index} className="relative group">
+                  <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/12 via-accent/8 to-secondary/12 dark:from-primary/8 dark:via-accent/6 dark:to-secondary/8 rounded-lg blur-sm opacity-20"></div>
+                  <Card className="relative glass-dark border-white/12 dark:border-white/8 backdrop-blur-lg bg-gradient-to-br from-white/4 via-white/2 to-white/1 dark:from-black/10 dark:via-black/5 dark:to-black/2">
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/1.5 via-transparent to-secondary/1.5 dark:from-primary/1 dark:via-transparent dark:to-secondary/1 rounded-lg"></div>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="flex items-center gap-2 text-sm">
+                        {getStatusIcon(result.processing_status.isComplete, !!blueprint)}
+                        {blueprint ? blueprint.title : `Blueprint ${index + 1}`}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="pt-0">
                     {blueprint ? (
                       <div className="space-y-2">
                         <p className="text-sm text-muted-foreground">{blueprint.description}</p>
@@ -315,26 +342,30 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                         Waiting for generation...
                       </div>
                     )}
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                </div>
               );
             })}
           </div>
         </TabsContent>
 
-        <TabsContent value="strategies" className="mt-6">
-          <div className="grid gap-4">
+        <TabsContent value="strategies" className="mt-4">
+          <div className="grid gap-3">
             {[...Array(4)].map((_, index) => {
               const strategy = result.components.strategies[index];
               return (
-                <Card key={index}>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      {getStatusIcon(result.processing_status.isComplete, !!strategy)}
-                      {strategy ? strategy.title : `Strategy ${index + 1}`}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
+                <div key={index} className="relative group">
+                  <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/12 via-accent/8 to-secondary/12 dark:from-primary/8 dark:via-accent/6 dark:to-secondary/8 rounded-lg blur-sm opacity-20"></div>
+                  <Card className="relative glass-dark border-white/12 dark:border-white/8 backdrop-blur-lg bg-gradient-to-br from-white/4 via-white/2 to-white/1 dark:from-black/10 dark:via-black/5 dark:to-black/2">
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/1.5 via-transparent to-secondary/1.5 dark:from-primary/1 dark:via-transparent dark:to-secondary/1 rounded-lg"></div>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="flex items-center gap-2 text-sm">
+                        {getStatusIcon(result.processing_status.isComplete, !!strategy)}
+                        {strategy ? strategy.title : `Strategy ${index + 1}`}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="pt-0">
                     {strategy ? (
                       <div className="space-y-2">
                         <p className="text-sm text-muted-foreground">{strategy.description}</p>
@@ -358,8 +389,9 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                         Waiting for generation...
                       </div>
                     )}
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                </div>
               );
             })}
           </div>
