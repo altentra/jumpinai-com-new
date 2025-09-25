@@ -14,6 +14,9 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  // Declare step variable outside try block for error handling access
+  let step = 1;
+
   try {
     // Validate OpenAI API key first
     if (!openAIApiKey) {
@@ -30,7 +33,8 @@ serve(async (req) => {
 
     console.log('✅ OpenAI API key is available');
 
-    const { goals, challenges, industry, ai_experience, urgency, budget, step = 1, overview_content = '' } = await req.json();
+    const { goals, challenges, industry, ai_experience, urgency, budget, step: requestStep = 1, overview_content = '' } = await req.json();
+    step = requestStep; // Assign to outer scope variable
 
     console.log('🚀 Generating Jump Step', step, 'with parameters:', { goals, challenges, industry, ai_experience, urgency, budget });
 
