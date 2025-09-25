@@ -1,9 +1,12 @@
 import React from 'react';
-import { Loader2, CheckCircle, Clock, Zap } from 'lucide-react';
+import { Loader2, CheckCircle, Clock, Zap, Timer } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { formatAIText } from '@/utils/aiTextFormatter';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import type { ProgressiveResult } from '@/hooks/useProgressiveGeneration';
 
 interface ProgressiveJumpDisplayProps {
@@ -51,7 +54,8 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
             <h2 className="text-xl font-semibold text-foreground">{result.title}</h2>
           </div>
           <div className="flex items-center gap-4">
-            <Badge variant="outline" className="text-sm">
+            <Badge variant="outline" className="text-sm flex items-center gap-1">
+              <Timer className="w-3 h-3" />
               {formatTime(generationTimer)}
             </Badge>
             <Badge 
@@ -62,6 +66,21 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
             </Badge>
           </div>
         </div>
+        
+        {/* Generation Timing Summary */}
+        {result.processing_status?.isComplete && result.stepTimes && (
+          <div className="mb-4 p-3 bg-muted/30 rounded-lg border">
+            <div className="text-xs font-medium mb-2 text-muted-foreground">Generation Performance</div>
+            <div className="grid grid-cols-5 gap-2 text-xs">
+              {Object.entries(result.stepTimes).map(([step, time]) => (
+                <div key={step} className="text-center">
+                  <div className="font-medium text-foreground">Step {step}</div>
+                  <div className="text-muted-foreground">{time}s</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
         
         <div className="space-y-2">
           <div className="flex items-center justify-between text-sm">
@@ -104,12 +123,39 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
         <TabsContent value="overview" className="mt-6">
           <Card>
             <CardHeader>
-              <CardTitle>Strategic Action Plan</CardTitle>
+              <CardTitle className="flex items-center gap-2">
+                <Zap className="w-5 h-5 text-primary" />
+                Strategic Action Plan
+              </CardTitle>
             </CardHeader>
             <CardContent>
               {result.full_content ? (
-                <div className="prose max-w-none">
-                  <div dangerouslySetInnerHTML={{ __html: result.full_content.replace(/\n/g, '<br>') }} />
+                <div className="prose prose-slate dark:prose-invert max-w-none">
+                  <ReactMarkdown
+                    remarkPlugins={[remarkGfm]}
+                    className="text-foreground"
+                    components={{
+                      h1: ({ children }) => <h1 className="text-2xl font-bold text-primary mb-4">{children}</h1>,
+                      h2: ({ children }) => <h2 className="text-xl font-semibold text-foreground mb-3 mt-6">{children}</h2>,
+                      h3: ({ children }) => <h3 className="text-lg font-medium text-foreground mb-2 mt-4">{children}</h3>,
+                      p: ({ children }) => <p className="text-muted-foreground mb-3 leading-relaxed">{children}</p>,
+                      ul: ({ children }) => <ul className="list-disc pl-6 mb-4 text-muted-foreground space-y-2">{children}</ul>,
+                      ol: ({ children }) => <ol className="list-decimal pl-6 mb-4 text-muted-foreground space-y-2">{children}</ol>,
+                      li: ({ children }) => <li className="leading-relaxed">{children}</li>,
+                      strong: ({ children }) => <strong className="font-semibold text-foreground">{children}</strong>,
+                      em: ({ children }) => <em className="italic text-primary">{children}</em>,
+                      blockquote: ({ children }) => (
+                        <blockquote className="border-l-4 border-primary pl-4 py-2 my-4 bg-muted/30 rounded-r-lg">
+                          {children}
+                        </blockquote>
+                      ),
+                      code: ({ children }) => (
+                        <code className="bg-muted px-2 py-1 rounded text-sm font-mono text-foreground">{children}</code>
+                      ),
+                    }}
+                  >
+                    {formatAIText(result.full_content)}
+                  </ReactMarkdown>
                 </div>
               ) : (
                 <div className="flex items-center justify-center h-32 text-muted-foreground">

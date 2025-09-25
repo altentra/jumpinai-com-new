@@ -22,6 +22,7 @@ export type ProgressiveResult = {
     strategies: any[];
   };
   processing_status: ProcessingStatus;
+  stepTimes?: { [key: string]: number };
 };
 
 export const useProgressiveGeneration = () => {
@@ -33,6 +34,7 @@ export const useProgressiveGeneration = () => {
     currentTask: '',
     isComplete: false
   });
+  const [stepStartTimes, setStepStartTimes] = useState<{ [key: string]: number }>({});
 
   const processResponseInChunks = useCallback(async (rawResponse: GenerationResult): Promise<ProgressiveResult> => {
     const progressiveResult: ProgressiveResult = {
@@ -190,6 +192,10 @@ export const useProgressiveGeneration = () => {
     });
 
     try {
+      // Initialize timing tracking
+      const stepTimes: { [key: string]: number } = {};
+      let currentStepStartTime = Date.now();
+      
       // Show initial empty structure immediately
       let progressiveResult: ProgressiveResult = {
         title: 'AI Transformation Jump',
@@ -205,7 +211,8 @@ export const useProgressiveGeneration = () => {
           progress: 5,
           currentTask: 'AI is analyzing your requirements...',
           isComplete: false
-        }
+        },
+        stepTimes: {}
       };
       setResult(progressiveResult);
 
@@ -217,15 +224,21 @@ export const useProgressiveGeneration = () => {
         (step: number, stepData: any) => {
           console.log(`Step ${step} completed:`, stepData);
           
+          // Calculate step completion time
+          const stepEndTime = Date.now();
+          const stepDuration = Math.round((stepEndTime - currentStepStartTime) / 1000);
+          stepTimes[step.toString()] = stepDuration;
+          currentStepStartTime = stepEndTime; // Reset for next step
+          
           const progressMap = {
-            1: { progress: 20, task: 'Generated strategic overview and comprehensive plan...' },
-            2: { progress: 40, task: 'Generated AI prompts for your transformation...' },
-            3: { progress: 60, task: 'Generated workflow processes and procedures...' },
-            4: { progress: 80, task: 'Generated implementation blueprints...' },
-            5: { progress: 100, task: 'Generated strategic frameworks - Complete!' }
+            1: { progress: 20, task: `Generated strategic overview and comprehensive plan (${stepDuration}s)` },
+            2: { progress: 40, task: `Generated AI prompts for your transformation (${stepDuration}s)` },
+            3: { progress: 60, task: `Generated workflow processes and procedures (${stepDuration}s)` },
+            4: { progress: 80, task: `Generated implementation blueprints (${stepDuration}s)` },
+            5: { progress: 100, task: `Generated strategic frameworks - Complete! (${stepDuration}s)` }
           };
           
-          const stepProgress = progressMap[step] || { progress: step * 20, task: `Completed step ${step}...` };
+          const stepProgress = progressMap[step] || { progress: step * 20, task: `Completed step ${step} (${stepDuration}s)` };
           
           // Update progressive result with new data
           if (step === 1 && stepData.full_content) {
@@ -250,18 +263,22 @@ export const useProgressiveGeneration = () => {
             }
           }
           
-          // Update status
+          // Update status and timing
           progressiveResult.processing_status = {
             stage: `Step ${step} Complete`,
             progress: stepProgress.progress,
             currentTask: stepProgress.task,
             isComplete: step === 5
           };
+          progressiveResult.stepTimes = { ...stepTimes };
           
           setProcessingStatus(progressiveResult.processing_status);
           setResult({ ...progressiveResult });
         }
       );
+      
+      // Calculate total generation time
+      const totalTime = Object.values(stepTimes).reduce((sum, time) => sum + time, 0);
       
       // Final update with complete data
       const finalResult: ProgressiveResult = {
@@ -279,9 +296,10 @@ export const useProgressiveGeneration = () => {
         processing_status: {
           stage: 'Complete',
           progress: 100,
-          currentTask: 'Jump generation complete!',
+          currentTask: `Jump generation complete! Total: ${totalTime}s`,
           isComplete: true
-        }
+        },
+        stepTimes: stepTimes
       };
       
       setResult(finalResult);
