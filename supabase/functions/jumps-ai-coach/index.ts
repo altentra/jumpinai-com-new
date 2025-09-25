@@ -169,12 +169,16 @@ serve(async (req) => {
             
             // Advanced cleanup for malformed JSON
             cleanContent = cleanContent
-              // Fix trailing commas in arrays
+              // Fix trailing commas in arrays and objects
               .replace(/,(\s*[\]}])/g, '$1')
               // Fix missing commas between array elements
               .replace(/}(\s*){/g, '},\n$1{')
+              // Fix missing commas between object properties
+              .replace(/}(\s*)"([^"]+)":/g, '},\n$1"$2":')
               // Fix incomplete array elements
               .replace(/,(\s*)$/, '$1')
+              // Fix incomplete string values (common in tools responses)
+              .replace(/"([^"]*)\n/g, '"$1",\n')
               .trim();
               
             // Ensure it ends properly
@@ -205,6 +209,7 @@ serve(async (req) => {
         hasStructuredPlan: !!generatedContent.structured_plan,
         hasComprehensivePlan: !!generatedContent.comprehensive_plan,
         componentCounts: generatedContent.components ? {
+          tools: generatedContent.components.tools?.length || 0,
           prompts: generatedContent.components.prompts?.length || 0,
           workflows: generatedContent.components.workflows?.length || 0,
           blueprints: generatedContent.components.blueprints?.length || 0,
