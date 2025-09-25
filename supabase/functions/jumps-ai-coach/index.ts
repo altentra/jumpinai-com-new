@@ -24,7 +24,7 @@ serve(async (req) => {
       return new Response(JSON.stringify({ 
         error: 'xAI API key not configured',
         full_content: 'Service configuration error. Please contact support.',
-        components: { prompts: [], workflows: [], blueprints: [], strategies: [] }
+        components: { tools: [], prompts: [], workflows: [], blueprints: [], strategies: [] }
       }), {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -246,7 +246,7 @@ serve(async (req) => {
       full_content: `Sorry, there was an error generating Step ${step} of your Jump in AI plan with xAI Grok-4-fast. Please try again.`,
       structured_plan: null,
       comprehensive_plan: null,
-      components: { prompts: [], workflows: [], blueprints: [], strategies: [] }
+      components: { tools: [], prompts: [], workflows: [], blueprints: [], strategies: [] }
     }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
