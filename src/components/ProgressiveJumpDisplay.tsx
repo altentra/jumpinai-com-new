@@ -1,5 +1,5 @@
 import React from 'react';
-import { Loader2, CheckCircle, Clock, Zap, Timer } from 'lucide-react';
+import { Loader2, CheckCircle, Clock, Zap, Timer, Copy, Check } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
@@ -8,6 +8,7 @@ import { formatAIText } from '@/utils/aiTextFormatter';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import type { ProgressiveResult } from '@/hooks/useProgressiveGeneration';
+import { toast } from 'sonner';
 
 interface ProgressiveJumpDisplayProps {
   result: ProgressiveResult;
@@ -18,6 +19,27 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
   result, 
   generationTimer 
 }) => {
+  const [copiedPrompts, setCopiedPrompts] = React.useState<Set<number>>(new Set());
+
+  const handleCopyPrompt = async (promptText: string, index: number) => {
+    try {
+      await navigator.clipboard.writeText(promptText);
+      setCopiedPrompts(prev => new Set([...prev, index]));
+      toast.success("Prompt copied to clipboard!");
+      
+      // Reset the copied state after 2 seconds
+      setTimeout(() => {
+        setCopiedPrompts(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(index);
+          return newSet;
+        });
+      }, 2000);
+    } catch (error) {
+      toast.error("Failed to copy prompt");
+    }
+  };
+
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
@@ -221,19 +243,47 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/12 via-accent/8 to-secondary/12 dark:from-primary/8 dark:via-accent/6 dark:to-secondary/8 rounded-lg blur-sm opacity-20"></div>
                   <Card className="relative glass-dark border-white/12 dark:border-white/8 backdrop-blur-lg bg-gradient-to-br from-white/4 via-white/2 to-white/1 dark:from-black/10 dark:via-black/5 dark:to-black/2">
                     <div className="absolute inset-0 bg-gradient-to-br from-primary/1.5 via-transparent to-secondary/1.5 dark:from-primary/1 dark:via-transparent dark:to-secondary/1 rounded-lg"></div>
-                    <CardHeader className="pb-2">
-                      <CardTitle className="flex items-center gap-2 text-sm">
-                        {getStatusIcon(result.processing_status.isComplete, !!prompt)}
-                        {prompt ? prompt.title : `AI Prompt ${index + 1}`}
-                      </CardTitle>
-                    </CardHeader>
+                     <CardHeader className="pb-2">
+                       <CardTitle className="flex items-center justify-between text-sm">
+                         <div className="flex items-center gap-2">
+                           {getStatusIcon(result.processing_status.isComplete, !!prompt)}
+                           {prompt ? prompt.title : `AI Prompt ${index + 1}`}
+                         </div>
+                         {prompt && (
+                           <div className="relative group">
+                             <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/10 via-accent/5 to-secondary/10 rounded-lg blur-sm opacity-20 group-hover:opacity-40 transition-opacity duration-300"></div>
+                             <button
+                               onClick={() => handleCopyPrompt(prompt.prompt_text, index)}
+                               className="relative px-3 py-1.5 glass backdrop-blur-xl border border-border/30 hover:border-primary/40 transition-all duration-300 rounded-lg shadow-sm hover:shadow-md bg-gradient-to-br from-background/60 to-background/40 dark:bg-gradient-to-br dark:from-gray-950/60 dark:to-gray-900/40 hover:scale-105 active:scale-95 group overflow-hidden"
+                             >
+                               <div className="absolute inset-0 bg-gradient-to-br from-primary/3 via-transparent to-secondary/3 rounded-lg"></div>
+                               <div className="absolute inset-0 bg-gradient-to-r from-white/8 via-transparent to-white/8 dark:from-white/6 dark:via-transparent dark:to-white/6 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                               
+                               <div className="relative z-10 flex items-center gap-1.5">
+                                 {copiedPrompts.has(index) ? (
+                                   <>
+                                     <Check className="w-3 h-3 text-green-500" />
+                                     <span className="text-xs font-medium text-green-500">Copied</span>
+                                   </>
+                                 ) : (
+                                   <>
+                                     <Copy className="w-3 h-3 text-muted-foreground group-hover:text-foreground transition-colors" />
+                                     <span className="text-xs font-medium text-muted-foreground group-hover:text-foreground transition-colors">Copy</span>
+                                   </>
+                                 )}
+                               </div>
+                             </button>
+                           </div>
+                         )}
+                       </CardTitle>
+                     </CardHeader>
                     <CardContent className="pt-0">
                     {prompt ? (
                       <div className="space-y-2">
                         <p className="text-sm text-muted-foreground">{prompt.description}</p>
-                        <div className="bg-muted rounded-lg p-4">
-                          <pre className="text-sm whitespace-pre-wrap">{prompt.prompt_text}</pre>
-                        </div>
+                         <div className="glass backdrop-blur-sm bg-background/50 dark:bg-background/30 rounded-xl p-4 border border-border/30">
+                           <pre className="text-sm whitespace-pre-wrap text-foreground select-text font-mono leading-relaxed">{prompt.prompt_text}</pre>
+                         </div>
                       </div>
                     ) : (
                       <div className="flex items-center justify-center h-24 text-muted-foreground">
