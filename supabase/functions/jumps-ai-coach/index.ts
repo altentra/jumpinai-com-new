@@ -385,7 +385,7 @@ RESPONSE FORMAT - EXACT JSON STRUCTURE REQUIRED:
 }
 
 Generate exactly 4 prompts with IDs 1, 2, 3, and 4.`,
-        expectedTokens: 6000
+        expectedTokens: 8000
       };
 
     case 4: // Workflows
@@ -430,7 +430,7 @@ RESPONSE FORMAT - EXACT JSON STRUCTURE REQUIRED:
 }
 
 Generate exactly 4 workflows with IDs 1, 2, 3, and 4. Each workflow should have 5-10 detailed steps.`,
-        expectedTokens: 8000
+        expectedTokens: 10000
       };
 
     case 5: // Blueprints
