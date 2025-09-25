@@ -249,14 +249,14 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                     <CardHeader className="pb-3">
                       <CardTitle className="flex items-center gap-2 text-base">
                         <Wrench className="w-5 h-5 text-primary" />
-                        {tool.website_url ? (
+                        {(tool.website_url || tool.url || tool.website) ? (
                           <a 
-                            href={tool.website_url} 
+                            href={tool.website_url || tool.url || tool.website || '#'} 
                             target="_blank" 
                             rel="noopener noreferrer"
-                            className="hover:text-primary transition-colors underline text-foreground font-semibold hover:underline-offset-4"
+                            className="hover:text-primary transition-colors text-foreground font-semibold hover:underline decoration-2 underline-offset-2 decoration-primary/60 hover:decoration-primary"
                           >
-                            {tool.name}
+                            {tool.name} 🔗
                           </a>
                         ) : (
                           <span className="text-foreground font-semibold">{tool.name}</span>

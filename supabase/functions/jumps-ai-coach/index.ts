@@ -337,7 +337,7 @@ RESPONSE FORMAT - EXACT JSON STRUCTURE REQUIRED:
         "name": "Specific AI Tool Name",
         "category": "Tool category (e.g., 'Language Models', 'Computer Vision', 'Data Analytics')",
         "description": "Tool overview in 2-3 concise sentences (50-80 words) - describe core functionality and main benefits clearly",
-        "website_url": "https://official-tool-website.com (provide actual working URL to the tool)",
+        "website_url": "https://actual-working-website.com (MANDATORY: provide the real, official website URL for this tool - this MUST be a working link users can click)",
         "primary_use_case": "Primary use case within the strategic plan with specific applications",
         "when_to_use": "Clear explanation (4-6 sentences, 60-100 words) of WHEN this tool should be used - be specific about phases and optimal timing",
         "how_to_integrate": "Practical integration guidance (4-6 sentences, 60-100 words) explaining HOW to implement this tool - include key setup steps and workflow positioning",
@@ -353,7 +353,10 @@ RESPONSE FORMAT - EXACT JSON STRUCTURE REQUIRED:
 
 IMPORTANT: Generate between 2-12+ tools depending on the complexity of the goals. Simple goals = 2-4 tools. Complex multi-faceted goals involving video, audio, images, apps, etc. = 8-12+ tools. Focus on quality and relevance over quantity.
 
-CRITICAL: Ensure ALL tools have balanced content - each tool should have consistently similar amounts of text in each section. Do not write extensive details for the first few tools and brief content for the later ones. Maintain consistent quality and detail level across ALL generated tools.`,
+CRITICAL REQUIREMENTS:
+1. WEBSITE URLs: Every tool MUST have a real, working website_url. Examples: ChatGPT = "https://chat.openai.com", Claude = "https://claude.ai", Midjourney = "https://midjourney.com", etc.
+2. BALANCED CONTENT: Ensure ALL tools have consistently similar amounts of text in each section. Do not write extensive details for the first few tools and brief content for the later ones.
+3. REAL TOOLS: Only suggest actual, existing AI tools with real websites that users can visit immediately.`,
         expectedTokens: 7000
       };
 
