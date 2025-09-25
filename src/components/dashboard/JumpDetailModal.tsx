@@ -4,13 +4,11 @@ import { Badge } from "@/components/ui/badge";
 import { Download, Calendar } from "lucide-react";
 import { UserJump } from "@/services/jumpService";
 import { format } from "date-fns";
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
 import { generateJumpPDF } from '@/utils/pdfGenerator';
-import JumpPlanDisplay from './JumpPlanDisplay';
-import ComprehensiveJumpDisplay from './ComprehensiveJumpDisplay';
-import { safeParseJSON } from '@/utils/safeJson';
+import UnifiedJumpDisplay from './UnifiedJumpDisplay';
 import ErrorBoundary from '@/components/common/ErrorBoundary';
+import { useState, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 
 interface JumpDetailModalProps {
   jump: UserJump | null;
@@ -19,7 +17,43 @@ interface JumpDetailModalProps {
 }
 
 export default function JumpDetailModal({ jump, isOpen, onClose }: JumpDetailModalProps) {
+  const [components, setComponents] = useState<any>({});
+  const [loading, setLoading] = useState(false);
+
   if (!jump) return null;
+
+  // Load jump components when modal opens
+  useEffect(() => {
+    if (isOpen && jump) {
+      loadJumpComponents();
+    }
+  }, [isOpen, jump?.id]);
+
+  const loadJumpComponents = async () => {
+    if (!jump) return;
+    
+    setLoading(true);
+    try {
+      const [promptsRes, workflowsRes, blueprintsRes, strategiesRes] = await Promise.all([
+        supabase.from('user_prompts').select('*').eq('jump_id', jump.id),
+        supabase.from('user_workflows').select('*').eq('jump_id', jump.id),
+        supabase.from('user_blueprints').select('*').eq('jump_id', jump.id),
+        supabase.from('user_strategies').select('*').eq('jump_id', jump.id)
+      ]);
+
+      setComponents({
+        prompts: promptsRes.data || [],
+        workflows: workflowsRes.data || [],
+        blueprints: blueprintsRes.data || [],
+        strategies: strategiesRes.data || [],
+        tools: [] // Tools are usually embedded in the content, not stored separately
+      });
+    } catch (error) {
+      console.error('Error loading jump components:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const formatDate = (dateString: string) => {
     return format(new Date(dateString), 'MMM dd, yyyy \'at\' HH:mm');
@@ -76,12 +110,16 @@ export default function JumpDetailModal({ jump, isOpen, onClose }: JumpDetailMod
               </div>
             }
           >
-            <JumpPlanDisplay
-              planContent={jump.full_content}
-              structuredPlan={jump.comprehensive_plan || jump.structured_plan}
-              onEdit={() => {}}
-              onDownload={downloadPlan}
-            />
+            {loading ? (
+              <div className="flex items-center justify-center h-32">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+              </div>
+            ) : (
+              <UnifiedJumpDisplay
+                jump={jump}
+                components={components}
+              />
+            )}
           </ErrorBoundary>
         </div>
       </DialogContent>
