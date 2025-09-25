@@ -394,7 +394,7 @@ const JumpinAIStudio = () => {
                           <button
                             onClick={handleGenerate}
                             disabled={isGenerating || (!isAuthenticated && !guestCanUse)}
-                            className="relative w-full max-w-4xl px-24 py-6 bg-gradient-to-r from-primary via-primary/95 to-primary text-primary-foreground rounded-full font-semibold text-lg shadow-2xl border border-primary/20 dark:border-primary/30 backdrop-blur-xl hover:scale-[1.02] hover:shadow-3xl hover:shadow-primary/40 active:scale-98 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 transition-all duration-500 overflow-hidden group"
+                            className="relative w-full max-w-4xl px-24 py-4 bg-gradient-to-r from-primary via-primary/95 to-primary text-primary-foreground rounded-full font-semibold text-lg shadow-2xl border border-primary/20 dark:border-primary/30 backdrop-blur-xl hover:scale-[1.02] hover:shadow-3xl hover:shadow-primary/40 active:scale-98 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 transition-all duration-500 overflow-hidden group"
                           >
                             {/* Enhanced inner effects */}
                             <div className="absolute inset-0 bg-gradient-to-r from-white/20 via-transparent to-white/20 dark:from-white/15 dark:via-transparent dark:to-white/15 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -402,7 +402,7 @@ const JumpinAIStudio = () => {
                             
                             <div className="relative z-10 flex items-center justify-center gap-3">
                               {isGenerating ? (
-                                <div className="flex flex-col items-center gap-2 min-h-[40px]">
+                                <div className="flex flex-col items-center gap-2 min-h-[30px]">
                                   <div className="flex items-center gap-3">
                                     <Loader2 className="w-5 h-5 animate-spin" />
                                     <span className="font-medium">{processingStatus.stage}</span>
@@ -415,10 +415,7 @@ const JumpinAIStudio = () => {
                                   </div>
                                 </div>
                               ) : (
-                                <div className="flex items-center gap-3">
-                                  <Zap className="w-5 h-5" />
-                                  <span>Generate My Jump</span>
-                                </div>
+                                <span>Generate My Jump in AI</span>
                               )}
                             </div>
                           </button>
