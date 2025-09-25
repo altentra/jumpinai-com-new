@@ -264,9 +264,9 @@ Make sure all content is practical, actionable, and tailored to the specific goa
     // Create AbortController for timeout handling
     const controller = new AbortController();
     const timeoutId = setTimeout(() => {
-      console.error('⏰ Request timed out after 5 minutes');
+      console.error('⏰ Request timed out after 3 minutes');
       controller.abort();
-    }, 300000); // 5 minute timeout for 30k tokens
+    }, 180000); // 3 minute timeout for 30k tokens
     
     console.log('🌐 Initiating fetch to OpenAI...');
     
