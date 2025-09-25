@@ -201,25 +201,34 @@ const UnifiedJumpDisplay: React.FC<UnifiedJumpDisplayProps> = ({ jump, component
                 <CardTitle className="text-base text-foreground">Implementation Plan</CardTitle>
               </CardHeader>
               <CardContent className="pt-0 relative z-10">
-                 {(jump.comprehensive_plan || jump.structured_plan) ? (
-                  <div className="space-y-4">
-                    {(jump.comprehensive_plan || jump.structured_plan)?.overview && (
-                      <p className="text-foreground select-text">{(jump.comprehensive_plan || jump.structured_plan).overview}</p>
-                    )}
-                    <div className="grid gap-4">
-                     {(jump.comprehensive_plan || jump.structured_plan)?.phases?.map((phase: any, index: number) => (
-                        <div key={index} className="glass backdrop-blur-sm border border-border/30 rounded-2xl p-4 bg-background/50">
-                          <h3 className="font-semibold mb-2 text-foreground select-text">
-                            Phase {phase.phase_number || index + 1}: {phase.title || phase.name || 'Unnamed Phase'}
-                          </h3>
-                          <p className="text-sm text-foreground mb-2 select-text">
-                            Duration: {phase.duration || phase.timeline || 'Not specified'}
-                          </p>
-                          <p className="text-sm text-foreground select-text">{phase.description || 'No description available'}</p>
+                {jump.comprehensive_plan || jump.structured_plan ? (
+                  (() => {
+                    // Get the correct phases array based on data structure
+                    const planData = jump.comprehensive_plan || jump.structured_plan;
+                    const phases = planData?.action_plan?.phases || planData?.phases || [];
+                    const overview = planData?.overview || planData?.executive_summary || '';
+                    
+                    return (
+                      <div className="space-y-4">
+                        {overview && (
+                          <p className="text-foreground select-text">{overview}</p>
+                        )}
+                        <div className="grid gap-4">
+                          {phases.map((phase: any, index: number) => (
+                            <div key={index} className="glass backdrop-blur-sm border border-border/30 rounded-2xl p-4 bg-background/50">
+                              <h3 className="font-semibold mb-2 text-foreground select-text">
+                                Phase {phase.phase_number || index + 1}: {phase.title || phase.name || 'Unnamed Phase'}
+                              </h3>
+                              <p className="text-sm text-foreground mb-2 select-text">
+                                Duration: {phase.duration || phase.timeline || 'Not specified'}
+                              </p>
+                              <p className="text-sm text-foreground select-text">{phase.description || 'No description available'}</p>
+                            </div>
+                          ))}
                         </div>
-                      )) || []}
-                    </div>
-                  </div>
+                      </div>
+                    );
+                  })()
                 ) : (
                   <div className="text-center py-8 text-muted-foreground">
                     <p>No implementation plan available for this jump.</p>
