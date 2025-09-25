@@ -40,12 +40,21 @@ export default function JumpDetailModal({ jump, isOpen, onClose }: JumpDetailMod
     
     setLoading(true);
     try {
+      console.log('Loading components for jump:', jump.id);
+      
       const [promptsRes, workflowsRes, blueprintsRes, strategiesRes] = await Promise.all([
         supabase.from('user_prompts').select('*').eq('jump_id', jump.id),
         supabase.from('user_workflows').select('*').eq('jump_id', jump.id),
         supabase.from('user_blueprints').select('*').eq('jump_id', jump.id),
         supabase.from('user_strategies').select('*').eq('jump_id', jump.id)
       ]);
+
+      console.log('Components loaded:', {
+        prompts: promptsRes.data?.length || 0,
+        workflows: workflowsRes.data?.length || 0,
+        blueprints: blueprintsRes.data?.length || 0,
+        strategies: strategiesRes.data?.length || 0
+      });
 
       // Extract tools from jump content or provide empty array
       const extractedTools = jump.full_content ? extractToolsFromContent(jump.full_content) : [];
@@ -59,6 +68,14 @@ export default function JumpDetailModal({ jump, isOpen, onClose }: JumpDetailMod
       });
     } catch (error) {
       console.error('Error loading jump components:', error);
+      // Set empty components to prevent black screen
+      setComponents({
+        prompts: [],
+        workflows: [],
+        blueprints: [],
+        strategies: [],
+        tools: []
+      });
     } finally {
       setLoading(false);
     }
@@ -124,10 +141,14 @@ export default function JumpDetailModal({ jump, isOpen, onClose }: JumpDetailMod
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
               </div>
             ) : (
-              <UnifiedJumpDisplay
-                jump={jump}
-                components={components}
-              />
+              <div className="space-y-4">
+                {jump && (
+                  <UnifiedJumpDisplay
+                    jump={jump}
+                    components={components}
+                  />
+                )}
+              </div>
             )}
           </ErrorBoundary>
         </div>

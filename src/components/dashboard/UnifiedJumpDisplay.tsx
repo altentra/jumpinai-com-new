@@ -20,8 +20,38 @@ interface UnifiedJumpDisplayProps {
   };
 }
 
-const UnifiedJumpDisplay: React.FC<UnifiedJumpDisplayProps> = ({ jump, components }) => {
+const UnifiedJumpDisplay: React.FC<UnifiedJumpDisplayProps> = ({ jump, components = {} }) => {
   const [copiedPrompts, setCopiedPrompts] = React.useState<Set<number>>(new Set());
+
+  // Safety check for jump data
+  if (!jump) {
+    return (
+      <div className="text-center py-8 text-muted-foreground">
+        <p>No jump data available</p>
+      </div>
+    );
+  }
+
+  // Ensure components have default values
+  const safeComponents = {
+    tools: components?.tools || [],
+    prompts: components?.prompts || [],
+    workflows: components?.workflows || [],
+    blueprints: components?.blueprints || [],
+    strategies: components?.strategies || []
+  };
+
+  console.log('UnifiedJumpDisplay rendering with:', {
+    jumpId: jump.id,
+    jumpTitle: jump.title,
+    componentCounts: {
+      tools: safeComponents.tools.length,
+      prompts: safeComponents.prompts.length,
+      workflows: safeComponents.workflows.length,
+      blueprints: safeComponents.blueprints.length,
+      strategies: safeComponents.strategies.length
+    }
+  });
 
   const handleCopyPrompt = async (promptText: string, index: number) => {
     try {
@@ -43,8 +73,8 @@ const UnifiedJumpDisplay: React.FC<UnifiedJumpDisplayProps> = ({ jump, component
   };
 
   // Parse jump number and name from title
-  const jumpNumber = jump.title.match(/Jump #(\d+)/)?.[1];
-  const jumpName = jump.title.replace(/Jump #\d+:\s*/, '');
+  const jumpNumber = jump?.title?.match(/Jump #(\d+)/)?.[1] || '';
+  const jumpName = jump?.title?.replace(/Jump #\d+:\s*/, '') || jump?.title || 'Untitled Jump';
 
   return (
     <div className="w-full space-y-4">
@@ -60,8 +90,8 @@ const UnifiedJumpDisplay: React.FC<UnifiedJumpDisplayProps> = ({ jump, component
               <div className="flex items-center gap-3">
                 <Zap className="w-5 h-5 text-primary" />
                 <div>
-                  <h2 className="text-xl font-semibold text-foreground">
-                    {jump.title}
+                 <h2 className="text-xl font-semibold text-foreground">
+                    {jump?.title || 'Untitled Jump'}
                   </h2>
                   {jumpNumber && jumpName && (
                     <div className="flex items-center gap-2 text-sm text-muted-foreground/70 mt-1">
@@ -98,23 +128,23 @@ const UnifiedJumpDisplay: React.FC<UnifiedJumpDisplayProps> = ({ jump, component
           </TabsTrigger>
           <TabsTrigger value="tools" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
             <CheckCircle className="w-4 h-4 text-green-500" />
-            Tools ({components?.tools?.length || 0})
+            Tools ({safeComponents?.tools?.length || 0})
           </TabsTrigger>
           <TabsTrigger value="prompts" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
             <CheckCircle className="w-4 h-4 text-green-500" />
-            Prompts ({components?.prompts?.length || 0})
+            Prompts ({safeComponents?.prompts?.length || 0})
           </TabsTrigger>
           <TabsTrigger value="workflows" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
             <CheckCircle className="w-4 h-4 text-green-500" />
-            Workflows ({components?.workflows?.length || 0})
+            Workflows ({safeComponents?.workflows?.length || 0})
           </TabsTrigger>
           <TabsTrigger value="blueprints" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
             <CheckCircle className="w-4 h-4 text-green-500" />
-            Blueprints ({components?.blueprints?.length || 0})
+            Blueprints ({safeComponents?.blueprints?.length || 0})
           </TabsTrigger>
           <TabsTrigger value="strategies" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
             <CheckCircle className="w-4 h-4 text-green-500" />
-            Strategies ({components?.strategies?.length || 0})
+            Strategies ({safeComponents?.strategies?.length || 0})
           </TabsTrigger>
         </TabsList>
 
@@ -154,7 +184,7 @@ const UnifiedJumpDisplay: React.FC<UnifiedJumpDisplayProps> = ({ jump, component
                       ),
                     }}
                   >
-                    {formatAIText(jump.full_content)}
+                    {formatAIText(jump?.full_content || 'No content available')}
                   </ReactMarkdown>
                 </div>
               </CardContent>
@@ -202,8 +232,8 @@ const UnifiedJumpDisplay: React.FC<UnifiedJumpDisplayProps> = ({ jump, component
 
         <TabsContent value="tools" className="mt-4">
           <div className="grid gap-3">
-            {components?.tools && components.tools.length > 0 ? (
-              components.tools.map((tool: any, index: number) => (
+            {safeComponents?.tools && safeComponents.tools.length > 0 ? (
+              safeComponents.tools.map((tool: any, index: number) => (
                 <div key={index} className="relative group">
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/12 via-accent/8 to-secondary/12 dark:from-primary/8 dark:via-accent/6 dark:to-secondary/8 rounded-lg blur-sm opacity-20 pointer-events-none"></div>
                   <Card className="relative glass-dark border-white/12 dark:border-white/8 backdrop-blur-lg bg-gradient-to-br from-white/4 via-white/2 to-white/1 dark:from-black/10 dark:via-black/5 dark:to-black/2 hover:border-primary/30 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10">
@@ -274,8 +304,8 @@ const UnifiedJumpDisplay: React.FC<UnifiedJumpDisplayProps> = ({ jump, component
 
         <TabsContent value="prompts" className="mt-4">
           <div className="grid gap-3">
-            {components?.prompts && components.prompts.length > 0 ? (
-              components.prompts.map((prompt: any, index: number) => (
+            {safeComponents?.prompts && safeComponents.prompts.length > 0 ? (
+              safeComponents.prompts.map((prompt: any, index: number) => (
                 <div key={index} className="relative group">
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/12 via-accent/8 to-secondary/12 dark:from-primary/8 dark:via-accent/6 dark:to-secondary/8 rounded-lg blur-sm opacity-20 pointer-events-none"></div>
                   <Card className="relative glass-dark border-white/12 dark:border-white/8 backdrop-blur-lg bg-gradient-to-br from-white/4 via-white/2 to-white/1 dark:from-black/10 dark:via-black/5 dark:to-black/2">
@@ -338,8 +368,8 @@ const UnifiedJumpDisplay: React.FC<UnifiedJumpDisplayProps> = ({ jump, component
 
         <TabsContent value="workflows" className="mt-4">
           <div className="grid gap-3">
-            {components?.workflows && components.workflows.length > 0 ? (
-              components.workflows.map((workflow: any, index: number) => (
+            {safeComponents?.workflows && safeComponents.workflows.length > 0 ? (
+              safeComponents.workflows.map((workflow: any, index: number) => (
                 <div key={index} className="relative group">
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/12 via-accent/8 to-secondary/12 dark:from-primary/8 dark:via-accent/6 dark:to-secondary/8 rounded-lg blur-sm opacity-20 pointer-events-none"></div>
                   <Card className="relative glass-dark border-white/12 dark:border-white/8 backdrop-blur-lg bg-gradient-to-br from-white/4 via-white/2 to-white/1 dark:from-black/10 dark:via-black/5 dark:to-black/2">
@@ -380,8 +410,8 @@ const UnifiedJumpDisplay: React.FC<UnifiedJumpDisplayProps> = ({ jump, component
 
         <TabsContent value="blueprints" className="mt-4">
           <div className="grid gap-3">
-            {components?.blueprints && components.blueprints.length > 0 ? (
-              components.blueprints.map((blueprint: any, index: number) => (
+            {safeComponents?.blueprints && safeComponents.blueprints.length > 0 ? (
+              safeComponents.blueprints.map((blueprint: any, index: number) => (
                 <div key={index} className="relative group">
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/12 via-accent/8 to-secondary/12 dark:from-primary/8 dark:via-accent/6 dark:to-secondary/8 rounded-lg blur-sm opacity-20 pointer-events-none"></div>
                   <Card className="relative glass-dark border-white/12 dark:border-white/8 backdrop-blur-lg bg-gradient-to-br from-white/4 via-white/2 to-white/1 dark:from-black/10 dark:via-black/5 dark:to-black/2">
@@ -414,8 +444,8 @@ const UnifiedJumpDisplay: React.FC<UnifiedJumpDisplayProps> = ({ jump, component
 
         <TabsContent value="strategies" className="mt-4">
           <div className="grid gap-3">
-            {components?.strategies && components.strategies.length > 0 ? (
-              components.strategies.map((strategy: any, index: number) => (
+            {safeComponents?.strategies && safeComponents.strategies.length > 0 ? (
+              safeComponents.strategies.map((strategy: any, index: number) => (
                 <div key={index} className="relative group">
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/12 via-accent/8 to-secondary/12 dark:from-primary/8 dark:via-accent/6 dark:to-secondary/8 rounded-lg blur-sm opacity-20 pointer-events-none"></div>
                   <Card className="relative glass-dark border-white/12 dark:border-white/8 backdrop-blur-lg bg-gradient-to-br from-white/4 via-white/2 to-white/1 dark:from-black/10 dark:via-black/5 dark:to-black/2">
