@@ -385,37 +385,49 @@ const JumpinAIStudio = () => {
                         </div>
                       </div>
 
-                      {/* Premium Generate Button with Progress Display */}
+                      {/* Glass Morphism Generate Button */}
                       <div className="text-center mt-8">
                         <div className="relative inline-block group">
-                          {/* Enhanced glow effect */}
-                          <div className="absolute -inset-2 bg-gradient-to-r from-primary/40 via-primary/50 to-primary/40 dark:from-primary/30 dark:via-primary/40 dark:to-primary/30 rounded-3xl blur-xl opacity-60 group-hover:opacity-80 transition-all duration-500"></div>
+                          {/* Subtle glow backdrop */}
+                          <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 dark:from-primary/15 dark:via-accent/12 dark:to-secondary/15 rounded-full blur-xl opacity-60 group-hover:opacity-80 transition-all duration-500"></div>
                           
                           <button
                             onClick={handleGenerate}
                             disabled={isGenerating || (!isAuthenticated && !guestCanUse)}
-                            className="relative w-full max-w-4xl px-24 py-4 bg-gradient-to-r from-primary via-primary/95 to-primary text-primary-foreground rounded-full font-semibold text-lg shadow-2xl border border-primary/20 dark:border-primary/30 backdrop-blur-xl hover:scale-[1.02] hover:shadow-3xl hover:shadow-primary/40 active:scale-98 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 transition-all duration-500 overflow-hidden group"
+                            className="relative w-full max-w-4xl px-24 py-5 glass backdrop-blur-xl border border-border/40 hover:border-primary/50 focus:border-primary/60 transition-all duration-500 rounded-full shadow-xl hover:shadow-2xl hover:shadow-primary/20 bg-gradient-to-br from-background/60 to-background/40 dark:bg-gradient-to-br dark:from-gray-950/60 dark:to-gray-900/40 hover:scale-[1.02] active:scale-98 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100 group overflow-hidden"
                           >
-                            {/* Enhanced inner effects */}
-                            <div className="absolute inset-0 bg-gradient-to-r from-white/20 via-transparent to-white/20 dark:from-white/15 dark:via-transparent dark:to-white/15 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                            <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/50 dark:via-white/40 to-transparent"></div>
+                            {/* Glass morphism overlay effects */}
+                            <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-transparent to-secondary/8 dark:from-primary/6 dark:via-transparent dark:to-secondary/6 rounded-full"></div>
+                            <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/40 dark:via-white/25 to-transparent"></div>
+                            <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-transparent to-white/10 dark:from-white/8 dark:via-transparent dark:to-white/8 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                             
-                            <div className="relative z-10 flex items-center justify-center gap-3">
+                            <div className="relative z-10 flex items-center justify-center">
                               {isGenerating ? (
-                                <div className="flex flex-col items-center gap-2 min-h-[30px]">
-                                  <div className="flex items-center gap-3">
-                                    <Loader2 className="w-5 h-5 animate-spin" />
-                                    <span className="font-medium">{processingStatus.stage}</span>
-                                  </div>
-                                  <div className="flex items-center gap-2 text-sm opacity-90">
-                                    <span>{processingStatus.currentTask}</span>
-                                    {generationTimer > 0 && (
-                                      <span className="text-primary-foreground/80">({formatTime(generationTimer)})</span>
-                                    )}
+                                <div className="flex flex-col items-center gap-3 min-h-[32px]">
+                                  <div className="flex items-center gap-4">
+                                    <div className="relative">
+                                      <Loader2 className="w-5 h-5 animate-spin text-primary" />
+                                      <div className="absolute inset-0 animate-ping">
+                                        <div className="w-5 h-5 border border-primary/30 rounded-full"></div>
+                                      </div>
+                                    </div>
+                                    <div className="text-center">
+                                      <div className="font-semibold text-foreground text-lg">{processingStatus.stage}</div>
+                                      <div className="text-sm text-muted-foreground/80 mt-1">
+                                        {processingStatus.currentTask}
+                                        {generationTimer > 0 && (
+                                          <span className="ml-2 px-2 py-0.5 glass backdrop-blur-sm bg-primary/10 text-primary rounded-full text-xs font-medium border border-primary/20">
+                                            {formatTime(generationTimer)}
+                                          </span>
+                                        )}
+                                      </div>
+                                    </div>
                                   </div>
                                 </div>
                               ) : (
-                                <span>Generate My Jump in AI</span>
+                                <div className="flex items-center justify-center">
+                                  <span className="font-semibold text-foreground text-lg tracking-wide">Generate My Jump in AI</span>
+                                </div>
                               )}
                             </div>
                           </button>
