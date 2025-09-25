@@ -145,6 +145,8 @@ serve(async (req) => {
         console.log(`SUCCESS: Direct JSON parsing worked for Step ${step}`);
       } catch (e) {
         console.log(`Direct parsing failed for Step ${step}, trying basic cleanup...`);
+        console.log(`Raw response sample for Step ${step}:`, rawContent.substring(0, 500));
+        
         // Basic cleanup: remove markdown code blocks and extract JSON
         let cleanContent = rawContent
           .replace(/```json\s*/gi, '')
@@ -157,8 +159,38 @@ serve(async (req) => {
         
         if (startBrace !== -1 && lastBrace !== -1 && lastBrace > startBrace) {
           cleanContent = cleanContent.substring(startBrace, lastBrace + 1);
-          generatedContent = JSON.parse(cleanContent);
-          console.log(`SUCCESS: Basic cleanup and extraction worked for Step ${step}`);
+          
+          // Try fixing common JSON issues
+          try {
+            generatedContent = JSON.parse(cleanContent);
+            console.log(`SUCCESS: Basic cleanup and extraction worked for Step ${step}`);
+          } catch (parseError) {
+            console.log(`JSON parsing still failed for Step ${step}, trying advanced cleanup...`);
+            
+            // Advanced cleanup for malformed JSON
+            cleanContent = cleanContent
+              // Fix trailing commas in arrays
+              .replace(/,(\s*[\]}])/g, '$1')
+              // Fix missing commas between array elements
+              .replace(/}(\s*){/g, '},\n$1{')
+              // Fix incomplete array elements
+              .replace(/,(\s*)$/, '$1')
+              .trim();
+              
+            // Ensure it ends properly
+            if (!cleanContent.endsWith('}')) {
+              const openBraces = (cleanContent.match(/{/g) || []).length;
+              const closeBraces = (cleanContent.match(/}/g) || []).length;
+              const missingBraces = openBraces - closeBraces;
+              
+              for (let i = 0; i < missingBraces; i++) {
+                cleanContent += '}';
+              }
+            }
+            
+            generatedContent = JSON.parse(cleanContent);
+            console.log(`SUCCESS: Advanced cleanup worked for Step ${step}`);
+          }
         } else {
           throw new Error('No valid JSON structure found');
         }

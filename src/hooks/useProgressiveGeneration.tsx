@@ -185,13 +185,13 @@ export const useProgressiveGeneration = () => {
     setProcessingStatus({
       stage: 'Generating',
       progress: 0,
-      currentTask: 'Sending request to AI...',
+      currentTask: 'Initializing AI generation...',
       isComplete: false
     });
 
     try {
       // Show initial empty structure immediately
-      const emptyResult: ProgressiveResult = {
+      let progressiveResult: ProgressiveResult = {
         title: 'AI Transformation Jump',
         full_content: '',
         components: {
@@ -207,13 +207,85 @@ export const useProgressiveGeneration = () => {
           isComplete: false
         }
       };
-      setResult(emptyResult);
+      setResult(progressiveResult);
 
-      // Generate with OpenAI
-      const rawResponse = await jumpinAIStudioService.generateJump(formData, userId);
+      // Generate with real-time step progress
+      const rawResponse = await jumpinAIStudioService.generateJump(
+        formData, 
+        userId,
+        // Real-time progress callback
+        (step: number, stepData: any) => {
+          console.log(`Step ${step} completed:`, stepData);
+          
+          const progressMap = {
+            1: { progress: 20, task: 'Generated strategic overview and comprehensive plan...' },
+            2: { progress: 40, task: 'Generated AI prompts for your transformation...' },
+            3: { progress: 60, task: 'Generated workflow processes and procedures...' },
+            4: { progress: 80, task: 'Generated implementation blueprints...' },
+            5: { progress: 100, task: 'Generated strategic frameworks - Complete!' }
+          };
+          
+          const stepProgress = progressMap[step] || { progress: step * 20, task: `Completed step ${step}...` };
+          
+          // Update progressive result with new data
+          if (step === 1 && stepData.full_content) {
+            progressiveResult.jumpId = stepData.jumpId;
+            progressiveResult.full_content = stepData.full_content;
+            progressiveResult.structured_plan = stepData.structured_plan;
+            progressiveResult.comprehensive_plan = stepData.comprehensive_plan;
+          }
+          
+          if (stepData.components) {
+            if (stepData.components.prompts && stepData.components.prompts.length > 0) {
+              progressiveResult.components.prompts = stepData.components.prompts;
+            }
+            if (stepData.components.workflows && stepData.components.workflows.length > 0) {
+              progressiveResult.components.workflows = stepData.components.workflows;
+            }
+            if (stepData.components.blueprints && stepData.components.blueprints.length > 0) {
+              progressiveResult.components.blueprints = stepData.components.blueprints;
+            }
+            if (stepData.components.strategies && stepData.components.strategies.length > 0) {
+              progressiveResult.components.strategies = stepData.components.strategies;
+            }
+          }
+          
+          // Update status
+          progressiveResult.processing_status = {
+            stage: `Step ${step} Complete`,
+            progress: stepProgress.progress,
+            currentTask: stepProgress.task,
+            isComplete: step === 5
+          };
+          
+          setProcessingStatus(progressiveResult.processing_status);
+          setResult({ ...progressiveResult });
+        }
+      );
       
-      // Process the response progressively
-      const finalResult = await processResponseInChunks(rawResponse);
+      // Final update with complete data
+      const finalResult: ProgressiveResult = {
+        jumpId: rawResponse.jumpId,
+        title: 'AI Transformation Jump',
+        full_content: rawResponse.fullContent,
+        structured_plan: rawResponse.structuredPlan,
+        comprehensive_plan: rawResponse.comprehensivePlan,
+        components: rawResponse.components || {
+          prompts: [],
+          workflows: [],
+          blueprints: [],
+          strategies: []
+        },
+        processing_status: {
+          stage: 'Complete',
+          progress: 100,
+          currentTask: 'Jump generation complete!',
+          isComplete: true
+        }
+      };
+      
+      setResult(finalResult);
+      setProcessingStatus(finalResult.processing_status);
       
       return finalResult;
     } catch (error) {
@@ -228,7 +300,7 @@ export const useProgressiveGeneration = () => {
       console.log('Generation process finished, setting isGenerating to false');
       setIsGenerating(false);
     }
-  }, [processResponseInChunks]);
+  }, []);
 
   return {
     isGenerating,
