@@ -56,83 +56,18 @@ export const jumpinAIStudioService = {
     }
   },
 
-  // Generate Jump in AI using the edge function
-  async generateJump(formData: StudioFormData, userId?: string): Promise<GenerationResult> {
+  // Generate Jump in AI using the 5-step approach
+  async generateJump(formData: StudioFormData, userId?: string, onProgress?: (step: number, data: any) => void): Promise<GenerationResult> {
     try {
-      // Prepare the request data
-      const requestData = {
-        goals: formData.goals,
-        challenges: formData.challenges,
-        industry: formData.industry,
-        ai_experience: formData.aiExperience,
-        urgency: formData.urgency,
-        budget: formData.budget,
-        generate_components: true, // Always generate components
-      };
+      console.log('Starting 5-step Jump generation with data:', formData);
 
-      console.log('Generating Jump with data:', requestData);
-
-      // Call the jumps-ai-coach edge function 
-      const { data, error } = await supabase.functions.invoke('jumps-ai-coach', {
-        body: requestData
-      });
-
-      console.log('Edge function response:', { data, error });
-
-      if (error) {
-        console.error('Edge function error:', error);
-        throw new Error(error.message || 'Failed to generate Jump');
-      }
-
-      if (!data) {
-        console.error('No data received from edge function');
-        throw new Error('No data received from AI generation service');
-      }
-
-      console.log('Generated Jump data keys:', Object.keys(data));
-
-      let jumpId: string | undefined;
-
-      // If user is logged in, save the jump to database
-      if (userId && data && data.full_content) {
-        try {
-          console.log('Saving jump to database for user:', userId);
-          // Save form data as profile
-          await this.saveFormData(formData, userId);
-
-          // Create the jump record
-          const jumpData = {
-            title: this.extractTitle(data.full_content),
-            summary: this.extractSummary(data.full_content),
-            full_content: data.full_content,
-            structured_plan: data.structured_plan,
-            comprehensive_plan: data.comprehensive_plan,
-            jump_type: 'studio_generated',
-            status: 'active',
-            completion_percentage: 0
-          };
-
-          const createdJump = await createJump(jumpData);
-          jumpId = createdJump?.id;
-
-          console.log('Created Jump with ID:', jumpId);
-
-          // Save individual components if they exist
-          if (data.components) {
-            await this.saveComponents(data.components, userId, jumpId);
-          }
-        } catch (saveError) {
-          console.error('Error saving jump to database:', saveError);
-          // Continue without saving - user still gets the generated content
-        }
-      }
-
-      const result = {
-        jumpId,
-        fullContent: data.full_content || '',
-        structuredPlan: data.structured_plan,
-        comprehensivePlan: data.comprehensive_plan,
-        components: data.components || {
+      // Initialize the final result
+      let finalResult: GenerationResult = {
+        jumpId: undefined,
+        fullContent: '',
+        structuredPlan: null,
+        comprehensivePlan: null,
+        components: {
           prompts: [],
           workflows: [],
           blueprints: [],
@@ -140,12 +75,211 @@ export const jumpinAIStudioService = {
         }
       };
 
-      console.log('Returning result:', Object.keys(result));
-      return result;
+      let jumpId: string | undefined;
+      let overviewContent = '';
+
+      // Step 1: Generate Overview & Plan
+      console.log('🚀 Step 1: Generating Overview & Plan...');
+      const step1Data = await this.executeStep(1, formData, '');
+      
+      if (step1Data.success) {
+        finalResult.fullContent = step1Data.full_content || '';
+        finalResult.structuredPlan = step1Data.structured_plan;
+        finalResult.comprehensivePlan = step1Data.comprehensive_plan;
+        overviewContent = step1Data.full_content || '';
+
+        // Save the jump to database if user is logged in
+        if (userId && step1Data.full_content) {
+          try {
+            console.log('Saving jump to database for user:', userId);
+            await this.saveFormData(formData, userId);
+
+            const jumpData = {
+              title: this.extractTitle(step1Data.full_content),
+              summary: this.extractSummary(step1Data.full_content),
+              full_content: step1Data.full_content,
+              structured_plan: step1Data.structured_plan,
+              comprehensive_plan: step1Data.comprehensive_plan,
+              jump_type: 'studio_generated',
+              status: 'active',
+              completion_percentage: 20
+            };
+
+            const createdJump = await createJump(jumpData);
+            jumpId = createdJump?.id;
+            finalResult.jumpId = jumpId;
+            console.log('Created Jump with ID:', jumpId);
+          } catch (saveError) {
+            console.error('Error saving jump to database:', saveError);
+          }
+        }
+
+        // Report progress
+        if (onProgress) {
+          onProgress(1, { ...step1Data, jumpId });
+        }
+      } else {
+        throw new Error(`Step 1 failed: ${step1Data.error}`);
+      }
+
+      // Step 2: Generate Prompts
+      console.log('🚀 Step 2: Generating Prompts...');
+      const step2Data = await this.executeStep(2, formData, overviewContent);
+      
+      if (step2Data.success && step2Data.components?.prompts) {
+        finalResult.components.prompts = step2Data.components.prompts;
+        
+        // Save prompts to database
+        if (userId && jumpId) {
+          await this.saveComponents({ prompts: step2Data.components.prompts }, userId, jumpId);
+          await this.updateJumpProgress(jumpId, 40);
+        }
+
+        if (onProgress) {
+          onProgress(2, step2Data);
+        }
+      }
+
+      // Step 3: Generate Workflows
+      console.log('🚀 Step 3: Generating Workflows...');
+      const step3Data = await this.executeStep(3, formData, overviewContent);
+      
+      if (step3Data.success && step3Data.components?.workflows) {
+        finalResult.components.workflows = step3Data.components.workflows;
+        
+        // Save workflows to database
+        if (userId && jumpId) {
+          await this.saveComponents({ workflows: step3Data.components.workflows }, userId, jumpId);
+          await this.updateJumpProgress(jumpId, 60);
+        }
+
+        if (onProgress) {
+          onProgress(3, step3Data);
+        }
+      }
+
+      // Step 4: Generate Blueprints
+      console.log('🚀 Step 4: Generating Blueprints...');
+      const step4Data = await this.executeStep(4, formData, overviewContent);
+      
+      if (step4Data.success && step4Data.components?.blueprints) {
+        finalResult.components.blueprints = step4Data.components.blueprints;
+        
+        // Save blueprints to database
+        if (userId && jumpId) {
+          await this.saveComponents({ blueprints: step4Data.components.blueprints }, userId, jumpId);
+          await this.updateJumpProgress(jumpId, 80);
+        }
+
+        if (onProgress) {
+          onProgress(4, step4Data);
+        }
+      }
+
+      // Step 5: Generate Strategies
+      console.log('🚀 Step 5: Generating Strategies...');
+      const step5Data = await this.executeStep(5, formData, overviewContent);
+      
+      if (step5Data.success && step5Data.components?.strategies) {
+        finalResult.components.strategies = step5Data.components.strategies;
+        
+        // Save strategies to database
+        if (userId && jumpId) {
+          await this.saveComponents({ strategies: step5Data.components.strategies }, userId, jumpId);
+          await this.updateJumpProgress(jumpId, 100);
+        }
+
+        if (onProgress) {
+          onProgress(5, step5Data);
+        }
+      }
+
+      console.log('✅ All 5 steps completed successfully!');
+      console.log('Final result:', {
+        jumpId: finalResult.jumpId,
+        hasFullContent: !!finalResult.fullContent,
+        componentCounts: {
+          prompts: finalResult.components.prompts.length,
+          workflows: finalResult.components.workflows.length,
+          blueprints: finalResult.components.blueprints.length,
+          strategies: finalResult.components.strategies.length
+        }
+      });
+
+      return finalResult;
 
     } catch (error) {
-      console.error('Error generating Jump:', error);
+      console.error('Error in 5-step Jump generation:', error);
       throw error;
+    }
+  },
+
+  // Execute a single step of the generation process
+  async executeStep(step: number, formData: StudioFormData, overviewContent: string): Promise<any> {
+    try {
+      const requestData = {
+        goals: formData.goals,
+        challenges: formData.challenges,
+        industry: formData.industry,
+        ai_experience: formData.aiExperience,
+        urgency: formData.urgency,
+        budget: formData.budget,
+        step: step,
+        overview_content: overviewContent
+      };
+
+      console.log(`Executing Step ${step} with data:`, requestData);
+
+      const { data, error } = await supabase.functions.invoke('jumps-ai-coach', {
+        body: requestData
+      });
+
+      console.log(`Step ${step} response:`, { data, error });
+
+      if (error) {
+        console.error(`Step ${step} error:`, error);
+        return {
+          success: false,
+          error: error.message || `Failed to generate Step ${step}`,
+          step: step
+        };
+      }
+
+      if (!data) {
+        console.error(`No data received from Step ${step}`);
+        return {
+          success: false,
+          error: `No data received from Step ${step}`,
+          step: step
+        };
+      }
+
+      return {
+        ...data,
+        success: true,
+        step: step
+      };
+
+    } catch (error) {
+      console.error(`Error executing Step ${step}:`, error);
+      return {
+        success: false,
+        error: error.message || `Failed to execute Step ${step}`,
+        step: step
+      };
+    }
+  },
+
+  // Update jump progress
+  async updateJumpProgress(jumpId: string, percentage: number): Promise<void> {
+    try {
+      await supabase
+        .from('user_jumps')
+        .update({ completion_percentage: percentage })
+        .eq('id', jumpId);
+      console.log(`Updated jump ${jumpId} progress to ${percentage}%`);
+    } catch (error) {
+      console.error('Error updating jump progress:', error);
     }
   },
 

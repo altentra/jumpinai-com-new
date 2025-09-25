@@ -30,29 +30,187 @@ serve(async (req) => {
 
     console.log('✅ OpenAI API key is available');
 
-    const { goals, challenges, industry, ai_experience, urgency, budget, generate_components } = await req.json();
+    const { goals, challenges, industry, ai_experience, urgency, budget, step = 1, overview_content = '' } = await req.json();
 
-    console.log('🚀 Generating Jump with parameters:', { goals, challenges, industry, ai_experience, urgency, budget });
+    console.log('🚀 Generating Jump Step', step, 'with parameters:', { goals, challenges, industry, ai_experience, urgency, budget });
 
-    const systemPrompt = `You are JumpinAI, the world's leading AI transformation consultant with expertise across all industries. You create comprehensive, detailed, professional-grade AI transformation plans called "Jumps" that serve as complete business transformation guides.
+    // Get the appropriate system prompt and user prompt based on step
+    const { systemPrompt, userPrompt, expectedTokens } = getStepPrompts(step, {
+      goals, challenges, industry, ai_experience, urgency, budget, overview_content
+    });
 
-CRITICAL RESPONSE REQUIREMENTS:
-- You MUST respond with ONLY valid JSON format
-- NO markdown formatting, code blocks, or extra text
-- Every section must be COMPREHENSIVE and DETAILED (minimum 200-500 words per major section)
-- This is a PREMIUM professional service - deliver world-class, consultancy-grade content
+    console.log('📡 Sending Step', step, 'request to OpenAI API...');
 
-CONTENT QUALITY STANDARDS:
-- Full strategic action plan: Detailed multi-phase implementation roadmap with specific timelines, milestones, and success metrics
-- Professional AI Prompts: Each prompt must be 150-300 words, expertly crafted with clear instructions, context, and expected outputs
-- Comprehensive Workflows: Step-by-step processes with detailed descriptions, tool requirements, time estimates, and deliverables
-- Strategic Blueprints: Complete architectural guides with implementation details, best practices, and technical specifications
-- Strategic Frameworks: Professional frameworks with detailed methodologies, assessment criteria, and implementation guidance
+    console.log('🤖 Making OpenAI API request with model: gpt-5-2025-08-07 for step:', step);
+    
+    const requestBody = {
+      model: 'gpt-5-2025-08-07',
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userPrompt }
+      ],
+      max_completion_tokens: expectedTokens, // Adjusted per step
+    };
 
-You are creating a premium AI transformation package worth $10,000+ in consulting value. Every component must reflect this level of quality and depth.`;
+    console.log('📋 Request body prepared for step', step, ':', {
+      model: requestBody.model,
+      messageCount: requestBody.messages.length,
+      systemPromptLength: systemPrompt.length,
+      userPromptLength: userPrompt.length,
+      maxTokens: requestBody.max_completion_tokens,
+      step: step
+    });
+    
+    // Create AbortController for timeout handling - shorter timeout per step
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => {
+      console.error(`⏰ Step ${step} request timed out after 2 minutes`);
+      controller.abort();
+    }, 120000); // 2 minute timeout per step
+    
+    console.log('🌐 Initiating fetch to OpenAI...');
+    
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${openAIApiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody),
+      signal: controller.signal,
+    }).catch(fetchError => {
+      console.error('🚨 Fetch error occurred:', fetchError.name, fetchError.message);
+      if (fetchError.name === 'AbortError') {
+        throw new Error('Request timed out - OpenAI took too long to respond');
+      }
+      throw new Error(`Network error: ${fetchError.message}`);
+    });
+    
+    clearTimeout(timeoutId);
+    console.log(`✅ Step ${step} response received from OpenAI`);
 
-    const userPrompt = `Create a COMPREHENSIVE, PROFESSIONAL-GRADE "Jump in AI" transformation plan based on these requirements:
+    console.log(`OpenAI Step ${step} response status:`, response.status, response.statusText);
 
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`OpenAI API error details for Step ${step}:`, {
+        status: response.status,
+        statusText: response.statusText,
+        error: errorText,
+        model: 'gpt-5-2025-08-07',
+        step: step,
+        maxTokens: expectedTokens,
+        headers: response.headers,
+        url: response.url
+      });
+      throw new Error(`OpenAI API error for Step ${step}: ${response.status} - ${errorText}`);
+    }
+
+    const data = await response.json();
+    console.log(`OpenAI Step ${step} response received successfully:`, {
+      usage: data.usage,
+      model: data.model,
+      finishReason: data.choices?.[0]?.finish_reason,
+      hasContent: !!data.choices?.[0]?.message?.content,
+      contentLength: data.choices?.[0]?.message?.content?.length || 0,
+      step: step
+    });
+
+    let generatedContent;
+    const rawContent = data.choices[0].message.content;
+    
+    try {
+      console.log(`Raw OpenAI Step ${step} response length:`, rawContent.length);
+      console.log(`Raw OpenAI Step ${step} response preview:`, rawContent.substring(0, 200));
+      
+      // Simplified parsing - try direct JSON first, then basic cleanup
+      try {
+        generatedContent = JSON.parse(rawContent);
+        console.log(`SUCCESS: Direct JSON parsing worked for Step ${step}`);
+      } catch (e) {
+        console.log(`Direct parsing failed for Step ${step}, trying basic cleanup...`);
+        // Basic cleanup: remove markdown code blocks and extract JSON
+        let cleanContent = rawContent
+          .replace(/```json\s*/gi, '')
+          .replace(/```\s*/gi, '')
+          .trim();
+        
+        // Extract JSON between first { and last }
+        const startBrace = cleanContent.indexOf('{');
+        const lastBrace = cleanContent.lastIndexOf('}');
+        
+        if (startBrace !== -1 && lastBrace !== -1 && lastBrace > startBrace) {
+          cleanContent = cleanContent.substring(startBrace, lastBrace + 1);
+          generatedContent = JSON.parse(cleanContent);
+          console.log(`SUCCESS: Basic cleanup and extraction worked for Step ${step}`);
+        } else {
+          throw new Error('No valid JSON structure found');
+        }
+      }
+      
+      // Step-specific validation
+      generatedContent = validateStepResponse(generatedContent, step, rawContent);
+      
+      console.log(`Parsed Step ${step} content successfully:`, {
+        step: step,
+        hasFullContent: !!generatedContent.full_content,
+        hasStructuredPlan: !!generatedContent.structured_plan,
+        hasComprehensivePlan: !!generatedContent.comprehensive_plan,
+        componentCounts: generatedContent.components ? {
+          prompts: generatedContent.components.prompts?.length || 0,
+          workflows: generatedContent.components.workflows?.length || 0,
+          blueprints: generatedContent.components.blueprints?.length || 0,
+          strategies: generatedContent.components.strategies?.length || 0
+        } : null
+      });
+      
+    } catch (parseError) {
+      console.error(`JSON parsing failed for Step ${step}:`, parseError);
+      console.error(`Raw response sample for Step ${step}:`, rawContent.substring(0, 500));
+      
+      // Step-specific fallback response
+      generatedContent = getStepFallbackResponse(step, rawContent);
+    }
+
+    console.log(`Generated Step ${step} content structure:`, Object.keys(generatedContent));
+
+    return new Response(JSON.stringify({ 
+      ...generatedContent,
+      step: step,
+      success: true 
+    }), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+
+  } catch (error: any) {
+    console.error(`Error in jumps-ai-coach function Step ${step}:`, error);
+    
+    // Log more details about the error
+    if (error.name === 'AbortError') {
+      console.error(`Step ${step} request timed out after 2 minutes`);
+    }
+    
+    return new Response(JSON.stringify({ 
+      error: error.message,
+      errorType: error.name || 'UnknownError',
+      step: step,
+      success: false,
+      full_content: `Sorry, there was an error generating Step ${step} of your Jump in AI plan. Please try again.`,
+      structured_plan: null,
+      comprehensive_plan: null,
+      components: { prompts: [], workflows: [], blueprints: [], strategies: [] }
+    }), {
+      status: 500,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  }
+});
+
+// Step-specific prompt generation
+function getStepPrompts(step: number, context: any) {
+  const { goals, challenges, industry, ai_experience, urgency, budget, overview_content } = context;
+
+  const baseContext = `
 **BUSINESS CONTEXT:**
 - Goals: ${goals}
 - Challenges: ${challenges}
@@ -60,56 +218,19 @@ You are creating a premium AI transformation package worth $10,000+ in consultin
 - AI Experience Level: ${ai_experience || 'Beginner'}
 - Timeline Urgency: ${urgency || 'Standard timeline'}
 - Budget Constraints: ${budget || 'Moderate'}
+`;
 
-**DELIVERABLE REQUIREMENTS - PREMIUM CONSULTING GRADE:**
+  switch (step) {
+    case 1: // Overview & Plan
+      return {
+        systemPrompt: `You are JumpinAI, the world's leading AI transformation consultant. You create comprehensive strategic action plans for AI transformation. Respond ONLY in valid JSON format.`,
+        userPrompt: `Create a comprehensive strategic action plan based on these requirements:
 
-**FULL STRATEGIC PLAN:** Provide a comprehensive 1000+ word strategic action plan with:
-- Executive summary with key transformation opportunities
-- Detailed phase-by-phase implementation roadmap (3-6 phases)
-- Specific timelines, milestones, and success metrics for each phase
-- Risk assessment and mitigation strategies
-- Resource allocation and budget planning
-- Change management and team preparation strategies
-
-**PROFESSIONAL AI PROMPTS (4 required):** Each prompt must be 200-400 words including:
-- Detailed context and background information
-- Specific, actionable instructions with examples
-- Expected output format and quality standards
-- Multiple use case scenarios and applications
-- Best practices for optimal results
-- Troubleshooting and optimization tips
-
-**COMPREHENSIVE WORKFLOWS (4 required):** Each workflow must include:
-- 8-15 detailed step-by-step processes
-- Specific tools, technologies, and platforms required
-- Time estimates and resource requirements for each step
-- Quality checkpoints and validation criteria
-- Expected deliverables and success metrics
-- Integration points with existing systems
-- Scalability and optimization recommendations
-
-**STRATEGIC BLUEPRINTS (4 required):** Each blueprint must contain:
-- Complete architectural overview and system design
-- Detailed technical specifications and requirements
-- Implementation methodology with best practices
-- Integration guidelines and compatibility considerations
-- Performance optimization strategies
-- Security and compliance requirements
-- Maintenance and support procedures
-
-**STRATEGIC FRAMEWORKS (4 required):** Each framework must provide:
-- Comprehensive methodology and approach
-- Detailed assessment criteria and evaluation metrics
-- Step-by-step implementation guidelines
-- Success measurement and KPI tracking
-- Risk management and contingency planning
-- Continuous improvement and optimization strategies
-- Industry-specific adaptations and considerations
+${baseContext}
 
 RESPONSE FORMAT - EXACT JSON STRUCTURE REQUIRED:
-
 {
-  "full_content": "COMPREHENSIVE MARKDOWN-FORMATTED STRATEGIC ACTION PLAN (1000+ words): Must include executive summary, detailed implementation phases with specific timelines, success metrics, risk assessment, resource requirements, and change management strategies. This should read like a professional consulting report with actionable insights and specific recommendations.",
+  "full_content": "COMPREHENSIVE MARKDOWN-FORMATTED STRATEGIC ACTION PLAN (1000+ words): Include executive summary, detailed implementation phases with specific timelines, success metrics, risk assessment, resource requirements, and change management strategies.",
   "structured_plan": {
     "title": "Professional plan title reflecting the transformation goals",
     "overview": "Comprehensive overview paragraph (150+ words) explaining the transformation approach, key opportunities, and expected outcomes",
@@ -144,7 +265,22 @@ RESPONSE FORMAT - EXACT JSON STRUCTURE REQUIRED:
       "team_roles": ["Detailed role description with skills and responsibilities", "Specific position with qualifications and time commitment"],
       "tools_needed": ["Specific tool with licensing and implementation details", "Platform with integration requirements and costs"]
     }
-  },
+  }
+}`,
+        expectedTokens: 8000
+      };
+
+    case 2: // Prompts
+      return {
+        systemPrompt: `You are JumpinAI, an expert in creating professional AI prompts. Create 4 comprehensive, ready-to-use AI prompts tailored to the business context. Respond ONLY in valid JSON format.`,
+        userPrompt: `Create 4 professional AI prompts based on this context:
+
+${baseContext}
+
+${overview_content ? `**STRATEGIC CONTEXT:**\n${overview_content}\n` : ''}
+
+RESPONSE FORMAT - EXACT JSON STRUCTURE REQUIRED:
+{
   "components": {
     "prompts": [
       {
@@ -159,7 +295,26 @@ RESPONSE FORMAT - EXACT JSON STRUCTURE REQUIRED:
         "estimated_time": "Realistic time estimate with setup and execution phases",
         "instructions": "Step-by-step implementation guide (200+ words) with best practices, troubleshooting, and optimization tips"
       }
-    ],
+    ]
+  }
+}
+
+Generate exactly 4 prompts with IDs 1, 2, 3, and 4.`,
+        expectedTokens: 6000
+      };
+
+    case 3: // Workflows  
+      return {
+        systemPrompt: `You are JumpinAI, an expert in creating comprehensive AI workflows. Create 4 detailed, step-by-step workflows tailored to the business context. Respond ONLY in valid JSON format.`,
+        userPrompt: `Create 4 comprehensive workflows based on this context:
+
+${baseContext}
+
+${overview_content ? `**STRATEGIC CONTEXT:**\n${overview_content}\n` : ''}
+
+RESPONSE FORMAT - EXACT JSON STRUCTURE REQUIRED:
+{
+  "components": {
     "workflows": [
       {
         "id": 1,
@@ -185,7 +340,26 @@ RESPONSE FORMAT - EXACT JSON STRUCTURE REQUIRED:
         "skill_level": "Required expertise with training recommendations",
         "instructions": "Comprehensive implementation guide (300+ words) with setup, execution, monitoring, and optimization"
       }
-    ],
+    ]
+  }
+}
+
+Generate exactly 4 workflows with IDs 1, 2, 3, and 4. Each workflow should have 5-10 detailed steps.`,
+        expectedTokens: 8000
+      };
+
+    case 4: // Blueprints
+      return {
+        systemPrompt: `You are JumpinAI, an expert in creating strategic AI implementation blueprints. Create 4 comprehensive architectural blueprints tailored to the business context. Respond ONLY in valid JSON format.`,
+        userPrompt: `Create 4 strategic blueprints based on this context:
+
+${baseContext}
+
+${overview_content ? `**STRATEGIC CONTEXT:**\n${overview_content}\n` : ''}
+
+RESPONSE FORMAT - EXACT JSON STRUCTURE REQUIRED:
+{
+  "components": {
     "blueprints": [
       {
         "id": 1,
@@ -209,7 +383,26 @@ RESPONSE FORMAT - EXACT JSON STRUCTURE REQUIRED:
         "implementation": "Detailed implementation methodology (400+ words) with phases, testing, deployment, and maintenance",
         "instructions": "Step-by-step implementation guide (400+ words) with setup, configuration, testing, deployment, and ongoing management"
       }
-    ],
+    ]
+  }
+}
+
+Generate exactly 4 blueprints with IDs 1, 2, 3, and 4.`,
+        expectedTokens: 8000
+      };
+
+    case 5: // Strategies
+      return {
+        systemPrompt: `You are JumpinAI, an expert in creating strategic AI transformation frameworks. Create 4 comprehensive strategic frameworks tailored to the business context. Respond ONLY in valid JSON format.`,
+        userPrompt: `Create 4 strategic frameworks based on this context:
+
+${baseContext}
+
+${overview_content ? `**STRATEGIC CONTEXT:**\n${overview_content}\n` : ''}
+
+RESPONSE FORMAT - EXACT JSON STRUCTURE REQUIRED:
+{
+  "components": {
     "strategies": [
       {
         "id": 1,
@@ -238,175 +431,171 @@ RESPONSE FORMAT - EXACT JSON STRUCTURE REQUIRED:
   }
 }
 
-Make sure all content is practical, actionable, and tailored to the specific goals and challenges provided. Each component should be distinct and valuable on its own.`;
+Generate exactly 4 strategies with IDs 1, 2, 3, and 4.`,
+        expectedTokens: 8000
+      };
 
-    console.log('📡 Sending request to OpenAI API...');
+    default:
+      throw new Error(`Invalid step: ${step}`);
+  }
+}
 
-    console.log('🤖 Making OpenAI API request with model: gpt-5-2025-08-07');
-    
-    const requestBody = {
-      model: 'gpt-5-2025-08-07',
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: userPrompt }
-      ],
-      max_completion_tokens: 30000, // GPT-5 uses max_completion_tokens
-    };
+// Validate step response based on expected structure
+function validateStepResponse(content: any, step: number, rawContent: string): any {
+  // Ensure basic structure exists
+  if (!content || typeof content !== 'object') {
+    return getStepFallbackResponse(step, rawContent);
+  }
 
-    console.log('📋 Request body prepared:', {
-      model: requestBody.model,
-      messageCount: requestBody.messages.length,
-      systemPromptLength: systemPrompt.length,
-      userPromptLength: userPrompt.length,
-      maxTokens: requestBody.max_completion_tokens
-    });
-    
-    // Create AbortController for timeout handling
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => {
-      console.error('⏰ Request timed out after 3 minutes');
-      controller.abort();
-    }, 180000); // 3 minute timeout for 30k tokens
-    
-    console.log('🌐 Initiating fetch to OpenAI...');
-    
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${openAIApiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(requestBody),
-      signal: controller.signal,
-    }).catch(fetchError => {
-      console.error('🚨 Fetch error occurred:', fetchError.name, fetchError.message);
-      if (fetchError.name === 'AbortError') {
-        throw new Error('Request timed out - OpenAI took too long to respond');
-      }
-      throw new Error(`Network error: ${fetchError.message}`);
-    });
-    
-    clearTimeout(timeoutId);
-    console.log('✅ Response received from OpenAI');
+  switch (step) {
+    case 1: // Overview & Plan
+      if (!content.full_content) content.full_content = rawContent;
+      if (!content.structured_plan) content.structured_plan = null;
+      if (!content.comprehensive_plan) content.comprehensive_plan = null;
+      break;
 
-    console.log('OpenAI response status:', response.status, response.statusText);
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('OpenAI API error details:', {
-        status: response.status,
-        statusText: response.statusText,
-        error: errorText,
-        model: 'gpt-5-2025-08-07',
-        maxTokens: 30000,
-        headers: response.headers,
-        url: response.url
-      });
-      throw new Error(`OpenAI API error: ${response.status} - ${errorText}`);
-    }
-
-    const data = await response.json();
-    console.log('OpenAI response received successfully:', {
-      usage: data.usage,
-      model: data.model,
-      finishReason: data.choices?.[0]?.finish_reason,
-      hasContent: !!data.choices?.[0]?.message?.content,
-      contentLength: data.choices?.[0]?.message?.content?.length || 0
-    });
-
-    let generatedContent;
-    const rawContent = data.choices[0].message.content;
-    
-    try {
-      console.log('Raw OpenAI response length:', rawContent.length);
-      console.log('Raw OpenAI response preview:', rawContent.substring(0, 200));
-      
-      // Simplified parsing - try direct JSON first, then basic cleanup
-      try {
-        generatedContent = JSON.parse(rawContent);
-        console.log('SUCCESS: Direct JSON parsing worked');
-      } catch (e) {
-        console.log('Direct parsing failed, trying basic cleanup...');
-        // Basic cleanup: remove markdown code blocks and extract JSON
-        let cleanContent = rawContent
-          .replace(/```json\s*/gi, '')
-          .replace(/```\s*/gi, '')
-          .trim();
-        
-        // Extract JSON between first { and last }
-        const startBrace = cleanContent.indexOf('{');
-        const lastBrace = cleanContent.lastIndexOf('}');
-        
-        if (startBrace !== -1 && lastBrace !== -1 && lastBrace > startBrace) {
-          cleanContent = cleanContent.substring(startBrace, lastBrace + 1);
-          generatedContent = JSON.parse(cleanContent);
-          console.log('SUCCESS: Basic cleanup and extraction worked');
-        } else {
-          throw new Error('No valid JSON structure found');
-        }
+    case 2: // Prompts
+    case 3: // Workflows  
+    case 4: // Blueprints
+    case 5: // Strategies
+      if (!content.components) {
+        content.components = {};
       }
       
-      // Quick validation and ensure required fields
-      if (!generatedContent.full_content) {
-        generatedContent.full_content = rawContent;
+      const componentType = ['', '', 'prompts', 'workflows', 'blueprints', 'strategies'][step];
+      if (!content.components[componentType]) {
+        content.components[componentType] = [];
       }
-      if (!generatedContent.components) {
-        generatedContent.components = { prompts: [], workflows: [], blueprints: [], strategies: [] };
-      }
-      
-      console.log('Parsed content successfully with components:', {
-        prompts: generatedContent.components?.prompts?.length || 0,
-        workflows: generatedContent.components?.workflows?.length || 0,
-        blueprints: generatedContent.components?.blueprints?.length || 0,
-        strategies: generatedContent.components?.strategies?.length || 0
-      });
-      
-    } catch (parseError) {
-      console.error('JSON parsing failed:', parseError);
-      console.error('Raw response sample:', rawContent.substring(0, 500));
-      
-      // Fallback response
-      generatedContent = {
-        full_content: rawContent,
-        structured_plan: null,
+      break;
+  }
+
+  return content;
+}
+
+// Get fallback response for failed step
+function getStepFallbackResponse(step: number, rawContent: string): any {
+  const base = {
+    full_content: rawContent,
+    structured_plan: null,
+    comprehensive_plan: null,
+    components: { prompts: [], workflows: [], blueprints: [], strategies: [] }
+  };
+
+  switch (step) {
+    case 1: // Overview & Plan
+      return {
+        ...base,
         comprehensive_plan: {
           executive_summary: "AI transformation plan generated successfully. Please review the full content for details.",
           key_objectives: ["Implement AI solutions", "Improve efficiency", "Drive innovation"],
           success_metrics: ["Performance improvement", "Cost reduction", "User satisfaction"]
-        },
-        components: {
-          prompts: [],
-          workflows: [],
-          blueprints: [],
-          strategies: []
         }
       };
-    }
 
-    console.log('Generated content structure:', Object.keys(generatedContent));
+    case 2: // Prompts
+      return {
+        components: {
+          prompts: [{
+            id: 1,
+            title: "Generated AI Prompt",
+            description: "AI prompt generated from your requirements.",
+            prompt_text: rawContent.length > 100 ? rawContent.substring(0, 400) : "Please review the generated content for your custom AI prompt.",
+            ai_tools: ["ChatGPT", "Claude"],
+            use_cases: ["General AI assistance"],
+            category: "General",
+            difficulty: "Beginner",
+            estimated_time: "5-10 minutes",
+            instructions: "Use this prompt with your preferred AI tool."
+          }]
+        }
+      };
 
-    return new Response(JSON.stringify(generatedContent), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    case 3: // Workflows
+      return {
+        components: {
+          workflows: [{
+            id: 1,
+            title: "Generated AI Workflow",
+            description: "AI workflow generated from your requirements.",
+            workflow_steps: [{
+              step: 1,
+              title: "Review Generated Content",
+              description: "Please review the generated workflow content.",
+              tools_required: ["AI Tool"],
+              duration: "30 minutes",
+              outputs: ["Completed workflow"]
+            }],
+            ai_tools: ["ChatGPT"],
+            duration_estimate: "1-2 hours",
+            complexity_level: "Intermediate",
+            prerequisites: ["Basic AI knowledge"],
+            expected_outcomes: ["Improved efficiency"],
+            category: "General",
+            tools_needed: ["Computer"],
+            skill_level: "Intermediate",
+            instructions: "Follow the workflow steps carefully."
+          }]
+        }
+      };
 
-  } catch (error: any) {
-    console.error("Error in jumps-ai-coach function:", error);
-    
-    // Log more details about the error
-    if (error.name === 'AbortError') {
-      console.error("Request timed out after 5 minutes");
-    }
-    
-    return new Response(JSON.stringify({ 
-      error: error.message,
-      errorType: error.name || 'UnknownError',
-      full_content: 'Sorry, there was an error generating your Jump in AI plan. Please try again.',
-      structured_plan: null,
-      comprehensive_plan: null,
-      components: { prompts: [], workflows: [], blueprints: [], strategies: [] }
-    }), {
-      status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    case 4: // Blueprints
+      return {
+        components: {
+          blueprints: [{
+            id: 1,
+            title: "Generated AI Blueprint",
+            description: "AI blueprint generated from your requirements.",
+            blueprint_content: {
+              overview: "Please review the generated blueprint content.",
+              components: ["AI System"],
+              architecture: "Standard AI architecture",
+              implementation_steps: ["Setup", "Configure", "Deploy"],
+              best_practices: ["Follow AI best practices"]
+            },
+            ai_tools: ["ChatGPT"],
+            implementation_time: "2-4 weeks",
+            difficulty_level: "Advanced",
+            resources_needed: ["Technical team"],
+            deliverables: ["Deployed solution"],
+            category: "Architecture",
+            requirements: ["Technical requirements"],
+            tools_used: ["AI Platform"],
+            implementation: "Standard implementation approach",
+            instructions: "Follow the blueprint guidelines."
+          }]
+        }
+      };
+
+    case 5: // Strategies
+      return {
+        components: {
+          strategies: [{
+            id: 1,
+            title: "Generated AI Strategy",
+            description: "AI strategy generated from your requirements.",
+            strategy_framework: {
+              objective: "Implement AI transformation",
+              approach: "Systematic approach to AI implementation",
+              tactics: ["Training", "Implementation"],
+              success_criteria: ["Improved efficiency"],
+              timeline: "6-12 months",
+              resources: ["Team", "Budget"]
+            },
+            ai_tools: ["ChatGPT"],
+            timeline: "6-12 months",
+            success_metrics: ["ROI improvement"],
+            key_actions: ["Planning", "Execution"],
+            potential_challenges: ["Change management"],
+            mitigation_strategies: ["Training and support"],
+            category: "Strategic",
+            priority_level: "High",
+            resource_requirements: ["Budget", "Team"],
+            instructions: "Execute strategy systematically."
+          }]
+        }
+      };
+
+    default:
+      return base;
   }
-});
+}
