@@ -16,6 +16,7 @@ export type ProgressiveResult = {
   structured_plan?: any;
   comprehensive_plan?: any;
   components: {
+    tools: any[];
     prompts: any[];
     workflows: any[];
     blueprints: any[];
@@ -44,6 +45,7 @@ export const useProgressiveGeneration = () => {
       structured_plan: null,
       comprehensive_plan: null,
       components: {
+        tools: [],
         prompts: [],
         workflows: [],
         blueprints: [],
@@ -201,6 +203,7 @@ export const useProgressiveGeneration = () => {
         title: 'AI Transformation Jump',
         full_content: '',
         components: {
+          tools: [],
           prompts: [],
           workflows: [],
           blueprints: [],
@@ -288,6 +291,7 @@ export const useProgressiveGeneration = () => {
         structured_plan: rawResponse.structuredPlan,
         comprehensive_plan: rawResponse.comprehensivePlan,
         components: rawResponse.components || {
+          tools: [],
           prompts: [],
           workflows: [],
           blueprints: [],

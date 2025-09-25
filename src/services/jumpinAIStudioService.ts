@@ -17,6 +17,7 @@ export interface GenerationResult {
   structuredPlan?: any;
   comprehensivePlan?: any;
   components?: {
+    tools: any[];
     prompts: any[];
     workflows: any[];
     blueprints: any[];
@@ -56,10 +57,10 @@ export const jumpinAIStudioService = {
     }
   },
 
-  // Generate Jump in AI using the 5-step approach
+  // Generate Jump in AI using the 6-step approach
   async generateJump(formData: StudioFormData, userId?: string, onProgress?: (step: number, data: any) => void): Promise<GenerationResult> {
     try {
-      console.log('Starting 5-step Jump generation with data:', formData);
+      console.log('Starting 6-step Jump generation with data:', formData);
 
       // Initialize the final result
       let finalResult: GenerationResult = {
@@ -68,6 +69,7 @@ export const jumpinAIStudioService = {
         structuredPlan: null,
         comprehensivePlan: null,
         components: {
+          tools: [],
           prompts: [],
           workflows: [],
           blueprints: [],
@@ -122,17 +124,17 @@ export const jumpinAIStudioService = {
         throw new Error(`Step 1 failed: ${step1Data.error}`);
       }
 
-      // Step 2: Generate Prompts
-      console.log('🚀 Step 2: Generating Prompts...');
+      // Step 2: Generate Tools
+      console.log('🚀 Step 2: Generating Tools...');
       const step2Data = await this.executeStep(2, formData, overviewContent);
       
-      if (step2Data.success && step2Data.components?.prompts) {
-        finalResult.components.prompts = step2Data.components.prompts;
+      if (step2Data.success && step2Data.components?.tools) {
+        finalResult.components.tools = step2Data.components.tools;
         
-        // Save prompts to database
+        // Save tools to database (if we had a tools table)
         if (userId && jumpId) {
-          await this.saveComponents({ prompts: step2Data.components.prompts }, userId, jumpId);
-          await this.updateJumpProgress(jumpId, 40);
+          // await this.saveComponents({ tools: step2Data.components.tools }, userId, jumpId);
+          await this.updateJumpProgress(jumpId, 33);
         }
 
         if (onProgress) {
@@ -140,17 +142,17 @@ export const jumpinAIStudioService = {
         }
       }
 
-      // Step 3: Generate Workflows
-      console.log('🚀 Step 3: Generating Workflows...');
+      // Step 3: Generate Prompts
+      console.log('🚀 Step 3: Generating Prompts...');
       const step3Data = await this.executeStep(3, formData, overviewContent);
       
-      if (step3Data.success && step3Data.components?.workflows) {
-        finalResult.components.workflows = step3Data.components.workflows;
+      if (step3Data.success && step3Data.components?.prompts) {
+        finalResult.components.prompts = step3Data.components.prompts;
         
-        // Save workflows to database
+        // Save prompts to database
         if (userId && jumpId) {
-          await this.saveComponents({ workflows: step3Data.components.workflows }, userId, jumpId);
-          await this.updateJumpProgress(jumpId, 60);
+          await this.saveComponents({ prompts: step3Data.components.prompts }, userId, jumpId);
+          await this.updateJumpProgress(jumpId, 50);
         }
 
         if (onProgress) {
@@ -158,17 +160,17 @@ export const jumpinAIStudioService = {
         }
       }
 
-      // Step 4: Generate Blueprints
-      console.log('🚀 Step 4: Generating Blueprints...');
+      // Step 4: Generate Workflows
+      console.log('🚀 Step 4: Generating Workflows...');
       const step4Data = await this.executeStep(4, formData, overviewContent);
       
-      if (step4Data.success && step4Data.components?.blueprints) {
-        finalResult.components.blueprints = step4Data.components.blueprints;
+      if (step4Data.success && step4Data.components?.workflows) {
+        finalResult.components.workflows = step4Data.components.workflows;
         
-        // Save blueprints to database
+        // Save workflows to database
         if (userId && jumpId) {
-          await this.saveComponents({ blueprints: step4Data.components.blueprints }, userId, jumpId);
-          await this.updateJumpProgress(jumpId, 80);
+          await this.saveComponents({ workflows: step4Data.components.workflows }, userId, jumpId);
+          await this.updateJumpProgress(jumpId, 66);
         }
 
         if (onProgress) {
@@ -176,17 +178,17 @@ export const jumpinAIStudioService = {
         }
       }
 
-      // Step 5: Generate Strategies
-      console.log('🚀 Step 5: Generating Strategies...');
+      // Step 5: Generate Blueprints
+      console.log('🚀 Step 5: Generating Blueprints...');
       const step5Data = await this.executeStep(5, formData, overviewContent);
       
-      if (step5Data.success && step5Data.components?.strategies) {
-        finalResult.components.strategies = step5Data.components.strategies;
+      if (step5Data.success && step5Data.components?.blueprints) {
+        finalResult.components.blueprints = step5Data.components.blueprints;
         
-        // Save strategies to database
+        // Save blueprints to database
         if (userId && jumpId) {
-          await this.saveComponents({ strategies: step5Data.components.strategies }, userId, jumpId);
-          await this.updateJumpProgress(jumpId, 100);
+          await this.saveComponents({ blueprints: step5Data.components.blueprints }, userId, jumpId);
+          await this.updateJumpProgress(jumpId, 83);
         }
 
         if (onProgress) {
@@ -194,11 +196,30 @@ export const jumpinAIStudioService = {
         }
       }
 
-      console.log('✅ All 5 steps completed successfully!');
+      // Step 6: Generate Strategies
+      console.log('🚀 Step 6: Generating Strategies...');
+      const step6Data = await this.executeStep(6, formData, overviewContent);
+      
+      if (step6Data.success && step6Data.components?.strategies) {
+        finalResult.components.strategies = step6Data.components.strategies;
+        
+        // Save strategies to database
+        if (userId && jumpId) {
+          await this.saveComponents({ strategies: step6Data.components.strategies }, userId, jumpId);
+          await this.updateJumpProgress(jumpId, 100);
+        }
+
+        if (onProgress) {
+          onProgress(6, step6Data);
+        }
+      }
+
+      console.log('✅ All 6 steps completed successfully!');
       console.log('Final result:', {
         jumpId: finalResult.jumpId,
         hasFullContent: !!finalResult.fullContent,
         componentCounts: {
+          tools: finalResult.components.tools.length,
           prompts: finalResult.components.prompts.length,
           workflows: finalResult.components.workflows.length,
           blueprints: finalResult.components.blueprints.length,
@@ -209,7 +230,7 @@ export const jumpinAIStudioService = {
       return finalResult;
 
     } catch (error) {
-      console.error('Error in 5-step Jump generation:', error);
+      console.error('Error in 6-step Jump generation:', error);
       throw error;
     }
   },

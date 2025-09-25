@@ -318,7 +318,42 @@ RESPONSE FORMAT - EXACT JSON STRUCTURE REQUIRED:
         expectedTokens: 8000
       };
 
-    case 2: // Prompts
+    case 2: // Tools
+      return {
+        systemPrompt: `You are JumpinAI, an expert AI consultant specializing in tool selection and implementation. Create a comprehensive list of AI tools needed for the strategic plan. Respond ONLY in valid JSON format.`,
+        userPrompt: `Create a comprehensive list of AI tools based on this context:
+
+${baseContext}
+
+${overview_content ? `**STRATEGIC CONTEXT:**\n${overview_content}\n` : ''}
+
+RESPONSE FORMAT - EXACT JSON STRUCTURE REQUIRED:
+{
+  "components": {
+    "tools": [
+      {
+        "id": 1,
+        "name": "Specific AI Tool Name",
+        "category": "Tool category (e.g., 'Language Models', 'Computer Vision', 'Data Analytics')",
+        "description": "Comprehensive tool description (150+ words) explaining capabilities, strengths, and optimal use cases",
+        "primary_use_case": "Primary use case within the strategic plan with specific applications",
+        "when_to_use": "Detailed explanation (100+ words) of when this tool should be used in the jump implementation",
+        "why_this_tool": "Comprehensive rationale (100+ words) explaining why this specific tool was chosen over alternatives",
+        "integration_notes": "Detailed integration guidance (150+ words) including setup, configuration, and workflow integration",
+        "alternatives": ["Alternative tool 1 with brief comparison", "Alternative tool 2 with pros/cons"],
+        "cost_model": "Pricing structure and cost considerations",
+        "skill_level": "Required skill level and learning curve",
+        "implementation_time": "Time to implement and become proficient"
+      }
+    ]
+  }
+}
+
+Generate a comprehensive list of AI tools needed for the strategic plan.`,
+        expectedTokens: 4000
+      };
+
+    case 3: // Prompts
       return {
         systemPrompt: `You are JumpinAI, an expert in creating professional AI prompts. Create 4 comprehensive, ready-to-use AI prompts tailored to the business context. Respond ONLY in valid JSON format.`,
         userPrompt: `Create 4 professional AI prompts based on this context:
@@ -351,7 +386,7 @@ Generate exactly 4 prompts with IDs 1, 2, 3, and 4.`,
         expectedTokens: 6000
       };
 
-    case 3: // Workflows  
+    case 4: // Workflows
       return {
         systemPrompt: `You are JumpinAI, an expert in creating comprehensive AI workflows. Create 4 detailed, step-by-step workflows tailored to the business context. Respond ONLY in valid JSON format.`,
         userPrompt: `Create 4 comprehensive workflows based on this context:
@@ -396,7 +431,7 @@ Generate exactly 4 workflows with IDs 1, 2, 3, and 4. Each workflow should have 
         expectedTokens: 8000
       };
 
-    case 4: // Blueprints
+    case 5: // Blueprints
       return {
         systemPrompt: `You are JumpinAI, an expert in creating strategic AI implementation blueprints. Create 4 comprehensive architectural blueprints tailored to the business context. Respond ONLY in valid JSON format.`,
         userPrompt: `Create 4 strategic blueprints based on this context:
@@ -439,7 +474,7 @@ Generate exactly 4 blueprints with IDs 1, 2, 3, and 4.`,
         expectedTokens: 8000
       };
 
-    case 5: // Strategies
+    case 6: // Strategies
       return {
         systemPrompt: `You are JumpinAI, an expert in creating strategic AI transformation frameworks. Create 4 comprehensive strategic frameworks tailored to the business context. Respond ONLY in valid JSON format.`,
         userPrompt: `Create 4 strategic frameworks based on this context:
@@ -502,15 +537,16 @@ function validateStepResponse(content: any, step: number, rawContent: string): a
       if (!content.comprehensive_plan) content.comprehensive_plan = null;
       break;
 
-    case 2: // Prompts
-    case 3: // Workflows  
-    case 4: // Blueprints
-    case 5: // Strategies
+    case 2: // Tools
+    case 3: // Prompts
+    case 4: // Workflows  
+    case 5: // Blueprints
+    case 6: // Strategies
       if (!content.components) {
         content.components = {};
       }
       
-      const componentType = ['', '', 'prompts', 'workflows', 'blueprints', 'strategies'][step];
+      const componentType = ['', '', 'tools', 'prompts', 'workflows', 'blueprints', 'strategies'][step];
       if (!content.components[componentType]) {
         content.components[componentType] = [];
       }
@@ -526,7 +562,7 @@ function getStepFallbackResponse(step: number, rawContent: string): any {
     full_content: rawContent,
     structured_plan: null,
     comprehensive_plan: null,
-    components: { prompts: [], workflows: [], blueprints: [], strategies: [] }
+    components: { tools: [], prompts: [], workflows: [], blueprints: [], strategies: [] }
   };
 
   switch (step) {
@@ -540,7 +576,27 @@ function getStepFallbackResponse(step: number, rawContent: string): any {
         }
       };
 
-    case 2: // Prompts
+    case 2: // Tools
+      return {
+        components: {
+          tools: [{
+            id: 1,
+            name: "AI Tool",
+            category: "General AI",
+            description: "AI tool generated from your requirements.",
+            primary_use_case: "Primary use case from your plan",
+            when_to_use: "When implementing AI solutions",
+            why_this_tool: "Selected based on your specific requirements",
+            integration_notes: "Integration guidance based on your context",
+            alternatives: ["Alternative tool options"],
+            cost_model: "Varies by usage",
+            skill_level: "Beginner",
+            implementation_time: "1-2 weeks"
+          }]
+        }
+      };
+
+    case 3: // Prompts
       return {
         components: {
           prompts: [{
@@ -558,7 +614,7 @@ function getStepFallbackResponse(step: number, rawContent: string): any {
         }
       };
 
-    case 3: // Workflows
+    case 4: // Workflows
       return {
         components: {
           workflows: [{
@@ -586,7 +642,7 @@ function getStepFallbackResponse(step: number, rawContent: string): any {
         }
       };
 
-    case 4: // Blueprints
+    case 5: // Blueprints
       return {
         components: {
           blueprints: [{
@@ -614,7 +670,7 @@ function getStepFallbackResponse(step: number, rawContent: string): any {
         }
       };
 
-    case 5: // Strategies
+    case 6: // Strategies
       return {
         components: {
           strategies: [{
