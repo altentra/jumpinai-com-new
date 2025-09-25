@@ -29,6 +29,12 @@ export default function JumpDetailModal({ jump, isOpen, onClose }: JumpDetailMod
     }
   }, [isOpen, jump?.id]);
 
+  // Simple function to extract basic tools info from content
+  const extractToolsFromContent = (content: string) => {
+    // Return empty array for now - tools will be handled in future iterations
+    return [];
+  };
+
   const loadJumpComponents = async () => {
     if (!jump) return;
     
@@ -41,12 +47,15 @@ export default function JumpDetailModal({ jump, isOpen, onClose }: JumpDetailMod
         supabase.from('user_strategies').select('*').eq('jump_id', jump.id)
       ]);
 
+      // Extract tools from jump content or provide empty array
+      const extractedTools = jump.full_content ? extractToolsFromContent(jump.full_content) : [];
+      
       setComponents({
         prompts: promptsRes.data || [],
         workflows: workflowsRes.data || [],
         blueprints: blueprintsRes.data || [],
         strategies: strategiesRes.data || [],
-        tools: [] // Tools are usually embedded in the content, not stored separately
+        tools: extractedTools
       });
     } catch (error) {
       console.error('Error loading jump components:', error);

@@ -171,19 +171,23 @@ const UnifiedJumpDisplay: React.FC<UnifiedJumpDisplayProps> = ({ jump, component
                 <CardTitle className="text-base text-foreground">Implementation Plan</CardTitle>
               </CardHeader>
               <CardContent className="pt-0 relative z-10">
-                {jump.comprehensive_plan || jump.structured_plan ? (
+                 {(jump.comprehensive_plan || jump.structured_plan) ? (
                   <div className="space-y-4">
                     {(jump.comprehensive_plan || jump.structured_plan)?.overview && (
                       <p className="text-foreground select-text">{(jump.comprehensive_plan || jump.structured_plan).overview}</p>
                     )}
                     <div className="grid gap-4">
-                      {(jump.comprehensive_plan || jump.structured_plan)?.phases?.map((phase: any, index: number) => (
+                     {(jump.comprehensive_plan || jump.structured_plan)?.phases?.map((phase: any, index: number) => (
                         <div key={index} className="glass backdrop-blur-sm border border-border/30 rounded-2xl p-4 bg-background/50">
-                          <h3 className="font-semibold mb-2 text-foreground select-text">Phase {phase.phase_number}: {phase.title}</h3>
-                          <p className="text-sm text-foreground mb-2 select-text">Duration: {phase.duration}</p>
-                          <p className="text-sm text-foreground select-text">{phase.description}</p>
+                          <h3 className="font-semibold mb-2 text-foreground select-text">
+                            Phase {phase.phase_number || index + 1}: {phase.title || phase.name || 'Unnamed Phase'}
+                          </h3>
+                          <p className="text-sm text-foreground mb-2 select-text">
+                            Duration: {phase.duration || phase.timeline || 'Not specified'}
+                          </p>
+                          <p className="text-sm text-foreground select-text">{phase.description || 'No description available'}</p>
                         </div>
-                      ))}
+                      )) || []}
                     </div>
                   </div>
                 ) : (
