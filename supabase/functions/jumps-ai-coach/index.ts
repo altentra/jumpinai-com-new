@@ -70,9 +70,9 @@ serve(async (req) => {
     // Create AbortController for timeout handling - Grok-4 should be much faster
     const controller = new AbortController();
     const timeoutId = setTimeout(() => {
-      console.error(`⏰ Step ${step} request timed out after 90 seconds`);
+      console.error(`⏰ Step ${step} request timed out after 120 seconds`);
       controller.abort();
-    }, 90000); // 90 second timeout - Grok-4 should be much faster
+    }, 120000); // 120 second timeout for complex generations
     
     console.log('🌐 Initiating fetch to xAI Grok-4...');
     
@@ -390,7 +390,7 @@ RESPONSE FORMAT - EXACT JSON STRUCTURE REQUIRED:
 }
 
 Generate exactly 4 prompts with IDs 1, 2, 3, and 4.`,
-        expectedTokens: 6000
+        expectedTokens: 8000
       };
 
     case 4: // Workflows
@@ -435,7 +435,7 @@ RESPONSE FORMAT - EXACT JSON STRUCTURE REQUIRED:
 }
 
 Generate exactly 4 workflows with IDs 1, 2, 3, and 4. Each workflow should have 5-8 detailed steps.`,
-        expectedTokens: 7000
+        expectedTokens: 9000
       };
 
     case 5: // Blueprints
