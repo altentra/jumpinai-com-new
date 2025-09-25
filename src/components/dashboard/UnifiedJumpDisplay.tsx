@@ -312,7 +312,7 @@ const UnifiedJumpDisplay: React.FC<UnifiedJumpDisplayProps> = ({ jump, component
                     <div className="absolute inset-0 bg-gradient-to-br from-primary/1.5 via-transparent to-secondary/1.5 dark:from-primary/1 dark:via-transparent dark:to-secondary/1 rounded-lg pointer-events-none"></div>
                     <CardHeader className="pb-2 relative z-10">
                       <CardTitle className="flex items-center justify-between text-sm">
-                        <div className="flex items-center gap-2">
+                         <div className="flex items-center gap-2">
                           <CheckCircle className="w-4 h-4 text-green-500" />
                           {prompt.title}
                         </div>
@@ -342,7 +342,7 @@ const UnifiedJumpDisplay: React.FC<UnifiedJumpDisplayProps> = ({ jump, component
                         </div>
                       </CardTitle>
                     </CardHeader>
-                    <CardContent className="pt-0 relative z-10">
+                     <CardContent className="pt-0 relative z-10">
                       <div className="space-y-2">
                         <p className="text-sm text-muted-foreground select-text">{prompt.description}</p>
                         <div className="p-3 glass backdrop-blur-sm bg-background/30 dark:bg-background/20 rounded-xl border border-border/30 select-text">
@@ -374,7 +374,7 @@ const UnifiedJumpDisplay: React.FC<UnifiedJumpDisplayProps> = ({ jump, component
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/12 via-accent/8 to-secondary/12 dark:from-primary/8 dark:via-accent/6 dark:to-secondary/8 rounded-lg blur-sm opacity-20 pointer-events-none"></div>
                   <Card className="relative glass-dark border-white/12 dark:border-white/8 backdrop-blur-lg bg-gradient-to-br from-white/4 via-white/2 to-white/1 dark:from-black/10 dark:via-black/5 dark:to-black/2">
                     <div className="absolute inset-0 bg-gradient-to-br from-primary/1.5 via-transparent to-secondary/1.5 dark:from-primary/1 dark:via-transparent dark:to-secondary/1 rounded-lg pointer-events-none"></div>
-                    <CardHeader className="pb-2 relative z-10">
+                     <CardHeader className="pb-2 relative z-10">
                       <CardTitle className="flex items-center gap-2 text-sm">
                         <CheckCircle className="w-4 h-4 text-green-500" />
                         {workflow.title}
@@ -390,6 +390,11 @@ const UnifiedJumpDisplay: React.FC<UnifiedJumpDisplayProps> = ({ jump, component
                               <span className="text-muted-foreground select-text">{step.title}</span>
                             </div>
                           ))}
+                          {workflow.workflow_steps?.length > 3 && (
+                            <div className="text-xs p-2 glass backdrop-blur-sm bg-background/30 dark:bg-background/20 rounded border border-border/20 text-center">
+                              <span className="text-muted-foreground select-text">+{workflow.workflow_steps.length - 3} more steps</span>
+                            </div>
+                          )}
                         </div>
                         <div className="flex gap-2 text-xs">
                           <Badge variant="secondary">{workflow.complexity_level}</Badge>
