@@ -45,10 +45,10 @@ serve(async (req) => {
 
     console.log('📡 Sending Step', step, 'request to xAI Grok-4 API...');
 
-    console.log('🤖 Making xAI API request with model: grok-4 for step:', step);
+    console.log('🤖 Making xAI API request with model: grok-beta for step:', step);
     
     const requestBody = {
-      model: 'grok-4',
+      model: 'grok-beta',
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt }
@@ -113,7 +113,7 @@ serve(async (req) => {
     }
 
     const data = await response.json();
-    console.log(`xAI Grok-4 Step ${step} response received successfully:`, {
+    console.log(`xAI Grok-beta Step ${step} response received successfully:`, {
       usage: data.usage,
       model: data.model,
       finishReason: data.choices?.[0]?.finish_reason,
@@ -122,12 +122,22 @@ serve(async (req) => {
       step: step
     });
 
+    // Check if we got empty content
+    const rawContent = data.choices?.[0]?.message?.content;
+    if (!rawContent || rawContent.trim() === '') {
+      console.error(`❌ Empty response from xAI API for Step ${step}:`, {
+        model: data.model,
+        finishReason: data.choices?.[0]?.finish_reason,
+        fullResponse: data
+      });
+      throw new Error(`xAI API returned empty response for Step ${step}. Model may not support this request.`);
+    }
+
     let generatedContent;
-    const rawContent = data.choices[0].message.content;
     
     try {
-      console.log(`Raw xAI Grok-4 Step ${step} response length:`, rawContent.length);
-      console.log(`Raw xAI Grok-4 Step ${step} response preview:`, rawContent.substring(0, 200));
+      console.log(`Raw xAI Grok-beta Step ${step} response length:`, rawContent.length);
+      console.log(`Raw xAI Grok-beta Step ${step} response preview:`, rawContent.substring(0, 200));
       
       // Simplified parsing - try direct JSON first, then basic cleanup
       try {
@@ -201,7 +211,7 @@ serve(async (req) => {
       errorType: error.name || 'UnknownError',
       step: step,
       success: false,
-      full_content: `Sorry, there was an error generating Step ${step} of your Jump in AI plan with xAI Grok-4. Please try again.`,
+      full_content: `Sorry, there was an error generating Step ${step} of your Jump in AI plan with xAI Grok-beta. Please try again.`,
       structured_plan: null,
       comprehensive_plan: null,
       components: { prompts: [], workflows: [], blueprints: [], strategies: [] }
