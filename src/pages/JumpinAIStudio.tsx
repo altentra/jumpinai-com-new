@@ -16,12 +16,14 @@ const JumpinAIStudio = () => {
   const [guestCanUse, setGuestCanUse] = useState(true);
   const [guestUsageCount, setGuestUsageCount] = useState(0);
   const [generationTimer, setGenerationTimer] = useState(0);
+  
   // Helper function to format time
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
+
   const [formData, setFormData] = useState<StudioFormData>({
     goals: '',
     challenges: '',
@@ -165,7 +167,6 @@ const JumpinAIStudio = () => {
     }
   };
 
-
   return (
     <>
       <Helmet>
@@ -173,223 +174,294 @@ const JumpinAIStudio = () => {
         <meta name="description" content="Your AI-powered workspace for creating and managing strategic transformations with intelligent guidance." />
       </Helmet>
       
-      <div className="min-h-screen scroll-snap-container bg-gradient-to-br from-background via-background/90 to-primary/5 dark:bg-gradient-to-br dark:from-black dark:via-gray-950/90 dark:to-gray-900/60">
-        {/* Enhanced floating background elements */}
+      <div className="min-h-screen scroll-snap-container bg-gradient-to-br from-background via-background/90 to-primary/5 dark:bg-gradient-to-br dark:from-black dark:via-gray-950/90 dark:to-gray-900/60 relative overflow-hidden">
+        {/* Premium floating background elements with liquid glass effects */}
         <div className="fixed inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-primary/20 to-primary/5 dark:bg-gradient-to-br dark:from-gray-800/30 dark:to-gray-700/15 rounded-full blur-3xl"></div>
-          <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-tr from-secondary/15 to-secondary/5 dark:bg-gradient-to-tr dark:from-gray-700/25 dark:to-gray-600/15 rounded-full blur-3xl"></div>
-          <div className="absolute top-1/3 left-1/2 transform -translate-x-1/2 w-64 h-64 bg-accent/10 dark:bg-gradient-radial dark:from-gray-800/20 dark:to-transparent rounded-full blur-2xl"></div>
-          <div className="absolute bottom-20 left-20 w-40 h-40 bg-gradient-to-tr from-secondary/8 to-transparent dark:bg-gradient-to-tr dark:from-gray-600/15 dark:to-transparent rounded-full blur-xl"></div>
+          {/* Main gradient orbs with enhanced blur and liquid animation */}
+          <div className="absolute -top-40 -right-40 w-[28rem] h-[28rem] bg-gradient-to-br from-primary/25 via-primary/15 to-primary/5 dark:bg-gradient-to-br dark:from-primary/20 dark:via-primary/10 dark:to-transparent rounded-full blur-3xl animate-pulse opacity-60"></div>
+          <div className="absolute -bottom-40 -left-40 w-[32rem] h-[32rem] bg-gradient-to-tr from-secondary/20 via-accent/10 to-secondary/5 dark:bg-gradient-to-tr dark:from-secondary/15 dark:via-accent/8 dark:to-transparent rounded-full blur-3xl animate-pulse opacity-50" style={{animationDelay: '2s'}}></div>
+          
+          {/* Liquid glass floating elements */}
+          <div className="absolute top-1/4 left-1/3 w-72 h-72 bg-gradient-conic from-primary/15 via-accent/10 to-secondary/15 dark:from-primary/12 dark:via-accent/8 dark:to-secondary/12 rounded-full blur-2xl animate-pulse opacity-40" style={{animationDelay: '1s'}}></div>
+          <div className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-gradient-radial from-accent/20 via-primary/10 to-transparent dark:from-accent/15 dark:via-primary/8 dark:to-transparent rounded-full blur-xl animate-pulse opacity-30" style={{animationDelay: '3s'}}></div>
+          
+          {/* Subtle mesh gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent dark:via-primary/3 opacity-50"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-accent/3 to-transparent dark:via-accent/2 opacity-40"></div>
         </div>
         
         <Navigation />
         
-        {/* Auth Status Bar */}
-        <div className="fixed top-20 right-4 z-50">
-          <div className="glass-dark rounded-xl p-3 text-sm">
-            {isAuthenticated ? (
-              <div className="flex items-center gap-2 text-green-400">
-                <User className="w-4 h-4" />
-                <span>Logged in as {user?.display_name || user?.email}</span>
+        {/* Premium Auth Status Bar with liquid glass effect */}
+        <div className="fixed top-20 right-4 z-50 animate-fade-in-right">
+          <div className="relative group">
+            {/* Liquid glass container with enhanced effects */}
+            <div className="absolute inset-0 bg-gradient-to-r from-background/60 via-background/40 to-background/60 dark:from-background/40 dark:via-background/20 dark:to-background/40 rounded-2xl blur-xl transform group-hover:scale-110 transition-transform duration-500"></div>
+            <div className="relative glass-dark rounded-2xl p-4 text-sm border border-white/30 dark:border-white/20 backdrop-blur-2xl bg-gradient-to-br from-white/15 via-white/8 to-white/5 dark:from-black/25 dark:via-black/15 dark:to-black/10 shadow-2xl group-hover:shadow-3xl transition-all duration-300">
+              {/* Premium glass overlay */}
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-transparent to-accent/5 dark:from-primary/6 dark:via-transparent dark:to-accent/4 rounded-2xl"></div>
+              <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/40 dark:via-white/25 to-transparent"></div>
+              
+              <div className="relative z-10">
+                {isAuthenticated ? (
+                  <div className="flex items-center gap-3 text-emerald-400 dark:text-emerald-300">
+                    <div className="relative">
+                      <User className="w-4 h-4" />
+                      <div className="absolute -top-1 -right-1 w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+                    </div>
+                    <span className="font-medium">Logged in as {user?.display_name || user?.email}</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-3 text-amber-400 dark:text-amber-300">
+                    <div className="relative">
+                      <AlertCircle className="w-4 h-4" />
+                      <div className="absolute -top-1 -right-1 w-2 h-2 bg-amber-400 rounded-full animate-pulse"></div>
+                    </div>
+                    <span className="font-medium">Guest user - {guestCanUse ? '1 free try remaining' : 'limit reached'}</span>
+                  </div>
+                )}
               </div>
-            ) : (
-              <div className="flex items-center gap-2 text-orange-400">
-                <AlertCircle className="w-4 h-4" />
-                <span>Guest user - {guestCanUse ? '1 free try remaining' : 'limit reached'}</span>
-              </div>
-            )}
+            </div>
           </div>
         </div>
         
         <main className="relative pt-24 px-4 sm:px-6 lg:px-8">
           <div className="max-w-6xl mx-auto">
-            {/* Hero Section */}
-            <div className="text-center mb-16 animate-fade-in-up">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-foreground via-foreground/90 to-foreground/80 bg-clip-text text-transparent leading-tight">
-                Jump in AI Studio
-              </h1>
-              <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-4xl mx-auto leading-relaxed">
-                Tell us your goals and challenges, and we'll generate your personalized <span className="font-semibold text-primary">Jump in AI</span>: 
-                a clear step-by-step plan, essential resources, custom prompts, workflows, blueprints, and strategies.
-              </p>
-              <div className="flex flex-wrap justify-center gap-4 text-sm text-muted-foreground/80">
-                <span className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-primary/60"></div>
-                  Strategic Action Plan
-                </span>
-                <span className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-primary/60"></div>
-                  4 Custom Prompts
-                </span>
-                <span className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-primary/60"></div>
-                  4 Workflows
-                </span>
-                <span className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-primary/60"></div>
-                  4 Blueprints
-                </span>
-                <span className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-primary/60"></div>
-                  4 Strategies
-                </span>
+            {/* Premium Hero Section with enhanced gradients */}
+            <div className="text-center mb-20 animate-fade-in-up">
+              {/* Liquid glass backdrop for title */}
+              <div className="relative mb-8">
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent dark:via-primary/8 blur-3xl transform -translate-y-4"></div>
+                <h1 className="relative text-4xl md:text-5xl lg:text-7xl font-bold mb-2 bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent leading-tight tracking-tight">
+                  Jump in AI Studio
+                </h1>
+                <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-transparent via-primary/60 to-transparent rounded-full"></div>
+              </div>
+              
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent/5 to-transparent blur-2xl"></div>
+                <p className="relative text-xl md:text-2xl text-muted-foreground/90 mb-12 max-w-4xl mx-auto leading-relaxed font-light">
+                  Tell us your goals and challenges, and we'll generate your personalized <span className="font-semibold text-primary bg-gradient-to-r from-primary via-primary/80 to-primary bg-clip-text text-transparent">Jump in AI</span>: 
+                  a clear step-by-step plan, essential resources, custom prompts, workflows, blueprints, and strategies.
+                </p>
+              </div>
+              
+              {/* Enhanced feature indicators with liquid glass effect */}
+              <div className="flex flex-wrap justify-center gap-6 text-sm">
+                {[
+                  'Strategic Action Plan',
+                  '4 Custom Prompts', 
+                  '4 Workflows',
+                  '4 Blueprints',
+                  '4 Strategies'
+                ].map((feature, index) => (
+                  <span key={feature} className="group flex items-center gap-3 px-4 py-2 glass rounded-2xl border border-white/20 dark:border-white/15 backdrop-blur-xl bg-gradient-to-r from-white/10 via-white/5 to-transparent dark:from-black/20 dark:via-black/10 dark:to-transparent hover:scale-105 transition-all duration-300 animate-fade-in-up" style={{animationDelay: `${index * 0.1 + 0.3}s`}}>
+                    <div className="w-3 h-3 rounded-full bg-gradient-to-br from-primary/80 to-accent/60 shadow-lg group-hover:shadow-primary/50 transition-all duration-300"></div>
+                    <span className="text-muted-foreground/80 group-hover:text-foreground/90 font-medium transition-colors duration-300">{feature}</span>
+                  </span>
+                ))}
               </div>
             </div>
 
-            {/* Goals & Challenges Form */}
-            <div className="mb-12 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-              <div className="relative glass-dark rounded-3xl p-6 shadow-modern-lg border border-white/20 dark:border-white/30 backdrop-blur-xl bg-gradient-to-br from-white/10 via-white/5 to-transparent dark:from-black/20 dark:via-black/10 dark:to-transparent overflow-hidden">
-                {/* Liquid glass effect overlay */}
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 dark:from-primary/10 dark:via-transparent dark:to-secondary/10 rounded-3xl"></div>
-                <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/30 to-transparent dark:via-white/20"></div>
+            {/* Premium Goals & Challenges Form with liquid glass morphism */}
+            <div className="mb-16 animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
+              <div className="relative group">
+                {/* Liquid glass backdrop effects */}
+                <div className="absolute -inset-4 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 dark:from-primary/15 dark:via-accent/10 dark:to-secondary/15 rounded-[2rem] blur-2xl opacity-50 group-hover:opacity-70 transition-opacity duration-700"></div>
+                <div className="absolute -inset-2 bg-gradient-to-br from-white/20 via-white/10 to-white/5 dark:from-black/30 dark:via-black/20 dark:to-black/15 rounded-[1.75rem] backdrop-blur-3xl"></div>
                 
-                <div className="relative z-10">
-                  <h2 className="text-xl font-semibold mb-5 text-foreground text-center">Let's understand your goals</h2>
-                  <div className="grid gap-4">
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-foreground/90 mb-2">
-                          What are you after? *
-                        </label>
-                        <textarea
-                          value={formData.goals}
-                          onChange={(e) => setFormData(prev => ({ ...prev, goals: e.target.value }))}
-                          className="w-full min-h-[80px] p-3 glass rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-300 placeholder:text-muted-foreground/60 text-foreground bg-white/10 dark:bg-black/20 border border-white/20 dark:border-white/30 backdrop-blur-sm"
-                          placeholder="Your main goals & projects with AI..."
-                        />
-                      </div>
-                      
-                      <div>
-                        <label className="block text-sm font-medium text-foreground/90 mb-2">
-                          What prevents you? *
-                        </label>
-                        <textarea
-                          value={formData.challenges}
-                          onChange={(e) => setFormData(prev => ({ ...prev, challenges: e.target.value }))}
-                          className="w-full min-h-[80px] p-3 glass rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-300 placeholder:text-muted-foreground/60 text-foreground bg-white/10 dark:bg-black/20 border border-white/20 dark:border-white/30 backdrop-blur-sm"
-                          placeholder="Your obstacles & challenges..."
-                        />
-                      </div>
+                {/* Main glass container with enhanced effects */}
+                <div className="relative glass-dark rounded-3xl p-8 shadow-2xl border border-white/30 dark:border-white/25 backdrop-blur-3xl bg-gradient-to-br from-white/15 via-white/8 to-white/5 dark:from-black/25 dark:via-black/15 dark:to-black/10 overflow-hidden group-hover:shadow-3xl transition-all duration-500">
+                  {/* Premium liquid glass overlays */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-transparent to-secondary/8 dark:from-primary/6 dark:via-transparent dark:to-secondary/6 rounded-3xl"></div>
+                  <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/40 dark:via-white/30 to-transparent"></div>
+                  <div className="absolute bottom-0 right-0 w-full h-px bg-gradient-to-l from-transparent via-white/20 dark:via-white/15 to-transparent"></div>
+                  
+                  {/* Floating accent elements */}
+                  <div className="absolute top-4 right-4 w-32 h-32 bg-gradient-conic from-primary/20 via-accent/15 to-secondary/20 dark:from-primary/15 dark:via-accent/10 dark:to-secondary/15 rounded-full blur-2xl opacity-30 group-hover:opacity-50 transition-opacity duration-700"></div>
+                  <div className="absolute bottom-4 left-4 w-24 h-24 bg-gradient-radial from-accent/25 via-primary/15 to-transparent dark:from-accent/20 dark:via-primary/10 dark:to-transparent rounded-full blur-xl opacity-20 group-hover:opacity-40 transition-opacity duration-700"></div>
+                  
+                  <div className="relative z-10">
+                    <div className="text-center mb-8">
+                      <h2 className="text-2xl font-bold mb-2 bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent">Let's understand your goals</h2>
+                      <div className="w-16 h-0.5 bg-gradient-to-r from-transparent via-primary/60 to-transparent mx-auto rounded-full"></div>
                     </div>
 
-                    <div className="grid md:grid-cols-2 gap-4 mb-4">
-                      <div>
-                        <label className="block text-sm font-medium text-foreground/90 mb-2">
-                          Industry
-                        </label>
-                        <input
-                          type="text"
-                          value={formData.industry}
-                          onChange={(e) => setFormData(prev => ({ ...prev, industry: e.target.value }))}
-                          className="w-full p-3 glass rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-300 placeholder:text-muted-foreground/60 text-foreground bg-white/10 dark:bg-black/20 border border-white/20 dark:border-white/30 backdrop-blur-sm"
-                          placeholder="Marketing, Tech, Finance..."
-                        />
-                      </div>
-                      
-                      <div>
-                        <label className="block text-sm font-medium text-foreground/90 mb-2">
-                          AI Experience
-                        </label>
-                        <select 
-                          value={formData.aiExperience}
-                          onChange={(e) => setFormData(prev => ({ ...prev, aiExperience: e.target.value }))}
-                          className="w-full p-3 glass rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-300 text-foreground bg-white/10 dark:bg-black/20 border border-white/20 dark:border-white/30 backdrop-blur-sm"
-                        >
-                          <option value="">Select level</option>
-                          <option value="beginner">Beginner</option>
-                          <option value="intermediate">Intermediate</option>
-                          <option value="advanced">Advanced</option>
-                          <option value="expert">Expert</option>
-                        </select>
-                      </div>
-                    </div>
-
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-foreground/90 mb-2">
-                          Urgency
-                        </label>
-                        <select 
-                          value={formData.urgency}
-                          onChange={(e) => setFormData(prev => ({ ...prev, urgency: e.target.value }))}
-                          className="w-full p-3 glass rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-300 text-foreground bg-white/10 dark:bg-black/20 border border-white/20 dark:border-white/30 backdrop-blur-sm"
-                        >
-                          <option value="">Select urgency</option>
-                          <option value="asap">ASAP - Need immediate results</option>
-                          <option value="weeks">Within few weeks</option>
-                          <option value="months">Within few months</option>
-                          <option value="exploring">Just exploring</option>
-                        </select>
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-foreground/90 mb-2">
-                          Budget
-                        </label>
-                        <select 
-                          value={formData.budget}
-                          onChange={(e) => setFormData(prev => ({ ...prev, budget: e.target.value }))}
-                          className="w-full p-3 glass rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-300 text-foreground bg-white/10 dark:bg-black/20 border border-white/20 dark:border-white/30 backdrop-blur-sm"
-                        >
-                          <option value="">Select budget</option>
-                          <option value="minimal">Minimal ($0-500)</option>
-                          <option value="moderate">Moderate ($500-2K)</option>
-                          <option value="substantial">Substantial ($2K-10K)</option>
-                          <option value="enterprise">Enterprise ($10K+)</option>
-                        </select>
-                      </div>
-                    </div>
-
-                    <button 
-                      type="button"
-                      onClick={handleGenerate}
-                      disabled={isGenerating}
-                      className="w-full modern-button bg-gradient-to-r from-primary via-primary/90 to-primary/80 hover:from-primary/90 hover:via-primary/80 hover:to-primary/70 disabled:from-muted disabled:to-muted text-primary-foreground disabled:text-muted-foreground px-8 py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-[1.02] shadow-lg hover:shadow-xl backdrop-blur-sm border border-white/20 dark:border-white/30 mt-2 flex items-center justify-center gap-2"
-                    >
-                      {isGenerating ? (
-                        <div className="flex flex-col items-center gap-2">
-                          <div className="flex items-center gap-2">
-                            <Loader2 className="w-5 h-5 animate-spin" />
-                            Generating Your Jump...
-                          </div>
-                          <div className="text-sm opacity-80">
-                            {formatTime(generationTimer)} - {processingStatus?.currentTask || 'Preparing...'}
+                    <div className="grid gap-6">
+                      <div className="grid md:grid-cols-2 gap-6">
+                        <div className="group">
+                          <label className="block text-sm font-semibold text-foreground/90 mb-3 transition-colors duration-300 group-focus-within:text-primary">
+                            What are you after? *
+                          </label>
+                          <div className="relative">
+                            <textarea
+                              value={formData.goals}
+                              onChange={(e) => setFormData(prev => ({ ...prev, goals: e.target.value }))}
+                              className="w-full min-h-[100px] p-4 glass rounded-2xl resize-none focus:outline-none focus:ring-2 focus:ring-primary/60 focus:border-primary/60 transition-all duration-300 placeholder:text-muted-foreground/60 text-foreground bg-white/12 dark:bg-black/25 border border-white/25 dark:border-white/20 backdrop-blur-xl hover:bg-white/15 dark:hover:bg-black/30 hover:border-white/30 dark:hover:border-white/25"
+                              placeholder="Your main goals & projects with AI..."
+                            />
+                            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/5 via-transparent to-accent/5 dark:from-primary/3 dark:via-transparent dark:to-accent/3 pointer-events-none"></div>
                           </div>
                         </div>
-                      ) : (
-                        'Generate My Jump in AI'
-                      )}
-                    </button>
-                    
-                    {!isAuthenticated && (
-                      <div className="mt-4 p-4 glass rounded-xl border border-orange-200/20">
-                        <div className="flex items-start gap-3">
-                          <AlertCircle className="w-5 h-5 text-orange-400 flex-shrink-0 mt-0.5" />
-                          <div className="text-sm">
-                            <p className="text-orange-400 font-medium mb-2">Want to save your data and get unlimited access?</p>
-                            <p className="text-muted-foreground mb-3">
-                              Sign up to save your inputs, access your generated content anytime, and get unlimited generations.
-                            </p>
-                            <button 
-                              onClick={() => login()}
-                              className="flex items-center gap-2 text-primary hover:text-primary/80 font-medium"
+                        
+                        <div className="group">
+                          <label className="block text-sm font-semibold text-foreground/90 mb-3 transition-colors duration-300 group-focus-within:text-primary">
+                            What prevents you? *
+                          </label>
+                          <div className="relative">
+                            <textarea
+                              value={formData.challenges}
+                              onChange={(e) => setFormData(prev => ({ ...prev, challenges: e.target.value }))}
+                              className="w-full min-h-[100px] p-4 glass rounded-2xl resize-none focus:outline-none focus:ring-2 focus:ring-primary/60 focus:border-primary/60 transition-all duration-300 placeholder:text-muted-foreground/60 text-foreground bg-white/12 dark:bg-black/25 border border-white/25 dark:border-white/20 backdrop-blur-xl hover:bg-white/15 dark:hover:bg-black/30 hover:border-white/30 dark:hover:border-white/25"
+                              placeholder="Your obstacles & challenges..."
+                            />
+                            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/5 via-transparent to-accent/5 dark:from-primary/3 dark:via-transparent dark:to-accent/3 pointer-events-none"></div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="grid md:grid-cols-2 gap-6">
+                        <div className="group">
+                          <label className="block text-sm font-semibold text-foreground/90 mb-3 transition-colors duration-300 group-focus-within:text-primary">
+                            Industry
+                          </label>
+                          <div className="relative">
+                            <input
+                              type="text"
+                              value={formData.industry}
+                              onChange={(e) => setFormData(prev => ({ ...prev, industry: e.target.value }))}
+                              className="w-full p-4 glass rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/60 focus:border-primary/60 transition-all duration-300 placeholder:text-muted-foreground/60 text-foreground bg-white/12 dark:bg-black/25 border border-white/25 dark:border-white/20 backdrop-blur-xl hover:bg-white/15 dark:hover:bg-black/30 hover:border-white/30 dark:hover:border-white/25"
+                              placeholder="Marketing, Tech, Finance..."
+                            />
+                            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/5 via-transparent to-accent/5 dark:from-primary/3 dark:via-transparent dark:to-accent/3 pointer-events-none"></div>
+                          </div>
+                        </div>
+                        
+                        <div className="group">
+                          <label className="block text-sm font-semibold text-foreground/90 mb-3 transition-colors duration-300 group-focus-within:text-primary">
+                            AI Experience
+                          </label>
+                          <div className="relative">
+                            <select 
+                              value={formData.aiExperience}
+                              onChange={(e) => setFormData(prev => ({ ...prev, aiExperience: e.target.value }))}
+                              className="w-full p-4 glass rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/60 focus:border-primary/60 transition-all duration-300 text-foreground bg-white/12 dark:bg-black/25 border border-white/25 dark:border-white/20 backdrop-blur-xl hover:bg-white/15 dark:hover:bg-black/30 hover:border-white/30 dark:hover:border-white/25"
                             >
-                              <LogIn className="w-4 h-4" />
-                              Sign Up / Login
-                            </button>
+                              <option value="">Select level</option>
+                              <option value="beginner">Beginner</option>
+                              <option value="intermediate">Intermediate</option>
+                              <option value="advanced">Advanced</option>
+                              <option value="expert">Expert</option>
+                            </select>
+                            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/5 via-transparent to-accent/5 dark:from-primary/3 dark:via-transparent dark:to-accent/3 pointer-events-none"></div>
                           </div>
                         </div>
                       </div>
-                    )}
+
+                      <div className="grid md:grid-cols-2 gap-6">
+                        <div className="group">
+                          <label className="block text-sm font-semibold text-foreground/90 mb-3 transition-colors duration-300 group-focus-within:text-primary">
+                            Urgency
+                          </label>
+                          <div className="relative">
+                            <select 
+                              value={formData.urgency}
+                              onChange={(e) => setFormData(prev => ({ ...prev, urgency: e.target.value }))}
+                              className="w-full p-4 glass rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/60 focus:border-primary/60 transition-all duration-300 text-foreground bg-white/12 dark:bg-black/25 border border-white/25 dark:border-white/20 backdrop-blur-xl hover:bg-white/15 dark:hover:bg-black/30 hover:border-white/30 dark:hover:border-white/25"
+                            >
+                              <option value="">Select urgency</option>
+                              <option value="asap">ASAP - Need immediate results</option>
+                              <option value="weeks">Within few weeks</option>
+                              <option value="months">Within few months</option>
+                              <option value="exploring">Just exploring</option>
+                            </select>
+                            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/5 via-transparent to-accent/5 dark:from-primary/3 dark:via-transparent dark:to-accent/3 pointer-events-none"></div>
+                          </div>
+                        </div>
+
+                        <div className="group">
+                          <label className="block text-sm font-semibold text-foreground/90 mb-3 transition-colors duration-300 group-focus-within:text-primary">
+                            Budget
+                          </label>
+                          <div className="relative">
+                            <select 
+                              value={formData.budget}
+                              onChange={(e) => setFormData(prev => ({ ...prev, budget: e.target.value }))}
+                              className="w-full p-4 glass rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/60 focus:border-primary/60 transition-all duration-300 text-foreground bg-white/12 dark:bg-black/25 border border-white/25 dark:border-white/20 backdrop-blur-xl hover:bg-white/15 dark:hover:bg-black/30 hover:border-white/30 dark:hover:border-white/25"
+                            >
+                              <option value="">Select budget</option>
+                              <option value="minimal">Minimal ($0-500)</option>
+                              <option value="moderate">Moderate ($500-2K)</option>
+                              <option value="substantial">Substantial ($2K-10K)</option>
+                              <option value="enterprise">Enterprise ($10K+)</option>
+                            </select>
+                            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/5 via-transparent to-accent/5 dark:from-primary/3 dark:via-transparent dark:to-accent/3 pointer-events-none"></div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Premium Generate Button */}
+                      <div className="relative mt-8">
+                        <div className="absolute inset-0 bg-gradient-to-r from-primary/30 via-primary/20 to-primary/30 dark:from-primary/25 dark:via-primary/15 dark:to-primary/25 blur-2xl rounded-2xl transform scale-110 opacity-50"></div>
+                        <button 
+                          type="button"
+                          onClick={handleGenerate}
+                          disabled={isGenerating}
+                          className="relative w-full modern-button bg-gradient-to-r from-primary via-primary/90 to-primary hover:from-primary/90 hover:via-primary/80 hover:to-primary/90 disabled:from-muted disabled:to-muted text-primary-foreground disabled:text-muted-foreground px-8 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:scale-[1.02] shadow-2xl hover:shadow-3xl backdrop-blur-xl border border-white/30 dark:border-white/25 flex items-center justify-center gap-3 group overflow-hidden"
+                        >
+                          {/* Button glow effect */}
+                          <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-primary/10 to-primary/20 dark:from-primary/15 dark:via-primary/8 dark:to-primary/15 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                          
+                          <div className="relative z-10">
+                            {isGenerating ? (
+                              <div className="flex flex-col items-center gap-3">
+                                <div className="flex items-center gap-3">
+                                  <Loader2 className="w-6 h-6 animate-spin" />
+                                  <span className="font-bold">Generating Your Jump...</span>
+                                </div>
+                                <div className="text-sm opacity-90 font-medium">
+                                  {formatTime(generationTimer)} - {processingStatus?.currentTask || 'Preparing...'}
+                                </div>
+                              </div>
+                            ) : (
+                              <span className="font-bold tracking-wide">Generate My Jump in AI</span>
+                            )}
+                          </div>
+                        </button>
+                      </div>
+                      
+                      {!isAuthenticated && (
+                        <div className="mt-6 p-5 glass-dark rounded-2xl border border-amber-200/20 dark:border-amber-300/20 backdrop-blur-xl bg-gradient-to-br from-amber-50/10 via-amber-100/5 to-transparent dark:from-amber-900/20 dark:via-amber-800/10 dark:to-transparent">
+                          <div className="flex items-start gap-4">
+                            <div className="relative">
+                              <AlertCircle className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
+                              <div className="absolute -top-1 -right-1 w-2 h-2 bg-amber-400 rounded-full animate-pulse"></div>
+                            </div>
+                            <div className="text-sm">
+                              <p className="text-amber-600 dark:text-amber-400 font-semibold mb-2">Want to save your data and get unlimited access?</p>
+                              <p className="text-muted-foreground mb-4 leading-relaxed">
+                                Sign up to save your inputs, access your generated content anytime, and get unlimited generations.
+                              </p>
+                              <button 
+                                onClick={() => login()}
+                                className="flex items-center gap-2 text-primary hover:text-primary/80 font-semibold transition-all duration-300 hover:gap-3"
+                              >
+                                <LogIn className="w-4 h-4" />
+                                Sign Up / Login
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
 
-
             {/* Progressive Results Display */}
             {result && (
-              <div className="mt-12 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
+              <div className="mt-16 animate-fade-in-up" style={{ animationDelay: '0.7s' }}>
                 <ProgressiveJumpDisplay 
                   result={result}
                   generationTimer={generationTimer}
