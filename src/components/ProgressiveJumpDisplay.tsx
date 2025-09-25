@@ -249,7 +249,18 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                     <CardHeader className="pb-2">
                       <CardTitle className="flex items-center gap-2 text-sm">
                         <Wrench className="w-4 h-4 text-primary" />
-                        {tool.name}
+                        {tool.website_url ? (
+                          <a 
+                            href={tool.website_url} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="hover:text-primary transition-colors underline"
+                          >
+                            {tool.name}
+                          </a>
+                        ) : (
+                          tool.name
+                        )}
                         <Badge variant="outline" className="ml-auto text-xs">{tool.category}</Badge>
                       </CardTitle>
                     </CardHeader>
@@ -267,13 +278,19 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                           </div>
                         </div>
                         <div className="text-xs">
-                          <span className="font-medium text-foreground">Integration notes:</span>
-                          <p className="text-muted-foreground">{tool.integration_notes}</p>
+                          <span className="font-medium text-foreground">How to integrate:</span>
+                          <p className="text-muted-foreground">{tool.how_to_integrate || tool.integration_notes}</p>
                         </div>
-                        <div className="flex gap-2 text-xs">
+                        {tool.alternatives && tool.alternatives.length > 0 && (
+                          <div className="text-xs">
+                            <span className="font-medium text-foreground">Alternatives:</span>
+                            <p className="text-muted-foreground">{tool.alternatives.join(', ')}</p>
+                          </div>
+                        )}
+                        <div className="flex gap-2 text-xs flex-wrap">
                           <Badge variant="secondary">{tool.skill_level}</Badge>
                           <Badge variant="outline">{tool.cost_model}</Badge>
-                          <Badge variant="outline">{tool.implementation_time}</Badge>
+                          <Badge variant="outline">{tool.implementation_timeline || tool.implementation_time}</Badge>
                         </div>
                       </div>
                     </CardContent>

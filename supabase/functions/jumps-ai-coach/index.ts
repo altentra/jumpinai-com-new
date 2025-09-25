@@ -320,7 +320,7 @@ RESPONSE FORMAT - EXACT JSON STRUCTURE REQUIRED:
 
     case 2: // Tools
       return {
-        systemPrompt: `You are JumpinAI, an expert AI consultant specializing in tool selection and implementation. Create a comprehensive list of AI tools needed for the strategic plan. Respond ONLY in valid JSON format.`,
+        systemPrompt: `You are JumpinAI, an expert AI consultant specializing in tool selection and implementation. Create a comprehensive list of AI tools needed for the strategic plan. Generate 2-12+ tools based on complexity. Respond ONLY in valid JSON format.`,
         userPrompt: `Create a comprehensive list of AI tools based on this context:
 
 ${baseContext}
@@ -335,21 +335,22 @@ RESPONSE FORMAT - EXACT JSON STRUCTURE REQUIRED:
         "id": 1,
         "name": "Specific AI Tool Name",
         "category": "Tool category (e.g., 'Language Models', 'Computer Vision', 'Data Analytics')",
-        "description": "Comprehensive tool description (150+ words) explaining capabilities, strengths, and optimal use cases",
+        "description": "Brief, concise tool overview (30-50 words maximum) - focus on core functionality only",
+        "website_url": "https://official-tool-website.com (provide actual working URL to the tool)",
         "primary_use_case": "Primary use case within the strategic plan with specific applications",
-        "when_to_use": "Detailed explanation (100+ words) of when this tool should be used in the jump implementation",
-        "why_this_tool": "Comprehensive rationale (100+ words) explaining why this specific tool was chosen over alternatives",
-        "integration_notes": "Detailed integration guidance (150+ words) including setup, configuration, and workflow integration",
-        "alternatives": ["Alternative tool 1 with brief comparison", "Alternative tool 2 with pros/cons"],
-        "cost_model": "Pricing structure and cost considerations",
-        "skill_level": "Required skill level and learning curve",
-        "implementation_time": "Time to implement and become proficient"
+        "when_to_use": "Detailed explanation (150+ words) of WHEN this tool should be used in the jump implementation - be specific about phases, triggers, and optimal timing",
+        "how_to_integrate": "Comprehensive integration guidance (200+ words) explaining HOW to implement this tool in the workflow - include setup steps, configuration, API integration, and workflow positioning",
+        "why_this_tool": "Detailed rationale (150+ words) explaining WHY this specific tool was chosen over alternatives - include unique advantages, cost-benefit analysis, and competitive comparison",
+        "alternatives": ["Alternative tool 1 with working URL and brief comparison", "Alternative tool 2 with working URL and pros/cons"],
+        "cost_model": "Pricing structure and cost considerations with specific numbers if possible",
+        "skill_level": "Required skill level and learning curve with training recommendations",
+        "implementation_timeline": "Realistic implementation timeline with milestones"
       }
     ]
   }
 }
 
-Generate a comprehensive list of AI tools needed for the strategic plan.`,
+IMPORTANT: Generate between 2-12+ tools depending on the complexity of the goals. Simple goals = 2-4 tools. Complex multi-faceted goals involving video, audio, images, apps, etc. = 8-12+ tools. Focus on quality and relevance over quantity.`,
         expectedTokens: 4000
       };
 
