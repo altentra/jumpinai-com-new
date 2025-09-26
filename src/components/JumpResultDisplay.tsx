@@ -110,30 +110,30 @@ const JumpResultDisplay: React.FC<JumpResultProps> = ({
             <CardContent className="space-y-4">
               {comprehensivePlan?.executive_summary && (
                 <div>
-                  <h4 className="font-semibold mb-2 text-foreground">Executive Summary</h4>
-                  <p className="text-muted-foreground leading-relaxed">
-                    {comprehensivePlan.executive_summary}
-                  </p>
+                   <h4 className="font-semibold mb-2 text-white drop-shadow-sm">Executive Summary</h4>
+                   <p className="text-white/90 drop-shadow-sm leading-relaxed">
+                     {comprehensivePlan.executive_summary}
+                   </p>
                 </div>
               )}
               
               {comprehensivePlan?.key_objectives && (
                 <div>
-                  <h4 className="font-semibold mb-2 text-foreground">Key Objectives</h4>
-                  <ul className="space-y-1">
-                    {comprehensivePlan.key_objectives.map((objective: string, index: number) => (
-                      <li key={index} className="flex items-start gap-2 text-muted-foreground">
-                        <span className="text-primary mt-1">•</span>
-                        {objective}
-                      </li>
-                    ))}
-                  </ul>
+                   <h4 className="font-semibold mb-2 text-white drop-shadow-sm">Key Objectives</h4>
+                   <ul className="space-y-1">
+                     {comprehensivePlan.key_objectives.map((objective: string, index: number) => (
+                       <li key={index} className="flex items-start gap-2 text-white/90 drop-shadow-sm">
+                         <span className="text-primary mt-1">•</span>
+                         {objective}
+                       </li>
+                     ))}
+                   </ul>
                 </div>
               )}
 
               {comprehensivePlan?.success_metrics && (
                 <div>
-                  <h4 className="font-semibold mb-2 text-foreground">Success Metrics</h4>
+                  <h4 className="font-semibold mb-2 text-white drop-shadow-sm">Success Metrics</h4>
                   <div className="flex flex-wrap gap-2">
                     {comprehensivePlan.success_metrics.map((metric: string, index: number) => (
                       <Badge key={index} variant="outline" className="text-primary border-primary/30">
@@ -151,29 +151,29 @@ const JumpResultDisplay: React.FC<JumpResultProps> = ({
             <Card className="glass border-white/20">
               <CardContent className="p-4 text-center">
                 <Lightbulb className="w-6 h-6 mx-auto mb-2 text-yellow-400" />
-                <div className="text-2xl font-bold text-foreground">{components?.prompts?.length || 0}</div>
-                <div className="text-sm text-muted-foreground">AI Prompts</div>
+                 <div className="text-2xl font-bold text-white drop-shadow-sm">{components?.prompts?.length || 0}</div>
+                 <div className="text-sm text-white/80 drop-shadow-sm">AI Prompts</div>
               </CardContent>
             </Card>
             <Card className="glass border-white/20">
               <CardContent className="p-4 text-center">
                 <Workflow className="w-6 h-6 mx-auto mb-2 text-blue-400" />
-                <div className="text-2xl font-bold text-foreground">{components?.workflows?.length || 0}</div>
-                <div className="text-sm text-muted-foreground">Workflows</div>
+                 <div className="text-2xl font-bold text-white drop-shadow-sm">{components?.workflows?.length || 0}</div>
+                 <div className="text-sm text-white/80 drop-shadow-sm">Workflows</div>
               </CardContent>
             </Card>
             <Card className="glass border-white/20">
               <CardContent className="p-4 text-center">
                 <FileText className="w-6 h-6 mx-auto mb-2 text-green-400" />
-                <div className="text-2xl font-bold text-foreground">{components?.blueprints?.length || 0}</div>
-                <div className="text-sm text-muted-foreground">Blueprints</div>
+                 <div className="text-2xl font-bold text-white drop-shadow-sm">{components?.blueprints?.length || 0}</div>
+                 <div className="text-sm text-white/80 drop-shadow-sm">Blueprints</div>
               </CardContent>
             </Card>
             <Card className="glass border-white/20">
               <CardContent className="p-4 text-center">
                 <TrendingUp className="w-6 h-6 mx-auto mb-2 text-purple-400" />
-                <div className="text-2xl font-bold text-foreground">{components?.strategies?.length || 0}</div>
-                <div className="text-sm text-muted-foreground">Strategies</div>
+                 <div className="text-2xl font-bold text-white drop-shadow-sm">{components?.strategies?.length || 0}</div>
+                 <div className="text-sm text-white/80 drop-shadow-sm">Strategies</div>
               </CardContent>
             </Card>
           </div>
@@ -209,15 +209,15 @@ const JumpResultDisplay: React.FC<JumpResultProps> = ({
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="bg-black/20 p-4 rounded-lg">
-                  <h5 className="font-medium mb-2 text-foreground">Prompt:</h5>
-                  <p className="text-sm text-muted-foreground font-mono whitespace-pre-wrap">
-                    {prompt.prompt_text}
-                  </p>
+                   <h5 className="font-medium mb-2 text-white drop-shadow-sm">Prompt:</h5>
+                   <p className="text-sm text-white/90 drop-shadow-sm font-mono whitespace-pre-wrap">
+                     {prompt.prompt_text}
+                   </p>
                 </div>
                 
                 {prompt.ai_tools && (
                   <div>
-                    <h5 className="font-medium mb-2 text-foreground">Recommended AI Tools:</h5>
+                    <h5 className="font-medium mb-2 text-white drop-shadow-sm">Recommended AI Tools:</h5>
                     <div className="flex flex-wrap gap-2">
                       {prompt.ai_tools.map((tool: string, toolIndex: number) => (
                         <Badge key={toolIndex} variant="outline" className="text-primary border-primary/30">
@@ -230,8 +230,8 @@ const JumpResultDisplay: React.FC<JumpResultProps> = ({
 
                 {prompt.instructions && (
                   <div>
-                    <h5 className="font-medium mb-2 text-foreground">Instructions:</h5>
-                    <p className="text-sm text-muted-foreground">{prompt.instructions}</p>
+                     <h5 className="font-medium mb-2 text-white drop-shadow-sm">Instructions:</h5>
+                     <p className="text-sm text-white/90 drop-shadow-sm">{prompt.instructions}</p>
                   </div>
                 )}
               </CardContent>
@@ -270,7 +270,7 @@ const JumpResultDisplay: React.FC<JumpResultProps> = ({
               <CardContent className="space-y-4">
                 {workflow.workflow_steps && (
                   <div>
-                    <h5 className="font-medium mb-3 text-foreground">Workflow Steps:</h5>
+                    <h5 className="font-medium mb-3 text-white drop-shadow-sm">Workflow Steps:</h5>
                     <div className="space-y-3">
                       {workflow.workflow_steps.map((step: any, stepIndex: number) => (
                         <div key={stepIndex} className="flex gap-3 p-3 glass rounded-lg border border-white/10">
@@ -278,8 +278,8 @@ const JumpResultDisplay: React.FC<JumpResultProps> = ({
                             {step.step || stepIndex + 1}
                           </div>
                           <div className="flex-1 space-y-2">
-                            <h6 className="font-medium text-foreground">{step.title}</h6>
-                            <p className="text-sm text-muted-foreground">{step.description}</p>
+                             <h6 className="font-medium text-white drop-shadow-sm">{step.title}</h6>
+                             <p className="text-sm text-white/90 drop-shadow-sm">{step.description}</p>
                             {step.tools_required && (
                               <div className="flex flex-wrap gap-1">
                                 {step.tools_required.map((tool: string, toolIndex: number) => (
@@ -298,10 +298,10 @@ const JumpResultDisplay: React.FC<JumpResultProps> = ({
 
                 {workflow.expected_outcomes && (
                   <div>
-                    <h5 className="font-medium mb-2 text-foreground">Expected Outcomes:</h5>
+                    <h5 className="font-medium mb-2 text-white drop-shadow-sm">Expected Outcomes:</h5>
                     <ul className="space-y-1">
                       {workflow.expected_outcomes.map((outcome: string, outcomeIndex: number) => (
-                        <li key={outcomeIndex} className="flex items-start gap-2 text-sm text-muted-foreground">
+                        <li key={outcomeIndex} className="flex items-start gap-2 text-sm text-white/90 drop-shadow-sm">
                           <CheckCircle className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
                           {outcome}
                         </li>
@@ -349,24 +349,24 @@ const JumpResultDisplay: React.FC<JumpResultProps> = ({
                     onOpenChange={() => toggleSection(`blueprint-${index}`)}
                   >
                     <CollapsibleTrigger className="flex items-center gap-2 w-full p-3 glass rounded-lg hover:bg-white/5 transition-colors">
-                      <span className="font-medium text-foreground">Blueprint Details</span>
-                      {expandedSections[`blueprint-${index}`] ? (
-                        <ChevronUp className="w-4 h-4 text-muted-foreground" />
-                      ) : (
-                        <ChevronDown className="w-4 h-4 text-muted-foreground" />
-                      )}
+                       <span className="font-medium text-white drop-shadow-sm">Blueprint Details</span>
+                       {expandedSections[`blueprint-${index}`] ? (
+                         <ChevronUp className="w-4 h-4 text-white/80" />
+                       ) : (
+                         <ChevronDown className="w-4 h-4 text-white/80" />
+                       )}
                     </CollapsibleTrigger>
                     <CollapsibleContent className="space-y-3 mt-3">
                       {blueprint.blueprint_content.overview && (
                         <div>
-                          <h6 className="font-medium mb-2 text-foreground">Overview:</h6>
-                          <p className="text-sm text-muted-foreground">{blueprint.blueprint_content.overview}</p>
+                           <h6 className="font-medium mb-2 text-white drop-shadow-sm">Overview:</h6>
+                           <p className="text-sm text-white/90 drop-shadow-sm">{blueprint.blueprint_content.overview}</p>
                         </div>
                       )}
                       {blueprint.blueprint_content.implementation_steps && (
                         <div>
-                          <h6 className="font-medium mb-2 text-foreground">Implementation Steps:</h6>
-                          <ol className="space-y-1 text-sm text-muted-foreground">
+                           <h6 className="font-medium mb-2 text-white drop-shadow-sm">Implementation Steps:</h6>
+                           <ol className="space-y-1 text-sm text-white/90 drop-shadow-sm">
                             {blueprint.blueprint_content.implementation_steps.map((step: string, stepIndex: number) => (
                               <li key={stepIndex} className="flex gap-2">
                                 <span className="font-medium text-primary">{stepIndex + 1}.</span>
@@ -382,7 +382,7 @@ const JumpResultDisplay: React.FC<JumpResultProps> = ({
 
                 {blueprint.resources_needed && (
                   <div>
-                    <h5 className="font-medium mb-2 text-foreground">Resources Needed:</h5>
+                    <h5 className="font-medium mb-2 text-white drop-shadow-sm">Resources Needed:</h5>
                     <div className="flex flex-wrap gap-2">
                       {blueprint.resources_needed.map((resource: string, resourceIndex: number) => (
                         <Badge key={resourceIndex} variant="outline" className="text-orange-300 border-orange-300/30">
@@ -428,10 +428,10 @@ const JumpResultDisplay: React.FC<JumpResultProps> = ({
               <CardContent className="space-y-4">
                 {strategy.key_actions && (
                   <div>
-                    <h5 className="font-medium mb-2 text-foreground">Key Actions:</h5>
-                    <ul className="space-y-1">
-                      {strategy.key_actions.map((action: string, actionIndex: number) => (
-                        <li key={actionIndex} className="flex items-start gap-2 text-sm text-muted-foreground">
+                     <h5 className="font-medium mb-2 text-white drop-shadow-sm">Key Actions:</h5>
+                     <ul className="space-y-1">
+                       {strategy.key_actions.map((action: string, actionIndex: number) => (
+                         <li key={actionIndex} className="flex items-start gap-2 text-sm text-white/90 drop-shadow-sm">
                           <Target className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
                           {action}
                         </li>
@@ -442,7 +442,7 @@ const JumpResultDisplay: React.FC<JumpResultProps> = ({
 
                 {strategy.success_metrics && (
                   <div>
-                    <h5 className="font-medium mb-2 text-foreground">Success Metrics:</h5>
+                    <h5 className="font-medium mb-2 text-white drop-shadow-sm">Success Metrics:</h5>
                     <div className="flex flex-wrap gap-2">
                       {strategy.success_metrics.map((metric: string, metricIndex: number) => (
                         <Badge key={metricIndex} variant="outline" className="text-green-300 border-green-300/30">
@@ -459,17 +459,17 @@ const JumpResultDisplay: React.FC<JumpResultProps> = ({
                     onOpenChange={() => toggleSection(`strategy-${index}`)}
                   >
                     <CollapsibleTrigger className="flex items-center gap-2 w-full p-3 glass rounded-lg hover:bg-white/5 transition-colors">
-                      <span className="font-medium text-foreground">Challenges & Mitigation</span>
-                      {expandedSections[`strategy-${index}`] ? (
-                        <ChevronUp className="w-4 h-4 text-muted-foreground" />
-                      ) : (
-                        <ChevronDown className="w-4 h-4 text-muted-foreground" />
-                      )}
+                       <span className="font-medium text-white drop-shadow-sm">Challenges & Mitigation</span>
+                       {expandedSections[`strategy-${index}`] ? (
+                         <ChevronUp className="w-4 h-4 text-white/80" />
+                       ) : (
+                         <ChevronDown className="w-4 h-4 text-white/80" />
+                       )}
                     </CollapsibleTrigger>
                     <CollapsibleContent className="space-y-3 mt-3">
                       <div>
-                        <h6 className="font-medium mb-2 text-foreground">Potential Challenges:</h6>
-                        <ul className="space-y-1 text-sm text-muted-foreground">
+                         <h6 className="font-medium mb-2 text-white drop-shadow-sm">Potential Challenges:</h6>
+                         <ul className="space-y-1 text-sm text-white/90 drop-shadow-sm">
                           {strategy.potential_challenges.map((challenge: string, challengeIndex: number) => (
                             <li key={challengeIndex} className="flex items-start gap-2">
                               <span className="text-red-400 mt-1">⚠</span>
@@ -480,8 +480,8 @@ const JumpResultDisplay: React.FC<JumpResultProps> = ({
                       </div>
                       {strategy.mitigation_strategies && (
                         <div>
-                          <h6 className="font-medium mb-2 text-foreground">Mitigation Strategies:</h6>
-                          <ul className="space-y-1 text-sm text-muted-foreground">
+                           <h6 className="font-medium mb-2 text-white drop-shadow-sm">Mitigation Strategies:</h6>
+                           <ul className="space-y-1 text-sm text-white/90 drop-shadow-sm">
                             {strategy.mitigation_strategies.map((mitigation: string, mitigationIndex: number) => (
                               <li key={mitigationIndex} className="flex items-start gap-2">
                                 <CheckCircle className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
@@ -509,11 +509,11 @@ const JumpResultDisplay: React.FC<JumpResultProps> = ({
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="prose prose-invert max-w-none">
-                <div className="whitespace-pre-wrap text-foreground/90 leading-relaxed">
-                  {fullContent}
-                </div>
-              </div>
+               <div className="prose prose-invert max-w-none">
+                 <div className="whitespace-pre-wrap text-white/90 drop-shadow-sm leading-relaxed">
+                   {fullContent}
+                 </div>
+               </div>
             </CardContent>
           </Card>
         </TabsContent>

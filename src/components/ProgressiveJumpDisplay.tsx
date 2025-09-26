@@ -182,16 +182,16 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                   <ReactMarkdown
                     remarkPlugins={[remarkGfm]}
                     className="text-foreground"
-                    components={{
-                      h1: ({ children }) => <h1 className="text-2xl font-bold text-foreground mb-4">{children}</h1>,
-                      h2: ({ children }) => <h2 className="text-xl font-semibold text-foreground mb-3 mt-6">{children}</h2>,
-                      h3: ({ children }) => <h3 className="text-lg font-medium text-foreground mb-2 mt-4">{children}</h3>,
-                      p: ({ children }) => <p className="text-foreground mb-3 leading-relaxed">{children}</p>,
-                      ul: ({ children }) => <ul className="list-disc pl-6 mb-4 text-foreground space-y-2">{children}</ul>,
-                      ol: ({ children }) => <ol className="list-decimal pl-6 mb-4 text-foreground space-y-2">{children}</ol>,
-                      li: ({ children }) => <li className="leading-relaxed text-foreground">{children}</li>,
-                      strong: ({ children }) => <strong className="font-semibold text-foreground">{children}</strong>,
-                      em: ({ children }) => <em className="italic text-primary">{children}</em>,
+                     components={{
+                       h1: ({ children }) => <h1 className="text-2xl font-bold text-white drop-shadow-sm mb-4">{children}</h1>,
+                       h2: ({ children }) => <h2 className="text-xl font-semibold text-white drop-shadow-sm mb-3 mt-6">{children}</h2>,
+                       h3: ({ children }) => <h3 className="text-lg font-medium text-white drop-shadow-sm mb-2 mt-4">{children}</h3>,
+                       p: ({ children }) => <p className="text-white/90 drop-shadow-sm mb-3 leading-relaxed">{children}</p>,
+                       ul: ({ children }) => <ul className="list-disc pl-6 mb-4 text-white/90 drop-shadow-sm space-y-2">{children}</ul>,
+                       ol: ({ children }) => <ol className="list-decimal pl-6 mb-4 text-white/90 drop-shadow-sm space-y-2">{children}</ol>,
+                       li: ({ children }) => <li className="leading-relaxed text-white/90 drop-shadow-sm">{children}</li>,
+                       strong: ({ children }) => <strong className="font-semibold text-white drop-shadow-sm">{children}</strong>,
+                       em: ({ children }) => <em className="italic text-primary drop-shadow-sm">{children}</em>,
                       blockquote: ({ children }) => (
                         <blockquote className="border-l-4 border-primary pl-4 py-2 my-4 glass backdrop-blur-sm bg-primary/10 rounded-r-xl">
                           {children}
@@ -231,9 +231,9 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                   <div className="grid gap-4">
                     {result.structured_plan.phases?.map((phase: any, index: number) => (
                       <div key={index} className="glass backdrop-blur-sm border border-border/30 rounded-2xl p-4 bg-background/50">
-                        <h3 className="font-semibold mb-2 text-foreground">Phase {phase.phase_number}: {phase.title}</h3>
-                        <p className="text-sm text-foreground mb-2">Duration: {phase.duration}</p>
-                        <p className="text-sm text-foreground">{phase.description}</p>
+                         <h3 className="font-semibold mb-2 text-white drop-shadow-sm">Phase {phase.phase_number}: {phase.title}</h3>
+                         <p className="text-sm text-white/90 drop-shadow-sm mb-2">Duration: {phase.duration}</p>
+                         <p className="text-sm text-white/90 drop-shadow-sm">{phase.description}</p>
                       </div>
                     ))}
                   </div>
@@ -368,7 +368,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                     <CardContent className="pt-0">
                     {prompt ? (
                       <div className="space-y-2">
-                        <p className="text-sm text-muted-foreground">{prompt.description}</p>
+                        <p className="text-sm text-white/90 drop-shadow-sm">{prompt.description}</p>
                         <div className="p-3 glass backdrop-blur-sm bg-background/30 dark:bg-background/20 rounded-xl border border-border/30 select-text">
                           <p className="text-sm text-foreground font-mono whitespace-pre-wrap select-text">{prompt.prompt_text}</p>
                         </div>
@@ -456,7 +456,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                     <CardContent className="pt-0">
                     {blueprint ? (
                       <div className="space-y-2">
-                        <p className="text-sm text-muted-foreground">{blueprint.description}</p>
+                        <p className="text-sm text-white/90 drop-shadow-sm">{blueprint.description}</p>
                         <div className="flex gap-2 text-xs">
                           <Badge variant="secondary">{blueprint.difficulty_level}</Badge>
                           <Badge variant="outline">{blueprint.implementation_time}</Badge>
@@ -494,7 +494,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                     <CardContent className="pt-0">
                     {strategy ? (
                       <div className="space-y-2">
-                        <p className="text-sm text-muted-foreground">{strategy.description}</p>
+                        <p className="text-sm text-white/90 drop-shadow-sm">{strategy.description}</p>
                         <div className="flex gap-2 text-xs">
                           <Badge variant="secondary">{strategy.priority_level}</Badge>
                           <Badge variant="outline">{strategy.timeline}</Badge>

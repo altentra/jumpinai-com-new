@@ -164,16 +164,16 @@ const UnifiedJumpDisplay: React.FC<UnifiedJumpDisplayProps> = ({ jump, component
                   <ReactMarkdown
                     remarkPlugins={[remarkGfm]}
                     className="text-foreground"
-                    components={{
-                      h1: ({ children }) => <h1 className="text-2xl font-bold text-foreground mb-4 select-text">{children}</h1>,
-                      h2: ({ children }) => <h2 className="text-xl font-semibold text-foreground mb-3 mt-6 select-text">{children}</h2>,
-                      h3: ({ children }) => <h3 className="text-lg font-medium text-foreground mb-2 mt-4 select-text">{children}</h3>,
-                      p: ({ children }) => <p className="text-foreground mb-3 leading-relaxed select-text">{children}</p>,
-                      ul: ({ children }) => <ul className="list-disc pl-6 mb-4 text-foreground space-y-2 select-text">{children}</ul>,
-                      ol: ({ children }) => <ol className="list-decimal pl-6 mb-4 text-foreground space-y-2 select-text">{children}</ol>,
-                      li: ({ children }) => <li className="leading-relaxed text-foreground select-text">{children}</li>,
-                      strong: ({ children }) => <strong className="font-semibold text-foreground select-text">{children}</strong>,
-                      em: ({ children }) => <em className="italic text-primary select-text">{children}</em>,
+                     components={{
+                       h1: ({ children }) => <h1 className="text-2xl font-bold text-white drop-shadow-sm mb-4 select-text">{children}</h1>,
+                       h2: ({ children }) => <h2 className="text-xl font-semibold text-white drop-shadow-sm mb-3 mt-6 select-text">{children}</h2>,
+                       h3: ({ children }) => <h3 className="text-lg font-medium text-white drop-shadow-sm mb-2 mt-4 select-text">{children}</h3>,
+                       p: ({ children }) => <p className="text-white/90 drop-shadow-sm mb-3 leading-relaxed select-text">{children}</p>,
+                       ul: ({ children }) => <ul className="list-disc pl-6 mb-4 text-white/90 drop-shadow-sm space-y-2 select-text">{children}</ul>,
+                       ol: ({ children }) => <ol className="list-decimal pl-6 mb-4 text-white/90 drop-shadow-sm space-y-2 select-text">{children}</ol>,
+                       li: ({ children }) => <li className="leading-relaxed text-white/90 drop-shadow-sm select-text">{children}</li>,
+                       strong: ({ children }) => <strong className="font-semibold text-white drop-shadow-sm select-text">{children}</strong>,
+                       em: ({ children }) => <em className="italic text-primary drop-shadow-sm select-text">{children}</em>,
                       blockquote: ({ children }) => (
                         <blockquote className="border-l-4 border-primary pl-4 py-2 my-4 glass backdrop-blur-sm bg-primary/10 rounded-r-xl select-text">
                           {children}
@@ -211,18 +211,18 @@ const UnifiedJumpDisplay: React.FC<UnifiedJumpDisplayProps> = ({ jump, component
                     return (
                       <div className="space-y-4">
                         {overview && (
-                          <p className="text-foreground select-text">{overview}</p>
+                          <p className="text-white/90 drop-shadow-sm select-text">{overview}</p>
                         )}
                         <div className="grid gap-4">
                           {phases.map((phase: any, index: number) => (
                             <div key={index} className="glass backdrop-blur-sm border border-border/30 rounded-2xl p-4 bg-background/50">
-                              <h3 className="font-semibold mb-2 text-foreground select-text">
-                                Phase {phase.phase_number || index + 1}: {phase.title || phase.name || 'Unnamed Phase'}
-                              </h3>
-                              <p className="text-sm text-foreground mb-2 select-text">
-                                Duration: {phase.duration || phase.timeline || 'Not specified'}
-                              </p>
-                              <p className="text-sm text-foreground select-text">{phase.description || 'No description available'}</p>
+                               <h3 className="font-semibold mb-2 text-white drop-shadow-sm select-text">
+                                 Phase {phase.phase_number || index + 1}: {phase.title || phase.name || 'Unnamed Phase'}
+                               </h3>
+                               <p className="text-sm text-white/90 drop-shadow-sm mb-2 select-text">
+                                 Duration: {phase.duration || phase.timeline || 'Not specified'}
+                               </p>
+                               <p className="text-sm text-white/90 drop-shadow-sm select-text">{phase.description || 'No description available'}</p>
                             </div>
                           ))}
                         </div>
@@ -267,31 +267,31 @@ const UnifiedJumpDisplay: React.FC<UnifiedJumpDisplayProps> = ({ jump, component
                     </CardHeader>
                     <CardContent className="pt-0 relative z-10">
                       <div className="space-y-4">
-                        <p className="text-sm text-muted-foreground leading-relaxed select-text">{tool.description}</p>
-                        
-                        <div className="space-y-3 text-sm">
-                          <div className="p-3 bg-muted/20 rounded-lg">
-                            <span className="font-medium text-foreground block mb-1 select-text">When to use:</span>
-                            <p className="text-muted-foreground leading-relaxed select-text">{tool.when_to_use}</p>
-                          </div>
-                          
-                          <div className="p-3 bg-muted/20 rounded-lg">
-                            <span className="font-medium text-foreground block mb-1 select-text">Why this tool:</span>
-                            <p className="text-muted-foreground leading-relaxed select-text">{tool.why_this_tool}</p>
-                          </div>
-                          
-                          <div className="p-3 bg-muted/20 rounded-lg">
-                            <span className="font-medium text-foreground block mb-1 select-text">How to integrate:</span>
-                            <p className="text-muted-foreground leading-relaxed select-text">{tool.how_to_integrate || tool.integration_notes}</p>
-                          </div>
-                        </div>
+                         <p className="text-sm text-white/90 drop-shadow-sm leading-relaxed select-text">{tool.description}</p>
+                         
+                         <div className="space-y-3 text-sm">
+                           <div className="p-3 bg-muted/20 rounded-lg">
+                             <span className="font-medium text-white drop-shadow-sm block mb-1 select-text">When to use:</span>
+                             <p className="text-white/90 drop-shadow-sm leading-relaxed select-text">{tool.when_to_use}</p>
+                           </div>
+                           
+                           <div className="p-3 bg-muted/20 rounded-lg">
+                             <span className="font-medium text-white drop-shadow-sm block mb-1 select-text">Why this tool:</span>
+                             <p className="text-white/90 drop-shadow-sm leading-relaxed select-text">{tool.why_this_tool}</p>
+                           </div>
+                           
+                           <div className="p-3 bg-muted/20 rounded-lg">
+                             <span className="font-medium text-white drop-shadow-sm block mb-1 select-text">How to integrate:</span>
+                             <p className="text-white/90 drop-shadow-sm leading-relaxed select-text">{tool.how_to_integrate || tool.integration_notes}</p>
+                           </div>
+                         </div>
 
-                        {tool.alternatives && tool.alternatives.length > 0 && (
-                          <div className="text-sm">
-                            <span className="font-medium text-foreground block mb-1 select-text">Alternatives:</span>
-                            <p className="text-muted-foreground select-text">{tool.alternatives.join(', ')}</p>
-                          </div>
-                        )}
+                         {tool.alternatives && tool.alternatives.length > 0 && (
+                           <div className="text-sm">
+                             <span className="font-medium text-white drop-shadow-sm block mb-1 select-text">Alternatives:</span>
+                             <p className="text-white/90 drop-shadow-sm select-text">{tool.alternatives.join(', ')}</p>
+                           </div>
+                         )}
                         
                         <div className="flex gap-2 text-xs flex-wrap pt-2 border-t border-border/30">
                           <Badge variant="secondary" className="text-xs">{tool.skill_level}</Badge>
@@ -353,7 +353,7 @@ const UnifiedJumpDisplay: React.FC<UnifiedJumpDisplayProps> = ({ jump, component
                     </CardHeader>
                      <CardContent className="pt-0 relative z-10">
                       <div className="space-y-2">
-                        <p className="text-sm text-muted-foreground select-text">{prompt.description}</p>
+                        <p className="text-sm text-white/90 drop-shadow-sm select-text">{prompt.description}</p>
                         <div className="p-3 glass backdrop-blur-sm bg-background/30 dark:bg-background/20 rounded-xl border border-border/30 select-text">
                           <p className="text-sm text-foreground font-mono whitespace-pre-wrap select-text">{prompt.prompt_text}</p>
                         </div>
@@ -438,7 +438,7 @@ const UnifiedJumpDisplay: React.FC<UnifiedJumpDisplayProps> = ({ jump, component
                     </CardHeader>
                     <CardContent className="pt-0 relative z-10">
                       <div className="space-y-2">
-                        <p className="text-sm text-muted-foreground select-text">{blueprint.description}</p>
+                        <p className="text-sm text-white/90 drop-shadow-sm select-text">{blueprint.description}</p>
                         <div className="flex gap-2 text-xs">
                           <Badge variant="secondary">{blueprint.difficulty_level}</Badge>
                           <Badge variant="outline">{blueprint.implementation_time}</Badge>
@@ -472,7 +472,7 @@ const UnifiedJumpDisplay: React.FC<UnifiedJumpDisplayProps> = ({ jump, component
                     </CardHeader>
                     <CardContent className="pt-0 relative z-10">
                       <div className="space-y-2">
-                        <p className="text-sm text-muted-foreground select-text">{strategy.description}</p>
+                        <p className="text-sm text-white/90 drop-shadow-sm select-text">{strategy.description}</p>
                         <div className="flex gap-2 text-xs">
                           <Badge variant="secondary">{strategy.priority_level}</Badge>
                           <Badge variant="outline">{strategy.timeline}</Badge>
