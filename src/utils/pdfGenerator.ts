@@ -20,25 +20,70 @@ export const generateJumpPDF = (jumpData: JumpPDFData): void => {
   const pdf = new jsPDF();
   const pageWidth = pdf.internal.pageSize.getWidth();
   const pageHeight = pdf.internal.pageSize.getHeight();
-  const margin = 15;
+  const margin = 20;
   const maxWidth = pageWidth - 2 * margin;
   let yPosition = margin;
 
-  // Professional color palette
+  // Premium color palette - Professional and elegant
   const colors = {
-    foreground: [10, 10, 10],
-    muted: [115, 115, 115],
-    border: [229, 229, 229],
-    accent: [245, 245, 245],
-    primary: [23, 23, 23],
-    sectionBg: [250, 250, 250],
-  } as const;
+    // Main colors
+    primary: { r: 15, g: 23, b: 42 },        // Slate-900 - Deep professional blue
+    secondary: { r: 30, g: 64, b: 175 },     // Blue-800 - Corporate blue
+    accent: { r: 99, g: 102, b: 241 },       // Indigo-500 - Modern accent
+    
+    // Text colors
+    heading: { r: 15, g: 23, b: 42 },        // Slate-900 - Strong headings
+    body: { r: 51, g: 65, b: 85 },          // Slate-700 - Readable body text
+    muted: { r: 100, g: 116, b: 139 },      // Slate-500 - Subtle text
+    light: { r: 148, g: 163, b: 184 },      // Slate-400 - Very light text
+    
+    // Background colors
+    pageBg: { r: 248, g: 250, b: 252 },     // Slate-50 - Premium page background
+    sectionBg: { r: 241, g: 245, b: 249 },  // Slate-100 - Section backgrounds
+    cardBg: { r: 255, g: 255, b: 255 },     // White - Card backgrounds
+    accentBg: { r: 238, g: 242, b: 255 },   // Indigo-50 - Accent backgrounds
+    
+    // Border and divider colors
+    border: { r: 203, g: 213, b: 225 },     // Slate-300 - Subtle borders
+    divider: { r: 226, g: 232, b: 240 },    // Slate-200 - Light dividers
+    
+    // Brand colors
+    brandPrimary: { r: 16, g: 185, b: 129 }, // Emerald-500 - JumpinAI green
+    brandSecondary: { r: 6, g: 78, b: 59 },  // Emerald-800 - Dark green
+    
+    // Special colors
+    white: { r: 255, g: 255, b: 255 },
+    black: { r: 0, g: 0, b: 0 },
+  };
 
-  // Helper functions
+  // Helper functions to set colors
+  const setFillColor = (color: { r: number; g: number; b: number }) => {
+    pdf.setFillColor(color.r, color.g, color.b);
+  };
+
+  const setTextColor = (color: { r: number; g: number; b: number }) => {
+    pdf.setTextColor(color.r, color.g, color.b);
+  };
+
+  const setDrawColor = (color: { r: number; g: number; b: number }) => {
+    pdf.setDrawColor(color.r, color.g, color.b);
+  };
+
+  // Typography settings - Professional hierarchy
+  const typography = {
+    title: { size: 24, lineHeight: 1.3, spacing: 12 },
+    h1: { size: 18, lineHeight: 1.4, spacing: 10 },
+    h2: { size: 14, lineHeight: 1.4, spacing: 8 },
+    h3: { size: 12, lineHeight: 1.4, spacing: 6 },
+    body: { size: 10, lineHeight: 1.5, spacing: 5 },
+    caption: { size: 8, lineHeight: 1.4, spacing: 4 },
+  };
+
+  // Helper functions with enhanced formatting
   const checkPageBreak = (neededHeight: number) => {
-    if (yPosition + neededHeight > pageHeight - margin - 25) {
+    if (yPosition + neededHeight > pageHeight - margin - 35) {
       pdf.addPage();
-      yPosition = margin + 20;
+      yPosition = margin + 25;
       addPageHeader();
     }
   };
@@ -49,213 +94,352 @@ export const generateJumpPDF = (jumpData: JumpPDFData): void => {
     return pdf.splitTextToSize(text.toString(), maxWidth);
   };
 
-  const addPageHeader = () => {
-    pdf.setFillColor(...colors.accent);
-    pdf.rect(0, 0, pageWidth, 18, 'F');
-    
-    pdf.setTextColor(...colors.primary);
-    pdf.setFontSize(12);
-    pdf.setFont('helvetica', 'bold');
-    pdf.text('JumpinAI', margin, 12);
-    
-    pdf.setTextColor(...colors.muted);
-    pdf.setFontSize(8);
-    pdf.setFont('helvetica', 'normal');
-    pdf.text('AI-Generated Jump Plan', pageWidth - margin - 40, 12);
-    
-    pdf.setDrawColor(...colors.border);
-    pdf.setLineWidth(0.3);
-    pdf.line(0, 18, pageWidth, 18);
+  const cleanTextContent = (text: string) => {
+    if (!text) return '';
+    // Remove emojis and special unicode characters
+    let cleanText = text.replace(/[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu, '');
+    // Clean markdown formatting
+    cleanText = cleanText.replace(/\*\*(.*?)\*\*/g, '$1').replace(/\*(.*?)\*/g, '$1').replace(/`([^`]+)`/g, '$1');
+    // Normalize whitespace
+    cleanText = cleanText.replace(/\s+/g, ' ').trim();
+    return cleanText;
   };
 
-  const addSectionHeader = (title: string, fontSize: number = 16) => {
-    checkPageBreak(25);
+  // Enhanced page header with premium branding
+  const addPageHeader = () => {
+    // Premium gradient background
+    setFillColor(colors.brandPrimary);
+    pdf.rect(0, 0, pageWidth, 20, 'F');
     
-    // Section background
-    pdf.setFillColor(...colors.sectionBg);
-    pdf.rect(margin - 5, yPosition - 5, maxWidth + 10, 20, 'F');
-    
-    pdf.setTextColor(...colors.primary);
-    pdf.setFontSize(fontSize);
+    // Brand name with premium styling
+    setTextColor(colors.white);
+    pdf.setFontSize(14);
     pdf.setFont('helvetica', 'bold');
-    const titleLines = wrapText(title, maxWidth, fontSize);
-    pdf.text(titleLines, margin, yPosition + 8);
-    yPosition += titleLines.length * 8 + 8;
+    pdf.text('JumpinAI', margin, 13);
     
-    // Underline
-    pdf.setDrawColor(...colors.primary);
+    // Subtitle
+    pdf.setFontSize(9);
+    pdf.setFont('helvetica', 'normal');
+    pdf.text('AI-Powered Strategic Planning', margin + 35, 13);
+    
+    // Right side text
+    setTextColor(colors.white);
+    pdf.setFontSize(8);
+    pdf.setFont('helvetica', 'italic');
+    const rightText = 'Premium Jump Plan';
+    const rightTextWidth = pdf.getTextWidth(rightText);
+    pdf.text(rightText, pageWidth - margin - rightTextWidth, 13);
+    
+    // Elegant bottom border
+    setDrawColor(colors.brandSecondary);
     pdf.setLineWidth(1);
-    pdf.line(margin, yPosition, margin + maxWidth * 0.3, yPosition);
-    yPosition += 15;
+    pdf.line(0, 20, pageWidth, 20);
+    
+    yPosition = 35;
+  };
+
+  // Enhanced section headers with premium design
+  const addSectionHeader = (title: string, level: number = 1) => {
+    const config = level === 1 ? typography.h1 : typography.h2;
+    checkPageBreak(config.spacing * 3);
+    
+    // Section background with gradient effect
+    const bgHeight = config.size + 12;
+    setFillColor(colors.sectionBg);
+    pdf.rect(margin - 8, yPosition - 6, maxWidth + 16, bgHeight, 'F');
+    
+    // Left accent bar
+    setFillColor(colors.brandPrimary);
+    pdf.rect(margin - 8, yPosition - 6, 4, bgHeight, 'F');
+    
+    // Section title
+    setTextColor(colors.heading);
+    pdf.setFontSize(config.size);
+    pdf.setFont('helvetica', 'bold');
+    const titleLines = wrapText(title, maxWidth - 20, config.size);
+    pdf.text(titleLines, margin, yPosition + config.size - 2);
+    yPosition += titleLines.length * config.spacing + config.spacing * 2;
+    
+    // Elegant underline
+    setDrawColor(colors.accent);
+    pdf.setLineWidth(0.8);
+    pdf.line(margin, yPosition, margin + maxWidth * 0.4, yPosition);
+    yPosition += config.spacing * 2;
   };
 
   const addSubsectionHeader = (title: string) => {
-    checkPageBreak(20);
-    pdf.setTextColor(...colors.foreground);
-    pdf.setFontSize(12);
+    checkPageBreak(typography.h3.spacing * 2);
+    
+    // Subtle background
+    setFillColor(colors.accentBg);
+    pdf.rect(margin - 4, yPosition - 4, maxWidth + 8, typography.h3.size + 8, 'F');
+    
+    setTextColor(colors.heading);
+    pdf.setFontSize(typography.h3.size);
     pdf.setFont('helvetica', 'bold');
-    const titleLines = wrapText(title, maxWidth, 12);
-    pdf.text(titleLines, margin, yPosition);
-    yPosition += titleLines.length * 6 + 8;
+    const titleLines = wrapText(title, maxWidth, typography.h3.size);
+    pdf.text(titleLines, margin, yPosition + typography.h3.size - 2);
+    yPosition += titleLines.length * typography.h3.spacing + typography.h3.spacing;
   };
 
-  const addParagraph = (text: string, fontSize: number = 10) => {
+  const addParagraph = (text: string, fontSize: number = typography.body.size, color = colors.body) => {
     if (!text) return;
-    checkPageBreak(15);
-    pdf.setTextColor(...colors.foreground);
+    const cleanText = cleanTextContent(text);
+    if (!cleanText) return;
+    
+    checkPageBreak(typography.body.spacing * 3);
+    setTextColor(color);
     pdf.setFontSize(fontSize);
     pdf.setFont('helvetica', 'normal');
-    
-    // Clean text
-    let cleanText = text.replace(/[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu, '');
-    cleanText = cleanText.replace(/\*\*(.*?)\*\*/g, '$1').replace(/\*(.*?)\*/g, '$1').replace(/`([^`]+)`/g, '$1');
-    cleanText = cleanText.replace(/\s+/g, ' ').trim();
     
     const textLines = wrapText(cleanText, maxWidth, fontSize);
     pdf.text(textLines, margin, yPosition);
-    yPosition += textLines.length * (fontSize * 0.6) + 8;
+    yPosition += textLines.length * (fontSize * typography.body.lineHeight) + typography.body.spacing;
   };
 
-  const addBulletPoint = (text: string, fontSize: number = 10) => {
+  const addBulletPoint = (text: string, fontSize: number = typography.body.size, indent: number = 0) => {
     if (!text) return;
-    checkPageBreak(15);
-    pdf.setTextColor(...colors.foreground);
+    const cleanText = cleanTextContent(text);
+    if (!cleanText) return;
+    
+    checkPageBreak(typography.body.spacing * 2);
+    
+    const bulletX = margin + indent;
+    const textX = bulletX + 12;
+    
+    // Enhanced bullet design
+    setFillColor(colors.accent);
+    pdf.circle(bulletX + 3, yPosition - 2, 1.5, 'F');
+    
+    setTextColor(colors.body);
     pdf.setFontSize(fontSize);
     pdf.setFont('helvetica', 'normal');
     
-    // Add bullet
-    pdf.setFillColor(...colors.primary);
-    pdf.circle(margin + 3, yPosition - 1, 1, 'F');
+    const bulletLines = wrapText(cleanText, maxWidth - 16 - indent, fontSize);
+    pdf.text(bulletLines, textX, yPosition);
+    yPosition += bulletLines.length * (fontSize * typography.body.lineHeight) + 2;
+  };
+
+  const addNumberedPoint = (text: string, number: number, fontSize: number = typography.body.size) => {
+    if (!text) return;
+    const cleanText = cleanTextContent(text);
+    if (!cleanText) return;
     
-    const bulletLines = wrapText(text, maxWidth - 12, fontSize);
-    pdf.text(bulletLines, margin + 10, yPosition);
-    yPosition += bulletLines.length * (fontSize * 0.6) + 3;
+    checkPageBreak(typography.body.spacing * 2);
+    
+    // Number in circle
+    setFillColor(colors.accent);
+    pdf.circle(margin + 6, yPosition - 1, 4, 'F');
+    
+    setTextColor(colors.white);
+    pdf.setFontSize(8);
+    pdf.setFont('helvetica', 'bold');
+    pdf.text(number.toString(), margin + (number > 9 ? 3 : 4.5), yPosition + 1);
+    
+    setTextColor(colors.body);
+    pdf.setFontSize(fontSize);
+    pdf.setFont('helvetica', 'normal');
+    
+    const textLines = wrapText(cleanText, maxWidth - 20, fontSize);
+    pdf.text(textLines, margin + 15, yPosition);
+    yPosition += textLines.length * (fontSize * typography.body.lineHeight) + 4;
   };
 
-  const addDivider = () => {
-    checkPageBreak(10);
-    pdf.setDrawColor(...colors.border);
-    pdf.setLineWidth(0.5);
+  const addDivider = (style: 'light' | 'medium' | 'heavy' = 'medium') => {
+    checkPageBreak(15);
+    
+    const lineStyles = {
+      light: { color: colors.divider, width: 0.3, spacing: 10 },
+      medium: { color: colors.border, width: 0.5, spacing: 15 },
+      heavy: { color: colors.accent, width: 1, spacing: 20 }
+    };
+    
+    const config = lineStyles[style];
+    setDrawColor(config.color);
+    pdf.setLineWidth(config.width);
     pdf.line(margin, yPosition, margin + maxWidth, yPosition);
-    yPosition += 15;
+    yPosition += config.spacing;
   };
 
-  // Start PDF generation
+  const addInfoBox = (title: string, content: string, type: 'info' | 'highlight' | 'code' = 'info') => {
+    if (!content) return;
+    
+    const boxStyles = {
+      info: { bg: colors.accentBg, border: colors.accent, titleColor: colors.heading },
+      highlight: { bg: colors.sectionBg, border: colors.brandPrimary, titleColor: colors.brandSecondary },
+      code: { bg: colors.cardBg, border: colors.border, titleColor: colors.muted }
+    };
+    
+    const style = boxStyles[type];
+    const contentLines = wrapText(cleanTextContent(content), maxWidth - 16, typography.body.size);
+    const boxHeight = (title ? typography.h3.size + 8 : 0) + contentLines.length * (typography.body.size * 1.4) + 12;
+    
+    checkPageBreak(boxHeight + 10);
+    
+    // Box background
+    setFillColor(style.bg);
+    pdf.rect(margin - 4, yPosition - 4, maxWidth + 8, boxHeight, 'F');
+    
+    // Box border
+    setDrawColor(style.border);
+    pdf.setLineWidth(0.5);
+    pdf.rect(margin - 4, yPosition - 4, maxWidth + 8, boxHeight, 'S');
+    
+    if (title) {
+      setTextColor(style.titleColor);
+      pdf.setFontSize(typography.h3.size);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text(title, margin, yPosition + typography.h3.size - 2);
+      yPosition += typography.h3.size + 4;
+    }
+    
+    setTextColor(colors.body);
+    pdf.setFontSize(typography.body.size);
+    pdf.setFont('helvetica', 'normal');
+    pdf.text(contentLines, margin + 4, yPosition);
+    yPosition += contentLines.length * (typography.body.size * 1.4) + 8;
+  };
+
+  // Start PDF generation with premium cover page
   addPageHeader();
-  yPosition = 35;
 
-  // Title section
-  pdf.setTextColor(...colors.primary);
-  pdf.setFontSize(20);
+  // Title section with enhanced design
+  yPosition += 10;
+  setTextColor(colors.heading);
+  pdf.setFontSize(typography.title.size);
   pdf.setFont('helvetica', 'bold');
-  const titleLines = wrapText(jumpData.title, maxWidth, 20);
+  const titleLines = wrapText(jumpData.title, maxWidth, typography.title.size);
   pdf.text(titleLines, margin, yPosition);
-  yPosition += titleLines.length * 10 + 10;
+  yPosition += titleLines.length * (typography.title.size * typography.title.lineHeight) + 15;
 
-  // Title underline
-  pdf.setDrawColor(...colors.primary);
-  pdf.setLineWidth(1.5);
-  pdf.line(margin, yPosition, margin + maxWidth * 0.5, yPosition);
-  yPosition += 20;
-
-  // Metadata
-  pdf.setTextColor(...colors.muted);
-  pdf.setFontSize(9);
-  pdf.setFont('helvetica', 'normal');
-  const dateText = new Date(jumpData.createdAt).toLocaleDateString('en-US', { 
-    year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'
-  });
-  pdf.text(`Created: ${dateText}`, margin, yPosition);
-  pdf.text('AI GENERATED', pageWidth - margin - 30, yPosition);
+  // Elegant title underline with gradient effect
+  setDrawColor(colors.brandPrimary);
+  pdf.setLineWidth(2);
+  pdf.line(margin, yPosition, margin + maxWidth * 0.6, yPosition);
   yPosition += 25;
 
-  // Summary section
+  // Enhanced metadata section
+  const dateText = new Date(jumpData.createdAt).toLocaleDateString('en-US', { 
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', 
+    hour: '2-digit', minute: '2-digit'
+  });
+  
+  // Metadata box
+  setFillColor(colors.sectionBg);
+  pdf.rect(margin - 4, yPosition - 4, maxWidth + 8, 20, 'F');
+  
+  setTextColor(colors.muted);
+  pdf.setFontSize(typography.caption.size);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text(`Generated: ${dateText}`, margin, yPosition + 6);
+  
+  setTextColor(colors.brandPrimary);
+  pdf.setFont('helvetica', 'bold');
+  const aiText = 'AI GENERATED STRATEGIC PLAN';
+  const aiTextWidth = pdf.getTextWidth(aiText);
+  pdf.text(aiText, pageWidth - margin - aiTextWidth - 4, yPosition + 6);
+  
+  setTextColor(colors.muted);
+  pdf.setFont('helvetica', 'italic');
+  pdf.text('Confidential Business Document', margin, yPosition + 14);
+  
+  yPosition += 35;
+
+  // Executive Summary (if available)
   if (jumpData.summary) {
-    addSubsectionHeader('Executive Summary');
-    addParagraph(jumpData.summary, 11);
-    addDivider();
+    addSectionHeader('Executive Summary', 1);
+    addParagraph(jumpData.summary, typography.body.size + 1);
+    addDivider('medium');
   }
 
-  // 1. OVERVIEW SECTION - Strategic Action Plan
+  // 1. STRATEGIC ACTION PLAN
   if (jumpData.content) {
-    addSectionHeader('Strategic Action Plan');
+    addSectionHeader('Strategic Action Plan', 1);
     
-    // Process markdown content with proper formatting
     const lines = jumpData.content.split('\n');
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i].trim();
       if (!line) {
-        yPosition += 3;
+        yPosition += 4;
         continue;
       }
 
       if (line.startsWith('# ')) {
         addSubsectionHeader(line.substring(2).trim());
       } else if (line.startsWith('## ')) {
-        checkPageBreak(15);
-        pdf.setTextColor(...colors.foreground);
-        pdf.setFontSize(11);
+        checkPageBreak(20);
+        setTextColor(colors.heading);
+        pdf.setFontSize(typography.h3.size);
         pdf.setFont('helvetica', 'bold');
-        const headerLines = wrapText(line.substring(3).trim(), maxWidth, 11);
+        const headerLines = wrapText(line.substring(3).trim(), maxWidth, typography.h3.size);
         pdf.text(headerLines, margin, yPosition);
-        yPosition += headerLines.length * 6 + 8;
+        yPosition += headerLines.length * typography.h3.spacing + 6;
       } else if (line.startsWith('### ')) {
-        checkPageBreak(12);
-        pdf.setTextColor(...colors.foreground);
-        pdf.setFontSize(10);
+        checkPageBreak(15);
+        setTextColor(colors.body);
+        pdf.setFontSize(typography.body.size + 1);
         pdf.setFont('helvetica', 'bold');
-        const headerLines = wrapText(line.substring(4).trim(), maxWidth, 10);
+        const headerLines = wrapText(line.substring(4).trim(), maxWidth, typography.body.size + 1);
         pdf.text(headerLines, margin, yPosition);
-        yPosition += headerLines.length * 5 + 6;
+        yPosition += headerLines.length * typography.body.spacing + 4;
       } else if (line.startsWith('- ') || line.startsWith('* ')) {
         addBulletPoint(line.substring(2).trim());
       } else if (line.match(/^\d+\. /)) {
-        addParagraph(line);
+        const numberMatch = line.match(/^(\d+)\. (.+)/);
+        if (numberMatch) {
+          addNumberedPoint(numberMatch[2], parseInt(numberMatch[1]));
+        }
       } else if (line.startsWith('**') && line.endsWith('**')) {
-        checkPageBreak(10);
-        pdf.setTextColor(...colors.foreground);
-        pdf.setFontSize(10);
-        pdf.setFont('helvetica', 'bold');
-        const boldLines = wrapText(line.substring(2, line.length - 2), maxWidth, 10);
-        pdf.text(boldLines, margin, yPosition);
-        yPosition += boldLines.length * 5 + 6;
+        const boldText = line.substring(2, line.length - 2);
+        addParagraph(boldText, typography.body.size + 1, colors.heading);
       } else {
         addParagraph(line);
       }
     }
-    addDivider();
+    addDivider('medium');
   }
 
   // 2. IMPLEMENTATION PLAN
   if (jumpData.structured_plan) {
-    addSectionHeader('Implementation Plan');
+    addSectionHeader('Implementation Roadmap', 1);
     
     if (jumpData.structured_plan.overview) {
-      addParagraph(jumpData.structured_plan.overview, 11);
+      addParagraph(jumpData.structured_plan.overview, typography.body.size + 1);
       yPosition += 10;
     }
 
     if (jumpData.structured_plan.phases && jumpData.structured_plan.phases.length > 0) {
       jumpData.structured_plan.phases.forEach((phase: any, index: number) => {
-        checkPageBreak(35);
+        checkPageBreak(45);
         
-        // Phase header with background
-        pdf.setFillColor(...colors.sectionBg);
-        pdf.rect(margin - 3, yPosition - 3, maxWidth + 6, 15, 'F');
-        
-        pdf.setTextColor(...colors.primary);
-        pdf.setFontSize(11);
-        pdf.setFont('helvetica', 'bold');
+        // Phase header with premium design
         const phaseTitle = `Phase ${phase.phase_number || index + 1}: ${phase.title}`;
-        pdf.text(phaseTitle, margin, yPosition + 5);
-        yPosition += 18;
+        
+        // Phase background
+        setFillColor(colors.accentBg);
+        pdf.rect(margin - 6, yPosition - 6, maxWidth + 12, 22, 'F');
+        
+        // Phase number circle
+        setFillColor(colors.accent);
+        pdf.circle(margin + 8, yPosition + 3, 6, 'F');
+        
+        setTextColor(colors.white);
+        pdf.setFontSize(10);
+        pdf.setFont('helvetica', 'bold');
+        pdf.text((phase.phase_number || index + 1).toString(), margin + (phase.phase_number > 9 ? 5 : 6.5), yPosition + 5);
+        
+        setTextColor(colors.heading);
+        pdf.setFontSize(typography.h2.size);
+        pdf.setFont('helvetica', 'bold');
+        pdf.text(phaseTitle, margin + 20, yPosition + 6);
+        yPosition += 25;
 
         if (phase.duration) {
-          pdf.setTextColor(...colors.muted);
-          pdf.setFontSize(9);
+          setTextColor(colors.muted);
+          pdf.setFontSize(typography.caption.size);
           pdf.setFont('helvetica', 'italic');
           pdf.text(`Duration: ${phase.duration}`, margin, yPosition);
-          yPosition += 10;
+          yPosition += 12;
         }
 
         if (phase.description) {
@@ -263,363 +447,347 @@ export const generateJumpPDF = (jumpData: JumpPDFData): void => {
         }
 
         if (phase.tasks && phase.tasks.length > 0) {
-          pdf.setTextColor(...colors.muted);
-          pdf.setFontSize(9);
+          setTextColor(colors.muted);
+          pdf.setFontSize(typography.body.size);
           pdf.setFont('helvetica', 'bold');
-          pdf.text('Key Tasks:', margin, yPosition);
-          yPosition += 8;
+          pdf.text('Key Deliverables:', margin, yPosition);
+          yPosition += 10;
           
           phase.tasks.forEach((task: any) => {
             const taskText = typeof task === 'string' ? task : task.description || task.name || 'Task';
-            addBulletPoint(taskText, 9);
+            addBulletPoint(taskText, typography.body.size);
           });
         }
-        yPosition += 8;
+        yPosition += 12;
       });
     }
-    addDivider();
+    addDivider('medium');
   }
 
   // 3. COMPREHENSIVE PLAN SECTIONS
   if (jumpData.comprehensive_plan) {
     const plan = jumpData.comprehensive_plan;
 
-    if (plan.executive_summary) {
-      addSectionHeader('Executive Summary');
-      addParagraph(plan.executive_summary, 11);
-      addDivider();
-    }
-
     if (plan.key_objectives) {
-      addSectionHeader('Key Objectives');
+      addSectionHeader('Strategic Objectives', 1);
       const objectives = Array.isArray(plan.key_objectives) ? plan.key_objectives : [plan.key_objectives];
-      objectives.forEach((objective: string) => addBulletPoint(objective));
-      addDivider();
+      objectives.forEach((objective: string, index: number) => addNumberedPoint(objective, index + 1));
+      addDivider('medium');
     }
 
     if (plan.success_metrics) {
-      addSectionHeader('Success Metrics');
+      addSectionHeader('Success Metrics & KPIs', 1);
       const metrics = Array.isArray(plan.success_metrics) ? plan.success_metrics : [plan.success_metrics];
       metrics.forEach((metric: string) => addBulletPoint(metric));
-      addDivider();
+      addDivider('medium');
     }
 
     if (plan.resource_requirements) {
-      addSectionHeader('Resource Requirements');
+      addSectionHeader('Resource Requirements', 1);
       if (typeof plan.resource_requirements === 'string') {
         addParagraph(plan.resource_requirements);
       } else if (plan.resource_requirements.overview) {
         addParagraph(plan.resource_requirements.overview);
       }
-      addDivider();
+      addDivider('medium');
     }
   }
 
   // 4. AI TOOLS & RESOURCES
   if (jumpData.components?.tools && jumpData.components.tools.length > 0) {
-    addSectionHeader('AI Tools & Resources');
+    addSectionHeader('AI Tools & Technologies', 1);
     
-    jumpData.components.tools.forEach((tool: any) => {
-      checkPageBreak(40);
+    jumpData.components.tools.forEach((tool: any, index: number) => {
+      checkPageBreak(50);
       
-      // Tool header with background
-      pdf.setFillColor(...colors.sectionBg);
-      pdf.rect(margin - 3, yPosition - 3, maxWidth + 6, 12, 'F');
+      // Tool card design
+      const cardHeight = 35;
+      setFillColor(colors.cardBg);
+      pdf.rect(margin - 4, yPosition - 4, maxWidth + 8, cardHeight, 'F');
+      setDrawColor(colors.border);
+      pdf.setLineWidth(0.5);
+      pdf.rect(margin - 4, yPosition - 4, maxWidth + 8, cardHeight, 'S');
       
-      pdf.setTextColor(...colors.primary);
-      pdf.setFontSize(11);
+      // Tool icon (using number for now)
+      setFillColor(colors.brandPrimary);
+      pdf.circle(margin + 8, yPosition + 8, 5, 'F');
+      setTextColor(colors.white);
+      pdf.setFontSize(8);
       pdf.setFont('helvetica', 'bold');
-      pdf.text(tool.name || 'AI Tool', margin, yPosition + 4);
+      pdf.text((index + 1).toString(), margin + (index + 1 > 9 ? 5.5 : 6.5), yPosition + 10);
+      
+      // Tool name and category
+      setTextColor(colors.heading);
+      pdf.setFontSize(typography.h3.size);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text(tool.name || 'AI Tool', margin + 20, yPosition + 6);
       
       if (tool.category) {
-        pdf.setTextColor(...colors.muted);
-        pdf.setFontSize(8);
+        setTextColor(colors.muted);
+        pdf.setFontSize(typography.caption.size);
         pdf.setFont('helvetica', 'normal');
-        pdf.text(`[${tool.category}]`, pageWidth - margin - 40, yPosition + 4);
+        pdf.text(`[${tool.category}]`, margin + 20, yPosition + 16);
       }
-      yPosition += 15;
+      
+      yPosition += cardHeight + 8;
 
       if (tool.description) {
         addParagraph(tool.description);
       }
 
       if (tool.when_to_use) {
-        pdf.setTextColor(...colors.muted);
-        pdf.setFontSize(9);
-        pdf.setFont('helvetica', 'bold');
-        pdf.text('When to use:', margin, yPosition);
-        yPosition += 8;
-        addParagraph(tool.when_to_use, 9);
+        addInfoBox('When to Use', tool.when_to_use, 'highlight');
       }
 
       if (tool.why_this_tool) {
-        pdf.setTextColor(...colors.muted);
-        pdf.setFontSize(9);
-        pdf.setFont('helvetica', 'bold');
-        pdf.text('Why this tool:', margin, yPosition);
-        yPosition += 8;
-        addParagraph(tool.why_this_tool, 9);
+        addInfoBox('Benefits', tool.why_this_tool, 'info');
       }
 
       if (tool.how_to_integrate || tool.integration_notes) {
-        pdf.setTextColor(...colors.muted);
-        pdf.setFontSize(9);
-        pdf.setFont('helvetica', 'bold');
-        pdf.text('How to integrate:', margin, yPosition);
-        yPosition += 8;
-        addParagraph(tool.how_to_integrate || tool.integration_notes, 9);
+        addInfoBox('Integration Guide', tool.how_to_integrate || tool.integration_notes, 'code');
       }
 
       if (tool.website_url || tool.url || tool.website) {
-        pdf.setTextColor(...colors.muted);
-        pdf.setFontSize(8);
+        setTextColor(colors.light);
+        pdf.setFontSize(typography.caption.size);
         pdf.setFont('helvetica', 'italic');
         pdf.text(`Website: ${tool.website_url || tool.url || tool.website}`, margin, yPosition);
-        yPosition += 8;
+        yPosition += 10;
       }
 
-      yPosition += 8;
+      yPosition += 15;
     });
-    addDivider();
+    addDivider('medium');
   }
 
   // 5. AI PROMPTS
   if (jumpData.components?.prompts && jumpData.components.prompts.length > 0) {
-    addSectionHeader('AI Prompts');
+    addSectionHeader('AI Prompts Library', 1);
     
-    jumpData.components.prompts.forEach((prompt: any) => {
-      checkPageBreak(35);
+    jumpData.components.prompts.forEach((prompt: any, index: number) => {
+      checkPageBreak(45);
       
-      addSubsectionHeader(prompt.title || 'AI Prompt');
+      addSubsectionHeader(`${index + 1}. ${prompt.title || 'AI Prompt'}`);
       
       if (prompt.description) {
         addParagraph(prompt.description);
       }
 
       if (prompt.prompt_text) {
-        pdf.setTextColor(...colors.muted);
-        pdf.setFontSize(9);
-        pdf.setFont('helvetica', 'bold');
-        pdf.text('Prompt:', margin, yPosition);
-        yPosition += 8;
-        
-        // Prompt text in box
-        pdf.setFillColor(...colors.sectionBg);
-        const promptLines = wrapText(prompt.prompt_text, maxWidth - 10, 9);
-        const boxHeight = promptLines.length * 5 + 8;
-        checkPageBreak(boxHeight + 10);
-        pdf.rect(margin - 2, yPosition - 4, maxWidth + 4, boxHeight, 'F');
-        
-        pdf.setTextColor(...colors.foreground);
-        pdf.setFontSize(9);
-        pdf.setFont('helvetica', 'normal');
-        pdf.text(promptLines, margin + 3, yPosition);
-        yPosition += boxHeight + 5;
+        addInfoBox('Prompt Template', prompt.prompt_text, 'code');
       }
 
       if (prompt.ai_tools && prompt.ai_tools.length > 0) {
-        pdf.setTextColor(...colors.muted);
-        pdf.setFontSize(8);
+        setTextColor(colors.muted);
+        pdf.setFontSize(typography.caption.size);
         pdf.setFont('helvetica', 'italic');
         pdf.text(`Compatible with: ${prompt.ai_tools.join(', ')}`, margin, yPosition);
-        yPosition += 10;
+        yPosition += 12;
       }
       
-      yPosition += 8;
+      yPosition += 10;
     });
-    addDivider();
+    addDivider('medium');
   }
 
   // 6. WORKFLOWS
   if (jumpData.components?.workflows && jumpData.components.workflows.length > 0) {
-    addSectionHeader('Workflows');
+    addSectionHeader('Process Workflows', 1);
     
-    jumpData.components.workflows.forEach((workflow: any) => {
-      checkPageBreak(35);
+    jumpData.components.workflows.forEach((workflow: any, index: number) => {
+      checkPageBreak(40);
       
-      addSubsectionHeader(workflow.title || 'AI Workflow');
+      addSubsectionHeader(`Workflow ${index + 1}: ${workflow.title || 'AI Workflow'}`);
       
       if (workflow.description) {
         addParagraph(workflow.description);
       }
 
       if (workflow.workflow_steps && workflow.workflow_steps.length > 0) {
-        pdf.setTextColor(...colors.muted);
-        pdf.setFontSize(9);
+        setTextColor(colors.muted);
+        pdf.setFontSize(typography.body.size);
         pdf.setFont('helvetica', 'bold');
-        pdf.text('Steps:', margin, yPosition);
-        yPosition += 8;
+        pdf.text('Process Steps:', margin, yPosition);
+        yPosition += 10;
         
-        workflow.workflow_steps.forEach((step: any, index: number) => {
-          checkPageBreak(15);
-          pdf.setTextColor(...colors.foreground);
-          pdf.setFontSize(9);
-          pdf.setFont('helvetica', 'normal');
-          
-          const stepText = `${step.step || index + 1}. ${step.title || step.description || step.action || 'Step'}`;
-          if (step.description && step.title) {
-            const stepLines = wrapText(`${stepText}: ${step.description}`, maxWidth - 8, 9);
-            pdf.text(stepLines, margin + 5, yPosition);
-            yPosition += stepLines.length * 5 + 3;
-          } else {
-            const stepLines = wrapText(stepText, maxWidth - 8, 9);
-            pdf.text(stepLines, margin + 5, yPosition);
-            yPosition += stepLines.length * 5 + 3;
-          }
+        workflow.workflow_steps.forEach((step: any, stepIndex: number) => {
+          const stepTitle = step.title || step.action || 'Step';
+          const stepDesc = step.description || '';
+          const stepText = stepDesc ? `${stepTitle}: ${stepDesc}` : stepTitle;
+          addNumberedPoint(stepText, stepIndex + 1);
         });
       }
 
-      if (workflow.complexity_level || workflow.duration_estimate) {
-        pdf.setTextColor(...colors.muted);
-        pdf.setFontSize(8);
+      // Workflow metadata
+      const metaInfo = [];
+      if (workflow.complexity_level) metaInfo.push(`Complexity: ${workflow.complexity_level}`);
+      if (workflow.duration_estimate) metaInfo.push(`Duration: ${workflow.duration_estimate}`);
+      
+      if (metaInfo.length > 0) {
+        setTextColor(colors.light);
+        pdf.setFontSize(typography.caption.size);
         pdf.setFont('helvetica', 'italic');
-        let info = '';
-        if (workflow.complexity_level) info += `Complexity: ${workflow.complexity_level}`;
-        if (workflow.duration_estimate) info += (info ? ' | ' : '') + `Duration: ${workflow.duration_estimate}`;
-        pdf.text(info, margin, yPosition);
-        yPosition += 10;
+        pdf.text(`${metaInfo.join(' | ')}`, margin, yPosition);
+        yPosition += 12;
       }
       
-      yPosition += 8;
+      yPosition += 10;
     });
-    addDivider();
+    addDivider('medium');
   }
 
   // 7. BLUEPRINTS
   if (jumpData.components?.blueprints && jumpData.components.blueprints.length > 0) {
-    addSectionHeader('Blueprints');
+    addSectionHeader('Implementation Blueprints', 1);
     
-    jumpData.components.blueprints.forEach((blueprint: any) => {
-      checkPageBreak(25);
+    jumpData.components.blueprints.forEach((blueprint: any, index: number) => {
+      checkPageBreak(35);
       
-      addSubsectionHeader(blueprint.title || 'AI Blueprint');
+      addSubsectionHeader(`Blueprint ${index + 1}: ${blueprint.title || 'AI Blueprint'}`);
       
       if (blueprint.description) {
         addParagraph(blueprint.description);
       }
 
       if (blueprint.implementation) {
-        pdf.setTextColor(...colors.muted);
-        pdf.setFontSize(9);
-        pdf.setFont('helvetica', 'bold');
-        pdf.text('Implementation:', margin, yPosition);
-        yPosition += 8;
-        addParagraph(blueprint.implementation, 9);
+        addInfoBox('Implementation Guide', blueprint.implementation, 'highlight');
       }
 
       if (blueprint.deliverables && blueprint.deliverables.length > 0) {
-        pdf.setTextColor(...colors.muted);
-        pdf.setFontSize(9);
+        setTextColor(colors.muted);
+        pdf.setFontSize(typography.body.size);
         pdf.setFont('helvetica', 'bold');
-        pdf.text('Deliverables:', margin, yPosition);
-        yPosition += 8;
-        blueprint.deliverables.forEach((deliverable: string) => addBulletPoint(deliverable, 9));
+        pdf.text('Expected Deliverables:', margin, yPosition);
+        yPosition += 10;
+        blueprint.deliverables.forEach((deliverable: string) => addBulletPoint(deliverable));
       }
 
-      if (blueprint.difficulty_level || blueprint.implementation_time) {
-        pdf.setTextColor(...colors.muted);
-        pdf.setFontSize(8);
+      // Blueprint metadata
+      const metaInfo = [];
+      if (blueprint.difficulty_level) metaInfo.push(`Difficulty: ${blueprint.difficulty_level}`);
+      if (blueprint.implementation_time) metaInfo.push(`Timeline: ${blueprint.implementation_time}`);
+      
+      if (metaInfo.length > 0) {
+        setTextColor(colors.light);
+        pdf.setFontSize(typography.caption.size);
         pdf.setFont('helvetica', 'italic');
-        let info = '';
-        if (blueprint.difficulty_level) info += `Difficulty: ${blueprint.difficulty_level}`;
-        if (blueprint.implementation_time) info += (info ? ' | ' : '') + `Time: ${blueprint.implementation_time}`;
-        pdf.text(info, margin, yPosition);
-        yPosition += 10;
+        pdf.text(`${metaInfo.join(' | ')}`, margin, yPosition);
+        yPosition += 12;
       }
       
-      yPosition += 8;
+      yPosition += 10;
     });
-    addDivider();
+    addDivider('medium');
   }
 
   // 8. STRATEGIES
   if (jumpData.components?.strategies && jumpData.components.strategies.length > 0) {
-    addSectionHeader('Strategies');
+    addSectionHeader('Strategic Initiatives', 1);
     
-    jumpData.components.strategies.forEach((strategy: any) => {
-      checkPageBreak(30);
+    jumpData.components.strategies.forEach((strategy: any, index: number) => {
+      checkPageBreak(40);
       
-      addSubsectionHeader(strategy.title || 'AI Strategy');
+      addSubsectionHeader(`Strategy ${index + 1}: ${strategy.title || 'AI Strategy'}`);
       
       if (strategy.description) {
         addParagraph(strategy.description);
       }
 
       if (strategy.key_actions && strategy.key_actions.length > 0) {
-        pdf.setTextColor(...colors.muted);
-        pdf.setFontSize(9);
+        setTextColor(colors.muted);
+        pdf.setFontSize(typography.body.size);
         pdf.setFont('helvetica', 'bold');
         pdf.text('Key Actions:', margin, yPosition);
-        yPosition += 8;
-        strategy.key_actions.forEach((action: string) => addBulletPoint(action, 9));
+        yPosition += 10;
+        strategy.key_actions.forEach((action: string) => addBulletPoint(action));
       }
 
       if (strategy.success_metrics && strategy.success_metrics.length > 0) {
-        pdf.setTextColor(...colors.muted);
-        pdf.setFontSize(9);
+        setTextColor(colors.muted);
+        pdf.setFontSize(typography.body.size);
         pdf.setFont('helvetica', 'bold');
         pdf.text('Success Metrics:', margin, yPosition);
-        yPosition += 8;
-        strategy.success_metrics.forEach((metric: string) => addBulletPoint(metric, 9));
+        yPosition += 10;
+        strategy.success_metrics.forEach((metric: string) => addBulletPoint(metric));
       }
 
       if (strategy.potential_challenges && strategy.potential_challenges.length > 0) {
-        pdf.setTextColor(...colors.muted);
-        pdf.setFontSize(9);
+        setTextColor(colors.muted);
+        pdf.setFontSize(typography.body.size);
         pdf.setFont('helvetica', 'bold');
         pdf.text('Potential Challenges:', margin, yPosition);
-        yPosition += 8;
-        strategy.potential_challenges.forEach((challenge: string) => addBulletPoint(challenge, 9));
+        yPosition += 10;
+        strategy.potential_challenges.forEach((challenge: string) => addBulletPoint(challenge));
       }
 
-      if (strategy.priority_level || strategy.timeline) {
-        pdf.setTextColor(...colors.muted);
-        pdf.setFontSize(8);
+      // Strategy metadata
+      const metaInfo = [];
+      if (strategy.priority_level) metaInfo.push(`Priority: ${strategy.priority_level}`);
+      if (strategy.timeline) metaInfo.push(`Timeline: ${strategy.timeline}`);
+      
+      if (metaInfo.length > 0) {
+        setTextColor(colors.light);
+        pdf.setFontSize(typography.caption.size);
         pdf.setFont('helvetica', 'italic');
-        let info = '';
-        if (strategy.priority_level) info += `Priority: ${strategy.priority_level}`;
-        if (strategy.timeline) info += (info ? ' | ' : '') + `Timeline: ${strategy.timeline}`;
-        pdf.text(info, margin, yPosition);
-        yPosition += 10;
+        pdf.text(`${metaInfo.join(' | ')}`, margin, yPosition);
+        yPosition += 12;
       }
       
-      yPosition += 8;
+      yPosition += 10;
     });
   }
 
-  // Add professional footer to all pages
+  // Add premium footer to all pages
   const pageCount = pdf.internal.pages.length - 1;
   for (let i = 1; i <= pageCount; i++) {
     pdf.setPage(i);
     
+    // Footer background
+    setFillColor(colors.sectionBg);
+    pdf.rect(0, pageHeight - 30, pageWidth, 30, 'F');
+    
     // Footer separator line
-    pdf.setDrawColor(...colors.border);
-    pdf.setLineWidth(0.3);
-    pdf.line(margin, pageHeight - 25, pageWidth - margin, pageHeight - 25);
+    setDrawColor(colors.brandPrimary);
+    pdf.setLineWidth(1);
+    pdf.line(0, pageHeight - 30, pageWidth, pageHeight - 30);
     
-    // Footer content
-    pdf.setTextColor(...colors.muted);
+    // Footer content with enhanced layout
+    setTextColor(colors.muted);
     pdf.setFontSize(8);
+    
+    // Left: Company info
+    pdf.setFont('helvetica', 'bold');
+    pdf.text('JumpinAI', margin, pageHeight - 20);
     pdf.setFont('helvetica', 'normal');
+    pdf.text('AI-Powered Strategic Planning Platform', margin, pageHeight - 12);
     
-    // Page number (right)
-    pdf.text(`${i} / ${pageCount}`, pageWidth - margin - 20, pageHeight - 15);
-    
-    // Generated by text (left)
-    pdf.text('Generated by JumpinAI', margin, pageHeight - 15);
-    
-    // Date generated (center)  
+    // Center: Generation info
     const currentDate = new Date().toLocaleDateString('en-US', { 
       year: 'numeric', 
       month: 'short', 
-      day: 'numeric' 
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
     });
-    const centerText = `Generated on ${currentDate}`;
+    const centerText = `Generated ${currentDate}`;
     const centerX = (pageWidth - pdf.getTextWidth(centerText)) / 2;
-    pdf.text(centerText, centerX, pageHeight - 15);
+    pdf.text(centerText, centerX, pageHeight - 16);
+    
+    // Right: Page number with enhanced design
+    pdf.setFont('helvetica', 'bold');
+    const pageText = `Page ${i} of ${pageCount}`;
+    const pageTextWidth = pdf.getTextWidth(pageText);
+    pdf.text(pageText, pageWidth - margin - pageTextWidth, pageHeight - 20);
+    
+    // Confidentiality notice
+    pdf.setFont('helvetica', 'italic');
+    pdf.setFontSize(6);
+    const confText = 'Confidential & Proprietary';
+    const confTextWidth = pdf.getTextWidth(confText);
+    pdf.text(confText, pageWidth - margin - confTextWidth, pageHeight - 8);
   }
 
-  // Download the PDF with clean filename
+  // Generate clean filename and save
   const cleanTitle = jumpData.title
     .replace(/[^a-zA-Z0-9\s]/g, '')
     .trim()
@@ -627,6 +795,7 @@ export const generateJumpPDF = (jumpData: JumpPDFData): void => {
     .toLowerCase()
     .substring(0, 50);
   
-  const fileName = `${cleanTitle || 'jump-plan'}.pdf`;
+  const timestamp = new Date().toISOString().slice(0, 10);
+  const fileName = `${cleanTitle || 'jump-plan'}-${timestamp}.pdf`;
   pdf.save(fileName);
 };
