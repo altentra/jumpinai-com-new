@@ -43,11 +43,11 @@ export default function JumpCard({ jump, onView, onDelete }: JumpCardProps) {
           <div className="flex-1 min-w-0 space-y-3">
             <div className="flex items-center gap-3">
               {number && (
-                <Badge className="bg-gradient-to-r from-primary/20 to-accent/20 text-primary border-0 ring-1 ring-primary/30 text-xs font-semibold px-3 py-1 rounded-full">
+                <Badge className="bg-primary/90 text-primary-foreground border-0 shadow-md text-xs font-semibold px-3 py-1 rounded-full">
                   #{number}
                 </Badge>
               )}
-              <Badge className="bg-gradient-to-r from-secondary/20 to-muted/20 text-secondary-foreground border-0 ring-1 ring-secondary/30 text-xs font-medium px-3 py-1 rounded-full">
+              <Badge className="bg-secondary/90 text-secondary-foreground border-0 shadow-md text-xs font-medium px-3 py-1 rounded-full">
                 AI Generated
               </Badge>
             </div>
