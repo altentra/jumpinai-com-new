@@ -20,43 +20,43 @@ export const generateJumpPDF = (jumpData: JumpPDFData): void => {
   const pdf = new jsPDF();
   const pageWidth = pdf.internal.pageSize.getWidth();
   const pageHeight = pdf.internal.pageSize.getHeight();
-  const margin = 20;
+  const margin = 25;
   const maxWidth = pageWidth - 2 * margin;
   let yPosition = margin;
 
-  // Premium color palette - Professional steel/charcoal theme matching website
+  // Premium color palette - Dark blue glass morphism inspired
   const colors = {
-    // Main colors - Steel/Charcoal theme from website
-    primary: { r: 55, g: 65, b: 81 },         // #374151 - Steel blue
-    secondary: { r: 31, g: 41, b: 55 },       // #1f2937 - Dark steel  
-    accent: { r: 17, g: 24, b: 39 },          // #111827 - Charcoal
+    // Main colors - Dark blue glass theme
+    primary: { r: 30, g: 58, b: 138 },        // #1e3a8a - Deep blue
+    secondary: { r: 55, g: 90, b: 127 },      // #375a7f - Steel blue  
+    accent: { r: 16, g: 30, b: 76 },          // #101e4c - Dark navy
     
-    // Text colors
-    heading: { r: 17, g: 24, b: 39 },         // #111827 - Strong headings
-    body: { r: 55, g: 65, b: 81 },           // #374151 - Readable body text
-    muted: { r: 75, g: 85, b: 99 },          // #4b5563 - Subtle text
-    light: { r: 107, g: 114, b: 128 },       // #6b7280 - Very light text
+    // Text colors - High contrast for readability
+    heading: { r: 15, g: 23, b: 42 },         // #0f172a - Very dark blue
+    body: { r: 51, g: 65, b: 85 },           // #334155 - Readable dark gray
+    muted: { r: 100, g: 116, b: 139 },       // #64748b - Medium gray
+    light: { r: 148, g: 163, b: 184 },       // #94a3b8 - Light gray
     
     // Background colors
-    pageBg: { r: 255, g: 255, b: 255 },      // White - Clean page background
-    sectionBg: { r: 249, g: 250, b: 251 },   // #f9fafb - Light section backgrounds
-    cardBg: { r: 255, g: 255, b: 255 },      // White - Card backgrounds
-    accentBg: { r: 241, g: 245, b: 249 },    // #f1f5f9 - Subtle accent backgrounds
+    pageBg: { r: 255, g: 255, b: 255 },      // Pure white
+    sectionBg: { r: 248, g: 250, b: 252 },   // #f8fafc - Very light blue
+    cardBg: { r: 255, g: 255, b: 255 },      // White cards
+    accentBg: { r: 241, g: 245, b: 249 },    // #f1f5f9 - Light blue tint
+    
+    // Brand colors - Blue glass theme
+    brandPrimary: { r: 30, g: 58, b: 138 },   // #1e3a8a - Deep blue
+    brandSecondary: { r: 59, g: 130, b: 246 }, // #3b82f6 - Bright blue
     
     // Border and divider colors
-    border: { r: 209, g: 213, b: 219 },      // #d1d5db - Subtle borders
-    divider: { r: 229, g: 231, b: 235 },     // #e5e7eb - Light dividers
-    
-    // Brand colors - Steel theme instead of green
-    brandPrimary: { r: 55, g: 65, b: 81 },   // #374151 - Steel blue
-    brandSecondary: { r: 31, g: 41, b: 55 }, // #1f2937 - Dark steel
+    border: { r: 226, g: 232, b: 240 },       // #e2e8f0 - Light blue borders
+    divider: { r: 241, g: 245, b: 249 },      // #f1f5f9 - Very light dividers
     
     // Special colors
     white: { r: 255, g: 255, b: 255 },
     black: { r: 0, g: 0, b: 0 },
   };
 
-  // Helper functions to set colors
+  // Helper functions
   const setFillColor = (color: { r: number; g: number; b: number }) => {
     pdf.setFillColor(color.r, color.g, color.b);
   };
@@ -69,21 +69,21 @@ export const generateJumpPDF = (jumpData: JumpPDFData): void => {
     pdf.setDrawColor(color.r, color.g, color.b);
   };
 
-  // Typography settings - Compact but readable
+  // Professional typography - Larger, more readable fonts
   const typography = {
-    title: { size: 22, lineHeight: 1.2, spacing: 8 },
-    h1: { size: 16, lineHeight: 1.3, spacing: 6 },
-    h2: { size: 13, lineHeight: 1.3, spacing: 5 },
-    h3: { size: 11, lineHeight: 1.3, spacing: 4 },
-    body: { size: 9, lineHeight: 1.4, spacing: 3 },
-    caption: { size: 8, lineHeight: 1.3, spacing: 2 },
+    title: { size: 24, lineHeight: 1.3, spacing: 4 },
+    h1: { size: 18, lineHeight: 1.3, spacing: 3 },
+    h2: { size: 15, lineHeight: 1.3, spacing: 3 },
+    h3: { size: 12, lineHeight: 1.3, spacing: 3 },
+    body: { size: 10, lineHeight: 1.4, spacing: 2 },
+    caption: { size: 9, lineHeight: 1.3, spacing: 2 },
   };
 
-  // Helper functions with enhanced formatting
+  // Helper functions with tight spacing and premium design
   const checkPageBreak = (neededHeight: number) => {
-    if (yPosition + neededHeight > pageHeight - margin - 25) {
+    if (yPosition + neededHeight > pageHeight - margin - 20) {
       pdf.addPage();
-      yPosition = margin + 20;
+      yPosition = margin + 15;
       addPageHeader();
     }
   };
@@ -96,82 +96,62 @@ export const generateJumpPDF = (jumpData: JumpPDFData): void => {
 
   const cleanTextContent = (text: string) => {
     if (!text) return '';
-    // Remove emojis and special unicode characters
+    // Clean text for better readability
     let cleanText = text.replace(/[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu, '');
-    // Clean markdown formatting
     cleanText = cleanText.replace(/\*\*(.*?)\*\*/g, '$1').replace(/\*(.*?)\*/g, '$1').replace(/`([^`]+)`/g, '$1');
-    // Normalize whitespace
     cleanText = cleanText.replace(/\s+/g, ' ').trim();
     return cleanText;
   };
 
-  // Minimal page header with steel theme
+  // Premium page header with blue glass theme
   const addPageHeader = () => {
-    // Steel gradient background
+    // Blue gradient header
     setFillColor(colors.brandPrimary);
-    pdf.rect(0, 0, pageWidth, 16, 'F');
+    pdf.rect(0, 0, pageWidth, 12, 'F');
     
     // Brand name
     setTextColor(colors.white);
-    pdf.setFontSize(12);
+    pdf.setFontSize(11);
     pdf.setFont('helvetica', 'bold');
-    pdf.text('JumpinAI', margin, 11);
+    pdf.text('JumpinAI', margin, 8);
     
     // Subtitle
     pdf.setFontSize(8);
     pdf.setFont('helvetica', 'normal');
-    pdf.text('Strategic Planning', margin + 30, 11);
+    pdf.text('Strategic Planning Platform', margin + 32, 8);
     
-    // Simple bottom line
-    setDrawColor(colors.brandSecondary);
-    pdf.setLineWidth(0.5);
-    pdf.line(0, 16, pageWidth, 16);
-    
-    yPosition = 28;
+    yPosition = 22;
   };
 
-  // Compact section headers
+  // Clean section headers with proper spacing
   const addSectionHeader = (title: string, level: number = 1) => {
     const config = level === 1 ? typography.h1 : typography.h2;
-    checkPageBreak(config.spacing * 2);
+    checkPageBreak(config.size + 10);
     
-    // Simple section background
-    const bgHeight = config.size + 6;
+    // Section background
     setFillColor(colors.sectionBg);
-    pdf.rect(margin - 4, yPosition - 3, maxWidth + 8, bgHeight, 'F');
+    pdf.rect(margin - 5, yPosition - 4, maxWidth + 10, config.size + 8, 'F');
     
     // Left accent bar
     setFillColor(colors.brandPrimary);
-    pdf.rect(margin - 4, yPosition - 3, 3, bgHeight, 'F');
+    pdf.rect(margin - 5, yPosition - 4, 3, config.size + 8, 'F');
     
-    // Section title
+    // Title
     setTextColor(colors.heading);
     pdf.setFontSize(config.size);
     pdf.setFont('helvetica', 'bold');
-    const titleLines = wrapText(title, maxWidth - 15, config.size);
-    pdf.text(titleLines, margin, yPosition + config.size - 1);
-    yPosition += titleLines.length * config.spacing + 8;
-    
-    // Simple underline
-    setDrawColor(colors.accent);
-    pdf.setLineWidth(0.5);
-    pdf.line(margin, yPosition, margin + maxWidth * 0.3, yPosition);
-    yPosition += 6;
+    pdf.text(title, margin, yPosition + config.size - 2);
+    yPosition += config.size + 6;
   };
 
   const addSubsectionHeader = (title: string) => {
-    checkPageBreak(typography.h3.spacing * 2);
-    
-    // Subtle background
-    setFillColor(colors.accentBg);
-    pdf.rect(margin - 4, yPosition - 4, maxWidth + 8, typography.h3.size + 8, 'F');
+    checkPageBreak(typography.h3.size + 8);
     
     setTextColor(colors.heading);
     pdf.setFontSize(typography.h3.size);
     pdf.setFont('helvetica', 'bold');
-    const titleLines = wrapText(title, maxWidth, typography.h3.size);
-    pdf.text(titleLines, margin, yPosition + typography.h3.size - 2);
-    yPosition += titleLines.length * typography.h3.spacing + typography.h3.spacing;
+    pdf.text(title, margin, yPosition);
+    yPosition += typography.h3.size + 4;
   };
 
   const addParagraph = (text: string, fontSize: number = typography.body.size, color = colors.body) => {
@@ -179,14 +159,14 @@ export const generateJumpPDF = (jumpData: JumpPDFData): void => {
     const cleanText = cleanTextContent(text);
     if (!cleanText) return;
     
-    checkPageBreak(typography.body.spacing * 2);
+    checkPageBreak(fontSize + 5);
     setTextColor(color);
     pdf.setFontSize(fontSize);
     pdf.setFont('helvetica', 'normal');
     
     const textLines = wrapText(cleanText, maxWidth, fontSize);
     pdf.text(textLines, margin, yPosition);
-    yPosition += textLines.length * (fontSize * typography.body.lineHeight) + typography.body.spacing;
+    yPosition += textLines.length * (fontSize * typography.body.lineHeight) + 3;
   };
 
   const addBulletPoint = (text: string, fontSize: number = typography.body.size, indent: number = 0) => {
@@ -194,20 +174,20 @@ export const generateJumpPDF = (jumpData: JumpPDFData): void => {
     const cleanText = cleanTextContent(text);
     if (!cleanText) return;
     
-    checkPageBreak(typography.body.spacing * 2);
+    checkPageBreak(fontSize + 5);
     
     const bulletX = margin + indent;
-    const textX = bulletX + 12;
+    const textX = bulletX + 8;
     
-    // Enhanced bullet design
-    setFillColor(colors.accent);
-    pdf.circle(bulletX + 3, yPosition - 2, 1.5, 'F');
+    // Simple bullet
+    setFillColor(colors.brandSecondary);
+    pdf.circle(bulletX + 2, yPosition - 1, 1, 'F');
     
     setTextColor(colors.body);
     pdf.setFontSize(fontSize);
     pdf.setFont('helvetica', 'normal');
     
-    const bulletLines = wrapText(cleanText, maxWidth - 16 - indent, fontSize);
+    const bulletLines = wrapText(cleanText, maxWidth - 12 - indent, fontSize);
     pdf.text(bulletLines, textX, yPosition);
     yPosition += bulletLines.length * (fontSize * typography.body.lineHeight) + 2;
   };
@@ -217,33 +197,33 @@ export const generateJumpPDF = (jumpData: JumpPDFData): void => {
     const cleanText = cleanTextContent(text);
     if (!cleanText) return;
     
-    checkPageBreak(typography.body.spacing * 2);
+    checkPageBreak(fontSize + 5);
     
     // Number in circle
-    setFillColor(colors.accent);
-    pdf.circle(margin + 6, yPosition - 1, 4, 'F');
+    setFillColor(colors.brandPrimary);
+    pdf.circle(margin + 5, yPosition - 1, 3, 'F');
     
     setTextColor(colors.white);
-    pdf.setFontSize(8);
+    pdf.setFontSize(7);
     pdf.setFont('helvetica', 'bold');
-    pdf.text(number.toString(), margin + (number > 9 ? 3 : 4.5), yPosition + 1);
+    pdf.text(number.toString(), margin + (number > 9 ? 3 : 4), yPosition + 1);
     
     setTextColor(colors.body);
     pdf.setFontSize(fontSize);
     pdf.setFont('helvetica', 'normal');
     
-    const textLines = wrapText(cleanText, maxWidth - 20, fontSize);
-    pdf.text(textLines, margin + 15, yPosition);
-    yPosition += textLines.length * (fontSize * typography.body.lineHeight) + 4;
+    const textLines = wrapText(cleanText, maxWidth - 15, fontSize);
+    pdf.text(textLines, margin + 12, yPosition);
+    yPosition += textLines.length * (fontSize * typography.body.lineHeight) + 3;
   };
 
   const addDivider = (style: 'light' | 'medium' | 'heavy' = 'medium') => {
-    checkPageBreak(8);
+    checkPageBreak(6);
     
     const lineStyles = {
-      light: { color: colors.divider, width: 0.3, spacing: 5 },
-      medium: { color: colors.border, width: 0.4, spacing: 8 },
-      heavy: { color: colors.accent, width: 0.6, spacing: 10 }
+      light: { color: colors.divider, width: 0.3, spacing: 4 },
+      medium: { color: colors.border, width: 0.5, spacing: 6 },
+      heavy: { color: colors.brandPrimary, width: 0.8, spacing: 8 }
     };
     
     const config = lineStyles[style];
@@ -292,45 +272,40 @@ export const generateJumpPDF = (jumpData: JumpPDFData): void => {
     yPosition += contentLines.length * (typography.body.size * 1.4) + 8;
   };
 
-  // Start PDF generation with premium cover page
+  // Start PDF with premium title page
   addPageHeader();
 
-  // Title section with compact design
-  yPosition += 5;
+  // Main title with professional styling
   setTextColor(colors.heading);
   pdf.setFontSize(typography.title.size);
   pdf.setFont('helvetica', 'bold');
   const titleLines = wrapText(jumpData.title, maxWidth, typography.title.size);
   pdf.text(titleLines, margin, yPosition);
-  yPosition += titleLines.length * (typography.title.size * typography.title.lineHeight) + 8;
+  yPosition += titleLines.length * (typography.title.size * typography.title.lineHeight) + 6;
 
-  // Simple title underline
+  // Title underline
   setDrawColor(colors.brandPrimary);
-  pdf.setLineWidth(1);
-  pdf.line(margin, yPosition, margin + maxWidth * 0.5, yPosition);
-  yPosition += 12;
+  pdf.setLineWidth(1.5);
+  pdf.line(margin, yPosition, margin + maxWidth * 0.6, yPosition);
+  yPosition += 8;
 
-  // Compact metadata section
+  // Clean metadata
   const dateText = new Date(jumpData.createdAt).toLocaleDateString('en-US', { 
     year: 'numeric', month: 'short', day: 'numeric'
   });
   
-  // Simple metadata box
-  setFillColor(colors.sectionBg);
-  pdf.rect(margin - 2, yPosition - 2, maxWidth + 4, 14, 'F');
-  
   setTextColor(colors.muted);
   pdf.setFontSize(typography.caption.size);
   pdf.setFont('helvetica', 'normal');
-  pdf.text(`Generated: ${dateText}`, margin, yPosition + 6);
+  pdf.text(`Generated: ${dateText}`, margin, yPosition);
   
-  setTextColor(colors.brandPrimary);
+  setTextColor(colors.brandSecondary);
   pdf.setFont('helvetica', 'bold');
   const aiText = 'AI Strategic Plan';
   const aiTextWidth = pdf.getTextWidth(aiText);
-  pdf.text(aiText, pageWidth - margin - aiTextWidth - 2, yPosition + 6);
+  pdf.text(aiText, pageWidth - margin - aiTextWidth, yPosition);
   
-  yPosition += 20;
+  yPosition += 12;
 
   // Executive Summary (if available)
   if (jumpData.summary) {
@@ -339,36 +314,31 @@ export const generateJumpPDF = (jumpData: JumpPDFData): void => {
     addDivider('medium');
   }
 
-  // 1. STRATEGIC ACTION PLAN
+  // 1. STRATEGIC ACTION PLAN - Improved formatting
   if (jumpData.content) {
     addSectionHeader('Strategic Action Plan', 1);
     
     const lines = jumpData.content.split('\n');
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i].trim();
-      if (!line) {
-        yPosition += 2;
-        continue;
-      }
+      if (!line) continue; // Skip empty lines entirely
 
       if (line.startsWith('# ')) {
         addSubsectionHeader(line.substring(2).trim());
       } else if (line.startsWith('## ')) {
-        checkPageBreak(15);
+        checkPageBreak(12);
         setTextColor(colors.heading);
         pdf.setFontSize(typography.h3.size);
         pdf.setFont('helvetica', 'bold');
-        const headerLines = wrapText(line.substring(3).trim(), maxWidth, typography.h3.size);
-        pdf.text(headerLines, margin, yPosition);
-        yPosition += headerLines.length * typography.h3.spacing + 4;
+        pdf.text(line.substring(3).trim(), margin, yPosition);
+        yPosition += typography.h3.size + 3;
       } else if (line.startsWith('### ')) {
-        checkPageBreak(12);
+        checkPageBreak(10);
         setTextColor(colors.body);
         pdf.setFontSize(typography.body.size + 1);
         pdf.setFont('helvetica', 'bold');
-        const headerLines = wrapText(line.substring(4).trim(), maxWidth, typography.body.size + 1);
-        pdf.text(headerLines, margin, yPosition);
-        yPosition += headerLines.length * typography.body.spacing + 3;
+        pdf.text(line.substring(4).trim(), margin, yPosition);
+        yPosition += typography.body.size + 3;
       } else if (line.startsWith('- ') || line.startsWith('* ')) {
         addBulletPoint(line.substring(2).trim());
       } else if (line.match(/^\d+\. /)) {
@@ -386,47 +356,47 @@ export const generateJumpPDF = (jumpData: JumpPDFData): void => {
     addDivider('medium');
   }
 
-  // 2. IMPLEMENTATION PLAN
+  // 2. IMPLEMENTATION PLAN - Clean phase design
   if (jumpData.structured_plan) {
     addSectionHeader('Implementation Roadmap', 1);
     
     if (jumpData.structured_plan.overview) {
       addParagraph(jumpData.structured_plan.overview, typography.body.size + 1);
-      yPosition += 10;
+      yPosition += 6;
     }
 
     if (jumpData.structured_plan.phases && jumpData.structured_plan.phases.length > 0) {
       jumpData.structured_plan.phases.forEach((phase: any, index: number) => {
-        checkPageBreak(45);
+        checkPageBreak(35);
         
-        // Phase header with premium design
+        // Clean Phase header
         const phaseTitle = `Phase ${phase.phase_number || index + 1}: ${phase.title}`;
         
         // Phase background
         setFillColor(colors.accentBg);
-        pdf.rect(margin - 6, yPosition - 6, maxWidth + 12, 22, 'F');
+        pdf.rect(margin - 4, yPosition - 4, maxWidth + 8, 18, 'F');
         
-        // Phase number circle
-        setFillColor(colors.accent);
-        pdf.circle(margin + 8, yPosition + 3, 6, 'F');
+        // Phase number
+        setFillColor(colors.brandPrimary);
+        pdf.circle(margin + 6, yPosition + 4, 4, 'F');
         
         setTextColor(colors.white);
-        pdf.setFontSize(10);
+        pdf.setFontSize(8);
         pdf.setFont('helvetica', 'bold');
-        pdf.text((phase.phase_number || index + 1).toString(), margin + (phase.phase_number > 9 ? 5 : 6.5), yPosition + 5);
+        pdf.text((phase.phase_number || index + 1).toString(), margin + (phase.phase_number > 9 ? 4 : 5), yPosition + 6);
         
         setTextColor(colors.heading);
         pdf.setFontSize(typography.h2.size);
         pdf.setFont('helvetica', 'bold');
-        pdf.text(phaseTitle, margin + 20, yPosition + 6);
-        yPosition += 25;
+        pdf.text(phaseTitle, margin + 16, yPosition + 7);
+        yPosition += 20;
 
         if (phase.duration) {
           setTextColor(colors.muted);
           pdf.setFontSize(typography.caption.size);
           pdf.setFont('helvetica', 'italic');
           pdf.text(`Duration: ${phase.duration}`, margin, yPosition);
-          yPosition += 12;
+          yPosition += 8;
         }
 
         if (phase.description) {
@@ -438,14 +408,14 @@ export const generateJumpPDF = (jumpData: JumpPDFData): void => {
           pdf.setFontSize(typography.body.size);
           pdf.setFont('helvetica', 'bold');
           pdf.text('Key Deliverables:', margin, yPosition);
-          yPosition += 10;
+          yPosition += 8;
           
           phase.tasks.forEach((task: any) => {
             const taskText = typeof task === 'string' ? task : task.description || task.name || 'Task';
             addBulletPoint(taskText, typography.body.size);
           });
         }
-        yPosition += 12;
+        yPosition += 6;
       });
     }
     addDivider('medium');
@@ -539,10 +509,10 @@ export const generateJumpPDF = (jumpData: JumpPDFData): void => {
         pdf.setFontSize(typography.caption.size);
         pdf.setFont('helvetica', 'italic');
         pdf.text(`Website: ${tool.website_url || tool.url || tool.website}`, margin, yPosition);
-        yPosition += 10;
+        yPosition += 6;
       }
 
-      yPosition += 15;
+      yPosition += 8;
     });
     addDivider('medium');
   }
