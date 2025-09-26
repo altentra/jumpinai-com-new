@@ -69,21 +69,21 @@ export const generateJumpPDF = (jumpData: JumpPDFData): void => {
     pdf.setDrawColor(color.r, color.g, color.b);
   };
 
-  // Professional typography - Larger, more readable fonts
+  // Compact professional typography - Tight spacing
   const typography = {
-    title: { size: 24, lineHeight: 1.3, spacing: 4 },
-    h1: { size: 18, lineHeight: 1.3, spacing: 3 },
-    h2: { size: 15, lineHeight: 1.3, spacing: 3 },
-    h3: { size: 12, lineHeight: 1.3, spacing: 3 },
-    body: { size: 10, lineHeight: 1.4, spacing: 2 },
-    caption: { size: 9, lineHeight: 1.3, spacing: 2 },
+    title: { size: 20, lineHeight: 1.2, spacing: 2 },
+    h1: { size: 16, lineHeight: 1.2, spacing: 2 },
+    h2: { size: 13, lineHeight: 1.2, spacing: 2 },
+    h3: { size: 11, lineHeight: 1.2, spacing: 2 },
+    body: { size: 9, lineHeight: 1.3, spacing: 1.5 },
+    caption: { size: 8, lineHeight: 1.2, spacing: 1 },
   };
 
-  // Helper functions with tight spacing and premium design
+  // Helper functions with minimal spacing
   const checkPageBreak = (neededHeight: number) => {
-    if (yPosition + neededHeight > pageHeight - margin - 20) {
+    if (yPosition + neededHeight > pageHeight - margin - 15) {
       pdf.addPage();
-      yPosition = margin + 15;
+      yPosition = margin + 10;
       addPageHeader();
     }
   };
@@ -103,55 +103,55 @@ export const generateJumpPDF = (jumpData: JumpPDFData): void => {
     return cleanText;
   };
 
-  // Premium page header with blue glass theme
+  // Minimal page header
   const addPageHeader = () => {
     // Blue gradient header
     setFillColor(colors.brandPrimary);
-    pdf.rect(0, 0, pageWidth, 12, 'F');
+    pdf.rect(0, 0, pageWidth, 10, 'F');
     
     // Brand name
     setTextColor(colors.white);
-    pdf.setFontSize(11);
+    pdf.setFontSize(10);
     pdf.setFont('helvetica', 'bold');
-    pdf.text('JumpinAI', margin, 8);
+    pdf.text('JumpinAI', margin, 7);
     
     // Subtitle
-    pdf.setFontSize(8);
+    pdf.setFontSize(7);
     pdf.setFont('helvetica', 'normal');
-    pdf.text('Strategic Planning Platform', margin + 32, 8);
+    pdf.text('Strategic Planning Platform', margin + 28, 7);
     
-    yPosition = 22;
+    yPosition = 18;
   };
 
-  // Clean section headers with proper spacing
+  // Compact section headers
   const addSectionHeader = (title: string, level: number = 1) => {
     const config = level === 1 ? typography.h1 : typography.h2;
-    checkPageBreak(config.size + 10);
+    checkPageBreak(config.size + 6);
     
     // Section background
     setFillColor(colors.sectionBg);
-    pdf.rect(margin - 5, yPosition - 4, maxWidth + 10, config.size + 8, 'F');
+    pdf.rect(margin - 3, yPosition - 2, maxWidth + 6, config.size + 4, 'F');
     
     // Left accent bar
     setFillColor(colors.brandPrimary);
-    pdf.rect(margin - 5, yPosition - 4, 3, config.size + 8, 'F');
+    pdf.rect(margin - 3, yPosition - 2, 2, config.size + 4, 'F');
     
     // Title
     setTextColor(colors.heading);
     pdf.setFontSize(config.size);
     pdf.setFont('helvetica', 'bold');
     pdf.text(title, margin, yPosition + config.size - 2);
-    yPosition += config.size + 6;
+    yPosition += config.size + 4;
   };
 
   const addSubsectionHeader = (title: string) => {
-    checkPageBreak(typography.h3.size + 8);
+    checkPageBreak(typography.h3.size + 4);
     
     setTextColor(colors.heading);
     pdf.setFontSize(typography.h3.size);
     pdf.setFont('helvetica', 'bold');
     pdf.text(title, margin, yPosition);
-    yPosition += typography.h3.size + 4;
+    yPosition += typography.h3.size + 2;
   };
 
   const addParagraph = (text: string, fontSize: number = typography.body.size, color = colors.body) => {
@@ -159,14 +159,14 @@ export const generateJumpPDF = (jumpData: JumpPDFData): void => {
     const cleanText = cleanTextContent(text);
     if (!cleanText) return;
     
-    checkPageBreak(fontSize + 5);
+    checkPageBreak(fontSize + 3);
     setTextColor(color);
     pdf.setFontSize(fontSize);
     pdf.setFont('helvetica', 'normal');
     
     const textLines = wrapText(cleanText, maxWidth, fontSize);
     pdf.text(textLines, margin, yPosition);
-    yPosition += textLines.length * (fontSize * typography.body.lineHeight) + 3;
+    yPosition += textLines.length * (fontSize * typography.body.lineHeight) + 1.5;
   };
 
   const addBulletPoint = (text: string, fontSize: number = typography.body.size, indent: number = 0) => {
@@ -174,22 +174,22 @@ export const generateJumpPDF = (jumpData: JumpPDFData): void => {
     const cleanText = cleanTextContent(text);
     if (!cleanText) return;
     
-    checkPageBreak(fontSize + 5);
+    checkPageBreak(fontSize + 3);
     
     const bulletX = margin + indent;
-    const textX = bulletX + 8;
+    const textX = bulletX + 6;
     
     // Simple bullet
     setFillColor(colors.brandSecondary);
-    pdf.circle(bulletX + 2, yPosition - 1, 1, 'F');
+    pdf.circle(bulletX + 1.5, yPosition - 1, 0.8, 'F');
     
     setTextColor(colors.body);
     pdf.setFontSize(fontSize);
     pdf.setFont('helvetica', 'normal');
     
-    const bulletLines = wrapText(cleanText, maxWidth - 12 - indent, fontSize);
+    const bulletLines = wrapText(cleanText, maxWidth - 8 - indent, fontSize);
     pdf.text(bulletLines, textX, yPosition);
-    yPosition += bulletLines.length * (fontSize * typography.body.lineHeight) + 2;
+    yPosition += bulletLines.length * (fontSize * typography.body.lineHeight) + 1;
   };
 
   const addNumberedPoint = (text: string, number: number, fontSize: number = typography.body.size) => {
@@ -197,33 +197,33 @@ export const generateJumpPDF = (jumpData: JumpPDFData): void => {
     const cleanText = cleanTextContent(text);
     if (!cleanText) return;
     
-    checkPageBreak(fontSize + 5);
+    checkPageBreak(fontSize + 3);
     
     // Number in circle
     setFillColor(colors.brandPrimary);
-    pdf.circle(margin + 5, yPosition - 1, 3, 'F');
+    pdf.circle(margin + 4, yPosition - 1, 2.5, 'F');
     
     setTextColor(colors.white);
-    pdf.setFontSize(7);
+    pdf.setFontSize(6);
     pdf.setFont('helvetica', 'bold');
-    pdf.text(number.toString(), margin + (number > 9 ? 3 : 4), yPosition + 1);
+    pdf.text(number.toString(), margin + (number > 9 ? 2.5 : 3.2), yPosition + 0.5);
     
     setTextColor(colors.body);
     pdf.setFontSize(fontSize);
     pdf.setFont('helvetica', 'normal');
     
-    const textLines = wrapText(cleanText, maxWidth - 15, fontSize);
-    pdf.text(textLines, margin + 12, yPosition);
-    yPosition += textLines.length * (fontSize * typography.body.lineHeight) + 3;
+    const textLines = wrapText(cleanText, maxWidth - 12, fontSize);
+    pdf.text(textLines, margin + 10, yPosition);
+    yPosition += textLines.length * (fontSize * typography.body.lineHeight) + 1.5;
   };
 
   const addDivider = (style: 'light' | 'medium' | 'heavy' = 'medium') => {
-    checkPageBreak(6);
+    checkPageBreak(4);
     
     const lineStyles = {
-      light: { color: colors.divider, width: 0.3, spacing: 4 },
-      medium: { color: colors.border, width: 0.5, spacing: 6 },
-      heavy: { color: colors.brandPrimary, width: 0.8, spacing: 8 }
+      light: { color: colors.divider, width: 0.3, spacing: 2 },
+      medium: { color: colors.border, width: 0.5, spacing: 3 },
+      heavy: { color: colors.brandPrimary, width: 0.8, spacing: 4 }
     };
     
     const config = lineStyles[style];
@@ -272,24 +272,24 @@ export const generateJumpPDF = (jumpData: JumpPDFData): void => {
     yPosition += contentLines.length * (typography.body.size * 1.4) + 8;
   };
 
-  // Start PDF with premium title page
+  // Start PDF with compact title
   addPageHeader();
 
-  // Main title with professional styling
+  // Main title
   setTextColor(colors.heading);
   pdf.setFontSize(typography.title.size);
   pdf.setFont('helvetica', 'bold');
   const titleLines = wrapText(jumpData.title, maxWidth, typography.title.size);
   pdf.text(titleLines, margin, yPosition);
-  yPosition += titleLines.length * (typography.title.size * typography.title.lineHeight) + 6;
+  yPosition += titleLines.length * (typography.title.size * typography.title.lineHeight) + 3;
 
   // Title underline
   setDrawColor(colors.brandPrimary);
-  pdf.setLineWidth(1.5);
+  pdf.setLineWidth(1);
   pdf.line(margin, yPosition, margin + maxWidth * 0.6, yPosition);
-  yPosition += 8;
+  yPosition += 4;
 
-  // Clean metadata
+  // Compact metadata
   const dateText = new Date(jumpData.createdAt).toLocaleDateString('en-US', { 
     year: 'numeric', month: 'short', day: 'numeric'
   });
@@ -305,7 +305,7 @@ export const generateJumpPDF = (jumpData: JumpPDFData): void => {
   const aiTextWidth = pdf.getTextWidth(aiText);
   pdf.text(aiText, pageWidth - margin - aiTextWidth, yPosition);
   
-  yPosition += 12;
+  yPosition += 6;
 
   // Executive Summary (if available)
   if (jumpData.summary) {
@@ -356,47 +356,47 @@ export const generateJumpPDF = (jumpData: JumpPDFData): void => {
     addDivider('medium');
   }
 
-  // 2. IMPLEMENTATION PLAN - Clean phase design
+  // 2. IMPLEMENTATION PLAN - Compact design
   if (jumpData.structured_plan) {
     addSectionHeader('Implementation Roadmap', 1);
     
     if (jumpData.structured_plan.overview) {
       addParagraph(jumpData.structured_plan.overview, typography.body.size + 1);
-      yPosition += 6;
+      yPosition += 2;
     }
 
     if (jumpData.structured_plan.phases && jumpData.structured_plan.phases.length > 0) {
       jumpData.structured_plan.phases.forEach((phase: any, index: number) => {
-        checkPageBreak(35);
+        checkPageBreak(25);
         
-        // Clean Phase header
+        // Compact Phase header
         const phaseTitle = `Phase ${phase.phase_number || index + 1}: ${phase.title}`;
         
         // Phase background
         setFillColor(colors.accentBg);
-        pdf.rect(margin - 4, yPosition - 4, maxWidth + 8, 18, 'F');
+        pdf.rect(margin - 3, yPosition - 2, maxWidth + 6, 14, 'F');
         
         // Phase number
         setFillColor(colors.brandPrimary);
-        pdf.circle(margin + 6, yPosition + 4, 4, 'F');
+        pdf.circle(margin + 5, yPosition + 3, 3, 'F');
         
         setTextColor(colors.white);
-        pdf.setFontSize(8);
+        pdf.setFontSize(7);
         pdf.setFont('helvetica', 'bold');
-        pdf.text((phase.phase_number || index + 1).toString(), margin + (phase.phase_number > 9 ? 4 : 5), yPosition + 6);
+        pdf.text((phase.phase_number || index + 1).toString(), margin + (phase.phase_number > 9 ? 3.5 : 4.2), yPosition + 4.5);
         
         setTextColor(colors.heading);
         pdf.setFontSize(typography.h2.size);
         pdf.setFont('helvetica', 'bold');
-        pdf.text(phaseTitle, margin + 16, yPosition + 7);
-        yPosition += 20;
+        pdf.text(phaseTitle, margin + 12, yPosition + 6);
+        yPosition += 16;
 
         if (phase.duration) {
           setTextColor(colors.muted);
           pdf.setFontSize(typography.caption.size);
           pdf.setFont('helvetica', 'italic');
           pdf.text(`Duration: ${phase.duration}`, margin, yPosition);
-          yPosition += 8;
+          yPosition += 5;
         }
 
         if (phase.description) {
@@ -408,14 +408,14 @@ export const generateJumpPDF = (jumpData: JumpPDFData): void => {
           pdf.setFontSize(typography.body.size);
           pdf.setFont('helvetica', 'bold');
           pdf.text('Key Deliverables:', margin, yPosition);
-          yPosition += 8;
+          yPosition += 5;
           
           phase.tasks.forEach((task: any) => {
             const taskText = typeof task === 'string' ? task : task.description || task.name || 'Task';
             addBulletPoint(taskText, typography.body.size);
           });
         }
-        yPosition += 6;
+        yPosition += 3;
       });
     }
     addDivider('medium');
