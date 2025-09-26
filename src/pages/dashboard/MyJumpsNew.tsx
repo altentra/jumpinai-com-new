@@ -89,28 +89,36 @@ export default function MyJumpsNew() {
   return (
     <div className="space-y-5">
       {/* Header */}
-      <div className="bg-gradient-to-br from-card/95 to-primary/5 rounded-3xl border border-primary/20 p-4 shadow-2xl shadow-primary/10 backdrop-blur-xl">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Rocket className="h-7 w-7 text-primary" />
-            <div>
-              <h1 className="text-2xl font-bold">My Jumps</h1>
-              <p className="text-sm text-muted-foreground">Your personal AI transformation plans</p>
+      <div className="glass border-0 ring-1 ring-white/10 rounded-3xl p-8 shadow-2xl backdrop-blur-2xl bg-gradient-to-br from-background/80 via-card/60 to-primary/5 relative overflow-hidden">
+        {/* Subtle background glow */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 opacity-50"></div>
+        
+        <div className="relative flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="p-3 rounded-2xl bg-primary/10 ring-1 ring-primary/20 shadow-lg">
+              <Rocket className="h-8 w-8 text-primary" />
+            </div>
+            <div className="space-y-1">
+              <h1 className="text-3xl font-display font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+                My Jumps
+              </h1>
+              <p className="text-muted-foreground font-medium">Your personal AI transformation plans</p>
             </div>
           </div>
           
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <Button
               variant="outline"
               size="sm"
               onClick={() => loadJumps()}
               disabled={loading}
+              className="rounded-2xl border-0 ring-1 ring-white/20 bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-all duration-300"
             >
-              <RefreshCw className={`w-3 h-3 ${loading ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
             </Button>
             <Link to="/jumpinai-studio">
-              <Button className="gap-2 text-sm px-3 py-1.5">
-                <Plus className="h-3 w-3" />
+              <Button className="gap-2 rounded-2xl bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transition-all duration-300 border-0 ring-1 ring-primary/30">
+                <Plus className="h-4 w-4" />
                 Create New Jump
               </Button>
             </Link>
@@ -120,34 +128,44 @@ export default function MyJumpsNew() {
 
       {/* Jumps Grid */}
       {jumps.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {jumps.map((jump) => (
-            <JumpCard
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          {jumps.map((jump, index) => (
+            <div 
               key={jump.id}
-              jump={jump}
-              onView={handleViewJump}
-              onDelete={handleDeleteJump}
-            />
+              className="animate-fade-in-up"
+              style={{ animationDelay: `${index * 100}ms` }}
+            >
+              <JumpCard
+                jump={jump}
+                onView={handleViewJump}
+                onDelete={handleDeleteJump}
+              />
+            </div>
           ))}
         </div>
       ) : (
-        <Card className="bg-gradient-to-br from-card/95 to-primary/5 border border-primary/20 rounded-3xl shadow-2xl shadow-primary/10 backdrop-blur-xl">
-          <CardHeader className="text-center">
-            <div className="mx-auto mb-3 p-3 rounded-full bg-muted w-fit">
-              <Rocket className="h-7 w-7 text-muted-foreground" />
+        <Card className="glass border-0 ring-1 ring-white/10 rounded-3xl shadow-2xl backdrop-blur-2xl bg-gradient-to-br from-background/80 via-card/60 to-primary/5 relative overflow-hidden">
+          {/* Subtle background pattern */}
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 opacity-30"></div>
+          
+          <CardHeader className="text-center relative z-10 pb-4">
+            <div className="mx-auto mb-6 p-4 rounded-3xl bg-gradient-to-br from-primary/10 to-accent/10 ring-1 ring-primary/20 shadow-lg w-fit">
+              <Rocket className="h-12 w-12 text-primary" />
             </div>
-            <CardTitle className="text-xl">No Jumps Yet</CardTitle>
-            <CardDescription className="text-sm">
+            <CardTitle className="text-2xl font-display font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent mb-2">
+              No Jumps Yet
+            </CardTitle>
+            <CardDescription className="text-base text-muted-foreground font-medium">
               Create your first AI transformation plan to get started
             </CardDescription>
           </CardHeader>
-          <CardContent className="text-center">
-            <p className="text-sm text-muted-foreground mb-5">
+          <CardContent className="text-center relative z-10 pt-0">
+            <p className="text-muted-foreground mb-8 leading-relaxed">
               Head to JumpinAI Studio to create personalized transformation plans powered by AI.
             </p>
             <Link to="/jumpinai-studio">
-              <Button className="gap-2 text-sm">
-                <Plus className="h-4 w-4" />
+              <Button className="gap-3 text-base px-8 py-3 rounded-2xl bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transition-all duration-300 border-0 ring-1 ring-primary/30">
+                <Plus className="h-5 w-5" />
                 Create Your First Jump
               </Button>
             </Link>

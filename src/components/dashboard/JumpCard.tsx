@@ -34,44 +34,50 @@ export default function JumpCard({ jump, onView, onDelete }: JumpCardProps) {
   const { number, name } = parseJumpTitle(jump.title);
 
   return (
-    <Card className="bg-gradient-to-br from-card/95 to-primary/5 border border-primary/20 rounded-3xl shadow-2xl shadow-primary/10 backdrop-blur-xl hover:shadow-primary/20 hover:border-primary/30 transition-all duration-300 hover-scale">
-      <CardHeader className="pb-3">
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-2">
+    <Card className="group glass border-0 ring-1 ring-white/10 rounded-3xl shadow-2xl backdrop-blur-2xl bg-gradient-to-br from-background/80 via-card/60 to-primary/5 hover:ring-white/20 hover:shadow-3xl transition-all duration-500 relative overflow-hidden hover:scale-[1.02]">
+      {/* Subtle background glow effect */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+      
+      <CardHeader className="pb-4 relative z-10">
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex-1 min-w-0 space-y-3">
+            <div className="flex items-center gap-3">
               {number && (
-                <Badge variant="outline" className="bg-primary/10 text-primary border-primary/30 text-xs">
+                <Badge className="bg-gradient-to-r from-primary/20 to-accent/20 text-primary border-0 ring-1 ring-primary/30 text-xs font-semibold px-3 py-1 rounded-full">
                   #{number}
                 </Badge>
               )}
-              <CardTitle className="text-lg line-clamp-2">
-                {name}
-              </CardTitle>
+              <Badge className="bg-gradient-to-r from-secondary/20 to-muted/20 text-secondary-foreground border-0 ring-1 ring-secondary/30 text-xs font-medium px-3 py-1 rounded-full">
+                AI Generated
+              </Badge>
             </div>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Calendar className="h-4 w-4" />
+            
+            <CardTitle className="text-xl font-display font-bold line-clamp-2 bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent leading-tight">
+              {name}
+            </CardTitle>
+            
+            <div className="flex items-center gap-2 text-sm text-muted-foreground font-medium">
+              <div className="p-1 rounded-lg bg-muted/30 ring-1 ring-muted/40">
+                <Calendar className="h-3.5 w-3.5" />
+              </div>
               <span>Created {formatDate(jump.created_at)}</span>
             </div>
           </div>
-          <Badge variant="secondary">
-            AI Generated
-          </Badge>
         </div>
       </CardHeader>
       
-      <CardContent className="pt-0">
+      <CardContent className="pt-0 relative z-10 space-y-4">
         {jump.summary && (
-          <CardDescription className="line-clamp-3 mb-4">
+          <CardDescription className="line-clamp-3 text-muted-foreground font-medium leading-relaxed">
             {jump.summary}
           </CardDescription>
         )}
         
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3 pt-2">
           <Button 
             onClick={() => onView(jump)}
-            variant="default"
+            className="flex-1 rounded-2xl bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transition-all duration-300 border-0 ring-1 ring-primary/30 font-semibold"
             size="sm"
-            className="flex-1 rounded-2xl shadow-md hover:shadow-lg"
           >
             <Eye className="h-4 w-4 mr-2" />
             View Full Plan
@@ -81,7 +87,7 @@ export default function JumpCard({ jump, onView, onDelete }: JumpCardProps) {
             onClick={() => onDelete(jump.id)}
             variant="outline"
             size="sm"
-            className="rounded-2xl border-primary/30 text-destructive hover:text-destructive"
+            className="rounded-2xl border-0 ring-1 ring-destructive/30 bg-destructive/5 text-destructive hover:bg-destructive/10 hover:ring-destructive/50 transition-all duration-300 p-2.5"
           >
             <Trash2 className="h-4 w-4" />
           </Button>
