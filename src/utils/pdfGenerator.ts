@@ -5,6 +5,15 @@ export interface JumpPDFData {
   summary?: string;
   content: string;
   createdAt: string;
+  structured_plan?: any;
+  comprehensive_plan?: any;
+  components?: {
+    tools?: any[];
+    prompts?: any[];
+    workflows?: any[];
+    blueprints?: any[];
+    strategies?: any[];
+  };
 }
 
 export const generateJumpPDF = (jumpData: JumpPDFData): void => {
@@ -102,8 +111,295 @@ export const generateJumpPDF = (jumpData: JumpPDFData): void => {
   
   yPosition += 20;
 
-  // Process content - convert markdown to PDF
+  // Add summary if available
+  if (jumpData.summary) {
+    checkPageBreak(20);
+    pdf.setTextColor(...colors.muted);
+    pdf.setFontSize(11);
+    pdf.setFont('helvetica', 'italic');
+    const summaryLines = wrapText(jumpData.summary, maxWidth, 11);
+    pdf.text(summaryLines, margin, yPosition);
+    yPosition += summaryLines.length * 6 + 15;
+  }
+
+  // Process structured plan if available
+  const processStructuredPlan = () => {
+    if (!jumpData.structured_plan) return;
+
+    checkPageBreak(25);
+    pdf.setTextColor(...colors.foreground);
+    pdf.setFontSize(16);
+    pdf.setFont('helvetica', 'bold');
+    pdf.text('Implementation Plan', margin, yPosition);
+    yPosition += 10;
+    
+    // Underline
+    pdf.setDrawColor(...colors.border);
+    pdf.setLineWidth(0.5);
+    pdf.line(margin, yPosition, margin + maxWidth * 0.3, yPosition);
+    yPosition += 15;
+
+    // Overview
+    if (jumpData.structured_plan.overview) {
+      pdf.setTextColor(...colors.foreground);
+      pdf.setFontSize(10);
+      pdf.setFont('helvetica', 'normal');
+      const overviewLines = wrapText(jumpData.structured_plan.overview, maxWidth, 10);
+      pdf.text(overviewLines, margin, yPosition);
+      yPosition += overviewLines.length * 5 + 10;
+    }
+
+    // Phases
+    if (jumpData.structured_plan.phases && jumpData.structured_plan.phases.length > 0) {
+      jumpData.structured_plan.phases.forEach((phase: any, index: number) => {
+        checkPageBreak(30);
+        
+        // Phase header
+        pdf.setTextColor(...colors.foreground);
+        pdf.setFontSize(12);
+        pdf.setFont('helvetica', 'bold');
+        const phaseTitle = `Phase ${phase.phase_number || index + 1}: ${phase.title}`;
+        const phaseTitleLines = wrapText(phaseTitle, maxWidth, 12);
+        pdf.text(phaseTitleLines, margin, yPosition);
+        yPosition += phaseTitleLines.length * 6 + 5;
+
+        // Duration
+        if (phase.duration) {
+          pdf.setTextColor(...colors.muted);
+          pdf.setFontSize(9);
+          pdf.setFont('helvetica', 'normal');
+          pdf.text(`Duration: ${phase.duration}`, margin, yPosition);
+          yPosition += 8;
+        }
+
+        // Description
+        if (phase.description) {
+          pdf.setTextColor(...colors.foreground);
+          pdf.setFontSize(10);
+          pdf.setFont('helvetica', 'normal');
+          const descLines = wrapText(phase.description, maxWidth, 10);
+          pdf.text(descLines, margin, yPosition);
+          yPosition += descLines.length * 5 + 8;
+        }
+
+        // Tasks
+        if (phase.tasks && phase.tasks.length > 0) {
+          phase.tasks.forEach((task: any) => {
+            checkPageBreak(15);
+            pdf.setTextColor(...colors.foreground);
+            pdf.setFontSize(10);
+            pdf.setFont('helvetica', 'normal');
+            
+            // Bullet point
+            pdf.setFillColor(...colors.primary);
+            pdf.circle(margin + 3, yPosition - 1, 1, 'F');
+            
+            const taskText = typeof task === 'string' ? task : task.description || task.name || 'Task';
+            const taskLines = wrapText(taskText, maxWidth - 12, 10);
+            pdf.text(taskLines, margin + 10, yPosition);
+            yPosition += taskLines.length * 5 + 2;
+          });
+        }
+
+        yPosition += 8;
+      });
+    }
+  };
+
+  // Process comprehensive plan sections
+  const processComprehensivePlan = () => {
+    if (!jumpData.comprehensive_plan) return;
+
+    const plan = jumpData.comprehensive_plan;
+
+    // Executive Summary
+    if (plan.executive_summary) {
+      checkPageBreak(25);
+      pdf.setTextColor(...colors.foreground);
+      pdf.setFontSize(14);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('Executive Summary', margin, yPosition);
+      yPosition += 8;
+      
+      pdf.setDrawColor(...colors.border);
+      pdf.setLineWidth(0.5);
+      pdf.line(margin, yPosition, margin + maxWidth * 0.25, yPosition);
+      yPosition += 10;
+
+      pdf.setTextColor(...colors.foreground);
+      pdf.setFontSize(10);
+      pdf.setFont('helvetica', 'normal');
+      const summaryLines = wrapText(plan.executive_summary, maxWidth, 10);
+      pdf.text(summaryLines, margin, yPosition);
+      yPosition += summaryLines.length * 5 + 15;
+    }
+
+    // Key Objectives
+    if (plan.key_objectives) {
+      checkPageBreak(25);
+      pdf.setTextColor(...colors.foreground);
+      pdf.setFontSize(14);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('Key Objectives', margin, yPosition);
+      yPosition += 8;
+      
+      pdf.setDrawColor(...colors.border);
+      pdf.setLineWidth(0.5);
+      pdf.line(margin, yPosition, margin + maxWidth * 0.25, yPosition);
+      yPosition += 10;
+
+      const objectives = Array.isArray(plan.key_objectives) ? plan.key_objectives : [plan.key_objectives];
+      objectives.forEach((objective: string) => {
+        checkPageBreak(15);
+        pdf.setTextColor(...colors.foreground);
+        pdf.setFontSize(10);
+        pdf.setFont('helvetica', 'normal');
+        
+        pdf.setFillColor(...colors.primary);
+        pdf.circle(margin + 3, yPosition - 1, 1, 'F');
+        
+        const objLines = wrapText(objective, maxWidth - 12, 10);
+        pdf.text(objLines, margin + 10, yPosition);
+        yPosition += objLines.length * 5 + 3;
+      });
+      yPosition += 10;
+    }
+
+    // Success Metrics
+    if (plan.success_metrics) {
+      checkPageBreak(25);
+      pdf.setTextColor(...colors.foreground);
+      pdf.setFontSize(14);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('Success Metrics', margin, yPosition);
+      yPosition += 8;
+      
+      pdf.setDrawColor(...colors.border);
+      pdf.setLineWidth(0.5);
+      pdf.line(margin, yPosition, margin + maxWidth * 0.25, yPosition);
+      yPosition += 10;
+
+      const metrics = Array.isArray(plan.success_metrics) ? plan.success_metrics : [plan.success_metrics];
+      metrics.forEach((metric: string) => {
+        checkPageBreak(15);
+        pdf.setTextColor(...colors.foreground);
+        pdf.setFontSize(10);
+        pdf.setFont('helvetica', 'normal');
+        
+        pdf.setFillColor(...colors.primary);
+        pdf.circle(margin + 3, yPosition - 1, 1, 'F');
+        
+        const metricLines = wrapText(metric, maxWidth - 12, 10);
+        pdf.text(metricLines, margin + 10, yPosition);
+        yPosition += metricLines.length * 5 + 3;
+      });
+      yPosition += 10;
+    }
+  };
+
+  // Process components (tools, prompts, workflows, blueprints, strategies)
+  const processComponents = () => {
+    if (!jumpData.components) return;
+
+    // Tools section
+    if (jumpData.components.tools && jumpData.components.tools.length > 0) {
+      checkPageBreak(25);
+      pdf.setTextColor(...colors.foreground);
+      pdf.setFontSize(14);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('AI Tools & Resources', margin, yPosition);
+      yPosition += 8;
+      
+      pdf.setDrawColor(...colors.border);
+      pdf.setLineWidth(0.5);
+      pdf.line(margin, yPosition, margin + maxWidth * 0.25, yPosition);
+      yPosition += 10;
+
+      jumpData.components.tools.forEach((tool: any) => {
+        checkPageBreak(20);
+        
+        // Tool name
+        pdf.setTextColor(...colors.foreground);
+        pdf.setFontSize(11);
+        pdf.setFont('helvetica', 'bold');
+        const toolName = tool.name || 'AI Tool';
+        pdf.text(toolName, margin, yPosition);
+        yPosition += 8;
+
+        // Tool description
+        if (tool.description) {
+          pdf.setTextColor(...colors.foreground);
+          pdf.setFontSize(10);
+          pdf.setFont('helvetica', 'normal');
+          const descLines = wrapText(tool.description, maxWidth, 10);
+          pdf.text(descLines, margin, yPosition);
+          yPosition += descLines.length * 5 + 5;
+        }
+
+        // When to use
+        if (tool.when_to_use) {
+          pdf.setTextColor(...colors.muted);
+          pdf.setFontSize(9);
+          pdf.setFont('helvetica', 'italic');
+          const whenLines = wrapText(`When to use: ${tool.when_to_use}`, maxWidth, 9);
+          pdf.text(whenLines, margin, yPosition);
+          yPosition += whenLines.length * 4 + 8;
+        }
+      });
+    }
+
+    // Add other component sections (prompts, workflows, etc.) if they exist
+    const componentSections = [
+      { key: 'prompts', title: 'AI Prompts' },
+      { key: 'workflows', title: 'Workflows' },
+      { key: 'blueprints', title: 'Blueprints' },
+      { key: 'strategies', title: 'Strategies' }
+    ];
+
+    componentSections.forEach(section => {
+      const components = jumpData.components?.[section.key as keyof typeof jumpData.components];
+      if (components && Array.isArray(components) && components.length > 0) {
+        checkPageBreak(25);
+        pdf.setTextColor(...colors.foreground);
+        pdf.setFontSize(14);
+        pdf.setFont('helvetica', 'bold');
+        pdf.text(section.title, margin, yPosition);
+        yPosition += 8;
+        
+        pdf.setDrawColor(...colors.border);
+        pdf.setLineWidth(0.5);
+        pdf.line(margin, yPosition, margin + maxWidth * 0.25, yPosition);
+        yPosition += 10;
+
+        components.forEach((component: any) => {
+          checkPageBreak(15);
+          
+          // Component title
+          pdf.setTextColor(...colors.foreground);
+          pdf.setFontSize(11);
+          pdf.setFont('helvetica', 'bold');
+          const title = component.title || component.name || `${section.title.slice(0, -1)}`;
+          pdf.text(title, margin, yPosition);
+          yPosition += 8;
+
+          // Component description
+          if (component.description) {
+            pdf.setTextColor(...colors.foreground);
+            pdf.setFontSize(10);
+            pdf.setFont('helvetica', 'normal');
+            const descLines = wrapText(component.description, maxWidth, 10);
+            pdf.text(descLines, margin, yPosition);
+            yPosition += descLines.length * 5 + 8;
+          }
+        });
+      }
+    });
+  };
+
+  // Process content - convert markdown to PDF for any remaining text content
   const processContent = (content: string) => {
+    if (!content) return;
+    
     const lines = content.split('\n');
     
     for (let i = 0; i < lines.length; i++) {
@@ -219,7 +515,15 @@ export const generateJumpPDF = (jumpData: JumpPDFData): void => {
     }
   };
 
-  processContent(jumpData.content);
+  // Process all sections in order
+  processStructuredPlan();
+  processComprehensivePlan();
+  processComponents();
+  
+  // Process any remaining markdown content
+  if (jumpData.content && !jumpData.structured_plan && !jumpData.comprehensive_plan) {
+    processContent(jumpData.content);
+  }
 
   // Add professional footer to all pages
   const pageCount = pdf.internal.pages.length - 1;

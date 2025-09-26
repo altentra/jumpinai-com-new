@@ -230,16 +230,20 @@ export default function JumpDetailModal({ jump, isOpen, onClose }: JumpDetailMod
   };
 
   const downloadPlan = async () => {
-    if (!jump) return;
+    if (!jump || !progressiveResult) return;
     
     try {
       const jumpPDFData = {
         title: jump.title,
         summary: jump.summary || undefined,
-        content: jump.full_content,
-        createdAt: jump.created_at
+        content: jump.full_content || '',
+        createdAt: jump.created_at,
+        structured_plan: progressiveResult.structured_plan,
+        comprehensive_plan: progressiveResult.comprehensive_plan,
+        components: progressiveResult.components
       };
       
+      console.log('Generating PDF with data:', jumpPDFData);
       await generateJumpPDF(jumpPDFData);
     } catch (error) {
       console.error('Error downloading plan:', error);
