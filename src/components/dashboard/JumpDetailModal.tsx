@@ -306,28 +306,29 @@ export default function JumpDetailModal({ jump, isOpen, onClose }: JumpDetailMod
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-6xl max-h-[90vh] w-[95vw] sm:w-full overflow-y-auto p-4 sm:p-6">
         <DialogHeader>
-          <div className="flex items-center justify-between">
-            <div>
-              <DialogTitle className="text-2xl font-bold">{jump?.title}</DialogTitle>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex-1 min-w-0">
+              <DialogTitle className="text-xl sm:text-2xl font-bold truncate pr-2">{jump?.title}</DialogTitle>
               {jump?.created_at && (
-                <p className="text-sm text-muted-foreground mt-1">
+                <p className="text-xs sm:text-sm text-muted-foreground mt-1">
                   Created on {formatDate(jump.created_at)}
                 </p>
               )}
             </div>
-            <div className="flex items-center gap-3">
-              <span className="text-xs px-2 py-1 bg-primary/10 text-primary rounded-full border border-primary/20">
+            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+              <span className="text-xs px-2 py-1 bg-primary/10 text-primary rounded-full border border-primary/20 whitespace-nowrap">
                 AI Generated
               </span>
               <Button 
                 onClick={downloadPlan}
                 size="sm"
-                className="gap-2"
+                className="gap-2 text-xs sm:text-sm"
               >
-                <Download className="w-4 h-4" />
-                Download
+                <Download className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span className="hidden sm:inline">Download</span>
+                <span className="sm:hidden">PDF</span>
               </Button>
             </div>
           </div>
@@ -339,10 +340,12 @@ export default function JumpDetailModal({ jump, isOpen, onClose }: JumpDetailMod
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
             </div>
           ) : progressiveResult ? (
-            <ProgressiveJumpDisplay 
-              result={progressiveResult} 
-              generationTimer={0}
-            />
+            <div className="mt-4">
+              <ProgressiveJumpDisplay 
+                result={progressiveResult} 
+                generationTimer={0}
+              />
+            </div>
           ) : (
             <div className="flex items-center justify-center py-12 text-muted-foreground">
               Failed to load jump data
