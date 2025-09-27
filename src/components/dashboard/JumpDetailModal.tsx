@@ -306,52 +306,71 @@ export default function JumpDetailModal({ jump, isOpen, onClose }: JumpDetailMod
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-6xl max-h-[90vh] w-[95vw] sm:w-full overflow-y-auto p-4 sm:p-6">
-        <DialogHeader>
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div className="flex-1 min-w-0">
-              <DialogTitle className="text-xl sm:text-2xl font-bold truncate pr-2">{jump?.title}</DialogTitle>
+      <DialogContent className="max-w-7xl max-h-[95vh] w-[98vw] sm:w-[95vw] md:w-full overflow-hidden flex flex-col p-0">
+        {/* Mobile-Optimized Header */}
+        <DialogHeader className="p-3 sm:p-4 md:p-6 pb-2 sm:pb-3 border-b border-border/20 shrink-0">
+          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 sm:gap-4">
+            <div className="flex-1 min-w-0 space-y-1">
+              <DialogTitle className="text-lg sm:text-xl md:text-2xl font-bold leading-tight pr-2">
+                {jump?.title}
+              </DialogTitle>
               {jump?.created_at && (
-                <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+                <p className="text-xs sm:text-sm text-muted-foreground">
                   Created on {formatDate(jump.created_at)}
                 </p>
               )}
             </div>
-            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            <div className="flex items-center gap-2 shrink-0 self-end sm:self-start">
               <span className="text-xs px-2 py-1 bg-primary/10 text-primary rounded-full border border-primary/20 whitespace-nowrap">
                 AI Generated
               </span>
               <Button 
                 onClick={downloadPlan}
                 size="sm"
-                className="gap-2 text-xs sm:text-sm"
+                className="gap-1.5 text-xs h-8 px-3"
               >
-                <Download className="w-3 h-3 sm:w-4 sm:h-4" />
-                <span className="hidden sm:inline">Download</span>
-                <span className="sm:hidden">PDF</span>
+                <Download className="w-3 h-3" />
+                <span className="hidden xs:inline sm:hidden md:inline">Download</span>
+                <span className="xs:hidden sm:inline md:hidden">PDF</span>
               </Button>
             </div>
           </div>
         </DialogHeader>
 
-        <ErrorBoundary>
-          {loading ? (
-            <div className="flex items-center justify-center py-12">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-            </div>
-          ) : progressiveResult ? (
-            <div className="mt-4">
-              <ProgressiveJumpDisplay 
-                result={progressiveResult} 
-                generationTimer={0}
-              />
-            </div>
-          ) : (
-            <div className="flex items-center justify-center py-12 text-muted-foreground">
-              Failed to load jump data
-            </div>
-          )}
-        </ErrorBoundary>
+        {/* Mobile-Optimized Content Area */}
+        <div className="flex-1 overflow-y-auto">
+          <ErrorBoundary>
+            {loading ? (
+              <div className="flex items-center justify-center py-12">
+                <div className="flex flex-col items-center gap-3">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                  <p className="text-sm text-muted-foreground">Loading your jump...</p>
+                </div>
+              </div>
+            ) : progressiveResult ? (
+              <div className="p-3 sm:p-4 md:p-6 pt-2 sm:pt-3">
+                <ProgressiveJumpDisplay 
+                  result={progressiveResult} 
+                  generationTimer={0}
+                />
+              </div>
+            ) : (
+              <div className="flex items-center justify-center py-12 text-muted-foreground p-4">
+                <div className="text-center space-y-2">
+                  <p className="text-sm">Failed to load jump data</p>
+                  <Button 
+                    onClick={() => window.location.reload()} 
+                    variant="outline" 
+                    size="sm"
+                    className="text-xs"
+                  >
+                    Try Again
+                  </Button>
+                </div>
+              </div>
+            )}
+          </ErrorBoundary>
+        </div>
       </DialogContent>
     </Dialog>
   );
