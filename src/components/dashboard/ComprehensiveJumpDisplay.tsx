@@ -351,28 +351,28 @@ export default function ComprehensiveJumpDisplay({ jump, onEdit, onDownload, cla
           <div className="space-y-6">
             {/* Phase Header */}
             <div className="flex items-center gap-4">
-              <div className="flex items-center justify-center w-12 h-12 bg-primary text-primary-foreground rounded-full font-bold text-lg">
+              <div className="flex items-center justify-center w-12 h-12 bg-white/20 text-white rounded-full font-bold text-lg drop-shadow-lg border border-white/30">
                 {phase.phase_number}
               </div>
               <div className="flex-1">
                 <h3 className="text-xl font-semibold text-white drop-shadow-sm">{phase.title}</h3>
                 <p className="text-white/90 drop-shadow-sm">{phase.description}</p>
-                <Badge variant="outline" className="mt-1 border-white/30 text-white/90">{phase.duration}</Badge>
+                <Badge variant="outline" className="mt-1 border-white/30 text-white/90 bg-white/10">{phase.duration}</Badge>
               </div>
             </div>
 
-            <Separator />
+            <Separator className="border-white/20" />
 
             {/* Objectives */}
             <div>
               <h4 className="font-medium text-white drop-shadow-sm mb-3 flex items-center gap-2">
-                <Target className="h-4 w-4" />
+                <Target className="h-4 w-4 text-white drop-shadow-sm" />
                 Objectives
               </h4>
               <div className="grid gap-2">
                 {phase.objectives.map((objective, objIndex) => (
                   <div key={objIndex} className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-green-400 drop-shadow-sm" />
+                    <CheckCircle2 className="h-4 w-4 text-white drop-shadow-sm" />
                     <span className="text-white/90 drop-shadow-sm">{objective}</span>
                   </div>
                 ))}
@@ -382,7 +382,7 @@ export default function ComprehensiveJumpDisplay({ jump, onEdit, onDownload, cla
             {/* Key Actions */}
             <div>
               <h4 className="font-medium text-white drop-shadow-sm mb-3 flex items-center gap-2">
-                <Play className="h-4 w-4" />
+                <Play className="h-4 w-4 text-white drop-shadow-sm" />
                 Key Actions
               </h4>
               <div className="space-y-3">
@@ -395,7 +395,7 @@ export default function ComprehensiveJumpDisplay({ jump, onEdit, onDownload, cla
                           <Badge variant={action.priority === 'High' ? 'destructive' : action.priority === 'Medium' ? 'default' : 'secondary'} className="text-xs">
                             {action.priority}
                           </Badge>
-                          <Badge variant="outline" className="text-xs border-white/30 text-white/90">
+                          <Badge variant="outline" className="text-xs border-white/30 text-white/90 bg-white/10">
                             {action.effort_level}
                           </Badge>
                         </div>
@@ -415,7 +415,7 @@ export default function ComprehensiveJumpDisplay({ jump, onEdit, onDownload, cla
             {/* Milestones */}
             <div>
               <h4 className="font-medium text-white drop-shadow-sm mb-3 flex items-center gap-2">
-                <Star className="h-4 w-4" />
+                <Star className="h-4 w-4 text-white drop-shadow-sm" />
                 Milestones
               </h4>
               <div className="space-y-3">
@@ -424,12 +424,12 @@ export default function ComprehensiveJumpDisplay({ jump, onEdit, onDownload, cla
                     <CardContent className="p-4">
                       <div className="flex items-center justify-between mb-2">
                         <h5 className="font-medium text-white drop-shadow-sm">{milestone.milestone}</h5>
-                        <Badge variant="outline" className="text-xs border-white/30 text-white/90">{milestone.target_date}</Badge>
+                        <Badge variant="outline" className="text-xs border-white/30 text-white/90 bg-white/10">{milestone.target_date}</Badge>
                       </div>
                       <div className="space-y-1">
                         {milestone.success_criteria.map((criteria, criteriaIndex) => (
                           <div key={criteriaIndex} className="flex items-center gap-2 text-sm text-white/80 drop-shadow-sm">
-                            <CheckCircle2 className="h-3 w-3" />
+                            <CheckCircle2 className="h-3 w-3 text-white drop-shadow-sm" />
                             {criteria}
                           </div>
                         ))}
