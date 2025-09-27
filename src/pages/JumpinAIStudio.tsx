@@ -17,6 +17,7 @@ const JumpinAIStudio = () => {
   const [guestUsageCount, setGuestUsageCount] = useState(0);
   const [generationTimer, setGenerationTimer] = useState(0);
   const progressDisplayRef = useRef<HTMLDivElement>(null);
+  const generateButtonRef = useRef<HTMLDivElement>(null);
   
   // Helper function to format time
   const formatTime = (seconds: number) => {
@@ -160,12 +161,12 @@ const JumpinAIStudio = () => {
       // Generate with progressive display
       const result = await generateWithProgression(formData, user?.id);
       
-      // Auto-scroll to progress display after generation starts
+      // Auto-scroll to button area where loading appears immediately
       setTimeout(() => {
-        if (progressDisplayRef.current) {
-          progressDisplayRef.current.scrollIntoView({ 
+        if (generateButtonRef.current) {
+          generateButtonRef.current.scrollIntoView({ 
             behavior: 'smooth', 
-            block: 'start' 
+            block: 'center' 
           });
         }
       }, 100);
@@ -409,7 +410,7 @@ const JumpinAIStudio = () => {
                       </div>
 
                       {/* Glass Morphism Generate Button */}
-                      <div className="text-center mt-8">
+                      <div ref={generateButtonRef} className="text-center mt-8">
                         <div className="relative inline-block group">
                           {/* Subtle glow backdrop */}
                           <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 dark:from-primary/15 dark:via-accent/12 dark:to-secondary/15 rounded-full blur-xl opacity-60 group-hover:opacity-80 transition-all duration-500"></div>
@@ -533,8 +534,8 @@ const JumpinAIStudio = () => {
             )}
 
             {/* Mini Footer */}
-            <div className="mt-16 py-4 text-center border-t border-border/20">
-              <div className="text-xs text-muted-foreground/60">
+            <div className="mt-16 py-2 text-center border-t border-border/20">
+              <div className="text-sm text-muted-foreground/60">
                 © 2025 JumpinAI, LLC. All rights reserved.{' '}
                 <a 
                   href="/terms-of-use" 
