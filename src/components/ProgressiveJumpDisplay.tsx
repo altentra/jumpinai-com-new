@@ -132,38 +132,75 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
         </div>
       </div>
 
-      {/* Content Tabs */}
+      {/* Content Tabs - Mobile Optimized with Horizontal Scroll */}
       <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="grid w-full grid-cols-7 p-1 bg-background/60 backdrop-blur-sm rounded-2xl border border-border/40 shadow-inner">
-          <TabsTrigger value="overview" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
-            {getStatusIcon(result.processing_status?.isComplete || false, !!result.full_content)}
-            Overview
-          </TabsTrigger>
-          <TabsTrigger value="plan" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
-            {getStatusIcon(result.processing_status?.isComplete || false, !!result.structured_plan)}
-            Plan
-          </TabsTrigger>
-          <TabsTrigger value="tools" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
-            {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.tools?.length || 0) > 0)}
-            Tools ({result.components?.tools?.length || 0})
-          </TabsTrigger>
-          <TabsTrigger value="prompts" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
-            {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.prompts?.length || 0) > 0)}
-            Prompts ({result.components?.prompts?.length || 0}/4)
-          </TabsTrigger>
-          <TabsTrigger value="workflows" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
-            {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.workflows?.length || 0) > 0)}
-            Workflows ({result.components?.workflows?.length || 0}/4)
-          </TabsTrigger>
-          <TabsTrigger value="blueprints" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
-            {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.blueprints?.length || 0) > 0)}
-            Blueprints ({result.components?.blueprints?.length || 0}/4)
-          </TabsTrigger>
-          <TabsTrigger value="strategies" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
-            {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.strategies?.length || 0) > 0)}
-            Strategies ({result.components?.strategies?.length || 0}/4)
-          </TabsTrigger>
-        </TabsList>
+        <div className="relative">
+          {/* Mobile: Horizontal scroll container */}
+          <div className="sm:hidden overflow-x-auto scrollbar-hide pb-2">
+            <TabsList className="inline-flex w-max min-w-full gap-2 p-1 bg-background/60 backdrop-blur-sm rounded-2xl border border-border/40 shadow-inner">
+              <TabsTrigger value="overview" className="flex items-center gap-1.5 text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
+                {getStatusIcon(result.processing_status?.isComplete || false, !!result.full_content)}
+                Overview
+              </TabsTrigger>
+              <TabsTrigger value="plan" className="flex items-center gap-1.5 text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
+                {getStatusIcon(result.processing_status?.isComplete || false, !!result.structured_plan)}
+                Plan
+              </TabsTrigger>
+              <TabsTrigger value="tools" className="flex items-center gap-1.5 text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
+                {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.tools?.length || 0) > 0)}
+                Tools ({result.components?.tools?.length || 0})
+              </TabsTrigger>
+              <TabsTrigger value="prompts" className="flex items-center gap-1.5 text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
+                {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.prompts?.length || 0) > 0)}
+                Prompts ({result.components?.prompts?.length || 0}/4)
+              </TabsTrigger>
+              <TabsTrigger value="workflows" className="flex items-center gap-1.5 text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
+                {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.workflows?.length || 0) > 0)}
+                Workflows ({result.components?.workflows?.length || 0}/4)
+              </TabsTrigger>
+              <TabsTrigger value="blueprints" className="flex items-center gap-1.5 text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
+                {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.blueprints?.length || 0) > 0)}
+                Blueprints ({result.components?.blueprints?.length || 0}/4)
+              </TabsTrigger>
+              <TabsTrigger value="strategies" className="flex items-center gap-1.5 text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
+                {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.strategies?.length || 0) > 0)}
+                Strategies ({result.components?.strategies?.length || 0}/4)
+              </TabsTrigger>
+            </TabsList>
+          </div>
+          
+          {/* Desktop: Grid layout */}
+          <TabsList className="hidden sm:grid w-full grid-cols-7 p-1 bg-background/60 backdrop-blur-sm rounded-2xl border border-border/40 shadow-inner">
+            <TabsTrigger value="overview" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
+              {getStatusIcon(result.processing_status?.isComplete || false, !!result.full_content)}
+              Overview
+            </TabsTrigger>
+            <TabsTrigger value="plan" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
+              {getStatusIcon(result.processing_status?.isComplete || false, !!result.structured_plan)}
+              Plan
+            </TabsTrigger>
+            <TabsTrigger value="tools" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
+              {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.tools?.length || 0) > 0)}
+              Tools ({result.components?.tools?.length || 0})
+            </TabsTrigger>
+            <TabsTrigger value="prompts" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
+              {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.prompts?.length || 0) > 0)}
+              Prompts ({result.components?.prompts?.length || 0}/4)
+            </TabsTrigger>
+            <TabsTrigger value="workflows" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
+              {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.workflows?.length || 0) > 0)}
+              Workflows ({result.components?.workflows?.length || 0}/4)
+            </TabsTrigger>
+            <TabsTrigger value="blueprints" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
+              {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.blueprints?.length || 0) > 0)}
+              Blueprints ({result.components?.blueprints?.length || 0}/4)
+            </TabsTrigger>
+            <TabsTrigger value="strategies" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
+              {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.strategies?.length || 0) > 0)}
+              Strategies ({result.components?.strategies?.length || 0}/4)
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
         <TabsContent value="overview" className="mt-6">
           <div className="relative group">

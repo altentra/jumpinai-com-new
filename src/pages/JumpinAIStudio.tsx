@@ -237,28 +237,28 @@ const JumpinAIStudio = () => {
         <Navigation />
         
         {/* Premium Auth Status Bar with liquid glass effect */}
-        <div className="fixed top-20 right-4 z-50 animate-fade-in-right">
+        <div className="fixed top-20 right-4 left-4 sm:left-auto z-50 animate-fade-in-right">
           <div className="relative group">
             {/* Liquid glass container with enhanced effects */}
             <div className="absolute inset-0 bg-gradient-to-r from-background/60 via-background/40 to-background/60 dark:from-background/40 dark:via-background/20 dark:to-background/40 rounded-2xl blur-xl transform group-hover:scale-110 transition-transform duration-500"></div>
-            <div className="relative glass-dark rounded-2xl p-4 text-sm border border-white/30 dark:border-white/20 backdrop-blur-2xl bg-gradient-to-br from-white/15 via-white/8 to-white/5 dark:from-black/25 dark:via-black/15 dark:to-black/10 shadow-2xl group-hover:shadow-3xl transition-all duration-300">
+            <div className="relative glass-dark rounded-2xl p-3 sm:p-4 text-xs sm:text-sm border border-white/30 dark:border-white/20 backdrop-blur-2xl bg-gradient-to-br from-white/15 via-white/8 to-white/5 dark:from-black/25 dark:via-black/15 dark:to-black/10 shadow-2xl group-hover:shadow-3xl transition-all duration-300">
               {/* Premium glass overlay */}
               <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-transparent to-accent/5 dark:from-primary/6 dark:via-transparent dark:to-accent/4 rounded-2xl"></div>
               <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/40 dark:via-white/25 to-transparent"></div>
               
               <div className="relative z-10">
                 {isAuthenticated ? (
-                  <div className="flex items-center gap-3 text-emerald-400 dark:text-emerald-300">
+                  <div className="flex items-center gap-2 sm:gap-3 text-emerald-400 dark:text-emerald-300">
                     <div className="relative">
-                      <User className="w-4 h-4" />
+                      <User className="w-3 h-3 sm:w-4 sm:h-4" />
                       <div className="absolute -top-1 -right-1 w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
                     </div>
-                    <span className="font-medium">Logged in as {user?.display_name || user?.email}</span>
+                    <span className="font-medium truncate">Logged in as {user?.display_name || user?.email}</span>
                   </div>
                 ) : (
-                  <div className="flex items-center gap-3 text-amber-400 dark:text-amber-300">
+                  <div className="flex items-center gap-2 sm:gap-3 text-amber-400 dark:text-amber-300">
                     <div className="relative">
-                      <AlertCircle className="w-4 h-4" />
+                      <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4" />
                       <div className="absolute -top-1 -right-1 w-2 h-2 bg-amber-400 rounded-full animate-pulse"></div>
                     </div>
                     <span className="font-medium">Guest user - {guestCanUse ? '1 free try remaining' : 'limit reached'}</span>
@@ -272,55 +272,55 @@ const JumpinAIStudio = () => {
         <main className="relative pt-24 px-4 sm:px-6 lg:px-8">
           <div className="max-w-6xl mx-auto">
             {/* Premium Hero Section with enhanced gradients */}
-            <div className="text-center mb-20 animate-fade-in-up">
+            <div className="text-center mb-12 sm:mb-20 animate-fade-in-up">
               {/* Liquid glass backdrop for title */}
-              <div className="relative mb-8">
+              <div className="relative mb-6 sm:mb-8">
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent dark:via-primary/8 blur-3xl transform -translate-y-4"></div>
-                <h1 className="relative text-4xl md:text-5xl lg:text-7xl font-bold mb-2 bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent leading-tight tracking-tight">
+                <h1 className="relative text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold mb-2 bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent leading-tight tracking-tight px-4 sm:px-0">
                   Jump in AI Studio
                 </h1>
                 <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-transparent via-primary/60 to-transparent rounded-full"></div>
               </div>
               
-              <div className="relative">
+              <div className="relative px-4 sm:px-0">
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent/5 to-transparent blur-2xl"></div>
-                <p className="relative text-lg md:text-xl text-muted-foreground/90 mb-12 max-w-4xl mx-auto leading-relaxed font-light">
+                <p className="relative text-base sm:text-lg md:text-xl text-muted-foreground/90 mb-8 sm:mb-12 max-w-4xl mx-auto leading-relaxed font-light">
                   Tell us your goals and challenges, and we'll generate your personalized <span className="font-semibold text-primary bg-gradient-to-r from-primary via-primary/80 to-primary bg-clip-text text-transparent whitespace-nowrap">Jump in AI</span>: 
                   a clear step-by-step plan, essential resources, custom prompts, workflows, blueprints, and strategies.
                 </p>
               </div>
               
-              {/* Simple feature indicators */}
-              <div className="flex flex-wrap justify-center gap-4 text-sm text-muted-foreground/70">
-                <span>Strategic Action Plan</span>
-                <span>•</span>
-                <span>List of AI tools</span>
-                <span>•</span>
-                <span>4 Custom Prompts</span> 
-                <span>•</span>
-                <span>4 Workflows</span>
-                <span>•</span>
-                <span>4 Blueprints</span>
-                <span>•</span>
-                <span>4 Strategies</span>
+              {/* Simple feature indicators - Mobile optimized */}
+              <div className="flex flex-wrap justify-center gap-2 sm:gap-4 text-xs sm:text-sm text-muted-foreground/70 px-4">
+                <span className="bg-background/60 backdrop-blur-sm px-2 py-1 rounded-md border border-border/30 sm:bg-transparent sm:backdrop-blur-none sm:px-0 sm:py-0 sm:rounded-none sm:border-none">Strategic Action Plan</span>
+                <span className="hidden sm:inline">•</span>
+                <span className="bg-background/60 backdrop-blur-sm px-2 py-1 rounded-md border border-border/30 sm:bg-transparent sm:backdrop-blur-none sm:px-0 sm:py-0 sm:rounded-none sm:border-none">List of AI tools</span>
+                <span className="hidden sm:inline">•</span>
+                <span className="bg-background/60 backdrop-blur-sm px-2 py-1 rounded-md border border-border/30 sm:bg-transparent sm:backdrop-blur-none sm:px-0 sm:py-0 sm:rounded-none sm:border-none">4 Custom Prompts</span> 
+                <span className="hidden sm:inline">•</span>
+                <span className="bg-background/60 backdrop-blur-sm px-2 py-1 rounded-md border border-border/30 sm:bg-transparent sm:backdrop-blur-none sm:px-0 sm:py-0 sm:rounded-none sm:border-none">4 Workflows</span>
+                <span className="hidden sm:inline">•</span>
+                <span className="bg-background/60 backdrop-blur-sm px-2 py-1 rounded-md border border-border/30 sm:bg-transparent sm:backdrop-blur-none sm:px-0 sm:py-0 sm:rounded-none sm:border-none">4 Blueprints</span>
+                <span className="hidden sm:inline">•</span>
+                <span className="bg-background/60 backdrop-blur-sm px-2 py-1 rounded-md border border-border/30 sm:bg-transparent sm:backdrop-blur-none sm:px-0 sm:py-0 sm:rounded-none sm:border-none">4 Strategies</span>
               </div>
             </div>
 
             {/* Compact Glass Form */}
-            <div className="mb-12 animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
+            <div className="mb-8 sm:mb-12 animate-fade-in-up px-2 sm:px-0" style={{ animationDelay: '0.5s' }}>
               <div className="relative group">
                 {/* Subtle backdrop */}
                 <div className="absolute -inset-1 bg-gradient-to-r from-primary/10 via-accent/8 to-secondary/10 dark:from-primary/8 dark:via-accent/6 dark:to-secondary/8 rounded-2xl blur-xl opacity-40"></div>
                 
                 {/* Compact glass container */}
-                <div className="relative glass-dark rounded-2xl p-6 border border-white/20 dark:border-white/15 backdrop-blur-2xl bg-gradient-to-br from-white/8 via-white/4 to-white/2 dark:from-black/20 dark:via-black/10 dark:to-black/5 overflow-hidden">
+                <div className="relative glass-dark rounded-2xl p-4 sm:p-6 border border-white/20 dark:border-white/15 backdrop-blur-2xl bg-gradient-to-br from-white/8 via-white/4 to-white/2 dark:from-black/20 dark:via-black/10 dark:to-black/5 overflow-hidden">
                   {/* Minimal glass overlay */}
                   <div className="absolute inset-0 bg-gradient-to-br from-primary/4 via-transparent to-secondary/4 dark:from-primary/3 dark:via-transparent dark:to-secondary/3 rounded-2xl"></div>
                   <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/30 dark:via-white/20 to-transparent"></div>
                   
                   <div className="relative z-10">
                     <div className="text-center mb-6">
-                      <h2 className="text-xl font-bold mb-2 bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent">Let's understand your goals</h2>
+                      <h2 className="text-lg sm:text-xl font-bold mb-2 bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent">Let's understand your goals</h2>
                       <div className="w-12 h-0.5 bg-gradient-to-r from-transparent via-primary/50 to-transparent mx-auto rounded-full"></div>
                     </div>
 
@@ -431,38 +431,38 @@ const JumpinAIStudio = () => {
                         </div>
                       </div>
 
-                      {/* Glass Morphism Generate Button */}
-                      <div ref={generateButtonRef} className="text-center mt-8">
-                        <div className="relative inline-block group">
+                      {/* Glass Morphism Generate Button - Mobile Optimized */}
+                      <div ref={generateButtonRef} className="text-center mt-6 sm:mt-8">
+                        <div className="relative inline-block group w-full sm:w-auto">
                           {/* Subtle glow backdrop */}
                           <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 dark:from-primary/15 dark:via-accent/12 dark:to-secondary/15 rounded-full blur-xl opacity-60 group-hover:opacity-80 transition-all duration-500"></div>
                           
                           <button
                             onClick={handleGenerate}
                             disabled={isGenerating || (!isAuthenticated && !guestCanUse)}
-                            className="relative w-full max-w-4xl px-24 py-5 glass backdrop-blur-xl border border-border/40 hover:border-primary/50 focus:border-primary/60 transition-all duration-500 rounded-full shadow-xl hover:shadow-2xl hover:shadow-primary/20 bg-gradient-to-br from-background/60 to-background/40 dark:bg-gradient-to-br dark:from-gray-950/60 dark:to-gray-900/40 hover:scale-[1.02] active:scale-98 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100 group overflow-hidden"
+                            className="relative w-full sm:max-w-4xl px-12 sm:px-24 py-4 sm:py-5 glass backdrop-blur-xl border border-border/40 hover:border-primary/50 focus:border-primary/60 transition-all duration-500 rounded-full shadow-xl hover:shadow-2xl hover:shadow-primary/20 bg-gradient-to-br from-background/60 to-background/40 dark:bg-gradient-to-br dark:from-gray-950/60 dark:to-gray-900/40 hover:scale-[1.02] active:scale-98 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100 group overflow-hidden"
                           >
                             {/* Glass morphism overlay effects */}
                             <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-transparent to-secondary/8 dark:from-primary/6 dark:via-transparent dark:to-secondary/6 rounded-full"></div>
                             <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/40 dark:via-white/25 to-transparent"></div>
                             <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-transparent to-white/10 dark:from-white/8 dark:via-transparent dark:to-white/8 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                             
-                            <div className="relative z-10 flex items-center justify-center">
+                            <div className="relative z-10 flex flex-col sm:flex-row items-center justify-center gap-3">
                               {isGenerating ? (
-                                <div className="flex flex-col items-center gap-3 min-h-[32px]">
-                                  <div className="flex items-center gap-4">
+                                <div className="flex flex-col items-center gap-2 min-h-[32px] w-full">
+                                  <div className="flex items-center gap-4 w-full justify-center">
                                     <div className="relative">
-                                      <Loader2 className="w-5 h-5 animate-spin text-primary" />
+                                      <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin text-primary" />
                                       <div className="absolute inset-0 animate-ping">
-                                        <div className="w-5 h-5 border border-primary/30 rounded-full"></div>
+                                        <div className="w-4 h-4 sm:w-5 sm:h-5 border border-primary/30 rounded-full"></div>
                                       </div>
                                     </div>
-                                    <div className="text-center">
-                                      <div className="font-semibold text-foreground text-lg">{processingStatus.stage}</div>
-                                      <div className="text-sm text-muted-foreground/80 mt-1">
-                                        {processingStatus.currentTask}
+                                    <div className="text-center flex-1">
+                                      <div className="font-semibold text-foreground text-base sm:text-lg">{processingStatus.stage}</div>
+                                      <div className="text-xs sm:text-sm text-muted-foreground/80 mt-1 flex flex-col sm:flex-row items-center gap-2">
+                                        <span>{processingStatus.currentTask}</span>
                                         {generationTimer > 0 && (
-                                          <span className="ml-2 px-2 py-0.5 glass backdrop-blur-sm bg-primary/10 text-primary rounded-full text-xs font-medium border border-primary/20">
+                                          <span className="px-2 py-0.5 glass backdrop-blur-sm bg-primary/10 text-primary rounded-full text-xs font-medium border border-primary/20">
                                             {formatTime(generationTimer)}
                                           </span>
                                         )}
@@ -472,7 +472,7 @@ const JumpinAIStudio = () => {
                                 </div>
                               ) : (
                                 <div className="flex items-center justify-center">
-                                  <span className="font-semibold text-foreground text-lg tracking-wide">Generate My Jump in AI</span>
+                                  <span className="font-semibold text-foreground text-base sm:text-lg tracking-wide">Generate My Jump in AI</span>
                                 </div>
                               )}
                             </div>
