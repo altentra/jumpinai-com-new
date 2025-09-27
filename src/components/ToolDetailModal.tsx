@@ -25,12 +25,22 @@ export function ToolDetailModal({ tool, isOpen, onClose }: ToolDetailModalProps)
 
   const { jumpInfo } = useJumpInfo(tool.jump_id || undefined);
   
-  // Get the rich content from tool_content field or fall back to flattened fields
+  // Get the rich content from tool_content field - this contains the detailed structure
   const toolContent = tool.tool_content as any;
   const displayTool = {
     title: tool.title,
+    name: toolContent?.name || tool.title,
     description: toolContent?.description || tool.description,
     category: toolContent?.category || tool.category,
+    website_url: toolContent?.website_url || toolContent?.url || toolContent?.website,
+    when_to_use: toolContent?.when_to_use,
+    why_this_tool: toolContent?.why_this_tool,
+    how_to_integrate: toolContent?.how_to_integrate || toolContent?.integration_notes,
+    alternatives: toolContent?.alternatives || [],
+    skill_level: toolContent?.skill_level,
+    cost_model: toolContent?.cost_model,
+    implementation_timeline: toolContent?.implementation_timeline || toolContent?.implementation_time,
+    // Fallback to flattened fields for additional data
     ai_tool_type: toolContent?.type || tool.ai_tool_type,
     use_cases: toolContent?.use_cases || toolContent?.useCases || tool.use_cases || [],
     instructions: toolContent?.instructions || toolContent?.howToUse || toolContent?.implementation || tool.instructions,
@@ -95,39 +105,101 @@ export function ToolDetailModal({ tool, isOpen, onClose }: ToolDetailModalProps)
         </DialogHeader>
 
         <div className="space-y-6">
-          {/* Key Information */}
+          {/* Primary Tool Sections - Match the jump display structure */}
+          {displayTool.when_to_use && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <CheckCircle className="h-5 w-5 text-green-600" />
+                  When to use
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm leading-relaxed">{displayTool.when_to_use}</p>
+              </CardContent>
+            </Card>
+          )}
+
+          {displayTool.why_this_tool && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <CheckCircle className="h-5 w-5 text-blue-600" />
+                  Why this tool
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm leading-relaxed">{displayTool.why_this_tool}</p>
+              </CardContent>
+            </Card>
+          )}
+
+          {displayTool.how_to_integrate && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Settings className="h-5 w-5 text-purple-600" />
+                  How to integrate
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm leading-relaxed">{displayTool.how_to_integrate}</p>
+              </CardContent>
+            </Card>
+          )}
+
+          {displayTool.alternatives && displayTool.alternatives.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <AlertTriangle className="h-5 w-5 text-orange-600" />
+                  Alternatives
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm leading-relaxed">{displayTool.alternatives.join(', ')}</p>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Key Information Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {displayTool.setup_time && (
+            {(displayTool.skill_level || displayTool.setup_time) && (
               <Card>
                 <CardContent className="flex items-center gap-3 p-4">
                   <Clock className="h-5 w-5 text-blue-600" />
                   <div>
-                    <p className="text-sm font-medium">Setup Time</p>
-                    <p className="text-sm text-muted-foreground">{displayTool.setup_time}</p>
+                    <p className="text-sm font-medium">Skill & Time</p>
+                    <p className="text-sm text-muted-foreground">
+                      {displayTool.skill_level && displayTool.setup_time 
+                        ? `${displayTool.skill_level} • ${displayTool.setup_time}`
+                        : displayTool.skill_level || displayTool.setup_time
+                      }
+                    </p>
                   </div>
                 </CardContent>
               </Card>
             )}
             
-            {displayTool.cost_estimate && (
+            {(displayTool.cost_model || displayTool.cost_estimate) && (
               <Card>
                 <CardContent className="flex items-center gap-3 p-4">
                   <DollarSign className="h-5 w-5 text-green-600" />
                   <div>
-                    <p className="text-sm font-medium">Cost Estimate</p>
-                    <p className="text-sm text-muted-foreground">{displayTool.cost_estimate}</p>
+                    <p className="text-sm font-medium">Cost</p>
+                    <p className="text-sm text-muted-foreground">{displayTool.cost_model || displayTool.cost_estimate}</p>
                   </div>
                 </CardContent>
               </Card>
             )}
             
-            {displayTool.integration_complexity && (
+            {(displayTool.implementation_timeline || displayTool.integration_complexity) && (
               <Card>
                 <CardContent className="flex items-center gap-3 p-4">
                   <Settings className="h-5 w-5 text-purple-600" />
                   <div>
-                    <p className="text-sm font-medium">Complexity</p>
-                    <p className="text-sm text-muted-foreground">{displayTool.integration_complexity}</p>
+                    <p className="text-sm font-medium">Implementation</p>
+                    <p className="text-sm text-muted-foreground">{displayTool.implementation_timeline || displayTool.integration_complexity}</p>
                   </div>
                 </CardContent>
               </Card>
