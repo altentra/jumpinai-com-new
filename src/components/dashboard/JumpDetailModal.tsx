@@ -53,9 +53,31 @@ export default function JumpDetailModal({ jump, isOpen, onClose }: JumpDetailMod
         strategies: strategiesResult.data?.length || 0
       });
 
+      // Transform database tools to display format
+      const transformedDbTools = (toolsResult.data || []).map((dbTool: any) => {
+        // If tool_content exists, merge it with top-level fields
+        const toolContent = dbTool.tool_content || {};
+        return {
+          id: dbTool.id,
+          name: dbTool.title || toolContent.name || 'Unnamed Tool',
+          description: dbTool.description || toolContent.description || 'No description available',
+          category: dbTool.category || toolContent.category || 'General',
+          website_url: toolContent.website_url || toolContent.url || toolContent.website,
+          when_to_use: toolContent.when_to_use || toolContent.primary_use_case || 'Use as needed',
+          why_this_tool: toolContent.why_this_tool || 'Recommended for your project',
+          how_to_integrate: toolContent.how_to_integrate || toolContent.integration_notes || 'Follow setup instructions',
+          alternatives: toolContent.alternatives || [],
+          skill_level: toolContent.skill_level || dbTool.difficulty_level || 'Beginner',
+          cost_model: toolContent.cost_model || dbTool.cost_estimate || 'Varies',
+          implementation_time: toolContent.implementation_timeline || toolContent.implementation_time || dbTool.setup_time || 'Quick setup',
+          // Include original database fields for compatibility
+          ...dbTool
+        };
+      });
+
       // For backward compatibility, also extract tools from comprehensive_plan if no tools in database
-      const fallbackTools = toolsResult.data?.length ? [] : extractToolsFromJump(jump);
-      const allTools = [...(toolsResult.data || []), ...fallbackTools];
+      const fallbackTools = transformedDbTools.length ? [] : extractToolsFromJump(jump);
+      const allTools = [...transformedDbTools, ...fallbackTools];
 
       // Create structured_plan from comprehensive_plan if it exists
       const structuredPlan = createStructuredPlan(jump);
