@@ -82,7 +82,20 @@ export function ToolDetailModal({ tool, isOpen, onClose }: ToolDetailModalProps)
         <DialogHeader>
           <div className="flex items-start justify-between">
             <div>
-              <DialogTitle className="text-2xl mb-2">{displayTool.title}</DialogTitle>
+              <DialogTitle className="text-2xl mb-2">
+                {displayTool.website_url ? (
+                  <a 
+                    href={displayTool.website_url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-primary transition-all duration-300 font-semibold underline decoration-2 underline-offset-2 decoration-primary/60 hover:decoration-primary hover:text-primary/80 hover:scale-[1.02] cursor-pointer select-text"
+                  >
+                    {displayTool.title}
+                  </a>
+                ) : (
+                  <span>{displayTool.title}</span>
+                )}
+              </DialogTitle>
               <DialogDescription className="text-base">
                 {displayTool.description}
               </DialogDescription>

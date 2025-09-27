@@ -224,7 +224,25 @@ export default function Tools() {
                       <CardHeader className="pb-2">
                         <div className="flex items-start justify-between gap-2">
                           <div className="flex-1">
-                            <CardTitle className="text-base line-clamp-2">{tool.title}</CardTitle>
+                             <CardTitle className="text-base line-clamp-2">
+                               {(() => {
+                                 const toolContent = tool.tool_content as any;
+                                 const websiteUrl = toolContent?.website_url || toolContent?.url || toolContent?.website;
+                                 return websiteUrl ? (
+                                   <a 
+                                     href={websiteUrl} 
+                                     target="_blank" 
+                                     rel="noopener noreferrer"
+                                     className="text-primary transition-all duration-300 font-semibold underline decoration-2 underline-offset-2 decoration-primary/60 hover:decoration-primary hover:text-primary/80 hover:scale-[1.02] cursor-pointer select-text"
+                                     onClick={(e) => e.stopPropagation()}
+                                   >
+                                     {tool.title}
+                                   </a>
+                                 ) : (
+                                   <span className="font-semibold">{tool.title}</span>
+                                 );
+                               })()}
+                             </CardTitle>
                             {tool.description && (
                               <CardDescription className="mt-1 line-clamp-3 text-xs">
                                 {tool.description}
