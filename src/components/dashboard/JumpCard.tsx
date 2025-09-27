@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Eye, Trash2 } from "lucide-react";
+import { Calendar, Rocket, Trash2, Sparkles } from "lucide-react";
 import { UserJump } from "@/services/jumpService";
 import { format } from "date-fns";
 
@@ -76,11 +76,24 @@ export default function JumpCard({ jump, onView, onDelete }: JumpCardProps) {
         <div className="flex items-center gap-3 pt-2">
           <Button 
             onClick={() => onView(jump)}
-            className="flex-1 rounded-2xl bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transition-all duration-300 border-0 ring-1 ring-primary/30 font-semibold"
+            className="group/btn flex-1 relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary via-primary to-primary/90 hover:from-primary/95 hover:via-primary/90 hover:to-primary/80 shadow-lg hover:shadow-2xl hover:shadow-primary/25 transition-all duration-500 border-0 ring-1 ring-primary/40 hover:ring-primary/60 font-semibold text-primary-foreground hover:scale-[1.02] active:scale-[0.98]"
             size="sm"
           >
-            <Eye className="h-4 w-4 mr-2" />
-            View Full Plan
+            {/* Premium glow effect */}
+            <div className="absolute inset-0 bg-gradient-to-r from-white/20 via-white/10 to-transparent opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-50"></div>
+            
+            {/* Content with sparkle effect */}
+            <div className="relative flex items-center justify-center gap-2 z-10">
+              <div className="relative">
+                <Rocket className="h-4 w-4 transition-transform duration-300 group-hover/btn:scale-110" />
+                <Sparkles className="absolute -top-1 -right-1 h-2.5 w-2.5 text-white/80 opacity-0 group-hover/btn:opacity-100 transition-all duration-300 group-hover/btn:animate-pulse" />
+              </div>
+              <span className="font-semibold tracking-wide">View the Jump</span>
+            </div>
+            
+            {/* Animated shine effect */}
+            <div className="absolute inset-0 -top-2 -bottom-2 bg-gradient-to-r from-transparent via-white/30 to-transparent translate-x-[-100%] group-hover/btn:translate-x-[100%] transition-transform duration-1000 ease-out skew-x-12"></div>
           </Button>
           
           <Button
