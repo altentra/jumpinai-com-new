@@ -70,6 +70,32 @@ export default function PricingNew() {
     }
   };
 
+  const handleSubscribePro = async () => {
+    if (!isAuthenticated) {
+      login('/pricing');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const { data, error } = await supabase.functions.invoke("create-checkout", {
+        headers: await getAuthHeaders(),
+        body: { source: 'pricing-page' },
+      });
+
+      if (error) throw error;
+      
+      const url = (data as any)?.url;
+      if (url) {
+        window.location.href = url;
+      }
+    } catch (e: any) {
+      toast.error(e.message || "Failed to start checkout");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const formatPrice = (cents: number) => {
     return `$${(cents / 100).toFixed(0)}`;
   };
@@ -152,18 +178,152 @@ export default function PricingNew() {
             </div>
           </div>
 
+          {/* Subscription Plans */}
+          <div className="mb-16">
+            <h2 className="text-2xl md:text-3xl font-bold gradient-text-primary text-center mb-10">Choose Your Plan</h2>
+            
+            {/* Subscription Plans Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-16">
+              {/* Free Plan */}
+              <Card className="glass backdrop-blur-xl border border-border/40 hover:border-primary/30 transition-all duration-500 rounded-2xl overflow-hidden">
+                <CardHeader className="text-center p-8">
+                  <CardTitle className="text-2xl font-bold mb-4">Free Plan</CardTitle>
+                  <div className="space-y-2">
+                    <div className="text-4xl font-bold">$0</div>
+                    <p className="text-muted-foreground">per month</p>
+                  </div>
+                </CardHeader>
+                <CardContent className="px-8 pb-8">
+                  <div className="space-y-4 mb-6">
+                    <div className="flex items-center gap-2 text-green-500 mb-4">
+                      <Gift className="w-5 h-5" />
+                      <span className="font-semibold">5 Welcome Credits</span>
+                    </div>
+                    <ul className="space-y-3">
+                      <li className="flex items-start gap-3">
+                        <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                        <span className="text-sm">Access to basic AI resources</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                        <span className="text-sm">Weekly newsletter with AI insights</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                        <span className="text-sm">Community support forum</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                        <span className="text-sm">Basic workflow templates</span>
+                      </li>
+                    </ul>
+                  </div>
+                </CardContent>
+                <CardFooter className="px-8 pb-8">
+                  {!isAuthenticated ? (
+                    <Button 
+                      onClick={() => login('/pricing')}
+                      variant="outline"
+                      className="w-full py-3 rounded-full border-2"
+                    >
+                      <Gift className="mr-2 h-4 w-4" />
+                      Sign Up for Free
+                    </Button>
+                  ) : (
+                    <div className="w-full text-center py-3">
+                      <span className="text-muted-foreground">Current Plan</span>
+                    </div>
+                  )}
+                </CardFooter>
+              </Card>
+
+              {/* Pro Plan */}
+              <Card className="glass backdrop-blur-xl border border-primary/40 hover:border-primary/60 transition-all duration-500 rounded-2xl overflow-hidden ring-2 ring-primary/20 relative">
+                <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-20">
+                  <Badge className="bg-primary text-primary-foreground px-4 py-1 text-sm font-semibold rounded-lg shadow-lg border-0">
+                    Most Popular
+                  </Badge>
+                </div>
+                
+                <CardHeader className="text-center p-8 pt-12">
+                  <CardTitle className="text-2xl font-bold text-primary mb-4">JumpinAI Pro</CardTitle>
+                  <div className="space-y-2">
+                    <div className="text-4xl font-bold text-primary">$50</div>
+                    <p className="text-muted-foreground">per month</p>
+                  </div>
+                </CardHeader>
+                <CardContent className="px-8 pb-8">
+                  <div className="space-y-4 mb-6">
+                    <div className="flex items-center gap-2 text-primary mb-4 p-3 bg-primary/10 rounded-xl">
+                      <Crown className="w-5 h-5" />
+                      <span className="font-semibold">1,000 Credits Monthly (Rollover)</span>
+                    </div>
+                    <ul className="space-y-3">
+                      <li className="flex items-start gap-3">
+                        <Check className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                        <span className="text-sm">Everything in Free plan</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <Check className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                        <span className="text-sm">Full blueprints library access</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <Check className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                        <span className="text-sm">Advanced workflow templates</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <Check className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                        <span className="text-sm">Premium prompt collection</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <Check className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                        <span className="text-sm">Priority email support</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <Check className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                        <span className="text-sm">Early access to new features</span>
+                      </li>
+                    </ul>
+                  </div>
+                </CardContent>
+                <CardFooter className="px-8 pb-8">
+                  <Button
+                    onClick={handleSubscribePro}
+                    disabled={loading}
+                    className="w-full py-3 rounded-full bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary/80 text-primary-foreground hover:scale-105 transition-all duration-300"
+                  >
+                    {loading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Processing...
+                      </>
+                    ) : (
+                      <>
+                        <Crown className="mr-2 h-4 w-4" />
+                        Upgrade to Pro
+                      </>
+                    )}
+                  </Button>
+                </CardFooter>
+              </Card>
+            </div>
+          </div>
+
           {/* Credit Packages */}
           <div className="mb-16">
-            <h2 className="text-2xl md:text-3xl font-bold gradient-text-primary text-center mb-10">Choose Your Credit Package</h2>
+            <h2 className="text-2xl md:text-3xl font-bold gradient-text-primary text-center mb-4">Need More Credits?</h2>
+            <p className="text-center text-muted-foreground mb-10 max-w-2xl mx-auto">
+              Purchase additional credits anytime. Perfect for heavy users or one-time projects.
+            </p>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
               {creditPackages.map((pkg) => {
                 const valueBadge = getValueBadge(pkg.credits, pkg.price_cents);
                 const pricePerCredit = pkg.price_cents / pkg.credits / 100;
                 
                 return (
-                  <Card key={pkg.id} className={`relative flex flex-col h-full glass backdrop-blur-xl border border-border/40 hover:border-primary/30 transition-all duration-500 hover:shadow-xl hover:shadow-primary/10 rounded-2xl overflow-hidden animate-fade-in-up group ${
-                    valueBadge ? 'ring-2 ring-primary/40' : ''
-                  }`}>
+        <Card className={`relative flex flex-col h-full glass backdrop-blur-xl border border-border/40 hover:border-primary/30 transition-all duration-500 hover:shadow-xl hover:shadow-primary/10 rounded-2xl overflow-hidden animate-fade-in-up group ${
+          valueBadge ? 'ring-2 ring-primary/40' : ''
+        }`}>
                     {/* Value Badge */}
                     {valueBadge && (
                       <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-20">
