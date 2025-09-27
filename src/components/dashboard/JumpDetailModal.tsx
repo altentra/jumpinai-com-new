@@ -185,6 +185,25 @@ export default function JumpDetailModal({ jump, isOpen, onClose }: JumpDetailMod
       // Try to extract tools from comprehensive_plan
       if (jump.comprehensive_plan && typeof jump.comprehensive_plan === 'object') {
         const plan = jump.comprehensive_plan as any;
+        
+        // Check tools_prompts.recommended_ai_tools first (correct structure)
+        if (plan.tools_prompts?.recommended_ai_tools) {
+          return plan.tools_prompts.recommended_ai_tools.map((tool: any, index: number) => ({
+            name: tool.tool || tool.name,
+            description: tool.use_case || tool.description || 'AI tool for your transformation',
+            category: tool.category || 'General',
+            website_url: tool.website_url || tool.url,
+            when_to_use: tool.when_to_use || tool.use_case || 'Use when needed for your project',
+            why_this_tool: tool.why_this_tool || `${tool.tool || tool.name} provides powerful capabilities for your project`,
+            how_to_integrate: tool.how_to_integrate || tool.integration_notes || 'Follow the platform\'s integration guide',
+            alternatives: tool.alternatives || [],
+            skill_level: tool.learning_curve || 'Beginner',
+            cost_model: tool.cost_estimate || 'Free/Paid',
+            implementation_time: tool.implementation_time || 'Quick setup'
+          }));
+        }
+        
+        // Fallback: check old structure for backwards compatibility
         if (plan.resource_requirements?.tools_needed) {
           return plan.resource_requirements.tools_needed.map((tool: any, index: number) => ({
             name: tool.name || tool,
@@ -192,7 +211,12 @@ export default function JumpDetailModal({ jump, isOpen, onClose }: JumpDetailMod
             category: tool.category || 'General',
             website_url: tool.website_url || tool.url,
             when_to_use: tool.when_to_use || 'Use when needed for your project',
-            why_this_tool: tool.why_this_tool || 'Helps achieve your goals efficiently'
+            why_this_tool: tool.why_this_tool || 'Helps achieve your goals efficiently',
+            how_to_integrate: tool.how_to_integrate || 'Follow integration guidelines',
+            alternatives: tool.alternatives || [],
+            skill_level: tool.skill_level || 'Beginner',
+            cost_model: tool.cost_model || 'Varies',
+            implementation_time: tool.implementation_time || 'Quick setup'
           }));
         }
       }
@@ -209,7 +233,12 @@ export default function JumpDetailModal({ jump, isOpen, onClose }: JumpDetailMod
             description: `AI-powered ${tool} for your transformation needs`,
             category: 'AI Tool',
             when_to_use: `Use ${tool} to enhance your productivity`,
-            why_this_tool: `${tool} provides powerful capabilities for your project`
+            why_this_tool: `${tool} provides powerful capabilities for your project`,
+            how_to_integrate: `Visit the ${tool} website and follow their setup guide`,
+            alternatives: [],
+            skill_level: 'Beginner',
+            cost_model: 'Varies',
+            implementation_time: 'Quick setup'
           }));
         }
       }
