@@ -171,42 +171,97 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
             <Card className="relative glass backdrop-blur-xl border border-border/40 hover:border-primary/30 transition-all duration-500 rounded-3xl shadow-xl hover:shadow-2xl hover:shadow-primary/10 bg-gradient-to-br from-background/80 to-background/60 dark:bg-gradient-to-br dark:from-gray-950/80 dark:to-gray-900/60">
               <div className="absolute inset-0 bg-gradient-to-br from-primary/3 via-transparent to-secondary/3 dark:from-primary/2 dark:via-transparent dark:to-secondary/2 rounded-3xl"></div>
               <CardHeader className="pb-4">
-                <CardTitle className="flex items-center gap-2 text-lg text-foreground">
-                  <Zap className="w-5 h-5 text-primary" />
+                <CardTitle className="flex items-center gap-2 text-lg text-white drop-shadow-sm">
+                  <Zap className="w-5 h-5 text-white drop-shadow-sm" />
                   Strategic Action Plan
                 </CardTitle>
               </CardHeader>
               <CardContent className="pt-0">
               {result.full_content ? (
-                <div className="prose prose-sm max-w-none dark:prose-invert prose-headings:text-foreground prose-p:text-foreground prose-li:text-foreground prose-strong:text-foreground">
-                  <ReactMarkdown
-                    remarkPlugins={[remarkGfm]}
-                    className="text-foreground"
-                     components={{
-                       h1: ({ children }) => <h1 className="text-2xl font-bold text-white drop-shadow-sm mb-4">{children}</h1>,
-                       h2: ({ children }) => <h2 className="text-xl font-semibold text-white drop-shadow-sm mb-3 mt-6">{children}</h2>,
-                       h3: ({ children }) => <h3 className="text-lg font-medium text-white drop-shadow-sm mb-2 mt-4">{children}</h3>,
-                       p: ({ children }) => <p className="text-white/90 drop-shadow-sm mb-3 leading-relaxed">{children}</p>,
-                       ul: ({ children }) => <ul className="list-disc pl-6 mb-4 text-white/90 drop-shadow-sm space-y-2">{children}</ul>,
-                       ol: ({ children }) => <ol className="list-decimal pl-6 mb-4 text-white/90 drop-shadow-sm space-y-2">{children}</ol>,
-                       li: ({ children }) => <li className="leading-relaxed text-white/90 drop-shadow-sm">{children}</li>,
-                       strong: ({ children }) => <strong className="font-semibold text-white drop-shadow-sm">{children}</strong>,
-                       em: ({ children }) => <em className="italic text-primary drop-shadow-sm">{children}</em>,
-                      blockquote: ({ children }) => (
-                        <blockquote className="border-l-4 border-primary pl-4 py-2 my-4 glass backdrop-blur-sm bg-primary/10 rounded-r-xl">
-                          {children}
-                        </blockquote>
-                      ),
-                      code: ({ children }) => (
-                        <code className="glass backdrop-blur-sm bg-muted px-2 py-1 rounded text-sm font-mono text-foreground border border-border/30">{children}</code>
-                      ),
-                    }}
-                  >
-                    {formatAIText(result.full_content)}
-                  </ReactMarkdown>
+                <div className="space-y-4">
+                  {(() => {
+                    const content = formatAIText(result.full_content)
+                      .replace(/\b(word count|character count|estimated reading time|approx\. \d+ words)\b/gi, '')
+                      .replace(/\(\s*\d+\s*words?\s*\)/gi, '')
+                      .replace(/\[\s*\d+\s*words?\s*\]/gi, '');
+                    
+                    const sections = content.split(/(?=^##\s)/m).filter(section => section.trim());
+                    
+                    if (sections.length > 1) {
+                      return sections.map((section, index) => {
+                        const lines = section.trim().split('\n');
+                        const title = lines[0]?.replace(/^##\s*/, '') || `Section ${index + 1}`;
+                        const body = lines.slice(1).join('\n').trim();
+                        
+                        return (
+                          <Card key={index} className="glass backdrop-blur-sm border border-white/10 rounded-2xl p-4 bg-white/5">
+                            <h3 className="font-semibold mb-3 text-white drop-shadow-sm text-lg">{title}</h3>
+                            <div className="prose prose-sm max-w-none dark:prose-invert">
+                              <ReactMarkdown
+                                remarkPlugins={[remarkGfm]}
+                                components={{
+                                  h1: ({ children }) => <h1 className="text-xl font-bold text-white drop-shadow-sm mb-3">{children}</h1>,
+                                  h2: ({ children }) => <h2 className="text-lg font-semibold text-white drop-shadow-sm mb-2 mt-4">{children}</h2>,
+                                  h3: ({ children }) => <h3 className="text-base font-medium text-white drop-shadow-sm mb-2 mt-3">{children}</h3>,
+                                  p: ({ children }) => <p className="text-white/90 drop-shadow-sm mb-3 leading-relaxed">{children}</p>,
+                                  ul: ({ children }) => <ul className="list-disc pl-6 mb-3 text-white/90 drop-shadow-sm space-y-1">{children}</ul>,
+                                  ol: ({ children }) => <ol className="list-decimal pl-6 mb-3 text-white/90 drop-shadow-sm space-y-1">{children}</ol>,
+                                  li: ({ children }) => <li className="leading-relaxed text-white/90 drop-shadow-sm">{children}</li>,
+                                  strong: ({ children }) => <strong className="font-semibold text-white drop-shadow-sm">{children}</strong>,
+                                  em: ({ children }) => <em className="italic text-white/80 drop-shadow-sm">{children}</em>,
+                                  blockquote: ({ children }) => (
+                                    <blockquote className="border-l-4 border-white/30 pl-4 py-2 my-3 glass backdrop-blur-sm bg-white/10 rounded-r-xl">
+                                      {children}
+                                    </blockquote>
+                                  ),
+                                  code: ({ children }) => (
+                                    <code className="glass backdrop-blur-sm bg-white/10 px-2 py-1 rounded text-sm font-mono text-white/90 border border-white/20">{children}</code>
+                                  ),
+                                }}
+                              >
+                                {body}
+                              </ReactMarkdown>
+                            </div>
+                          </Card>
+                        );
+                      });
+                    } else {
+                      // Fallback for content without clear sections
+                      return (
+                        <Card className="glass backdrop-blur-sm border border-white/10 rounded-2xl p-4 bg-white/5">
+                          <div className="prose prose-sm max-w-none dark:prose-invert">
+                            <ReactMarkdown
+                              remarkPlugins={[remarkGfm]}
+                              components={{
+                                h1: ({ children }) => <h1 className="text-xl font-bold text-white drop-shadow-sm mb-3">{children}</h1>,
+                                h2: ({ children }) => <h2 className="text-lg font-semibold text-white drop-shadow-sm mb-2 mt-4">{children}</h2>,
+                                h3: ({ children }) => <h3 className="text-base font-medium text-white drop-shadow-sm mb-2 mt-3">{children}</h3>,
+                                p: ({ children }) => <p className="text-white/90 drop-shadow-sm mb-3 leading-relaxed">{children}</p>,
+                                ul: ({ children }) => <ul className="list-disc pl-6 mb-3 text-white/90 drop-shadow-sm space-y-1">{children}</ul>,
+                                ol: ({ children }) => <ol className="list-decimal pl-6 mb-3 text-white/90 drop-shadow-sm space-y-1">{children}</ol>,
+                                li: ({ children }) => <li className="leading-relaxed text-white/90 drop-shadow-sm">{children}</li>,
+                                strong: ({ children }) => <strong className="font-semibold text-white drop-shadow-sm">{children}</strong>,
+                                em: ({ children }) => <em className="italic text-white/80 drop-shadow-sm">{children}</em>,
+                                blockquote: ({ children }) => (
+                                  <blockquote className="border-l-4 border-white/30 pl-4 py-2 my-3 glass backdrop-blur-sm bg-white/10 rounded-r-xl">
+                                    {children}
+                                  </blockquote>
+                                ),
+                                code: ({ children }) => (
+                                  <code className="glass backdrop-blur-sm bg-white/10 px-2 py-1 rounded text-sm font-mono text-white/90 border border-white/20">{children}</code>
+                                ),
+                              }}
+                            >
+                              {content}
+                            </ReactMarkdown>
+                          </div>
+                        </Card>
+                      );
+                    }
+                  })()}
                 </div>
               ) : (
-                <div className="flex items-center justify-center h-32 text-muted-foreground">
+                <div className="flex items-center justify-center h-32 text-white/80 drop-shadow-sm">
                   <Loader2 className="w-6 h-6 animate-spin mr-2" />
                   Generating strategic action plan...
                 </div>
