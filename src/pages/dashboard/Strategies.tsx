@@ -153,7 +153,7 @@ export default function Strategies() {
                 {jumpStrategies.map((strategy) => (
                   <Card 
                     key={strategy.id} 
-                    className="glass group cursor-pointer hover:shadow-modern-lg transition-all duration-300 relative rounded-lg border-0 hover:scale-[1.02]"
+                    className="group cursor-pointer hover:shadow-modern-lg transition-shadow relative rounded-lg"
                     onClick={() => setSelectedStrategy(strategy)}
                   >
                     <CardHeader className="pb-2">
@@ -168,7 +168,7 @@ export default function Strategies() {
                         </div>
                         <div className="flex items-center gap-2">
                           {strategy.category && (
-                            <Badge variant="secondary" className="text-xs">
+                            <Badge variant="outline" className="text-xs">
                               {strategy.category}
                             </Badge>
                           )}

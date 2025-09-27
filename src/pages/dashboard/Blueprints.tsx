@@ -162,7 +162,7 @@ export default function Blueprints() {
                 {jumpBlueprints.map((blueprint) => (
                   <Card 
                     key={blueprint.id} 
-                    className="glass group cursor-pointer hover:shadow-modern-lg transition-all duration-300 relative rounded-lg border-0 hover:scale-[1.02]"
+                    className="group cursor-pointer hover:shadow-modern-lg transition-shadow relative rounded-lg"
                     onClick={() => setSelectedBlueprint(blueprint)}
                   >
                     <CardHeader className="pb-2">
@@ -177,7 +177,7 @@ export default function Blueprints() {
                         </div>
                         <div className="flex items-center gap-2">
                           {blueprint.category && (
-                            <Badge variant="secondary" className="text-xs">
+                            <Badge variant="outline" className="text-xs">
                               {blueprint.category}
                             </Badge>
                           )}

@@ -162,7 +162,7 @@ export default function Workflows() {
                 {jumpWorkflows.map((workflow) => (
                   <Card 
                     key={workflow.id} 
-                    className="glass group cursor-pointer hover:shadow-modern-lg transition-all duration-300 relative rounded-lg border-0 hover:scale-[1.02]"
+                    className="group cursor-pointer hover:shadow-modern-lg transition-shadow relative rounded-lg"
                     onClick={() => setSelectedWorkflow(workflow)}
                   >
                     <CardHeader className="pb-2">
@@ -177,7 +177,7 @@ export default function Workflows() {
                         </div>
                         <div className="flex items-center gap-2">
                           {workflow.category && (
-                            <Badge variant="secondary" className="text-xs">
+                            <Badge variant="outline" className="text-xs">
                               {workflow.category}
                             </Badge>
                           )}
