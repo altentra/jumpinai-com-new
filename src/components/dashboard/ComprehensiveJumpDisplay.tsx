@@ -439,56 +439,6 @@ export default function ComprehensiveJumpDisplay({ jump, onEdit, onDownload, cla
                 ))}
               </div>
             </div>
-
-            {/* Deliverables */}
-            {phase.deliverables && phase.deliverables.length > 0 && (
-              <div>
-                <h4 className="font-medium text-white drop-shadow-sm mb-3 flex items-center gap-2">
-                  <BookOpen className="h-4 w-4" />
-                  Deliverables
-                </h4>
-                <div className="grid gap-2">
-                  {phase.deliverables.map((deliverable, delivIndex) => (
-                    <div key={delivIndex} className="flex items-center gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-blue-400 drop-shadow-sm" />
-                      <span className="text-white/90 drop-shadow-sm">{deliverable}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Risks */}
-            {phase.risks && phase.risks.length > 0 && (
-              <div>
-                <h4 className="font-medium text-white drop-shadow-sm mb-3 flex items-center gap-2">
-                  <AlertTriangle className="h-4 w-4" />
-                  Risks & Mitigation
-                </h4>
-                <div className="space-y-3">
-                  {phase.risks.map((risk, riskIndex) => (
-                    <Card key={riskIndex} className="border-white/10 bg-white/5 backdrop-blur-sm">
-                      <CardContent className="p-4">
-                        <div className="flex items-start justify-between mb-2">
-                          <h5 className="font-medium text-white drop-shadow-sm">{risk.risk}</h5>
-                          <div className="flex gap-2">
-                            <Badge variant={risk.impact === 'High' ? 'destructive' : risk.impact === 'Medium' ? 'default' : 'secondary'} className="text-xs">
-                              {risk.impact}
-                            </Badge>
-                            <Badge variant="outline" className="text-xs border-white/30 text-white/90">
-                              {risk.probability}
-                            </Badge>
-                          </div>
-                        </div>
-                        <p className="text-sm text-white/80 drop-shadow-sm">
-                          <span className="font-medium">Mitigation:</span> {risk.mitigation}
-                        </p>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
         </TabCard>
       ))}
