@@ -133,6 +133,17 @@ export default function AppSidebar() {
           <Separator className="my-1.5" />
 
           <Link 
+            to="/dashboard/tools" 
+            className={cn(
+              "flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm transition-colors",
+              getNavCls({ isActive: currentPath === "/dashboard/tools" })
+            )}
+          >
+            <Settings className="h-4 w-4" />
+            My Tools
+          </Link>
+
+          <Link 
             to="/dashboard/prompts" 
             className={cn(
               "flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm transition-colors",

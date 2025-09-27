@@ -152,27 +152,16 @@ export const jumpinAIStudioService = {
       if (step2Data.success && step2Data.components?.tools) {
         finalResult.components.tools = step2Data.components.tools;
         
-        // Update comprehensive_plan with tools and save to database
+        // Save tools to database using new user_tools table
         if (userId && jumpId) {
-          // Update the comprehensive_plan to include tools
-          const updatedComprehensivePlan = {
-            ...finalResult.comprehensivePlan,
-            tools_prompts: {
-              ...finalResult.comprehensivePlan?.tools_prompts,
-              recommended_ai_tools: step2Data.components.tools
-            }
-          };
-          
-          finalResult.comprehensivePlan = updatedComprehensivePlan;
-          
-          // Update the jump in database with tools included in comprehensive_plan
-          await supabase
-            .from('user_jumps')
-            .update({ comprehensive_plan: updatedComprehensivePlan })
-            .eq('id', jumpId);
-            
+          try {
+            const { toolsService } = await import('./toolsService');
+            await toolsService.saveTools(step2Data.components.tools, userId, jumpId);
+            console.log('Saved tools to user_tools table for jump:', jumpId);
+          } catch (error) {
+            console.error('Error saving tools:', error);
+          }
           await this.updateJumpProgress(jumpId, 33);
-          console.log('Updated comprehensive_plan with tools for jump:', jumpId);
         }
 
         if (onProgress) {
@@ -345,6 +334,12 @@ export const jumpinAIStudioService = {
   // Save individual components to their respective tables
   async saveComponents(components: any, userId: string, jumpId: string): Promise<void> {
     try {
+      // Save tools
+      if (components.tools && components.tools.length > 0) {
+        const { toolsService } = await import('./toolsService');
+        await toolsService.saveTools(components.tools, userId, jumpId);
+      }
+
       // Save prompts
       if (components.prompts && components.prompts.length > 0) {
         for (const prompt of components.prompts) {

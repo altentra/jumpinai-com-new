@@ -626,6 +626,72 @@ export type Database = {
           },
         ]
       }
+      user_tools: {
+        Row: {
+          ai_tool_type: string | null
+          category: string | null
+          cost_estimate: string | null
+          created_at: string
+          description: string | null
+          difficulty_level: string | null
+          features: string[] | null
+          id: string
+          instructions: string | null
+          integration_complexity: string | null
+          jump_id: string | null
+          limitations: string[] | null
+          setup_time: string | null
+          tags: string[] | null
+          title: string
+          tool_content: Json
+          updated_at: string
+          use_cases: string[] | null
+          user_id: string
+        }
+        Insert: {
+          ai_tool_type?: string | null
+          category?: string | null
+          cost_estimate?: string | null
+          created_at?: string
+          description?: string | null
+          difficulty_level?: string | null
+          features?: string[] | null
+          id?: string
+          instructions?: string | null
+          integration_complexity?: string | null
+          jump_id?: string | null
+          limitations?: string[] | null
+          setup_time?: string | null
+          tags?: string[] | null
+          title: string
+          tool_content: Json
+          updated_at?: string
+          use_cases?: string[] | null
+          user_id: string
+        }
+        Update: {
+          ai_tool_type?: string | null
+          category?: string | null
+          cost_estimate?: string | null
+          created_at?: string
+          description?: string | null
+          difficulty_level?: string | null
+          features?: string[] | null
+          id?: string
+          instructions?: string | null
+          integration_complexity?: string | null
+          jump_id?: string | null
+          limitations?: string[] | null
+          setup_time?: string | null
+          tags?: string[] | null
+          title?: string
+          tool_content?: Json
+          updated_at?: string
+          use_cases?: string[] | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_workflows: {
         Row: {
           ai_tools: string[] | null

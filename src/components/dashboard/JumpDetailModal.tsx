@@ -37,7 +37,8 @@ export default function JumpDetailModal({ jump, isOpen, onClose }: JumpDetailMod
       console.log('JumpDetailModal: Fetching data for jump ID:', jump.id);
 
       // Fetch all components for this jump in parallel
-      const [promptsResult, workflowsResult, blueprintsResult, strategiesResult] = await Promise.all([
+      const [toolsResult, promptsResult, workflowsResult, blueprintsResult, strategiesResult] = await Promise.all([
+        supabase.from('user_tools').select('*').eq('jump_id', jump.id),
         supabase.from('user_prompts').select('*').eq('jump_id', jump.id),
         supabase.from('user_workflows').select('*').eq('jump_id', jump.id),
         supabase.from('user_blueprints').select('*').eq('jump_id', jump.id),
@@ -45,14 +46,16 @@ export default function JumpDetailModal({ jump, isOpen, onClose }: JumpDetailMod
       ]);
 
       console.log('JumpDetailModal: Components fetched:', {
+        tools: toolsResult.data?.length || 0,
         prompts: promptsResult.data?.length || 0,
         workflows: workflowsResult.data?.length || 0,
         blueprints: blueprintsResult.data?.length || 0,
         strategies: strategiesResult.data?.length || 0
       });
 
-      // Extract tools from comprehensive_plan or full_content
-      const tools = extractToolsFromJump(jump);
+      // For backward compatibility, also extract tools from comprehensive_plan if no tools in database
+      const fallbackTools = toolsResult.data?.length ? [] : extractToolsFromJump(jump);
+      const allTools = [...(toolsResult.data || []), ...fallbackTools];
 
       // Create structured_plan from comprehensive_plan if it exists
       const structuredPlan = createStructuredPlan(jump);
@@ -67,7 +70,7 @@ export default function JumpDetailModal({ jump, isOpen, onClose }: JumpDetailMod
         structured_plan: structuredPlan,
         comprehensive_plan: jump.comprehensive_plan,
         components: {
-          tools: tools,
+          tools: allTools,
           prompts: promptsResult.data || [],
           workflows: workflowsResult.data || [],
           blueprints: blueprintsResult.data || [],
