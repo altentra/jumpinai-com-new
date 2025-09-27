@@ -520,6 +520,27 @@ const JumpinAIStudio = () => {
                 />
               </div>
             )}
+
+            {/* Mini Footer */}
+            <div className="mt-20 py-8 text-center border-t border-border/20">
+              <div className="text-sm text-muted-foreground/70">
+                © 2025 JumpinAI, LLC. All rights reserved.{' '}
+                <a 
+                  href="/terms-of-use" 
+                  className="text-primary hover:text-primary/80 transition-colors duration-200 underline underline-offset-4"
+                >
+                  Terms of Use
+                </a>
+                {' '}and{' '}
+                <a 
+                  href="/privacy-policy" 
+                  className="text-primary hover:text-primary/80 transition-colors duration-200 underline underline-offset-4"
+                >
+                  Privacy Policy
+                </a>
+                .
+              </div>
+            </div>
           </div>
         </main>
       </div>
