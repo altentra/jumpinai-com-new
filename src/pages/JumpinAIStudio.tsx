@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { User, AlertCircle, Loader2, LogIn, Zap } from 'lucide-react';
 import Navigation from '@/components/Navigation';
@@ -16,6 +16,7 @@ const JumpinAIStudio = () => {
   const [guestCanUse, setGuestCanUse] = useState(true);
   const [guestUsageCount, setGuestUsageCount] = useState(0);
   const [generationTimer, setGenerationTimer] = useState(0);
+  const progressDisplayRef = useRef<HTMLDivElement>(null);
   
   // Helper function to format time
   const formatTime = (seconds: number) => {
@@ -158,6 +159,16 @@ const JumpinAIStudio = () => {
 
       // Generate with progressive display
       const result = await generateWithProgression(formData, user?.id);
+      
+      // Auto-scroll to progress display after generation starts
+      setTimeout(() => {
+        if (progressDisplayRef.current) {
+          progressDisplayRef.current.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start' 
+          });
+        }
+      }, 100);
       
       if (result.jumpId) {
         toast.success('Your Jump in AI has been saved to your dashboard!');
@@ -513,7 +524,7 @@ const JumpinAIStudio = () => {
 
             {/* Progressive Results Display */}
             {result && (
-              <div className="mt-16 animate-fade-in-up" style={{ animationDelay: '0.7s' }}>
+              <div ref={progressDisplayRef} className="mt-16 animate-fade-in-up" style={{ animationDelay: '0.7s' }}>
                 <ProgressiveJumpDisplay 
                   result={result}
                   generationTimer={generationTimer}
@@ -522,8 +533,8 @@ const JumpinAIStudio = () => {
             )}
 
             {/* Mini Footer */}
-            <div className="mt-20 py-8 text-center border-t border-border/20">
-              <div className="text-sm text-muted-foreground/70">
+            <div className="mt-16 py-4 text-center border-t border-border/20">
+              <div className="text-xs text-muted-foreground/60">
                 © 2025 JumpinAI, LLC. All rights reserved.{' '}
                 <a 
                   href="/terms-of-use" 
