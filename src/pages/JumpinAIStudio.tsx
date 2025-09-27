@@ -236,41 +236,41 @@ const JumpinAIStudio = () => {
         
         <Navigation />
         
-        {/* Premium Auth Status Bar with liquid glass effect */}
-        <div className="fixed top-20 right-4 left-4 sm:left-auto z-50 animate-fade-in-right">
-          <div className="relative group">
-            {/* Liquid glass container with enhanced effects */}
-            <div className="absolute inset-0 bg-gradient-to-r from-background/60 via-background/40 to-background/60 dark:from-background/40 dark:via-background/20 dark:to-background/40 rounded-2xl blur-xl transform group-hover:scale-110 transition-transform duration-500"></div>
-            <div className="relative glass-dark rounded-2xl p-3 sm:p-4 text-xs sm:text-sm border border-white/30 dark:border-white/20 backdrop-blur-2xl bg-gradient-to-br from-white/15 via-white/8 to-white/5 dark:from-black/25 dark:via-black/15 dark:to-black/10 shadow-2xl group-hover:shadow-3xl transition-all duration-300">
-              {/* Premium glass overlay */}
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-transparent to-accent/5 dark:from-primary/6 dark:via-transparent dark:to-accent/4 rounded-2xl"></div>
-              <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/40 dark:via-white/25 to-transparent"></div>
-              
-              <div className="relative z-10">
-                {isAuthenticated ? (
-                  <div className="flex items-center gap-2 sm:gap-3 text-emerald-400 dark:text-emerald-300">
-                    <div className="relative">
-                      <User className="w-3 h-3 sm:w-4 sm:h-4" />
-                      <div className="absolute -top-1 -right-1 w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
-                    </div>
-                    <span className="font-medium truncate">Logged in as {user?.display_name || user?.email}</span>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-2 sm:gap-3 text-amber-400 dark:text-amber-300">
-                    <div className="relative">
-                      <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4" />
-                      <div className="absolute -top-1 -right-1 w-2 h-2 bg-amber-400 rounded-full animate-pulse"></div>
-                    </div>
-                    <span className="font-medium">Guest user - {guestCanUse ? '1 free try remaining' : 'limit reached'}</span>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-        
         <main className="relative pt-24 px-4 sm:px-6 lg:px-8">
           <div className="max-w-6xl mx-auto">
+            {/* Auth Status Notification - Integrated into page layout */}
+            <div className="flex justify-end mb-4 sm:mb-6 animate-fade-in-right">
+              <div className="relative group">
+                <div className="relative glass-dark rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm border border-white/20 dark:border-white/15 backdrop-blur-xl bg-gradient-to-br from-white/10 via-white/5 to-white/2 dark:from-black/15 dark:via-black/8 dark:to-black/5 shadow-lg transition-all duration-300 max-w-sm">
+                  {/* Subtle glass overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/3 dark:from-primary/4 dark:via-transparent dark:to-accent/2 rounded-xl"></div>
+                  
+                  <div className="relative z-10">
+                    {isAuthenticated ? (
+                      <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
+                        <div className="relative">
+                          <User className="w-3 h-3 sm:w-4 sm:h-4" />
+                          <div className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-emerald-500 rounded-full"></div>
+                        </div>
+                        <span className="font-medium truncate text-xs sm:text-sm">
+                          Logged in as {user?.display_name || user?.email}
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                        <div className="relative">
+                          <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4" />
+                          <div className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-amber-500 rounded-full"></div>
+                        </div>
+                        <span className="font-medium text-xs sm:text-sm">
+                          Guest: {guestCanUse ? '1 free try remaining' : 'limit reached'}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
             {/* Premium Hero Section with enhanced gradients */}
             <div className="text-center mb-12 sm:mb-20 animate-fade-in-up">
               {/* Liquid glass backdrop for title */}
