@@ -503,8 +503,8 @@ const JumpResultDisplay: React.FC<JumpResultProps> = ({
         <TabsContent value="plan" className="space-y-4">
           <Card className="glass border-white/20">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Clock className="w-5 h-5 text-primary" />
+              <CardTitle className="flex items-center gap-2 text-white drop-shadow-sm">
+                <Clock className="w-5 h-5 text-white drop-shadow-sm" />
                 Complete Strategic Action Plan
               </CardTitle>
             </CardHeader>
