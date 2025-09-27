@@ -24,6 +24,28 @@ export function ToolDetailModal({ tool, isOpen, onClose }: ToolDetailModalProps)
   if (!tool) return null;
 
   const { jumpInfo } = useJumpInfo(tool.jump_id || undefined);
+  
+  // Get the rich content from tool_content field or fall back to flattened fields
+  const toolContent = tool.tool_content as any;
+  const displayTool = {
+    title: tool.title,
+    description: toolContent?.description || tool.description,
+    category: toolContent?.category || tool.category,
+    ai_tool_type: toolContent?.type || tool.ai_tool_type,
+    use_cases: toolContent?.use_cases || toolContent?.useCases || tool.use_cases || [],
+    instructions: toolContent?.instructions || toolContent?.howToUse || toolContent?.implementation || tool.instructions,
+    tags: toolContent?.tags || tool.tags || [],
+    difficulty_level: toolContent?.difficulty || toolContent?.difficultyLevel || tool.difficulty_level,
+    setup_time: toolContent?.setup_time || toolContent?.setupTime || tool.setup_time,
+    integration_complexity: toolContent?.complexity || toolContent?.integrationComplexity || tool.integration_complexity,
+    cost_estimate: toolContent?.cost || toolContent?.costEstimate || tool.cost_estimate,
+    features: toolContent?.features || toolContent?.keyFeatures || tool.features || [],
+    limitations: toolContent?.limitations || toolContent?.considerations || tool.limitations || [],
+    benefits: toolContent?.benefits || [],
+    prerequisites: toolContent?.prerequisites || [],
+    examples: toolContent?.examples || [],
+    resources: toolContent?.resources || []
+  };
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -50,9 +72,9 @@ export function ToolDetailModal({ tool, isOpen, onClose }: ToolDetailModalProps)
         <DialogHeader>
           <div className="flex items-start justify-between">
             <div>
-              <DialogTitle className="text-2xl mb-2">{tool.title}</DialogTitle>
+              <DialogTitle className="text-2xl mb-2">{displayTool.title}</DialogTitle>
               <DialogDescription className="text-base">
-                {tool.description}
+                {displayTool.description}
               </DialogDescription>
               {jumpInfo && (
                 <div className="flex items-center gap-2 mt-2 text-sm text-muted-foreground">
@@ -63,16 +85,11 @@ export function ToolDetailModal({ tool, isOpen, onClose }: ToolDetailModalProps)
             </div>
           </div>
           <div className="flex items-center gap-2 mt-4">
-            {tool.ai_tool_type && (
-              <Badge variant="secondary">{tool.ai_tool_type}</Badge>
+            {displayTool.ai_tool_type && (
+              <Badge variant="secondary">{displayTool.ai_tool_type}</Badge>
             )}
-            {tool.category && (
-              <Badge variant="outline">{tool.category}</Badge>
-            )}
-            {tool.difficulty_level && (
-              <Badge className={getDifficultyColor(tool.difficulty_level)}>
-                {tool.difficulty_level}
-              </Badge>
+            {displayTool.category && (
+              <Badge variant="outline">{displayTool.category}</Badge>
             )}
           </div>
         </DialogHeader>
@@ -80,37 +97,37 @@ export function ToolDetailModal({ tool, isOpen, onClose }: ToolDetailModalProps)
         <div className="space-y-6">
           {/* Key Information */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {tool.setup_time && (
+            {displayTool.setup_time && (
               <Card>
                 <CardContent className="flex items-center gap-3 p-4">
                   <Clock className="h-5 w-5 text-blue-600" />
                   <div>
                     <p className="text-sm font-medium">Setup Time</p>
-                    <p className="text-sm text-muted-foreground">{tool.setup_time}</p>
+                    <p className="text-sm text-muted-foreground">{displayTool.setup_time}</p>
                   </div>
                 </CardContent>
               </Card>
             )}
             
-            {tool.cost_estimate && (
+            {displayTool.cost_estimate && (
               <Card>
                 <CardContent className="flex items-center gap-3 p-4">
                   <DollarSign className="h-5 w-5 text-green-600" />
                   <div>
                     <p className="text-sm font-medium">Cost Estimate</p>
-                    <p className="text-sm text-muted-foreground">{tool.cost_estimate}</p>
+                    <p className="text-sm text-muted-foreground">{displayTool.cost_estimate}</p>
                   </div>
                 </CardContent>
               </Card>
             )}
             
-            {tool.integration_complexity && (
+            {displayTool.integration_complexity && (
               <Card>
                 <CardContent className="flex items-center gap-3 p-4">
                   <Settings className="h-5 w-5 text-purple-600" />
                   <div>
                     <p className="text-sm font-medium">Complexity</p>
-                    <p className="text-sm text-muted-foreground">{tool.integration_complexity}</p>
+                    <p className="text-sm text-muted-foreground">{displayTool.integration_complexity}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -118,7 +135,7 @@ export function ToolDetailModal({ tool, isOpen, onClose }: ToolDetailModalProps)
           </div>
 
           {/* Use Cases */}
-          {tool.use_cases && tool.use_cases.length > 0 && (
+          {displayTool.use_cases && displayTool.use_cases.length > 0 && (
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg flex items-center gap-2">
@@ -128,7 +145,7 @@ export function ToolDetailModal({ tool, isOpen, onClose }: ToolDetailModalProps)
               </CardHeader>
               <CardContent>
                 <ul className="list-disc list-inside space-y-1">
-                  {tool.use_cases.map((useCase, index) => (
+                  {displayTool.use_cases.map((useCase, index) => (
                     <li key={index} className="text-sm">{useCase}</li>
                   ))}
                 </ul>
@@ -137,14 +154,14 @@ export function ToolDetailModal({ tool, isOpen, onClose }: ToolDetailModalProps)
           )}
 
           {/* Features */}
-          {tool.features && tool.features.length > 0 && (
+          {displayTool.features && displayTool.features.length > 0 && (
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg">Key Features</CardTitle>
               </CardHeader>
               <CardContent>
                 <ul className="list-disc list-inside space-y-1">
-                  {tool.features.map((feature, index) => (
+                  {displayTool.features.map((feature, index) => (
                     <li key={index} className="text-sm">{feature}</li>
                   ))}
                 </ul>
@@ -152,22 +169,78 @@ export function ToolDetailModal({ tool, isOpen, onClose }: ToolDetailModalProps)
             </Card>
           )}
 
+          {/* Benefits */}
+          {displayTool.benefits && displayTool.benefits.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <CheckCircle className="h-5 w-5 text-green-600" />
+                  Benefits
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="list-disc list-inside space-y-1">
+                  {displayTool.benefits.map((benefit, index) => (
+                    <li key={index} className="text-sm">{benefit}</li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Prerequisites */}
+          {displayTool.prerequisites && displayTool.prerequisites.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Settings className="h-5 w-5 text-blue-600" />
+                  Prerequisites
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="list-disc list-inside space-y-1">
+                  {displayTool.prerequisites.map((prerequisite, index) => (
+                    <li key={index} className="text-sm">{prerequisite}</li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          )}
+
           {/* Instructions */}
-          {tool.instructions && (
+          {displayTool.instructions && (
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg">Implementation Instructions</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="prose prose-sm max-w-none dark:prose-invert">
-                  <pre className="whitespace-pre-wrap text-sm">{tool.instructions}</pre>
+                  <pre className="whitespace-pre-wrap text-sm bg-muted/30 p-4 rounded-lg border">{displayTool.instructions}</pre>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Examples */}
+          {displayTool.examples && displayTool.examples.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Examples</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {displayTool.examples.map((example, index) => (
+                    <div key={index} className="p-3 bg-muted/30 rounded-lg border">
+                      <p className="text-sm">{example}</p>
+                    </div>
+                  ))}
                 </div>
               </CardContent>
             </Card>
           )}
 
           {/* Limitations */}
-          {tool.limitations && tool.limitations.length > 0 && (
+          {displayTool.limitations && displayTool.limitations.length > 0 && (
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg flex items-center gap-2">
@@ -177,7 +250,7 @@ export function ToolDetailModal({ tool, isOpen, onClose }: ToolDetailModalProps)
               </CardHeader>
               <CardContent>
                 <ul className="list-disc list-inside space-y-1">
-                  {tool.limitations.map((limitation, index) => (
+                  {displayTool.limitations.map((limitation, index) => (
                     <li key={index} className="text-sm text-muted-foreground">{limitation}</li>
                   ))}
                 </ul>
@@ -185,8 +258,27 @@ export function ToolDetailModal({ tool, isOpen, onClose }: ToolDetailModalProps)
             </Card>
           )}
 
+          {/* Resources */}
+          {displayTool.resources && displayTool.resources.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Tag className="h-5 w-5" />
+                  Additional Resources
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="list-disc list-inside space-y-1">
+                  {displayTool.resources.map((resource, index) => (
+                    <li key={index} className="text-sm">{resource}</li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          )}
+
           {/* Tags */}
-          {tool.tags && tool.tags.length > 0 && (
+          {displayTool.tags && displayTool.tags.length > 0 && (
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg flex items-center gap-2">
@@ -196,7 +288,7 @@ export function ToolDetailModal({ tool, isOpen, onClose }: ToolDetailModalProps)
               </CardHeader>
               <CardContent>
                 <div className="flex flex-wrap gap-2">
-                  {tool.tags.map((tag) => (
+                  {displayTool.tags.map((tag) => (
                     <Badge key={tag} variant="outline">
                       {tag}
                     </Badge>
