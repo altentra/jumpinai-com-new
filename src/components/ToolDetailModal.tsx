@@ -8,8 +8,9 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Clock, DollarSign, Settings, AlertTriangle, CheckCircle, Tag } from "lucide-react";
+import { Clock, DollarSign, Settings, AlertTriangle, CheckCircle, Tag, Rocket } from "lucide-react";
 import type { Database } from "@/integrations/supabase/types";
+import { useJumpInfo } from "@/hooks/useJumpInfo";
 
 type UserTool = Database['public']['Tables']['user_tools']['Row'];
 
@@ -21,6 +22,8 @@ interface ToolDetailModalProps {
 
 export function ToolDetailModal({ tool, isOpen, onClose }: ToolDetailModalProps) {
   if (!tool) return null;
+
+  const { jumpInfo } = useJumpInfo(tool.jump_id || undefined);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -51,6 +54,12 @@ export function ToolDetailModal({ tool, isOpen, onClose }: ToolDetailModalProps)
               <DialogDescription className="text-base">
                 {tool.description}
               </DialogDescription>
+              {jumpInfo && (
+                <div className="flex items-center gap-2 mt-2 text-sm text-muted-foreground">
+                  <Rocket className="h-4 w-4" />
+                  <span>From Jump: {jumpInfo.title}</span>
+                </div>
+              )}
             </div>
           </div>
           <div className="flex items-center gap-2 mt-4">

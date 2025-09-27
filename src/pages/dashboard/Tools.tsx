@@ -7,8 +7,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Loader2, Search, Settings, Clock, DollarSign, Tag } from "lucide-react";
+import { Loader2, Search, Settings, Clock, DollarSign, Tag, Rocket, RefreshCw, ExternalLink } from "lucide-react";
 import { ToolDetailModal } from "@/components/ToolDetailModal";
+import { useJumpsInfo } from "@/hooks/useJumpInfo";
 import type { Database } from "@/integrations/supabase/types";
 
 type UserTool = Database['public']['Tables']['user_tools']['Row'];
@@ -22,6 +23,10 @@ export default function Tools() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCategory, setFilterCategory] = useState<string>("all");
   const { user } = useAuth();
+  
+  // Get jump information for all tools
+  const jumpIds = tools.map(tool => tool.jump_id);
+  const { jumpsInfo } = useJumpsInfo(jumpIds);
 
   useEffect(() => {
     if (user?.id) {
@@ -107,111 +112,183 @@ export default function Tools() {
           </p>
         </div>
 
-        {/* Search and Filter Controls */}
-        <div className="flex flex-col sm:flex-row gap-4">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-            <Input
-              placeholder="Search tools by name, description, or tags..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
-            />
+        <div className="glass rounded-xl p-4 shadow-modern">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-semibold">My Tools</h2>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={loadTools}
+                disabled={loading}
+              >
+                <RefreshCw className={`w-3 h-3 ${loading ? 'animate-spin' : ''}`} />
+              </Button>
+              <Badge variant="secondary" className="text-xs">{tools.length} tools</Badge>
+            </div>
           </div>
-          <Select value={filterCategory} onValueChange={setFilterCategory}>
-            <SelectTrigger className="w-full sm:w-[200px]">
-              <SelectValue placeholder="Filter by category" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Categories</SelectItem>
-              {getUniqueCategories().map(category => (
-                <SelectItem key={category} value={category || ""}>
-                  {category}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
         </div>
 
-        {/* Tools Grid */}
-        {filteredTools.length === 0 ? (
-          <div className="text-center py-12">
-            <Settings className="mx-auto h-12 w-12 text-muted-foreground" />
-            <h3 className="mt-4 text-lg font-semibold">No tools found</h3>
-            <p className="text-muted-foreground">
-              {tools.length === 0 
-                ? "Generate some jumps in JumpinAI Studio to see your tools here."
-                : "Try adjusting your search or filter criteria."
-              }
-            </p>
+        {/* Search and Filter Controls */}
+        <div className="glass rounded-xl p-4 shadow-modern">
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+              <Input
+                placeholder="Search tools by name, description, or tags..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            <Select value={filterCategory} onValueChange={setFilterCategory}>
+              <SelectTrigger className="w-full sm:w-[200px]">
+                <SelectValue placeholder="Filter by category" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Categories</SelectItem>
+                {getUniqueCategories().map(category => (
+                  <SelectItem key={category} value={category || ""}>
+                    {category}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
+        </div>
+
+        {/* Tools by Jump */}
+        {filteredTools.length === 0 ? (
+          <Card className="glass text-center py-12 rounded-xl shadow-modern">
+            <CardContent>
+              <Settings className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
+              <h3 className="text-base font-medium text-muted-foreground mb-2">
+                {tools.length === 0 ? "No tools yet" : "No tools found"}
+              </h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                {tools.length === 0 
+                  ? "Generate your personalized AI transformation plan in JumpinAI Studio to get custom tools"
+                  : "Try adjusting your search or filter criteria."
+                }
+              </p>
+              {tools.length === 0 && (
+                <Button variant="outline" className="text-sm" onClick={() => window.location.href = '/jumpinai-studio'}>
+                  <ExternalLink className="w-3 h-3 mr-2" />
+                  Visit JumpinAI Studio
+                </Button>
+              )}
+            </CardContent>
+          </Card>
         ) : (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {filteredTools.map((tool) => (
-              <Card 
-                key={tool.id} 
-                className="cursor-pointer hover:shadow-md transition-shadow"
-                onClick={() => handleToolClick(tool)}
-              >
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <CardTitle className="text-lg">{tool.title}</CardTitle>
-                      <CardDescription className="mt-1">
-                        {tool.description}
-                      </CardDescription>
-                    </div>
-                    {tool.ai_tool_type && (
-                      <Badge variant="secondary" className="ml-2">
-                        {tool.ai_tool_type}
-                      </Badge>
-                    )}
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    {tool.difficulty_level && (
-                      <div className="flex items-center gap-2">
-                        <Badge className={getDifficultyColor(tool.difficulty_level)}>
-                          {tool.difficulty_level}
-                        </Badge>
-                      </div>
-                    )}
-                    
-                    {tool.setup_time && (
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Clock className="h-4 w-4" />
-                        <span>Setup: {tool.setup_time}</span>
-                      </div>
-                    )}
-                    
-                    {tool.cost_estimate && (
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <DollarSign className="h-4 w-4" />
-                        <span>{tool.cost_estimate}</span>
-                      </div>
-                    )}
-                    
-                    {tool.tags && tool.tags.length > 0 && (
-                      <div className="flex items-center gap-2">
-                        <Tag className="h-4 w-4 text-muted-foreground" />
-                        <div className="flex flex-wrap gap-1">
-                          {tool.tags.slice(0, 3).map((tag) => (
-                            <Badge key={tag} variant="outline" className="text-xs">
-                              {tag}
-                            </Badge>
-                          ))}
-                          {tool.tags.length > 3 && (
-                            <Badge variant="outline" className="text-xs">
-                              +{tool.tags.length - 3}
+          <div className="space-y-6">
+            {/* Group tools by Jump */}
+            {Object.entries(
+              filteredTools.reduce((groups, tool) => {
+                const jumpId = tool.jump_id || 'unassigned';
+                if (!groups[jumpId]) groups[jumpId] = [];
+                groups[jumpId].push(tool);
+                return groups;
+              }, {} as Record<string, UserTool[]>)
+            )
+              .sort(([jumpIdA], [jumpIdB]) => {
+                // Sort by jump number descending (latest first), with unassigned last
+                if (jumpIdA === 'unassigned') return 1;
+                if (jumpIdB === 'unassigned') return -1;
+                const jumpA = jumpIdA && jumpsInfo[jumpIdA];
+                const jumpB = jumpIdB && jumpsInfo[jumpIdB];
+                return (jumpB?.jumpNumber || 0) - (jumpA?.jumpNumber || 0);
+              })
+              .map(([jumpId, jumpTools]) => (
+              <div key={jumpId} className="glass border rounded-xl p-5 bg-card shadow-modern">
+                <div className="flex items-center gap-2 mb-3 pb-3 border-b">
+                  <Rocket className="w-4 h-4 text-primary" />
+                  <h3 className="text-lg font-semibold">
+                    {jumpId === 'unassigned' 
+                      ? 'Unassigned Tools' 
+                      : jumpsInfo[jumpId] 
+                        ? `Jump #${jumpsInfo[jumpId].jumpNumber} - ${jumpsInfo[jumpId].title}` 
+                        : 'Loading Jump Info...'}
+                  </h3>
+                  <Badge variant="secondary" className="ml-auto text-xs">
+                    {jumpTools.length} tool{jumpTools.length !== 1 ? 's' : ''}
+                  </Badge>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {jumpTools.map((tool) => (
+                    <Card 
+                      key={tool.id} 
+                      className="group cursor-pointer hover:shadow-modern-lg transition-shadow relative rounded-lg"
+                      onClick={() => handleToolClick(tool)}
+                    >
+                      <CardHeader className="pb-2">
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="flex-1">
+                            <CardTitle className="text-base line-clamp-2">{tool.title}</CardTitle>
+                            {tool.description && (
+                              <CardDescription className="mt-1 line-clamp-3 text-xs">
+                                {tool.description}
+                              </CardDescription>
+                            )}
+                          </div>
+                          {tool.ai_tool_type && (
+                            <Badge variant="secondary" className="ml-2 text-xs">
+                              {tool.ai_tool_type}
                             </Badge>
                           )}
                         </div>
-                      </div>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
+                      </CardHeader>
+                      <CardContent className="pt-0">
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            {tool.difficulty_level && (
+                              <Badge className={getDifficultyColor(tool.difficulty_level)}>
+                                {tool.difficulty_level}
+                              </Badge>
+                            )}
+                            {tool.category && (
+                              <Badge variant="outline" className="text-xs">
+                                {tool.category}
+                              </Badge>
+                            )}
+                          </div>
+                          
+                          <div className="space-y-1">
+                            {tool.setup_time && (
+                              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                                <Clock className="h-3 w-3" />
+                                <span>Setup: {tool.setup_time}</span>
+                              </div>
+                            )}
+                            
+                            {tool.cost_estimate && (
+                              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                                <DollarSign className="h-3 w-3" />
+                                <span>{tool.cost_estimate}</span>
+                              </div>
+                            )}
+                          </div>
+                          
+                          {tool.tags && tool.tags.length > 0 && (
+                            <div className="flex flex-wrap gap-1">
+                              {tool.tags.slice(0, 2).map((tag) => (
+                                <Badge key={tag} variant="outline" className="text-xs">
+                                  {tag}
+                                </Badge>
+                              ))}
+                              {tool.tags.length > 2 && (
+                                <Badge variant="outline" className="text-xs">
+                                  +{tool.tags.length - 2}
+                                </Badge>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
             ))}
           </div>
         )}
