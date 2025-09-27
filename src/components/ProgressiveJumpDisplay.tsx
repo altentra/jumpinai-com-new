@@ -222,12 +222,12 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
             <Card className="relative glass backdrop-blur-xl border border-border/40 hover:border-primary/30 transition-all duration-500 rounded-3xl shadow-xl hover:shadow-2xl hover:shadow-primary/10 bg-gradient-to-br from-background/80 to-background/60 dark:bg-gradient-to-br dark:from-gray-950/80 dark:to-gray-900/60">
               <div className="absolute inset-0 bg-gradient-to-br from-primary/2 via-transparent to-secondary/2 dark:from-primary/1.5 dark:via-transparent dark:to-secondary/1.5 rounded-3xl"></div>
               <CardHeader className="pb-3">
-                <CardTitle className="text-base text-foreground">Implementation Plan</CardTitle>
+                <CardTitle className="text-base text-white drop-shadow-sm">Implementation Plan</CardTitle>
               </CardHeader>
               <CardContent className="pt-0">
               {result.structured_plan ? (
                 <div className="space-y-4">
-                  <p className="text-foreground">{result.structured_plan.overview}</p>
+                  <p className="text-white/90 drop-shadow-sm">{result.structured_plan.overview}</p>
                   <div className="grid gap-4">
                     {result.structured_plan.phases?.map((phase: any, index: number) => (
                       <div key={index} className="glass backdrop-blur-sm border border-border/30 rounded-2xl p-4 bg-background/50">
@@ -239,7 +239,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                   </div>
                 </div>
               ) : (
-                <div className="flex items-center justify-center h-32 text-muted-foreground">
+                <div className="flex items-center justify-center h-32 text-white/80 drop-shadow-sm">
                   <Loader2 className="w-6 h-6 animate-spin mr-2" />
                   Creating implementation plan...
                 </div>
