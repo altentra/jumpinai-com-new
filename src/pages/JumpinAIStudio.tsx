@@ -59,6 +59,18 @@ const JumpinAIStudio = () => {
     };
   }, [isGenerating]);
 
+  // Auto-scroll to results when they appear
+  useEffect(() => {
+    if (result && !isGenerating && progressDisplayRef.current) {
+      setTimeout(() => {
+        progressDisplayRef.current?.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'start' 
+        });
+      }, 300); // Small delay to ensure DOM is updated
+    }
+  }, [result, isGenerating]);
+
   const loadSavedFormData = async () => {
     // SECURITY: Only load data for authenticated users with verified user ID
     if (!isAuthenticated || !user?.id) {
@@ -160,16 +172,6 @@ const JumpinAIStudio = () => {
 
       // Generate with progressive display
       const result = await generateWithProgression(formData, user?.id);
-      
-      // Auto-scroll to button area where loading appears immediately
-      setTimeout(() => {
-        if (generateButtonRef.current) {
-          generateButtonRef.current.scrollIntoView({ 
-            behavior: 'smooth', 
-            block: 'center' 
-          });
-        }
-      }, 100);
       
       if (result.jumpId) {
         toast.success('Your Jump in AI has been saved to your dashboard!');
