@@ -387,7 +387,7 @@ export default function ComprehensiveJumpDisplay({ jump, onEdit, onDownload, cla
               </h4>
               <div className="space-y-3">
                 {phase.key_actions.map((action, actionIndex) => (
-                  <Card key={actionIndex} className="border-border/30">
+                  <Card key={actionIndex} className="border-white/10 bg-white/5 backdrop-blur-sm">
                     <CardContent className="p-4">
                       <div className="flex items-start justify-between mb-2">
                         <h5 className="font-medium text-white drop-shadow-sm">{action.action}</h5>
@@ -420,7 +420,7 @@ export default function ComprehensiveJumpDisplay({ jump, onEdit, onDownload, cla
               </h4>
               <div className="space-y-3">
                 {phase.milestones.map((milestone, milestoneIndex) => (
-                  <Card key={milestoneIndex} className="border-border/30">
+                  <Card key={milestoneIndex} className="border-white/10 bg-white/5 backdrop-blur-sm">
                     <CardContent className="p-4">
                       <div className="flex items-center justify-between mb-2">
                         <h5 className="font-medium text-white drop-shadow-sm">{milestone.milestone}</h5>
