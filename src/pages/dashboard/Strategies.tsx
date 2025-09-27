@@ -153,15 +153,22 @@ export default function Strategies() {
                 {jumpStrategies.map((strategy) => (
                   <Card 
                     key={strategy.id} 
-                    className="group cursor-pointer hover:shadow-modern-lg transition-shadow relative rounded-lg"
+                    className="glass group cursor-pointer hover:shadow-modern-lg transition-all duration-300 relative rounded-lg border-0 hover:scale-[1.02]"
                     onClick={() => setSelectedStrategy(strategy)}
                   >
                     <CardHeader className="pb-2">
                       <div className="flex items-start justify-between gap-2">
-                        <CardTitle className="text-base line-clamp-2">{strategy.title}</CardTitle>
+                        <div className="flex-1">
+                          <CardTitle className="text-base line-clamp-2 font-semibold">{strategy.title}</CardTitle>
+                          {strategy.description && (
+                            <CardDescription className="mt-1 line-clamp-3 text-xs">
+                              {strategy.description}
+                            </CardDescription>
+                          )}
+                        </div>
                         <div className="flex items-center gap-2">
                           {strategy.category && (
-                            <Badge variant="outline" className="text-xs">
+                            <Badge variant="secondary" className="text-xs">
                               {strategy.category}
                             </Badge>
                           )}
@@ -197,27 +204,22 @@ export default function Strategies() {
                           </AlertDialog>
                         </div>
                       </div>
-                      {strategy.description && (
-                        <CardDescription className="line-clamp-3 text-xs">
-                          {strategy.description}
-                        </CardDescription>
-                      )}
                     </CardHeader>
                     <CardContent className="pt-0">
-                      <div className="space-y-3">
-                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-3 text-sm text-muted-foreground">
                           {strategy.timeline && (
                             <div className="flex items-center gap-1">
-                              <Calendar className="w-4 h-4" />
-                              {strategy.timeline}
+                              <Calendar className="w-3 h-3" />
+                              <span className="text-xs">{strategy.timeline}</span>
                             </div>
                           )}
                         </div>
                         
                         {strategy.key_actions && strategy.key_actions.length > 0 && (
                           <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                            <Target className="w-4 h-4" />
-                            <span>{strategy.key_actions.length} action{strategy.key_actions.length > 1 ? 's' : ''}</span>
+                            <Target className="w-3 h-3" />
+                            <span className="text-xs">{strategy.key_actions.length} action{strategy.key_actions.length > 1 ? 's' : ''}</span>
                           </div>
                         )}
                         

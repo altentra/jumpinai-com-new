@@ -53,10 +53,10 @@ export default function Blueprints() {
 
   const getDifficultyColor = (level?: string) => {
     switch (level) {
-      case 'beginner': return 'bg-green-100 text-green-800';
-      case 'intermediate': return 'bg-yellow-100 text-yellow-800';
-      case 'advanced': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'beginner': return 'secondary';
+      case 'intermediate': return 'outline';
+      case 'advanced': return 'destructive';
+      default: return 'secondary';
     }
   };
 
@@ -162,15 +162,22 @@ export default function Blueprints() {
                 {jumpBlueprints.map((blueprint) => (
                   <Card 
                     key={blueprint.id} 
-                    className="group cursor-pointer hover:shadow-modern-lg transition-shadow relative rounded-lg"
+                    className="glass group cursor-pointer hover:shadow-modern-lg transition-all duration-300 relative rounded-lg border-0 hover:scale-[1.02]"
                     onClick={() => setSelectedBlueprint(blueprint)}
                   >
                     <CardHeader className="pb-2">
                       <div className="flex items-start justify-between gap-2">
-                        <CardTitle className="text-base line-clamp-2">{blueprint.title}</CardTitle>
+                        <div className="flex-1">
+                          <CardTitle className="text-base line-clamp-2 font-semibold">{blueprint.title}</CardTitle>
+                          {blueprint.description && (
+                            <CardDescription className="mt-1 line-clamp-3 text-xs">
+                              {blueprint.description}
+                            </CardDescription>
+                          )}
+                        </div>
                         <div className="flex items-center gap-2">
                           {blueprint.category && (
-                            <Badge variant="outline" className="text-xs">
+                            <Badge variant="secondary" className="text-xs">
                               {blueprint.category}
                             </Badge>
                           )}
@@ -206,23 +213,18 @@ export default function Blueprints() {
                           </AlertDialog>
                         </div>
                       </div>
-                      {blueprint.description && (
-                        <CardDescription className="line-clamp-3 text-xs">
-                          {blueprint.description}
-                        </CardDescription>
-                      )}
                     </CardHeader>
                     <CardContent className="pt-0">
-                      <div className="space-y-3">
-                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-3 text-sm text-muted-foreground">
                           {blueprint.implementation_time && (
                             <div className="flex items-center gap-1">
-                              <Clock className="w-4 h-4" />
-                              {blueprint.implementation_time}
+                              <Clock className="w-3 h-3" />
+                              <span className="text-xs">{blueprint.implementation_time}</span>
                             </div>
                           )}
                           {blueprint.difficulty_level && (
-                            <Badge className={`text-xs ${getDifficultyColor(blueprint.difficulty_level)}`}>
+                            <Badge variant={getDifficultyColor(blueprint.difficulty_level)} className="text-xs">
                               {blueprint.difficulty_level}
                             </Badge>
                           )}
@@ -230,8 +232,8 @@ export default function Blueprints() {
                         
                         {blueprint.deliverables && blueprint.deliverables.length > 0 && (
                           <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                            <Layers className="w-4 h-4" />
-                            <span>{blueprint.deliverables.length} deliverable{blueprint.deliverables.length > 1 ? 's' : ''}</span>
+                            <Layers className="w-3 h-3" />
+                            <span className="text-xs">{blueprint.deliverables.length} deliverable{blueprint.deliverables.length > 1 ? 's' : ''}</span>
                           </div>
                         )}
                         

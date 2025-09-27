@@ -165,15 +165,22 @@ export default function Prompts() {
                 {jumpPrompts.map((prompt) => (
                   <Card 
                     key={prompt.id} 
-                    className="group cursor-pointer hover:shadow-modern-lg transition-shadow relative rounded-lg"
+                    className="glass group cursor-pointer hover:shadow-modern-lg transition-all duration-300 relative rounded-lg border-0 hover:scale-[1.02]"
                     onClick={() => setSelectedPrompt(prompt)}
                   >
                     <CardHeader className="pb-2">
                       <div className="flex items-start justify-between gap-2">
-                        <CardTitle className="text-base line-clamp-2">{prompt.title}</CardTitle>
+                        <div className="flex-1">
+                          <CardTitle className="text-base line-clamp-2 font-semibold">{prompt.title}</CardTitle>
+                          {prompt.description && (
+                            <CardDescription className="mt-1 line-clamp-3 text-xs">
+                              {prompt.description}
+                            </CardDescription>
+                          )}
+                        </div>
                         <div className="flex items-center gap-2">
                           {prompt.category && (
-                            <Badge variant="outline" className="text-xs">
+                            <Badge variant="secondary" className="text-xs">
                               {prompt.category}
                             </Badge>
                           )}
@@ -209,11 +216,6 @@ export default function Prompts() {
                           </AlertDialog>
                         </div>
                       </div>
-                      {prompt.description && (
-                        <CardDescription className="line-clamp-3 text-xs">
-                          {prompt.description}
-                        </CardDescription>
-                      )}
                     </CardHeader>
                     <CardContent className="pt-0">
                       <div className="space-y-2">

@@ -53,10 +53,10 @@ export default function Workflows() {
 
   const getDifficultyColor = (level?: string) => {
     switch (level) {
-      case 'beginner': return 'bg-green-100 text-green-800';
-      case 'intermediate': return 'bg-yellow-100 text-yellow-800';
-      case 'advanced': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'beginner': return 'secondary';
+      case 'intermediate': return 'outline';
+      case 'advanced': return 'destructive';
+      default: return 'secondary';
     }
   };
 
@@ -162,15 +162,22 @@ export default function Workflows() {
                 {jumpWorkflows.map((workflow) => (
                   <Card 
                     key={workflow.id} 
-                    className="group cursor-pointer hover:shadow-modern-lg transition-shadow relative rounded-lg"
+                    className="glass group cursor-pointer hover:shadow-modern-lg transition-all duration-300 relative rounded-lg border-0 hover:scale-[1.02]"
                     onClick={() => setSelectedWorkflow(workflow)}
                   >
                     <CardHeader className="pb-2">
                       <div className="flex items-start justify-between gap-2">
-                        <CardTitle className="text-base line-clamp-2">{workflow.title}</CardTitle>
+                        <div className="flex-1">
+                          <CardTitle className="text-base line-clamp-2 font-semibold">{workflow.title}</CardTitle>
+                          {workflow.description && (
+                            <CardDescription className="mt-1 line-clamp-3 text-xs">
+                              {workflow.description}
+                            </CardDescription>
+                          )}
+                        </div>
                         <div className="flex items-center gap-2">
                           {workflow.category && (
-                            <Badge variant="outline" className="text-xs">
+                            <Badge variant="secondary" className="text-xs">
                               {workflow.category}
                             </Badge>
                           )}
@@ -206,23 +213,18 @@ export default function Workflows() {
                           </AlertDialog>
                         </div>
                       </div>
-                      {workflow.description && (
-                        <CardDescription className="line-clamp-3 text-xs">
-                          {workflow.description}
-                        </CardDescription>
-                      )}
                     </CardHeader>
                     <CardContent className="pt-0">
-                      <div className="space-y-3">
-                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-3 text-sm text-muted-foreground">
                           {workflow.duration_estimate && (
                             <div className="flex items-center gap-1">
-                              <Clock className="w-4 h-4" />
-                              {workflow.duration_estimate}
+                              <Clock className="w-3 h-3" />
+                              <span className="text-xs">{workflow.duration_estimate}</span>
                             </div>
                           )}
                           {workflow.complexity_level && (
-                            <Badge className={`text-xs ${getDifficultyColor(workflow.complexity_level)}`}>
+                            <Badge variant={getDifficultyColor(workflow.complexity_level)} className="text-xs">
                               {workflow.complexity_level}
                             </Badge>
                           )}
