@@ -94,6 +94,69 @@ export type Database = {
         }
         Relationships: []
       }
+      credit_packages: {
+        Row: {
+          active: boolean
+          created_at: string
+          credits: number
+          id: string
+          name: string
+          price_cents: number
+          stripe_price_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          credits: number
+          id?: string
+          name: string
+          price_cents: number
+          stripe_price_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          credits?: number
+          id?: string
+          name?: string
+          price_cents?: number
+          stripe_price_id?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      credit_transactions: {
+        Row: {
+          created_at: string
+          credits_amount: number
+          description: string | null
+          id: string
+          reference_id: string | null
+          transaction_type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          credits_amount: number
+          description?: string | null
+          id?: string
+          reference_id?: string | null
+          transaction_type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          credits_amount?: number
+          description?: string | null
+          id?: string
+          reference_id?: string | null
+          transaction_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       lead_magnet_downloads: {
         Row: {
           downloaded_at: string
@@ -382,6 +445,33 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      user_credits: {
+        Row: {
+          created_at: string
+          credits_balance: number
+          id: string
+          total_credits_purchased: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          credits_balance?: number
+          id?: string
+          total_credits_purchased?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          credits_balance?: number
+          id?: string
+          total_credits_purchased?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       user_jumps: {
         Row: {
@@ -768,6 +858,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      add_user_credits: {
+        Args: {
+          p_credits: number
+          p_description: string
+          p_reference_id?: string
+          p_user_id: string
+        }
+        Returns: undefined
+      }
       check_rate_limit: {
         Args: {
           email_col: string
@@ -776,6 +875,14 @@ export type Database = {
           time_col: string
           time_window_hours?: number
           user_email: string
+        }
+        Returns: boolean
+      }
+      deduct_user_credit: {
+        Args: {
+          p_description?: string
+          p_reference_id?: string
+          p_user_id: string
         }
         Returns: boolean
       }
