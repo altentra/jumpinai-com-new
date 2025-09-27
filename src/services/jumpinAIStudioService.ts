@@ -152,10 +152,27 @@ export const jumpinAIStudioService = {
       if (step2Data.success && step2Data.components?.tools) {
         finalResult.components.tools = step2Data.components.tools;
         
-        // Save tools to database (if we had a tools table)
+        // Update comprehensive_plan with tools and save to database
         if (userId && jumpId) {
-          // await this.saveComponents({ tools: step2Data.components.tools }, userId, jumpId);
+          // Update the comprehensive_plan to include tools
+          const updatedComprehensivePlan = {
+            ...finalResult.comprehensivePlan,
+            tools_prompts: {
+              ...finalResult.comprehensivePlan?.tools_prompts,
+              recommended_ai_tools: step2Data.components.tools
+            }
+          };
+          
+          finalResult.comprehensivePlan = updatedComprehensivePlan;
+          
+          // Update the jump in database with tools included in comprehensive_plan
+          await supabase
+            .from('user_jumps')
+            .update({ comprehensive_plan: updatedComprehensivePlan })
+            .eq('id', jumpId);
+            
           await this.updateJumpProgress(jumpId, 33);
+          console.log('Updated comprehensive_plan with tools for jump:', jumpId);
         }
 
         if (onProgress) {
