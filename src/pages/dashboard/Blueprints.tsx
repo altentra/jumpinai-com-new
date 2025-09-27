@@ -240,12 +240,12 @@ export default function Blueprints() {
                         {blueprint.ai_tools && blueprint.ai_tools.length > 0 && (
                           <div className="flex flex-wrap gap-1">
                             {blueprint.ai_tools.slice(0, 3).map((tool, index) => (
-                              <Badge key={index} variant="secondary" className="text-xs">
+                              <Badge key={index} variant="outline" className="text-xs">
                                 {tool}
                               </Badge>
                             ))}
                             {blueprint.ai_tools.length > 3 && (
-                              <Badge variant="secondary" className="text-xs">
+                              <Badge variant="outline" className="text-xs">
                                 +{blueprint.ai_tools.length - 3}
                               </Badge>
                             )}
