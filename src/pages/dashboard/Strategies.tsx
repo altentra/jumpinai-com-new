@@ -81,16 +81,18 @@ export default function Strategies() {
   }
 
   return (
-    <div className="space-y-5">
-      <div className="glass rounded-xl p-4 shadow-modern">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold">My Strategies</h2>
-          <div className="flex items-center gap-2">
+    <div className="space-y-4 sm:space-y-5 px-2 sm:px-0">
+      {/* Header - Mobile Optimized */}
+      <div className="glass rounded-xl p-3 sm:p-4 shadow-modern">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0">
+          <h2 className="text-lg sm:text-xl font-semibold">My Strategies</h2>
+          <div className="flex items-center gap-2 self-end sm:self-auto">
             <Button
               variant="outline"
               size="sm"
               onClick={() => loadStrategies()}
               disabled={isLoading}
+              className="shrink-0"
             >
               <RefreshCw className={`w-3 h-3 ${isLoading ? 'animate-spin' : ''}`} />
             </Button>
@@ -100,22 +102,31 @@ export default function Strategies() {
       </div>
 
       {strategies.length === 0 ? (
-        <Card className="glass text-center py-12 rounded-xl shadow-modern">
-          <CardContent>
-            <h3 className="text-base font-medium text-muted-foreground mb-2">
-              No strategies yet
-            </h3>
-            <p className="text-sm text-muted-foreground mb-4">
-              Generate your personalized AI transformation plan in JumpinAI Studio to get custom strategies
-            </p>
-            <Button variant="outline" className="text-sm" onClick={() => window.location.href = '/jumpinai-studio'}>
-              <ExternalLink className="w-3 h-3 mr-2" />
-              Visit JumpinAI Studio
-            </Button>
+        <Card className="glass text-center py-8 sm:py-12 rounded-xl shadow-modern">
+          <CardContent className="p-4 sm:p-6">
+            <div className="space-y-3">
+              <div className="p-3 rounded-full bg-primary/10 w-fit mx-auto">
+                <ExternalLink className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
+              </div>
+              <h3 className="text-base sm:text-lg font-medium text-muted-foreground">
+                No strategies yet
+              </h3>
+              <p className="text-sm text-muted-foreground max-w-md mx-auto">
+                Generate your personalized AI transformation plan in JumpinAI Studio to get custom strategies
+              </p>
+              <Button 
+                variant="outline" 
+                className="text-sm" 
+                onClick={() => window.location.href = '/jumpinai-studio'}
+              >
+                <ExternalLink className="w-3 h-3 mr-2" />
+                Visit JumpinAI Studio
+              </Button>
+            </div>
           </CardContent>
         </Card>
       ) : (
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
           {/* Group strategies by Jump */}
           {Object.entries(
             strategies.reduce((groups, strategy) => {
