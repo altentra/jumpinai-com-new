@@ -355,9 +355,9 @@ export default function ComprehensiveJumpDisplay({ jump, onEdit, onDownload, cla
                 {phase.phase_number}
               </div>
               <div className="flex-1">
-                <h3 className="text-xl font-semibold text-foreground">{phase.title}</h3>
-                <p className="text-muted-foreground">{phase.description}</p>
-                <Badge variant="outline" className="mt-1">{phase.duration}</Badge>
+                <h3 className="text-xl font-semibold text-white drop-shadow-sm">{phase.title}</h3>
+                <p className="text-white/90 drop-shadow-sm">{phase.description}</p>
+                <Badge variant="outline" className="mt-1 border-white/30 text-white/90">{phase.duration}</Badge>
               </div>
             </div>
 
@@ -365,15 +365,15 @@ export default function ComprehensiveJumpDisplay({ jump, onEdit, onDownload, cla
 
             {/* Objectives */}
             <div>
-              <h4 className="font-medium text-foreground mb-3 flex items-center gap-2">
+              <h4 className="font-medium text-white drop-shadow-sm mb-3 flex items-center gap-2">
                 <Target className="h-4 w-4" />
                 Objectives
               </h4>
               <div className="grid gap-2">
                 {phase.objectives.map((objective, objIndex) => (
                   <div key={objIndex} className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-green-500" />
-                    <span className="text-foreground">{objective}</span>
+                    <CheckCircle2 className="h-4 w-4 text-green-400 drop-shadow-sm" />
+                    <span className="text-white/90 drop-shadow-sm">{objective}</span>
                   </div>
                 ))}
               </div>
@@ -381,7 +381,7 @@ export default function ComprehensiveJumpDisplay({ jump, onEdit, onDownload, cla
 
             {/* Key Actions */}
             <div>
-              <h4 className="font-medium text-foreground mb-3 flex items-center gap-2">
+              <h4 className="font-medium text-white drop-shadow-sm mb-3 flex items-center gap-2">
                 <Play className="h-4 w-4" />
                 Key Actions
               </h4>
@@ -390,19 +390,19 @@ export default function ComprehensiveJumpDisplay({ jump, onEdit, onDownload, cla
                   <Card key={actionIndex} className="border-border/30">
                     <CardContent className="p-4">
                       <div className="flex items-start justify-between mb-2">
-                        <h5 className="font-medium text-foreground">{action.action}</h5>
+                        <h5 className="font-medium text-white drop-shadow-sm">{action.action}</h5>
                         <div className="flex gap-2">
                           <Badge variant={action.priority === 'High' ? 'destructive' : action.priority === 'Medium' ? 'default' : 'secondary'} className="text-xs">
                             {action.priority}
                           </Badge>
-                          <Badge variant="outline" className="text-xs">
+                          <Badge variant="outline" className="text-xs border-white/30 text-white/90">
                             {action.effort_level}
                           </Badge>
                         </div>
                       </div>
-                      <p className="text-sm text-muted-foreground mb-2">{action.description}</p>
+                      <p className="text-sm text-white/80 drop-shadow-sm mb-2">{action.description}</p>
                       {action.dependencies.length > 0 && (
-                        <div className="text-xs text-muted-foreground">
+                        <div className="text-xs text-white/70 drop-shadow-sm">
                           <span className="font-medium">Dependencies:</span> {action.dependencies.join(', ')}
                         </div>
                       )}
@@ -414,7 +414,7 @@ export default function ComprehensiveJumpDisplay({ jump, onEdit, onDownload, cla
 
             {/* Milestones */}
             <div>
-              <h4 className="font-medium text-foreground mb-3 flex items-center gap-2">
+              <h4 className="font-medium text-white drop-shadow-sm mb-3 flex items-center gap-2">
                 <Star className="h-4 w-4" />
                 Milestones
               </h4>
@@ -423,12 +423,12 @@ export default function ComprehensiveJumpDisplay({ jump, onEdit, onDownload, cla
                   <Card key={milestoneIndex} className="border-border/30">
                     <CardContent className="p-4">
                       <div className="flex items-center justify-between mb-2">
-                        <h5 className="font-medium text-foreground">{milestone.milestone}</h5>
-                        <Badge variant="outline" className="text-xs">{milestone.target_date}</Badge>
+                        <h5 className="font-medium text-white drop-shadow-sm">{milestone.milestone}</h5>
+                        <Badge variant="outline" className="text-xs border-white/30 text-white/90">{milestone.target_date}</Badge>
                       </div>
                       <div className="space-y-1">
                         {milestone.success_criteria.map((criteria, criteriaIndex) => (
-                          <div key={criteriaIndex} className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <div key={criteriaIndex} className="flex items-center gap-2 text-sm text-white/80 drop-shadow-sm">
                             <CheckCircle2 className="h-3 w-3" />
                             {criteria}
                           </div>
