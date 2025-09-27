@@ -93,11 +93,8 @@ export default function Pricing() {
   };
 
   const handleManageDashboard = () => {
-    if (isAuthenticated) {
-      navigate('/dashboard/subscription');
-    } else {
-      login('/dashboard/subscription');
-    }
+    // Redirect to the new credits-based pricing page
+    navigate('/pricing');
   };
 
   return (

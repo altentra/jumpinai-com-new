@@ -3,15 +3,18 @@ import { Helmet } from 'react-helmet-async';
 import { User, AlertCircle, Loader2, LogIn, Zap } from 'lucide-react';
 import Navigation from '@/components/Navigation';
 import { useAuth } from '@/hooks/useAuth';
+import { useCredits } from '@/hooks/useCredits';
 import { guestLimitService } from '@/services/guestLimitService';
 import { jumpinAIStudioService, type StudioFormData } from '@/services/jumpinAIStudioService';
 import { toast } from 'sonner';
 import ProgressiveJumpDisplay from '@/components/ProgressiveJumpDisplay';
 import { useProgressiveGeneration } from '@/hooks/useProgressiveGeneration';
+import { CreditsDisplay } from '@/components/CreditsDisplay';
 import { supabase } from '@/integrations/supabase/client';
 
 const JumpinAIStudio = () => {
   const { user, isAuthenticated, login } = useAuth();
+  const { hasCredits, deductCredit, creditsBalance } = useCredits();
   const { isGenerating, result, processingStatus, generateWithProgression } = useProgressiveGeneration();
   const [guestCanUse, setGuestCanUse] = useState(true);
   const [guestUsageCount, setGuestUsageCount] = useState(0);
@@ -173,19 +176,39 @@ const JumpinAIStudio = () => {
       return;
     }
 
-    // Check guest limits
-    if (!isAuthenticated && !guestCanUse) {
-      toast.error('You\'ve reached the guest limit. Please sign up to continue.');
-      return;
+    // Check limits based on user authentication status
+    if (isAuthenticated) {
+      // Authenticated users: Check credits
+      if (!hasCredits()) {
+        toast.error('You don\'t have enough credits. Please purchase more credits to continue.');
+        return;
+      }
+    } else {
+      // Guest users: Strict 1-try limit
+      if (!guestCanUse) {
+        toast.error('You\'ve used your free try. Please sign up and get 5 welcome credits to continue!');
+        return;
+      }
     }
 
     try {
-      // Save form data for logged-in users
+      // Deduct credit for authenticated users BEFORE generation
       if (isAuthenticated && user?.id) {
+        const creditDeducted = await deductCredit(
+          'JumpinAI Studio generation', 
+          `generation_${Date.now()}`
+        );
+        
+        if (!creditDeducted) {
+          toast.error('Failed to deduct credit. Please try again.');
+          return;
+        }
+        
+        // Save form data
         await saveFormData(formData);
       }
 
-      // Record guest usage if not authenticated
+      // Record guest usage if not authenticated (BEFORE generation)
       if (!isAuthenticated) {
         await guestLimitService.recordGuestUsage();
       }
@@ -194,9 +217,9 @@ const JumpinAIStudio = () => {
       const result = await generateWithProgression(formData, user?.id);
       
       if (result.jumpId) {
-        toast.success('Your Jump in AI has been saved to your dashboard!');
+        toast.success('Your Jump in AI has been saved to your dashboard! 1 credit used.');
       } else if (!isAuthenticated) {
-        toast.success('Your Jump in AI is ready! Sign up to save and access more features.');
+        toast.success('Your Jump in AI is ready! Sign up to get 5 welcome credits and save your jumps.');
       }
 
       // Update guest limits
@@ -238,8 +261,16 @@ const JumpinAIStudio = () => {
         
         <main className="relative pt-24 px-4 sm:px-6 lg:px-8">
           <div className="max-w-6xl mx-auto">
-            {/* Auth Status Notification - Integrated into page layout */}
-            <div className="flex justify-end mb-4 sm:mb-6 animate-fade-in-right">
+            {/* Auth Status and Credits Display - Integrated into page layout */}
+            <div className="flex justify-between items-center mb-4 sm:mb-6 animate-fade-in-right gap-4">
+              {/* Credits display for authenticated users */}
+              {isAuthenticated && (
+                <div className="flex-1">
+                  <CreditsDisplay showBuyButton={true} />
+                </div>
+              )}
+              
+              {/* Auth status notification */}
               <div className="relative group">
                 <div className="relative glass-dark rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm border border-white/20 dark:border-white/15 backdrop-blur-xl bg-gradient-to-br from-white/10 via-white/5 to-white/2 dark:from-black/15 dark:via-black/8 dark:to-black/5 shadow-lg transition-all duration-300 max-w-sm">
                   {/* Subtle glass overlay */}
@@ -253,7 +284,7 @@ const JumpinAIStudio = () => {
                           <div className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-emerald-500 rounded-full"></div>
                         </div>
                         <span className="font-medium truncate text-xs sm:text-sm">
-                          Logged in as {user?.display_name || user?.email}
+                          {user?.display_name || user?.email}
                         </span>
                       </div>
                     ) : (

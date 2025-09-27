@@ -26,7 +26,7 @@ const Resources = lazy(() => import("./pages/Resources"));
 const Profile = lazy(() => import("./pages/Profile"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Auth = lazy(() => import("./pages/Auth"));
-const Pricing = lazy(() => import("./pages/Pricing"));
+const PricingNew = lazy(() => import("./pages/PricingNew"));
 const JumpinAIStudio = lazy(() => import("./pages/JumpinAIStudio"));
 
 // Loading component for Suspense
@@ -77,7 +77,7 @@ const App = () => {
               <Route path="/terms-of-use" element={<TermsOfUse />} />
               <Route path="/contact-us" element={<ContactUs />} />
               <Route path="/resources" element={<Resources />} />
-              <Route path="/pricing" element={<Pricing />} />
+          <Route path="/pricing" element={<PricingNew />} />
               <Route path="/test-sync" element={<TestSync />} />
               <Route path="/jumps" element={<Jumps />} />
               <Route path="/for-investors" element={<ForInvestors />} />
