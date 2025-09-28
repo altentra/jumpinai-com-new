@@ -237,8 +237,8 @@ const Hero = () => {
           
           {/* Subheading */}
           <p className="text-2xl sm:text-3xl lg:text-4xl text-muted-foreground mb-6 font-light max-w-4xl mx-auto leading-relaxed">
-            Jump into the world of AI and 
-            <span className="text-foreground font-medium"> transform your reality</span>
+            Jump into the world of AI with 
+            <span className="text-foreground font-medium"> clarity and precision</span>
           </p>
           
           {/* Description */}
