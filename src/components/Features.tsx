@@ -110,18 +110,16 @@ const Features = () => {
           {features.map((feature, index) => {
             const Icon = feature.icon;
             return (
-              <div key={index} className="group relative p-6 rounded-3xl border-2 border-border hover:border-primary/40 hover:shadow-xl shadow-lg transition-all duration-300 bg-card hover:bg-card/95 overflow-hidden hover:scale-105">
-                {/* Subtle background accent */}
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/8 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div key={index} className="group relative p-6 rounded-3xl border-2 border-gray-200 dark:border-gray-700 hover:border-primary/40 hover:shadow-xl shadow-lg transition-all duration-300 bg-white dark:bg-gray-900 overflow-hidden hover:scale-105">
                 
                 <div className="relative flex items-center gap-4 mb-4">
                   <div className="flex-shrink-0 w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center group-hover:bg-primary/15 transition-all duration-300 shadow-md border border-primary/20">
                     <Icon className="w-6 h-6 text-primary" />
                   </div>
-                  <h3 className="font-bold text-lg text-card-foreground group-hover:text-primary transition-colors duration-300 leading-tight">{feature.title}</h3>
+                  <h3 className="font-bold text-lg text-gray-900 dark:text-white group-hover:text-primary transition-colors duration-300 leading-tight">{feature.title}</h3>
                 </div>
                 
-                <p className="text-card-foreground/80 text-sm leading-relaxed ml-16 group-hover:text-card-foreground transition-colors duration-300">{feature.description}</p>
+                <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed ml-16 group-hover:text-gray-900 dark:group-hover:text-white transition-colors duration-300">{feature.description}</p>
               </div>
             );
           })}
