@@ -91,7 +91,7 @@ serve(async (req) => {
           price_data: {
             currency: 'usd',
             product_data: {
-              name: creditPackage.name,
+              name: `JumpinAI ${creditPackage.name}`,
               description: `${creditPackage.credits} JumpinAI credits for generating AI transformation plans`,
             },
             unit_amount: creditPackage.price_cents,

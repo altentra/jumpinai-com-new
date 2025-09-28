@@ -97,7 +97,7 @@ serve(async (req) => {
     if (!stripeProductId) {
       // Create Stripe product
       const product = await stripe.products.create({
-        name: subscriptionPlan.name,
+        name: `JumpinAI ${subscriptionPlan.name}`,
         description: subscriptionPlan.description || `${subscriptionPlan.credits_per_month} monthly credits with rollover`,
       });
       stripeProductId = product.id;
