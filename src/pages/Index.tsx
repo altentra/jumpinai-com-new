@@ -375,10 +375,10 @@ const Index = () => {
                     </svg>
                   </div>
                   <h3 className="text-xl font-bold">Free Plan</h3>
-                  <p className="text-sm text-muted-foreground">Perfect for getting started</p>
+                  <p className="text-sm text-muted-foreground">Perfect for getting started with AI transformation</p>
                   <div className="mt-4">
                     <div className="text-3xl font-bold">Free</div>
-                    <div className="text-sm text-muted-foreground mt-1">2 credits</div>
+                    <div className="text-sm text-muted-foreground mt-1">5 credits</div>
                   </div>
                 </div>
                 
@@ -388,13 +388,13 @@ const Index = () => {
                       <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                       </svg>
-                      <span>2 AI Jump generations per month</span>
+                      <span>5 welcome credits</span>
                     </li>
                     <li className="flex items-start gap-2 text-sm">
                       <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                       </svg>
-                      <span>Basic AI transformation strategies</span>
+                      <span>Basic AI transformation plans</span>
                     </li>
                     <li className="flex items-start gap-2 text-sm">
                       <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -406,7 +406,7 @@ const Index = () => {
                       <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                       </svg>
-                      <span>Access to basic resources</span>
+                      <span>Access to free resources</span>
                     </li>
                   </ul>
                   
@@ -427,13 +427,13 @@ const Index = () => {
                     </svg>
                   </div>
                   <h3 className="text-xl font-bold">Starter Plan</h3>
-                  <p className="text-sm text-muted-foreground">Great for individuals and small teams</p>
+                  <p className="text-sm text-muted-foreground">Ideal for individuals exploring AI solutions</p>
                   <div className="mt-4">
                     <div className="text-3xl font-bold">
-                      $29
+                      $15
                       <span className="text-base font-normal text-muted-foreground">/month</span>
                     </div>
-                    <div className="text-sm text-muted-foreground mt-1">5 credits monthly</div>
+                    <div className="text-sm text-muted-foreground mt-1">40 credits monthly</div>
                   </div>
                 </div>
                 
@@ -443,13 +443,13 @@ const Index = () => {
                       <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                       </svg>
-                      <span>5 AI Jump generations per month</span>
+                      <span>40 monthly credits</span>
                     </li>
                     <li className="flex items-start gap-2 text-sm">
                       <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                       </svg>
-                      <span>Premium AI strategies and tools</span>
+                      <span>Priority AI generation</span>
                     </li>
                     <li className="flex items-start gap-2 text-sm">
                       <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -461,13 +461,13 @@ const Index = () => {
                       <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                       </svg>
-                      <span>Detailed implementation guides</span>
+                      <span>Access to all guides & resources</span>
                     </li>
                     <li className="flex items-start gap-2 text-sm">
                       <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                       </svg>
-                      <span>Access to resource library</span>
+                      <span>Credit rollover</span>
                     </li>
                   </ul>
                   
@@ -494,13 +494,13 @@ const Index = () => {
                     </svg>
                   </div>
                   <h3 className="text-xl font-bold">Pro Plan</h3>
-                  <p className="text-sm text-muted-foreground">Perfect for growing businesses</p>
+                  <p className="text-sm text-muted-foreground">Best for professionals and small teams</p>
                   <div className="mt-4">
                     <div className="text-3xl font-bold">
-                      $99
+                      $39
                       <span className="text-base font-normal text-muted-foreground">/month</span>
                     </div>
-                    <div className="text-sm text-muted-foreground mt-1">20 credits monthly</div>
+                    <div className="text-sm text-muted-foreground mt-1">150 credits monthly</div>
                   </div>
                 </div>
                 
@@ -510,37 +510,37 @@ const Index = () => {
                       <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                       </svg>
-                      <span>20 AI Jump generations per month</span>
+                      <span>150 monthly credits</span>
                     </li>
                     <li className="flex items-start gap-2 text-sm">
                       <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                       </svg>
-                      <span>Advanced AI strategies and workflows</span>
+                      <span>Priority processing</span>
                     </li>
                     <li className="flex items-start gap-2 text-sm">
                       <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                       </svg>
-                      <span>Priority email and chat support</span>
+                      <span>Advanced AI models</span>
                     </li>
                     <li className="flex items-start gap-2 text-sm">
                       <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                       </svg>
-                      <span>Custom business strategy sessions</span>
+                      <span>Phone & email support</span>
                     </li>
                     <li className="flex items-start gap-2 text-sm">
                       <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                       </svg>
-                      <span>Advanced analytics and reporting</span>
+                      <span>Custom workflows</span>
                     </li>
                     <li className="flex items-start gap-2 text-sm">
                       <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                       </svg>
-                      <span>Exclusive webinars and training</span>
+                      <span>Credit rollover</span>
                     </li>
                   </ul>
                   
@@ -567,13 +567,13 @@ const Index = () => {
                     </svg>
                   </div>
                   <h3 className="text-xl font-bold">Growth Plan</h3>
-                  <p className="text-sm text-muted-foreground">For scaling enterprises and agencies</p>
+                  <p className="text-sm text-muted-foreground">Perfect for growing businesses and teams</p>
                   <div className="mt-4">
                     <div className="text-3xl font-bold">
-                      $299
+                      $79
                       <span className="text-base font-normal text-muted-foreground">/month</span>
                     </div>
-                    <div className="text-sm text-muted-foreground mt-1">100 credits monthly</div>
+                    <div className="text-sm text-muted-foreground mt-1">400 credits monthly</div>
                   </div>
                 </div>
                 
@@ -583,43 +583,37 @@ const Index = () => {
                       <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                       </svg>
-                      <span>100 AI Jump generations per month</span>
+                      <span>400 monthly credits</span>
                     </li>
                     <li className="flex items-start gap-2 text-sm">
                       <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                       </svg>
-                      <span>Enterprise AI transformation strategies</span>
+                      <span>Fastest processing</span>
                     </li>
                     <li className="flex items-start gap-2 text-sm">
                       <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                       </svg>
-                      <span>Dedicated success manager</span>
+                      <span>Premium AI models</span>
                     </li>
                     <li className="flex items-start gap-2 text-sm">
                       <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                       </svg>
-                      <span>White-label solutions available</span>
+                      <span>Dedicated support</span>
                     </li>
                     <li className="flex items-start gap-2 text-sm">
                       <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                       </svg>
-                      <span>Custom integrations and API access</span>
+                      <span>Team collaboration tools</span>
                     </li>
                     <li className="flex items-start gap-2 text-sm">
                       <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                       </svg>
-                      <span>Priority phone and video support</span>
-                    </li>
-                    <li className="flex items-start gap-2 text-sm">
-                      <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                      <span>Quarterly strategy review sessions</span>
+                      <span>Priority feature requests</span>
                     </li>
                   </ul>
                   
