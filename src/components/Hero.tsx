@@ -265,8 +265,10 @@ const Hero = () => {
         {/* Floating Elements */}
         <div className="absolute top-1/4 left-8 w-2 h-2 bg-gray-400 rounded-full animate-pulse dark:bg-gray-600"></div>
         <div className="absolute top-1/3 right-12 w-3 h-3 bg-gray-500 rounded-full animate-pulse animation-delay-1000 dark:bg-gray-500"></div>
-        <div className="absolute bottom-1/4 left-1/4 w-1 h-1 bg-gray-600 rounded-full animate-pulse animation-delay-2000 dark:bg-gray-400"></div>
-        <div className="absolute bottom-1/3 right-1/4 w-2 h-2 bg-gray-700 rounded-full animate-pulse animation-delay-3000 dark:bg-gray-300"></div>
+        <div className="absolute top-1/2 left-4 w-1 h-1 bg-gray-600 rounded-full animate-pulse animation-delay-2000 dark:bg-gray-400"></div>
+        <div className="absolute bottom-1/4 right-8 w-2 h-2 bg-gray-700 rounded-full animate-pulse animation-delay-3000 dark:bg-gray-300"></div>
+        <div className="absolute top-3/4 left-12 w-1.5 h-1.5 bg-gray-500 rounded-full animate-pulse animation-delay-4000 dark:bg-gray-500"></div>
+        <div className="absolute bottom-1/3 right-4 w-1 h-1 bg-gray-600 rounded-full animate-pulse animation-delay-1500 dark:bg-gray-400"></div>
       </div>
       
       {/* Bottom Gradient Fade */}
