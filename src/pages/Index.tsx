@@ -171,7 +171,7 @@ const Index = () => {
           </div>
           <div className="flex flex-wrap justify-center items-center gap-8 lg:gap-12 opacity-70 hover:opacity-90 transition-opacity">
             <div className="flex items-center gap-2 text-lg lg:text-xl font-bold text-foreground">
-              <img src="/images/xai-logo.png" alt="xAI Logo" className="w-6 h-6 lg:w-8 lg:h-8 object-contain filter dark:invert" />
+              <img src="/images/xai-logo-official.png" alt="xAI Logo" className="w-6 h-6 lg:w-8 lg:h-8 object-contain filter dark:invert" />
               xAI
             </div>
             <div className="flex items-center gap-2 text-lg lg:text-xl font-bold text-foreground">
