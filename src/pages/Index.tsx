@@ -125,7 +125,7 @@ const Index = () => {
               <p className="text-sm text-muted-foreground mb-4">
                 Hand-picked AI tools specifically chosen for your use case with setup guides and optimization tips.
               </p>
-              <div className="text-xs text-secondary space-y-1">
+              <div className="text-xs text-white space-y-1">
                 <div>✓ Pre-vetted tools only</div>
                 <div>✓ Cost-benefit analysis</div>
                 <div>✓ Integration guidance included</div>
@@ -138,7 +138,7 @@ const Index = () => {
               <p className="text-sm text-muted-foreground mb-4">
                 16 ready-to-use resources: prompts, workflows, blueprints, and strategies for immediate deployment.
               </p>
-              <div className="text-xs text-accent space-y-1">
+              <div className="text-xs text-white space-y-1">
                 <div>✓ Custom prompts & workflows</div>
                 <div>✓ Detailed blueprints</div>
                 <div>✓ Proven strategies</div>
@@ -151,7 +151,7 @@ const Index = () => {
               <p className="text-sm text-muted-foreground mb-4">
                 Ongoing guidance with AI coach conversations and comprehensive support system.
               </p>
-              <div className="text-xs text-primary space-y-1">
+              <div className="text-xs text-white space-y-1">
                 <div>✓ AI coaching sessions</div>
                 <div>✓ Implementation support</div>
                 <div>✓ Progress tracking</div>
