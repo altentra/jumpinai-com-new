@@ -37,7 +37,17 @@ const Index = () => {
   };
 
   const handleSubscribe = async (planName: string) => {
+    // Map plan names to loading keys
+    const loadingKey = planName === 'Starter Plan' ? 'starter' : 
+                      planName === 'Pro Plan' ? 'pro' : 
+                      planName === 'Growth Plan' ? 'growth' : 'unknown';
+
+    // Show immediate feedback
+    setLoadingSubscription(prev => ({ ...prev, [loadingKey]: true }));
+    toast.info('Processing your request...');
+
     if (!isAuthenticated) {
+      setLoadingSubscription(prev => ({ ...prev, [loadingKey]: false }));
       toast.error('Please sign in first');
       window.location.href = '/auth';
       return;
@@ -45,11 +55,10 @@ const Index = () => {
 
     const plan = subscriptionPlans.find(p => p.name === planName);
     if (!plan) {
+      setLoadingSubscription(prev => ({ ...prev, [loadingKey]: false }));
       toast.error('Plan not found');
       return;
     }
-
-    setLoadingSubscription(prev => ({ ...prev, [plan.id]: true }));
 
     try {
       const { data, error } = await supabase.functions.invoke('create-subscription-checkout', {
@@ -59,6 +68,7 @@ const Index = () => {
       if (error) throw error;
 
       if (data?.url) {
+        toast.success('Redirecting to checkout...');
         window.location.href = data.url;
       } else {
         throw new Error('No checkout URL received');
@@ -67,7 +77,7 @@ const Index = () => {
       console.error('Error creating subscription checkout:', error);
       toast.error('Failed to create subscription checkout');
     } finally {
-      setLoadingSubscription(prev => ({ ...prev, [plan.id]: false }));
+      setLoadingSubscription(prev => ({ ...prev, [loadingKey]: false }));
     }
   };
 
