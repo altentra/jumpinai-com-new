@@ -25,6 +25,7 @@ const planFeatures = {
   ],
   pro: [
     "Everything in Free plan",
+    "1000 credits monthly (rollover)",
     "Full blueprints library access",
     "Advanced workflow templates", 
     "Premium prompt collection",
@@ -261,7 +262,7 @@ export default function Subscription() {
           <CardHeader>
             <div className="text-center space-y-2">
               <CardTitle className="text-xl font-semibold text-primary">JumpinAI Pro</CardTitle>
-              <div className="text-2xl font-bold text-primary">$10</div>
+              <div className="text-2xl font-bold text-primary">$50</div>
               <p className="text-sm text-muted-foreground">per month</p>
             </div>
           </CardHeader>
