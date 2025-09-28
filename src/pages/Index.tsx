@@ -202,37 +202,33 @@ const Index = () => {
             </p>
           </div>
 
-          <div className="max-w-5xl mx-auto">
-            <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
-              <div className="flex-1 text-center p-6 rounded-xl glass">
-                <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-primary to-primary/70 rounded-full flex items-center justify-center text-primary-foreground text-xl font-bold">01</div>
+          <div className="max-w-6xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+              <div className="text-center p-6 rounded-xl glass">
+                <div className="w-12 h-12 mx-auto mb-3 bg-gradient-to-r from-primary to-primary/70 rounded-full flex items-center justify-center text-primary-foreground text-lg font-bold">01</div>
                 <h3 className="text-lg font-bold mb-2 font-display">Share Your Goals</h3>
                 <p className="text-sm text-muted-foreground">Tell us your objectives, challenges, industry, and AI experience level.</p>
               </div>
               
-              <div className="hidden lg:block w-8 h-0.5 bg-gradient-to-r from-primary to-secondary"></div>
-              
-              <div className="flex-1 text-center p-6 rounded-xl glass">
-                <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-secondary to-secondary/70 rounded-full flex items-center justify-center text-secondary-foreground text-xl font-bold">02</div>
+              <div className="text-center p-6 rounded-xl glass">
+                <div className="w-12 h-12 mx-auto mb-3 bg-gradient-to-r from-primary to-primary/70 rounded-full flex items-center justify-center text-primary-foreground text-lg font-bold">02</div>
                 <h3 className="text-lg font-bold mb-2 font-display">AI Analysis</h3>
                 <p className="text-sm text-muted-foreground">Our AI generates your comprehensive Jump plan with roadmap, tools, and resources.</p>
               </div>
               
-              <div className="hidden lg:block w-8 h-0.5 bg-gradient-to-r from-secondary to-accent"></div>
-              
-              <div className="flex-1 text-center p-6 rounded-xl glass">
-                <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-accent to-accent/70 rounded-full flex items-center justify-center text-accent-foreground text-xl font-bold">03</div>
+              <div className="text-center p-6 rounded-xl glass">
+                <div className="w-12 h-12 mx-auto mb-3 bg-gradient-to-r from-primary to-primary/70 rounded-full flex items-center justify-center text-primary-foreground text-lg font-bold">03</div>
                 <h3 className="text-lg font-bold mb-2 font-display">Start Implementing</h3>
                 <p className="text-sm text-muted-foreground">Follow your plan and use custom resources immediately with dashboard access.</p>
               </div>
             </div>
 
             <div className="text-center mt-8">
-              <div className="inline-flex items-center gap-3 p-4 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-xl border border-primary/20">
+              <div className="inline-flex items-center gap-3 p-4 bg-gradient-to-r from-primary/10 to-primary/10 rounded-xl border border-primary/20">
                 <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
-                <span className="font-semibold">Complete personalized plan generated in under 2 minutes</span>
+                <span className="font-semibold">Complete personalized plan generated in 5 minutes</span>
               </div>
             </div>
           </div>
