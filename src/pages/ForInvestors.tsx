@@ -104,11 +104,11 @@ const ForInvestors = () => {
                 <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight">
                   Invest in the Future of
                   <span className="block bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
-                    Everyday AI Education
+                    Personalized AI Transformation
                   </span>
                 </h1>
                 <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-                  JumpinAI empowers everyday people to harness AI tools for income, productivity, and opportunity.
+                  JumpinAI Studio creates personalized AI transformation roadmaps in 5 minutes, delivering 16 ready-to-use resources tailored specifically to each individual's goals and context.
                 </p>
               </div>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -142,32 +142,32 @@ const ForInvestors = () => {
                 Why Invest in JumpinAI
               </h2>
               <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-                Positioned at the intersection of AI, education, and the future of work
+                The world's first platform for truly personalized AI transformation at scale
               </p>
             </div>
             
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-2xl p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/40 transition-all duration-300 group hover:scale-105 hover:-translate-y-2 text-center">
                 <TrendingUp className="h-10 w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
-                <h3 className="text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Growing Market</h3>
+                <h3 className="text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Massive Untapped Market</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  The AI education market is projected to reach $25.7B by 2030, growing at 32% annually.
+                  Billions struggle with generic AI solutions. We're the first to deliver truly personalized AI transformation at scale.
                 </p>
               </div>
               
               <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-2xl p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/40 transition-all duration-300 group hover:scale-105 hover:-translate-y-2 text-center">
                 <Target className="h-10 w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
-                <h3 className="text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Clear Problem</h3>
+                <h3 className="text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Breakthrough Innovation</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  Millions need practical AI skills but find existing resources too technical or theoretical.
+                  5-minute AI questionnaire creates 16 personalized resources. No competitor offers this level of individualization at scale.
                 </p>
               </div>
               
               <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-2xl p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/40 transition-all duration-300 group hover:scale-105 hover:-translate-y-2 text-center">
                 <DollarSign className="h-10 w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
-                <h3 className="text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">High Margins</h3>
+                <h3 className="text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Scalable AI Engine</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  Digital-first model with scalable content delivery and low operational overhead.
+                  AI-powered personalization engine generates unlimited unique transformations with minimal marginal cost.
                 </p>
               </div>
               
@@ -175,7 +175,7 @@ const ForInvestors = () => {
                 <Rocket className="h-10 w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
                 <h3 className="text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Perfect Timing</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  AI adoption is accelerating, creating massive demand for accessible education.
+                  AI revolution creating demand for personalized transformation. We're first-to-market with this approach.
                 </p>
               </div>
             </div>
@@ -192,7 +192,7 @@ const ForInvestors = () => {
                 What Makes Us Unique
               </h2>
               <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-                Our differentiated approach to AI education sets us apart in the market
+                The world's first platform to deliver truly personalized AI transformation at enterprise scale
               </p>
             </div>
             
@@ -204,9 +204,9 @@ const ForInvestors = () => {
                       <Users className="h-6 w-6 text-primary" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-bold mb-2 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Beginner-First Approach</h3>
+                      <h3 className="text-lg font-bold mb-2 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">5-Minute Personalization</h3>
                       <p className="text-sm text-muted-foreground leading-relaxed">
-                        Designed for everyday people, not tech experts. We make AI accessible to everyone.
+                        Proprietary AI engine creates complete personalized transformation roadmaps in minutes, not months.
                       </p>
                     </div>
                   </div>
@@ -218,9 +218,9 @@ const ForInvestors = () => {
                       <Globe className="h-6 w-6 text-primary" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-bold mb-2 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Digital-First Model</h3>
+                      <h3 className="text-lg font-bold mb-2 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">16 Ready-to-Use Resources</h3>
                       <p className="text-sm text-muted-foreground leading-relaxed">
-                        Low overhead, high scalability. Our platform reaches global audiences efficiently.
+                        Each Jump delivers 4 custom prompts, 4 workflows, 4 blueprints, and 4 strategies - all personalized and implementation-ready.
                       </p>
                     </div>
                   </div>
@@ -234,9 +234,9 @@ const ForInvestors = () => {
                       <Users className="h-6 w-6 text-primary" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-bold mb-2 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Community-Driven Growth</h3>
+                      <h3 className="text-lg font-bold mb-2 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">AI Coach Integration</h3>
                       <p className="text-sm text-muted-foreground leading-relaxed">
-                        Our users become advocates, driving organic growth and engagement.
+                        Ongoing personalized guidance through intelligent coaching, creating deeper engagement and retention.
                       </p>
                     </div>
                   </div>
@@ -248,9 +248,9 @@ const ForInvestors = () => {
                       <Lightbulb className="h-6 w-6 text-primary" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-bold mb-2 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Real-World Application</h3>
+                      <h3 className="text-lg font-bold mb-2 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Human-Centered AI Architecture</h3>
                       <p className="text-sm text-muted-foreground leading-relaxed">
-                        Practical skills that translate directly to income and productivity gains.
+                        AI amplifies human potential rather than replacing it, creating sustainable transformation and loyalty.
                       </p>
                     </div>
                   </div>
@@ -270,7 +270,7 @@ const ForInvestors = () => {
                 Use of Funds
               </h2>
               <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-                Strategic investment in growth, innovation, and community impact
+                Strategic investment in AI technology, platform expansion, and market leadership
               </p>
             </div>
             
@@ -279,9 +279,9 @@ const ForInvestors = () => {
                 <div className="w-14 h-14 glass backdrop-blur-sm bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
                   <Rocket className="h-7 w-7 text-primary" />
                 </div>
-                <h3 className="text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Product Development</h3>
+                <h3 className="text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">AI Engine Enhancement</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed mb-4">
-                  Enhanced platform features, mobile apps, and AI-powered personalization
+                  Advanced personalization algorithms, multi-language support, and enterprise-grade AI capabilities
                 </p>
                 <div className="text-2xl font-bold text-primary">40%</div>
               </div>
@@ -290,9 +290,9 @@ const ForInvestors = () => {
                 <div className="w-14 h-14 glass backdrop-blur-sm bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
                   <TrendingUp className="h-7 w-7 text-primary" />
                 </div>
-                <h3 className="text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Marketing & Content</h3>
+                <h3 className="text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Market Expansion</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed mb-4">
-                  Content production, influencer partnerships, and growth marketing
+                  Strategic partnerships, enterprise sales, and global market penetration initiatives
                 </p>
                 <div className="text-2xl font-bold text-primary">30%</div>
               </div>
@@ -301,9 +301,9 @@ const ForInvestors = () => {
                 <div className="w-14 h-14 glass backdrop-blur-sm bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
                   <Globe className="h-7 w-7 text-primary" />
                 </div>
-                <h3 className="text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Platform Expansion</h3>
+                <h3 className="text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Technology Infrastructure</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed mb-4">
-                  New markets, language localization, and enterprise solutions
+                  Scalable cloud architecture, security enhancements, and enterprise-level platform reliability
                 </p>
                 <div className="text-2xl font-bold text-primary">20%</div>
               </div>
@@ -312,9 +312,9 @@ const ForInvestors = () => {
                 <div className="w-14 h-14 glass backdrop-blur-sm bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
                   <Users className="h-7 w-7 text-primary" />
                 </div>
-                <h3 className="text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Community & Access</h3>
+                <h3 className="text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Talent & Operations</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed mb-4">
-                  Scholarships, community programs, and accessibility initiatives
+                  World-class AI talent acquisition, operational excellence, and strategic leadership expansion
                 </p>
                 <div className="text-2xl font-bold text-primary">10%</div>
               </div>
@@ -352,10 +352,10 @@ const ForInvestors = () => {
           <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-3xl p-8 md:p-12 shadow-2xl shadow-primary/10 hover:shadow-3xl hover:shadow-primary/15 transition-all duration-500">
             <div className="text-center mb-10">
               <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-br from-foreground via-foreground to-primary/70 bg-clip-text text-transparent">
-                Ready to Support a Smarter Future?
+                Ready to Lead the AI Transformation Revolution?
               </h2>
               <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
-                Join us in democratizing AI education and empowering the next generation of AI-savvy professionals.
+                Partner with us to scale the world's first truly personalized AI transformation platform and define the future of human-AI collaboration.
               </p>
             </div>
             
