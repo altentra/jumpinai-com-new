@@ -165,14 +165,15 @@ const PricingNew = () => {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
-              {subscriptionPlans.map((plan) => {
+            <div className="w-full overflow-x-auto pb-4">
+              <div className="flex gap-6 min-w-max px-4 md:px-0 md:justify-center md:flex-wrap md:max-w-7xl md:mx-auto">
+                {subscriptionPlans.map((plan) => {
                 const badge = getPlanBadge(plan.name);
                 const isLoading = loadingSubscription[plan.id];
                 const isFree = plan.price_cents === 0;
                 
                 return (
-                  <Card key={plan.id} className={`relative h-full flex flex-col ${plan.name.toLowerCase().includes('pro') ? 'border-primary shadow-lg shadow-primary/20' : ''}`}>
+                  <Card key={plan.id} className={`relative h-full flex flex-col w-72 md:w-auto flex-shrink-0 ${plan.name.toLowerCase().includes('pro') ? 'border-primary shadow-lg shadow-primary/20' : ''}`}>
                     {badge && (
                       <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
                         <Badge className={badge.color}>
@@ -231,7 +232,8 @@ const PricingNew = () => {
                     </CardContent>
                   </Card>
                 );
-              })}
+                })}
+              </div>
             </div>
           </section>
 
@@ -244,13 +246,14 @@ const PricingNew = () => {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 max-w-6xl mx-auto">
-              {creditPackages.map((pkg) => {
+            <div className="w-full overflow-x-auto pb-4">
+              <div className="flex gap-4 min-w-max px-4 md:px-0 md:justify-center md:flex-wrap md:max-w-6xl md:mx-auto">
+                {creditPackages.map((pkg) => {
                 const isLoading = packageLoading[pkg.id];
                 const valueBadge = getValueBadge(pkg.credits, pkg.price_cents);
                 
                 return (
-                  <Card key={pkg.id} className="relative h-full flex flex-col hover:shadow-lg transition-shadow">
+                  <Card key={pkg.id} className="relative h-full flex flex-col hover:shadow-lg transition-shadow w-56 md:w-auto flex-shrink-0">
                     {valueBadge && (
                       <div className="absolute -top-2 -right-2">
                         <Badge variant="secondary" className="text-xs">
@@ -297,7 +300,8 @@ const PricingNew = () => {
                     </CardContent>
                   </Card>
                 );
-              })}
+                })}
+              </div>
             </div>
           </section>
 
