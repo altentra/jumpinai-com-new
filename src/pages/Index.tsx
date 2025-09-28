@@ -98,10 +98,10 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl lg:text-4xl font-bold gradient-text-primary mb-4 font-display">
-              Accelerate Your AI Transformation
+              Ready to Make Your AI Jump?
             </h2>
             <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              Get your complete AI transformation blueprint in minutes. JumpinAI Studio creates personalized action plans that turn AI confusion into competitive advantage.
+              Don't wait months to see AI results. Get your personalized Jump plan in minutes and start transforming your life and business today. Join 15,000+ professionals who've already made the leap.
             </p>
           </div>
 
