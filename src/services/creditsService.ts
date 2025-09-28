@@ -28,6 +28,20 @@ export interface CreditPackage {
   active: boolean;
 }
 
+export interface SubscriptionPlan {
+  id: string;
+  name: string;
+  description: string | null;
+  credits_per_month: number;
+  price_cents: number;
+  stripe_price_id: string | null;
+  stripe_product_id: string | null;
+  features: string[];
+  active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
 export const creditsService = {
   // Get user's current credits balance
   async getUserCredits(userId: string): Promise<UserCredits | null> {
@@ -133,6 +147,26 @@ export const creditsService = {
       return data || [];
     } catch (error) {
       console.error('Error fetching credit packages:', error);
+      return [];
+    }
+  },
+
+  // Get available subscription plans
+  async getSubscriptionPlans(): Promise<SubscriptionPlan[]> {
+    try {
+      const { data, error } = await supabase
+        .from('subscription_plans')
+        .select('*')
+        .eq('active', true)
+        .order('price_cents', { ascending: true });
+
+      if (error) {
+        throw error;
+      }
+
+      return data || [];
+    } catch (error) {
+      console.error('Error fetching subscription plans:', error);
       return [];
     }
   },

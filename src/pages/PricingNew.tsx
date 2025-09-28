@@ -1,37 +1,26 @@
-import { useState, useEffect } from "react";
-import { useAuth } from "@/hooks/useAuth";
-import { useCredits } from "@/hooks/useCredits";
-import { supabase } from "@/integrations/supabase/client";
-import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Crown, Check, Rocket, Sparkles, Zap, Star, ArrowRight, Gift, CreditCard, Loader2 } from "lucide-react";
-import { useAuth0Token } from "@/hooks/useAuth0Token";
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
-import { CreditsDisplay } from "@/components/CreditsDisplay";
-import { Helmet } from "react-helmet-async";
-import { creditsService, type CreditPackage } from "@/services/creditsService";
+import React, { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
+import Navigation from '@/components/Navigation';
+import Footer from '@/components/Footer';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Check, Zap, Star, Crown, Rocket, ArrowRight, Sparkles } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
+import { creditsService, type CreditPackage, type SubscriptionPlan } from '@/services/creditsService';
 
-interface SubscriberInfo {
-  subscribed: boolean;
-  subscription_tier?: string | null;
-  subscription_end?: string | null;
-}
-
-export default function PricingNew() {
+const PricingNew = () => {
+  const { user, isAuthenticated } = useAuth();
   const [creditPackages, setCreditPackages] = useState<CreditPackage[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [packageLoading, setPackageLoading] = useState<string | null>(null);
-  const navigate = useNavigate();
-  const { isAuthenticated, user, login } = useAuth();
-  const { creditsBalance } = useCredits();
-  const { getAuthHeaders } = useAuth0Token();
+  const [subscriptionPlans, setSubscriptionPlans] = useState<SubscriptionPlan[]>([]);
+  const [loadingSubscription, setLoadingSubscription] = useState<Record<string, boolean>>({});
+  const [packageLoading, setPackageLoading] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     fetchCreditPackages();
+    fetchSubscriptionPlans();
   }, []);
 
   const fetchCreditPackages = async () => {
@@ -44,414 +33,348 @@ export default function PricingNew() {
     }
   };
 
+  const fetchSubscriptionPlans = async () => {
+    try {
+      const plans = await creditsService.getSubscriptionPlans();
+      setSubscriptionPlans(plans);
+    } catch (error) {
+      console.error('Error fetching subscription plans:', error);
+      toast.error('Failed to load subscription plans');
+    }
+  };
+
   const handleBuyCredits = async (packageId: string) => {
     if (!isAuthenticated) {
-      login('/pricing');
+      toast.error('Please sign in to purchase credits');
       return;
     }
 
+    setPackageLoading(prev => ({ ...prev, [packageId]: true }));
+
     try {
-      setPackageLoading(packageId);
-      const { data, error } = await supabase.functions.invoke("create-credit-checkout", {
-        headers: await getAuthHeaders(),
-        body: { packageId },
+      const { data, error } = await supabase.functions.invoke('create-credit-checkout', {
+        body: { packageId }
       });
 
       if (error) throw error;
-      
-      const url = (data as any)?.url;
-      if (url) {
-        window.open(url, '_blank');
+
+      if (data?.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error('No checkout URL received');
       }
-    } catch (e: any) {
-      toast.error(e.message || "Failed to start checkout");
+    } catch (error) {
+      console.error('Error creating checkout session:', error);
+      toast.error('Failed to create checkout session');
     } finally {
-      setPackageLoading(null);
+      setPackageLoading(prev => ({ ...prev, [packageId]: false }));
     }
   };
 
-  const handleSubscribePro = async () => {
+  const handleSubscribe = async (planId: string) => {
     if (!isAuthenticated) {
-      login('/pricing');
+      toast.error('Please sign in to subscribe');
       return;
     }
 
+    setLoadingSubscription(prev => ({ ...prev, [planId]: true }));
+
     try {
-      setLoading(true);
-      const { data, error } = await supabase.functions.invoke("create-checkout", {
-        headers: await getAuthHeaders(),
-        body: { source: 'pricing-page' },
+      const { data, error } = await supabase.functions.invoke('create-subscription-checkout', {
+        body: { planId }
       });
 
       if (error) throw error;
-      
-      const url = (data as any)?.url;
-      if (url) {
-        window.location.href = url;
+
+      if (data?.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error('No checkout URL received');
       }
-    } catch (e: any) {
-      toast.error(e.message || "Failed to start checkout");
+    } catch (error) {
+      console.error('Error creating subscription checkout:', error);
+      toast.error('Failed to create subscription checkout');
     } finally {
-      setLoading(false);
+      setLoadingSubscription(prev => ({ ...prev, [planId]: false }));
     }
   };
 
-  const formatPrice = (cents: number) => {
+  const formatPrice = (cents: number): string => {
     return `$${(cents / 100).toFixed(0)}`;
   };
 
-  const getValueBadge = (credits: number, price: number) => {
-    const pricePerCredit = price / credits;
-    if (pricePerCredit <= 0.35) return { text: "Best Value", color: "bg-green-500" };
-    if (pricePerCredit <= 0.4) return { text: "Popular", color: "bg-blue-500" };
+  const getValueBadge = (credits: number, price_cents: number) => {
+    const pricePerCredit = price_cents / credits;
+    if (pricePerCredit <= 30) return "Best Value";
+    if (pricePerCredit <= 40) return "Popular";
     return null;
+  };
+
+  const getPlanIcon = (planName: string) => {
+    switch (planName.toLowerCase()) {
+      case 'free plan': return <Zap className="w-6 h-6" />;
+      case 'starter plan': return <Star className="w-6 h-6" />;
+      case 'pro plan': return <Crown className="w-6 h-6" />;
+      case 'growth plan': return <Rocket className="w-6 h-6" />;
+      default: return <Zap className="w-6 h-6" />;
+    }
+  };
+
+  const getPlanBadge = (planName: string) => {
+    switch (planName.toLowerCase()) {
+      case 'pro plan': return { text: "Most Popular", color: "bg-primary text-primary-foreground" };
+      case 'growth plan': return { text: "Best Value", color: "bg-gradient-to-r from-purple-500 to-pink-500 text-white" };
+      default: return null;
+    }
   };
 
   return (
     <>
       <Helmet>
-        <title>Credits Pricing - JumpinAI | Buy AI Generation Credits</title>
-        <meta name="description" content="Purchase JumpinAI credits to generate unlimited AI transformation plans. Get 5 welcome credits free when you sign up!" />
-        <meta name="keywords" content="JumpinAI credits, AI generation, transformation plans, AI tools pricing" />
-        <link rel="canonical" href="https://www.jumpinai.com/pricing" />
+        <title>Pricing - JumpinAI | AI Transformation Plans & Credits</title>
+        <meta 
+          name="description" 
+          content="Choose the perfect plan for your AI transformation journey. Flexible subscription plans and credit packages to power your business growth with AI." 
+        />
+        <meta name="keywords" content="AI pricing, subscription plans, credits, transformation, business AI" />
+        <link rel="canonical" href="https://jumpinai.com/pricing" />
       </Helmet>
-      
-      <Navigation />
-      
-      <main className="min-h-screen pt-20 pb-12 bg-gradient-to-br from-background via-background/90 to-primary/5 dark:bg-gradient-to-br dark:from-black dark:via-gray-950/90 dark:to-gray-900/60">
-        {/* Enhanced floating background elements */}
-        <div className="fixed inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-primary/20 to-primary/5 dark:bg-gradient-to-br dark:from-gray-800/30 dark:to-gray-700/15 rounded-full blur-3xl"></div>
-          <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-tr from-secondary/15 to-secondary/5 dark:bg-gradient-to-tr dark:from-gray-700/25 dark:to-gray-600/15 rounded-full blur-3xl"></div>
-          <div className="absolute top-1/3 left-1/2 transform -translate-x-1/2 w-64 h-64 bg-accent/10 dark:bg-gradient-radial dark:from-gray-800/20 dark:to-transparent rounded-full blur-2xl"></div>
-        </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Hero Header */}
-          <header className="text-center space-y-4 mb-12 animate-fade-in-down">
-            <div className="space-y-3">
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold gradient-text-primary tracking-tight">
-                JumpinAI Credits
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/10">
+        <Navigation />
+        
+        <main className="pt-20 pb-16">
+          {/* Hero Section */}
+          <section className="container mx-auto px-4 py-16 text-center">
+            <div className="max-w-4xl mx-auto">
+              <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
+                Transform Your Business with AI
               </h1>
-              <p className="text-base md:text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-                Purchase credits to generate unlimited AI transformation plans. Each credit = 1 complete Jump generation with tools, prompts, workflows, blueprints, and strategies.
+              <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+                Choose the perfect plan for your AI transformation journey. Get access to powerful AI tools, expert guidance, and comprehensive resources.
               </p>
             </div>
-            
-            {/* Current Credits Display */}
-            {isAuthenticated && (
-              <div className="flex justify-center animate-scale-in animate-delay-300">
-                <CreditsDisplay showBuyButton={false} className="bg-primary/10 border-primary/20 px-6 py-3 rounded-2xl" />
-              </div>
-            )}
-          </header>
-
-          {/* How It Works */}
-          <div className="mb-16 text-center">
-            <div className="max-w-4xl mx-auto">
-              <h2 className="text-2xl md:text-3xl font-bold gradient-text-primary mb-6">How Credits Work</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="text-center p-6 glass backdrop-blur-xl rounded-2xl border border-border/40">
-                  <div className="w-12 h-12 bg-gradient-to-br from-primary/20 to-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <Zap className="h-6 w-6 text-primary" />
-                  </div>
-                  <h3 className="text-lg font-bold mb-2">1 Credit = 1 Generation</h3>
-                  <p className="text-muted-foreground text-sm">Each credit generates a complete AI transformation plan</p>
-                </div>
-                
-                <div className="text-center p-6 glass backdrop-blur-xl rounded-2xl border border-border/40">
-                  <div className="w-12 h-12 bg-gradient-to-br from-green-500/20 to-green-500/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <Gift className="h-6 w-6 text-green-500" />
-                  </div>
-                  <h3 className="text-lg font-bold mb-2">5 Welcome Credits</h3>
-                  <p className="text-muted-foreground text-sm">New users get 5 free credits when they sign up</p>
-                </div>
-                
-                <div className="text-center p-6 glass backdrop-blur-xl rounded-2xl border border-border/40">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500/20 to-blue-500/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <Star className="h-6 w-6 text-blue-500" />
-                  </div>
-                  <h3 className="text-lg font-bold mb-2">Never Expire</h3>
-                  <p className="text-muted-foreground text-sm">Credits never expire and are always available</p>
-                </div>
-              </div>
-            </div>
-          </div>
+          </section>
 
           {/* Subscription Plans */}
-          <div className="mb-16">
-            <h2 className="text-2xl md:text-3xl font-bold gradient-text-primary text-center mb-10">Choose Your Plan</h2>
-            
-            {/* Subscription Plans Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-16">
-              {/* Free Plan */}
-              <Card className="glass backdrop-blur-xl border border-border/40 hover:border-primary/30 transition-all duration-500 rounded-2xl overflow-hidden">
-                <CardHeader className="text-center p-8">
-                  <CardTitle className="text-2xl font-bold mb-4">Free Plan</CardTitle>
-                  <div className="space-y-2">
-                    <div className="text-4xl font-bold">$0</div>
-                    <p className="text-muted-foreground">per month</p>
-                  </div>
-                </CardHeader>
-                <CardContent className="px-8 pb-8">
-                  <div className="space-y-4 mb-6">
-                    <div className="flex items-center gap-2 text-green-500 mb-4">
-                      <Gift className="w-5 h-5" />
-                      <span className="font-semibold">5 Welcome Credits</span>
-                    </div>
-                    <ul className="space-y-3">
-                      <li className="flex items-start gap-3">
-                        <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                        <span className="text-sm">Access to basic AI resources</span>
-                      </li>
-                      <li className="flex items-start gap-3">
-                        <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                        <span className="text-sm">Weekly newsletter with AI insights</span>
-                      </li>
-                      <li className="flex items-start gap-3">
-                        <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                        <span className="text-sm">Community support forum</span>
-                      </li>
-                      <li className="flex items-start gap-3">
-                        <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                        <span className="text-sm">Basic workflow templates</span>
-                      </li>
-                    </ul>
-                  </div>
-                </CardContent>
-                <CardFooter className="px-8 pb-8">
-                  {!isAuthenticated ? (
-                    <Button 
-                      onClick={() => login('/pricing')}
-                      variant="outline"
-                      className="w-full py-3 rounded-full border-2"
-                    >
-                      <Gift className="mr-2 h-4 w-4" />
-                      Sign Up for Free
-                    </Button>
-                  ) : (
-                    <div className="w-full text-center py-3">
-                      <span className="text-muted-foreground">Current Plan</span>
-                    </div>
-                  )}
-                </CardFooter>
-              </Card>
-
-              {/* Pro Plan */}
-              <Card className="glass backdrop-blur-xl border border-primary/40 hover:border-primary/60 transition-all duration-500 rounded-2xl overflow-hidden ring-2 ring-primary/20 relative">
-                <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-20">
-                  <Badge className="bg-primary text-primary-foreground px-4 py-1 text-sm font-semibold rounded-lg shadow-lg border-0">
-                    Most Popular
-                  </Badge>
-                </div>
-                
-                <CardHeader className="text-center p-8 pt-12">
-                  <CardTitle className="text-2xl font-bold text-primary mb-4">JumpinAI Pro</CardTitle>
-                  <div className="space-y-2">
-                    <div className="text-4xl font-bold text-primary">$50</div>
-                    <p className="text-muted-foreground">per month</p>
-                  </div>
-                </CardHeader>
-                <CardContent className="px-8 pb-8">
-                  <div className="space-y-4 mb-6">
-                    <div className="flex items-center gap-2 text-primary mb-4 p-3 bg-primary/10 rounded-xl">
-                      <Crown className="w-5 h-5" />
-                      <span className="font-semibold">1,000 Credits Monthly (Rollover)</span>
-                    </div>
-                    <ul className="space-y-3">
-                      <li className="flex items-start gap-3">
-                        <Check className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                        <span className="text-sm">Everything in Free plan</span>
-                      </li>
-                      <li className="flex items-start gap-3">
-                        <Check className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                        <span className="text-sm">Full blueprints library access</span>
-                      </li>
-                      <li className="flex items-start gap-3">
-                        <Check className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                        <span className="text-sm">Advanced workflow templates</span>
-                      </li>
-                      <li className="flex items-start gap-3">
-                        <Check className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                        <span className="text-sm">Premium prompt collection</span>
-                      </li>
-                      <li className="flex items-start gap-3">
-                        <Check className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                        <span className="text-sm">Priority email support</span>
-                      </li>
-                      <li className="flex items-start gap-3">
-                        <Check className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                        <span className="text-sm">Early access to new features</span>
-                      </li>
-                    </ul>
-                  </div>
-                </CardContent>
-                <CardFooter className="px-8 pb-8">
-                  <Button
-                    onClick={handleSubscribePro}
-                    disabled={loading}
-                    className="w-full py-3 rounded-full bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary/80 text-primary-foreground hover:scale-105 transition-all duration-300"
-                  >
-                    {loading ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Processing...
-                      </>
-                    ) : (
-                      <>
-                        <Crown className="mr-2 h-4 w-4" />
-                        Upgrade to Pro
-                      </>
-                    )}
-                  </Button>
-                </CardFooter>
-              </Card>
+          <section className="container mx-auto px-4 py-16">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold mb-4">Choose Your Plan</h2>
+              <p className="text-muted-foreground max-w-2xl mx-auto">
+                Get monthly credits that roll over, plus access to all our resources and tools
+              </p>
             </div>
-          </div>
 
-          {/* Credit Packages */}
-          <div className="mb-16">
-            <h2 className="text-2xl md:text-3xl font-bold gradient-text-primary text-center mb-4">Need More Credits?</h2>
-            <p className="text-center text-muted-foreground mb-10 max-w-2xl mx-auto">
-              Purchase additional credits anytime. Perfect for heavy users or one-time projects.
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-              {creditPackages.map((pkg) => {
-                const valueBadge = getValueBadge(pkg.credits, pkg.price_cents);
-                const pricePerCredit = pkg.price_cents / pkg.credits / 100;
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+              {subscriptionPlans.map((plan) => {
+                const badge = getPlanBadge(plan.name);
+                const isLoading = loadingSubscription[plan.id];
+                const isFree = plan.price_cents === 0;
                 
                 return (
-        <Card className={`relative flex flex-col h-full glass backdrop-blur-xl border border-border/40 hover:border-primary/30 transition-all duration-500 hover:shadow-xl hover:shadow-primary/10 rounded-2xl overflow-hidden animate-fade-in-up group ${
-          valueBadge ? 'ring-2 ring-primary/40' : ''
-        }`}>
-                    {/* Value Badge */}
-                    {valueBadge && (
-                      <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-20">
-                        <Badge className={`${valueBadge.color} text-white px-3 py-1 text-xs font-semibold rounded-lg shadow-lg border-0`}>
-                          {valueBadge.text}
+                  <Card key={plan.id} className={`relative h-full flex flex-col ${plan.name.toLowerCase().includes('pro') ? 'border-primary shadow-lg shadow-primary/20' : ''}`}>
+                    {badge && (
+                      <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                        <Badge className={badge.color}>
+                          {badge.text}
                         </Badge>
                       </div>
                     )}
-
-                    <CardHeader className={`text-center p-6 ${valueBadge ? 'pt-12' : ''}`}>
-                      <div className="space-y-2">
-                        <CardTitle className="text-xl font-bold text-foreground">{pkg.name}</CardTitle>
-                        <div className="space-y-1">
-                          <div className="text-3xl font-bold text-primary">{formatPrice(pkg.price_cents)}</div>
-                          <p className="text-muted-foreground text-sm">${pricePerCredit.toFixed(2)} per credit</p>
+                    
+                    <CardHeader className="text-center pb-6">
+                      <div className="mx-auto mb-4 p-3 rounded-full bg-primary/10 text-primary">
+                        {getPlanIcon(plan.name)}
+                      </div>
+                      <CardTitle className="text-xl font-bold">{plan.name}</CardTitle>
+                      <CardDescription className="text-sm">{plan.description}</CardDescription>
+                      <div className="mt-4">
+                        <div className="text-3xl font-bold">
+                          {isFree ? 'Free' : formatPrice(plan.price_cents)}
+                          {!isFree && <span className="text-base font-normal text-muted-foreground">/month</span>}
+                        </div>
+                        <div className="text-sm text-muted-foreground mt-1">
+                          {plan.credits_per_month} credits {!isFree && 'monthly'}
                         </div>
                       </div>
                     </CardHeader>
                     
-                    <CardContent className="px-6 pb-6 flex-1 flex flex-col items-center justify-center">
-                      <div className="text-center mb-4">
-                        <div className="flex items-center justify-center gap-2 mb-2">
-                          <Zap className="w-6 h-6 text-primary" />
-                          <span className="text-2xl font-bold text-foreground">{pkg.credits}</span>
-                          <span className="text-muted-foreground">credits</span>
-                        </div>
-                        <p className="text-sm text-muted-foreground">
-                          Generate {pkg.credits} complete AI transformation plans
-                        </p>
-                      </div>
-                    </CardContent>
-                    
-                    <CardFooter className="p-6 pt-0 mt-auto">
-                      <Button
-                        onClick={() => handleBuyCredits(pkg.id)}
-                        disabled={loading || packageLoading === pkg.id}
-                        className={`w-full py-3 rounded-full font-semibold hover:scale-105 transition-all duration-300 ${
-                          valueBadge 
-                            ? 'bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary/80 text-primary-foreground shadow-lg'
-                            : 'bg-gradient-to-r from-secondary to-secondary/90 hover:from-secondary/90 hover:to-secondary/80 text-secondary-foreground'
-                        }`}
+                    <CardContent className="flex-1 flex flex-col">
+                      <ul className="space-y-2 mb-6 flex-1">
+                        {plan.features.map((feature, index) => (
+                          <li key={index} className="flex items-start gap-2 text-sm">
+                            <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                            <span>{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      
+                      <Button 
+                        onClick={() => isFree ? null : handleSubscribe(plan.id)}
+                        disabled={isLoading || isFree}
+                        className="w-full"
+                        variant={isFree ? "outline" : "default"}
                       >
-                        {packageLoading === pkg.id ? (
+                        {isLoading ? (
                           <>
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
                             Processing...
                           </>
+                        ) : isFree ? (
+                          'Current Plan'
                         ) : (
                           <>
-                            <CreditCard className="mr-2 h-4 w-4" />
-                            Buy Credits
+                            Get Started
+                            <ArrowRight className="w-4 h-4 ml-2" />
                           </>
                         )}
                       </Button>
-                    </CardFooter>
+                    </CardContent>
                   </Card>
                 );
               })}
             </div>
-          </div>
+          </section>
 
-          {/* Free Trial Section */}
-          <div className="mb-16">
-            <Card className="glass backdrop-blur-xl border border-primary/30 rounded-3xl overflow-hidden max-w-4xl mx-auto">
-              <div className="bg-gradient-to-r from-primary/10 via-primary/5 to-transparent p-8 md:p-12">
-                <div className="flex flex-col md:flex-row items-center gap-8">
-                  <div className="flex-1 text-center md:text-left">
-                    <h3 className="text-2xl md:text-3xl font-bold gradient-text-primary mb-4">
-                      Try JumpinAI Free!
-                    </h3>
-                    <p className="text-muted-foreground text-lg mb-6">
-                      Not sure yet? Try our JumpinAI Studio with 1 free generation as a guest, or sign up to get 5 welcome credits immediately!
-                    </p>
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+          {/* Credit Packages */}
+          <section className="container mx-auto px-4 py-16">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold mb-4">Need More Credits?</h2>
+              <p className="text-muted-foreground max-w-2xl mx-auto">
+                Top up your account with additional credits anytime. Perfect for busy periods or special projects.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 max-w-6xl mx-auto">
+              {creditPackages.map((pkg) => {
+                const isLoading = packageLoading[pkg.id];
+                const valueBadge = getValueBadge(pkg.credits, pkg.price_cents);
+                
+                return (
+                  <Card key={pkg.id} className="relative h-full flex flex-col hover:shadow-lg transition-shadow">
+                    {valueBadge && (
+                      <div className="absolute -top-2 -right-2">
+                        <Badge variant="secondary" className="text-xs">
+                          <Sparkles className="w-3 h-3 mr-1" />
+                          {valueBadge}
+                        </Badge>
+                      </div>
+                    )}
+                    
+                    <CardHeader className="text-center pb-4">
+                      <CardTitle className="text-lg font-semibold">{pkg.name}</CardTitle>
+                      <div className="mt-2">
+                        <div className="text-2xl font-bold text-primary">
+                          {formatPrice(pkg.price_cents)}
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                          {pkg.credits} credits
+                        </div>
+                        <div className="text-xs text-muted-foreground mt-1">
+                          ${(pkg.price_cents / pkg.credits / 100).toFixed(2)} per credit
+                        </div>
+                      </div>
+                    </CardHeader>
+                    
+                    <CardContent className="flex-1 flex flex-col justify-end">
                       <Button 
-                        onClick={() => navigate('/jumpinai-studio')}
-                        variant="outline"
-                        className="px-6 py-3 rounded-full border-2 hover:scale-105 transition-all duration-300"
+                        onClick={() => handleBuyCredits(pkg.id)}
+                        disabled={isLoading}
+                        className="w-full"
+                        size="sm"
                       >
-                        Try Free (No Signup)
+                        {isLoading ? (
+                          <>
+                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                            Processing...
+                          </>
+                        ) : (
+                          <>
+                            <Zap className="w-4 h-4 mr-2" />
+                            Buy Credits
+                          </>
+                        )}
                       </Button>
-                      {!isAuthenticated && (
-                        <Button 
-                          onClick={() => login('/jumpinai-studio')}
-                          className="px-6 py-3 rounded-full bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary/80 text-primary-foreground hover:scale-105 transition-all duration-300"
-                        >
-                          <Gift className="mr-2 h-4 w-4" />
-                          Sign Up for 5 Free Credits
-                        </Button>
-                      )}
-                    </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          </section>
+
+          {/* How Credits Work */}
+          <section className="container mx-auto px-4 py-16">
+            <div className="max-w-4xl mx-auto">
+              <h2 className="text-3xl font-bold text-center mb-8">How Credits Work</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="text-center">
+                  <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Zap className="w-6 h-6 text-primary" />
                   </div>
-                  <div className="text-center">
-                    <div className="w-24 h-24 bg-gradient-to-br from-primary/20 to-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Rocket className="w-12 h-12 text-primary" />
-                    </div>
+                  <h3 className="font-semibold mb-2">One Credit Per Generation</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Each AI transformation plan, strategy, or workflow costs 1 credit to generate
+                  </p>
+                </div>
+                <div className="text-center">
+                  <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Star className="w-6 h-6 text-primary" />
                   </div>
+                  <h3 className="font-semibold mb-2">Credits Roll Over</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Unused monthly credits carry forward to the next month. No credits go to waste
+                  </p>
+                </div>
+                <div className="text-center">
+                  <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Crown className="w-6 h-6 text-primary" />
+                  </div>
+                  <h3 className="font-semibold mb-2">Access Everything</h3>
+                  <p className="text-sm text-muted-foreground">
+                    All plans include access to our complete library of guides, resources, and tools
+                  </p>
                 </div>
               </div>
-            </Card>
-          </div>
+            </div>
+          </section>
 
           {/* FAQ Section */}
-          <div className="text-center">
-            <h2 className="text-2xl md:text-3xl font-bold gradient-text-primary mb-8">Frequently Asked Questions</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto text-left">
-              <div className="p-6 glass backdrop-blur-xl rounded-2xl border border-border/40">
-                <h3 className="text-lg font-bold mb-3">Do credits expire?</h3>
-                <p className="text-muted-foreground">No, your credits never expire. Use them whenever you need to generate AI transformation plans.</p>
-              </div>
-              <div className="p-6 glass backdrop-blur-xl rounded-2xl border border-border/40">
-                <h3 className="text-lg font-bold mb-3">What's included in each generation?</h3>
-                <p className="text-muted-foreground">Each credit generates a complete plan with 4 AI tools, 4 prompts, 4 workflows, 4 blueprints, and 4 strategies.</p>
-              </div>
-              <div className="p-6 glass backdrop-blur-xl rounded-2xl border border-border/40">
-                <h3 className="text-lg font-bold mb-3">Can I get a refund?</h3>
-                <p className="text-muted-foreground">Credits are non-refundable, but you can always try our free guest generation before purchasing.</p>
-              </div>
-              <div className="p-6 glass backdrop-blur-xl rounded-2xl border border-border/40">
-                <h3 className="text-lg font-bold mb-3">How do welcome credits work?</h3>
-                <p className="text-muted-foreground">New users automatically receive 5 free credits when they create an account. No purchase necessary!</p>
+          <section className="container mx-auto px-4 py-16">
+            <div className="max-w-3xl mx-auto">
+              <h2 className="text-3xl font-bold text-center mb-12">Frequently Asked Questions</h2>
+              <div className="space-y-8">
+                <div>
+                  <h3 className="font-semibold mb-2">What can I do with credits?</h3>
+                  <p className="text-muted-foreground">
+                    Credits are used to generate AI transformation plans, strategies, workflows, and other AI-powered content through our JumpinAI Studio.
+                  </p>
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-2">Do credits expire?</h3>
+                  <p className="text-muted-foreground">
+                    Monthly subscription credits roll over to the next month, so you never lose them. Purchased credit packages also never expire.
+                  </p>
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-2">Can I change my plan anytime?</h3>
+                  <p className="text-muted-foreground">
+                    Yes! You can upgrade, downgrade, or cancel your subscription at any time. Changes take effect at your next billing cycle.
+                  </p>
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-2">What's included with all plans?</h3>
+                  <p className="text-muted-foreground">
+                    All paid plans include access to our complete resource library, guides, templates, and priority support. Higher tier plans include additional features like phone support and custom workflows.
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-      </main>
-      
-      <Footer />
+          </section>
+        </main>
+
+        <Footer />
+      </div>
     </>
   );
-}
+};
+
+export default PricingNew;
