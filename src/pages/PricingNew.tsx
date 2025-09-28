@@ -145,19 +145,19 @@ const PricingNew = () => {
         
         <main className="pt-20 pb-16">
           {/* Hero Section */}
-          <section className="container mx-auto px-4 py-16 text-center">
+          <section className="container mx-auto px-4 py-12 text-center">
             <div className="max-w-4xl mx-auto">
-              <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
+              <h1 className="text-4xl md:text-6xl font-bold mb-4 gradient-text-primary">
                 JumpinAI Pricing
               </h1>
-              <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-                Choose the perfect plan for your needs and get started with AI transformation today.
+              <p className="text-lg text-muted-foreground mb-8 max-w-3xl mx-auto">
+                Choose the perfect plan for your needs. <span className="font-semibold text-foreground">1 credit = 1 jump generation</span> - each jump includes a comprehensive AI transformation plan with strategies, tools, workflows, and actionable blueprints tailored to your business.
               </p>
             </div>
           </section>
 
           {/* Subscription Plans */}
-          <section className="container mx-auto px-4 py-16">
+          <section className="container mx-auto px-4 py-12">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold mb-4">Choose Your Plan</h2>
               <p className="text-muted-foreground max-w-2xl mx-auto">
@@ -173,10 +173,10 @@ const PricingNew = () => {
                 const isFree = plan.price_cents === 0;
                 
                 return (
-                  <Card key={plan.id} className={`relative flex flex-col w-64 sm:w-56 md:w-64 lg:w-72 flex-shrink-0 min-h-[500px] ${plan.name.toLowerCase().includes('pro') ? 'border-primary shadow-lg shadow-primary/20' : ''}`}>
+                  <Card key={plan.id} className={`relative flex flex-col w-64 sm:w-56 md:w-64 lg:w-72 flex-shrink-0 min-h-[500px] glass hover:glass-dark transition-all duration-300 shadow-modern hover:shadow-modern-lg rounded-2xl border-0 ${plan.name.toLowerCase().includes('pro') ? 'shadow-steel' : ''}`}>
                     {badge && (
-                      <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                        <Badge className={badge.color}>
+                      <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
+                        <Badge className={`${badge.color} shadow-modern rounded-full px-3 py-1`}>
                           {badge.text}
                         </Badge>
                       </div>
@@ -211,11 +211,11 @@ const PricingNew = () => {
                       
                       <div className="mt-auto">
                         <Button
-                        onClick={() => isFree ? null : handleSubscribe(plan.id)}
-                        disabled={isLoading || isFree}
-                        className="w-full"
-                        variant={isFree ? "outline" : "default"}
-                      >
+                         onClick={() => isFree ? null : handleSubscribe(plan.id)}
+                         disabled={isLoading || isFree}
+                         className={`w-full modern-button shadow-modern ${isFree ? '' : 'bg-foreground hover:bg-foreground/90'}`}
+                         variant={isFree ? "outline" : "default"}
+                       >
                         {isLoading ? (
                           <>
                             <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
@@ -240,7 +240,7 @@ const PricingNew = () => {
           </section>
 
           {/* Credit Packages */}
-          <section className="container mx-auto px-4 py-16">
+          <section className="container mx-auto px-4 py-12">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold mb-4">Need More Credits?</h2>
               <p className="text-muted-foreground max-w-2xl mx-auto">
@@ -254,10 +254,10 @@ const PricingNew = () => {
                 const valueBadge = getValueBadge(pkg.credits, pkg.price_cents);
                 
                 return (
-                  <Card key={pkg.id} className="relative h-full flex flex-col hover:shadow-lg transition-shadow">
+                  <Card key={pkg.id} className="relative h-full flex flex-col glass hover:glass-dark transition-all duration-300 shadow-modern hover:shadow-modern-lg rounded-2xl border-0">
                     {valueBadge && (
-                      <div className="absolute -top-2 -right-2">
-                        <Badge variant="secondary" className="text-xs">
+                      <div className="absolute -top-2 -right-2 z-10">
+                        <Badge variant="secondary" className="text-xs shadow-modern rounded-full px-2 py-1">
                           <Sparkles className="w-3 h-3 mr-1" />
                           {valueBadge}
                         </Badge>
@@ -266,15 +266,12 @@ const PricingNew = () => {
                     
                     <CardHeader className="text-center pb-4">
                       <CardTitle className="text-lg font-semibold">{pkg.name}</CardTitle>
-                      <div className="mt-2">
-                        <div className="text-2xl font-bold text-primary">
+                      <div className="mt-3">
+                        <div className="text-3xl font-bold gradient-text-primary mb-1">
                           {formatPrice(pkg.price_cents)}
                         </div>
-                        <div className="text-sm text-muted-foreground">
+                        <div className="text-base font-medium text-muted-foreground">
                           {pkg.credits} credits
-                        </div>
-                        <div className="text-xs text-muted-foreground mt-1">
-                          ${(pkg.price_cents / pkg.credits / 100).toFixed(2)} per credit
                         </div>
                       </div>
                     </CardHeader>
@@ -283,7 +280,7 @@ const PricingNew = () => {
                       <Button 
                         onClick={() => handleBuyCredits(pkg.id)}
                         disabled={isLoading}
-                        className="w-full"
+                        className="w-full modern-button shadow-modern bg-foreground hover:bg-foreground/90"
                         size="sm"
                       >
                         {isLoading ? (
@@ -310,10 +307,10 @@ const PricingNew = () => {
                 const valueBadge = getValueBadge(pkg.credits, pkg.price_cents);
                 
                 return (
-                  <Card key={pkg.id} className="relative h-full flex flex-col hover:shadow-lg transition-shadow">
+                  <Card key={pkg.id} className="relative h-full flex flex-col glass hover:glass-dark transition-all duration-300 shadow-modern hover:shadow-modern-lg rounded-2xl border-0">
                     {getValueBadge(pkg.credits, pkg.price_cents) && (
-                      <div className="absolute -top-2 -right-2">
-                        <Badge variant="secondary" className="text-xs">
+                      <div className="absolute -top-2 -right-2 z-10">
+                        <Badge variant="secondary" className="text-xs shadow-modern rounded-full px-2 py-1">
                           <Sparkles className="w-3 h-3 mr-1" />
                           {getValueBadge(pkg.credits, pkg.price_cents)}
                         </Badge>
@@ -322,15 +319,12 @@ const PricingNew = () => {
                     
                     <CardHeader className="text-center pb-4">
                       <CardTitle className="text-lg font-semibold">{pkg.name}</CardTitle>
-                      <div className="mt-2">
-                        <div className="text-2xl font-bold text-primary">
+                      <div className="mt-3">
+                        <div className="text-3xl font-bold gradient-text-primary mb-1">
                           {formatPrice(pkg.price_cents)}
                         </div>
-                        <div className="text-sm text-muted-foreground">
+                        <div className="text-base font-medium text-muted-foreground">
                           {pkg.credits} credits
-                        </div>
-                        <div className="text-xs text-muted-foreground mt-1">
-                          ${(pkg.price_cents / pkg.credits / 100).toFixed(2)} per credit
                         </div>
                       </div>
                     </CardHeader>
@@ -339,7 +333,7 @@ const PricingNew = () => {
                       <Button 
                         onClick={() => handleBuyCredits(pkg.id)}
                         disabled={packageLoading[pkg.id]}
-                        className="w-full"
+                        className="w-full modern-button shadow-modern bg-foreground hover:bg-foreground/90"
                         size="sm"
                       >
                         {packageLoading[pkg.id] ? (
@@ -362,7 +356,7 @@ const PricingNew = () => {
           </section>
 
           {/* How Credits Work */}
-          <section className="container mx-auto px-4 py-16">
+          <section className="container mx-auto px-4 py-12">
             <div className="max-w-4xl mx-auto">
               <h2 className="text-3xl font-bold text-center mb-8">How Credits Work</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
