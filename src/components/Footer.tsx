@@ -70,7 +70,7 @@ const Footer = () => {
               <span className="ml-3 text-2xl font-black font-display text-foreground">JumpinAI</span>
             </Link>
             <p className="text-muted-foreground leading-relaxed mb-8 max-w-md font-light">
-              Empowering professionals and organizations to implement AI strategically with clarity, precision, and measurable results.
+              Empowering the bold to leap beyond limits. Transforming how you work, create, and thrive in the AI revolution.
             </p>
             
             {/* Social Links - Professional Design */}
