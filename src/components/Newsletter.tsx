@@ -154,7 +154,7 @@ const Newsletter = () => {
             </div>
             
             <h2 className="text-3xl sm:text-4xl font-black text-foreground mb-3 tracking-tight font-display">
-              Stay Ahead
+              Stay Updated
             </h2>
             
             <p className="text-base text-muted-foreground mb-6 max-w-2xl mx-auto leading-relaxed font-light">

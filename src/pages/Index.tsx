@@ -476,10 +476,11 @@ const Index = () => {
                   
                   <div className="mt-auto">
                     <button 
-                      onClick={() => window.location.href = '/jumpinai-studio'}
-                      className="w-full modern-button shadow-modern bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-lg font-semibold cursor-pointer text-center transition-colors"
+                      onClick={() => handleSubscribe('Starter Plan')}
+                      disabled={loadingSubscription['starter']}
+                      className="w-full modern-button shadow-modern bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-lg font-semibold cursor-pointer text-center transition-colors disabled:opacity-50"
                     >
-                      Get Started
+                      {loadingSubscription['starter'] ? 'Processing...' : 'Get Started'}
                     </button>
                   </div>
                 </div>
@@ -547,11 +548,11 @@ const Index = () => {
                   
                   <div className="mt-auto">
                     <button 
-                      onClick={() => handleSubscribe('Starter')}
-                      disabled={loadingSubscription['starter']}
+                      onClick={() => handleSubscribe('Pro Plan')}
+                      disabled={loadingSubscription['pro']}
                       className="w-full modern-button shadow-modern bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-lg font-semibold cursor-pointer text-center transition-colors disabled:opacity-50"
                     >
-                      {loadingSubscription['starter'] ? 'Processing...' : 'Get Started'}
+                      {loadingSubscription['pro'] ? 'Processing...' : 'Get Started'}
                     </button>
                   </div>
                 </div>
@@ -619,11 +620,11 @@ const Index = () => {
                   
                   <div className="mt-auto">
                     <button 
-                      onClick={() => handleSubscribe('Pro')}
-                      disabled={loadingSubscription['pro']}
+                      onClick={() => handleSubscribe('Growth Plan')}
+                      disabled={loadingSubscription['growth']}
                       className="w-full modern-button shadow-modern bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-lg font-semibold cursor-pointer text-center transition-colors disabled:opacity-50"
                     >
-                      {loadingSubscription['pro'] ? 'Processing...' : 'Get Started'}
+                      {loadingSubscription['growth'] ? 'Processing...' : 'Get Started'}
                     </button>
                   </div>
                 </div>
@@ -632,7 +633,7 @@ const Index = () => {
           </div>
 
           <div className="text-center pt-8">
-            <a href="/pricing" className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-8 py-4 rounded-xl text-lg font-semibold hover:bg-primary/90 transition-all duration-300 shadow-lg hover:shadow-xl">
+            <a href="/pricing" className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-xl text-base font-semibold hover:bg-primary/90 transition-all duration-300 shadow-lg hover:shadow-xl">
               View All Plans & Pricing
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
