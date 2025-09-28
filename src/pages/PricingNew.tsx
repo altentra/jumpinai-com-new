@@ -148,10 +148,10 @@ const PricingNew = () => {
           <section className="container mx-auto px-4 py-16 text-center">
             <div className="max-w-4xl mx-auto">
               <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
-                Transform Your Business with AI
+                JumpinAI Pricing
               </h1>
               <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-                Choose the perfect plan for your AI transformation journey. Get access to powerful AI tools, expert guidance, and comprehensive resources.
+                Choose the perfect plan for your needs and get started with AI transformation today.
               </p>
             </div>
           </section>
@@ -173,7 +173,7 @@ const PricingNew = () => {
                 const isFree = plan.price_cents === 0;
                 
                 return (
-                  <Card key={plan.id} className={`relative flex flex-col w-72 md:w-auto flex-shrink-0 min-h-[500px] ${plan.name.toLowerCase().includes('pro') ? 'border-primary shadow-lg shadow-primary/20' : ''}`}>
+                  <Card key={plan.id} className={`relative flex flex-col w-64 sm:w-56 md:w-64 lg:w-72 flex-shrink-0 min-h-[500px] ${plan.name.toLowerCase().includes('pro') ? 'border-primary shadow-lg shadow-primary/20' : ''}`}>
                     {badge && (
                       <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
                         <Badge className={badge.color}>
@@ -248,14 +248,13 @@ const PricingNew = () => {
               </p>
             </div>
 
-            <div className="w-full overflow-x-auto pb-4">
-              <div className="flex gap-4 min-w-max px-4 md:px-0 md:justify-center md:flex-wrap md:max-w-6xl md:mx-auto">
-                {creditPackages.map((pkg) => {
+            <div className="grid grid-cols-3 gap-4 max-w-4xl mx-auto mb-4">
+              {creditPackages.slice(0, 3).map((pkg) => {
                 const isLoading = packageLoading[pkg.id];
                 const valueBadge = getValueBadge(pkg.credits, pkg.price_cents);
                 
                 return (
-                  <Card key={pkg.id} className="relative h-full flex flex-col hover:shadow-lg transition-shadow w-56 md:w-auto flex-shrink-0">
+                  <Card key={pkg.id} className="relative h-full flex flex-col hover:shadow-lg transition-shadow">
                     {valueBadge && (
                       <div className="absolute -top-2 -right-2">
                         <Badge variant="secondary" className="text-xs">
@@ -302,8 +301,63 @@ const PricingNew = () => {
                     </CardContent>
                   </Card>
                 );
-                })}
-              </div>
+              })}
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4 max-w-2xl mx-auto">
+              {creditPackages.slice(3, 5).map((pkg) => {
+                const isLoading = packageLoading[pkg.id];
+                const valueBadge = getValueBadge(pkg.credits, pkg.price_cents);
+                
+                return (
+                  <Card key={pkg.id} className="relative h-full flex flex-col hover:shadow-lg transition-shadow">
+                    {getValueBadge(pkg.credits, pkg.price_cents) && (
+                      <div className="absolute -top-2 -right-2">
+                        <Badge variant="secondary" className="text-xs">
+                          <Sparkles className="w-3 h-3 mr-1" />
+                          {getValueBadge(pkg.credits, pkg.price_cents)}
+                        </Badge>
+                      </div>
+                    )}
+                    
+                    <CardHeader className="text-center pb-4">
+                      <CardTitle className="text-lg font-semibold">{pkg.name}</CardTitle>
+                      <div className="mt-2">
+                        <div className="text-2xl font-bold text-primary">
+                          {formatPrice(pkg.price_cents)}
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                          {pkg.credits} credits
+                        </div>
+                        <div className="text-xs text-muted-foreground mt-1">
+                          ${(pkg.price_cents / pkg.credits / 100).toFixed(2)} per credit
+                        </div>
+                      </div>
+                    </CardHeader>
+                    
+                    <CardContent className="flex-1 flex flex-col justify-end">
+                      <Button 
+                        onClick={() => handleBuyCredits(pkg.id)}
+                        disabled={packageLoading[pkg.id]}
+                        className="w-full"
+                        size="sm"
+                      >
+                        {packageLoading[pkg.id] ? (
+                          <>
+                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                            Processing...
+                          </>
+                        ) : (
+                          <>
+                            <Zap className="w-4 h-4 mr-2" />
+                            Buy Credits
+                          </>
+                        )}
+                      </Button>
+                    </CardContent>
+                  </Card>
+                );
+              })}
             </div>
           </section>
 
