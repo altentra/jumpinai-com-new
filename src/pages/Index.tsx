@@ -93,7 +93,73 @@ const Index = () => {
       <Navigation />
       <Hero />
 
-      <Features />
+      {/* What JumpinAI Studio Actually Does - Features Section */}
+      <section className="py-16 lg:py-24 relative">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl lg:text-4xl font-bold gradient-text-primary mb-4 font-display">
+              Stop Struggling with AI Implementation
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+              Get your complete AI transformation blueprint in minutes. JumpinAI Studio creates personalized action plans that turn AI confusion into competitive advantage.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-6">
+            {/* Strategic Action Plans */}
+            <div className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-300">
+              <h3 className="text-lg font-bold mb-3 font-display">Strategic Action Plans</h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                Clear, step-by-step roadmaps tailored to your exact goals, industry, and experience level.
+              </p>
+              <div className="text-xs text-primary space-y-1">
+                <div>✓ Industry-specific strategies</div>
+                <div>✓ Clear execution timelines</div>
+                <div>✓ Risk-assessed recommendations</div>
+              </div>
+            </div>
+
+            {/* AI Tool Selection */}
+            <div className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-300">
+              <h3 className="text-lg font-bold mb-3 font-display">Curated AI Tool Lists</h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                Hand-picked AI tools specifically chosen for your use case with setup guides and optimization tips.
+              </p>
+              <div className="text-xs text-secondary space-y-1">
+                <div>✓ Pre-vetted tools only</div>
+                <div>✓ Cost-benefit analysis</div>
+                <div>✓ Integration guidance included</div>
+              </div>
+            </div>
+
+            {/* Complete Resource Package */}
+            <div className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-300">
+              <h3 className="text-lg font-bold mb-3 font-display">Ready Resources</h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                16 ready-to-use resources: prompts, workflows, blueprints, and strategies for immediate deployment.
+              </p>
+              <div className="text-xs text-accent space-y-1">
+                <div>✓ Custom prompts & workflows</div>
+                <div>✓ Detailed blueprints</div>
+                <div>✓ Proven strategies</div>
+              </div>
+            </div>
+
+            {/* AI Coach & Support */}
+            <div className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-300">
+              <h3 className="text-lg font-bold mb-3 font-display">AI Coach & Support</h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                Ongoing guidance with AI coach conversations and comprehensive support system.
+              </p>
+              <div className="text-xs text-primary space-y-1">
+                <div>✓ AI coaching sessions</div>
+                <div>✓ Implementation support</div>
+                <div>✓ Progress tracking</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Trust by Association Section */}
       <section className="py-12 bg-muted/30 dark:bg-muted/10">
