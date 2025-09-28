@@ -239,13 +239,13 @@ const Hero = () => {
           
           {/* Subheading */}
           <p className="text-2xl sm:text-3xl lg:text-4xl text-muted-foreground mb-6 font-light max-w-4xl mx-auto leading-relaxed">
-            Jump into the world of AI with 
-            <span className="text-foreground font-medium"> clarity and precision</span>
+            Jump into the world of AI and 
+            <span className="text-foreground font-medium"> transform your reality</span>
           </p>
           
           {/* Description */}
           <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed font-light">
-            Discover curated AI tools, practical use-cases, and smart workflows that empower creators, entrepreneurs, and innovators to harness the power of artificial intelligence.
+            This is your moment. While others hesitate at the edge of the AI revolution, you're ready to jump. We'll guide you from curiosity to clarity, from ideas to implementation, transforming the way you work, create, and live. Your AI-powered future begins with one bold step forward.
           </p>
           
           {/* Call to Action Button */}
