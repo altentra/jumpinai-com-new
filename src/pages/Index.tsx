@@ -26,69 +26,67 @@ const Index = () => {
       <Hero />
 
       {/* What JumpinAI Studio Actually Does - Features Section */}
-      <section className="py-20 lg:py-32 relative">
+      <section className="py-16 lg:py-24 relative">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl lg:text-5xl font-bold gradient-text-primary mb-6 font-display">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl lg:text-4xl font-bold gradient-text-primary mb-4 font-display">
               Stop Struggling with AI Implementation
             </h2>
-            <p className="text-xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
               Get your complete AI transformation blueprint in minutes. JumpinAI Studio creates personalized action plans that turn AI confusion into competitive advantage.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
-            {/* Personalized Jump Plans */}
-            <div className="group relative p-8 rounded-2xl glass hover:glass-dark transition-all duration-300">
-              <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
-                <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                </svg>
-              </div>
-              <h3 className="text-2xl font-bold mb-4 font-display">Strategic Action Plans</h3>
-              <p className="text-muted-foreground mb-6">
-                Stop wandering aimlessly in the AI landscape. Get clear, step-by-step roadmaps tailored to your exact goals, industry, and current AI experience level.
+          <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-6">
+            {/* Strategic Action Plans */}
+            <div className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-300">
+              <h3 className="text-lg font-bold mb-3 font-display">Strategic Action Plans</h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                Clear, step-by-step roadmaps tailored to your exact goals, industry, and experience level.
               </p>
-              <div className="text-sm font-semibold text-primary">
-                ✓ Industry-specific strategies<br/>
-                ✓ Clear execution timelines<br/>
-                ✓ Risk-assessed recommendations
+              <div className="text-xs text-primary space-y-1">
+                <div>✓ Industry-specific strategies</div>
+                <div>✓ Clear execution timelines</div>
+                <div>✓ Risk-assessed recommendations</div>
               </div>
             </div>
 
             {/* AI Tool Selection */}
-            <div className="group relative p-8 rounded-2xl glass hover:glass-dark transition-all duration-300">
-              <div className="w-16 h-16 bg-secondary/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-secondary/20 transition-colors">
-                <svg className="w-8 h-8 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
-                </svg>
-              </div>
-              <h3 className="text-2xl font-bold mb-4 font-display">Curated AI Tool Lists</h3>
-              <p className="text-muted-foreground mb-6">
-                End tool overwhelm forever. Receive hand-picked AI tools specifically chosen for your use case, complete with setup guides and optimization tips.
+            <div className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-300">
+              <h3 className="text-lg font-bold mb-3 font-display">Curated AI Tool Lists</h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                Hand-picked AI tools specifically chosen for your use case with setup guides and optimization tips.
               </p>
-              <div className="text-sm font-semibold text-secondary">
-                ✓ Pre-vetted tools only<br/>
-                ✓ Cost-benefit analysis<br/>
-                ✓ Integration guidance included
+              <div className="text-xs text-secondary space-y-1">
+                <div>✓ Pre-vetted tools only</div>
+                <div>✓ Cost-benefit analysis</div>
+                <div>✓ Integration guidance included</div>
               </div>
             </div>
 
-            {/* Ready-to-Use Resources */}
-            <div className="group relative p-8 rounded-2xl glass hover:glass-dark transition-all duration-300 md:col-span-2 lg:col-span-1">
-              <div className="w-16 h-16 bg-accent/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-accent/20 transition-colors">
-                <svg className="w-8 h-8 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                </svg>
-              </div>
-              <h3 className="text-2xl font-bold mb-4 font-display">Complete Resource Package</h3>
-              <p className="text-muted-foreground mb-6">
-                Get 4 custom prompts, 4 workflows, 4 blueprints, and 4 strategies ready for immediate deployment. No more starting from scratch.
+            {/* Complete Resource Package */}
+            <div className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-300">
+              <h3 className="text-lg font-bold mb-3 font-display">Ready Resources</h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                16 ready-to-use resources: prompts, workflows, blueprints, and strategies for immediate deployment.
               </p>
-              <div className="text-sm font-semibold text-accent">
-                ✓ 16 ready-to-use resources<br/>
-                ✓ Customized for your goals<br/>
-                ✓ Instant implementation
+              <div className="text-xs text-accent space-y-1">
+                <div>✓ Custom prompts & workflows</div>
+                <div>✓ Detailed blueprints</div>
+                <div>✓ Proven strategies</div>
+              </div>
+            </div>
+
+            {/* AI Coach & Support */}
+            <div className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-300">
+              <h3 className="text-lg font-bold mb-3 font-display">AI Coach & Support</h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                Ongoing guidance with AI coach conversations and comprehensive support system.
+              </p>
+              <div className="text-xs text-primary space-y-1">
+                <div>✓ AI coaching sessions</div>
+                <div>✓ Implementation support</div>
+                <div>✓ Progress tracking</div>
               </div>
             </div>
           </div>
@@ -133,64 +131,48 @@ const Index = () => {
       </section>
 
       {/* How JumpinAI Studio Works */}
-      <section className="py-20 lg:py-32">
+      <section className="py-16 lg:py-24">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl lg:text-5xl font-bold mb-6 font-display">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl lg:text-4xl font-bold mb-4 font-display">
               From Confusion to <span className="gradient-text-primary">Clarity in Minutes</span>
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Skip months of research and trial-and-error. Our AI analyzes your situation and delivers your personalized Jump in AI plan.
             </p>
           </div>
 
-          <div className="max-w-6xl mx-auto">
-            <div className="grid lg:grid-cols-3 gap-8 lg:gap-12">
-              <div className="relative group">
-                <div className="text-center">
-                  <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-r from-primary to-primary/70 rounded-full flex items-center justify-center text-primary-foreground text-2xl font-bold shadow-lg">
-                    01
-                  </div>
-                  <h3 className="text-2xl font-bold mb-4 font-display">Share Your Goals</h3>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Tell us your objectives, current challenges, industry, and AI experience. Our intelligent form adapts to gather exactly what we need to help you.
-                  </p>
-                </div>
-                <div className="hidden lg:block absolute top-10 -right-6 w-12 h-0.5 bg-gradient-to-r from-primary to-transparent"></div>
+          <div className="max-w-5xl mx-auto">
+            <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
+              <div className="flex-1 text-center p-6 rounded-xl glass">
+                <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-primary to-primary/70 rounded-full flex items-center justify-center text-primary-foreground text-xl font-bold">01</div>
+                <h3 className="text-lg font-bold mb-2 font-display">Share Your Goals</h3>
+                <p className="text-sm text-muted-foreground">Tell us your objectives, challenges, industry, and AI experience level.</p>
               </div>
-
-              <div className="relative group">
-                <div className="text-center">
-                  <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-r from-secondary to-secondary/70 rounded-full flex items-center justify-center text-secondary-foreground text-2xl font-bold shadow-lg">
-                    02
-                  </div>
-                  <h3 className="text-2xl font-bold mb-4 font-display">AI Analysis & Generation</h3>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Our AI instantly analyzes your needs and generates your comprehensive Jump plan with strategic roadmap, tools, prompts, workflows, and blueprints.
-                  </p>
-                </div>
-                <div className="hidden lg:block absolute top-10 -right-6 w-12 h-0.5 bg-gradient-to-r from-secondary to-transparent"></div>
+              
+              <div className="hidden lg:block w-8 h-0.5 bg-gradient-to-r from-primary to-secondary"></div>
+              
+              <div className="flex-1 text-center p-6 rounded-xl glass">
+                <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-secondary to-secondary/70 rounded-full flex items-center justify-center text-secondary-foreground text-xl font-bold">02</div>
+                <h3 className="text-lg font-bold mb-2 font-display">AI Analysis</h3>
+                <p className="text-sm text-muted-foreground">Our AI generates your comprehensive Jump plan with roadmap, tools, and resources.</p>
               </div>
-
-              <div className="relative group">
-                <div className="text-center">
-                  <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-r from-accent to-accent/70 rounded-full flex items-center justify-center text-accent-foreground text-2xl font-bold shadow-lg">
-                    03
-                  </div>
-                  <h3 className="text-2xl font-bold mb-4 font-display">Start Implementing</h3>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Follow your step-by-step plan and use your custom resources immediately. Save to dashboard for ongoing access and track your progress.
-                  </p>
-                </div>
+              
+              <div className="hidden lg:block w-8 h-0.5 bg-gradient-to-r from-secondary to-accent"></div>
+              
+              <div className="flex-1 text-center p-6 rounded-xl glass">
+                <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-accent to-accent/70 rounded-full flex items-center justify-center text-accent-foreground text-xl font-bold">03</div>
+                <h3 className="text-lg font-bold mb-2 font-display">Start Implementing</h3>
+                <p className="text-sm text-muted-foreground">Follow your plan and use custom resources immediately with dashboard access.</p>
               </div>
             </div>
 
-            <div className="text-center mt-12">
-              <div className="inline-flex items-center gap-4 p-6 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-2xl border border-primary/20">
-                <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="text-center mt-8">
+              <div className="inline-flex items-center gap-3 p-4 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-xl border border-primary/20">
+                <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
-                <span className="text-lg font-semibold">Complete personalized plan generated in under 2 minutes</span>
+                <span className="font-semibold">Complete personalized plan generated in under 2 minutes</span>
               </div>
             </div>
           </div>
@@ -198,67 +180,40 @@ const Index = () => {
       </section>
 
       {/* Success Metrics Section */}
-      <section className="py-20 bg-gradient-to-r from-muted/30 via-muted/10 to-muted/30 dark:from-muted/20 dark:via-muted/5 dark:to-muted/20">
+      <section className="py-12 bg-gradient-to-r from-muted/20 via-muted/5 to-muted/20">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl lg:text-5xl font-bold mb-6 font-display">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl lg:text-3xl font-bold mb-3 font-display">
               Proven Results Speak Louder Than Promises
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            <p className="text-muted-foreground max-w-2xl mx-auto">
               Join thousands who've transformed their AI journey from overwhelming to outstanding
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="text-center group">
-              <div className="p-8 rounded-2xl glass hover:glass-dark transition-all duration-300">
-                <div className="text-5xl font-bold gradient-text-primary mb-2">15K+</div>
-                <div className="text-lg font-semibold mb-2">Jump Plans Created</div>
-                <div className="text-sm text-muted-foreground">Personalized AI strategies delivered</div>
-              </div>
+          <div className="flex flex-wrap justify-center items-center gap-8 lg:gap-12">
+            <div className="text-center">
+              <div className="text-3xl font-bold gradient-text-primary mb-1">15K+</div>
+              <div className="text-sm font-semibold mb-1">Jump Plans Created</div>
+              <div className="text-xs text-muted-foreground">Personalized strategies delivered</div>
             </div>
 
-            <div className="text-center group">
-              <div className="p-8 rounded-2xl glass hover:glass-dark transition-all duration-300">
-                <div className="text-5xl font-bold gradient-text-primary mb-2">94%</div>
-                <div className="text-lg font-semibold mb-2">Implementation Rate</div>
-                <div className="text-sm text-muted-foreground">Users actually deploy their plans</div>
-              </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold gradient-text-primary mb-1">94%</div>
+              <div className="text-sm font-semibold mb-1">Implementation Rate</div>
+              <div className="text-xs text-muted-foreground">Users deploy their plans</div>
             </div>
 
-            <div className="text-center group">
-              <div className="p-8 rounded-2xl glass hover:glass-dark transition-all duration-300">
-                <div className="text-5xl font-bold gradient-text-primary mb-2">3.2x</div>
-                <div className="text-lg font-semibold mb-2">Faster Results</div>
-                <div className="text-sm text-muted-foreground">Compared to DIY approaches</div>
-              </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold gradient-text-primary mb-1">3.2x</div>
+              <div className="text-sm font-semibold mb-1">Faster Results</div>
+              <div className="text-xs text-muted-foreground">vs DIY approaches</div>
             </div>
 
-            <div className="text-center group">
-              <div className="p-8 rounded-2xl glass hover:glass-dark transition-all duration-300">
-                <div className="text-5xl font-bold gradient-text-primary mb-2">4.8★</div>
-                <div className="text-lg font-semibold mb-2">User Rating</div>
-                <div className="text-sm text-muted-foreground">Based on 2,800+ reviews</div>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-16 text-center">
-            <div className="max-w-4xl mx-auto p-8 rounded-2xl glass border border-primary/20">
-              <h3 className="text-2xl font-bold mb-4 font-display">Real Success Story</h3>
-              <p className="text-lg text-muted-foreground mb-6">
-                "JumpinAI Studio gave me the exact roadmap I needed. In 30 days, I implemented AI tools that increased my productivity by 300% and saved 15 hours per week."
-              </p>
-              <div className="flex items-center justify-center gap-2 text-sm font-semibold text-primary">
-                <div className="flex gap-1">
-                  {[...Array(5)].map((_, i) => (
-                    <svg key={i} className="w-4 h-4 text-yellow-500 fill-current" viewBox="0 0 24 24">
-                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                    </svg>
-                  ))}
-                </div>
-                <span>Michael Chen, Marketing Director</span>
-              </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold gradient-text-primary mb-1">4.8★</div>
+              <div className="text-sm font-semibold mb-1">User Rating</div>
+              <div className="text-xs text-muted-foreground">2,800+ reviews</div>
             </div>
           </div>
         </div>
@@ -421,11 +376,6 @@ const Index = () => {
               {/* Starter Plan */}
               <div className="relative flex flex-col w-72 sm:w-56 md:w-64 lg:w-72 flex-shrink-0 min-h-[500px] glass hover:glass-dark transition-all duration-300 shadow-modern hover:shadow-modern-lg rounded-2xl border-0">
                 <div className="text-center pb-6 p-6">
-                  <div className="mx-auto mb-4 p-3 rounded-full bg-primary/10 text-primary">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
-                    </svg>
-                  </div>
                   <h3 className="text-xl font-bold">Starter Plan</h3>
                   <p className="text-sm text-muted-foreground">Ideal for individuals exploring AI solutions</p>
                   <div className="mt-4">
@@ -488,11 +438,6 @@ const Index = () => {
                 </div>
                 
                 <div className="text-center pb-6 p-6">
-                  <div className="mx-auto mb-4 p-3 rounded-full bg-primary/10 text-primary">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 3l14 9-14 9V3z"></path>
-                    </svg>
-                  </div>
                   <h3 className="text-xl font-bold">Pro Plan</h3>
                   <p className="text-sm text-muted-foreground">Best for professionals and small teams</p>
                   <div className="mt-4">
@@ -561,11 +506,6 @@ const Index = () => {
                 </div>
                 
                 <div className="text-center pb-6 p-6">
-                  <div className="mx-auto mb-4 p-3 rounded-full bg-primary/10 text-primary">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                    </svg>
-                  </div>
                   <h3 className="text-xl font-bold">Growth Plan</h3>
                   <p className="text-sm text-muted-foreground">Perfect for growing businesses and teams</p>
                   <div className="mt-4">
@@ -639,48 +579,98 @@ const Index = () => {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-20">
+      <section className="py-16">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl lg:text-5xl font-bold mb-6 font-display">
+          <div className="text-center mb-10">
+            <h2 className="text-3xl lg:text-4xl font-bold mb-4 font-display">
               Frequently Asked Questions
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Everything you need to know about transforming your business with JumpinAI Studio
             </p>
           </div>
 
-          <div className="max-w-4xl mx-auto space-y-6">
-            <div className="p-6 rounded-2xl glass hover:glass-dark transition-all duration-300">
-              <h3 className="text-xl font-bold mb-3 font-display">How quickly can I see results from my Jump?</h3>
-              <p className="text-muted-foreground">Most users see immediate clarity within minutes of receiving their Jump plan, with measurable improvements starting within 1-2 weeks of implementation. Our personalized strategies are designed for rapid deployment.</p>
+          <div className="max-w-3xl mx-auto space-y-4">
+            <div className="p-5 rounded-xl glass hover:glass-dark transition-all duration-300">
+              <h3 className="text-lg font-bold mb-2 font-display">How quickly can I see results from my Jump?</h3>
+              <p className="text-sm text-muted-foreground">Most users see immediate clarity within minutes of receiving their Jump plan, with measurable improvements starting within 1-2 weeks of implementation.</p>
             </div>
 
-            <div className="p-6 rounded-2xl glass hover:glass-dark transition-all duration-300">
-              <h3 className="text-xl font-bold mb-3 font-display">What exactly do I get in each Jump plan?</h3>
-              <p className="text-muted-foreground">Every Jump includes a strategic action plan, curated AI tool list, 4 custom prompts, 4 workflows, 4 blueprints, and 4 strategies - all tailored to your specific goals, industry, and experience level. It's a complete transformation package.</p>
+            <div className="p-5 rounded-xl glass hover:glass-dark transition-all duration-300">
+              <h3 className="text-lg font-bold mb-2 font-display">What exactly do I get in each Jump plan?</h3>
+              <p className="text-sm text-muted-foreground">Every Jump includes a strategic action plan, curated AI tool list, 4 custom prompts, 4 workflows, 4 blueprints, and 4 strategies - all tailored to your specific goals and industry.</p>
             </div>
 
-            <div className="p-6 rounded-2xl glass hover:glass-dark transition-all duration-300">
-              <h3 className="text-xl font-bold mb-3 font-display">Do I need technical expertise to implement the strategies?</h3>
-              <p className="text-muted-foreground">Not at all. Every Jump includes step-by-step implementation guides, tool setup instructions, and clear timelines. Our plans are designed for business leaders and professionals, not technical experts.</p>
+            <div className="p-5 rounded-xl glass hover:glass-dark transition-all duration-300">
+              <h3 className="text-lg font-bold mb-2 font-display">Do I need technical expertise to implement the strategies?</h3>
+              <p className="text-sm text-muted-foreground">Not at all. Every Jump includes step-by-step implementation guides, tool setup instructions, and clear timelines designed for business professionals.</p>
             </div>
 
-            <div className="p-6 rounded-2xl glass hover:glass-dark transition-all duration-300">
-              <h3 className="text-xl font-bold mb-3 font-display">Can I customize my Jump based on my specific industry?</h3>
-              <p className="text-muted-foreground">Absolutely. JumpinAI Studio creates completely customized strategies based on your specific business context, industry dynamics, role, and current AI experience level. Every plan is unique to your situation.</p>
+            <div className="p-5 rounded-xl glass hover:glass-dark transition-all duration-300">
+              <h3 className="text-lg font-bold mb-2 font-display">Can I customize my Jump based on my specific industry?</h3>
+              <p className="text-sm text-muted-foreground">Absolutely. JumpinAI Studio creates completely customized strategies based on your specific business context, industry dynamics, role, and current AI experience level.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Stay Ahead Section */}
+      <section className="py-16 bg-gradient-to-br from-background via-muted/20 to-background dark:from-black dark:via-muted/10 dark:to-black">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl lg:text-4xl font-bold mb-4 font-display gradient-text-primary">
+              Stay Ahead of the AI Revolution
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              While others struggle with AI implementation, you'll be leading the transformation with proven strategies and cutting-edge insights.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <div className="text-center p-6 rounded-xl glass hover:glass-dark transition-all duration-300">
+              <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-primary to-primary/70 rounded-full flex items-center justify-center">
+                <svg className="w-8 h-8 text-primary-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold mb-3 font-display">First-Mover Advantage</h3>
+              <p className="text-sm text-muted-foreground">Get ahead of 90% of businesses still struggling with AI basics. Implement proven strategies while competitors are still researching.</p>
             </div>
 
-            <div className="p-6 rounded-2xl glass hover:glass-dark transition-all duration-300">
-              <h3 className="text-xl font-bold mb-3 font-display">What happens if I'm not satisfied with my Jump plan?</h3>
-              <p className="text-muted-foreground">We have a 94% implementation rate because our plans work. However, if you're not satisfied, contact our support team and we'll work with you to refine your strategy or provide additional guidance at no extra cost.</p>
+            <div className="text-center p-6 rounded-xl glass hover:glass-dark transition-all duration-300">
+              <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-secondary to-secondary/70 rounded-full flex items-center justify-center">
+                <svg className="w-8 h-8 text-secondary-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold mb-3 font-display">Measurable ROI</h3>
+              <p className="text-sm text-muted-foreground">Track real productivity gains, cost savings, and competitive advantages with our results-focused approach and success metrics.</p>
+            </div>
+
+            <div className="text-center p-6 rounded-xl glass hover:glass-dark transition-all duration-300">
+              <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-accent to-accent/70 rounded-full flex items-center justify-center">
+                <svg className="w-8 h-8 text-accent-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold mb-3 font-display">Future-Proof Strategy</h3>
+              <p className="text-sm text-muted-foreground">Build AI capabilities that scale with technological advances. Our strategies evolve with the latest developments and industry trends.</p>
+            </div>
+          </div>
+
+          <div className="text-center mt-10">
+            <div className="inline-flex items-center gap-3 p-4 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-xl border border-primary/20">
+              <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <span className="font-semibold">Join 15,000+ professionals already transforming their businesses with AI</span>
             </div>
           </div>
         </div>
       </section>
 
       {/* Major Final CTA Section */}
-      <section className="py-20 lg:py-32 bg-gradient-to-br from-background via-muted/30 to-background dark:from-black dark:via-muted/10 dark:to-black relative overflow-hidden">
+      <section className="py-20 lg:py-32 bg-gradient-to-br from-background via-background/80 to-background dark:from-black dark:via-gray-950/80 dark:to-black relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-secondary/5 to-accent/5 dark:from-primary/10 dark:via-secondary/10 dark:to-accent/10"></div>
         <div className="relative container mx-auto px-4 text-center">
           <div className="max-w-4xl mx-auto">
@@ -736,8 +726,6 @@ const Index = () => {
       {showTest && (
         <GoogleSheetsTest />
       )}
-      <LeadMagnet />
-      <BookPromotion />
       <Newsletter />
       <Footer />
     </div>
