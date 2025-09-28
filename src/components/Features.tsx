@@ -110,16 +110,16 @@ const Features = () => {
           {features.map((feature, index) => {
             const Icon = feature.icon;
             return (
-              <div key={index} className="group relative p-6 rounded-3xl border-2 border-gray-200 dark:border-gray-700 hover:border-primary/40 hover:shadow-xl shadow-lg transition-all duration-300 bg-white dark:bg-gray-900 overflow-hidden hover:scale-105">
+              <div key={index} className="group relative p-6 rounded-3xl border-2 border-gray-200 dark:border-gray-600 hover:border-black dark:hover:border-white hover:shadow-xl shadow-lg transition-all duration-300 bg-white dark:bg-black overflow-hidden hover:scale-105">
                 
                 <div className="relative flex items-center gap-4 mb-4">
-                  <div className="flex-shrink-0 w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center group-hover:bg-primary/15 transition-all duration-300 shadow-md border border-primary/20">
-                    <Icon className="w-6 h-6 text-primary" />
+                  <div className="flex-shrink-0 w-12 h-12 bg-black/10 dark:bg-white/10 rounded-2xl flex items-center justify-center hover:bg-black/20 dark:hover:bg-white/20 transition-all duration-300 shadow-md border border-black/20 dark:border-white/20">
+                    <Icon className="w-6 h-6 text-black dark:text-white" />
                   </div>
-                  <h3 className="font-bold text-lg text-gray-900 dark:text-white group-hover:text-primary transition-colors duration-300 leading-tight">{feature.title}</h3>
+                  <h3 className="font-bold text-lg text-black dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300 leading-tight" style={{color: 'inherit'}}>{feature.title}</h3>
                 </div>
                 
-                <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed ml-16 group-hover:text-gray-900 dark:group-hover:text-white transition-colors duration-300">{feature.description}</p>
+                <p className="text-black dark:text-white text-sm leading-relaxed ml-16 opacity-80 hover:opacity-100 transition-all duration-300" style={{color: 'inherit'}}>{feature.description}</p>
               </div>
             );
           })}
