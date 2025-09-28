@@ -243,7 +243,7 @@ const Hero = () => {
           
           {/* Description */}
           <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed font-light">
-            This is your moment. <br />While others hesitate at the edge of the AI revolution, you're ready to jump. <br />We'll guide you from curiosity to clarity, from ideas to implementation, transforming the way you work, create, and live. Your AI-powered future begins with one bold step forward.
+            This is your moment. <br />While others hesitate at the edge of the AI revolution, you're <span className="font-bold">ready to jump</span>. <br />We'll guide you from curiosity to clarity, from ideas to implementation, transforming the way you work, create, and live. Your AI-powered future begins with one bold step forward.
           </p>
           
           {/* Call to Action Button */}
