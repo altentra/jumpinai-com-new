@@ -200,46 +200,46 @@ const AboutUs = () => {
 
   const handleStartBuilding = () => {
     if (isAuthenticated) {
-      navigate('/dashboard');
+      navigate('/jumpinai-studio');
     } else {
-      navigate('/auth');
+      navigate('/jumpinai-studio');
     }
   };
 
   const beliefs = [
     {
-      title: "AI is for Everyone",
-      description: "You don't need a computer science degree. You need the right guidance and blueprints."
+      title: "Personalization Over Generalization",
+      description: "Your AI journey should be as unique as your goals. Generic advice fails because every person's situation is different."
     },
     {
-      title: "Speed Beats Perfection",
-      description: "Launch fast, learn faster. Perfect is the enemy of profitable."
+      title: "Speed Through Precision",
+      description: "Why spend months learning when you can get a personalized plan in 5 minutes? Precision beats prolonged research."
     },
     {
-      title: "Applied Over Theory",
-      description: "We teach real strategies for real problems. No fluff, no academic exercises."
+      title: "Implementation Over Information",
+      description: "We don't just teach about AI—we give you the exact prompts, workflows, and strategies to implement immediately."
     },
     {
-      title: "Action Creates Opportunity",
-      description: "While others debate AI's future, we're educating the builders. Join the movement."
+      title: "Your Success is Personal",
+      description: "While others talk about AI's potential, we're creating your specific path to AI transformation. Your Jump, your results."
     }
   ];
 
   const offerings = [
     {
       icon: Zap,
-      title: "AI Implementation Guides",
-      description: "Learn which AI tools to use and exactly how to use them for real business results."
+      title: "Personalized Jump Plans",
+      description: "Your unique AI transformation roadmap created in 5 minutes, complete with custom prompts, workflows, and strategies tailored to your specific goals."
     },
     {
       icon: Target,
-      title: "Strategic Blueprints",
-      description: "Step-by-step workflows that turn AI concepts into profitable actions."
+      title: "16 Ready-to-Use Resources",
+      description: "Each Jump includes 4 custom prompts, 4 workflows, 4 blueprints, and 4 strategies - all designed specifically for your situation and ready to implement immediately."
     },
     {
       icon: Rocket,
-      title: "Educational Resources",
-      description: "Prompts, guides, and educational materials to start generating AI-powered income streams today."
+      title: "AI Coach & Support",
+      description: "Ongoing personalized guidance through AI coach conversations, implementation support, and progress tracking throughout your transformation journey."
     }
   ];
 
@@ -255,16 +255,17 @@ const AboutUs = () => {
           <div className="absolute bottom-20 left-20 w-40 h-40 bg-gradient-to-tr from-secondary/8 to-transparent dark:bg-gradient-to-tr dark:from-gray-600/15 dark:to-transparent rounded-full blur-xl"></div>
         </div>
         <Helmet>
-          <title>About JumpinAI | AI Strategy, Tools and Implementation</title>
-          <meta name="description" content="Learn who JumpinAI is: an AI education and implementation studio helping teams turn AI into measurable results with clarity, speed, and impact." />
+          <title>About JumpinAI Studio | Personalized AI Transformation Plans</title>
+          <meta name="description" content="Meet JumpinAI Studio: We create personalized AI transformation plans called 'Jumps' - complete with custom prompts, workflows, and strategies tailored to your unique goals in just 5 minutes." />
           <link rel="canonical" href="https://jumpinai.com/about-us" />
           <script type="application/ld+json">{JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'Organization',
-            name: 'JumpinAI',
+            name: 'JumpinAI Studio',
             url: 'https://jumpinai.com',
             logo: 'https://jumpinai.com/lovable-uploads/156b282b-1e93-436c-914a-a886a6a5cdfd.png',
-            sameAs: ['https://twitter.com/jumpinai']
+            sameAs: ['https://twitter.com/jumpinai'],
+            description: 'Personalized AI transformation plans that help individuals implement AI in their life and business with custom strategies, prompts, and workflows.'
           })}</script>
         </Helmet>
         <Navigation />
@@ -277,17 +278,17 @@ const AboutUs = () => {
 
           <div className="relative z-10 px-6 text-center">
             <div className="glass backdrop-blur-md bg-background/20 dark:bg-background/10 border border-primary/20 rounded-3xl p-8 md:p-12 shadow-2xl shadow-primary/10 hover:shadow-3xl hover:shadow-primary/15 transition-all duration-500">
-              <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6 bg-gradient-to-br from-foreground via-foreground to-primary/70 bg-clip-text text-transparent">About JumpinAI</h1>
-              <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-8">For creators, founders, and teams who want results—not research. Learn the right tools, then ship real automations in days.</p>
+              <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6 bg-gradient-to-br from-foreground via-foreground to-primary/70 bg-clip-text text-transparent">About JumpinAI Studio</h1>
+              <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-8">Where personalized AI transformation meets instant results. We don't teach generic AI—we create your unique Jump plan tailored specifically to your goals, challenges, and dreams.</p>
               <div className="flex justify-center">
-                <Button 
-                  size="lg" 
-                  onClick={handleStartBuilding}
-                  className="text-lg px-8 py-4 bg-gradient-to-r from-primary/90 to-primary hover:from-primary hover:to-primary/80 text-primary-foreground border border-primary/30 rounded-2xl shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 hover:scale-105 group backdrop-blur-sm"
-                >
-                  Start Building Now
-                  <ArrowRight className="ml-2 w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
-                </Button>
+                  <Button 
+                    size="lg" 
+                    onClick={handleStartBuilding}
+                    className="text-lg px-8 py-4 bg-gradient-to-r from-primary/90 to-primary hover:from-primary hover:to-primary/80 text-primary-foreground border border-primary/30 rounded-2xl shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 hover:scale-105 group backdrop-blur-sm"
+                  >
+                    Get Your Personal Jump
+                    <ArrowRight className="ml-2 w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
+                  </Button>
               </div>
             </div>
           </div>
@@ -314,19 +315,16 @@ const AboutUs = () => {
                 </div>
               </div>
               <article className="md:col-span-3 space-y-6">
-                <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-br from-foreground via-foreground to-primary/70 bg-clip-text text-transparent">Who We Are</h2>
+                <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-br from-foreground via-foreground to-primary/70 bg-clip-text text-transparent">The Jump Revolution</h2>
                 <div className="space-y-5">
                   <p className="text-lg text-muted-foreground leading-relaxed">
-                    JumpinAI is a modern AI education and implementation studio. We help creators, entrepreneurs, and teams turn
-                    artificial intelligence into an unfair advantage—quickly and responsibly.
+                    JumpinAI Studio is the world's first personalized AI transformation platform. While others offer generic courses and one-size-fits-all advice, we create individual <strong className="text-foreground">Jump plans</strong> — complete AI implementation roadmaps designed uniquely for your goals, industry, and experience level.
                   </p>
                   <p className="text-lg text-muted-foreground leading-relaxed">
-                    We cut through the noise with clarity, curate the right tools, and provide step-by-step blueprints that move you from
-                    idea to deployed workflows in days, not months.
+                    What is a Jump? It's your personalized pathway to AI mastery. In just 5 minutes, our AI analyzes your situation and delivers 16 ready-to-use resources: custom prompts, proven workflows, detailed blueprints, and strategic guidance — all tailored specifically to you.
                   </p>
                   <p className="text-lg text-muted-foreground leading-relaxed">
-                    Our promise is simple: less theory, more outcomes. Clear guidance, fast execution, and measurable results—so you can
-                    build with confidence.
+                    We believe AI transformation should be personal, immediate, and actionable. No more months of generic learning. Your Jump plan puts you on the fast track to implementing AI in your life and business — starting today.
                   </p>
                 </div>
               </article>
@@ -341,10 +339,10 @@ const AboutUs = () => {
           <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-3xl p-8 md:p-12 shadow-2xl shadow-primary/10">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-5xl font-bold mb-6 bg-gradient-to-br from-foreground via-foreground to-primary/70 bg-clip-text text-transparent">
-                What We Believe
+                Our Core Beliefs
               </h2>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                These aren't just values. They're the principles that drive every guide we create and every strategy we teach.
+                These principles shape every personalized Jump plan we create and every individual transformation we guide.
               </p>
             </div>
 
@@ -373,11 +371,10 @@ const AboutUs = () => {
           <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-3xl p-8 md:p-12 shadow-2xl shadow-primary/10">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-5xl font-bold mb-6 bg-gradient-to-br from-foreground via-foreground to-primary/70 bg-clip-text text-transparent">
-                What We Do
+                How JumpinAI Studio Works
               </h2>
               <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-                We provide education and guidance that bridges AI potential with real-world profit. 
-                No technical background required. No months of learning. Just clear, actionable guidance.
+                We don't offer generic AI education. Instead, we create your personalized Jump plan - a complete AI transformation roadmap designed uniquely for your goals, industry, and experience level.
               </p>
             </div>
 
@@ -402,11 +399,10 @@ const AboutUs = () => {
 
             <div className="glass backdrop-blur-sm bg-gradient-to-br from-primary/10 via-primary/5 to-secondary/8 border border-primary/30 rounded-3xl p-8 md:p-12 text-center shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/25 transition-all duration-300">
               <h3 className="text-3xl md:text-4xl font-bold mb-6 bg-gradient-to-br from-foreground to-primary/70 bg-clip-text text-transparent">
-                From Zero to AI-Powered in Days, Not Months
+                From Confusion to Your Personal Jump in 5 Minutes
               </h3>
               <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
-                Whether you're a creator looking to automate your workflow, an entrepreneur building your next venture, 
-                or simply curious about AI's potential—we provide the education and strategies to get you there fast.
+                Whether you're an entrepreneur, professional, creator, or simply curious about AI—we create your personalized transformation plan in minutes, not months. Your unique Jump plan includes everything you need to start implementing AI immediately.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <LeadMagnetButton />
@@ -421,12 +417,12 @@ const AboutUs = () => {
         <div className="max-w-4xl mx-auto">
           <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-3xl p-8 md:p-12 shadow-2xl shadow-primary/10 text-center">
             <h2 className="text-3xl md:text-5xl font-bold mb-6 bg-gradient-to-br from-foreground via-primary to-primary/70 bg-clip-text text-transparent">
-              The Time to Build is Now
+              Ready for Your Personal Jump?
             </h2>
             <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
-              While others are still figuring out what AI can do, you could already be using it to create real value. 
-              <span className="text-primary font-semibold"> We've done the research</span> — the blueprints are ready, 
-              the strategies are proven, and the opportunity is massive.
+              While others are still offering generic AI courses, you could have your personalized Jump plan in 5 minutes. 
+              <span className="text-primary font-semibold"> Your transformation starts now</span> — with custom strategies, 
+              proven workflows, and personalized guidance designed specifically for your success.
             </p>
             
             <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/30 rounded-2xl p-8 mb-8 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/20 transition-all duration-300">
@@ -455,7 +451,7 @@ const AboutUs = () => {
                 onClick={handleStartBuilding}
                 className="text-lg px-8 py-4 bg-gradient-to-r from-primary/90 to-primary hover:from-primary hover:to-primary/80 text-primary-foreground border border-primary/30 rounded-2xl shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 hover:scale-105 group backdrop-blur-sm"
               >
-                {isAuthenticated ? 'Go to Dashboard' : 'Start Building Now'}
+                {isAuthenticated ? 'Create My Jump Plan' : 'Get My Personal Jump'}
                 <ArrowRight className="ml-2 w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
               </Button>
             </div>
