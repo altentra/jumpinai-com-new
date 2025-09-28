@@ -150,8 +150,11 @@ const PricingNew = () => {
               <h1 className="text-4xl md:text-6xl font-bold mb-4 gradient-text-primary">
                 JumpinAI Pricing
               </h1>
-              <p className="text-lg text-muted-foreground mb-8 max-w-3xl mx-auto">
-                Choose the perfect plan for your needs. <span className="font-semibold text-foreground">1 credit = 1 jump generation</span> - each jump includes a comprehensive AI transformation plan with strategies, tools, workflows, and actionable blueprints tailored to your business.
+              <p className="text-lg text-muted-foreground mb-2 max-w-3xl mx-auto">
+                Choose the perfect plan for your needs.
+              </p>
+              <p className="text-base text-muted-foreground mb-8 max-w-3xl mx-auto">
+                <span className="font-semibold text-foreground">1 credit = 1 jump generation</span> - each jump includes a comprehensive AI transformation plan with strategies, tools, workflows, and actionable blueprints tailored to your business.
               </p>
             </div>
           </section>
