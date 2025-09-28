@@ -110,16 +110,16 @@ const Features = () => {
           {features.map((feature, index) => {
             const Icon = feature.icon;
             return (
-              <div key={index} className="group relative p-6 rounded-3xl border-2 border-gray-200 dark:border-gray-600 hover:border-black dark:hover:border-white hover:shadow-xl shadow-lg transition-all duration-300 bg-white dark:bg-black overflow-hidden hover:scale-105">
+              <div key={index} className="group relative p-6 rounded-3xl border-2 border-gray-600 hover:border-white hover:shadow-xl shadow-lg transition-all duration-300 bg-black overflow-hidden hover:scale-105">
                 
                 <div className="relative flex items-center gap-4 mb-4">
-                  <div className="flex-shrink-0 w-12 h-12 bg-black/10 dark:bg-white/10 rounded-2xl flex items-center justify-center hover:bg-black/20 dark:hover:bg-white/20 transition-all duration-300 shadow-md border border-black/20 dark:border-white/20">
-                    <Icon className="w-6 h-6 text-black dark:text-white" />
+                  <div className="flex-shrink-0 w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center hover:bg-white/20 transition-all duration-300 shadow-md border border-white/20">
+                    <Icon className="w-6 h-6 text-white" />
                   </div>
-                  <h3 className="font-bold text-lg text-black dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300 leading-tight" style={{color: 'inherit'}}>{feature.title}</h3>
+                  <h3 className="font-bold text-lg text-white hover:text-blue-400 transition-colors duration-300 leading-tight">{feature.title}</h3>
                 </div>
                 
-                <p className="text-black dark:text-white text-sm leading-relaxed ml-16 opacity-80 hover:opacity-100 transition-all duration-300" style={{color: 'inherit'}}>{feature.description}</p>
+                <p className="text-white text-sm leading-relaxed ml-16 opacity-90 hover:opacity-100 transition-all duration-300">{feature.description}</p>
               </div>
             );
           })}
