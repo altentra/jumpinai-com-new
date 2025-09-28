@@ -171,32 +171,20 @@ const Index = () => {
           </div>
           <div className="flex flex-wrap justify-center items-center gap-8 lg:gap-12 opacity-70 hover:opacity-90 transition-opacity">
             <div className="flex items-center gap-2 text-lg lg:text-xl font-bold text-foreground">
-              <div className="w-6 h-6 lg:w-8 lg:h-8 bg-primary rounded-lg flex items-center justify-center text-white text-xs lg:text-sm font-bold">
-                AI
-              </div>
-              OpenAI GPT
-            </div>
-            <div className="flex items-center gap-2 text-lg lg:text-xl font-bold text-foreground">
-              <div className="w-6 h-6 lg:w-8 lg:h-8 bg-secondary rounded-lg flex items-center justify-center text-white text-xs lg:text-sm font-bold">
-                C
-              </div>
-              Claude AI
-            </div>
-            <div className="flex items-center gap-2 text-lg lg:text-xl font-bold text-foreground">
-              <div className="w-6 h-6 lg:w-8 lg:h-8 bg-accent rounded-lg flex items-center justify-center text-white text-xs lg:text-sm font-bold">
-                G
-              </div>
-              Gemini
-            </div>
-            <div className="flex items-center gap-2 text-lg lg:text-xl font-bold text-foreground">
-              <img src="/images/xai-logo.png" alt="xAI Logo" className="w-6 h-6 lg:w-8 lg:h-8 object-contain" />
+              <img src="/images/xai-logo.png" alt="xAI Logo" className="w-6 h-6 lg:w-8 lg:h-8 object-contain filter dark:invert" />
               xAI
             </div>
             <div className="flex items-center gap-2 text-lg lg:text-xl font-bold text-foreground">
-              <div className="w-6 h-6 lg:w-8 lg:h-8 bg-primary rounded-lg flex items-center justify-center text-white text-xs lg:text-sm font-bold">
-                ∞
-              </div>
-              Machine Learning
+              <img src="/images/openai-logo.png" alt="OpenAI Logo" className="w-6 h-6 lg:w-8 lg:h-8 object-contain filter dark:invert" />
+              OpenAI
+            </div>
+            <div className="flex items-center gap-2 text-lg lg:text-xl font-bold text-foreground">
+              <img src="/images/anthropic-logo.png" alt="Anthropic Logo" className="w-6 h-6 lg:w-8 lg:h-8 object-contain filter dark:invert" />
+              Anthropic
+            </div>
+            <div className="flex items-center gap-2 text-lg lg:text-xl font-bold text-foreground">
+              <img src="/images/gemini-logo.png" alt="Google Gemini Logo" className="w-6 h-6 lg:w-8 lg:h-8 object-contain filter dark:invert" />
+              Google Gemini
             </div>
           </div>
         </div>
