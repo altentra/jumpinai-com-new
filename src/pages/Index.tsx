@@ -363,116 +363,272 @@ const Index = () => {
             </p>
           </div>
 
-          {/* Subscription Plans */}
-          <div className="grid md:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto mb-16">
-            <div className="relative p-8 rounded-2xl glass hover:glass-dark transition-all duration-300 border-0">
-              <div className="text-center">
-                <div className="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-full flex items-center justify-center">
-                  <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                  </svg>
+          {/* All 4 Subscription Plans */}
+          <div className="w-full overflow-x-auto pb-4">
+            <div className="flex gap-4 sm:gap-6 min-w-max px-2 sm:px-4 md:px-0 md:justify-center md:flex-wrap md:max-w-7xl md:mx-auto pt-4">
+              {/* Free Plan */}
+              <div className="relative flex flex-col w-72 sm:w-56 md:w-64 lg:w-72 flex-shrink-0 min-h-[500px] glass hover:glass-dark transition-all duration-300 shadow-modern hover:shadow-modern-lg rounded-2xl border-0">
+                <div className="text-center pb-6 p-6">
+                  <div className="mx-auto mb-4 p-3 rounded-full bg-primary/10 text-primary">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-bold">Free Plan</h3>
+                  <p className="text-sm text-muted-foreground">Perfect for getting started</p>
+                  <div className="mt-4">
+                    <div className="text-3xl font-bold">Free</div>
+                    <div className="text-sm text-muted-foreground mt-1">2 credits</div>
+                  </div>
                 </div>
-                <h3 className="text-2xl font-bold mb-2 font-display">Starter Plan</h3>
-                <p className="text-muted-foreground mb-4">Perfect for small businesses</p>
-                <div className="mb-6">
-                  <div className="text-3xl font-bold">$29<span className="text-base font-normal text-muted-foreground">/month</span></div>
-                  <div className="text-sm text-muted-foreground">5 credits monthly</div>
+                
+                <div className="flex-1 flex flex-col justify-between p-6 pt-0">
+                  <ul className="space-y-2 mb-6">
+                    <li className="flex items-start gap-2 text-sm">
+                      <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span>2 AI Jump generations per month</span>
+                    </li>
+                    <li className="flex items-start gap-2 text-sm">
+                      <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span>Basic AI transformation strategies</span>
+                    </li>
+                    <li className="flex items-start gap-2 text-sm">
+                      <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span>Community support</span>
+                    </li>
+                    <li className="flex items-start gap-2 text-sm">
+                      <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span>Access to basic resources</span>
+                    </li>
+                  </ul>
+                  
+                  <div className="mt-auto">
+                    <div className="w-full modern-button shadow-modern border border-border bg-card hover:bg-accent hover:text-accent-foreground text-foreground px-4 py-2 rounded-lg font-semibold cursor-pointer text-center">
+                      Current Plan
+                    </div>
+                  </div>
                 </div>
-                <ul className="space-y-2 text-sm mb-6">
-                  <li className="flex items-center gap-2">
-                    <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                    5 AI Jump generations
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                    Complete transformation blueprints
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                    Dashboard access
-                  </li>
-                </ul>
               </div>
-            </div>
 
-            <div className="relative p-8 rounded-2xl glass hover:glass-dark transition-all duration-300 border-2 border-primary/20 shadow-lg">
-              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                <div className="bg-primary text-primary-foreground px-4 py-1 rounded-full text-sm font-semibold">Most Popular</div>
-              </div>
-              <div className="text-center">
-                <div className="w-16 h-16 mx-auto mb-4 bg-primary/20 rounded-full flex items-center justify-center">
-                  <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 3l14 9-14 9V3z"></path>
-                  </svg>
+              {/* Starter Plan */}
+              <div className="relative flex flex-col w-72 sm:w-56 md:w-64 lg:w-72 flex-shrink-0 min-h-[500px] glass hover:glass-dark transition-all duration-300 shadow-modern hover:shadow-modern-lg rounded-2xl border-0">
+                <div className="text-center pb-6 p-6">
+                  <div className="mx-auto mb-4 p-3 rounded-full bg-primary/10 text-primary">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-bold">Starter Plan</h3>
+                  <p className="text-sm text-muted-foreground">Great for individuals and small teams</p>
+                  <div className="mt-4">
+                    <div className="text-3xl font-bold">
+                      $29
+                      <span className="text-base font-normal text-muted-foreground">/month</span>
+                    </div>
+                    <div className="text-sm text-muted-foreground mt-1">5 credits monthly</div>
+                  </div>
                 </div>
-                <h3 className="text-2xl font-bold mb-2 font-display">Pro Plan</h3>
-                <p className="text-muted-foreground mb-4">For growing businesses</p>
-                <div className="mb-6">
-                  <div className="text-3xl font-bold">$99<span className="text-base font-normal text-muted-foreground">/month</span></div>
-                  <div className="text-sm text-muted-foreground">20 credits monthly</div>
+                
+                <div className="flex-1 flex flex-col justify-between p-6 pt-0">
+                  <ul className="space-y-2 mb-6">
+                    <li className="flex items-start gap-2 text-sm">
+                      <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span>5 AI Jump generations per month</span>
+                    </li>
+                    <li className="flex items-start gap-2 text-sm">
+                      <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span>Premium AI strategies and tools</span>
+                    </li>
+                    <li className="flex items-start gap-2 text-sm">
+                      <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span>Email support</span>
+                    </li>
+                    <li className="flex items-start gap-2 text-sm">
+                      <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span>Detailed implementation guides</span>
+                    </li>
+                    <li className="flex items-start gap-2 text-sm">
+                      <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span>Access to resource library</span>
+                    </li>
+                  </ul>
+                  
+                  <div className="mt-auto">
+                    <div className="w-full modern-button shadow-modern bg-foreground hover:bg-foreground/90 text-background px-4 py-2 rounded-lg font-semibold cursor-pointer text-center">
+                      Get Started
+                    </div>
+                  </div>
                 </div>
-                <ul className="space-y-2 text-sm mb-6">
-                  <li className="flex items-center gap-2">
-                    <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                    20 AI Jump generations
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                    Priority support
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                    Advanced analytics
-                  </li>
-                </ul>
               </div>
-            </div>
 
-            <div className="relative p-8 rounded-2xl glass hover:glass-dark transition-all duration-300 border-0">
-              <div className="text-center">
-                <div className="w-16 h-16 mx-auto mb-4 bg-accent/10 rounded-full flex items-center justify-center">
-                  <svg className="w-8 h-8 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                  </svg>
+              {/* Pro Plan */}
+              <div className="relative flex flex-col w-72 sm:w-56 md:w-64 lg:w-72 flex-shrink-0 min-h-[500px] glass hover:glass-dark transition-all duration-300 shadow-steel rounded-2xl border-0">
+                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
+                  <div className="bg-primary text-primary-foreground shadow-modern rounded-full px-3 py-1 text-sm font-semibold">
+                    Most Popular
+                  </div>
                 </div>
-                <h3 className="text-2xl font-bold mb-2 font-display">Growth Plan</h3>
-                <p className="text-muted-foreground mb-4">For scaling enterprises</p>
-                <div className="mb-6">
-                  <div className="text-3xl font-bold">$299<span className="text-base font-normal text-muted-foreground">/month</span></div>
-                  <div className="text-sm text-muted-foreground">100 credits monthly</div>
+                
+                <div className="text-center pb-6 p-6">
+                  <div className="mx-auto mb-4 p-3 rounded-full bg-primary/10 text-primary">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 3l14 9-14 9V3z"></path>
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-bold">Pro Plan</h3>
+                  <p className="text-sm text-muted-foreground">Perfect for growing businesses</p>
+                  <div className="mt-4">
+                    <div className="text-3xl font-bold">
+                      $99
+                      <span className="text-base font-normal text-muted-foreground">/month</span>
+                    </div>
+                    <div className="text-sm text-muted-foreground mt-1">20 credits monthly</div>
+                  </div>
                 </div>
-                <ul className="space-y-2 text-sm mb-6">
-                  <li className="flex items-center gap-2">
-                    <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                
+                <div className="flex-1 flex flex-col justify-between p-6 pt-0">
+                  <ul className="space-y-2 mb-6">
+                    <li className="flex items-start gap-2 text-sm">
+                      <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span>20 AI Jump generations per month</span>
+                    </li>
+                    <li className="flex items-start gap-2 text-sm">
+                      <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span>Advanced AI strategies and workflows</span>
+                    </li>
+                    <li className="flex items-start gap-2 text-sm">
+                      <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span>Priority email and chat support</span>
+                    </li>
+                    <li className="flex items-start gap-2 text-sm">
+                      <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span>Custom business strategy sessions</span>
+                    </li>
+                    <li className="flex items-start gap-2 text-sm">
+                      <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span>Advanced analytics and reporting</span>
+                    </li>
+                    <li className="flex items-start gap-2 text-sm">
+                      <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span>Exclusive webinars and training</span>
+                    </li>
+                  </ul>
+                  
+                  <div className="mt-auto">
+                    <div className="w-full modern-button shadow-modern bg-foreground hover:bg-foreground/90 text-background px-4 py-2 rounded-lg font-semibold cursor-pointer text-center">
+                      Get Started
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Growth Plan */}
+              <div className="relative flex flex-col w-72 sm:w-56 md:w-64 lg:w-72 flex-shrink-0 min-h-[500px] glass hover:glass-dark transition-all duration-300 shadow-modern hover:shadow-modern-lg rounded-2xl border-0">
+                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
+                  <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-modern rounded-full px-3 py-1 text-sm font-semibold">
+                    Best Value
+                  </div>
+                </div>
+                
+                <div className="text-center pb-6 p-6">
+                  <div className="mx-auto mb-4 p-3 rounded-full bg-primary/10 text-primary">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                     </svg>
-                    100 AI Jump generations
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                    White-label options
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                    Dedicated success manager
-                  </li>
-                </ul>
+                  </div>
+                  <h3 className="text-xl font-bold">Growth Plan</h3>
+                  <p className="text-sm text-muted-foreground">For scaling enterprises and agencies</p>
+                  <div className="mt-4">
+                    <div className="text-3xl font-bold">
+                      $299
+                      <span className="text-base font-normal text-muted-foreground">/month</span>
+                    </div>
+                    <div className="text-sm text-muted-foreground mt-1">100 credits monthly</div>
+                  </div>
+                </div>
+                
+                <div className="flex-1 flex flex-col justify-between p-6 pt-0">
+                  <ul className="space-y-2 mb-6">
+                    <li className="flex items-start gap-2 text-sm">
+                      <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span>100 AI Jump generations per month</span>
+                    </li>
+                    <li className="flex items-start gap-2 text-sm">
+                      <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span>Enterprise AI transformation strategies</span>
+                    </li>
+                    <li className="flex items-start gap-2 text-sm">
+                      <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span>Dedicated success manager</span>
+                    </li>
+                    <li className="flex items-start gap-2 text-sm">
+                      <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span>White-label solutions available</span>
+                    </li>
+                    <li className="flex items-start gap-2 text-sm">
+                      <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span>Custom integrations and API access</span>
+                    </li>
+                    <li className="flex items-start gap-2 text-sm">
+                      <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span>Priority phone and video support</span>
+                    </li>
+                    <li className="flex items-start gap-2 text-sm">
+                      <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span>Quarterly strategy review sessions</span>
+                    </li>
+                  </ul>
+                  
+                  <div className="mt-auto">
+                    <div className="w-full modern-button shadow-modern bg-foreground hover:bg-foreground/90 text-background px-4 py-2 rounded-lg font-semibold cursor-pointer text-center">
+                      Get Started
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -530,28 +686,28 @@ const Index = () => {
       </section>
 
       {/* Major Final CTA Section */}
-      <section className="py-20 lg:py-32 bg-gradient-to-r from-primary via-secondary to-accent relative overflow-hidden">
-        <div className="absolute inset-0 bg-black/20"></div>
-        <div className="relative container mx-auto px-4 text-center text-white">
+      <section className="py-20 lg:py-32 bg-gradient-to-br from-background via-muted/30 to-background dark:from-black dark:via-muted/10 dark:to-black relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-secondary/5 to-accent/5 dark:from-primary/10 dark:via-secondary/10 dark:to-accent/10"></div>
+        <div className="relative container mx-auto px-4 text-center">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-4xl lg:text-6xl font-bold mb-6 font-display">
+            <h2 className="text-4xl lg:text-6xl font-bold mb-6 font-display gradient-text-primary">
               Ready to Jump into AI Success?
             </h2>
-            <p className="text-xl lg:text-2xl mb-8 opacity-90">
+            <p className="text-xl lg:text-2xl mb-8 text-muted-foreground">
               Join 15,000+ professionals who've transformed their AI journey with personalized Jump plans
             </p>
-            <p className="text-lg mb-12 opacity-80 max-w-3xl mx-auto">
+            <p className="text-lg mb-12 text-muted-foreground max-w-3xl mx-auto">
               Stop struggling with AI implementation. Get your complete transformation blueprint in minutes, not months. Your competitive advantage starts today.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-              <a href="/jumpinai-studio" className="inline-flex items-center gap-2 bg-white text-primary px-8 py-4 rounded-lg text-lg font-bold hover:bg-white/90 transition-colors shadow-2xl">
+              <a href="/jumpinai-studio" className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-8 py-4 rounded-lg text-lg font-bold hover:bg-primary/90 transition-colors shadow-2xl">
                 Start Your Jump Now - Free Try
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                 </svg>
               </a>
-              <a href="/pricing" className="inline-flex items-center gap-2 border border-white/30 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-white/10 transition-colors">
+              <a href="/pricing" className="inline-flex items-center gap-2 border border-border bg-card hover:bg-accent hover:text-accent-foreground px-8 py-4 rounded-lg text-lg font-semibold transition-colors">
                 View Plans & Pricing
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
@@ -559,21 +715,21 @@ const Index = () => {
               </a>
             </div>
 
-            <div className="flex flex-wrap justify-center items-center gap-8 text-sm opacity-70">
+            <div className="flex flex-wrap justify-center items-center gap-8 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                 </svg>
                 Free trial available
               </div>
               <div className="flex items-center gap-2">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                 </svg>
                 Cancel anytime
               </div>
               <div className="flex items-center gap-2">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                 </svg>
                 94% implementation success rate
