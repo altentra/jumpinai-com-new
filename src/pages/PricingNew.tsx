@@ -166,14 +166,14 @@ const PricingNew = () => {
             </div>
 
             <div className="w-full overflow-x-auto pb-4">
-              <div className="flex gap-6 min-w-max px-4 md:px-0 md:justify-center md:flex-wrap md:max-w-7xl md:mx-auto">
+              <div className="flex gap-6 min-w-max px-4 md:px-0 md:justify-center md:flex-wrap md:max-w-7xl md:mx-auto pt-4">
                 {subscriptionPlans.map((plan) => {
                 const badge = getPlanBadge(plan.name);
                 const isLoading = loadingSubscription[plan.id];
                 const isFree = plan.price_cents === 0;
                 
                 return (
-                  <Card key={plan.id} className={`relative h-full flex flex-col w-72 md:w-auto flex-shrink-0 ${plan.name.toLowerCase().includes('pro') ? 'border-primary shadow-lg shadow-primary/20' : ''}`}>
+                  <Card key={plan.id} className={`relative flex flex-col w-72 md:w-auto flex-shrink-0 min-h-[500px] ${plan.name.toLowerCase().includes('pro') ? 'border-primary shadow-lg shadow-primary/20' : ''}`}>
                     {badge && (
                       <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
                         <Badge className={badge.color}>
@@ -199,8 +199,8 @@ const PricingNew = () => {
                       </div>
                     </CardHeader>
                     
-                    <CardContent className="flex-1 flex flex-col">
-                      <ul className="space-y-2 mb-6 flex-1">
+                    <CardContent className="flex-1 flex flex-col justify-between">
+                      <ul className="space-y-2 mb-6">
                         {plan.features.map((feature, index) => (
                           <li key={index} className="flex items-start gap-2 text-sm">
                             <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
@@ -209,7 +209,8 @@ const PricingNew = () => {
                         ))}
                       </ul>
                       
-                      <Button 
+                      <div className="mt-auto">
+                        <Button
                         onClick={() => isFree ? null : handleSubscribe(plan.id)}
                         disabled={isLoading || isFree}
                         className="w-full"
@@ -228,7 +229,8 @@ const PricingNew = () => {
                             <ArrowRight className="w-4 h-4 ml-2" />
                           </>
                         )}
-                      </Button>
+                        </Button>
+                      </div>
                     </CardContent>
                   </Card>
                 );
