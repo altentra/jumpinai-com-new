@@ -251,8 +251,9 @@ const PricingNew = () => {
               </p>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 max-w-4xl mx-auto mb-4">
-              {creditPackages.slice(0, 3).map((pkg) => {
+            {/* First row - 2 packages */}
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 max-w-2xl mx-auto mb-4">
+              {creditPackages.slice(0, 2).map((pkg) => {
                 const isLoading = packageLoading[pkg.id];
                 const valueBadge = getValueBadge(pkg.credits, pkg.price_cents);
                 
@@ -304,18 +305,19 @@ const PricingNew = () => {
               })}
             </div>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 max-w-2xl mx-auto">
-              {creditPackages.slice(3, 5).map((pkg) => {
+            {/* Second row - 2 packages */}
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 max-w-2xl mx-auto mb-4">
+              {creditPackages.slice(2, 4).map((pkg) => {
                 const isLoading = packageLoading[pkg.id];
                 const valueBadge = getValueBadge(pkg.credits, pkg.price_cents);
                 
                 return (
                   <Card key={pkg.id} className="relative h-full flex flex-col glass hover:glass-dark transition-all duration-300 shadow-modern hover:shadow-modern-lg rounded-2xl border-0">
-                    {getValueBadge(pkg.credits, pkg.price_cents) && (
+                    {valueBadge && (
                       <div className="absolute -top-2 -right-2 z-10">
                         <Badge variant="secondary" className="text-xs shadow-modern rounded-full px-2 py-1">
                           <Sparkles className="w-3 h-3 mr-1" />
-                          {getValueBadge(pkg.credits, pkg.price_cents)}
+                          {valueBadge}
                         </Badge>
                       </div>
                     )}
@@ -335,11 +337,11 @@ const PricingNew = () => {
                     <CardContent className="flex-1 flex flex-col justify-end">
                       <Button 
                         onClick={() => handleBuyCredits(pkg.id)}
-                        disabled={packageLoading[pkg.id]}
+                        disabled={isLoading}
                         className="w-full modern-button shadow-modern bg-foreground hover:bg-foreground/90"
                         size="sm"
                       >
-                        {packageLoading[pkg.id] ? (
+                        {isLoading ? (
                           <>
                             <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
                             Processing...
@@ -355,6 +357,62 @@ const PricingNew = () => {
                   </Card>
                 );
               })}
+            </div>
+
+            {/* Third row - 1 package centered */}
+            <div className="flex justify-center">
+              <div className="w-full max-w-xs">
+                {creditPackages.slice(4, 5).map((pkg) => {
+                  const isLoading = packageLoading[pkg.id];
+                  const valueBadge = getValueBadge(pkg.credits, pkg.price_cents);
+                  
+                  return (
+                    <Card key={pkg.id} className="relative h-full flex flex-col glass hover:glass-dark transition-all duration-300 shadow-modern hover:shadow-modern-lg rounded-2xl border-0">
+                      {valueBadge && (
+                        <div className="absolute -top-2 -right-2 z-10">
+                          <Badge variant="secondary" className="text-xs shadow-modern rounded-full px-2 py-1">
+                            <Sparkles className="w-3 h-3 mr-1" />
+                            {valueBadge}
+                          </Badge>
+                        </div>
+                      )}
+                      
+                      <CardHeader className="text-center pb-4">
+                        <CardTitle className="text-lg font-semibold">{pkg.name}</CardTitle>
+                        <div className="mt-3">
+                          <div className="text-3xl font-bold gradient-text-primary mb-1">
+                            {formatPrice(pkg.price_cents)}
+                          </div>
+                          <div className="text-base font-medium text-muted-foreground">
+                            {pkg.credits} credits
+                          </div>
+                        </div>
+                      </CardHeader>
+                      
+                      <CardContent className="flex-1 flex flex-col justify-end">
+                        <Button 
+                          onClick={() => handleBuyCredits(pkg.id)}
+                          disabled={isLoading}
+                          className="w-full modern-button shadow-modern bg-foreground hover:bg-foreground/90"
+                          size="sm"
+                        >
+                          {isLoading ? (
+                            <>
+                              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                              Processing...
+                            </>
+                          ) : (
+                            <>
+                              <Zap className="w-4 h-4 mr-2" />
+                              Buy Credits
+                            </>
+                          )}
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
             </div>
           </section>
 
