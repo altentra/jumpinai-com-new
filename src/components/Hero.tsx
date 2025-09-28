@@ -105,7 +105,6 @@ const Hero = () => {
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-blue-300/60 dark:bg-blue-400/40 rounded-full animate-bounce" style={{ animationDuration: '3s', animationDelay: '0s' }}></div>
         <div className="absolute bottom-1/3 left-1/5 w-3 h-3 bg-slate-400/50 dark:bg-slate-300/30 rounded-full animate-bounce" style={{ animationDuration: '5s', animationDelay: '2s' }}></div>
-        <div className="absolute top-2/3 right-1/4 w-1.5 h-1.5 bg-blue-500/60 dark:bg-blue-200/40 rounded-full animate-bounce" style={{ animationDuration: '3.5s', animationDelay: '0.5s' }}></div>
         <div className="absolute bottom-1/4 right-1/5 w-2 h-2 bg-indigo-300/80 dark:bg-indigo-400/50 rounded-full animate-bounce" style={{ animationDuration: '4.5s', animationDelay: '1.5s' }}></div>
       </div>
 
