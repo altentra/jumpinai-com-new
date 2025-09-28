@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import Navigation from "@/components/Navigation";
 import Hero from "@/components/Hero";
 import Features from "@/components/Features";
@@ -6,12 +7,69 @@ import BookPromotion from "@/components/BookPromotion";
 import Newsletter from "@/components/Newsletter";
 import Footer from "@/components/Footer";
 import { GoogleSheetsTest } from "@/components/GoogleSheetsTest";
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
+import { creditsService, type SubscriptionPlan } from '@/services/creditsService';
 
 const Index = () => {
+  const { user, isAuthenticated } = useAuth();
+  const [subscriptionPlans, setSubscriptionPlans] = useState<SubscriptionPlan[]>([]);
+  const [loadingSubscription, setLoadingSubscription] = useState<Record<string, boolean>>({});
+
   // Show test component only in development or when URL contains 'test'
   const showTest = window.location.hostname === 'localhost' || 
                    window.location.search.includes('test=true') ||
                    window.location.pathname.includes('test');
+
+  useEffect(() => {
+    fetchSubscriptionPlans();
+  }, []);
+
+  const fetchSubscriptionPlans = async () => {
+    try {
+      const plans = await creditsService.getSubscriptionPlans();
+      setSubscriptionPlans(plans);
+    } catch (error) {
+      console.error('Error fetching subscription plans:', error);
+      toast.error('Failed to load subscription plans');
+    }
+  };
+
+  const handleSubscribe = async (planName: string) => {
+    if (!isAuthenticated) {
+      toast.error('Please sign in first');
+      window.location.href = '/auth';
+      return;
+    }
+
+    const plan = subscriptionPlans.find(p => p.name === planName);
+    if (!plan) {
+      toast.error('Plan not found');
+      return;
+    }
+
+    setLoadingSubscription(prev => ({ ...prev, [plan.id]: true }));
+
+    try {
+      const { data, error } = await supabase.functions.invoke('create-subscription-checkout', {
+        body: { planId: plan.id }
+      });
+
+      if (error) throw error;
+
+      if (data?.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error('No checkout URL received');
+      }
+    } catch (error) {
+      console.error('Error creating subscription checkout:', error);
+      toast.error('Failed to create subscription checkout');
+    } finally {
+      setLoadingSubscription(prev => ({ ...prev, [plan.id]: false }));
+    }
+  };
 
   return (
     <div className="min-h-screen scroll-snap-container bg-gradient-to-br from-background via-background/90 to-primary/5 dark:bg-gradient-to-br dark:from-black dark:via-gray-950/90 dark:to-gray-900/60">
@@ -324,11 +382,6 @@ const Index = () => {
               {/* Free Plan */}
               <div className="relative flex flex-col w-72 sm:w-56 md:w-64 lg:w-72 flex-shrink-0 min-h-[500px] glass hover:glass-dark transition-all duration-300 shadow-modern hover:shadow-modern-lg rounded-2xl border-0">
                 <div className="text-center pb-6 p-6">
-                  <div className="mx-auto mb-4 p-3 rounded-full bg-primary/10 text-primary">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                    </svg>
-                  </div>
                   <h3 className="text-xl font-bold">Free Plan</h3>
                   <p className="text-sm text-muted-foreground">Perfect for getting started with AI transformation</p>
                   <div className="mt-4">
@@ -422,9 +475,12 @@ const Index = () => {
                   </ul>
                   
                   <div className="mt-auto">
-                    <div className="w-full modern-button shadow-modern bg-foreground hover:bg-foreground/90 text-background px-4 py-2 rounded-lg font-semibold cursor-pointer text-center">
+                    <button 
+                      onClick={() => window.location.href = '/jumpinai-studio'}
+                      className="w-full modern-button shadow-modern bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-lg font-semibold cursor-pointer text-center transition-colors"
+                    >
                       Get Started
-                    </div>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -490,9 +546,13 @@ const Index = () => {
                   </ul>
                   
                   <div className="mt-auto">
-                    <div className="w-full modern-button shadow-modern bg-foreground hover:bg-foreground/90 text-background px-4 py-2 rounded-lg font-semibold cursor-pointer text-center">
-                      Get Started
-                    </div>
+                    <button 
+                      onClick={() => handleSubscribe('Starter')}
+                      disabled={loadingSubscription['starter']}
+                      className="w-full modern-button shadow-modern bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-lg font-semibold cursor-pointer text-center transition-colors disabled:opacity-50"
+                    >
+                      {loadingSubscription['starter'] ? 'Processing...' : 'Get Started'}
+                    </button>
                   </div>
                 </div>
               </div>
@@ -558,17 +618,21 @@ const Index = () => {
                   </ul>
                   
                   <div className="mt-auto">
-                    <div className="w-full modern-button shadow-modern bg-foreground hover:bg-foreground/90 text-background px-4 py-2 rounded-lg font-semibold cursor-pointer text-center">
-                      Get Started
-                    </div>
+                    <button 
+                      onClick={() => handleSubscribe('Pro')}
+                      disabled={loadingSubscription['pro']}
+                      className="w-full modern-button shadow-modern bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-lg font-semibold cursor-pointer text-center transition-colors disabled:opacity-50"
+                    >
+                      {loadingSubscription['pro'] ? 'Processing...' : 'Get Started'}
+                    </button>
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="text-center">
-            <a href="/pricing" className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-8 py-4 rounded-lg text-lg font-semibold hover:bg-primary/90 transition-colors">
+          <div className="text-center pt-8">
+            <a href="/pricing" className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-8 py-4 rounded-xl text-lg font-semibold hover:bg-primary/90 transition-all duration-300 shadow-lg hover:shadow-xl">
               View All Plans & Pricing
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
@@ -609,61 +673,6 @@ const Index = () => {
             <div className="p-5 rounded-xl glass hover:glass-dark transition-all duration-300">
               <h3 className="text-lg font-bold mb-2 font-display">Can I customize my Jump based on my specific industry?</h3>
               <p className="text-sm text-muted-foreground">Absolutely. JumpinAI Studio creates completely customized strategies based on your specific business context, industry dynamics, role, and current AI experience level.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Stay Ahead Section */}
-      <section className="py-16 bg-gradient-to-br from-background via-muted/20 to-background dark:from-black dark:via-muted/10 dark:to-black">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold mb-4 font-display gradient-text-primary">
-              Stay Ahead of the AI Revolution
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              While others struggle with AI implementation, you'll be leading the transformation with proven strategies and cutting-edge insights.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            <div className="text-center p-6 rounded-xl glass hover:glass-dark transition-all duration-300">
-              <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-primary to-primary/70 rounded-full flex items-center justify-center">
-                <svg className="w-8 h-8 text-primary-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold mb-3 font-display">First-Mover Advantage</h3>
-              <p className="text-sm text-muted-foreground">Get ahead of 90% of businesses still struggling with AI basics. Implement proven strategies while competitors are still researching.</p>
-            </div>
-
-            <div className="text-center p-6 rounded-xl glass hover:glass-dark transition-all duration-300">
-              <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-secondary to-secondary/70 rounded-full flex items-center justify-center">
-                <svg className="w-8 h-8 text-secondary-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold mb-3 font-display">Measurable ROI</h3>
-              <p className="text-sm text-muted-foreground">Track real productivity gains, cost savings, and competitive advantages with our results-focused approach and success metrics.</p>
-            </div>
-
-            <div className="text-center p-6 rounded-xl glass hover:glass-dark transition-all duration-300">
-              <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-accent to-accent/70 rounded-full flex items-center justify-center">
-                <svg className="w-8 h-8 text-accent-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold mb-3 font-display">Future-Proof Strategy</h3>
-              <p className="text-sm text-muted-foreground">Build AI capabilities that scale with technological advances. Our strategies evolve with the latest developments and industry trends.</p>
-            </div>
-          </div>
-
-          <div className="text-center mt-10">
-            <div className="inline-flex items-center gap-3 p-4 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-xl border border-primary/20">
-              <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-              <span className="font-semibold">Join 15,000+ professionals already transforming their businesses with AI</span>
             </div>
           </div>
         </div>
