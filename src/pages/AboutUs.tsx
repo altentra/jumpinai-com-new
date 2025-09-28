@@ -208,20 +208,20 @@ const AboutUs = () => {
 
   const beliefs = [
     {
-      title: "Personalization Over Generalization",
-      description: "Your AI journey should be as unique as your goals. Generic advice fails because every person's situation is different."
+      title: "Human-Centered AI Revolution",
+      description: "We believe the AI revolution succeeds only when it amplifies human potential, not replaces it. Every breakthrough should make us more human, not less."
     },
     {
-      title: "Speed Through Precision",
-      description: "Why spend months learning when you can get a personalized plan in 5 minutes? Precision beats prolonged research."
+      title: "Individuality Over Uniformity",
+      description: "In a world pushing toward standardization, we champion the unique. Your AI journey should be as distinctive as your dreams, challenges, and aspirations."
     },
     {
-      title: "Implementation Over Information",
-      description: "We don't just teach about AI—we give you the exact prompts, workflows, and strategies to implement immediately."
+      title: "Transformation Through Connection",
+      description: "True AI transformation happens at the intersection of cutting-edge technology and deep human understanding. We build bridges, not barriers."
     },
     {
-      title: "Your Success is Personal",
-      description: "While others talk about AI's potential, we're creating your specific path to AI transformation. Your Jump, your results."
+      title: "Purpose-Driven Innovation",
+      description: "We don't innovate for innovation's sake. Every solution we create serves a higher purpose: unlocking human potential and making AI accessible to all who seek growth."
     }
   ];
 
