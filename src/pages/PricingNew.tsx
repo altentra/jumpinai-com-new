@@ -160,23 +160,23 @@ const PricingNew = () => {
           </section>
 
           {/* Subscription Plans */}
-          <section className="container mx-auto px-4 py-12">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold mb-4">Choose Your Plan</h2>
-              <p className="text-muted-foreground max-w-2xl mx-auto">
+          <section className="container mx-auto px-4 py-8 sm:py-12">
+            <div className="text-center mb-8 sm:mb-12">
+              <h2 className="text-2xl sm:text-3xl font-bold mb-4">Choose Your Plan</h2>
+              <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto px-4">
                 Get monthly credits that roll over, plus access to all our resources and tools
               </p>
             </div>
 
             <div className="w-full overflow-x-auto pb-4">
-              <div className="flex gap-6 min-w-max px-4 md:px-0 md:justify-center md:flex-wrap md:max-w-7xl md:mx-auto pt-4">
+              <div className="flex gap-4 sm:gap-6 min-w-max px-2 sm:px-4 md:px-0 md:justify-center md:flex-wrap md:max-w-7xl md:mx-auto pt-4">
                 {subscriptionPlans.map((plan) => {
                 const badge = getPlanBadge(plan.name);
                 const isLoading = loadingSubscription[plan.id];
                 const isFree = plan.price_cents === 0;
                 
                 return (
-                  <Card key={plan.id} className={`relative flex flex-col w-64 sm:w-56 md:w-64 lg:w-72 flex-shrink-0 min-h-[500px] glass hover:glass-dark transition-all duration-300 shadow-modern hover:shadow-modern-lg rounded-2xl border-0 ${plan.name.toLowerCase().includes('pro') ? 'shadow-steel' : ''}`}>
+                  <Card key={plan.id} className={`relative flex flex-col w-72 sm:w-56 md:w-64 lg:w-72 flex-shrink-0 min-h-[500px] glass hover:glass-dark transition-all duration-300 shadow-modern hover:shadow-modern-lg rounded-2xl border-0 ${plan.name.toLowerCase().includes('pro') ? 'shadow-steel' : ''}`}>
                     {badge && (
                       <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
                         <Badge className={`${badge.color} shadow-modern rounded-full px-3 py-1`}>
@@ -243,15 +243,15 @@ const PricingNew = () => {
           </section>
 
           {/* Credit Packages */}
-          <section className="container mx-auto px-4 py-12">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold mb-4">Need More Credits?</h2>
-              <p className="text-muted-foreground max-w-2xl mx-auto">
+          <section className="container mx-auto px-4 py-8 sm:py-12">
+            <div className="text-center mb-8 sm:mb-12">
+              <h2 className="text-2xl sm:text-3xl font-bold mb-4">Need More Credits?</h2>
+              <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto px-4">
                 Top up your account with additional credits anytime. Perfect for busy periods or special projects.
               </p>
             </div>
 
-            <div className="grid grid-cols-3 gap-4 max-w-4xl mx-auto mb-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 max-w-4xl mx-auto mb-4">
               {creditPackages.slice(0, 3).map((pkg) => {
                 const isLoading = packageLoading[pkg.id];
                 const valueBadge = getValueBadge(pkg.credits, pkg.price_cents);
@@ -304,7 +304,7 @@ const PricingNew = () => {
               })}
             </div>
             
-            <div className="grid grid-cols-2 gap-4 max-w-2xl mx-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 max-w-2xl mx-auto">
               {creditPackages.slice(3, 5).map((pkg) => {
                 const isLoading = packageLoading[pkg.id];
                 const valueBadge = getValueBadge(pkg.credits, pkg.price_cents);
@@ -359,10 +359,10 @@ const PricingNew = () => {
           </section>
 
           {/* How Credits Work */}
-          <section className="container mx-auto px-4 py-12">
+          <section className="container mx-auto px-4 py-8 sm:py-12">
             <div className="max-w-4xl mx-auto">
-              <h2 className="text-3xl font-bold text-center mb-8">How Credits Work</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8">How Credits Work</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
                 <div className="text-center">
                   <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                     <Zap className="w-6 h-6 text-primary" />
@@ -395,9 +395,9 @@ const PricingNew = () => {
           </section>
 
           {/* FAQ Section */}
-          <section className="container mx-auto px-4 py-16">
+          <section className="container mx-auto px-4 py-12 sm:py-16">
             <div className="max-w-3xl mx-auto">
-              <h2 className="text-3xl font-bold text-center mb-12">Frequently Asked Questions</h2>
+              <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8 sm:mb-12">Frequently Asked Questions</h2>
               <div className="space-y-8">
                 <div>
                   <h3 className="font-semibold mb-2">What can I do with credits?</h3>
