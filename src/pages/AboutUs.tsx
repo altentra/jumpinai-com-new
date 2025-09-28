@@ -255,17 +255,17 @@ const AboutUs = () => {
           <div className="absolute bottom-20 left-20 w-40 h-40 bg-gradient-to-tr from-secondary/8 to-transparent dark:bg-gradient-to-tr dark:from-gray-600/15 dark:to-transparent rounded-full blur-xl"></div>
         </div>
         <Helmet>
-          <title>About JumpinAI Studio | Personalized AI Transformation Plans</title>
-          <meta name="description" content="Meet JumpinAI Studio: We create personalized AI transformation plans called 'Jumps' - complete with custom prompts, workflows, and strategies tailored to your unique goals in just 5 minutes." />
+          <title>About JumpinAI</title>
+          <meta name="description" content="Discover JumpinAI - pioneering the future of personalized AI transformation. We're more than a platform; we're architects of individual AI journeys, building bridges between human potential and artificial intelligence." />
           <link rel="canonical" href="https://jumpinai.com/about-us" />
           <script type="application/ld+json">{JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'Organization',
-            name: 'JumpinAI Studio',
+            name: 'JumpinAI',
             url: 'https://jumpinai.com',
             logo: 'https://jumpinai.com/lovable-uploads/156b282b-1e93-436c-914a-a886a6a5cdfd.png',
             sameAs: ['https://twitter.com/jumpinai'],
-            description: 'Personalized AI transformation plans that help individuals implement AI in their life and business with custom strategies, prompts, and workflows.'
+            description: 'Pioneering personalized AI transformation through individualized learning paths, custom strategies, and human-centered AI implementation.'
           })}</script>
         </Helmet>
         <Navigation />
@@ -278,8 +278,8 @@ const AboutUs = () => {
 
           <div className="relative z-10 px-6 text-center">
             <div className="glass backdrop-blur-md bg-background/20 dark:bg-background/10 border border-primary/20 rounded-3xl p-8 md:p-12 shadow-2xl shadow-primary/10 hover:shadow-3xl hover:shadow-primary/15 transition-all duration-500">
-              <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6 bg-gradient-to-br from-foreground via-foreground to-primary/70 bg-clip-text text-transparent">About JumpinAI Studio</h1>
-              <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-8">Where personalized AI transformation meets instant results. We don't teach generic AI—we create your unique Jump plan tailored specifically to your goals, challenges, and dreams.</p>
+              <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6 bg-gradient-to-br from-foreground via-foreground to-primary/70 bg-clip-text text-transparent">About JumpinAI</h1>
+              <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-8">Pioneering the future of human-AI collaboration. We're not just building tools—we're architecting the bridge between human potential and artificial intelligence, one personalized journey at a time.</p>
               <div className="flex justify-center">
                   <Button 
                     size="lg" 
@@ -295,7 +295,7 @@ const AboutUs = () => {
         </div>
       </section>
 
-      {/* Brand Intro Section - Glass Morphism */}
+      {/* Who We Are Section - Glass Morphism */}
       <section className="px-6 py-16 md:py-24 relative z-10">
         <div className="max-w-6xl mx-auto">
           <div className="glass backdrop-blur-md bg-background/40 dark:bg-background/20 border border-primary/20 rounded-3xl p-8 md:p-12 shadow-2xl shadow-primary/10 hover:shadow-3xl hover:shadow-primary/15 transition-all duration-500">
@@ -315,16 +315,19 @@ const AboutUs = () => {
                 </div>
               </div>
               <article className="md:col-span-3 space-y-6">
-                <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-br from-foreground via-foreground to-primary/70 bg-clip-text text-transparent">The Jump Revolution</h2>
+                <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-br from-foreground via-foreground to-primary/70 bg-clip-text text-transparent">Who We Are</h2>
                 <div className="space-y-5">
                   <p className="text-lg text-muted-foreground leading-relaxed">
-                    JumpinAI Studio is the world's first personalized AI transformation platform. While others offer generic courses and one-size-fits-all advice, we create individual <strong className="text-foreground">Jump plans</strong> — complete AI implementation roadmaps designed uniquely for your goals, industry, and experience level.
+                    We stand at the crossroads of human potential and artificial intelligence. <strong className="text-foreground">JumpinAI</strong> was born from a profound realization: the AI revolution isn't about replacing human intelligence—it's about amplifying it in ways uniquely meaningful to each individual.
                   </p>
                   <p className="text-lg text-muted-foreground leading-relaxed">
-                    What is a Jump? It's your personalized pathway to AI mastery. In just 5 minutes, our AI analyzes your situation and delivers 16 ready-to-use resources: custom prompts, proven workflows, detailed blueprints, and strategic guidance — all tailored specifically to you.
+                    In a world drowning in generic AI solutions and one-size-fits-all approaches, we chose a different path. We believe that true transformation happens when technology meets the individual—when artificial intelligence becomes deeply personal, intimately relevant, and immediately actionable in your specific context.
                   </p>
                   <p className="text-lg text-muted-foreground leading-relaxed">
-                    We believe AI transformation should be personal, immediate, and actionable. No more months of generic learning. Your Jump plan puts you on the fast track to implementing AI in your life and business — starting today.
+                    We are <strong className="text-foreground">architects of individual AI journeys</strong>. We don't just teach about artificial intelligence; we craft personalized bridges between who you are today and who you can become with AI as your ally. Every interaction, every solution, every moment of transformation is designed around one fundamental truth: your AI journey should be as unique as your fingerprint.
+                  </p>
+                  <p className="text-lg text-muted-foreground leading-relaxed">
+                    As pioneers in this new era, we're not just riding the wave of the AI revolution—we're helping to shape it with humanity at its core. Because the future belongs not to those who simply adopt AI, but to those who make it truly their own.
                   </p>
                 </div>
               </article>
