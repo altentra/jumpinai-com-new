@@ -188,7 +188,7 @@ const Newsletter = () => {
             
             <div className="flex flex-col sm:flex-row justify-center items-center gap-5 mb-3">
               <div className="text-center">
-                <div className="text-xl font-bold text-foreground font-display">30K+</div>
+                <div className="text-xl font-bold text-foreground font-display">15K+</div>
                 <div className="text-muted-foreground text-sm">Professionals</div>
               </div>
               <div className="w-px h-6 bg-border hidden sm:block"></div>
