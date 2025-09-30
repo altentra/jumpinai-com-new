@@ -81,11 +81,11 @@ export default function Dashboard() {
         © 2025 JumpinAI, LLC. All rights reserved.{' '}
         <a 
           href="/terms-of-use" 
-          className="text-primary hover:text-primary/80 transition-colors duration-200 underline underline-offset-4 ml-1"
+          className="text-primary hover:text-primary/80 transition-colors duration-200 underline underline-offset-4"
         >
           Terms of Use
         </a>
-        {' '}and{' '}
+        {' and '}
         <a 
           href="/privacy-policy" 
           className="text-primary hover:text-primary/80 transition-colors duration-200 underline underline-offset-4"
