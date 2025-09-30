@@ -76,6 +76,9 @@ verify_jwt = false
 [functions.jumps-ai-coach]
 verify_jwt = false
 
+[functions.jumps-ai-streaming]
+verify_jwt = false
+
 [realtime]
 enabled = true
 port = 54323

@@ -61,6 +61,164 @@ export const jumpinAIStudioService = {
     }
   },
 
+  // Generate Jump using streaming approach - all steps in one API call
+  async generateJumpStreaming(
+    formData: StudioFormData,
+    userId?: string,
+    onProgress?: (step: number, type: string, data: any) => void
+  ): Promise<GenerationResult> {
+    console.log('Starting streaming jump generation...');
+    
+    const result: GenerationResult = {
+      fullContent: '',
+      components: {
+        tools: [],
+        prompts: [],
+        workflows: [],
+        blueprints: [],
+        strategies: []
+      }
+    };
+
+    return new Promise((resolve, reject) => {
+      const url = `https://cieczaajcgkgdgenfdzi.supabase.co/functions/v1/jumps-ai-streaming`;
+      
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+      }).then(async response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const reader = response.body?.getReader();
+        const decoder = new TextDecoder();
+
+        if (!reader) {
+          throw new Error('No reader available');
+        }
+
+        let buffer = '';
+        let jumpId: string | undefined;
+
+        while (true) {
+          const { done, value } = await reader.read();
+          
+          if (done) break;
+
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split('\n');
+          buffer = lines.pop() || '';
+
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              try {
+                const jsonData = JSON.parse(line.slice(6));
+                const { step, type, data } = jsonData;
+
+                console.log(`Received step ${step}:`, type);
+
+                if (type === 'error') {
+                  throw new Error(data.message);
+                }
+
+                if (type === 'complete') {
+                  console.log('Generation complete!');
+                  continue;
+                }
+
+                // Process each step
+                if (type === 'overview') {
+                  result.jumpName = data.jumpName || 'AI Transformation Journey';
+                  result.fullContent = data.executiveSummary || '';
+                  result.structuredPlan = data;
+                  result.comprehensivePlan = data;
+                  
+                  // Save jump to database immediately
+                  if (userId) {
+                    const jumpNumber = await jumpNamingService.getNextJumpNumber(userId);
+                    const fullTitle = `Jump #${jumpNumber}: ${result.jumpName}`;
+                    result.jumpNumber = jumpNumber;
+                    result.fullTitle = fullTitle;
+                    
+                    const { data: savedJump, error } = await supabase
+                      .from('user_jumps')
+                      .insert({
+                        user_id: userId,
+                        title: fullTitle,
+                        summary: result.fullContent.slice(0, 500),
+                        full_content: JSON.stringify(data),
+                        structured_plan: data,
+                        comprehensive_plan: data,
+                        completion_percentage: 15,
+                        status: 'active'
+                      })
+                      .select()
+                      .single();
+
+                    if (!error && savedJump) {
+                      jumpId = savedJump.id;
+                      result.jumpId = jumpId;
+                      console.log('Jump created:', jumpId);
+                    }
+                  }
+                } else if (type === 'tools') {
+                  result.components!.tools = data.tools || [];
+                  if (userId && jumpId) {
+                    await this.saveComponents({ tools: result.components!.tools }, userId, jumpId);
+                  }
+                } else if (type === 'prompts') {
+                  result.components!.prompts = data.prompts || [];
+                  if (userId && jumpId) {
+                    await this.saveComponents({ prompts: result.components!.prompts }, userId, jumpId);
+                  }
+                } else if (type === 'workflows') {
+                  result.components!.workflows = data.workflows || [];
+                  if (userId && jumpId) {
+                    await this.saveComponents({ workflows: result.components!.workflows }, userId, jumpId);
+                  }
+                } else if (type === 'blueprints') {
+                  result.components!.blueprints = data.blueprints || [];
+                  if (userId && jumpId) {
+                    await this.saveComponents({ blueprints: result.components!.blueprints }, userId, jumpId);
+                  }
+                } else if (type === 'strategies') {
+                  result.components!.strategies = data.strategies || [];
+                  if (userId && jumpId) {
+                    await this.saveComponents({ strategies: result.components!.strategies }, userId, jumpId);
+                  }
+                }
+
+                // Update jump progress
+                if (userId && jumpId) {
+                  const progress = Math.min(100, step * 15);
+                  await this.updateJumpProgress(jumpId, progress);
+                }
+
+                // Call progress callback
+                if (onProgress) {
+                  onProgress(step, type, data);
+                }
+
+              } catch (parseError) {
+                console.error('Error parsing SSE data:', parseError);
+              }
+            }
+          }
+        }
+
+        resolve(result);
+
+      }).catch(error => {
+        console.error('Streaming error:', error);
+        reject(error);
+      });
+    });
+  },
+
   // Generate Jump in AI using the 6-step approach
   async generateJump(formData: StudioFormData, userId?: string, onProgress?: (step: number, data: any) => void): Promise<GenerationResult> {
     try {

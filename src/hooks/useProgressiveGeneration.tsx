@@ -220,6 +220,15 @@ export const useProgressiveGeneration = () => {
       const stepTimes: { [key: string]: number } = {};
       let currentStepStartTime = Date.now();
       
+      const stepNames: Record<string, string> = {
+        overview: 'Creating Overview & Strategic Plan',
+        tools: 'Generating AI Tools Recommendations',
+        prompts: 'Crafting AI Prompts',
+        workflows: 'Designing Workflow Processes',
+        blueprints: 'Building Implementation Blueprints',
+        strategies: 'Developing Strategic Frameworks'
+      };
+      
       // Show initial empty structure immediately
       let progressiveResult: ProgressiveResult = {
         title: 'Generating Jump...',
@@ -234,74 +243,58 @@ export const useProgressiveGeneration = () => {
         processing_status: {
           stage: 'Generating',
           progress: 5,
-          currentTask: 'AI is analyzing your requirements and generating jump name...',
+          currentTask: 'AI is analyzing your requirements...',
           isComplete: false
         },
         stepTimes: {}
       };
       setResult(progressiveResult);
 
-      // Generate with real-time step progress
-      const rawResponse = await jumpinAIStudioService.generateJump(
+      // Generate with real-time streaming progress
+      const rawResponse = await jumpinAIStudioService.generateJumpStreaming(
         formData, 
         userId,
         // Real-time progress callback
-        (step: number, stepData: any) => {
-          console.log(`Step ${step} completed:`, stepData);
+        (step: number, type: string, stepData: any) => {
+          console.log(`Step ${step} (${type}) completed:`, stepData);
           
           // Calculate step completion time
           const stepEndTime = Date.now();
           const stepDuration = Math.round((stepEndTime - currentStepStartTime) / 1000);
-          stepTimes[step.toString()] = stepDuration;
-          currentStepStartTime = stepEndTime; // Reset for next step
+          stepTimes[type] = stepDuration;
+          currentStepStartTime = stepEndTime;
           
-          const progressMap = {
-            1: { progress: 16, task: `Generated strategic overview and comprehensive plan (${stepDuration}s)` },
-            2: { progress: 33, task: `Generated AI tools recommendations (${stepDuration}s)` },
-            3: { progress: 50, task: `Generated AI prompts for your transformation (${stepDuration}s)` },
-            4: { progress: 66, task: `Generated workflow processes and procedures (${stepDuration}s)` },
-            5: { progress: 83, task: `Generated implementation blueprints (${stepDuration}s)` },
-            6: { progress: 100, task: `Generated strategic frameworks - Complete! (${stepDuration}s)` }
-          };
-          
-          const stepProgress = progressMap[step] || { progress: Math.round((step / 6) * 100), task: `Completed step ${step} (${stepDuration}s)` };
+          const taskName = stepNames[type] || `Processing ${type}...`;
+          const progress = Math.min(100, (step / 7) * 100);
           
           // Update progressive result with new data
-          if (step === 1 && stepData.full_content) {
+          if (type === 'overview') {
             progressiveResult.jumpId = stepData.jumpId;
-            progressiveResult.jumpName = stepData.jumpName;
+            progressiveResult.jumpName = stepData.jumpName || 'AI Transformation Journey';
             progressiveResult.jumpNumber = stepData.jumpNumber;
             progressiveResult.fullTitle = stepData.fullTitle;
-            progressiveResult.title = stepData.fullTitle || 'AI Transformation Jump';
-            progressiveResult.full_content = stepData.full_content;
-            progressiveResult.structured_plan = stepData.structured_plan;
-            progressiveResult.comprehensive_plan = stepData.comprehensive_plan;
-          }
-          
-          if (stepData.components) {
-            if (stepData.components.tools && stepData.components.tools.length > 0) {
-              progressiveResult.components.tools = stepData.components.tools;
-            }
-            if (stepData.components.prompts && stepData.components.prompts.length > 0) {
-              progressiveResult.components.prompts = stepData.components.prompts;
-            }
-            if (stepData.components.workflows && stepData.components.workflows.length > 0) {
-              progressiveResult.components.workflows = stepData.components.workflows;
-            }
-            if (stepData.components.blueprints && stepData.components.blueprints.length > 0) {
-              progressiveResult.components.blueprints = stepData.components.blueprints;
-            }
-            if (stepData.components.strategies && stepData.components.strategies.length > 0) {
-              progressiveResult.components.strategies = stepData.components.strategies;
-            }
+            progressiveResult.title = stepData.fullTitle || progressiveResult.jumpName;
+            progressiveResult.full_content = stepData.executiveSummary || '';
+            progressiveResult.structured_plan = stepData;
+            progressiveResult.comprehensive_plan = stepData;
+          } else if (type === 'tools') {
+            progressiveResult.components.tools = stepData.tools || [];
+          } else if (type === 'prompts') {
+            progressiveResult.components.prompts = stepData.prompts || [];
+          } else if (type === 'workflows') {
+            progressiveResult.components.workflows = stepData.workflows || [];
+          } else if (type === 'blueprints') {
+            progressiveResult.components.blueprints = stepData.blueprints || [];
+          } else if (type === 'strategies') {
+            progressiveResult.components.strategies = stepData.strategies || [];
           }
           
           // Update status and timing
           progressiveResult.processing_status = {
-            stage: `Step ${step} Complete`,
-            progress: stepProgress.progress,
-            currentTask: stepProgress.task,
-            isComplete: step === 6
+            stage: type === 'complete' ? 'Complete' : 'Generating',
+            progress,
+            currentTask: `${taskName} (${stepDuration}s)`,
+            isComplete: type === 'complete'
           };
           progressiveResult.stepTimes = { ...stepTimes };
           
