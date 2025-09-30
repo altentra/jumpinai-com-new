@@ -284,12 +284,30 @@ export const useProgressiveGeneration = () => {
           if (type === 'overview') {
             console.log('Processing overview step data:', stepData);
             
-            // Extract overview data
-            progressiveResult.jumpId = stepData.jumpId;
-            progressiveResult.jumpName = stepData.jumpName || 'AI Transformation Journey';
-            progressiveResult.jumpNumber = stepData.jumpNumber;
-            progressiveResult.fullTitle = stepData.fullTitle;
-            progressiveResult.title = stepData.fullTitle || progressiveResult.jumpName;
+            // Extract jump name from data
+            const jumpName = stepData.jumpName || 'AI Transformation Journey';
+            
+            // Generate jump number and full title immediately
+            let jumpNumber = 1;
+            let fullTitle = jumpName;
+            
+            if (userId) {
+              // Get jump number synchronously - this should be fast
+              import('@/utils/jumpNamingService').then(async ({ jumpNamingService }) => {
+                jumpNumber = await jumpNamingService.getNextJumpNumber(userId);
+                fullTitle = `Jump #${jumpNumber}: ${jumpName}`;
+                
+                // Update with proper title
+                progressiveResult.jumpNumber = jumpNumber;
+                progressiveResult.fullTitle = fullTitle;
+                progressiveResult.title = fullTitle;
+                setResult({ ...progressiveResult });
+              });
+            }
+            
+            // Extract overview data - display immediately
+            progressiveResult.jumpName = jumpName;
+            progressiveResult.title = fullTitle;
             progressiveResult.full_content = stepData.executiveSummary || '';
             progressiveResult.structured_plan = stepData;
             progressiveResult.comprehensive_plan = stepData;
@@ -384,6 +402,15 @@ export const useProgressiveGeneration = () => {
             progressiveResult.stepTimes = { ...progressiveResult.stepTimes, strategies: stepDuration };
             setProcessingStatus(progressiveResult.processing_status);
             setResult({ ...progressiveResult });
+          } else if (type === 'jump_created') {
+            // Update with jumpId and title info after save completes
+            console.log('Jump created callback:', stepData);
+            progressiveResult.jumpId = stepData.jumpId;
+            progressiveResult.jumpNumber = stepData.jumpNumber;
+            progressiveResult.fullTitle = stepData.fullTitle;
+            progressiveResult.title = stepData.fullTitle;
+            setResult({ ...progressiveResult });
+            
           } else if (type === 'complete') {
             // Final completion
             progressiveResult.processing_status = {

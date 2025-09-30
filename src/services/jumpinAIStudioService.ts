@@ -81,16 +81,23 @@ export const jumpinAIStudioService = {
     };
 
     return new Promise((resolve, reject) => {
-      const url = `https://cieczaajcgkgdgenfdzi.supabase.co/functions/v1/jumps-ai-streaming`;
+      const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/jumps-ai-streaming`;
+      
+      console.log('Fetching streaming endpoint:', url);
       
       fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
         },
         body: JSON.stringify(formData)
       }).then(async response => {
+        console.log('Response status:', response.status);
+        
         if (!response.ok) {
+          const errorText = await response.text();
+          console.error('Response error:', errorText);
           throw new Error(`HTTP error! status: ${response.status}`);
         }
 
@@ -138,86 +145,139 @@ export const jumpinAIStudioService = {
                   result.structuredPlan = data;
                   result.comprehensivePlan = data;
                   
-                  // Get jump number and create full title
+                  // Call progress callback IMMEDIATELY for name
+                  if (onProgress) {
+                    onProgress(step, type, data);
+                  }
+                  
+                  // Save to database in background (non-blocking)
                   if (userId) {
-                    const jumpNumber = await jumpNamingService.getNextJumpNumber(userId);
-                    const fullTitle = `Jump #${jumpNumber}: ${result.jumpName}`;
-                    result.jumpNumber = jumpNumber;
-                    result.fullTitle = fullTitle;
-                    
-                    const { data: savedJump, error } = await supabase
-                      .from('user_jumps')
-                      .insert({
-                        user_id: userId,
-                        title: fullTitle,
-                        summary: result.fullContent.slice(0, 500),
-                        full_content: JSON.stringify(data),
-                        structured_plan: data,
-                        comprehensive_plan: data,
-                        completion_percentage: 15,
-                        status: 'active'
-                      })
-                      .select()
-                      .single();
+                    (async () => {
+                      const jumpNumber = await jumpNamingService.getNextJumpNumber(userId);
+                      const fullTitle = `Jump #${jumpNumber}: ${result.jumpName}`;
+                      result.jumpNumber = jumpNumber;
+                      result.fullTitle = fullTitle;
+                      
+                      const { data: savedJump, error } = await supabase
+                        .from('user_jumps')
+                        .insert({
+                          user_id: userId,
+                          title: fullTitle,
+                          summary: result.fullContent.slice(0, 500),
+                          full_content: JSON.stringify(data),
+                          structured_plan: data,
+                          comprehensive_plan: data,
+                          completion_percentage: 15,
+                          status: 'active'
+                        })
+                        .select()
+                        .single();
 
-                    if (!error && savedJump) {
-                      jumpId = savedJump.id;
-                      result.jumpId = jumpId;
-                      console.log('Jump created:', jumpId);
-                    }
+                      if (!error && savedJump) {
+                        jumpId = savedJump.id;
+                        result.jumpId = jumpId;
+                        console.log('Jump created with ID:', jumpId, 'Title:', fullTitle);
+                        
+                        // Send update with jumpId and title
+                        if (onProgress) {
+                          onProgress(step, 'jump_created', { 
+                            jumpId, 
+                            jumpNumber, 
+                            fullTitle 
+                          });
+                        }
+                      }
+                    })();
                   }
                 } else if (type === 'tools') {
                   console.log('Processing tools data:', data);
                   result.components!.tools = data.tools || [];
                   console.log('Tools extracted:', result.components!.tools.length);
                   
+                  // Call progress callback IMMEDIATELY
+                  if (onProgress) {
+                    onProgress(step, type, data);
+                  }
+                  
+                  // Save in background
                   if (userId && jumpId) {
-                    const { toolsService } = await import('@/services/toolsService');
-                    await toolsService.saveTools(result.components!.tools, userId, jumpId);
+                    (async () => {
+                      const { toolsService } = await import('@/services/toolsService');
+                      await toolsService.saveTools(result.components!.tools, userId, jumpId);
+                    })();
                   }
                 } else if (type === 'prompts') {
                   console.log('Processing prompts data:', data);
                   result.components!.prompts = data.prompts || [];
                   console.log('Prompts extracted:', result.components!.prompts.length);
                   
+                  // Call progress callback IMMEDIATELY
+                  if (onProgress) {
+                    onProgress(step, type, data);
+                  }
+                  
+                  // Save in background
                   if (userId && jumpId) {
-                    await this.saveComponents({ prompts: result.components!.prompts }, userId, jumpId);
+                    (async () => {
+                      await this.saveComponents({ prompts: result.components!.prompts }, userId, jumpId);
+                    })();
                   }
                 } else if (type === 'workflows') {
                   console.log('Processing workflows data:', data);
                   result.components!.workflows = data.workflows || [];
                   console.log('Workflows extracted:', result.components!.workflows.length);
                   
+                  // Call progress callback IMMEDIATELY
+                  if (onProgress) {
+                    onProgress(step, type, data);
+                  }
+                  
+                  // Save in background
                   if (userId && jumpId) {
-                    await this.saveComponents({ workflows: result.components!.workflows }, userId, jumpId);
+                    (async () => {
+                      await this.saveComponents({ workflows: result.components!.workflows }, userId, jumpId);
+                    })();
                   }
                 } else if (type === 'blueprints') {
                   console.log('Processing blueprints data:', data);
                   result.components!.blueprints = data.blueprints || [];
                   console.log('Blueprints extracted:', result.components!.blueprints.length);
                   
+                  // Call progress callback IMMEDIATELY
+                  if (onProgress) {
+                    onProgress(step, type, data);
+                  }
+                  
+                  // Save in background
                   if (userId && jumpId) {
-                    await this.saveComponents({ blueprints: result.components!.blueprints }, userId, jumpId);
+                    (async () => {
+                      await this.saveComponents({ blueprints: result.components!.blueprints }, userId, jumpId);
+                    })();
                   }
                 } else if (type === 'strategies') {
                   console.log('Processing strategies data:', data);
                   result.components!.strategies = data.strategies || [];
                   console.log('Strategies extracted:', result.components!.strategies.length);
                   
+                  // Call progress callback IMMEDIATELY
+                  if (onProgress) {
+                    onProgress(step, type, data);
+                  }
+                  
+                  // Save in background
                   if (userId && jumpId) {
-                    await this.saveComponents({ strategies: result.components!.strategies }, userId, jumpId);
+                    (async () => {
+                      await this.saveComponents({ strategies: result.components!.strategies }, userId, jumpId);
+                    })();
                   }
                 }
 
-                // Update jump progress
+                // Update progress in background
                 if (userId && jumpId) {
-                  const progress = Math.min(100, step * 15);
-                  await this.updateJumpProgress(jumpId, progress);
-                }
-
-                // Call progress callback
-                if (onProgress) {
-                  onProgress(step, type, data);
+                  (async () => {
+                    const progress = Math.min(100, step * 15);
+                    await this.updateJumpProgress(jumpId, progress);
+                  })();
                 }
 
               } catch (parseError) {
