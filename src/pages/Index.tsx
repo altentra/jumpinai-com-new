@@ -166,7 +166,7 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">
             <p className="text-sm uppercase tracking-wider text-muted-foreground font-semibold">
-              Powered by leading AI technologies
+              Powered by leading AI
             </p>
           </div>
           <div className="flex flex-wrap justify-center items-center gap-8 lg:gap-12 opacity-70 hover:opacity-90 transition-opacity">
