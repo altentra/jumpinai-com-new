@@ -242,6 +242,9 @@ export const useProgressiveGeneration = () => {
         strategies: 100
       };
       
+      // Initial empty structure
+      let jumpName = 'Generating Jump...';
+      
       // Show initial empty structure immediately
       let progressiveResult: ProgressiveResult = {
         title: 'Generating Jump...',
@@ -278,26 +281,43 @@ export const useProgressiveGeneration = () => {
           currentStepStartTime = stepEndTime;
           
           const taskName = stepNames[type] || `Processing ${type}...`;
-          const progress = Math.min(100, (step / 7) * 100);
+          const progress = stepProgress[type] || Math.min(100, (step / 8) * 100);
           
           // Update progressive result with new data
-          if (type === 'overview') {
+          if (type === 'naming') {
+            // STEP 1: Name only (5% - should be fast!)
+            console.log('Processing naming step data:', stepData);
+            jumpName = stepData.jumpName || 'AI Transformation Journey';
+            
+            // Display name immediately
+            progressiveResult.jumpName = jumpName;
+            progressiveResult.title = jumpName; // Show without number initially
+            
+            progressiveResult.processing_status = {
+              stage: 'Generating',
+              progress: 5,
+              currentTask: `${stepNames.naming} (${stepDuration}s)`,
+              isComplete: false
+            };
+            progressiveResult.stepTimes = { naming: stepDuration };
+            setProcessingStatus(progressiveResult.processing_status);
+            setResult({ ...progressiveResult });
+            
+          } else if (type === 'overview') {
+            // STEP 2: Overview (19%)
             console.log('Processing overview step data:', stepData);
             
-            // Extract jump name from data
-            const jumpName = stepData.jumpName || 'AI Transformation Journey';
-            
-            // Generate jump number and full title immediately
+            // Generate jump number and full title
             let jumpNumber = 1;
             let fullTitle = jumpName;
             
             if (userId) {
-              // Get jump number synchronously - this should be fast
+              // Get jump number and update title with "Jump #X:"
               import('@/utils/jumpNamingService').then(async ({ jumpNamingService }) => {
                 jumpNumber = await jumpNamingService.getNextJumpNumber(userId);
                 fullTitle = `Jump #${jumpNumber}: ${jumpName}`;
                 
-                // Update with proper title
+                // Update with proper "Jump #X:" title
                 progressiveResult.jumpNumber = jumpNumber;
                 progressiveResult.fullTitle = fullTitle;
                 progressiveResult.title = fullTitle;
@@ -305,9 +325,8 @@ export const useProgressiveGeneration = () => {
               });
             }
             
-            // Extract overview data - display immediately
-            progressiveResult.jumpName = jumpName;
-            progressiveResult.title = fullTitle;
+            // Extract overview data
+            progressiveResult.title = fullTitle || jumpName;
             progressiveResult.full_content = stepData.executiveSummary || '';
             progressiveResult.structured_plan = stepData;
             progressiveResult.comprehensive_plan = stepData;
@@ -319,11 +338,29 @@ export const useProgressiveGeneration = () => {
               currentTask: `${stepNames.overview} (${stepDuration}s)`,
               isComplete: false
             };
-            progressiveResult.stepTimes = { overview: stepDuration };
+            progressiveResult.stepTimes = { ...progressiveResult.stepTimes, overview: stepDuration };
+            setProcessingStatus(progressiveResult.processing_status);
+            setResult({ ...progressiveResult });
+            
+          } else if (type === 'plan') {
+            // STEP 3: Plan (32%)
+            console.log('Processing plan step data:', stepData);
+            if (stepData.structuredPlan) {
+              progressiveResult.structured_plan = stepData.structuredPlan;
+            }
+            
+            progressiveResult.processing_status = {
+              stage: 'Generating',
+              progress: 32,
+              currentTask: `${stepNames.plan} (${stepDuration}s)`,
+              isComplete: false
+            };
+            progressiveResult.stepTimes = { ...progressiveResult.stepTimes, plan: stepDuration };
             setProcessingStatus(progressiveResult.processing_status);
             setResult({ ...progressiveResult });
             
           } else if (type === 'tools') {
+            // STEP 4: Tools (46%)
             console.log('Processing tools step data:', stepData);
             progressiveResult.components.tools = stepData.tools || [];
             
@@ -340,6 +377,7 @@ export const useProgressiveGeneration = () => {
             setResult({ ...progressiveResult });
             
           } else if (type === 'prompts') {
+            // STEP 5: Prompts (59%)
             console.log('Processing prompts step data:', stepData);
             progressiveResult.components.prompts = stepData.prompts || [];
             
@@ -356,6 +394,7 @@ export const useProgressiveGeneration = () => {
             setResult({ ...progressiveResult });
             
           } else if (type === 'workflows') {
+            // STEP 6: Workflows (73%)
             console.log('Processing workflows step data:', stepData);
             progressiveResult.components.workflows = stepData.workflows || [];
             
@@ -372,6 +411,7 @@ export const useProgressiveGeneration = () => {
             setResult({ ...progressiveResult });
             
           } else if (type === 'blueprints') {
+            // STEP 7: Blueprints (86%)
             console.log('Processing blueprints step data:', stepData);
             progressiveResult.components.blueprints = stepData.blueprints || [];
             
@@ -388,6 +428,7 @@ export const useProgressiveGeneration = () => {
             setResult({ ...progressiveResult });
             
           } else if (type === 'strategies') {
+            // STEP 8: Strategies (100%)
             console.log('Processing strategies step data:', stepData);
             progressiveResult.components.strategies = stepData.strategies || [];
             

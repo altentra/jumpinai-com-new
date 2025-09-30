@@ -47,23 +47,30 @@ serve(async (req) => {
         };
 
         try {
-          // Step 1: Generate Overview & Plan
-          console.log('Step 1: Generating overview...');
-          const overviewResponse = await callXAI(XAI_API_KEY, 1, formData, '');
+          // Step 1: Generate JUST the name (quick, 3-5 seconds)
+          console.log('Step 1: Generating jump name...');
+          const namingResponse = await callXAI(XAI_API_KEY, 1, formData, '');
+          console.log('Naming response:', namingResponse);
+          sendEvent(1, 'naming', namingResponse);
+          
+          // Step 2: Generate Overview & Plan
+          console.log('Step 2: Generating overview...');
+          const overviewResponse = await callXAI(XAI_API_KEY, 2, formData, '');
           console.log('Overview response:', overviewResponse);
-          sendEvent(1, 'overview', overviewResponse);
+          sendEvent(2, 'overview', overviewResponse);
           
           const overviewContent = typeof overviewResponse === 'string' 
             ? overviewResponse 
             : JSON.stringify(overviewResponse);
 
-          // Steps 2-6: Generate all components
+          // Steps 3-8: Generate all components
           const steps = [
-            { step: 2, type: 'tools', name: 'Tools' },
-            { step: 3, type: 'prompts', name: 'Prompts' },
-            { step: 4, type: 'workflows', name: 'Workflows' },
-            { step: 5, type: 'blueprints', name: 'Blueprints' },
-            { step: 6, type: 'strategies', name: 'Strategies' }
+            { step: 3, type: 'plan', name: 'Plan' },
+            { step: 4, type: 'tools', name: 'Tools' },
+            { step: 5, type: 'prompts', name: 'Prompts' },
+            { step: 6, type: 'workflows', name: 'Workflows' },
+            { step: 7, type: 'blueprints', name: 'Blueprints' },
+            { step: 8, type: 'strategies', name: 'Strategies' }
           ];
 
           for (const { step, type, name } of steps) {
@@ -77,7 +84,7 @@ serve(async (req) => {
           // Send completion event
           if (!isClosed) {
             console.log('Sending completion event...');
-            sendEvent(7, 'complete', { message: 'Generation complete' });
+            sendEvent(9, 'complete', { message: 'Generation complete' });
           }
 
         } catch (error) {
@@ -183,6 +190,26 @@ Budget: ${context.budget}
 
   switch (step) {
     case 1:
+      // STEP 1: Quick name generation (3-5 seconds)
+      return {
+        systemPrompt: `You are a creative naming expert. Generate inspiring, memorable names for AI transformation journeys.`,
+        userPrompt: `${baseContext}
+
+Create an inspiring, memorable name for this AI transformation journey. The name should be:
+- Catchy and motivating
+- 3-5 words maximum
+- Relevant to their goals and industry
+- Professional yet inspiring
+
+Return ONLY valid JSON:
+{
+  "jumpName": "Inspiring 3-5 word name"
+}`,
+        expectedTokens: 100
+      };
+    
+    case 2:
+      // STEP 2: Comprehensive overview and strategic plan
       return {
         systemPrompt: `You are an AI transformation strategist. Create a comprehensive overview and strategic plan.`,
         userPrompt: `${baseContext}
@@ -197,7 +224,6 @@ Create a detailed AI transformation plan with:
 
 Return ONLY valid JSON in this exact format:
 {
-  "jumpName": "Inspiring name for this AI transformation journey",
   "executiveSummary": "2-3 paragraph summary",
   "situationAnalysis": {
     "currentState": "Description of where they are now",
@@ -216,7 +242,22 @@ Return ONLY valid JSON in this exact format:
         expectedTokens: 3000
       };
 
-    case 2:
+    case 3:
+      // STEP 3: Detailed implementation plan
+      return {
+        systemPrompt: `You are an AI implementation strategist. Create detailed action plans.`,
+        userPrompt: `${baseContext}
+
+Overview Context:
+${overviewContent}
+
+Create a detailed implementation plan with specific actions, timelines, and success metrics.
+
+Return ONLY valid JSON with structured plan data.`,
+        expectedTokens: 2500
+      };
+
+    case 4:
       return {
         systemPrompt: `You are an AI tools specialist. Recommend specific AI tools based on the overview.`,
         userPrompt: `${baseContext}
@@ -247,7 +288,7 @@ Recommend 4-6 specific AI tools. Return ONLY valid JSON:
         expectedTokens: 3500
       };
 
-    case 3:
+    case 5:
       return {
         systemPrompt: `You are an AI prompt engineering expert. Create powerful prompts.`,
         userPrompt: `${baseContext}
@@ -275,7 +316,7 @@ Create 4-6 ready-to-use AI prompts. Return ONLY valid JSON:
         expectedTokens: 4000
       };
 
-    case 4:
+    case 6:
       return {
         systemPrompt: `You are a workflow optimization expert. Design AI-powered workflows.`,
         userPrompt: `${baseContext}
@@ -315,7 +356,7 @@ Design 3-5 AI-powered workflows. Return ONLY valid JSON:
         expectedTokens: 4500
       };
 
-    case 5:
+    case 7:
       return {
         systemPrompt: `You are an AI implementation architect. Create detailed blueprints.`,
         userPrompt: `${baseContext}
@@ -358,7 +399,7 @@ Create 3-5 implementation blueprints. Return ONLY valid JSON:
         expectedTokens: 5000
       };
 
-    case 6:
+    case 8:
       return {
         systemPrompt: `You are a strategic AI advisor. Develop comprehensive strategies.`,
         userPrompt: `${baseContext}
@@ -414,8 +455,8 @@ function validateStepResponse(content: any, step: number, rawContent: string): a
 
   // Fallback responses
   const fallbacks: Record<number, any> = {
-    1: {
-      jumpName: "AI Transformation Journey",
+    1: { jumpName: "AI Transformation Journey" },
+    2: {
       executiveSummary: rawContent.slice(0, 500),
       situationAnalysis: { currentState: "Starting AI journey", challenges: [], opportunities: [] },
       strategicVision: "Success through AI",
@@ -423,11 +464,12 @@ function validateStepResponse(content: any, step: number, rawContent: string): a
       successFactors: [],
       riskMitigation: []
     },
-    2: { tools: [] },
-    3: { prompts: [] },
-    4: { workflows: [] },
-    5: { blueprints: [] },
-    6: { strategies: [] }
+    3: { structuredPlan: {} },
+    4: { tools: [] },
+    5: { prompts: [] },
+    6: { workflows: [] },
+    7: { blueprints: [] },
+    8: { strategies: [] }
   };
 
   return fallbacks[step] || {};

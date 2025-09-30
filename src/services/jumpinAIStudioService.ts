@@ -81,7 +81,8 @@ export const jumpinAIStudioService = {
     };
 
     return new Promise((resolve, reject) => {
-      const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/jumps-ai-streaming`;
+      // Use hardcoded project URL to ensure it works
+      const url = 'https://cieczaajcgkgdgenfdzi.supabase.co/functions/v1/jumps-ai-streaming';
       
       console.log('Fetching streaming endpoint:', url);
       
@@ -89,7 +90,7 @@ export const jumpinAIStudioService = {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpZWN6YWFqY2drZ2RnZW5mZHppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1MzU4OTksImV4cCI6MjA2NjExMTg5OX0.OiDppCXfN_AN64XvCvfhphFqbjSvRtKSwF-cIXCZMQU',
         },
         body: JSON.stringify(formData)
       }).then(async response => {
@@ -138,14 +139,23 @@ export const jumpinAIStudioService = {
                 }
 
                 // Process each step with proper data extraction
-                if (type === 'overview') {
-                  console.log('Processing overview data:', data);
+                if (type === 'naming') {
+                  // STEP 1: Quick name only (5% - 3-5 seconds)
+                  console.log('Processing naming data:', data);
                   result.jumpName = data.jumpName || 'AI Transformation Journey';
+                  
+                  // Call progress callback IMMEDIATELY
+                  if (onProgress) {
+                    onProgress(step, type, data);
+                  }
+                } else if (type === 'overview') {
+                  // STEP 2: Overview (19%)
+                  console.log('Processing overview data:', data);
                   result.fullContent = data.executiveSummary || '';
                   result.structuredPlan = data;
                   result.comprehensivePlan = data;
                   
-                  // Call progress callback IMMEDIATELY for name
+                  // Call progress callback IMMEDIATELY
                   if (onProgress) {
                     onProgress(step, type, data);
                   }
@@ -189,7 +199,19 @@ export const jumpinAIStudioService = {
                       }
                     })();
                   }
+                } else if (type === 'plan') {
+                  // STEP 3: Detailed plan (32%)
+                  console.log('Processing plan data:', data);
+                  if (data.structuredPlan) {
+                    result.structuredPlan = data.structuredPlan;
+                  }
+                  
+                  // Call progress callback IMMEDIATELY
+                  if (onProgress) {
+                    onProgress(step, type, data);
+                  }
                 } else if (type === 'tools') {
+                  // STEP 4: Tools (46%)
                   console.log('Processing tools data:', data);
                   result.components!.tools = data.tools || [];
                   console.log('Tools extracted:', result.components!.tools.length);
@@ -207,6 +229,7 @@ export const jumpinAIStudioService = {
                     })();
                   }
                 } else if (type === 'prompts') {
+                  // STEP 5: Prompts (59%)
                   console.log('Processing prompts data:', data);
                   result.components!.prompts = data.prompts || [];
                   console.log('Prompts extracted:', result.components!.prompts.length);
@@ -223,6 +246,7 @@ export const jumpinAIStudioService = {
                     })();
                   }
                 } else if (type === 'workflows') {
+                  // STEP 6: Workflows (73%)
                   console.log('Processing workflows data:', data);
                   result.components!.workflows = data.workflows || [];
                   console.log('Workflows extracted:', result.components!.workflows.length);
@@ -239,6 +263,7 @@ export const jumpinAIStudioService = {
                     })();
                   }
                 } else if (type === 'blueprints') {
+                  // STEP 7: Blueprints (86%)
                   console.log('Processing blueprints data:', data);
                   result.components!.blueprints = data.blueprints || [];
                   console.log('Blueprints extracted:', result.components!.blueprints.length);
@@ -255,6 +280,7 @@ export const jumpinAIStudioService = {
                     })();
                   }
                 } else if (type === 'strategies') {
+                  // STEP 8: Strategies (100%)
                   console.log('Processing strategies data:', data);
                   result.components!.strategies = data.strategies || [];
                   console.log('Strategies extracted:', result.components!.strategies.length);
