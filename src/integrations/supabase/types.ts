@@ -157,6 +157,36 @@ export type Database = {
         }
         Relationships: []
       }
+      drip_credit_tracking: {
+        Row: {
+          created_at: string
+          current_month: number
+          drip_count_this_month: number
+          id: string
+          last_drip_at: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_month?: number
+          drip_count_this_month?: number
+          id?: string
+          last_drip_at?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          current_month?: number
+          drip_count_this_month?: number
+          id?: string
+          last_drip_at?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       lead_magnet_downloads: {
         Row: {
           downloaded_at: string
@@ -925,6 +955,10 @@ export type Database = {
           p_reference_id?: string
           p_user_id: string
         }
+        Returns: undefined
+      }
+      allocate_drip_credits: {
+        Args: Record<PropertyKey, never>
         Returns: undefined
       }
       allocate_monthly_credits: {
