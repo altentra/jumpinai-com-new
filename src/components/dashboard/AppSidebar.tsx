@@ -87,7 +87,7 @@ export default function AppSidebar() {
                 subInfo.subscribed ? "border-primary/20 text-primary" : "border-muted text-muted-foreground"
               )}
             >
-              {subInfo.subscribed ? subInfo.subscription_tier || 'Pro' : 'Free'}
+              {subInfo.subscribed ? subInfo.subscription_tier || 'Pro Plan' : 'Free Plan'}
             </Badge>
           </div>
         )}

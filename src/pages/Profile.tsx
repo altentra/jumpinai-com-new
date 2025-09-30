@@ -184,9 +184,9 @@ const Profile = () => {
               </div>
               <div className="flex items-center gap-2">
                 {subInfo?.subscribed ? (
-                  <Badge className="bg-primary/10 text-primary">{subInfo.subscription_tier || 'Pro'} Active</Badge>
+                  <Badge className="bg-primary/10 text-primary border-primary/20">{subInfo.subscription_tier || 'Pro Plan'}</Badge>
                 ) : (
-                  <Badge variant="secondary">Free plan</Badge>
+                  <Badge variant="secondary" className="border-muted">Free Plan</Badge>
                 )}
               </div>
             </div>

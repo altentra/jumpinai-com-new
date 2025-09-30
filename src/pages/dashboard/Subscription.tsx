@@ -1,13 +1,15 @@
-import { useState, useEffect, useMemo } from "react";
-import { Navigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { ExternalLink, Loader2, RefreshCw, X, CreditCard, Crown, AlertTriangle } from "lucide-react";
+import { ExternalLink, RefreshCw, CreditCard, Crown, Zap, Star, Rocket, AlertTriangle, ArrowRight, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useCredits } from "@/hooks/useCredits";
+import { creditsService, type CreditPackage, type SubscriptionPlan } from "@/services/creditsService";
+import { Separator } from "@/components/ui/separator";
 
 interface SubscriberInfo {
   subscribed: boolean;
@@ -15,34 +17,17 @@ interface SubscriberInfo {
   subscription_end?: string | null;
 }
 
-const planFeatures = {
-  free: [
-    "Access to basic AI resources",
-    "Weekly newsletter with AI insights", 
-    "Community support forum",
-    "Basic workflow templates",
-    "Limited prompt library access"
-  ],
-  pro: [
-    "Everything in Free plan",
-    "1000 credits monthly (rollover)",
-    "Full blueprints library access",
-    "Advanced workflow templates", 
-    "Premium prompt collection",
-    "Priority email support",
-    "Early access to new features",
-    "Advanced analytics dashboard",
-    "Custom strategy tools",
-    "Monthly AI training sessions"
-  ],
-};
-
 export default function Subscription() {
   const { user, refreshSubscription, isAuthenticated, isLoading: authLoading, login, subscription } = useAuth();
   const isMobile = useIsMobile();
+  const { credits, isLoading: creditsLoading, fetchCredits } = useCredits();
   const [email, setEmail] = useState<string>("");
   const [subInfo, setSubInfo] = useState<SubscriberInfo | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [creditPackages, setCreditPackages] = useState<CreditPackage[]>([]);
+  const [subscriptionPlans, setSubscriptionPlans] = useState<SubscriptionPlan[]>([]);
+  const [packageLoading, setPackageLoading] = useState<Record<string, boolean>>({});
+  const [planLoading, setPlanLoading] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     if (!authLoading) {
@@ -50,42 +35,76 @@ export default function Subscription() {
         login('/dashboard/subscription');
       } else if (user) {
         setEmail(user.email || "");
-        // Use cached subscription data from auth context
         setSubInfo(subscription || { subscribed: false });
         setLoading(false);
+        fetchCreditPackages();
+        fetchSubscriptionPlans();
         
         // Show success message if user just returned from payment
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('payment') === 'success') {
-          toast.success("Payment successful! Welcome to JumpinAI Pro!", {
+          toast.success("Payment successful! Your account has been updated.", {
             duration: 5000,
           });
-          // Clean up URL
           window.history.replaceState({}, document.title, window.location.pathname);
         }
       }
     }
   }, [isAuthenticated, authLoading, user, subscription, login]);
 
-  // Use the cached refreshSubscription from auth context - this will update both cache and local state
+  const fetchCreditPackages = async () => {
+    try {
+      const packages = await creditsService.getCreditPackages();
+      setCreditPackages(packages);
+    } catch (error) {
+      console.error('Error fetching credit packages:', error);
+    }
+  };
+
+  const fetchSubscriptionPlans = async () => {
+    try {
+      const plans = await creditsService.getSubscriptionPlans();
+      setSubscriptionPlans(plans);
+    } catch (error) {
+      console.error('Error fetching subscription plans:', error);
+    }
+  };
+
   const handleRefreshSubscription = async () => {
     await refreshSubscription();
-    // Update local state with the refreshed data
+    await fetchCredits();
     setTimeout(() => {
       setSubInfo(subscription || { subscribed: false });
     }, 100);
   };
 
-  const subscribe = async () => {
+  const handleSubscribe = async (planId: string) => {
+    setPlanLoading(prev => ({ ...prev, [planId]: true }));
     try {
-      const { data, error } = await supabase.functions.invoke("create-checkout", {
-        body: { source: 'dashboard-subscription' },
+      const { data, error } = await supabase.functions.invoke('create-subscription-checkout', {
+        body: { planId }
       });
       if (error) throw error;
-      const url = (data as any)?.url;
-      if (url) window.location.href = url;
+      if (data?.url) window.location.href = data.url;
     } catch (e: any) {
       toast.error(e.message || "Failed to start checkout");
+    } finally {
+      setPlanLoading(prev => ({ ...prev, [planId]: false }));
+    }
+  };
+
+  const handleBuyCredits = async (packageId: string) => {
+    setPackageLoading(prev => ({ ...prev, [packageId]: true }));
+    try {
+      const { data, error } = await supabase.functions.invoke('create-credit-checkout', {
+        body: { packageId }
+      });
+      if (error) throw error;
+      if (data?.url) window.location.href = data.url;
+    } catch (e: any) {
+      toast.error(e.message || "Failed to start checkout");
+    } finally {
+      setPackageLoading(prev => ({ ...prev, [packageId]: false }));
     }
   };
 
@@ -104,7 +123,6 @@ export default function Subscription() {
       
       if (url) {
         if (isMobile) {
-          // Use placeholder window approach for mobile to avoid popup blockers
           const placeholder = window.open('', '_blank');
           if (placeholder && typeof placeholder.location !== 'undefined') {
             placeholder.location.href = url;
@@ -112,7 +130,6 @@ export default function Subscription() {
             window.location.href = url;
           }
         } else {
-          // Direct approach for desktop - much faster
           window.open(url, '_blank');
         }
       }
@@ -121,43 +138,31 @@ export default function Subscription() {
     }
   };
 
-  const cancelSubscription = async () => {
-    if (!confirm('Are you sure you want to cancel your subscription? You will lose access to Pro features at the end of your billing period.')) {
-      return;
-    }
-    
-    try {
-      const { data: session } = await supabase.auth.getSession();
-      const accessToken = session.session?.access_token;
-      
-      const { data, error } = await supabase.functions.invoke("customer-portal", {
-        body: { source: 'dashboard-subscription' },
-        headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
-      });
-      
-      if (error) throw error;
-      const url = (data as any)?.url;
-      
-      if (url) {
-        if (isMobile) {
-          // Use placeholder window approach for mobile to avoid popup blockers
-          const placeholder = window.open('', '_blank');
-          if (placeholder && typeof placeholder.location !== 'undefined') {
-            placeholder.location.href = url;
-          } else {
-            window.location.href = url;
-          }
-        } else {
-          // Direct approach for desktop - much faster
-          window.open(url, '_blank');
-        }
-      }
-    } catch (e: any) {
-      toast.error(e.message || "Failed to open billing portal");
-    }
+  const formatPrice = (cents: number): string => {
+    return `$${(cents / 100).toFixed(0)}`;
   };
 
-  const proActive = useMemo(() => subInfo?.subscribed && subInfo.subscription_tier === "JumpinAI Pro", [subInfo]);
+  const getPlanIcon = (planName: string) => {
+    const name = planName.toLowerCase();
+    if (name.includes('free')) return Zap;
+    if (name.includes('starter')) return Star;
+    if (name.includes('pro')) return Crown;
+    if (name.includes('growth')) return Rocket;
+    return Zap;
+  };
+
+  const getPlanBadge = (planName: string) => {
+    const name = planName.toLowerCase();
+    if (name.includes('pro')) return { text: "Most Popular", color: "bg-primary text-primary-foreground" };
+    if (name.includes('growth')) return { text: "Best Value", color: "bg-gradient-to-r from-purple-500 to-pink-500 text-white" };
+    return null;
+  };
+
+  const isCurrentPlan = (planName: string) => {
+    if (!subInfo) return false;
+    if (!subInfo.subscribed && planName.toLowerCase().includes('free')) return true;
+    return subInfo.subscription_tier === planName;
+  };
 
   if (loading) {
     return <div className="animate-fade-in">Loading...</div>;
@@ -167,161 +172,312 @@ export default function Subscription() {
     <div className="animate-fade-in space-y-6">
       {/* Header */}
       <header>
-        <div className="rounded-2xl border border-border glass p-6 md:p-8">
+        <div className="rounded-2xl border border-border glass p-6 md:p-8 shadow-modern">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
-              <h1 className="text-3xl md:text-4xl font-bold flex items-center gap-3">
-                <CreditCard className="h-7 w-7 text-primary" />
-                Subscription
+              <h1 className="text-3xl md:text-4xl font-bold flex items-center gap-3 gradient-text-primary">
+                <CreditCard className="h-7 w-7" />
+                Subscription & Credits
               </h1>
               <p className="text-muted-foreground mt-2">{email}</p>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               {subInfo?.subscribed ? (
-                <Badge className="bg-primary/10 text-primary">{subInfo.subscription_tier || 'Pro'} Active</Badge>
+                <Badge className="bg-primary/10 text-primary border-primary/20 text-sm px-3 py-1">
+                  {subInfo.subscription_tier || 'Pro Plan'}
+                </Badge>
               ) : (
-                <Badge variant="secondary">Free plan</Badge>
+                <Badge variant="secondary" className="border-muted text-sm px-3 py-1">
+                  Free Plan
+                </Badge>
               )}
             </div>
           </div>
         </div>
       </header>
 
-      {/* Current Subscription Overview */}
-      <Card>
+      {/* Credits Balance Card */}
+      <Card className="glass border-primary/20 shadow-modern">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2"><Crown className="h-5 w-5 text-primary" /> Current Subscription</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            <Zap className="h-5 w-5 text-primary" />
+            Your Credits Balance
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-4xl font-bold gradient-text-primary">
+                {creditsLoading ? "..." : credits?.credits_balance || 0}
+              </div>
+              <p className="text-sm text-muted-foreground mt-1">
+                Available credits for generating Jumps
+              </p>
+            </div>
+            <Button variant="outline" onClick={fetchCredits} size="sm">
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Refresh
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Current Subscription Overview */}
+      <Card className="glass shadow-modern">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Crown className="h-5 w-5 text-primary" />
+            Current Subscription Status
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-muted-foreground">
             {subInfo?.subscribed
-              ? `You're on ${subInfo.subscription_tier || 'JumpinAI Pro'}. Next renewal: ${subInfo.subscription_end ? new Date(subInfo.subscription_end).toLocaleString() : '—'}`
-              : 'You are on the Free plan. Upgrade to JumpinAI Pro to unlock all blueprints and workflows.'}
+              ? `You're currently on ${subInfo.subscription_tier || 'Pro Plan'}. Your subscription ${subInfo.subscription_end ? `renews on ${new Date(subInfo.subscription_end).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}` : 'is active'}.`
+              : 'You are on the Free Plan. Upgrade to a paid plan to receive monthly credits and access advanced features.'}
           </p>
+          {subInfo?.subscribed && (
+            <div className="flex items-center gap-2 p-3 bg-primary/5 rounded-lg border border-primary/10">
+              <Sparkles className="h-4 w-4 text-primary" />
+              <p className="text-sm text-foreground">
+                Monthly credits automatically renew with your subscription
+              </p>
+            </div>
+          )}
         </CardContent>
         <CardFooter className="flex flex-wrap gap-3">
-          {!subInfo?.subscribed ? (
-            <Button onClick={subscribe} className="hover-scale">
-              <Crown className="mr-2 h-4 w-4" /> Get JumpinAI Pro
-            </Button>
-          ) : (
+          {subInfo?.subscribed ? (
             <>
-              <Button variant="secondary" onClick={manage} className="hover-scale">
-                <ExternalLink className="mr-2 h-4 w-4" /> Manage billing
+              <Button variant="default" onClick={manage}>
+                <ExternalLink className="mr-2 h-4 w-4" />
+                Manage Billing
               </Button>
-              <Button variant="outline" onClick={handleRefreshSubscription} className="hover-scale">
-                <RefreshCw className="mr-2 h-4 w-4" /> Refresh status
-              </Button>
-              <Button variant="destructive" onClick={cancelSubscription} className="hover-scale">
-                <AlertTriangle className="mr-2 h-4 w-4" /> Cancel subscription
+              <Button variant="outline" onClick={handleRefreshSubscription}>
+                <RefreshCw className="mr-2 h-4 w-4" />
+                Refresh Status
               </Button>
             </>
+          ) : (
+            <p className="text-sm text-muted-foreground">
+              Choose a subscription plan below to get started with monthly credits.
+            </p>
           )}
         </CardFooter>
       </Card>
 
-      {/* Subscription Plans */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
-        {/* Free Plan */}
-        <Card className="relative h-full border hover:shadow-md transition-shadow duration-200">
-          <CardHeader>
-            <div className="text-center space-y-2">
-              <CardTitle className="text-xl font-semibold">Free Plan</CardTitle>
-              <div className="text-2xl font-bold">$0</div>
-              <p className="text-sm text-muted-foreground">per month</p>
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <ul className="space-y-3 list-disc list-inside marker:text-foreground">
-              {planFeatures.free.map((feature, index) => (
-                <li key={index} className="text-sm text-foreground">
-                  {feature}
-                </li>
-              ))}
-            </ul>
-          </CardContent>
-          <CardFooter className="mt-auto">
-            <div className="w-full text-center">
-              <div className="text-sm text-muted-foreground">Currently active</div>
-            </div>
-          </CardFooter>
-        </Card>
+      <Separator className="my-8" />
 
-        {/* Pro Plan */}
-        <Card className={`relative h-full transition-all duration-200 ${subInfo?.subscribed ? 'ring-2 ring-primary/30 border-primary/50' : 'border-primary/30 hover:border-primary/50 hover:shadow-lg'}`}>
-          {subInfo?.subscribed && (
-            <div className="absolute -top-2 left-1/2 transform -translate-x-1/2">
-              <Badge className="bg-primary text-primary-foreground">Your Plan</Badge>
-            </div>
-          )}
-          {!subInfo?.subscribed && (
-            <div className="absolute -top-2 left-1/2 transform -translate-x-1/2">
-              <Badge className="bg-primary text-primary-foreground">Most Popular</Badge>
-            </div>
-          )}
-          <CardHeader>
-            <div className="text-center space-y-2">
-              <CardTitle className="text-xl font-semibold text-primary">JumpinAI Pro</CardTitle>
-              <div className="text-2xl font-bold text-primary">$50</div>
-              <p className="text-sm text-muted-foreground">per month</p>
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <ul className="space-y-3 list-disc list-inside marker:text-primary">
-              {planFeatures.pro.map((feature, index) => (
-                <li key={index} className="text-sm text-foreground">
-                  {feature}
-                </li>
-              ))}
-            </ul>
-          </CardContent>
-          <CardFooter className="mt-auto space-y-3">
-            {!subInfo?.subscribed ? (
-              <div className="w-full space-y-3 text-center">
-                <Button 
-                  onClick={subscribe} 
-                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
-                >
-                  <Crown className="mr-2 h-4 w-4" /> 
-                  Upgrade to Pro
-                </Button>
-                <div className="text-xs text-muted-foreground">
-                  Cancel anytime
-                </div>
-              </div>
-            ) : (
-              <div className="space-y-2 w-full">
-                <Button 
-                  variant="secondary" 
-                  onClick={manage} 
-                  className="w-full"
-                >
-                  <ExternalLink className="mr-2 h-4 w-4" /> 
-                  Manage Billing
-                </Button>
-                <div className="flex gap-2">
-                  <Button 
-                    variant="outline" 
-                    onClick={handleRefreshSubscription} 
-                    className="flex-1 text-xs"
-                  >
-                    <RefreshCw className="mr-1 h-3 w-3" /> 
-                    Refresh
-                  </Button>
-                  <Button 
-                    variant="destructive" 
-                    onClick={cancelSubscription} 
-                    className="flex-1 text-xs"
-                  >
-                    <AlertTriangle className="mr-1 h-3 w-3" /> 
-                    Cancel
-                  </Button>
-                </div>
-              </div>
-            )}
-          </CardFooter>
-        </Card>
+      {/* Subscription Plans */}
+      <div>
+        <div className="text-center mb-8">
+          <h2 className="text-2xl sm:text-3xl font-bold gradient-text-primary mb-3">
+            Subscription Plans
+          </h2>
+          <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto">
+            Get monthly credits that roll over, plus access to all our resources and tools. 
+            <br />
+            <span className="font-semibold text-foreground">1 credit = 1 comprehensive Jump generation</span>
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+          {subscriptionPlans.map((plan) => {
+            const PlanIcon = getPlanIcon(plan.name);
+            const badge = getPlanBadge(plan.name);
+            const isCurrent = isCurrentPlan(plan.name);
+            const isFree = plan.price_cents === 0;
+            const isLoading = planLoading[plan.id];
+
+            return (
+              <Card 
+                key={plan.id} 
+                className={`relative flex flex-col glass transition-all duration-300 shadow-modern hover:shadow-modern-lg rounded-2xl ${
+                  isCurrent ? 'ring-2 ring-primary/40 border-primary/60' : 'border-border/40'
+                }`}
+              >
+                {badge && !isCurrent && (
+                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
+                    <Badge className={`${badge.color} shadow-modern rounded-full px-3 py-1 text-xs`}>
+                      {badge.text}
+                    </Badge>
+                  </div>
+                )}
+                {isCurrent && (
+                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
+                    <Badge className="bg-primary text-primary-foreground shadow-modern rounded-full px-3 py-1 text-xs">
+                      Current Plan
+                    </Badge>
+                  </div>
+                )}
+                
+                <CardHeader className="text-center pb-4">
+                  <div className="mx-auto mb-3 p-3 rounded-full bg-primary/10 text-primary w-fit">
+                    <PlanIcon className="w-5 h-5" />
+                  </div>
+                  <CardTitle className="text-lg font-bold">{plan.name}</CardTitle>
+                  <CardDescription className="text-xs min-h-[40px]">{plan.description}</CardDescription>
+                  <div className="mt-3">
+                    <div className="text-3xl font-bold gradient-text-primary">
+                      {isFree ? 'Free' : formatPrice(plan.price_cents)}
+                      {!isFree && <span className="text-sm font-normal text-muted-foreground">/mo</span>}
+                    </div>
+                    <div className="text-sm text-muted-foreground mt-1">
+                      {plan.credits_per_month} credits {!isFree && 'monthly'}
+                    </div>
+                  </div>
+                </CardHeader>
+                
+                <CardContent className="flex-1">
+                  <ul className="space-y-2">
+                    {plan.features.map((feature, index) => (
+                      <li key={index} className="flex items-start gap-2 text-xs">
+                        <Zap className="w-3 h-3 text-primary mt-0.5 flex-shrink-0" />
+                        <span className="text-foreground/90">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+                
+                <CardFooter className="mt-auto pt-4">
+                  {isCurrent ? (
+                    <Button variant="outline" className="w-full" disabled>
+                      Current Plan
+                    </Button>
+                  ) : isFree ? (
+                    <Button variant="outline" className="w-full" disabled>
+                      Free Forever
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={() => handleSubscribe(plan.id)}
+                      disabled={isLoading}
+                      className="w-full bg-foreground hover:bg-foreground/90 text-background"
+                    >
+                      {isLoading ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-background border-t-transparent rounded-full animate-spin mr-2" />
+                          Processing...
+                        </>
+                      ) : (
+                        <>
+                          Upgrade Now
+                          <ArrowRight className="w-4 h-4 ml-2" />
+                        </>
+                      )}
+                    </Button>
+                  )}
+                </CardFooter>
+              </Card>
+            );
+          })}
+        </div>
       </div>
+
+      <Separator className="my-8" />
+
+      {/* Credit Packages */}
+      <div>
+        <div className="text-center mb-8">
+          <h2 className="text-2xl sm:text-3xl font-bold gradient-text-primary mb-3">
+            Need More Credits?
+          </h2>
+          <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto">
+            Purchase additional credits anytime to supplement your subscription or as a one-time boost.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
+          {creditPackages.map((pkg) => {
+            const isLoading = packageLoading[pkg.id];
+            const pricePerCredit = pkg.price_cents / pkg.credits;
+            const isValue = pricePerCredit <= 30;
+
+            return (
+              <Card 
+                key={pkg.id} 
+                className="relative flex flex-col glass transition-all duration-300 shadow-modern hover:shadow-modern-lg rounded-2xl border-border/40"
+              >
+                {isValue && (
+                  <div className="absolute -top-2 -right-2 z-10">
+                    <Badge variant="secondary" className="text-xs shadow-modern rounded-full px-2 py-1">
+                      <Sparkles className="w-3 h-3 mr-1" />
+                      Best Value
+                    </Badge>
+                  </div>
+                )}
+                
+                <CardHeader className="text-center pb-4">
+                  <CardTitle className="text-base font-semibold">{pkg.name}</CardTitle>
+                  <div className="mt-3">
+                    <div className="text-3xl font-bold gradient-text-primary">
+                      {formatPrice(pkg.price_cents)}
+                    </div>
+                    <div className="text-base font-medium text-muted-foreground mt-1">
+                      {pkg.credits} credits
+                    </div>
+                    <div className="text-xs text-muted-foreground mt-1">
+                      ~{formatPrice(Math.round(pricePerCredit))} per credit
+                    </div>
+                  </div>
+                </CardHeader>
+                
+                <CardContent className="flex-1 flex flex-col justify-end">
+                  <Button 
+                    onClick={() => handleBuyCredits(pkg.id)}
+                    disabled={isLoading}
+                    className="w-full bg-foreground hover:bg-foreground/90 text-background"
+                  >
+                    {isLoading ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-background border-t-transparent rounded-full animate-spin mr-2" />
+                        Processing...
+                      </>
+                    ) : (
+                      <>
+                        <Zap className="w-4 h-4 mr-2" />
+                        Buy Now
+                      </>
+                    )}
+                  </Button>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Info Section */}
+      <Card className="glass border-border/40 shadow-modern">
+        <CardContent className="p-6">
+          <div className="space-y-4">
+            <div className="flex items-start gap-3">
+              <div className="p-2 rounded-lg bg-primary/10">
+                <Sparkles className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-foreground mb-1">How Credits Work</h3>
+                <p className="text-sm text-muted-foreground">
+                  Each credit allows you to generate one comprehensive Jump in our AI Studio. 
+                  Subscription credits roll over monthly, and purchased credits never expire.
+                </p>
+              </div>
+            </div>
+            <Separator />
+            <div className="flex items-start gap-3">
+              <div className="p-2 rounded-lg bg-primary/10">
+                <Crown className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-foreground mb-1">Subscription Benefits</h3>
+                <p className="text-sm text-muted-foreground">
+                  Subscribers get monthly credits that roll over, access to premium resources, 
+                  priority support, and early access to new features. Cancel anytime.
+                </p>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

@@ -122,20 +122,28 @@ const DashboardHome = () => {
   return (
     <div className="space-y-4 sm:space-y-6 px-2 sm:px-0">
       {/* Welcome Header - Mobile Optimized */}
-      <div className="glass rounded-xl p-4 sm:p-6 text-center animate-fade-in-down shadow-modern">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-center gap-2 sm:gap-3 mb-3">
-          <h1 className="text-xl sm:text-3xl font-bold gradient-text-primary text-center">
-            Welcome{user?.display_name ? `, ${user.display_name}` : ""}, to JumpinAI!
-          </h1>
-          {subscription && (
-            <Badge className={`${subscription.subscribed ? "bg-primary/10 text-primary border-primary/20" : "bg-muted text-muted-foreground"} text-xs sm:text-sm`}>
-              {subscription.subscribed ? subscription.subscription_tier || 'Pro' : 'Free'}
-            </Badge>
-          )}
+      <div className="glass rounded-xl border border-border/40 shadow-modern hover:shadow-modern-lg transition-all duration-300 animate-fade-in-down">
+        <div className="p-4 sm:p-6">
+          <div className="flex flex-col items-center gap-3 mb-3">
+            <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3">
+              <h1 className="text-lg sm:text-2xl md:text-3xl font-bold gradient-text-primary text-center leading-tight">
+                Welcome{user?.display_name ? `, ${user.display_name}` : ""}!
+              </h1>
+              {subscription && (
+                <Badge className={`${
+                  subscription.subscribed 
+                    ? "bg-primary/10 text-primary border-primary/20" 
+                    : "bg-muted text-muted-foreground border-border"
+                } text-xs sm:text-sm px-3 py-1 font-medium shadow-sm`}>
+                  {subscription.subscribed ? subscription.subscription_tier || 'Pro Plan' : 'Free Plan'}
+                </Badge>
+              )}
+            </div>
+          </div>
+          <p className="text-xs sm:text-sm md:text-base text-muted-foreground text-center max-w-2xl mx-auto leading-relaxed">
+            Your AI-powered dashboard is ready. Explore your tools, manage your projects, and accelerate your AI journey.
+          </p>
         </div>
-        <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto">
-          Your AI-powered dashboard is ready. Explore your tools, manage your projects, and accelerate your AI journey.
-        </p>
       </div>
 
       {/* Dashboard Stats */}
