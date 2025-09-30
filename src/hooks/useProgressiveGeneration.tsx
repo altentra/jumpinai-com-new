@@ -289,9 +289,9 @@ export const useProgressiveGeneration = () => {
             console.log('Processing naming step data:', stepData);
             jumpName = stepData.jumpName || 'AI Transformation Journey';
             
-            // Display name immediately
+            // Display name immediately WITHOUT Jump# prefix
             progressiveResult.jumpName = jumpName;
-            progressiveResult.title = jumpName; // Show without number initially
+            progressiveResult.title = jumpName; // Show name only, wait for jump_created event for full title
             
             progressiveResult.processing_status = {
               stage: 'Generating',
@@ -303,30 +303,22 @@ export const useProgressiveGeneration = () => {
             setProcessingStatus(progressiveResult.processing_status);
             setResult({ ...progressiveResult });
             
+          } else if (type === 'jump_created') {
+            // IMMEDIATE UPDATE: Jump created with Jump# formatting right after naming
+            console.log('Jump created callback:', stepData);
+            progressiveResult.jumpId = stepData.jumpId;
+            progressiveResult.jumpNumber = stepData.jumpNumber;
+            progressiveResult.fullTitle = stepData.fullTitle;
+            progressiveResult.title = stepData.fullTitle; // Update with full "Jump #X: Name"
+            
+            // Update UI immediately
+            setResult({ ...progressiveResult });
+            
           } else if (type === 'overview') {
             // STEP 2: Overview (19%)
             console.log('Processing overview step data:', stepData);
             
-            // Generate jump number and full title
-            let jumpNumber = 1;
-            let fullTitle = jumpName;
-            
-            if (userId) {
-              // Get jump number and update title with "Jump #X:"
-              import('@/utils/jumpNamingService').then(async ({ jumpNamingService }) => {
-                jumpNumber = await jumpNamingService.getNextJumpNumber(userId);
-                fullTitle = `Jump #${jumpNumber}: ${jumpName}`;
-                
-                // Update with proper "Jump #X:" title
-                progressiveResult.jumpNumber = jumpNumber;
-                progressiveResult.fullTitle = fullTitle;
-                progressiveResult.title = fullTitle;
-                setResult({ ...progressiveResult });
-              });
-            }
-            
-            // Extract overview data
-            progressiveResult.title = fullTitle || jumpName;
+            // Extract overview data (Jump# and title already set in jump_created event)
             progressiveResult.full_content = stepData.executiveSummary || '';
             progressiveResult.structured_plan = stepData;
             progressiveResult.comprehensive_plan = stepData;
@@ -443,25 +435,15 @@ export const useProgressiveGeneration = () => {
             progressiveResult.stepTimes = { ...progressiveResult.stepTimes, strategies: stepDuration };
             setProcessingStatus(progressiveResult.processing_status);
             setResult({ ...progressiveResult });
-          } else if (type === 'jump_created') {
-            // Update with jumpId and title info after save completes
-            console.log('Jump created callback:', stepData);
+          } else if (type === 'complete') {
+            // Generation complete
+            console.log('All steps complete');
             progressiveResult.jumpId = stepData.jumpId;
             progressiveResult.jumpNumber = stepData.jumpNumber;
             progressiveResult.fullTitle = stepData.fullTitle;
             progressiveResult.title = stepData.fullTitle;
             setResult({ ...progressiveResult });
             
-          } else if (type === 'complete') {
-            // Final completion
-            progressiveResult.processing_status = {
-              stage: 'Complete',
-              progress: 100,
-              currentTask: 'Jump generation complete!',
-              isComplete: true
-            };
-            setProcessingStatus(progressiveResult.processing_status);
-            setResult({ ...progressiveResult });
           }
         }
       );

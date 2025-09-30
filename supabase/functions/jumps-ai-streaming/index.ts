@@ -36,13 +36,24 @@ serve(async (req) => {
         
         // Helper to safely send SSE event
         const sendEvent = (step: number, type: string, data: any) => {
-          if (isClosed) return;
+          if (isClosed) {
+            console.log(`Skipping event (stream closed): step ${step}, type ${type}`);
+            return;
+          }
           try {
             const message = `data: ${JSON.stringify({ step, type, data })}\n\n`;
             controller.enqueue(encoder.encode(message));
+            console.log(`✓ Sent event: step ${step}, type ${type}`);
           } catch (error) {
             console.error('Error sending event:', error);
-            isClosed = true;
+            if (!isClosed) {
+              isClosed = true;
+              try {
+                controller.close();
+              } catch (e) {
+                // Already closed
+              }
+            }
           }
         };
 
@@ -205,7 +216,7 @@ Return ONLY valid JSON:
 {
   "jumpName": "Inspiring 3-5 word name"
 }`,
-        expectedTokens: 100
+        expectedTokens: 150
       };
     
     case 2:
@@ -239,7 +250,7 @@ Return ONLY valid JSON in this exact format:
   "successFactors": ["Factor 1", "Factor 2"],
   "riskMitigation": ["Strategy 1", "Strategy 2"]
 }`,
-        expectedTokens: 3000
+        expectedTokens: 4000
       };
 
     case 3:
@@ -254,7 +265,7 @@ ${overviewContent}
 Create a detailed implementation plan with specific actions, timelines, and success metrics.
 
 Return ONLY valid JSON with structured plan data.`,
-        expectedTokens: 2500
+        expectedTokens: 4000
       };
 
     case 4:
@@ -285,7 +296,7 @@ Recommend 4-6 specific AI tools. Return ONLY valid JSON:
     }
   ]
 }`,
-        expectedTokens: 3500
+        expectedTokens: 5000
       };
 
     case 5:
@@ -313,7 +324,7 @@ Create 4-6 ready-to-use AI prompts. Return ONLY valid JSON:
     }
   ]
 }`,
-        expectedTokens: 4000
+        expectedTokens: 6000
       };
 
     case 6:
@@ -353,7 +364,7 @@ Design 3-5 AI-powered workflows. Return ONLY valid JSON:
     }
   ]
 }`,
-        expectedTokens: 4500
+        expectedTokens: 6500
       };
 
     case 7:
@@ -396,7 +407,7 @@ Create 3-5 implementation blueprints. Return ONLY valid JSON:
     }
   ]
 }`,
-        expectedTokens: 5000
+        expectedTokens: 7000
       };
 
     case 8:
@@ -439,7 +450,7 @@ Develop 3-5 strategic initiatives. Return ONLY valid JSON:
     }
   ]
 }`,
-        expectedTokens: 5000
+        expectedTokens: 7000
       };
 
     default:

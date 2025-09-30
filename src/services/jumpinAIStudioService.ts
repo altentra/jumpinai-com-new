@@ -144,9 +144,51 @@ export const jumpinAIStudioService = {
                   console.log('Processing naming data:', data);
                   result.jumpName = data.jumpName || 'AI Transformation Journey';
                   
-                  // Call progress callback IMMEDIATELY
+                  // Call progress callback IMMEDIATELY with just the name
                   if (onProgress) {
                     onProgress(step, type, data);
+                  }
+                  
+                  // Save jump with name and generate Jump# immediately (non-blocking)
+                  if (userId) {
+                    (async () => {
+                      try {
+                        const jumpNumber = await jumpNamingService.getNextJumpNumber(userId);
+                        const fullTitle = `Jump #${jumpNumber}: ${result.jumpName}`;
+                        result.jumpNumber = jumpNumber;
+                        result.fullTitle = fullTitle;
+                        
+                        const { data: savedJump, error } = await supabase
+                          .from('user_jumps')
+                          .insert({
+                            user_id: userId,
+                            title: fullTitle,
+                            summary: `AI Transformation: ${result.jumpName}`,
+                            full_content: JSON.stringify({ jumpName: result.jumpName }),
+                            completion_percentage: 5,
+                            status: 'generating'
+                          })
+                          .select()
+                          .single();
+
+                        if (!error && savedJump) {
+                          jumpId = savedJump.id;
+                          result.jumpId = jumpId;
+                          console.log('Jump created with ID:', jumpId, 'Title:', fullTitle);
+                          
+                          // Fire jump_created callback with Jump# immediately
+                          if (onProgress) {
+                            onProgress(step, 'jump_created', { 
+                              jumpId, 
+                              jumpNumber, 
+                              fullTitle 
+                            });
+                          }
+                        }
+                      } catch (error) {
+                        console.error('Error creating jump in naming step:', error);
+                      }
+                    })();
                   }
                 } else if (type === 'overview') {
                   // STEP 2: Overview (19%)
@@ -160,42 +202,25 @@ export const jumpinAIStudioService = {
                     onProgress(step, type, data);
                   }
                   
-                  // Save to database in background (non-blocking)
-                  if (userId) {
+                  // Update jump with overview data in background (non-blocking)
+                  if (userId && jumpId) {
                     (async () => {
-                      const jumpNumber = await jumpNamingService.getNextJumpNumber(userId);
-                      const fullTitle = `Jump #${jumpNumber}: ${result.jumpName}`;
-                      result.jumpNumber = jumpNumber;
-                      result.fullTitle = fullTitle;
-                      
-                      const { data: savedJump, error } = await supabase
-                        .from('user_jumps')
-                        .insert({
-                          user_id: userId,
-                          title: fullTitle,
-                          summary: result.fullContent.slice(0, 500),
-                          full_content: JSON.stringify(data),
-                          structured_plan: data,
-                          comprehensive_plan: data,
-                          completion_percentage: 15,
-                          status: 'active'
-                        })
-                        .select()
-                        .single();
-
-                      if (!error && savedJump) {
-                        jumpId = savedJump.id;
-                        result.jumpId = jumpId;
-                        console.log('Jump created with ID:', jumpId, 'Title:', fullTitle);
+                      try {
+                        await supabase
+                          .from('user_jumps')
+                          .update({
+                            summary: result.fullContent.slice(0, 500),
+                            full_content: JSON.stringify(data),
+                            structured_plan: data,
+                            comprehensive_plan: data,
+                            completion_percentage: 19,
+                            status: 'active'
+                          })
+                          .eq('id', jumpId);
                         
-                        // Send update with jumpId and title
-                        if (onProgress) {
-                          onProgress(step, 'jump_created', { 
-                            jumpId, 
-                            jumpNumber, 
-                            fullTitle 
-                          });
-                        }
+                        console.log('Jump updated with overview data');
+                      } catch (error) {
+                        console.error('Error updating jump with overview:', error);
                       }
                     })();
                   }
