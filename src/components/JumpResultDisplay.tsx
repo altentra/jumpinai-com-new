@@ -108,39 +108,113 @@ const JumpResultDisplay: React.FC<JumpResultProps> = ({
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              {comprehensivePlan?.executive_summary && (
+              {comprehensivePlan?.executiveSummary && (
                 <div>
                    <h4 className="font-semibold mb-2 text-white drop-shadow-sm">Executive Summary</h4>
-                   <p className="text-white/90 drop-shadow-sm leading-relaxed">
-                     {comprehensivePlan.executive_summary}
+                   <p className="text-white/90 drop-shadow-sm leading-relaxed whitespace-pre-wrap">
+                     {comprehensivePlan.executiveSummary}
                    </p>
                 </div>
               )}
               
-              {comprehensivePlan?.key_objectives && (
-                <div>
-                   <h4 className="font-semibold mb-2 text-white drop-shadow-sm">Key Objectives</h4>
-                   <ul className="space-y-1">
-                     {comprehensivePlan.key_objectives.map((objective: string, index: number) => (
-                       <li key={index} className="flex items-start gap-2 text-white/90 drop-shadow-sm">
-                         <span className="text-primary mt-1">•</span>
-                         {objective}
-                       </li>
-                     ))}
-                   </ul>
+              {comprehensivePlan?.situationAnalysis && (
+                <div className="space-y-3">
+                   <h4 className="font-semibold mb-2 text-white drop-shadow-sm">Situation Analysis</h4>
+                   
+                   {comprehensivePlan.situationAnalysis.currentState && (
+                     <div>
+                       <h5 className="text-sm font-medium text-white/80 mb-1">Current State</h5>
+                       <p className="text-white/90 drop-shadow-sm text-sm">{comprehensivePlan.situationAnalysis.currentState}</p>
+                     </div>
+                   )}
+                   
+                   {comprehensivePlan.situationAnalysis.challenges && comprehensivePlan.situationAnalysis.challenges.length > 0 && (
+                     <div>
+                       <h5 className="text-sm font-medium text-white/80 mb-1">Challenges</h5>
+                       <ul className="space-y-1">
+                         {comprehensivePlan.situationAnalysis.challenges.map((challenge: string, index: number) => (
+                           <li key={index} className="flex items-start gap-2 text-white/90 drop-shadow-sm text-sm">
+                             <span className="text-red-400 mt-1">•</span>
+                             {challenge}
+                           </li>
+                         ))}
+                       </ul>
+                     </div>
+                   )}
+                   
+                   {comprehensivePlan.situationAnalysis.opportunities && comprehensivePlan.situationAnalysis.opportunities.length > 0 && (
+                     <div>
+                       <h5 className="text-sm font-medium text-white/80 mb-1">Opportunities</h5>
+                       <ul className="space-y-1">
+                         {comprehensivePlan.situationAnalysis.opportunities.map((opp: string, index: number) => (
+                           <li key={index} className="flex items-start gap-2 text-white/90 drop-shadow-sm text-sm">
+                             <span className="text-green-400 mt-1">•</span>
+                             {opp}
+                           </li>
+                         ))}
+                       </ul>
+                     </div>
+                   )}
                 </div>
               )}
 
-              {comprehensivePlan?.success_metrics && (
+              {comprehensivePlan?.strategicVision && (
                 <div>
-                  <h4 className="font-semibold mb-2 text-white drop-shadow-sm">Success Metrics</h4>
+                  <h4 className="font-semibold mb-2 text-white drop-shadow-sm">Strategic Vision</h4>
+                  <p className="text-white/90 drop-shadow-sm leading-relaxed">{comprehensivePlan.strategicVision}</p>
+                </div>
+              )}
+
+              {comprehensivePlan?.roadmap && (
+                <div>
+                  <h4 className="font-semibold mb-3 text-white drop-shadow-sm">Implementation Roadmap</h4>
+                  <div className="grid gap-3">
+                    {Object.entries(comprehensivePlan.roadmap).map(([key, phase]: [string, any]) => (
+                      <div key={key} className="p-3 glass rounded-lg border border-white/10">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Badge variant="outline" className="text-primary border-primary/30">{phase.name}</Badge>
+                          <span className="text-sm text-white/70">{phase.timeline}</span>
+                        </div>
+                        {phase.milestones && phase.milestones.length > 0 && (
+                          <ul className="space-y-1 mt-2">
+                            {phase.milestones.map((milestone: string, idx: number) => (
+                              <li key={idx} className="text-sm text-white/90 flex items-start gap-2">
+                                <CheckCircle className="w-3 h-3 text-green-400 mt-1 flex-shrink-0" />
+                                {milestone}
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {comprehensivePlan?.successFactors && comprehensivePlan.successFactors.length > 0 && (
+                <div>
+                  <h4 className="font-semibold mb-2 text-white drop-shadow-sm">Key Success Factors</h4>
                   <div className="flex flex-wrap gap-2">
-                    {comprehensivePlan.success_metrics.map((metric: string, index: number) => (
-                      <Badge key={index} variant="outline" className="text-primary border-primary/30">
-                        {metric}
+                    {comprehensivePlan.successFactors.map((factor: string, index: number) => (
+                      <Badge key={index} variant="outline" className="text-green-400 border-green-400/30">
+                        {factor}
                       </Badge>
                     ))}
                   </div>
+                </div>
+              )}
+
+              {comprehensivePlan?.riskMitigation && comprehensivePlan.riskMitigation.length > 0 && (
+                <div>
+                  <h4 className="font-semibold mb-2 text-white drop-shadow-sm">Risk Mitigation</h4>
+                  <ul className="space-y-1">
+                    {comprehensivePlan.riskMitigation.map((strategy: string, index: number) => (
+                      <li key={index} className="flex items-start gap-2 text-white/90 drop-shadow-sm text-sm">
+                        <span className="text-blue-400 mt-1">•</span>
+                        {strategy}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               )}
             </CardContent>
@@ -211,15 +285,15 @@ const JumpResultDisplay: React.FC<JumpResultProps> = ({
                 <div className="bg-black/20 p-4 rounded-lg">
                    <h5 className="font-medium mb-2 text-white drop-shadow-sm">Prompt:</h5>
                    <p className="text-sm text-white/90 drop-shadow-sm font-mono whitespace-pre-wrap">
-                     {prompt.prompt_text}
+                     {prompt.promptText || prompt.prompt_text}
                    </p>
                 </div>
                 
-                {prompt.ai_tools && (
+                {(prompt.aiTools || prompt.ai_tools) && (
                   <div>
                     <h5 className="font-medium mb-2 text-white drop-shadow-sm">Recommended AI Tools:</h5>
                     <div className="flex flex-wrap gap-2">
-                      {prompt.ai_tools.map((tool: string, toolIndex: number) => (
+                      {(prompt.aiTools || prompt.ai_tools).map((tool: string, toolIndex: number) => (
                         <Badge key={toolIndex} variant="outline" className="text-primary border-primary/30">
                           {tool}
                         </Badge>
@@ -255,39 +329,38 @@ const JumpResultDisplay: React.FC<JumpResultProps> = ({
                     )}
                   </div>
                   <div className="flex gap-2">
-                    <Badge className={getDifficultyColor(workflow.complexity_level)}>
-                      {workflow.complexity_level || 'Standard'}
+                    <Badge className={getDifficultyColor(workflow.complexityLevel || workflow.complexity_level)}>
+                      {workflow.complexityLevel || workflow.complexity_level || 'Standard'}
                     </Badge>
-                    {workflow.duration_estimate && (
+                    {(workflow.durationEstimate || workflow.duration_estimate) && (
                       <Badge variant="outline" className="text-blue-300 border-blue-300/30">
                         <Clock className="w-3 h-3 mr-1" />
-                        {workflow.duration_estimate}
+                        {workflow.durationEstimate || workflow.duration_estimate}
                       </Badge>
                     )}
                   </div>
                 </div>
               </CardHeader>
               <CardContent className="space-y-4">
-                {workflow.workflow_steps && (
+                {(workflow.workflowSteps || workflow.workflow_steps) && (
                   <div>
                     <h5 className="font-medium mb-3 text-white drop-shadow-sm">Workflow Steps:</h5>
                     <div className="space-y-3">
-                      {workflow.workflow_steps.map((step: any, stepIndex: number) => (
+                      {(workflow.workflowSteps || workflow.workflow_steps).map((step: any, stepIndex: number) => (
                         <div key={stepIndex} className="flex gap-3 p-3 glass rounded-lg border border-white/10">
                           <div className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-xs font-semibold text-primary">
-                            {step.step || stepIndex + 1}
+                            {step.stepNumber || step.step || stepIndex + 1}
                           </div>
                           <div className="flex-1 space-y-2">
                              <h6 className="font-medium text-white drop-shadow-sm">{step.title}</h6>
                              <p className="text-sm text-white/90 drop-shadow-sm">{step.description}</p>
-                            {step.tools_required && (
-                              <div className="flex flex-wrap gap-1">
-                                {step.tools_required.map((tool: string, toolIndex: number) => (
-                                <Badge key={toolIndex} variant="outline" className="text-xs">
-                                  {tool}
-                                </Badge>
-                                ))}
-                              </div>
+                            {step.aiTool && (
+                              <Badge variant="outline" className="text-xs text-primary border-primary/30">
+                                {step.aiTool}
+                              </Badge>
+                            )}
+                            {step.estimatedTime && (
+                              <span className="text-xs text-white/70">⏱️ {step.estimatedTime}</span>
                             )}
                           </div>
                         </div>
@@ -296,11 +369,11 @@ const JumpResultDisplay: React.FC<JumpResultProps> = ({
                   </div>
                 )}
 
-                {workflow.expected_outcomes && (
+                {(workflow.expectedOutcomes || workflow.expected_outcomes) && (
                   <div>
                     <h5 className="font-medium mb-2 text-white drop-shadow-sm">Expected Outcomes:</h5>
                     <ul className="space-y-1">
-                      {workflow.expected_outcomes.map((outcome: string, outcomeIndex: number) => (
+                      {(workflow.expectedOutcomes || workflow.expected_outcomes).map((outcome: string, outcomeIndex: number) => (
                         <li key={outcomeIndex} className="flex items-start gap-2 text-sm text-white/90 drop-shadow-sm">
                           <CheckCircle className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
                           {outcome}
@@ -330,20 +403,20 @@ const JumpResultDisplay: React.FC<JumpResultProps> = ({
                     )}
                   </div>
                   <div className="flex gap-2">
-                    <Badge className={getDifficultyColor(blueprint.difficulty_level)}>
-                      {blueprint.difficulty_level || 'Standard'}
+                    <Badge className={getDifficultyColor(blueprint.difficultyLevel || blueprint.difficulty_level)}>
+                      {blueprint.difficultyLevel || blueprint.difficulty_level || 'Standard'}
                     </Badge>
-                    {blueprint.implementation_time && (
+                    {(blueprint.implementationTime || blueprint.implementation_time) && (
                       <Badge variant="outline" className="text-blue-300 border-blue-300/30">
                         <Clock className="w-3 h-3 mr-1" />
-                        {blueprint.implementation_time}
+                        {blueprint.implementationTime || blueprint.implementation_time}
                       </Badge>
                     )}
                   </div>
                 </div>
               </CardHeader>
               <CardContent className="space-y-4">
-                {blueprint.blueprint_content && (
+                {(blueprint.blueprintContent || blueprint.blueprint_content) && (
                   <Collapsible 
                     open={expandedSections[`blueprint-${index}`]} 
                     onOpenChange={() => toggleSection(`blueprint-${index}`)}
@@ -357,30 +430,55 @@ const JumpResultDisplay: React.FC<JumpResultProps> = ({
                        )}
                     </CollapsibleTrigger>
                     <CollapsibleContent className="space-y-3 mt-3">
-                      {blueprint.blueprint_content.overview && (
+                      {(blueprint.blueprintContent || blueprint.blueprint_content)?.phases && (
                         <div>
-                           <h6 className="font-medium mb-2 text-white drop-shadow-sm">Overview:</h6>
-                           <p className="text-sm text-white/90 drop-shadow-sm">{blueprint.blueprint_content.overview}</p>
-                        </div>
-                      )}
-                      {blueprint.blueprint_content.implementation_steps && (
-                        <div>
-                           <h6 className="font-medium mb-2 text-white drop-shadow-sm">Implementation Steps:</h6>
-                           <ol className="space-y-1 text-sm text-white/90 drop-shadow-sm">
-                            {blueprint.blueprint_content.implementation_steps.map((step: string, stepIndex: number) => (
-                              <li key={stepIndex} className="flex gap-2">
-                                <span className="font-medium text-primary">{stepIndex + 1}.</span>
-                                {step}
-                              </li>
+                          <h6 className="font-medium mb-2 text-white drop-shadow-sm">Implementation Phases:</h6>
+                          <div className="space-y-3">
+                            {(blueprint.blueprintContent || blueprint.blueprint_content).phases.map((phase: any, phaseIdx: number) => (
+                              <div key={phaseIdx} className="p-3 bg-black/20 rounded-lg">
+                                <div className="flex items-center gap-2 mb-2">
+                                  <Badge variant="outline" className="text-primary border-primary/30">
+                                    Phase {phase.phase}
+                                  </Badge>
+                                  <span className="text-sm font-medium text-white">{phase.name}</span>
+                                  <span className="text-xs text-white/60">{phase.duration}</span>
+                                </div>
+                                {phase.objectives && phase.objectives.length > 0 && (
+                                  <div className="mb-2">
+                                    <span className="text-xs font-medium text-white/80">Objectives:</span>
+                                    <ul className="mt-1 space-y-1">
+                                      {phase.objectives.map((obj: string, idx: number) => (
+                                        <li key={idx} className="text-xs text-white/90 flex items-start gap-1">
+                                          <span className="text-green-400">•</span>
+                                          {obj}
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                )}
+                                {phase.tasks && phase.tasks.length > 0 && (
+                                  <div>
+                                    <span className="text-xs font-medium text-white/80">Tasks:</span>
+                                    <ul className="mt-1 space-y-1">
+                                      {phase.tasks.map((task: string, idx: number) => (
+                                        <li key={idx} className="text-xs text-white/80 flex items-start gap-1">
+                                          <span className="text-blue-400">→</span>
+                                          {task}
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                )}
+                              </div>
                             ))}
-                          </ol>
+                          </div>
                         </div>
                       )}
                     </CollapsibleContent>
                   </Collapsible>
                 )}
 
-                {blueprint.resources_needed && (
+                {(blueprint.resourcesNeeded || blueprint.resources_needed) && (
                   <div>
                     <h5 className="font-medium mb-2 text-white drop-shadow-sm">Resources Needed:</h5>
                     <div className="flex flex-wrap gap-2">
