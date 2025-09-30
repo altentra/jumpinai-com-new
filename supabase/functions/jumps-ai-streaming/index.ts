@@ -216,139 +216,185 @@ Return ONLY valid JSON:
 {
   "jumpName": "Inspiring 3-5 word name"
 }`,
-        expectedTokens: 1000
+        expectedTokens: 500
       };
     
     case 2:
       // STEP 2: Comprehensive overview and strategic plan
       return {
-        systemPrompt: `You are an AI transformation strategist. Create a comprehensive overview and strategic plan.`,
+        systemPrompt: `You are an AI transformation strategist. Create comprehensive, actionable plans.`,
         userPrompt: `${baseContext}
 
-Create a detailed AI transformation plan with:
-1. Executive Summary (2-3 paragraphs)
-2. Situation Analysis (current state, challenges, opportunities)
-3. Strategic Vision (what success looks like)
-4. Implementation Roadmap (phases, timeline, milestones)
-5. Key Success Factors
-6. Risk Mitigation Strategies
+Create a detailed AI transformation plan with these sections:
+1. Executive Summary (3 focused paragraphs about their situation and solution)
+2. Situation Analysis with currentState, 3 challenges, 3 opportunities
+3. Strategic Vision (clear description of success)
+4. 3-Phase Roadmap with timelines and 3 milestones per phase
+5. 3 Key Success Factors
+6. 3 Risk Mitigation Strategies
 
-Return ONLY valid JSON in this exact format:
+Return ONLY valid JSON:
 {
-  "executiveSummary": "2-3 paragraph summary",
+  "executiveSummary": "Comprehensive 3-paragraph summary",
   "situationAnalysis": {
-    "currentState": "Description of where they are now",
-    "challenges": ["Challenge 1", "Challenge 2"],
-    "opportunities": ["Opportunity 1", "Opportunity 2"]
+    "currentState": "Current situation",
+    "challenges": ["Challenge 1", "Challenge 2", "Challenge 3"],
+    "opportunities": ["Opportunity 1", "Opportunity 2", "Opportunity 3"]
   },
-  "strategicVision": "What success looks like",
+  "strategicVision": "Clear success description",
   "roadmap": {
-    "phase1": {"name": "Phase name", "timeline": "X weeks", "milestones": []},
-    "phase2": {"name": "Phase name", "timeline": "X weeks", "milestones": []},
-    "phase3": {"name": "Phase name", "timeline": "X weeks", "milestones": []}
+    "phase1": {"name": "Phase name", "timeline": "X weeks", "milestones": ["M1", "M2", "M3"]},
+    "phase2": {"name": "Phase name", "timeline": "X weeks", "milestones": ["M1", "M2", "M3"]},
+    "phase3": {"name": "Phase name", "timeline": "X weeks", "milestones": ["M1", "M2", "M3"]}
   },
-  "successFactors": ["Factor 1", "Factor 2"],
-  "riskMitigation": ["Strategy 1", "Strategy 2"]
+  "successFactors": ["Factor 1", "Factor 2", "Factor 3"],
+  "riskMitigation": ["Strategy 1", "Strategy 2", "Strategy 3"]
 }`,
-        expectedTokens: 10000
+        expectedTokens: 8000
       };
 
     case 3:
       // STEP 3: Detailed implementation plan
       return {
-        systemPrompt: `You are an AI implementation strategist. Create detailed action plans.`,
+        systemPrompt: `You are an AI implementation strategist. Create detailed, actionable plans.`,
         userPrompt: `${baseContext}
 
 Overview Context:
 ${overviewContent}
 
-Create a detailed implementation plan with specific actions, timelines, and success metrics.
+Create a comprehensive implementation plan with:
+1. 3 Implementation Phases (each with name, duration, objectives, and actions)
+2. Weekly breakdown for first phase
+3. Key milestones and deliverables
+4. Success metrics
 
-Return ONLY valid JSON with structured plan data.`,
-        expectedTokens: 10000
+Return ONLY valid JSON:
+{
+  "implementationPlan": {
+    "phases": [
+      {
+        "name": "Phase name",
+        "duration": "X weeks",
+        "objectives": ["Objective 1", "Objective 2"],
+        "actions": ["Action 1", "Action 2", "Action 3"],
+        "milestones": ["Milestone 1", "Milestone 2"]
+      }
+    ],
+    "weeklyBreakdown": {
+      "week1": {"focus": "Focus area", "tasks": ["Task 1", "Task 2"]},
+      "week2": {"focus": "Focus area", "tasks": ["Task 1", "Task 2"]}
+    },
+    "successMetrics": ["Metric 1", "Metric 2", "Metric 3"]
+  }
+}`,
+        expectedTokens: 8000
       };
 
     case 4:
       return {
-        systemPrompt: `You are an AI tools specialist. Recommend specific AI tools based on the overview.`,
+        systemPrompt: `You are an AI tools specialist. Recommend specific, actionable AI tools.`,
         userPrompt: `${baseContext}
 
 Overview Context:
 ${overviewContent}
 
-Recommend 4-6 specific AI tools. Return ONLY valid JSON:
+Recommend 4 specific AI tools tailored to their needs. Each tool must have:
+- Clear title and description (2 sentences max)
+- Category and type
+- 3 specific use cases
+- Practical setup instructions (concise)
+- 3 key features and 2 limitations
+- Difficulty, setup time, cost estimate
+
+Return ONLY valid JSON:
 {
   "tools": [
     {
       "title": "Tool name",
-      "description": "What it does",
+      "description": "What it does in 2 sentences",
       "category": "Category",
       "aiToolType": "Type",
-      "useCases": ["Use case 1", "Use case 2"],
-      "instructions": "How to use it",
-      "tags": ["tag1", "tag2"],
+      "useCases": ["Use case 1", "Use case 2", "Use case 3"],
+      "instructions": "Concise setup instructions",
+      "tags": ["tag1", "tag2", "tag3"],
       "difficultyLevel": "beginner|intermediate|advanced",
       "setupTime": "X minutes",
       "integrationComplexity": "low|medium|high",
       "costEstimate": "$X/month or free",
-      "features": ["Feature 1", "Feature 2"],
+      "features": ["Feature 1", "Feature 2", "Feature 3"],
       "limitations": ["Limitation 1", "Limitation 2"]
     }
   ]
 }`,
-        expectedTokens: 10000
+        expectedTokens: 8000
       };
 
     case 5:
       return {
-        systemPrompt: `You are an AI prompt engineering expert. Create powerful prompts.`,
+        systemPrompt: `You are an AI prompt engineering expert. Create powerful, ready-to-use prompts.`,
         userPrompt: `${baseContext}
 
 Overview Context:
 ${overviewContent}
 
-Create 4-6 ready-to-use AI prompts. Return ONLY valid JSON:
+Create 4 comprehensive, professional AI prompts tailored to their needs. Each prompt must:
+- Have clear title and description
+- Include complete, ready-to-use prompt text (detailed and specific)
+- List 2 compatible AI tools
+- Provide 3 specific use cases
+- Include practical instructions
+- Have difficulty and time estimate
+
+Return ONLY valid JSON:
 {
   "prompts": [
     {
       "title": "Prompt title",
-      "description": "What this prompt achieves",
-      "promptText": "The actual prompt text",
+      "description": "What this achieves",
+      "promptText": "Complete ready-to-use prompt text",
       "category": "Category",
       "aiTools": ["Tool 1", "Tool 2"],
-      "useCases": ["Use case 1", "Use case 2"],
-      "instructions": "How to use this prompt",
-      "tags": ["tag1", "tag2"],
+      "useCases": ["Use case 1", "Use case 2", "Use case 3"],
+      "instructions": "How to use this prompt effectively",
+      "tags": ["tag1", "tag2", "tag3"],
       "difficulty": "beginner|intermediate|advanced",
       "estimatedTime": "X minutes"
     }
   ]
 }`,
-        expectedTokens: 10000
+        expectedTokens: 8000
       };
 
     case 6:
       return {
-        systemPrompt: `You are a workflow optimization expert. Design AI-powered workflows.`,
+        systemPrompt: `You are a workflow optimization expert. Design comprehensive AI-powered workflows.`,
         userPrompt: `${baseContext}
 
 Overview Context:
 ${overviewContent}
 
-Design 3-5 AI-powered workflows. Return ONLY valid JSON:
+Design 4 detailed AI-powered workflows. Each must include:
+- Clear title and description
+- Category and complexity level
+- Duration estimate and prerequisites
+- 4-6 detailed workflow steps (each with title, description, tool, time, deliverable)
+- Expected outcomes
+- Practical instructions
+
+Return ONLY valid JSON:
 {
   "workflows": [
     {
       "title": "Workflow title",
-      "description": "What this workflow accomplishes",
+      "description": "What this accomplishes",
       "category": "Category",
       "aiTools": ["Tool 1", "Tool 2"],
       "durationEstimate": "X hours",
       "complexityLevel": "low|medium|high",
       "prerequisites": ["Prerequisite 1", "Prerequisite 2"],
-      "expectedOutcomes": ["Outcome 1", "Outcome 2"],
-      "instructions": "Detailed steps",
-      "tags": ["tag1", "tag2"],
+      "expectedOutcomes": ["Outcome 1", "Outcome 2", "Outcome 3"],
+      "instructions": "Detailed step-by-step instructions",
+      "tags": ["tag1", "tag2", "tag3"],
       "toolsNeeded": ["Tool 1", "Tool 2"],
       "skillLevel": "beginner|intermediate|advanced",
       "workflowSteps": [
@@ -364,32 +410,40 @@ Design 3-5 AI-powered workflows. Return ONLY valid JSON:
     }
   ]
 }`,
-        expectedTokens: 10000
+        expectedTokens: 8000
       };
 
     case 7:
       return {
-        systemPrompt: `You are an AI implementation architect. Create detailed blueprints.`,
+        systemPrompt: `You are an AI implementation architect. Create comprehensive, actionable blueprints.`,
         userPrompt: `${baseContext}
 
 Overview Context:
 ${overviewContent}
 
-Create 3-5 implementation blueprints. Return ONLY valid JSON:
+Create 4 detailed implementation blueprints. Each must include:
+- Clear title and description
+- Category and difficulty level
+- Implementation time and resources needed
+- 3 key deliverables
+- Detailed implementation instructions
+- Blueprint with 3 phases (each with objectives, tasks, milestones)
+
+Return ONLY valid JSON:
 {
   "blueprints": [
     {
       "title": "Blueprint title",
-      "description": "What this blueprint implements",
+      "description": "What this implements",
       "category": "Category",
       "aiTools": ["Tool 1", "Tool 2"],
       "implementationTime": "X weeks",
       "difficultyLevel": "beginner|intermediate|advanced",
       "resourcesNeeded": ["Resource 1", "Resource 2"],
-      "deliverables": ["Deliverable 1", "Deliverable 2"],
+      "deliverables": ["Deliverable 1", "Deliverable 2", "Deliverable 3"],
       "instructions": "Detailed implementation guide",
-      "tags": ["tag1", "tag2"],
-      "implementation": "Step-by-step implementation",
+      "tags": ["tag1", "tag2", "tag3"],
+      "implementation": "Step-by-step implementation details",
       "requirements": ["Requirement 1", "Requirement 2"],
       "toolsUsed": ["Tool 1", "Tool 2"],
       "blueprintContent": {
@@ -399,7 +453,7 @@ Create 3-5 implementation blueprints. Return ONLY valid JSON:
             "name": "Phase name",
             "duration": "X weeks",
             "objectives": ["Objective 1", "Objective 2"],
-            "tasks": ["Task 1", "Task 2"],
+            "tasks": ["Task 1", "Task 2", "Task 3"],
             "milestones": ["Milestone 1", "Milestone 2"]
           }
         ]
@@ -407,32 +461,41 @@ Create 3-5 implementation blueprints. Return ONLY valid JSON:
     }
   ]
 }`,
-        expectedTokens: 10000
+        expectedTokens: 8000
       };
 
     case 8:
       return {
-        systemPrompt: `You are a strategic AI advisor. Develop comprehensive strategies.`,
+        systemPrompt: `You are a strategic AI advisor. Develop comprehensive, actionable strategies.`,
         userPrompt: `${baseContext}
 
 Overview Context:
 ${overviewContent}
 
-Develop 3-5 strategic initiatives. Return ONLY valid JSON:
+Develop 4 strategic initiatives. Each must include:
+- Clear title and description
+- Category and priority level
+- Timeline and resource requirements
+- 3 success metrics and 3 key actions
+- 2 potential challenges with mitigation strategies
+- Execution instructions
+- Strategy framework with vision, objectives, and 2 initiatives
+
+Return ONLY valid JSON:
 {
   "strategies": [
     {
       "title": "Strategy title",
-      "description": "What this strategy achieves",
+      "description": "What this achieves",
       "category": "Category",
       "aiTools": ["Tool 1", "Tool 2"],
       "timeline": "X months",
-      "successMetrics": ["Metric 1", "Metric 2"],
-      "keyActions": ["Action 1", "Action 2"],
+      "successMetrics": ["Metric 1", "Metric 2", "Metric 3"],
+      "keyActions": ["Action 1", "Action 2", "Action 3"],
       "potentialChallenges": ["Challenge 1", "Challenge 2"],
       "mitigationStrategies": ["Strategy 1", "Strategy 2"],
-      "instructions": "How to execute",
-      "tags": ["tag1", "tag2"],
+      "instructions": "How to execute this strategy",
+      "tags": ["tag1", "tag2", "tag3"],
       "priorityLevel": "low|medium|high",
       "resourceRequirements": ["Resource 1", "Resource 2"],
       "strategyFramework": {
@@ -450,7 +513,7 @@ Develop 3-5 strategic initiatives. Return ONLY valid JSON:
     }
   ]
 }`,
-        expectedTokens: 10000
+        expectedTokens: 8000
       };
 
     default:
