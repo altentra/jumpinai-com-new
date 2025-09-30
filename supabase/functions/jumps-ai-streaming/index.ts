@@ -116,7 +116,7 @@ async function callXAI(
       'Content-Type': 'application/json',
     },
       body: JSON.stringify({
-        model: 'grok-3',
+        model: 'grok-4-fast-reasoning',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt }
