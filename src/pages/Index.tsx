@@ -374,259 +374,65 @@ const Index = () => {
             </p>
           </div>
 
-          {/* All 4 Subscription Plans */}
+          {/* All Subscription Plans - Dynamic from Database */}
           <div className="w-full overflow-x-auto pb-4">
             <div className="flex gap-4 sm:gap-6 min-w-max px-2 sm:px-4 md:px-0 md:justify-center md:flex-wrap md:max-w-7xl md:mx-auto pt-4">
-              {/* Free Plan */}
-              <div className="relative flex flex-col w-72 sm:w-56 md:w-64 lg:w-72 flex-shrink-0 min-h-[500px] glass hover:glass-dark transition-all duration-300 shadow-modern hover:shadow-modern-lg rounded-2xl border-0">
-                <div className="text-center pb-6 p-6">
-                  <h3 className="text-xl font-bold">Free Plan</h3>
-                  <p className="text-sm text-muted-foreground">Perfect for getting started with AI transformation</p>
-                  <div className="mt-4">
-                    <div className="text-3xl font-bold">Free</div>
-                    <div className="text-sm text-muted-foreground mt-1">5 credits</div>
-                  </div>
-                </div>
+              {subscriptionPlans.map((plan) => {
+                const loadingKey = plan.name.toLowerCase().replace(' plan', '').replace(' ', '_');
+                const isLoading = loadingSubscription[loadingKey];
+                const isFree = plan.price_cents === 0;
+                const isMostPopular = plan.name.toLowerCase().includes('pro');
+                const isBestValue = plan.name.toLowerCase().includes('growth');
                 
-                <div className="flex-1 flex flex-col justify-between p-6 pt-0">
-                  <ul className="space-y-2 mb-6">
-                    <li className="flex items-start gap-2 text-sm">
-                      <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                      <span>5 welcome credits</span>
-                    </li>
-                    <li className="flex items-start gap-2 text-sm">
-                      <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                      <span>Basic AI transformation plans</span>
-                    </li>
-                    <li className="flex items-start gap-2 text-sm">
-                      <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                      <span>Community support</span>
-                    </li>
-                    <li className="flex items-start gap-2 text-sm">
-                      <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                      <span>Access to free resources</span>
-                    </li>
-                  </ul>
-                  
-                  <div className="mt-auto">
-                    <div className="w-full modern-button shadow-modern border border-border bg-card hover:bg-accent hover:text-accent-foreground text-foreground px-4 py-2 rounded-lg font-semibold cursor-pointer text-center">
-                      Current Plan
+                return (
+                  <div key={plan.id} className={`relative flex flex-col w-72 sm:w-56 md:w-64 lg:w-72 flex-shrink-0 min-h-[500px] glass hover:glass-dark transition-all duration-300 shadow-modern hover:shadow-modern-lg rounded-2xl border-0 ${isMostPopular ? 'shadow-steel' : ''}`}>
+                    {(isMostPopular || isBestValue) && (
+                      <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
+                        <div className={`${isBestValue ? 'bg-gradient-to-r from-purple-500 to-pink-500' : 'bg-primary'} text-${isBestValue ? 'white' : 'primary-foreground'} shadow-modern rounded-full px-3 py-1 text-sm font-semibold`}>
+                          {isBestValue ? 'Best Value' : 'Most Popular'}
+                        </div>
+                      </div>
+                    )}
+                    
+                    <div className="text-center pb-6 p-6">
+                      <h3 className="text-xl font-bold">{plan.name}</h3>
+                      <p className="text-sm text-muted-foreground">{plan.description}</p>
+                      <div className="mt-4">
+                        <div className="text-3xl font-bold">
+                          {isFree ? 'Free' : `$${(plan.price_cents / 100).toFixed(0)}`}
+                          {!isFree && <span className="text-base font-normal text-muted-foreground">/month</span>}
+                        </div>
+                        <div className="text-sm text-muted-foreground mt-1">
+                          {plan.credits_per_month} credits {!isFree && 'monthly'}
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex-1 flex flex-col justify-between p-6 pt-0">
+                      <ul className="space-y-2 mb-6">
+                        {plan.features.map((feature, index) => (
+                          <li key={index} className="flex items-start gap-2 text-sm">
+                            <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span>{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      
+                      <div className="mt-auto">
+                        <button 
+                          onClick={() => isFree ? null : handleSubscribe(plan.name)}
+                          disabled={isLoading || isFree}
+                          className={`w-full modern-button shadow-modern ${isFree ? 'border border-border bg-card hover:bg-accent hover:text-accent-foreground text-foreground' : 'bg-primary hover:bg-primary/90 text-primary-foreground'} px-4 py-2 rounded-lg font-semibold cursor-pointer text-center transition-colors disabled:opacity-50`}
+                        >
+                          {isLoading ? 'Processing...' : isFree ? 'Current Plan' : 'Get Started'}
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
-
-              {/* Starter Plan */}
-              <div className="relative flex flex-col w-72 sm:w-56 md:w-64 lg:w-72 flex-shrink-0 min-h-[500px] glass hover:glass-dark transition-all duration-300 shadow-modern hover:shadow-modern-lg rounded-2xl border-0">
-                <div className="text-center pb-6 p-6">
-                  <h3 className="text-xl font-bold">Starter Plan</h3>
-                  <p className="text-sm text-muted-foreground">Ideal for individuals exploring AI solutions</p>
-                  <div className="mt-4">
-                    <div className="text-3xl font-bold">
-                      $15
-                      <span className="text-base font-normal text-muted-foreground">/month</span>
-                    </div>
-                    <div className="text-sm text-muted-foreground mt-1">40 credits monthly</div>
-                  </div>
-                </div>
-                
-                <div className="flex-1 flex flex-col justify-between p-6 pt-0">
-                  <ul className="space-y-2 mb-6">
-                    <li className="flex items-start gap-2 text-sm">
-                      <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                      <span>40 monthly credits</span>
-                    </li>
-                    <li className="flex items-start gap-2 text-sm">
-                      <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                      <span>Priority AI generation</span>
-                    </li>
-                    <li className="flex items-start gap-2 text-sm">
-                      <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                      <span>Email support</span>
-                    </li>
-                    <li className="flex items-start gap-2 text-sm">
-                      <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                      <span>Access to all guides & resources</span>
-                    </li>
-                    <li className="flex items-start gap-2 text-sm">
-                      <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                      <span>Credit rollover</span>
-                    </li>
-                  </ul>
-                  
-                  <div className="mt-auto">
-                    <button 
-                      onClick={() => handleSubscribe('Starter Plan')}
-                      disabled={loadingSubscription['starter']}
-                      className="w-full modern-button shadow-modern bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-lg font-semibold cursor-pointer text-center transition-colors disabled:opacity-50"
-                    >
-                      {loadingSubscription['starter'] ? 'Processing...' : 'Get Started'}
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Pro Plan */}
-              <div className="relative flex flex-col w-72 sm:w-56 md:w-64 lg:w-72 flex-shrink-0 min-h-[500px] glass hover:glass-dark transition-all duration-300 shadow-steel rounded-2xl border-0">
-                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
-                  <div className="bg-primary text-primary-foreground shadow-modern rounded-full px-3 py-1 text-sm font-semibold">
-                    Most Popular
-                  </div>
-                </div>
-                
-                <div className="text-center pb-6 p-6">
-                  <h3 className="text-xl font-bold">Pro Plan</h3>
-                  <p className="text-sm text-muted-foreground">Best for professionals and small teams</p>
-                  <div className="mt-4">
-                    <div className="text-3xl font-bold">
-                      $39
-                      <span className="text-base font-normal text-muted-foreground">/month</span>
-                    </div>
-                    <div className="text-sm text-muted-foreground mt-1">150 credits monthly</div>
-                  </div>
-                </div>
-                
-                <div className="flex-1 flex flex-col justify-between p-6 pt-0">
-                  <ul className="space-y-2 mb-6">
-                    <li className="flex items-start gap-2 text-sm">
-                      <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                      <span>150 monthly credits</span>
-                    </li>
-                    <li className="flex items-start gap-2 text-sm">
-                      <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                      <span>Priority processing</span>
-                    </li>
-                    <li className="flex items-start gap-2 text-sm">
-                      <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                      <span>Advanced AI models</span>
-                    </li>
-                    <li className="flex items-start gap-2 text-sm">
-                      <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                      <span>Phone & email support</span>
-                    </li>
-                    <li className="flex items-start gap-2 text-sm">
-                      <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                      <span>Custom workflows</span>
-                    </li>
-                    <li className="flex items-start gap-2 text-sm">
-                      <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                      <span>Credit rollover</span>
-                    </li>
-                  </ul>
-                  
-                  <div className="mt-auto">
-                    <button 
-                      onClick={() => handleSubscribe('Pro Plan')}
-                      disabled={loadingSubscription['pro']}
-                      className="w-full modern-button shadow-modern bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-lg font-semibold cursor-pointer text-center transition-colors disabled:opacity-50"
-                    >
-                      {loadingSubscription['pro'] ? 'Processing...' : 'Get Started'}
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Growth Plan */}
-              <div className="relative flex flex-col w-72 sm:w-56 md:w-64 lg:w-72 flex-shrink-0 min-h-[500px] glass hover:glass-dark transition-all duration-300 shadow-modern hover:shadow-modern-lg rounded-2xl border-0">
-                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
-                  <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-modern rounded-full px-3 py-1 text-sm font-semibold">
-                    Best Value
-                  </div>
-                </div>
-                
-                <div className="text-center pb-6 p-6">
-                  <h3 className="text-xl font-bold">Growth Plan</h3>
-                  <p className="text-sm text-muted-foreground">Perfect for growing businesses and teams</p>
-                  <div className="mt-4">
-                    <div className="text-3xl font-bold">
-                      $79
-                      <span className="text-base font-normal text-muted-foreground">/month</span>
-                    </div>
-                    <div className="text-sm text-muted-foreground mt-1">400 credits monthly</div>
-                  </div>
-                </div>
-                
-                <div className="flex-1 flex flex-col justify-between p-6 pt-0">
-                  <ul className="space-y-2 mb-6">
-                    <li className="flex items-start gap-2 text-sm">
-                      <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                      <span>400 monthly credits</span>
-                    </li>
-                    <li className="flex items-start gap-2 text-sm">
-                      <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                      <span>Fastest processing</span>
-                    </li>
-                    <li className="flex items-start gap-2 text-sm">
-                      <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                      <span>Premium AI models</span>
-                    </li>
-                    <li className="flex items-start gap-2 text-sm">
-                      <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                      <span>Dedicated support</span>
-                    </li>
-                    <li className="flex items-start gap-2 text-sm">
-                      <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                      <span>Team collaboration tools</span>
-                    </li>
-                    <li className="flex items-start gap-2 text-sm">
-                      <svg className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                      <span>Priority feature requests</span>
-                    </li>
-                  </ul>
-                  
-                  <div className="mt-auto">
-                    <button 
-                      onClick={() => handleSubscribe('Growth Plan')}
-                      disabled={loadingSubscription['growth']}
-                      className="w-full modern-button shadow-modern bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-lg font-semibold cursor-pointer text-center transition-colors disabled:opacity-50"
-                    >
-                      {loadingSubscription['growth'] ? 'Processing...' : 'Get Started'}
-                    </button>
-                  </div>
-                </div>
-              </div>
+                );
+              })}
             </div>
           </div>
 
