@@ -32,59 +32,69 @@ serve(async (req) => {
     const encoder = new TextEncoder();
     const stream = new ReadableStream({
       async start(controller) {
-        try {
-          // Helper to send SSE event
-          const sendEvent = (step: number, type: string, data: any) => {
+        let isClosed = false;
+        
+        // Helper to safely send SSE event
+        const sendEvent = (step: number, type: string, data: any) => {
+          if (isClosed) return;
+          try {
             const message = `data: ${JSON.stringify({ step, type, data })}\n\n`;
             controller.enqueue(encoder.encode(message));
-          };
+          } catch (error) {
+            console.error('Error sending event:', error);
+            isClosed = true;
+          }
+        };
 
-          try {
-            // Step 1: Generate Overview & Plan
-            console.log('Step 1: Generating overview...');
-            const overviewResponse = await callXAI(XAI_API_KEY, 1, formData, '');
-            console.log('Overview response:', overviewResponse);
-            sendEvent(1, 'overview', overviewResponse);
-            
-            const overviewContent = typeof overviewResponse === 'string' 
-              ? overviewResponse 
-              : JSON.stringify(overviewResponse);
+        try {
+          // Step 1: Generate Overview & Plan
+          console.log('Step 1: Generating overview...');
+          const overviewResponse = await callXAI(XAI_API_KEY, 1, formData, '');
+          console.log('Overview response:', overviewResponse);
+          sendEvent(1, 'overview', overviewResponse);
+          
+          const overviewContent = typeof overviewResponse === 'string' 
+            ? overviewResponse 
+            : JSON.stringify(overviewResponse);
 
-            // Steps 2-6: Generate all components
-            const steps = [
-              { step: 2, type: 'tools', name: 'Tools' },
-              { step: 3, type: 'prompts', name: 'Prompts' },
-              { step: 4, type: 'workflows', name: 'Workflows' },
-              { step: 5, type: 'blueprints', name: 'Blueprints' },
-              { step: 6, type: 'strategies', name: 'Strategies' }
-            ];
+          // Steps 2-6: Generate all components
+          const steps = [
+            { step: 2, type: 'tools', name: 'Tools' },
+            { step: 3, type: 'prompts', name: 'Prompts' },
+            { step: 4, type: 'workflows', name: 'Workflows' },
+            { step: 5, type: 'blueprints', name: 'Blueprints' },
+            { step: 6, type: 'strategies', name: 'Strategies' }
+          ];
 
-            for (const { step, type, name } of steps) {
-              console.log(`Step ${step}: Generating ${name}...`);
-              const response = await callXAI(XAI_API_KEY, step, formData, overviewContent);
-              console.log(`Step ${step} response:`, response);
-              sendEvent(step, type, response);
-            }
+          for (const { step, type, name } of steps) {
+            if (isClosed) break;
+            console.log(`Step ${step}: Generating ${name}...`);
+            const response = await callXAI(XAI_API_KEY, step, formData, overviewContent);
+            console.log(`Step ${step} response:`, response);
+            sendEvent(step, type, response);
+          }
 
-            // Send completion event before closing
+          // Send completion event
+          if (!isClosed) {
             console.log('Sending completion event...');
             sendEvent(7, 'complete', { message: 'Generation complete' });
-          } catch (stepError) {
-            console.error('Step execution error:', stepError);
-            sendEvent(-1, 'error', { message: stepError.message });
-          } finally {
-            controller.close();
           }
 
         } catch (error) {
-          console.error('Stream error:', error);
-          const errorMessage = `data: ${JSON.stringify({ 
-            step: -1, 
-            type: 'error', 
-            data: { message: error.message } 
-          })}\n\n`;
-          controller.enqueue(encoder.encode(errorMessage));
-          controller.close();
+          console.error('Generation error:', error);
+          if (!isClosed) {
+            sendEvent(-1, 'error', { message: error.message });
+          }
+        } finally {
+          // Always close the stream at the end
+          if (!isClosed) {
+            try {
+              controller.close();
+              isClosed = true;
+            } catch (e) {
+              console.error('Error closing stream:', e);
+            }
+          }
         }
       }
     });
@@ -132,6 +142,7 @@ async function callXAI(
         ],
         temperature: 0.7,
         max_tokens: expectedTokens,
+        stream: false, // Ensure non-streaming for simpler response handling
       }),
   });
 
@@ -202,7 +213,7 @@ Return ONLY valid JSON in this exact format:
   "successFactors": ["Factor 1", "Factor 2"],
   "riskMitigation": ["Strategy 1", "Strategy 2"]
 }`,
-        expectedTokens: 2000
+        expectedTokens: 3000
       };
 
     case 2:
@@ -233,7 +244,7 @@ Recommend 4-6 specific AI tools. Return ONLY valid JSON:
     }
   ]
 }`,
-        expectedTokens: 2500
+        expectedTokens: 3500
       };
 
     case 3:
@@ -261,7 +272,7 @@ Create 4-6 ready-to-use AI prompts. Return ONLY valid JSON:
     }
   ]
 }`,
-        expectedTokens: 3000
+        expectedTokens: 4000
       };
 
     case 4:
@@ -301,7 +312,7 @@ Design 3-5 AI-powered workflows. Return ONLY valid JSON:
     }
   ]
 }`,
-        expectedTokens: 3500
+        expectedTokens: 4500
       };
 
     case 5:
@@ -344,7 +355,7 @@ Create 3-5 implementation blueprints. Return ONLY valid JSON:
     }
   ]
 }`,
-        expectedTokens: 4000
+        expectedTokens: 5000
       };
 
     case 6:
@@ -387,7 +398,7 @@ Develop 3-5 strategic initiatives. Return ONLY valid JSON:
     }
   ]
 }`,
-        expectedTokens: 4000
+        expectedTokens: 5000
       };
 
     default:
