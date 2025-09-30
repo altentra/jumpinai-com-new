@@ -221,12 +221,25 @@ export const useProgressiveGeneration = () => {
       let currentStepStartTime = Date.now();
       
       const stepNames: Record<string, string> = {
-        overview: 'Creating Overview & Strategic Plan',
-        tools: 'Generating AI Tools Recommendations',
+        naming: 'Generating Jump Name',
+        overview: 'Creating Overview',
+        plan: 'Building Strategic Plan',
+        tools: 'Generating AI Tools',
         prompts: 'Crafting AI Prompts',
-        workflows: 'Designing Workflow Processes',
-        blueprints: 'Building Implementation Blueprints',
-        strategies: 'Developing Strategic Frameworks'
+        workflows: 'Designing Workflows',
+        blueprints: 'Building Blueprints',
+        strategies: 'Developing Strategies'
+      };
+      
+      const stepProgress: Record<string, number> = {
+        naming: 5,
+        overview: 19,
+        plan: 32,
+        tools: 46,
+        prompts: 59,
+        workflows: 73,
+        blueprints: 86,
+        strategies: 100
       };
       
       // Show initial empty structure immediately
@@ -269,14 +282,54 @@ export const useProgressiveGeneration = () => {
           
           // Update progressive result with new data
           if (type === 'overview') {
-            progressiveResult.jumpId = stepData.jumpId;
-            progressiveResult.jumpName = stepData.jumpName || 'AI Transformation Journey';
-            progressiveResult.jumpNumber = stepData.jumpNumber;
-            progressiveResult.fullTitle = stepData.fullTitle;
-            progressiveResult.title = stepData.fullTitle || progressiveResult.jumpName;
-            progressiveResult.full_content = stepData.executiveSummary || '';
-            progressiveResult.structured_plan = stepData;
-            progressiveResult.comprehensive_plan = stepData;
+            // Split overview step into 3 sub-steps for better progress tracking
+            const overviewData = stepData;
+            
+            // Sub-step 1: Naming (5%)
+            progressiveResult.jumpId = overviewData.jumpId;
+            progressiveResult.jumpName = overviewData.jumpName || 'AI Transformation Journey';
+            progressiveResult.jumpNumber = overviewData.jumpNumber;
+            progressiveResult.fullTitle = overviewData.fullTitle;
+            progressiveResult.title = overviewData.fullTitle || progressiveResult.jumpName;
+            
+            progressiveResult.processing_status = {
+              stage: 'Generating',
+              progress: 5,
+              currentTask: `${stepNames.naming} (${stepDuration}s)`,
+              isComplete: false
+            };
+            progressiveResult.stepTimes = { naming: stepDuration };
+            setProcessingStatus(progressiveResult.processing_status);
+            setResult({ ...progressiveResult });
+            
+            // Update with overview content (19%)
+            setTimeout(() => {
+              progressiveResult.full_content = overviewData.executiveSummary || '';
+              progressiveResult.processing_status = {
+                stage: 'Generating',
+                progress: 19,
+                currentTask: `${stepNames.overview}`,
+                isComplete: false
+              };
+              progressiveResult.stepTimes = { ...progressiveResult.stepTimes, overview: Math.round((Date.now() - currentStepStartTime) / 1000) };
+              setProcessingStatus(progressiveResult.processing_status);
+              setResult({ ...progressiveResult });
+              
+              // Update with plan (32%)
+              setTimeout(() => {
+                progressiveResult.structured_plan = overviewData;
+                progressiveResult.comprehensive_plan = overviewData;
+                progressiveResult.processing_status = {
+                  stage: 'Generating',
+                  progress: 32,
+                  currentTask: `${stepNames.plan}`,
+                  isComplete: false
+                };
+                progressiveResult.stepTimes = { ...progressiveResult.stepTimes, plan: Math.round((Date.now() - currentStepStartTime) / 1000) };
+                setProcessingStatus(progressiveResult.processing_status);
+                setResult({ ...progressiveResult });
+              }, 300);
+            }, 300);
           } else if (type === 'tools') {
             progressiveResult.components.tools = stepData.tools || [];
           } else if (type === 'prompts') {
@@ -289,17 +342,21 @@ export const useProgressiveGeneration = () => {
             progressiveResult.components.strategies = stepData.strategies || [];
           }
           
-          // Update status and timing
-          progressiveResult.processing_status = {
-            stage: type === 'complete' ? 'Complete' : 'Generating',
-            progress,
-            currentTask: `${taskName} (${stepDuration}s)`,
-            isComplete: type === 'complete'
-          };
-          progressiveResult.stepTimes = { ...stepTimes };
-          
-          setProcessingStatus(progressiveResult.processing_status);
-          setResult({ ...progressiveResult });
+          // Update status and timing (skip if overview - already handled)
+          if (type !== 'overview') {
+            const progress = stepProgress[type] || Math.min(100, (step / 7) * 100);
+            
+            progressiveResult.processing_status = {
+              stage: type === 'complete' ? 'Complete' : 'Generating',
+              progress,
+              currentTask: `${taskName} (${stepDuration}s)`,
+              isComplete: type === 'complete'
+            };
+            progressiveResult.stepTimes = { ...stepTimes };
+            
+            setProcessingStatus(progressiveResult.processing_status);
+            setResult({ ...progressiveResult });
+          }
         }
       );
       

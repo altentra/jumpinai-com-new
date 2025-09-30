@@ -115,15 +115,15 @@ async function callXAI(
       'Authorization': `Bearer ${apiKey}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({
-      model: 'grok-beta',
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: userPrompt }
-      ],
-      temperature: 0.7,
-      max_tokens: expectedTokens,
-    }),
+      body: JSON.stringify({
+        model: 'grok-3',
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: userPrompt }
+        ],
+        temperature: 0.7,
+        max_tokens: expectedTokens,
+      }),
   });
 
   if (!response.ok) {
