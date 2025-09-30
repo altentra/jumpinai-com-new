@@ -119,17 +119,6 @@ export default function AppSidebar() {
             My Jumps
           </Link>
 
-          <Link 
-            to="/dashboard/jumps-guides" 
-            className={cn(
-              "flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm transition-colors",
-              getNavCls({ isActive: currentPath === "/dashboard/jumps-guides" })
-            )}
-          >
-            <FileText className="h-4 w-4" />
-            Jumps Guides
-          </Link>
-
           <Separator className="my-1.5" />
 
           <Link 
