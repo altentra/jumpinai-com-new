@@ -85,7 +85,7 @@ export default function Dashboard() {
         >
           Terms of Use
         </a>
-        {' and '}
+        {' '}and{' '}
         <a 
           href="/privacy-policy" 
           className="text-primary hover:text-primary/80 transition-colors duration-200 underline underline-offset-4"
