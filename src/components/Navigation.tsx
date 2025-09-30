@@ -197,13 +197,36 @@ const Navigation = React.memo(() => {
                   {item.name}
                 </button>
               ))}
-              <div className="pt-2">
-                <Button 
-                  onClick={handleCtaClick}
-                  className="w-full modern-button bg-gradient-to-r from-gray-800 to-black hover:from-gray-900 hover:to-gray-800 dark:from-white dark:to-gray-300 dark:hover:from-gray-100 dark:hover:to-gray-400 text-white dark:text-black py-3 rounded-2xl font-semibold shadow-lg hover:shadow-xl"
-                >
-                  {isAuthenticated ? 'My Account' : 'Log In'}
-                </Button>
+              <div className="pt-2 border-t border-white/20 dark:border-white/30 mt-2">
+                {isAuthenticated ? (
+                  <>
+                    <button
+                      onClick={() => {
+                        navigate('/dashboard');
+                        setIsOpen(false);
+                      }}
+                      className="text-muted-foreground hover:text-foreground block w-full text-left px-4 py-3 rounded-2xl text-base font-medium hover:bg-white/10 dark:hover:bg-white/20 transition-all duration-300"
+                    >
+                      Dashboard
+                    </button>
+                    <button
+                      onClick={() => {
+                        logout();
+                        setIsOpen(false);
+                      }}
+                      className="text-muted-foreground hover:text-foreground block w-full text-left px-4 py-3 rounded-2xl text-base font-medium hover:bg-white/10 dark:hover:bg-white/20 transition-all duration-300"
+                    >
+                      Log Out
+                    </button>
+                  </>
+                ) : (
+                  <Button 
+                    onClick={handleCtaClick}
+                    className="w-full modern-button bg-gradient-to-r from-gray-800 to-black hover:from-gray-900 hover:to-gray-800 dark:from-white dark:to-gray-300 dark:hover:from-gray-100 dark:hover:to-gray-400 text-white dark:text-black py-3 rounded-2xl font-semibold shadow-lg hover:shadow-xl"
+                  >
+                    Log In
+                  </Button>
+                )}
               </div>
             </div>
           </div>
