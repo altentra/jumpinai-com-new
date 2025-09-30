@@ -130,14 +130,15 @@ export const jumpinAIStudioService = {
                   continue;
                 }
 
-                // Process each step
+                // Process each step with proper data extraction
                 if (type === 'overview') {
+                  console.log('Processing overview data:', data);
                   result.jumpName = data.jumpName || 'AI Transformation Journey';
                   result.fullContent = data.executiveSummary || '';
                   result.structuredPlan = data;
                   result.comprehensivePlan = data;
                   
-                  // Save jump to database immediately
+                  // Get jump number and create full title
                   if (userId) {
                     const jumpNumber = await jumpNamingService.getNextJumpNumber(userId);
                     const fullTitle = `Jump #${jumpNumber}: ${result.jumpName}`;
@@ -166,27 +167,43 @@ export const jumpinAIStudioService = {
                     }
                   }
                 } else if (type === 'tools') {
+                  console.log('Processing tools data:', data);
                   result.components!.tools = data.tools || [];
+                  console.log('Tools extracted:', result.components!.tools.length);
+                  
                   if (userId && jumpId) {
-                    await this.saveComponents({ tools: result.components!.tools }, userId, jumpId);
+                    const { toolsService } = await import('@/services/toolsService');
+                    await toolsService.saveTools(result.components!.tools, userId, jumpId);
                   }
                 } else if (type === 'prompts') {
+                  console.log('Processing prompts data:', data);
                   result.components!.prompts = data.prompts || [];
+                  console.log('Prompts extracted:', result.components!.prompts.length);
+                  
                   if (userId && jumpId) {
                     await this.saveComponents({ prompts: result.components!.prompts }, userId, jumpId);
                   }
                 } else if (type === 'workflows') {
+                  console.log('Processing workflows data:', data);
                   result.components!.workflows = data.workflows || [];
+                  console.log('Workflows extracted:', result.components!.workflows.length);
+                  
                   if (userId && jumpId) {
                     await this.saveComponents({ workflows: result.components!.workflows }, userId, jumpId);
                   }
                 } else if (type === 'blueprints') {
+                  console.log('Processing blueprints data:', data);
                   result.components!.blueprints = data.blueprints || [];
+                  console.log('Blueprints extracted:', result.components!.blueprints.length);
+                  
                   if (userId && jumpId) {
                     await this.saveComponents({ blueprints: result.components!.blueprints }, userId, jumpId);
                   }
                 } else if (type === 'strategies') {
+                  console.log('Processing strategies data:', data);
                   result.components!.strategies = data.strategies || [];
+                  console.log('Strategies extracted:', result.components!.strategies.length);
+                  
                   if (userId && jumpId) {
                     await this.saveComponents({ strategies: result.components!.strategies }, userId, jumpId);
                   }

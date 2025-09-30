@@ -39,33 +39,42 @@ serve(async (req) => {
             controller.enqueue(encoder.encode(message));
           };
 
-          // Step 1: Generate Overview & Plan
-          console.log('Step 1: Generating overview...');
-          const overviewResponse = await callXAI(XAI_API_KEY, 1, formData, '');
-          sendEvent(1, 'overview', overviewResponse);
-          
-          const overviewContent = typeof overviewResponse === 'string' 
-            ? overviewResponse 
-            : JSON.stringify(overviewResponse);
+          try {
+            // Step 1: Generate Overview & Plan
+            console.log('Step 1: Generating overview...');
+            const overviewResponse = await callXAI(XAI_API_KEY, 1, formData, '');
+            console.log('Overview response:', overviewResponse);
+            sendEvent(1, 'overview', overviewResponse);
+            
+            const overviewContent = typeof overviewResponse === 'string' 
+              ? overviewResponse 
+              : JSON.stringify(overviewResponse);
 
-          // Steps 2-6: Generate all components
-          const steps = [
-            { step: 2, type: 'tools', name: 'Tools' },
-            { step: 3, type: 'prompts', name: 'Prompts' },
-            { step: 4, type: 'workflows', name: 'Workflows' },
-            { step: 5, type: 'blueprints', name: 'Blueprints' },
-            { step: 6, type: 'strategies', name: 'Strategies' }
-          ];
+            // Steps 2-6: Generate all components
+            const steps = [
+              { step: 2, type: 'tools', name: 'Tools' },
+              { step: 3, type: 'prompts', name: 'Prompts' },
+              { step: 4, type: 'workflows', name: 'Workflows' },
+              { step: 5, type: 'blueprints', name: 'Blueprints' },
+              { step: 6, type: 'strategies', name: 'Strategies' }
+            ];
 
-          for (const { step, type, name } of steps) {
-            console.log(`Step ${step}: Generating ${name}...`);
-            const response = await callXAI(XAI_API_KEY, step, formData, overviewContent);
-            sendEvent(step, type, response);
+            for (const { step, type, name } of steps) {
+              console.log(`Step ${step}: Generating ${name}...`);
+              const response = await callXAI(XAI_API_KEY, step, formData, overviewContent);
+              console.log(`Step ${step} response:`, response);
+              sendEvent(step, type, response);
+            }
+
+            // Send completion event before closing
+            console.log('Sending completion event...');
+            sendEvent(7, 'complete', { message: 'Generation complete' });
+          } catch (stepError) {
+            console.error('Step execution error:', stepError);
+            sendEvent(-1, 'error', { message: stepError.message });
+          } finally {
+            controller.close();
           }
-
-          // Send completion event
-          sendEvent(7, 'complete', { message: 'Generation complete' });
-          controller.close();
 
         } catch (error) {
           console.error('Stream error:', error);

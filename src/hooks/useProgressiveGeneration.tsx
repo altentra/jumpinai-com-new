@@ -282,78 +282,116 @@ export const useProgressiveGeneration = () => {
           
           // Update progressive result with new data
           if (type === 'overview') {
-            // Split overview step into 3 sub-steps for better progress tracking
-            const overviewData = stepData;
+            console.log('Processing overview step data:', stepData);
             
-            // Sub-step 1: Naming (5%)
-            progressiveResult.jumpId = overviewData.jumpId;
-            progressiveResult.jumpName = overviewData.jumpName || 'AI Transformation Journey';
-            progressiveResult.jumpNumber = overviewData.jumpNumber;
-            progressiveResult.fullTitle = overviewData.fullTitle;
-            progressiveResult.title = overviewData.fullTitle || progressiveResult.jumpName;
+            // Extract overview data
+            progressiveResult.jumpId = stepData.jumpId;
+            progressiveResult.jumpName = stepData.jumpName || 'AI Transformation Journey';
+            progressiveResult.jumpNumber = stepData.jumpNumber;
+            progressiveResult.fullTitle = stepData.fullTitle;
+            progressiveResult.title = stepData.fullTitle || progressiveResult.jumpName;
+            progressiveResult.full_content = stepData.executiveSummary || '';
+            progressiveResult.structured_plan = stepData;
+            progressiveResult.comprehensive_plan = stepData;
             
+            // Update immediately - Overview is 19%
             progressiveResult.processing_status = {
               stage: 'Generating',
-              progress: 5,
-              currentTask: `${stepNames.naming} (${stepDuration}s)`,
+              progress: 19,
+              currentTask: `${stepNames.overview} (${stepDuration}s)`,
               isComplete: false
             };
-            progressiveResult.stepTimes = { naming: stepDuration };
+            progressiveResult.stepTimes = { overview: stepDuration };
             setProcessingStatus(progressiveResult.processing_status);
             setResult({ ...progressiveResult });
             
-            // Update with overview content (19%)
-            setTimeout(() => {
-              progressiveResult.full_content = overviewData.executiveSummary || '';
-              progressiveResult.processing_status = {
-                stage: 'Generating',
-                progress: 19,
-                currentTask: `${stepNames.overview}`,
-                isComplete: false
-              };
-              progressiveResult.stepTimes = { ...progressiveResult.stepTimes, overview: Math.round((Date.now() - currentStepStartTime) / 1000) };
-              setProcessingStatus(progressiveResult.processing_status);
-              setResult({ ...progressiveResult });
-              
-              // Update with plan (32%)
-              setTimeout(() => {
-                progressiveResult.structured_plan = overviewData;
-                progressiveResult.comprehensive_plan = overviewData;
-                progressiveResult.processing_status = {
-                  stage: 'Generating',
-                  progress: 32,
-                  currentTask: `${stepNames.plan}`,
-                  isComplete: false
-                };
-                progressiveResult.stepTimes = { ...progressiveResult.stepTimes, plan: Math.round((Date.now() - currentStepStartTime) / 1000) };
-                setProcessingStatus(progressiveResult.processing_status);
-                setResult({ ...progressiveResult });
-              }, 300);
-            }, 300);
           } else if (type === 'tools') {
+            console.log('Processing tools step data:', stepData);
             progressiveResult.components.tools = stepData.tools || [];
-          } else if (type === 'prompts') {
-            progressiveResult.components.prompts = stepData.prompts || [];
-          } else if (type === 'workflows') {
-            progressiveResult.components.workflows = stepData.workflows || [];
-          } else if (type === 'blueprints') {
-            progressiveResult.components.blueprints = stepData.blueprints || [];
-          } else if (type === 'strategies') {
-            progressiveResult.components.strategies = stepData.strategies || [];
-          }
-          
-          // Update status and timing (skip if overview - already handled)
-          if (type !== 'overview') {
-            const progress = stepProgress[type] || Math.min(100, (step / 7) * 100);
             
+            // Update immediately - Tools is 46%
+            const progress = 46;
             progressiveResult.processing_status = {
-              stage: type === 'complete' ? 'Complete' : 'Generating',
+              stage: 'Generating',
               progress,
-              currentTask: `${taskName} (${stepDuration}s)`,
-              isComplete: type === 'complete'
+              currentTask: `${stepNames.tools} (${stepDuration}s)`,
+              isComplete: false
             };
-            progressiveResult.stepTimes = { ...stepTimes };
+            progressiveResult.stepTimes = { ...progressiveResult.stepTimes, tools: stepDuration };
+            setProcessingStatus(progressiveResult.processing_status);
+            setResult({ ...progressiveResult });
             
+          } else if (type === 'prompts') {
+            console.log('Processing prompts step data:', stepData);
+            progressiveResult.components.prompts = stepData.prompts || [];
+            
+            // Update immediately - Prompts is 59%
+            const progress = 59;
+            progressiveResult.processing_status = {
+              stage: 'Generating',
+              progress,
+              currentTask: `${stepNames.prompts} (${stepDuration}s)`,
+              isComplete: false
+            };
+            progressiveResult.stepTimes = { ...progressiveResult.stepTimes, prompts: stepDuration };
+            setProcessingStatus(progressiveResult.processing_status);
+            setResult({ ...progressiveResult });
+            
+          } else if (type === 'workflows') {
+            console.log('Processing workflows step data:', stepData);
+            progressiveResult.components.workflows = stepData.workflows || [];
+            
+            // Update immediately - Workflows is 73%
+            const progress = 73;
+            progressiveResult.processing_status = {
+              stage: 'Generating',
+              progress,
+              currentTask: `${stepNames.workflows} (${stepDuration}s)`,
+              isComplete: false
+            };
+            progressiveResult.stepTimes = { ...progressiveResult.stepTimes, workflows: stepDuration };
+            setProcessingStatus(progressiveResult.processing_status);
+            setResult({ ...progressiveResult });
+            
+          } else if (type === 'blueprints') {
+            console.log('Processing blueprints step data:', stepData);
+            progressiveResult.components.blueprints = stepData.blueprints || [];
+            
+            // Update immediately - Blueprints is 86%
+            const progress = 86;
+            progressiveResult.processing_status = {
+              stage: 'Generating',
+              progress,
+              currentTask: `${stepNames.blueprints} (${stepDuration}s)`,
+              isComplete: false
+            };
+            progressiveResult.stepTimes = { ...progressiveResult.stepTimes, blueprints: stepDuration };
+            setProcessingStatus(progressiveResult.processing_status);
+            setResult({ ...progressiveResult });
+            
+          } else if (type === 'strategies') {
+            console.log('Processing strategies step data:', stepData);
+            progressiveResult.components.strategies = stepData.strategies || [];
+            
+            // Update immediately - Strategies is 100%
+            const progress = 100;
+            progressiveResult.processing_status = {
+              stage: 'Generating',
+              progress,
+              currentTask: `${stepNames.strategies} (${stepDuration}s)`,
+              isComplete: false
+            };
+            progressiveResult.stepTimes = { ...progressiveResult.stepTimes, strategies: stepDuration };
+            setProcessingStatus(progressiveResult.processing_status);
+            setResult({ ...progressiveResult });
+          } else if (type === 'complete') {
+            // Final completion
+            progressiveResult.processing_status = {
+              stage: 'Complete',
+              progress: 100,
+              currentTask: 'Jump generation complete!',
+              isComplete: true
+            };
             setProcessingStatus(progressiveResult.processing_status);
             setResult({ ...progressiveResult });
           }
