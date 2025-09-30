@@ -103,10 +103,9 @@ const PricingNew = () => {
     return `$${(cents / 100).toFixed(0)}`;
   };
 
-  const getValueBadge = (credits: number, price_cents: number) => {
-    const pricePerCredit = price_cents / credits;
-    if (pricePerCredit <= 30) return "Best Value";
-    if (pricePerCredit <= 40) return "Popular";
+  const getValueBadge = (credits: number) => {
+    if (credits === 250) return "Best Value";
+    if (credits === 100) return "Popular";
     return null;
   };
 
@@ -253,9 +252,9 @@ const PricingNew = () => {
 
             {/* First row - 2 packages */}
             <div className="grid grid-cols-2 gap-3 sm:gap-4 max-w-2xl mx-auto mb-4">
-              {creditPackages.slice(0, 2).map((pkg) => {
+            {creditPackages.slice(0, 2).map((pkg) => {
                 const isLoading = packageLoading[pkg.id];
-                const valueBadge = getValueBadge(pkg.credits, pkg.price_cents);
+                const valueBadge = getValueBadge(pkg.credits);
                 
                 return (
                   <Card key={pkg.id} className="relative h-full flex flex-col glass hover:glass-dark transition-all duration-300 shadow-modern hover:shadow-modern-lg rounded-2xl border-0">
@@ -272,10 +271,10 @@ const PricingNew = () => {
                       <CardTitle className="text-lg font-semibold">{pkg.name}</CardTitle>
                       <div className="mt-3">
                         <div className="text-3xl font-bold gradient-text-primary mb-1">
-                          {formatPrice(pkg.price_cents)}
+                          {pkg.credits} credits
                         </div>
                         <div className="text-base font-medium text-muted-foreground">
-                          {pkg.credits} credits
+                          {formatPrice(pkg.price_cents)}
                         </div>
                       </div>
                     </CardHeader>
@@ -307,9 +306,9 @@ const PricingNew = () => {
             
             {/* Second row - 2 packages */}
             <div className="grid grid-cols-2 gap-3 sm:gap-4 max-w-2xl mx-auto mb-4">
-              {creditPackages.slice(2, 4).map((pkg) => {
+            {creditPackages.slice(2, 4).map((pkg) => {
                 const isLoading = packageLoading[pkg.id];
-                const valueBadge = getValueBadge(pkg.credits, pkg.price_cents);
+                const valueBadge = getValueBadge(pkg.credits);
                 
                 return (
                   <Card key={pkg.id} className="relative h-full flex flex-col glass hover:glass-dark transition-all duration-300 shadow-modern hover:shadow-modern-lg rounded-2xl border-0">
@@ -326,10 +325,10 @@ const PricingNew = () => {
                       <CardTitle className="text-lg font-semibold">{pkg.name}</CardTitle>
                       <div className="mt-3">
                         <div className="text-3xl font-bold gradient-text-primary mb-1">
-                          {formatPrice(pkg.price_cents)}
+                          {pkg.credits} credits
                         </div>
                         <div className="text-base font-medium text-muted-foreground">
-                          {pkg.credits} credits
+                          {formatPrice(pkg.price_cents)}
                         </div>
                       </div>
                     </CardHeader>
@@ -364,7 +363,7 @@ const PricingNew = () => {
               <div className="w-full max-w-xs">
                 {creditPackages.slice(4, 5).map((pkg) => {
                   const isLoading = packageLoading[pkg.id];
-                  const valueBadge = getValueBadge(pkg.credits, pkg.price_cents);
+                  const valueBadge = getValueBadge(pkg.credits);
                   
                   return (
                     <Card key={pkg.id} className="relative h-full flex flex-col glass hover:glass-dark transition-all duration-300 shadow-modern hover:shadow-modern-lg rounded-2xl border-0">
@@ -381,10 +380,10 @@ const PricingNew = () => {
                         <CardTitle className="text-lg font-semibold">{pkg.name}</CardTitle>
                         <div className="mt-3">
                           <div className="text-3xl font-bold gradient-text-primary mb-1">
-                            {formatPrice(pkg.price_cents)}
+                            {pkg.credits} credits
                           </div>
                           <div className="text-base font-medium text-muted-foreground">
-                            {pkg.credits} credits
+                            {formatPrice(pkg.price_cents)}
                           </div>
                         </div>
                       </CardHeader>

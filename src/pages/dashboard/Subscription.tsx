@@ -386,22 +386,22 @@ export default function Subscription() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
           {creditPackages.map((pkg) => {
             const isLoading = packageLoading[pkg.id];
-            const pricePerCredit = pkg.price_cents / pkg.credits;
-            const isValue = pricePerCredit <= 30;
+            const isPopular = pkg.credits === 100;
+            const isBestValue = pkg.credits === 250;
 
             return (
               <Card 
                 key={pkg.id} 
                 className="relative flex flex-col glass transition-all duration-300 shadow-modern hover:shadow-modern-lg rounded-2xl border-border/40"
               >
-                {isValue && (
+                {(isPopular || isBestValue) && (
                   <div className="absolute -top-2 -right-2 z-10">
                     <Badge variant="secondary" className="text-xs shadow-modern rounded-full px-2 py-1">
                       <Sparkles className="w-3 h-3 mr-1" />
-                      Best Value
+                      {isBestValue ? 'Best Value' : 'Popular'}
                     </Badge>
                   </div>
                 )}
@@ -410,13 +410,10 @@ export default function Subscription() {
                   <CardTitle className="text-base font-semibold">{pkg.name}</CardTitle>
                   <div className="mt-3">
                     <div className="text-3xl font-bold gradient-text-primary">
-                      {formatPrice(pkg.price_cents)}
-                    </div>
-                    <div className="text-base font-medium text-muted-foreground mt-1">
                       {pkg.credits} credits
                     </div>
-                    <div className="text-xs text-muted-foreground mt-1">
-                      ~{formatPrice(Math.round(pricePerCredit))} per credit
+                    <div className="text-base font-medium text-muted-foreground mt-1">
+                      {formatPrice(pkg.price_cents)}
                     </div>
                   </div>
                 </CardHeader>
