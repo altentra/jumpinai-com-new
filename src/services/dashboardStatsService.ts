@@ -37,37 +37,37 @@ export const dashboardStatsService = {
       const { data: jumpsData } = await supabase
         .from('user_jumps')
         .select('id, implemented')
-        .eq('user_id', userId);
+        .eq('user_id', userId) as any;
 
       // Get tools count and implemented count
       const { data: toolsData } = await supabase
         .from('user_tools')
         .select('id, implemented')
-        .eq('user_id', userId);
+        .eq('user_id', userId) as any;
 
       // Get prompts count and implemented count
       const { data: promptsData } = await supabase
         .from('user_prompts')
         .select('id, implemented')
-        .eq('user_id', userId);
+        .eq('user_id', userId) as any;
 
       // Get workflows count and implemented count
       const { data: workflowsData } = await supabase
         .from('user_workflows')
         .select('id, implemented')
-        .eq('user_id', userId);
+        .eq('user_id', userId) as any;
 
       // Get blueprints count and implemented count
       const { data: blueprintsData } = await supabase
         .from('user_blueprints')
         .select('id, implemented')
-        .eq('user_id', userId);
+        .eq('user_id', userId) as any;
 
       // Get strategies count and implemented count
       const { data: strategiesData } = await supabase
         .from('user_strategies')
         .select('id, implemented')
-        .eq('user_id', userId);
+        .eq('user_id', userId) as any;
 
       return {
         credits: creditsData?.credits_balance || 0,
@@ -77,12 +77,12 @@ export const dashboardStatsService = {
         totalWorkflows: workflowsData?.length || 0,
         totalBlueprints: blueprintsData?.length || 0,
         totalStrategies: strategiesData?.length || 0,
-        implementedJumps: jumpsData?.filter(j => j.implemented).length || 0,
-        implementedTools: toolsData?.filter(t => t.implemented).length || 0,
-        implementedPrompts: promptsData?.filter(p => p.implemented).length || 0,
-        implementedWorkflows: workflowsData?.filter(w => w.implemented).length || 0,
-        implementedBlueprints: blueprintsData?.filter(b => b.implemented).length || 0,
-        implementedStrategies: strategiesData?.filter(s => s.implemented).length || 0,
+        implementedJumps: jumpsData?.filter((j: any) => j.implemented).length || 0,
+        implementedTools: toolsData?.filter((t: any) => t.implemented).length || 0,
+        implementedPrompts: promptsData?.filter((p: any) => p.implemented).length || 0,
+        implementedWorkflows: workflowsData?.filter((w: any) => w.implemented).length || 0,
+        implementedBlueprints: blueprintsData?.filter((b: any) => b.implemented).length || 0,
+        implementedStrategies: strategiesData?.filter((s: any) => s.implemented).length || 0,
       };
     } catch (error) {
       console.error('Error fetching dashboard stats:', error);

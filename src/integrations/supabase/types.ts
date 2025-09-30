@@ -426,6 +426,7 @@ export type Database = {
           id: string
           implementation: string | null
           implementation_time: string | null
+          implemented: boolean | null
           instructions: string | null
           jump_id: string | null
           requirements: string[] | null
@@ -447,6 +448,7 @@ export type Database = {
           id?: string
           implementation?: string | null
           implementation_time?: string | null
+          implemented?: boolean | null
           instructions?: string | null
           jump_id?: string | null
           requirements?: string[] | null
@@ -468,6 +470,7 @@ export type Database = {
           id?: string
           implementation?: string | null
           implementation_time?: string | null
+          implemented?: boolean | null
           instructions?: string | null
           jump_id?: string | null
           requirements?: string[] | null
@@ -522,6 +525,7 @@ export type Database = {
           created_at: string
           full_content: string
           id: string
+          implemented: boolean | null
           jump_type: string | null
           profile_id: string | null
           status: string | null
@@ -537,6 +541,7 @@ export type Database = {
           created_at?: string
           full_content: string
           id?: string
+          implemented?: boolean | null
           jump_type?: string | null
           profile_id?: string | null
           status?: string | null
@@ -552,6 +557,7 @@ export type Database = {
           created_at?: string
           full_content?: string
           id?: string
+          implemented?: boolean | null
           jump_type?: string | null
           profile_id?: string | null
           status?: string | null
@@ -631,6 +637,7 @@ export type Database = {
           difficulty: string | null
           estimated_time: string | null
           id: string
+          implemented: boolean | null
           instructions: string | null
           jump_id: string | null
           prompt_text: string
@@ -648,6 +655,7 @@ export type Database = {
           difficulty?: string | null
           estimated_time?: string | null
           id?: string
+          implemented?: boolean | null
           instructions?: string | null
           jump_id?: string | null
           prompt_text: string
@@ -665,6 +673,7 @@ export type Database = {
           difficulty?: string | null
           estimated_time?: string | null
           id?: string
+          implemented?: boolean | null
           instructions?: string | null
           jump_id?: string | null
           prompt_text?: string
@@ -691,6 +700,7 @@ export type Database = {
           created_at: string
           description: string | null
           id: string
+          implemented: boolean | null
           instructions: string | null
           jump_id: string | null
           key_actions: string[] | null
@@ -712,6 +722,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
+          implemented?: boolean | null
           instructions?: string | null
           jump_id?: string | null
           key_actions?: string[] | null
@@ -733,6 +744,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
+          implemented?: boolean | null
           instructions?: string | null
           jump_id?: string | null
           key_actions?: string[] | null
@@ -768,6 +780,7 @@ export type Database = {
           difficulty_level: string | null
           features: string[] | null
           id: string
+          implemented: boolean | null
           instructions: string | null
           integration_complexity: string | null
           jump_id: string | null
@@ -789,6 +802,7 @@ export type Database = {
           difficulty_level?: string | null
           features?: string[] | null
           id?: string
+          implemented?: boolean | null
           instructions?: string | null
           integration_complexity?: string | null
           jump_id?: string | null
@@ -810,6 +824,7 @@ export type Database = {
           difficulty_level?: string | null
           features?: string[] | null
           id?: string
+          implemented?: boolean | null
           instructions?: string | null
           integration_complexity?: string | null
           jump_id?: string | null
@@ -834,6 +849,7 @@ export type Database = {
           duration_estimate: string | null
           expected_outcomes: string[] | null
           id: string
+          implemented: boolean | null
           instructions: string | null
           jump_id: string | null
           prerequisites: string[] | null
@@ -854,6 +870,7 @@ export type Database = {
           duration_estimate?: string | null
           expected_outcomes?: string[] | null
           id?: string
+          implemented?: boolean | null
           instructions?: string | null
           jump_id?: string | null
           prerequisites?: string[] | null
@@ -874,6 +891,7 @@ export type Database = {
           duration_estimate?: string | null
           expected_outcomes?: string[] | null
           id?: string
+          implemented?: boolean | null
           instructions?: string | null
           jump_id?: string | null
           prerequisites?: string[] | null
