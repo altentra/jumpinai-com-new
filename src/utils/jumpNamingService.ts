@@ -12,32 +12,121 @@ export const jumpNamingService = {
    * Generate an appropriate jump name based on form inputs
    */
   generateJumpName(formData: StudioFormData): string {
-    const { goals, industry, challenges } = formData;
+    const { goals, industry, challenges, aiExperience } = formData;
     
-    // Extract key words from goals (main focus)
-    const goalKeywords = this.extractKeywords(goals, 2);
+    // Analyze the core objective from goals
+    const coreObjective = this.identifyCoreObjective(goals);
     
-    // Extract industry context
-    const industryContext = industry.trim() ? ` ${industry}` : '';
+    // Extract industry context for personalization
+    const industryContext = industry.trim() ? ` in ${industry}` : '';
     
-    // Create base name from goals and industry
+    // Create an inspiring, action-oriented name
     let baseName = '';
     
-    if (goalKeywords.length > 0) {
-      baseName = goalKeywords.join(' ');
+    if (coreObjective) {
+      // Generate inspiring names based on the objective type
+      baseName = this.generateInspiringName(coreObjective, industry, aiExperience);
     } else {
-      // Fallback based on challenges or generic
-      const challengeKeywords = this.extractKeywords(challenges, 1);
-      baseName = challengeKeywords.length > 0 ? challengeKeywords[0] : 'AI Transformation';
+      // Fallback: analyze challenges for name inspiration
+      const challengeFocus = this.identifyChallengeFocus(challenges);
+      if (challengeFocus) {
+        baseName = `${challengeFocus} Transformation`;
+      } else {
+        baseName = 'AI Innovation Journey';
+      }
     }
     
-    // Add industry context if available
-    if (industryContext) {
+    // Add industry context if it enhances the name
+    if (industryContext && !baseName.toLowerCase().includes(industry.toLowerCase())) {
       baseName += industryContext;
     }
     
     // Clean and format the name
     return this.formatJumpName(baseName);
+  },
+
+  /**
+   * Identify the core objective from user goals
+   */
+  identifyCoreObjective(goals: string): string | null {
+    if (!goals.trim()) return null;
+    
+    const lowerGoals = goals.toLowerCase();
+    
+    // Map common goal patterns to inspiring objectives
+    const objectivePatterns = [
+      { keywords: ['automate', 'automation', 'streamline', 'efficiency'], objective: 'Automation Excellence' },
+      { keywords: ['customer', 'client', 'service', 'support', 'experience'], objective: 'Customer Experience Revolution' },
+      { keywords: ['marketing', 'content', 'social', 'brand', 'campaign'], objective: 'Marketing Intelligence' },
+      { keywords: ['sales', 'revenue', 'conversion', 'lead', 'pipeline'], objective: 'Sales Acceleration' },
+      { keywords: ['data', 'analytics', 'insight', 'intelligence', 'reporting'], objective: 'Data-Driven Intelligence' },
+      { keywords: ['product', 'development', 'innovation', 'design', 'prototype'], objective: 'Product Innovation' },
+      { keywords: ['operation', 'workflow', 'process', 'productivity'], objective: 'Operational Excellence' },
+      { keywords: ['personalize', 'recommend', 'customize', 'tailor'], objective: 'Personalization Engine' },
+      { keywords: ['predict', 'forecast', 'trend', 'analysis'], objective: 'Predictive Intelligence' },
+      { keywords: ['creative', 'content', 'generate', 'create', 'design'], objective: 'Creative Amplification' },
+      { keywords: ['research', 'analyze', 'discover', 'explore'], objective: 'Research Acceleration' },
+      { keywords: ['scale', 'growth', 'expand', 'enterprise'], objective: 'Growth Acceleration' },
+      { keywords: ['team', 'collaboration', 'communication', 'workplace'], objective: 'Team Transformation' },
+      { keywords: ['compete', 'advantage', 'market', 'leadership'], objective: 'Competitive Edge' },
+    ];
+    
+    // Find the best matching objective
+    for (const pattern of objectivePatterns) {
+      if (pattern.keywords.some(keyword => lowerGoals.includes(keyword))) {
+        return pattern.objective;
+      }
+    }
+    
+    // Extract action verbs and key nouns for a custom objective
+    const actionWords = this.extractKeywords(goals, 1);
+    if (actionWords.length > 0) {
+      const actionWord = actionWords[0].charAt(0).toUpperCase() + actionWords[0].slice(1);
+      return `${actionWord} Revolution`;
+    }
+    
+    return null;
+  },
+
+  /**
+   * Generate an inspiring name based on objective and context
+   */
+  generateInspiringName(objective: string, industry: string, aiExperience?: string): string {
+    // For beginners, use more approachable names
+    const isBeginnerFriendly = aiExperience?.toLowerCase().includes('beginner') || aiExperience?.toLowerCase().includes('none');
+    
+    if (isBeginnerFriendly) {
+      return objective.replace('Revolution', 'Journey').replace('Excellence', 'Transformation');
+    }
+    
+    // For advanced users, keep powerful, action-oriented names
+    return objective;
+  },
+
+  /**
+   * Identify the main focus from challenges
+   */
+  identifyChallengeFocus(challenges: string): string | null {
+    if (!challenges.trim()) return null;
+    
+    const lowerChallenges = challenges.toLowerCase();
+    
+    const focusPatterns = [
+      { keywords: ['time', 'resource', 'capacity', 'bandwidth'], focus: 'Efficiency' },
+      { keywords: ['cost', 'budget', 'expensive', 'price'], focus: 'Cost Optimization' },
+      { keywords: ['quality', 'accuracy', 'precision', 'reliability'], focus: 'Quality Enhancement' },
+      { keywords: ['speed', 'slow', 'delay', 'bottleneck'], focus: 'Speed' },
+      { keywords: ['compete', 'behind', 'lagging', 'catch up'], focus: 'Competitive Edge' },
+      { keywords: ['skill', 'knowledge', 'expertise', 'learning'], focus: 'Capability Building' },
+    ];
+    
+    for (const pattern of focusPatterns) {
+      if (pattern.keywords.some(keyword => lowerChallenges.includes(keyword))) {
+        return pattern.focus;
+      }
+    }
+    
+    return null;
   },
 
   /**

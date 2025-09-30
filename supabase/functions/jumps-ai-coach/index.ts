@@ -279,7 +279,7 @@ ${baseContext}
 
 RESPONSE FORMAT - EXACT JSON STRUCTURE REQUIRED:
 {
-  "full_content": "COMPREHENSIVE MARKDOWN-FORMATTED STRATEGIC ACTION PLAN (1000+ words): Include executive summary, detailed implementation phases with specific timelines, success metrics, risk assessment, resource requirements, and change management strategies.",
+  "full_content": "COMPREHENSIVE MARKDOWN-FORMATTED STRATEGIC ACTION PLAN: Create a detailed, well-structured plan with executive summary, implementation phases with specific timelines, success metrics, risk assessment, resource requirements, and change management strategies. Format using markdown headings (##, ###) and sections. DO NOT include word counts or character counts anywhere in the content - focus on valuable, actionable information.",
   "structured_plan": {
     "title": "Professional plan title reflecting the transformation goals",
     "overview": "Comprehensive overview paragraph (150+ words) explaining the transformation approach, key opportunities, and expected outcomes",
@@ -390,7 +390,7 @@ RESPONSE FORMAT - EXACT JSON STRUCTURE REQUIRED:
 }
 
 Generate exactly 4 prompts with IDs 1, 2, 3, and 4.`,
-        expectedTokens: 8000
+        expectedTokens: 12000
       };
 
     case 4: // Workflows
