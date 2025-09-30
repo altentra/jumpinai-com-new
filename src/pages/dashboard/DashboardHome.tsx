@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Rocket, Sparkles, GitBranch, Boxes, Lightbulb, ChevronRight, Crown, Palette, ArrowRight } from "lucide-react";
+import { Rocket, GitBranch, Boxes, Lightbulb, ChevronRight, Palette, ArrowRight, Wrench, Target } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
+import { DashboardStats } from "@/components/dashboard/DashboardStats";
+import { DashboardActivityGraph } from "@/components/dashboard/DashboardActivityGraph";
+import { dashboardStatsService } from "@/services/dashboardStatsService";
+import type { DashboardStats as StatsType, ActivityData } from "@/services/dashboardStatsService";
 
 // Memoized dashboard section card for better performance
 const DashboardCard = React.memo(({ section, onClick }: { 
@@ -39,15 +41,36 @@ DashboardCard.displayName = 'DashboardCard';
 const DashboardHome = () => {
   const navigate = useNavigate();
   const { user, subscription } = useAuth();
+  const [stats, setStats] = useState<StatsType | null>(null);
+  const [activityData, setActivityData] = useState<ActivityData[]>([]);
+  const [isLoadingStats, setIsLoadingStats] = useState(true);
+  const [isLoadingActivity, setIsLoadingActivity] = useState(true);
 
-  const subscribe = async () => {
+  useEffect(() => {
+    if (user?.id) {
+      loadDashboardData();
+    }
+  }, [user?.id]);
+
+  const loadDashboardData = async () => {
+    if (!user?.id) return;
+
+    setIsLoadingStats(true);
+    setIsLoadingActivity(true);
+
     try {
-      const { data, error } = await supabase.functions.invoke("create-checkout");
-      if (error) throw error;
-      const url = (data as any)?.url;
-      if (url) window.location.href = url;
-    } catch (e: any) {
-      toast.error(e.message || "Failed to start checkout");
+      const [statsData, activityData] = await Promise.all([
+        dashboardStatsService.getStats(user.id),
+        dashboardStatsService.getActivityData(user.id, 30),
+      ]);
+      
+      setStats(statsData);
+      setActivityData(activityData);
+    } catch (error) {
+      console.error('Error loading dashboard data:', error);
+    } finally {
+      setIsLoadingStats(false);
+      setIsLoadingActivity(false);
     }
   };
 
@@ -60,11 +83,11 @@ const DashboardHome = () => {
       color: "text-blue-500"
     },
     {
-      title: "Jumps in AI Guides",
-      description: "Explore and purchase AI guide products",
-      icon: Sparkles,
-      path: "/dashboard/jumps-guides",
-      color: "text-cyan-500"
+      title: "My Tools", 
+      description: "Manage your AI tools",
+      icon: Wrench,
+      path: "/dashboard/tools",
+      color: "text-orange-500"
     },
     {
       title: "My Prompts", 
@@ -85,14 +108,14 @@ const DashboardHome = () => {
       description: "Design your project blueprints",
       icon: Boxes, 
       path: "/dashboard/blueprints",
-      color: "text-orange-500"
+      color: "text-cyan-500"
     },
     {
       title: "My Strategies",
       description: "Plan and execute your strategies",
-      icon: Lightbulb,
+      icon: Target,
       path: "/dashboard/strategies", 
-      color: "text-yellow-500"
+      color: "text-pink-500"
     }
   ];
 
@@ -115,6 +138,12 @@ const DashboardHome = () => {
         </p>
       </div>
 
+      {/* Dashboard Stats */}
+      {stats && <DashboardStats stats={stats} isLoading={isLoadingStats} />}
+
+      {/* Activity Graph */}
+      <DashboardActivityGraph data={activityData} isLoading={isLoadingActivity} />
+
       {/* JumpinAI Studio Invitation - Mobile Optimized */}
       <Card className="glass border-primary/20 bg-gradient-to-r from-primary/5 to-primary/10 animate-fade-in-up rounded-xl shadow-modern">
         <CardContent className="p-4 sm:p-6 text-center">
@@ -136,26 +165,6 @@ const DashboardHome = () => {
           </Button>
         </CardContent>
       </Card>
-
-      {/* Pro Subscription Card - Mobile Optimized */}
-      {subscription && !subscription.subscribed && (
-        <Card className="glass border-border animate-fade-in-up rounded-xl shadow-modern">
-          <CardHeader className="pb-3 p-4 sm:p-6">
-            <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
-              <Crown className="h-4 w-4 sm:h-5 sm:w-5 text-primary" /> 
-              Upgrade to JumpinAI Pro
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="text-sm text-muted-foreground pb-3 px-4 sm:px-6">
-            Get all digital products with ongoing updates for just $10/month.
-          </CardContent>
-          <CardFooter className="pt-0 p-4 sm:p-6">
-            <Button onClick={subscribe} className="modern-button text-sm w-full sm:w-auto">
-              Get Pro
-            </Button>
-          </CardFooter>
-        </Card>
-      )}
 
       {/* Dashboard Sections Grid - Mobile Optimized */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 animate-fade-in-up animate-delay-200">
