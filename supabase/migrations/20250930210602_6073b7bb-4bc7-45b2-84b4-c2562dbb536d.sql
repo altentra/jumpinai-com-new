@@ -1,0 +1,2 @@
+-- Add 1000 testing credits to ivan.adventuring@gmail.com
+SELECT add_user_credits('68851121-043e-4b32-b8b3-eebd3e6965c8'::uuid, 1000, 'Testing credits - manual addition for development', 'dev_testing_2025');
