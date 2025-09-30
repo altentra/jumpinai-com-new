@@ -216,7 +216,7 @@ Return ONLY valid JSON:
 {
   "jumpName": "Inspiring 3-5 word name"
 }`,
-        expectedTokens: 150
+        expectedTokens: 1000
       };
     
     case 2:
@@ -250,7 +250,7 @@ Return ONLY valid JSON in this exact format:
   "successFactors": ["Factor 1", "Factor 2"],
   "riskMitigation": ["Strategy 1", "Strategy 2"]
 }`,
-        expectedTokens: 4000
+        expectedTokens: 10000
       };
 
     case 3:
@@ -265,7 +265,7 @@ ${overviewContent}
 Create a detailed implementation plan with specific actions, timelines, and success metrics.
 
 Return ONLY valid JSON with structured plan data.`,
-        expectedTokens: 4000
+        expectedTokens: 10000
       };
 
     case 4:
@@ -296,7 +296,7 @@ Recommend 4-6 specific AI tools. Return ONLY valid JSON:
     }
   ]
 }`,
-        expectedTokens: 5000
+        expectedTokens: 10000
       };
 
     case 5:
@@ -324,7 +324,7 @@ Create 4-6 ready-to-use AI prompts. Return ONLY valid JSON:
     }
   ]
 }`,
-        expectedTokens: 6000
+        expectedTokens: 10000
       };
 
     case 6:
@@ -364,7 +364,7 @@ Design 3-5 AI-powered workflows. Return ONLY valid JSON:
     }
   ]
 }`,
-        expectedTokens: 6500
+        expectedTokens: 10000
       };
 
     case 7:
@@ -407,7 +407,7 @@ Create 3-5 implementation blueprints. Return ONLY valid JSON:
     }
   ]
 }`,
-        expectedTokens: 7000
+        expectedTokens: 10000
       };
 
     case 8:
@@ -450,7 +450,7 @@ Develop 3-5 strategic initiatives. Return ONLY valid JSON:
     }
   ]
 }`,
-        expectedTokens: 7000
+        expectedTokens: 10000
       };
 
     default:
