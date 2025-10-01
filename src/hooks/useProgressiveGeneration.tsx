@@ -315,12 +315,12 @@ export const useProgressiveGeneration = () => {
             setResult({ ...progressiveResult });
             
           } else if (type === 'overview') {
-            // STEP 2: Overview (19%)
+            // STEP 2: Overview (19%) - ONLY set comprehensive_plan, NOT structured_plan
             console.log('Processing overview step data:', stepData);
             
             // Extract overview data (Jump# and title already set in jump_created event)
             progressiveResult.full_content = stepData.executiveSummary || '';
-            progressiveResult.structured_plan = stepData;
+            // DO NOT set structured_plan here - it will be set in the 'plan' step
             progressiveResult.comprehensive_plan = stepData;
             
             // Update immediately - Overview is 19%
@@ -335,10 +335,10 @@ export const useProgressiveGeneration = () => {
             setResult({ ...progressiveResult });
             
           } else if (type === 'plan') {
-            // STEP 3: Plan (32%)
+            // STEP 3: Plan (32%) - Set structured_plan from implementationPlan
             console.log('Processing plan step data:', stepData);
-            if (stepData.structuredPlan) {
-              progressiveResult.structured_plan = stepData.structuredPlan;
+            if (stepData.implementationPlan) {
+              progressiveResult.structured_plan = stepData.implementationPlan;
             }
             
             progressiveResult.processing_status = {

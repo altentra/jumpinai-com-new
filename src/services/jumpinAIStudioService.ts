@@ -247,7 +247,7 @@ export const jumpinAIStudioService = {
                   console.log('📝 Processing plan data:', data);
                   if (data.implementationPlan) {
                     result.structuredPlan = data.implementationPlan;
-                    console.log('Plan phases:', Object.keys(data.implementationPlan));
+                    console.log('Plan phases:', data.implementationPlan.phases ? data.implementationPlan.phases.length : 0);
                     
                     // Append plan details to fullContent
                     let planText = '\n\n=== IMPLEMENTATION PLAN ===\n';
@@ -270,7 +270,7 @@ export const jumpinAIStudioService = {
                     console.log('Plan appended, full content now:', result.fullContent.length, 'chars');
                   }
                   
-                  // Call progress callback IMMEDIATELY
+                  // Call progress callback IMMEDIATELY with the correct data structure
                   if (onProgress) {
                     onProgress(step, type, data);
                   }

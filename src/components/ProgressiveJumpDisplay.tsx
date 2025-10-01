@@ -319,16 +319,66 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
               <CardContent className="pt-0">
               {result.structured_plan ? (
                 <div className="space-y-4">
-                  <p className="text-white/90 drop-shadow-sm">{result.structured_plan.overview}</p>
-                  <div className="grid gap-4">
-                    {result.structured_plan.phases?.map((phase: any, index: number) => (
-                      <div key={index} className="glass backdrop-blur-sm border border-border/30 rounded-2xl p-4 bg-background/50">
-                         <h3 className="font-semibold mb-2 text-white drop-shadow-sm">Phase {phase.phase_number}: {phase.title}</h3>
-                         <p className="text-sm text-white/90 drop-shadow-sm mb-2">Duration: {phase.duration}</p>
-                         <p className="text-sm text-white/90 drop-shadow-sm">{phase.description}</p>
-                      </div>
-                    ))}
-                  </div>
+                  {result.structured_plan.phases && result.structured_plan.phases.length > 0 ? (
+                    <div className="grid gap-4">
+                      {result.structured_plan.phases.map((phase: any, index: number) => (
+                        <div key={index} className="glass backdrop-blur-sm border border-border/30 rounded-2xl p-4 bg-background/50">
+                          <h3 className="font-semibold mb-2 text-white drop-shadow-sm">
+                            Phase {index + 1}: {phase.name}
+                          </h3>
+                          <p className="text-sm text-white/70 drop-shadow-sm mb-3">
+                            Duration: {phase.duration}
+                          </p>
+                          
+                          {phase.objectives && phase.objectives.length > 0 && (
+                            <div className="mb-3">
+                              <h4 className="text-sm font-medium text-white/80 mb-1">Objectives:</h4>
+                              <ul className="list-disc pl-5 space-y-1">
+                                {phase.objectives.map((obj: string, idx: number) => (
+                                  <li key={idx} className="text-sm text-white/90 drop-shadow-sm">{obj}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                          
+                          {phase.actions && phase.actions.length > 0 && (
+                            <div className="mb-3">
+                              <h4 className="text-sm font-medium text-white/80 mb-1">Actions:</h4>
+                              <ul className="list-disc pl-5 space-y-1">
+                                {phase.actions.map((action: string, idx: number) => (
+                                  <li key={idx} className="text-sm text-white/90 drop-shadow-sm">{action}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                          
+                          {phase.milestones && phase.milestones.length > 0 && (
+                            <div>
+                              <h4 className="text-sm font-medium text-white/80 mb-1">Milestones:</h4>
+                              <ul className="list-disc pl-5 space-y-1">
+                                {phase.milestones.map((milestone: string, idx: number) => (
+                                  <li key={idx} className="text-sm text-white/90 drop-shadow-sm">{milestone}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-white/80 drop-shadow-sm">No implementation phases available</p>
+                  )}
+                  
+                  {result.structured_plan.successMetrics && result.structured_plan.successMetrics.length > 0 && (
+                    <div className="glass backdrop-blur-sm border border-border/30 rounded-2xl p-4 bg-background/50 mt-4">
+                      <h3 className="font-semibold mb-2 text-white drop-shadow-sm">Success Metrics</h3>
+                      <ul className="list-disc pl-5 space-y-1">
+                        {result.structured_plan.successMetrics.map((metric: string, idx: number) => (
+                          <li key={idx} className="text-sm text-white/90 drop-shadow-sm">{metric}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div className="flex items-center justify-center h-32 text-white/80 drop-shadow-sm">
