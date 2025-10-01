@@ -338,6 +338,11 @@ export const jumpinAIStudioService = {
               } catch (parseError) {
                 console.error('❌ Error parsing SSE data:', parseError);
                 console.error('Failed line:', line);
+                console.error('Parse error details:', {
+                  name: parseError.name,
+                  message: parseError.message,
+                  line: line.substring(0, 200)
+                });
               }
             }
           }

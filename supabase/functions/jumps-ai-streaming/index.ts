@@ -38,22 +38,18 @@ serve(async (req) => {
         const sendEvent = (step: number, type: string, data: any) => {
           if (isClosed) {
             console.log(`Skipping event (stream closed): step ${step}, type ${type}`);
-            return;
+            return false;
           }
           try {
             const message = `data: ${JSON.stringify({ step, type, data })}\n\n`;
             controller.enqueue(encoder.encode(message));
             console.log(`✓ Sent event: step ${step}, type ${type}`);
+            return true;
           } catch (error) {
             console.error('Error sending event:', error);
-            if (!isClosed) {
-              isClosed = true;
-              try {
-                controller.close();
-              } catch (e) {
-                // Already closed
-              }
-            }
+            // Don't close immediately - just mark as closed
+            isClosed = true;
+            return false;
           }
         };
 
@@ -85,11 +81,23 @@ serve(async (req) => {
           ];
 
           for (const { step, type, name } of steps) {
-            if (isClosed) break;
-            console.log(`Step ${step}: Generating ${name}...`);
-            const response = await callXAI(XAI_API_KEY, step, formData, overviewContent);
-            console.log(`Step ${step} response:`, response);
-            sendEvent(step, type, response);
+            if (isClosed) {
+              console.log(`Stream closed, stopping at step ${step}`);
+              break;
+            }
+            try {
+              console.log(`Step ${step}: Generating ${name}...`);
+              const response = await callXAI(XAI_API_KEY, step, formData, overviewContent);
+              console.log(`Step ${step} response:`, response);
+              const sent = sendEvent(step, type, response);
+              if (!sent) {
+                console.error(`Failed to send step ${step}, but continuing...`);
+              }
+            } catch (stepError) {
+              console.error(`Error in step ${step}:`, stepError);
+              // Continue with next step even if this one fails
+              sendEvent(step, 'error', { message: `Step ${step} failed: ${stepError.message}` });
+            }
           }
 
           // Send completion event

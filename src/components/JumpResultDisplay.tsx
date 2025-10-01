@@ -272,10 +272,10 @@ const JumpResultDisplay: React.FC<JumpResultProps> = ({
                     <Badge className={getDifficultyColor(prompt.difficulty)}>
                       {prompt.difficulty || 'Standard'}
                     </Badge>
-                    {prompt.estimated_time && (
+                    {(prompt.estimatedTime || prompt.estimated_time) && (
                       <Badge variant="outline" className="text-blue-300 border-blue-300/30">
                         <Clock className="w-3 h-3 mr-1" />
-                        {prompt.estimated_time}
+                        {prompt.estimatedTime || prompt.estimated_time}
                       </Badge>
                     )}
                   </div>
@@ -351,16 +351,16 @@ const JumpResultDisplay: React.FC<JumpResultProps> = ({
                           <div className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-xs font-semibold text-primary">
                             {step.stepNumber || step.step || stepIndex + 1}
                           </div>
-                          <div className="flex-1 space-y-2">
+                           <div className="flex-1 space-y-2">
                              <h6 className="font-medium text-white drop-shadow-sm">{step.title}</h6>
                              <p className="text-sm text-white/90 drop-shadow-sm">{step.description}</p>
-                            {step.aiTool && (
+                            {(step.aiTool || step.ai_tool) && (
                               <Badge variant="outline" className="text-xs text-primary border-primary/30">
-                                {step.aiTool}
+                                {step.aiTool || step.ai_tool}
                               </Badge>
                             )}
-                            {step.estimatedTime && (
-                              <span className="text-xs text-white/70">⏱️ {step.estimatedTime}</span>
+                            {(step.estimatedTime || step.estimated_time) && (
+                              <span className="text-xs text-white/70">⏱️ {step.estimatedTime || step.estimated_time}</span>
                             )}
                           </div>
                         </div>
