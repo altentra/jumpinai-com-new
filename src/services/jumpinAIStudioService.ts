@@ -195,10 +195,25 @@ export const jumpinAIStudioService = {
                 } else if (type === 'overview') {
                   // STEP 2: Overview (19%)
                   console.log('📋 Processing overview data:', data);
-                  result.fullContent = data.executiveSummary || '';
-                  result.structuredPlan = data;
                   result.comprehensivePlan = data;
-                  console.log('Overview set with executiveSummary length:', result.fullContent.length);
+                  
+                  // Build full content from all overview sections
+                  let overviewText = data.executiveSummary || '';
+                  if (data.situationAnalysis) {
+                    overviewText += '\n\nSITUATION ANALYSIS\n';
+                    overviewText += `Current State: ${data.situationAnalysis.currentState || ''}\n`;
+                    if (data.situationAnalysis.challenges?.length) {
+                      overviewText += '\nChallenges:\n' + data.situationAnalysis.challenges.map((c: string) => `• ${c}`).join('\n');
+                    }
+                    if (data.situationAnalysis.opportunities?.length) {
+                      overviewText += '\n\nOpportunities:\n' + data.situationAnalysis.opportunities.map((o: string) => `• ${o}`).join('\n');
+                    }
+                  }
+                  if (data.strategicVision) {
+                    overviewText += `\n\nSTRATEGIC VISION\n${data.strategicVision}`;
+                  }
+                  result.fullContent = overviewText;
+                  console.log('Overview set with full content length:', result.fullContent.length);
                   
                   // Call progress callback IMMEDIATELY
                   if (onProgress) {
@@ -233,6 +248,26 @@ export const jumpinAIStudioService = {
                   if (data.implementationPlan) {
                     result.structuredPlan = data.implementationPlan;
                     console.log('Plan phases:', Object.keys(data.implementationPlan));
+                    
+                    // Append plan details to fullContent
+                    let planText = '\n\n=== IMPLEMENTATION PLAN ===\n';
+                    if (data.implementationPlan.phases) {
+                      planText += '\nPHASES:\n';
+                      data.implementationPlan.phases.forEach((phase: any, idx: number) => {
+                        planText += `\n${idx + 1}. ${phase.name} (${phase.duration})\n`;
+                        if (phase.objectives?.length) {
+                          planText += '   Objectives:\n' + phase.objectives.map((o: string) => `   • ${o}`).join('\n') + '\n';
+                        }
+                        if (phase.actions?.length) {
+                          planText += '   Actions:\n' + phase.actions.map((a: string) => `   • ${a}`).join('\n') + '\n';
+                        }
+                      });
+                    }
+                    if (data.implementationPlan.successMetrics?.length) {
+                      planText += '\nSUCCESS METRICS:\n' + data.implementationPlan.successMetrics.map((m: string) => `• ${m}`).join('\n');
+                    }
+                    result.fullContent += planText;
+                    console.log('Plan appended, full content now:', result.fullContent.length, 'chars');
                   }
                   
                   // Call progress callback IMMEDIATELY

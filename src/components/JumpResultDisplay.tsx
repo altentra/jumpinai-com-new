@@ -606,12 +606,90 @@ const JumpResultDisplay: React.FC<JumpResultProps> = ({
                 Complete Strategic Action Plan
               </CardTitle>
             </CardHeader>
-            <CardContent>
-               <div className="prose prose-invert max-w-none">
-                 <div className="whitespace-pre-wrap text-white/90 drop-shadow-sm leading-relaxed">
-                   {fullContent}
-                 </div>
-               </div>
+            <CardContent className="space-y-6">
+              {/* Show comprehensive overview and implementation plan */}
+              {fullContent && (
+                <div className="prose prose-invert max-w-none">
+                  <div className="whitespace-pre-wrap text-white/90 drop-shadow-sm leading-relaxed">
+                    {fullContent}
+                  </div>
+                </div>
+              )}
+              
+              {/* Show structured implementation plan if available */}
+              {structuredPlan?.phases && (
+                <div className="space-y-4 mt-6">
+                  <h4 className="font-semibold text-white drop-shadow-sm text-lg">Detailed Implementation Phases</h4>
+                  {structuredPlan.phases.map((phase: any, index: number) => (
+                    <Card key={index} className="glass border-white/10">
+                      <CardHeader>
+                        <CardTitle className="text-base flex items-center justify-between">
+                          <span className="text-white drop-shadow-sm">{phase.name}</span>
+                          <Badge variant="outline" className="text-blue-300 border-blue-300/30">
+                            {phase.duration}
+                          </Badge>
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-3">
+                        {phase.objectives?.length > 0 && (
+                          <div>
+                            <h5 className="text-sm font-medium text-white/80 mb-2">Objectives</h5>
+                            <ul className="space-y-1">
+                              {phase.objectives.map((obj: string, idx: number) => (
+                                <li key={idx} className="flex items-start gap-2 text-sm text-white/90">
+                                  <Target className="w-3 h-3 text-green-400 mt-1 flex-shrink-0" />
+                                  {obj}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                        {phase.actions?.length > 0 && (
+                          <div>
+                            <h5 className="text-sm font-medium text-white/80 mb-2">Actions</h5>
+                            <ul className="space-y-1">
+                              {phase.actions.map((action: string, idx: number) => (
+                                <li key={idx} className="flex items-start gap-2 text-sm text-white/90">
+                                  <CheckCircle className="w-3 h-3 text-blue-400 mt-1 flex-shrink-0" />
+                                  {action}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                        {phase.milestones?.length > 0 && (
+                          <div>
+                            <h5 className="text-sm font-medium text-white/80 mb-2">Milestones</h5>
+                            <ul className="space-y-1">
+                              {phase.milestones.map((milestone: string, idx: number) => (
+                                <li key={idx} className="flex items-start gap-2 text-sm text-white/90">
+                                  <CheckCircle className="w-3 h-3 text-yellow-400 mt-1 flex-shrink-0" />
+                                  {milestone}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              )}
+              
+              {/* Show success metrics if available */}
+              {structuredPlan?.successMetrics?.length > 0 && (
+                <div className="mt-6">
+                  <h4 className="font-semibold text-white drop-shadow-sm mb-3">Success Metrics</h4>
+                  <div className="grid gap-2">
+                    {structuredPlan.successMetrics.map((metric: string, index: number) => (
+                      <div key={index} className="flex items-start gap-2 p-3 glass rounded-lg border border-white/10">
+                        <TrendingUp className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
+                        <span className="text-sm text-white/90">{metric}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
