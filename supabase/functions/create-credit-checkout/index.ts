@@ -82,20 +82,39 @@ serve(async (req) => {
       customerId = newCustomer.id;
     }
 
+    // Create or get Stripe price ID for this package
+    let stripePriceId = creditPackage.stripe_price_id;
+
+    if (!stripePriceId) {
+      // Create Stripe product
+      const product = await stripe.products.create({
+        name: `JumpinAI ${creditPackage.name}`,
+        description: `${creditPackage.credits} credits for AI transformation plans`,
+      });
+
+      // Create Stripe price
+      const price = await stripe.prices.create({
+        product: product.id,
+        unit_amount: creditPackage.price_cents,
+        currency: 'usd',
+      });
+      
+      stripePriceId = price.id;
+
+      // Update database with price ID
+      await supabase
+        .from('credit_packages')
+        .update({ stripe_price_id: stripePriceId })
+        .eq('id', packageId);
+    }
+
     // Create Stripe checkout session
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       payment_method_types: ['card'],
       line_items: [
         {
-          price_data: {
-            currency: 'usd',
-            product_data: {
-              name: `JumpinAI ${creditPackage.name}`,
-              description: `${creditPackage.credits} JumpinAI credits for generating AI transformation plans`,
-            },
-            unit_amount: creditPackage.price_cents,
-          },
+          price: stripePriceId,
           quantity: 1,
         },
       ],
@@ -110,13 +129,41 @@ serve(async (req) => {
       },
     });
 
+    // Create a virtual product record for this credit package if it doesn't exist
+    const { data: existingProduct } = await supabase
+      .from('products')
+      .select('id')
+      .eq('name', `${creditPackage.name}`)
+      .maybeSingle();
+
+    let productId = existingProduct?.id;
+
+    if (!productId) {
+      const { data: newProduct, error: productError } = await supabase
+        .from('products')
+        .insert({
+          name: creditPackage.name,
+          description: `${creditPackage.credits} credits for AI transformation plans`,
+          price: creditPackage.price_cents,
+          file_path: 'virtual',
+          file_name: 'credits_package',
+          status: 'active'
+        })
+        .select('id')
+        .single();
+
+      if (!productError && newProduct) {
+        productId = newProduct.id;
+      }
+    }
+
     // Record the pending order
     const { error: orderError } = await supabase
       .from('orders')
       .insert({
         user_id: user.id,
         user_email: user.email,
-        product_id: packageId, // Using package_id as product_id
+        product_id: productId,
         amount: creditPackage.price_cents,
         currency: 'usd',
         status: 'pending',
@@ -125,7 +172,7 @@ serve(async (req) => {
 
     if (orderError) {
       console.error('Error creating order record:', orderError);
-      // Continue anyway - the webhook will handle the credit addition
+      // Continue anyway - the payment processing will handle it
     }
 
     // Send purchase notification

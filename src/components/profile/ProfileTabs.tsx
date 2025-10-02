@@ -245,7 +245,7 @@ export default function ProfileTabs() {
         return;
       }
       
-      // Single query with products join to get real product names
+      // Fetch all paid orders including subscriptions and credit purchases
       const { data, error } = await supabase
         .from("orders")
         .select(`
@@ -269,7 +269,7 @@ export default function ProfileTabs() {
           )
         `)
         .eq("user_email", userEmail)
-        .in("status", ["paid"]) // Show paid orders (includes subscription orders)
+        .eq("status", "paid")
         .order("created_at", { ascending: false });
       
       if (error) {
@@ -732,67 +732,82 @@ export default function ProfileTabs() {
                 ) : (
                   <div className="space-y-4 sm:hidden">
                     {/* Mobile Card View */}
-                    {orders.map((order) => (
-                      <div key={order.id} className="border border-border rounded-lg p-4 space-y-3">
-                        <div className="flex flex-col gap-2">
-                          <div className="font-medium text-sm">{order.products?.name ?? (order.download_token ? 'Digital product' : 'JumpinAI Pro Subscription')}</div>
-                          <div className="text-xs text-muted-foreground">
-                            {order.products?.description || (!order.download_token ? 'Monthly subscription' : 'Digital product')}
-                          </div>
-                        </div>
-                        
-                        <div className="grid grid-cols-2 gap-4 text-sm">
-                          <div>
-                            <div className="text-xs text-muted-foreground mb-1">Date</div>
-                            <div>{new Date(order.created_at).toLocaleDateString()}</div>
-                          </div>
-                          <div>
-                            <div className="text-xs text-muted-foreground mb-1">Amount</div>
-                            <div>${(order.amount / 100).toFixed(2)} {order.currency?.toUpperCase()}</div>
-                          </div>
-                        </div>
-                        
-                        {order.products?.file_name && order.download_token && order.products?.name !== 'JumpinAI Pro Subscription' && (
-                          <div>
-                            <div className="text-xs text-muted-foreground mb-1">Downloads</div>
-                            <div className="text-sm">
-                              {order.download_count || 0} / {order.max_downloads || 5}
+                    {orders.map((order) => {
+                      // Determine product display name
+                      const productName = order.products?.name || 
+                        (order.download_token ? 'Digital Product' : 'Credit Package or Subscription');
+                      const productDescription = order.products?.description || 
+                        (!order.download_token ? 'Purchase' : 'Digital product download');
+                      const isPhysicalProduct = order.products?.file_name && order.download_token;
+                      
+                      return (
+                        <div key={order.id} className="border border-border rounded-lg p-4 space-y-3">
+                          <div className="flex flex-col gap-2">
+                            <div className="font-medium text-sm">{productName}</div>
+                            <div className="text-xs text-muted-foreground">
+                              {productDescription}
                             </div>
                           </div>
-                        )}
-                        
-                        <div className="flex flex-col gap-2 pt-2">
-                          {order.products?.file_name && order.download_token && order.products?.name !== 'JumpinAI Pro Subscription' && (
-                            <Button 
-                              variant="outline" 
-                              size="sm"
-                              className="w-full text-xs"
-                              onClick={() => window.open(`https://cieczaajcgkgdgenfdzi.supabase.co/functions/v1/download-product/${order.download_token}`, '_blank')}
-                              disabled={(order.download_count || 0) >= (order.max_downloads || 5)}
-                            >
-                              <Download className="mr-2 h-3 w-3" />
-                              Download
-                            </Button>
+                          
+                          <div className="grid grid-cols-2 gap-4 text-sm">
+                            <div>
+                              <div className="text-xs text-muted-foreground mb-1">Date</div>
+                              <div>
+                                {new Date(order.created_at).toLocaleDateString('en-US', { 
+                                  year: 'numeric', 
+                                  month: 'short', 
+                                  day: 'numeric' 
+                                })}
+                              </div>
+                            </div>
+                            <div>
+                              <div className="text-xs text-muted-foreground mb-1">Amount</div>
+                              <div>${(order.amount / 100).toFixed(2)} {order.currency?.toUpperCase() || 'USD'}</div>
+                            </div>
+                          </div>
+                          
+                          {isPhysicalProduct && (
+                            <div>
+                              <div className="text-xs text-muted-foreground mb-1">Downloads</div>
+                              <div className="text-sm">
+                                {order.download_count || 0} / {order.max_downloads || 5}
+                              </div>
+                            </div>
                           )}
-                          {order.stripe_session_id && (
-                            <Button 
-                              variant="outline" 
-                              size="sm"
-                              className="w-full text-xs"
-                              onClick={() => downloadReceipt(order.stripe_session_id)}
-                              disabled={downloadingReceipt === order.stripe_session_id}
-                            >
-                              {downloadingReceipt === order.stripe_session_id ? (
-                                <Loader2 className="mr-2 h-3 w-3 animate-spin" />
-                              ) : (
-                                <ExternalLink className="mr-2 h-3 w-3" />
-                              )}
-                              {downloadingReceipt === order.stripe_session_id ? "Loading..." : "Receipt"}
-                            </Button>
-                          )}
+                          
+                          <div className="flex flex-col gap-2 pt-2">
+                            {isPhysicalProduct && (
+                              <Button 
+                                variant="outline" 
+                                size="sm"
+                                className="w-full text-xs"
+                                onClick={() => window.open(`https://cieczaajcgkgdgenfdzi.supabase.co/functions/v1/download-product/${order.download_token}`, '_blank')}
+                                disabled={(order.download_count || 0) >= (order.max_downloads || 5)}
+                              >
+                                <Download className="mr-2 h-3 w-3" />
+                                Download
+                              </Button>
+                            )}
+                            {order.stripe_session_id && (
+                              <Button 
+                                variant="outline" 
+                                size="sm"
+                                className="w-full text-xs"
+                                onClick={() => downloadReceipt(order.stripe_session_id)}
+                                disabled={downloadingReceipt === order.stripe_session_id}
+                              >
+                                {downloadingReceipt === order.stripe_session_id ? (
+                                  <Loader2 className="mr-2 h-3 w-3 animate-spin" />
+                                ) : (
+                                  <ExternalLink className="mr-2 h-3 w-3" />
+                                )}
+                                {downloadingReceipt === order.stripe_session_id ? "Loading..." : "Receipt"}
+                              </Button>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 )}
                 
@@ -811,58 +826,79 @@ export default function ProfileTabs() {
                           </TableRow>
                         </TableHeader>
                         <TableBody>
-                          {orders.map((order) => (
-                            <TableRow key={order.id}>
-                              <TableCell className="min-w-0">
-                                <div>
-                                  <div className="font-medium text-sm">{order.products?.name ?? (order.download_token ? 'Digital product' : 'JumpinAI Pro Subscription')}</div>
-                                  <div className="text-xs text-muted-foreground break-words">
-                                    {order.products?.description || (!order.download_token ? 'Monthly subscription' : 'Digital product')}
+                           {orders.map((order) => {
+                            // Determine product display name
+                            const productName = order.products?.name || 
+                              (order.download_token ? 'Digital Product' : 'Credit Package or Subscription');
+                            const productDescription = order.products?.description || 
+                              (!order.download_token ? 'Purchase' : 'Digital product download');
+                            const isPhysicalProduct = order.products?.file_name && order.download_token;
+                            
+                            return (
+                              <TableRow key={order.id}>
+                                <TableCell className="min-w-0">
+                                  <div>
+                                    <div className="font-medium text-sm">{productName}</div>
+                                    <div className="text-xs text-muted-foreground break-words">
+                                      {productDescription}
+                                    </div>
                                   </div>
-                                </div>
-                              </TableCell>
-                              <TableCell className="text-sm whitespace-nowrap">
-                                {new Date(order.created_at).toLocaleDateString()}
-                              </TableCell>
-                              <TableCell className="text-sm whitespace-nowrap">
-                                ${(order.amount / 100).toFixed(2)} {order.currency?.toUpperCase()}
-                              </TableCell>
-                              <TableCell className="text-sm">
-                                {order.products?.file_name && order.download_token && order.products?.name !== 'JumpinAI Pro Subscription' ? (
-                                  <div className="text-sm">
-                                    <div>{order.download_count || 0} / {order.max_downloads || 5}</div>
-                                    <div className="text-xs text-muted-foreground">downloads</div>
+                                </TableCell>
+                                <TableCell className="text-sm whitespace-nowrap">
+                                  {new Date(order.created_at).toLocaleDateString('en-US', { 
+                                    year: 'numeric', 
+                                    month: 'short', 
+                                    day: 'numeric' 
+                                  })}
+                                </TableCell>
+                                <TableCell className="text-sm whitespace-nowrap">
+                                  ${(order.amount / 100).toFixed(2)} {order.currency?.toUpperCase() || 'USD'}
+                                </TableCell>
+                                <TableCell className="text-sm">
+                                  {isPhysicalProduct ? (
+                                    <div className="text-sm">
+                                      <div>{order.download_count || 0} / {order.max_downloads || 5}</div>
+                                      <div className="text-xs text-muted-foreground">downloads</div>
+                                    </div>
+                                  ) : (
+                                    <span className="text-muted-foreground">—</span>
+                                  )}
+                                </TableCell>
+                                <TableCell>
+                                  <div className="flex flex-col lg:flex-row gap-1 lg:gap-2">
+                                    {isPhysicalProduct && (
+                                      <Button 
+                                        variant="outline" 
+                                        size="sm"
+                                        className="text-xs whitespace-nowrap"
+                                        onClick={() => window.open(`https://cieczaajcgkgdgenfdzi.supabase.co/functions/v1/download-product/${order.download_token}`, '_blank')}
+                                        disabled={(order.download_count || 0) >= (order.max_downloads || 5)}
+                                      >
+                                        <Download className="mr-1 h-3 w-3" />
+                                        Download
+                                      </Button>
+                                    )}
+                                    {order.stripe_session_id && (
+                                      <Button 
+                                        variant="outline" 
+                                        size="sm"
+                                        className="text-xs whitespace-nowrap"
+                                        onClick={() => downloadReceipt(order.stripe_session_id)}
+                                        disabled={downloadingReceipt === order.stripe_session_id}
+                                      >
+                                        {downloadingReceipt === order.stripe_session_id ? (
+                                          <Loader2 className="mr-1 h-3 w-3 animate-spin" />
+                                        ) : (
+                                          <ExternalLink className="mr-1 h-3 w-3" />
+                                        )}
+                                        {downloadingReceipt === order.stripe_session_id ? "Loading..." : "Receipt"}
+                                      </Button>
+                                    )}
                                   </div>
-                                ) : null}
-                              </TableCell>
-                              <TableCell>
-                                <div className="flex flex-col lg:flex-row gap-1 lg:gap-2">
-                                  {order.products?.file_name && order.download_token && order.products?.name !== 'JumpinAI Pro Subscription' && (
-                                    <Button 
-                                      variant="outline" 
-                                      size="sm"
-                                      className="text-xs whitespace-nowrap"
-                                      onClick={() => window.open(`https://cieczaajcgkgdgenfdzi.supabase.co/functions/v1/download-product/${order.download_token}`, '_blank')}
-                                      disabled={(order.download_count || 0) >= (order.max_downloads || 5)}
-                                    >
-                                      Download
-                                    </Button>
-                                  )}
-                                  {order.stripe_session_id && (
-                                    <Button 
-                                      variant="outline" 
-                                      size="sm"
-                                      className="text-xs whitespace-nowrap"
-                                      onClick={() => downloadReceipt(order.stripe_session_id)}
-                                      disabled={downloadingReceipt === order.stripe_session_id}
-                                    >
-                                      {downloadingReceipt === order.stripe_session_id ? "Loading..." : "Receipt"}
-                                    </Button>
-                                  )}
-                                </div>
-                              </TableCell>
-                            </TableRow>
-                          ))}
+                                </TableCell>
+                              </TableRow>
+                            );
+                          })}
                         </TableBody>
                       </Table>
                     </div>

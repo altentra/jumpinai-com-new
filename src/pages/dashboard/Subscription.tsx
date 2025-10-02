@@ -245,11 +245,16 @@ export default function Subscription() {
             </div>
           )}
         </CardContent>
-        <CardFooter className="flex flex-wrap gap-3">
+        <CardFooter className="flex flex-col items-center gap-3">
           {subInfo?.subscribed ? (
             <>
-              <Button variant="default" onClick={manage}>
-                <ExternalLink className="mr-2 h-4 w-4" />
+              <Button 
+                variant="default" 
+                onClick={manage}
+                size="lg"
+                className="w-full max-w-md text-lg py-6 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary/80 shadow-lg hover:shadow-xl transition-all"
+              >
+                <ExternalLink className="mr-2 h-5 w-5" />
                 Manage Billing
               </Button>
               <Button variant="outline" onClick={handleRefreshSubscription}>
