@@ -90,41 +90,51 @@ serve(async (req) => {
       customerId = newCustomer.id;
     }
 
-    // Create or get Stripe product and price
+    // ALWAYS create fresh Stripe price with current database amount to ensure sync
+    console.log(`Processing subscription: ${subscriptionPlan.name} - $${subscriptionPlan.price_cents / 100}/month`);
+    
     let stripeProductId = subscriptionPlan.stripe_product_id;
-    let stripePriceId = subscriptionPlan.stripe_price_id;
 
+    // Create or update Stripe product
     if (!stripeProductId) {
-      // Create Stripe product
       const product = await stripe.products.create({
         name: `JumpinAI ${subscriptionPlan.name}`,
-        description: subscriptionPlan.description || `${subscriptionPlan.credits_per_month} monthly credits with rollover`,
+        description: subscriptionPlan.description || `${subscriptionPlan.credits_per_month} monthly credits with ${subscriptionPlan.name}`,
       });
       stripeProductId = product.id;
-
-      // Update database with product ID
-      await supabase
-        .from('subscription_plans')
-        .update({ stripe_product_id: stripeProductId })
-        .eq('id', planId);
-    }
-
-    if (!stripePriceId) {
-      // Create Stripe price
-      const price = await stripe.prices.create({
-        product: stripeProductId,
-        unit_amount: subscriptionPlan.price_cents,
-        currency: 'usd',
-        recurring: { interval: 'month' },
+      console.log(`Created new Stripe product: ${stripeProductId}`);
+    } else {
+      // Update existing product to ensure name/description are current
+      await stripe.products.update(stripeProductId, {
+        name: `JumpinAI ${subscriptionPlan.name}`,
+        description: subscriptionPlan.description || `${subscriptionPlan.credits_per_month} monthly credits with ${subscriptionPlan.name}`,
       });
-      stripePriceId = price.id;
-
-      // Update database with price ID
-      await supabase
-        .from('subscription_plans')
-        .update({ stripe_price_id: stripePriceId })
-        .eq('id', planId);
+      console.log(`Updated Stripe product: ${stripeProductId}`);
     }
+
+    // ALWAYS create a fresh price with the current database amount
+    // This ensures we're always using the latest pricing
+    console.log(`Creating new Stripe price: $${subscriptionPlan.price_cents / 100} for ${subscriptionPlan.name}`);
+    const price = await stripe.prices.create({
+      product: stripeProductId,
+      unit_amount: subscriptionPlan.price_cents,
+      currency: 'usd',
+      recurring: { interval: 'month' },
+    });
+    const stripePriceId = price.id;
+    console.log(`Created new Stripe price: ${stripePriceId} - $${subscriptionPlan.price_cents / 100}`);
+    
+    // Update database with the new product and price IDs
+    await supabase
+      .from('subscription_plans')
+      .update({ 
+        stripe_product_id: stripeProductId,
+        stripe_price_id: stripePriceId,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', planId);
+    
+    console.log(`Updated database with new price ID for ${subscriptionPlan.name}`);
 
     // Create Stripe checkout session
     const session = await stripe.checkout.sessions.create({
