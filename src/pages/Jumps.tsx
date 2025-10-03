@@ -54,13 +54,14 @@ const Jumps = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch products
+        // Fetch products - only PDF guides, exclude plans and credit packages
         const { data, error } = await (supabase as any)
           .from('products')
           .select('id, name, description, price, status, created_at, updated_at, file_name')
           .eq('status', 'active')
           .neq('name', 'JumpinAI Pro Subscription')
           .neq('file_name', 'jump-in-ai-powerstack.pdf')
+          .like('file_name', '%.pdf')
           .order('created_at', { ascending: true });
         
         if (error) throw error;
