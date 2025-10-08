@@ -104,7 +104,7 @@ export default function AppSidebar() {
             )}
           >
             <Home className="h-4 w-4" />
-            Overview
+            Dashboard
           </Link>
 
 
