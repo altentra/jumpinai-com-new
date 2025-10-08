@@ -173,17 +173,6 @@ const DashboardHome = () => {
           </Button>
         </CardContent>
       </Card>
-
-      {/* Dashboard Sections Grid - Mobile Optimized */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 animate-fade-in-up animate-delay-200">
-        {dashboardSections.map((section, index) => (
-          <DashboardCard 
-            key={section.title}
-            section={section}
-            onClick={() => navigate(section.path)}
-          />
-        ))}
-      </div>
     </div>
   );
 };

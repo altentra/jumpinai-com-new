@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Zap, Rocket, Wrench, Lightbulb, GitBranch, Boxes, Target, CheckCircle2 } from 'lucide-react';
 import { DashboardStats as StatsType } from '@/services/dashboardStatsService';
 import { Progress } from '@/components/ui/progress';
+import { useNavigate } from 'react-router-dom';
 
 interface DashboardStatsProps {
   stats: StatsType;
@@ -10,6 +11,7 @@ interface DashboardStatsProps {
 }
 
 export const DashboardStats: React.FC<DashboardStatsProps> = ({ stats, isLoading }) => {
+  const navigate = useNavigate();
   const totalItems = stats.totalJumps + stats.totalTools + stats.totalPrompts + 
                      stats.totalWorkflows + stats.totalBlueprints + stats.totalStrategies;
   
@@ -25,6 +27,7 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({ stats, isLoading
       icon: Zap,
       color: 'text-yellow-500',
       bgColor: 'bg-yellow-500/10',
+      path: '/dashboard/subscription',
     },
     {
       title: 'Jumps',
@@ -33,6 +36,7 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({ stats, isLoading
       icon: Rocket,
       color: 'text-blue-500',
       bgColor: 'bg-blue-500/10',
+      path: '/dashboard/jumps',
     },
     {
       title: 'Tools',
@@ -41,6 +45,7 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({ stats, isLoading
       icon: Wrench,
       color: 'text-orange-500',
       bgColor: 'bg-orange-500/10',
+      path: '/dashboard/tools',
     },
     {
       title: 'Prompts',
@@ -49,6 +54,7 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({ stats, isLoading
       icon: Lightbulb,
       color: 'text-purple-500',
       bgColor: 'bg-purple-500/10',
+      path: '/dashboard/prompts',
     },
     {
       title: 'Workflows',
@@ -57,6 +63,7 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({ stats, isLoading
       icon: GitBranch,
       color: 'text-green-500',
       bgColor: 'bg-green-500/10',
+      path: '/dashboard/workflows',
     },
     {
       title: 'Blueprints',
@@ -65,6 +72,7 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({ stats, isLoading
       icon: Boxes,
       color: 'text-cyan-500',
       bgColor: 'bg-cyan-500/10',
+      path: '/dashboard/blueprints',
     },
     {
       title: 'Strategies',
@@ -73,6 +81,7 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({ stats, isLoading
       icon: Target,
       color: 'text-pink-500',
       bgColor: 'bg-pink-500/10',
+      path: '/dashboard/strategies',
     },
   ];
 
@@ -95,10 +104,14 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({ stats, isLoading
       {/* Stats Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-3 sm:gap-4">
         {statCards.map((stat) => (
-          <Card key={stat.title} className="glass border-border hover:shadow-modern transition-all duration-300 rounded-xl">
+          <Card 
+            key={stat.title} 
+            className="glass border-border hover:shadow-modern transition-all duration-300 rounded-xl cursor-pointer group"
+            onClick={() => navigate(stat.path)}
+          >
             <CardContent className="p-4">
               <div className="flex flex-col gap-2">
-                <div className={`w-10 h-10 rounded-lg ${stat.bgColor} flex items-center justify-center`}>
+                <div className={`w-10 h-10 rounded-lg ${stat.bgColor} flex items-center justify-center group-hover:scale-110 transition-transform`}>
                   <stat.icon className={`h-5 w-5 ${stat.color}`} />
                 </div>
                 <div>
