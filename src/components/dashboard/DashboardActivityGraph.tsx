@@ -37,25 +37,25 @@ export const DashboardActivityGraph: React.FC<DashboardActivityGraphProps> = ({ 
   const chartConfig = {
     jumps: {
       label: "Jumps",
-      color: "hsl(262, 83%, 58%)",
+      color: "hsl(210, 100%, 60%)",
     },
     components: {
       label: "Components",
-      color: "hsl(160, 84%, 39%)",
+      color: "hsl(152, 76%, 46%)",
     },
   };
 
   return (
     <Card className="group relative overflow-hidden border-0 bg-gradient-to-br from-card via-card to-card/50 shadow-xl hover:shadow-2xl transition-all duration-500 rounded-2xl animate-fade-in-up">
       {/* Animated background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-violet-500/5 via-transparent to-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
       
       <CardHeader className="relative pb-6 space-y-0">
         <div className="flex items-start justify-between">
           <div className="flex items-start gap-4">
             <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-violet-500 to-purple-600 rounded-xl blur-md opacity-50 group-hover:opacity-75 transition-opacity duration-500" />
-              <div className="relative p-3 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 shadow-lg">
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl blur-md opacity-50 group-hover:opacity-75 transition-opacity duration-500" />
+              <div className="relative p-3 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg">
                 <Activity className="h-5 w-5 text-white" />
               </div>
             </div>
@@ -64,7 +64,7 @@ export const DashboardActivityGraph: React.FC<DashboardActivityGraphProps> = ({ 
                 <CardTitle className="text-xl font-bold bg-gradient-to-r from-foreground via-foreground/90 to-foreground/70 bg-clip-text text-transparent">
                   Activity Overview
                 </CardTitle>
-                <Sparkles className="h-4 w-4 text-violet-500 animate-pulse" />
+                <Sparkles className="h-4 w-4 text-blue-500 animate-pulse" />
               </div>
               <CardDescription className="text-sm text-muted-foreground/80">
                 Your creative journey over the last 30 days
@@ -72,9 +72,9 @@ export const DashboardActivityGraph: React.FC<DashboardActivityGraphProps> = ({ 
             </div>
           </div>
           <div className="flex flex-col items-end gap-1">
-            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-violet-500/10 to-emerald-500/10 backdrop-blur-sm border border-violet-500/20 shadow-lg">
-              <TrendingUp className="h-4 w-4 text-violet-500" />
-              <span className="text-lg font-bold bg-gradient-to-r from-violet-500 to-emerald-500 bg-clip-text text-transparent">{totalItems}</span>
+            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-500/10 to-emerald-500/10 backdrop-blur-sm border border-blue-500/20 shadow-lg">
+              <TrendingUp className="h-4 w-4 text-blue-500" />
+              <span className="text-lg font-bold bg-gradient-to-r from-blue-500 to-emerald-500 bg-clip-text text-transparent">{totalItems}</span>
             </div>
             <span className="text-xs text-muted-foreground/60 font-medium">total items</span>
           </div>
@@ -88,18 +88,18 @@ export const DashboardActivityGraph: React.FC<DashboardActivityGraphProps> = ({ 
             margin={{ top: 20, right: 20, left: -20, bottom: 0 }}
           >
             <defs>
-              {/* Ultra-modern gradient for jumps - violet to blue */}
+              {/* Ultra-modern gradient for jumps - beautiful blue */}
               <linearGradient id="jumpsGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="hsl(262, 83%, 58%)" stopOpacity={0.5} />
-                <stop offset="40%" stopColor="hsl(262, 83%, 58%)" stopOpacity={0.25} />
-                <stop offset="100%" stopColor="hsl(262, 83%, 58%)" stopOpacity={0.02} />
+                <stop offset="0%" stopColor="hsl(210, 100%, 60%)" stopOpacity={0.6} />
+                <stop offset="40%" stopColor="hsl(210, 100%, 60%)" stopOpacity={0.3} />
+                <stop offset="100%" stopColor="hsl(210, 100%, 60%)" stopOpacity={0.02} />
               </linearGradient>
               
-              {/* Ultra-modern gradient for components - emerald to teal */}
+              {/* Ultra-modern gradient for components - vibrant green */}
               <linearGradient id="componentsGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="hsl(160, 84%, 39%)" stopOpacity={0.5} />
-                <stop offset="40%" stopColor="hsl(160, 84%, 39%)" stopOpacity={0.25} />
-                <stop offset="100%" stopColor="hsl(160, 84%, 39%)" stopOpacity={0.02} />
+                <stop offset="0%" stopColor="hsl(152, 76%, 46%)" stopOpacity={0.6} />
+                <stop offset="40%" stopColor="hsl(152, 76%, 46%)" stopOpacity={0.3} />
+                <stop offset="100%" stopColor="hsl(152, 76%, 46%)" stopOpacity={0.02} />
               </linearGradient>
 
               {/* Subtle glow effect */}
@@ -140,7 +140,7 @@ export const DashboardActivityGraph: React.FC<DashboardActivityGraphProps> = ({ 
             <ChartTooltip 
               content={<ChartTooltipContent indicator="dot" labelFormatter={formatDate} />}
               cursor={{ 
-                stroke: 'hsl(262, 83%, 58%)', 
+                stroke: 'hsl(210, 100%, 60%)', 
                 strokeWidth: 1.5, 
                 strokeDasharray: '6 6', 
                 opacity: 0.3 
@@ -155,17 +155,17 @@ export const DashboardActivityGraph: React.FC<DashboardActivityGraphProps> = ({ 
             
             {/* Components area (behind) */}
             <Area
-              type="natural"
+              type="monotone"
               dataKey="components"
-              stroke="hsl(160, 84%, 39%)"
-              strokeWidth={1.5}
+              stroke="hsl(152, 76%, 46%)"
+              strokeWidth={2}
               fill="url(#componentsGradient)"
               dot={false}
               activeDot={{ 
                 r: 5, 
                 strokeWidth: 2,
                 stroke: 'hsl(var(--background))',
-                fill: 'hsl(160, 84%, 39%)',
+                fill: 'hsl(152, 76%, 46%)',
                 filter: 'url(#softGlow)'
               }}
               animationDuration={1500}
@@ -174,17 +174,17 @@ export const DashboardActivityGraph: React.FC<DashboardActivityGraphProps> = ({ 
             
             {/* Jumps area (front) */}
             <Area
-              type="natural"
+              type="monotone"
               dataKey="jumps"
-              stroke="hsl(262, 83%, 58%)"
-              strokeWidth={1.5}
+              stroke="hsl(210, 100%, 60%)"
+              strokeWidth={2}
               fill="url(#jumpsGradient)"
               dot={false}
               activeDot={{ 
                 r: 5, 
                 strokeWidth: 2,
                 stroke: 'hsl(var(--background))',
-                fill: 'hsl(262, 83%, 58%)',
+                fill: 'hsl(210, 100%, 60%)',
                 filter: 'url(#softGlow)'
               }}
               animationDuration={1500}
@@ -195,7 +195,7 @@ export const DashboardActivityGraph: React.FC<DashboardActivityGraphProps> = ({ 
       </CardContent>
       
       {/* Bottom accent line */}
-      <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-violet-500/50 via-purple-500/50 to-emerald-500/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500/50 via-cyan-500/50 to-emerald-500/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
     </Card>
   );
 };
