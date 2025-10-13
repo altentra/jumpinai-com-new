@@ -2,13 +2,13 @@ import { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { ExternalLink, RefreshCw, CreditCard, Crown, Zap, Star, Rocket, AlertTriangle, ArrowRight, Sparkles } from "lucide-react";
+import { ExternalLink, RefreshCw, CreditCard, Crown, Zap, Star, Rocket, AlertTriangle, ArrowRight, Sparkles, TrendingUp, TrendingDown, Gift, Calendar, Coins } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useCredits } from "@/hooks/useCredits";
-import { creditsService, type CreditPackage, type SubscriptionPlan } from "@/services/creditsService";
+import { creditsService, type CreditPackage, type SubscriptionPlan, type CreditTransaction } from "@/services/creditsService";
 import { Separator } from "@/components/ui/separator";
 
 interface SubscriberInfo {
@@ -26,6 +26,8 @@ export default function Subscription() {
   const [loading, setLoading] = useState<boolean>(true);
   const [creditPackages, setCreditPackages] = useState<CreditPackage[]>([]);
   const [subscriptionPlans, setSubscriptionPlans] = useState<SubscriptionPlan[]>([]);
+  const [creditTransactions, setCreditTransactions] = useState<CreditTransaction[]>([]);
+  const [loadingTransactions, setLoadingTransactions] = useState(true);
   const [packageLoading, setPackageLoading] = useState<Record<string, boolean>>({});
   const [planLoading, setPlanLoading] = useState<Record<string, boolean>>({});
 
@@ -39,6 +41,7 @@ export default function Subscription() {
         setLoading(false);
         fetchCreditPackages();
         fetchSubscriptionPlans();
+        fetchCreditTransactions();
         
         // Show success message if user just returned from payment
         const urlParams = new URLSearchParams(window.location.search);
@@ -70,9 +73,23 @@ export default function Subscription() {
     }
   };
 
+  const fetchCreditTransactions = async () => {
+    if (!user?.id) return;
+    try {
+      setLoadingTransactions(true);
+      const transactions = await creditsService.getCreditTransactions(user.id);
+      setCreditTransactions(transactions);
+    } catch (error) {
+      console.error('Error fetching credit transactions:', error);
+    } finally {
+      setLoadingTransactions(false);
+    }
+  };
+
   const handleRefreshSubscription = async () => {
     await refreshSubscription();
     await fetchCredits();
+    await fetchCreditTransactions();
     setTimeout(() => {
       setSubInfo(subscription || { subscribed: false });
     }, 100);
@@ -219,6 +236,105 @@ export default function Subscription() {
               Refresh
             </Button>
           </div>
+        </CardContent>
+      </Card>
+
+      {/* Credits Use History and Log */}
+      <Card className="glass border-border/40 shadow-modern">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-gradient-to-br from-primary/20 to-accent/20">
+              <Coins className="w-5 h-5 text-primary" />
+            </div>
+            <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              Credits Use History & Log
+            </span>
+          </CardTitle>
+          <CardDescription>
+            Track all your credit transactions, purchases, and usage history
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {loadingTransactions ? (
+            <div className="flex items-center justify-center py-12">
+              <div className="w-8 h-8 border-4 border-primary/30 border-t-primary rounded-full animate-spin" />
+            </div>
+          ) : creditTransactions.length === 0 ? (
+            <div className="text-center py-12">
+              <Coins className="w-12 h-12 mx-auto mb-4 text-muted-foreground/50" />
+              <p className="text-muted-foreground">No transaction history yet</p>
+              <p className="text-sm text-muted-foreground/70 mt-1">Your credit activity will appear here</p>
+            </div>
+          ) : (
+            <div className="space-y-2 max-h-[600px] overflow-y-auto">
+              {creditTransactions.map((transaction) => {
+                const isPositive = transaction.credits_amount > 0;
+                const typeConfig = {
+                  purchase: { icon: Sparkles, label: 'Credit Purchase', color: 'text-emerald-500', bgColor: 'bg-emerald-500/10' },
+                  usage: { icon: Zap, label: 'Credit Used', color: 'text-blue-500', bgColor: 'bg-blue-500/10' },
+                  welcome_bonus: { icon: Gift, label: 'Welcome Bonus', color: 'text-violet-500', bgColor: 'bg-violet-500/10' },
+                  monthly_allocation: { icon: Calendar, label: 'Monthly Credits', color: 'text-cyan-500', bgColor: 'bg-cyan-500/10' },
+                  drip_credit: { icon: TrendingUp, label: 'Drip Credit', color: 'text-amber-500', bgColor: 'bg-amber-500/10' },
+                };
+                const config = typeConfig[transaction.transaction_type as keyof typeof typeConfig] || { 
+                  icon: Coins, 
+                  label: transaction.transaction_type, 
+                  color: 'text-muted-foreground',
+                  bgColor: 'bg-muted/10'
+                };
+                const Icon = config.icon;
+
+                return (
+                  <div
+                    key={transaction.id}
+                    className="group flex items-center justify-between p-4 rounded-xl border border-border/50 hover:border-primary/30 hover:bg-accent/5 transition-all duration-300 hover:shadow-sm"
+                  >
+                    <div className="flex items-center gap-4 flex-1 min-w-0">
+                      <div className={`p-2.5 rounded-lg ${config.bgColor} flex-shrink-0`}>
+                        <Icon className={`w-4 h-4 ${config.color}`} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <p className="font-semibold text-sm text-foreground">{config.label}</p>
+                        </div>
+                        {transaction.description && (
+                          <p className="text-xs text-muted-foreground truncate mb-1">
+                            {transaction.description}
+                          </p>
+                        )}
+                        <p className="text-xs text-muted-foreground/70">
+                          {new Date(transaction.created_at).toLocaleString('en-US', {
+                            month: 'short',
+                            day: 'numeric',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                          })}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      {isPositive ? (
+                        <div className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+                          <TrendingUp className="w-3.5 h-3.5 text-emerald-500" />
+                          <span className="font-bold text-sm text-emerald-500">
+                            +{transaction.credits_amount}
+                          </span>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-rose-500/10 border border-rose-500/20">
+                          <TrendingDown className="w-3.5 h-3.5 text-rose-500" />
+                          <span className="font-bold text-sm text-rose-500">
+                            {transaction.credits_amount}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </CardContent>
       </Card>
 
