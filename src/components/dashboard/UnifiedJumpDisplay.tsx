@@ -203,9 +203,10 @@ const UnifiedJumpDisplay: React.FC<UnifiedJumpDisplayProps> = ({ jump, component
               <CardContent className="pt-0 relative z-10">
                 {jump.comprehensive_plan || jump.structured_plan ? (
                   (() => {
-                    // Get the correct phases array based on data structure
-                    const planData = jump.comprehensive_plan || jump.structured_plan;
-                    const phases = planData?.action_plan?.phases || planData?.phases || [];
+                    // Prioritize structured_plan for the implementation plan tab
+                    // comprehensive_plan is for the overview, structured_plan is for the phased plan
+                    const planData = jump.structured_plan || jump.comprehensive_plan;
+                    const phases = planData?.phases || planData?.action_plan?.phases || [];
                     const overview = planData?.overview || planData?.executive_summary || '';
                     
                     return (
@@ -213,19 +214,47 @@ const UnifiedJumpDisplay: React.FC<UnifiedJumpDisplayProps> = ({ jump, component
                         {overview && (
                           <p className="text-white/90 drop-shadow-sm select-text">{overview}</p>
                         )}
-                        <div className="grid gap-4">
-                          {phases.map((phase: any, index: number) => (
-                            <div key={index} className="glass backdrop-blur-sm border border-border/30 rounded-2xl p-4 bg-background/50">
-                               <h3 className="font-semibold mb-2 text-white drop-shadow-sm select-text">
-                                 Phase {phase.phase_number || index + 1}: {phase.title || phase.name || 'Unnamed Phase'}
-                               </h3>
-                               <p className="text-sm text-white/90 drop-shadow-sm mb-2 select-text">
-                                 Duration: {phase.duration || phase.timeline || 'Not specified'}
-                               </p>
-                               <p className="text-sm text-white/90 drop-shadow-sm select-text">{phase.description || 'No description available'}</p>
-                            </div>
-                          ))}
-                        </div>
+                        {phases.length > 0 ? (
+                          <div className="grid gap-4">
+                            {phases.map((phase: any, index: number) => (
+                              <div key={index} className="glass backdrop-blur-sm border border-border/30 rounded-2xl p-4 bg-background/50">
+                                 <h3 className="font-semibold mb-2 text-white drop-shadow-sm select-text">
+                                   Phase {phase.phase_number || index + 1}: {phase.title || phase.name || 'Unnamed Phase'}
+                                 </h3>
+                                 <p className="text-sm text-white/90 drop-shadow-sm mb-2 select-text">
+                                   Duration: {phase.duration || phase.timeline || 'Not specified'}
+                                 </p>
+                                 {phase.description && (
+                                   <p className="text-sm text-white/90 drop-shadow-sm mb-3 select-text">{phase.description}</p>
+                                 )}
+                                 {phase.objectives && phase.objectives.length > 0 && (
+                                   <div className="mb-2">
+                                     <h4 className="text-sm font-medium text-white/80 mb-1">Objectives:</h4>
+                                     <ul className="list-disc pl-5 space-y-1">
+                                       {phase.objectives.map((obj: string, idx: number) => (
+                                         <li key={idx} className="text-sm text-white/90 drop-shadow-sm select-text">{obj}</li>
+                                       ))}
+                                     </ul>
+                                   </div>
+                                 )}
+                                 {phase.actions && phase.actions.length > 0 && (
+                                   <div>
+                                     <h4 className="text-sm font-medium text-white/80 mb-1">Actions:</h4>
+                                     <ul className="list-disc pl-5 space-y-1">
+                                       {phase.actions.map((action: string, idx: number) => (
+                                         <li key={idx} className="text-sm text-white/90 drop-shadow-sm select-text">{action}</li>
+                                       ))}
+                                     </ul>
+                                   </div>
+                                 )}
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="text-center py-8 text-muted-foreground">
+                            <p>No implementation phases available.</p>
+                          </div>
+                        )}
                       </div>
                     );
                   })()

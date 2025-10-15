@@ -229,14 +229,14 @@ export const jumpinAIStudioService = {
                           .update({
                             summary: result.fullContent.slice(0, 500),
                             full_content: JSON.stringify(data),
-                            structured_plan: data,
+                            // DO NOT set structured_plan here - it will be set in step 3 (plan)
                             comprehensive_plan: data,
                             completion_percentage: 19,
                             status: 'active'
                           })
                           .eq('id', jumpId);
                         
-                        console.log('Jump updated with overview data');
+                        console.log('Jump updated with overview data (comprehensive_plan only)');
                       } catch (error) {
                         console.error('Error updating jump with overview:', error);
                       }
@@ -273,6 +273,26 @@ export const jumpinAIStudioService = {
                   // Call progress callback IMMEDIATELY with the correct data structure
                   if (onProgress) {
                     onProgress(step, type, data);
+                  }
+                  
+                  // Update jump with plan data in background (non-blocking)
+                  if (userId && jumpId && data.implementationPlan) {
+                    (async () => {
+                      try {
+                        await supabase
+                          .from('user_jumps')
+                          .update({
+                            structured_plan: data.implementationPlan,
+                            full_content: result.fullContent,
+                            completion_percentage: 32
+                          })
+                          .eq('id', jumpId);
+                        
+                        console.log('Jump updated with implementation plan (structured_plan)');
+                      } catch (error) {
+                        console.error('Error updating jump with plan:', error);
+                      }
+                    })();
                   }
                 } else if (type === 'tools') {
                   // STEP 4: Tools (46%)
