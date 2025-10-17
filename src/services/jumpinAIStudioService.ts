@@ -292,20 +292,29 @@ export const jumpinAIStudioService = {
                       }
                     })();
                   }
-                } else if (type === 'tool_prompts' || type === 'tools') {
+                } else if (type === 'tool_prompts') {
                   // STEP 4: Tools & Prompts Combined (52%)
                   console.log('✨ Processing tool-prompts data:', data);
-                  result.components!.toolPrompts = data.tool_prompts || data.tools || [];
-                  console.log(`✓ ${result.components!.toolPrompts.length} tool-prompts extracted`);
+                  
+                  const toolPromptsArray = data.tool_prompts || [];
+                  console.log(`📦 Extracted ${toolPromptsArray.length} tool prompts`);
+                  
+                  result.components!.toolPrompts = toolPromptsArray;
                   
                   if (onProgress) {
                     onProgress(step, type, data);
                   }
                   
-                  if (userId && jumpId) {
+                  if (userId && jumpId && toolPromptsArray.length > 0) {
+                    console.log(`💾 Saving ${toolPromptsArray.length} tool prompts...`);
                     (async () => {
-                      const { toolPromptsService } = await import('@/services/toolPromptsService');
-                      await toolPromptsService.saveToolPrompts(result.components!.toolPrompts, userId, jumpId);
+                      try {
+                        const { toolPromptsService } = await import('@/services/toolPromptsService');
+                        await toolPromptsService.saveToolPrompts(toolPromptsArray, userId, jumpId);
+                        console.log('✅ Tool prompts saved successfully');
+                      } catch (error) {
+                        console.error('❌ Error saving tool prompts:', error);
+                      }
                     })();
                   }
                 } else if (type === 'prompts') {

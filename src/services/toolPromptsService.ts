@@ -51,39 +51,53 @@ export const toolPromptsService = {
   },
 
   async saveToolPrompts(toolPrompts: any[], userId: string, jumpId: string): Promise<void> {
-    if (!toolPrompts || toolPrompts.length === 0) return;
+    if (!toolPrompts || toolPrompts.length === 0) {
+      console.log('⚠️ No tool prompts to save');
+      return;
+    }
 
-    const toolPromptsToInsert: UserToolPromptInsert[] = toolPrompts.map((item) => ({
-      user_id: userId,
-      jump_id: jumpId,
-      title: item.title || item.name || 'AI Tool & Prompt',
-      description: item.description || '',
-      category: item.category || 'General',
-      tool_name: item.tool_name || item.tool || '',
-      tool_url: item.tool_url || item.url || '',
-      tool_type: item.tool_type || item.type || '',
-      setup_time: item.setup_time || '',
-      cost_estimate: item.cost_estimate || item.cost || '',
-      integration_complexity: item.integration_complexity || item.complexity || '',
-      prompt_text: item.prompt_text || item.prompt || '',
-      prompt_instructions: item.prompt_instructions || item.instructions || '',
-      use_cases: item.use_cases || [],
-      tags: item.tags || [],
-      difficulty_level: item.difficulty_level || item.difficulty || 'medium',
-      ai_tools: item.ai_tools || [],
-      features: item.features || [],
-      limitations: item.limitations || [],
-      content: item
-    }));
+    console.log(`💾 Saving ${toolPrompts.length} tool prompts:`, toolPrompts);
 
-    const { error } = await supabase
+    const toolPromptsToInsert: UserToolPromptInsert[] = toolPrompts.map((item) => {
+      // Extract all fields from the item, whether they're at root or nested
+      const toolPromptData = {
+        user_id: userId,
+        jump_id: jumpId,
+        title: item.title || item.name || 'AI Tool & Prompt',
+        description: item.description || '',
+        category: item.category || 'General',
+        tool_name: item.tool_name || item.tool || '',
+        tool_url: item.tool_url || item.url || '',
+        tool_type: item.tool_type || item.type || '',
+        setup_time: item.setup_time || '',
+        cost_estimate: item.cost_estimate || item.cost || '',
+        integration_complexity: item.integration_complexity || item.complexity || '',
+        prompt_text: item.prompt_text || item.prompt || '',
+        prompt_instructions: item.prompt_instructions || item.instructions || '',
+        use_cases: item.use_cases || [],
+        tags: item.tags || [],
+        difficulty_level: item.difficulty_level || item.difficulty || 'medium',
+        ai_tools: item.ai_tools || [],
+        features: item.features || [],
+        limitations: item.limitations || [],
+        content: item // Store the complete original object
+      };
+
+      console.log('📝 Formatted tool prompt:', toolPromptData.title);
+      return toolPromptData;
+    });
+
+    const { data, error } = await supabase
       .from('user_tool_prompts')
-      .insert(toolPromptsToInsert);
+      .insert(toolPromptsToInsert)
+      .select();
 
     if (error) {
-      console.error('Error saving tool-prompts:', error);
+      console.error('❌ Error saving tool-prompts:', error);
       throw error;
     }
+
+    console.log(`✅ Successfully saved ${data?.length || 0} tool prompts`);
   },
 
   async updateToolPrompt(id: string, updates: Partial<UserToolPromptInsert>): Promise<UserToolPrompt> {

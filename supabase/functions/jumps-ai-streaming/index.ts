@@ -299,41 +299,45 @@ Return ONLY valid JSON:
 
     case 4:
       return {
-        systemPrompt: `You are an AI tools and prompt engineering expert. Create combined tool recommendations with ready-to-use prompts.`,
+        systemPrompt: `You are an AI tools and prompt engineering expert specializing in practical implementation. Your job is to recommend specific AI tools paired with custom prompts that are immediately actionable for the user's specific situation.`,
         userPrompt: `${baseContext}
 
 Overview Context:
 ${overviewContent}
 
-Create 4-5 AI tool recommendations, each paired with a custom prompt for their specific situation. Each item must include:
-- Tool name, URL, and description
-- Custom prompt text tailored to their goals
-- Clear instructions on where/how to use the prompt in that tool
-- Use cases, features, and limitations
+Create 4-6 powerful AI tool + prompt combinations tailored specifically for their situation. For each combination:
 
-Return ONLY valid JSON:
+1. Choose a SPECIFIC, REAL AI tool (like ChatGPT, Claude, Midjourney, Jasper, Copy.ai, etc.)
+2. Create a COMPLETE, READY-TO-USE prompt customized for their industry and goals
+3. Provide CLEAR, STEP-BY-STEP instructions on WHERE and HOW to use this prompt
+
+Each tool-prompt combination must be practical and immediately implementable.
+
+Return ONLY valid JSON (no markdown, no explanations):
 {
   "tool_prompts": [
     {
-      "title": "Tool Name for [Their Use Case]",
-      "description": "How this tool+prompt combination helps them",
-      "category": "Category",
-      "tool_name": "Specific Tool Name",
-      "tool_url": "https://tool-website.com",
-      "tool_type": "Type",
-      "prompt_text": "Complete ready-to-use prompt text customized for their industry/goals",
-      "prompt_instructions": "Step-by-step: where to paste this prompt in the tool and how to customize it",
-      "use_cases": ["Specific use case 1", "Use case 2", "Use case 3"],
-      "features": ["Key feature 1", "Feature 2", "Feature 3"],
-      "limitations": ["Limitation 1", "Limitation 2"],
-      "tags": ["tag1", "tag2"],
+      "title": "[Tool Name] for [Their Specific Use Case]",
+      "description": "Clear explanation of how this tool+prompt solves their specific challenge",
+      "category": "Content Creation|Marketing|Data Analysis|Customer Service|Operations|Strategy",
+      "tool_name": "Exact AI Tool Name (e.g., ChatGPT, Claude, Midjourney)",
+      "tool_url": "https://actual-tool-website.com",
+      "tool_type": "Text Generation|Image Generation|Data Analysis|Chatbot|etc",
+      "prompt_text": "Complete ready-to-use prompt text that is fully customized for their industry, goals, and challenges. This should be 3-5 sentences minimum and include specific context from their situation.",
+      "prompt_instructions": "Step-by-step instructions: 1) Go to [Tool Name] 2) Navigate to [specific section] 3) Paste this prompt 4) Customize [specific parts] with your data 5) Review and refine the output",
+      "use_cases": ["Specific use case 1 relevant to their goals", "Use case 2", "Use case 3"],
+      "features": ["Key feature that helps them", "Feature 2", "Feature 3"],
+      "limitations": ["Important limitation to know", "Limitation 2"],
+      "tags": ["relevant", "tags", "for", "searching"],
       "difficulty_level": "beginner|intermediate|advanced",
-      "setup_time": "X minutes",
-      "cost_estimate": "$X/month or free"
+      "setup_time": "5 minutes|15 minutes|30 minutes|1 hour",
+      "cost_estimate": "Free|$10/month|$20/month|$50/month|Custom pricing"
     }
   ]
-}`,
-        expectedTokens: 10000
+}
+
+CRITICAL: Make each prompt SPECIFIC to their situation. Include their industry, goals, and challenges in the prompt text itself.`,
+        expectedTokens: 12000
       };
 
     case 5:
