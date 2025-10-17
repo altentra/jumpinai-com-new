@@ -800,6 +800,87 @@ export type Database = {
           },
         ]
       }
+      user_tool_prompts: {
+        Row: {
+          ai_tools: string[] | null
+          category: string | null
+          content: Json | null
+          cost_estimate: string | null
+          created_at: string
+          description: string | null
+          difficulty_level: string | null
+          features: string[] | null
+          id: string
+          implemented: boolean | null
+          integration_complexity: string | null
+          jump_id: string | null
+          limitations: string[] | null
+          prompt_instructions: string | null
+          prompt_text: string
+          setup_time: string | null
+          tags: string[] | null
+          title: string
+          tool_name: string | null
+          tool_type: string | null
+          tool_url: string | null
+          updated_at: string
+          use_cases: string[] | null
+          user_id: string
+        }
+        Insert: {
+          ai_tools?: string[] | null
+          category?: string | null
+          content?: Json | null
+          cost_estimate?: string | null
+          created_at?: string
+          description?: string | null
+          difficulty_level?: string | null
+          features?: string[] | null
+          id?: string
+          implemented?: boolean | null
+          integration_complexity?: string | null
+          jump_id?: string | null
+          limitations?: string[] | null
+          prompt_instructions?: string | null
+          prompt_text: string
+          setup_time?: string | null
+          tags?: string[] | null
+          title: string
+          tool_name?: string | null
+          tool_type?: string | null
+          tool_url?: string | null
+          updated_at?: string
+          use_cases?: string[] | null
+          user_id: string
+        }
+        Update: {
+          ai_tools?: string[] | null
+          category?: string | null
+          content?: Json | null
+          cost_estimate?: string | null
+          created_at?: string
+          description?: string | null
+          difficulty_level?: string | null
+          features?: string[] | null
+          id?: string
+          implemented?: boolean | null
+          integration_complexity?: string | null
+          jump_id?: string | null
+          limitations?: string[] | null
+          prompt_instructions?: string | null
+          prompt_text?: string
+          setup_time?: string | null
+          tags?: string[] | null
+          title?: string
+          tool_name?: string | null
+          tool_type?: string | null
+          tool_url?: string | null
+          updated_at?: string
+          use_cases?: string[] | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_tools: {
         Row: {
           ai_tool_type: string | null

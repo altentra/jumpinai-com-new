@@ -19,8 +19,7 @@ export type ProgressiveResult = {
   structured_plan?: any;
   comprehensive_plan?: any;
   components: {
-    tools: any[];
-    prompts: any[];
+    toolPrompts: any[];
     workflows: any[];
     blueprints: any[];
     strategies: any[];
@@ -51,8 +50,7 @@ export const useProgressiveGeneration = () => {
       structured_plan: null,
       comprehensive_plan: null,
       components: {
-        tools: [],
-        prompts: [],
+        toolPrompts: [],
         workflows: [],
         blueprints: [],
         strategies: []
@@ -106,33 +104,17 @@ export const useProgressiveGeneration = () => {
     setResult({ ...progressiveResult });
 
     // Process components one by one
-    const components = rawResponse.components || { tools: [], prompts: [], workflows: [], blueprints: [], strategies: [] };
+    const components = rawResponse.components || { toolPrompts: [], workflows: [], blueprints: [], strategies: [] };
     
-    // Process tools first
-    if (components.tools && Array.isArray(components.tools) && components.tools.length > 0) {
-      for (let i = 0; i < components.tools.length; i++) {
+    // Process tool-prompts
+    if (components.toolPrompts && Array.isArray(components.toolPrompts) && components.toolPrompts.length > 0) {
+      for (let i = 0; i < components.toolPrompts.length; i++) {
         await new Promise(resolve => setTimeout(resolve, 400));
-        progressiveResult.components.tools.push(components.tools[i]);
+        progressiveResult.components.toolPrompts.push(components.toolPrompts[i]);
         progressiveResult.processing_status = {
-          stage: 'Processing Tools',
-          progress: 40 + (i * 3),
-          currentTask: `Processing AI tool ${i + 1} of ${components.tools.length}...`,
-          isComplete: false
-        };
-        setProcessingStatus(progressiveResult.processing_status);
-        setResult({ ...progressiveResult });
-      }
-    }
-    
-    // Process prompts
-    if (components.prompts && Array.isArray(components.prompts) && components.prompts.length > 0) {
-      for (let i = 0; i < components.prompts.length; i++) {
-        await new Promise(resolve => setTimeout(resolve, 400));
-        progressiveResult.components.prompts.push(components.prompts[i]);
-        progressiveResult.processing_status = {
-          stage: 'Processing Prompts',
-          progress: 52 + (i * 3),
-          currentTask: `Processing AI prompt ${i + 1} of ${components.prompts.length}...`,
+          stage: 'Processing Tools & Prompts',
+          progress: 40 + (i * 4),
+          currentTask: `Processing tool & prompt ${i + 1} of ${components.toolPrompts.length}...`,
           isComplete: false
         };
         setProcessingStatus(progressiveResult.processing_status);
@@ -224,8 +206,8 @@ export const useProgressiveGeneration = () => {
         naming: 'Generating Jump Name',
         overview: 'Creating Overview',
         plan: 'Building Strategic Plan',
-        tools: 'Generating AI Tools',
-        prompts: 'Crafting AI Prompts',
+        tool_prompts: 'Generating Tools & Prompts',
+        tools: 'Generating Tools & Prompts',
         workflows: 'Designing Workflows',
         blueprints: 'Building Blueprints',
         strategies: 'Developing Strategies'
@@ -235,10 +217,10 @@ export const useProgressiveGeneration = () => {
         naming: 5,
         overview: 19,
         plan: 32,
-        tools: 46,
-        prompts: 59,
-        workflows: 73,
-        blueprints: 86,
+        tool_prompts: 52,
+        tools: 52,
+        workflows: 70,
+        blueprints: 85,
         strategies: 100
       };
       
@@ -250,8 +232,7 @@ export const useProgressiveGeneration = () => {
         title: 'Generating Jump...',
         full_content: '',
         components: {
-          tools: [],
-          prompts: [],
+          toolPrompts: [],
           workflows: [],
           blueprints: [],
           strategies: []
