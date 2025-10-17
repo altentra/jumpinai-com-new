@@ -331,7 +331,6 @@ REQUIREMENTS:
 - Choose tools that are REAL, POPULAR, and directly applicable to their industry and goals`;
 
       return {
-      return {
         systemPrompt: `You are an AI tools and prompt engineering expert specializing in practical implementation. Your job is to recommend specific AI tools paired with custom prompts that are immediately actionable for the user's specific situation.`,
         userPrompt: `${baseContext}
 
