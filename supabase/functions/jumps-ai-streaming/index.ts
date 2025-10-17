@@ -73,11 +73,10 @@ serve(async (req) => {
           // Steps 3-8: Generate all components
           const steps = [
             { step: 3, type: 'plan', name: 'Plan' },
-            { step: 4, type: 'tools', name: 'Tools' },
-            { step: 5, type: 'prompts', name: 'Prompts' },
-            { step: 6, type: 'workflows', name: 'Workflows' },
-            { step: 7, type: 'blueprints', name: 'Blueprints' },
-            { step: 8, type: 'strategies', name: 'Strategies' }
+            { step: 4, type: 'tool_prompts', name: 'Tools & Prompts' },
+            { step: 5, type: 'workflows', name: 'Workflows' },
+            { step: 6, type: 'blueprints', name: 'Blueprints' },
+            { step: 7, type: 'strategies', name: 'Strategies' }
           ];
 
           for (const { step, type, name } of steps) {
@@ -300,80 +299,44 @@ Return ONLY valid JSON:
 
     case 4:
       return {
-        systemPrompt: `You are an AI tools specialist. Recommend specific, actionable AI tools.`,
+        systemPrompt: `You are an AI tools and prompt engineering expert. Create combined tool recommendations with ready-to-use prompts.`,
         userPrompt: `${baseContext}
 
 Overview Context:
 ${overviewContent}
 
-Recommend 4 specific AI tools tailored to their needs. Each tool must have:
-- Clear title and description (2 sentences max)
-- Category and type
-- 3 specific use cases
-- Practical setup instructions (concise)
-- 3 key features and 2 limitations
-- Difficulty, setup time, cost estimate
+Create 4-5 AI tool recommendations, each paired with a custom prompt for their specific situation. Each item must include:
+- Tool name, URL, and description
+- Custom prompt text tailored to their goals
+- Clear instructions on where/how to use the prompt in that tool
+- Use cases, features, and limitations
 
 Return ONLY valid JSON:
 {
-  "tools": [
+  "tool_prompts": [
     {
-      "title": "Tool name",
-      "description": "What it does in 2 sentences",
+      "title": "Tool Name for [Their Use Case]",
+      "description": "How this tool+prompt combination helps them",
       "category": "Category",
-      "aiToolType": "Type",
-      "useCases": ["Use case 1", "Use case 2", "Use case 3"],
-      "instructions": "Concise setup instructions",
-      "tags": ["tag1", "tag2", "tag3"],
-      "difficultyLevel": "beginner|intermediate|advanced",
-      "setupTime": "X minutes",
-      "integrationComplexity": "low|medium|high",
-      "costEstimate": "$X/month or free",
-      "features": ["Feature 1", "Feature 2", "Feature 3"],
-      "limitations": ["Limitation 1", "Limitation 2"]
+      "tool_name": "Specific Tool Name",
+      "tool_url": "https://tool-website.com",
+      "tool_type": "Type",
+      "prompt_text": "Complete ready-to-use prompt text customized for their industry/goals",
+      "prompt_instructions": "Step-by-step: where to paste this prompt in the tool and how to customize it",
+      "use_cases": ["Specific use case 1", "Use case 2", "Use case 3"],
+      "features": ["Key feature 1", "Feature 2", "Feature 3"],
+      "limitations": ["Limitation 1", "Limitation 2"],
+      "tags": ["tag1", "tag2"],
+      "difficulty_level": "beginner|intermediate|advanced",
+      "setup_time": "X minutes",
+      "cost_estimate": "$X/month or free"
     }
   ]
 }`,
-        expectedTokens: 8000
+        expectedTokens: 10000
       };
 
     case 5:
-      return {
-        systemPrompt: `You are an AI prompt engineering expert. Create powerful, ready-to-use prompts.`,
-        userPrompt: `${baseContext}
-
-Overview Context:
-${overviewContent}
-
-Create 4 comprehensive, professional AI prompts tailored to their needs. Each prompt must:
-- Have clear title and description
-- Include complete, ready-to-use prompt text (detailed and specific)
-- List 2 compatible AI tools
-- Provide 3 specific use cases
-- Include practical instructions
-- Have difficulty and time estimate
-
-Return ONLY valid JSON:
-{
-  "prompts": [
-    {
-      "title": "Prompt title",
-      "description": "What this achieves",
-      "promptText": "Complete ready-to-use prompt text",
-      "category": "Category",
-      "aiTools": ["Tool 1", "Tool 2"],
-      "useCases": ["Use case 1", "Use case 2", "Use case 3"],
-      "instructions": "How to use this prompt effectively",
-      "tags": ["tag1", "tag2", "tag3"],
-      "difficulty": "beginner|intermediate|advanced",
-      "estimatedTime": "X minutes"
-    }
-  ]
-}`,
-        expectedTokens: 8000
-      };
-
-    case 6:
       return {
         systemPrompt: `You are a workflow optimization expert. Design comprehensive AI-powered workflows.`,
         userPrompt: `${baseContext}
@@ -421,7 +384,7 @@ Return ONLY valid JSON:
         expectedTokens: 8000
       };
 
-    case 7:
+    case 6:
       return {
         systemPrompt: `You are an AI implementation architect. Create comprehensive, actionable blueprints.`,
         userPrompt: `${baseContext}
@@ -472,7 +435,7 @@ Return ONLY valid JSON:
         expectedTokens: 8000
       };
 
-    case 8:
+    case 7:
       return {
         systemPrompt: `You are a strategic AI advisor. Develop comprehensive, actionable strategies.`,
         userPrompt: `${baseContext}

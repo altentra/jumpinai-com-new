@@ -37,47 +37,47 @@ export default function JumpDetailModal({ jump, isOpen, onClose }: JumpDetailMod
       console.log('JumpDetailModal: Fetching data for jump ID:', jump.id);
 
       // Fetch all components for this jump in parallel
-      const [toolsResult, promptsResult, workflowsResult, blueprintsResult, strategiesResult] = await Promise.all([
-        supabase.from('user_tools').select('*').eq('jump_id', jump.id),
-        supabase.from('user_prompts').select('*').eq('jump_id', jump.id),
+      const [toolPromptsResult, workflowsResult, blueprintsResult, strategiesResult] = await Promise.all([
+        supabase.from('user_tool_prompts').select('*').eq('jump_id', jump.id),
         supabase.from('user_workflows').select('*').eq('jump_id', jump.id),
         supabase.from('user_blueprints').select('*').eq('jump_id', jump.id),
         supabase.from('user_strategies').select('*').eq('jump_id', jump.id)
       ]);
 
       console.log('JumpDetailModal: Components fetched:', {
-        tools: toolsResult.data?.length || 0,
-        prompts: promptsResult.data?.length || 0,
+        toolPrompts: toolPromptsResult.data?.length || 0,
         workflows: workflowsResult.data?.length || 0,
         blueprints: blueprintsResult.data?.length || 0,
         strategies: strategiesResult.data?.length || 0
       });
 
-      // Transform database tools to display format
-      const transformedDbTools = (toolsResult.data || []).map((dbTool: any) => {
-        // If tool_content exists, merge it with top-level fields
-        const toolContent = dbTool.tool_content || {};
+      // Transform database tool-prompts to display format
+      const transformedDbToolPrompts = (toolPromptsResult.data || []).map((dbToolPrompt: any) => {
+        // If content exists, merge it with top-level fields
+        const content = dbToolPrompt.content || {};
         return {
-          id: dbTool.id,
-          name: dbTool.title || toolContent.name || 'Unnamed Tool',
-          description: dbTool.description || toolContent.description || 'No description available',
-          category: dbTool.category || toolContent.category || 'General',
-          website_url: toolContent.website_url || toolContent.url || toolContent.website,
-          when_to_use: toolContent.when_to_use || toolContent.primary_use_case || 'Use as needed',
-          why_this_tool: toolContent.why_this_tool || 'Recommended for your project',
-          how_to_integrate: toolContent.how_to_integrate || toolContent.integration_notes || 'Follow setup instructions',
-          alternatives: toolContent.alternatives || [],
-          skill_level: toolContent.skill_level || dbTool.difficulty_level || 'Beginner',
-          cost_model: toolContent.cost_model || dbTool.cost_estimate || 'Varies',
-          implementation_time: toolContent.implementation_timeline || toolContent.implementation_time || dbTool.setup_time || 'Quick setup',
+          id: dbToolPrompt.id,
+          name: dbToolPrompt.tool_name || dbToolPrompt.title || content.name || 'Unnamed Tool',
+          description: dbToolPrompt.description || content.description || 'No description available',
+          category: dbToolPrompt.category || content.category || 'General',
+          website_url: dbToolPrompt.tool_url || content.website_url || content.url || content.website,
+          when_to_use: content.when_to_use || content.primary_use_case || 'Use as needed',
+          why_this_tool: content.why_this_tool || 'Recommended for your project',
+          how_to_integrate: content.how_to_integrate || content.integration_notes || 'Follow setup instructions',
+          alternatives: content.alternatives || [],
+          skill_level: content.skill_level || dbToolPrompt.difficulty_level || 'Beginner',
+          cost_model: content.cost_model || dbToolPrompt.cost_estimate || 'Varies',
+          implementation_time: content.implementation_timeline || content.implementation_time || dbToolPrompt.setup_time || 'Quick setup',
+          prompt_text: dbToolPrompt.prompt_text || content.prompt_text || '',
+          prompt_instructions: dbToolPrompt.prompt_instructions || content.prompt_instructions || '',
           // Include original database fields for compatibility
-          ...dbTool
+          ...dbToolPrompt
         };
       });
 
       // For backward compatibility, also extract tools from comprehensive_plan if no tools in database
-      const fallbackTools = transformedDbTools.length ? [] : extractToolsFromJump(jump);
-      const allTools = [...transformedDbTools, ...fallbackTools];
+      const fallbackToolPrompts = transformedDbToolPrompts.length ? [] : extractToolsFromJump(jump);
+      const allToolPrompts = [...transformedDbToolPrompts, ...fallbackToolPrompts];
 
       // Create structured_plan from comprehensive_plan if it exists
       const structuredPlan = createStructuredPlan(jump);
@@ -92,8 +92,7 @@ export default function JumpDetailModal({ jump, isOpen, onClose }: JumpDetailMod
         structured_plan: structuredPlan,
         comprehensive_plan: jump.comprehensive_plan,
         components: {
-          tools: allTools,
-          prompts: promptsResult.data || [],
+          toolPrompts: allToolPrompts,
           workflows: workflowsResult.data || [],
           blueprints: blueprintsResult.data || [],
           strategies: strategiesResult.data || []
@@ -121,8 +120,7 @@ export default function JumpDetailModal({ jump, isOpen, onClose }: JumpDetailMod
         structured_plan: null,
         comprehensive_plan: null,
         components: {
-          tools: [],
-          prompts: [],
+          toolPrompts: [],
           workflows: [],
           blueprints: [],
           strategies: []

@@ -12,7 +12,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import { User, Settings, Home, FileText, Workflow, Lightbulb, Boxes, ChevronDown, CreditCard, Palette } from "lucide-react";
+import { User, Settings, Home, FileText, Workflow, Lightbulb, Boxes, ChevronDown, CreditCard, Palette, Sparkles } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { useAuth0Token } from "@/hooks/useAuth0Token";
 
@@ -122,25 +122,14 @@ export default function AppSidebar() {
           <Separator className="my-1.5" />
 
           <Link 
-            to="/dashboard/tools" 
+            to="/dashboard/tools-prompts" 
             className={cn(
               "flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm transition-colors",
-              getNavCls({ isActive: currentPath === "/dashboard/tools" })
+              getNavCls({ isActive: currentPath === "/dashboard/tools-prompts" })
             )}
           >
-            <Settings className="h-4 w-4" />
-            My Tools
-          </Link>
-
-          <Link 
-            to="/dashboard/prompts" 
-            className={cn(
-              "flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm transition-colors",
-              getNavCls({ isActive: currentPath === "/dashboard/prompts" })
-            )}
-          >
-            <FileText className="h-4 w-4" />
-            My Prompts
+            <Sparkles className="h-4 w-4" />
+            Tools & Prompts
           </Link>
 
           <Link 

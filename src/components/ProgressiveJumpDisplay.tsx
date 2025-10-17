@@ -146,13 +146,9 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                 {getStatusIcon(result.processing_status?.isComplete || false, !!result.structured_plan)}
                 Plan
               </TabsTrigger>
-              <TabsTrigger value="tools" className="flex items-center gap-1.5 text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
-                {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.tools?.length || 0) > 0)}
-                Tools ({result.components?.tools?.length || 0})
-              </TabsTrigger>
-              <TabsTrigger value="prompts" className="flex items-center gap-1.5 text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
-                {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.prompts?.length || 0) > 0)}
-                Prompts ({result.components?.prompts?.length || 0}/4)
+              <TabsTrigger value="toolPrompts" className="flex items-center gap-1.5 text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
+                {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.toolPrompts?.length || 0) > 0)}
+                Tools & Prompts ({result.components?.toolPrompts?.length || 0})
               </TabsTrigger>
               <TabsTrigger value="workflows" className="flex items-center gap-1.5 text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
                 {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.workflows?.length || 0) > 0)}
@@ -179,13 +175,9 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
               {getStatusIcon(result.processing_status?.isComplete || false, !!result.structured_plan)}
               Plan
             </TabsTrigger>
-            <TabsTrigger value="tools" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
-              {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.tools?.length || 0) > 0)}
-              Tools ({result.components?.tools?.length || 0})
-            </TabsTrigger>
-            <TabsTrigger value="prompts" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
-              {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.prompts?.length || 0) > 0)}
-              Prompts ({result.components?.prompts?.length || 0}/4)
+            <TabsTrigger value="toolPrompts" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
+              {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.toolPrompts?.length || 0) > 0)}
+              Tools & Prompts ({result.components?.toolPrompts?.length || 0})
             </TabsTrigger>
             <TabsTrigger value="workflows" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
               {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.workflows?.length || 0) > 0)}
@@ -391,10 +383,12 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
           </div>
         </TabsContent>
 
-        <TabsContent value="tools" className="mt-4">
+        <TabsContent value="toolPrompts" className="mt-4">
           <div className="grid gap-3">
-            {result.components?.tools ? (
-              result.components.tools.map((tool: any, index: number) => (
+            {result.components?.toolPrompts ? (
+              result.components.toolPrompts.map((toolPrompt: any, index: number) => {
+                const tool = toolPrompt;
+                return (
                 <div key={index} className="relative group">
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/12 via-accent/8 to-secondary/12 dark:from-primary/8 dark:via-accent/6 dark:to-secondary/8 rounded-lg blur-sm opacity-20 pointer-events-none"></div>
                   <Card className="relative glass-dark border-white/12 dark:border-white/8 backdrop-blur-lg bg-gradient-to-br from-white/4 via-white/2 to-white/1 dark:from-black/10 dark:via-black/5 dark:to-black/2 hover:border-primary/30 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10">
@@ -454,83 +448,14 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                     </CardContent>
                   </Card>
                 </div>
-              ))
+                );
+              })
             ) : (
               <div className="flex items-center justify-center h-32 text-muted-foreground">
                 <Loader2 className="w-6 h-6 animate-spin mr-2" />
-                Generating AI tools recommendations...
+                Generating tools & prompts...
               </div>
             )}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="prompts" className="mt-4">
-          <div className="grid gap-3">
-            {[...Array(4)].map((_, index) => {
-              const prompt = result.components?.prompts?.[index];
-              return (
-                <div key={index} className="relative group">
-                  <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/12 via-accent/8 to-secondary/12 dark:from-primary/8 dark:via-accent/6 dark:to-secondary/8 rounded-lg blur-sm opacity-20"></div>
-                  <Card className="relative glass-dark border-white/12 dark:border-white/8 backdrop-blur-lg bg-gradient-to-br from-white/4 via-white/2 to-white/1 dark:from-black/10 dark:via-black/5 dark:to-black/2">
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary/1.5 via-transparent to-secondary/1.5 dark:from-primary/1 dark:via-transparent dark:to-secondary/1 rounded-lg"></div>
-                    <CardHeader className="pb-2">
-                      <CardTitle className="flex items-center justify-between text-sm">
-                        <div className="flex items-center gap-2">
-                          {getStatusIcon(result.processing_status?.isComplete || false, !!prompt)}
-                          {prompt ? prompt.title : `AI Prompt ${index + 1}`}
-                        </div>
-                        {prompt && (
-                          <div className="relative group">
-                            <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/10 via-accent/5 to-secondary/10 rounded-lg blur-sm opacity-20 group-hover:opacity-40 transition-opacity duration-300"></div>
-                            <button
-                              onClick={() => handleCopyPrompt(prompt.prompt_text, index)}
-                              className="relative px-3 py-1.5 glass backdrop-blur-xl border border-border/30 hover:border-primary/40 transition-all duration-300 rounded-lg shadow-sm hover:shadow-md bg-gradient-to-br from-background/60 to-background/40 dark:bg-gradient-to-br dark:from-gray-950/60 dark:to-gray-900/40 hover:scale-105 active:scale-95 group overflow-hidden"
-                            >
-                              <div className="absolute inset-0 bg-gradient-to-br from-primary/3 via-transparent to-secondary/3 rounded-lg"></div>
-                              <div className="absolute inset-0 bg-gradient-to-r from-white/8 via-transparent to-white/8 dark:from-white/6 dark:via-transparent dark:to-white/6 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                              
-                              <div className="relative z-10 flex items-center gap-1.5">
-                                {copiedPrompts.has(index) ? (
-                                  <>
-                                    <Check className="w-3 h-3 text-green-500" />
-                                    <span className="text-xs font-medium text-green-500">Copied</span>
-                                  </>
-                                ) : (
-                                  <>
-                                    <Copy className="w-3 h-3 text-muted-foreground group-hover:text-foreground transition-colors" />
-                                    <span className="text-xs font-medium text-muted-foreground group-hover:text-foreground transition-colors">Copy</span>
-                                  </>
-                                )}
-                              </div>
-                            </button>
-                          </div>
-                        )}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="pt-0">
-                    {prompt ? (
-                      <div className="space-y-2">
-                        <p className="text-sm text-white/90 drop-shadow-sm">{prompt.description}</p>
-                        <div className="p-3 glass backdrop-blur-sm bg-background/30 dark:bg-background/20 rounded-xl border border-border/30 select-text">
-                          <p className="text-sm text-foreground font-mono whitespace-pre-wrap select-text">{prompt.prompt_text}</p>
-                        </div>
-                        <div className="flex flex-wrap gap-1">
-                          {prompt.ai_tools?.map((tool: string, toolIndex: number) => (
-                            <Badge key={toolIndex} variant="secondary" className="text-xs">{tool}</Badge>
-                          ))}
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="flex items-center justify-center h-20 text-muted-foreground">
-                        <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                        Generating...
-                      </div>
-                    )}
-                    </CardContent>
-                  </Card>
-                </div>
-              );
-            })}
           </div>
         </TabsContent>
 

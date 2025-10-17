@@ -332,39 +332,25 @@ export const useProgressiveGeneration = () => {
             setProcessingStatus(progressiveResult.processing_status);
             setResult({ ...progressiveResult });
             
-          } else if (type === 'tools') {
-            // STEP 4: Tools (46%)
-            console.log('Processing tools step data:', stepData);
-            progressiveResult.components.tools = stepData.tools || [];
+          } else if (type === 'tool_prompts' || type === 'tools') {
+            // STEP 4: Tools & Prompts (52%)
+            console.log('Processing tool-prompts step data:', stepData);
+            progressiveResult.components.toolPrompts = stepData.tool_prompts || stepData.tools || [];
             
-            // Update immediately - Tools is 46%
-            const progress = 46;
+            const progress = 52;
             progressiveResult.processing_status = {
               stage: 'Generating',
               progress,
-              currentTask: `${stepNames.tools} (${stepDuration}s)`,
+              currentTask: `Generating Tools & Prompts (${stepDuration}s)`,
               isComplete: false
             };
-            progressiveResult.stepTimes = { ...progressiveResult.stepTimes, tools: stepDuration };
+            progressiveResult.stepTimes = { ...progressiveResult.stepTimes, tool_prompts: stepDuration };
             setProcessingStatus(progressiveResult.processing_status);
             setResult({ ...progressiveResult });
             
           } else if (type === 'prompts') {
-            // STEP 5: Prompts (59%)
-            console.log('Processing prompts step data:', stepData);
-            progressiveResult.components.prompts = stepData.prompts || [];
-            
-            // Update immediately - Prompts is 59%
-            const progress = 59;
-            progressiveResult.processing_status = {
-              stage: 'Generating',
-              progress,
-              currentTask: `${stepNames.prompts} (${stepDuration}s)`,
-              isComplete: false
-            };
-            progressiveResult.stepTimes = { ...progressiveResult.stepTimes, prompts: stepDuration };
-            setProcessingStatus(progressiveResult.processing_status);
-            setResult({ ...progressiveResult });
+            // Legacy: Skip
+            console.log('⚠️ Skipping legacy prompts step');
             
           } else if (type === 'workflows') {
             // STEP 6: Workflows (73%)
@@ -443,8 +429,7 @@ export const useProgressiveGeneration = () => {
         structured_plan: rawResponse.structuredPlan,
         comprehensive_plan: rawResponse.comprehensivePlan,
         components: rawResponse.components || {
-          tools: [],
-          prompts: [],
+          toolPrompts: [],
           workflows: [],
           blueprints: [],
           strategies: []

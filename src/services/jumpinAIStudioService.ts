@@ -292,41 +292,25 @@ export const jumpinAIStudioService = {
                       }
                     })();
                   }
-                } else if (type === 'tools') {
-                  // STEP 4: Tools (46%)
-                  console.log('🛠️ Processing tools data:', data);
-                  result.components!.tools = data.tools || [];
-                  console.log(`✓ ${result.components!.tools.length} tools extracted:`, result.components!.tools.map(t => t.title));
+                } else if (type === 'tool_prompts' || type === 'tools') {
+                  // STEP 4: Tools & Prompts Combined (52%)
+                  console.log('✨ Processing tool-prompts data:', data);
+                  result.components!.toolPrompts = data.tool_prompts || data.tools || [];
+                  console.log(`✓ ${result.components!.toolPrompts.length} tool-prompts extracted`);
                   
-                  // Call progress callback IMMEDIATELY
                   if (onProgress) {
                     onProgress(step, type, data);
                   }
                   
-                  // Save in background
                   if (userId && jumpId) {
                     (async () => {
-                      const { toolsService } = await import('@/services/toolsService');
-                      await toolsService.saveTools(result.components!.tools, userId, jumpId);
+                      const { toolPromptsService } = await import('@/services/toolPromptsService');
+                      await toolPromptsService.saveToolPrompts(result.components!.toolPrompts, userId, jumpId);
                     })();
                   }
                 } else if (type === 'prompts') {
-                  // STEP 5: Prompts (59%)
-                  console.log('💡 Processing prompts data:', data);
-                  result.components!.prompts = data.prompts || [];
-                  console.log(`✓ ${result.components!.prompts.length} prompts extracted:`, result.components!.prompts.map(p => p.title));
-                  
-                  // Call progress callback IMMEDIATELY
-                  if (onProgress) {
-                    onProgress(step, type, data);
-                  }
-                  
-                  // Save in background
-                  if (userId && jumpId) {
-                    (async () => {
-                      await this.saveComponents({ prompts: result.components!.prompts }, userId, jumpId);
-                    })();
-                  }
+                  // Legacy: Skip
+                  console.log('⚠️ Skipping legacy prompts step');
                 } else if (type === 'workflows') {
                   // STEP 6: Workflows (73%)
                   console.log('⚙️ Processing workflows data:', data);

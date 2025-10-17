@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckCircle, Zap, Timer, Copy, Check, Wrench } from 'lucide-react';
+import { CheckCircle, Zap, Timer, Copy, Check, Wrench, Sparkles } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -12,8 +12,7 @@ import { toast } from 'sonner';
 interface UnifiedJumpDisplayProps {
   jump: UserJump;
   components?: {
-    tools?: any[];
-    prompts?: any[];
+    toolPrompts?: any[];
     workflows?: any[];
     blueprints?: any[];
     strategies?: any[];
@@ -34,8 +33,7 @@ const UnifiedJumpDisplay: React.FC<UnifiedJumpDisplayProps> = ({ jump, component
 
   // Ensure components have default values
   const safeComponents = {
-    tools: components?.tools || [],
-    prompts: components?.prompts || [],
+    toolPrompts: components?.toolPrompts || [],
     workflows: components?.workflows || [],
     blueprints: components?.blueprints || [],
     strategies: components?.strategies || []
@@ -45,8 +43,7 @@ const UnifiedJumpDisplay: React.FC<UnifiedJumpDisplayProps> = ({ jump, component
     jumpId: jump.id,
     jumpTitle: jump.title,
     componentCounts: {
-      tools: safeComponents.tools.length,
-      prompts: safeComponents.prompts.length,
+      toolPrompts: safeComponents.toolPrompts.length,
       workflows: safeComponents.workflows.length,
       blueprints: safeComponents.blueprints.length,
       strategies: safeComponents.strategies.length
@@ -126,13 +123,9 @@ const UnifiedJumpDisplay: React.FC<UnifiedJumpDisplayProps> = ({ jump, component
             <CheckCircle className="w-4 h-4 text-green-500" />
             Plan
           </TabsTrigger>
-          <TabsTrigger value="tools" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
+          <TabsTrigger value="toolPrompts" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
             <CheckCircle className="w-4 h-4 text-green-500" />
-            Tools ({safeComponents?.tools?.length || 0})
-          </TabsTrigger>
-          <TabsTrigger value="prompts" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
-            <CheckCircle className="w-4 h-4 text-green-500" />
-            Prompts ({safeComponents?.prompts?.length || 0})
+            Tools & Prompts ({safeComponents?.toolPrompts?.length || 0})
           </TabsTrigger>
           <TabsTrigger value="workflows" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
             <CheckCircle className="w-4 h-4 text-green-500" />
@@ -268,10 +261,12 @@ const UnifiedJumpDisplay: React.FC<UnifiedJumpDisplayProps> = ({ jump, component
           </div>
         </TabsContent>
 
-        <TabsContent value="tools" className="mt-4">
+        <TabsContent value="toolPrompts" className="mt-4">
           <div className="grid gap-3">
-            {safeComponents?.tools && safeComponents.tools.length > 0 ? (
-              safeComponents.tools.map((tool: any, index: number) => (
+            {safeComponents?.toolPrompts && safeComponents.toolPrompts.length > 0 ? (
+              safeComponents.toolPrompts.map((toolPrompt: any, index: number) => {
+                const tool = toolPrompt;
+                return (
                 <div key={index} className="relative group">
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/12 via-accent/8 to-secondary/12 dark:from-primary/8 dark:via-accent/6 dark:to-secondary/8 rounded-lg blur-sm opacity-20 pointer-events-none"></div>
                   <Card className="relative glass-dark border-white/12 dark:border-white/8 backdrop-blur-lg bg-gradient-to-br from-white/4 via-white/2 to-white/1 dark:from-black/10 dark:via-black/5 dark:to-black/2 hover:border-primary/30 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10">
@@ -331,74 +326,11 @@ const UnifiedJumpDisplay: React.FC<UnifiedJumpDisplayProps> = ({ jump, component
                     </CardContent>
                   </Card>
                 </div>
-              ))
+                );
+              })
             ) : (
               <div className="text-center py-8 text-muted-foreground">
-                <p>No tools available for this jump.</p>
-              </div>
-            )}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="prompts" className="mt-4">
-          <div className="grid gap-3">
-            {safeComponents?.prompts && safeComponents.prompts.length > 0 ? (
-              safeComponents.prompts.map((prompt: any, index: number) => (
-                <div key={index} className="relative group">
-                  <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/12 via-accent/8 to-secondary/12 dark:from-primary/8 dark:via-accent/6 dark:to-secondary/8 rounded-lg blur-sm opacity-20 pointer-events-none"></div>
-                  <Card className="relative glass-dark border-white/12 dark:border-white/8 backdrop-blur-lg bg-gradient-to-br from-white/4 via-white/2 to-white/1 dark:from-black/10 dark:via-black/5 dark:to-black/2">
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary/1.5 via-transparent to-secondary/1.5 dark:from-primary/1 dark:via-transparent dark:to-secondary/1 rounded-lg pointer-events-none"></div>
-                    <CardHeader className="pb-2 relative z-10">
-                      <CardTitle className="flex items-center justify-between text-sm">
-                         <div className="flex items-center gap-2">
-                          <CheckCircle className="w-4 h-4 text-green-500" />
-                          {prompt.title}
-                        </div>
-                        <div className="relative group">
-                          <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/10 via-accent/5 to-secondary/10 rounded-lg blur-sm opacity-20 group-hover:opacity-40 transition-opacity duration-300 pointer-events-none"></div>
-                          <button
-                            onClick={() => handleCopyPrompt(prompt.prompt_text, index)}
-                            className="relative px-3 py-1.5 glass backdrop-blur-xl border border-border/30 hover:border-primary/40 transition-all duration-300 rounded-lg shadow-sm hover:shadow-md bg-gradient-to-br from-background/60 to-background/40 dark:bg-gradient-to-br dark:from-gray-950/60 dark:to-gray-900/40 hover:scale-105 active:scale-95 group overflow-hidden z-10"
-                          >
-                            <div className="absolute inset-0 bg-gradient-to-br from-primary/3 via-transparent to-secondary/3 rounded-lg pointer-events-none"></div>
-                            <div className="absolute inset-0 bg-gradient-to-r from-white/8 via-transparent to-white/8 dark:from-white/6 dark:via-transparent dark:to-white/6 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-                            
-                            <div className="relative z-10 flex items-center gap-1.5">
-                              {copiedPrompts.has(index) ? (
-                                <>
-                                  <Check className="w-3 h-3 text-green-500" />
-                                  <span className="text-xs font-medium text-green-500">Copied</span>
-                                </>
-                              ) : (
-                                <>
-                                  <Copy className="w-3 h-3 text-muted-foreground group-hover:text-foreground transition-colors" />
-                                  <span className="text-xs font-medium text-muted-foreground group-hover:text-foreground transition-colors">Copy</span>
-                                </>
-                              )}
-                            </div>
-                          </button>
-                        </div>
-                      </CardTitle>
-                    </CardHeader>
-                     <CardContent className="pt-0 relative z-10">
-                      <div className="space-y-2">
-                        <p className="text-sm text-white/90 drop-shadow-sm select-text">{prompt.description}</p>
-                        <div className="p-3 glass backdrop-blur-sm bg-background/30 dark:bg-background/20 rounded-xl border border-border/30 select-text">
-                          <p className="text-sm text-foreground font-mono whitespace-pre-wrap select-text">{prompt.prompt_text}</p>
-                        </div>
-                        <div className="flex flex-wrap gap-1">
-                          {prompt.ai_tools?.map((tool: string, toolIndex: number) => (
-                            <Badge key={toolIndex} variant="secondary" className="text-xs">{tool}</Badge>
-                          ))}
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              ))
-            ) : (
-              <div className="text-center py-8 text-muted-foreground">
-                <p>No prompts available for this jump.</p>
+                <p>No tools & prompts available for this jump.</p>
               </div>
             )}
           </div>
