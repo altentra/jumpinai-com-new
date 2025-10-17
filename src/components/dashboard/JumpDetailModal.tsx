@@ -51,29 +51,52 @@ export default function JumpDetailModal({ jump, isOpen, onClose }: JumpDetailMod
         strategies: strategiesResult.data?.length || 0
       });
 
-      // Transform database tool-prompts to display format
+      // Transform database tool-prompts to display format with complete data structure
       const transformedDbToolPrompts = (toolPromptsResult.data || []).map((dbToolPrompt: any) => {
-        // If content exists, merge it with top-level fields
+        console.log('Transforming tool prompt:', dbToolPrompt.title);
+        
+        // Merge content object with top-level fields for complete data
         const content = dbToolPrompt.content || {};
+        
         return {
+          // Core identification
           id: dbToolPrompt.id,
-          name: dbToolPrompt.tool_name || dbToolPrompt.title || content.name || 'Unnamed Tool',
-          description: dbToolPrompt.description || content.description || 'No description available',
+          name: dbToolPrompt.tool_name || content.name || dbToolPrompt.title || 'Unnamed Tool',
           category: dbToolPrompt.category || content.category || 'General',
-          website_url: dbToolPrompt.tool_url || content.website_url || content.url || content.website,
-          when_to_use: content.when_to_use || content.primary_use_case || 'Use as needed',
+          
+          // Description and URLs
+          description: dbToolPrompt.description || content.description || 'No description available',
+          website_url: dbToolPrompt.tool_url || content.website_url || content.url || '',
+          
+          // Usage information (CRITICAL for display)
+          when_to_use: content.when_to_use || dbToolPrompt.use_cases?.[0] || 'Use as needed',
           why_this_tool: content.why_this_tool || 'Recommended for your project',
-          how_to_integrate: content.how_to_integrate || content.integration_notes || 'Follow setup instructions',
+          how_to_integrate: content.how_to_integrate || 'Follow setup instructions',
+          
+          // Prompt data
+          custom_prompt: dbToolPrompt.prompt_text || content.custom_prompt || '',
+          prompt_instructions: dbToolPrompt.prompt_instructions || content.prompt_instructions || '',
+          
+          // Metadata
           alternatives: content.alternatives || [],
           skill_level: content.skill_level || dbToolPrompt.difficulty_level || 'Beginner',
           cost_model: content.cost_model || dbToolPrompt.cost_estimate || 'Varies',
-          implementation_time: content.implementation_timeline || content.implementation_time || dbToolPrompt.setup_time || 'Quick setup',
-          prompt_text: dbToolPrompt.prompt_text || content.prompt_text || '',
-          prompt_instructions: dbToolPrompt.prompt_instructions || content.prompt_instructions || '',
-          // Include original database fields for compatibility
+          implementation_timeline: content.implementation_timeline || dbToolPrompt.setup_time || 'Quick setup',
+          implementation_time: content.implementation_timeline || dbToolPrompt.setup_time || 'Quick setup',
+          
+          // Arrays
+          use_cases: dbToolPrompt.use_cases || [],
+          ai_tools: dbToolPrompt.ai_tools || [],
+          features: dbToolPrompt.features || [],
+          tags: dbToolPrompt.tags || [],
+          
+          // Keep all original fields for compatibility
           ...dbToolPrompt
         };
       });
+
+      console.log('✅ Transformed', transformedDbToolPrompts.length, 'tool prompts');
+      console.log('Sample transformed tool:', transformedDbToolPrompts[0]);
 
       // For backward compatibility, also extract tools from comprehensive_plan if no tools in database
       const fallbackToolPrompts = transformedDbToolPrompts.length ? [] : extractToolsFromJump(jump);

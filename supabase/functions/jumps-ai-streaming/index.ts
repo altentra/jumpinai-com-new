@@ -298,6 +298,39 @@ Return ONLY valid JSON:
       };
 
     case 4:
+      // STEP 4: Tools & Prompts Combined
+      const toolPromptsPrompt = `Based on the user's goals and situation, generate 5-7 SPECIFIC, ACTIONABLE AI tool recommendations with custom prompts.
+
+CRITICAL: Each tool MUST include ALL fields below with substantial, useful content:
+
+{
+  "tool_prompts": [
+    {
+      "name": "Exact tool name (e.g., ChatGPT, Claude, Notion AI)",
+      "category": "Specific category (Content Creation, Automation, Data Analysis, Design, Marketing, etc.)",
+      "description": "Clear 2-3 sentence explanation of what this tool does and its key features",
+      "website_url": "Actual website URL (e.g., https://chat.openai.com)",
+      "when_to_use": "Detailed scenario describing when this tool provides the most value for their specific situation",
+      "why_this_tool": "2-3 sentences explaining WHY this specific tool is perfect for their needs and goals",
+      "how_to_integrate": "Step-by-step practical guidance (3-5 steps) on how to start using this tool in their workflow",
+      "custom_prompt": "A complete, ready-to-use prompt they can copy-paste into the tool right now (100-200 words, specific to their situation)",
+      "prompt_instructions": "Detailed instructions on how to use the prompt effectively with this tool (when to use it, how to customize it, what to expect)",
+      "alternatives": ["Alternative tool 1", "Alternative tool 2", "Alternative tool 3"],
+      "skill_level": "Beginner | Intermediate | Advanced",
+      "cost_model": "Free | Freemium | Paid | Enterprise (include price range if paid)",
+      "implementation_timeline": "Specific timeframe (e.g., '30 minutes', '1-2 days', '1 week')"
+    }
+  ]
+}
+
+REQUIREMENTS:
+- ALL fields must be present and filled with substantial content
+- custom_prompt must be 100-200 words and immediately usable
+- prompt_instructions must be detailed (3-5 sentences)
+- how_to_integrate must have clear steps
+- Choose tools that are REAL, POPULAR, and directly applicable to their industry and goals`;
+
+      return {
       return {
         systemPrompt: `You are an AI tools and prompt engineering expert specializing in practical implementation. Your job is to recommend specific AI tools paired with custom prompts that are immediately actionable for the user's specific situation.`,
         userPrompt: `${baseContext}

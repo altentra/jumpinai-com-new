@@ -195,23 +195,80 @@ export const jumpinAIStudioService = {
                   console.log('📋 Processing overview data:', data);
                   result.comprehensivePlan = data;
                   
-                  // Build full content from all overview sections
-                  let overviewText = data.executiveSummary || '';
+                  // Build comprehensive markdown text from ALL sections
+                  let overviewText = '';
+                  
+                  // Executive Summary
+                  if (data.executiveSummary) {
+                    overviewText += `## Executive Summary\n\n${data.executiveSummary}\n\n`;
+                  }
+                  
+                  // Situation Analysis
                   if (data.situationAnalysis) {
-                    overviewText += '\n\nSITUATION ANALYSIS\n';
-                    overviewText += `Current State: ${data.situationAnalysis.currentState || ''}\n`;
+                    overviewText += `## Situation Analysis\n\n`;
+                    if (data.situationAnalysis.currentState) {
+                      overviewText += `### Current State\n${data.situationAnalysis.currentState}\n\n`;
+                    }
                     if (data.situationAnalysis.challenges?.length) {
-                      overviewText += '\nChallenges:\n' + data.situationAnalysis.challenges.map((c: string) => `• ${c}`).join('\n');
+                      overviewText += `### Key Challenges\n`;
+                      data.situationAnalysis.challenges.forEach((c: string) => {
+                        overviewText += `- ${c}\n`;
+                      });
+                      overviewText += '\n';
                     }
                     if (data.situationAnalysis.opportunities?.length) {
-                      overviewText += '\n\nOpportunities:\n' + data.situationAnalysis.opportunities.map((o: string) => `• ${o}`).join('\n');
+                      overviewText += `### Opportunities\n`;
+                      data.situationAnalysis.opportunities.forEach((o: string) => {
+                        overviewText += `- ${o}\n`;
+                      });
+                      overviewText += '\n';
                     }
                   }
+                  
+                  // Strategic Vision
                   if (data.strategicVision) {
-                    overviewText += `\n\nSTRATEGIC VISION\n${data.strategicVision}`;
+                    overviewText += `## Strategic Vision\n\n${data.strategicVision}\n\n`;
                   }
-                  result.fullContent = overviewText;
-                  console.log('Overview set with full content length:', result.fullContent.length);
+                  
+                  // Key Objectives
+                  if (data.keyObjectives?.length) {
+                    overviewText += `## Key Objectives\n\n`;
+                    data.keyObjectives.forEach((obj: string, idx: number) => {
+                      overviewText += `${idx + 1}. ${obj}\n`;
+                    });
+                    overviewText += '\n';
+                  }
+                  
+                  // Success Metrics
+                  if (data.successMetrics?.length) {
+                    overviewText += `## Success Metrics\n\n`;
+                    data.successMetrics.forEach((metric: string) => {
+                      overviewText += `- ${metric}\n`;
+                    });
+                    overviewText += '\n';
+                  }
+                  
+                  // Risk Assessment
+                  if (data.riskAssessment) {
+                    overviewText += `## Risk Assessment\n\n`;
+                    if (data.riskAssessment.risks?.length) {
+                      overviewText += `### Potential Risks\n`;
+                      data.riskAssessment.risks.forEach((risk: string) => {
+                        overviewText += `- ${risk}\n`;
+                      });
+                      overviewText += '\n';
+                    }
+                    if (data.riskAssessment.mitigations?.length) {
+                      overviewText += `### Mitigation Strategies\n`;
+                      data.riskAssessment.mitigations.forEach((mitigation: string) => {
+                        overviewText += `- ${mitigation}\n`;
+                      });
+                      overviewText += '\n';
+                    }
+                  }
+                  
+                  result.fullContent = overviewText.trim();
+                  console.log('✅ Overview built with full content length:', result.fullContent.length);
                   
                   // Call progress callback IMMEDIATELY
                   if (onProgress) {
@@ -226,17 +283,16 @@ export const jumpinAIStudioService = {
                           .from('user_jumps')
                           .update({
                             summary: result.fullContent.slice(0, 500),
-                            full_content: JSON.stringify(data),
-                            // DO NOT set structured_plan here - it will be set in step 3 (plan)
-                            comprehensive_plan: data,
+                            full_content: result.fullContent, // Save as plain text markdown
+                            comprehensive_plan: data, // Save structured data
                             completion_percentage: 19,
                             status: 'active'
                           })
                           .eq('id', jumpId);
                         
-                        console.log('Jump updated with overview data (comprehensive_plan only)');
+                        console.log('✅ Jump updated with overview data');
                       } catch (error) {
-                        console.error('Error updating jump with overview:', error);
+                        console.error('❌ Error updating jump with overview:', error);
                       }
                     })();
                   }
