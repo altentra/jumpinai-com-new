@@ -284,30 +284,16 @@ export default function Strategies() {
                 <div>
                   <h4 className="font-semibold mb-4">Strategy Framework</h4>
                   <div className="bg-muted p-4 rounded-lg space-y-4">
-                    {selectedStrategy.strategy_framework.overview && (
-                      <div>
-                        <h5 className="font-medium mb-2">Overview</h5>
-                        <p className="text-muted-foreground text-sm">{selectedStrategy.strategy_framework.overview}</p>
-                      </div>
-                    )}
-                    
-                    {selectedStrategy.strategy_framework.phases && Array.isArray(selectedStrategy.strategy_framework.phases) && (
-                      <div>
-                        <h5 className="font-medium mb-2">Phases</h5>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                          {selectedStrategy.strategy_framework.phases.map((phase: string, index: number) => (
-                            <div key={index} className="flex items-center gap-2">
-                              <Badge variant="outline" className="text-xs">Phase {index + 1}</Badge>
-                              <span className="text-sm">{phase}</span>
-                            </div>
-                          ))}
-                        </div>
+                    {selectedStrategy.strategy_framework.vision && (
+                      <div className="border-l-4 border-primary pl-4 py-2">
+                        <h5 className="font-medium mb-2 text-primary">Strategic Vision</h5>
+                        <p className="text-muted-foreground text-sm">{selectedStrategy.strategy_framework.vision}</p>
                       </div>
                     )}
                     
                     {selectedStrategy.strategy_framework.objectives && Array.isArray(selectedStrategy.strategy_framework.objectives) && (
                       <div>
-                        <h5 className="font-medium mb-2">Objectives</h5>
+                        <h5 className="font-medium mb-2">Strategic Objectives</h5>
                         <ul className="list-disc list-inside space-y-1">
                           {selectedStrategy.strategy_framework.objectives.map((objective: string, index: number) => (
                             <li key={index} className="text-muted-foreground text-sm">{objective}</li>
@@ -315,11 +301,33 @@ export default function Strategies() {
                         </ul>
                       </div>
                     )}
-                    
-                    {selectedStrategy.strategy_framework.approach && (
+
+                    {selectedStrategy.strategy_framework.initiatives && Array.isArray(selectedStrategy.strategy_framework.initiatives) && (
                       <div>
-                        <h5 className="font-medium mb-2">Approach</h5>
-                        <p className="text-muted-foreground text-sm">{selectedStrategy.strategy_framework.approach}</p>
+                        <h5 className="font-medium mb-3">Strategic Initiatives</h5>
+                        <div className="space-y-3">
+                          {selectedStrategy.strategy_framework.initiatives.map((initiative: any, index: number) => (
+                            <div key={index} className="border border-border rounded-lg p-3 bg-background">
+                              <div className="flex items-start justify-between mb-2">
+                                <h6 className="font-semibold">{initiative.name}</h6>
+                                <Badge variant="outline" className="text-xs">{initiative.timeline}</Badge>
+                              </div>
+                              <p className="text-sm text-muted-foreground mb-2">{initiative.description}</p>
+                              {initiative.kpis && Array.isArray(initiative.kpis) && initiative.kpis.length > 0 && (
+                                <div>
+                                  <p className="text-xs font-medium mb-1">Key Performance Indicators:</p>
+                                  <div className="flex flex-wrap gap-1">
+                                    {initiative.kpis.map((kpi: string, kpiIndex: number) => (
+                                      <Badge key={kpiIndex} variant="secondary" className="text-xs">
+                                        {kpi}
+                                      </Badge>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     )}
                   </div>

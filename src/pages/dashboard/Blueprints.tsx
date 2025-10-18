@@ -309,41 +309,55 @@ export default function Blueprints() {
                 )}
               </div>
 
-              {selectedBlueprint.blueprint_content && (
+              {selectedBlueprint.blueprint_content?.phases && Array.isArray(selectedBlueprint.blueprint_content.phases) && (
                 <div>
-                  <h4 className="font-semibold mb-4">Blueprint Details</h4>
-                  <div className="bg-muted p-4 rounded-lg space-y-4">
-                    {selectedBlueprint.blueprint_content.overview && (
-                      <div>
-                        <h5 className="font-medium mb-2">Overview</h5>
-                        <p className="text-muted-foreground text-sm">{selectedBlueprint.blueprint_content.overview}</p>
+                  <h4 className="font-semibold mb-4">Implementation Phases</h4>
+                  <div className="space-y-4">
+                    {selectedBlueprint.blueprint_content.phases.map((phase: any, index: number) => (
+                      <div key={index} className="border border-border rounded-lg p-4 bg-muted/50">
+                        <div className="flex items-start justify-between mb-3">
+                          <div>
+                            <h5 className="font-semibold text-lg">Phase {phase.phase}: {phase.name}</h5>
+                            <p className="text-sm text-muted-foreground mt-1">Duration: {phase.duration}</p>
+                          </div>
+                        </div>
+
+                        {phase.objectives && Array.isArray(phase.objectives) && phase.objectives.length > 0 && (
+                          <div className="mb-3">
+                            <h6 className="font-medium mb-2 text-sm">Objectives</h6>
+                            <ul className="list-disc list-inside space-y-1">
+                              {phase.objectives.map((obj: string, objIndex: number) => (
+                                <li key={objIndex} className="text-sm text-muted-foreground">{obj}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+
+                        {phase.tasks && Array.isArray(phase.tasks) && phase.tasks.length > 0 && (
+                          <div className="mb-3">
+                            <h6 className="font-medium mb-2 text-sm">Tasks</h6>
+                            <ul className="list-disc list-inside space-y-1">
+                              {phase.tasks.map((task: string, taskIndex: number) => (
+                                <li key={taskIndex} className="text-sm text-muted-foreground">{task}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+
+                        {phase.milestones && Array.isArray(phase.milestones) && phase.milestones.length > 0 && (
+                          <div>
+                            <h6 className="font-medium mb-2 text-sm">Milestones</h6>
+                            <div className="flex flex-wrap gap-2">
+                              {phase.milestones.map((milestone: string, milestoneIndex: number) => (
+                                <Badge key={milestoneIndex} variant="secondary" className="text-xs">
+                                  {milestone}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                       </div>
-                    )}
-                    
-                    {selectedBlueprint.blueprint_content.components && Array.isArray(selectedBlueprint.blueprint_content.components) && (
-                      <div>
-                        <h5 className="font-medium mb-2">Components</h5>
-                        <ul className="list-disc list-inside space-y-1">
-                          {selectedBlueprint.blueprint_content.components.map((component: string, index: number) => (
-                            <li key={index} className="text-muted-foreground text-sm">{component}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                    
-                    {selectedBlueprint.blueprint_content.structure && (
-                      <div>
-                        <h5 className="font-medium mb-2">Structure</h5>
-                        <p className="text-muted-foreground text-sm">{selectedBlueprint.blueprint_content.structure}</p>
-                      </div>
-                    )}
-                    
-                    {selectedBlueprint.blueprint_content.implementation && (
-                      <div>
-                        <h5 className="font-medium mb-2">Implementation</h5>
-                        <p className="text-muted-foreground text-sm whitespace-pre-wrap">{selectedBlueprint.blueprint_content.implementation}</p>
-                      </div>
-                    )}
+                    ))}
                   </div>
                 </div>
               )}
