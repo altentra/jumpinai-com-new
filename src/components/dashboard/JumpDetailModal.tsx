@@ -36,19 +36,11 @@ export default function JumpDetailModal({ jump, isOpen, onClose }: JumpDetailMod
       setLoading(true);
       console.log('JumpDetailModal: Fetching data for jump ID:', jump.id);
 
-      // Fetch all components for this jump in parallel
-      const [toolPromptsResult, workflowsResult, blueprintsResult, strategiesResult] = await Promise.all([
-        supabase.from('user_tool_prompts').select('*').eq('jump_id', jump.id),
-        supabase.from('user_workflows').select('*').eq('jump_id', jump.id),
-        supabase.from('user_blueprints').select('*').eq('jump_id', jump.id),
-        supabase.from('user_strategies').select('*').eq('jump_id', jump.id)
-      ]);
+      // Fetch tool prompts for this jump
+      const toolPromptsResult = await supabase.from('user_tool_prompts').select('*').eq('jump_id', jump.id);
 
       console.log('JumpDetailModal: Components fetched:', {
-        toolPrompts: toolPromptsResult.data?.length || 0,
-        workflows: workflowsResult.data?.length || 0,
-        blueprints: blueprintsResult.data?.length || 0,
-        strategies: strategiesResult.data?.length || 0
+        toolPrompts: toolPromptsResult.data?.length || 0
       });
 
       // Transform database tool-prompts to display format with complete data structure
@@ -116,9 +108,9 @@ export default function JumpDetailModal({ jump, isOpen, onClose }: JumpDetailMod
         comprehensive_plan: jump.comprehensive_plan,
         components: {
           toolPrompts: allToolPrompts,
-          workflows: workflowsResult.data || [],
-          blueprints: blueprintsResult.data || [],
-          strategies: strategiesResult.data || []
+          workflows: [],
+          blueprints: [],
+          strategies: []
         },
         processing_status: {
           isComplete: true,

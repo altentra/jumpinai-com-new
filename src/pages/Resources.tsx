@@ -22,9 +22,7 @@ import { Helmet } from "react-helmet-async";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import { WorkflowDetailModal } from "@/components/WorkflowDetailModal";
 import ResourceBlueprintModal from "@/components/ResourceBlueprintModal";
-import StrategyDetailModal from "@/components/StrategyDetailModal";
 import PromptDetailModal from "@/components/PromptDetailModal";
 
 // Updated data models with structured information
@@ -1933,14 +1931,10 @@ export default function Resources() {
   const [activeTopicTab, setActiveTopicTab] = useState<TopicCategory>("Text");
   
   // Modal states
-  const [selectedWorkflow, setSelectedWorkflow] = useState<Workflow | null>(null);
   const [selectedBlueprint, setSelectedBlueprint] = useState<Blueprint | null>(null);
-  const [selectedStrategy, setSelectedStrategy] = useState<Strategy | null>(null);
   const [selectedPrompt, setSelectedPrompt] = useState<PromptTemplate | null>(null);
-  const [isWorkflowModalOpen, setIsWorkflowModalOpen] = useState(false);
   const [isPromptModalOpen, setIsPromptModalOpen] = useState(false);
   const [isBlueprintModalOpen, setIsBlueprintModalOpen] = useState(false);
-  const [isStrategyModalOpen, setIsStrategyModalOpen] = useState(false);
 
   // Show all content if user has Pro subscription
   const showAllContent = subscription?.subscribed && subscription.subscription_tier === 'JumpinAI Pro';
@@ -1975,15 +1969,9 @@ export default function Resources() {
     const handleCardClick = () => {
       if (isBlurred) return;
       
-      if (type === 'workflow' && 'steps' in item) {
-        setSelectedWorkflow(item as Workflow);
-        setIsWorkflowModalOpen(true);
-      } else if (type === 'blueprint' && 'template' in item) {
+      if (type === 'blueprint' && 'template' in item) {
         setSelectedBlueprint(item as Blueprint);
         setIsBlueprintModalOpen(true);
-      } else if (type === 'strategy' && 'approach' in item) {
-        setSelectedStrategy(item as Strategy);
-        setIsStrategyModalOpen(true);
       } else if (type === 'prompt' && 'prompt' in item) {
         setSelectedPrompt(item as PromptTemplate);
         setIsPromptModalOpen(true);
@@ -2376,30 +2364,12 @@ export default function Resources() {
       <Footer />
 
       {/* Modals */}
-      <WorkflowDetailModal
-        workflow={selectedWorkflow}
-        isOpen={isWorkflowModalOpen}
-        onClose={() => {
-          setIsWorkflowModalOpen(false);
-          setSelectedWorkflow(null);
-        }}
-      />
-
       <ResourceBlueprintModal
         blueprint={selectedBlueprint}
         isOpen={isBlueprintModalOpen}
         onClose={() => {
           setIsBlueprintModalOpen(false);
           setSelectedBlueprint(null);
-        }}
-      />
-
-      <StrategyDetailModal
-        strategy={selectedStrategy}
-        isOpen={isStrategyModalOpen}
-        onClose={() => {
-          setIsStrategyModalOpen(false);
-          setSelectedStrategy(null);
         }}
       />
 

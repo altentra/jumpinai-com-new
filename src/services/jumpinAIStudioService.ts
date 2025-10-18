@@ -1,7 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 import { createJump } from "./jumpService";
 import { jumpNamingService } from "@/utils/jumpNamingService";
-import { jumpComponentsService } from "./jumpComponentsService";
 
 export interface StudioFormData {
   currentRole: string;
@@ -295,70 +294,28 @@ export const jumpinAIStudioService = {
                   })();
                 }
               } else if (type === 'workflows') {
-                console.log('⚙️ Processing workflows data');
+                console.log('⚙️ Workflows data received (not saved - feature removed)');
                 const workflowsArray = data.workflows || [];
                 result.components!.workflows = workflowsArray;
-                console.log(`✅ Extracted ${workflowsArray.length} workflows:`, workflowsArray.map((w: any) => w.title));
                 
                 if (onProgress) {
                   onProgress(step, type, data);
-                }
-                
-                if (userId && jumpId && workflowsArray.length > 0) {
-                  console.log(`💾 Saving ${workflowsArray.length} workflows...`);
-                  (async () => {
-                    try {
-                      await jumpComponentsService.saveWorkflows(workflowsArray, userId, jumpId);
-                      console.log('✅ Workflows saved successfully');
-                    } catch (error) {
-                      console.error('❌ Error saving workflows:', error);
-                      console.error('❌ Workflows data:', JSON.stringify(workflowsArray, null, 2));
-                    }
-                  })();
                 }
               } else if (type === 'blueprints') {
-                console.log('📐 Processing blueprints data');
+                console.log('📐 Blueprints data received (not saved - feature removed)');
                 const blueprintsArray = data.blueprints || [];
                 result.components!.blueprints = blueprintsArray;
-                console.log(`✅ Extracted ${blueprintsArray.length} blueprints:`, blueprintsArray.map((b: any) => b.title));
                 
                 if (onProgress) {
                   onProgress(step, type, data);
-                }
-                
-                if (userId && jumpId && blueprintsArray.length > 0) {
-                  console.log(`💾 Saving ${blueprintsArray.length} blueprints...`);
-                  (async () => {
-                    try {
-                      await jumpComponentsService.saveBlueprints(blueprintsArray, userId, jumpId);
-                      console.log('✅ Blueprints saved successfully');
-                    } catch (error) {
-                      console.error('❌ Error saving blueprints:', error);
-                      console.error('❌ Blueprints data:', JSON.stringify(blueprintsArray, null, 2));
-                    }
-                  })();
                 }
               } else if (type === 'strategies') {
-                console.log('🎯 Processing strategies data');
+                console.log('🎯 Strategies data received (not saved - feature removed)');
                 const strategiesArray = data.strategies || [];
                 result.components!.strategies = strategiesArray;
-                console.log(`✅ Extracted ${strategiesArray.length} strategies:`, strategiesArray.map((s: any) => s.title));
                 
                 if (onProgress) {
                   onProgress(step, type, data);
-                }
-                
-                if (userId && jumpId && strategiesArray.length > 0) {
-                  console.log(`💾 Saving ${strategiesArray.length} strategies...`);
-                  (async () => {
-                    try {
-                      await jumpComponentsService.saveStrategies(strategiesArray, userId, jumpId);
-                      console.log('✅ Strategies saved successfully');
-                    } catch (error) {
-                      console.error('❌ Error saving strategies:', error);
-                      console.error('❌ Strategies data:', JSON.stringify(strategiesArray, null, 2));
-                    }
-                  })();
                 }
               }
 

@@ -132,39 +132,6 @@ export default function AppSidebar() {
             Tools & Prompts
           </Link>
 
-          <Link 
-            to="/dashboard/workflows" 
-            className={cn(
-              "flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm transition-colors",
-              getNavCls({ isActive: currentPath === "/dashboard/workflows" })
-            )}
-          >
-            <Workflow className="h-4 w-4" />
-            My Workflows
-          </Link>
-
-          <Link 
-            to="/dashboard/blueprints" 
-            className={cn(
-              "flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm transition-colors",
-              getNavCls({ isActive: currentPath === "/dashboard/blueprints" })
-            )}
-          >
-            <Boxes className="h-4 w-4" />
-            My Blueprints
-          </Link>
-
-          <Link 
-            to="/dashboard/strategies" 
-            className={cn(
-              "flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm transition-colors",
-              getNavCls({ isActive: currentPath === "/dashboard/strategies" })
-            )}
-          >
-            <Lightbulb className="h-4 w-4" />
-            My Strategies
-          </Link>
-
           <Separator className="my-1.5" />
 
           {/* Profile & Settings */}

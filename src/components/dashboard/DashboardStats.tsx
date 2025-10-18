@@ -12,11 +12,9 @@ interface DashboardStatsProps {
 
 export const DashboardStats: React.FC<DashboardStatsProps> = ({ stats, isLoading }) => {
   const navigate = useNavigate();
-  const totalItems = stats.totalJumps + stats.totalTools + stats.totalPrompts + 
-                     stats.totalWorkflows + stats.totalBlueprints + stats.totalStrategies;
+  const totalItems = stats.totalJumps + stats.totalTools + stats.totalPrompts;
   
-  const totalImplemented = stats.implementedJumps + stats.implementedTools + stats.implementedPrompts +
-                           stats.implementedWorkflows + stats.implementedBlueprints + stats.implementedStrategies;
+  const totalImplemented = stats.implementedJumps + stats.implementedTools + stats.implementedPrompts;
   
   const implementationRate = totalItems > 0 ? (totalImplemented / totalItems) * 100 : 0;
 
@@ -56,39 +54,12 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({ stats, isLoading
       bgColor: 'bg-purple-500/10',
       path: '/dashboard/prompts',
     },
-    {
-      title: 'Workflows',
-      value: stats.totalWorkflows,
-      implemented: stats.implementedWorkflows,
-      icon: GitBranch,
-      color: 'text-green-500',
-      bgColor: 'bg-green-500/10',
-      path: '/dashboard/workflows',
-    },
-    {
-      title: 'Blueprints',
-      value: stats.totalBlueprints,
-      implemented: stats.implementedBlueprints,
-      icon: Boxes,
-      color: 'text-cyan-500',
-      bgColor: 'bg-cyan-500/10',
-      path: '/dashboard/blueprints',
-    },
-    {
-      title: 'Strategies',
-      value: stats.totalStrategies,
-      implemented: stats.implementedStrategies,
-      icon: Target,
-      color: 'text-pink-500',
-      bgColor: 'bg-pink-500/10',
-      path: '/dashboard/strategies',
-    },
   ];
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-3 sm:gap-4">
-        {Array.from({ length: 7 }).map((_, i) => (
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+        {Array.from({ length: 4 }).map((_, i) => (
           <Card key={i} className="glass animate-pulse">
             <CardContent className="p-4">
               <div className="h-16 bg-muted/20 rounded" />
@@ -102,7 +73,7 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({ stats, isLoading
   return (
     <div className="space-y-4">
       {/* Stats Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
         {statCards.map((stat) => (
           <Card 
             key={stat.title} 
@@ -150,7 +121,7 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({ stats, isLoading
               </span>
             </div>
             <Progress value={implementationRate} className="h-2" />
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 text-xs">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
               {statCards.slice(1).map((stat) => (
                 stat.value > 0 && (
                   <div key={stat.title} className="flex items-center gap-1.5">
