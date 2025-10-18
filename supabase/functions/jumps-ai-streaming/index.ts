@@ -391,7 +391,7 @@ CRITICAL: Generate EXACTLY 4 workflows with 4-6 steps each.`,
     case 6:
       // STEP 6: Blueprints (Generate exactly 4)
       return {
-        systemPrompt: `You are an AI implementation architect. Create actionable blueprints.`,
+        systemPrompt: `You are an AI implementation architect. Create comprehensive, actionable blueprints with detailed technical architecture.`,
         userPrompt: `${baseContext}
 
 Overview Context:
@@ -404,27 +404,42 @@ Return ONLY valid JSON:
   "blueprints": [
     {
       "title": "Blueprint title",
-      "description": "What this implements (2-3 sentences)",
-      "category": "Category",
+      "description": "What this implements (2-3 sentences explaining the value and impact)",
+      "category": "Category (e.g., Technology Architecture, Business Process, Content System, Marketing Infrastructure)",
       "aiTools": ["Tool 1", "Tool 2"],
-      "implementationTime": "X weeks",
+      "implementationTime": "X weeks|X months",
       "difficultyLevel": "beginner|intermediate|advanced",
-      "resourcesNeeded": ["Resource 1", "Resource 2"],
-      "deliverables": ["Deliverable 1", "Deliverable 2", "Deliverable 3"],
-      "instructions": "Detailed implementation guide",
-      "tags": ["tag1", "tag2"],
-      "implementation": "Step-by-step details",
-      "requirements": ["Requirement 1", "Requirement 2"],
-      "toolsUsed": ["Tool 1", "Tool 2"],
+      "resourcesNeeded": ["Specific resource 1 (e.g., $20/month tool subscription)", "Resource 2", "Resource 3"],
+      "deliverables": ["Concrete deliverable 1 (e.g., Live website with 5 pages)", "Deliverable 2", "Deliverable 3"],
+      "instructions": "High-level implementation approach and key considerations (3-4 sentences)",
+      "tags": ["relevant", "tags"],
+      "implementation": "Detailed step-by-step implementation methodology explaining the approach (paragraph form, 100-150 words)",
+      "requirements": ["Technical requirement 1", "Business requirement 2", "Resource requirement 3"],
+      "toolsUsed": ["Specific Tool 1", "Specific Tool 2"],
       "blueprintContent": {
-        "phases": [
+        "overview": "Comprehensive overview of the blueprint architecture, how components integrate, data flow, and scalability approach (150-200 words)",
+        "architecture": "Detailed technical architecture explanation including tiers, flow, security, scalability, and system integration. Explain the complete system design with specific components and connections (200-300 words)",
+        "components": [
           {
-            "phase": 1,
-            "name": "Phase name",
-            "duration": "X weeks",
-            "objectives": ["Objective 1", "Objective 2"],
-            "tasks": ["Task 1", "Task 2"],
-            "milestones": ["Milestone 1", "Milestone 2"]
+            "name": "Component Name (e.g., Analytics Dashboard)",
+            "specs": "Technical specifications and details",
+            "config": "Configuration approach and settings",
+            "requirements": "Specific requirements for this component"
+          }
+        ],
+        "implementation_steps": [
+          {
+            "name": "Step name (e.g., Setup Foundation)",
+            "description": "What happens in this step and why",
+            "checkpoint": "How to verify completion",
+            "testing": "How to test this step"
+          }
+        ],
+        "best_practices": [
+          {
+            "title": "Best Practice Title",
+            "rationale": "Why this matters",
+            "example": "Concrete example of application"
           }
         ]
       }
@@ -432,14 +447,21 @@ Return ONLY valid JSON:
   ]
 }
 
-CRITICAL: Generate EXACTLY 4 blueprints with 3 phases each.`,
-        expectedTokens: 8000
+CRITICAL REQUIREMENTS:
+- Generate EXACTLY 4 comprehensive blueprints
+- Each architecture section must be 200-300 words with detailed technical explanation
+- Each overview must be 150-200 words explaining integration and flow
+- Include 3-4 components per blueprint with detailed specs
+- Include 4-6 implementation steps with checkpoints
+- Include 3-4 best practices with rationale
+- Make everything specific to their industry, goals, and budget`,
+        expectedTokens: 12000
       };
 
     case 7:
       // STEP 7: Strategies (Generate exactly 4)
       return {
-        systemPrompt: `You are a strategic AI advisor. Develop actionable strategies.`,
+        systemPrompt: `You are a strategic AI transformation advisor. Develop comprehensive, actionable strategies with detailed frameworks.`,
         userPrompt: `${baseContext}
 
 Overview Context:
@@ -451,28 +473,46 @@ Return ONLY valid JSON:
 {
   "strategies": [
     {
-      "title": "Strategy title",
-      "description": "What this achieves (2-3 sentences)",
-      "category": "Category",
-      "aiTools": ["Tool 1", "Tool 2"],
-      "timeline": "X months",
-      "successMetrics": ["Metric 1", "Metric 2", "Metric 3"],
-      "keyActions": ["Action 1", "Action 2", "Action 3"],
-      "potentialChallenges": ["Challenge 1", "Challenge 2"],
-      "mitigationStrategies": ["Strategy 1", "Strategy 2"],
-      "instructions": "How to execute",
-      "tags": ["tag1", "tag2"],
+      "title": "Strategy title (clear and action-oriented)",
+      "description": "What this achieves and why it matters (3-4 sentences explaining business impact)",
+      "category": "Category (e.g., Business Scaling, Content Marketing, Freelance Services, Revenue Optimization)",
+      "aiTools": ["Specific AI Tool 1 with use case", "Specific AI Tool 2 with use case"],
+      "timeline": "X weeks|X months (realistic timeframe)",
+      "successMetrics": [
+        {
+          "name": "Metric Name (e.g., Client Acquisition)",
+          "baseline": "Starting point (e.g., 0 clients)",
+          "target": "Goal (e.g., 10 clients by month 9)"
+        }
+      ],
+      "keyActions": ["Concrete action 1 (specific and measurable)", "Action 2", "Action 3"],
+      "potentialChallenges": ["Realistic challenge 1 with context", "Challenge 2"],
+      "mitigationStrategies": ["Specific mitigation for challenge 1", "Mitigation for challenge 2"],
+      "instructions": "High-level execution approach (3-4 sentences)",
+      "tags": ["relevant", "tags"],
       "priorityLevel": "low|medium|high",
-      "resourceRequirements": ["Resource 1", "Resource 2"],
+      "resourceRequirements": ["Specific resource 1 with cost/time", "Resource 2"],
       "strategyFramework": {
-        "vision": "Strategic vision",
-        "objectives": ["Objective 1", "Objective 2"],
-        "initiatives": [
+        "objective": "Clear, measurable objective with success criteria (e.g., 'Secure 10 clients generating $1,500/month by month 9, criteria: 80% retention and 4.8/5 ratings')",
+        "approach": "Detailed strategic methodology explaining principles, philosophy, implementation approach, and how it addresses their specific challenges. Include time efficiency, niche focus, monetization, impact, and sustainability. (200-300 words)",
+        "timeline": "Detailed phase-by-phase timeline with milestones. Format: 'Phase 1 (Weeks 1-3): [Activity], milestone: [Result]; Phase 2 (Weeks 4-8): [Activity], milestone: [Result]...' Include dependencies and critical paths.",
+        "tactics": [
           {
-            "name": "Initiative name",
-            "description": "What it does",
-            "timeline": "X months",
-            "kpis": ["KPI 1", "KPI 2"]
+            "name": "Tactic Name",
+            "actions": "Specific actions to take",
+            "outcomes": "Expected results",
+            "timeline": "Time requirement",
+            "resources": "Resources needed"
+          }
+        ],
+        "success_criteria": [
+          {
+            "description": "Quantifiable criterion (e.g., '$500 earnings by month 3, measured via platform tracker')"
+          }
+        ],
+        "resources": [
+          {
+            "description": "Specific resource with management details (e.g., 'Upwork free account, managed 1 hour/day; contingency: Fiverr alternative')"
           }
         ]
       }
@@ -480,8 +520,16 @@ Return ONLY valid JSON:
   ]
 }
 
-CRITICAL: Generate EXACTLY 4 strategies with 2 initiatives each.`,
-        expectedTokens: 8000
+CRITICAL REQUIREMENTS:
+- Generate EXACTLY 4 comprehensive strategies
+- Each approach section must be 200-300 words with detailed methodology
+- Include 2-3 tactics per strategy with clear actions and outcomes
+- Include 2-3 success criteria with specific measurements
+- Include 2-3 resources with management details
+- Timeline must show clear phases with milestones
+- Make everything specific to their industry, goals, budget, and urgency
+- Address their challenges directly with concrete solutions`,
+        expectedTokens: 12000
       };
 
     default:
