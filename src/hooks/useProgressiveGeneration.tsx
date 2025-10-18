@@ -295,16 +295,43 @@ export const useProgressiveGeneration = () => {
             // Update UI immediately
             setResult({ ...progressiveResult });
             
-          } else if (type === 'overview') {
-            // STEP 2: Overview (19%) - ONLY set comprehensive_plan, NOT structured_plan
+                } else if (type === 'overview') {
+            // STEP 2: Overview (19%) - Build comprehensive markdown from ALL sections
             console.log('Processing overview step data:', stepData);
             
-            // Extract overview data (Jump# and title already set in jump_created event)
-            progressiveResult.full_content = stepData.executiveSummary || '';
-            // DO NOT set structured_plan here - it will be set in the 'plan' step
             progressiveResult.comprehensive_plan = stepData;
             
-            // Update immediately - Overview is 19%
+            // Build full overview content from all sections
+            let overviewText = '';
+            if (stepData.executiveSummary) overviewText += `## Executive Summary\n\n${stepData.executiveSummary}\n\n`;
+            if (stepData.situationAnalysis) {
+              overviewText += `## Situation Analysis\n\n`;
+              if (stepData.situationAnalysis.currentState) overviewText += `### Current State\n${stepData.situationAnalysis.currentState}\n\n`;
+              if (stepData.situationAnalysis.challenges?.length) {
+                overviewText += `### Key Challenges\n`;
+                stepData.situationAnalysis.challenges.forEach((c: string) => overviewText += `- ${c}\n`);
+                overviewText += '\n';
+              }
+              if (stepData.situationAnalysis.opportunities?.length) {
+                overviewText += `### Opportunities\n`;
+                stepData.situationAnalysis.opportunities.forEach((o: string) => overviewText += `- ${o}\n`);
+                overviewText += '\n';
+              }
+            }
+            if (stepData.strategicVision) overviewText += `## Strategic Vision\n\n${stepData.strategicVision}\n\n`;
+            if (stepData.successFactors?.length) {
+              overviewText += `## Success Factors\n\n`;
+              stepData.successFactors.forEach((f: string) => overviewText += `- ${f}\n`);
+              overviewText += '\n';
+            }
+            if (stepData.riskMitigation?.length) {
+              overviewText += `## Risk Mitigation\n\n`;
+              stepData.riskMitigation.forEach((r: string) => overviewText += `- ${r}\n`);
+              overviewText += '\n';
+            }
+            
+            progressiveResult.full_content = overviewText.trim();
+            
             progressiveResult.processing_status = {
               stage: 'Generating',
               progress: 19,

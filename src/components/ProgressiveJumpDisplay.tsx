@@ -148,7 +148,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
               </TabsTrigger>
               <TabsTrigger value="toolPrompts" className="flex items-center gap-1.5 text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
                 {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.toolPrompts?.length || 0) > 0)}
-                Tools & Prompts ({result.components?.toolPrompts?.length || 0})
+                Tools & Prompts ({result.components?.toolPrompts?.length || 0}/6)
               </TabsTrigger>
               <TabsTrigger value="workflows" className="flex items-center gap-1.5 text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
                 {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.workflows?.length || 0) > 0)}
@@ -177,7 +177,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
             </TabsTrigger>
             <TabsTrigger value="toolPrompts" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
               {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.toolPrompts?.length || 0) > 0)}
-              Tools & Prompts ({result.components?.toolPrompts?.length || 0})
+              Tools & Prompts ({result.components?.toolPrompts?.length || 0}/6)
             </TabsTrigger>
             <TabsTrigger value="workflows" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
               {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.workflows?.length || 0) > 0)}

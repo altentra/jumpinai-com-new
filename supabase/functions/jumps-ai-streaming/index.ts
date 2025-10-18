@@ -47,8 +47,7 @@ serve(async (req) => {
             return true;
           } catch (error) {
             console.error('Error sending event:', error);
-            // Don't close immediately - just mark as closed
-            isClosed = true;
+            // Don't mark as closed - this might be a temporary issue
             return false;
           }
         };
@@ -80,21 +79,21 @@ serve(async (req) => {
           ];
 
           for (const { step, type, name } of steps) {
-            if (isClosed) {
-              console.log(`Stream closed, stopping at step ${step}`);
-              break;
-            }
             try {
               console.log(`Step ${step}: Generating ${name}...`);
               const response = await callXAI(XAI_API_KEY, step, formData, overviewContent);
               console.log(`Step ${step} response:`, response);
+              
+              // Try to send the event
               const sent = sendEvent(step, type, response);
               if (!sent) {
-                console.error(`Failed to send step ${step}, but continuing...`);
+                console.error(`Failed to send step ${step}, attempting to continue...`);
+                // Wait a bit and try to continue anyway
+                await new Promise(resolve => setTimeout(resolve, 100));
               }
             } catch (stepError) {
               console.error(`Error in step ${step}:`, stepError);
-              // Continue with next step even if this one fails
+              // Try to send error event, then continue
               sendEvent(step, 'error', { message: `Step ${step} failed: ${stepError.message}` });
             }
           }
@@ -298,102 +297,60 @@ Return ONLY valid JSON:
       };
 
     case 4:
-      // STEP 4: Tools & Prompts Combined
-      const toolPromptsPrompt = `Based on the user's goals and situation, generate 5-7 SPECIFIC, ACTIONABLE AI tool recommendations with custom prompts.
-
-CRITICAL: Each tool MUST include ALL fields below with substantial, useful content:
-
-{
-  "tool_prompts": [
-    {
-      "name": "Exact tool name (e.g., ChatGPT, Claude, Notion AI)",
-      "category": "Specific category (Content Creation, Automation, Data Analysis, Design, Marketing, etc.)",
-      "description": "Clear 2-3 sentence explanation of what this tool does and its key features",
-      "website_url": "Actual website URL (e.g., https://chat.openai.com)",
-      "when_to_use": "Detailed scenario describing when this tool provides the most value for their specific situation",
-      "why_this_tool": "2-3 sentences explaining WHY this specific tool is perfect for their needs and goals",
-      "how_to_integrate": "Step-by-step practical guidance (3-5 steps) on how to start using this tool in their workflow",
-      "custom_prompt": "A complete, ready-to-use prompt they can copy-paste into the tool right now (100-200 words, specific to their situation)",
-      "prompt_instructions": "Detailed instructions on how to use the prompt effectively with this tool (when to use it, how to customize it, what to expect)",
-      "alternatives": ["Alternative tool 1", "Alternative tool 2", "Alternative tool 3"],
-      "skill_level": "Beginner | Intermediate | Advanced",
-      "cost_model": "Free | Freemium | Paid | Enterprise (include price range if paid)",
-      "implementation_timeline": "Specific timeframe (e.g., '30 minutes', '1-2 days', '1 week')"
-    }
-  ]
-}
-
-REQUIREMENTS:
-- ALL fields must be present and filled with substantial content
-- custom_prompt must be 100-200 words and immediately usable
-- prompt_instructions must be detailed (3-5 sentences)
-- how_to_integrate must have clear steps
-- Choose tools that are REAL, POPULAR, and directly applicable to their industry and goals`;
-
+      // STEP 4: Tools & Prompts (Generate 6 items)
       return {
-        systemPrompt: `You are an AI tools and prompt engineering expert specializing in practical implementation. Your job is to recommend specific AI tools paired with custom prompts that are immediately actionable for the user's specific situation.`,
+        systemPrompt: `You are an AI tools and prompt engineering expert. Recommend specific, actionable AI tools with custom prompts.`,
         userPrompt: `${baseContext}
 
 Overview Context:
 ${overviewContent}
 
-Create 4-6 powerful AI tool + prompt combinations tailored specifically for their situation. For each combination:
+Generate exactly 6 AI tool + prompt combinations. Each MUST include:
 
-1. Choose a SPECIFIC, REAL AI tool (like ChatGPT, Claude, Midjourney, Jasper, Copy.ai, etc.)
-2. Create a COMPLETE, READY-TO-USE prompt customized for their industry and goals
-3. Provide CLEAR, STEP-BY-STEP instructions on WHERE and HOW to use this prompt
-
-Each tool-prompt combination must be practical and immediately implementable.
-
-Return ONLY valid JSON (no markdown, no explanations):
+Return ONLY valid JSON:
 {
   "tool_prompts": [
     {
-      "title": "[Tool Name] for [Their Specific Use Case]",
-      "description": "Clear explanation of how this tool+prompt solves their specific challenge",
-      "category": "Content Creation|Marketing|Data Analysis|Customer Service|Operations|Strategy",
-      "tool_name": "Exact AI Tool Name (e.g., ChatGPT, Claude, Midjourney)",
-      "tool_url": "https://actual-tool-website.com",
-      "tool_type": "Text Generation|Image Generation|Data Analysis|Chatbot|etc",
-      "prompt_text": "Complete ready-to-use prompt text that is fully customized for their industry, goals, and challenges. This should be 3-5 sentences minimum and include specific context from their situation.",
-      "prompt_instructions": "Step-by-step instructions: 1) Go to [Tool Name] 2) Navigate to [specific section] 3) Paste this prompt 4) Customize [specific parts] with your data 5) Review and refine the output",
-      "use_cases": ["Specific use case 1 relevant to their goals", "Use case 2", "Use case 3"],
-      "features": ["Key feature that helps them", "Feature 2", "Feature 3"],
-      "limitations": ["Important limitation to know", "Limitation 2"],
-      "tags": ["relevant", "tags", "for", "searching"],
+      "title": "[Tool Name] for [Specific Use Case]",
+      "description": "How this tool+prompt solves their challenge (2-3 sentences)",
+      "category": "Content Creation|Marketing|Automation|Data Analysis|Strategy",
+      "tool_name": "ChatGPT|Claude|Gemini|Midjourney|Canva|etc",
+      "tool_url": "https://actual-tool-url.com",
+      "tool_type": "Text Generation|Image Generation|Data Analysis|Automation",
+      "prompt_text": "Complete, ready-to-use prompt customized for their situation (100-200 words, include their specific goals/industry/challenges)",
+      "prompt_instructions": "Step-by-step: 1) Open [Tool] 2) Paste prompt 3) Customize [X] 4) Use output (4-5 sentences)",
+      "use_cases": ["Use case 1", "Use case 2", "Use case 3"],
+      "features": ["Feature 1", "Feature 2", "Feature 3"],
+      "limitations": ["Limitation 1", "Limitation 2"],
+      "tags": ["tag1", "tag2", "tag3"],
       "difficulty_level": "beginner|intermediate|advanced",
-      "setup_time": "5 minutes|15 minutes|30 minutes|1 hour",
-      "cost_estimate": "Free|$10/month|$20/month|$50/month|Custom pricing"
+      "setup_time": "5 minutes|30 minutes|1 hour",
+      "cost_estimate": "Free|$20/month|Custom"
     }
   ]
 }
 
-CRITICAL: Make each prompt SPECIFIC to their situation. Include their industry, goals, and challenges in the prompt text itself.`,
-        expectedTokens: 12000
+CRITICAL: Generate EXACTLY 6 items. Make prompts highly specific to their situation.`,
+        expectedTokens: 10000
       };
 
     case 5:
+      // STEP 5: Workflows (Generate exactly 4)
       return {
-        systemPrompt: `You are a workflow optimization expert. Design comprehensive AI-powered workflows.`,
+        systemPrompt: `You are a workflow optimization expert. Design AI-powered workflows.`,
         userPrompt: `${baseContext}
 
 Overview Context:
 ${overviewContent}
 
-Design 4 detailed AI-powered workflows. Each must include:
-- Clear title and description
-- Category and complexity level
-- Duration estimate and prerequisites
-- 4-6 detailed workflow steps (each with title, description, tool, time, deliverable)
-- Expected outcomes
-- Practical instructions
+Generate exactly 4 AI-powered workflows. Each MUST include:
 
 Return ONLY valid JSON:
 {
   "workflows": [
     {
       "title": "Workflow title",
-      "description": "What this accomplishes",
+      "description": "What this accomplishes (2-3 sentences)",
       "category": "Category",
       "aiTools": ["Tool 1", "Tool 2"],
       "durationEstimate": "X hours",
@@ -401,7 +358,7 @@ Return ONLY valid JSON:
       "prerequisites": ["Prerequisite 1", "Prerequisite 2"],
       "expectedOutcomes": ["Outcome 1", "Outcome 2", "Outcome 3"],
       "instructions": "Detailed step-by-step instructions",
-      "tags": ["tag1", "tag2", "tag3"],
+      "tags": ["tag1", "tag2"],
       "toolsNeeded": ["Tool 1", "Tool 2"],
       "skillLevel": "beginner|intermediate|advanced",
       "workflowSteps": [
@@ -416,32 +373,29 @@ Return ONLY valid JSON:
       ]
     }
   ]
-}`,
+}
+
+CRITICAL: Generate EXACTLY 4 workflows with 4-6 steps each.`,
         expectedTokens: 8000
       };
 
     case 6:
+      // STEP 6: Blueprints (Generate exactly 4)
       return {
-        systemPrompt: `You are an AI implementation architect. Create comprehensive, actionable blueprints.`,
+        systemPrompt: `You are an AI implementation architect. Create actionable blueprints.`,
         userPrompt: `${baseContext}
 
 Overview Context:
 ${overviewContent}
 
-Create 4 detailed implementation blueprints. Each must include:
-- Clear title and description
-- Category and difficulty level
-- Implementation time and resources needed
-- 3 key deliverables
-- Detailed implementation instructions
-- Blueprint with 3 phases (each with objectives, tasks, milestones)
+Generate exactly 4 implementation blueprints. Each MUST include:
 
 Return ONLY valid JSON:
 {
   "blueprints": [
     {
       "title": "Blueprint title",
-      "description": "What this implements",
+      "description": "What this implements (2-3 sentences)",
       "category": "Category",
       "aiTools": ["Tool 1", "Tool 2"],
       "implementationTime": "X weeks",
@@ -449,8 +403,8 @@ Return ONLY valid JSON:
       "resourcesNeeded": ["Resource 1", "Resource 2"],
       "deliverables": ["Deliverable 1", "Deliverable 2", "Deliverable 3"],
       "instructions": "Detailed implementation guide",
-      "tags": ["tag1", "tag2", "tag3"],
-      "implementation": "Step-by-step implementation details",
+      "tags": ["tag1", "tag2"],
+      "implementation": "Step-by-step details",
       "requirements": ["Requirement 1", "Requirement 2"],
       "toolsUsed": ["Tool 1", "Tool 2"],
       "blueprintContent": {
@@ -460,40 +414,36 @@ Return ONLY valid JSON:
             "name": "Phase name",
             "duration": "X weeks",
             "objectives": ["Objective 1", "Objective 2"],
-            "tasks": ["Task 1", "Task 2", "Task 3"],
+            "tasks": ["Task 1", "Task 2"],
             "milestones": ["Milestone 1", "Milestone 2"]
           }
         ]
       }
     }
   ]
-}`,
+}
+
+CRITICAL: Generate EXACTLY 4 blueprints with 3 phases each.`,
         expectedTokens: 8000
       };
 
     case 7:
+      // STEP 7: Strategies (Generate exactly 4)
       return {
-        systemPrompt: `You are a strategic AI advisor. Develop comprehensive, actionable strategies.`,
+        systemPrompt: `You are a strategic AI advisor. Develop actionable strategies.`,
         userPrompt: `${baseContext}
 
 Overview Context:
 ${overviewContent}
 
-Develop 4 strategic initiatives. Each must include:
-- Clear title and description
-- Category and priority level
-- Timeline and resource requirements
-- 3 success metrics and 3 key actions
-- 2 potential challenges with mitigation strategies
-- Execution instructions
-- Strategy framework with vision, objectives, and 2 initiatives
+Generate exactly 4 strategic initiatives. Each MUST include:
 
 Return ONLY valid JSON:
 {
   "strategies": [
     {
       "title": "Strategy title",
-      "description": "What this achieves",
+      "description": "What this achieves (2-3 sentences)",
       "category": "Category",
       "aiTools": ["Tool 1", "Tool 2"],
       "timeline": "X months",
@@ -501,8 +451,8 @@ Return ONLY valid JSON:
       "keyActions": ["Action 1", "Action 2", "Action 3"],
       "potentialChallenges": ["Challenge 1", "Challenge 2"],
       "mitigationStrategies": ["Strategy 1", "Strategy 2"],
-      "instructions": "How to execute this strategy",
-      "tags": ["tag1", "tag2", "tag3"],
+      "instructions": "How to execute",
+      "tags": ["tag1", "tag2"],
       "priorityLevel": "low|medium|high",
       "resourceRequirements": ["Resource 1", "Resource 2"],
       "strategyFramework": {
@@ -519,7 +469,9 @@ Return ONLY valid JSON:
       }
     }
   ]
-}`,
+}
+
+CRITICAL: Generate EXACTLY 4 strategies with 2 initiatives each.`,
         expectedTokens: 8000
       };
 
