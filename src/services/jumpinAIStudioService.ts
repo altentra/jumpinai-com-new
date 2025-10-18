@@ -749,7 +749,7 @@ export const jumpinAIStudioService = {
         }
       }
 
-      // Save workflows
+      // Save workflows - Map camelCase to snake_case
       if (components.workflows && components.workflows.length > 0) {
         for (const workflow of components.workflows) {
           await supabase.from('user_workflows').insert({
@@ -757,22 +757,22 @@ export const jumpinAIStudioService = {
             jump_id: jumpId,
             title: workflow.title,
             description: workflow.description,
-            workflow_steps: workflow.workflow_steps,
+            workflow_steps: workflow.workflowSteps || workflow.workflow_steps,
             category: workflow.category,
-            ai_tools: workflow.ai_tools,
-            duration_estimate: workflow.duration_estimate,
-            complexity_level: workflow.complexity_level,
+            ai_tools: workflow.aiTools || workflow.ai_tools,
+            duration_estimate: workflow.durationEstimate || workflow.duration_estimate,
+            complexity_level: workflow.complexityLevel || workflow.complexity_level,
             prerequisites: workflow.prerequisites,
-            expected_outcomes: workflow.expected_outcomes,
+            expected_outcomes: workflow.expectedOutcomes || workflow.expected_outcomes,
             instructions: workflow.instructions,
             tags: workflow.tags || [],
-            tools_needed: workflow.tools_needed,
-            skill_level: workflow.skill_level
+            tools_needed: workflow.toolsNeeded || workflow.tools_needed,
+            skill_level: workflow.skillLevel || workflow.skill_level
           });
         }
       }
 
-      // Save blueprints
+      // Save blueprints - Map camelCase to snake_case
       if (components.blueprints && components.blueprints.length > 0) {
         for (const blueprint of components.blueprints) {
           await supabase.from('user_blueprints').insert({
@@ -780,23 +780,23 @@ export const jumpinAIStudioService = {
             jump_id: jumpId,
             title: blueprint.title,
             description: blueprint.description,
-            blueprint_content: blueprint.blueprint_content,
+            blueprint_content: blueprint.blueprintContent || blueprint.blueprint_content,
             category: blueprint.category,
-            ai_tools: blueprint.ai_tools,
-            implementation_time: blueprint.implementation_time,
-            difficulty_level: blueprint.difficulty_level,
-            resources_needed: blueprint.resources_needed,
+            ai_tools: blueprint.aiTools || blueprint.ai_tools,
+            implementation_time: blueprint.implementationTime || blueprint.implementation_time,
+            difficulty_level: blueprint.difficultyLevel || blueprint.difficulty_level,
+            resources_needed: blueprint.resourcesNeeded || blueprint.resources_needed,
             deliverables: blueprint.deliverables,
             instructions: blueprint.instructions,
             tags: blueprint.tags || [],
             implementation: blueprint.implementation,
             requirements: blueprint.requirements,
-            tools_used: blueprint.tools_used
+            tools_used: blueprint.toolsUsed || blueprint.tools_used
           });
         }
       }
 
-      // Save strategies
+      // Save strategies - Map camelCase to snake_case
       if (components.strategies && components.strategies.length > 0) {
         for (const strategy of components.strategies) {
           await supabase.from('user_strategies').insert({
@@ -804,18 +804,18 @@ export const jumpinAIStudioService = {
             jump_id: jumpId,
             title: strategy.title,
             description: strategy.description,
-            strategy_framework: strategy.strategy_framework,
+            strategy_framework: strategy.strategyFramework || strategy.strategy_framework,
             category: strategy.category,
-            ai_tools: strategy.ai_tools,
+            ai_tools: strategy.aiTools || strategy.ai_tools,
             timeline: strategy.timeline,
-            success_metrics: strategy.success_metrics,
-            key_actions: strategy.key_actions,
-            potential_challenges: strategy.potential_challenges,
-            mitigation_strategies: strategy.mitigation_strategies,
+            success_metrics: strategy.successMetrics || strategy.success_metrics,
+            key_actions: strategy.keyActions || strategy.key_actions,
+            potential_challenges: strategy.potentialChallenges || strategy.potential_challenges,
+            mitigation_strategies: strategy.mitigationStrategies || strategy.mitigation_strategies,
             instructions: strategy.instructions,
             tags: strategy.tags || [],
-            priority_level: strategy.priority_level,
-            resource_requirements: strategy.resource_requirements
+            priority_level: strategy.priorityLevel || strategy.priority_level,
+            resource_requirements: strategy.resourceRequirements || strategy.resource_requirements
           });
         }
       }
