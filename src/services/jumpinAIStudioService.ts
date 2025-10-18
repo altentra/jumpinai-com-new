@@ -1,6 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import { createJump } from "./jumpService";
 import { jumpNamingService } from "@/utils/jumpNamingService";
+import { jumpComponentsService } from "./jumpComponentsService";
 
 export interface StudioFormData {
   currentRole: string;
@@ -307,7 +308,7 @@ export const jumpinAIStudioService = {
                   console.log(`💾 Saving ${workflowsArray.length} workflows...`);
                   (async () => {
                     try {
-                      await this.saveWorkflows(workflowsArray, userId, jumpId);
+                      await jumpComponentsService.saveWorkflows(workflowsArray, userId, jumpId);
                       console.log('✅ Workflows saved successfully');
                     } catch (error) {
                       console.error('❌ Error saving workflows:', error);
@@ -329,7 +330,7 @@ export const jumpinAIStudioService = {
                   console.log(`💾 Saving ${blueprintsArray.length} blueprints...`);
                   (async () => {
                     try {
-                      await this.saveBlueprints(blueprintsArray, userId, jumpId);
+                      await jumpComponentsService.saveBlueprints(blueprintsArray, userId, jumpId);
                       console.log('✅ Blueprints saved successfully');
                     } catch (error) {
                       console.error('❌ Error saving blueprints:', error);
@@ -351,7 +352,7 @@ export const jumpinAIStudioService = {
                   console.log(`💾 Saving ${strategiesArray.length} strategies...`);
                   (async () => {
                     try {
-                      await this.saveStrategies(strategiesArray, userId, jumpId);
+                      await jumpComponentsService.saveStrategies(strategiesArray, userId, jumpId);
                       console.log('✅ Strategies saved successfully');
                     } catch (error) {
                       console.error('❌ Error saving strategies:', error);
@@ -391,148 +392,8 @@ export const jumpinAIStudioService = {
     });
   },
 
-  // NEW: Dedicated save method for workflows with robust error handling
-  async saveWorkflows(workflows: any[], userId: string, jumpId: string): Promise<void> {
-    console.log(`🔄 saveWorkflows called with ${workflows.length} workflows`);
-    
-    for (let i = 0; i < workflows.length; i++) {
-      const workflow = workflows[i];
-      console.log(`💾 Saving workflow ${i + 1}/${workflows.length}: "${workflow.title}"`);
-      
-      try {
-        const insertData = {
-          user_id: userId,
-          jump_id: jumpId,
-          title: workflow.title || 'Untitled Workflow',
-          description: workflow.description || null,
-          workflow_steps: workflow.workflowSteps || workflow.workflow_steps || [],
-          category: workflow.category || null,
-          ai_tools: workflow.aiTools || workflow.ai_tools || [],
-          duration_estimate: workflow.durationEstimate || workflow.duration_estimate || null,
-          complexity_level: workflow.complexityLevel || workflow.complexity_level || null,
-          prerequisites: workflow.prerequisites || [],
-          expected_outcomes: workflow.expectedOutcomes || workflow.expected_outcomes || [],
-          instructions: workflow.instructions || null,
-          tags: workflow.tags || [],
-          tools_needed: workflow.toolsNeeded || workflow.tools_needed || [],
-          skill_level: workflow.skillLevel || workflow.skill_level || null
-        };
+  // Old save methods removed - now using clean jumpComponentsService
 
-        console.log(`📝 Insert data for "${workflow.title}":`, JSON.stringify(insertData, null, 2));
-
-        const { data, error } = await supabase
-          .from('user_workflows')
-          .insert(insertData)
-          .select()
-          .single();
-
-        if (error) {
-          console.error(`❌ Error inserting workflow "${workflow.title}":`, error);
-          console.error('❌ Error details:', JSON.stringify(error, null, 2));
-        } else {
-          console.log(`✅ Successfully saved workflow "${workflow.title}" with ID:`, data.id);
-        }
-      } catch (error) {
-        console.error(`❌ Exception saving workflow "${workflow.title}":`, error);
-      }
-    }
-  },
-
-  // NEW: Dedicated save method for blueprints with robust error handling
-  async saveBlueprints(blueprints: any[], userId: string, jumpId: string): Promise<void> {
-    console.log(`🔄 saveBlueprints called with ${blueprints.length} blueprints`);
-    
-    for (let i = 0; i < blueprints.length; i++) {
-      const blueprint = blueprints[i];
-      console.log(`💾 Saving blueprint ${i + 1}/${blueprints.length}: "${blueprint.title}"`);
-      
-      try {
-        const insertData = {
-          user_id: userId,
-          jump_id: jumpId,
-          title: blueprint.title || 'Untitled Blueprint',
-          description: blueprint.description || null,
-          blueprint_content: blueprint.blueprintContent || blueprint.blueprint_content || {},
-          category: blueprint.category || null,
-          ai_tools: blueprint.aiTools || blueprint.ai_tools || [],
-          implementation_time: blueprint.implementationTime || blueprint.implementation_time || null,
-          difficulty_level: blueprint.difficultyLevel || blueprint.difficulty_level || null,
-          resources_needed: blueprint.resourcesNeeded || blueprint.resources_needed || [],
-          deliverables: blueprint.deliverables || [],
-          instructions: blueprint.instructions || null,
-          tags: blueprint.tags || [],
-          implementation: blueprint.implementation || null,
-          requirements: blueprint.requirements || [],
-          tools_used: blueprint.toolsUsed || blueprint.tools_used || []
-        };
-
-        console.log(`📝 Insert data for "${blueprint.title}":`, JSON.stringify(insertData, null, 2));
-
-        const { data, error } = await supabase
-          .from('user_blueprints')
-          .insert(insertData)
-          .select()
-          .single();
-
-        if (error) {
-          console.error(`❌ Error inserting blueprint "${blueprint.title}":`, error);
-          console.error('❌ Error details:', JSON.stringify(error, null, 2));
-        } else {
-          console.log(`✅ Successfully saved blueprint "${blueprint.title}" with ID:`, data.id);
-        }
-      } catch (error) {
-        console.error(`❌ Exception saving blueprint "${blueprint.title}":`, error);
-      }
-    }
-  },
-
-  // NEW: Dedicated save method for strategies with robust error handling
-  async saveStrategies(strategies: any[], userId: string, jumpId: string): Promise<void> {
-    console.log(`🔄 saveStrategies called with ${strategies.length} strategies`);
-    
-    for (let i = 0; i < strategies.length; i++) {
-      const strategy = strategies[i];
-      console.log(`💾 Saving strategy ${i + 1}/${strategies.length}: "${strategy.title}"`);
-      
-      try {
-        const insertData = {
-          user_id: userId,
-          jump_id: jumpId,
-          title: strategy.title || 'Untitled Strategy',
-          description: strategy.description || null,
-          strategy_framework: strategy.strategyFramework || strategy.strategy_framework || {},
-          category: strategy.category || null,
-          ai_tools: strategy.aiTools || strategy.ai_tools || [],
-          timeline: strategy.timeline || null,
-          success_metrics: strategy.successMetrics || strategy.success_metrics || [],
-          key_actions: strategy.keyActions || strategy.key_actions || [],
-          potential_challenges: strategy.potentialChallenges || strategy.potential_challenges || [],
-          mitigation_strategies: strategy.mitigationStrategies || strategy.mitigation_strategies || [],
-          instructions: strategy.instructions || null,
-          tags: strategy.tags || [],
-          priority_level: strategy.priorityLevel || strategy.priority_level || null,
-          resource_requirements: strategy.resourceRequirements || strategy.resource_requirements || []
-        };
-
-        console.log(`📝 Insert data for "${strategy.title}":`, JSON.stringify(insertData, null, 2));
-
-        const { data, error } = await supabase
-          .from('user_strategies')
-          .insert(insertData)
-          .select()
-          .single();
-
-        if (error) {
-          console.error(`❌ Error inserting strategy "${strategy.title}":`, error);
-          console.error('❌ Error details:', JSON.stringify(error, null, 2));
-        } else {
-          console.log(`✅ Successfully saved strategy "${strategy.title}" with ID:`, data.id);
-        }
-      } catch (error) {
-        console.error(`❌ Exception saving strategy "${strategy.title}":`, error);
-      }
-    }
-  },
 
   async generateJump(formData: StudioFormData, userId?: string, onProgress?: (step: number, data: any) => void): Promise<GenerationResult> {
     console.log(`generateJump called with userId: ${userId}`);
@@ -620,7 +481,6 @@ export const jumpinAIStudioService = {
     }
 
     return result;
-    throw new Error('Not implemented - use generateJumpStreaming instead');
   },
 
   async executeStep(step: number, formData: StudioFormData, overviewContent: string): Promise<any> {

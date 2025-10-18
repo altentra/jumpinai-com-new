@@ -4,10 +4,11 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { Clock, Users, ExternalLink, Rocket, RefreshCw, Trash2 } from "lucide-react";
+import { Clock, Zap, CheckCircle2, Trash2, Sparkles } from "lucide-react";
 import { workflowsService, UserWorkflow } from "@/services/workflowsService";
 import { useToast } from "@/hooks/use-toast";
 import { useJumpsInfo } from "@/hooks/useJumpInfo";
+import { Separator } from "@/components/ui/separator";
 
 export default function Workflows() {
   const [workflows, setWorkflows] = useState<UserWorkflow[]>([]);
@@ -16,7 +17,6 @@ export default function Workflows() {
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const { toast } = useToast();
   
-  // Get jump information for all workflows
   const jumpIds = workflows.map(workflow => workflow.jump_id);
   const { jumpsInfo } = useJumpsInfo(jumpIds);
 
@@ -24,7 +24,6 @@ export default function Workflows() {
     loadWorkflows();
   }, []);
 
-  // Add visibility change listener to refresh data when user returns to tab
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (!document.hidden && !isLoading) {
@@ -43,7 +42,7 @@ export default function Workflows() {
       console.error('Error loading workflows:', error);
       toast({
         title: "Error",
-        description: "Failed to load workflows. Please try again.",
+        description: "Failed to load workflows",
         variant: "destructive"
       });
     } finally {
@@ -51,29 +50,19 @@ export default function Workflows() {
     }
   };
 
-  const getDifficultyColor = (level?: string) => {
-    switch (level) {
-      case 'beginner': return 'secondary';
-      case 'intermediate': return 'outline';
-      case 'advanced': return 'destructive';
-      default: return 'secondary';
-    }
-  };
-
   const handleDelete = async (workflowId: string) => {
+    setDeletingId(workflowId);
     try {
-      setDeletingId(workflowId);
       await workflowsService.deleteWorkflow(workflowId);
       setWorkflows(workflows.filter(w => w.id !== workflowId));
       toast({
-        title: "Deleted",
-        description: "Workflow deleted successfully",
+        title: "Success",
+        description: "Workflow deleted successfully"
       });
     } catch (error) {
-      console.error('Error deleting workflow:', error);
       toast({
         title: "Error",
-        description: "Failed to delete workflow. Please try again.",
+        description: "Failed to delete workflow",
         variant: "destructive"
       });
     } finally {
@@ -83,320 +72,276 @@ export default function Workflows() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-16">
-        <div className="animate-pulse">Loading your workflows...</div>
+      <div className="flex items-center justify-center h-96">
+        <div className="text-center space-y-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto" />
+          <p className="text-muted-foreground">Loading workflows...</p>
+        </div>
       </div>
     );
   }
 
-  return (
-    <div className="space-y-4 sm:space-y-5 px-2 sm:px-0">
-      {/* Header - Mobile Optimized */}
-      <div className="glass rounded-xl p-3 sm:p-4 shadow-modern">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0">
-          <h2 className="text-lg sm:text-xl font-semibold">My Workflows</h2>
-          <div className="flex items-center gap-2 self-end sm:self-auto">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => loadWorkflows()}
-              disabled={isLoading}
-              className="shrink-0"
-            >
-              <RefreshCw className={`w-3 h-3 ${isLoading ? 'animate-spin' : ''}`} />
-            </Button>
-            <Badge variant="secondary" className="text-xs">{workflows.length} workflows</Badge>
-          </div>
+  if (workflows.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center h-96 space-y-6 text-center px-4">
+        <div className="rounded-full bg-primary/10 p-6">
+          <Sparkles className="h-12 w-12 text-primary" />
         </div>
+        <div className="space-y-2">
+          <h3 className="text-2xl font-bold">No Workflows Yet</h3>
+          <p className="text-muted-foreground max-w-md">
+            Start your AI journey by visiting the JumpinAI Studio to generate your first workflow
+          </p>
+        </div>
+        <Button size="lg" onClick={() => window.location.href = "/jumpinai-studio"}>
+          Create Your First Workflow
+        </Button>
       </div>
+    );
+  }
 
-      {workflows.length === 0 ? (
-        <Card className="glass text-center py-8 sm:py-12 rounded-xl shadow-modern">
-          <CardContent className="p-4 sm:p-6">
-            <div className="space-y-3">
-              <div className="p-3 rounded-full bg-primary/10 w-fit mx-auto">
-                <ExternalLink className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
-              </div>
-              <h3 className="text-base sm:text-lg font-medium text-muted-foreground">
-                No workflows yet
-              </h3>
-              <p className="text-sm text-muted-foreground max-w-md mx-auto">
-                Generate your personalized AI transformation plan in JumpinAI Studio to get custom workflows
-              </p>
-              <Button 
-                variant="outline" 
-                className="text-sm" 
-                onClick={() => window.location.href = '/jumpinai-studio'}
-              >
-                <ExternalLink className="w-3 h-3 mr-2" />
-                Visit JumpinAI Studio
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      ) : (
-        <div className="space-y-4 sm:space-y-6">
-          {/* Group workflows by Jump */}
-          {Object.entries(
-            workflows.reduce((groups, workflow) => {
-              const jumpId = workflow.jump_id || 'unassigned';
-              if (!groups[jumpId]) groups[jumpId] = [];
-              groups[jumpId].push(workflow);
-              return groups;
-            }, {} as Record<string, UserWorkflow[]>)
-          )
-            .sort(([jumpIdA], [jumpIdB]) => {
-              // Sort by jump number descending (latest first), with unassigned last
-              if (jumpIdA === 'unassigned') return 1;
-              if (jumpIdB === 'unassigned') return -1;
-              const jumpA = jumpIdA && jumpsInfo[jumpIdA];
-              const jumpB = jumpIdB && jumpsInfo[jumpIdB];
-              return (jumpB?.jumpNumber || 0) - (jumpA?.jumpNumber || 0);
-            })
-            .map(([jumpId, jumpWorkflows]) => (
-            <div key={jumpId} className="glass border rounded-xl p-5 bg-card shadow-modern">
-              <div className="flex items-center gap-2 mb-3 pb-3 border-b">
-                <Rocket className="w-4 h-4 text-primary" />
-                <h3 className="text-lg font-semibold">
-                  {jumpId === 'unassigned' 
-                    ? 'Unassigned Workflows' 
-                    : jumpsInfo[jumpId] 
-                      ? `Jump #${jumpsInfo[jumpId].jumpNumber} - ${jumpsInfo[jumpId].title}` 
-                      : 'Loading Jump Info...'}
-                </h3>
-                <Badge variant="secondary" className="ml-auto text-xs">
-                  {jumpWorkflows.length} workflow{jumpWorkflows.length !== 1 ? 's' : ''}
-                </Badge>
-              </div>
-              
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+  const groupedWorkflows = workflows.reduce((acc, workflow) => {
+    const jumpId = workflow.jump_id || 'No Jump';
+    if (!acc[jumpId]) acc[jumpId] = [];
+    acc[jumpId].push(workflow);
+    return acc;
+  }, {} as Record<string, UserWorkflow[]>);
+
+  return (
+    <div className="space-y-8">
+      {Object.entries(groupedWorkflows)
+        .sort(([, a], [, b]) => (b[0]?.created_at || '').localeCompare(a[0]?.created_at || ''))
+        .map(([jumpId, jumpWorkflows]) => {
+          const jumpInfo = jumpsInfo[jumpId];
+          return (
+            <div key={jumpId} className="space-y-4">
+              {jumpInfo && (
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-1 bg-gradient-to-b from-primary to-primary/30 rounded-full" />
+                  <div>
+                    <h2 className="text-xl font-bold">{jumpInfo.title}</h2>
+                    <p className="text-sm text-muted-foreground">
+                      {jumpWorkflows.length} workflow{jumpWorkflows.length !== 1 ? 's' : ''}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {jumpWorkflows.map((workflow) => (
                   <Card 
                     key={workflow.id} 
-                    className="group cursor-pointer hover:shadow-modern-lg transition-shadow relative rounded-lg"
+                    className="group hover:shadow-lg transition-all duration-300 cursor-pointer border-2 hover:border-primary/50"
                     onClick={() => setSelectedWorkflow(workflow)}
                   >
-                    <CardHeader className="pb-2">
+                    <CardHeader className="space-y-3">
                       <div className="flex items-start justify-between gap-2">
-                        <div className="flex-1">
-                          <CardTitle className="text-base line-clamp-2 font-semibold">{workflow.title}</CardTitle>
-                          {workflow.description && (
-                            <CardDescription className="mt-1 line-clamp-3 text-xs">
-                              {workflow.description}
-                            </CardDescription>
-                          )}
-                        </div>
-                        <div className="flex items-center gap-2">
-                          {workflow.category && (
-                            <Badge variant="outline" className="text-xs">
-                              {workflow.category}
-                            </Badge>
-                          )}
-                          <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                className="opacity-0 group-hover:opacity-100 transition-opacity p-1 h-6 w-6 hover:bg-destructive/10"
-                                onClick={(e) => e.stopPropagation()}
-                              >
-                                <Trash2 className="h-3 w-3 text-destructive" />
-                              </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                              <AlertDialogHeader>
-                                <AlertDialogTitle>Delete Workflow</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                  Are you sure you want to delete "{workflow.title}"? This action cannot be undone.
-                                </AlertDialogDescription>
-                              </AlertDialogHeader>
-                              <AlertDialogFooter>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction
-                                  onClick={() => handleDelete(workflow.id)}
-                                  className="bg-destructive hover:bg-destructive/90"
-                                  disabled={deletingId === workflow.id}
-                                >
-                                  {deletingId === workflow.id ? "Deleting..." : "Delete"}
-                                </AlertDialogAction>
-                              </AlertDialogFooter>
-                            </AlertDialogContent>
-                          </AlertDialog>
-                        </div>
+                        <CardTitle className="text-lg leading-tight line-clamp-2">
+                          {workflow.title}
+                        </CardTitle>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild onClick={(e) => e.stopPropagation()}>
+                            <Button 
+                              variant="ghost" 
+                              size="icon"
+                              className="opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
+                              disabled={deletingId === workflow.id}
+                            >
+                              <Trash2 className="h-4 w-4 text-destructive" />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent onClick={(e) => e.stopPropagation()}>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Delete Workflow?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                This will permanently delete "{workflow.title}". This action cannot be undone.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogAction onClick={() => handleDelete(workflow.id)}>
+                                Delete
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
                       </div>
+
+                      {workflow.category && (
+                        <Badge variant="secondary" className="w-fit">
+                          {workflow.category}
+                        </Badge>
+                      )}
+
+                      {workflow.description && (
+                        <CardDescription className="line-clamp-2">
+                          {workflow.description}
+                        </CardDescription>
+                      )}
                     </CardHeader>
-                    <CardContent className="pt-0">
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                          {workflow.duration_estimate && (
-                            <div className="flex items-center gap-1">
-                              <Clock className="w-3 h-3" />
-                              <span className="text-xs">{workflow.duration_estimate}</span>
-                            </div>
-                          )}
-                          {workflow.complexity_level && (
-                            <Badge variant={getDifficultyColor(workflow.complexity_level)} className="text-xs">
-                              {workflow.complexity_level}
-                            </Badge>
-                          )}
-                        </div>
-                        
-                        {workflow.ai_tools && workflow.ai_tools.length > 0 && (
-                          <div className="flex flex-wrap gap-1">
-                            {workflow.ai_tools.slice(0, 3).map((tool, index) => (
-                              <Badge key={index} variant="outline" className="text-xs">
-                                {tool}
-                              </Badge>
-                            ))}
-                            {workflow.ai_tools.length > 3 && (
-                              <Badge variant="outline" className="text-xs">
-                                +{workflow.ai_tools.length - 3}
-                              </Badge>
-                            )}
+
+                    <CardContent className="space-y-3">
+                      <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                        {workflow.duration_estimate && (
+                          <div className="flex items-center gap-1">
+                            <Clock className="h-4 w-4" />
+                            <span>{workflow.duration_estimate}</span>
+                          </div>
+                        )}
+                        {workflow.complexity_level && (
+                          <div className="flex items-center gap-1">
+                            <Zap className="h-4 w-4" />
+                            <span className="capitalize">{workflow.complexity_level}</span>
                           </div>
                         )}
                       </div>
+
+                      {workflow.workflow_steps && workflow.workflow_steps.length > 0 && (
+                        <div className="flex items-center gap-2 text-sm">
+                          <CheckCircle2 className="h-4 w-4 text-primary" />
+                          <span className="font-medium">{workflow.workflow_steps.length} Steps</span>
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
                 ))}
               </div>
             </div>
-          ))}
-        </div>
-      )}
+          );
+        })}
 
+      {/* Detail Modal */}
       <Dialog open={!!selectedWorkflow} onOpenChange={() => setSelectedWorkflow(null)}>
-        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="flex items-center justify-between">
-              {selectedWorkflow?.title}
-              {selectedWorkflow?.complexity_level && (
-                <Badge className={getDifficultyColor(selectedWorkflow.complexity_level)}>
-                  {selectedWorkflow.complexity_level}
-                </Badge>
-              )}
-            </DialogTitle>
-          </DialogHeader>
-          
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
           {selectedWorkflow && (
             <div className="space-y-6">
+              <DialogHeader>
+                <DialogTitle className="text-2xl">{selectedWorkflow.title}</DialogTitle>
+                {selectedWorkflow.category && (
+                  <Badge variant="secondary" className="w-fit">
+                    {selectedWorkflow.category}
+                  </Badge>
+                )}
+              </DialogHeader>
+
               {selectedWorkflow.description && (
                 <div>
-                  <h4 className="font-semibold mb-2">Description</h4>
                   <p className="text-muted-foreground">{selectedWorkflow.description}</p>
                 </div>
               )}
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                {selectedWorkflow.duration_estimate && (
-                  <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-muted-foreground" />
-                    <span>Duration: {selectedWorkflow.duration_estimate}</span>
+              <Separator />
+
+              {/* Workflow Steps */}
+              {selectedWorkflow.workflow_steps && selectedWorkflow.workflow_steps.length > 0 && (
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold flex items-center gap-2">
+                    <CheckCircle2 className="h-5 w-5 text-primary" />
+                    Workflow Steps
+                  </h3>
+                  <div className="space-y-4">
+                    {selectedWorkflow.workflow_steps.map((step: any, index: number) => (
+                      <Card key={index} className="border-l-4 border-l-primary">
+                        <CardContent className="pt-6 space-y-3">
+                          <div className="flex items-start gap-3">
+                            <div className="rounded-full bg-primary/10 px-3 py-1 text-sm font-bold text-primary">
+                              {step.stepNumber || index + 1}
+                            </div>
+                            <div className="flex-1 space-y-2">
+                              <h4 className="font-semibold">{step.title}</h4>
+                              {step.description && (
+                                <p className="text-sm text-muted-foreground">{step.description}</p>
+                              )}
+                              <div className="flex flex-wrap gap-3 text-sm">
+                                {step.aiTool && (
+                                  <Badge variant="outline">
+                                    <Sparkles className="h-3 w-3 mr-1" />
+                                    {step.aiTool}
+                                  </Badge>
+                                )}
+                                {step.estimatedTime && (
+                                  <Badge variant="outline">
+                                    <Clock className="h-3 w-3 mr-1" />
+                                    {step.estimatedTime}
+                                  </Badge>
+                                )}
+                              </div>
+                              {step.deliverable && (
+                                <div className="mt-2 p-3 bg-muted rounded-lg">
+                                  <p className="text-sm"><strong>Deliverable:</strong> {step.deliverable}</p>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Additional Details */}
+              <div className="grid gap-6 md:grid-cols-2">
+                {selectedWorkflow.prerequisites && selectedWorkflow.prerequisites.length > 0 && (
+                  <div className="space-y-3">
+                    <h4 className="font-semibold">Prerequisites</h4>
+                    <ul className="space-y-2">
+                      {selectedWorkflow.prerequisites.map((prereq, index) => (
+                        <li key={index} className="flex items-start gap-2 text-sm">
+                          <span className="text-primary mt-1">•</span>
+                          <span>{prereq}</span>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 )}
-                {selectedWorkflow.complexity_level && (
-                  <div className="flex items-center gap-2">
-                    <Users className="w-4 h-4 text-muted-foreground" />
-                    <span>Level: {selectedWorkflow.complexity_level}</span>
+
+                {selectedWorkflow.expected_outcomes && selectedWorkflow.expected_outcomes.length > 0 && (
+                  <div className="space-y-3">
+                    <h4 className="font-semibold">Expected Outcomes</h4>
+                    <ul className="space-y-2">
+                      {selectedWorkflow.expected_outcomes.map((outcome, index) => (
+                        <li key={index} className="flex items-start gap-2 text-sm">
+                          <CheckCircle2 className="h-4 w-4 text-primary mt-0.5" />
+                          <span>{outcome}</span>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 )}
               </div>
 
-              {selectedWorkflow.workflow_steps && Array.isArray(selectedWorkflow.workflow_steps) && (
-                <div>
-                  <h4 className="font-semibold mb-4">Workflow Steps</h4>
-                  <div className="space-y-4">
-                    {selectedWorkflow.workflow_steps.map((step: any, index) => (
-                      <div key={index} className="border-l-4 border-primary/30 pl-4 pb-6 bg-muted/20 rounded-r-lg p-4">
-                        <div className="flex items-center gap-2 mb-3">
-                          <Badge variant="default" className="text-sm font-semibold">
-                            Step {step.step || step.stepNumber || index + 1}
-                          </Badge>
-                          {step.duration && (
-                            <span className="text-xs text-muted-foreground bg-background px-2 py-1 rounded-md">
-                              ⏱️ {step.duration}
-                            </span>
-                          )}
-                        </div>
-                        
-                        <h5 className="font-semibold text-lg mb-2">{step.title}</h5>
-                        <p className="text-muted-foreground text-sm mb-3 leading-relaxed whitespace-pre-wrap">{step.description}</p>
-                        
-                        {step.tools_required && Array.isArray(step.tools_required) && step.tools_required.length > 0 && (
-                          <div className="mb-3">
-                            <p className="text-xs font-medium mb-2">🛠️ Tools Required:</p>
-                            <div className="flex flex-wrap gap-1">
-                              {step.tools_required.map((tool: string, toolIndex: number) => (
-                                <Badge key={toolIndex} variant="secondary" className="text-xs">
-                                  {tool}
-                                </Badge>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-
-                        {step.outputs && Array.isArray(step.outputs) && step.outputs.length > 0 && (
-                          <div className="mt-3 bg-background rounded-lg p-3">
-                            <p className="text-xs font-medium mb-2">📦 Expected Outputs:</p>
-                            <ul className="list-disc list-inside space-y-1">
-                              {step.outputs.map((output: string, outputIndex: number) => (
-                                <li key={outputIndex} className="text-xs text-muted-foreground">{output}</li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
-                      </div>
-                    ))}
+              {selectedWorkflow.instructions && (
+                <div className="space-y-3">
+                  <h4 className="font-semibold">Instructions</h4>
+                  <div className="p-4 bg-muted rounded-lg">
+                    <p className="text-sm whitespace-pre-wrap">{selectedWorkflow.instructions}</p>
                   </div>
                 </div>
               )}
 
-              {selectedWorkflow.prerequisites && selectedWorkflow.prerequisites.length > 0 && (
-                <div>
-                  <h4 className="font-semibold mb-2">Prerequisites</h4>
-                  <ul className="list-disc list-inside space-y-1">
-                    {selectedWorkflow.prerequisites.map((prereq, index) => (
-                      <li key={index} className="text-muted-foreground">{prereq}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {selectedWorkflow.expected_outcomes && selectedWorkflow.expected_outcomes.length > 0 && (
-                <div>
-                  <h4 className="font-semibold mb-2">Expected Outcomes</h4>
-                  <ul className="list-disc list-inside space-y-1">
-                    {selectedWorkflow.expected_outcomes.map((outcome, index) => (
-                      <li key={index} className="text-muted-foreground">{outcome}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {selectedWorkflow.instructions && (
-                <div>
-                  <h4 className="font-semibold mb-2">Implementation Instructions</h4>
-                  <p className="text-muted-foreground whitespace-pre-wrap">{selectedWorkflow.instructions}</p>
-                </div>
-              )}
-
               {selectedWorkflow.ai_tools && selectedWorkflow.ai_tools.length > 0 && (
-                <div>
-                  <h4 className="font-semibold mb-2">Recommended AI Tools</h4>
+                <div className="space-y-3">
+                  <h4 className="font-semibold">AI Tools</h4>
                   <div className="flex flex-wrap gap-2">
                     {selectedWorkflow.ai_tools.map((tool, index) => (
-                      <Badge key={index} variant="secondary">{tool}</Badge>
+                      <Badge key={index} variant="secondary">
+                        <Sparkles className="h-3 w-3 mr-1" />
+                        {tool}
+                      </Badge>
                     ))}
                   </div>
                 </div>
               )}
 
               {selectedWorkflow.tags && selectedWorkflow.tags.length > 0 && (
-                <div>
-                  <h4 className="font-semibold mb-2">Tags</h4>
+                <div className="space-y-3">
+                  <h4 className="font-semibold">Tags</h4>
                   <div className="flex flex-wrap gap-2">
                     {selectedWorkflow.tags.map((tag, index) => (
-                      <Badge key={index} variant="outline">{tag}</Badge>
+                      <Badge key={index} variant="outline">
+                        {tag}
+                      </Badge>
                     ))}
                   </div>
                 </div>
