@@ -195,10 +195,10 @@ export default function Blueprints() {
                         )}
                       </div>
 
-                      {blueprint.blueprint_content?.phases && (
+                      {blueprint.deliverables && blueprint.deliverables.length > 0 && (
                         <div className="flex items-center gap-2 text-sm">
-                          <Layers className="h-4 w-4 text-primary" />
-                          <span className="font-medium">{blueprint.blueprint_content.phases.length} Phases</span>
+                          <Package className="h-4 w-4 text-primary" />
+                          <span className="font-medium">{blueprint.deliverables.length} Deliverables</span>
                         </div>
                       )}
                     </CardContent>
@@ -234,79 +234,87 @@ export default function Blueprints() {
 
               <Separator />
 
-              {/* Phases */}
-              {selectedBlueprint.blueprint_content?.phases && selectedBlueprint.blueprint_content.phases.length > 0 && (
-                <div className="space-y-4">
+              {/* Blueprint Overview */}
+              {selectedBlueprint.blueprint_content?.overview && (
+                <div className="p-4 bg-primary/5 border border-primary/20 rounded-lg">
+                  <h4 className="font-semibold mb-2">Overview</h4>
+                  <p className="text-sm">{selectedBlueprint.blueprint_content.overview}</p>
+                </div>
+              )}
+
+              {/* Architecture */}
+              {selectedBlueprint.blueprint_content?.architecture && (
+                <div className="space-y-3">
                   <h3 className="text-lg font-semibold flex items-center gap-2">
                     <Layers className="h-5 w-5 text-primary" />
-                    Implementation Phases
+                    Architecture
                   </h3>
-                  <div className="space-y-4">
-                    {selectedBlueprint.blueprint_content.phases.map((phase: any, index: number) => (
-                      <Card key={index} className="border-l-4 border-l-primary">
-                        <CardContent className="pt-6 space-y-4">
-                          <div className="flex items-start gap-3">
-                            <div className="rounded-full bg-primary/10 px-3 py-1 text-sm font-bold text-primary">
-                              Phase {phase.phase || index + 1}
-                            </div>
-                            <div className="flex-1 space-y-3">
-                              <div>
-                                <h4 className="font-semibold">{phase.name}</h4>
-                                {phase.duration && (
-                                  <p className="text-sm text-muted-foreground flex items-center gap-1 mt-1">
-                                    <Clock className="h-3 w-3" />
-                                    {phase.duration}
-                                  </p>
-                                )}
-                              </div>
+                  <div className="p-4 bg-muted rounded-lg">
+                    <p className="text-sm whitespace-pre-wrap">{selectedBlueprint.blueprint_content.architecture}</p>
+                  </div>
+                </div>
+              )}
 
-                              {phase.objectives && phase.objectives.length > 0 && (
-                                <div>
-                                  <p className="text-sm font-medium mb-2">Objectives:</p>
-                                  <ul className="space-y-1">
-                                    {phase.objectives.map((obj: string, i: number) => (
-                                      <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
-                                        <span className="text-primary mt-1">•</span>
-                                        <span>{obj}</span>
-                                      </li>
-                                    ))}
-                                  </ul>
-                                </div>
-                              )}
-
-                              {phase.tasks && phase.tasks.length > 0 && (
-                                <div>
-                                  <p className="text-sm font-medium mb-2">Tasks:</p>
-                                  <ul className="space-y-1">
-                                    {phase.tasks.map((task: string, i: number) => (
-                                      <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
-                                        <Package className="h-3 w-3 text-primary mt-0.5 shrink-0" />
-                                        <span>{task}</span>
-                                      </li>
-                                    ))}
-                                  </ul>
-                                </div>
-                              )}
-
-                              {phase.milestones && phase.milestones.length > 0 && (
-                                <div className="p-3 bg-muted rounded-lg">
-                                  <p className="text-sm font-medium mb-2">Milestones:</p>
-                                  <ul className="space-y-1">
-                                    {phase.milestones.map((milestone: string, i: number) => (
-                                      <li key={i} className="text-sm flex items-start gap-2">
-                                        <span className="text-primary">✓</span>
-                                        <span>{milestone}</span>
-                                      </li>
-                                    ))}
-                                  </ul>
-                                </div>
-                              )}
-                            </div>
-                          </div>
+              {/* Components */}
+              {selectedBlueprint.blueprint_content?.components && selectedBlueprint.blueprint_content.components.length > 0 && (
+                <div className="space-y-3">
+                  <h4 className="font-semibold flex items-center gap-2">
+                    <Package className="h-5 w-5 text-primary" />
+                    Components
+                  </h4>
+                  <div className="space-y-3">
+                    {selectedBlueprint.blueprint_content.components.map((component: any, index: number) => (
+                      <Card key={index} className="border-l-4 border-l-primary/50">
+                        <CardContent className="pt-4">
+                          <h5 className="font-semibold mb-2">{component.name || `Component ${index + 1}`}</h5>
+                          {component.specs && <p className="text-sm text-muted-foreground mb-2">{component.specs}</p>}
+                          {component.config && <p className="text-sm"><strong>Config:</strong> {component.config}</p>}
+                          {component.requirements && <p className="text-sm"><strong>Requirements:</strong> {component.requirements}</p>}
                         </CardContent>
                       </Card>
                     ))}
                   </div>
+                </div>
+              )}
+
+              {/* Implementation Steps */}
+              {selectedBlueprint.blueprint_content?.implementation_steps && selectedBlueprint.blueprint_content.implementation_steps.length > 0 && (
+                <div className="space-y-3">
+                  <h4 className="font-semibold">Implementation Steps</h4>
+                  <div className="space-y-2">
+                    {selectedBlueprint.blueprint_content.implementation_steps.map((step: any, index: number) => (
+                      <div key={index} className="flex gap-3 p-3 bg-muted rounded-lg">
+                        <div className="rounded-full bg-primary/10 px-3 py-1 text-sm font-bold text-primary h-fit">
+                          {index + 1}
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-sm font-medium">{step.title || step.name || step}</p>
+                          {step.description && <p className="text-sm text-muted-foreground mt-1">{step.description}</p>}
+                          {step.checkpoint && <p className="text-sm text-primary mt-1">✓ Checkpoint: {step.checkpoint}</p>}
+                          {step.testing && <p className="text-sm text-muted-foreground mt-1">Testing: {step.testing}</p>}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Best Practices */}
+              {selectedBlueprint.blueprint_content?.best_practices && selectedBlueprint.blueprint_content.best_practices.length > 0 && (
+                <div className="space-y-3">
+                  <h4 className="font-semibold">Best Practices</h4>
+                  <ul className="space-y-2">
+                    {selectedBlueprint.blueprint_content.best_practices.map((practice: any, index: number) => (
+                      <li key={index} className="flex items-start gap-2 text-sm p-3 bg-primary/5 rounded-lg">
+                        <span className="text-primary mt-1">✓</span>
+                        <div>
+                          <p className="font-medium">{practice.title || practice.name || practice}</p>
+                          {practice.rationale && <p className="text-muted-foreground mt-1">{practice.rationale}</p>}
+                          {practice.example && <p className="text-muted-foreground mt-1 italic">Example: {practice.example}</p>}
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               )}
 
@@ -325,6 +333,22 @@ export default function Blueprints() {
                 </div>
               )}
 
+              {/* Resources Needed */}
+              {selectedBlueprint.resources_needed && selectedBlueprint.resources_needed.length > 0 && (
+                <div className="space-y-3">
+                  <h4 className="font-semibold">Resources Needed</h4>
+                  <ul className="space-y-2">
+                    {selectedBlueprint.resources_needed.map((resource, index) => (
+                      <li key={index} className="flex items-start gap-2 text-sm">
+                        <span className="text-primary mt-1">•</span>
+                        <span>{resource}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* Instructions */}
               {selectedBlueprint.instructions && (
                 <div className="space-y-3">
                   <h4 className="font-semibold">Implementation Instructions</h4>
@@ -333,23 +357,6 @@ export default function Blueprints() {
                   </div>
                 </div>
               )}
-
-              <div className="grid gap-6 md:grid-cols-2">
-                {selectedBlueprint.resources_needed && selectedBlueprint.resources_needed.length > 0 && (
-                  <div className="space-y-3">
-                    <h4 className="font-semibold">Resources Needed</h4>
-                    <ul className="space-y-2">
-                      {selectedBlueprint.resources_needed.map((resource, index) => (
-                        <li key={index} className="flex items-start gap-2 text-sm">
-                          <span className="text-primary mt-1">•</span>
-                          <span>{resource}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-
-              </div>
 
               {selectedBlueprint.ai_tools && selectedBlueprint.ai_tools.length > 0 && (
                 <div className="space-y-3">
