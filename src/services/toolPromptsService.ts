@@ -67,36 +67,43 @@ export const toolPromptsService = {
         const record = {
           user_id: userId,
           jump_id: jumpId,
-          title: item.name || item.tool || item.title || `Tool ${index + 1}`,
+          title: item.title || item.name || item.tool || item.tool_name || `Tool Combo ${index + 1}`,
           description: item.description || 'No description available',
-          tool_name: item.name || item.tool || item.tool_name || `Tool ${index + 1}`,
-          tool_url: item.website_url || item.url || item.tool_url || item.website || '',
-          tool_type: item.category || item.tool_type || 'General',
+          tool_name: item.tool_name || item.name || item.tool || `Tool ${index + 1}`,
+          tool_url: item.tool_url || item.website_url || item.url || item.website || '',
+          tool_type: item.tool_type || item.category || 'General',
           category: item.category || 'General',
-          prompt_text: item.custom_prompt || item.prompt_text || item.prompt || '',
+          prompt_text: item.prompt_text || item.custom_prompt || item.prompt || '',
           prompt_instructions: item.prompt_instructions || item.instructions || '',
-          difficulty_level: item.skill_level || item.difficulty_level || 'Beginner',
-          setup_time: item.implementation_timeline || item.implementation_time || item.setup_time || '',
-          cost_estimate: item.cost_model || item.cost_estimate || item.cost || '',
+          difficulty_level: item.difficulty_level || item.skill_level || 'Beginner',
+          setup_time: item.setup_time || item.implementation_timeline || item.implementation_time || '',
+          cost_estimate: item.cost_estimate || item.cost_model || item.cost || '',
           integration_complexity: item.integration_complexity || 'Medium',
-          use_cases: Array.isArray(item.use_cases) ? item.use_cases : (item.when_to_use ? [item.when_to_use] : []),
-          ai_tools: Array.isArray(item.ai_tools) ? item.ai_tools : [item.name || item.tool || 'AI Tool'],
+          use_cases: Array.isArray(item.use_cases) ? item.use_cases : [],
+          ai_tools: Array.isArray(item.ai_tools) ? item.ai_tools : [item.tool_name || item.name || 'AI Tool'],
           features: Array.isArray(item.features) ? item.features : [],
           limitations: Array.isArray(item.limitations) ? item.limitations : [],
           tags: Array.isArray(item.tags) ? item.tags : [item.category || 'General'],
           content: {
-            name: item.name || item.tool,
+            title: item.title,
+            name: item.tool_name || item.name,
             description: item.description,
-            website_url: item.website_url || item.url || item.website,
+            tool_name: item.tool_name || item.name,
+            tool_url: item.tool_url || item.website_url || item.url,
+            tool_type: item.tool_type,
+            category: item.category,
+            prompt_text: item.prompt_text || item.custom_prompt || item.prompt,
+            prompt_instructions: item.prompt_instructions || item.instructions,
             when_to_use: item.when_to_use || '',
-            why_this_tool: item.why_this_tool || '',
-            how_to_integrate: item.how_to_integrate || item.integration_notes || '',
-            custom_prompt: item.custom_prompt || item.prompt_text || '',
-            prompt_instructions: item.prompt_instructions || '',
+            why_this_combo: item.why_this_combo || item.why_this_tool || '',
             alternatives: Array.isArray(item.alternatives) ? item.alternatives : [],
-            skill_level: item.skill_level || 'Beginner',
-            cost_model: item.cost_model || item.cost || '',
-            implementation_timeline: item.implementation_timeline || item.implementation_time || ''
+            use_cases: Array.isArray(item.use_cases) ? item.use_cases : [],
+            features: Array.isArray(item.features) ? item.features : [],
+            limitations: Array.isArray(item.limitations) ? item.limitations : [],
+            tags: Array.isArray(item.tags) ? item.tags : [],
+            difficulty_level: item.difficulty_level || item.skill_level,
+            setup_time: item.setup_time,
+            cost_estimate: item.cost_estimate || item.cost_model
           }
         };
 
@@ -105,7 +112,8 @@ export const toolPromptsService = {
           tool_name: record.tool_name,
           category: record.category,
           hasPrompt: !!record.prompt_text,
-          hasInstructions: !!record.prompt_instructions
+          hasInstructions: !!record.prompt_instructions,
+          hasAlternatives: record.content.alternatives?.length || 0
         });
         
         return record;

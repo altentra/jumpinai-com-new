@@ -39,7 +39,7 @@ export function ToolPromptDetailModal({ toolPrompt, isOpen, onClose }: ToolPromp
     tool_name: content?.tool_name || toolPrompt.tool_name,
     tool_url: content?.tool_url || content?.url || toolPrompt.tool_url,
     tool_type: content?.tool_type || toolPrompt.tool_type,
-    prompt_text: content?.prompt_text || content?.prompt || toolPrompt.prompt_text,
+    prompt_text: content?.prompt_text || content?.custom_prompt || content?.prompt || toolPrompt.prompt_text,
     prompt_instructions: content?.prompt_instructions || content?.instructions || toolPrompt.prompt_instructions,
     use_cases: content?.use_cases || toolPrompt.use_cases || [],
     tags: content?.tags || toolPrompt.tags || [],
@@ -50,8 +50,9 @@ export function ToolPromptDetailModal({ toolPrompt, isOpen, onClose }: ToolPromp
     features: content?.features || toolPrompt.features || [],
     limitations: content?.limitations || toolPrompt.limitations || [],
     ai_tools: content?.ai_tools || toolPrompt.ai_tools || [],
-    why_this_tool: content?.why_this_tool,
+    why_this_tool: content?.why_this_tool || content?.why_this_combo,
     when_to_use: content?.when_to_use,
+    alternatives: content?.alternatives || [],
     best_practices: content?.best_practices || [],
     examples: content?.examples || []
   };
@@ -239,6 +240,43 @@ export function ToolPromptDetailModal({ toolPrompt, isOpen, onClose }: ToolPromp
               </CardHeader>
               <CardContent>
                 <p className="text-sm leading-relaxed">{displayItem.when_to_use}</p>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Alternative Tools */}
+          {displayItem.alternatives && displayItem.alternatives.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Settings className="h-5 w-5 text-purple-600" />
+                  Alternative Tools
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {displayItem.alternatives.map((alt: any, index: number) => (
+                    <div key={index} className="p-3 bg-muted/30 rounded-lg border flex items-start justify-between gap-3">
+                      <div className="flex-1">
+                        <p className="font-medium text-sm mb-1">{alt.tool || alt.name}</p>
+                        {alt.note && (
+                          <p className="text-xs text-muted-foreground">{alt.note}</p>
+                        )}
+                      </div>
+                      {(alt.url || alt.tool_url) && (
+                        <a 
+                          href={alt.url || alt.tool_url} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="text-primary hover:underline flex items-center gap-1 text-sm shrink-0"
+                        >
+                          <ExternalLink className="h-3 w-3" />
+                          Visit
+                        </a>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </CardContent>
             </Card>
           )}

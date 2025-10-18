@@ -8,6 +8,7 @@ import { formatAIText } from '@/utils/aiTextFormatter';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import type { ProgressiveResult } from '@/hooks/useProgressiveGeneration';
+import { ToolPromptComboCard } from '@/components/dashboard/ToolPromptComboCard';
 import { toast } from 'sonner';
 
 interface ProgressiveJumpDisplayProps {
@@ -330,72 +331,15 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
         </TabsContent>
 
         <TabsContent value="toolPrompts" className="mt-4">
-          <div className="grid gap-3">
-            {result.components?.toolPrompts ? (
-              result.components.toolPrompts.map((toolPrompt: any, index: number) => {
-                const tool = toolPrompt;
-                return (
-                <div key={index} className="relative group">
-                  <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/12 via-accent/8 to-secondary/12 dark:from-primary/8 dark:via-accent/6 dark:to-secondary/8 rounded-lg blur-sm opacity-20 pointer-events-none"></div>
-                  <Card className="relative glass-dark border-white/12 dark:border-white/8 backdrop-blur-lg bg-gradient-to-br from-white/4 via-white/2 to-white/1 dark:from-black/10 dark:via-black/5 dark:to-black/2 hover:border-primary/30 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10">
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary/1.5 via-transparent to-secondary/1.5 dark:from-primary/1 dark:via-transparent dark:to-secondary/1 rounded-lg pointer-events-none"></div>
-                    <CardHeader className="pb-3 relative z-10">
-                      <CardTitle className="flex items-center gap-2 text-base">
-                        <Wrench className="w-5 h-5 text-primary" />
-                        {(tool.website_url || tool.url || tool.website) ? (
-                          <a 
-                            href={tool.website_url || tool.url || tool.website || '#'} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="text-primary transition-all duration-300 font-semibold underline decoration-2 underline-offset-2 decoration-primary/60 hover:decoration-primary hover:text-primary/80 hover:scale-[1.02] cursor-pointer select-text"
-                          >
-                            {tool.name}
-                          </a>
-                        ) : (
-                          <span className="text-foreground font-semibold select-text">{tool.name}</span>
-                        )}
-                        <Badge variant="outline" className="ml-auto text-xs">{tool.category}</Badge>
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="pt-0 relative z-10">
-                      <div className="space-y-4">
-                        <p className="text-sm text-muted-foreground leading-relaxed select-text">{tool.description}</p>
-                        
-                          <div className="space-y-3 text-sm">
-                          <div className="p-3 bg-muted/20 rounded-lg">
-                            <span className="font-medium text-foreground block mb-1 select-text">When to use:</span>
-                            <p className="text-muted-foreground leading-relaxed select-text">{tool.when_to_use}</p>
-                          </div>
-                          
-                          <div className="p-3 bg-muted/20 rounded-lg">
-                            <span className="font-medium text-foreground block mb-1 select-text">Why this tool:</span>
-                            <p className="text-muted-foreground leading-relaxed select-text">{tool.why_this_tool}</p>
-                          </div>
-                          
-                          <div className="p-3 bg-muted/20 rounded-lg">
-                            <span className="font-medium text-foreground block mb-1 select-text">How to integrate:</span>
-                            <p className="text-muted-foreground leading-relaxed select-text">{tool.how_to_integrate || tool.integration_notes}</p>
-                          </div>
-                        </div>
-
-                        {tool.alternatives && tool.alternatives.length > 0 && (
-                          <div className="text-sm">
-                            <span className="font-medium text-foreground block mb-1">Alternatives:</span>
-                            <p className="text-muted-foreground">{tool.alternatives.join(', ')}</p>
-                          </div>
-                        )}
-                        
-                        <div className="flex gap-2 text-xs flex-wrap pt-2 border-t border-border/30">
-                          <Badge variant="secondary" className="text-xs">{tool.skill_level}</Badge>
-                          <Badge variant="outline" className="text-xs">{tool.cost_model}</Badge>
-                          <Badge variant="outline" className="text-xs">{tool.implementation_timeline || tool.implementation_time}</Badge>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-                );
-              })
+          <div className="grid gap-4">
+            {result.components?.toolPrompts && result.components.toolPrompts.length > 0 ? (
+              result.components.toolPrompts.map((combo: any, index: number) => (
+                <ToolPromptComboCard
+                  key={index}
+                  combo={combo}
+                  onClick={() => {/* Detail modal will be added later */}}
+                />
+              ))
             ) : (
               <div className="flex items-center justify-center h-32 text-muted-foreground">
                 <Loader2 className="w-6 h-6 animate-spin mr-2" />

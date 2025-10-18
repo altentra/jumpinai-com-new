@@ -299,39 +299,48 @@ Return ONLY valid JSON:
     case 4:
       // STEP 4: Tools & Prompts (Generate 6 items)
       return {
-        systemPrompt: `You are an AI tools and prompt engineering expert. Recommend specific, actionable AI tools with custom prompts.`,
+        systemPrompt: `You are an AI tools and prompt engineering expert. Create powerful tool+prompt combinations that are immediately actionable.`,
         userPrompt: `${baseContext}
 
 Overview Context:
 ${overviewContent}
 
-Generate exactly 6 AI tool + prompt combinations. Each MUST include:
+Generate exactly 6 AI tool + prompt combinations. Each combo must be a complete, ready-to-use solution.
 
 Return ONLY valid JSON:
 {
   "tool_prompts": [
     {
-      "title": "[Tool Name] for [Specific Use Case]",
-      "description": "How this tool+prompt solves their challenge (2-3 sentences)",
-      "category": "Content Creation|Marketing|Automation|Data Analysis|Strategy",
-      "tool_name": "ChatGPT|Claude|Gemini|Midjourney|Canva|etc",
-      "tool_url": "https://actual-tool-url.com",
-      "tool_type": "Text Generation|Image Generation|Data Analysis|Automation",
-      "prompt_text": "Complete, ready-to-use prompt customized for their situation (100-200 words, include their specific goals/industry/challenges)",
-      "prompt_instructions": "Step-by-step: 1) Open [Tool] 2) Paste prompt 3) Customize [X] 4) Use output (4-5 sentences)",
-      "use_cases": ["Use case 1", "Use case 2", "Use case 3"],
-      "features": ["Feature 1", "Feature 2", "Feature 3"],
-      "limitations": ["Limitation 1", "Limitation 2"],
-      "tags": ["tag1", "tag2", "tag3"],
+      "title": "Clear Use Case Title (e.g., 'Content Strategy with ChatGPT')",
+      "description": "2-3 sentences explaining how this tool+prompt combo solves their specific challenge and fits into their plan",
+      "category": "Content Creation|Marketing|Automation|Data Analysis|Strategy|Planning",
+      "tool_name": "ChatGPT|Claude|Gemini|Perplexity|Midjourney|Canva|etc",
+      "tool_url": "https://actual-working-url.com",
+      "tool_type": "Text Generation|Image Generation|Data Analysis|Automation|Research",
+      "prompt_text": "Complete, ready-to-copy prompt (150-250 words). Must be highly specific to their situation, include their industry/goals/challenges, and produce immediate value. Make it copy-paste ready.",
+      "prompt_instructions": "Step-by-step guide: 1) Go to [Tool URL] 2) Paste the prompt above 3) Customize [specific field] with your data 4) Review output and iterate. Make it foolproof.",
+      "when_to_use": "Explain exactly WHEN in their transformation journey to use this (e.g., 'Use this in Week 2 when defining your content strategy')",
+      "why_this_combo": "2-3 sentences explaining WHY this specific tool+prompt combination is perfect for their situation",
+      "alternatives": [
+        {"tool": "Alternative Tool 1", "url": "https://alt1-url.com", "note": "Brief why this alternative"},
+        {"tool": "Alternative Tool 2", "url": "https://alt2-url.com", "note": "Brief why this alternative"}
+      ],
+      "use_cases": ["Specific use case 1", "Specific use case 2", "Specific use case 3"],
+      "tags": ["tag1", "tag2"],
       "difficulty_level": "beginner|intermediate|advanced",
-      "setup_time": "5 minutes|30 minutes|1 hour",
-      "cost_estimate": "Free|$20/month|Custom"
+      "setup_time": "5 minutes|15 minutes|30 minutes|1 hour",
+      "cost_estimate": "Free|$20/month|$50/month|Custom"
     }
   ]
 }
 
-CRITICAL: Generate EXACTLY 6 items. Make prompts highly specific to their situation.`,
-        expectedTokens: 10000
+CRITICAL REQUIREMENTS:
+- Generate EXACTLY 6 combos
+- Each prompt must be 150-250 words and immediately usable
+- Include 2 alternatives for each combo
+- Make everything specific to their situation
+- Focus on immediate, practical value`,
+        expectedTokens: 12000
       };
 
     case 5:
