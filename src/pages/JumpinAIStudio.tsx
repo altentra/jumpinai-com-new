@@ -30,11 +30,13 @@ const JumpinAIStudio = () => {
   };
 
   const [formData, setFormData] = useState<StudioFormData>({
+    currentRole: '',
+    industry: '',
+    experienceLevel: '',
+    aiKnowledge: '',
     goals: '',
     challenges: '',
-    industry: '',
-    aiExperience: '',
-    urgency: '',
+    timeCommitment: '',
     budget: ''
   });
 
@@ -124,11 +126,13 @@ const JumpinAIStudio = () => {
         
         // SECURITY: Only update with saved data, never expose other users' data
         setFormData({
+          currentRole: profile.current_role_value || '',
+          industry: profile.industry || '',
+          experienceLevel: profile.experience_level || '',
+          aiKnowledge: profile.ai_knowledge || '',
           goals: profile.goals || '',
           challenges: profile.challenges || '',
-          industry: profile.industry || '',
-          aiExperience: profile.ai_knowledge || '',
-          urgency: profile.time_commitment || '',
+          timeCommitment: profile.time_commitment || '',
           budget: profile.budget || '',
         });
       } else {
@@ -408,8 +412,8 @@ const JumpinAIStudio = () => {
                           </label>
                           <div className="relative">
                             <select 
-                              value={formData.aiExperience}
-                              onChange={(e) => setFormData(prev => ({ ...prev, aiExperience: e.target.value }))}
+                              value={formData.aiKnowledge}
+                              onChange={(e) => setFormData(prev => ({ ...prev, aiKnowledge: e.target.value }))}
                               className="w-full p-3 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl focus:shadow-2xl focus:shadow-primary/10 text-foreground bg-gradient-to-br from-background/60 to-background/30 dark:bg-gradient-to-br dark:from-gray-950/70 dark:to-gray-900/40"
                             >
                               <option value="">Select level</option>
@@ -429,8 +433,8 @@ const JumpinAIStudio = () => {
                           </label>
                           <div className="relative">
                             <select 
-                              value={formData.urgency}
-                              onChange={(e) => setFormData(prev => ({ ...prev, urgency: e.target.value }))}
+                              value={formData.timeCommitment}
+                              onChange={(e) => setFormData(prev => ({ ...prev, timeCommitment: e.target.value }))}
                               className="w-full p-3 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl focus:shadow-2xl focus:shadow-primary/10 text-foreground bg-gradient-to-br from-background/60 to-background/30 dark:bg-gradient-to-br dark:from-gray-950/70 dark:to-gray-900/40"
                             >
                               <option value="">Select urgency</option>
