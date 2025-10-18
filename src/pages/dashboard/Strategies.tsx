@@ -281,56 +281,143 @@ export default function Strategies() {
               )}
 
               {selectedStrategy.strategy_framework && (
-                <div>
-                  <h4 className="font-semibold mb-4">Strategy Framework</h4>
-                  <div className="bg-muted p-4 rounded-lg space-y-4">
-                    {selectedStrategy.strategy_framework.vision && (
-                      <div className="border-l-4 border-primary pl-4 py-2">
-                        <h5 className="font-medium mb-2 text-primary">Strategic Vision</h5>
-                        <p className="text-muted-foreground text-sm">{selectedStrategy.strategy_framework.vision}</p>
-                      </div>
-                    )}
-                    
-                    {selectedStrategy.strategy_framework.objectives && Array.isArray(selectedStrategy.strategy_framework.objectives) && (
-                      <div>
-                        <h5 className="font-medium mb-2">Strategic Objectives</h5>
-                        <ul className="list-disc list-inside space-y-1">
-                          {selectedStrategy.strategy_framework.objectives.map((objective: string, index: number) => (
-                            <li key={index} className="text-muted-foreground text-sm">{objective}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
+                <div className="space-y-6">
+                  <h4 className="font-semibold text-lg mb-4 flex items-center gap-2">
+                    🎯 Strategy Framework
+                  </h4>
+                  
+                  {/* Approach Section */}
+                  {selectedStrategy.strategy_framework.approach && (
+                    <div className="bg-primary/5 border-l-4 border-primary p-4 rounded-r-lg">
+                      <h5 className="font-semibold mb-2 flex items-center gap-2">
+                        💡 Strategic Approach
+                      </h5>
+                      <p className="text-muted-foreground text-sm leading-relaxed whitespace-pre-wrap">{selectedStrategy.strategy_framework.approach}</p>
+                    </div>
+                  )}
 
-                    {selectedStrategy.strategy_framework.initiatives && Array.isArray(selectedStrategy.strategy_framework.initiatives) && (
-                      <div>
-                        <h5 className="font-medium mb-3">Strategic Initiatives</h5>
-                        <div className="space-y-3">
-                          {selectedStrategy.strategy_framework.initiatives.map((initiative: any, index: number) => (
-                            <div key={index} className="border border-border rounded-lg p-3 bg-background">
-                              <div className="flex items-start justify-between mb-2">
-                                <h6 className="font-semibold">{initiative.name}</h6>
-                                <Badge variant="outline" className="text-xs">{initiative.timeline}</Badge>
-                              </div>
-                              <p className="text-sm text-muted-foreground mb-2">{initiative.description}</p>
-                              {initiative.kpis && Array.isArray(initiative.kpis) && initiative.kpis.length > 0 && (
-                                <div>
-                                  <p className="text-xs font-medium mb-1">Key Performance Indicators:</p>
-                                  <div className="flex flex-wrap gap-1">
-                                    {initiative.kpis.map((kpi: string, kpiIndex: number) => (
-                                      <Badge key={kpiIndex} variant="secondary" className="text-xs">
-                                        {kpi}
-                                      </Badge>
-                                    ))}
-                                  </div>
-                                </div>
-                              )}
-                            </div>
-                          ))}
-                        </div>
+                  {/* Objective Section */}
+                  {selectedStrategy.strategy_framework.objective && (
+                    <div className="bg-muted/50 border rounded-lg p-4">
+                      <h5 className="font-semibold mb-2 flex items-center gap-2">
+                        🎯 Primary Objective
+                      </h5>
+                      <p className="text-muted-foreground text-sm leading-relaxed whitespace-pre-wrap">{selectedStrategy.strategy_framework.objective}</p>
+                    </div>
+                  )}
+
+                  {/* Timeline Section */}
+                  {selectedStrategy.strategy_framework.timeline && (
+                    <div className="bg-background border rounded-lg p-4">
+                      <h5 className="font-semibold mb-2 flex items-center gap-2">
+                        📅 Implementation Timeline
+                      </h5>
+                      <p className="text-muted-foreground text-sm leading-relaxed whitespace-pre-wrap">{selectedStrategy.strategy_framework.timeline}</p>
+                    </div>
+                  )}
+
+                  {/* Resources Section */}
+                  {selectedStrategy.strategy_framework.resources && Array.isArray(selectedStrategy.strategy_framework.resources) && selectedStrategy.strategy_framework.resources.length > 0 && (
+                    <div>
+                      <h5 className="font-semibold mb-3 flex items-center gap-2">
+                        🛠️ Required Resources
+                      </h5>
+                      <div className="grid grid-cols-1 gap-2">
+                        {selectedStrategy.strategy_framework.resources.map((resource: string, index: number) => (
+                          <div key={index} className="bg-muted/30 border rounded-lg p-3 flex items-start gap-2">
+                            <span className="text-primary">•</span>
+                            <p className="text-sm text-muted-foreground flex-1">{resource}</p>
+                          </div>
+                        ))}
                       </div>
-                    )}
-                  </div>
+                    </div>
+                  )}
+
+                  {/* Success Criteria Section */}
+                  {selectedStrategy.strategy_framework.success_criteria && Array.isArray(selectedStrategy.strategy_framework.success_criteria) && selectedStrategy.strategy_framework.success_criteria.length > 0 && (
+                    <div>
+                      <h5 className="font-semibold mb-3 flex items-center gap-2">
+                        ✅ Success Criteria
+                      </h5>
+                      <div className="space-y-2">
+                        {selectedStrategy.strategy_framework.success_criteria.map((criteria: string, index: number) => (
+                          <div key={index} className="bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-900 rounded-lg p-3 flex items-start gap-2">
+                            <span className="text-green-600 dark:text-green-400">✓</span>
+                            <p className="text-sm text-muted-foreground flex-1">{criteria}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Tactics Section */}
+                  {selectedStrategy.strategy_framework.tactics && Array.isArray(selectedStrategy.strategy_framework.tactics) && selectedStrategy.strategy_framework.tactics.length > 0 && (
+                    <div>
+                      <h5 className="font-semibold mb-3 flex items-center gap-2">
+                        ⚡ Tactical Actions
+                      </h5>
+                      <div className="space-y-3">
+                        {selectedStrategy.strategy_framework.tactics.map((tactic: string, index: number) => (
+                          <div key={index} className="bg-background border-l-4 border-accent rounded-r-lg p-4">
+                            <div className="flex items-start gap-3">
+                              <Badge variant="secondary" className="shrink-0 mt-0.5">{index + 1}</Badge>
+                              <p className="text-sm text-muted-foreground flex-1 leading-relaxed whitespace-pre-wrap">{tactic}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Vision Section (for newer data format) */}
+                  {selectedStrategy.strategy_framework.vision && (
+                    <div className="border-l-4 border-primary pl-4 py-2">
+                      <h5 className="font-medium mb-2 text-primary">Strategic Vision</h5>
+                      <p className="text-muted-foreground text-sm">{selectedStrategy.strategy_framework.vision}</p>
+                    </div>
+                  )}
+
+                  {/* Objectives Section (for newer data format) */}
+                  {selectedStrategy.strategy_framework.objectives && Array.isArray(selectedStrategy.strategy_framework.objectives) && (
+                    <div>
+                      <h5 className="font-medium mb-2">Strategic Objectives</h5>
+                      <ul className="list-disc list-inside space-y-1">
+                        {selectedStrategy.strategy_framework.objectives.map((objective: string, index: number) => (
+                          <li key={index} className="text-muted-foreground text-sm">{objective}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* Initiatives Section (for newer data format) */}
+                  {selectedStrategy.strategy_framework.initiatives && Array.isArray(selectedStrategy.strategy_framework.initiatives) && (
+                    <div>
+                      <h5 className="font-medium mb-3">Strategic Initiatives</h5>
+                      <div className="space-y-3">
+                        {selectedStrategy.strategy_framework.initiatives.map((initiative: any, index: number) => (
+                          <div key={index} className="border border-border rounded-lg p-3 bg-background">
+                            <div className="flex items-start justify-between mb-2">
+                              <h6 className="font-semibold">{initiative.name}</h6>
+                              <Badge variant="outline" className="text-xs">{initiative.timeline}</Badge>
+                            </div>
+                            <p className="text-sm text-muted-foreground mb-2">{initiative.description}</p>
+                            {initiative.kpis && Array.isArray(initiative.kpis) && initiative.kpis.length > 0 && (
+                              <div>
+                                <p className="text-xs font-medium mb-1">Key Performance Indicators:</p>
+                                <div className="flex flex-wrap gap-1">
+                                  {initiative.kpis.map((kpi: string, kpiIndex: number) => (
+                                    <Badge key={kpiIndex} variant="secondary" className="text-xs">
+                                      {kpi}
+                                    </Badge>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
 

@@ -309,56 +309,128 @@ export default function Blueprints() {
                 )}
               </div>
 
-              {selectedBlueprint.blueprint_content?.phases && Array.isArray(selectedBlueprint.blueprint_content.phases) && (
-                <div>
-                  <h4 className="font-semibold mb-4">Implementation Phases</h4>
-                  <div className="space-y-4">
-                    {selectedBlueprint.blueprint_content.phases.map((phase: any, index: number) => (
-                      <div key={index} className="border border-border rounded-lg p-4 bg-muted/50">
-                        <div className="flex items-start justify-between mb-3">
-                          <div>
-                            <h5 className="font-semibold text-lg">Phase {phase.phase}: {phase.name}</h5>
-                            <p className="text-sm text-muted-foreground mt-1">Duration: {phase.duration}</p>
-                          </div>
-                        </div>
+              {selectedBlueprint.blueprint_content && (
+                <div className="space-y-6">
+                  {/* Overview Section */}
+                  {selectedBlueprint.blueprint_content.overview && (
+                    <div className="bg-primary/5 border-l-4 border-primary p-4 rounded-r-lg">
+                      <h4 className="font-semibold mb-2 flex items-center gap-2">
+                        📋 Overview
+                      </h4>
+                      <p className="text-muted-foreground text-sm leading-relaxed">{selectedBlueprint.blueprint_content.overview}</p>
+                    </div>
+                  )}
 
-                        {phase.objectives && Array.isArray(phase.objectives) && phase.objectives.length > 0 && (
-                          <div className="mb-3">
-                            <h6 className="font-medium mb-2 text-sm">Objectives</h6>
-                            <ul className="list-disc list-inside space-y-1">
-                              {phase.objectives.map((obj: string, objIndex: number) => (
-                                <li key={objIndex} className="text-sm text-muted-foreground">{obj}</li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
+                  {/* Architecture Section */}
+                  {selectedBlueprint.blueprint_content.architecture && (
+                    <div>
+                      <h4 className="font-semibold mb-2 flex items-center gap-2">
+                        🏗️ Architecture
+                      </h4>
+                      <p className="text-muted-foreground text-sm leading-relaxed whitespace-pre-wrap">{selectedBlueprint.blueprint_content.architecture}</p>
+                    </div>
+                  )}
 
-                        {phase.tasks && Array.isArray(phase.tasks) && phase.tasks.length > 0 && (
-                          <div className="mb-3">
-                            <h6 className="font-medium mb-2 text-sm">Tasks</h6>
-                            <ul className="list-disc list-inside space-y-1">
-                              {phase.tasks.map((task: string, taskIndex: number) => (
-                                <li key={taskIndex} className="text-sm text-muted-foreground">{task}</li>
-                              ))}
-                            </ul>
+                  {/* Components Section */}
+                  {selectedBlueprint.blueprint_content.components && Array.isArray(selectedBlueprint.blueprint_content.components) && selectedBlueprint.blueprint_content.components.length > 0 && (
+                    <div>
+                      <h4 className="font-semibold mb-3 flex items-center gap-2">
+                        🧩 Key Components
+                      </h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        {selectedBlueprint.blueprint_content.components.map((component: string, index: number) => (
+                          <div key={index} className="bg-muted/50 border rounded-lg p-3">
+                            <p className="text-sm">{component}</p>
                           </div>
-                        )}
-
-                        {phase.milestones && Array.isArray(phase.milestones) && phase.milestones.length > 0 && (
-                          <div>
-                            <h6 className="font-medium mb-2 text-sm">Milestones</h6>
-                            <div className="flex flex-wrap gap-2">
-                              {phase.milestones.map((milestone: string, milestoneIndex: number) => (
-                                <Badge key={milestoneIndex} variant="secondary" className="text-xs">
-                                  {milestone}
-                                </Badge>
-                              ))}
-                            </div>
-                          </div>
-                        )}
+                        ))}
                       </div>
-                    ))}
-                  </div>
+                    </div>
+                  )}
+
+                  {/* Implementation Steps Section */}
+                  {selectedBlueprint.blueprint_content.implementation_steps && Array.isArray(selectedBlueprint.blueprint_content.implementation_steps) && selectedBlueprint.blueprint_content.implementation_steps.length > 0 && (
+                    <div>
+                      <h4 className="font-semibold mb-3 flex items-center gap-2">
+                        🚀 Implementation Steps
+                      </h4>
+                      <div className="space-y-3">
+                        {selectedBlueprint.blueprint_content.implementation_steps.map((step: string, index: number) => (
+                          <div key={index} className="flex gap-3 items-start bg-background border rounded-lg p-3">
+                            <Badge variant="outline" className="shrink-0 mt-1">{index + 1}</Badge>
+                            <p className="text-sm text-muted-foreground flex-1">{step}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Best Practices Section */}
+                  {selectedBlueprint.blueprint_content.best_practices && Array.isArray(selectedBlueprint.blueprint_content.best_practices) && selectedBlueprint.blueprint_content.best_practices.length > 0 && (
+                    <div>
+                      <h4 className="font-semibold mb-3 flex items-center gap-2">
+                        ✨ Best Practices
+                      </h4>
+                      <ul className="list-disc list-inside space-y-2">
+                        {selectedBlueprint.blueprint_content.best_practices.map((practice: string, index: number) => (
+                          <li key={index} className="text-sm text-muted-foreground leading-relaxed">{practice}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* Phases Section (if exists in newer data) */}
+                  {selectedBlueprint.blueprint_content.phases && Array.isArray(selectedBlueprint.blueprint_content.phases) && selectedBlueprint.blueprint_content.phases.length > 0 && (
+                    <div>
+                      <h4 className="font-semibold mb-4">📅 Implementation Phases</h4>
+                      <div className="space-y-4">
+                        {selectedBlueprint.blueprint_content.phases.map((phase: any, index: number) => (
+                          <div key={index} className="border border-border rounded-lg p-4 bg-muted/50">
+                            <div className="flex items-start justify-between mb-3">
+                              <div>
+                                <h5 className="font-semibold text-lg">Phase {phase.phase || index + 1}: {phase.name}</h5>
+                                <p className="text-sm text-muted-foreground mt-1">Duration: {phase.duration}</p>
+                              </div>
+                            </div>
+
+                            {phase.objectives && Array.isArray(phase.objectives) && phase.objectives.length > 0 && (
+                              <div className="mb-3">
+                                <h6 className="font-medium mb-2 text-sm">Objectives</h6>
+                                <ul className="list-disc list-inside space-y-1">
+                                  {phase.objectives.map((obj: string, objIndex: number) => (
+                                    <li key={objIndex} className="text-sm text-muted-foreground">{obj}</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+
+                            {phase.tasks && Array.isArray(phase.tasks) && phase.tasks.length > 0 && (
+                              <div className="mb-3">
+                                <h6 className="font-medium mb-2 text-sm">Tasks</h6>
+                                <ul className="list-disc list-inside space-y-1">
+                                  {phase.tasks.map((task: string, taskIndex: number) => (
+                                    <li key={taskIndex} className="text-sm text-muted-foreground">{task}</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+
+                            {phase.milestones && Array.isArray(phase.milestones) && phase.milestones.length > 0 && (
+                              <div>
+                                <h6 className="font-medium mb-2 text-sm">Milestones</h6>
+                                <div className="flex flex-wrap gap-2">
+                                  {phase.milestones.map((milestone: string, milestoneIndex: number) => (
+                                    <Badge key={milestoneIndex} variant="secondary" className="text-xs">
+                                      {milestone}
+                                    </Badge>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
 

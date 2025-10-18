@@ -307,26 +307,42 @@ export default function Workflows() {
                   <h4 className="font-semibold mb-4">Workflow Steps</h4>
                   <div className="space-y-4">
                     {selectedWorkflow.workflow_steps.map((step: any, index) => (
-                      <div key={index} className="border-l-2 border-primary/20 pl-4 pb-4">
-                        <div className="flex items-center gap-2 mb-2">
-                          <Badge variant="outline" className="text-xs">
-                            Step {step.step || index + 1}
+                      <div key={index} className="border-l-4 border-primary/30 pl-4 pb-6 bg-muted/20 rounded-r-lg p-4">
+                        <div className="flex items-center gap-2 mb-3">
+                          <Badge variant="default" className="text-sm font-semibold">
+                            Step {step.step || step.stepNumber || index + 1}
                           </Badge>
-                          {step.estimated_time && (
-                            <span className="text-xs text-muted-foreground">
-                              {step.estimated_time}
+                          {step.duration && (
+                            <span className="text-xs text-muted-foreground bg-background px-2 py-1 rounded-md">
+                              ⏱️ {step.duration}
                             </span>
                           )}
                         </div>
-                        <h5 className="font-medium mb-1">{step.title}</h5>
-                        <p className="text-muted-foreground text-sm mb-2">{step.description}</p>
-                        {step.tools && Array.isArray(step.tools) && step.tools.length > 0 && (
-                          <div className="flex flex-wrap gap-1">
-                            {step.tools.map((tool: string, toolIndex: number) => (
-                              <Badge key={toolIndex} variant="secondary" className="text-xs">
-                                {tool}
-                              </Badge>
-                            ))}
+                        
+                        <h5 className="font-semibold text-lg mb-2">{step.title}</h5>
+                        <p className="text-muted-foreground text-sm mb-3 leading-relaxed whitespace-pre-wrap">{step.description}</p>
+                        
+                        {step.tools_required && Array.isArray(step.tools_required) && step.tools_required.length > 0 && (
+                          <div className="mb-3">
+                            <p className="text-xs font-medium mb-2">🛠️ Tools Required:</p>
+                            <div className="flex flex-wrap gap-1">
+                              {step.tools_required.map((tool: string, toolIndex: number) => (
+                                <Badge key={toolIndex} variant="secondary" className="text-xs">
+                                  {tool}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {step.outputs && Array.isArray(step.outputs) && step.outputs.length > 0 && (
+                          <div className="mt-3 bg-background rounded-lg p-3">
+                            <p className="text-xs font-medium mb-2">📦 Expected Outputs:</p>
+                            <ul className="list-disc list-inside space-y-1">
+                              {step.outputs.map((output: string, outputIndex: number) => (
+                                <li key={outputIndex} className="text-xs text-muted-foreground">{output}</li>
+                              ))}
+                            </ul>
                           </div>
                         )}
                       </div>
