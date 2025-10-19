@@ -28,8 +28,9 @@ serve(async (req) => {
       throw new Error('XAI_API_KEY not configured');
     }
 
-    const formData: StudioFormData = await req.json();
-    console.log('Starting streaming generation for:', formData);
+    // CRITICAL FIX: Frontend sends { formData: {...} }, so we need to destructure
+    const { formData }: { formData: StudioFormData } = await req.json();
+    console.log('Starting streaming generation for:', { formData });
 
     const encoder = new TextEncoder();
     const stream = new ReadableStream({
