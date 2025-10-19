@@ -88,7 +88,7 @@ export const jumpinAIStudioService = {
 
               console.log(`📨 Received SSE event: step=${step}, type=${type}`);
 
-              if (type === 'name') {
+              if (type === 'naming') {
                 result.jumpName = data.jumpName;
                 console.log('✅ Jump name received:', data.jumpName);
                 
