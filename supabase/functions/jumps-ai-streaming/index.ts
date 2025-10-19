@@ -262,28 +262,39 @@ CRITICAL INSTRUCTIONS:
 
 DO NOT use generic roles or examples. Extract understanding from THEIR input.
 
-Create these sections:
-
-1. Executive Summary (3 paragraphs):
-   - Para 1: Show you understand their current situation (infer from their goals)
-   - Para 2: Transformation path for their constraints (time: ${context.timeCommitment}, budget: ${context.budget})
-   - Para 3: Success picture based on what they're trying to achieve
-
-2. Situation Analysis:
-   - Current State: Describe what you understand about their situation from their goals
-   - Challenges: Extract 3 from "What's preventing them"
-   - Opportunities: 3 relevant to their situation
-
-3. Strategic Vision: Success for what they're trying to achieve
-
-4. 3-Phase Roadmap (fit ${context.timeCommitment}):
-   - Each phase: name, timeline, 3 milestones
-
-5. Success Factors: 3 for their situation
-
-6. Risk Mitigation: 3 strategies for their obstacles
-
-Return ONLY valid JSON with structure from previous prompt.`,
+Return ONLY valid JSON:
+{
+  "executiveSummary": "3 paragraphs showing you understand their situation, transformation path for time: ${context.timeCommitment} and budget: ${context.budget}, and success picture",
+  "situationAnalysis": {
+    "currentState": "What you understand from their goals",
+    "challenges": ["From what's preventing them", "Challenge 2", "Challenge 3"],
+    "opportunities": ["Relevant to them", "Opportunity 2", "Opportunity 3"]
+  },
+  "strategicVision": "Success for what they're trying to achieve",
+  "roadmap": {
+    "phase1": {
+      "name": "Phase 1 name",
+      "timeline": "Fits ${context.timeCommitment}",
+      "milestones": ["Milestone 1", "Milestone 2", "Milestone 3"]
+    },
+    "phase2": {
+      "name": "Phase 2 name", 
+      "timeline": "Realistic timeline",
+      "milestones": ["Milestone 1", "Milestone 2", "Milestone 3"]
+    },
+    "phase3": {
+      "name": "Phase 3 name",
+      "timeline": "Realistic timeline",
+      "milestones": ["Milestone 1", "Milestone 2", "Milestone 3"]
+    }
+  },
+  "keyObjectives": ["Objective 1 for them", "Objective 2 for them", "Objective 3 for them"],
+  "successMetrics": ["Metric 1", "Metric 2", "Metric 3"],
+  "riskAssessment": {
+    "risks": ["Risk 1", "Risk 2", "Risk 3"],
+    "mitigations": ["Mitigation 1", "Mitigation 2", "Mitigation 3"]
+  }
+}`,
         expectedTokens: 10000
       };
 
