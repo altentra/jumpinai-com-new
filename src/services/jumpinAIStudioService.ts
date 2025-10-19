@@ -221,16 +221,17 @@ export const jumpinAIStudioService = {
                     }
                   })();
                 }
-              } else if (type === 'plan') {
-                console.log('📝 Processing plan data');
-                if (data.implementationPlan) {
-                  result.structuredPlan = data.implementationPlan;
-                  console.log('✅ Plan has', data.implementationPlan.phases?.length || 0, 'phases');
-                  
-                  let planText = '\n\n=== IMPLEMENTATION PLAN ===\n';
-                  if (data.implementationPlan.phases) {
-                    planText += '\nPHASES:\n';
-                    data.implementationPlan.phases.forEach((phase: any, idx: number) => {
+              } else if (type === 'comprehensive' || type === 'plan') {
+                console.log('📝 Processing plan/comprehensive data');
+                // Handle both direct structure and wrapped structure
+                const planData = data.implementationPlan || data;
+                result.structuredPlan = planData;
+                console.log('✅ Plan has', planData.phases?.length || 0, 'phases');
+                
+                let planText = '\n\n=== IMPLEMENTATION PLAN ===\n';
+                if (planData.phases) {
+                  planText += '\nPHASES:\n';
+                  planData.phases.forEach((phase: any, idx: number) => {
                       planText += `\n${idx + 1}. ${phase.name} (${phase.duration})\n`;
                       if (phase.objectives?.length) {
                         planText += '   Objectives:\n' + phase.objectives.map((o: string) => `   • ${o}`).join('\n') + '\n';
@@ -238,26 +239,25 @@ export const jumpinAIStudioService = {
                       if (phase.actions?.length) {
                         planText += '   Actions:\n' + phase.actions.map((a: string) => `   • ${a}`).join('\n') + '\n';
                       }
-                    });
-                  }
-                  if (data.implementationPlan.successMetrics?.length) {
-                    planText += '\nSUCCESS METRICS:\n' + data.implementationPlan.successMetrics.map((m: string) => `• ${m}`).join('\n');
-                  }
-                  result.fullContent += planText;
-                  console.log('✅ Plan appended, total', result.fullContent.length, 'chars');
+                  });
                 }
+                if (planData.successMetrics?.length) {
+                    planText += '\nSUCCESS METRICS:\n' + planData.successMetrics.map((m: string) => `• ${m}`).join('\n');
+                }
+                result.fullContent += planText;
+                console.log('✅ Plan appended, total', result.fullContent.length, 'chars');
                 
                 if (onProgress) {
                   onProgress(step, type, data);
                 }
                 
-                if (userId && jumpId && data.implementationPlan) {
+                if (userId && jumpId) {
                   (async () => {
                     try {
                       await supabase
                         .from('user_jumps')
                         .update({
-                          structured_plan: data.implementationPlan,
+                          structured_plan: planData,
                           full_content: result.fullContent,
                           completion_percentage: 32
                         })
