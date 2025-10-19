@@ -216,202 +216,175 @@ async function callXAI(
 }
 
 function getStepPrompts(step: number, context: StudioFormData, overviewContent: string) {
-  // Map form fields correctly to prompt context
+  // Build context from user input - NO hardcoded role
   const baseContext = `
-Current Role: ${context.currentRole || 'Not specified'}
+What they're trying to achieve: ${context.goals || 'Not specified'}
+What's preventing them: ${context.challenges || 'Not specified'}
 Industry: ${context.industry || 'Not specified'}
-Experience Level: ${context.experienceLevel || 'Not specified'}
-AI Knowledge: ${context.aiKnowledge || 'Not specified'}
-Goals & Aspirations: ${context.goals || 'Not specified'}
-Challenges & Obstacles: ${context.challenges || 'Not specified'}
-Time Commitment: ${context.timeCommitment || 'Not specified'}
+AI Experience: ${context.aiKnowledge || 'Not specified'}
+Urgency: ${context.timeCommitment || 'Not specified'}
 Budget: ${context.budget || 'Not specified'}
   `.trim();
 
   switch (step) {
     case 1:
-      // STEP 1: Quick name generation (3-5 seconds)
+      // STEP 1: Quick name generation
       return {
-        systemPrompt: `You are a creative naming expert specializing in personal transformation and AI-powered career development. Generate inspiring, memorable names that resonate with the user's unique situation.`,
-        userPrompt: `Based on this person's profile, create an inspiring name for their AI transformation journey:
+        systemPrompt: `You are a creative naming expert. First ANALYZE what the person is trying to achieve to understand their situation, then create an inspiring journey name.`,
+        userPrompt: `Read what this person is trying to achieve and understand their situation:
 
 ${baseContext}
 
-The name should:
-- Directly reflect their specific goals and current role
-- Be motivating and action-oriented
-- Be 3-5 words maximum
-- Sound professional yet inspiring
+Steps:
+1. Analyze their goals to understand their current role/situation
+2. Identify what transformation they're seeking
+3. Create an inspiring 3-5 word name that captures their journey
 
 Return ONLY valid JSON:
 {
-  "jumpName": "Inspiring 3-5 word name based on THEIR actual goals and role"
+  "jumpName": "3-5 word name reflecting THEIR specific transformation"
 }`,
         expectedTokens: 500
       };
     
     case 2:
-      // STEP 2: Comprehensive overview and strategic plan
+      // STEP 2: Comprehensive overview
       return {
-        systemPrompt: `You are an expert AI transformation strategist. Create deeply personalized, actionable transformation plans based ONLY on the user's actual input. Use their exact words and context.`,
-        userPrompt: `Create a detailed AI transformation overview for this specific person. Use THEIR actual details:
+        systemPrompt: `You are an expert AI strategist. Deeply analyze what the person is trying to achieve to understand their situation, then create a personalized plan.`,
+        userPrompt: `Deeply analyze this person's situation:
 
 ${baseContext}
 
-CRITICAL: Reference their ACTUAL role (${context.currentRole}), ACTUAL goals (${context.goals}), ACTUAL challenges (${context.challenges}), ACTUAL time (${context.timeCommitment}), and ACTUAL budget (${context.budget}) throughout your response.
+CRITICAL INSTRUCTIONS:
+1. First, carefully read "What they're trying to achieve" to understand their current role/situation
+2. Analyze "What's preventing them" to understand obstacles
+3. Create a transformation plan specific to THEIR situation
+
+DO NOT use generic roles or examples. Extract understanding from THEIR input.
 
 Create these sections:
 
-1. Executive Summary (3 focused paragraphs):
-   - Paragraph 1: Acknowledge THEIR current situation with empathy (reference their role: ${context.currentRole})
-   - Paragraph 2: Present a transformation path given THEIR constraints (time: ${context.timeCommitment}, budget: ${context.budget})
-   - Paragraph 3: Paint success picture FOR THEM based on THEIR goals: ${context.goals}
+1. Executive Summary (3 paragraphs):
+   - Para 1: Show you understand their current situation (infer from their goals)
+   - Para 2: Transformation path for their constraints (time: ${context.timeCommitment}, budget: ${context.budget})
+   - Para 3: Success picture based on what they're trying to achieve
 
 2. Situation Analysis:
-   - Current State: Describe THEIR situation (role: ${context.currentRole}, industry: ${context.industry}, AI level: ${context.aiKnowledge})
-   - Challenges: 3 challenges from THEIR input: ${context.challenges}
-   - Opportunities: 3 opportunities for THEIR context
+   - Current State: Describe what you understand about their situation from their goals
+   - Challenges: Extract 3 from "What's preventing them"
+   - Opportunities: 3 relevant to their situation
 
-3. Strategic Vision:
-   - Success description FOR THEM addressing: ${context.goals}
-   - Realistic given: ${context.timeCommitment} and ${context.budget}
+3. Strategic Vision: Success for what they're trying to achieve
 
 4. 3-Phase Roadmap (fit ${context.timeCommitment}):
    - Each phase: name, timeline, 3 milestones
-   - Must align with THEIR time and budget
 
-5. Success Factors: 3 factors for THEIR situation
+5. Success Factors: 3 for their situation
 
-6. Risk Mitigation: 3 strategies for THEIR challenges: ${context.challenges}
+6. Risk Mitigation: 3 strategies for their obstacles
 
-Return ONLY valid JSON:
-{
-  "executiveSummary": "3 paragraphs with THEIR specifics",
-  "situationAnalysis": {
-    "currentState": "THEIR actual situation",
-    "challenges": ["From their input", "From their input", "From their input"],
-    "opportunities": ["For their context", "For their context", "For their context"]
-  },
-  "strategicVision": "Success for THEM",
-  "roadmap": {
-    "phase1": {"name": "Phase name", "timeline": "Fits their time", "milestones": ["M1", "M2", "M3"]},
-    "phase2": {"name": "Phase name", "timeline": "Fits their time", "milestones": ["M1", "M2", "M3"]},
-    "phase3": {"name": "Phase name", "timeline": "Fits their time", "milestones": ["M1", "M2", "M3"]}
-  },
-  "successFactors": ["For them", "For them", "For them"],
-  "riskMitigation": ["For their challenges", "For their challenges", "For their challenges"]
-}`,
+Return ONLY valid JSON with structure from previous prompt.`,
         expectedTokens: 10000
       };
 
     case 3:
-      // STEP 3: Detailed strategic action plan
+      // STEP 3: Detailed action plan
       return {
-        systemPrompt: `You are an expert AI transformation strategist. Create action plans based on the user's ACTUAL input. Return ONLY valid JSON.`,
-        userPrompt: `Create a 3-phase strategic plan for THIS person using THEIR actual details:
+        systemPrompt: `You are an action planning expert. Analyze the person's goals to understand their situation, then create specific action phases.`,
+        userPrompt: `Analyze and create action plan:
 
 ${baseContext}
 
 Overview Context:
 ${overviewContent}
 
-CRITICAL: Make phases specific to:
-- THEIR Role: ${context.currentRole}
-- THEIR Goals: ${context.goals}
-- THEIR Time: ${context.timeCommitment}
-- THEIR Budget: ${context.budget}
-- THEIR AI Level: ${context.aiKnowledge}
-
-Each phase must be actionable for THEIR specific situation.
+INSTRUCTIONS:
+1. Understand their situation from what they're trying to achieve
+2. Create 3 phases specific to THEIR journey
+3. Address what's preventing them
+4. Fit their urgency: ${context.timeCommitment} and budget: ${context.budget}
 
 Return ONLY valid JSON:
 {
   "phases": [
     {
-      "name": "Phase 1: [Relevant to their role]",
-      "description": "[Specific to their goals]",
-      "duration": "[Realistic for their time: ${context.timeCommitment}]",
-      "objectives": ["Objective for THEM", "Objective for THEM"],
+      "name": "Phase 1: [Based on their situation]",
+      "description": "[For what they're trying to achieve]",
+      "duration": "[Fits urgency: ${context.timeCommitment}]",
+      "objectives": ["For THEM", "For THEM"],
       "actions": ["Action for THEM", "Action for THEM", "Action for THEM"],
-      "milestones": ["Milestone for THEM", "Milestone for THEM"]
+      "milestones": ["For THEM", "For THEM"]
     },
     {
-      "name": "Phase 2: [Relevant to their role]",
-      "description": "[Specific to their goals]",
-      "duration": "[Realistic for their time]",
-      "objectives": ["Objective for THEM", "Objective for THEM"],
-      "actions": ["Action for THEM", "Action for THEM", "Action for THEM"],
-      "milestones": ["Milestone for THEM", "Milestone for THEM"]
+      "name": "Phase 2: [Based on their situation]",
+      "description": "[For their goals]",
+      "duration": "[Fits urgency]",
+      "objectives": ["For THEM", "For THEM"],
+      "actions": ["For THEM", "For THEM", "For THEM"],
+      "milestones": ["For THEM", "For THEM"]
     },
     {
-      "name": "Phase 3: [Relevant to their role]",
-      "description": "[Specific to their goals]",
-      "duration": "[Realistic for their time]",
-      "objectives": ["Objective for THEM", "Objective for THEM"],
-      "actions": ["Action for THEM", "Action for THEM", "Action for THEM"],
-      "milestones": ["Milestone for THEM", "Milestone for THEM"]
+      "name": "Phase 3: [Based on their situation]",
+      "description": "[For their goals]",
+      "duration": "[Fits urgency]",
+      "objectives": ["For THEM", "For THEM"],
+      "actions": ["For THEM", "For THEM", "For THEM"],
+      "milestones": ["For THEM", "For THEM"]
     }
   ],
-  "successMetrics": ["Metric for their goals", "Metric for their goals", "Metric for their goals"]
+  "successMetrics": ["For their goals", "For their goals", "For their goals"]
 }`,
         expectedTokens: 3000
       };
 
     case 4:
-      // STEP 4: Tools & Prompts (Generate 6 items)
+      // STEP 4: Tools & Prompts
       return {
-        systemPrompt: `You are an expert AI tools specialist. Create tool+prompt combinations based ONLY on the user's ACTUAL input. Reference their exact role, goals, challenges, and constraints.`,
-        userPrompt: `Generate 6 AI tool+prompt combinations for THIS specific person:
+        systemPrompt: `You are an AI tools specialist. Analyze what the person is trying to achieve to understand their situation, then create tailored tool+prompt combos.`,
+        userPrompt: `Create 6 tool+prompt combinations:
 
 ${baseContext}
 
 Overview Context:
 ${overviewContent}
 
-CRITICAL: Every combo must be tailored to:
-- THEIR Role: ${context.currentRole}
-- THEIR Industry: ${context.industry}
-- THEIR Goals: ${context.goals}
-- THEIR Challenges: ${context.challenges}
-- THEIR Budget: ${context.budget}
-- THEIR AI Level: ${context.aiKnowledge}
-- THEIR Time: ${context.timeCommitment}
+CRITICAL INSTRUCTIONS:
+1. Understand their situation from what they're trying to achieve
+2. Each combo must solve what's preventing them
+3. Fit their budget: ${context.budget}
+4. Match AI experience: ${context.aiKnowledge}
+5. Work with urgency: ${context.timeCommitment}
 
-Each tool+prompt must:
-1. Address THEIR specific goals (${context.goals})
-2. Solve THEIR challenges (${context.challenges})
-3. Fit THEIR budget (${context.budget})
-4. Match THEIR AI level (${context.aiKnowledge})
-5. Work with THEIR time (${context.timeCommitment})
+DO NOT use generic roles. Tailor to THEIR specific situation.
 
 Return ONLY valid JSON:
 {
   "tool_prompts": [
     {
-      "title": "Use Case for ${context.currentRole}",
-      "description": "How this solves THEIR challenge: ${context.challenges}",
-      "category": "Content Creation|Marketing|Automation|Data Analysis|Strategy|Planning",
-      "tool_name": "ChatGPT|Claude|Gemini|Perplexity|etc",
-      "tool_url": "https://actual-url.com",
-      "tool_type": "Text Generation|Image Generation|Data Analysis|etc",
-      "prompt_text": "Ready-to-copy prompt (200-300 words) specifically for ${context.currentRole} working on ${context.goals}. Reference THEIR industry: ${context.industry}. Address THEIR challenge: ${context.challenges}.",
-      "prompt_instructions": "Step-by-step for THEIR use case",
-      "when_to_use": "When in THEIR journey (reference phases from plan)",
-      "why_this_combo": "Why perfect for THEIR situation",
+      "title": "Use case for their situation",
+      "description": "How this helps them achieve their goals and overcome obstacles",
+      "category": "Relevant category",
+      "tool_name": "Specific tool",
+      "tool_url": "https://url.com",
+      "tool_type": "Tool type",
+      "prompt_text": "200-300 word ready-to-copy prompt tailored to what they're trying to achieve. Reference what's preventing them. Include industry: ${context.industry}.",
+      "prompt_instructions": "Steps for THEIR use case",
+      "when_to_use": "When in their journey",
+      "why_this_combo": "Why perfect for their situation",
       "alternatives": [
-        {"tool": "Alt 1", "url": "https://url.com", "note": "Why for them"},
-        {"tool": "Alt 2", "url": "https://url.com", "note": "Why for them"}
+        {"tool": "Alt", "url": "url", "note": "Why for them"},
+        {"tool": "Alt", "url": "url", "note": "Why for them"}
       ],
-      "use_cases": ["For their role", "For their goal", "For their challenge"],
-      "tags": ["relevant-tag1", "relevant-tag2"],
-      "difficulty_level": "Match ${context.aiKnowledge}",
-      "setup_time": "Realistic for ${context.timeCommitment}",
+      "use_cases": ["For their situation", "For their goal", "For their challenge"],
+      "tags": ["relevant-tags"],
+      "difficulty_level": "${context.aiKnowledge}",
+      "setup_time": "Fits ${context.timeCommitment}",
       "cost_estimate": "Within ${context.budget}"
     }
   ]
 }
 
-Generate EXACTLY 6 combos. Each must feel hand-picked for THEIR specific situation.`,
+Generate EXACTLY 6 combos tailored to THEIR input.`,
         expectedTokens: 15000
       };
 
