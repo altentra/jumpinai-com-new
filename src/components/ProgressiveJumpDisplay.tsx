@@ -172,35 +172,223 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
         </div>
 
         <TabsContent value="overview" className="mt-6">
-          {result.full_content ? (
-            <div className="relative group">
-              <div className="absolute -inset-1 bg-gradient-to-r from-primary/15 via-accent/10 to-secondary/15 dark:from-primary/10 dark:via-accent/8 dark:to-secondary/10 rounded-3xl blur-xl opacity-40"></div>
-              <Card className="relative glass backdrop-blur-xl border border-border/40 hover:border-primary/30 transition-all duration-500 rounded-3xl shadow-xl hover:shadow-2xl hover:shadow-primary/10 bg-gradient-to-br from-background/80 to-background/60 dark:bg-gradient-to-br dark:from-gray-950/80 dark:to-gray-900/60">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/2 via-transparent to-secondary/2 dark:from-primary/1.5 dark:via-transparent dark:to-secondary/1.5 rounded-3xl"></div>
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-base text-white drop-shadow-sm">Strategic Overview</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="prose prose-sm max-w-none dark:prose-invert">
-                    <ReactMarkdown
-                      remarkPlugins={[remarkGfm]}
-                      components={{
-                        h1: ({...props}) => <h1 className="text-2xl font-bold mt-6 mb-4 text-foreground" {...props} />,
-                        h2: ({...props}) => <h2 className="text-xl font-semibold mt-5 mb-3 text-foreground" {...props} />,
-                        h3: ({...props}) => <h3 className="text-lg font-semibold mt-4 mb-2 text-foreground" {...props} />,
-                        p: ({...props}) => <p className="mb-4 text-white/90 leading-relaxed" {...props} />,
-                        ul: ({...props}) => <ul className="list-disc list-inside mb-4 space-y-2 text-white/80" {...props} />,
-                        ol: ({...props}) => <ol className="list-decimal list-inside mb-4 space-y-2 text-white/80" {...props} />,
-                        li: ({...props}) => <li className="ml-4 text-white/80" {...props} />,
-                        strong: ({...props}) => <strong className="font-semibold text-white" {...props} />,
-                        em: ({...props}) => <em className="italic text-white/90" {...props} />,
-                      }}
-                    >
-                      {formatAIText(result.full_content)}
-                    </ReactMarkdown>
-                  </div>
-                </CardContent>
-              </Card>
+          {result.comprehensive_plan ? (
+            <div className="space-y-6">
+              {/* Executive Summary */}
+              {result.comprehensive_plan.executiveSummary && (
+                <Card className="glass backdrop-blur-xl border border-border/40 rounded-2xl">
+                  <CardHeader>
+                    <CardTitle className="text-lg flex items-center gap-2">
+                      <Lightbulb className="w-5 h-5 text-primary" />
+                      Executive Summary
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-foreground/90 leading-relaxed whitespace-pre-line">
+                      {result.comprehensive_plan.executiveSummary}
+                    </p>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Situation Analysis */}
+              {result.comprehensive_plan.situationAnalysis && (
+                <Card className="glass backdrop-blur-xl border border-border/40 rounded-2xl">
+                  <CardHeader>
+                    <CardTitle className="text-lg flex items-center gap-2">
+                      <Compass className="w-5 h-5 text-primary" />
+                      Situation Analysis
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {result.comprehensive_plan.situationAnalysis.currentState && (
+                      <div>
+                        <h4 className="font-semibold text-sm mb-2">Current State</h4>
+                        <p className="text-foreground/80 text-sm">{result.comprehensive_plan.situationAnalysis.currentState}</p>
+                      </div>
+                    )}
+                    
+                    <div className="grid md:grid-cols-2 gap-4 mt-4">
+                      {result.comprehensive_plan.situationAnalysis.challenges?.length > 0 && (
+                        <div className="space-y-2">
+                          <h4 className="font-semibold text-sm flex items-center gap-2">
+                            <AlertTriangle className="w-4 h-4 text-destructive" />
+                            Key Challenges
+                          </h4>
+                          <ul className="space-y-2">
+                            {result.comprehensive_plan.situationAnalysis.challenges.map((challenge: string, idx: number) => (
+                              <li key={idx} className="text-sm text-foreground/80 pl-4 border-l-2 border-destructive/30">
+                                {challenge}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                      
+                      {result.comprehensive_plan.situationAnalysis.opportunities?.length > 0 && (
+                        <div className="space-y-2">
+                          <h4 className="font-semibold text-sm flex items-center gap-2">
+                            <TrendingUp className="w-4 h-4 text-primary" />
+                            Opportunities
+                          </h4>
+                          <ul className="space-y-2">
+                            {result.comprehensive_plan.situationAnalysis.opportunities.map((opp: string, idx: number) => (
+                              <li key={idx} className="text-sm text-foreground/80 pl-4 border-l-2 border-primary/30">
+                                {opp}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Strategic Vision */}
+              {result.comprehensive_plan.strategicVision && (
+                <Card className="glass backdrop-blur-xl border border-border/40 rounded-2xl">
+                  <CardHeader>
+                    <CardTitle className="text-lg flex items-center gap-2">
+                      <Target className="w-5 h-5 text-primary" />
+                      Strategic Vision
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-foreground/90 leading-relaxed whitespace-pre-line">
+                      {result.comprehensive_plan.strategicVision}
+                    </p>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Roadmap */}
+              {result.comprehensive_plan.roadmap && (
+                <Card className="glass backdrop-blur-xl border border-border/40 rounded-2xl">
+                  <CardHeader>
+                    <CardTitle className="text-lg flex items-center gap-2">
+                      <MapPin className="w-5 h-5 text-primary" />
+                      Roadmap
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {['phase1', 'phase2', 'phase3'].map((phaseKey) => {
+                      const phase = result.comprehensive_plan.roadmap[phaseKey];
+                      if (!phase) return null;
+                      return (
+                        <div key={phaseKey} className="p-4 rounded-xl border border-border/30 bg-background/50">
+                          <div className="flex items-start justify-between mb-3">
+                            <h4 className="font-semibold">{phase.name}</h4>
+                            <Badge variant="outline" className="text-xs">{phase.timeline}</Badge>
+                          </div>
+                          {phase.milestones?.length > 0 && (
+                            <ul className="space-y-1">
+                              {phase.milestones.map((milestone: string, idx: number) => (
+                                <li key={idx} className="text-sm text-foreground/80 flex items-start gap-2">
+                                  <CheckCircle className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                                  <span>{milestone}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Key Objectives & Success Metrics */}
+              <div className="grid md:grid-cols-2 gap-6">
+                {result.comprehensive_plan.keyObjectives?.length > 0 && (
+                  <Card className="glass backdrop-blur-xl border border-border/40 rounded-2xl">
+                    <CardHeader>
+                      <CardTitle className="text-lg flex items-center gap-2">
+                        <Target className="w-5 h-5 text-primary" />
+                        Key Objectives
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <ul className="space-y-2">
+                        {result.comprehensive_plan.keyObjectives.map((obj: string, idx: number) => (
+                          <li key={idx} className="text-sm text-foreground/80 flex items-start gap-2">
+                            <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                              <span className="text-xs font-semibold text-primary">{idx + 1}</span>
+                            </div>
+                            <span>{obj}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </CardContent>
+                  </Card>
+                )}
+
+                {result.comprehensive_plan.successMetrics?.length > 0 && (
+                  <Card className="glass backdrop-blur-xl border border-border/40 rounded-2xl">
+                    <CardHeader>
+                      <CardTitle className="text-lg flex items-center gap-2">
+                        <DollarSign className="w-5 h-5 text-primary" />
+                        Success Metrics
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <ul className="space-y-2">
+                        {result.comprehensive_plan.successMetrics.map((metric: string, idx: number) => (
+                          <li key={idx} className="text-sm text-foreground/80 flex items-start gap-2">
+                            <TrendingUp className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                            <span>{metric}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </CardContent>
+                  </Card>
+                )}
+              </div>
+
+              {/* Risk Assessment */}
+              {result.comprehensive_plan.riskAssessment && (
+                <Card className="glass backdrop-blur-xl border border-border/40 rounded-2xl">
+                  <CardHeader>
+                    <CardTitle className="text-lg flex items-center gap-2">
+                      <Shield className="w-5 h-5 text-primary" />
+                      Risk Assessment
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="grid md:grid-cols-2 gap-4">
+                    {result.comprehensive_plan.riskAssessment.risks?.length > 0 && (
+                      <div className="space-y-2">
+                        <h4 className="font-semibold text-sm flex items-center gap-2">
+                          <AlertTriangle className="w-4 h-4 text-destructive" />
+                          Potential Risks
+                        </h4>
+                        <ul className="space-y-2">
+                          {result.comprehensive_plan.riskAssessment.risks.map((risk: string, idx: number) => (
+                            <li key={idx} className="text-sm text-foreground/80 pl-4 border-l-2 border-destructive/30">
+                              {risk}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    
+                    {result.comprehensive_plan.riskAssessment.mitigations?.length > 0 && (
+                      <div className="space-y-2">
+                        <h4 className="font-semibold text-sm flex items-center gap-2">
+                          <Heart className="w-4 h-4 text-primary" />
+                          Mitigation Strategies
+                        </h4>
+                        <ul className="space-y-2">
+                          {result.comprehensive_plan.riskAssessment.mitigations.map((mitigation: string, idx: number) => (
+                            <li key={idx} className="text-sm text-foreground/80 pl-4 border-l-2 border-primary/30">
+                              {mitigation}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              )}
             </div>
           ) : (
             <div className="flex items-center justify-center h-32">
