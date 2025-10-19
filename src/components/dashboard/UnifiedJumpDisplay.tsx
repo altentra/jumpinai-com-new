@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckCircle, Zap, Timer, Copy, Check, Wrench, Sparkles } from 'lucide-react';
+import { CheckCircle, Zap, Timer, Copy, Check, Wrench, Sparkles, AlertTriangle, Lightbulb, Target, TrendingUp, Compass, DollarSign, Heart, MapPin, AlertCircle, Info, CheckSquare } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -121,78 +121,245 @@ const UnifiedJumpDisplay: React.FC<UnifiedJumpDisplayProps> = ({ jump, component
         </TabsList>
 
         <TabsContent value="overview" className="mt-6">
-          <div className="relative group">
-            <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 dark:from-primary/15 dark:via-accent/12 dark:to-secondary/15 rounded-3xl blur-xl opacity-40"></div>
-            <Card className="relative glass backdrop-blur-xl border border-border/40 hover:border-primary/30 transition-all duration-500 rounded-3xl shadow-xl hover:shadow-2xl hover:shadow-primary/10 bg-gradient-to-br from-background/80 to-background/60 dark:bg-gradient-to-br dark:from-gray-950/80 dark:to-gray-900/60 overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/3 via-transparent to-secondary/3 dark:from-primary/2 dark:via-transparent dark:to-secondary/2 rounded-3xl pointer-events-none"></div>
+          <div className="space-y-6">
+            {(() => {
+              // Parse the overview content structure
+              const content = jump?.full_content || '';
+              const sections = content.split(/(?=##\s)/g);
               
-              <CardHeader className="pb-6 pt-8 px-8 border-b border-border/20">
-                <CardTitle className="flex items-center gap-3 text-2xl font-bold text-foreground">
-                  <div className="p-2.5 rounded-xl bg-primary/10 border border-primary/20">
-                    <Sparkles className="w-6 h-6 text-primary" />
+              return sections.map((section, idx) => {
+                const lines = section.trim().split('\n');
+                const title = lines[0]?.replace(/^#+\s*/, '').trim();
+                const body = lines.slice(1).join('\n').trim();
+                
+                // Determine section type based on title keywords
+                const isSummary = /executive|summary|overview/i.test(title);
+                const isChallenges = /challenge|barrier|obstacle|problem/i.test(title);
+                const isOpportunities = /opportunit|strength|advantage/i.test(title);
+                const isStrategic = /strategic|approach|methodology/i.test(title);
+                const isSuccess = /success|vision|goal|outcome/i.test(title);
+                
+                // Section-specific styling and icons
+                let icon = Sparkles;
+                let accentColor = 'primary';
+                let bgGradient = 'from-primary/10 to-primary/5';
+                let borderColor = 'border-primary/30';
+                
+                if (isChallenges) {
+                  icon = AlertTriangle;
+                  accentColor = 'red-500';
+                  bgGradient = 'from-red-500/10 to-red-500/5';
+                  borderColor = 'border-red-500/30';
+                } else if (isOpportunities) {
+                  icon = Lightbulb;
+                  accentColor = 'green-500';
+                  bgGradient = 'from-green-500/10 to-green-500/5';
+                  borderColor = 'border-green-500/30';
+                } else if (isStrategic) {
+                  icon = Compass;
+                  accentColor = 'blue-500';
+                  bgGradient = 'from-blue-500/10 to-blue-500/5';
+                  borderColor = 'border-blue-500/30';
+                } else if (isSuccess) {
+                  icon = Target;
+                  accentColor = 'purple-500';
+                  bgGradient = 'from-purple-500/10 to-purple-500/5';
+                  borderColor = 'border-purple-500/30';
+                }
+                
+                const IconComponent = icon;
+                
+                // Extract list items if present
+                const listMatches = body.match(/(?:^|\n)[-•]\s*(.+?)(?=\n[-•]|\n\n|$)/gs) || [];
+                const hasListItems = listMatches.length > 0;
+                
+                // For challenges and opportunities, render as grid of mini-cards
+                if ((isChallenges || isOpportunities) && hasListItems) {
+                  const items = body.split(/\n(?=[-•])/g).filter(item => item.trim());
+                  
+                  return (
+                    <div key={idx} className="space-y-4">
+                      <div className={`flex items-center gap-3 mb-6`}>
+                        <div className={`p-2.5 rounded-xl bg-${accentColor}/10 border border-${accentColor}/20`}>
+                          <IconComponent className={`w-6 h-6 text-${accentColor}`} />
+                        </div>
+                        <h2 className="text-2xl font-bold text-white">{title}</h2>
+                      </div>
+                      
+                      <div className="grid md:grid-cols-2 gap-4">
+                        {items.map((item, itemIdx) => {
+                          const cleanItem = item.replace(/^[-•]\s*/, '').trim();
+                          const [itemTitle, ...itemBody] = cleanItem.split(':');
+                          const itemDescription = itemBody.join(':').trim();
+                          
+                          return (
+                            <div key={itemIdx} className={`glass backdrop-blur-sm border ${borderColor} rounded-2xl p-5 bg-gradient-to-br ${bgGradient} hover:scale-[1.02] transition-all duration-300 group`}>
+                              <div className="flex gap-3">
+                                <div className={`flex-shrink-0 w-8 h-8 rounded-lg bg-${accentColor}/20 border border-${accentColor}/30 flex items-center justify-center`}>
+                                  <IconComponent className={`w-4 h-4 text-${accentColor}`} />
+                                </div>
+                                <div className="flex-1">
+                                  {itemTitle && itemDescription ? (
+                                    <>
+                                      <h4 className="font-semibold text-white mb-2">{itemTitle.trim()}</h4>
+                                      <p className="text-sm text-white/80 leading-relaxed">{itemDescription}</p>
+                                    </>
+                                  ) : (
+                                    <p className="text-sm text-white/90 leading-relaxed">{cleanItem}</p>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                }
+                
+                // Executive summary gets special TL;DR treatment
+                if (isSummary) {
+                  const paragraphs = body.split(/\n\n+/).filter(p => p.trim());
+                  const firstPara = paragraphs[0] || '';
+                  const restParas = paragraphs.slice(1);
+                  
+                  return (
+                    <div key={idx} className="space-y-6">
+                      {/* TL;DR Highlight Box */}
+                      <div className="relative group">
+                        <div className="absolute -inset-1 bg-gradient-to-r from-yellow-500/20 via-orange-500/15 to-yellow-500/20 rounded-2xl blur-lg opacity-40"></div>
+                        <div className="relative glass backdrop-blur-xl border border-yellow-500/30 rounded-2xl p-6 bg-gradient-to-br from-yellow-500/10 to-orange-500/10">
+                          <div className="flex items-start gap-3 mb-3">
+                            <div className="p-2 rounded-lg bg-yellow-500/20 border border-yellow-500/30">
+                              <Sparkles className="w-5 h-5 text-yellow-500" />
+                            </div>
+                            <div>
+                              <h3 className="text-lg font-bold text-white mb-1">TL;DR - Quick Overview</h3>
+                              <p className="text-sm text-white/70">Your transformation at a glance</p>
+                            </div>
+                          </div>
+                          <p className="text-white/90 leading-relaxed text-base">{firstPara}</p>
+                        </div>
+                      </div>
+                      
+                      {/* Full Executive Summary */}
+                      <div className="relative group">
+                        <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 rounded-3xl blur-xl opacity-40"></div>
+                        <Card className="relative glass backdrop-blur-xl border border-border/40 hover:border-primary/30 transition-all duration-500 rounded-3xl shadow-xl bg-gradient-to-br from-background/80 to-background/60 overflow-hidden">
+                          <CardHeader className="pb-4 pt-6 px-6 border-b border-border/20">
+                            <CardTitle className="flex items-center gap-3 text-xl font-bold text-foreground">
+                              <div className="p-2 rounded-xl bg-primary/10 border border-primary/20">
+                                <IconComponent className="w-5 h-5 text-primary" />
+                              </div>
+                              {title}
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent className="pt-6 pb-6 px-6 space-y-4">
+                            {restParas.map((para, pIdx) => (
+                              <p key={pIdx} className="text-white/90 leading-relaxed text-[15px]">{para}</p>
+                            ))}
+                          </CardContent>
+                        </Card>
+                      </div>
+                    </div>
+                  );
+                }
+                
+                // Success vision gets color-coded subsections
+                if (isSuccess) {
+                  const subsections = body.split(/\n(?=[A-Z][a-z]+:)/g).filter(s => s.trim());
+                  
+                  return (
+                    <div key={idx} className="space-y-4">
+                      <div className="flex items-center gap-3 mb-6">
+                        <div className="p-2.5 rounded-xl bg-purple-500/10 border border-purple-500/20">
+                          <Target className="w-6 h-6 text-purple-500" />
+                        </div>
+                        <h2 className="text-2xl font-bold text-white">{title}</h2>
+                      </div>
+                      
+                      <div className="grid md:grid-cols-3 gap-4">
+                        {subsections.map((subsection, subIdx) => {
+                          const [subTitle, ...subContent] = subsection.split(':');
+                          const content = subContent.join(':').trim();
+                          
+                          // Color code by type
+                          let subIcon = Heart;
+                          let subColor = 'purple-500';
+                          if (/financial|money|income/i.test(subTitle)) {
+                            subIcon = DollarSign;
+                            subColor = 'green-500';
+                          } else if (/emotion|feeling|mental/i.test(subTitle)) {
+                            subIcon = Heart;
+                            subColor = 'pink-500';
+                          } else if (/lifestyle|life|location/i.test(subTitle)) {
+                            subIcon = MapPin;
+                            subColor = 'blue-500';
+                          }
+                          
+                          const SubIcon = subIcon;
+                          
+                          return (
+                            <div key={subIdx} className={`glass backdrop-blur-sm border border-${subColor}/30 rounded-2xl p-5 bg-gradient-to-br from-${subColor}/10 to-${subColor}/5 hover:scale-[1.02] transition-all duration-300`}>
+                              <div className="flex items-center gap-2 mb-3">
+                                <div className={`p-1.5 rounded-lg bg-${subColor}/20 border border-${subColor}/30`}>
+                                  <SubIcon className={`w-4 h-4 text-${subColor}`} />
+                                </div>
+                                <h4 className="font-semibold text-white">{subTitle.trim()}</h4>
+                              </div>
+                              <p className="text-sm text-white/80 leading-relaxed">{content}</p>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                }
+                
+                // Default rendering for other sections
+                return (
+                  <div key={idx} className="relative group">
+                    <div className="absolute -inset-1 bg-gradient-to-r from-primary/15 via-accent/10 to-secondary/15 rounded-3xl blur-lg opacity-30"></div>
+                    <Card className="relative glass backdrop-blur-xl border border-border/40 hover:border-primary/30 transition-all duration-500 rounded-3xl shadow-lg bg-gradient-to-br from-background/70 to-background/50 overflow-hidden">
+                      <CardHeader className="pb-4 pt-6 px-6 border-b border-border/20">
+                        <CardTitle className="flex items-center gap-3 text-xl font-bold text-foreground">
+                          <div className={`p-2 rounded-xl bg-${accentColor}/10 border border-${accentColor}/20`}>
+                            <IconComponent className={`w-5 h-5 text-${accentColor}`} />
+                          </div>
+                          {title}
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="pt-6 pb-6 px-6">
+                        <div className="prose prose-sm max-w-none dark:prose-invert">
+                          <ReactMarkdown
+                            remarkPlugins={[remarkGfm]}
+                            components={{
+                              p: ({ children }) => (
+                                <p className="text-white/90 leading-relaxed text-[15px] mb-4">{children}</p>
+                              ),
+                              ul: ({ children }) => (
+                                <ul className="space-y-2 list-none ml-0">{children}</ul>
+                              ),
+                              li: ({ children }) => (
+                                <li className="flex gap-2 text-white/85 text-[15px] leading-relaxed">
+                                  <span className="text-primary mt-1">→</span>
+                                  <span>{children}</span>
+                                </li>
+                              ),
+                              strong: ({ children }) => (
+                                <strong className="font-semibold text-white">{children}</strong>
+                              ),
+                            }}
+                          >
+                            {body}
+                          </ReactMarkdown>
+                        </div>
+                      </CardContent>
+                    </Card>
                   </div>
-                  Strategic Transformation Plan
-                </CardTitle>
-                <p className="text-muted-foreground mt-3 text-base">Comprehensive roadmap tailored to your unique situation</p>
-              </CardHeader>
-              
-              <CardContent className="pt-8 pb-10 px-8 relative z-10">
-                <div className="prose prose-base max-w-none dark:prose-invert prose-headings:text-foreground prose-p:text-foreground prose-li:text-foreground prose-strong:text-foreground">
-                  <ReactMarkdown
-                    remarkPlugins={[remarkGfm]}
-                    className="text-foreground space-y-8"
-                    components={{
-                      h1: ({ children }) => (
-                        <div className="mb-8 pb-6 border-b-2 border-primary/20">
-                          <h1 className="text-3xl font-bold text-white drop-shadow-sm select-text leading-tight">{children}</h1>
-                        </div>
-                      ),
-                      h2: ({ children }) => (
-                        <div className="mt-12 mb-6">
-                          <h2 className="text-2xl font-bold text-white drop-shadow-sm select-text flex items-center gap-3 leading-tight">
-                            <div className="w-1.5 h-8 bg-gradient-to-b from-primary to-primary/50 rounded-full"></div>
-                            {children}
-                          </h2>
-                        </div>
-                      ),
-                      h3: ({ children }) => (
-                        <h3 className="text-xl font-semibold text-white drop-shadow-sm mb-4 mt-8 select-text leading-snug">{children}</h3>
-                      ),
-                      p: ({ children }) => (
-                        <p className="text-white/95 drop-shadow-sm mb-5 leading-relaxed text-[15px] select-text">{children}</p>
-                      ),
-                      ul: ({ children }) => (
-                        <ul className="list-none space-y-4 mb-6 text-white/95 drop-shadow-sm select-text ml-2">{children}</ul>
-                      ),
-                      ol: ({ children }) => (
-                        <ol className="list-decimal pl-8 space-y-4 mb-6 text-white/95 drop-shadow-sm select-text">{children}</ol>
-                      ),
-                      li: ({ children }) => (
-                        <li className="leading-relaxed text-white/95 drop-shadow-sm select-text relative pl-6 before:content-['→'] before:absolute before:left-0 before:text-primary before:font-bold">
-                          <span className="text-[15px]">{children}</span>
-                        </li>
-                      ),
-                      strong: ({ children }) => (
-                        <strong className="font-bold text-white drop-shadow-sm select-text">{children}</strong>
-                      ),
-                      em: ({ children }) => (
-                        <em className="italic text-primary/90 drop-shadow-sm select-text font-medium">{children}</em>
-                      ),
-                      blockquote: ({ children }) => (
-                        <blockquote className="border-l-4 border-primary pl-6 py-4 my-6 glass backdrop-blur-sm bg-primary/10 rounded-r-2xl select-text">
-                          <div className="text-white/90 text-base">{children}</div>
-                        </blockquote>
-                      ),
-                      code: ({ children }) => (
-                        <code className="glass backdrop-blur-sm bg-muted/80 px-3 py-1.5 rounded-lg text-sm font-mono text-foreground border border-border/30 select-text">{children}</code>
-                      ),
-                    }}
-                  >
-                    {formatAIText(jump?.full_content || 'No content available')}
-                  </ReactMarkdown>
-                </div>
-              </CardContent>
-            </Card>
+                );
+              });
+            })()}
           </div>
         </TabsContent>
 
