@@ -7,11 +7,13 @@ const corsHeaders = {
 };
 
 interface StudioFormData {
+  currentRole: string;
+  industry: string;
+  experienceLevel: string;
+  aiKnowledge: string;
   goals: string;
   challenges: string;
-  industry: string;
-  aiExperience: string;
-  urgency: string;
+  timeCommitment: string;
   budget: string;
 }
 
@@ -180,19 +182,39 @@ async function callXAI(
     throw new Error('No content in API response');
   }
 
-  // Clean and parse JSON
-  content = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+  // Clean and parse JSON more aggressively
+  content = content
+    .replace(/```json\n?/g, '')
+    .replace(/```\n?/g, '')
+    .replace(/^[^{[]*/, '') // Remove any text before first { or [
+    .replace(/[^}\]]*$/, '') // Remove any text after last } or ]
+    .trim();
   
   try {
-    return JSON.parse(content);
+    const parsed = JSON.parse(content);
+    console.log(`Step ${step} parsed successfully:`, JSON.stringify(parsed).substring(0, 200));
+    return parsed;
   } catch (parseError) {
-    console.error('JSON parse error:', parseError);
-    console.log('Raw content:', content);
+    console.error(`JSON parse error for step ${step}:`, parseError);
+    console.log('Failed content preview:', content.substring(0, 500));
+    
+    // Try to extract JSON object from text
+    const jsonMatch = content.match(/\{[\s\S]*\}|\[[\s\S]*\]/);
+    if (jsonMatch) {
+      try {
+        const extracted = JSON.parse(jsonMatch[0]);
+        console.log(`Step ${step} extracted and parsed successfully`);
+        return extracted;
+      } catch (e) {
+        console.error('Extraction also failed:', e);
+      }
+    }
+    
     return validateStepResponse(content, step, content);
   }
 }
 
-function getStepPrompts(step: number, context: any, overviewContent: string) {
+function getStepPrompts(step: number, context: StudioFormData, overviewContent: string) {
   // Map form fields correctly to prompt context
   const baseContext = `
 Current Role: ${context.currentRole || 'Not specified'}
@@ -291,59 +313,60 @@ Return ONLY valid JSON:
       };
 
     case 3:
-      // STEP 3: Detailed strategic action plan
+      // STEP 3: Detailed strategic action plan - SIMPLIFIED for better JSON parsing
       return {
-        systemPrompt: `You are an expert AI transformation strategist creating detailed, step-by-step action plans. Focus on practical, achievable actions that fit the user's constraints and maximize their chances of success.`,
+        systemPrompt: `You are an expert AI transformation strategist. Create detailed action plans as valid JSON. CRITICAL: Return ONLY valid JSON, no extra text.`,
         userPrompt: `${baseContext}
 
-Overview Context (use this to ensure consistency):
+Overview Context:
 ${overviewContent}
 
-Create a highly detailed, actionable strategic plan that this person can actually follow given their time commitment and budget. Be SPECIFIC and PRACTICAL.
+Create a 3-phase strategic plan. Keep each phase simple and actionable.
 
-For each of the 3 phases, provide:
+CRITICAL REQUIREMENTS:
+- Return ONLY valid JSON, no markdown, no extra text
+- Each phase must have: name, description, duration, objectives (2-3 items), actions (3 items), milestones (2 items)
+- Keep all strings under 200 characters
+- Use simple quotes, no special characters
 
-1. Phase Information:
-   - Clear name and description
-   - Realistic duration based on their time commitment
-   - 2-3 specific objectives
-   - 3-5 concrete actions with descriptions
-   - 2-3 milestones with success criteria
-
-2. Weekly Breakdown for FIRST PHASE ONLY:
-   - Break down the first 4-8 weeks (depending on their time commitment)
-   - Each week: specific focus area and 2-3 actionable tasks
-   - Tasks should be doable in their available time
-
-3. Success Metrics:
-   - 5-7 specific, measurable metrics they can track
-   - Must be relevant to their goals and achievable
-
-CRITICAL: Everything must align with:
-- Their available time (${context.timeCommitment})
-- Their budget constraints (${context.budget})
-- Their current AI knowledge level (${context.aiKnowledge})
-- Their specific goals and challenges
-
-Return ONLY valid JSON:
+Return this exact JSON structure:
 {
   "phases": [
     {
-      "name": "Phase name",
-      "description": "What this phase accomplishes",
-      "duration": "Realistic duration",
-      "objectives": ["Specific objective 1", "Specific objective 2"],
-      "actions": ["Concrete action 1", "Concrete action 2", "Concrete action 3"],
-      "milestones": ["Measurable milestone 1", "Measurable milestone 2"]
+      "name": "Phase 1: Foundation",
+      "description": "Build AI foundation",
+      "duration": "4 weeks",
+      "objectives": ["Learn AI basics", "Choose first tool"],
+      "actions": ["Action 1", "Action 2", "Action 3"],
+      "milestones": ["Milestone 1", "Milestone 2"]
+    },
+    {
+      "name": "Phase 2: Implementation",
+      "description": "Apply AI to work",
+      "duration": "6 weeks",
+      "objectives": ["Integrate AI", "Track results"],
+      "actions": ["Action 1", "Action 2", "Action 3"],
+      "milestones": ["Milestone 1", "Milestone 2"]
+    },
+    {
+      "name": "Phase 3: Optimization",
+      "description": "Optimize and scale",
+      "duration": "4 weeks",
+      "objectives": ["Refine process", "Share knowledge"],
+      "actions": ["Action 1", "Action 2", "Action 3"],
+      "milestones": ["Milestone 1", "Milestone 2"]
     }
   ],
-  "weeklyBreakdown": {
-    "week1": {"focus": "Specific focus", "tasks": ["Task 1", "Task 2"]},
-    "week2": {"focus": "Specific focus", "tasks": ["Task 1", "Task 2"]}
-  },
-  "successMetrics": ["Metric 1", "Metric 2", "Metric 3", "Metric 4", "Metric 5"]
-}`,
-        expectedTokens: 10000
+  "successMetrics": ["Metric 1", "Metric 2", "Metric 3"]
+}
+
+Make it specific to their:
+- Current Role: ${context.currentRole}
+- Goals: ${context.goals}
+- Time: ${context.timeCommitment}
+- Budget: ${context.budget}
+- AI Level: ${context.aiKnowledge}`,
+        expectedTokens: 3000
       };
 
     case 4:
