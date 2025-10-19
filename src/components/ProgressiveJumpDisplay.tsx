@@ -1,5 +1,5 @@
 import React from 'react';
-import { Loader2, CheckCircle, Clock, Zap, Timer, Copy, Check, Wrench, AlertTriangle, Lightbulb, Target, Compass, TrendingUp, Shield, DollarSign, Heart, MapPin } from 'lucide-react';
+import { Loader2, CheckCircle, Clock, Zap, Timer, Copy, Check, Wrench, AlertTriangle, Lightbulb, Target, Compass, TrendingUp, Shield, DollarSign, Heart, MapPin, Calendar, Play } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
@@ -398,87 +398,144 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
           )}
         </TabsContent>
 
-        <TabsContent value="plan" className="mt-4">
-          <div className="relative group">
-            <div className="absolute -inset-1 bg-gradient-to-r from-primary/15 via-accent/10 to-secondary/15 dark:from-primary/10 dark:via-accent/8 dark:to-secondary/10 rounded-3xl blur-xl opacity-40"></div>
-            <Card className="relative glass backdrop-blur-xl border border-border/40 hover:border-primary/30 transition-all duration-500 rounded-3xl shadow-xl hover:shadow-2xl hover:shadow-primary/10 bg-gradient-to-br from-background/80 to-background/60 dark:bg-gradient-to-br dark:from-gray-950/80 dark:to-gray-900/60">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/2 via-transparent to-secondary/2 dark:from-primary/1.5 dark:via-transparent dark:to-secondary/1.5 rounded-3xl"></div>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-base text-white drop-shadow-sm">Implementation Plan</CardTitle>
-              </CardHeader>
-              <CardContent className="pt-0">
-              {result.structured_plan ? (
-                <div className="space-y-4">
-                  {result.structured_plan.phases && result.structured_plan.phases.length > 0 ? (
-                    <div className="grid gap-4">
+        <TabsContent value="plan" className="mt-6">
+          {result.structured_plan ? (
+            <div className="space-y-6">
+              {/* Implementation Phases */}
+              {result.structured_plan.phases && result.structured_plan.phases.length > 0 ? (
+                <div className="space-y-6">
+                  <Card className="glass backdrop-blur-xl border border-border/40 rounded-2xl">
+                    <CardHeader>
+                      <CardTitle className="text-lg flex items-center gap-2">
+                        <MapPin className="w-5 h-5 text-primary" />
+                        Implementation Phases
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
                       {result.structured_plan.phases.map((phase: any, index: number) => (
-                        <div key={index} className="glass backdrop-blur-sm border border-border/30 rounded-2xl p-4 bg-background/50">
-                          <h3 className="font-semibold mb-2 text-white drop-shadow-sm">
-                            Phase {index + 1}: {phase.name}
-                          </h3>
-                          <p className="text-sm text-white/70 drop-shadow-sm mb-3">
-                            Duration: {phase.duration}
-                          </p>
+                        <div 
+                          key={index} 
+                          className="p-5 rounded-xl border border-border/30 bg-background/50 hover:border-primary/30 transition-all duration-300 space-y-4"
+                        >
+                          {/* Phase Header */}
+                          <div className="flex items-start justify-between gap-4">
+                            <div className="flex items-start gap-3 flex-1">
+                              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                                <span className="text-sm font-bold text-primary">{index + 1}</span>
+                              </div>
+                              <div className="flex-1">
+                                <h3 className="font-semibold text-foreground mb-1">
+                                  {phase.name}
+                                </h3>
+                                {phase.duration && (
+                                  <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                                    <Calendar className="w-3.5 h-3.5" />
+                                    <span>{phase.duration}</span>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                            <Badge variant="outline" className="text-xs">
+                              Phase {index + 1}
+                            </Badge>
+                          </div>
                           
+                          {/* Objectives */}
                           {phase.objectives && phase.objectives.length > 0 && (
-                            <div className="mb-3">
-                              <h4 className="text-sm font-medium text-white/80 mb-1">Objectives:</h4>
-                              <ul className="list-disc pl-5 space-y-1">
+                            <div className="space-y-2">
+                              <h4 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                                <Target className="w-4 h-4 text-primary" />
+                                Objectives
+                              </h4>
+                              <ul className="space-y-2 pl-6">
                                 {phase.objectives.map((obj: string, idx: number) => (
-                                  <li key={idx} className="text-sm text-white/90 drop-shadow-sm">{obj}</li>
+                                  <li key={idx} className="text-sm text-foreground/80 flex items-start gap-2">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2 flex-shrink-0" />
+                                    <span>{obj}</span>
+                                  </li>
                                 ))}
                               </ul>
                             </div>
                           )}
                           
+                          {/* Actions */}
                           {phase.actions && phase.actions.length > 0 && (
-                            <div className="mb-3">
-                              <h4 className="text-sm font-medium text-white/80 mb-1">Actions:</h4>
-                              <ul className="list-disc pl-5 space-y-1">
+                            <div className="space-y-2">
+                              <h4 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                                <Play className="w-4 h-4 text-primary" />
+                                Actions
+                              </h4>
+                              <ul className="space-y-2 pl-6">
                                 {phase.actions.map((action: string, idx: number) => (
-                                  <li key={idx} className="text-sm text-white/90 drop-shadow-sm">{action}</li>
+                                  <li key={idx} className="text-sm text-foreground/80 flex items-start gap-2">
+                                    <Zap className="w-3.5 h-3.5 text-primary mt-0.5 flex-shrink-0" />
+                                    <span>{action}</span>
+                                  </li>
                                 ))}
                               </ul>
                             </div>
                           )}
                           
+                          {/* Milestones */}
                           {phase.milestones && phase.milestones.length > 0 && (
-                            <div>
-                              <h4 className="text-sm font-medium text-white/80 mb-1">Milestones:</h4>
-                              <ul className="list-disc pl-5 space-y-1">
+                            <div className="space-y-2">
+                              <h4 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                                <CheckCircle className="w-4 h-4 text-primary" />
+                                Milestones
+                              </h4>
+                              <ul className="space-y-2 pl-6">
                                 {phase.milestones.map((milestone: string, idx: number) => (
-                                  <li key={idx} className="text-sm text-white/90 drop-shadow-sm">{milestone}</li>
+                                  <li key={idx} className="text-sm text-foreground/80 flex items-start gap-2">
+                                    <div className="w-4 h-4 rounded border-2 border-primary/40 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                      <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                                    </div>
+                                    <span>{milestone}</span>
+                                  </li>
                                 ))}
                               </ul>
                             </div>
                           )}
                         </div>
                       ))}
-                    </div>
-                  ) : (
-                    <p className="text-white/80 drop-shadow-sm">No implementation phases available</p>
-                  )}
+                    </CardContent>
+                  </Card>
                   
+                  {/* Success Metrics */}
                   {result.structured_plan.successMetrics && result.structured_plan.successMetrics.length > 0 && (
-                    <div className="glass backdrop-blur-sm border border-border/30 rounded-2xl p-4 bg-background/50 mt-4">
-                      <h3 className="font-semibold mb-2 text-white drop-shadow-sm">Success Metrics</h3>
-                      <ul className="list-disc pl-5 space-y-1">
-                        {result.structured_plan.successMetrics.map((metric: string, idx: number) => (
-                          <li key={idx} className="text-sm text-white/90 drop-shadow-sm">{metric}</li>
-                        ))}
-                      </ul>
-                    </div>
+                    <Card className="glass backdrop-blur-xl border border-border/40 rounded-2xl">
+                      <CardHeader>
+                        <CardTitle className="text-lg flex items-center gap-2">
+                          <TrendingUp className="w-5 h-5 text-primary" />
+                          Success Metrics
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <ul className="space-y-3">
+                          {result.structured_plan.successMetrics.map((metric: string, idx: number) => (
+                            <li key={idx} className="text-sm text-foreground/80 flex items-start gap-3 p-3 rounded-lg bg-primary/5 border border-primary/10">
+                              <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <span className="text-xs font-semibold text-primary">{idx + 1}</span>
+                              </div>
+                              <span>{metric}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </CardContent>
+                    </Card>
                   )}
                 </div>
               ) : (
-                <div className="flex items-center justify-center h-32 text-white/80 drop-shadow-sm">
-                  <Loader2 className="w-6 h-6 animate-spin mr-2" />
-                  Creating implementation plan...
+                <div className="flex items-center justify-center h-32 text-muted-foreground">
+                  <p>No implementation phases available</p>
                 </div>
               )}
-              </CardContent>
-            </Card>
-          </div>
+            </div>
+          ) : (
+            <div className="flex items-center justify-center h-32">
+              <Loader2 className="w-6 h-6 animate-spin mr-2" />
+              Creating implementation plan...
+            </div>
+          )}
         </TabsContent>
 
         <TabsContent value="toolPrompts" className="mt-4">
