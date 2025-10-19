@@ -151,23 +151,11 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                 {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.toolPrompts?.length || 0) > 0)}
                 Tools & Prompts ({result.components?.toolPrompts?.length || 0}/6)
               </TabsTrigger>
-              <TabsTrigger value="workflows" className="flex items-center gap-1.5 text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
-                {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.workflows?.length || 0) > 0)}
-                Workflows ({result.components?.workflows?.length || 0}/4)
-              </TabsTrigger>
-              <TabsTrigger value="blueprints" className="flex items-center gap-1.5 text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
-                {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.blueprints?.length || 0) > 0)}
-                Blueprints ({result.components?.blueprints?.length || 0}/4)
-              </TabsTrigger>
-              <TabsTrigger value="strategies" className="flex items-center gap-1.5 text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
-                {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.strategies?.length || 0) > 0)}
-                Strategies ({result.components?.strategies?.length || 0}/4)
-              </TabsTrigger>
             </TabsList>
           </div>
           
           {/* Desktop: Grid layout */}
-          <TabsList className="hidden sm:grid w-full grid-cols-7 p-1 bg-background/60 backdrop-blur-sm rounded-2xl border border-border/40 shadow-inner">
+          <TabsList className="hidden sm:grid w-full grid-cols-3 p-1 bg-background/60 backdrop-blur-sm rounded-2xl border border-border/40 shadow-inner">
             <TabsTrigger value="overview" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
               {getStatusIcon(result.processing_status?.isComplete || false, !!result.full_content)}
               Overview
@@ -179,18 +167,6 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
             <TabsTrigger value="toolPrompts" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
               {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.toolPrompts?.length || 0) > 0)}
               Tools & Prompts ({result.components?.toolPrompts?.length || 0}/6)
-            </TabsTrigger>
-            <TabsTrigger value="workflows" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
-              {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.workflows?.length || 0) > 0)}
-              Workflows ({result.components?.workflows?.length || 0}/4)
-            </TabsTrigger>
-            <TabsTrigger value="blueprints" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
-              {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.blueprints?.length || 0) > 0)}
-              Blueprints ({result.components?.blueprints?.length || 0}/4)
-            </TabsTrigger>
-            <TabsTrigger value="strategies" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
-              {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.strategies?.length || 0) > 0)}
-              Strategies ({result.components?.strategies?.length || 0}/4)
             </TabsTrigger>
           </TabsList>
         </div>
@@ -346,128 +322,6 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                 Generating tools & prompts...
               </div>
             )}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="workflows" className="mt-4">
-          <div className="grid gap-3">
-            {[...Array(4)].map((_, index) => {
-              const workflow = result.components?.workflows?.[index];
-              return (
-                <div key={index} className="relative group">
-                  <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/12 via-accent/8 to-secondary/12 dark:from-primary/8 dark:via-accent/6 dark:to-secondary/8 rounded-lg blur-sm opacity-20"></div>
-                  <Card className="relative glass-dark border-white/12 dark:border-white/8 backdrop-blur-lg bg-gradient-to-br from-white/4 via-white/2 to-white/1 dark:from-black/10 dark:via-black/5 dark:to-black/2">
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary/1.5 via-transparent to-secondary/1.5 dark:from-primary/1 dark:via-transparent dark:to-secondary/1 rounded-lg"></div>
-                    <CardHeader className="pb-2">
-                      <CardTitle className="flex items-center gap-2 text-sm">
-                        {getStatusIcon(result.processing_status?.isComplete || false, !!workflow)}
-                        {workflow ? workflow.title : `AI Workflow ${index + 1}`}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="pt-0">
-                    {workflow ? (
-                      <div className="space-y-2">
-                        <p className="text-sm text-muted-foreground">{workflow.description}</p>
-                        <div className="space-y-1">
-                          {workflow.workflow_steps?.slice(0, 3).map((step: any, stepIndex: number) => (
-                            <div key={stepIndex} className="text-xs p-2 glass backdrop-blur-sm bg-background/30 dark:bg-background/20 rounded border border-border/20">
-                              <span className="font-medium text-foreground">Step {step.step}: </span>
-                              <span className="text-muted-foreground">{step.title}</span>
-                            </div>
-                          ))}
-                        </div>
-                        <div className="flex gap-2 text-xs">
-                          <Badge variant="secondary">{workflow.complexity_level}</Badge>
-                          <Badge variant="outline">{workflow.duration_estimate}</Badge>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="flex items-center justify-center h-20 text-muted-foreground">
-                        <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                        Generating...
-                      </div>
-                    )}
-                    </CardContent>
-                  </Card>
-                </div>
-              );
-            })}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="blueprints" className="mt-4">
-          <div className="grid gap-3">
-            {[...Array(4)].map((_, index) => {
-              const blueprint = result.components?.blueprints?.[index];
-              return (
-                <div key={index} className="relative group">
-                  <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/12 via-accent/8 to-secondary/12 dark:from-primary/8 dark:via-accent/6 dark:to-secondary/8 rounded-lg blur-sm opacity-20"></div>
-                  <Card className="relative glass-dark border-white/12 dark:border-white/8 backdrop-blur-lg bg-gradient-to-br from-white/4 via-white/2 to-white/1 dark:from-black/10 dark:via-black/5 dark:to-black/2">
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary/1.5 via-transparent to-secondary/1.5 dark:from-primary/1 dark:via-transparent dark:to-secondary/1 rounded-lg"></div>
-                    <CardHeader className="pb-2">
-                      <CardTitle className="flex items-center gap-2 text-sm">
-                        {getStatusIcon(result.processing_status?.isComplete || false, !!blueprint)}
-                        {blueprint ? blueprint.title : `AI Blueprint ${index + 1}`}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="pt-0">
-                    {blueprint ? (
-                      <div className="space-y-2">
-                        <p className="text-sm text-white/90 drop-shadow-sm">{blueprint.description}</p>
-                        <div className="flex gap-2 text-xs">
-                          <Badge variant="secondary">{blueprint.difficulty_level}</Badge>
-                          <Badge variant="outline">{blueprint.implementation_time}</Badge>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="flex items-center justify-center h-20 text-muted-foreground">
-                        <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                        Generating...
-                      </div>
-                    )}
-                    </CardContent>
-                  </Card>
-                </div>
-              );
-            })}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="strategies" className="mt-4">
-          <div className="grid gap-3">
-            {[...Array(4)].map((_, index) => {
-              const strategy = result.components?.strategies?.[index];
-              return (
-                <div key={index} className="relative group">
-                  <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/12 via-accent/8 to-secondary/12 dark:from-primary/8 dark:via-accent/6 dark:to-secondary/8 rounded-lg blur-sm opacity-20"></div>
-                  <Card className="relative glass-dark border-white/12 dark:border-white/8 backdrop-blur-lg bg-gradient-to-br from-white/4 via-white/2 to-white/1 dark:from-black/10 dark:via-black/5 dark:to-black/2">
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary/1.5 via-transparent to-secondary/1.5 dark:from-primary/1 dark:via-transparent dark:to-secondary/1 rounded-lg"></div>
-                    <CardHeader className="pb-2">
-                      <CardTitle className="flex items-center gap-2 text-sm">
-                        {getStatusIcon(result.processing_status?.isComplete || false, !!strategy)}
-                        {strategy ? strategy.title : `AI Strategy ${index + 1}`}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="pt-0">
-                    {strategy ? (
-                      <div className="space-y-2">
-                        <p className="text-sm text-white/90 drop-shadow-sm">{strategy.description}</p>
-                        <div className="flex gap-2 text-xs">
-                          <Badge variant="secondary">{strategy.priority_level}</Badge>
-                          <Badge variant="outline">{strategy.timeline}</Badge>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="flex items-center justify-center h-20 text-muted-foreground">
-                        <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                        Generating...
-                      </div>
-                    )}
-                    </CardContent>
-                  </Card>
-                </div>
-              );
-            })}
           </div>
         </TabsContent>
       </Tabs>

@@ -13,9 +13,6 @@ interface UnifiedJumpDisplayProps {
   jump: UserJump;
   components?: {
     toolPrompts?: any[];
-    workflows?: any[];
-    blueprints?: any[];
-    strategies?: any[];
   };
 }
 
@@ -33,20 +30,14 @@ const UnifiedJumpDisplay: React.FC<UnifiedJumpDisplayProps> = ({ jump, component
 
   // Ensure components have default values
   const safeComponents = {
-    toolPrompts: components?.toolPrompts || [],
-    workflows: components?.workflows || [],
-    blueprints: components?.blueprints || [],
-    strategies: components?.strategies || []
+    toolPrompts: components?.toolPrompts || []
   };
 
   console.log('UnifiedJumpDisplay rendering with:', {
     jumpId: jump.id,
     jumpTitle: jump.title,
     componentCounts: {
-      toolPrompts: safeComponents.toolPrompts.length,
-      workflows: safeComponents.workflows.length,
-      blueprints: safeComponents.blueprints.length,
-      strategies: safeComponents.strategies.length
+      toolPrompts: safeComponents.toolPrompts.length
     }
   });
 
@@ -114,7 +105,7 @@ const UnifiedJumpDisplay: React.FC<UnifiedJumpDisplayProps> = ({ jump, component
 
       {/* Content Tabs */}
       <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="grid w-full grid-cols-7 p-1 bg-background/60 backdrop-blur-sm rounded-2xl border border-border/40 shadow-inner">
+        <TabsList className="grid w-full grid-cols-3 p-1 bg-background/60 backdrop-blur-sm rounded-2xl border border-border/40 shadow-inner">
           <TabsTrigger value="overview" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
             <CheckCircle className="w-4 h-4 text-green-500" />
             Overview
@@ -126,18 +117,6 @@ const UnifiedJumpDisplay: React.FC<UnifiedJumpDisplayProps> = ({ jump, component
           <TabsTrigger value="toolPrompts" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
             <CheckCircle className="w-4 h-4 text-green-500" />
             Tools & Prompts ({safeComponents?.toolPrompts?.length || 0})
-          </TabsTrigger>
-          <TabsTrigger value="workflows" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
-            <CheckCircle className="w-4 h-4 text-green-500" />
-            Workflows ({safeComponents?.workflows?.length || 0})
-          </TabsTrigger>
-          <TabsTrigger value="blueprints" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
-            <CheckCircle className="w-4 h-4 text-green-500" />
-            Blueprints ({safeComponents?.blueprints?.length || 0})
-          </TabsTrigger>
-          <TabsTrigger value="strategies" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
-            <CheckCircle className="w-4 h-4 text-green-500" />
-            Strategies ({safeComponents?.strategies?.length || 0})
           </TabsTrigger>
         </TabsList>
 
@@ -331,121 +310,6 @@ const UnifiedJumpDisplay: React.FC<UnifiedJumpDisplayProps> = ({ jump, component
             ) : (
               <div className="text-center py-8 text-muted-foreground">
                 <p>No tools & prompts available for this jump.</p>
-              </div>
-            )}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="workflows" className="mt-4">
-          <div className="grid gap-3">
-            {safeComponents?.workflows && safeComponents.workflows.length > 0 ? (
-              safeComponents.workflows.map((workflow: any, index: number) => (
-                <div key={index} className="relative group">
-                  <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/12 via-accent/8 to-secondary/12 dark:from-primary/8 dark:via-accent/6 dark:to-secondary/8 rounded-lg blur-sm opacity-20 pointer-events-none"></div>
-                  <Card className="relative glass-dark border-white/12 dark:border-white/8 backdrop-blur-lg bg-gradient-to-br from-white/4 via-white/2 to-white/1 dark:from-black/10 dark:via-black/5 dark:to-black/2">
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary/1.5 via-transparent to-secondary/1.5 dark:from-primary/1 dark:via-transparent dark:to-secondary/1 rounded-lg pointer-events-none"></div>
-                     <CardHeader className="pb-2 relative z-10">
-                      <CardTitle className="flex items-center gap-2 text-sm">
-                        <CheckCircle className="w-4 h-4 text-green-500" />
-                        {workflow.title}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="pt-0 relative z-10">
-                      <div className="space-y-2">
-                        <p className="text-sm text-muted-foreground select-text">{workflow.description}</p>
-                        <div className="space-y-1">
-                          {workflow.workflow_steps?.slice(0, 3).map((step: any, stepIndex: number) => (
-                            <div key={stepIndex} className="text-xs p-2 glass backdrop-blur-sm bg-background/30 dark:bg-background/20 rounded border border-border/20">
-                              <span className="font-medium text-foreground select-text">Step {step.step}: </span>
-                              <span className="text-muted-foreground select-text">{step.title}</span>
-                            </div>
-                          ))}
-                          {workflow.workflow_steps?.length > 3 && (
-                            <div className="text-xs p-2 glass backdrop-blur-sm bg-background/30 dark:bg-background/20 rounded border border-border/20 text-center">
-                              <span className="text-muted-foreground select-text">+{workflow.workflow_steps.length - 3} more steps</span>
-                            </div>
-                          )}
-                        </div>
-                        <div className="flex gap-2 text-xs">
-                          <Badge variant="secondary">{workflow.complexity_level}</Badge>
-                          <Badge variant="outline">{workflow.duration_estimate}</Badge>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              ))
-            ) : (
-              <div className="text-center py-8 text-muted-foreground">
-                <p>No workflows available for this jump.</p>
-              </div>
-            )}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="blueprints" className="mt-4">
-          <div className="grid gap-3">
-            {safeComponents?.blueprints && safeComponents.blueprints.length > 0 ? (
-              safeComponents.blueprints.map((blueprint: any, index: number) => (
-                <div key={index} className="relative group">
-                  <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/12 via-accent/8 to-secondary/12 dark:from-primary/8 dark:via-accent/6 dark:to-secondary/8 rounded-lg blur-sm opacity-20 pointer-events-none"></div>
-                  <Card className="relative glass-dark border-white/12 dark:border-white/8 backdrop-blur-lg bg-gradient-to-br from-white/4 via-white/2 to-white/1 dark:from-black/10 dark:via-black/5 dark:to-black/2">
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary/1.5 via-transparent to-secondary/1.5 dark:from-primary/1 dark:via-transparent dark:to-secondary/1 rounded-lg pointer-events-none"></div>
-                    <CardHeader className="pb-2 relative z-10">
-                      <CardTitle className="flex items-center gap-2 text-sm">
-                        <CheckCircle className="w-4 h-4 text-green-500" />
-                        {blueprint.title}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="pt-0 relative z-10">
-                      <div className="space-y-2">
-                        <p className="text-sm text-white/90 drop-shadow-sm select-text">{blueprint.description}</p>
-                        <div className="flex gap-2 text-xs">
-                          <Badge variant="secondary">{blueprint.difficulty_level}</Badge>
-                          <Badge variant="outline">{blueprint.implementation_time}</Badge>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              ))
-            ) : (
-              <div className="text-center py-8 text-muted-foreground">
-                <p>No blueprints available for this jump.</p>
-              </div>
-            )}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="strategies" className="mt-4">
-          <div className="grid gap-3">
-            {safeComponents?.strategies && safeComponents.strategies.length > 0 ? (
-              safeComponents.strategies.map((strategy: any, index: number) => (
-                <div key={index} className="relative group">
-                  <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/12 via-accent/8 to-secondary/12 dark:from-primary/8 dark:via-accent/6 dark:to-secondary/8 rounded-lg blur-sm opacity-20 pointer-events-none"></div>
-                  <Card className="relative glass-dark border-white/12 dark:border-white/8 backdrop-blur-lg bg-gradient-to-br from-white/4 via-white/2 to-white/1 dark:from-black/10 dark:via-black/5 dark:to-black/2">
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary/1.5 via-transparent to-secondary/1.5 dark:from-primary/1 dark:via-transparent dark:to-secondary/1 rounded-lg pointer-events-none"></div>
-                    <CardHeader className="pb-2 relative z-10">
-                      <CardTitle className="flex items-center gap-2 text-sm">
-                        <CheckCircle className="w-4 h-4 text-green-500" />
-                        {strategy.title}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="pt-0 relative z-10">
-                      <div className="space-y-2">
-                        <p className="text-sm text-white/90 drop-shadow-sm select-text">{strategy.description}</p>
-                        <div className="flex gap-2 text-xs">
-                          <Badge variant="secondary">{strategy.priority_level}</Badge>
-                          <Badge variant="outline">{strategy.timeline}</Badge>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              ))
-            ) : (
-              <div className="text-center py-8 text-muted-foreground">
-                <p>No strategies available for this jump.</p>
               </div>
             )}
           </div>

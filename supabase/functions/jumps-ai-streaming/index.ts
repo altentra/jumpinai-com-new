@@ -69,16 +69,14 @@ serve(async (req) => {
             ? overviewResponse 
             : JSON.stringify(overviewResponse);
 
-          // Steps 3-8: Generate all components
-          const steps = [
-            { step: 3, type: 'plan', name: 'Plan' },
-            { step: 4, type: 'tool_prompts', name: 'Tools & Prompts' },
-            { step: 5, type: 'workflows', name: 'Workflows' },
-            { step: 6, type: 'blueprints', name: 'Blueprints' },
-            { step: 7, type: 'strategies', name: 'Strategies' }
+          const stepComponents = [
+            { step: 1, type: 'overview', name: 'Overview & Plan' },
+            { step: 2, type: 'comprehensive', name: 'Comprehensive Plan' },
+            { step: 3, type: 'summary', name: 'Executive Summary' },
+            { step: 4, type: 'tool_prompts', name: 'Tools & Prompts' }
           ];
 
-          for (const { step, type, name } of steps) {
+          for (const { step, type, name } of stepComponents) {
             try {
               console.log(`Step ${step}: Generating ${name}...`);
               const response = await callXAI(XAI_API_KEY, step, formData, overviewContent);
@@ -343,7 +341,10 @@ CRITICAL REQUIREMENTS:
         expectedTokens: 12000
       };
 
-    case 5:
+    default:
+      throw new Error(`Invalid step: ${step}`);
+  }
+}
       // STEP 5: Workflows (Generate exactly 4)
       return {
         systemPrompt: `You are a workflow optimization expert. Design AI-powered workflows.`,
@@ -555,11 +556,7 @@ function validateStepResponse(content: any, step: number, rawContent: string): a
       riskMitigation: []
     },
     3: { structuredPlan: {} },
-    4: { tools: [] },
-    5: { prompts: [] },
-    6: { workflows: [] },
-    7: { blueprints: [] },
-    8: { strategies: [] }
+    4: { tools: [] }
   };
 
   return fallbacks[step] || {};

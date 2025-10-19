@@ -22,7 +22,7 @@ const Features = () => {
     {
       icon: BookOpen,
       title: "Complete Toolkit",
-      description: "Prompts, workflows, blueprints, and strategies in one package"
+      description: "AI-powered prompts and tools tailored to your goals"
     },
     {
       icon: Settings,
@@ -97,7 +97,7 @@ const Features = () => {
                 helps you <strong className="text-primary bg-primary/10 px-1 rounded">implement AI in your life and business</strong>.
               </p>
               <p className="text-base text-foreground leading-relaxed">
-                Each Jump includes personalized prompts, custom workflows, proven blueprints, 
+                Each Jump includes personalized prompts, actionable tools, and strategic plans 
                 and strategic guidance - everything you need to <strong className="text-primary bg-primary/10 px-1 rounded">literally Jump into AI fast</strong> and 
                 start using it to your advantage ASAP in the most professional, efficient, and transformative way possible.
               </p>
