@@ -123,36 +123,68 @@ const UnifiedJumpDisplay: React.FC<UnifiedJumpDisplayProps> = ({ jump, component
         <TabsContent value="overview" className="mt-6">
           <div className="relative group">
             <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 dark:from-primary/15 dark:via-accent/12 dark:to-secondary/15 rounded-3xl blur-xl opacity-40"></div>
-            <Card className="relative glass backdrop-blur-xl border border-border/40 hover:border-primary/30 transition-all duration-500 rounded-3xl shadow-xl hover:shadow-2xl hover:shadow-primary/10 bg-gradient-to-br from-background/80 to-background/60 dark:bg-gradient-to-br dark:from-gray-950/80 dark:to-gray-900/60">
+            <Card className="relative glass backdrop-blur-xl border border-border/40 hover:border-primary/30 transition-all duration-500 rounded-3xl shadow-xl hover:shadow-2xl hover:shadow-primary/10 bg-gradient-to-br from-background/80 to-background/60 dark:bg-gradient-to-br dark:from-gray-950/80 dark:to-gray-900/60 overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-primary/3 via-transparent to-secondary/3 dark:from-primary/2 dark:via-transparent dark:to-secondary/2 rounded-3xl pointer-events-none"></div>
-              <CardHeader className="pb-4">
-                <CardTitle className="flex items-center gap-2 text-lg text-foreground">
-                  <Zap className="w-5 h-5 text-primary" />
-                  Strategic Action Plan
+              
+              <CardHeader className="pb-6 pt-8 px-8 border-b border-border/20">
+                <CardTitle className="flex items-center gap-3 text-2xl font-bold text-foreground">
+                  <div className="p-2.5 rounded-xl bg-primary/10 border border-primary/20">
+                    <Sparkles className="w-6 h-6 text-primary" />
+                  </div>
+                  Strategic Transformation Plan
                 </CardTitle>
+                <p className="text-muted-foreground mt-3 text-base">Comprehensive roadmap tailored to your unique situation</p>
               </CardHeader>
-              <CardContent className="pt-0 relative z-10">
-                <div className="prose prose-sm max-w-none dark:prose-invert prose-headings:text-foreground prose-p:text-foreground prose-li:text-foreground prose-strong:text-foreground">
+              
+              <CardContent className="pt-8 pb-10 px-8 relative z-10">
+                <div className="prose prose-base max-w-none dark:prose-invert prose-headings:text-foreground prose-p:text-foreground prose-li:text-foreground prose-strong:text-foreground">
                   <ReactMarkdown
                     remarkPlugins={[remarkGfm]}
-                    className="text-foreground"
-                     components={{
-                       h1: ({ children }) => <h1 className="text-2xl font-bold text-white drop-shadow-sm mb-4 select-text">{children}</h1>,
-                       h2: ({ children }) => <h2 className="text-xl font-semibold text-white drop-shadow-sm mb-3 mt-6 select-text">{children}</h2>,
-                       h3: ({ children }) => <h3 className="text-lg font-medium text-white drop-shadow-sm mb-2 mt-4 select-text">{children}</h3>,
-                       p: ({ children }) => <p className="text-white/90 drop-shadow-sm mb-3 leading-relaxed select-text">{children}</p>,
-                       ul: ({ children }) => <ul className="list-disc pl-6 mb-4 text-white/90 drop-shadow-sm space-y-2 select-text">{children}</ul>,
-                       ol: ({ children }) => <ol className="list-decimal pl-6 mb-4 text-white/90 drop-shadow-sm space-y-2 select-text">{children}</ol>,
-                       li: ({ children }) => <li className="leading-relaxed text-white/90 drop-shadow-sm select-text">{children}</li>,
-                       strong: ({ children }) => <strong className="font-semibold text-white drop-shadow-sm select-text">{children}</strong>,
-                       em: ({ children }) => <em className="italic text-primary drop-shadow-sm select-text">{children}</em>,
+                    className="text-foreground space-y-8"
+                    components={{
+                      h1: ({ children }) => (
+                        <div className="mb-8 pb-6 border-b-2 border-primary/20">
+                          <h1 className="text-3xl font-bold text-white drop-shadow-sm select-text leading-tight">{children}</h1>
+                        </div>
+                      ),
+                      h2: ({ children }) => (
+                        <div className="mt-12 mb-6">
+                          <h2 className="text-2xl font-bold text-white drop-shadow-sm select-text flex items-center gap-3 leading-tight">
+                            <div className="w-1.5 h-8 bg-gradient-to-b from-primary to-primary/50 rounded-full"></div>
+                            {children}
+                          </h2>
+                        </div>
+                      ),
+                      h3: ({ children }) => (
+                        <h3 className="text-xl font-semibold text-white drop-shadow-sm mb-4 mt-8 select-text leading-snug">{children}</h3>
+                      ),
+                      p: ({ children }) => (
+                        <p className="text-white/95 drop-shadow-sm mb-5 leading-relaxed text-[15px] select-text">{children}</p>
+                      ),
+                      ul: ({ children }) => (
+                        <ul className="list-none space-y-4 mb-6 text-white/95 drop-shadow-sm select-text ml-2">{children}</ul>
+                      ),
+                      ol: ({ children }) => (
+                        <ol className="list-decimal pl-8 space-y-4 mb-6 text-white/95 drop-shadow-sm select-text">{children}</ol>
+                      ),
+                      li: ({ children }) => (
+                        <li className="leading-relaxed text-white/95 drop-shadow-sm select-text relative pl-6 before:content-['→'] before:absolute before:left-0 before:text-primary before:font-bold">
+                          <span className="text-[15px]">{children}</span>
+                        </li>
+                      ),
+                      strong: ({ children }) => (
+                        <strong className="font-bold text-white drop-shadow-sm select-text">{children}</strong>
+                      ),
+                      em: ({ children }) => (
+                        <em className="italic text-primary/90 drop-shadow-sm select-text font-medium">{children}</em>
+                      ),
                       blockquote: ({ children }) => (
-                        <blockquote className="border-l-4 border-primary pl-4 py-2 my-4 glass backdrop-blur-sm bg-primary/10 rounded-r-xl select-text">
-                          {children}
+                        <blockquote className="border-l-4 border-primary pl-6 py-4 my-6 glass backdrop-blur-sm bg-primary/10 rounded-r-2xl select-text">
+                          <div className="text-white/90 text-base">{children}</div>
                         </blockquote>
                       ),
                       code: ({ children }) => (
-                        <code className="glass backdrop-blur-sm bg-muted px-2 py-1 rounded text-sm font-mono text-foreground border border-border/30 select-text">{children}</code>
+                        <code className="glass backdrop-blur-sm bg-muted/80 px-3 py-1.5 rounded-lg text-sm font-mono text-foreground border border-border/30 select-text">{children}</code>
                       ),
                     }}
                   >
@@ -164,75 +196,201 @@ const UnifiedJumpDisplay: React.FC<UnifiedJumpDisplayProps> = ({ jump, component
           </div>
         </TabsContent>
 
-        <TabsContent value="plan" className="mt-4">
+        <TabsContent value="plan" className="mt-6">
           <div className="relative group">
             <div className="absolute -inset-1 bg-gradient-to-r from-primary/15 via-accent/10 to-secondary/15 dark:from-primary/10 dark:via-accent/8 dark:to-secondary/10 rounded-3xl blur-xl opacity-40"></div>
-            <Card className="relative glass backdrop-blur-xl border border-border/40 hover:border-primary/30 transition-all duration-500 rounded-3xl shadow-xl hover:shadow-2xl hover:shadow-primary/10 bg-gradient-to-br from-background/80 to-background/60 dark:bg-gradient-to-br dark:from-gray-950/80 dark:to-gray-900/60">
+            <Card className="relative glass backdrop-blur-xl border border-border/40 hover:border-primary/30 transition-all duration-500 rounded-3xl shadow-xl hover:shadow-2xl hover:shadow-primary/10 bg-gradient-to-br from-background/80 to-background/60 dark:bg-gradient-to-br dark:from-gray-950/80 dark:to-gray-900/60 overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-primary/2 via-transparent to-secondary/2 dark:from-primary/1.5 dark:via-transparent dark:to-secondary/1.5 rounded-3xl pointer-events-none"></div>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-base text-foreground">Implementation Plan</CardTitle>
+              
+              <CardHeader className="pb-6 pt-8 px-8 border-b border-border/20">
+                <CardTitle className="flex items-center gap-3 text-2xl font-bold text-foreground">
+                  <div className="p-2.5 rounded-xl bg-primary/10 border border-primary/20">
+                    <Timer className="w-6 h-6 text-primary" />
+                  </div>
+                  Detailed Implementation Roadmap
+                </CardTitle>
+                <p className="text-muted-foreground mt-3 text-base">Step-by-step action plan with measurable milestones</p>
               </CardHeader>
-              <CardContent className="pt-0 relative z-10">
+              
+              <CardContent className="pt-8 pb-10 px-8 relative z-10">
                 {jump.comprehensive_plan || jump.structured_plan ? (
                   (() => {
-                    // Prioritize structured_plan for the implementation plan tab
-                    // comprehensive_plan is for the overview, structured_plan is for the phased plan
                     const planData = jump.structured_plan || jump.comprehensive_plan;
                     const phases = planData?.phases || planData?.action_plan?.phases || [];
                     const overview = planData?.overview || planData?.executive_summary || '';
                     
                     return (
-                      <div className="space-y-4">
+                      <div className="space-y-8">
                         {overview && (
-                          <p className="text-white/90 drop-shadow-sm select-text">{overview}</p>
+                          <div className="glass backdrop-blur-sm border border-primary/20 rounded-2xl p-6 bg-primary/5">
+                            <h3 className="text-lg font-bold text-white mb-3 flex items-center gap-2">
+                              <Sparkles className="w-5 h-5 text-primary" />
+                              Overview
+                            </h3>
+                            <p className="text-white/95 drop-shadow-sm select-text text-[15px] leading-relaxed">{overview}</p>
+                          </div>
                         )}
+                        
                         {phases.length > 0 ? (
-                          <div className="grid gap-4">
+                          <div className="space-y-8">
                             {phases.map((phase: any, index: number) => (
-                              <div key={index} className="glass backdrop-blur-sm border border-border/30 rounded-2xl p-4 bg-background/50">
-                                 <h3 className="font-semibold mb-2 text-white drop-shadow-sm select-text">
-                                   Phase {phase.phase_number || index + 1}: {phase.title || phase.name || 'Unnamed Phase'}
-                                 </h3>
-                                 <p className="text-sm text-white/90 drop-shadow-sm mb-2 select-text">
-                                   Duration: {phase.duration || phase.timeline || 'Not specified'}
-                                 </p>
-                                 {phase.description && (
-                                   <p className="text-sm text-white/90 drop-shadow-sm mb-3 select-text">{phase.description}</p>
-                                 )}
-                                 {phase.objectives && phase.objectives.length > 0 && (
-                                   <div className="mb-2">
-                                     <h4 className="text-sm font-medium text-white/80 mb-1">Objectives:</h4>
-                                     <ul className="list-disc pl-5 space-y-1">
-                                       {phase.objectives.map((obj: string, idx: number) => (
-                                         <li key={idx} className="text-sm text-white/90 drop-shadow-sm select-text">{obj}</li>
-                                       ))}
-                                     </ul>
-                                   </div>
-                                 )}
-                                 {phase.actions && phase.actions.length > 0 && (
-                                   <div>
-                                     <h4 className="text-sm font-medium text-white/80 mb-1">Actions:</h4>
-                                     <ul className="list-disc pl-5 space-y-1">
-                                       {phase.actions.map((action: string, idx: number) => (
-                                         <li key={idx} className="text-sm text-white/90 drop-shadow-sm select-text">{action}</li>
-                                       ))}
-                                     </ul>
-                                   </div>
-                                 )}
+                              <div key={index} className="relative animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
+                                {/* Phase connector line */}
+                                {index < phases.length - 1 && (
+                                  <div className="absolute left-8 top-full h-8 w-0.5 bg-gradient-to-b from-primary/40 to-transparent z-0"></div>
+                                )}
+                                
+                                <div className="glass backdrop-blur-sm border border-border/40 rounded-3xl p-8 bg-background/60 hover:border-primary/30 transition-all duration-300 group relative">
+                                  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 rounded-3xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                  
+                                  {/* Phase header with number badge */}
+                                  <div className="flex items-start gap-5 mb-6 relative z-10">
+                                    <div className="flex-shrink-0 w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center text-white font-bold text-2xl shadow-lg shadow-primary/20 border-2 border-white/10">
+                                      {phase.phase_number || index + 1}
+                                    </div>
+                                    <div className="flex-1">
+                                      <h3 className="text-2xl font-bold text-white drop-shadow-sm select-text mb-2 leading-tight">
+                                        {phase.title || phase.name || 'Unnamed Phase'}
+                                      </h3>
+                                      <div className="flex items-center gap-2 text-sm">
+                                        <Badge variant="outline" className="bg-primary/10 border-primary/30 text-primary font-medium">
+                                          <Timer className="w-3 h-3 mr-1" />
+                                          {phase.duration || phase.timeline || 'Timeline TBD'}
+                                        </Badge>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  
+                                  {/* Phase description */}
+                                  {phase.description && (
+                                    <div className="mb-8 relative z-10">
+                                      <p className="text-white/95 drop-shadow-sm select-text text-[15px] leading-relaxed bg-muted/5 border-l-4 border-primary/30 pl-6 py-4 rounded-r-xl">{phase.description}</p>
+                                    </div>
+                                  )}
+                                  
+                                  <div className="grid md:grid-cols-2 gap-6 relative z-10">
+                                    {/* Objectives section */}
+                                    {phase.objectives && phase.objectives.length > 0 && (
+                                      <div className="space-y-4">
+                                        <h4 className="text-lg font-bold text-white/90 flex items-center gap-2 mb-4">
+                                          <div className="w-2 h-2 rounded-full bg-primary"></div>
+                                          Key Objectives
+                                        </h4>
+                                        <ul className="space-y-3">
+                                          {phase.objectives.map((obj: string, idx: number) => (
+                                            <li key={idx} className="flex gap-3 group/item">
+                                              <div className="flex-shrink-0 w-6 h-6 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center mt-0.5">
+                                                <CheckCircle className="w-3.5 h-3.5 text-primary" />
+                                              </div>
+                                              <span className="text-[15px] text-white/95 drop-shadow-sm select-text leading-relaxed flex-1">{obj}</span>
+                                            </li>
+                                          ))}
+                                        </ul>
+                                      </div>
+                                    )}
+                                    
+                                    {/* Milestones section */}
+                                    {phase.milestones && phase.milestones.length > 0 && (
+                                      <div className="space-y-4">
+                                        <h4 className="text-lg font-bold text-white/90 flex items-center gap-2 mb-4">
+                                          <div className="w-2 h-2 rounded-full bg-accent"></div>
+                                          Success Milestones
+                                        </h4>
+                                        <ul className="space-y-3">
+                                          {phase.milestones.map((milestone: string, idx: number) => (
+                                            <li key={idx} className="flex gap-3 group/item">
+                                              <div className="flex-shrink-0 w-6 h-6 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center mt-0.5">
+                                                <Zap className="w-3.5 h-3.5 text-accent" />
+                                              </div>
+                                              <span className="text-[15px] text-white/95 drop-shadow-sm select-text leading-relaxed flex-1">{milestone}</span>
+                                            </li>
+                                          ))}
+                                        </ul>
+                                      </div>
+                                    )}
+                                  </div>
+                                  
+                                  {/* Actions section - full width */}
+                                  {phase.actions && phase.actions.length > 0 && (
+                                    <div className="mt-8 space-y-4 relative z-10">
+                                      <h4 className="text-lg font-bold text-white/90 flex items-center gap-2 mb-5">
+                                        <div className="w-2 h-2 rounded-full bg-secondary"></div>
+                                        Action Steps
+                                      </h4>
+                                      <div className="grid gap-4">
+                                        {phase.actions.map((action: string, idx: number) => (
+                                          <div key={idx} className="flex gap-4 glass backdrop-blur-sm bg-background/30 border border-border/20 rounded-xl p-5 hover:border-primary/30 hover:bg-background/40 transition-all duration-300 group/action">
+                                            <div className="flex-shrink-0 w-8 h-8 rounded-xl bg-gradient-to-br from-secondary/20 to-secondary/10 border border-secondary/30 flex items-center justify-center font-bold text-secondary text-sm">
+                                              {idx + 1}
+                                            </div>
+                                            <p className="text-[15px] text-white/95 drop-shadow-sm select-text leading-relaxed flex-1 pt-1">{action}</p>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  )}
+                                  
+                                  {/* Additional phase details if available */}
+                                  {(phase.successCriteria || phase.prerequisites || phase.expectedOutcomes) && (
+                                    <div className="mt-8 pt-6 border-t border-border/20 grid md:grid-cols-3 gap-6 relative z-10">
+                                      {phase.successCriteria && phase.successCriteria.length > 0 && (
+                                        <div>
+                                          <h5 className="text-sm font-bold text-white/70 mb-3 uppercase tracking-wider">Success Criteria</h5>
+                                          <ul className="space-y-2">
+                                            {phase.successCriteria.map((criteria: string, idx: number) => (
+                                              <li key={idx} className="text-sm text-white/80 leading-relaxed flex items-start gap-2">
+                                                <span className="text-primary mt-1">•</span>
+                                                <span>{criteria}</span>
+                                              </li>
+                                            ))}
+                                          </ul>
+                                        </div>
+                                      )}
+                                      {phase.prerequisites && phase.prerequisites.length > 0 && (
+                                        <div>
+                                          <h5 className="text-sm font-bold text-white/70 mb-3 uppercase tracking-wider">Prerequisites</h5>
+                                          <ul className="space-y-2">
+                                            {phase.prerequisites.map((prereq: string, idx: number) => (
+                                              <li key={idx} className="text-sm text-white/80 leading-relaxed flex items-start gap-2">
+                                                <span className="text-accent mt-1">•</span>
+                                                <span>{prereq}</span>
+                                              </li>
+                                            ))}
+                                          </ul>
+                                        </div>
+                                      )}
+                                      {phase.expectedOutcomes && phase.expectedOutcomes.length > 0 && (
+                                        <div>
+                                          <h5 className="text-sm font-bold text-white/70 mb-3 uppercase tracking-wider">Expected Outcomes</h5>
+                                          <ul className="space-y-2">
+                                            {phase.expectedOutcomes.map((outcome: string, idx: number) => (
+                                              <li key={idx} className="text-sm text-white/80 leading-relaxed flex items-start gap-2">
+                                                <span className="text-secondary mt-1">•</span>
+                                                <span>{outcome}</span>
+                                              </li>
+                                            ))}
+                                          </ul>
+                                        </div>
+                                      )}
+                                    </div>
+                                  )}
+                                </div>
                               </div>
                             ))}
                           </div>
                         ) : (
-                          <div className="text-center py-8 text-muted-foreground">
-                            <p>No implementation phases available.</p>
+                          <div className="text-center py-12 text-muted-foreground">
+                            <Timer className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                            <p className="text-lg">No implementation phases available.</p>
                           </div>
                         )}
                       </div>
                     );
                   })()
                 ) : (
-                  <div className="text-center py-8 text-muted-foreground">
-                    <p>No implementation plan available for this jump.</p>
+                  <div className="text-center py-12 text-muted-foreground">
+                    <Timer className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                    <p className="text-lg">No implementation plan available for this jump.</p>
                   </div>
                 )}
               </CardContent>
