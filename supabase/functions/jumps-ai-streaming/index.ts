@@ -295,7 +295,7 @@ Return ONLY valid JSON:
     "mitigations": ["Mitigation 1", "Mitigation 2", "Mitigation 3"]
   }
 }`,
-        expectedTokens: 10000
+        expectedTokens: 20000
       };
 
     case 3:
@@ -345,7 +345,7 @@ Return ONLY valid JSON:
   ],
   "successMetrics": ["For their goals", "For their goals", "For their goals"]
 }`,
-        expectedTokens: 3000
+        expectedTokens: 20000
       };
 
     case 4:
@@ -396,7 +396,7 @@ Return ONLY valid JSON:
 }
 
 Generate EXACTLY 6 combos tailored to THEIR input.`,
-        expectedTokens: 15000
+        expectedTokens: 25000
       };
 
     default:
