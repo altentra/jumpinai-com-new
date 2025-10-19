@@ -321,7 +321,7 @@ const JumpinAIStudio = () => {
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent/5 to-transparent blur-2xl"></div>
                 <p className="relative text-base sm:text-lg md:text-xl text-muted-foreground/90 mb-8 sm:mb-12 max-w-4xl mx-auto leading-relaxed font-light">
                   Tell us your goals and challenges, and we'll generate your personalized <span className="font-semibold text-primary bg-gradient-to-r from-primary via-primary/80 to-primary bg-clip-text text-transparent whitespace-nowrap">Jump in AI</span>: 
-                  a clear step-by-step plan, essential resources, custom prompts, workflows, blueprints, and strategies.
+                  a clear step-by-step plan with AI tools, custom prompts, and actionable strategies.
                 </p>
               </div>
               
@@ -329,15 +329,11 @@ const JumpinAIStudio = () => {
               <div className="flex flex-wrap justify-center gap-2 sm:gap-4 text-xs sm:text-sm text-muted-foreground/70 px-4">
                 <span className="bg-background/60 backdrop-blur-sm px-2 py-1 rounded-md border border-border/30 sm:bg-transparent sm:backdrop-blur-none sm:px-0 sm:py-0 sm:rounded-none sm:border-none">Strategic Action Plan</span>
                 <span className="hidden sm:inline">•</span>
-                <span className="bg-background/60 backdrop-blur-sm px-2 py-1 rounded-md border border-border/30 sm:bg-transparent sm:backdrop-blur-none sm:px-0 sm:py-0 sm:rounded-none sm:border-none">List of AI tools</span>
+                <span className="bg-background/60 backdrop-blur-sm px-2 py-1 rounded-md border border-border/30 sm:bg-transparent sm:backdrop-blur-none sm:px-0 sm:py-0 sm:rounded-none sm:border-none">AI Tools & Resources</span>
                 <span className="hidden sm:inline">•</span>
-                <span className="bg-background/60 backdrop-blur-sm px-2 py-1 rounded-md border border-border/30 sm:bg-transparent sm:backdrop-blur-none sm:px-0 sm:py-0 sm:rounded-none sm:border-none">4 Custom Prompts</span> 
+                <span className="bg-background/60 backdrop-blur-sm px-2 py-1 rounded-md border border-border/30 sm:bg-transparent sm:backdrop-blur-none sm:px-0 sm:py-0 sm:rounded-none sm:border-none">Custom Prompts</span> 
                 <span className="hidden sm:inline">•</span>
-                <span className="bg-background/60 backdrop-blur-sm px-2 py-1 rounded-md border border-border/30 sm:bg-transparent sm:backdrop-blur-none sm:px-0 sm:py-0 sm:rounded-none sm:border-none">4 Workflows</span>
-                <span className="hidden sm:inline">•</span>
-                <span className="bg-background/60 backdrop-blur-sm px-2 py-1 rounded-md border border-border/30 sm:bg-transparent sm:backdrop-blur-none sm:px-0 sm:py-0 sm:rounded-none sm:border-none">4 Blueprints</span>
-                <span className="hidden sm:inline">•</span>
-                <span className="bg-background/60 backdrop-blur-sm px-2 py-1 rounded-md border border-border/30 sm:bg-transparent sm:backdrop-blur-none sm:px-0 sm:py-0 sm:rounded-none sm:border-none">4 Strategies</span>
+                <span className="bg-background/60 backdrop-blur-sm px-2 py-1 rounded-md border border-border/30 sm:bg-transparent sm:backdrop-blur-none sm:px-0 sm:py-0 sm:rounded-none sm:border-none">Implementation Guide</span>
               </div>
             </div>
 

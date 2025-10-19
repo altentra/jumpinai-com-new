@@ -69,14 +69,13 @@ serve(async (req) => {
             ? overviewResponse 
             : JSON.stringify(overviewResponse);
 
-          const stepComponents = [
-            { step: 1, type: 'overview', name: 'Overview & Plan' },
-            { step: 2, type: 'comprehensive', name: 'Comprehensive Plan' },
-            { step: 3, type: 'summary', name: 'Executive Summary' },
+          // Remaining steps (3 and 4 only - naming and overview already done)
+          const remainingSteps = [
+            { step: 3, type: 'comprehensive', name: 'Comprehensive Plan' },
             { step: 4, type: 'tool_prompts', name: 'Tools & Prompts' }
           ];
 
-          for (const { step, type, name } of stepComponents) {
+          for (const { step, type, name } of remainingSteps) {
             try {
               console.log(`Step ${step}: Generating ${name}...`);
               const response = await callXAI(XAI_API_KEY, step, formData, overviewContent);

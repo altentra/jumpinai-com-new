@@ -103,66 +103,17 @@ export const useProgressiveGeneration = () => {
     setProcessingStatus(progressiveResult.processing_status);
     setResult({ ...progressiveResult });
 
-    // Process components one by one
-    const components = rawResponse.components || { toolPrompts: [], workflows: [], blueprints: [], strategies: [] };
+    // Process tool-prompts only (workflows/blueprints/strategies removed)
+    const components = rawResponse.components || { toolPrompts: [] };
     
-    // Process tool-prompts
     if (components.toolPrompts && Array.isArray(components.toolPrompts) && components.toolPrompts.length > 0) {
       for (let i = 0; i < components.toolPrompts.length; i++) {
         await new Promise(resolve => setTimeout(resolve, 400));
         progressiveResult.components.toolPrompts.push(components.toolPrompts[i]);
         progressiveResult.processing_status = {
           stage: 'Processing Tools & Prompts',
-          progress: 40 + (i * 4),
+          progress: 40 + (i * 10),
           currentTask: `Processing tool & prompt ${i + 1} of ${components.toolPrompts.length}...`,
-          isComplete: false
-        };
-        setProcessingStatus(progressiveResult.processing_status);
-        setResult({ ...progressiveResult });
-      }
-    }
-
-    // Process workflows
-    if (components.workflows && Array.isArray(components.workflows) && components.workflows.length > 0) {
-      for (let i = 0; i < components.workflows.length; i++) {
-        await new Promise(resolve => setTimeout(resolve, 400));
-        progressiveResult.components.workflows.push(components.workflows[i]);
-        progressiveResult.processing_status = {
-          stage: 'Processing Workflows',
-          progress: 64 + (i * 3),
-          currentTask: `Processing workflow ${i + 1} of ${components.workflows.length}...`,
-          isComplete: false
-        };
-        setProcessingStatus(progressiveResult.processing_status);
-        setResult({ ...progressiveResult });
-      }
-    }
-
-    // Process blueprints
-    if (components.blueprints && Array.isArray(components.blueprints) && components.blueprints.length > 0) {
-      for (let i = 0; i < components.blueprints.length; i++) {
-        await new Promise(resolve => setTimeout(resolve, 400));
-        progressiveResult.components.blueprints.push(components.blueprints[i]);
-        progressiveResult.processing_status = {
-          stage: 'Processing Blueprints',
-          progress: 76 + (i * 3),
-          currentTask: `Processing blueprint ${i + 1} of ${components.blueprints.length}...`,
-          isComplete: false
-        };
-        setProcessingStatus(progressiveResult.processing_status);
-        setResult({ ...progressiveResult });
-      }
-    }
-
-    // Process strategies
-    if (components.strategies && Array.isArray(components.strategies) && components.strategies.length > 0) {
-      for (let i = 0; i < components.strategies.length; i++) {
-        await new Promise(resolve => setTimeout(resolve, 400));
-        progressiveResult.components.strategies.push(components.strategies[i]);
-        progressiveResult.processing_status = {
-          stage: 'Processing Strategies',
-          progress: 88 + (i * 3),
-          currentTask: `Processing strategy ${i + 1} of ${components.strategies.length}...`,
           isComplete: false
         };
         setProcessingStatus(progressiveResult.processing_status);
@@ -205,23 +156,19 @@ export const useProgressiveGeneration = () => {
       const stepNames: Record<string, string> = {
         naming: 'Generating Jump Name',
         overview: 'Creating Overview',
+        comprehensive: 'Building Strategic Plan',
         plan: 'Building Strategic Plan',
         tool_prompts: 'Generating Tools & Prompts',
-        tools: 'Generating Tools & Prompts',
-        workflows: 'Designing Workflows',
-        blueprints: 'Building Blueprints',
-        strategies: 'Developing Strategies'
+        tools: 'Generating Tools & Prompts'
       };
       
       const stepProgress: Record<string, number> = {
-        naming: 5,
-        overview: 19,
-        plan: 32,
-        tool_prompts: 52,
-        tools: 52,
-        workflows: 70,
-        blueprints: 85,
-        strategies: 100
+        naming: 10,
+        overview: 30,
+        comprehensive: 60,
+        plan: 60,
+        tool_prompts: 100,
+        tools: 100
       };
       
       // Initial empty structure
@@ -233,9 +180,9 @@ export const useProgressiveGeneration = () => {
         full_content: '',
         components: {
           toolPrompts: [],
-          workflows: [],
-          blueprints: [],
-          strategies: []
+          workflows: [],  // Keep for type compatibility but won't be used
+          blueprints: [], // Keep for type compatibility but won't be used
+          strategies: []  // Keep for type compatibility but won't be used
         },
         processing_status: {
           stage: 'Generating',
@@ -276,7 +223,7 @@ export const useProgressiveGeneration = () => {
             
             progressiveResult.processing_status = {
               stage: 'Generating',
-              progress: 5,
+              progress: 10,
               currentTask: `${stepNames.naming} (${stepDuration}s)`,
               isComplete: false
             };
@@ -334,7 +281,7 @@ export const useProgressiveGeneration = () => {
             
             progressiveResult.processing_status = {
               stage: 'Generating',
-              progress: 19,
+              progress: 30,
               currentTask: `${stepNames.overview} (${stepDuration}s)`,
               isComplete: false
             };
@@ -342,20 +289,20 @@ export const useProgressiveGeneration = () => {
             setProcessingStatus(progressiveResult.processing_status);
             setResult({ ...progressiveResult });
             
-          } else if (type === 'plan') {
-            // STEP 3: Plan (32%) - Set structured_plan from implementationPlan
-            console.log('Processing plan step data:', stepData);
+          } else if (type === 'comprehensive' || type === 'plan') {
+            // STEP 3: Comprehensive Plan (32%) - Set structured_plan from implementationPlan
+            console.log('Processing comprehensive plan step data:', stepData);
             if (stepData.implementationPlan) {
               progressiveResult.structured_plan = stepData.implementationPlan;
             }
             
             progressiveResult.processing_status = {
               stage: 'Generating',
-              progress: 32,
-              currentTask: `${stepNames.plan} (${stepDuration}s)`,
+              progress: 60,
+              currentTask: `Building Strategic Plan (${stepDuration}s)`,
               isComplete: false
             };
-            progressiveResult.stepTimes = { ...progressiveResult.stepTimes, plan: stepDuration };
+            progressiveResult.stepTimes = { ...progressiveResult.stepTimes, comprehensive: stepDuration };
             setProcessingStatus(progressiveResult.processing_status);
             setResult({ ...progressiveResult });
             
@@ -364,7 +311,7 @@ export const useProgressiveGeneration = () => {
             console.log('Processing tool-prompts step data:', stepData);
             progressiveResult.components.toolPrompts = stepData.tool_prompts || stepData.tools || [];
             
-            const progress = 52;
+            const progress = 100;
             progressiveResult.processing_status = {
               stage: 'Generating',
               progress,
@@ -375,60 +322,6 @@ export const useProgressiveGeneration = () => {
             setProcessingStatus(progressiveResult.processing_status);
             setResult({ ...progressiveResult });
             
-          } else if (type === 'prompts') {
-            // Legacy: Skip
-            console.log('⚠️ Skipping legacy prompts step');
-            
-          } else if (type === 'workflows') {
-            // STEP 6: Workflows (73%)
-            console.log('Processing workflows step data:', stepData);
-            progressiveResult.components.workflows = stepData.workflows || [];
-            
-            // Update immediately - Workflows is 73%
-            const progress = 73;
-            progressiveResult.processing_status = {
-              stage: 'Generating',
-              progress,
-              currentTask: `${stepNames.workflows} (${stepDuration}s)`,
-              isComplete: false
-            };
-            progressiveResult.stepTimes = { ...progressiveResult.stepTimes, workflows: stepDuration };
-            setProcessingStatus(progressiveResult.processing_status);
-            setResult({ ...progressiveResult });
-            
-          } else if (type === 'blueprints') {
-            // STEP 7: Blueprints (86%)
-            console.log('Processing blueprints step data:', stepData);
-            progressiveResult.components.blueprints = stepData.blueprints || [];
-            
-            // Update immediately - Blueprints is 86%
-            const progress = 86;
-            progressiveResult.processing_status = {
-              stage: 'Generating',
-              progress,
-              currentTask: `${stepNames.blueprints} (${stepDuration}s)`,
-              isComplete: false
-            };
-            progressiveResult.stepTimes = { ...progressiveResult.stepTimes, blueprints: stepDuration };
-            setProcessingStatus(progressiveResult.processing_status);
-            setResult({ ...progressiveResult });
-            
-          } else if (type === 'strategies') {
-            // STEP 8: Strategies (100%)
-            console.log('Processing strategies step data:', stepData);
-            progressiveResult.components.strategies = stepData.strategies || [];
-            
-            // Update immediately - Strategies is 100%
-            const progress = 100;
-            progressiveResult.processing_status = {
-              stage: 'Generating',
-              progress,
-              currentTask: `${stepNames.strategies} (${stepDuration}s)`,
-              isComplete: false
-            };
-            progressiveResult.stepTimes = { ...progressiveResult.stepTimes, strategies: stepDuration };
-            setProcessingStatus(progressiveResult.processing_status);
-            setResult({ ...progressiveResult });
           } else if (type === 'complete') {
             // Generation complete
             console.log('All steps complete');
