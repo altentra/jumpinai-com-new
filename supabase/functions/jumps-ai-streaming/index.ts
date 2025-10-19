@@ -193,27 +193,33 @@ async function callXAI(
 }
 
 function getStepPrompts(step: number, context: any, overviewContent: string) {
+  // Map form fields correctly to prompt context
   const baseContext = `
-User Goals: ${context.goals}
-Challenges: ${context.challenges}
-Industry: ${context.industry}
-AI Experience: ${context.aiExperience}
-Urgency: ${context.urgency}
-Budget: ${context.budget}
+Current Role: ${context.currentRole || 'Not specified'}
+Industry: ${context.industry || 'Not specified'}
+Experience Level: ${context.experienceLevel || 'Not specified'}
+AI Knowledge: ${context.aiKnowledge || 'Not specified'}
+Goals & Aspirations: ${context.goals || 'Not specified'}
+Challenges & Obstacles: ${context.challenges || 'Not specified'}
+Time Commitment: ${context.timeCommitment || 'Not specified'}
+Budget: ${context.budget || 'Not specified'}
   `.trim();
 
   switch (step) {
     case 1:
       // STEP 1: Quick name generation (3-5 seconds)
       return {
-        systemPrompt: `You are a creative naming expert. Generate inspiring, memorable names for AI transformation journeys.`,
+        systemPrompt: `You are a creative naming expert specializing in personal transformation and AI-powered career development. Generate inspiring, memorable names that resonate with the user's unique situation.`,
         userPrompt: `${baseContext}
 
-Create an inspiring, memorable name for this AI transformation journey. The name should be:
-- Catchy and motivating
-- 3-5 words maximum
-- Relevant to their goals and industry
-- Professional yet inspiring
+Create an inspiring, memorable name for this AI transformation journey. The name should:
+- Be deeply relevant to their specific goals, current role, and aspirations
+- Capture their unique situation and desired transformation
+- Be motivating and action-oriented
+- Be 3-5 words maximum
+- Sound professional yet inspiring and personal
+
+Consider their industry, experience level, challenges, and what they want to achieve. Make it feel tailored to THEM.
 
 Return ONLY valid JSON:
 {
@@ -225,84 +231,142 @@ Return ONLY valid JSON:
     case 2:
       // STEP 2: Comprehensive overview and strategic plan
       return {
-        systemPrompt: `You are an AI transformation strategist. Create comprehensive, actionable plans.`,
+        systemPrompt: `You are an expert AI transformation strategist and career development coach. Create deeply personalized, actionable transformation plans that address the user's specific situation, constraints, and aspirations.`,
         userPrompt: `${baseContext}
 
-Create a detailed AI transformation plan with these sections:
-1. Executive Summary (3 focused paragraphs about their situation and solution)
-2. Situation Analysis with currentState, 3 challenges, 3 opportunities
-3. Strategic Vision (clear description of success)
-4. 3-Phase Roadmap with timelines and 3 milestones per phase
-5. 3 Key Success Factors
-6. 3 Risk Mitigation Strategies
+Create a detailed, highly personalized AI transformation overview that speaks directly to THIS person's situation. Be specific about their current role, challenges, goals, time availability, and budget constraints.
+
+CRITICAL: Make this feel like it was written specifically for them by analyzing:
+- Their current role and what it tells you about their daily work
+- Their specific goals and what they're trying to achieve
+- Their real challenges (money, time, knowledge gaps)
+- Their industry context and opportunities
+- Their AI knowledge level and where they need to start
+
+Create these sections:
+
+1. Executive Summary (3 focused paragraphs):
+   - Paragraph 1: Acknowledge their current situation with empathy and specificity
+   - Paragraph 2: Present a realistic, achievable transformation path given their constraints
+   - Paragraph 3: Paint a compelling picture of their success and what it means for them
+
+2. Situation Analysis:
+   - Current State: Describe their ACTUAL current situation (role, skills, constraints)
+   - Challenges: List 3 SPECIFIC challenges relevant to their situation
+   - Opportunities: List 3 SPECIFIC opportunities they can leverage in their context
+
+3. Strategic Vision:
+   - A clear, inspiring description of what success looks like FOR THEM
+   - Must be realistic given their time commitment and budget
+   - Should address their specific goals
+
+4. 3-Phase Roadmap (must fit their time commitment):
+   - Each phase: name, realistic timeline, 3 specific milestones
+   - Phase 1: Quick wins and foundation (fits their schedule)
+   - Phase 2: Skill building and implementation (realistic pace)
+   - Phase 3: Advanced application and results (achievable outcomes)
+
+5. Success Factors: 3 factors critical for THEIR specific situation
+
+6. Risk Mitigation: 3 strategies addressing THEIR specific challenges
 
 Return ONLY valid JSON:
 {
-  "executiveSummary": "Comprehensive 3-paragraph summary",
+  "executiveSummary": "3 paragraphs addressing their specific situation",
   "situationAnalysis": {
-    "currentState": "Current situation",
-    "challenges": ["Challenge 1", "Challenge 2", "Challenge 3"],
-    "opportunities": ["Opportunity 1", "Opportunity 2", "Opportunity 3"]
+    "currentState": "Their actual current situation",
+    "challenges": ["Specific challenge 1", "Specific challenge 2", "Specific challenge 3"],
+    "opportunities": ["Specific opportunity 1", "Specific opportunity 2", "Specific opportunity 3"]
   },
-  "strategicVision": "Clear success description",
+  "strategicVision": "Their specific success description",
   "roadmap": {
-    "phase1": {"name": "Phase name", "timeline": "X weeks", "milestones": ["M1", "M2", "M3"]},
-    "phase2": {"name": "Phase name", "timeline": "X weeks", "milestones": ["M1", "M2", "M3"]},
-    "phase3": {"name": "Phase name", "timeline": "X weeks", "milestones": ["M1", "M2", "M3"]}
+    "phase1": {"name": "Phase name", "timeline": "Realistic weeks/months", "milestones": ["M1", "M2", "M3"]},
+    "phase2": {"name": "Phase name", "timeline": "Realistic weeks/months", "milestones": ["M1", "M2", "M3"]},
+    "phase3": {"name": "Phase name", "timeline": "Realistic weeks/months", "milestones": ["M1", "M2", "M3"]}
   },
-  "successFactors": ["Factor 1", "Factor 2", "Factor 3"],
-  "riskMitigation": ["Strategy 1", "Strategy 2", "Strategy 3"]
+  "successFactors": ["Factor 1 for their situation", "Factor 2 for their situation", "Factor 3 for their situation"],
+  "riskMitigation": ["Strategy 1 for their challenges", "Strategy 2 for their challenges", "Strategy 3 for their challenges"]
 }`,
-        expectedTokens: 8000
+        expectedTokens: 10000
       };
 
     case 3:
-      // STEP 3: Detailed implementation plan
+      // STEP 3: Detailed strategic action plan
       return {
-        systemPrompt: `You are an AI implementation strategist. Create detailed, actionable plans.`,
+        systemPrompt: `You are an expert AI transformation strategist creating detailed, step-by-step action plans. Focus on practical, achievable actions that fit the user's constraints and maximize their chances of success.`,
         userPrompt: `${baseContext}
 
-Overview Context:
+Overview Context (use this to ensure consistency):
 ${overviewContent}
 
-Create a comprehensive implementation plan with:
-1. 3 Implementation Phases (each with name, duration, objectives, and actions)
-2. Weekly breakdown for first phase
-3. Key milestones and deliverables
-4. Success metrics
+Create a highly detailed, actionable strategic plan that this person can actually follow given their time commitment and budget. Be SPECIFIC and PRACTICAL.
+
+For each of the 3 phases, provide:
+
+1. Phase Information:
+   - Clear name and description
+   - Realistic duration based on their time commitment
+   - 2-3 specific objectives
+   - 3-5 concrete actions with descriptions
+   - 2-3 milestones with success criteria
+
+2. Weekly Breakdown for FIRST PHASE ONLY:
+   - Break down the first 4-8 weeks (depending on their time commitment)
+   - Each week: specific focus area and 2-3 actionable tasks
+   - Tasks should be doable in their available time
+
+3. Success Metrics:
+   - 5-7 specific, measurable metrics they can track
+   - Must be relevant to their goals and achievable
+
+CRITICAL: Everything must align with:
+- Their available time (${context.timeCommitment})
+- Their budget constraints (${context.budget})
+- Their current AI knowledge level (${context.aiKnowledge})
+- Their specific goals and challenges
 
 Return ONLY valid JSON:
 {
-  "implementationPlan": {
-    "phases": [
-      {
-        "name": "Phase name",
-        "duration": "X weeks",
-        "objectives": ["Objective 1", "Objective 2"],
-        "actions": ["Action 1", "Action 2", "Action 3"],
-        "milestones": ["Milestone 1", "Milestone 2"]
-      }
-    ],
-    "weeklyBreakdown": {
-      "week1": {"focus": "Focus area", "tasks": ["Task 1", "Task 2"]},
-      "week2": {"focus": "Focus area", "tasks": ["Task 1", "Task 2"]}
-    },
-    "successMetrics": ["Metric 1", "Metric 2", "Metric 3"]
-  }
+  "phases": [
+    {
+      "name": "Phase name",
+      "description": "What this phase accomplishes",
+      "duration": "Realistic duration",
+      "objectives": ["Specific objective 1", "Specific objective 2"],
+      "actions": ["Concrete action 1", "Concrete action 2", "Concrete action 3"],
+      "milestones": ["Measurable milestone 1", "Measurable milestone 2"]
+    }
+  ],
+  "weeklyBreakdown": {
+    "week1": {"focus": "Specific focus", "tasks": ["Task 1", "Task 2"]},
+    "week2": {"focus": "Specific focus", "tasks": ["Task 1", "Task 2"]}
+  },
+  "successMetrics": ["Metric 1", "Metric 2", "Metric 3", "Metric 4", "Metric 5"]
 }`,
-        expectedTokens: 8000
+        expectedTokens: 10000
       };
 
     case 4:
       // STEP 4: Tools & Prompts (Generate 6 items)
       return {
-        systemPrompt: `You are an AI tools and prompt engineering expert. Create powerful tool+prompt combinations that are immediately actionable.`,
+        systemPrompt: `You are an expert AI tools and prompt engineering specialist. Create powerful, personalized tool+prompt combinations that are immediately actionable and specifically tailored to the user's situation, goals, and constraints.`,
         userPrompt: `${baseContext}
 
 Overview Context:
 ${overviewContent}
 
-Generate exactly 6 AI tool + prompt combinations. Each combo must be a complete, ready-to-use solution.
+Generate exactly 6 AI tool + prompt combinations that are PERFECT for this person's specific situation. Each must:
+- Address their specific goals and challenges
+- Fit their budget constraints (${context.budget})
+- Match their AI knowledge level (${context.aiKnowledge})
+- Work with their time commitment (${context.timeCommitment})
+- Be immediately actionable and practical
+
+CRITICAL: Make each tool+prompt combo feel personally selected FOR THEM based on:
+- Their current role and industry
+- Their specific transformation goals
+- Their real constraints (time, money, knowledge)
+- The phases and actions in the strategic plan above
 
 Return ONLY valid JSON:
 {
@@ -332,12 +396,14 @@ Return ONLY valid JSON:
 }
 
 CRITICAL REQUIREMENTS:
-- Generate EXACTLY 6 combos
-- Each prompt must be 150-250 words and immediately usable
-- Include 2 alternatives for each combo
-- Make everything specific to their situation
-- Focus on immediate, practical value`,
-        expectedTokens: 12000
+- Generate EXACTLY 6 combos that feel hand-picked for THIS person
+- Each prompt must be 200-300 words, highly specific, and copy-paste ready
+- Prompts must reference their specific situation, goals, and challenges
+- Include 2 relevant alternatives for each combo
+- Tool selection must match their budget and knowledge level
+- Everything must be immediately actionable and practical
+- Focus on tools and prompts that will help them achieve their stated goals`,
+        expectedTokens: 15000
       };
 
     default:

@@ -20,6 +20,7 @@ export type ProgressiveResult = {
   comprehensive_plan?: any;
   components: {
     toolPrompts: any[];
+    plan?: any;
     workflows: any[];
     blueprints: any[];
     strategies: any[];
@@ -51,6 +52,7 @@ export const useProgressiveGeneration = () => {
       comprehensive_plan: null,
       components: {
         toolPrompts: [],
+        plan: null,
         workflows: [],
         blueprints: [],
         strategies: []
@@ -180,6 +182,7 @@ export const useProgressiveGeneration = () => {
         full_content: '',
         components: {
           toolPrompts: [],
+          plan: null,
           workflows: [],  // Keep for type compatibility but won't be used
           blueprints: [], // Keep for type compatibility but won't be used
           strategies: []  // Keep for type compatibility but won't be used
@@ -290,11 +293,11 @@ export const useProgressiveGeneration = () => {
             setResult({ ...progressiveResult });
             
           } else if (type === 'comprehensive' || type === 'plan') {
-            // STEP 3: Comprehensive Plan (32%) - Set structured_plan from implementationPlan
-            console.log('Processing comprehensive plan step data:', stepData);
-            if (stepData.implementationPlan) {
-              progressiveResult.structured_plan = stepData.implementationPlan;
-            }
+            // STEP 3: Strategic Action Plan (60%)
+            console.log('📋 Received strategic action plan:', stepData);
+            // Store the plan data directly (no implementationPlan wrapper)
+            progressiveResult.structured_plan = stepData;
+            progressiveResult.components.plan = stepData;
             
             progressiveResult.processing_status = {
               stage: 'Generating',
