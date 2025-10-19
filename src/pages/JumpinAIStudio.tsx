@@ -356,43 +356,6 @@ const JumpinAIStudio = () => {
                     </div>
 
                     <div className="grid gap-5">
-                      {/* Current Role & Experience Level */}
-                      <div className="grid md:grid-cols-2 gap-5">
-                        <div className="group">
-                          <label className="block text-sm font-medium text-foreground/90 mb-3 transition-colors duration-300 group-focus-within:text-primary">
-                            Your Current Role
-                          </label>
-                          <div className="relative">
-                            <input
-                              type="text"
-                              value={formData.currentRole}
-                              onChange={(e) => setFormData(prev => ({ ...prev, currentRole: e.target.value }))}
-                              className="w-full p-3 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl focus:shadow-2xl focus:shadow-primary/10 placeholder:text-muted-foreground/60 text-foreground bg-gradient-to-br from-background/60 to-background/30 dark:bg-gradient-to-br dark:from-gray-950/70 dark:to-gray-900/40"
-                              placeholder="Cashier, Developer, Manager..."
-                            />
-                          </div>
-                        </div>
-                        
-                        <div className="group">
-                          <label className="block text-sm font-medium text-foreground/90 mb-3 transition-colors duration-300 group-focus-within:text-primary">
-                            Experience Level
-                          </label>
-                          <div className="relative">
-                            <select 
-                              value={formData.experienceLevel}
-                              onChange={(e) => setFormData(prev => ({ ...prev, experienceLevel: e.target.value }))}
-                              className="w-full p-3 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl focus:shadow-2xl focus:shadow-primary/10 text-foreground bg-gradient-to-br from-background/60 to-background/30 dark:bg-gradient-to-br dark:from-gray-950/70 dark:to-gray-900/40"
-                            >
-                              <option value="">Select level</option>
-                              <option value="entry">Entry Level</option>
-                              <option value="intermediate">Intermediate</option>
-                              <option value="senior">Senior</option>
-                              <option value="expert">Expert</option>
-                            </select>
-                          </div>
-                        </div>
-                      </div>
-
                       <div className="grid md:grid-cols-2 gap-5">
                         <div className="group">
                           <label className="block text-sm font-medium text-foreground/90 mb-3 transition-colors duration-300 group-focus-within:text-primary">
