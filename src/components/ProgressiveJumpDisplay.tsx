@@ -1,5 +1,5 @@
 import React from 'react';
-import { Loader2, CheckCircle, Clock, Zap, Timer, Copy, Check, Wrench } from 'lucide-react';
+import { Loader2, CheckCircle, Clock, Zap, Timer, Copy, Check, Wrench, AlertTriangle, Lightbulb, Target, Compass, TrendingUp, Shield, DollarSign, Heart, MapPin } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
@@ -172,55 +172,275 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
         </div>
 
         <TabsContent value="overview" className="mt-6">
-          <div className="relative group">
-            <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 dark:from-primary/15 dark:via-accent/12 dark:to-secondary/15 rounded-3xl blur-xl opacity-40"></div>
-            <Card className="relative glass backdrop-blur-xl border border-border/40 hover:border-primary/30 transition-all duration-500 rounded-3xl shadow-xl hover:shadow-2xl hover:shadow-primary/10 bg-gradient-to-br from-background/80 to-background/60 dark:bg-gradient-to-br dark:from-gray-950/80 dark:to-gray-900/60">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/3 via-transparent to-secondary/3 dark:from-primary/2 dark:via-transparent dark:to-secondary/2 rounded-3xl"></div>
-              <CardHeader className="pb-4">
-                <CardTitle className="flex items-center gap-2 text-lg text-white drop-shadow-sm">
-                  <Zap className="w-5 h-5 text-white drop-shadow-sm" />
-                  Strategic Action Plan
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="pt-0">
-               {result.full_content ? (
-                <div className="space-y-4">
-                  <div className="prose prose-sm max-w-none dark:prose-invert prose-headings:text-white prose-p:text-white/90 prose-li:text-white/90">
-                    <ReactMarkdown
-                      remarkPlugins={[remarkGfm]}
-                      components={{
-                        h1: ({ children }) => <h1 className="text-2xl font-bold text-white drop-shadow-sm mb-4 mt-6 first:mt-0">{children}</h1>,
-                        h2: ({ children }) => <h2 className="text-xl font-semibold text-white drop-shadow-sm mb-3 mt-5 first:mt-0 border-b border-white/10 pb-2">{children}</h2>,
-                        h3: ({ children }) => <h3 className="text-lg font-medium text-white drop-shadow-sm mb-2 mt-4 first:mt-0">{children}</h3>,
-                        p: ({ children }) => <p className="text-white/90 drop-shadow-sm mb-3 leading-relaxed">{children}</p>,
-                        ul: ({ children }) => <ul className="list-disc pl-6 mb-4 text-white/90 drop-shadow-sm space-y-2">{children}</ul>,
-                        ol: ({ children }) => <ol className="list-decimal pl-6 mb-4 text-white/90 drop-shadow-sm space-y-2">{children}</ol>,
-                        li: ({ children }) => <li className="leading-relaxed text-white/90 drop-shadow-sm">{children}</li>,
-                        strong: ({ children }) => <strong className="font-semibold text-white drop-shadow-sm">{children}</strong>,
-                        em: ({ children }) => <em className="italic text-white/80 drop-shadow-sm">{children}</em>,
-                        blockquote: ({ children }) => (
-                          <blockquote className="border-l-4 border-white/30 pl-4 py-2 my-4 glass backdrop-blur-sm bg-white/10 rounded-r-xl">
-                            {children}
-                          </blockquote>
-                        ),
-                        code: ({ children }) => (
-                          <code className="glass backdrop-blur-sm bg-white/10 px-2 py-1 rounded text-sm font-mono text-white/90 border border-white/20">{children}</code>
-                        ),
-                      }}
-                    >
-                      {formatAIText(result.full_content)}
-                    </ReactMarkdown>
-                  </div>
-                </div>
-               ) : (
-                <div className="flex items-center justify-center h-32 text-white/80 drop-shadow-sm">
-                  <Loader2 className="w-6 h-6 animate-spin mr-2" />
-                  Generating strategic action plan...
+          {result.comprehensive_plan ? (
+            <div className="space-y-6">
+              {/* Executive Summary with TL;DR Box */}
+              {result.comprehensive_plan.executiveSummary && (
+                <div className="relative group">
+                  <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 rounded-2xl blur-xl opacity-40"></div>
+                  <Card className="relative glass backdrop-blur-xl border border-border/40 rounded-2xl shadow-xl bg-gradient-to-br from-background/80 to-background/60">
+                    <CardHeader className="pb-3">
+                      <CardTitle className="flex items-center gap-2 text-lg">
+                        <Target className="w-5 h-5 text-primary" />
+                        Executive Summary
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      {/* TL;DR Box */}
+                      <div className="mb-4 p-4 rounded-xl bg-gradient-to-br from-amber-500/10 to-orange-500/10 border-l-4 border-amber-500">
+                        <div className="flex items-start gap-2">
+                          <Zap className="w-5 h-5 text-amber-500 mt-0.5 flex-shrink-0" />
+                          <div>
+                            <div className="font-semibold text-amber-600 dark:text-amber-400 mb-2">TL;DR</div>
+                            <p className="text-sm leading-relaxed">
+                              {result.comprehensive_plan.executiveSummary.split('.').slice(0, 2).join('.') + '.'}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Full Summary */}
+                      <div className="prose prose-sm max-w-none dark:prose-invert">
+                        <p className="leading-relaxed whitespace-pre-line">{result.comprehensive_plan.executiveSummary}</p>
+                      </div>
+                    </CardContent>
+                  </Card>
                 </div>
               )}
-              </CardContent>
-            </Card>
-          </div>
+
+              {/* Situation Analysis - Challenges & Opportunities in 2-column grid */}
+              {result.comprehensive_plan.situationAnalysis && (
+                <div className="space-y-4">
+                  {/* Current State */}
+                  {result.comprehensive_plan.situationAnalysis.currentState && (
+                    <div className="relative group">
+                      <div className="absolute -inset-1 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 rounded-2xl blur-xl opacity-40"></div>
+                      <Card className="relative glass backdrop-blur-xl border border-blue-500/20 rounded-2xl shadow-xl">
+                        <CardHeader className="pb-3">
+                          <CardTitle className="flex items-center gap-2 text-base">
+                            <Compass className="w-5 h-5 text-blue-500" />
+                            Current Situation
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <p className="text-sm leading-relaxed">{result.comprehensive_plan.situationAnalysis.currentState}</p>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  )}
+
+                  {/* Challenges & Opportunities Grid */}
+                  <div className="grid md:grid-cols-2 gap-4">
+                    {/* Challenges */}
+                    {result.comprehensive_plan.situationAnalysis.challenges && result.comprehensive_plan.situationAnalysis.challenges.length > 0 && (
+                      <div className="space-y-3">
+                        <h3 className="text-sm font-semibold flex items-center gap-2 text-red-600 dark:text-red-400">
+                          <AlertTriangle className="w-4 h-4" />
+                          Key Challenges
+                        </h3>
+                        {result.comprehensive_plan.situationAnalysis.challenges.map((challenge: string, idx: number) => (
+                          <div key={idx} className="group relative">
+                            <div className="absolute -inset-0.5 bg-gradient-to-r from-red-500/20 to-orange-500/20 rounded-xl blur opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                            <div className="relative glass backdrop-blur-sm border border-red-500/20 rounded-xl p-3 bg-red-500/5 hover:bg-red-500/10 transition-colors">
+                              <div className="flex items-start gap-2">
+                                <AlertTriangle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
+                                <p className="text-sm leading-relaxed flex-1">{challenge}</p>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Opportunities */}
+                    {result.comprehensive_plan.situationAnalysis.opportunities && result.comprehensive_plan.situationAnalysis.opportunities.length > 0 && (
+                      <div className="space-y-3">
+                        <h3 className="text-sm font-semibold flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
+                          <Lightbulb className="w-4 h-4" />
+                          Key Opportunities
+                        </h3>
+                        {result.comprehensive_plan.situationAnalysis.opportunities.map((opportunity: string, idx: number) => (
+                          <div key={idx} className="group relative">
+                            <div className="absolute -inset-0.5 bg-gradient-to-r from-emerald-500/20 to-green-500/20 rounded-xl blur opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                            <div className="relative glass backdrop-blur-sm border border-emerald-500/20 rounded-xl p-3 bg-emerald-500/5 hover:bg-emerald-500/10 transition-colors">
+                              <div className="flex items-start gap-2">
+                                <Lightbulb className="w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0" />
+                                <p className="text-sm leading-relaxed flex-1">{opportunity}</p>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Strategic Vision */}
+              {result.comprehensive_plan.strategicVision && (
+                <div className="relative group">
+                  <div className="absolute -inset-1 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-2xl blur-xl opacity-40"></div>
+                  <Card className="relative glass backdrop-blur-xl border border-purple-500/20 rounded-2xl shadow-xl">
+                    <CardHeader className="pb-3">
+                      <CardTitle className="flex items-center gap-2 text-base">
+                        <TrendingUp className="w-5 h-5 text-purple-500" />
+                        Success Vision
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="prose prose-sm max-w-none dark:prose-invert">
+                        <p className="leading-relaxed whitespace-pre-line">{result.comprehensive_plan.strategicVision}</p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              )}
+
+              {/* Roadmap - 3 Phase Cards */}
+              {result.comprehensive_plan.roadmap && (
+                <div className="space-y-4">
+                  <h3 className="text-sm font-semibold flex items-center gap-2">
+                    <MapPin className="w-4 h-4 text-primary" />
+                    Journey Roadmap
+                  </h3>
+                  <div className="grid md:grid-cols-3 gap-4">
+                    {['phase1', 'phase2', 'phase3'].map((phaseKey, idx) => {
+                      const phase = result.comprehensive_plan.roadmap[phaseKey];
+                      if (!phase) return null;
+                      
+                      const colors = [
+                        { from: 'blue-500', to: 'cyan-500', text: 'blue-500' },
+                        { from: 'purple-500', to: 'pink-500', text: 'purple-500' },
+                        { from: 'emerald-500', to: 'green-500', text: 'emerald-500' }
+                      ];
+                      const color = colors[idx];
+
+                      return (
+                        <div key={phaseKey} className="relative group">
+                          <div className={`absolute -inset-0.5 bg-gradient-to-r from-${color.from}/20 to-${color.to}/20 rounded-xl blur opacity-0 group-hover:opacity-100 transition-opacity`}></div>
+                          <div className={`relative glass backdrop-blur-sm border border-${color.from}/20 rounded-xl p-4 bg-${color.from}/5`}>
+                            <div className="flex items-center gap-2 mb-2">
+                              <div className={`w-8 h-8 rounded-lg bg-${color.from}/10 flex items-center justify-center`}>
+                                <span className={`text-${color.text} font-bold`}>{idx + 1}</span>
+                              </div>
+                              <div className="flex-1">
+                                <h4 className="font-semibold text-sm">{phase.name}</h4>
+                                <p className={`text-xs text-${color.text}/70`}>{phase.timeline}</p>
+                              </div>
+                            </div>
+                            {phase.milestones && phase.milestones.length > 0 && (
+                              <ul className="space-y-2 mt-3">
+                                {phase.milestones.map((milestone: string, mIdx: number) => (
+                                  <li key={mIdx} className="flex items-start gap-2 text-xs">
+                                    <CheckCircle className={`w-3 h-3 text-${color.text} mt-0.5 flex-shrink-0`} />
+                                    <span className="leading-relaxed">{milestone}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Key Objectives & Success Metrics - Side by side */}
+              <div className="grid md:grid-cols-2 gap-4">
+                {result.comprehensive_plan.keyObjectives && result.comprehensive_plan.keyObjectives.length > 0 && (
+                  <Card className="glass backdrop-blur-xl border border-border/40 rounded-xl">
+                    <CardHeader className="pb-3">
+                      <CardTitle className="flex items-center gap-2 text-sm">
+                        <Target className="w-4 h-4 text-primary" />
+                        Key Objectives
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <ul className="space-y-2">
+                        {result.comprehensive_plan.keyObjectives.map((objective: string, idx: number) => (
+                          <li key={idx} className="flex items-start gap-2 text-sm">
+                            <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                              <span className="text-xs font-semibold text-primary">{idx + 1}</span>
+                            </div>
+                            <span className="leading-relaxed flex-1">{objective}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </CardContent>
+                  </Card>
+                )}
+
+                {result.comprehensive_plan.successMetrics && result.comprehensive_plan.successMetrics.length > 0 && (
+                  <Card className="glass backdrop-blur-xl border border-border/40 rounded-xl">
+                    <CardHeader className="pb-3">
+                      <CardTitle className="flex items-center gap-2 text-sm">
+                        <TrendingUp className="w-4 h-4 text-emerald-500" />
+                        Success Metrics
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <ul className="space-y-2">
+                        {result.comprehensive_plan.successMetrics.map((metric: string, idx: number) => (
+                          <li key={idx} className="flex items-start gap-2 text-sm">
+                            <CheckCircle className="w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0" />
+                            <span className="leading-relaxed flex-1">{metric}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </CardContent>
+                  </Card>
+                )}
+              </div>
+
+              {/* Risk Assessment */}
+              {result.comprehensive_plan.riskAssessment && (
+                <Card className="glass backdrop-blur-xl border border-amber-500/20 rounded-xl">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="flex items-center gap-2 text-base">
+                      <Shield className="w-5 h-5 text-amber-500" />
+                      Risk Assessment & Mitigation
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      {result.comprehensive_plan.riskAssessment.risks && result.comprehensive_plan.riskAssessment.risks.length > 0 && (
+                        <div>
+                          <h4 className="text-sm font-semibold mb-3 text-red-600 dark:text-red-400">Potential Risks</h4>
+                          <ul className="space-y-2">
+                            {result.comprehensive_plan.riskAssessment.risks.map((risk: string, idx: number) => (
+                              <li key={idx} className="flex items-start gap-2 text-sm p-2 rounded-lg bg-red-500/5 border border-red-500/10">
+                                <AlertTriangle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
+                                <span className="leading-relaxed">{risk}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                      {result.comprehensive_plan.riskAssessment.mitigations && result.comprehensive_plan.riskAssessment.mitigations.length > 0 && (
+                        <div>
+                          <h4 className="text-sm font-semibold mb-3 text-emerald-600 dark:text-emerald-400">Mitigation Strategies</h4>
+                          <ul className="space-y-2">
+                            {result.comprehensive_plan.riskAssessment.mitigations.map((mitigation: string, idx: number) => (
+                              <li key={idx} className="flex items-start gap-2 text-sm p-2 rounded-lg bg-emerald-500/5 border border-emerald-500/10">
+                                <Shield className="w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0" />
+                                <span className="leading-relaxed">{mitigation}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+          ) : (
+            <div className="flex items-center justify-center h-32">
+              <Loader2 className="w-6 h-6 animate-spin mr-2" />
+              Generating strategic overview...
+            </div>
+          )}
         </TabsContent>
 
         <TabsContent value="plan" className="mt-4">
