@@ -101,8 +101,7 @@ export function ToolPromptDetailModal({ toolPrompt, isOpen, onClose }: ToolPromp
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-background text-foreground"
->
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <div className="flex items-start justify-between">
             <div>
