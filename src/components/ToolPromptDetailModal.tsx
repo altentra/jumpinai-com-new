@@ -1,15 +1,7 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Copy, Sparkles, ExternalLink } from "lucide-react";
+import { Copy, Sparkles } from "lucide-react";
 import type { Database } from "@/integrations/supabase/types";
-import { useJumpInfo } from "@/hooks/useJumpInfo";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 
@@ -27,143 +19,55 @@ export function ToolPromptDetailModal({ toolPrompt, isOpen, onClose }: ToolPromp
   
   if (!toolPrompt) return null;
 
-  // Safely extract string values
-  const safeString = (val: any): string => {
-    if (val === null || val === undefined) return '';
-    if (typeof val === 'string') return val;
-    return String(val);
-  };
-
-  const title = safeString(toolPrompt.title) || 'Tool & Prompt';
-  const description = safeString(toolPrompt.description);
-  const toolName = safeString(toolPrompt.tool_name);
-  const category = safeString(toolPrompt.category);
-  const toolUrl = safeString(toolPrompt.tool_url);
-  const promptText = safeString(toolPrompt.prompt_text) || 'No prompt available';
-  const promptInstructions = safeString(toolPrompt.prompt_instructions);
-
-  const { jumpInfo } = useJumpInfo(toolPrompt.jump_id || undefined);
-
   const copyToClipboard = async () => {
     try {
-      await navigator.clipboard.writeText(promptText);
+      await navigator.clipboard.writeText(toolPrompt.prompt_text || '');
       setCopied(true);
-      toast({
-        title: "Copied!",
-        description: "Prompt copied to clipboard.",
-      });
+      toast({ title: "Copied!" });
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      toast({
-        title: "Failed to copy",
-        description: "Please try again.",
-        variant: "destructive",
-      });
+      toast({ title: "Failed to copy", variant: "destructive" });
     }
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-2xl mb-2 flex items-center gap-2">
-            <Sparkles className="h-6 w-6 text-primary" />
-            {title}
+          <DialogTitle className="text-2xl flex items-center gap-2">
+            <Sparkles className="h-6 w-6" />
+            {toolPrompt.title}
           </DialogTitle>
-          {jumpInfo && (
-            <p className="text-sm text-muted-foreground">
-              From Jump: {jumpInfo.title}
-            </p>
-          )}
         </DialogHeader>
 
-        <div className="space-y-6">
-          {/* Description */}
-          {description && (
+        <div className="space-y-6 p-4">
+          {toolPrompt.description && (
             <div>
-              <p className="text-sm text-muted-foreground">{description}</p>
+              <h3 className="font-semibold mb-2">Description</h3>
+              <p className="text-sm">{toolPrompt.description}</p>
             </div>
           )}
 
-          {/* Tool Information */}
-          {toolName && (
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">AI Tool</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">{toolName}</p>
-                    {category && (
-                      <Badge variant="outline" className="mt-1">{category}</Badge>
-                    )}
-                  </div>
-                  {toolUrl && (
-                    <a 
-                      href={toolUrl} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="text-primary hover:underline flex items-center gap-1"
-                    >
-                      <ExternalLink className="h-4 w-4" />
-                      Visit
-                    </a>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
+          {toolPrompt.tool_name && (
+            <div>
+              <h3 className="font-semibold mb-2">Tool</h3>
+              <p className="text-sm">{toolPrompt.tool_name}</p>
+            </div>
           )}
 
-          {/* Prompt */}
-          <Card className="border-primary/20">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-lg">Custom Prompt</CardTitle>
-                <Button
-                  onClick={copyToClipboard}
-                  variant="outline"
-                  size="sm"
-                  className="gap-2"
-                >
-                  <Copy className="h-4 w-4" />
-                  {copied ? "Copied!" : "Copy"}
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="bg-muted/30 rounded-lg p-4 border">
-                <pre className="whitespace-pre-wrap text-sm font-mono">
-                  {promptText}
-                </pre>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Instructions */}
-          {promptInstructions && (
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">How to Use</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm whitespace-pre-wrap">{promptInstructions}</p>
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Metadata */}
-          <div className="text-xs text-muted-foreground space-y-1">
-            {toolPrompt.created_at && <p>Created: {formatDate(toolPrompt.created_at)}</p>}
-            {toolPrompt.updated_at && <p>Updated: {formatDate(toolPrompt.updated_at)}</p>}
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="font-semibold">Prompt</h3>
+              <Button onClick={copyToClipboard} size="sm" variant="outline">
+                <Copy className="h-4 w-4 mr-2" />
+                {copied ? "Copied!" : "Copy"}
+              </Button>
+            </div>
+            <div className="bg-muted p-4 rounded-lg">
+              <pre className="whitespace-pre-wrap text-sm">
+                {toolPrompt.prompt_text || 'No prompt available'}
+              </pre>
+            </div>
           </div>
         </div>
       </DialogContent>
