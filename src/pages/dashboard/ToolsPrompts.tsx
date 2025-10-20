@@ -28,6 +28,8 @@ export default function ToolsPrompts() {
   const { jumpsInfo } = useJumpsInfo(jumpIds);
 
   useEffect(() => {
+    console.log('🔄 ToolsPrompts useEffect - user:', user);
+    console.log('🔄 User ID:', user?.id);
     if (user?.id) {
       loadToolPrompts();
     }
@@ -38,14 +40,21 @@ export default function ToolsPrompts() {
   }, [toolPrompts, searchTerm, filterCategory]);
 
   const loadToolPrompts = async () => {
-    if (!user?.id) return;
+    if (!user?.id) {
+      console.log('❌ No user ID available for loading tool prompts');
+      return;
+    }
+    
+    console.log('📥 Loading tool prompts for user:', user.id);
     
     try {
       setLoading(true);
       const userToolPrompts = await toolPromptsService.getUserToolPrompts(user.id);
+      console.log('✅ Loaded tool prompts:', userToolPrompts);
+      console.log('📊 Total tool prompts:', userToolPrompts.length);
       setToolPrompts(userToolPrompts);
     } catch (error) {
-      console.error('Error loading tool-prompts:', error);
+      console.error('❌ Error loading tool-prompts:', error);
     } finally {
       setLoading(false);
     }

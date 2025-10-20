@@ -6,6 +6,8 @@ type UserToolPromptInsert = Database['public']['Tables']['user_tool_prompts']['I
 
 export const toolPromptsService = {
   async getUserToolPrompts(userId: string): Promise<UserToolPrompt[]> {
+    console.log('🔍 toolPromptsService.getUserToolPrompts - userId:', userId);
+    
     const { data, error } = await supabase
       .from('user_tool_prompts')
       .select('*')
@@ -13,9 +15,12 @@ export const toolPromptsService = {
       .order('created_at', { ascending: false });
 
     if (error) {
-      console.error('Error fetching user tool-prompts:', error);
+      console.error('❌ Error fetching user tool-prompts:', error);
       throw error;
     }
+
+    console.log('✅ toolPromptsService - fetched data:', data);
+    console.log('📊 Number of records:', data?.length || 0);
 
     return data || [];
   },
