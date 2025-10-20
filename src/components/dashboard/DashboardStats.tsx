@@ -12,9 +12,9 @@ interface DashboardStatsProps {
 
 export const DashboardStats: React.FC<DashboardStatsProps> = ({ stats, isLoading }) => {
   const navigate = useNavigate();
-  const totalItems = stats.totalJumps + stats.totalTools + stats.totalPrompts;
+  const totalItems = stats.totalJumps + stats.totalToolPrompts;
   
-  const totalImplemented = stats.implementedJumps + stats.implementedTools + stats.implementedPrompts;
+  const totalImplemented = stats.implementedJumps + stats.implementedToolPrompts;
   
   const implementationRate = totalItems > 0 ? (totalImplemented / totalItems) * 100 : 0;
 
@@ -37,22 +37,13 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({ stats, isLoading
       path: '/dashboard/jumps',
     },
     {
-      title: 'Tools',
-      value: stats.totalTools,
-      implemented: stats.implementedTools,
+      title: 'Tools & Prompts',
+      value: stats.totalToolPrompts,
+      implemented: stats.implementedToolPrompts,
       icon: Wrench,
-      color: 'text-orange-500',
-      bgColor: 'bg-orange-500/10',
-      path: '/dashboard/tools',
-    },
-    {
-      title: 'Prompts',
-      value: stats.totalPrompts,
-      implemented: stats.implementedPrompts,
-      icon: Lightbulb,
       color: 'text-purple-500',
       bgColor: 'bg-purple-500/10',
-      path: '/dashboard/prompts',
+      path: '/dashboard/tools-prompts',
     },
   ];
 

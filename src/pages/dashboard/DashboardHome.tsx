@@ -83,39 +83,11 @@ const DashboardHome = () => {
       color: "text-blue-500"
     },
     {
-      title: "My Tools", 
-      description: "Manage your AI tools",
+      title: "Tools & Prompts", 
+      description: "AI tools paired with custom prompts",
       icon: Wrench,
-      path: "/dashboard/tools",
-      color: "text-orange-500"
-    },
-    {
-      title: "My Prompts", 
-      description: "Create and organize your prompts",
-      icon: Lightbulb,
-      path: "/dashboard/prompts",
+      path: "/dashboard/tools-prompts",
       color: "text-purple-500"
-    },
-    {
-      title: "My Workflows",
-      description: "Build and manage your workflows", 
-      icon: GitBranch,
-      path: "/dashboard/workflows",
-      color: "text-green-500"
-    },
-    {
-      title: "My Blueprints",
-      description: "Design your project blueprints",
-      icon: Boxes, 
-      path: "/dashboard/blueprints",
-      color: "text-cyan-500"
-    },
-    {
-      title: "My Strategies",
-      description: "Plan and execute your strategies",
-      icon: Target,
-      path: "/dashboard/strategies", 
-      color: "text-pink-500"
     }
   ];
 

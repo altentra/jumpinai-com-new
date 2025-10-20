@@ -3,11 +3,9 @@ import { supabase } from "@/integrations/supabase/client";
 export interface DashboardStats {
   credits: number;
   totalJumps: number;
-  totalTools: number;
-  totalPrompts: number;
+  totalToolPrompts: number;
   implementedJumps: number;
-  implementedTools: number;
-  implementedPrompts: number;
+  implementedToolPrompts: number;
 }
 
 export interface ActivityData {
@@ -33,37 +31,27 @@ export const dashboardStatsService = {
         .select('id, implemented')
         .eq('user_id', userId) as any;
 
-      // Get tools count and implemented count
-      const { data: toolsData } = await supabase
-        .from('user_tools')
-        .select('id, implemented')
-        .eq('user_id', userId) as any;
-
-      // Get prompts count and implemented count
-      const { data: promptsData } = await supabase
-        .from('user_prompts')
+      // Get tool prompts count and implemented count
+      const { data: toolPromptsData } = await supabase
+        .from('user_tool_prompts')
         .select('id, implemented')
         .eq('user_id', userId) as any;
 
       return {
         credits: creditsData?.credits_balance || 0,
         totalJumps: jumpsData?.length || 0,
-        totalTools: toolsData?.length || 0,
-        totalPrompts: promptsData?.length || 0,
+        totalToolPrompts: toolPromptsData?.length || 0,
         implementedJumps: jumpsData?.filter((j: any) => j.implemented).length || 0,
-        implementedTools: toolsData?.filter((t: any) => t.implemented).length || 0,
-        implementedPrompts: promptsData?.filter((p: any) => p.implemented).length || 0,
+        implementedToolPrompts: toolPromptsData?.filter((tp: any) => tp.implemented).length || 0,
       };
     } catch (error) {
       console.error('Error fetching dashboard stats:', error);
       return {
         credits: 0,
         totalJumps: 0,
-        totalTools: 0,
-        totalPrompts: 0,
+        totalToolPrompts: 0,
         implementedJumps: 0,
-        implementedTools: 0,
-        implementedPrompts: 0,
+        implementedToolPrompts: 0,
       };
     }
   },
@@ -74,10 +62,9 @@ export const dashboardStatsService = {
       startDate.setDate(startDate.getDate() - days);
 
       // Fetch all data with created_at timestamps
-      const [jumpsRes, toolsRes, promptsRes] = await Promise.all([
+      const [jumpsRes, toolPromptsRes] = await Promise.all([
         supabase.from('user_jumps').select('created_at').eq('user_id', userId).gte('created_at', startDate.toISOString()),
-        supabase.from('user_tools').select('created_at').eq('user_id', userId).gte('created_at', startDate.toISOString()),
-        supabase.from('user_prompts').select('created_at').eq('user_id', userId).gte('created_at', startDate.toISOString()),
+        supabase.from('user_tool_prompts').select('created_at').eq('user_id', userId).gte('created_at', startDate.toISOString()),
       ]);
 
       // Create a map for all dates in range
@@ -98,14 +85,12 @@ export const dashboardStatsService = {
         }
       });
 
-      // Count components per day
-      [toolsRes, promptsRes].forEach(res => {
-        res.data?.forEach(item => {
-          const dateKey = new Date(item.created_at).toISOString().split('T')[0];
-          if (dateMap.has(dateKey)) {
-            dateMap.get(dateKey)!.components += 1;
-          }
-        });
+      // Count tool-prompts per day
+      toolPromptsRes.data?.forEach(item => {
+        const dateKey = new Date(item.created_at).toISOString().split('T')[0];
+        if (dateMap.has(dateKey)) {
+          dateMap.get(dateKey)!.components += 1;
+        }
       });
 
       // Convert to array and sort by date
