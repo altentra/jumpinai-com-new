@@ -38,28 +38,28 @@ export function ToolPromptDetailModal({ toolPrompt, isOpen, onClose }: ToolPromp
   
   const content = toolPrompt.content as any;
   const displayItem = {
-    title: toolPrompt.title,
-    description: content?.description || toolPrompt.description,
-    category: content?.category || toolPrompt.category,
-    tool_name: content?.tool_name || toolPrompt.tool_name,
-    tool_url: content?.tool_url || content?.url || toolPrompt.tool_url,
-    tool_type: content?.tool_type || toolPrompt.tool_type,
-    prompt_text: content?.prompt_text || content?.custom_prompt || content?.prompt || toolPrompt.prompt_text,
-    prompt_instructions: content?.prompt_instructions || content?.instructions || toolPrompt.prompt_instructions,
-    use_cases: content?.use_cases || toolPrompt.use_cases || [],
-    tags: content?.tags || toolPrompt.tags || [],
-    difficulty_level: content?.difficulty_level || content?.difficulty || toolPrompt.difficulty_level,
-    setup_time: content?.setup_time || toolPrompt.setup_time,
-    cost_estimate: content?.cost_estimate || content?.cost || toolPrompt.cost_estimate,
-    integration_complexity: content?.integration_complexity || toolPrompt.integration_complexity,
-    features: content?.features || toolPrompt.features || [],
-    limitations: content?.limitations || toolPrompt.limitations || [],
-    ai_tools: content?.ai_tools || toolPrompt.ai_tools || [],
-    why_this_tool: content?.why_this_tool || content?.why_this_combo,
-    when_to_use: content?.when_to_use,
-    alternatives: content?.alternatives || [],
-    best_practices: content?.best_practices || [],
-    examples: content?.examples || []
+    title: toolPrompt.title || 'Untitled',
+    description: content?.description || toolPrompt.description || '',
+    category: content?.category || toolPrompt.category || '',
+    tool_name: content?.tool_name || toolPrompt.tool_name || '',
+    tool_url: content?.tool_url || content?.url || toolPrompt.tool_url || '',
+    tool_type: content?.tool_type || toolPrompt.tool_type || '',
+    prompt_text: content?.prompt_text || content?.custom_prompt || content?.prompt || toolPrompt.prompt_text || 'No prompt available',
+    prompt_instructions: content?.prompt_instructions || content?.instructions || toolPrompt.prompt_instructions || '',
+    use_cases: Array.isArray(content?.use_cases) ? content.use_cases : (Array.isArray(toolPrompt.use_cases) ? toolPrompt.use_cases : []),
+    tags: Array.isArray(content?.tags) ? content.tags : (Array.isArray(toolPrompt.tags) ? toolPrompt.tags : []),
+    difficulty_level: content?.difficulty_level || content?.difficulty || toolPrompt.difficulty_level || '',
+    setup_time: content?.setup_time || toolPrompt.setup_time || '',
+    cost_estimate: content?.cost_estimate || content?.cost || toolPrompt.cost_estimate || '',
+    integration_complexity: content?.integration_complexity || toolPrompt.integration_complexity || '',
+    features: Array.isArray(content?.features) ? content.features : (Array.isArray(toolPrompt.features) ? toolPrompt.features : []),
+    limitations: Array.isArray(content?.limitations) ? content.limitations : (Array.isArray(toolPrompt.limitations) ? toolPrompt.limitations : []),
+    ai_tools: Array.isArray(content?.ai_tools) ? content.ai_tools : (Array.isArray(toolPrompt.ai_tools) ? toolPrompt.ai_tools : []),
+    why_this_tool: content?.why_this_tool || content?.why_this_combo || '',
+    when_to_use: content?.when_to_use || '',
+    alternatives: Array.isArray(content?.alternatives) ? content.alternatives : [],
+    best_practices: Array.isArray(content?.best_practices) ? content.best_practices : [],
+    examples: Array.isArray(content?.examples) ? content.examples : []
   };
 
   const copyToClipboard = async () => {
@@ -263,12 +263,12 @@ export function ToolPromptDetailModal({ toolPrompt, isOpen, onClose }: ToolPromp
                   {displayItem.alternatives.map((alt: any, index: number) => (
                     <div key={index} className="p-3 bg-muted/30 rounded-lg border flex items-start justify-between gap-3">
                       <div className="flex-1">
-                        <p className="font-medium text-sm mb-1">{alt.tool || alt.name}</p>
-                        {alt.note && (
+                        <p className="font-medium text-sm mb-1">{alt?.tool || alt?.name || 'Alternative Tool'}</p>
+                        {alt?.note && (
                           <p className="text-xs text-muted-foreground">{alt.note}</p>
                         )}
                       </div>
-                      {(alt.url || alt.tool_url) && (
+                      {(alt?.url || alt?.tool_url) && (
                         <a 
                           href={alt.url || alt.tool_url} 
                           target="_blank" 
