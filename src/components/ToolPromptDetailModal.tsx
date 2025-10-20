@@ -336,10 +336,10 @@ export function ToolPromptDetailModal({ toolPrompt, isOpen, onClose }: ToolPromp
                   Use Cases
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+               <CardContent>
                 <ul className="list-disc list-inside space-y-1">
                   {displayItem.use_cases.map((useCase, index) => (
-                    <li key={index} className="text-sm">{useCase}</li>
+                    <li key={index} className="text-sm">{typeof useCase === 'string' ? useCase : JSON.stringify(useCase)}</li>
                   ))}
                 </ul>
               </CardContent>
@@ -352,10 +352,10 @@ export function ToolPromptDetailModal({ toolPrompt, isOpen, onClose }: ToolPromp
               <CardHeader>
                 <CardTitle className="text-lg">Key Features</CardTitle>
               </CardHeader>
-              <CardContent>
+               <CardContent>
                 <ul className="list-disc list-inside space-y-1">
                   {displayItem.features.map((feature, index) => (
-                    <li key={index} className="text-sm">{feature}</li>
+                    <li key={index} className="text-sm">{typeof feature === 'string' ? feature : JSON.stringify(feature)}</li>
                   ))}
                 </ul>
               </CardContent>
@@ -371,10 +371,10 @@ export function ToolPromptDetailModal({ toolPrompt, isOpen, onClose }: ToolPromp
                   Best Practices
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+               <CardContent>
                 <ul className="list-disc list-inside space-y-1">
                   {displayItem.best_practices.map((practice, index) => (
-                    <li key={index} className="text-sm">{practice}</li>
+                    <li key={index} className="text-sm">{typeof practice === 'string' ? practice : JSON.stringify(practice)}</li>
                   ))}
                 </ul>
               </CardContent>
@@ -387,11 +387,11 @@ export function ToolPromptDetailModal({ toolPrompt, isOpen, onClose }: ToolPromp
               <CardHeader>
                 <CardTitle className="text-lg">Examples</CardTitle>
               </CardHeader>
-              <CardContent>
+               <CardContent>
                 <div className="space-y-3">
                   {displayItem.examples.map((example, index) => (
                     <div key={index} className="p-3 bg-muted/30 rounded-lg border">
-                      <p className="text-sm">{example}</p>
+                      <p className="text-sm">{typeof example === 'string' ? example : JSON.stringify(example)}</p>
                     </div>
                   ))}
                 </div>
@@ -408,10 +408,10 @@ export function ToolPromptDetailModal({ toolPrompt, isOpen, onClose }: ToolPromp
                   Limitations & Considerations
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+               <CardContent>
                 <ul className="list-disc list-inside space-y-1">
                   {displayItem.limitations.map((limitation, index) => (
-                    <li key={index} className="text-sm text-muted-foreground">{limitation}</li>
+                    <li key={index} className="text-sm text-muted-foreground">{typeof limitation === 'string' ? limitation : JSON.stringify(limitation)}</li>
                   ))}
                 </ul>
               </CardContent>
