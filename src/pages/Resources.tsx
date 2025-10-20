@@ -23,7 +23,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ResourceBlueprintModal from "@/components/ResourceBlueprintModal";
-import PromptDetailModal from "@/components/PromptDetailModal";
 
 // Updated data models with structured information
 type Tool = {
@@ -1932,8 +1931,6 @@ export default function Resources() {
   
   // Modal states
   const [selectedBlueprint, setSelectedBlueprint] = useState<Blueprint | null>(null);
-  const [selectedPrompt, setSelectedPrompt] = useState<PromptTemplate | null>(null);
-  const [isPromptModalOpen, setIsPromptModalOpen] = useState(false);
   const [isBlueprintModalOpen, setIsBlueprintModalOpen] = useState(false);
 
   // Show all content if user has Pro subscription
@@ -1972,12 +1969,10 @@ export default function Resources() {
       if (type === 'blueprint' && 'template' in item) {
         setSelectedBlueprint(item as Blueprint);
         setIsBlueprintModalOpen(true);
-      } else if (type === 'prompt' && 'prompt' in item) {
-        setSelectedPrompt(item as PromptTemplate);
-        setIsPromptModalOpen(true);
       } else if (type === 'tool' && 'url' in item) {
         window.open((item as Tool).url, '_blank');
       }
+      // Prompt cards are view-only (no modal needed)
     };
 
     const getCardIcon = () => {
@@ -2370,15 +2365,6 @@ export default function Resources() {
         onClose={() => {
           setIsBlueprintModalOpen(false);
           setSelectedBlueprint(null);
-        }}
-      />
-
-      <PromptDetailModal
-        prompt={selectedPrompt}
-        isOpen={isPromptModalOpen}
-        onClose={() => {
-          setIsPromptModalOpen(false);
-          setSelectedPrompt(null);
         }}
       />
     </>

@@ -85,6 +85,8 @@ export default function ToolsPrompts() {
   };
 
   const handleToolPromptClick = (toolPrompt: UserToolPrompt) => {
+    console.log('🔍 Clicked tool prompt:', toolPrompt);
+    console.log('🔍 Tool prompt content:', toolPrompt.content);
     setSelectedToolPrompt(toolPrompt);
     setIsModalOpen(true);
   };

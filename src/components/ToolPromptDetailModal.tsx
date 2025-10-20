@@ -29,7 +29,12 @@ export function ToolPromptDetailModal({ toolPrompt, isOpen, onClose }: ToolPromp
   
   if (!toolPrompt) return null;
 
+  console.log('🎯 Modal opening with toolPrompt:', toolPrompt);
+  console.log('🎯 Jump ID:', toolPrompt.jump_id);
+
   const { jumpInfo } = useJumpInfo(toolPrompt.jump_id || undefined);
+  
+  console.log('🎯 Jump Info:', jumpInfo);
   
   const content = toolPrompt.content as any;
   const displayItem = {
