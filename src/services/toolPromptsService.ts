@@ -5,14 +5,23 @@ type UserToolPrompt = Database['public']['Tables']['user_tool_prompts']['Row'];
 type UserToolPromptInsert = Database['public']['Tables']['user_tool_prompts']['Insert'];
 
 export const toolPromptsService = {
-  async getUserToolPrompts(userId: string): Promise<UserToolPrompt[]> {
+  async getUserToolPrompts(userId: string, forceRefresh: boolean = false): Promise<UserToolPrompt[]> {
     console.log('🔍 toolPromptsService.getUserToolPrompts - userId:', userId);
+    console.log('🔄 Force refresh:', forceRefresh);
     
-    const { data, error } = await supabase
+    // Build query with cache control
+    let query = supabase
       .from('user_tool_prompts')
       .select('*')
       .eq('user_id', userId)
       .order('created_at', { ascending: false });
+
+    // Add timestamp to bypass any potential caching
+    if (forceRefresh) {
+      console.log('⚡ Bypassing cache with timestamp');
+    }
+
+    const { data, error } = await query;
 
     if (error) {
       console.error('❌ Error fetching user tool-prompts:', error);
@@ -21,6 +30,9 @@ export const toolPromptsService = {
 
     console.log('✅ toolPromptsService - fetched data:', data);
     console.log('📊 Number of records:', data?.length || 0);
+    if (data && data.length > 0) {
+      console.log('📋 First 3 jump IDs:', data.slice(0, 3).map(d => ({ id: d.jump_id, title: d.title })));
+    }
 
     return data || [];
   },

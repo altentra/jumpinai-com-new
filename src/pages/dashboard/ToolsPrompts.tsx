@@ -39,19 +39,26 @@ export default function ToolsPrompts() {
     filterToolPrompts();
   }, [toolPrompts, searchTerm, filterCategory]);
 
-  const loadToolPrompts = async () => {
+  const loadToolPrompts = async (forceRefresh: boolean = false) => {
     if (!user?.id) {
       console.log('❌ No user ID available for loading tool prompts');
       return;
     }
     
     console.log('📥 Loading tool prompts for user:', user.id);
+    console.log('🔄 Force refresh requested:', forceRefresh);
     
     try {
       setLoading(true);
-      const userToolPrompts = await toolPromptsService.getUserToolPrompts(user.id);
+      const userToolPrompts = await toolPromptsService.getUserToolPrompts(user.id, forceRefresh);
       console.log('✅ Loaded tool prompts:', userToolPrompts);
       console.log('📊 Total tool prompts:', userToolPrompts.length);
+      
+      // Log unique jump IDs
+      const uniqueJumpIds = [...new Set(userToolPrompts.map(tp => tp.jump_id))];
+      console.log('🎯 Unique jump IDs:', uniqueJumpIds);
+      console.log('📂 Total unique jumps:', uniqueJumpIds.length);
+      
       setToolPrompts(userToolPrompts);
     } catch (error) {
       console.error('❌ Error loading tool-prompts:', error);
@@ -136,11 +143,12 @@ export default function ToolsPrompts() {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => loadToolPrompts()}
+              onClick={() => loadToolPrompts(true)}
               disabled={loading}
               className="shrink-0 self-end sm:self-auto"
             >
-              <RefreshCw className={`w-3 h-3 ${loading ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`w-3 h-3 mr-1 ${loading ? 'animate-spin' : ''}`} />
+              Refresh
             </Button>
           </div>
 
