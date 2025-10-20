@@ -243,17 +243,15 @@ export default function ToolsPrompts() {
               .map(([jumpId, jumpToolPrompts]) => {
                 const jumpInfo = jumpsInfo[jumpId];
                 
-                if (!jumpInfo) {
-                  console.warn('⚠️ No jump info found for jump ID:', jumpId);
-                  return null;
-                }
+                // Show the section even if jump info is still loading
+                const displayTitle = jumpInfo?.title || `Jump (Loading...)`;
                 
                 return (
                   <div key={jumpId} className="space-y-3 sm:space-y-4">
                     <div className="flex items-center gap-2 px-1 sm:px-0">
                       <Rocket className="h-4 w-4 text-primary" />
                       <h3 className="text-base sm:text-lg font-semibold text-foreground">
-                        {jumpInfo?.title || 'Jump'}
+                        {displayTitle}
                       </h3>
                       <Badge variant="outline" className="text-xs">
                         {jumpToolPrompts.length} {jumpToolPrompts.length === 1 ? 'item' : 'items'}
@@ -326,8 +324,7 @@ export default function ToolsPrompts() {
                     </div>
                   </div>
                 );
-              })
-              .filter(Boolean)}
+              })}
           </div>
         )}
       </div>
