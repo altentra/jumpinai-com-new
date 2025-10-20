@@ -72,6 +72,15 @@ export default function ToolsPrompts() {
       console.log('🎯 Unique jump IDs:', uniqueJumpIds);
       console.log('📂 Total unique jumps:', uniqueJumpIds.length);
       
+      // Log how many prompts per jump
+      const promptsPerJump: Record<string, number> = {};
+      userToolPrompts.forEach(tp => {
+        if (tp.jump_id) {
+          promptsPerJump[tp.jump_id] = (promptsPerJump[tp.jump_id] || 0) + 1;
+        }
+      });
+      console.log('📊 Prompts per jump:', promptsPerJump);
+      
       setToolPrompts(userToolPrompts);
     } catch (error) {
       console.error('❌ Error loading tool-prompts:', error);
@@ -83,6 +92,8 @@ export default function ToolsPrompts() {
   const filterToolPrompts = () => {
     let filtered = toolPrompts;
 
+    console.log('🔍 Filtering - Starting with:', toolPrompts.length, 'prompts');
+
     if (searchTerm) {
       filtered = filtered.filter(tp =>
         tp.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -90,12 +101,15 @@ export default function ToolsPrompts() {
         tp.category?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         tp.tool_name?.toLowerCase().includes(searchTerm.toLowerCase())
       );
+      console.log('🔍 After search filter:', filtered.length, 'prompts');
     }
 
     if (filterCategory !== "all") {
       filtered = filtered.filter(tp => tp.category === filterCategory);
+      console.log('🔍 After category filter:', filtered.length, 'prompts');
     }
 
+    console.log('✅ Final filtered count:', filtered.length);
     setFilteredToolPrompts(filtered);
   };
 
@@ -227,21 +241,29 @@ export default function ToolsPrompts() {
           </Card>
         ) : (
           <div className="space-y-4 sm:space-y-6">
-            {Object.entries(
-              filteredToolPrompts.reduce((groups, tp) => {
+            {(() => {
+              const grouped = filteredToolPrompts.reduce((groups, tp) => {
                 const jumpId = tp.jump_id || 'unassigned';
                 if (!groups[jumpId]) groups[jumpId] = [];
                 groups[jumpId].push(tp);
                 return groups;
-              }, {} as Record<string, UserToolPrompt[]>)
-            )
-              .sort(([jumpIdA], [jumpIdB]) => {
+              }, {} as Record<string, UserToolPrompt[]>);
+              
+              console.log('📦 Grouped tool prompts:', Object.keys(grouped).length, 'groups');
+              console.log('📦 Group details:', Object.entries(grouped).map(([id, items]) => ({ id, count: items.length })));
+              
+              const sortedEntries = Object.entries(grouped).sort(([jumpIdA], [jumpIdB]) => {
                 if (jumpIdA === 'unassigned') return 1;
                 if (jumpIdB === 'unassigned') return -1;
                 return jumpIdB.localeCompare(jumpIdA);
-              })
-              .map(([jumpId, jumpToolPrompts]) => {
+              });
+              
+              console.log('📦 Sorted entries count:', sortedEntries.length);
+              
+              return sortedEntries.map(([jumpId, jumpToolPrompts]) => {
                 const jumpInfo = jumpsInfo[jumpId];
+                
+                console.log('🔍 Rendering jump section:', jumpId, 'Info:', jumpInfo?.title || 'Loading...');
                 
                 // Show the section even if jump info is still loading
                 const displayTitle = jumpInfo?.title || `Jump (Loading...)`;
@@ -324,7 +346,8 @@ export default function ToolsPrompts() {
                     </div>
                   </div>
                 );
-              })}
+              });
+            })()}
           </div>
         )}
       </div>
