@@ -24,14 +24,27 @@ export default function ToolsPrompts() {
   const [filterCategory, setFilterCategory] = useState<string>("all");
   const { user } = useAuth();
   
-  const jumpIds = toolPrompts.map(tp => tp.jump_id);
-  const { jumpsInfo } = useJumpsInfo(jumpIds);
+  const jumpIds = toolPrompts.map(tp => tp.jump_id).filter((id): id is string => !!id);
+  const { jumpsInfo, isLoading: jumpsLoading } = useJumpsInfo(jumpIds);
+  
+  console.log('🎯 ToolsPrompts state:', {
+    userLoggedIn: !!user,
+    userId: user?.id,
+    toolPromptsCount: toolPrompts.length,
+    jumpIdsCount: jumpIds.length,
+    jumpsInfoCount: Object.keys(jumpsInfo).length,
+    jumpsLoading
+  });
 
   useEffect(() => {
     console.log('🔄 ToolsPrompts useEffect - user:', user);
     console.log('🔄 User ID:', user?.id);
+    console.log('🔄 User email:', user?.email);
     if (user?.id) {
       loadToolPrompts();
+    } else {
+      console.warn('⚠️ No authenticated user found');
+      setLoading(false);
     }
   }, [user?.id]);
 
@@ -107,10 +120,13 @@ export default function ToolsPrompts() {
     setIsModalOpen(true);
   };
 
-  if (loading) {
+  if (loading || jumpsLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <Loader2 className="h-8 w-8 animate-spin" />
+      <div className="flex flex-col items-center justify-center min-h-[400px] gap-3">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <p className="text-sm text-muted-foreground">
+          {loading ? 'Loading tool prompts...' : 'Loading jump information...'}
+        </p>
       </div>
     );
   }
@@ -225,14 +241,19 @@ export default function ToolsPrompts() {
                 return jumpIdB.localeCompare(jumpIdA);
               })
               .map(([jumpId, jumpToolPrompts]) => {
-                const jumpInfo = jumpsInfo[jumpId] || { title: 'Unknown Jump', number: null };
+                const jumpInfo = jumpsInfo[jumpId];
+                
+                if (!jumpInfo) {
+                  console.warn('⚠️ No jump info found for jump ID:', jumpId);
+                  return null;
+                }
                 
                 return (
                   <div key={jumpId} className="space-y-3 sm:space-y-4">
                     <div className="flex items-center gap-2 px-1 sm:px-0">
                       <Rocket className="h-4 w-4 text-primary" />
                       <h3 className="text-base sm:text-lg font-semibold text-foreground">
-                        {jumpInfo.title}
+                        {jumpInfo?.title || 'Jump'}
                       </h3>
                       <Badge variant="outline" className="text-xs">
                         {jumpToolPrompts.length} {jumpToolPrompts.length === 1 ? 'item' : 'items'}
@@ -305,7 +326,8 @@ export default function ToolsPrompts() {
                     </div>
                   </div>
                 );
-              })}
+              })
+              .filter(Boolean)}
           </div>
         )}
       </div>
