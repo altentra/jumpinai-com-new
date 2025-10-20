@@ -27,12 +27,26 @@ export function ToolPromptDetailModal({ toolPrompt, isOpen, onClose }: ToolPromp
   
   if (!toolPrompt) return null;
 
+  // Safely extract string values
+  const safeString = (val: any): string => {
+    if (val === null || val === undefined) return '';
+    if (typeof val === 'string') return val;
+    return String(val);
+  };
+
+  const title = safeString(toolPrompt.title) || 'Tool & Prompt';
+  const description = safeString(toolPrompt.description);
+  const toolName = safeString(toolPrompt.tool_name);
+  const category = safeString(toolPrompt.category);
+  const toolUrl = safeString(toolPrompt.tool_url);
+  const promptText = safeString(toolPrompt.prompt_text) || 'No prompt available';
+  const promptInstructions = safeString(toolPrompt.prompt_instructions);
+
   const { jumpInfo } = useJumpInfo(toolPrompt.jump_id || undefined);
 
   const copyToClipboard = async () => {
-    const text = toolPrompt.prompt_text || 'No prompt available';
     try {
-      await navigator.clipboard.writeText(text);
+      await navigator.clipboard.writeText(promptText);
       setCopied(true);
       toast({
         title: "Copied!",
@@ -62,7 +76,7 @@ export function ToolPromptDetailModal({ toolPrompt, isOpen, onClose }: ToolPromp
         <DialogHeader>
           <DialogTitle className="text-2xl mb-2 flex items-center gap-2">
             <Sparkles className="h-6 w-6 text-primary" />
-            {toolPrompt.title || 'Tool & Prompt'}
+            {title}
           </DialogTitle>
           {jumpInfo && (
             <p className="text-sm text-muted-foreground">
@@ -73,14 +87,14 @@ export function ToolPromptDetailModal({ toolPrompt, isOpen, onClose }: ToolPromp
 
         <div className="space-y-6">
           {/* Description */}
-          {toolPrompt.description && (
+          {description && (
             <div>
-              <p className="text-sm text-muted-foreground">{toolPrompt.description}</p>
+              <p className="text-sm text-muted-foreground">{description}</p>
             </div>
           )}
 
           {/* Tool Information */}
-          {toolPrompt.tool_name && (
+          {toolName && (
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg">AI Tool</CardTitle>
@@ -88,14 +102,14 @@ export function ToolPromptDetailModal({ toolPrompt, isOpen, onClose }: ToolPromp
               <CardContent className="space-y-3">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="font-medium">{toolPrompt.tool_name}</p>
-                    {toolPrompt.category && (
-                      <Badge variant="outline" className="mt-1">{toolPrompt.category}</Badge>
+                    <p className="font-medium">{toolName}</p>
+                    {category && (
+                      <Badge variant="outline" className="mt-1">{category}</Badge>
                     )}
                   </div>
-                  {toolPrompt.tool_url && (
+                  {toolUrl && (
                     <a 
-                      href={toolPrompt.tool_url} 
+                      href={toolUrl} 
                       target="_blank" 
                       rel="noopener noreferrer"
                       className="text-primary hover:underline flex items-center gap-1"
@@ -128,28 +142,28 @@ export function ToolPromptDetailModal({ toolPrompt, isOpen, onClose }: ToolPromp
             <CardContent>
               <div className="bg-muted/30 rounded-lg p-4 border">
                 <pre className="whitespace-pre-wrap text-sm font-mono">
-                  {toolPrompt.prompt_text || 'No prompt available'}
+                  {promptText}
                 </pre>
               </div>
             </CardContent>
           </Card>
 
           {/* Instructions */}
-          {toolPrompt.prompt_instructions && (
+          {promptInstructions && (
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg">How to Use</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm whitespace-pre-wrap">{toolPrompt.prompt_instructions}</p>
+                <p className="text-sm whitespace-pre-wrap">{promptInstructions}</p>
               </CardContent>
             </Card>
           )}
 
           {/* Metadata */}
           <div className="text-xs text-muted-foreground space-y-1">
-            <p>Created: {formatDate(toolPrompt.created_at)}</p>
-            <p>Updated: {formatDate(toolPrompt.updated_at)}</p>
+            {toolPrompt.created_at && <p>Created: {formatDate(toolPrompt.created_at)}</p>}
+            {toolPrompt.updated_at && <p>Updated: {formatDate(toolPrompt.updated_at)}</p>}
           </div>
         </div>
       </DialogContent>
