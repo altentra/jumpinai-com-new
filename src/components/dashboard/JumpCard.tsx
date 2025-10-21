@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Calendar, Trash2, ArrowRight } from "lucide-react";
 import { UserJump } from "@/services/jumpService";
 import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
 
 interface JumpCardProps {
   jump: UserJump;
@@ -13,6 +14,7 @@ interface JumpCardProps {
 }
 
 export default function JumpCard({ jump, jumpNumber, onView, onDelete }: JumpCardProps) {
+  const navigate = useNavigate();
   const formatDate = (dateString: string) => {
     return format(new Date(dateString), 'MMM dd, yyyy h:mm a');
   };
@@ -31,7 +33,7 @@ export default function JumpCard({ jump, jumpNumber, onView, onDelete }: JumpCar
     if ((e.target as HTMLElement).closest('[data-delete-button]')) {
       return;
     }
-    onView(jump);
+    navigate(`/dashboard/jump/${jump.id}`);
   };
 
   const handleDeleteClick = (e: React.MouseEvent) => {
@@ -95,7 +97,7 @@ export default function JumpCard({ jump, jumpNumber, onView, onDelete }: JumpCar
             className="w-full relative overflow-hidden rounded-full bg-gradient-to-br from-gray-950/90 to-gray-900/80 border border-border/30 hover:border-primary/40 shadow-xl hover:shadow-2xl hover:shadow-primary/20 transition-all duration-500 hover:scale-[1.02] font-bold text-white h-12"
             onClick={(e) => {
               e.stopPropagation();
-              onView(jump);
+              navigate(`/dashboard/jump/${jump.id}`);
             }}
           >
             {/* Glass morphism overlay effects */}

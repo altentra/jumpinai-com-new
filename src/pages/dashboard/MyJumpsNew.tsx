@@ -5,15 +5,12 @@ import { Button } from "@/components/ui/button";
 import { getUserJumps, deleteJump, UserJump } from "@/services/jumpService";
 import { useOptimizedAuth } from "@/hooks/useOptimizedAuth";
 import JumpCard from "@/components/dashboard/JumpCard";
-import JumpDetailModal from "@/components/dashboard/JumpDetailModal";
 import { toast } from 'sonner';
 import { Link } from 'react-router-dom';
 
 export default function MyJumpsNew() {
   const [jumps, setJumps] = useState<UserJump[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedJump, setSelectedJump] = useState<UserJump | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const { isAuthenticated, isLoading: authLoading } = useOptimizedAuth();
 
   // Load user jumps
@@ -48,8 +45,7 @@ export default function MyJumpsNew() {
   }, [loading, isAuthenticated]);
 
   const handleViewJump = (jump: UserJump) => {
-    setSelectedJump(jump);
-    setIsModalOpen(true);
+    // Navigation is now handled in JumpCard component
   };
 
   const handleDeleteJump = async (jumpId: string) => {
@@ -65,11 +61,6 @@ export default function MyJumpsNew() {
       console.error('Error deleting jump:', error);
       toast.error('Failed to delete jump');
     }
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setSelectedJump(null);
   };
 
   if (authLoading || loading) {
@@ -213,13 +204,6 @@ export default function MyJumpsNew() {
           </CardContent>
         </Card>
       )}
-
-      {/* Jump Detail Modal */}
-      <JumpDetailModal
-        jump={selectedJump}
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-      />
     </div>
   );
 }

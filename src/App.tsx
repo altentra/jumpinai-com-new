@@ -29,6 +29,7 @@ const Auth = lazy(() => import("./pages/Auth"));
 const PricingNew = lazy(() => import("./pages/PricingNew"));
 const JumpinAIStudio = lazy(() => import("./pages/JumpinAIStudio"));
 const SyncStripe = lazy(() => import("./pages/SyncStripe"));
+const ViewJump = lazy(() => import("./pages/dashboard/ViewJump"));
 
 // Loading component for Suspense
 const PageLoader = () => (
@@ -89,6 +90,7 @@ const App = () => {
               <Route path="/download/:token" element={<Download />} />
               <Route path="/download-pro/:productId" element={<DownloadPro />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/dashboard/jump/:jumpId" element={<ViewJump />} />
               <Route path="/dashboard/*" element={<Dashboard />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="*" element={<NotFound />} />
