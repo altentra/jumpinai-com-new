@@ -53,7 +53,7 @@ export default function ToolsPrompts() {
         .from('user_tool_prompts')
         .select('*')
         .eq('user_id', user.id)
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: true });
 
       if (promptsError) throw promptsError;
       
