@@ -14,7 +14,7 @@ interface JumpCardProps {
 
 export default function JumpCard({ jump, jumpNumber, onView, onDelete }: JumpCardProps) {
   const formatDate = (dateString: string) => {
-    return format(new Date(dateString), 'MMM dd, yyyy');
+    return format(new Date(dateString), 'MMM dd, yyyy h:mm a');
   };
 
   // Extract name from title if it has "Jump #X: " prefix
