@@ -248,302 +248,161 @@ Return ONLY valid JSON:
       };
     
     case 2:
-      // STEP 2: Comprehensive overview - SIGNIFICANTLY ENHANCED FOR DEPTH
+      // STEP 2: Strategic Overview - CONCISE & HIGH-IMPACT
       return {
-        systemPrompt: `You are a senior AI transformation strategist with 15+ years of experience. Your role is to provide COMPREHENSIVE, DETAILED strategic analysis. Every section must be thorough, specific, and actionable. Provide professional-grade depth.`,
-        userPrompt: `Conduct a COMPREHENSIVE strategic analysis of this person's situation:
+        systemPrompt: `You are a senior strategy consultant known for clarity and precision. Provide sharp, actionable insights with zero fluff. Every word must add value. Focus on QUALITY over quantity.`,
+        userPrompt: `Analyze this person's transformation journey with laser focus:
 
 ${baseContext}
 
-CRITICAL REQUIREMENTS FOR MAXIMUM DETAIL:
+CRITICAL: Be CONCISE and IMPACTFUL. No verbose explanations. Focus on key insights.
 
-1. DEEPLY analyze their current situation, goals, and barriers
-2. Provide EXTENSIVE detail in every section - this is a professional strategic document
-3. Be SPECIFIC with examples, timelines, and actionable insights
-4. Make it rich, detailed, and valuable - NOT superficial
-
-Return ONLY valid JSON with EXTENSIVE DETAIL:
+Return ONLY valid JSON:
 {
-  "executiveSummary": "Write 5-7 COMPREHENSIVE paragraphs (minimum 250 words total). Paragraph 1: Deep analysis of their current situation and what drives their desire for change. Paragraph 2: Detailed breakdown of their specific challenges and how they interconnect. Paragraph 3: Thorough explanation of transformation path tailored to time: ${context.timeCommitment} and budget: ${context.budget}. Paragraph 4: Specific opportunities they can leverage given their background. Paragraph 5: Detailed success vision with concrete outcomes. Paragraphs 6-7: Strategic approach and why this plan will work for THEM specifically.",
+  "executiveSummary": "Write 2-3 crisp paragraphs (80-120 words total). Para 1: Their current situation and transformation goal. Para 2: Core challenges and why they matter. Para 3: Path to success with timeline: ${context.timeCommitment} and budget: ${context.budget}. Be direct and specific.",
   
   "situationAnalysis": {
-    "currentState": "4-5 detailed sentences analyzing what you understand from their goals, their current position, their mindset, and what's driving their desire for change",
+    "currentState": "2-3 sharp sentences capturing their current position and what's driving change",
     "challenges": [
-      "Challenge 1: Detailed explanation of this barrier with specific examples and impact (2-3 sentences)",
-      "Challenge 2: Another major obstacle with context on why it matters for their journey (2-3 sentences)",
-      "Challenge 3: Third significant challenge with analysis of how to address it (2-3 sentences)",
-      "Challenge 4: Additional barrier specific to their situation (2-3 sentences)",
-      "Challenge 5: Extra challenge showing deep understanding (2-3 sentences)",
-      "Challenge 6: [Optional] Another relevant obstacle if applicable",
-      "Challenge 7: [Optional] Final challenge demonstrating thoroughness"
+      "Top challenge with specific impact (1 concise sentence)",
+      "Second critical barrier (1 concise sentence)",
+      "Third key obstacle (1 concise sentence)"
     ],
     "opportunities": [
-      "Opportunity 1: Detailed explanation of this advantage with specific ways to leverage it (2-3 sentences)",
-      "Opportunity 2: Another major opportunity with actionable insights on capitalizing (2-3 sentences)",
-      "Opportunity 3: Third opportunity with strategic context (2-3 sentences)",
-      "Opportunity 4: Additional advantage specific to their background (2-3 sentences)",
-      "Opportunity 5: Extra opportunity showing market awareness (2-3 sentences)",
-      "Opportunity 6: [Optional] Another leverage point if applicable",
-      "Opportunity 7: [Optional] Final opportunity for comprehensive coverage"
+      "Major opportunity they can leverage (1 concise sentence)",
+      "Second key advantage (1 concise sentence)",  
+      "Third strategic opportunity (1 concise sentence)"
     ]
   },
   
-  "strategicVision": "3-4 paragraphs (minimum 150 words) painting a DETAILED picture of success for what they're trying to achieve. Include: specific revenue targets, lifestyle changes, daily routine transformation, emotional and financial outcomes, and long-term impact.",
-  
-  "roadmap": {
-    "phase1": {
-      "name": "Descriptive Phase 1 name reflecting their journey",
-      "timeline": "Specific timeline fitting ${context.timeCommitment} with weekly breakdown",
-      "milestones": [
-        "Milestone 1: Specific, measurable achievement with clear success criteria",
-        "Milestone 2: Detailed milestone with context on significance",
-        "Milestone 3: Another key achievement with expected outcomes",
-        "Milestone 4: Additional milestone showing progression",
-        "Milestone 5: Extra milestone for comprehensive tracking",
-        "Milestone 6: [Optional] Another achievement marker",
-        "Milestone 7: [Optional] Final milestone if needed"
-      ]
-    },
-    "phase2": {
-      "name": "Descriptive Phase 2 name showing evolution", 
-      "timeline": "Specific timeline with weekly/monthly breakdown",
-      "milestones": [
-        "Milestone 1: Specific achievement building on Phase 1",
-        "Milestone 2: Key milestone with measurable outcomes",
-        "Milestone 3: Important achievement with context",
-        "Milestone 4: Additional milestone for this phase",
-        "Milestone 5: Extra milestone showing growth",
-        "Milestone 6: [Optional] Another key marker",
-        "Milestone 7: [Optional] Final milestone for depth"
-      ]
-    },
-    "phase3": {
-      "name": "Descriptive Phase 3 name reflecting mastery/scale",
-      "timeline": "Specific timeline with clear end goals",
-      "milestones": [
-        "Milestone 1: Major achievement showing transformation",
-        "Milestone 2: Significant milestone with impact metrics",
-        "Milestone 3: Key achievement demonstrating success",
-        "Milestone 4: Additional milestone for final phase",
-        "Milestone 5: Extra milestone showing full implementation",
-        "Milestone 6: [Optional] Another success marker",
-        "Milestone 7: [Optional] Ultimate achievement milestone"
-      ]
-    }
-  },
+  "strategicVision": "2 focused paragraphs (60-80 words) painting clear picture of success. Include specific outcomes, lifestyle changes, and measurable impact. Be concrete and inspiring.",
   
   "keyObjectives": [
-    "Objective 1: Detailed objective (2-3 sentences) with specific outcomes and why it matters for THEM",
-    "Objective 2: Another key objective with context on how it drives success",
-    "Objective 3: Third objective showing strategic alignment",
-    "Objective 4: Additional objective specific to their situation",
-    "Objective 5: Extra objective demonstrating comprehensive planning",
-    "Objective 6: [Optional] Another strategic goal if applicable",
-    "Objective 7: [Optional] Final objective for thoroughness"
+    "Primary objective with clear outcome (1 concise sentence)",
+    "Second key objective (1 concise sentence)",
+    "Third strategic objective (1 concise sentence)",
+    "Fourth important goal (1 concise sentence)"
   ],
   
   "successMetrics": [
-    "Metric 1: Specific, measurable KPI with target numbers and timeline",
-    "Metric 2: Another quantifiable metric with clear success criteria",
-    "Metric 3: Third metric tracking progress toward goals",
-    "Metric 4: Additional metric relevant to their transformation",
-    "Metric 5: Extra metric for comprehensive tracking",
-    "Metric 6: [Optional] Another measurement for depth",
-    "Metric 7: [Optional] Final metric showing full coverage"
+    "KPI 1: Specific metric with target (e.g., 'Generate $5K/month by month 3')",
+    "KPI 2: Another measurable goal with timeline",
+    "KPI 3: Third quantifiable metric",
+    "KPI 4: Fourth success indicator"
   ],
   
   "riskAssessment": {
     "risks": [
-      "Risk 1: Detailed risk analysis (2-3 sentences) with likelihood and impact assessment",
-      "Risk 2: Another significant risk with context on why it's concerning",
-      "Risk 3: Third risk with analysis of potential consequences",
-      "Risk 4: Additional risk specific to their situation",
-      "Risk 5: Extra risk showing thorough evaluation",
-      "Risk 6: [Optional] Another risk factor if applicable",
-      "Risk 7: [Optional] Final risk for comprehensive assessment"
+      "Top risk with impact (1 concise sentence)",
+      "Second major risk (1 concise sentence)",
+      "Third key risk (1 concise sentence)"
     ],
     "mitigations": [
-      "Mitigation 1: Detailed strategy (2-3 sentences) to address corresponding risk with specific actions",
-      "Mitigation 2: Another mitigation plan with clear steps and expected outcomes",
-      "Mitigation 3: Third mitigation strategy with implementation details",
-      "Mitigation 4: Additional mitigation for their context",
-      "Mitigation 5: Extra mitigation demonstrating proactive planning",
-      "Mitigation 6: [Optional] Another mitigation strategy",
-      "Mitigation 7: [Optional] Final mitigation for complete coverage"
+      "Strategy to address risk 1 (1 action-focused sentence)",
+      "Strategy to address risk 2 (1 action-focused sentence)",
+      "Strategy to address risk 3 (1 action-focused sentence)"
     ]
   }
 }
 
-REMEMBER: This is a PROFESSIONAL STRATEGIC DOCUMENT. Every section must be DETAILED, SPECIFIC, and VALUABLE. Minimum 2-3 sentences per bullet point. Rich, actionable content throughout.`,
-        expectedTokens: 20000
+REMEMBER: CONCISE, SHARP, ACTIONABLE. One sentence per bullet. Short paragraphs. Maximum clarity and impact.`,
+        expectedTokens: 3000
       };
 
     case 3:
-      // STEP 3: Detailed action plan - SIGNIFICANTLY ENHANCED FOR DEPTH
+      // STEP 3: Action Plan - FOCUSED & ACTIONABLE
       return {
-        systemPrompt: `You are a senior implementation strategist specializing in detailed action planning. Your plans are COMPREHENSIVE, SPECIFIC, and ACTIONABLE. Every phase must be thoroughly detailed with step-by-step guidance. This is professional-grade implementation planning.`,
-        userPrompt: `Create a COMPREHENSIVE, DETAILED action plan:
+        systemPrompt: `You are an execution expert. Create clear, actionable implementation plans. Be specific about steps, but concise in explanation. Focus on WHAT to do and HOW to measure success.`,
+        userPrompt: `Create a focused action plan:
 
 ${baseContext}
 
 Overview Context:
 ${overviewContent}
 
-CRITICAL REQUIREMENTS FOR MAXIMUM DETAIL:
+CRITICAL: Keep it actionable and scannable. Clear steps, not lengthy explanations.
 
-1. Each phase must be EXTENSIVELY detailed with specific, actionable steps
-2. Provide DEEP context and guidance - NOT surface-level instructions
-3. Include specific examples, timeframes, and success criteria
-4. Make every action item clear, measurable, and achievable
-5. Show HOW to execute, not just WHAT to execute
-
-Return ONLY valid JSON with EXTENSIVE DETAIL:
+Return ONLY valid JSON:
 {
   "phases": [
     {
-      "name": "Phase 1: [Descriptive name reflecting their starting point]",
-      "description": "COMPREHENSIVE description (4-5 sentences minimum, 100+ words) explaining: what this phase accomplishes, why it's the right starting point for THEM, how it addresses their challenges, what transformation occurs, and expected outcomes. Be thorough and specific.",
-      "duration": "Specific timeline fitting urgency: ${context.timeCommitment} with weekly breakdown (e.g., 'Weeks 1-4: 10-15 hours/week' or 'Month 1: Daily 2-hour sessions')",
+      "name": "Phase 1: [Clear name for foundation phase]",
+      "description": "2-3 sharp sentences: what's achieved, why it's the starting point, expected outcomes.",
+      "duration": "Specific timeline (e.g., 'Weeks 1-4: 10 hrs/week')",
       "objectives": [
-        "Objective 1: DETAILED objective (3-4 sentences) explaining what they'll achieve, why it matters, how it builds toward the goal, and success criteria",
-        "Objective 2: Another comprehensive objective with full context on significance and expected outcomes",
-        "Objective 3: Third detailed objective showing strategic progression",
+        "Clear objective 1 (1 sentence)",
+        "Clear objective 2 (1 sentence)",
+        "Clear objective 3 (1 sentence)"
         "Objective 4: Additional objective specific to their transformation",
         "Objective 5: Extra objective for thorough planning"
       ],
       "actions": [
-        "Action 1: SPECIFIC step-by-step action (3-4 sentences) with: what to do, how to do it, tools/resources needed, time required, expected outcome, and success criteria",
-        "Action 2: Detailed action with clear execution steps and context on why this matters",
-        "Action 3: Comprehensive action item with specific guidance and implementation details",
-        "Action 4: Another thorough action with examples and best practices",
-        "Action 5: Detailed action showing progression from previous steps",
-        "Action 6: Additional action building on earlier achievements",
-        "Action 7: Extra action for comprehensive coverage",
-        "Action 8: [Optional] Another detailed step if needed for their situation",
-        "Action 9: [Optional] Additional action for thorough planning",
-        "Action 10: [Optional] Final action ensuring complete phase execution"
+        "Specific action 1: what + how (1-2 sentences max)",
+        "Specific action 2 (1-2 sentences max)",
+        "Specific action 3 (1-2 sentences max)",
+        "Specific action 4 (1-2 sentences max)",
+        "Specific action 5 (1-2 sentences max)"
       ],
       "milestones": [
-        "Milestone 1: Specific, measurable milestone with clear success criteria and timeline",
-        "Milestone 2: Detailed milestone showing progress with quantifiable outcomes",
-        "Milestone 3: Another key milestone with context on significance"
-      ],
-      "successCriteria": [
-        "Criteria 1: Specific metric or outcome that indicates phase completion",
-        "Criteria 2: Another measurable indicator of success",
-        "Criteria 3: Third criterion for comprehensive evaluation"
-      ],
-      "prerequisites": [
-        "Prerequisite 1: What must be in place before starting this phase",
-        "Prerequisite 2: Another requirement or resource needed",
-        "Prerequisite 3: [Optional] Additional prerequisite if applicable"
-      ],
-      "expectedOutcomes": [
-        "Outcome 1: Specific result they'll achieve with metrics",
-        "Outcome 2: Another tangible outcome from this phase",
-        "Outcome 3: Third outcome showing transformation"
+        "Measurable milestone 1 with metric",
+        "Measurable milestone 2 with metric",
+        "Measurable milestone 3 with metric"
       ]
     },
     {
-      "name": "Phase 2: [Descriptive name showing progression]",
-      "description": "COMPREHENSIVE description (4-5 sentences minimum, 100+ words) explaining: how this builds on Phase 1, what new capabilities they'll develop, how challenges are addressed, what transformation deepens, and bridge to Phase 3. Rich detail throughout.",
-      "duration": "Specific timeline with weekly/monthly breakdown fitting their schedule",
+      "name": "Phase 2: [Clear name for growth phase]",
+      "description": "2-3 sentences: builds on Phase 1, new capabilities, outcomes.",
+      "duration": "Specific timeline",
       "objectives": [
-        "Objective 1: DETAILED objective (3-4 sentences) building on Phase 1 achievements",
-        "Objective 2: Comprehensive objective showing evolution and growth",
-        "Objective 3: Third detailed objective with strategic context",
-        "Objective 4: Additional objective for this phase",
-        "Objective 5: Extra objective demonstrating thorough planning"
+        "Clear objective 1 (1 sentence)",
+        "Clear objective 2 (1 sentence)",
+        "Clear objective 3 (1 sentence)"
       ],
       "actions": [
-        "Action 1: SPECIFIC action (3-4 sentences) leveraging Phase 1 foundation with detailed execution steps",
-        "Action 2: Detailed action advancing their capabilities",
-        "Action 3: Comprehensive action with clear implementation guidance",
-        "Action 4: Another thorough action building momentum",
-        "Action 5: Detailed action addressing intermediate challenges",
-        "Action 6: Additional action scaling their efforts",
-        "Action 7: Extra action for depth and progression",
-        "Action 8: [Optional] Another step for comprehensive coverage",
-        "Action 9: [Optional] Additional action ensuring success",
-        "Action 10: [Optional] Final action completing phase objectives"
+        "Specific action 1 (1-2 sentences max)",
+        "Specific action 2 (1-2 sentences max)",
+        "Specific action 3 (1-2 sentences max)",
+        "Specific action 4 (1-2 sentences max)",
+        "Specific action 5 (1-2 sentences max)"
       ],
       "milestones": [
-        "Milestone 1: Specific achievement marking progress with success metrics",
-        "Milestone 2: Detailed milestone demonstrating capability growth",
-        "Milestone 3: Another key milestone with measurable outcomes"
-      ],
-      "successCriteria": [
-        "Criteria 1: Specific indicator of Phase 2 completion",
-        "Criteria 2: Another measurable success marker",
-        "Criteria 3: Third criterion for thorough evaluation"
-      ],
-      "prerequisites": [
-        "Prerequisite 1: What Phase 1 outcomes are needed",
-        "Prerequisite 2: Additional requirements for Phase 2",
-        "Prerequisite 3: [Optional] Extra prerequisite if applicable"
-      ],
-      "expectedOutcomes": [
-        "Outcome 1: Specific result with quantifiable impact",
-        "Outcome 2: Another tangible outcome from Phase 2",
-        "Outcome 3: Third outcome showing growth"
+        "Measurable milestone 1 with metric",
+        "Measurable milestone 2 with metric",
+        "Measurable milestone 3 with metric"
       ]
     },
     {
-      "name": "Phase 3: [Descriptive name reflecting mastery/scale]",
-      "description": "COMPREHENSIVE description (4-5 sentences minimum, 100+ words) explaining: how this achieves their ultimate goal, what mastery/scale looks like, final transformation, sustainability strategies, and long-term success. Complete picture of achievement.",
-      "duration": "Specific timeline with clear end state and transition to independence",
+      "name": "Phase 3: [Clear name for mastery phase]",
+      "description": "2-3 sentences: achieves ultimate goal, scale/mastery, sustainability.",
+      "duration": "Specific timeline with end state",
       "objectives": [
-        "Objective 1: DETAILED objective (3-4 sentences) representing culmination of journey",
-        "Objective 2: Comprehensive objective showing full transformation",
-        "Objective 3: Third detailed objective achieving stated goals",
-        "Objective 4: Additional objective for complete success",
-        "Objective 5: Extra objective ensuring sustainable outcomes"
+        "Clear objective 1 (1 sentence)",
+        "Clear objective 2 (1 sentence)",
+        "Clear objective 3 (1 sentence)"
       ],
       "actions": [
-        "Action 1: SPECIFIC action (3-4 sentences) demonstrating mastery with detailed steps",
-        "Action 2: Detailed action scaling or optimizing their system",
-        "Action 3: Comprehensive action ensuring sustainability",
-        "Action 4: Another thorough action cementing success",
-        "Action 5: Detailed action preparing for independence",
-        "Action 6: Additional action maximizing outcomes",
-        "Action 7: Extra action for complete transformation",
-        "Action 8: [Optional] Another step ensuring lasting success",
-        "Action 9: [Optional] Additional action for comprehensive completion",
-        "Action 10: [Optional] Final action achieving ultimate goals"
+        "Specific action 1 (1-2 sentences max)",
+        "Specific action 2 (1-2 sentences max)",
+        "Specific action 3 (1-2 sentences max)",
+        "Specific action 4 (1-2 sentences max)",
+        "Specific action 5 (1-2 sentences max)"
       ],
       "milestones": [
-        "Milestone 1: Major achievement marking transformation with clear metrics",
-        "Milestone 2: Significant milestone demonstrating goal attainment",
-        "Milestone 3: Final milestone proving complete success"
-      ],
-      "successCriteria": [
-        "Criteria 1: Ultimate success indicator for their goal",
-        "Criteria 2: Another final achievement marker",
-        "Criteria 3: Third criterion for complete evaluation"
-      ],
-      "prerequisites": [
-        "Prerequisite 1: What Phase 2 must deliver",
-        "Prerequisite 2: Requirements for final phase",
-        "Prerequisite 3: [Optional] Additional prerequisites"
-      ],
-      "expectedOutcomes": [
-        "Outcome 1: Ultimate achievement with transformation metrics",
-        "Outcome 2: Final tangible result of complete journey",
-        "Outcome 3: Long-term sustainable outcome"
+        "Major milestone 1 with clear metric",
+        "Major milestone 2 with clear metric",
+        "Final milestone with success proof"
       ]
     }
   ],
   "successMetrics": [
-    "Metric 1: Overall success KPI (detailed with specific targets and timeline)",
-    "Metric 2: Another comprehensive metric tracking total transformation",
-    "Metric 3: Third detailed metric measuring achievement",
-    "Metric 4: Additional metric for complete evaluation",
-    "Metric 5: Extra metric ensuring thorough success tracking"
+    "KPI 1: Specific metric with target",
+    "KPI 2: Another metric with target",
+    "KPI 3: Third metric with target"
   ]
 }
 
-REMEMBER: This is PROFESSIONAL IMPLEMENTATION PLANNING. Every section must be DETAILED, ACTIONABLE, and SPECIFIC. 3-4 sentences per action/objective minimum. Rich, executable guidance throughout. Show them exactly HOW to succeed.`,
-        expectedTokens: 20000
+REMEMBER: CONCISE and ACTIONABLE. One sentence per item. Clear metrics. No fluff.`,
+        expectedTokens: 4000
       };
 
     case 4:

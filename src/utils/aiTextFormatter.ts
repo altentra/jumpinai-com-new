@@ -19,29 +19,6 @@ function normalize(text: string) {
   // normalize numbered lists like "1)" → "1."
   t = t.replace(/^(\s*)(\d+)\)\s+/gm, '$1$2. ');
   
-  // Break up long paragraphs (300+ chars) into smaller chunks at sentence boundaries
-  t = t.replace(/^([^\n]{300,})$/gm, (match) => {
-    // Split at sentence boundaries (. ! ?)
-    const sentences = match.match(/[^.!?]+[.!?]+/g) || [match];
-    let result = '';
-    let chunk = '';
-    
-    sentences.forEach((sentence, idx) => {
-      chunk += sentence;
-      // Create a new paragraph after every 2-3 sentences or ~200 chars
-      if ((idx > 0 && idx % 2 === 0) || chunk.length > 200) {
-        result += chunk.trim() + '\n\n';
-        chunk = '';
-      }
-    });
-    
-    if (chunk.trim()) {
-      result += chunk.trim();
-    }
-    
-    return result;
-  });
-  
   return t.trim();
 }
 
@@ -91,59 +68,25 @@ export function formatAIText(input: string): string {
   t = boldLabels(t);
   t = promoteHeadings(t);
 
-  // === ENHANCED VISUAL FORMATTING FOR MAXIMUM READABILITY ===
+  // === FOCUSED FORMATTING FOR READABILITY ===
   
-  // 1. BOLD key business/strategic terms for emphasis
-  t = t.replace(/\b(important|key|critical|essential|significant|major|primary|fundamental|crucial|vital|strategic|core|priority|urgent|valuable|impactful)\b/gi, '**$1**');
+  // 1. BOLD key terms for quick scanning
+  t = t.replace(/\b(critical|essential|key|important|priority|urgent|strategic)\b/gi, '**$1**');
   
-  // 2. BOLD action verbs to highlight actionable items
-  t = t.replace(/\b(implement|execute|develop|create|establish|achieve|optimize|enhance|improve|analyze|evaluate|monitor|measure|track|assess|review|design|build|launch|deploy|test|validate|integrate|automate|streamline|accelerate|scale|transform)\b/gi, '**$1**');
+  // 2. Format metrics and numbers
+  t = t.replace(/\b(\d+%|\$[\d,]+(?:\.\d{2})?)\b/gi, '**$1**');
 
-  // 3. BOLD metrics, numbers, and quantifiable data
-  t = t.replace(/\b(\d+%|\$\d+[kmb]?|\d+[kmb]?\s*(?:users|customers|revenue|profit|growth|increase|decrease|reduction|improvement|hours?|days?|weeks?|months?))\b/gi, '**$1**');
+  // 3. Italicize timeframes
+  t = t.replace(/\b(week \d+|month \d+|phase \d+|by [A-Z][a-z]+ \d{4})\b/gi, '*$1*');
 
-  // 4. Italicize timeframes for visual distinction
-  t = t.replace(/\b(within \d+\s*(?:days?|weeks?|months?|years?)|by (?:q\d|quarter \d|\w+ \d{4})|short[- ]?term|long[- ]?term|immediate|ongoing|phase \d+)\b/gi, '*$1*');
+  // 4. Add icons to section headers
+  t = t.replace(/^### (Success|Metrics?|KPI|Results?)[\s:]/gim, '\n### 🎯 $1 ');
+  t = t.replace(/^### (Risk|Challenge|Issue|Concern)[\s:]/gim, '\n### ⚠️ $1 ');
+  t = t.replace(/^### (Action|Step|Task|Next)[\s:]/gim, '\n### ✅ $1 ');
+  t = t.replace(/^### (Timeline|Schedule|Roadmap)[\s:]/gim, '\n### 📅 $1 ');
 
-  // 5. Convert section headers to proper heading levels
-  t = t.replace(/^(Success Criteria|Success Metrics|Key Results|Expected Outcomes?):\s*(.*)$/gim, '\n### 🎯 $1\n\n$2\n');
-  t = t.replace(/^(Risks?|Challenges?|Potential Issues?|Concerns?):\s*(.*)$/gim, '\n### ⚠️ $1\n\n$2\n');
-  t = t.replace(/^(Action Items?|Next Steps?|Immediate Actions?):\s*(.*)$/gim, '\n### ✅ $1\n\n$2\n');
-  t = t.replace(/^(Benefits?|Advantages?|Value Proposition):\s*(.*)$/gim, '\n### 💡 $1\n\n$2\n');
-  t = t.replace(/^(Timeline|Schedule|Roadmap):\s*(.*)$/gim, '\n### 📅 $1\n\n$2\n');
-  t = t.replace(/^(Resources?|Tools?|Requirements?):\s*(.*)$/gim, '\n### 🔧 $1\n\n$2\n');
-
-  // 6. Format numbered phases/stages with visual hierarchy
-  t = t.replace(/^(\d+)\.\s*(Phase|Stage|Sprint|Milestone|Step)\s*(\d*)[:\-\s]*(.*)$/gim, '\n### 📍 $2 $1$3: $4\n');
-
-  // 7. Emphasize ALL CAPS sections (usually important callouts)
-  t = t.replace(/\b([A-Z]{3,})\b/g, '**$1**');
-
-  // 8. Format bullet points with prefixes for better scanning
-  t = t.replace(/^(\s*)-\s*(Action|Task|Goal|Objective|Deliverable|Requirement|Output|Outcome):\s*(.+)$/gim, '$1- **$2:** $3');
-
-  // 9. Add visual separators before major sections
-  t = t.replace(/\n### /g, '\n\n---\n\n### ');
-
-  // 10. Highlight dollar amounts and ROI
-  t = t.replace(/\$[\d,]+(?:\.\d{2})?/g, '**$&**');
-  t = t.replace(/\b(ROI|return on investment)\b/gi, '**$1**');
-
-  // 11. Bold comparative/superlative terms
-  t = t.replace(/\b(best|top|leading|maximum|minimum|highest|lowest|fastest|slowest|most|least)\b/gi, '**$1**');
-
-  // 12. Create visual breaks between sections
-  t = t
-    .replace(/([^\n])\n(\s*[-\d])/g, '$1\n\n$2')  // Space before lists
-    .replace(/([^\n])\n(\s*##?#+\s)/g, '$1\n\n$2')  // Space before headings
-    .replace(/([^\n])\n(\s*>\s)/g, '$1\n\n$2')  // Space before blockquotes
-    .replace(/\n{4,}/g, '\n\n\n');  // Limit excessive spacing to max 2 blank lines
-
-  // 13. Format KPIs and metrics headers
-  t = t.replace(/^(KPIs?|Metrics?|Indicators?):\s*/gim, '\n### 📊 $1\n\n');
-
-  // 14. Emphasize urgency/priority levels
-  t = t.replace(/\b(high priority|urgent|asap|critical priority|immediate attention)\b/gi, '**$1**');
+  // 5. Clean spacing
+  t = t.replace(/\n{3,}/g, '\n\n');
 
   return t.trim();
 }
