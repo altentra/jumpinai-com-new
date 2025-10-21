@@ -22,6 +22,8 @@ import {
   Play,
   Download
 } from "lucide-react";
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface ComprehensiveJump {
   title: string;
@@ -356,7 +358,9 @@ export default function ComprehensiveJumpDisplay({ jump, onEdit, onDownload, cla
               </div>
               <div className="flex-1">
                 <h3 className="text-xl font-semibold text-white drop-shadow-sm">{phase.title}</h3>
-                <p className="text-white/90 drop-shadow-sm">{phase.description}</p>
+                <div className="text-white/90 drop-shadow-sm prose prose-invert prose-sm max-w-none">
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{phase.description}</ReactMarkdown>
+                </div>
                 <Badge variant="outline" className="mt-1 border-white/30 text-white/90 bg-white/10">{phase.duration}</Badge>
               </div>
             </div>
@@ -371,9 +375,11 @@ export default function ComprehensiveJumpDisplay({ jump, onEdit, onDownload, cla
               </h4>
               <div className="grid gap-2">
                 {phase.objectives.map((objective, objIndex) => (
-                  <div key={objIndex} className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-white drop-shadow-sm" />
-                    <span className="text-white/90 drop-shadow-sm">{objective}</span>
+                  <div key={objIndex} className="flex items-start gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-white drop-shadow-sm mt-1 flex-shrink-0" />
+                    <div className="text-white/90 drop-shadow-sm prose prose-invert prose-sm max-w-none flex-1">
+                      <ReactMarkdown remarkPlugins={[remarkGfm]}>{objective}</ReactMarkdown>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -390,8 +396,10 @@ export default function ComprehensiveJumpDisplay({ jump, onEdit, onDownload, cla
                   <Card key={actionIndex} className="border-white/10 bg-white/5 backdrop-blur-sm">
                     <CardContent className="p-4">
                       <div className="flex items-start justify-between mb-2">
-                        <h5 className="font-medium text-white drop-shadow-sm">{action.action}</h5>
-                        <div className="flex gap-2">
+                        <div className="font-medium text-white drop-shadow-sm prose prose-invert prose-sm max-w-none flex-1">
+                          <ReactMarkdown remarkPlugins={[remarkGfm]}>{action.action}</ReactMarkdown>
+                        </div>
+                        <div className="flex gap-2 flex-shrink-0 ml-2">
                           <Badge variant={action.priority === 'High' ? 'destructive' : action.priority === 'Medium' ? 'default' : 'secondary'} className="text-xs">
                             {action.priority}
                           </Badge>
@@ -400,7 +408,9 @@ export default function ComprehensiveJumpDisplay({ jump, onEdit, onDownload, cla
                           </Badge>
                         </div>
                       </div>
-                      <p className="text-sm text-white/80 drop-shadow-sm mb-2">{action.description}</p>
+                      <div className="text-sm text-white/80 drop-shadow-sm mb-2 prose prose-invert prose-sm max-w-none">
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{action.description}</ReactMarkdown>
+                      </div>
                       {action.dependencies.length > 0 && (
                         <div className="text-xs text-white/70 drop-shadow-sm">
                           <span className="font-medium">Dependencies:</span> {action.dependencies.join(', ')}
@@ -422,15 +432,19 @@ export default function ComprehensiveJumpDisplay({ jump, onEdit, onDownload, cla
                 {phase.milestones.map((milestone, milestoneIndex) => (
                   <Card key={milestoneIndex} className="border-white/10 bg-white/5 backdrop-blur-sm">
                     <CardContent className="p-4">
-                      <div className="flex items-center justify-between mb-2">
-                        <h5 className="font-medium text-white drop-shadow-sm">{milestone.milestone}</h5>
-                        <Badge variant="outline" className="text-xs border-white/30 text-white/90 bg-white/10">{milestone.target_date}</Badge>
+                      <div className="flex items-start justify-between mb-2">
+                        <div className="font-medium text-white drop-shadow-sm prose prose-invert prose-sm max-w-none flex-1">
+                          <ReactMarkdown remarkPlugins={[remarkGfm]}>{milestone.milestone}</ReactMarkdown>
+                        </div>
+                        <Badge variant="outline" className="text-xs border-white/30 text-white/90 bg-white/10 flex-shrink-0 ml-2">{milestone.target_date}</Badge>
                       </div>
                       <div className="space-y-1">
                         {milestone.success_criteria.map((criteria, criteriaIndex) => (
-                          <div key={criteriaIndex} className="flex items-center gap-2 text-sm text-white/80 drop-shadow-sm">
-                            <CheckCircle2 className="h-3 w-3 text-white drop-shadow-sm" />
-                            {criteria}
+                          <div key={criteriaIndex} className="flex items-start gap-2 text-sm text-white/80 drop-shadow-sm">
+                            <CheckCircle2 className="h-3 w-3 text-white drop-shadow-sm mt-1 flex-shrink-0" />
+                            <div className="prose prose-invert prose-sm max-w-none flex-1">
+                              <ReactMarkdown remarkPlugins={[remarkGfm]}>{criteria}</ReactMarkdown>
+                            </div>
                           </div>
                         ))}
                       </div>
