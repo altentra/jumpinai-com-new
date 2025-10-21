@@ -248,161 +248,202 @@ Return ONLY valid JSON:
       };
     
     case 2:
-      // STEP 2: Strategic Overview - CONCISE & HIGH-IMPACT
+      // STEP 2: Strategic Overview - HIGH QUALITY, WELL-FORMATTED
       return {
-        systemPrompt: `You are a senior strategy consultant known for clarity and precision. Provide sharp, actionable insights with zero fluff. Every word must add value. Focus on QUALITY over quantity.`,
-        userPrompt: `Analyze this person's transformation journey with laser focus:
+        systemPrompt: `You are a senior strategy consultant. Provide clear, actionable insights with excellent structure and formatting. Use markdown formatting for emphasis and clarity. Be professional yet concise.`,
+        userPrompt: `Analyze this transformation journey comprehensively:
 
 ${baseContext}
 
-CRITICAL: Be CONCISE and IMPACTFUL. No verbose explanations. Focus on key insights.
+FORMATTING REQUIREMENTS:
+- Use **bold** for key terms, numbers, and metrics
+- Use bullet points for lists
+- Use clear section headers
+- Keep paragraphs 2-4 sentences max
+- Make it scannable and easy to read
 
 Return ONLY valid JSON:
 {
-  "executiveSummary": "Write 2-3 crisp paragraphs (80-120 words total). Para 1: Their current situation and transformation goal. Para 2: Core challenges and why they matter. Para 3: Path to success with timeline: ${context.timeCommitment} and budget: ${context.budget}. Be direct and specific.",
+  "executiveSummary": "Write 3-4 well-structured paragraphs (150-200 words). Para 1: Current situation and transformation goal. Para 2: Core challenges. Para 3: Strategic approach. Para 4: Expected outcomes with timeline: ${context.timeCommitment} and budget: ${context.budget}. Use markdown for emphasis.",
   
   "situationAnalysis": {
-    "currentState": "2-3 sharp sentences capturing their current position and what's driving change",
+    "currentState": "3-4 sentences analyzing their current position, what's driving change, and key constraints. Use **bold** for critical points.",
     "challenges": [
-      "Top challenge with specific impact (1 concise sentence)",
-      "Second critical barrier (1 concise sentence)",
-      "Third key obstacle (1 concise sentence)"
+      "Challenge 1: Clear description with impact (1-2 sentences)",
+      "Challenge 2: Clear description with impact (1-2 sentences)",
+      "Challenge 3: Clear description with impact (1-2 sentences)",
+      "Challenge 4: Additional challenge if relevant (1-2 sentences)"
     ],
     "opportunities": [
-      "Major opportunity they can leverage (1 concise sentence)",
-      "Second key advantage (1 concise sentence)",  
-      "Third strategic opportunity (1 concise sentence)"
+      "Opportunity 1: What they can leverage and why (1-2 sentences)",
+      "Opportunity 2: Key advantage with context (1-2 sentences)",
+      "Opportunity 3: Strategic opportunity (1-2 sentences)",
+      "Opportunity 4: Additional opportunity if relevant (1-2 sentences)"
     ]
   },
   
-  "strategicVision": "2 focused paragraphs (60-80 words) painting clear picture of success. Include specific outcomes, lifestyle changes, and measurable impact. Be concrete and inspiring.",
+  "strategicVision": "3-4 paragraphs (150-200 words) painting a clear picture of success. Include specific outcomes, lifestyle changes, measurable impact, and transformation milestones. Use **bold** for key achievements and metrics.",
+  
+  "roadmap": {
+    "phase1": {
+      "name": "Clear name for foundation phase",
+      "timeline": "Specific timeline (e.g., 'Weeks 1-4')",
+      "milestones": [
+        "**Milestone 1**: Clear, measurable achievement",
+        "**Milestone 2**: Clear, measurable achievement",
+        "**Milestone 3**: Clear, measurable achievement"
+      ]
+    },
+    "phase2": {
+      "name": "Clear name for growth phase",
+      "timeline": "Specific timeline",
+      "milestones": [
+        "**Milestone 1**: Clear, measurable achievement",
+        "**Milestone 2**: Clear, measurable achievement",
+        "**Milestone 3**: Clear, measurable achievement"
+      ]
+    },
+    "phase3": {
+      "name": "Clear name for mastery phase",
+      "timeline": "Specific timeline",
+      "milestones": [
+        "**Milestone 1**: Major achievement with metric",
+        "**Milestone 2**: Major achievement with metric",
+        "**Milestone 3**: Final success proof"
+      ]
+    }
+  },
   
   "keyObjectives": [
-    "Primary objective with clear outcome (1 concise sentence)",
-    "Second key objective (1 concise sentence)",
-    "Third strategic objective (1 concise sentence)",
-    "Fourth important goal (1 concise sentence)"
+    "**Objective 1**: Primary goal with clear outcome and timeline",
+    "**Objective 2**: Second key objective with specifics",
+    "**Objective 3**: Third strategic objective",
+    "**Objective 4**: Fourth important goal"
   ],
   
   "successMetrics": [
-    "KPI 1: Specific metric with target (e.g., 'Generate $5K/month by month 3')",
-    "KPI 2: Another measurable goal with timeline",
-    "KPI 3: Third quantifiable metric",
-    "KPI 4: Fourth success indicator"
+    "**KPI 1**: Specific metric with target (e.g., '**Generate $5K/month** by month 3')",
+    "**KPI 2**: Another measurable goal with timeline",
+    "**KPI 3**: Third quantifiable metric with clear benchmark",
+    "**KPI 4**: Fourth success indicator with measurement method"
   ],
   
   "riskAssessment": {
     "risks": [
-      "Top risk with impact (1 concise sentence)",
-      "Second major risk (1 concise sentence)",
-      "Third key risk (1 concise sentence)"
+      "**Risk 1**: Description with potential impact",
+      "**Risk 2**: Description with potential impact",
+      "**Risk 3**: Description with potential impact"
     ],
     "mitigations": [
-      "Strategy to address risk 1 (1 action-focused sentence)",
-      "Strategy to address risk 2 (1 action-focused sentence)",
-      "Strategy to address risk 3 (1 action-focused sentence)"
+      "**Mitigation 1**: Strategy to address risk 1 with action steps",
+      "**Mitigation 2**: Strategy to address risk 2 with action steps",
+      "**Mitigation 3**: Strategy to address risk 3 with action steps"
     ]
   }
 }
 
-REMEMBER: CONCISE, SHARP, ACTIONABLE. One sentence per bullet. Short paragraphs. Maximum clarity and impact.`,
-        expectedTokens: 3000
+Focus on clarity, professional formatting, and actionable content.`,
+        expectedTokens: 8000
       };
 
     case 3:
-      // STEP 3: Action Plan - FOCUSED & ACTIONABLE
+      // STEP 3: Action Plan - DETAILED & WELL-FORMATTED
       return {
-        systemPrompt: `You are an execution expert. Create clear, actionable implementation plans. Be specific about steps, but concise in explanation. Focus on WHAT to do and HOW to measure success.`,
-        userPrompt: `Create a focused action plan:
+        systemPrompt: `You are an execution expert. Create detailed, actionable implementation plans with excellent formatting. Use markdown for emphasis. Be specific and thorough while maintaining clarity.`,
+        userPrompt: `Create a comprehensive action plan:
 
 ${baseContext}
 
 Overview Context:
 ${overviewContent}
 
-CRITICAL: Keep it actionable and scannable. Clear steps, not lengthy explanations.
+FORMATTING: Use **bold** for key terms, actions, and metrics. Keep descriptions clear and scannable.
 
 Return ONLY valid JSON:
 {
   "phases": [
     {
       "name": "Phase 1: [Clear name for foundation phase]",
-      "description": "2-3 sharp sentences: what's achieved, why it's the starting point, expected outcomes.",
-      "duration": "Specific timeline (e.g., 'Weeks 1-4: 10 hrs/week')",
+      "description": "3-4 sentences: what's achieved, why it's the starting point, expected outcomes. Use **bold** for key deliverables.",
+      "duration": "Specific timeline (e.g., '**Weeks 1-4**: 10-15 hrs/week')",
       "objectives": [
-        "Clear objective 1 (1 sentence)",
-        "Clear objective 2 (1 sentence)",
-        "Clear objective 3 (1 sentence)"
-        "Objective 4: Additional objective specific to their transformation",
-        "Objective 5: Extra objective for thorough planning"
+        "**Objective 1**: Clear goal with measurable outcome",
+        "**Objective 2**: Clear goal with measurable outcome",
+        "**Objective 3**: Clear goal with measurable outcome",
+        "**Objective 4**: Additional objective",
+        "**Objective 5**: Extra objective for thorough planning"
       ],
       "actions": [
-        "Specific action 1: what + how (1-2 sentences max)",
-        "Specific action 2 (1-2 sentences max)",
-        "Specific action 3 (1-2 sentences max)",
-        "Specific action 4 (1-2 sentences max)",
-        "Specific action 5 (1-2 sentences max)"
+        "**Action 1**: Specific step with clear outcome (2-3 sentences)",
+        "**Action 2**: Specific step with clear outcome (2-3 sentences)",
+        "**Action 3**: Specific step with clear outcome (2-3 sentences)",
+        "**Action 4**: Specific step with clear outcome (2-3 sentences)",
+        "**Action 5**: Specific step with clear outcome (2-3 sentences)"
       ],
       "milestones": [
-        "Measurable milestone 1 with metric",
-        "Measurable milestone 2 with metric",
-        "Measurable milestone 3 with metric"
+        "**Milestone 1**: Measurable achievement with metric",
+        "**Milestone 2**: Measurable achievement with metric",
+        "**Milestone 3**: Measurable achievement with metric"
       ]
     },
     {
       "name": "Phase 2: [Clear name for growth phase]",
-      "description": "2-3 sentences: builds on Phase 1, new capabilities, outcomes.",
-      "duration": "Specific timeline",
+      "description": "3-4 sentences: builds on Phase 1, new capabilities, outcomes. Use **bold** for achievements.",
+      "duration": "Specific timeline with hours/week",
       "objectives": [
-        "Clear objective 1 (1 sentence)",
-        "Clear objective 2 (1 sentence)",
-        "Clear objective 3 (1 sentence)"
+        "**Objective 1**: Clear goal",
+        "**Objective 2**: Clear goal",
+        "**Objective 3**: Clear goal",
+        "**Objective 4**: Additional objective",
+        "**Objective 5**: Extra objective"
       ],
       "actions": [
-        "Specific action 1 (1-2 sentences max)",
-        "Specific action 2 (1-2 sentences max)",
-        "Specific action 3 (1-2 sentences max)",
-        "Specific action 4 (1-2 sentences max)",
-        "Specific action 5 (1-2 sentences max)"
+        "**Action 1**: Specific step (2-3 sentences)",
+        "**Action 2**: Specific step (2-3 sentences)",
+        "**Action 3**: Specific step (2-3 sentences)",
+        "**Action 4**: Specific step (2-3 sentences)",
+        "**Action 5**: Specific step (2-3 sentences)"
       ],
       "milestones": [
-        "Measurable milestone 1 with metric",
-        "Measurable milestone 2 with metric",
-        "Measurable milestone 3 with metric"
+        "**Milestone 1**: Measurable achievement",
+        "**Milestone 2**: Measurable achievement",
+        "**Milestone 3**: Measurable achievement"
       ]
     },
     {
       "name": "Phase 3: [Clear name for mastery phase]",
-      "description": "2-3 sentences: achieves ultimate goal, scale/mastery, sustainability.",
+      "description": "3-4 sentences: achieves ultimate goal, scale/mastery, sustainability. Use **bold** for final outcomes.",
       "duration": "Specific timeline with end state",
       "objectives": [
-        "Clear objective 1 (1 sentence)",
-        "Clear objective 2 (1 sentence)",
-        "Clear objective 3 (1 sentence)"
+        "**Objective 1**: Clear goal",
+        "**Objective 2**: Clear goal",
+        "**Objective 3**: Clear goal",
+        "**Objective 4**: Additional objective",
+        "**Objective 5**: Extra objective"
       ],
       "actions": [
-        "Specific action 1 (1-2 sentences max)",
-        "Specific action 2 (1-2 sentences max)",
-        "Specific action 3 (1-2 sentences max)",
-        "Specific action 4 (1-2 sentences max)",
-        "Specific action 5 (1-2 sentences max)"
+        "**Action 1**: Specific step (2-3 sentences)",
+        "**Action 2**: Specific step (2-3 sentences)",
+        "**Action 3**: Specific step (2-3 sentences)",
+        "**Action 4**: Specific step (2-3 sentences)",
+        "**Action 5**: Specific step (2-3 sentences)"
       ],
       "milestones": [
-        "Major milestone 1 with clear metric",
-        "Major milestone 2 with clear metric",
-        "Final milestone with success proof"
+        "**Milestone 1**: Major achievement with metric",
+        "**Milestone 2**: Major achievement with metric",
+        "**Milestone 3**: Final success proof with clear validation"
       ]
     }
   ],
   "successMetrics": [
-    "KPI 1: Specific metric with target",
-    "KPI 2: Another metric with target",
-    "KPI 3: Third metric with target"
+    "**KPI 1**: Specific metric with target and measurement method",
+    "**KPI 2**: Another metric with target and timeline",
+    "**KPI 3**: Third metric with clear benchmarks"
   ]
 }
 
-REMEMBER: CONCISE and ACTIONABLE. One sentence per item. Clear metrics. No fluff.`,
-        expectedTokens: 4000
+Create detailed, professional content with excellent formatting for easy reading.`,
+        expectedTokens: 12000
       };
 
     case 4:
