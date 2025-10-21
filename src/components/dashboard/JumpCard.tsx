@@ -53,8 +53,8 @@ export default function JumpCard({ jump, jumpNumber, onView, onDelete }: JumpCar
       <CardHeader className="pb-4 relative z-10">
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1 min-w-0 space-y-3">
-            {/* Badge */}
-            <Badge className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground border-0 shadow-lg text-xs font-bold px-3 py-1.5 rounded-full ring-1 ring-primary/30">
+          {/* Badge */}
+            <Badge className="bg-gradient-to-br from-gray-950/90 to-gray-900/80 dark:from-gray-950/95 dark:to-gray-900/85 text-white border border-border/30 shadow-lg text-xs font-bold px-3 py-1.5 rounded-full">
               #{jumpNumber}
             </Badge>
             
@@ -88,22 +88,24 @@ export default function JumpCard({ jump, jumpNumber, onView, onDelete }: JumpCar
       <CardContent className="pt-0 relative z-10">
         {/* Premium View Button */}
         <div className="relative group/btn">
+          {/* Subtle glow backdrop */}
+          <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/15 via-accent/10 to-secondary/15 rounded-full blur-lg opacity-50 group-hover/btn:opacity-70 transition-all duration-500"></div>
+          
           <Button 
-            className="w-full relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary via-primary to-primary/90 hover:from-primary/95 hover:via-primary/90 hover:to-primary/85 shadow-lg hover:shadow-2xl hover:shadow-primary/30 transition-all duration-500 border-0 ring-1 ring-primary/40 hover:ring-primary/60 font-bold text-primary-foreground h-11"
+            className="w-full relative overflow-hidden rounded-full bg-gradient-to-br from-background/60 to-background/40 dark:from-gray-950/60 dark:to-gray-900/40 border border-border/40 hover:border-primary/50 shadow-xl hover:shadow-2xl hover:shadow-primary/20 transition-all duration-500 hover:scale-[1.02] font-bold text-foreground h-12"
             onClick={(e) => {
               e.stopPropagation();
               onView(jump);
             }}
           >
-            {/* Glossy overlay */}
-            <div className="absolute inset-0 bg-gradient-to-b from-white/20 via-transparent to-black/20"></div>
-            
-            {/* Shimmer effect */}
-            <div className="absolute inset-0 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12"></div>
+            {/* Glass morphism overlay effects */}
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-transparent to-secondary/8 dark:from-primary/6 dark:via-transparent dark:to-secondary/6 rounded-full"></div>
+            <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/40 dark:via-white/25 to-transparent"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-transparent to-white/10 dark:from-white/8 dark:via-transparent dark:to-white/8 rounded-full opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500"></div>
             
             {/* Content */}
             <div className="relative flex items-center justify-center gap-2.5 z-10">
-              <span className="font-bold tracking-wide text-base">View Jump</span>
+              <span className="font-semibold tracking-wide text-base">View Jump</span>
               <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
             </div>
           </Button>
