@@ -20,7 +20,8 @@ import {
   Zap,
   Star,
   Play,
-  Download
+  Download,
+  Rocket
 } from "lucide-react";
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -347,105 +348,141 @@ export default function ComprehensiveJumpDisplay({ jump, onEdit, onDownload, cla
   );
 
   const renderActionPlan = () => (
-    <div className="space-y-6">
+    <div className="space-y-8">
+      {/* Executive Summary Bar */}
+      <div className="bg-gradient-to-r from-primary/20 to-primary/10 border border-primary/30 rounded-lg p-6 backdrop-blur-sm">
+        <div className="flex items-center gap-3 mb-2">
+          <Rocket className="h-6 w-6 text-primary" />
+          <h3 className="text-lg font-semibold text-foreground">Your Transformation Roadmap</h3>
+        </div>
+        <p className="text-muted-foreground">
+          This comprehensive action plan breaks down your transformation into {jump.action_plan.phases.length} strategic phases. 
+          Each phase builds on the previous one, with clear objectives, actionable steps, and measurable milestones.
+        </p>
+      </div>
+
       {jump.action_plan.phases.map((phase, index) => (
         <TabCard key={index}>
           <div className="space-y-6">
-            {/* Phase Header */}
-            <div className="flex items-center gap-4">
-              <div className="flex items-center justify-center w-12 h-12 bg-white/20 text-white rounded-full font-bold text-lg drop-shadow-lg border border-white/30">
+            {/* Enhanced Phase Header */}
+            <div className="flex items-start gap-4">
+              <div className="flex items-center justify-center w-14 h-14 bg-gradient-to-br from-primary to-primary/70 text-primary-foreground rounded-xl font-bold text-xl drop-shadow-lg border-2 border-primary/30 flex-shrink-0">
                 {phase.phase_number}
               </div>
               <div className="flex-1">
-                <h3 className="text-xl font-semibold text-white drop-shadow-sm">{phase.title}</h3>
-                <p className="text-white/90 drop-shadow-sm">
+                <h3 className="text-2xl font-bold text-foreground mb-2 leading-tight">{phase.title}</h3>
+                <div className="text-foreground/90 leading-relaxed mb-3">
                   <ReactMarkdown 
                     remarkPlugins={[remarkGfm]}
                     components={{
-                      p: ({node, ...props}) => <span {...props} />,
-                      strong: ({node, ...props}) => <strong className="font-semibold text-white" {...props} />
+                      p: ({node, ...props}) => <p className="inline" {...props} />,
+                      strong: ({node, ...props}) => <strong className="font-semibold text-primary" {...props} />
                     }}
                   >
                     {phase.description}
                   </ReactMarkdown>
-                </p>
-                <Badge variant="outline" className="mt-1 border-white/30 text-white/90 bg-white/10">{phase.duration}</Badge>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Clock className="h-4 w-4 text-muted-foreground" />
+                  <ReactMarkdown 
+                    remarkPlugins={[remarkGfm]}
+                    components={{
+                      p: ({node, ...props}) => <span className="text-sm text-muted-foreground" {...props} />,
+                      strong: ({node, ...props}) => <strong className="font-semibold text-foreground" {...props} />
+                    }}
+                  >
+                    {phase.duration}
+                  </ReactMarkdown>
+                </div>
               </div>
             </div>
 
-            <Separator className="border-white/20" />
+            <Separator className="border-border/50" />
 
-            {/* Objectives */}
-            <div>
-              <h4 className="font-medium text-white drop-shadow-sm mb-3 flex items-center gap-2">
-                <Target className="h-4 w-4 text-white drop-shadow-sm" />
-                Objectives
+            {/* Objectives Section */}
+            <div className="bg-gradient-to-br from-blue-50 to-blue-100/50 dark:from-blue-950/20 dark:to-blue-900/10 rounded-lg p-5 border border-blue-200/50 dark:border-blue-800/30">
+              <h4 className="font-semibold text-foreground mb-4 flex items-center gap-2 text-lg">
+                <Target className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                Phase Objectives
               </h4>
-              <div className="grid gap-2">
+              <div className="grid gap-3">
                 {phase.objectives.map((objective, objIndex) => (
-                  <div key={objIndex} className="flex items-start gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-white drop-shadow-sm mt-1 flex-shrink-0" />
-                    <span className="text-white/90 drop-shadow-sm flex-1">
+                  <div key={objIndex} className="flex items-start gap-3 bg-white/50 dark:bg-background/30 rounded-md p-3 border border-blue-200/30 dark:border-blue-800/20">
+                    <CheckCircle2 className="h-5 w-5 text-green-600 dark:text-green-400 mt-0.5 flex-shrink-0" />
+                    <div className="text-foreground/90 flex-1 leading-relaxed">
                       <ReactMarkdown 
                         remarkPlugins={[remarkGfm]}
                         components={{
                           p: ({node, ...props}) => <span {...props} />,
-                          strong: ({node, ...props}) => <strong className="font-semibold text-white" {...props} />
+                          strong: ({node, ...props}) => <strong className="font-semibold text-foreground" {...props} />
                         }}
                       >
                         {objective}
                       </ReactMarkdown>
-                    </span>
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Key Actions */}
+            {/* Key Actions Section */}
             <div>
-              <h4 className="font-medium text-white drop-shadow-sm mb-3 flex items-center gap-2">
-                <Play className="h-4 w-4 text-white drop-shadow-sm" />
-                Key Actions
+              <h4 className="font-semibold text-foreground mb-4 flex items-center gap-2 text-lg">
+                <Play className="h-5 w-5 text-primary" />
+                Action Steps
               </h4>
-              <div className="space-y-3">
+              <div className="space-y-4">
                 {phase.key_actions.map((action, actionIndex) => (
-                  <Card key={actionIndex} className="border-white/10 bg-white/5 backdrop-blur-sm">
-                    <CardContent className="p-4">
-                      <div className="flex items-start justify-between mb-2">
-                        <div className="font-medium text-white drop-shadow-sm flex-1">
-                          <ReactMarkdown 
-                            remarkPlugins={[remarkGfm]}
-                            components={{
-                              p: ({node, ...props}) => <span {...props} />,
-                              strong: ({node, ...props}) => <strong className="font-semibold text-white" {...props} />
-                            }}
-                          >
-                            {action.action}
-                          </ReactMarkdown>
+                  <Card key={actionIndex} className="border-border/50 hover:border-primary/30 transition-all duration-200 hover:shadow-lg bg-gradient-to-br from-background to-muted/20">
+                    <CardContent className="p-5">
+                      <div className="flex items-start justify-between gap-3 mb-3">
+                        <div className="flex items-start gap-3 flex-1">
+                          <div className="flex items-center justify-center w-8 h-8 bg-primary/10 text-primary rounded-full font-bold text-sm flex-shrink-0 border border-primary/20">
+                            {actionIndex + 1}
+                          </div>
+                          <div className="flex-1">
+                            <div className="font-semibold text-foreground text-base mb-2 leading-snug">
+                              <ReactMarkdown 
+                                remarkPlugins={[remarkGfm]}
+                                components={{
+                                  p: ({node, ...props}) => <span {...props} />,
+                                  strong: ({node, ...props}) => <strong className="font-bold text-primary" {...props} />
+                                }}
+                              >
+                                {action.action}
+                              </ReactMarkdown>
+                            </div>
+                          </div>
                         </div>
-                        <div className="flex gap-2 flex-shrink-0 ml-2">
-                          <Badge variant={action.priority === 'High' ? 'destructive' : action.priority === 'Medium' ? 'default' : 'secondary'} className="text-xs">
+                        <div className="flex gap-2 flex-shrink-0">
+                          <Badge 
+                            variant={action.priority === 'High' ? 'destructive' : action.priority === 'Medium' ? 'default' : 'secondary'} 
+                            className="text-xs whitespace-nowrap"
+                          >
                             {action.priority}
                           </Badge>
-                          <Badge variant="outline" className="text-xs border-white/30 text-white/90 bg-white/10">
+                          <Badge variant="outline" className="text-xs whitespace-nowrap">
                             {action.effort_level}
                           </Badge>
                         </div>
                       </div>
-                      <p className="text-sm text-white/80 drop-shadow-sm mb-2">
+                      <div className="text-sm text-muted-foreground leading-relaxed pl-11">
                         <ReactMarkdown 
                           remarkPlugins={[remarkGfm]}
                           components={{
-                            p: ({node, ...props}) => <span {...props} />,
-                            strong: ({node, ...props}) => <strong className="font-semibold text-white" {...props} />
+                            p: ({node, ...props}) => <p className="inline" {...props} />,
+                            strong: ({node, ...props}) => <strong className="font-semibold text-foreground" {...props} />
                           }}
                         >
                           {action.description}
                         </ReactMarkdown>
-                      </p>
-                      {action.dependencies.length > 0 && (
-                        <div className="text-xs text-white/70 drop-shadow-sm">
-                          <span className="font-medium">Dependencies:</span> {action.dependencies.join(', ')}
+                      </div>
+                      {action.dependencies && action.dependencies.length > 0 && (
+                        <div className="mt-3 pt-3 border-t border-border/50 pl-11">
+                          <div className="text-xs text-muted-foreground flex items-center gap-2">
+                            <span className="font-medium text-foreground">Dependencies:</span> 
+                            <span>{action.dependencies.join(' • ')}</span>
+                          </div>
                         </div>
                       )}
                     </CardContent>
@@ -454,45 +491,48 @@ export default function ComprehensiveJumpDisplay({ jump, onEdit, onDownload, cla
               </div>
             </div>
 
-            {/* Milestones */}
-            <div>
-              <h4 className="font-medium text-white drop-shadow-sm mb-3 flex items-center gap-2">
-                <Star className="h-4 w-4 text-white drop-shadow-sm" />
-                Milestones
+            {/* Milestones Section */}
+            <div className="bg-gradient-to-br from-amber-50 to-amber-100/50 dark:from-amber-950/20 dark:to-amber-900/10 rounded-lg p-5 border border-amber-200/50 dark:border-amber-800/30">
+              <h4 className="font-semibold text-foreground mb-4 flex items-center gap-2 text-lg">
+                <Star className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+                Key Milestones
               </h4>
-              <div className="space-y-3">
+              <div className="space-y-4">
                 {phase.milestones.map((milestone, milestoneIndex) => (
-                  <Card key={milestoneIndex} className="border-white/10 bg-white/5 backdrop-blur-sm">
+                  <Card key={milestoneIndex} className="border-amber-200/50 dark:border-amber-800/30 bg-white/60 dark:bg-background/40 backdrop-blur-sm">
                     <CardContent className="p-4">
-                      <div className="flex items-start justify-between mb-2">
-                        <div className="font-medium text-white drop-shadow-sm flex-1">
+                      <div className="flex items-start justify-between gap-3 mb-3">
+                        <div className="font-semibold text-foreground flex-1 leading-snug">
                           <ReactMarkdown 
                             remarkPlugins={[remarkGfm]}
                             components={{
                               p: ({node, ...props}) => <span {...props} />,
-                              strong: ({node, ...props}) => <strong className="font-semibold text-white" {...props} />
+                              strong: ({node, ...props}) => <strong className="font-bold text-amber-700 dark:text-amber-400" {...props} />
                             }}
                           >
                             {milestone.milestone}
                           </ReactMarkdown>
                         </div>
-                        <Badge variant="outline" className="text-xs border-white/30 text-white/90 bg-white/10 flex-shrink-0 ml-2">{milestone.target_date}</Badge>
+                        <Badge variant="outline" className="text-xs border-amber-300 dark:border-amber-700 text-amber-700 dark:text-amber-400 bg-amber-100/50 dark:bg-amber-900/30 flex-shrink-0 whitespace-nowrap">
+                          {milestone.target_date}
+                        </Badge>
                       </div>
-                      <div className="space-y-1">
+                      <div className="space-y-2 mt-3 pt-3 border-t border-amber-200/50 dark:border-amber-800/30">
+                        <div className="text-xs font-medium text-foreground mb-2">Success Criteria:</div>
                         {milestone.success_criteria.map((criteria, criteriaIndex) => (
-                          <div key={criteriaIndex} className="flex items-start gap-2 text-sm text-white/80 drop-shadow-sm">
-                            <CheckCircle2 className="h-3 w-3 text-white drop-shadow-sm mt-1 flex-shrink-0" />
-                            <span className="flex-1">
+                          <div key={criteriaIndex} className="flex items-start gap-2 text-sm text-muted-foreground">
+                            <CheckCircle2 className="h-4 w-4 text-green-600 dark:text-green-400 mt-0.5 flex-shrink-0" />
+                            <div className="flex-1 leading-relaxed">
                               <ReactMarkdown 
                                 remarkPlugins={[remarkGfm]}
                                 components={{
                                   p: ({node, ...props}) => <span {...props} />,
-                                  strong: ({node, ...props}) => <strong className="font-semibold text-white" {...props} />
+                                  strong: ({node, ...props}) => <strong className="font-semibold text-foreground" {...props} />
                                 }}
                               >
                                 {criteria}
                               </ReactMarkdown>
-                            </span>
+                            </div>
                           </div>
                         ))}
                       </div>

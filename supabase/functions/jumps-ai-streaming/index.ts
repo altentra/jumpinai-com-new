@@ -347,103 +347,278 @@ Focus on clarity, professional formatting, and actionable content.`,
       };
 
     case 3:
-      // STEP 3: Action Plan - DETAILED & WELL-FORMATTED
+      // STEP 3: Action Plan - WORLD-CLASS DETAILED EXECUTION ROADMAP
       return {
-        systemPrompt: `You are an execution expert. Create detailed, actionable implementation plans with excellent formatting. Use markdown for emphasis. Be specific and thorough while maintaining clarity.`,
-        userPrompt: `Create a comprehensive action plan:
+        systemPrompt: `You are a world-class execution strategist and business advisor. Create exceptionally detailed, actionable implementation plans with professional formatting. Use **bold** markdown strategically to highlight critical information. Your plans should inspire confidence and provide crystal-clear guidance.`,
+        userPrompt: `Create a comprehensive, world-class action plan for transformation:
 
 ${baseContext}
 
 Overview Context:
 ${overviewContent}
 
-FORMATTING: Use **bold** for key terms, actions, and metrics. Keep descriptions clear and scannable.
+CRITICAL REQUIREMENTS:
+1. Use **bold** markdown for ALL key terms, actions, deliverables, and metrics
+2. Provide specific, actionable steps with clear outcomes
+3. Include realistic timelines and effort estimates
+4. Make every action measurable and verifiable
+5. Ensure professional, executive-level quality throughout
 
-Return ONLY valid JSON:
+Return ONLY valid JSON in this EXACT structure:
 {
   "phases": [
     {
-      "name": "Phase 1: [Clear name for foundation phase]",
-      "description": "3-4 sentences: what's achieved, why it's the starting point, expected outcomes. Use **bold** for key deliverables.",
-      "duration": "Specific timeline (e.g., '**Weeks 1-4**: 10-15 hrs/week')",
+      "phase_number": 1,
+      "title": "Foundation Phase: [Compelling title that captures the phase essence]",
+      "description": "Comprehensive 3-4 sentence overview explaining: what will be achieved, why this is the crucial first step, key deliverables, and expected transformation outcomes. Use **bold** for all key deliverables and metrics.",
+      "duration": "**Weeks 1-4** (10-15 hours/week)",
       "objectives": [
-        "**Objective 1**: Clear goal with measurable outcome",
-        "**Objective 2**: Clear goal with measurable outcome",
-        "**Objective 3**: Clear goal with measurable outcome",
-        "**Objective 4**: Additional objective",
-        "**Objective 5**: Extra objective for thorough planning"
+        "**Master [specific skill]** through hands-on practice with [specific tools/methods]",
+        "**Build [specific deliverable]** that demonstrates [measurable outcome]",
+        "**Establish [specific system/process]** for [clear purpose with metric]",
+        "**Achieve [quantifiable milestone]** by completing [specific actions]",
+        "**Develop [capability]** to [specific outcome with measurement]"
       ],
-      "actions": [
-        "**Action 1**: Specific step with clear outcome (2-3 sentences)",
-        "**Action 2**: Specific step with clear outcome (2-3 sentences)",
-        "**Action 3**: Specific step with clear outcome (2-3 sentences)",
-        "**Action 4**: Specific step with clear outcome (2-3 sentences)",
-        "**Action 5**: Specific step with clear outcome (2-3 sentences)"
+      "key_actions": [
+        {
+          "action": "**Set up professional AI workspace** with essential tools and systems",
+          "description": "Install and configure **ChatGPT Plus**, **Claude Pro**, and **Notion AI**. Create organized workspace with folders for projects, prompts, and learning resources. Establish daily practice routine of **30 minutes** for skill building. Set up tracking system for progress and insights.",
+          "priority": "High",
+          "effort_level": "2-3 hours",
+          "dependencies": []
+        },
+        {
+          "action": "**Complete foundational AI literacy training** through structured learning",
+          "description": "Enroll in **AI fundamentals course** covering prompt engineering, tool selection, and best practices. Complete **5 hands-on exercises** building real-world outputs. Document learnings and create personal **AI playbook** with proven prompts and techniques.",
+          "priority": "High",
+          "effort_level": "5-6 hours",
+          "dependencies": ["Set up professional AI workspace"]
+        },
+        {
+          "action": "**Create first AI-powered project** demonstrating core capabilities",
+          "description": "Design and build **[specific deliverable]** using AI tools learned so far. Focus on **quality over speed**, iterating prompts for optimal results. Document entire process including prompts used, tools selected, and results achieved. Present finished project to **3 peers or mentors** for feedback.",
+          "priority": "High",
+          "effort_level": "8-10 hours",
+          "dependencies": ["Complete foundational AI literacy training"]
+        },
+        {
+          "action": "**Establish daily AI practice routine** for consistent skill development",
+          "description": "Create **30-minute daily practice schedule** focused on one AI skill per week. Build library of **20+ proven prompts** for common tasks. Join **2 AI communities** for support and learning. Track progress with **weekly reflection log** documenting wins and challenges.",
+          "priority": "Medium",
+          "effort_level": "3-4 hours/week",
+          "dependencies": []
+        },
+        {
+          "action": "**Build initial client/project pipeline** to apply new skills",
+          "description": "Identify **3-5 potential projects** where AI can add immediate value. Create **compelling portfolio piece** showcasing AI capabilities. Develop **pitch template** explaining AI benefits. Schedule **5 conversations** with potential clients or stakeholders to discuss opportunities.",
+          "priority": "Medium",
+          "effort_level": "4-5 hours",
+          "dependencies": ["Create first AI-powered project"]
+        }
       ],
       "milestones": [
-        "**Milestone 1**: Measurable achievement with metric",
-        "**Milestone 2**: Measurable achievement with metric",
-        "**Milestone 3**: Measurable achievement with metric"
+        {
+          "milestone": "**AI Workspace Operational** - All essential tools configured and actively used",
+          "target_date": "End of Week 1",
+          "success_criteria": [
+            "**3+ AI tools** installed and configured with premium accounts",
+            "Organized workspace created with **project folders and tracking system**",
+            "**Daily practice routine** established with first 5 sessions completed",
+            "Personal **AI playbook started** with initial 10 proven prompts documented"
+          ]
+        },
+        {
+          "milestone": "**Core AI Competency Achieved** - Demonstrated ability to create quality outputs",
+          "target_date": "End of Week 2",
+          "success_criteria": [
+            "Foundational training completed with **90%+ comprehension**",
+            "**5 hands-on exercises** completed successfully",
+            "**15+ proven prompts** documented in personal playbook",
+            "Able to independently create **professional-quality AI outputs**"
+          ]
+        },
+        {
+          "milestone": "**First AI Project Delivered** - Tangible proof of new capabilities",
+          "target_date": "End of Week 4",
+          "success_criteria": [
+            "Complete **portfolio-quality project** finished and documented",
+            "**Positive feedback** received from 3+ reviewers",
+            "**Full process documentation** created including prompts and learnings",
+            "**3-5 project opportunities** identified for immediate application"
+          ]
+        }
       ]
     },
     {
-      "name": "Phase 2: [Clear name for growth phase]",
-      "description": "3-4 sentences: builds on Phase 1, new capabilities, outcomes. Use **bold** for achievements.",
-      "duration": "Specific timeline with hours/week",
+      "phase_number": 2,
+      "title": "Growth Phase: [Dynamic title showing advancement]",
+      "description": "Powerful 3-4 sentence description building on Phase 1 success. Explain how this phase scales capabilities, introduces advanced techniques, generates tangible results, and positions for mastery. Use **bold** for all achievements and metrics.",
+      "duration": "**Weeks 5-8** (12-18 hours/week)",
       "objectives": [
-        "**Objective 1**: Clear goal",
-        "**Objective 2**: Clear goal",
-        "**Objective 3**: Clear goal",
-        "**Objective 4**: Additional objective",
-        "**Objective 5**: Extra objective"
+        "**Scale [capability from Phase 1]** to handle [more complex scenarios]",
+        "**Generate [specific revenue/results]** through [concrete method]",
+        "**Master [advanced technique]** enabling [new possibilities]",
+        "**Build [sophisticated system]** that [delivers measurable value]",
+        "**Establish [reputation/presence]** as [credible expert] in [specific area]"
       ],
-      "actions": [
-        "**Action 1**: Specific step (2-3 sentences)",
-        "**Action 2**: Specific step (2-3 sentences)",
-        "**Action 3**: Specific step (2-3 sentences)",
-        "**Action 4**: Specific step (2-3 sentences)",
-        "**Action 5**: Specific step (2-3 sentences)"
+      "key_actions": [
+        {
+          "action": "**Launch revenue-generating AI service** with first paying clients",
+          "description": "Package **3 core AI services** with clear deliverables and pricing (**$500-2000 per project**). Create **professional service page** with portfolio examples. Execute outreach campaign to **20 qualified prospects**. Deliver first **3 paid projects** with exceptional quality, gathering testimonials and case studies.",
+          "priority": "High",
+          "effort_level": "15-20 hours",
+          "dependencies": ["First AI Project Delivered"]
+        },
+        {
+          "action": "**Master advanced AI techniques** for competitive advantage",
+          "description": "Deep-dive into **prompt chaining**, **multi-model workflows**, and **AI automation**. Complete **advanced training program** with hands-on projects. Build **10 sophisticated prompt sequences** for complex tasks. Create **automation workflows** saving **5+ hours per week**.",
+          "priority": "High",
+          "effort_level": "12-15 hours",
+          "dependencies": ["Core AI Competency Achieved"]
+        },
+        {
+          "action": "**Build thought leadership presence** in AI community",
+          "description": "Publish **2 high-quality articles** sharing insights and case studies on **LinkedIn** and **Medium**. Create **weekly content** demonstrating expertise (**tips, examples, results**). Engage actively in **3 AI communities** providing valuable input. Speak at **1 virtual event** or host **workshop** for 20+ attendees.",
+          "priority": "Medium",
+          "effort_level": "6-8 hours",
+          "dependencies": ["First AI Project Delivered"]
+        },
+        {
+          "action": "**Develop proprietary AI methodology** as unique competitive advantage",
+          "description": "Document proven **AI workflow system** combining best practices from all projects. Create **standardized templates** for common use cases. Build **quality checklist** ensuring consistent excellence. Package methodology into **sellable framework** or **training program**.",
+          "priority": "High",
+          "effort_level": "10-12 hours",
+          "dependencies": ["Master advanced AI techniques"]
+        },
+        {
+          "action": "**Scale operations with systems** for efficiency and growth",
+          "description": "Implement **project management system** for client work. Create **automated workflows** for repetitive tasks using **Zapier/Make**. Build **template library** with **30+ proven assets**. Establish **quality assurance process** ensuring consistent output excellence.",
+          "priority": "Medium",
+          "effort_level": "8-10 hours",
+          "dependencies": ["Launch revenue-generating AI service"]
+        }
       ],
       "milestones": [
-        "**Milestone 1**: Measurable achievement",
-        "**Milestone 2**: Measurable achievement",
-        "**Milestone 3**: Measurable achievement"
+        {
+          "milestone": "**First Revenue Generated** - Validated business model with paying clients",
+          "target_date": "End of Week 6",
+          "success_criteria": [
+            "**$1,500-3,000** in revenue generated from initial projects",
+            "**3+ satisfied clients** with documented testimonials",
+            "**Proven service delivery system** established and documented",
+            "**Active pipeline** of 5+ qualified opportunities"
+          ]
+        },
+        {
+          "milestone": "**Advanced Skills Mastered** - Competitive differentiation achieved",
+          "target_date": "End of Week 7",
+          "success_criteria": [
+            "**10+ advanced techniques** mastered and applied in projects",
+            "**Automation workflows** saving 5+ hours weekly",
+            "**Proprietary methodology** documented and tested",
+            "Demonstrable **speed and quality improvements** over Phase 1"
+          ]
+        },
+        {
+          "milestone": "**Market Presence Established** - Recognized as credible AI expert",
+          "target_date": "End of Week 8",
+          "success_criteria": [
+            "**2+ published articles** with 500+ combined views",
+            "**Growing social media presence** with engaged followers",
+            "**Speaking engagement** completed with positive feedback",
+            "**Inbound inquiries** from content marketing efforts"
+          ]
+        }
       ]
     },
     {
-      "name": "Phase 3: [Clear name for mastery phase]",
-      "description": "3-4 sentences: achieves ultimate goal, scale/mastery, sustainability. Use **bold** for final outcomes.",
-      "duration": "Specific timeline with end state",
+      "phase_number": 3,
+      "title": "Mastery Phase: [Aspirational title reflecting ultimate achievement]",
+      "description": "Inspiring 3-4 sentence vision of ultimate achievement. Describe how this phase achieves the original transformation goal, establishes sustainable success, creates lasting impact, and positions for continued growth. Use **bold** for all final outcomes and long-term metrics.",
+      "duration": "**Weeks 9-12+** (15-20 hours/week, then sustainable ongoing)",
       "objectives": [
-        "**Objective 1**: Clear goal",
-        "**Objective 2**: Clear goal",
-        "**Objective 3**: Clear goal",
-        "**Objective 4**: Additional objective",
-        "**Objective 5**: Extra objective"
+        "**Achieve [original transformation goal]** with [measurable validation]",
+        "**Generate [target income/impact level]** consistently and sustainably",
+        "**Establish [market position/brand]** as recognized [authority/leader]",
+        "**Build [sustainable system]** requiring [reduced time] while delivering [maintained/increased results]",
+        "**Create [legacy/impact]** through [specific contribution] benefiting [target audience]"
       ],
-      "actions": [
-        "**Action 1**: Specific step (2-3 sentences)",
-        "**Action 2**: Specific step (2-3 sentences)",
-        "**Action 3**: Specific step (2-3 sentences)",
-        "**Action 4**: Specific step (2-3 sentences)",
-        "**Action 5**: Specific step (2-3 sentences)"
+      "key_actions": [
+        {
+          "action": "**Scale to consistent revenue target** with predictable client pipeline",
+          "description": "Achieve **$5,000-10,000 monthly revenue** from AI services. Establish **systematic marketing** generating **10+ qualified leads monthly**. Build **subscription or retainer model** for **3-5 ongoing clients**. Create **referral system** generating **30% of new business**. Document all systems for consistency and scalability.",
+          "priority": "High",
+          "effort_level": "20-25 hours",
+          "dependencies": ["First Revenue Generated", "Market Presence Established"]
+        },
+        {
+          "action": "**Launch signature program or product** leveraging unique expertise",
+          "description": "Package methodology into **online course**, **coaching program**, or **SaaS tool**. Create compelling **marketing assets** including **sales page**, **demo videos**, and **case studies**. Execute **strategic launch** to **audience of 500+**. Generate **$3,000-5,000** from initial launch with **recurring revenue potential**.",
+          "priority": "High",
+          "effort_level": "25-30 hours",
+          "dependencies": ["Develop proprietary AI methodology", "Advanced Skills Mastered"]
+        },
+        {
+          "action": "**Build team or automation** for leverage and scaling",
+          "description": "Hire **1-2 contractors** or **virtual assistants** for task delegation. Implement **advanced automation** handling **60%+ of routine work**. Create **comprehensive SOPs** for all key processes. Establish **quality control system** maintaining excellence at scale. Reduce personal time to **10-12 hours weekly** while maintaining or growing revenue.",
+          "priority": "High",
+          "effort_level": "15-20 hours initial setup",
+          "dependencies": ["Scale to consistent revenue target"]
+        },
+        {
+          "action": "**Establish industry authority** through strategic visibility",
+          "description": "Publish **comprehensive guide or mini-book** on AI transformation. Secure **podcast interviews** on **5+ relevant shows**. Present at **2+ industry conferences** or major virtual events. Build **email list of 1,000+ subscribers**. Create **weekly newsletter** with **40%+ open rates**.",
+          "priority": "Medium",
+          "effort_level": "12-15 hours",
+          "dependencies": ["Market Presence Established"]
+        },
+        {
+          "action": "**Create sustainable long-term system** for continued success",
+          "description": "Develop **5-year vision** with **quarterly milestones**. Implement **continuous learning routine** staying ahead of AI trends. Build **strategic partnerships** with **complementary service providers**. Establish **financial systems** for **business health tracking**. Create **succession or scaling plan** for future growth options.",
+          "priority": "Medium",
+          "effort_level": "10-12 hours",
+          "dependencies": ["Build team or automation"]
+        }
       ],
       "milestones": [
-        "**Milestone 1**: Major achievement with metric",
-        "**Milestone 2**: Major achievement with metric",
-        "**Milestone 3**: Final success proof with clear validation"
+        {
+          "milestone": "**Revenue Target Achieved** - Sustainable income from AI transformation",
+          "target_date": "End of Week 12",
+          "success_criteria": [
+            "**$5,000-10,000 monthly recurring revenue** established",
+            "**10+ active clients** or **3-5 retainer relationships**",
+            "**Consistent 10+ lead flow** from marketing systems",
+            "**80%+ client satisfaction** with strong retention and referrals"
+          ]
+        },
+        {
+          "milestone": "**Signature Offering Launched** - Scalable product beyond services",
+          "target_date": "End of Month 4",
+          "success_criteria": [
+            "**Program/product launched** with complete marketing funnel",
+            "**$3,000-5,000** generated from initial launch",
+            "**20+ customers/students** enrolled with positive feedback",
+            "**Recurring revenue model** established for long-term growth"
+          ]
+        },
+        {
+          "milestone": "**Transformation Complete** - Original goal achieved and sustainable",
+          "target_date": "End of Month 6",
+          "success_criteria": [
+            "**Original transformation goal** achieved with measurable validation",
+            "**Sustainable systems** operating with **reduced time commitment**",
+            "**Recognized authority** with growing influence and opportunities",
+            "**Clear path forward** with **documented playbook** for continued success",
+            "**Meaningful impact** created for clients/community with testimonials and case studies"
+          ]
+        }
       ]
     }
-  ],
-  "successMetrics": [
-    "**KPI 1**: Specific metric with target and measurement method",
-    "**KPI 2**: Another metric with target and timeline",
-    "**KPI 3**: Third metric with clear benchmarks"
   ]
 }
 
-Create detailed, professional content with excellent formatting for easy reading.`,
-        expectedTokens: 12000
+Create world-class, executive-level content that inspires action and provides crystal-clear guidance. Every element must be specific, measurable, and actionable.`,
+        expectedTokens: 16000
       };
 
     case 4:
