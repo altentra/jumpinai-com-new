@@ -347,21 +347,35 @@ export default function ComprehensiveJumpDisplay({ jump, onEdit, onDownload, cla
     </div>
   );
 
-  const renderActionPlan = () => (
-    <div className="space-y-8">
-      {/* Executive Summary Bar */}
-      <div className="bg-gradient-to-r from-primary/20 to-primary/10 border border-primary/30 rounded-lg p-6 backdrop-blur-sm">
-        <div className="flex items-center gap-3 mb-2">
-          <Rocket className="h-6 w-6 text-primary" />
-          <h3 className="text-lg font-semibold text-foreground">Your Transformation Roadmap</h3>
-        </div>
-        <p className="text-muted-foreground">
-          This comprehensive action plan breaks down your transformation into {jump.action_plan.phases.length} strategic phases. 
-          Each phase builds on the previous one, with clear objectives, actionable steps, and measurable milestones.
-        </p>
-      </div>
+  const renderActionPlan = () => {
+    // Safety check for phases data
+    if (!jump.action_plan?.phases || !Array.isArray(jump.action_plan.phases) || jump.action_plan.phases.length === 0) {
+      return (
+        <TabCard>
+          <div className="text-center py-12">
+            <Target className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+            <h3 className="text-lg font-semibold text-foreground mb-2">No Action Plan Available</h3>
+            <p className="text-muted-foreground">The action plan is being generated. Please refresh or check back soon.</p>
+          </div>
+        </TabCard>
+      );
+    }
 
-      {jump.action_plan.phases.map((phase, index) => (
+    return (
+      <div className="space-y-8">
+        {/* Executive Summary Bar */}
+        <div className="bg-gradient-to-r from-primary/20 to-primary/10 border border-primary/30 rounded-lg p-6 backdrop-blur-sm">
+          <div className="flex items-center gap-3 mb-2">
+            <Rocket className="h-6 w-6 text-primary" />
+            <h3 className="text-lg font-semibold text-foreground">Your Transformation Roadmap</h3>
+          </div>
+          <p className="text-muted-foreground">
+            This comprehensive action plan breaks down your transformation into {jump.action_plan.phases.length} strategic phases. 
+            Each phase builds on the previous one, with clear objectives, actionable steps, and measurable milestones.
+          </p>
+        </div>
+
+        {jump.action_plan.phases.map((phase, index) => (
         <TabCard key={index}>
           <div className="space-y-6">
             {/* Enhanced Phase Header */}
@@ -544,8 +558,9 @@ export default function ComprehensiveJumpDisplay({ jump, onEdit, onDownload, cla
           </div>
         </TabCard>
       ))}
-    </div>
-  );
+      </div>
+    );
+  };
 
   const renderToolsPrompts = () => (
     <div className="space-y-6">
