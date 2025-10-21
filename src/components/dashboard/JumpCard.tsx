@@ -92,20 +92,20 @@ export default function JumpCard({ jump, jumpNumber, onView, onDelete }: JumpCar
           <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/15 via-accent/10 to-secondary/15 rounded-full blur-lg opacity-50 group-hover/btn:opacity-70 transition-all duration-500"></div>
           
           <Button 
-            className="w-full relative overflow-hidden rounded-full bg-gradient-to-br from-background/60 to-background/40 dark:from-gray-950/60 dark:to-gray-900/40 border border-border/40 hover:border-primary/50 shadow-xl hover:shadow-2xl hover:shadow-primary/20 transition-all duration-500 hover:scale-[1.02] font-bold text-foreground h-12"
+            className="w-full relative overflow-hidden rounded-full bg-gradient-to-br from-gray-950/90 to-gray-900/80 border border-border/30 hover:border-primary/40 shadow-xl hover:shadow-2xl hover:shadow-primary/20 transition-all duration-500 hover:scale-[1.02] font-bold text-white h-12"
             onClick={(e) => {
               e.stopPropagation();
               onView(jump);
             }}
           >
             {/* Glass morphism overlay effects */}
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-transparent to-secondary/8 dark:from-primary/6 dark:via-transparent dark:to-secondary/6 rounded-full"></div>
-            <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/40 dark:via-white/25 to-transparent"></div>
-            <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-transparent to-white/10 dark:from-white/8 dark:via-transparent dark:to-white/8 rounded-full opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-transparent to-secondary/8 rounded-full"></div>
+            <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-white/8 via-transparent to-white/8 rounded-full opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500"></div>
             
             {/* Content */}
             <div className="relative flex items-center justify-center gap-2.5 z-10">
-              <span className="font-semibold tracking-wide text-base">View Jump</span>
+              <span className="font-semibold tracking-wide text-base">View the Jump</span>
               <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
             </div>
           </Button>
