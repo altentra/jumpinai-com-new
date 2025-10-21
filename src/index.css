@@ -314,3 +314,73 @@
 .dark ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.4);
 }
+
+/* Enhanced Prose Styles for Markdown Content */
+.prose {
+  @apply text-foreground;
+}
+
+.prose strong {
+  @apply font-semibold text-foreground;
+}
+
+.prose em {
+  @apply italic text-foreground/90;
+}
+
+.prose h1, .prose h2, .prose h3, .prose h4 {
+  @apply font-bold text-foreground mt-6 mb-3;
+}
+
+.prose h1 {
+  @apply text-2xl;
+}
+
+.prose h2 {
+  @apply text-xl;
+}
+
+.prose h3 {
+  @apply text-lg;
+}
+
+.prose h4 {
+  @apply text-base;
+}
+
+.prose p {
+  @apply my-3 leading-relaxed;
+}
+
+.prose ul, .prose ol {
+  @apply my-3 space-y-2;
+}
+
+.prose li {
+  @apply leading-relaxed;
+}
+
+.prose hr {
+  @apply my-6 border-border/40;
+}
+
+.prose blockquote {
+  @apply border-l-4 border-primary/30 pl-4 italic my-4;
+}
+
+.prose code {
+  @apply bg-muted px-1.5 py-0.5 rounded text-sm font-mono;
+}
+
+.prose a {
+  @apply text-primary underline-offset-4 hover:underline;
+}
+
+/* Dark mode adjustments */
+.dark .prose strong {
+  @apply text-foreground;
+}
+
+.dark .prose em {
+  @apply text-foreground/90;
+}

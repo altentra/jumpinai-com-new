@@ -184,9 +184,11 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-foreground/90 leading-relaxed whitespace-pre-line">
-                      {result.comprehensive_plan.executiveSummary}
-                    </p>
+                    <div className="prose prose-sm dark:prose-invert max-w-none">
+                      <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                        {formatAIText(result.comprehensive_plan.executiveSummary)}
+                      </ReactMarkdown>
+                    </div>
                   </CardContent>
                 </Card>
               )}
@@ -204,7 +206,11 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                     {result.comprehensive_plan.situationAnalysis.currentState && (
                       <div>
                         <h4 className="font-semibold text-sm mb-2">Current State</h4>
-                        <p className="text-foreground/80 text-sm">{result.comprehensive_plan.situationAnalysis.currentState}</p>
+                        <div className="prose prose-sm dark:prose-invert max-w-none">
+                          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                            {formatAIText(result.comprehensive_plan.situationAnalysis.currentState)}
+                          </ReactMarkdown>
+                        </div>
                       </div>
                     )}
                     
@@ -217,8 +223,12 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                           </h4>
                           <ul className="space-y-2">
                             {result.comprehensive_plan.situationAnalysis.challenges.map((challenge: string, idx: number) => (
-                              <li key={idx} className="text-sm text-foreground/80 pl-4 border-l-2 border-destructive/30">
-                                {challenge}
+                              <li key={idx} className="text-sm pl-4 border-l-2 border-destructive/30">
+                                <div className="prose prose-sm dark:prose-invert max-w-none">
+                                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                    {formatAIText(challenge)}
+                                  </ReactMarkdown>
+                                </div>
                               </li>
                             ))}
                           </ul>
@@ -233,8 +243,12 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                           </h4>
                           <ul className="space-y-2">
                             {result.comprehensive_plan.situationAnalysis.opportunities.map((opp: string, idx: number) => (
-                              <li key={idx} className="text-sm text-foreground/80 pl-4 border-l-2 border-primary/30">
-                                {opp}
+                              <li key={idx} className="text-sm pl-4 border-l-2 border-primary/30">
+                                <div className="prose prose-sm dark:prose-invert max-w-none">
+                                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                    {formatAIText(opp)}
+                                  </ReactMarkdown>
+                                </div>
                               </li>
                             ))}
                           </ul>
@@ -255,9 +269,11 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-foreground/90 leading-relaxed whitespace-pre-line">
-                      {result.comprehensive_plan.strategicVision}
-                    </p>
+                    <div className="prose prose-sm dark:prose-invert max-w-none">
+                      <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                        {formatAIText(result.comprehensive_plan.strategicVision)}
+                      </ReactMarkdown>
+                    </div>
                   </CardContent>
                 </Card>
               )}
@@ -309,13 +325,17 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <ul className="space-y-2">
+                      <ul className="space-y-3">
                         {result.comprehensive_plan.keyObjectives.map((obj: string, idx: number) => (
-                          <li key={idx} className="text-sm text-foreground/80 flex items-start gap-2">
+                          <li key={idx} className="text-sm flex items-start gap-2">
                             <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
                               <span className="text-xs font-semibold text-primary">{idx + 1}</span>
                             </div>
-                            <span>{obj}</span>
+                            <div className="prose prose-sm dark:prose-invert max-w-none flex-1">
+                              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                {formatAIText(obj)}
+                              </ReactMarkdown>
+                            </div>
                           </li>
                         ))}
                       </ul>
@@ -332,11 +352,15 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <ul className="space-y-2">
+                      <ul className="space-y-3">
                         {result.comprehensive_plan.successMetrics.map((metric: string, idx: number) => (
-                          <li key={idx} className="text-sm text-foreground/80 flex items-start gap-2">
+                          <li key={idx} className="text-sm flex items-start gap-2">
                             <TrendingUp className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                            <span>{metric}</span>
+                            <div className="prose prose-sm dark:prose-invert max-w-none flex-1">
+                              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                {formatAIText(metric)}
+                              </ReactMarkdown>
+                            </div>
                           </li>
                         ))}
                       </ul>
