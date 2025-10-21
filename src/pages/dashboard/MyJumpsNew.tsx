@@ -164,19 +164,25 @@ export default function MyJumpsNew() {
       {/* Jumps Grid - Mobile Optimized */}
       {jumps.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 px-2 sm:px-0">
-          {jumps.map((jump, index) => (
-            <div 
-              key={jump.id}
-              className="animate-fade-in-up"
-              style={{ animationDelay: `${index * 100}ms` }}
-            >
-              <JumpCard
-                jump={jump}
-                onView={handleViewJump}
-                onDelete={handleDeleteJump}
-              />
-            </div>
-          ))}
+          {jumps.map((jump, index) => {
+            // Calculate jump number (oldest = #1, newest = highest)
+            const jumpNumber = jumps.length - index;
+            
+            return (
+              <div 
+                key={jump.id}
+                className="animate-fade-in-up"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                <JumpCard
+                  jump={jump}
+                  jumpNumber={jumpNumber}
+                  onView={handleViewJump}
+                  onDelete={handleDeleteJump}
+                />
+              </div>
+            );
+          })}
         </div>
       ) : (
         <Card className="glass border-0 ring-1 ring-white/10 rounded-3xl shadow-2xl backdrop-blur-2xl bg-gradient-to-br from-background/80 via-card/60 to-primary/5 relative overflow-hidden">
