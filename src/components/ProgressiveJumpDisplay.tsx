@@ -300,9 +300,13 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                           {phase.milestones?.length > 0 && (
                             <ul className="space-y-1">
                               {phase.milestones.map((milestone: string, idx: number) => (
-                                <li key={idx} className="text-sm text-foreground/80 flex items-start gap-2">
+                                <li key={idx} className="text-sm flex items-start gap-2">
                                   <CheckCircle className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                                  <span>{milestone}</span>
+                                  <div className="prose prose-sm dark:prose-invert max-w-none flex-1">
+                                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                      {formatAIText(milestone)}
+                                    </ReactMarkdown>
+                                  </div>
                                 </li>
                               ))}
                             </ul>
@@ -387,8 +391,12 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                         </h4>
                         <ul className="space-y-2">
                           {result.comprehensive_plan.riskAssessment.risks.map((risk: string, idx: number) => (
-                            <li key={idx} className="text-sm text-foreground/80 pl-4 border-l-2 border-destructive/30">
-                              {risk}
+                            <li key={idx} className="text-sm pl-4 border-l-2 border-destructive/30">
+                              <div className="prose prose-sm dark:prose-invert max-w-none">
+                                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                  {formatAIText(risk)}
+                                </ReactMarkdown>
+                              </div>
                             </li>
                           ))}
                         </ul>
@@ -403,8 +411,12 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                         </h4>
                         <ul className="space-y-2">
                           {result.comprehensive_plan.riskAssessment.mitigations.map((mitigation: string, idx: number) => (
-                            <li key={idx} className="text-sm text-foreground/80 pl-4 border-l-2 border-primary/30">
-                              {mitigation}
+                            <li key={idx} className="text-sm pl-4 border-l-2 border-primary/30">
+                              <div className="prose prose-sm dark:prose-invert max-w-none">
+                                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                  {formatAIText(mitigation)}
+                                </ReactMarkdown>
+                              </div>
                             </li>
                           ))}
                         </ul>

@@ -18,14 +18,30 @@ function normalize(text: string) {
   t = t.replace(/^\s*[•*]\s+/gm, '- ');
   // normalize numbered lists like "1)" → "1."
   t = t.replace(/^(\s*)(\d+)\)\s+/gm, '$1$2. ');
-  // reduce excessive bullet points - convert nested bullets to simple text
-  t = t.replace(/^(\s*-\s+.*\n)(\s*-\s+.*\n){4,}/gm, (match) => {
-    const lines = match.split('\n').filter(line => line.trim());
-    // Keep first 3 bullets, convert rest to regular paragraphs
-    const bullets = lines.slice(0, 3);
-    const rest = lines.slice(3).map(line => line.replace(/^\s*-\s+/, ''));
-    return bullets.join('\n') + '\n' + rest.join(' ') + '\n';
+  
+  // Break up long paragraphs (300+ chars) into smaller chunks at sentence boundaries
+  t = t.replace(/^([^\n]{300,})$/gm, (match) => {
+    // Split at sentence boundaries (. ! ?)
+    const sentences = match.match(/[^.!?]+[.!?]+/g) || [match];
+    let result = '';
+    let chunk = '';
+    
+    sentences.forEach((sentence, idx) => {
+      chunk += sentence;
+      // Create a new paragraph after every 2-3 sentences or ~200 chars
+      if ((idx > 0 && idx % 2 === 0) || chunk.length > 200) {
+        result += chunk.trim() + '\n\n';
+        chunk = '';
+      }
+    });
+    
+    if (chunk.trim()) {
+      result += chunk.trim();
+    }
+    
+    return result;
   });
+  
   return t.trim();
 }
 
