@@ -264,7 +264,7 @@ FORMATTING REQUIREMENTS:
 
 Return ONLY valid JSON:
 {
-  "executiveSummary": "Write 3-4 well-structured paragraphs (150-200 words). Para 1: Current situation and transformation goal. Para 2: Core challenges. Para 3: Strategic approach. Para 4: Expected outcomes with timeline: ${context.timeCommitment} and budget: ${context.budget}. Use markdown for emphasis.",
+  "executiveSummary": "Write 3-4 well-structured paragraphs. Para 1: Current situation and transformation goal. Para 2: Core challenges. Para 3: Strategic approach. Para 4: Expected outcomes with timeline: ${context.timeCommitment} and budget: ${context.budget}. Use markdown for emphasis.",
   
   "situationAnalysis": {
     "currentState": "3-4 sentences analyzing their current position, what's driving change, and key constraints. Use **bold** for critical points.",
@@ -282,7 +282,7 @@ Return ONLY valid JSON:
     ]
   },
   
-  "strategicVision": "3-4 paragraphs (150-200 words) painting a clear picture of success. Include specific outcomes, lifestyle changes, measurable impact, and transformation milestones. Use **bold** for key achievements and metrics.",
+  "strategicVision": "3-4 paragraphs painting a clear picture of success. Include specific outcomes, lifestyle changes, measurable impact, and transformation milestones. Use **bold** for key achievements and metrics. DO NOT include word counts.",
   
   "roadmap": {
     "phase1": {
