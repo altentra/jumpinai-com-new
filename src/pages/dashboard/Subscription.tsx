@@ -354,14 +354,13 @@ export default function Subscription() {
                         <div className="flex items-center gap-2 mb-1">
                           <p className="font-semibold text-sm text-foreground">{config.label}</p>
                         </div>
-                        {transaction.description && (
+                        {transaction.transaction_type === 'usage' && transaction.reference_id && jumpTitles[transaction.reference_id] ? (
+                          <p className="text-xs text-muted-foreground truncate mb-1">
+                            Generated Jump #{transaction.reference_id.substring(0, 8)}: {jumpTitles[transaction.reference_id]}
+                          </p>
+                        ) : transaction.description && (
                           <p className="text-xs text-muted-foreground truncate mb-1">
                             {transaction.description}
-                          </p>
-                        )}
-                        {transaction.transaction_type === 'usage' && transaction.reference_id && jumpTitles[transaction.reference_id] && (
-                          <p className="text-xs text-primary/80 font-medium truncate mb-1">
-                            Jump: {jumpTitles[transaction.reference_id]}
                           </p>
                         )}
                         <p className="text-xs text-muted-foreground/70">
