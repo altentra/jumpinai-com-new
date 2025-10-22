@@ -174,12 +174,12 @@ const PricingNew = () => {
                 
                 <div className="relative px-4 sm:px-0">
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent/5 to-transparent blur-2xl"></div>
-                  <p className="relative text-base sm:text-lg md:text-xl text-muted-foreground/90 mb-8 sm:mb-12 max-w-4xl mx-auto leading-relaxed font-light">
+                  <p className="relative text-base sm:text-lg md:text-xl text-muted-foreground/90 mb-4 sm:mb-6 max-w-4xl mx-auto leading-relaxed font-light">
                     Choose the perfect plan for your needs.
                   </p>
                 </div>
               </div>
-              <p className="text-base sm:text-lg text-muted-foreground/90 max-w-3xl mx-auto mb-12 leading-relaxed">
+              <p className="text-base sm:text-lg text-muted-foreground/90 max-w-3xl mx-auto mb-6 leading-relaxed">
                 <span className="font-semibold text-foreground">1 credit = 1 jump generation</span> - each jump includes a comprehensive AI transformation plan with strategies, tools, workflows, and actionable blueprints tailored to your business.
               </p>
             </div>
@@ -187,7 +187,7 @@ const PricingNew = () => {
 
           {/* Subscription Plans */}
           <section className="container mx-auto px-4 py-8 sm:py-12">
-            <div className="text-center mb-8 sm:mb-12">
+            <div className="text-center mb-6 sm:mb-8">
               <h2 className="text-2xl sm:text-3xl font-bold mb-4">Choose Your Plan</h2>
               <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto px-4">
                 Get monthly credits that roll over, plus access to all our resources and tools
