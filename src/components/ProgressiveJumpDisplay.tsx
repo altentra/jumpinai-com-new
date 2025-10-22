@@ -627,14 +627,14 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
 
                         {/* Milestones Section */}
                         {phase.milestones && phase.milestones.length > 0 && (
-                          <div className="bg-gradient-to-br from-amber-50 to-amber-100/50 dark:from-amber-950/20 dark:to-amber-900/10 rounded-lg p-5 border border-amber-200/50 dark:border-amber-800/30">
+                          <div className="bg-gradient-to-br from-slate-50 to-slate-100/50 dark:from-slate-950/20 dark:to-slate-900/10 rounded-lg p-5 border border-slate-200/50 dark:border-slate-800/30">
                             <h4 className="font-semibold text-foreground mb-4 flex items-center gap-2 text-lg">
-                              <CheckCircle className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+                              <CheckCircle className="h-5 w-5 text-slate-600 dark:text-slate-400" />
                               Phase Milestones
                             </h4>
                             <div className="space-y-3">
                               {phase.milestones.map((milestone: any, idx: number) => (
-                                <Card key={idx} className="border-amber-200/30 dark:border-amber-800/20 bg-white/50 dark:bg-background/30">
+                                <Card key={idx} className="border-slate-200/30 dark:border-slate-800/20 bg-white/50 dark:bg-background/30">
                                   <CardContent className="p-4">
                                     <div className="flex items-start justify-between gap-3 mb-2">
                                       <div className="font-medium text-foreground prose prose-sm dark:prose-invert max-w-none">
@@ -650,7 +650,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                                       )}
                                     </div>
                                     {milestone.success_criteria && milestone.success_criteria.length > 0 && (
-                                      <div className="mt-2 pt-2 border-t border-amber-200/30 dark:border-amber-800/20">
+                                      <div className="mt-2 pt-2 border-t border-slate-200/30 dark:border-slate-800/20">
                                         <p className="text-xs font-medium text-muted-foreground mb-1">Success Criteria:</p>
                                         <ul className="space-y-1">
                                           {milestone.success_criteria.map((criteria: string, cIdx: number) => (
