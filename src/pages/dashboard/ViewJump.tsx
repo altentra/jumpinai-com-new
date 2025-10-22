@@ -6,7 +6,7 @@ import { getJumpById, UserJump } from "@/services/jumpService";
 import ErrorBoundary from "@/components/common/ErrorBoundary";
 import { generateJumpPDF } from '@/utils/pdfGenerator';
 import { supabase } from '@/integrations/supabase/client';
-import ProgressiveJumpDisplay from '@/components/ProgressiveJumpDisplay';
+import ViewJumpDisplay from '@/components/ViewJumpDisplay';
 import type { ProgressiveResult } from '@/hooks/useProgressiveGeneration';
 import { toast } from 'sonner';
 
@@ -335,42 +335,47 @@ export default function ViewJump() {
 
   return (
     <div className="container mx-auto py-6 px-4 space-y-6">
-      {/* Header */}
-      <div className="glass border-0 ring-1 ring-white/10 rounded-3xl p-6 shadow-2xl backdrop-blur-2xl bg-gradient-to-br from-background/80 via-card/60 to-primary/5">
-        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-          <div className="flex-1 min-w-0 space-y-2">
-            <div className="flex items-center gap-3">
-              <Button
-                onClick={() => navigate('/dashboard/jumps')}
-                variant="ghost"
-                size="sm"
-                className="rounded-xl border-0 ring-1 ring-white/20 bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-all duration-300"
-              >
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back
-              </Button>
+      {/* Enhanced Header with Gradient Background */}
+      <div className="relative group">
+        <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 dark:from-primary/15 dark:via-accent/12 dark:to-secondary/15 rounded-3xl blur-xl opacity-40"></div>
+        <div className="relative glass backdrop-blur-xl border border-border/40 hover:border-primary/30 transition-all duration-500 rounded-3xl p-6 shadow-2xl hover:shadow-2xl hover:shadow-primary/10 bg-gradient-to-br from-background/60 to-background/30 dark:bg-gradient-to-br dark:from-gray-950/70 dark:to-gray-900/40">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/4 via-transparent to-secondary/4 dark:from-primary/3 dark:via-transparent dark:to-secondary/3 rounded-3xl"></div>
+          <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/30 dark:via-white/20 to-transparent"></div>
+          
+          <div className="relative z-10">
+            <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+              <div className="flex-1 min-w-0 space-y-3">
+                <div className="flex items-center gap-3">
+                  <Button
+                    onClick={() => navigate('/dashboard/jumps')}
+                    variant="ghost"
+                    size="sm"
+                    className="rounded-xl border border-border/40 bg-background/60 hover:bg-background/80 backdrop-blur-sm transition-all duration-300"
+                  >
+                    <ArrowLeft className="h-4 w-4 mr-2" />
+                    Back
+                  </Button>
+                </div>
+                <h1 className="text-2xl md:text-3xl font-bold leading-tight text-foreground">
+                  {jump?.title}
+                </h1>
+                {jump?.created_at && (
+                  <p className="text-sm text-muted-foreground">
+                    Created on {formatDate(jump.created_at)}
+                  </p>
+                )}
+              </div>
+              <div className="flex items-center gap-3 shrink-0">
+                <Button 
+                  onClick={downloadPlan}
+                  size="sm"
+                  className="gap-2 rounded-xl bg-primary/10 hover:bg-primary/20 text-primary border border-primary/30 backdrop-blur-sm transition-all duration-300 hover:shadow-lg hover:shadow-primary/20"
+                >
+                  <Download className="w-4 h-4" />
+                  Download PDF
+                </Button>
+              </div>
             </div>
-            <h1 className="text-2xl md:text-3xl font-bold leading-tight">
-              {jump?.title}
-            </h1>
-            {jump?.created_at && (
-              <p className="text-sm text-muted-foreground">
-                Created on {formatDate(jump.created_at)}
-              </p>
-            )}
-          </div>
-          <div className="flex items-center gap-3 shrink-0">
-            <span className="text-xs px-3 py-1.5 bg-primary/10 text-primary rounded-full border border-primary/20 whitespace-nowrap">
-              AI Generated
-            </span>
-            <Button 
-              onClick={downloadPlan}
-              size="sm"
-              className="gap-2 rounded-xl"
-            >
-              <Download className="w-4 h-4" />
-              Download PDF
-            </Button>
           </div>
         </div>
       </div>
@@ -378,7 +383,7 @@ export default function ViewJump() {
       {/* Content */}
       <ErrorBoundary>
         {progressiveResult ? (
-          <ProgressiveJumpDisplay 
+          <ViewJumpDisplay 
             result={progressiveResult} 
             generationTimer={0}
           />
