@@ -47,7 +47,7 @@ const About = () => {
                 <div className="relative mb-8">
                   <div className={`absolute inset-0 bg-gradient-to-r ${feature.gradient} rounded-2xl blur-lg opacity-20 group-hover:opacity-40 transition-opacity duration-500`}></div>
                   <div className={`relative bg-gradient-to-r ${feature.gradient} p-4 rounded-2xl inline-block`}>
-                    <feature.icon className="h-8 w-8 text-white dark:text-black" />
+                    <feature.icon className="h-8 w-8 text-primary-foreground" />
                   </div>
                 </div>
                 

@@ -58,11 +58,11 @@ const Footer = () => {
           <div className="md:col-span-2">
             <Link to="/" className="flex items-center mb-6 group">
               <div className="relative">
-                <div className="pointer-events-none absolute -inset-1 rounded-2xl bg-white/25 dark:bg-white/35 blur-md opacity-0 dark:opacity-60 transition-opacity duration-300"></div>
-                <div className="relative w-10 h-10 rounded-xl overflow-hidden group-hover:scale-105 transition-transform duration-300 ring-1 ring-white/10 dark:ring-white/20">
+                <div className="pointer-events-none absolute -inset-1 rounded-2xl bg-primary/20 blur-md opacity-0 group-hover:opacity-60 transition-opacity duration-300"></div>
+                <div className="relative w-10 h-10 rounded-xl overflow-hidden group-hover:scale-105 transition-transform duration-300 ring-1 ring-border">
                   <img 
                     src="/lovable-uploads/156b282b-1e93-436c-914a-a886a6a5cdfd.png" 
-                    alt="JumpinAI Logo" 
+                    alt="JumpinAI Logo"
                     className="w-full h-full object-cover"
                   />
                 </div>

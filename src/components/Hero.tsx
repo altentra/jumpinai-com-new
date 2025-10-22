@@ -219,8 +219,8 @@ const Hero = () => {
           {/* Logo with Professional Glow */}
           <div className="flex items-center justify-center mb-6">
             <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-gray-800 to-black rounded-2xl blur-md opacity-60 animate-glow dark:from-white dark:to-gray-300 dark:animate-glow-dark"></div>
-              <div className="relative bg-gradient-to-r from-gray-800 to-black rounded-2xl dark:from-white dark:to-gray-300 w-20 h-20 p-0 overflow-hidden">
+              <div className="absolute inset-0 bg-primary/50 rounded-2xl blur-md opacity-60 animate-glow"></div>
+              <div className="relative bg-primary rounded-2xl w-20 h-20 p-0 overflow-hidden">
                 <img 
                   src="/lovable-uploads/156b282b-1e93-436c-914a-a886a6a5cdfd.png" 
                   alt="JumpinAI Logo" 
@@ -251,7 +251,7 @@ const Hero = () => {
             <Button 
               size="lg" 
               asChild
-              className="modern-button group bg-gradient-to-r from-gray-800 to-black hover:from-gray-900 hover:to-gray-800 dark:from-white dark:to-gray-300 dark:hover:from-gray-100 dark:hover:to-gray-400 text-white dark:text-black px-12 py-6 text-lg font-semibold rounded-3xl transition-all duration-500 hover:scale-105 shadow-2xl hover:shadow-3xl border border-white/10 dark:border-black/10"
+              className="modern-button group bg-primary hover:bg-primary/90 text-primary-foreground px-12 py-6 text-lg font-semibold rounded-3xl transition-all duration-500 hover:scale-105 shadow-2xl hover:shadow-3xl"
             >
               <Link to="/jumpinai-studio">
                 <Sparkles className="mr-3 h-5 w-5 group-hover:animate-spin" />

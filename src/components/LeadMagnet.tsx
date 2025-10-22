@@ -211,7 +211,7 @@ const LeadMagnet = () => {
                     <Button 
                       onClick={handleDirectDownload}
                       size="lg"
-                      className="w-full modern-button bg-green-600 hover:bg-green-700 text-white py-3 text-base font-semibold rounded-xl transition-all duration-300"
+                      className="w-full modern-button bg-primary hover:bg-primary/90 text-primary-foreground py-3 text-base font-semibold rounded-xl transition-all duration-300"
                     >
                       <Download className="mr-2 h-4 w-4" />
                       Download PDF Now

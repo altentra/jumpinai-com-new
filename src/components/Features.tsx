@@ -110,16 +110,16 @@ const Features = () => {
           {features.map((feature, index) => {
             const Icon = feature.icon;
             return (
-              <div key={index} className="group relative p-6 rounded-3xl border-2 border-gray-600 hover:border-white hover:shadow-xl shadow-lg transition-all duration-300 bg-black overflow-hidden hover:scale-105">
+              <div key={index} className="group relative p-6 rounded-3xl border-2 border-border hover:border-primary hover:shadow-xl shadow-lg transition-all duration-300 bg-card overflow-hidden hover:scale-105">
                 
                 <div className="relative flex items-center gap-4 mb-4">
-                  <div className="flex-shrink-0 w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center hover:bg-white/20 transition-all duration-300 shadow-md border border-white/20">
-                    <Icon className="w-6 h-6 text-white" />
+                  <div className="flex-shrink-0 w-12 h-12 bg-muted rounded-2xl flex items-center justify-center hover:bg-accent transition-all duration-300 shadow-md border border-border">
+                    <Icon className="w-6 h-6 text-foreground" />
                   </div>
-                  <h3 className="font-bold text-lg text-white hover:text-blue-400 transition-colors duration-300 leading-tight">{feature.title}</h3>
+                  <h3 className="font-bold text-lg text-foreground hover:text-primary transition-colors duration-300 leading-tight">{feature.title}</h3>
                 </div>
                 
-                <p className="text-white text-sm leading-relaxed ml-16 opacity-90 hover:opacity-100 transition-all duration-300">{feature.description}</p>
+                <p className="text-muted-foreground text-sm leading-relaxed ml-16 opacity-90 hover:opacity-100 transition-all duration-300">{feature.description}</p>
               </div>
             );
           })}
@@ -131,7 +131,7 @@ const Features = () => {
             <Button 
               size="lg" 
               onClick={handleGetStarted}
-              className="group bg-gradient-to-r from-gray-800 to-black hover:from-gray-900 hover:to-gray-800 dark:from-white dark:to-gray-300 dark:hover:from-gray-100 dark:hover:to-gray-400 text-white dark:text-black px-10 py-6 text-lg font-semibold rounded-3xl transition-all duration-500 hover:scale-105 shadow-2xl hover:shadow-3xl border border-white/10 dark:border-black/10"
+              className="group bg-primary hover:bg-primary/90 text-primary-foreground px-10 py-6 text-lg font-semibold rounded-3xl transition-all duration-500 hover:scale-105 shadow-2xl hover:shadow-3xl"
             >
               Get Started
               <ArrowRight className="ml-3 w-5 h-5 group-hover:translate-x-1 transition-transform" />
