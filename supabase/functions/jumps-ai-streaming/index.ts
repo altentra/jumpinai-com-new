@@ -218,8 +218,8 @@ async function callXAI(
 function getStepPrompts(step: number, context: StudioFormData, overviewContent: string) {
   // Build context from user input - NO hardcoded role
   const baseContext = `
-What they're trying to achieve: ${context.goals || 'Not specified'}
-What's preventing them: ${context.challenges || 'Not specified'}
+What they're working toward: ${context.goals || 'Not specified'}
+What's keeping them from getting there: ${context.challenges || 'Not specified'}
 Industry: ${context.industry || 'Not specified'}
 AI Experience: ${context.aiKnowledge || 'Not specified'}
 Urgency: ${context.timeCommitment || 'Not specified'}
