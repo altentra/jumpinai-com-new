@@ -81,7 +81,7 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
   if (!result || !result.processing_status) {
     return (
       <div className="w-full space-y-6">
-        <div className="glass-dark rounded-xl p-4 border border-white/20">
+        <div className="glass rounded-xl p-4 border border-border">
           <div className="flex items-center justify-center h-32 text-muted-foreground">
             <Loader2 className="w-6 h-6 animate-spin mr-2" />
             Initializing generation system...

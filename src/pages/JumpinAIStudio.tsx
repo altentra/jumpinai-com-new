@@ -283,13 +283,13 @@ const JumpinAIStudio = () => {
               
               {/* Auth status notification */}
               <div className="relative group">
-                <div className="relative glass-dark rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm border border-border backdrop-blur-xl bg-gradient-to-br from-card/60 via-card/30 to-card/10 shadow-lg transition-all duration-300 max-w-sm">
+                <div className="relative glass rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm border border-border backdrop-blur-xl bg-card/80 shadow-lg transition-all duration-300 max-w-sm">
                   {/* Subtle glass overlay */}
                   <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/3 rounded-xl"></div>
                   
                   <div className="relative z-10">
                     {isAuthenticated ? (
-                      <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
+                      <div className="flex items-center gap-2 text-emerald-600">
                         <div className="relative">
                           <User className="w-3 h-3 sm:w-4 sm:h-4" />
                           <div className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-emerald-500 rounded-full"></div>
@@ -299,7 +299,7 @@ const JumpinAIStudio = () => {
                         </span>
                       </div>
                     ) : (
-                      <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                      <div className="flex items-center gap-2 text-amber-600">
                         <div className="relative">
                           <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4" />
                           <div className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-amber-500 rounded-full"></div>
@@ -372,7 +372,7 @@ const JumpinAIStudio = () => {
                             <textarea
                               value={formData.goals}
                               onChange={(e) => setFormData(prev => ({ ...prev, goals: e.target.value }))}
-                              className="w-full h-32 p-4 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-3xl shadow-xl hover:shadow-2xl focus:shadow-2xl focus:shadow-primary/10 resize-none placeholder:text-muted-foreground/60 text-foreground bg-gradient-to-br from-background/60 to-background/40 dark:bg-gradient-to-br dark:from-gray-950/60 dark:to-gray-900/40"
+                              className="w-full h-32 p-4 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-3xl shadow-xl hover:shadow-2xl focus:shadow-2xl focus:shadow-primary/10 resize-none placeholder:text-muted-foreground/60 text-foreground bg-card/60"
                               placeholder="Your main goals & projects with AI..."
                             />
                           </div>
@@ -386,7 +386,7 @@ const JumpinAIStudio = () => {
                             <textarea
                               value={formData.challenges}
                               onChange={(e) => setFormData(prev => ({ ...prev, challenges: e.target.value }))}
-                              className="w-full h-32 p-4 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-3xl shadow-xl hover:shadow-2xl focus:shadow-2xl focus:shadow-primary/10 resize-none placeholder:text-muted-foreground/60 text-foreground bg-gradient-to-br from-background/60 to-background/40 dark:bg-gradient-to-br dark:from-gray-950/60 dark:to-gray-900/40"
+                              className="w-full h-32 p-4 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-3xl shadow-xl hover:shadow-2xl focus:shadow-2xl focus:shadow-primary/10 resize-none placeholder:text-muted-foreground/60 text-foreground bg-card/60"
                               placeholder="Your obstacles & challenges..."
                             />
                           </div>
@@ -403,7 +403,7 @@ const JumpinAIStudio = () => {
                               type="text"
                               value={formData.industry}
                               onChange={(e) => setFormData(prev => ({ ...prev, industry: e.target.value }))}
-                              className="w-full p-3 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl focus:shadow-2xl focus:shadow-primary/10 placeholder:text-muted-foreground/60 text-foreground bg-gradient-to-br from-background/60 to-background/30 dark:bg-gradient-to-br dark:from-gray-950/70 dark:to-gray-900/40"
+                              className="w-full p-3 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl focus:shadow-2xl focus:shadow-primary/10 placeholder:text-muted-foreground/60 text-foreground bg-card/60"
                               placeholder="Marketing, Tech, Finance..."
                             />
                           </div>
@@ -417,7 +417,7 @@ const JumpinAIStudio = () => {
                             <select 
                               value={formData.aiKnowledge}
                               onChange={(e) => setFormData(prev => ({ ...prev, aiKnowledge: e.target.value }))}
-                              className="w-full p-3 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl focus:shadow-2xl focus:shadow-primary/10 text-foreground bg-gradient-to-br from-background/60 to-background/30 dark:bg-gradient-to-br dark:from-gray-950/70 dark:to-gray-900/40"
+                              className="w-full p-3 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl focus:shadow-2xl focus:shadow-primary/10 text-foreground bg-card/60"
                             >
                               <option value="">Select level</option>
                               <option value="beginner">Beginner</option>
@@ -438,7 +438,7 @@ const JumpinAIStudio = () => {
                             <select 
                               value={formData.timeCommitment}
                               onChange={(e) => setFormData(prev => ({ ...prev, timeCommitment: e.target.value }))}
-                              className="w-full p-3 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl focus:shadow-2xl focus:shadow-primary/10 text-foreground bg-gradient-to-br from-background/60 to-background/30 dark:bg-gradient-to-br dark:from-gray-950/70 dark:to-gray-900/40"
+                              className="w-full p-3 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl focus:shadow-2xl focus:shadow-primary/10 text-foreground bg-card/60"
                             >
                               <option value="">Select urgency</option>
                               <option value="asap">ASAP - Need immediate results</option>
@@ -457,7 +457,7 @@ const JumpinAIStudio = () => {
                             <select 
                               value={formData.budget}
                               onChange={(e) => setFormData(prev => ({ ...prev, budget: e.target.value }))}
-                              className="w-full p-3 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl focus:shadow-2xl focus:shadow-primary/10 text-foreground bg-gradient-to-br from-background/60 to-background/30 dark:bg-gradient-to-br dark:from-gray-950/70 dark:to-gray-900/40"
+                              className="w-full p-3 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl focus:shadow-2xl focus:shadow-primary/10 text-foreground bg-card/60"
                             >
                               <option value="">Select budget</option>
                               <option value="minimal">Minimal ($0-500)</option>
@@ -478,10 +478,10 @@ const JumpinAIStudio = () => {
                           <button
                             onClick={handleGenerate}
                             disabled={isGenerating || (!isAuthenticated && !guestCanUse)}
-                            className="relative w-full sm:max-w-4xl px-12 sm:px-24 py-4 sm:py-5 glass backdrop-blur-xl border border-border/40 hover:border-primary/50 focus:border-primary/60 transition-all duration-500 rounded-full shadow-xl hover:shadow-2xl hover:shadow-primary/20 bg-gradient-to-br from-background/60 to-background/40 dark:bg-gradient-to-br dark:from-gray-950/60 dark:to-gray-900/40 hover:scale-[1.02] active:scale-98 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100 group overflow-hidden"
+                            className="relative w-full sm:max-w-4xl px-12 sm:px-24 py-4 sm:py-5 glass backdrop-blur-xl border border-border/40 hover:border-primary/50 focus:border-primary/60 transition-all duration-500 rounded-full shadow-xl hover:shadow-2xl hover:shadow-primary/20 bg-card/70 hover:scale-[1.02] active:scale-98 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100 group overflow-hidden"
                           >
                             {/* Glass morphism overlay effects */}
-                            <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-transparent to-secondary/8 dark:from-primary/6 dark:via-transparent dark:to-secondary/6 rounded-full"></div>
+                            <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-transparent to-secondary/8 rounded-full"></div>
                             <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/40 dark:via-white/25 to-transparent"></div>
                             <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-transparent to-white/10 dark:from-white/8 dark:via-transparent dark:to-white/8 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                             
@@ -525,7 +525,7 @@ const JumpinAIStudio = () => {
                                 
                                 <button
                                   onClick={handleCancel}
-                                  className="relative px-6 py-3 glass backdrop-blur-xl border border-border/30 hover:border-muted-foreground/40 transition-all duration-300 rounded-full shadow-lg hover:shadow-xl bg-gradient-to-br from-background/70 to-background/50 dark:bg-gradient-to-br dark:from-gray-950/70 dark:to-gray-900/50 hover:scale-105 active:scale-95 group overflow-hidden"
+                                  className="relative px-6 py-3 glass backdrop-blur-xl border border-border/30 hover:border-muted-foreground/40 transition-all duration-300 rounded-full shadow-lg hover:shadow-xl bg-card/70 hover:scale-105 active:scale-95 group overflow-hidden"
                                 >
                                   {/* Subtle glass overlay */}
                                   <div className="absolute inset-0 bg-gradient-to-br from-muted-foreground/5 via-transparent to-muted-foreground/3 rounded-full"></div>

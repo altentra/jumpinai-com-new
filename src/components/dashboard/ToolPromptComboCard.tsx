@@ -60,14 +60,14 @@ export function ToolPromptComboCard({ combo, onClick }: ToolPromptComboCardProps
     <div className="relative group">
       <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
       <Card 
-        className="relative glass-dark border-white/10 backdrop-blur-lg bg-gradient-to-br from-white/5 via-white/3 to-white/2 hover:border-primary/40 transition-all duration-300 cursor-pointer"
+        className="relative glass backdrop-blur-lg bg-card/80 border border-border hover:border-primary/40 transition-all duration-300 cursor-pointer"
         onClick={onClick}
       >
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between gap-3 mb-2">
             <CardTitle className="flex items-center gap-2 text-lg">
               <Sparkles className="w-5 h-5 text-primary" />
-              <span className="text-white font-semibold">{combo.title || toolName}</span>
+              <span className="font-semibold">{combo.title || toolName}</span>
             </CardTitle>
             {combo.category && (
               <Badge variant="outline" className="shrink-0 text-xs">
@@ -75,17 +75,17 @@ export function ToolPromptComboCard({ combo, onClick }: ToolPromptComboCardProps
               </Badge>
             )}
           </div>
-          <p className="text-sm text-white/70 leading-relaxed">
+          <p className="text-sm text-muted-foreground leading-relaxed">
             {combo.description}
           </p>
         </CardHeader>
 
         <CardContent className="space-y-4">
           {/* Tool Information with Link */}
-          <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg border border-white/10">
+          <div className="flex items-center justify-between p-3 bg-muted/20 rounded-lg border border-border">
             <div className="flex items-center gap-2">
               <ExternalLink className="w-4 h-4 text-primary" />
-              <span className="text-sm font-medium text-white">Tool: {toolName}</span>
+              <span className="text-sm font-medium">Tool: {toolName}</span>
             </div>
             {toolUrl && (
               <a
@@ -104,7 +104,7 @@ export function ToolPromptComboCard({ combo, onClick }: ToolPromptComboCardProps
           {/* Prompt Display */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-white flex items-center gap-2">
+              <span className="text-sm font-medium flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-primary" />
                 Ready-to-Use Prompt
               </span>
@@ -118,8 +118,8 @@ export function ToolPromptComboCard({ combo, onClick }: ToolPromptComboCardProps
                 {copied ? "Copied!" : "Copy"}
               </Button>
             </div>
-            <div className="bg-black/30 border border-white/10 rounded-lg p-3 max-h-32 overflow-y-auto">
-              <pre className="text-xs text-white/80 whitespace-pre-wrap font-mono leading-relaxed">
+            <div className="bg-muted/30 border border-border rounded-lg p-3 max-h-32 overflow-y-auto">
+              <pre className="text-xs text-muted-foreground whitespace-pre-wrap font-mono leading-relaxed">
                 {promptText}
               </pre>
             </div>
@@ -132,7 +132,7 @@ export function ToolPromptComboCard({ combo, onClick }: ToolPromptComboCardProps
                 <Clock className="w-4 h-4 text-blue-400 mt-0.5 shrink-0" />
                 <div>
                   <p className="text-xs font-medium text-blue-400 mb-1">When to Use</p>
-                  <p className="text-xs text-white/70 leading-relaxed">{whenToUse}</p>
+                  <p className="text-xs text-muted-foreground leading-relaxed">{whenToUse}</p>
                 </div>
               </div>
             </div>
@@ -145,7 +145,7 @@ export function ToolPromptComboCard({ combo, onClick }: ToolPromptComboCardProps
                 <CheckCircle className="w-4 h-4 text-green-400 mt-0.5 shrink-0" />
                 <div>
                   <p className="text-xs font-medium text-green-400 mb-1">Why This Combo</p>
-                  <p className="text-xs text-white/70 leading-relaxed">{whyCombo}</p>
+                  <p className="text-xs text-muted-foreground leading-relaxed">{whyCombo}</p>
                 </div>
               </div>
             </div>
@@ -154,11 +154,11 @@ export function ToolPromptComboCard({ combo, onClick }: ToolPromptComboCardProps
           {/* Alternatives */}
           {alternatives.length > 0 && (
             <div className="space-y-2">
-              <p className="text-xs font-medium text-white/80">Alternative Tools:</p>
+              <p className="text-xs font-medium text-foreground/80">Alternative Tools:</p>
               <div className="space-y-2">
                 {alternatives.map((alt: any, idx: number) => (
-                  <div key={idx} className="flex items-center justify-between p-2 bg-white/5 rounded border border-white/10 text-xs">
-                    <span className="text-white/70">{alt.tool || alt.name}</span>
+                  <div key={idx} className="flex items-center justify-between p-2 bg-muted/20 rounded border border-border text-xs">
+                    <span className="text-muted-foreground">{alt.tool || alt.name}</span>
                     {(alt.url || alt.tool_url) && (
                       <a
                         href={alt.url || alt.tool_url}
@@ -178,7 +178,7 @@ export function ToolPromptComboCard({ combo, onClick }: ToolPromptComboCardProps
           )}
 
           {/* Meta Information */}
-          <div className="flex gap-2 flex-wrap pt-2 border-t border-white/10">
+          <div className="flex gap-2 flex-wrap pt-2 border-t border-border">
             {combo.difficulty_level && (
               <Badge className={getDifficultyColor(combo.difficulty_level)} variant="outline">
                 {combo.difficulty_level}

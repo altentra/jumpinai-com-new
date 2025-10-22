@@ -81,7 +81,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
   if (!result || !result.processing_status) {
     return (
       <div className="w-full space-y-6">
-        <div className="glass-dark rounded-xl p-4 border border-white/20">
+        <div className="glass rounded-xl p-4 border border-border">
           <div className="flex items-center justify-center h-32 text-muted-foreground">
             <Loader2 className="w-6 h-6 animate-spin mr-2" />
             Initializing generation system...
@@ -95,10 +95,10 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
     <div className="w-full space-y-4">
       {/* Compact Glass Progress Header with enhanced glass morphism */}
       <div className="relative group">
-        <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 dark:from-primary/15 dark:via-accent/12 dark:to-secondary/15 rounded-2xl blur-xl opacity-40"></div>
-        <div className="relative glass backdrop-blur-xl border border-border/40 hover:border-primary/30 transition-all duration-500 rounded-2xl p-5 shadow-xl hover:shadow-2xl hover:shadow-primary/10 bg-gradient-to-br from-background/60 to-background/30 dark:bg-gradient-to-br dark:from-gray-950/70 dark:to-gray-900/40">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/4 via-transparent to-secondary/4 dark:from-primary/3 dark:via-transparent dark:to-secondary/3 rounded-2xl"></div>
-          <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/30 dark:via-white/20 to-transparent"></div>
+        <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 rounded-2xl blur-xl opacity-40"></div>
+        <div className="relative glass backdrop-blur-xl border border-border/40 hover:border-primary/30 transition-all duration-500 rounded-2xl p-5 shadow-xl hover:shadow-2xl hover:shadow-primary/10 bg-card/80">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/4 via-transparent to-secondary/4 rounded-2xl"></div>
+          <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-border/60 to-transparent"></div>
           
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-4">
@@ -156,7 +156,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                 );
               
               return (
-                <div className="mb-4 glass backdrop-blur-md bg-muted/30 dark:bg-muted/20 rounded-lg border border-border/40 p-4">
+                <div className="mb-4 glass backdrop-blur-md bg-muted/30 rounded-lg border border-border/40 p-4">
                   <div className="text-sm font-semibold mb-3 text-muted-foreground flex items-center gap-2">
                     <Zap className="w-4 h-4 text-primary" />
                     Generation Performance
@@ -165,7 +165,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                     {displaySteps.map((step, index) => (
                       <div 
                         key={step.label}
-                        className="text-center p-3 glass backdrop-blur-sm bg-background/50 dark:bg-background/30 rounded-lg border border-border/30"
+                        className="text-center p-3 glass backdrop-blur-sm bg-card/60 rounded-lg border border-border/30"
                       >
                         <div className="font-medium text-sm text-foreground/90 mb-1">{step.label}</div>
                         <div className="text-primary font-semibold text-base">{step.time}s</div>
