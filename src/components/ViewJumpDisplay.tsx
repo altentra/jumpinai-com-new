@@ -187,26 +187,6 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
         </div>
       </div>
 
-      {/* Navigation Buttons */}
-      {result.processing_status?.isComplete && result.jumpId && (
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full">
-          <button
-            onClick={() => navigate('/dashboard/jumps')}
-            className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-border/40 bg-background/60 hover:bg-background/80 backdrop-blur-sm transition-all duration-300 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/10 text-sm font-medium"
-          >
-            <LayoutDashboard className="h-4 w-4" />
-            View My Jumps in My Dashboard
-          </button>
-          <button
-            onClick={() => navigate(`/dashboard/jump/${result.jumpId}`)}
-            className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-primary/30 bg-primary/10 hover:bg-primary/20 backdrop-blur-sm transition-all duration-300 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/20 text-primary text-sm font-medium"
-          >
-            <Eye className="h-4 w-4" />
-            View this Jump
-          </button>
-        </div>
-      )}
-
       {/* Content Tabs - Ultra Premium Design */}
       <Tabs defaultValue="overview" className="w-full">
         <div className="relative mb-8">
