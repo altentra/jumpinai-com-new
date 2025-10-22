@@ -21,6 +21,8 @@ const JumpinAIStudio = () => {
   const [generationTimer, setGenerationTimer] = useState(0);
   const progressDisplayRef = useRef<HTMLDivElement>(null);
   const generateButtonRef = useRef<HTMLDivElement>(null);
+  const goalsTextareaRef = useRef<HTMLTextAreaElement>(null);
+  const challengesTextareaRef = useRef<HTMLTextAreaElement>(null);
   
   // Helper function to format time
   const formatTime = (seconds: number) => {
@@ -95,6 +97,18 @@ const JumpinAIStudio = () => {
       }, 800);
     }
   }, [result]);
+
+  // Auto-adjust textarea heights when content changes
+  useEffect(() => {
+    if (goalsTextareaRef.current) {
+      goalsTextareaRef.current.style.height = 'auto';
+      goalsTextareaRef.current.style.height = goalsTextareaRef.current.scrollHeight + 'px';
+    }
+    if (challengesTextareaRef.current) {
+      challengesTextareaRef.current.style.height = 'auto';
+      challengesTextareaRef.current.style.height = challengesTextareaRef.current.scrollHeight + 'px';
+    }
+  }, [formData.goals, formData.challenges]);
 
   const loadSavedFormData = async () => {
     // SECURITY: Only load data for authenticated users with verified user ID
@@ -370,17 +384,10 @@ const JumpinAIStudio = () => {
                           </label>
                           <div className="relative">
                             <textarea
+                              ref={goalsTextareaRef}
                               value={formData.goals}
-                              onChange={(e) => {
-                                setFormData(prev => ({ ...prev, goals: e.target.value }));
-                                e.target.style.height = 'auto';
-                                e.target.style.height = e.target.scrollHeight + 'px';
-                              }}
-                              onFocus={(e) => {
-                                e.target.style.height = 'auto';
-                                e.target.style.height = e.target.scrollHeight + 'px';
-                              }}
-                              className="w-full min-h-[128px] p-4 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-3xl shadow-xl hover:shadow-2xl focus:shadow-2xl focus:shadow-primary/10 resize-none placeholder:text-muted-foreground/60 text-foreground bg-card/60 overflow-hidden"
+                              onChange={(e) => setFormData(prev => ({ ...prev, goals: e.target.value }))}
+                              className="w-full min-h-[160px] p-4 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-3xl shadow-xl hover:shadow-2xl focus:shadow-2xl focus:shadow-primary/10 resize-none placeholder:text-muted-foreground/60 text-foreground bg-card/60 overflow-hidden"
                               placeholder="Your main goals & projects with AI..."
                             />
                           </div>
@@ -392,17 +399,10 @@ const JumpinAIStudio = () => {
                           </label>
                           <div className="relative">
                             <textarea
+                              ref={challengesTextareaRef}
                               value={formData.challenges}
-                              onChange={(e) => {
-                                setFormData(prev => ({ ...prev, challenges: e.target.value }));
-                                e.target.style.height = 'auto';
-                                e.target.style.height = e.target.scrollHeight + 'px';
-                              }}
-                              onFocus={(e) => {
-                                e.target.style.height = 'auto';
-                                e.target.style.height = e.target.scrollHeight + 'px';
-                              }}
-                              className="w-full min-h-[128px] p-4 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-3xl shadow-xl hover:shadow-2xl focus:shadow-2xl focus:shadow-primary/10 resize-none placeholder:text-muted-foreground/60 text-foreground bg-card/60 overflow-hidden"
+                              onChange={(e) => setFormData(prev => ({ ...prev, challenges: e.target.value }))}
+                              className="w-full min-h-[160px] p-4 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-3xl shadow-xl hover:shadow-2xl focus:shadow-2xl focus:shadow-primary/10 resize-none placeholder:text-muted-foreground/60 text-foreground bg-card/60 overflow-hidden"
                               placeholder="Your obstacles & challenges..."
                             />
                           </div>
