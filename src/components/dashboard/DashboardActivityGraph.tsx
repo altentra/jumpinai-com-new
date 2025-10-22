@@ -46,43 +46,43 @@ export const DashboardActivityGraph: React.FC<DashboardActivityGraphProps> = ({ 
   };
 
   return (
-    <Card className="group relative overflow-hidden border-0 bg-gradient-to-br from-card via-card to-card/50 shadow-xl hover:shadow-2xl transition-all duration-500 rounded-2xl animate-fade-in-up">
+    <Card className="group relative overflow-hidden border-0 bg-gradient-to-br from-card via-card to-card/50 shadow-xl hover:shadow-2xl transition-all duration-500 rounded-xl sm:rounded-2xl animate-fade-in-up mx-2 sm:mx-0">
       {/* Animated background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
       
-      <CardHeader className="relative pb-6 space-y-0">
-        <div className="flex items-start justify-between">
-          <div className="flex items-start gap-4">
+      <CardHeader className="relative pb-4 sm:pb-6 space-y-0 px-4 sm:px-6 pt-4 sm:pt-6">
+        <div className="flex flex-col sm:flex-row items-start sm:justify-between gap-3 sm:gap-0">
+          <div className="flex items-start gap-2.5 sm:gap-4">
             <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl blur-md opacity-50 group-hover:opacity-75 transition-opacity duration-500" />
-              <div className="relative p-3 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg">
-                <Activity className="h-5 w-5 text-white" />
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg sm:rounded-xl blur-md opacity-50 group-hover:opacity-75 transition-opacity duration-500" />
+              <div className="relative p-2 sm:p-3 rounded-lg sm:rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg">
+                <Activity className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
               </div>
             </div>
-            <div className="space-y-1.5">
-              <div className="flex items-center gap-2">
-                <CardTitle className="text-xl font-bold bg-gradient-to-r from-foreground via-foreground/90 to-foreground/70 bg-clip-text text-transparent">
+            <div className="space-y-0.5 sm:space-y-1.5">
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <CardTitle className="text-base sm:text-xl font-bold bg-gradient-to-r from-foreground via-foreground/90 to-foreground/70 bg-clip-text text-transparent">
                   Activity Overview
                 </CardTitle>
-                <Sparkles className="h-4 w-4 text-blue-500 animate-pulse" />
+                <Sparkles className="h-3 w-3 sm:h-4 sm:w-4 text-blue-500 animate-pulse" />
               </div>
-              <CardDescription className="text-sm text-muted-foreground/80">
+              <CardDescription className="text-xs sm:text-sm text-muted-foreground/80">
                 Your creative journey over the last 30 days
               </CardDescription>
             </div>
           </div>
-          <div className="flex flex-col items-end gap-1">
-            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-500/10 to-emerald-500/10 backdrop-blur-sm border border-blue-500/20 shadow-lg">
-              <TrendingUp className="h-4 w-4 text-blue-500" />
-              <span className="text-lg font-bold bg-gradient-to-r from-blue-500 to-emerald-500 bg-clip-text text-transparent">{totalItems}</span>
+          <div className="flex flex-col items-end gap-0.5 sm:gap-1">
+            <div className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-gradient-to-r from-blue-500/10 to-emerald-500/10 backdrop-blur-sm border border-blue-500/20 shadow-lg">
+              <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4 text-blue-500" />
+              <span className="text-base sm:text-lg font-bold bg-gradient-to-r from-blue-500 to-emerald-500 bg-clip-text text-transparent">{totalItems}</span>
             </div>
-            <span className="text-xs text-muted-foreground/60 font-medium">total items</span>
+            <span className="text-[10px] sm:text-xs text-muted-foreground/60 font-medium">total items</span>
           </div>
         </div>
       </CardHeader>
       
-      <CardContent className="relative pb-8">
-        <ChartContainer config={chartConfig} className="h-[340px] w-full">
+      <CardContent className="relative pb-4 sm:pb-8 px-2 sm:px-6">
+        <ChartContainer config={chartConfig} className="h-[240px] sm:h-[300px] md:h-[340px] w-full">
           <AreaChart 
             data={data} 
             margin={{ top: 20, right: 20, left: -20, bottom: 0 }}
