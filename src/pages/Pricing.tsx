@@ -108,14 +108,14 @@ export default function Pricing() {
       
       <Navigation />
       
-      <main className="min-h-screen pt-20 pb-12 bg-gradient-to-br from-background via-background/90 to-primary/5 dark:bg-gradient-to-br dark:from-black dark:via-gray-950/90 dark:to-gray-900/60">
+      <main className="min-h-screen pt-20 pb-12 bg-gradient-to-br from-background/95 via-background to-primary/5">
         {/* Enhanced floating background elements */}
         <div className="fixed inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-primary/20 to-primary/5 dark:bg-gradient-to-br dark:from-gray-800/30 dark:to-gray-700/15 rounded-full blur-3xl"></div>
-          <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-tr from-secondary/15 to-secondary/5 dark:bg-gradient-to-tr dark:from-gray-700/25 dark:to-gray-600/15 rounded-full blur-3xl"></div>
-          <div className="absolute top-1/3 left-1/2 transform -translate-x-1/2 w-64 h-64 bg-accent/10 dark:bg-gradient-radial dark:from-gray-800/20 dark:to-transparent rounded-full blur-2xl"></div>
-          <div className="absolute top-20 right-20 w-32 h-32 bg-gradient-to-br from-primary/10 to-transparent dark:bg-gradient-to-br dark:from-gray-700/20 dark:to-transparent rounded-full blur-xl"></div>
-          <div className="absolute bottom-20 left-20 w-40 h-40 bg-gradient-to-tr from-secondary/8 to-transparent dark:bg-gradient-to-tr dark:from-gray-600/15 dark:to-transparent rounded-full blur-xl"></div>
+          <div className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-primary/20 to-primary/5 rounded-full blur-3xl"></div>
+          <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-tr from-secondary/15 to-secondary/5 rounded-full blur-3xl"></div>
+          <div className="absolute top-1/3 left-1/2 transform -translate-x-1/2 w-64 h-64 bg-accent/10 rounded-full blur-2xl"></div>
+          <div className="absolute top-20 right-20 w-32 h-32 bg-gradient-to-br from-primary/10 to-transparent rounded-full blur-xl"></div>
+          <div className="absolute bottom-20 left-20 w-40 h-40 bg-gradient-to-tr from-secondary/8 to-transparent rounded-full blur-xl"></div>
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -143,10 +143,10 @@ export default function Pricing() {
           {/* Pricing Cards */}
           <div className="grid grid-cols-2 gap-3 md:gap-4 lg:gap-6 max-w-4xl mx-auto mb-16">
             {/* Free Plan */}
-            <Card className="relative flex flex-col h-full glass backdrop-blur-xl border border-border/40 hover:border-primary/30 transition-all duration-500 hover:shadow-xl hover:shadow-primary/10 dark:shadow-2xl dark:shadow-black/20 rounded-2xl overflow-hidden animate-fade-in-up group bg-gradient-to-br from-background/50 to-background/30 dark:bg-gradient-to-br dark:from-gray-950/60 dark:to-gray-900/40">
+            <Card className="relative flex flex-col h-full glass backdrop-blur-xl border border-border/40 hover:border-primary/30 transition-all duration-500 hover:shadow-xl hover:shadow-primary/10 rounded-2xl overflow-hidden animate-fade-in-up group bg-gradient-to-br from-card/80 to-card/60">
               {/* Subtle floating elements */}
-              <div className="absolute -top-6 -right-6 w-16 h-16 bg-gradient-to-br from-primary/8 to-primary/3 dark:bg-gradient-to-br dark:from-gray-700/20 dark:to-gray-800/10 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              <div className="absolute -bottom-6 -left-6 w-20 h-20 bg-gradient-to-tr from-secondary/6 to-secondary/2 dark:bg-gradient-to-tr dark:from-gray-600/15 dark:to-gray-700/8 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{transitionDelay: '200ms'}}></div>
+              <div className="absolute -top-6 -right-6 w-16 h-16 bg-gradient-to-br from-primary/8 to-primary/3 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <div className="absolute -bottom-6 -left-6 w-20 h-20 bg-gradient-to-tr from-secondary/6 to-secondary/2 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{transitionDelay: '200ms'}}></div>
               
               <CardHeader className="text-center p-3 md:p-5 pb-2">
                 <div className="space-y-2">
@@ -196,9 +196,9 @@ export default function Pricing() {
             {/* Pro Plan */}
             <Card className={`relative flex flex-col h-full transition-all duration-500 rounded-2xl overflow-hidden animate-fade-in-up animate-delay-200 group ${
               subInfo?.subscribed 
-                ? 'ring-2 ring-primary/40 border-primary/60 glass backdrop-blur-xl shadow-2xl shadow-primary/25 dark:shadow-primary/10' 
-                : 'glass backdrop-blur-xl border border-primary/40 hover:border-primary/60 hover:shadow-2xl hover:shadow-primary/25 dark:hover:shadow-primary/10 hover:ring-2 hover:ring-primary/30'
-            } bg-gradient-to-br from-background/60 to-primary/5 dark:bg-gradient-to-br dark:from-gray-950/70 dark:to-gray-800/30`}>
+                ? 'ring-2 ring-primary/40 border-primary/60 glass backdrop-blur-xl shadow-2xl shadow-primary/25' 
+                : 'glass backdrop-blur-xl border border-primary/40 hover:border-primary/60 hover:shadow-2xl hover:shadow-primary/25 hover:ring-2 hover:ring-primary/30'
+            } bg-gradient-to-br from-card/90 to-primary/5`}>
               {/* Premium badge - Fixed positioning */}
               <div className="absolute top-2 left-1/2 transform -translate-x-1/2 z-20">
                 <Badge className="bg-gradient-to-r from-primary to-primary/90 text-primary-foreground px-2 md:px-3 py-0.5 text-xs font-semibold rounded-lg shadow-lg border-0">
@@ -207,8 +207,8 @@ export default function Pricing() {
               </div>
 
               {/* Enhanced floating elements - premium gradients */}
-              <div className="absolute -top-8 -right-8 w-20 h-20 bg-gradient-to-br from-primary/20 to-primary/8 dark:bg-gradient-to-br dark:from-gray-700/30 dark:to-gray-800/15 rounded-full blur-2xl"></div>
-              <div className="absolute -bottom-8 -left-8 w-24 h-24 bg-gradient-to-tr from-secondary/15 to-secondary/5 dark:bg-gradient-to-tr dark:from-gray-600/25 dark:to-gray-700/12 rounded-full blur-2xl"></div>
+              <div className="absolute -top-8 -right-8 w-20 h-20 bg-gradient-to-br from-primary/20 to-primary/8 rounded-full blur-2xl"></div>
+              <div className="absolute -bottom-8 -left-8 w-24 h-24 bg-gradient-to-tr from-secondary/15 to-secondary/5 rounded-full blur-2xl"></div>
               
               <CardHeader className="text-center p-3 md:p-5 pb-2 pt-8 md:pt-9">
                 <div className="space-y-2">
@@ -294,8 +294,8 @@ export default function Pricing() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
-              <div className="text-center p-4 md:p-5 glass backdrop-blur-xl rounded-3xl border border-border/40 hover:border-primary/30 transition-all duration-500 hover:shadow-xl hover:shadow-primary/10 dark:shadow-lg dark:shadow-black/10 animate-fade-in-up bg-gradient-to-br from-background/50 to-background/30 dark:bg-gradient-to-br dark:from-gray-950/60 dark:to-gray-900/40">
-                <div className="w-10 h-10 bg-gradient-to-br from-primary/15 to-primary/5 dark:bg-gradient-to-br dark:from-gray-700/30 dark:to-gray-800/15 rounded-2xl flex items-center justify-center mx-auto mb-3">
+              <div className="text-center p-4 md:p-5 glass backdrop-blur-xl rounded-3xl border border-border/40 hover:border-primary/30 transition-all duration-500 hover:shadow-xl hover:shadow-primary/10 animate-fade-in-up bg-gradient-to-br from-card/70 to-card/50">
+                <div className="w-10 h-10 bg-gradient-to-br from-primary/15 to-primary/5 rounded-2xl flex items-center justify-center mx-auto mb-3">
                   <Rocket className="h-5 w-5 text-primary" />
                 </div>
                 <h3 className="text-base font-bold mb-2 text-foreground">AI-Powered Planning</h3>

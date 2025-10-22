@@ -252,20 +252,20 @@ const JumpinAIStudio = () => {
         <meta name="description" content="Your AI-powered workspace for creating and managing strategic transformations with intelligent guidance." />
       </Helmet>
       
-      <div className="min-h-screen scroll-snap-container bg-gradient-to-br from-background via-background/90 to-primary/5 dark:bg-gradient-to-br dark:from-black dark:via-gray-950/90 dark:to-gray-900/60 relative overflow-hidden">
+      <div className="min-h-screen scroll-snap-container bg-gradient-to-br from-background/95 via-background to-primary/5 relative overflow-hidden">
         {/* Premium floating background elements with liquid glass effects */}
         <div className="fixed inset-0 overflow-hidden pointer-events-none">
           {/* Main gradient orbs with enhanced blur and liquid animation */}
-          <div className="absolute -top-40 -right-40 w-[28rem] h-[28rem] bg-gradient-to-br from-primary/25 via-primary/15 to-primary/5 dark:bg-gradient-to-br dark:from-primary/20 dark:via-primary/10 dark:to-transparent rounded-full blur-3xl animate-pulse opacity-60"></div>
-          <div className="absolute -bottom-40 -left-40 w-[32rem] h-[32rem] bg-gradient-to-tr from-secondary/20 via-accent/10 to-secondary/5 dark:bg-gradient-to-tr dark:from-secondary/15 dark:via-accent/8 dark:to-transparent rounded-full blur-3xl animate-pulse opacity-50" style={{animationDelay: '2s'}}></div>
+          <div className="absolute -top-40 -right-40 w-[28rem] h-[28rem] bg-gradient-to-br from-primary/25 via-primary/15 to-primary/5 rounded-full blur-3xl animate-pulse opacity-60"></div>
+          <div className="absolute -bottom-40 -left-40 w-[32rem] h-[32rem] bg-gradient-to-tr from-secondary/20 via-accent/10 to-secondary/5 rounded-full blur-3xl animate-pulse opacity-50" style={{animationDelay: '2s'}}></div>
           
           {/* Liquid glass floating elements */}
-          <div className="absolute top-1/4 left-1/3 w-72 h-72 bg-gradient-conic from-primary/15 via-accent/10 to-secondary/15 dark:from-primary/12 dark:via-accent/8 dark:to-secondary/12 rounded-full blur-2xl animate-pulse opacity-40" style={{animationDelay: '1s'}}></div>
-          <div className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-gradient-radial from-accent/20 via-primary/10 to-transparent dark:from-accent/15 dark:via-primary/8 dark:to-transparent rounded-full blur-xl animate-pulse opacity-30" style={{animationDelay: '3s'}}></div>
+          <div className="absolute top-1/4 left-1/3 w-72 h-72 bg-gradient-conic from-primary/15 via-accent/10 to-secondary/15 rounded-full blur-2xl animate-pulse opacity-40" style={{animationDelay: '1s'}}></div>
+          <div className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-gradient-radial from-accent/20 via-primary/10 to-transparent rounded-full blur-xl animate-pulse opacity-30" style={{animationDelay: '3s'}}></div>
           
           {/* Subtle mesh gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent dark:via-primary/3 opacity-50"></div>
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-accent/3 to-transparent dark:via-accent/2 opacity-40"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent opacity-50"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-accent/3 to-transparent opacity-40"></div>
         </div>
         
         <Navigation />
@@ -283,9 +283,9 @@ const JumpinAIStudio = () => {
               
               {/* Auth status notification */}
               <div className="relative group">
-                <div className="relative glass-dark rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm border border-white/20 dark:border-white/15 backdrop-blur-xl bg-gradient-to-br from-white/10 via-white/5 to-white/2 dark:from-black/15 dark:via-black/8 dark:to-black/5 shadow-lg transition-all duration-300 max-w-sm">
+                <div className="relative glass-dark rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm border border-border backdrop-blur-xl bg-gradient-to-br from-card/60 via-card/30 to-card/10 shadow-lg transition-all duration-300 max-w-sm">
                   {/* Subtle glass overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/3 dark:from-primary/4 dark:via-transparent dark:to-accent/2 rounded-xl"></div>
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/3 rounded-xl"></div>
                   
                   <div className="relative z-10">
                     {isAuthenticated ? (
@@ -351,10 +351,10 @@ const JumpinAIStudio = () => {
                 <div className="absolute -inset-1 bg-gradient-to-r from-primary/10 via-accent/8 to-secondary/10 dark:from-primary/8 dark:via-accent/6 dark:to-secondary/8 rounded-2xl blur-xl opacity-40"></div>
                 
                 {/* Compact glass container */}
-                <div className="relative glass-dark rounded-2xl p-4 sm:p-6 border border-white/20 dark:border-white/15 backdrop-blur-2xl bg-gradient-to-br from-white/8 via-white/4 to-white/2 dark:from-black/20 dark:via-black/10 dark:to-black/5 overflow-hidden">
+                <div className="relative glass-dark rounded-2xl p-4 sm:p-6 border border-border backdrop-blur-2xl bg-gradient-to-br from-card/50 via-card/25 to-card/10 overflow-hidden">
                   {/* Minimal glass overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/4 via-transparent to-secondary/4 dark:from-primary/3 dark:via-transparent dark:to-secondary/3 rounded-2xl"></div>
-                  <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/30 dark:via-white/20 to-transparent"></div>
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/4 via-transparent to-secondary/4 rounded-2xl"></div>
+                  <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
                   
                   <div className="relative z-10">
                     <div className="text-center mb-6">
