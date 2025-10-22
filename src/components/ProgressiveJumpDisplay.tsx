@@ -135,10 +135,10 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
 
       {/* Content Tabs - Ultra Premium Design */}
       <Tabs defaultValue="overview" className="w-full">
-        <div className="relative">
+        <div className="relative mb-8">
           {/* Mobile: Horizontal scroll container */}
-          <div className="sm:hidden overflow-x-auto scrollbar-hide pb-2">
-            <TabsList className="inline-flex w-max min-w-full gap-2 p-1.5 bg-gradient-to-r from-background/80 via-background/70 to-background/80 backdrop-blur-xl rounded-2xl border border-border/50 shadow-lg shadow-primary/5">
+          <div className="sm:hidden overflow-x-auto scrollbar-hide pb-4">
+            <TabsList className="inline-flex w-max min-w-full gap-2 p-3 bg-gradient-to-r from-background/80 via-background/70 to-background/80 backdrop-blur-xl rounded-2xl border border-border/50 shadow-lg shadow-primary/5">
               <TabsTrigger 
                 value="overview" 
                 className="relative flex items-center gap-2 text-sm font-semibold whitespace-nowrap px-5 py-3 
@@ -179,7 +179,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
           </div>
           
           {/* Desktop: Grid layout with premium effects */}
-          <TabsList className="hidden sm:grid w-full grid-cols-3 gap-2 p-1.5 bg-gradient-to-r from-background/80 via-background/70 to-background/80 backdrop-blur-xl rounded-2xl border border-border/50 shadow-lg shadow-primary/5">
+          <TabsList className="hidden sm:grid w-full grid-cols-3 gap-2 p-3 bg-gradient-to-r from-background/80 via-background/70 to-background/80 backdrop-blur-xl rounded-2xl border border-border/50 shadow-lg shadow-primary/5">
             <TabsTrigger 
               value="overview" 
               className="relative flex items-center justify-center gap-2.5 text-base font-semibold px-6 py-4
@@ -225,7 +225,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
           </TabsList>
         </div>
 
-        <TabsContent value="overview" className="mt-6">
+        <TabsContent value="overview" className="mt-0">
           {result.comprehensive_plan ? (
             <div className="space-y-6">
               {/* Executive Summary */}
@@ -488,7 +488,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
           )}
         </TabsContent>
 
-        <TabsContent value="plan" className="mt-6">
+        <TabsContent value="plan" className="mt-0">
           {(() => {
             // CRITICAL: Comprehensive error handling and data validation
             console.log('🔍 Plan Tab - Checking structured_plan:', result.structured_plan);
@@ -760,7 +760,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
           })()}
         </TabsContent>
 
-        <TabsContent value="toolPrompts" className="mt-4">
+        <TabsContent value="toolPrompts" className="mt-0">
           <div className="grid gap-4">
             {result.components?.toolPrompts && result.components.toolPrompts.length > 0 ? (
               result.components.toolPrompts.map((combo: any, index: number) => (
