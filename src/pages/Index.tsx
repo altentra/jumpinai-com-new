@@ -94,13 +94,13 @@ const Index = () => {
       <Hero />
 
       {/* What JumpinAI Studio Actually Does - Features Section */}
-      <section className="py-16 lg:py-24 relative">
+      <section className="py-12 sm:py-16 lg:py-24 relative">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold gradient-text-primary mb-4 font-display">
+          <div className="text-center mb-8 sm:mb-12">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold gradient-text-primary mb-3 sm:mb-4 font-display px-4">
               Ready to Make Your AI Jump?
             </h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+            <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto px-4">
               Don't wait months to see AI results. Get your personalized Jump plan in 2 minutes and start transforming your life and business today. Join 15,000+ professionals who've already made the leap.
             </p>
           </div>

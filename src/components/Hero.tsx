@@ -217,10 +217,10 @@ const Hero = () => {
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div className="animate-fade-in-up">
           {/* Logo with Professional Glow */}
-          <div className="flex items-center justify-center mb-6">
+          <div className="flex items-center justify-center mb-4 sm:mb-6">
             <div className="relative">
               <div className="absolute inset-0 bg-primary/50 rounded-2xl blur-md opacity-60 animate-glow"></div>
-              <div className="relative bg-primary rounded-2xl w-20 h-20 p-0 overflow-hidden">
+              <div className="relative bg-primary rounded-2xl w-16 h-16 sm:w-20 sm:h-20 p-0 overflow-hidden">
                 <img 
                   src="/lovable-uploads/156b282b-1e93-436c-914a-a886a6a5cdfd.png" 
                   alt="JumpinAI Logo" 
@@ -231,32 +231,32 @@ const Hero = () => {
           </div>
           
           {/* Main Heading with Professional Typography */}
-          <h1 className="text-6xl sm:text-7xl lg:text-8xl font-black mb-4 tracking-tight font-display">
+          <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black mb-3 sm:mb-4 tracking-tight font-display">
             <span className="block gradient-text-primary">JumpinAI</span>
           </h1>
           
           {/* Subheading */}
-          <p className="text-2xl sm:text-3xl lg:text-4xl text-muted-foreground mb-6 font-light max-w-4xl mx-auto leading-relaxed">
+          <p className="text-xl sm:text-2xl md:text-3xl lg:text-4xl text-muted-foreground mb-4 sm:mb-6 font-light max-w-4xl mx-auto leading-relaxed px-2">
             Jump into the world of AI with 
             <span className="text-foreground font-medium"> clarity and precision</span>
           </p>
           
           {/* Description */}
-          <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed font-light">
-            This is your moment. <br />While others hesitate at the edge of the AI revolution, you're <span className="font-bold">ready to jump</span>. <br />We'll guide you from curiosity to clarity, from ideas to implementation, transforming the way you work, create, and live. Your AI-powered future begins with one bold step forward.
+          <p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed font-light px-4">
+            This is your moment. <br className="hidden sm:block" />While others hesitate at the edge of the AI revolution, you're <span className="font-bold">ready to jump</span>. <br className="hidden sm:block" />We'll guide you from curiosity to clarity, from ideas to implementation, transforming the way you work, create, and live. Your AI-powered future begins with one bold step forward.
           </p>
           
           {/* Call to Action Button */}
-          <div className="flex justify-center">
+          <div className="flex justify-center px-4">
             <Button 
               size="lg" 
               asChild
-              className="modern-button group bg-primary hover:bg-primary/90 text-primary-foreground px-12 py-6 text-lg font-semibold rounded-3xl transition-all duration-500 hover:scale-105 shadow-2xl hover:shadow-3xl"
+              className="modern-button group bg-primary hover:bg-primary/90 text-primary-foreground px-8 sm:px-12 py-4 sm:py-6 text-base sm:text-lg font-semibold rounded-3xl transition-all duration-500 hover:scale-105 shadow-2xl hover:shadow-3xl w-full sm:w-auto"
             >
               <Link to="/jumpinai-studio">
-                <Sparkles className="mr-3 h-5 w-5 group-hover:animate-spin" />
+                <Sparkles className="mr-2 sm:mr-3 h-4 w-4 sm:h-5 sm:w-5 group-hover:animate-spin" />
                 Get Started
-                <ArrowRight className="ml-3 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="ml-2 sm:ml-3 h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform" />
               </Link>
             </Button>
           </div>

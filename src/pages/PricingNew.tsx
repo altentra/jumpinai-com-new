@@ -161,27 +161,27 @@ const PricingNew = () => {
           {/* Hero Section */}
           <section className="container mx-auto px-4 py-12 text-center">
             <div className="max-w-4xl mx-auto">
-              {/* Premium Hero Section with enhanced gradients */}
-              <div className="text-center mb-12 sm:mb-20 animate-fade-in-up">
-                {/* Liquid glass backdrop for title */}
-                <div className="relative mb-6 sm:mb-8">
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent dark:via-primary/8 blur-3xl transform -translate-y-4"></div>
-                  <h1 className="relative text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold mb-2 bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent leading-tight tracking-tight px-4 sm:px-0">
-                    JumpinAI Pricing
-                  </h1>
-                  <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-transparent via-primary/60 to-transparent rounded-full"></div>
+                {/* Premium Hero Section with enhanced gradients */}
+                <div className="text-center mb-8 sm:mb-12 lg:mb-20 animate-fade-in-up">
+                  {/* Liquid glass backdrop for title */}
+                  <div className="relative mb-4 sm:mb-6 lg:mb-8">
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent dark:via-primary/8 blur-3xl transform -translate-y-4"></div>
+                    <h1 className="relative text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-2 bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent leading-tight tracking-tight px-4 sm:px-0">
+                      JumpinAI Pricing
+                    </h1>
+                    <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 sm:w-32 h-1 bg-gradient-to-r from-transparent via-primary/60 to-transparent rounded-full"></div>
+                  </div>
+                  
+                  <div className="relative px-4 sm:px-0">
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent/5 to-transparent blur-2xl"></div>
+                    <p className="relative text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground/90 mb-2 sm:mb-3 max-w-4xl mx-auto leading-relaxed font-light">
+                      Choose the perfect plan for your needs.
+                    </p>
+                  </div>
                 </div>
-                
-                <div className="relative px-4 sm:px-0">
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent/5 to-transparent blur-2xl"></div>
-                  <p className="relative text-base sm:text-lg md:text-xl text-muted-foreground/90 mb-2 sm:mb-3 max-w-4xl mx-auto leading-relaxed font-light">
-                    Choose the perfect plan for your needs.
-                  </p>
-                </div>
-              </div>
-              <p className="text-base sm:text-lg text-muted-foreground/90 max-w-3xl mx-auto mb-4 leading-relaxed">
-                <span className="font-semibold text-foreground">1 credit = 1 jump generation</span> - each jump includes a comprehensive AI transformation plan with strategies, tools, workflows, and actionable blueprints tailored to your business.
-              </p>
+                <p className="text-sm sm:text-base md:text-lg text-muted-foreground/90 max-w-3xl mx-auto mb-4 leading-relaxed px-4">
+                  <span className="font-semibold text-foreground">1 credit = 1 jump generation</span> - each jump includes a comprehensive AI transformation plan with strategies, tools, workflows, and actionable blueprints tailored to your business.
+                </p>
             </div>
           </section>
 

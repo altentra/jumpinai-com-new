@@ -95,26 +95,26 @@ const ForInvestors = () => {
       <Navigation />
       
       {/* Premium Hero Section - Glass Morphism */}
-      <section className="relative py-24 px-4 bg-gradient-to-br from-primary/5 via-background to-secondary/5">
+      <section className="relative py-12 sm:py-16 md:py-24 px-4 bg-gradient-to-br from-primary/5 via-background to-secondary/5">
         <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:50px_50px]" />
         <div className="relative max-w-6xl mx-auto">
-          <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-3xl p-8 md:p-16 shadow-2xl shadow-primary/10 hover:shadow-3xl hover:shadow-primary/15 transition-all duration-500">
-            <div className="text-center space-y-8">
-              <div className="space-y-6">
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight">
+          <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-3xl p-6 sm:p-8 md:p-12 lg:p-16 shadow-2xl shadow-primary/10 hover:shadow-3xl hover:shadow-primary/15 transition-all duration-500">
+            <div className="text-center space-y-6 sm:space-y-8">
+              <div className="space-y-4 sm:space-y-6">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight">
                   Invest in the Future of
                   <span className="block bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
                     Personalized AI Transformation
                   </span>
                 </h1>
-                <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+                <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed px-2">
                   JumpinAI Studio creates personalized AI transformation roadmaps in 5 minutes, delivering 16 ready-to-use resources tailored specifically to each individual's goals and context.
                 </p>
               </div>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
                 <Button 
                   size="lg" 
-                  className="text-base px-8 py-3 bg-gradient-to-r from-primary/90 to-primary hover:from-primary hover:to-primary/80 text-primary-foreground border border-primary/30 rounded-2xl shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 hover:scale-105 group backdrop-blur-sm"
+                  className="text-sm sm:text-base px-6 sm:px-8 py-3 bg-gradient-to-r from-primary/90 to-primary hover:from-primary hover:to-primary/80 text-primary-foreground border border-primary/30 rounded-2xl shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 hover:scale-105 group backdrop-blur-sm w-full sm:w-auto"
                   onClick={() => setIsDeckModalOpen(true)}
                 >
                   Explore Investment Deck
@@ -122,7 +122,7 @@ const ForInvestors = () => {
                 <Button 
                   variant="outline" 
                   size="lg" 
-                  className="text-base px-8 py-3 glass backdrop-blur-sm bg-background/20 border-primary/30 hover:bg-primary/10 hover:border-primary/40 rounded-2xl shadow-lg shadow-primary/10 hover:shadow-xl hover:shadow-primary/15 transition-all duration-300"
+                  className="text-sm sm:text-base px-6 sm:px-8 py-3 glass backdrop-blur-sm bg-background/20 border-primary/30 hover:bg-primary/10 hover:border-primary/40 rounded-2xl shadow-lg shadow-primary/10 hover:shadow-xl hover:shadow-primary/15 transition-all duration-300 w-full sm:w-auto"
                   onClick={scrollToContactForm}
                 >
                   Contact Our Team

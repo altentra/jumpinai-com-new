@@ -279,19 +279,19 @@ const AboutUs = () => {
       <section className="relative px-0 pt-32 pb-12">
         <div className="relative flex items-center justify-center overflow-hidden">
           <div className="relative z-10 px-6 text-center max-w-7xl mx-auto">
-            <div className="text-center mb-12 sm:mb-20 animate-fade-in-up">
-              <div className="space-y-6">
-                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold mb-2 bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent leading-tight tracking-tight px-4 sm:px-0">About JumpinAI</h1>
-                <p className="text-base sm:text-lg md:text-xl text-muted-foreground/90 mb-8 sm:mb-12 max-w-4xl mx-auto leading-relaxed font-light">Pioneering the future of human-AI collaboration. We're not just building tools—we're architecting the bridge between human potential and artificial intelligence, one personalized journey at a time.</p>
+            <div className="text-center mb-8 sm:mb-12 lg:mb-20 animate-fade-in-up px-4">
+              <div className="space-y-4 sm:space-y-6">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-2 bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent leading-tight tracking-tight">About JumpinAI</h1>
+                <p className="text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground/90 mb-6 sm:mb-8 lg:mb-12 max-w-4xl mx-auto leading-relaxed font-light">Pioneering the future of human-AI collaboration. We're not just building tools—we're architecting the bridge between human potential and artificial intelligence, one personalized journey at a time.</p>
               </div>
-              <div className="flex justify-center mt-8">
+              <div className="flex justify-center mt-6 sm:mt-8">
                 <Button 
                   size="lg" 
                   onClick={handleStartBuilding}
-                  className="text-lg px-8 py-4 bg-gradient-to-r from-primary/90 to-primary hover:from-primary hover:to-primary/80 text-primary-foreground border border-primary/30 rounded-2xl shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 hover:scale-105 group backdrop-blur-sm"
+                  className="text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-primary/90 to-primary hover:from-primary hover:to-primary/80 text-primary-foreground border border-primary/30 rounded-2xl shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 hover:scale-105 group backdrop-blur-sm w-full sm:w-auto"
                 >
                   Get Your Personal Jump
-                  <ArrowRight className="ml-2 w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
+                  <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-300 group-hover:translate-x-1" />
                 </Button>
               </div>
             </div>

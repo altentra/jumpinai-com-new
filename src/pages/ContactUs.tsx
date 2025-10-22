@@ -95,13 +95,13 @@ const ContactUs = () => {
       {/* Premium Hero Section - Glass Morphism */}
       <section className="pt-32 pb-12 px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12 sm:mb-20 animate-fade-in-up">
-            <div className="space-y-6">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold mb-2 bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent leading-tight tracking-tight px-4 sm:px-0">
+          <div className="text-center mb-8 sm:mb-12 lg:mb-20 animate-fade-in-up px-4">
+            <div className="space-y-4 sm:space-y-6">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-2 bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent leading-tight tracking-tight">
                 Let's Start a Conversation
               </h1>
               
-              <p className="text-base sm:text-lg md:text-xl text-muted-foreground/90 mb-8 sm:mb-12 max-w-4xl mx-auto leading-relaxed font-light">
+              <p className="text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground/90 mb-6 sm:mb-8 lg:mb-12 max-w-4xl mx-auto leading-relaxed font-light">
                 Ready to transform your business with AI? We're here to guide you through every step of your AI journey.
               </p>
             </div>
