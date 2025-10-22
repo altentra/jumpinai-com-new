@@ -245,7 +245,7 @@ const AboutUs = () => {
 
   return (
     <HelmetProvider>
-      <div className="min-h-screen bg-gradient-to-br from-background/95 via-background to-primary/5 dark:bg-gradient-to-br dark:from-black dark:via-gray-950/90 dark:to-gray-900/60">
+      <div className="min-h-screen bg-gradient-to-br from-background/95 via-background to-primary/5 dark:bg-gradient-to-br dark:from-gray-950/90 dark:via-gray-900/70 dark:to-gray-950/80">
         {/* Enhanced floating background elements */}
         <div className="fixed inset-0 overflow-hidden pointer-events-none">
           <div className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-primary/20 to-primary/5 dark:bg-gradient-to-br dark:from-gray-800/30 dark:to-gray-700/15 rounded-full blur-3xl"></div>
@@ -278,8 +278,8 @@ const AboutUs = () => {
 
           <div className="relative z-10 px-6 text-center">
             <div className="glass backdrop-blur-md bg-background/20 dark:bg-background/10 border border-primary/20 rounded-3xl p-8 md:p-12 shadow-2xl shadow-primary/10 hover:shadow-3xl hover:shadow-primary/15 transition-all duration-500">
-              <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6 bg-gradient-to-br from-foreground via-foreground to-primary/70 bg-clip-text text-transparent">About JumpinAI</h1>
-              <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-8">Pioneering the future of human-AI collaboration. We're not just building tools—we're architecting the bridge between human potential and artificial intelligence, one personalized journey at a time.</p>
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold mb-2 bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent leading-tight tracking-tight">About JumpinAI</h1>
+              <p className="text-base sm:text-lg md:text-xl text-muted-foreground/90 mb-8 sm:mb-12 max-w-4xl mx-auto leading-relaxed font-light">Pioneering the future of human-AI collaboration. We're not just building tools—we're architecting the bridge between human potential and artificial intelligence, one personalized journey at a time.</p>
               <div className="flex justify-center">
                   <Button 
                     size="lg" 
