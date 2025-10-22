@@ -31,6 +31,7 @@ export default function Subscription() {
   const [packageLoading, setPackageLoading] = useState<Record<string, boolean>>({});
   const [planLoading, setPlanLoading] = useState<Record<string, boolean>>({});
   const [jumpTitles, setJumpTitles] = useState<Record<string, string>>({});
+  const [jumpNumbers, setJumpNumbers] = useState<Record<string, number>>({});
   const [downloadingReceipt, setDownloadingReceipt] = useState<string | null>(null);
 
   useEffect(() => {
@@ -82,21 +83,29 @@ export default function Subscription() {
       const transactions = await creditsService.getCreditTransactions(user.id);
       setCreditTransactions(transactions);
       
-      // Fetch jump titles for usage transactions
+      // Fetch jump titles and numbers for usage transactions
       const usageTransactions = transactions.filter(t => t.transaction_type === 'usage' && t.reference_id);
       if (usageTransactions.length > 0) {
         const jumpIds = usageTransactions.map(t => t.reference_id).filter(Boolean) as string[];
-        const { data: jumps } = await supabase
-          .from('user_jumps')
-          .select('id, title')
-          .in('id', jumpIds);
         
-        if (jumps) {
+        // Get all user jumps ordered by creation date to assign sequential numbers
+        const { data: allJumps } = await supabase
+          .from('user_jumps')
+          .select('id, title, created_at')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: true });
+        
+        if (allJumps) {
           const titles: Record<string, string> = {};
-          jumps.forEach(jump => {
+          const numbers: Record<string, number> = {};
+          
+          allJumps.forEach((jump, index) => {
             titles[jump.id] = jump.title;
+            numbers[jump.id] = index + 1; // Sequential number starting from 1
           });
+          
           setJumpTitles(titles);
+          setJumpNumbers(numbers);
         }
       }
     } catch (error) {
@@ -356,7 +365,7 @@ export default function Subscription() {
                         </div>
                         {transaction.transaction_type === 'usage' && transaction.reference_id && jumpTitles[transaction.reference_id] ? (
                           <p className="text-xs text-muted-foreground truncate mb-1">
-                            Generated Jump #{transaction.reference_id.substring(0, 8)}: {jumpTitles[transaction.reference_id]}
+                            Generated Jump #{jumpNumbers[transaction.reference_id] || '?'}: {jumpTitles[transaction.reference_id]}
                           </p>
                         ) : transaction.description && (
                           <p className="text-xs text-muted-foreground truncate mb-1">
