@@ -101,7 +101,7 @@ const Index = () => {
               Ready to Make Your AI Jump?
             </h2>
             <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              Don't wait months to see AI results. Get your personalized Jump plan in minutes and start transforming your life and business today. Join 15,000+ professionals who've already made the leap.
+              Don't wait months to see AI results. Get your personalized Jump plan in 2 minutes and start transforming your life and business today. Join 15,000+ professionals who've already made the leap.
             </p>
           </div>
 
@@ -136,12 +136,12 @@ const Index = () => {
             <div className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-300">
               <h3 className="text-lg font-bold mb-3 font-display">Ready Resources</h3>
               <p className="text-sm text-muted-foreground mb-4">
-                16 ready-to-use resources: prompts, workflows, blueprints, and strategies for immediate deployment.
+                Comprehensive analysis of your situation, strategic action plan, and 6 personalized batches of tools and prompts to get you started immediately.
               </p>
               <div className="text-xs text-white space-y-1">
-                <div>✓ Custom prompts & workflows</div>
-                <div>✓ Detailed blueprints</div>
-                <div>✓ Proven strategies</div>
+                <div>✓ Situational analysis</div>
+                <div>✓ Strategic action plan</div>
+                <div>✓ 6 personalized tool & prompt batches</div>
               </div>
             </div>
 
@@ -228,7 +228,7 @@ const Index = () => {
                 <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
-                <span className="font-semibold">Complete personalized plan generated in 5 minutes</span>
+                <span className="font-semibold">Complete personalized plan generated in 2 minutes</span>
               </div>
             </div>
           </div>
@@ -297,7 +297,7 @@ const Index = () => {
                 </div>
                 <div>
                   <h3 className="text-xl font-bold mb-2 font-display">Instant Personalization</h3>
-                  <p className="text-muted-foreground">Skip months of research. Get AI strategies tailored to your exact industry, role, and experience level in minutes.</p>
+                  <p className="text-muted-foreground">Skip months of research. Get AI strategies tailored to your exact industry, role, and experience level in 2 minutes.</p>
                 </div>
               </div>
 
@@ -309,7 +309,7 @@ const Index = () => {
                 </div>
                 <div>
                   <h3 className="text-xl font-bold mb-2 font-display">Complete Resource Package</h3>
-                  <p className="text-muted-foreground">No more hunting for resources. Get 16 ready-to-use items: prompts, workflows, blueprints, and strategies all in one place.</p>
+                  <p className="text-muted-foreground">No more hunting for resources. Get detailed analysis of your situation, a strategic action plan, and 6 personalized batches of tools and prompts all in one place.</p>
                 </div>
               </div>
 
@@ -341,14 +341,14 @@ const Index = () => {
                   <div className="flex items-center justify-between p-4 bg-secondary/5 rounded-lg">
                     <span className="font-medium">Ready-to-use resources</span>
                     <div className="flex gap-2">
-                      <span className="text-green-500 font-bold">✓ 16 items</span>
+                      <span className="text-green-500 font-bold">✓ Analysis + 6 batches</span>
                       <span className="text-red-500">✗ DIY research</span>
                     </div>
                   </div>
                   <div className="flex items-center justify-between p-4 bg-accent/5 rounded-lg">
                     <span className="font-medium">Implementation time</span>
                     <div className="flex gap-2">
-                      <span className="text-green-500 font-bold">✓ 5 minutes</span>
+                      <span className="text-green-500 font-bold">✓ 2 minutes</span>
                       <span className="text-red-500">✗ Weeks/months</span>
                     </div>
                   </div>
@@ -467,7 +467,7 @@ const Index = () => {
 
             <div className="p-5 rounded-xl glass hover:glass-dark transition-all duration-300">
               <h3 className="text-lg font-bold mb-2 font-display">What exactly do I get in each Jump plan?</h3>
-              <p className="text-sm text-muted-foreground">Every Jump includes a strategic action plan, curated AI tool list, 4 custom prompts, 4 workflows, 4 blueprints, and 4 strategies - all tailored to your specific goals and industry.</p>
+              <p className="text-sm text-muted-foreground">Every Jump includes a detailed analysis of your situation, a strategic action plan, and 6 personalized batches of tools and prompts to help you get started - all tailored to your specific goals and industry.</p>
             </div>
 
             <div className="p-5 rounded-xl glass hover:glass-dark transition-all duration-300">
@@ -495,7 +495,7 @@ const Index = () => {
               Join 15,000+ professionals who've transformed their AI journey with personalized Jump plans
             </p>
             <p className="text-lg mb-12 text-muted-foreground max-w-3xl mx-auto">
-              Stop struggling with AI implementation. Get your complete transformation blueprint in minutes, not months. Your competitive advantage starts today.
+              Stop struggling with AI implementation. Get your complete transformation blueprint in 2 minutes, not months. Your competitive advantage starts today.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
