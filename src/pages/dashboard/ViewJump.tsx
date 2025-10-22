@@ -165,22 +165,42 @@ export default function ViewJump() {
 
   const createStructuredPlan = (jump: UserJump): any => {
     try {
-      if (jump.structured_plan) {
-        return jump.structured_plan;
+      // ✅ CRITICAL FIX: Use structured_plan directly if it exists (contains Step 3 phases with full details)
+      if (jump.structured_plan && typeof jump.structured_plan === 'object') {
+        const plan = jump.structured_plan as any;
+        
+        // If it already has phases array at root, return it as-is
+        if (Array.isArray(plan.phases) && plan.phases.length > 0) {
+          console.log('✅ Using structured_plan.phases directly:', plan.phases.length, 'phases found');
+          return plan;
+        }
+        
+        // If it has action_plan.phases, return that
+        if (plan.action_plan?.phases) {
+          console.log('✅ Using structured_plan.action_plan.phases');
+          return plan.action_plan;
+        }
       }
 
+      // Fallback: Try comprehensive_plan
       if (jump.comprehensive_plan && typeof jump.comprehensive_plan === 'object') {
         const plan = jump.comprehensive_plan as any;
         
-        // Create phases from the comprehensive plan structure
-        const phases = [];
-        
-        // Try to extract phases from the plan
-        if (plan.action_plan?.phases) {
+        // Check if comprehensive_plan has action_plan.phases
+        if (plan.action_plan?.phases && Array.isArray(plan.action_plan.phases)) {
+          console.log('✅ Using comprehensive_plan.action_plan.phases');
           return plan.action_plan;
         }
+        
+        // Check if phases are at root level
+        if (Array.isArray(plan.phases) && plan.phases.length > 0) {
+          console.log('✅ Using comprehensive_plan.phases at root');
+          return { phases: plan.phases };
+        }
 
-        // Create phases from key sections
+        // Legacy fallback: Create basic phases from key sections
+        console.warn('⚠️ No phases found, creating basic structure from sections');
+        const phases = [];
         let phaseNumber = 1;
         
         if (plan.key_objectives) {
@@ -188,7 +208,10 @@ export default function ViewJump() {
             phase_number: phaseNumber++,
             title: "Key Objectives",
             description: Array.isArray(plan.key_objectives) ? plan.key_objectives.join('. ') : plan.key_objectives,
-            duration: "Ongoing"
+            duration: "Ongoing",
+            objectives: Array.isArray(plan.key_objectives) ? plan.key_objectives : [plan.key_objectives],
+            key_actions: [],
+            milestones: []
           });
         }
 
@@ -197,28 +220,25 @@ export default function ViewJump() {
             phase_number: phaseNumber++,
             title: "Resource Setup", 
             description: "Set up required tools and resources for implementation",
-            duration: "1-2 weeks"
+            duration: "1-2 weeks",
+            objectives: ["Acquire and configure necessary tools"],
+            key_actions: [],
+            milestones: []
           });
         }
 
-        if (plan.success_metrics) {
-          phases.push({
-            phase_number: phaseNumber++,
-            title: "Implementation & Monitoring",
-            description: "Execute the plan while tracking success metrics",
-            duration: "3-6 months"
-          });
+        if (phases.length > 0) {
+          return {
+            overview: plan.executiveSummary || plan.executive_summary || "Strategic implementation plan",
+            phases: phases
+          };
         }
-
-        return {
-          overview: plan.executive_summary || "Strategic implementation plan for your AI transformation",
-          phases: phases
-        };
       }
 
+      console.warn('⚠️ No structured plan data found');
       return null;
     } catch (error) {
-      console.error('Error creating structured plan:', error);
+      console.error('❌ Error creating structured plan:', error);
       return null;
     }
   };
