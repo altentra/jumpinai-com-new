@@ -435,10 +435,60 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
         </TabsContent>
 
         <TabsContent value="plan" className="mt-6">
-          {result.structured_plan ? (
-            <div className="space-y-6">
-              {/* Implementation Phases */}
-              {result.structured_plan.phases && result.structured_plan.phases.length > 0 ? (
+          {(() => {
+            // CRITICAL: Comprehensive error handling and data validation
+            console.log('🔍 Plan Tab - Checking structured_plan:', result.structured_plan);
+            
+            // Check if structured_plan exists
+            if (!result.structured_plan) {
+              console.warn('⚠️ No structured_plan data');
+              return (
+                <div className="flex items-center justify-center h-32">
+                  <Loader2 className="w-6 h-6 animate-spin mr-2" />
+                  Creating implementation plan...
+                </div>
+              );
+            }
+
+            // Get phases array - handle different possible structures
+            let phases = null;
+            try {
+              // Try direct access first
+              if (Array.isArray(result.structured_plan.phases)) {
+                phases = result.structured_plan.phases;
+              } 
+              // Try if structured_plan itself is the phases array
+              else if (Array.isArray(result.structured_plan)) {
+                phases = result.structured_plan;
+              }
+              // Try if it's wrapped in implementationPlan
+              else if (result.structured_plan.implementationPlan?.phases) {
+                phases = result.structured_plan.implementationPlan.phases;
+              }
+              
+              console.log('📋 Found phases array:', phases?.length || 0, 'phases');
+            } catch (error) {
+              console.error('❌ Error extracting phases:', error);
+            }
+
+            // Validate phases
+            if (!phases || !Array.isArray(phases) || phases.length === 0) {
+              console.warn('⚠️ No valid phases found in structured_plan');
+              return (
+                <div className="flex items-center justify-center h-32 text-muted-foreground">
+                  <div className="text-center">
+                    <AlertTriangle className="w-8 h-8 mx-auto mb-2 text-amber-500" />
+                    <p>Plan data structure mismatch</p>
+                    <p className="text-xs mt-1">Check console for details</p>
+                  </div>
+                </div>
+              );
+            }
+
+            // Render phases
+            return (
+              <div className="space-y-6">
+                {/* Implementation Phases */}
                 <div className="space-y-6">
                   {/* Executive Summary */}
                   <div className="bg-gradient-to-r from-primary/20 to-primary/10 border border-primary/30 rounded-2xl p-6 backdrop-blur-sm">
@@ -447,12 +497,19 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                       <h3 className="text-lg font-semibold text-foreground">Your Transformation Roadmap</h3>
                     </div>
                     <p className="text-muted-foreground">
-                      This comprehensive action plan breaks down your transformation into {result.structured_plan.phases.length} strategic phases. 
+                      This comprehensive action plan breaks down your transformation into {phases.length} strategic phases. 
                       Each phase builds on the previous one, with clear objectives, actionable steps, and measurable milestones.
                     </p>
                   </div>
 
-                  {result.structured_plan.phases.map((phase: any, index: number) => (
+                  {phases.map((phase: any, index: number) => {
+                    // Validate each phase
+                    if (!phase) {
+                      console.warn(`⚠️ Phase ${index} is null/undefined`);
+                      return null;
+                    }
+                    
+                    return (
                     <Card key={index} className="glass backdrop-blur-xl border border-border/40 rounded-2xl overflow-hidden">
                       <CardContent className="p-6 space-y-6">
                         {/* Enhanced Phase Header */}
@@ -613,7 +670,8 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                         )}
                       </CardContent>
                     </Card>
-                  ))}
+                  );
+                  })}
                   
                   {/* Success Metrics */}
                   {result.structured_plan.successMetrics && result.structured_plan.successMetrics.length > 0 && (
@@ -639,18 +697,9 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                     </Card>
                   )}
                 </div>
-              ) : (
-                <div className="flex items-center justify-center h-32 text-muted-foreground">
-                  <p>No implementation phases available</p>
-                </div>
-              )}
-            </div>
-          ) : (
-            <div className="flex items-center justify-center h-32">
-              <Loader2 className="w-6 h-6 animate-spin mr-2" />
-              Creating implementation plan...
-            </div>
-          )}
+              </div>
+            );
+          })()}
         </TabsContent>
 
         <TabsContent value="toolPrompts" className="mt-4">
