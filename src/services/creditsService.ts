@@ -171,6 +171,26 @@ export const creditsService = {
     }
   },
 
+  // Update transaction reference (e.g., link jump ID to credit usage)
+  async updateTransactionReference(userId: string, oldReferenceId: string, newReferenceId: string): Promise<void> {
+    try {
+      const { error } = await supabase
+        .from('credit_transactions')
+        .update({ reference_id: newReferenceId })
+        .eq('user_id', userId)
+        .eq('reference_id', oldReferenceId)
+        .eq('transaction_type', 'usage');
+
+      if (error) {
+        console.error('Error updating transaction reference:', error);
+        throw error;
+      }
+    } catch (error) {
+      console.error('Error updating transaction reference:', error);
+      throw error;
+    }
+  },
+
   // Initialize credits for new user (called by trigger, but can be called manually if needed)
   async initializeUserCredits(userId: string): Promise<void> {
     try {

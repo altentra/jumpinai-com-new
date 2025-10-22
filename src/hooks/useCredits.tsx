@@ -67,6 +67,17 @@ export const useCredits = () => {
     }
   };
 
+  // Update transaction reference (link jump ID to credit usage)
+  const updateTransactionReference = async (oldReferenceId: string, newReferenceId: string): Promise<void> => {
+    if (!user?.id) return;
+
+    try {
+      await creditsService.updateTransactionReference(user.id, oldReferenceId, newReferenceId);
+    } catch (error) {
+      console.error('Error updating transaction reference:', error);
+    }
+  };
+
   // Initialize credits for new users
   const initializeCredits = async (): Promise<void> => {
     if (!user?.id) return;
@@ -96,6 +107,7 @@ export const useCredits = () => {
     addCredits,
     fetchCredits,
     initializeCredits,
+    updateTransactionReference,
     creditsBalance: credits?.credits_balance || 0
   };
 };

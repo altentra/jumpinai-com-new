@@ -14,7 +14,7 @@ import { supabase } from '@/integrations/supabase/client';
 
 const JumpinAIStudio = () => {
   const { user, isAuthenticated, login } = useAuth();
-  const { hasCredits, deductCredit, creditsBalance } = useCredits();
+  const { hasCredits, deductCredit, creditsBalance, updateTransactionReference } = useCredits();
   const { isGenerating, result, processingStatus, generateWithProgression } = useProgressiveGeneration();
   const [guestCanUse, setGuestCanUse] = useState(true);
   const [guestUsageCount, setGuestUsageCount] = useState(0);
@@ -197,10 +197,12 @@ const JumpinAIStudio = () => {
 
     try {
       // Deduct credit for authenticated users BEFORE generation
+      let tempReferenceId: string | undefined;
       if (isAuthenticated && user?.id) {
+        tempReferenceId = `generation_${Date.now()}`;
         const creditDeducted = await deductCredit(
           'JumpinAI Studio generation', 
-          `generation_${Date.now()}`
+          tempReferenceId
         );
         
         if (!creditDeducted) {
@@ -219,6 +221,11 @@ const JumpinAIStudio = () => {
 
       // Generate with progressive display
       const result = await generateWithProgression(formData, user?.id);
+      
+      // Update credit transaction with actual jump ID
+      if (result.jumpId && tempReferenceId && isAuthenticated && user?.id) {
+        await updateTransactionReference(tempReferenceId, result.jumpId);
+      }
       
       if (result.jumpId) {
         toast.success('Your Jump in AI has been saved to your dashboard! 1 credit used.');
