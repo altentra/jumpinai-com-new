@@ -69,8 +69,8 @@ export default function AppSidebar() {
     isActive ? "bg-muted text-primary font-medium" : "hover:bg-muted/50";
 
   return (
-    <Sidebar className="w-52 mt-20">
-      <SidebarHeader className="border-b border-border px-3 py-2">
+    <Sidebar className="w-52 mt-20 glass backdrop-blur-xl bg-background/40 dark:bg-background/20 border-r border-primary/20">
+      <SidebarHeader className="border-b border-primary/20 px-3 py-2">
         <div className="text-center text-sm text-muted-foreground mb-1">
           Welcome{userName ? (
             <>

@@ -272,7 +272,7 @@ const JumpinAIStudio = () => {
         <meta name="description" content="Your AI-powered workspace for creating and managing strategic transformations with intelligent guidance." />
       </Helmet>
       
-      <div className="min-h-screen scroll-snap-container bg-gradient-to-br from-background/95 via-background to-primary/5 dark:from-gray-950/90 dark:via-gray-900/70 dark:to-gray-950/80 relative overflow-hidden">
+      <div className="min-h-screen scroll-snap-container bg-gradient-to-br from-background/95 via-background to-primary/5 dark:bg-gradient-to-br dark:from-black dark:via-gray-950/90 dark:to-gray-900/60 relative overflow-hidden">
         {/* Premium floating background elements with liquid glass effects */}
         <div className="fixed inset-0 overflow-hidden pointer-events-none">
           {/* Main gradient orbs with enhanced blur and liquid animation */}
@@ -371,7 +371,7 @@ const JumpinAIStudio = () => {
                 <div className="absolute -inset-1 bg-gradient-to-r from-primary/10 via-accent/8 to-secondary/10 rounded-2xl blur-xl opacity-40"></div>
                 
                 {/* Compact glass container */}
-                <div className="relative glass rounded-2xl p-4 sm:p-6 border border-border backdrop-blur-2xl bg-card/80 dark:bg-gradient-to-br dark:from-gray-950/70 dark:to-gray-900/40 overflow-hidden">
+                <div className="relative glass rounded-2xl p-4 sm:p-6 border border-border backdrop-blur-2xl bg-card/80 dark:bg-background/20 overflow-hidden">
                   {/* Minimal glass overlay */}
                   <div className="absolute inset-0 bg-gradient-to-br from-primary/4 via-transparent to-secondary/4 rounded-2xl"></div>
                   <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
