@@ -292,24 +292,24 @@ const JumpinAIStudio = () => {
         
         <main className="relative pt-24 px-4 sm:px-6 lg:px-8">
           <div className="max-w-6xl mx-auto">
-            {/* Auth Status and Credits Display - Integrated into page layout */}
-            <div className="flex justify-between items-center mb-4 sm:mb-6 animate-fade-in-right gap-4">
+            {/* Auth Status and Credits Display - Mobile Optimized */}
+            <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center mb-4 sm:mb-6 animate-fade-in-right gap-3 sm:gap-4">
               {/* Credits display for authenticated users */}
               {isAuthenticated && (
-                <div className="flex-1">
+                <div className="flex-1 order-2 sm:order-1">
                   <CreditsDisplay showBuyButton={true} />
                 </div>
               )}
               
               {/* Auth status notification */}
-              <div className="relative group">
-                <div className="relative glass rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm border border-border backdrop-blur-xl bg-card/80 shadow-lg transition-all duration-300 max-w-sm">
+              <div className="relative group order-1 sm:order-2 w-full sm:w-auto">
+                <div className="relative glass rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm border border-border backdrop-blur-xl bg-card/80 shadow-lg transition-all duration-300 w-full sm:max-w-sm">
                   {/* Subtle glass overlay */}
                   <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/3 rounded-xl"></div>
                   
                   <div className="relative z-10">
                     {isAuthenticated ? (
-                      <div className="flex items-center gap-2 text-emerald-600">
+                      <div className="flex items-center justify-center sm:justify-start gap-2 text-emerald-600">
                         <div className="relative">
                           <User className="w-3 h-3 sm:w-4 sm:h-4" />
                           <div className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-emerald-500 rounded-full"></div>
@@ -319,7 +319,7 @@ const JumpinAIStudio = () => {
                         </span>
                       </div>
                     ) : (
-                      <div className="flex items-center gap-2 text-amber-600">
+                      <div className="flex items-center justify-center sm:justify-start gap-2 text-amber-600">
                         <div className="relative">
                           <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4" />
                           <div className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-amber-500 rounded-full"></div>
@@ -333,59 +333,59 @@ const JumpinAIStudio = () => {
                 </div>
               </div>
             </div>
-            {/* Premium Hero Section with enhanced gradients */}
-            <div className="text-center mb-12 sm:mb-20 animate-fade-in-up">
+            {/* Premium Hero Section - Mobile Optimized */}
+            <div className="text-center mb-8 sm:mb-12 lg:mb-20 animate-fade-in-up px-2">
               {/* Liquid glass backdrop for title */}
-              <div className="relative mb-6 sm:mb-8">
+              <div className="relative mb-4 sm:mb-6 lg:mb-8">
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent dark:via-primary/8 blur-3xl transform -translate-y-4"></div>
-                <h1 className="relative text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold mb-2 bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent leading-tight tracking-tight px-4 sm:px-0">
+                <h1 className="relative text-2xl sm:text-3xl md:text-4xl lg:text-6xl xl:text-7xl font-bold mb-2 bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent leading-tight tracking-tight px-2">
                   JumpinAI Studio
                 </h1>
-                <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-transparent via-primary/60 to-transparent rounded-full"></div>
+                <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 sm:w-32 h-1 bg-gradient-to-r from-transparent via-primary/60 to-transparent rounded-full"></div>
               </div>
               
-              <div className="relative px-4 sm:px-0">
+              <div className="relative px-4">
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent/5 to-transparent blur-2xl"></div>
-                <p className="relative text-base sm:text-lg md:text-xl text-muted-foreground/90 mb-8 sm:mb-12 max-w-4xl mx-auto leading-relaxed font-light">
+                <p className="relative text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground/90 mb-6 sm:mb-8 lg:mb-12 max-w-4xl mx-auto leading-relaxed font-light">
                   Tell us your goals and challenges, and we'll generate your personalized <span className="font-semibold text-primary bg-gradient-to-r from-primary via-primary/80 to-primary bg-clip-text text-transparent whitespace-nowrap">Jump in AI</span>: 
                   a clear step-by-step plan with AI tools, custom prompts, and actionable strategies.
                 </p>
               </div>
               
               {/* Simple feature indicators - Mobile optimized */}
-              <div className="flex flex-wrap justify-center gap-2 sm:gap-4 text-xs sm:text-sm text-muted-foreground/70 px-4">
-                <span className="bg-background/60 backdrop-blur-sm px-2 py-1 rounded-md border border-border/30 sm:bg-transparent sm:backdrop-blur-none sm:px-0 sm:py-0 sm:rounded-none sm:border-none">Strategic Action Plan</span>
-                <span className="hidden sm:inline">•</span>
-                <span className="bg-background/60 backdrop-blur-sm px-2 py-1 rounded-md border border-border/30 sm:bg-transparent sm:backdrop-blur-none sm:px-0 sm:py-0 sm:rounded-none sm:border-none">AI Tools & Resources</span>
-                <span className="hidden sm:inline">•</span>
-                <span className="bg-background/60 backdrop-blur-sm px-2 py-1 rounded-md border border-border/30 sm:bg-transparent sm:backdrop-blur-none sm:px-0 sm:py-0 sm:rounded-none sm:border-none">Custom Prompts</span> 
-                <span className="hidden sm:inline">•</span>
-                <span className="bg-background/60 backdrop-blur-sm px-2 py-1 rounded-md border border-border/30 sm:bg-transparent sm:backdrop-blur-none sm:px-0 sm:py-0 sm:rounded-none sm:border-none">Implementation Guide</span>
+              <div className="flex flex-wrap justify-center gap-2 text-xs sm:text-sm text-muted-foreground/70 px-2">
+                <span className="bg-background/60 backdrop-blur-sm px-2 sm:px-3 py-1 rounded-md border border-border/30">Strategic Action Plan</span>
+                <span className="hidden sm:inline text-muted-foreground/50">•</span>
+                <span className="bg-background/60 backdrop-blur-sm px-2 sm:px-3 py-1 rounded-md border border-border/30">AI Tools & Resources</span>
+                <span className="hidden sm:inline text-muted-foreground/50">•</span>
+                <span className="bg-background/60 backdrop-blur-sm px-2 sm:px-3 py-1 rounded-md border border-border/30">Custom Prompts</span> 
+                <span className="hidden sm:inline text-muted-foreground/50">•</span>
+                <span className="bg-background/60 backdrop-blur-sm px-2 sm:px-3 py-1 rounded-md border border-border/30">Implementation Guide</span>
               </div>
             </div>
 
-            {/* Compact Glass Form */}
-            <div className="mb-8 sm:mb-12 animate-fade-in-up px-2 sm:px-0" style={{ animationDelay: '0.5s' }}>
+            {/* Compact Glass Form - Mobile Optimized */}
+            <div className="mb-6 sm:mb-8 lg:mb-12 animate-fade-in-up px-2 sm:px-4 lg:px-0" style={{ animationDelay: '0.5s' }}>
               <div className="relative group">
                 {/* Subtle backdrop */}
                 <div className="absolute -inset-1 bg-gradient-to-r from-primary/10 via-accent/8 to-secondary/10 rounded-2xl blur-xl opacity-40"></div>
                 
                 {/* Compact glass container */}
-                <div className="relative glass rounded-2xl p-4 sm:p-6 border border-border backdrop-blur-2xl bg-card/80 dark:bg-background/20 overflow-hidden">
+                <div className="relative glass rounded-2xl p-3 sm:p-4 md:p-6 border border-border backdrop-blur-2xl bg-card/80 dark:bg-background/20 overflow-hidden">
                   {/* Minimal glass overlay */}
                   <div className="absolute inset-0 bg-gradient-to-br from-primary/4 via-transparent to-secondary/4 rounded-2xl"></div>
                   <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
                   
                   <div className="relative z-10">
-                    <div className="text-center mb-6">
-                      <h2 className="text-lg sm:text-xl font-bold mb-2 bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent">Let's understand your goals</h2>
+                    <div className="text-center mb-4 sm:mb-6">
+                      <h2 className="text-base sm:text-lg md:text-xl font-bold mb-2 bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent px-2">Let's understand your goals</h2>
                       <div className="w-12 h-0.5 bg-gradient-to-r from-transparent via-primary/50 to-transparent mx-auto rounded-full"></div>
                     </div>
 
-                    <div className="grid gap-5">
-                      <div className="grid md:grid-cols-2 gap-5">
+                    <div className="grid gap-3 sm:gap-4 md:gap-5">
+                      <div className="grid md:grid-cols-2 gap-3 sm:gap-4 md:gap-5">
                         <div className="group">
-                          <label className="block text-sm font-medium text-foreground/90 mb-3 transition-colors duration-300 group-focus-within:text-primary">
+                          <label className="block text-xs sm:text-sm font-medium text-foreground/90 mb-2 sm:mb-3 transition-colors duration-300 group-focus-within:text-primary">
                             What are you working toward? *
                           </label>
                           <div className="relative">
@@ -393,14 +393,14 @@ const JumpinAIStudio = () => {
                               ref={goalsTextareaRef}
                               value={formData.goals}
                               onChange={(e) => setFormData(prev => ({ ...prev, goals: e.target.value }))}
-                              className="w-full min-h-[160px] p-4 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-3xl shadow-xl hover:shadow-2xl focus:shadow-2xl focus:shadow-primary/10 resize-none placeholder:text-muted-foreground/60 text-foreground bg-card/60 overflow-hidden"
+                              className="w-full min-h-[120px] sm:min-h-[140px] md:min-h-[160px] p-3 sm:p-4 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-2xl sm:rounded-3xl shadow-xl hover:shadow-2xl focus:shadow-2xl focus:shadow-primary/10 resize-none placeholder:text-muted-foreground/60 text-sm sm:text-base text-foreground bg-card/60 overflow-hidden"
                               placeholder="Your main goals & projects with AI..."
                             />
                           </div>
                         </div>
                         
                         <div className="group">
-                          <label className="block text-sm font-medium text-foreground/90 mb-3 transition-colors duration-300 group-focus-within:text-primary">
+                          <label className="block text-xs sm:text-sm font-medium text-foreground/90 mb-2 sm:mb-3 transition-colors duration-300 group-focus-within:text-primary">
                             What's keeping you from getting there?
                           </label>
                           <div className="relative">
@@ -408,16 +408,16 @@ const JumpinAIStudio = () => {
                               ref={challengesTextareaRef}
                               value={formData.challenges}
                               onChange={(e) => setFormData(prev => ({ ...prev, challenges: e.target.value }))}
-                              className="w-full min-h-[160px] p-4 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-3xl shadow-xl hover:shadow-2xl focus:shadow-2xl focus:shadow-primary/10 resize-none placeholder:text-muted-foreground/60 text-foreground bg-card/60 overflow-hidden"
+                              className="w-full min-h-[120px] sm:min-h-[140px] md:min-h-[160px] p-3 sm:p-4 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-2xl sm:rounded-3xl shadow-xl hover:shadow-2xl focus:shadow-2xl focus:shadow-primary/10 resize-none placeholder:text-muted-foreground/60 text-sm sm:text-base text-foreground bg-card/60 overflow-hidden"
                               placeholder="Your obstacles & challenges..."
                             />
                           </div>
                         </div>
                       </div>
 
-                      <div className="grid md:grid-cols-2 gap-5">
+                      <div className="grid md:grid-cols-2 gap-3 sm:gap-4 md:gap-5">
                         <div className="group">
-                          <label className="block text-sm font-medium text-foreground/90 mb-3 transition-colors duration-300 group-focus-within:text-primary">
+                          <label className="block text-xs sm:text-sm font-medium text-foreground/90 mb-2 sm:mb-3 transition-colors duration-300 group-focus-within:text-primary">
                             Industry
                           </label>
                           <div className="relative">
@@ -425,21 +425,21 @@ const JumpinAIStudio = () => {
                               type="text"
                               value={formData.industry}
                               onChange={(e) => setFormData(prev => ({ ...prev, industry: e.target.value }))}
-                              className="w-full p-3 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl focus:shadow-2xl focus:shadow-primary/10 placeholder:text-muted-foreground/60 text-foreground bg-card/60"
+                              className="w-full p-2.5 sm:p-3 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl focus:shadow-2xl focus:shadow-primary/10 placeholder:text-muted-foreground/60 text-sm sm:text-base text-foreground bg-card/60"
                               placeholder="Marketing, Tech, Finance..."
                             />
                           </div>
                         </div>
                         
                         <div className="group">
-                          <label className="block text-sm font-medium text-foreground/90 mb-3 transition-colors duration-300 group-focus-within:text-primary">
+                          <label className="block text-xs sm:text-sm font-medium text-foreground/90 mb-2 sm:mb-3 transition-colors duration-300 group-focus-within:text-primary">
                             AI Experience
                           </label>
                           <div className="relative">
                             <select 
                               value={formData.aiKnowledge}
                               onChange={(e) => setFormData(prev => ({ ...prev, aiKnowledge: e.target.value }))}
-                              className="w-full p-3 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl focus:shadow-2xl focus:shadow-primary/10 text-foreground bg-card/60"
+                              className="w-full p-2.5 sm:p-3 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl focus:shadow-2xl focus:shadow-primary/10 text-sm sm:text-base text-foreground bg-card/60"
                             >
                               <option value="">Select level</option>
                               <option value="beginner">Beginner</option>
@@ -451,16 +451,16 @@ const JumpinAIStudio = () => {
                         </div>
                       </div>
 
-                      <div className="grid md:grid-cols-2 gap-5">
+                      <div className="grid md:grid-cols-2 gap-3 sm:gap-4 md:gap-5">
                         <div className="group">
-                          <label className="block text-sm font-medium text-foreground/90 mb-3 transition-colors duration-300 group-focus-within:text-primary">
+                          <label className="block text-xs sm:text-sm font-medium text-foreground/90 mb-2 sm:mb-3 transition-colors duration-300 group-focus-within:text-primary">
                             Urgency
                           </label>
                           <div className="relative">
                             <select 
                               value={formData.timeCommitment}
                               onChange={(e) => setFormData(prev => ({ ...prev, timeCommitment: e.target.value }))}
-                              className="w-full p-3 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl focus:shadow-2xl focus:shadow-primary/10 text-foreground bg-card/60"
+                              className="w-full p-2.5 sm:p-3 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl focus:shadow-2xl focus:shadow-primary/10 text-sm sm:text-base text-foreground bg-card/60"
                             >
                               <option value="">Select urgency</option>
                               <option value="asap">ASAP - Need immediate results</option>
@@ -472,14 +472,14 @@ const JumpinAIStudio = () => {
                         </div>
 
                         <div className="group">
-                          <label className="block text-sm font-medium text-foreground/90 mb-3 transition-colors duration-300 group-focus-within:text-primary">
+                          <label className="block text-xs sm:text-sm font-medium text-foreground/90 mb-2 sm:mb-3 transition-colors duration-300 group-focus-within:text-primary">
                             Budget
                           </label>
                           <div className="relative">
                             <select 
                               value={formData.budget}
                               onChange={(e) => setFormData(prev => ({ ...prev, budget: e.target.value }))}
-                              className="w-full p-3 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl focus:shadow-2xl focus:shadow-primary/10 text-foreground bg-card/60"
+                              className="w-full p-2.5 sm:p-3 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl focus:shadow-2xl focus:shadow-primary/10 text-sm sm:text-base text-foreground bg-card/60"
                             >
                               <option value="">Select budget</option>
                               <option value="minimal">Minimal ($0-500)</option>
@@ -492,7 +492,7 @@ const JumpinAIStudio = () => {
                       </div>
 
                       {/* Glass Morphism Generate Button - Mobile Optimized */}
-                      <div ref={generateButtonRef} className="text-center mt-6 sm:mt-8">
+                      <div ref={generateButtonRef} className="text-center mt-4 sm:mt-6 md:mt-8">
                         <div className="relative inline-block group w-full sm:w-auto">
                           {/* Subtle glow backdrop */}
                           <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 dark:from-primary/15 dark:via-accent/12 dark:to-secondary/15 rounded-full blur-xl opacity-60 group-hover:opacity-80 transition-all duration-500"></div>
@@ -500,17 +500,17 @@ const JumpinAIStudio = () => {
                           <button
                             onClick={handleGenerate}
                             disabled={isGenerating || (!isAuthenticated && !guestCanUse)}
-                            className="relative w-full sm:max-w-4xl px-12 sm:px-24 py-4 sm:py-5 glass backdrop-blur-xl border border-border/40 hover:border-primary/50 focus:border-primary/60 transition-all duration-500 rounded-full shadow-xl hover:shadow-2xl hover:shadow-primary/20 bg-card/70 hover:scale-[1.02] active:scale-98 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100 group overflow-hidden"
+                            className="relative w-full sm:max-w-4xl px-8 sm:px-16 md:px-24 py-3 sm:py-4 md:py-5 glass backdrop-blur-xl border border-border/40 hover:border-primary/50 focus:border-primary/60 transition-all duration-500 rounded-full shadow-xl hover:shadow-2xl hover:shadow-primary/20 bg-card/70 hover:scale-[1.02] active:scale-98 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100 group overflow-hidden"
                           >
                             {/* Glass morphism overlay effects */}
                             <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-transparent to-secondary/8 rounded-full"></div>
                             <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/40 dark:via-white/25 to-transparent"></div>
                             <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-transparent to-white/10 dark:from-white/8 dark:via-transparent dark:to-white/8 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                             
-                            <div className="relative z-10 flex flex-col sm:flex-row items-center justify-center gap-3">
+                            <div className="relative z-10 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3">
                               {isGenerating ? (
-                                <div className="flex flex-col items-center gap-2 min-h-[32px] w-full">
-                                  <div className="flex items-center gap-4 w-full justify-center">
+                                <div className="flex flex-col items-center gap-1 sm:gap-2 min-h-[32px] w-full">
+                                  <div className="flex items-center gap-3 sm:gap-4 w-full justify-center">
                                     <div className="relative">
                                       <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin text-primary" />
                                       <div className="absolute inset-0 animate-ping">
@@ -518,9 +518,9 @@ const JumpinAIStudio = () => {
                                       </div>
                                     </div>
                                     <div className="text-center flex-1">
-                                      <div className="font-semibold text-foreground text-base sm:text-lg">{processingStatus.stage}</div>
-                                      <div className="text-xs sm:text-sm text-muted-foreground/80 mt-1 flex flex-col sm:flex-row items-center gap-2">
-                                        <span>{processingStatus.currentTask}</span>
+                                      <div className="font-semibold text-foreground text-sm sm:text-base md:text-lg">{processingStatus.stage}</div>
+                                      <div className="text-xs sm:text-sm text-muted-foreground/80 mt-1 flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
+                                        <span className="text-xs sm:text-sm">{processingStatus.currentTask}</span>
                                         {generationTimer > 0 && (
                                           <span className="px-2 py-0.5 glass backdrop-blur-sm bg-primary/10 text-primary rounded-full text-xs font-medium border border-primary/20">
                                             {formatTime(generationTimer)}
@@ -532,7 +532,7 @@ const JumpinAIStudio = () => {
                                 </div>
                               ) : (
                                 <div className="flex items-center justify-center">
-                                  <span className="font-semibold text-foreground text-base sm:text-lg tracking-wide">Generate My Jump in AI</span>
+                                  <span className="font-semibold text-foreground text-sm sm:text-base md:text-lg tracking-wide">Generate My Jump in AI</span>
                                 </div>
                               )}
                             </div>
