@@ -148,9 +148,22 @@ export default function ToolsPrompts() {
     }
   };
 
-  const handleToolPromptClick = (toolPrompt: UserToolPrompt) => {
-    setSelectedToolPrompt(toolPrompt);
-    setIsModalOpen(true);
+  const handleToolPromptClick = async (toolPrompt: UserToolPrompt) => {
+    try {
+      // Fetch the complete tool prompt data including prompt_text, prompt_instructions, and content
+      const { data: fullPrompt, error } = await supabase
+        .from('user_tool_prompts')
+        .select('*')
+        .eq('id', toolPrompt.id)
+        .single();
+
+      if (error) throw error;
+      
+      setSelectedToolPrompt(fullPrompt);
+      setIsModalOpen(true);
+    } catch (error) {
+      console.error('Error loading full prompt details:', error);
+    }
   };
 
   if (loading) {
