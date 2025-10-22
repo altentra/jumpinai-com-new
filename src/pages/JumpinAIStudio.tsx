@@ -98,15 +98,21 @@ const JumpinAIStudio = () => {
     }
   }, [result]);
 
-  // Auto-adjust textarea heights when content changes
+  // Auto-adjust textarea heights when content changes - keep both equal
   useEffect(() => {
-    if (goalsTextareaRef.current) {
+    if (goalsTextareaRef.current && challengesTextareaRef.current) {
+      // Reset heights to calculate scroll height properly
       goalsTextareaRef.current.style.height = 'auto';
-      goalsTextareaRef.current.style.height = goalsTextareaRef.current.scrollHeight + 'px';
-    }
-    if (challengesTextareaRef.current) {
       challengesTextareaRef.current.style.height = 'auto';
-      challengesTextareaRef.current.style.height = challengesTextareaRef.current.scrollHeight + 'px';
+      
+      // Get the maximum height needed
+      const goalsHeight = goalsTextareaRef.current.scrollHeight;
+      const challengesHeight = challengesTextareaRef.current.scrollHeight;
+      const maxHeight = Math.max(goalsHeight, challengesHeight);
+      
+      // Set both to the same height
+      goalsTextareaRef.current.style.height = maxHeight + 'px';
+      challengesTextareaRef.current.style.height = maxHeight + 'px';
     }
   }, [formData.goals, formData.challenges]);
 
