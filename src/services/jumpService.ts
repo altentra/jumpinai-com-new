@@ -83,6 +83,34 @@ export const getUserJumps = async (): Promise<UserJump[]> => {
   return data || [];
 };
 
+// Get jumps with minimal fields for list view (optimized for performance)
+export const getUserJumpsLight = async (limit?: number): Promise<Pick<UserJump, 'id' | 'title' | 'summary' | 'created_at' | 'jump_type' | 'status' | 'completion_percentage'>[]> => {
+  const { data: { user } } = await supabase.auth.getUser();
+  
+  if (!user) {
+    return [];
+  }
+
+  let query = supabase
+    .from('user_jumps')
+    .select('id, title, summary, created_at, jump_type, status, completion_percentage')
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: false });
+
+  if (limit) {
+    query = query.limit(limit);
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
+    console.error('Error fetching user jumps (light):', error);
+    throw error;
+  }
+
+  return data || [];
+};
+
 // Get a specific jump by ID
 export const getJumpById = async (jumpId: string): Promise<UserJump | null> => {
   const { data, error } = await supabase

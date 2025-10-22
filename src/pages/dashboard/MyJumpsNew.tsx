@@ -2,24 +2,35 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Rocket, Plus, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { getUserJumps, deleteJump, UserJump } from "@/services/jumpService";
+import { getUserJumpsLight, deleteJump } from "@/services/jumpService";
 import { useOptimizedAuth } from "@/hooks/useOptimizedAuth";
 import JumpCard from "@/components/dashboard/JumpCard";
 import { toast } from 'sonner';
 import { Link } from 'react-router-dom';
 
+type LightJump = {
+  id: string;
+  title: string;
+  summary: string | null;
+  created_at: string;
+  jump_type?: string;
+  status?: string;
+  completion_percentage?: number;
+};
+
 export default function MyJumpsNew() {
-  const [jumps, setJumps] = useState<UserJump[]>([]);
+  const [jumps, setJumps] = useState<LightJump[]>([]);
   const [loading, setLoading] = useState(true);
+  const [displayLimit, setDisplayLimit] = useState(20);
   const { isAuthenticated, isLoading: authLoading } = useOptimizedAuth();
 
-  // Load user jumps
+  // Load user jumps with optimized query (only essential fields)
   const loadJumps = async () => {
     if (!isAuthenticated || authLoading) return;
     
     try {
       setLoading(true);
-      const userJumps = await getUserJumps();
+      const userJumps = await getUserJumpsLight();
       setJumps(userJumps);
     } catch (error) {
       console.error('Error loading jumps:', error);
@@ -33,18 +44,7 @@ export default function MyJumpsNew() {
     loadJumps();
   }, [isAuthenticated, authLoading]);
 
-  // Add visibility change listener to refresh data when user returns to tab
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (!document.hidden && !loading && isAuthenticated) {
-        loadJumps();
-      }
-    };
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
-  }, [loading, isAuthenticated]);
-
-  const handleViewJump = (jump: UserJump) => {
+  const handleViewJump = (jump: LightJump) => {
     // Navigation is now handled in JumpCard component
   };
 
@@ -62,6 +62,13 @@ export default function MyJumpsNew() {
       toast.error('Failed to delete jump');
     }
   };
+
+  const handleLoadMore = () => {
+    setDisplayLimit(prev => prev + 20);
+  };
+
+  const displayedJumps = jumps.slice(0, displayLimit);
+  const hasMore = displayLimit < jumps.length;
 
   if (authLoading || loading) {
     return (
@@ -154,27 +161,41 @@ export default function MyJumpsNew() {
 
       {/* Jumps Grid - Mobile Optimized */}
       {jumps.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 px-2 sm:px-0">
-          {jumps.map((jump, index) => {
-            // Calculate jump number (oldest = #1, newest = highest)
-            const jumpNumber = jumps.length - index;
-            
-            return (
-              <div 
-                key={jump.id}
-                className="animate-fade-in-up"
-                style={{ animationDelay: `${index * 100}ms` }}
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 px-2 sm:px-0">
+            {displayedJumps.map((jump, index) => {
+              // Calculate jump number (oldest = #1, newest = highest)
+              const jumpNumber = jumps.length - index;
+              
+              return (
+                <div 
+                  key={jump.id}
+                  className="animate-fade-in-up"
+                  style={{ animationDelay: `${Math.min(index, 20) * 50}ms` }}
+                >
+                  <JumpCard
+                    jump={jump as any}
+                    jumpNumber={jumpNumber}
+                    onView={handleViewJump}
+                    onDelete={handleDeleteJump}
+                  />
+                </div>
+              );
+            })}
+          </div>
+          
+          {hasMore && (
+            <div className="flex justify-center pt-4">
+              <Button
+                variant="outline"
+                onClick={handleLoadMore}
+                className="rounded-2xl border-0 ring-1 ring-white/20 bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-all duration-300"
               >
-                <JumpCard
-                  jump={jump}
-                  jumpNumber={jumpNumber}
-                  onView={handleViewJump}
-                  onDelete={handleDeleteJump}
-                />
-              </div>
-            );
-          })}
-        </div>
+                Load More ({jumps.length - displayLimit} remaining)
+              </Button>
+            </div>
+          )}
+        </>
       ) : (
         <Card className="glass border-0 ring-1 ring-white/10 rounded-3xl shadow-2xl backdrop-blur-2xl bg-gradient-to-br from-background/80 via-card/60 to-primary/5 relative overflow-hidden">
           {/* Subtle background pattern */}

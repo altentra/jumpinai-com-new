@@ -48,10 +48,10 @@ export default function ToolsPrompts() {
       setLoading(true);
       console.log('📥 Loading data for user:', user.id);
 
-      // Fetch all tool prompts for this user
+      // Fetch tool prompts with optimized query (no large content field)
       const { data: toolPrompts, error: promptsError } = await supabase
         .from('user_tool_prompts')
-        .select('*')
+        .select('id, jump_id, title, description, tool_name, category, difficulty_level, setup_time, cost_estimate, tool_url, created_at')
         .eq('user_id', user.id)
         .order('created_at', { ascending: true });
 
@@ -69,10 +69,10 @@ export default function ToolsPrompts() {
       const uniqueJumpIds = [...new Set(toolPrompts.map(tp => tp.jump_id).filter(Boolean))];
       console.log('🎯 Unique jump IDs:', uniqueJumpIds.length);
 
-      // Fetch all jumps at once
+      // Fetch jumps with only needed fields (no full_content or plans)
       const { data: jumps, error: jumpsError } = await supabase
         .from('user_jumps')
-        .select('*')
+        .select('id, title, created_at')
         .eq('user_id', user.id)
         .in('id', uniqueJumpIds)
         .order('created_at', { ascending: false });
@@ -83,12 +83,18 @@ export default function ToolsPrompts() {
 
       // Group prompts by jump
       const grouped: JumpWithPrompts[] = (jumps || []).map(jump => ({
-        jump,
-        prompts: toolPrompts.filter(tp => tp.jump_id === jump.id)
+        jump: jump as any,
+        prompts: toolPrompts as any
       })).filter(group => group.prompts.length > 0);
 
-      console.log('✅ Created groups:', grouped.length);
-      setJumpsWithPrompts(grouped);
+      // Filter prompts for each jump
+      const finalGrouped = grouped.map(group => ({
+        ...group,
+        prompts: toolPrompts.filter(tp => tp.jump_id === group.jump.id) as any
+      })).filter(group => group.prompts.length > 0);
+
+      console.log('✅ Created groups:', finalGrouped.length);
+      setJumpsWithPrompts(finalGrouped);
       
     } catch (error) {
       console.error('❌ Error loading data:', error);

@@ -37,6 +37,22 @@ export const toolPromptsService = {
     return data || [];
   },
 
+  // Optimized version that only fetches essential fields (no large content JSONB)
+  async getUserToolPromptsLight(userId: string): Promise<Pick<UserToolPrompt, 'id' | 'jump_id' | 'title' | 'description' | 'tool_name' | 'category' | 'difficulty_level' | 'setup_time' | 'cost_estimate' | 'created_at'>[]> {
+    const { data, error } = await supabase
+      .from('user_tool_prompts')
+      .select('id, jump_id, title, description, tool_name, category, difficulty_level, setup_time, cost_estimate, created_at')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: true });
+
+    if (error) {
+      console.error('❌ Error fetching user tool-prompts (light):', error);
+      throw error;
+    }
+
+    return data || [];
+  },
+
   async getToolPromptsByJumpId(jumpId: string): Promise<UserToolPrompt[]> {
     const { data, error } = await supabase
       .from('user_tool_prompts')
