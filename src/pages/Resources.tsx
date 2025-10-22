@@ -2099,7 +2099,7 @@ export default function Resources() {
       
       <Navigation />
       
-      <main className="min-h-screen bg-gradient-to-br from-background/95 via-background to-primary/5 dark:bg-gradient-to-br dark:from-black dark:via-gray-950/90 dark:to-gray-900/60 pt-20">
+      <main className="min-h-screen bg-gradient-to-br from-background/95 via-background to-primary/5 dark:bg-gradient-to-br dark:from-gray-950/90 dark:via-gray-900/70 dark:to-gray-950/80 pt-20">
         {/* Enhanced floating background elements */}
         <div className="fixed inset-0 overflow-hidden pointer-events-none">
           <div className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-primary/20 to-primary/5 dark:bg-gradient-to-br dark:from-gray-800/30 dark:to-gray-700/15 rounded-full blur-3xl"></div>
@@ -2110,9 +2110,11 @@ export default function Resources() {
         </div>
         <div className="max-w-7xl mx-auto px-4 py-12">
           {/* Header */}
-          <div className="text-center mb-8 glass rounded-2xl border border-white/10 p-6 shadow-modern">
-            <h1 className="text-3xl font-bold mb-3">AI Resources</h1>
-            <p className="text-base text-muted-foreground max-w-2xl mx-auto">
+          <div className="text-center mb-8 space-y-6">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold mb-2 bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent leading-tight tracking-tight">
+              AI Resources
+            </h1>
+            <p className="text-base sm:text-lg md:text-xl text-muted-foreground/90 mb-8 sm:mb-12 max-w-4xl mx-auto leading-relaxed font-light">
               Your complete toolkit for AI-powered productivity. Discover curated tools, proven prompts, and strategic frameworks across all creative and business domains.
             </p>
           </div>
