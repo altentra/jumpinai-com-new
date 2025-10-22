@@ -295,9 +295,9 @@ const PricingNew = () => {
                     )}
                     
                     <CardHeader className="text-center pb-4">
-                      <CardTitle className="text-lg font-semibold">{pkg.name}</CardTitle>
+                      <CardTitle className="text-lg font-semibold min-h-[3rem] flex items-center justify-center">{pkg.name}</CardTitle>
                       <div className="mt-3">
-                        <div className="text-xl sm:text-2xl md:text-3xl font-bold gradient-text-primary mb-1">
+                        <div className="text-lg sm:text-xl font-bold gradient-text-primary mb-1">
                           {pkg.credits} credits
                         </div>
                         <div className="text-base font-medium text-muted-foreground">
@@ -349,9 +349,9 @@ const PricingNew = () => {
                     )}
                     
                     <CardHeader className="text-center pb-4">
-                      <CardTitle className="text-lg font-semibold">{pkg.name}</CardTitle>
+                      <CardTitle className="text-lg font-semibold min-h-[3rem] flex items-center justify-center">{pkg.name}</CardTitle>
                       <div className="mt-3">
-                        <div className="text-xl sm:text-2xl md:text-3xl font-bold gradient-text-primary mb-1">
+                        <div className="text-lg sm:text-xl font-bold gradient-text-primary mb-1">
                           {pkg.credits} credits
                         </div>
                         <div className="text-base font-medium text-muted-foreground">
@@ -404,9 +404,9 @@ const PricingNew = () => {
                       )}
                       
                       <CardHeader className="text-center pb-4">
-                        <CardTitle className="text-lg font-semibold">{pkg.name}</CardTitle>
+                        <CardTitle className="text-lg font-semibold min-h-[3rem] flex items-center justify-center">{pkg.name}</CardTitle>
                         <div className="mt-3">
-                          <div className="text-3xl font-bold gradient-text-primary mb-1">
+                          <div className="text-lg sm:text-xl font-bold gradient-text-primary mb-1">
                             {pkg.credits} credits
                           </div>
                           <div className="text-base font-medium text-muted-foreground">
