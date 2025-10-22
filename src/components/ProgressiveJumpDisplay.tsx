@@ -507,33 +507,57 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
             // Get phases array - handle different possible structures
             let phases = null;
             try {
+              console.log('🔍 Examining structured_plan:', {
+                type: typeof result.structured_plan,
+                isArray: Array.isArray(result.structured_plan),
+                keys: result.structured_plan ? Object.keys(result.structured_plan) : 'null',
+                hasPhases: result.structured_plan?.phases ? 'yes' : 'no',
+                hasImplementationPlan: result.structured_plan?.implementationPlan ? 'yes' : 'no'
+              });
+
               // Try direct access first
-              if (Array.isArray(result.structured_plan.phases)) {
+              if (Array.isArray(result.structured_plan?.phases)) {
                 phases = result.structured_plan.phases;
+                console.log('✅ Found phases via direct access');
               } 
               // Try if structured_plan itself is the phases array
               else if (Array.isArray(result.structured_plan)) {
                 phases = result.structured_plan;
+                console.log('✅ structured_plan itself is phases array');
               }
               // Try if it's wrapped in implementationPlan
-              else if (result.structured_plan.implementationPlan?.phases) {
+              else if (result.structured_plan?.implementationPlan?.phases) {
                 phases = result.structured_plan.implementationPlan.phases;
+                console.log('✅ Found phases via implementationPlan wrapper');
+              }
+              // Try if the data structure has a phases key anywhere
+              else if (result.structured_plan && typeof result.structured_plan === 'object') {
+                // Check all keys for phases
+                for (const key in result.structured_plan) {
+                  if (Array.isArray(result.structured_plan[key]?.phases)) {
+                    phases = result.structured_plan[key].phases;
+                    console.log(`✅ Found phases via ${key}.phases`);
+                    break;
+                  }
+                }
               }
               
-              console.log('📋 Found phases array:', phases?.length || 0, 'phases');
+              console.log('📋 Extracted phases:', phases?.length || 0, 'phases');
             } catch (error) {
               console.error('❌ Error extracting phases:', error);
+              console.error('structured_plan value:', result.structured_plan);
             }
 
             // Validate phases
             if (!phases || !Array.isArray(phases) || phases.length === 0) {
               console.warn('⚠️ No valid phases found in structured_plan');
+              console.warn('Full structured_plan object:', JSON.stringify(result.structured_plan, null, 2));
               return (
                 <div className="flex items-center justify-center h-32 text-muted-foreground">
                   <div className="text-center">
                     <AlertTriangle className="w-8 h-8 mx-auto mb-2 text-amber-500" />
                     <p>Plan data structure mismatch</p>
-                    <p className="text-xs mt-1">Check console for details</p>
+                    <p className="text-xs mt-1">Check console for detailed structure</p>
                   </div>
                 </div>
               );
