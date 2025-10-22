@@ -138,7 +138,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
         <div className="relative mb-8">
           {/* Mobile: Horizontal scroll container */}
           <div className="sm:hidden overflow-x-auto scrollbar-hide pb-4">
-            <TabsList className="inline-flex w-max min-w-full gap-2 p-3 bg-gradient-to-r from-background/80 via-background/70 to-background/80 backdrop-blur-xl rounded-2xl border border-border/50 shadow-lg shadow-primary/5">
+            <TabsList className="inline-flex h-auto w-max min-w-full gap-2 p-3 bg-gradient-to-r from-background/80 via-background/70 to-background/80 backdrop-blur-xl rounded-2xl border border-border/50 shadow-lg shadow-primary/5">
               <TabsTrigger 
                 value="overview" 
                 className="relative flex items-center gap-2 text-sm font-semibold whitespace-nowrap px-5 py-3 
@@ -179,7 +179,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
           </div>
           
           {/* Desktop: Grid layout with premium effects */}
-          <TabsList className="hidden sm:grid w-full grid-cols-3 gap-2 p-3 bg-gradient-to-r from-background/80 via-background/70 to-background/80 backdrop-blur-xl rounded-2xl border border-border/50 shadow-lg shadow-primary/5">
+          <TabsList className="hidden sm:grid h-auto w-full grid-cols-3 gap-2 p-3 bg-gradient-to-r from-background/80 via-background/70 to-background/80 backdrop-blur-xl rounded-2xl border border-border/50 shadow-lg shadow-primary/5">
             <TabsTrigger 
               value="overview" 
               className="relative flex items-center justify-center gap-2.5 text-base font-semibold px-6 py-4
