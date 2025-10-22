@@ -14,6 +14,7 @@ import Subscription from "./dashboard/Subscription";
 export default function Dashboard() {
   const navigate = useNavigate();
   const [userName, setUserName] = useState<string>("");
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const { isAuthenticated, isLoading, user, login } = useAuth();
 
   useEffect(() => {
@@ -26,6 +27,17 @@ export default function Dashboard() {
     }
   }, [isAuthenticated, isLoading, user, login]);
 
+  // Set sidebar state based on screen size
+  useEffect(() => {
+    const handleResize = () => {
+      setSidebarOpen(window.innerWidth >= 768); // open on md and above
+    };
+    
+    handleResize(); // Set initial state
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <>
       <Helmet>
@@ -35,7 +47,7 @@ export default function Dashboard() {
       </Helmet>
       <Navigation />
 
-      <SidebarProvider defaultOpen={false}>
+      <SidebarProvider defaultOpen={sidebarOpen}>
         <div className="min-h-screen flex w-full pt-20 bg-gradient-to-br from-background via-background/90 to-primary/5 dark:bg-gradient-to-br dark:from-black dark:via-gray-950/90 dark:to-gray-900/60 relative overflow-x-hidden">
           {/* Enhanced floating background elements */}
           <div className="fixed inset-0 overflow-hidden pointer-events-none">
