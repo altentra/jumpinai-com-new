@@ -366,7 +366,7 @@ const JumpinAIStudio = () => {
                       <div className="grid md:grid-cols-2 gap-5">
                         <div className="group">
                           <label className="block text-sm font-medium text-foreground/90 mb-3 transition-colors duration-300 group-focus-within:text-primary">
-                            What are you after? *
+                            What are you working toward? *
                           </label>
                           <div className="relative">
                             <textarea
@@ -380,7 +380,7 @@ const JumpinAIStudio = () => {
                         
                         <div className="group">
                           <label className="block text-sm font-medium text-foreground/90 mb-3 transition-colors duration-300 group-focus-within:text-primary">
-                            What prevents you? *
+                            What's keeping you from getting there?
                           </label>
                           <div className="relative">
                             <textarea
