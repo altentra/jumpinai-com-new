@@ -35,8 +35,8 @@ export default function Dashboard() {
       </Helmet>
       <Navigation />
 
-      <SidebarProvider defaultOpen={true}>
-        <div className="min-h-screen flex w-full pt-20 bg-gradient-to-br from-background via-background/90 to-primary/5 dark:bg-gradient-to-br dark:from-black dark:via-gray-950/90 dark:to-gray-900/60 relative">
+      <SidebarProvider defaultOpen={false}>
+        <div className="min-h-screen flex w-full pt-20 bg-gradient-to-br from-background via-background/90 to-primary/5 dark:bg-gradient-to-br dark:from-black dark:via-gray-950/90 dark:to-gray-900/60 relative overflow-x-hidden">
           {/* Enhanced floating background elements */}
           <div className="fixed inset-0 overflow-hidden pointer-events-none">
             <div className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-primary/20 to-primary/5 dark:bg-gradient-to-br dark:from-gray-800/30 dark:to-gray-700/15 rounded-full blur-3xl"></div>
@@ -47,15 +47,15 @@ export default function Dashboard() {
           </div>
           <AppSidebar />
 
-          <main className="flex-1 relative z-10">
-            <header className="h-12 flex items-center justify-between border-b px-3">
-              <div className="flex items-center">
-                <SidebarTrigger className="mr-2 hover:bg-muted/50 transition-colors rounded-md p-1" />
-                <h1 className="text-base font-medium">My Dashboard</h1>
+          <main className="flex-1 relative z-10 w-full max-w-full overflow-x-hidden">
+            <header className="h-12 flex items-center justify-between border-b px-3 sm:px-4">
+              <div className="flex items-center min-w-0">
+                <SidebarTrigger className="mr-2 hover:bg-muted/50 transition-colors rounded-md p-1 shrink-0" />
+                <h1 className="text-sm sm:text-base font-medium truncate">My Dashboard</h1>
               </div>
             </header>
 
-            <div className="p-4 md:p-6">
+            <div className="p-3 sm:p-4 md:p-6 max-w-full overflow-x-hidden">
               <Routes>
                 <Route index element={<DashboardHome />} />
                 <Route path="jumps" element={<MyJumpsNew />} />
@@ -69,8 +69,8 @@ export default function Dashboard() {
         </div>
       </SidebarProvider>
 
-      <div className="h-12 border-t bg-background flex items-center justify-center text-sm text-muted-foreground">
-        © 2025 JumpinAI, LLC. All rights reserved.
+      <div className="h-12 border-t bg-background flex items-center justify-center text-xs sm:text-sm text-muted-foreground px-4">
+        <span className="text-center">© 2025 JumpinAI, LLC. All rights reserved.</span>
       </div>
     </>
   );
