@@ -132,19 +132,19 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                 );
               
               return (
-                <div className="mb-4 inline-flex flex-col glass backdrop-blur-md bg-muted/30 dark:bg-muted/20 rounded-lg border border-border/40 p-3">
-                  <div className="text-xs font-semibold mb-2 text-muted-foreground flex items-center gap-2">
-                    <Zap className="w-3.5 h-3.5 text-primary" />
+                <div className="mb-4 glass backdrop-blur-md bg-muted/30 dark:bg-muted/20 rounded-lg border border-border/40 p-4">
+                  <div className="text-sm font-semibold mb-3 text-muted-foreground flex items-center gap-2">
+                    <Zap className="w-4 h-4 text-primary" />
                     Generation Performance
                   </div>
-                  <div className="flex gap-3 text-xs">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     {displaySteps.map((step, index) => (
                       <div 
                         key={step.label}
-                        className="text-center px-3 py-2 glass backdrop-blur-sm bg-background/50 dark:bg-background/30 rounded border border-border/30"
+                        className="text-center p-3 glass backdrop-blur-sm bg-background/50 dark:bg-background/30 rounded-lg border border-border/30"
                       >
-                        <div className="font-semibold text-foreground">{step.label}</div>
-                        <div className="text-primary font-bold text-sm">{step.time}s</div>
+                        <div className="font-medium text-sm text-foreground/90 mb-1">{step.label}</div>
+                        <div className="text-primary font-semibold text-base">{step.time}s</div>
                       </div>
                     ))}
                   </div>
