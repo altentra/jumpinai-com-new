@@ -7,6 +7,7 @@ export type ProcessingStatus = {
   progress: number;
   currentTask: string;
   isComplete: boolean;
+  currentStep?: string; // Track which step is currently generating: 'naming', 'overview', 'plan', 'tool_prompts'
 };
 
 export type ProgressiveResult = {
@@ -190,8 +191,9 @@ export const useProgressiveGeneration = () => {
         processing_status: {
           stage: 'Generating',
           progress: 5,
-          currentTask: 'AI is analyzing your requirements...',
-          isComplete: false
+          currentTask: 'Generating Jump Name...',
+          isComplete: false,
+          currentStep: 'naming'
         },
         stepTimes: {}
       };
@@ -216,7 +218,7 @@ export const useProgressiveGeneration = () => {
           
           // Update progressive result with new data
           if (type === 'naming') {
-            // STEP 1: Name only (5% - should be fast!)
+            // STEP 1: Name complete - show it and start overview
             console.log('Processing naming step data:', stepData);
             jumpName = stepData.jumpName || 'AI Transformation Journey';
             
@@ -227,8 +229,9 @@ export const useProgressiveGeneration = () => {
             progressiveResult.processing_status = {
               stage: 'Generating',
               progress: 10,
-              currentTask: `${stepNames.naming} (${stepDuration}s)`,
-              isComplete: false
+              currentTask: `Name has been generated (${stepDuration}s). Generating Overview...`,
+              isComplete: false,
+              currentStep: 'overview'
             };
             progressiveResult.stepTimes = { naming: stepDuration };
             setProcessingStatus(progressiveResult.processing_status);
@@ -246,7 +249,7 @@ export const useProgressiveGeneration = () => {
             setResult({ ...progressiveResult });
             
                 } else if (type === 'overview') {
-            // STEP 2: Overview (19%) - Build comprehensive markdown from ALL sections
+            // STEP 2: Overview complete - show it and start plan
             console.log('Processing overview step data:', stepData);
             
             progressiveResult.comprehensive_plan = stepData;
@@ -285,15 +288,16 @@ export const useProgressiveGeneration = () => {
             progressiveResult.processing_status = {
               stage: 'Generating',
               progress: 30,
-              currentTask: `${stepNames.overview} (${stepDuration}s)`,
-              isComplete: false
+              currentTask: `Overview has been generated (${stepDuration}s). Generating Plan...`,
+              isComplete: false,
+              currentStep: 'plan'
             };
             progressiveResult.stepTimes = { ...progressiveResult.stepTimes, overview: stepDuration };
             setProcessingStatus(progressiveResult.processing_status);
             setResult({ ...progressiveResult });
             
           } else if (type === 'comprehensive' || type === 'plan') {
-            // STEP 3: Strategic Action Plan (60%)
+            // STEP 3: Plan complete - show it and start tools
             console.log('📋 Received strategic action plan:', stepData);
             // Store the plan data directly (no implementationPlan wrapper)
             progressiveResult.structured_plan = stepData;
@@ -302,15 +306,16 @@ export const useProgressiveGeneration = () => {
             progressiveResult.processing_status = {
               stage: 'Generating',
               progress: 60,
-              currentTask: `Building Strategic Plan (${stepDuration}s)`,
-              isComplete: false
+              currentTask: `Plan has been generated (${stepDuration}s). Generating Tools & Prompts...`,
+              isComplete: false,
+              currentStep: 'tool_prompts'
             };
             progressiveResult.stepTimes = { ...progressiveResult.stepTimes, comprehensive: stepDuration };
             setProcessingStatus(progressiveResult.processing_status);
             setResult({ ...progressiveResult });
             
           } else if (type === 'tool_prompts' || type === 'tools') {
-            // STEP 4: Tools & Prompts (52%)
+            // STEP 4: Tools & Prompts complete
             console.log('Processing tool-prompts step data:', stepData);
             progressiveResult.components.toolPrompts = stepData.tool_prompts || stepData.tools || [];
             
@@ -318,8 +323,9 @@ export const useProgressiveGeneration = () => {
             progressiveResult.processing_status = {
               stage: 'Generating',
               progress,
-              currentTask: `Generating Tools & Prompts (${stepDuration}s)`,
-              isComplete: false
+              currentTask: `Tools & Prompts have been generated (${stepDuration}s). Finalizing...`,
+              isComplete: false,
+              currentStep: 'complete'
             };
             progressiveResult.stepTimes = { ...progressiveResult.stepTimes, tool_prompts: stepDuration };
             setProcessingStatus(progressiveResult.processing_status);
@@ -360,8 +366,9 @@ export const useProgressiveGeneration = () => {
         processing_status: {
           stage: 'Complete',
           progress: 100,
-          currentTask: `Jump generation complete! Total: ${totalTime}s`,
-          isComplete: true
+          currentTask: `Jump has been created (${totalTime}s)`,
+          isComplete: true,
+          currentStep: 'complete'
         },
         stepTimes: stepTimes
       };

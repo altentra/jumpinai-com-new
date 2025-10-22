@@ -47,9 +47,31 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const getStatusIcon = (isComplete: boolean, hasContent: boolean) => {
-    if (isComplete && hasContent) return <CheckCircle className="w-4 h-4 text-green-500" />;
-    if (hasContent) return <Loader2 className="w-4 h-4 text-blue-500 animate-spin" />;
+  const getStatusIcon = (stepName: string, hasContent: boolean) => {
+    const currentStep = result.processing_status?.currentStep;
+    const isComplete = result.processing_status?.isComplete;
+    
+    // Determine if this step is complete
+    const stepOrder = ['naming', 'overview', 'plan', 'tool_prompts', 'complete'];
+    const currentStepIndex = currentStep ? stepOrder.indexOf(currentStep) : -1;
+    const thisStepIndex = stepOrder.indexOf(stepName);
+    
+    // If generation is complete, all steps get checkmark
+    if (isComplete && hasContent) {
+      return <CheckCircle className="w-4 h-4 text-green-500" />;
+    }
+    
+    // If current step is past this step and we have content, it's complete
+    if (currentStepIndex > thisStepIndex && hasContent) {
+      return <CheckCircle className="w-4 h-4 text-green-500" />;
+    }
+    
+    // If this is the current step, show spinning
+    if (currentStep === stepName) {
+      return <Loader2 className="w-4 h-4 text-blue-500 animate-spin" />;
+    }
+    
+    // Otherwise, waiting
     return <Clock className="w-4 h-4 text-gray-400" />;
   };
 
@@ -178,7 +200,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                   text-muted-foreground hover:text-foreground hover:bg-accent/50
                   transition-all duration-300 rounded-xl hover:scale-[1.02]"
               >
-                {getStatusIcon(result.processing_status?.isComplete || false, !!result.full_content)}
+                {getStatusIcon('overview', !!result.full_content)}
                 <span className="tracking-wide">Overview</span>
               </TabsTrigger>
               <TabsTrigger 
@@ -190,7 +212,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                   text-muted-foreground hover:text-foreground hover:bg-accent/50
                   transition-all duration-300 rounded-xl hover:scale-[1.02]"
               >
-                {getStatusIcon(result.processing_status?.isComplete || false, !!result.structured_plan)}
+                {getStatusIcon('plan', !!result.structured_plan)}
                 <span className="tracking-wide">Plan</span>
               </TabsTrigger>
               <TabsTrigger 
@@ -202,7 +224,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                   text-muted-foreground hover:text-foreground hover:bg-accent/50
                   transition-all duration-300 rounded-xl hover:scale-[1.02]"
               >
-                {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.toolPrompts?.length || 0) > 0)}
+                {getStatusIcon('tool_prompts', (result.components?.toolPrompts?.length || 0) > 0)}
                 <span className="tracking-wide">Tools & Prompts ({result.components?.toolPrompts?.length || 0}/6)</span>
               </TabsTrigger>
             </TabsList>
@@ -220,7 +242,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                 transition-all duration-300 rounded-xl hover:scale-[1.02] group"
             >
               <span className="transition-transform duration-300 group-hover:scale-110">
-                {getStatusIcon(result.processing_status?.isComplete || false, !!result.full_content)}
+                {getStatusIcon('overview', !!result.full_content)}
               </span>
               <span className="tracking-wide">Overview</span>
             </TabsTrigger>
@@ -234,7 +256,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                 transition-all duration-300 rounded-xl hover:scale-[1.02] group"
             >
               <span className="transition-transform duration-300 group-hover:scale-110">
-                {getStatusIcon(result.processing_status?.isComplete || false, !!result.structured_plan)}
+                {getStatusIcon('plan', !!result.structured_plan)}
               </span>
               <span className="tracking-wide">Plan</span>
             </TabsTrigger>
@@ -248,7 +270,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                 transition-all duration-300 rounded-xl hover:scale-[1.02] group"
             >
               <span className="transition-transform duration-300 group-hover:scale-110">
-                {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.toolPrompts?.length || 0) > 0)}
+                {getStatusIcon('tool_prompts', (result.components?.toolPrompts?.length || 0) > 0)}
               </span>
               <span className="tracking-wide">Tools & Prompts ({result.components?.toolPrompts?.length || 0}/6)</span>
             </TabsTrigger>
