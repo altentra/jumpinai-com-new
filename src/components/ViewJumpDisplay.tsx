@@ -547,8 +547,13 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
                 hasImplementationPlan: result.structured_plan?.implementationPlan ? 'yes' : 'no'
               });
 
-              // Try direct access first
-              if (Array.isArray(result.structured_plan?.phases)) {
+              // Try action_plan.phases first (most common structure)
+              if (Array.isArray(result.structured_plan?.action_plan?.phases)) {
+                phases = result.structured_plan.action_plan.phases;
+                console.log('✅ Found phases via action_plan.phases');
+              }
+              // Try direct access
+              else if (Array.isArray(result.structured_plan?.phases)) {
                 phases = result.structured_plan.phases;
                 console.log('✅ Found phases via direct access');
               } 
