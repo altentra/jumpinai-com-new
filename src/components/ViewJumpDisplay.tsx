@@ -20,26 +20,6 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
   result, 
   generationTimer 
 }) => {
-  const [copiedPrompts, setCopiedPrompts] = React.useState<Set<number>>(new Set());
-
-  const handleCopyPrompt = async (promptText: string, index: number) => {
-    try {
-      await navigator.clipboard.writeText(promptText);
-      setCopiedPrompts(prev => new Set([...prev, index]));
-      toast.success("Prompt copied to clipboard!");
-      
-      // Reset the copied state after 2 seconds
-      setTimeout(() => {
-        setCopiedPrompts(prev => {
-          const newSet = new Set(prev);
-          newSet.delete(index);
-          return newSet;
-        });
-      }, 2000);
-    } catch (error) {
-      toast.error("Failed to copy prompt");
-    }
-  };
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -808,10 +788,7 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
                 {result.components.toolPrompts.map((toolPrompt: any, index: number) => (
                   <ToolPromptComboCard
                     key={index}
-                    toolPrompt={toolPrompt}
-                    index={index}
-                    onCopyPrompt={handleCopyPrompt}
-                    isCopied={copiedPrompts.has(index)}
+                    combo={toolPrompt}
                   />
                 ))}
               </div>
