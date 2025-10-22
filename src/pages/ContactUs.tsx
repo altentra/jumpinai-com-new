@@ -87,24 +87,17 @@ const ContactUs = () => {
       <Navigation />
       
       {/* Premium Hero Section - Glass Morphism */}
-      <section className="pt-28 pb-16 px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="max-w-5xl mx-auto">
-          <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-3xl p-6 md:p-12 shadow-2xl shadow-primary/10 hover:shadow-3xl hover:shadow-primary/15 transition-all duration-500">
-            <div className="text-center max-w-3xl mx-auto">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold mb-2 bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent leading-tight tracking-tight animate-fade-in-up">
+      <section className="pt-32 pb-12 px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12 sm:mb-20 animate-fade-in-up">
+            <div className="space-y-6">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold mb-2 bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent leading-tight tracking-tight px-4 sm:px-0">
                 Let's Start a Conversation
               </h1>
               
-              <p className="text-base sm:text-lg md:text-xl text-muted-foreground/90 mb-8 sm:mb-12 max-w-4xl mx-auto leading-relaxed font-light animate-fade-in-up animate-delay-100">
+              <p className="text-base sm:text-lg md:text-xl text-muted-foreground/90 mb-8 sm:mb-12 max-w-4xl mx-auto leading-relaxed font-light">
                 Ready to transform your business with AI? We're here to guide you through every step of your AI journey.
               </p>
-              
-              <div className="glass backdrop-blur-sm bg-background/20 dark:bg-background/10 border border-primary/20 rounded-2xl p-4 shadow-lg shadow-primary/10 animate-fade-in-up animate-delay-200">
-                <p className="text-base text-muted-foreground">
-                  Whether you need strategic guidance, implementation support, or custom AI solutions, 
-                  our team of AI experts is ready to help you unlock your potential.
-                </p>
-              </div>
             </div>
           </div>
         </div>

@@ -2099,7 +2099,7 @@ export default function Resources() {
       
       <Navigation />
       
-      <main className="min-h-screen bg-gradient-to-br from-background/95 via-background to-primary/5 dark:bg-gradient-to-br dark:from-gray-950/90 dark:via-gray-900/70 dark:to-gray-950/80 pt-20">
+      <main className="min-h-screen bg-gradient-to-br from-background/95 via-background to-primary/5 dark:bg-gradient-to-br dark:from-gray-950/90 dark:via-gray-900/70 dark:to-gray-950/80">
         {/* Enhanced floating background elements */}
         <div className="fixed inset-0 overflow-hidden pointer-events-none">
           <div className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-primary/20 to-primary/5 dark:bg-gradient-to-br dark:from-gray-800/30 dark:to-gray-700/15 rounded-full blur-3xl"></div>
@@ -2108,15 +2108,17 @@ export default function Resources() {
           <div className="absolute top-20 right-20 w-32 h-32 bg-gradient-to-br from-primary/10 to-transparent dark:bg-gradient-to-br dark:from-gray-700/20 dark:to-transparent rounded-full blur-xl"></div>
           <div className="absolute bottom-20 left-20 w-40 h-40 bg-gradient-to-tr from-secondary/8 to-transparent dark:bg-gradient-to-tr dark:from-gray-600/15 dark:to-transparent rounded-full blur-xl"></div>
         </div>
-        <div className="max-w-7xl mx-auto px-4 py-12">
+        <div className="max-w-7xl mx-auto px-4 pt-32 pb-12">
           {/* Header */}
-          <div className="text-center mb-8 space-y-6">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold mb-2 bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent leading-tight tracking-tight">
-              AI Resources
-            </h1>
-            <p className="text-base sm:text-lg md:text-xl text-muted-foreground/90 mb-8 sm:mb-12 max-w-4xl mx-auto leading-relaxed font-light">
-              Your complete toolkit for AI-powered productivity. Discover curated tools, proven prompts, and strategic frameworks across all creative and business domains.
-            </p>
+          <div className="text-center mb-12 sm:mb-20 animate-fade-in-up">
+            <div className="space-y-6">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold mb-2 bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent leading-tight tracking-tight px-4 sm:px-0">
+                AI Resources
+              </h1>
+              <p className="text-base sm:text-lg md:text-xl text-muted-foreground/90 mb-8 sm:mb-12 max-w-4xl mx-auto leading-relaxed font-light">
+                Your complete toolkit for AI-powered productivity. Discover curated tools, proven prompts, and strategic frameworks across all creative and business domains.
+              </p>
+            </div>
           </div>
 
           {/* Resource type tabs */}
