@@ -108,19 +108,49 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
             </div>
             
             {/* Enhanced Generation Timing Summary */}
-            {result.processing_status?.isComplete && result.stepTimes && (
-              <div className="mb-4 p-3 glass backdrop-blur-sm bg-background/30 dark:bg-background/20 rounded-xl border border-border/30">
-                <div className="text-xs font-medium mb-2 text-muted-foreground">Generation Performance</div>
-                <div className="grid grid-cols-6 gap-2 text-xs">
-                  {Object.entries(result.stepTimes).map(([step, time]) => (
-                    <div key={step} className="text-center p-2 glass backdrop-blur-sm bg-primary/5 rounded-lg border border-primary/20">
-                      <div className="font-medium text-foreground">Step {step}</div>
-                      <div className="text-primary font-semibold">{time}s</div>
-                    </div>
-                  ))}
+            {result.processing_status?.isComplete && result.stepTimes && (() => {
+              // Map technical step names to user-friendly labels
+              const stepLabels: Record<string, string> = {
+                naming: 'Name',
+                overview: 'Overview',
+                comprehensive: 'Plan',
+                plan: 'Plan',
+                tool_prompts: 'Tools & Prompts',
+                tools: 'Tools & Prompts'
+              };
+              
+              // Transform stepTimes into display format
+              const displaySteps = Object.entries(result.stepTimes)
+                .map(([key, time]) => ({
+                  label: stepLabels[key] || key,
+                  time
+                }))
+                .filter((step, index, self) => 
+                  // Remove duplicates (e.g., if both 'comprehensive' and 'plan' exist)
+                  index === self.findIndex(s => s.label === step.label)
+                );
+              
+              return (
+                <div className="mb-4 p-4 glass backdrop-blur-sm bg-gradient-to-br from-background/40 to-background/20 dark:from-background/30 dark:to-background/10 rounded-xl border border-border/40 shadow-sm">
+                  <div className="text-xs font-semibold mb-3 text-muted-foreground flex items-center gap-2">
+                    <Zap className="w-3.5 h-3.5 text-primary" />
+                    Generation Performance
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                    {displaySteps.map((step, index) => (
+                      <div 
+                        key={step.label}
+                        className="text-center p-3 glass backdrop-blur-sm bg-gradient-to-br from-primary/8 to-primary/4 dark:from-primary/6 dark:to-primary/3 rounded-lg border border-primary/25 hover:border-primary/40 transition-all duration-200 hover:shadow-md hover:shadow-primary/10"
+                        style={{ animationDelay: `${index * 50}ms` }}
+                      >
+                        <div className="font-semibold text-foreground mb-1">{step.label}</div>
+                        <div className="text-primary font-bold text-sm">{step.time}s</div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
+              );
+            })()}
             
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm">
