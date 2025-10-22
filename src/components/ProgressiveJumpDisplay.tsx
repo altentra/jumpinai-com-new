@@ -133,40 +133,94 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
         </div>
       </div>
 
-      {/* Content Tabs - Mobile Optimized with Horizontal Scroll */}
+      {/* Content Tabs - Ultra Premium Design */}
       <Tabs defaultValue="overview" className="w-full">
         <div className="relative">
           {/* Mobile: Horizontal scroll container */}
           <div className="sm:hidden overflow-x-auto scrollbar-hide pb-2">
-            <TabsList className="inline-flex w-max min-w-full gap-2 p-1 bg-background/60 backdrop-blur-sm rounded-2xl border border-border/40 shadow-inner">
-              <TabsTrigger value="overview" className="flex items-center gap-1.5 text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
+            <TabsList className="inline-flex w-max min-w-full gap-2 p-1.5 bg-gradient-to-r from-background/80 via-background/70 to-background/80 backdrop-blur-xl rounded-2xl border border-border/50 shadow-lg shadow-primary/5">
+              <TabsTrigger 
+                value="overview" 
+                className="relative flex items-center gap-2 text-sm font-semibold whitespace-nowrap px-5 py-3 
+                  data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary/20 data-[state=active]:to-primary/10 
+                  data-[state=active]:text-primary data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20
+                  data-[state=active]:border data-[state=active]:border-primary/30
+                  text-muted-foreground hover:text-foreground hover:bg-accent/50
+                  transition-all duration-300 rounded-xl hover:scale-[1.02]"
+              >
                 {getStatusIcon(result.processing_status?.isComplete || false, !!result.full_content)}
-                Overview
+                <span className="tracking-wide">Overview</span>
               </TabsTrigger>
-              <TabsTrigger value="plan" className="flex items-center gap-1.5 text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
+              <TabsTrigger 
+                value="plan" 
+                className="relative flex items-center gap-2 text-sm font-semibold whitespace-nowrap px-5 py-3 
+                  data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary/20 data-[state=active]:to-primary/10 
+                  data-[state=active]:text-primary data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20
+                  data-[state=active]:border data-[state=active]:border-primary/30
+                  text-muted-foreground hover:text-foreground hover:bg-accent/50
+                  transition-all duration-300 rounded-xl hover:scale-[1.02]"
+              >
                 {getStatusIcon(result.processing_status?.isComplete || false, !!result.structured_plan)}
-                Plan
+                <span className="tracking-wide">Plan</span>
               </TabsTrigger>
-              <TabsTrigger value="toolPrompts" className="flex items-center gap-1.5 text-xs whitespace-nowrap px-3 py-2 data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
+              <TabsTrigger 
+                value="toolPrompts" 
+                className="relative flex items-center gap-2 text-sm font-semibold whitespace-nowrap px-5 py-3 
+                  data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary/20 data-[state=active]:to-primary/10 
+                  data-[state=active]:text-primary data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20
+                  data-[state=active]:border data-[state=active]:border-primary/30
+                  text-muted-foreground hover:text-foreground hover:bg-accent/50
+                  transition-all duration-300 rounded-xl hover:scale-[1.02]"
+              >
                 {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.toolPrompts?.length || 0) > 0)}
-                Tools & Prompts ({result.components?.toolPrompts?.length || 0}/6)
+                <span className="tracking-wide">Tools & Prompts ({result.components?.toolPrompts?.length || 0}/6)</span>
               </TabsTrigger>
             </TabsList>
           </div>
           
-          {/* Desktop: Grid layout */}
-          <TabsList className="hidden sm:grid w-full grid-cols-3 p-1 bg-background/60 backdrop-blur-sm rounded-2xl border border-border/40 shadow-inner">
-            <TabsTrigger value="overview" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
-              {getStatusIcon(result.processing_status?.isComplete || false, !!result.full_content)}
-              Overview
+          {/* Desktop: Grid layout with premium effects */}
+          <TabsList className="hidden sm:grid w-full grid-cols-3 gap-2 p-1.5 bg-gradient-to-r from-background/80 via-background/70 to-background/80 backdrop-blur-xl rounded-2xl border border-border/50 shadow-lg shadow-primary/5">
+            <TabsTrigger 
+              value="overview" 
+              className="relative flex items-center justify-center gap-2.5 text-base font-semibold px-6 py-4
+                data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary/20 data-[state=active]:to-primary/10 
+                data-[state=active]:text-primary data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20
+                data-[state=active]:border data-[state=active]:border-primary/30
+                text-muted-foreground hover:text-foreground hover:bg-accent/50
+                transition-all duration-300 rounded-xl hover:scale-[1.02] group"
+            >
+              <span className="transition-transform duration-300 group-hover:scale-110">
+                {getStatusIcon(result.processing_status?.isComplete || false, !!result.full_content)}
+              </span>
+              <span className="tracking-wide">Overview</span>
             </TabsTrigger>
-            <TabsTrigger value="plan" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
-              {getStatusIcon(result.processing_status?.isComplete || false, !!result.structured_plan)}
-              Plan
+            <TabsTrigger 
+              value="plan" 
+              className="relative flex items-center justify-center gap-2.5 text-base font-semibold px-6 py-4
+                data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary/20 data-[state=active]:to-primary/10 
+                data-[state=active]:text-primary data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20
+                data-[state=active]:border data-[state=active]:border-primary/30
+                text-muted-foreground hover:text-foreground hover:bg-accent/50
+                transition-all duration-300 rounded-xl hover:scale-[1.02] group"
+            >
+              <span className="transition-transform duration-300 group-hover:scale-110">
+                {getStatusIcon(result.processing_status?.isComplete || false, !!result.structured_plan)}
+              </span>
+              <span className="tracking-wide">Plan</span>
             </TabsTrigger>
-            <TabsTrigger value="toolPrompts" className="flex items-center gap-2 text-xs data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground transition-all duration-200 rounded-xl">
-              {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.toolPrompts?.length || 0) > 0)}
-              Tools & Prompts ({result.components?.toolPrompts?.length || 0}/6)
+            <TabsTrigger 
+              value="toolPrompts" 
+              className="relative flex items-center justify-center gap-2.5 text-base font-semibold px-6 py-4
+                data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary/20 data-[state=active]:to-primary/10 
+                data-[state=active]:text-primary data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20
+                data-[state=active]:border data-[state=active]:border-primary/30
+                text-muted-foreground hover:text-foreground hover:bg-accent/50
+                transition-all duration-300 rounded-xl hover:scale-[1.02] group"
+            >
+              <span className="transition-transform duration-300 group-hover:scale-110">
+                {getStatusIcon(result.processing_status?.isComplete || false, (result.components?.toolPrompts?.length || 0) > 0)}
+              </span>
+              <span className="tracking-wide">Tools & Prompts ({result.components?.toolPrompts?.length || 0}/6)</span>
             </TabsTrigger>
           </TabsList>
         </div>
