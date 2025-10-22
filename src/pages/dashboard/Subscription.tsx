@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { ExternalLink, RefreshCw, CreditCard, Crown, Zap, Star, Rocket, AlertTriangle, ArrowRight, Sparkles, TrendingUp, TrendingDown, Gift, Calendar, Coins } from "lucide-react";
+import { ExternalLink, RefreshCw, CreditCard, Crown, Zap, Star, Rocket, AlertTriangle, ArrowRight, Sparkles, TrendingUp, TrendingDown, Gift, Calendar, Coins, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -30,6 +30,8 @@ export default function Subscription() {
   const [loadingTransactions, setLoadingTransactions] = useState(true);
   const [packageLoading, setPackageLoading] = useState<Record<string, boolean>>({});
   const [planLoading, setPlanLoading] = useState<Record<string, boolean>>({});
+  const [jumpTitles, setJumpTitles] = useState<Record<string, string>>({});
+  const [downloadingReceipt, setDownloadingReceipt] = useState<string | null>(null);
 
   useEffect(() => {
     if (!authLoading) {
@@ -79,6 +81,24 @@ export default function Subscription() {
       setLoadingTransactions(true);
       const transactions = await creditsService.getCreditTransactions(user.id);
       setCreditTransactions(transactions);
+      
+      // Fetch jump titles for usage transactions
+      const usageTransactions = transactions.filter(t => t.transaction_type === 'usage' && t.reference_id);
+      if (usageTransactions.length > 0) {
+        const jumpIds = usageTransactions.map(t => t.reference_id).filter(Boolean) as string[];
+        const { data: jumps } = await supabase
+          .from('user_jumps')
+          .select('id, title')
+          .in('id', jumpIds);
+        
+        if (jumps) {
+          const titles: Record<string, string> = {};
+          jumps.forEach(jump => {
+            titles[jump.id] = jump.title;
+          });
+          setJumpTitles(titles);
+        }
+      }
     } catch (error) {
       console.error('Error fetching credit transactions:', error);
     } finally {
@@ -157,6 +177,43 @@ export default function Subscription() {
 
   const formatPrice = (cents: number): string => {
     return `$${(cents / 100).toFixed(0)}`;
+  };
+
+  const downloadReceipt = async (stripeSessionId: string) => {
+    if (!stripeSessionId) {
+      toast.error("No receipt available for this transaction");
+      return;
+    }
+
+    const placeholder = window.open('', '_blank');
+    setDownloadingReceipt(stripeSessionId);
+    try {
+      const { data, error } = await supabase.functions.invoke("download-receipt", {
+        body: { sessionId: stripeSessionId }
+      });
+
+      if (error) throw error;
+
+      if (data?.receiptUrl) {
+        if (placeholder && typeof placeholder.location !== 'undefined') {
+          placeholder.location.href = data.receiptUrl;
+        } else {
+          const win = window.open(data.receiptUrl, '_blank');
+          if (!win) {
+            window.location.href = data.receiptUrl;
+          }
+        }
+      } else {
+        toast.error("Receipt not available");
+        try { placeholder?.close(); } catch {}
+      }
+    } catch (error: any) {
+      console.error("Error downloading receipt:", error);
+      toast.error("Failed to download receipt");
+      try { placeholder?.close(); } catch {}
+    } finally {
+      setDownloadingReceipt(null);
+    }
   };
 
   const getPlanIcon = (planName: string) => {
@@ -246,7 +303,7 @@ export default function Subscription() {
             <div className="p-2 rounded-lg bg-gradient-to-br from-primary/20 to-accent/20">
               <Coins className="w-5 h-5 text-primary" />
             </div>
-            <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+            <span className="text-foreground">
               Credits Use History & Log
             </span>
           </CardTitle>
@@ -302,6 +359,11 @@ export default function Subscription() {
                             {transaction.description}
                           </p>
                         )}
+                        {transaction.transaction_type === 'usage' && transaction.reference_id && jumpTitles[transaction.reference_id] && (
+                          <p className="text-xs text-primary/80 font-medium truncate mb-1">
+                            Jump: {jumpTitles[transaction.reference_id]}
+                          </p>
+                        )}
                         <p className="text-xs text-muted-foreground/70">
                           {new Date(transaction.created_at).toLocaleString('en-US', {
                             month: 'short',
@@ -328,6 +390,24 @@ export default function Subscription() {
                             {transaction.credits_amount}
                           </span>
                         </div>
+                      )}
+                      {transaction.transaction_type === 'purchase' && transaction.reference_id && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => downloadReceipt(transaction.reference_id!)}
+                          disabled={downloadingReceipt === transaction.reference_id}
+                          className="h-8 px-3 text-xs"
+                        >
+                          {downloadingReceipt === transaction.reference_id ? (
+                            <Loader2 className="w-3 h-3 animate-spin" />
+                          ) : (
+                            <>
+                              <ExternalLink className="w-3 h-3 mr-1" />
+                              Receipt
+                            </>
+                          )}
+                        </Button>
                       )}
                     </div>
                   </div>
