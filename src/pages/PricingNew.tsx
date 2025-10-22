@@ -139,20 +139,47 @@ const PricingNew = () => {
         <link rel="canonical" href="https://jumpinai.com/pricing" />
       </Helmet>
 
-      <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/10">
+      <div className="min-h-screen scroll-snap-container bg-gradient-to-br from-background/95 via-background to-primary/5 dark:bg-gradient-to-br dark:from-black dark:via-gray-950/90 dark:to-gray-900/60 relative overflow-hidden">
+        {/* Premium floating background elements with liquid glass effects */}
+        <div className="fixed inset-0 overflow-hidden pointer-events-none">
+          {/* Main gradient orbs with enhanced blur and liquid animation */}
+          <div className="absolute -top-40 -right-40 w-[28rem] h-[28rem] bg-gradient-to-br from-primary/25 via-primary/15 to-primary/5 rounded-full blur-3xl animate-pulse opacity-60"></div>
+          <div className="absolute -bottom-40 -left-40 w-[32rem] h-[32rem] bg-gradient-to-tr from-secondary/20 via-accent/10 to-secondary/5 rounded-full blur-3xl animate-pulse opacity-50" style={{animationDelay: '2s'}}></div>
+          
+          {/* Liquid glass floating elements */}
+          <div className="absolute top-1/4 left-1/3 w-72 h-72 bg-gradient-conic from-primary/15 via-accent/10 to-secondary/15 rounded-full blur-2xl animate-pulse opacity-40" style={{animationDelay: '1s'}}></div>
+          <div className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-gradient-radial from-accent/20 via-primary/10 to-transparent rounded-full blur-xl animate-pulse opacity-30" style={{animationDelay: '3s'}}></div>
+          
+          {/* Subtle mesh gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent opacity-50"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-accent/3 to-transparent opacity-40"></div>
+        </div>
+        
         <Navigation />
         
-        <main className="pt-20 pb-16">
+        <main className="relative pt-24 px-4 sm:px-6 lg:px-8">
           {/* Hero Section */}
           <section className="container mx-auto px-4 py-12 text-center">
             <div className="max-w-4xl mx-auto">
-              <h1 className="text-4xl md:text-6xl font-bold mb-4 gradient-text-primary">
-                JumpinAI Pricing
-              </h1>
-              <p className="text-lg text-muted-foreground mb-2 max-w-3xl mx-auto">
-                Choose the perfect plan for your needs.
-              </p>
-              <p className="text-base text-muted-foreground mb-8 max-w-3xl mx-auto">
+              {/* Premium Hero Section with enhanced gradients */}
+              <div className="text-center mb-12 sm:mb-20 animate-fade-in-up">
+                {/* Liquid glass backdrop for title */}
+                <div className="relative mb-6 sm:mb-8">
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent dark:via-primary/8 blur-3xl transform -translate-y-4"></div>
+                  <h1 className="relative text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold mb-2 bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent leading-tight tracking-tight px-4 sm:px-0">
+                    JumpinAI Pricing
+                  </h1>
+                  <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-transparent via-primary/60 to-transparent rounded-full"></div>
+                </div>
+                
+                <div className="relative px-4 sm:px-0">
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent/5 to-transparent blur-2xl"></div>
+                  <p className="relative text-base sm:text-lg md:text-xl text-muted-foreground/90 mb-8 sm:mb-12 max-w-4xl mx-auto leading-relaxed font-light">
+                    Choose the perfect plan for your needs.
+                  </p>
+                </div>
+              </div>
+              <p className="text-base sm:text-lg text-muted-foreground/90 max-w-3xl mx-auto mb-12 leading-relaxed">
                 <span className="font-semibold text-foreground">1 credit = 1 jump generation</span> - each jump includes a comprehensive AI transformation plan with strategies, tools, workflows, and actionable blueprints tailored to your business.
               </p>
             </div>
