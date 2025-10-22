@@ -49,11 +49,11 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({ stats, isLoading
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
-        {Array.from({ length: 4 }).map((_, i) => (
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 max-w-4xl mx-auto">
+        {Array.from({ length: 3 }).map((_, i) => (
           <Card key={i} className="glass animate-pulse">
-            <CardContent className="p-4">
-              <div className="h-16 bg-muted/20 rounded" />
+            <CardContent className="p-6">
+              <div className="h-24 bg-muted/20 rounded" />
             </CardContent>
           </Card>
         ))}
@@ -62,30 +62,45 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({ stats, isLoading
   }
 
   return (
-    <div className="space-y-4">
-      {/* Stats Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+    <div className="space-y-6">
+      {/* Stats Grid - Centered and Beautiful */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 max-w-4xl mx-auto">
         {statCards.map((stat) => (
           <Card 
             key={stat.title} 
-            className="glass border-border hover:shadow-modern transition-all duration-300 rounded-xl cursor-pointer group"
+            className="glass border-border/50 hover:border-primary/30 hover:shadow-modern-lg transition-all duration-300 rounded-xl cursor-pointer group overflow-hidden relative"
             onClick={() => navigate(stat.path)}
           >
-            <CardContent className="p-4">
-              <div className="flex flex-col gap-2">
-                <div className={`w-10 h-10 rounded-lg ${stat.bgColor} flex items-center justify-center group-hover:scale-110 transition-transform`}>
-                  <stat.icon className={`h-5 w-5 ${stat.color}`} />
+            {/* Subtle gradient background */}
+            <div className={`absolute inset-0 ${stat.bgColor} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
+            
+            <CardContent className="p-6 relative z-10">
+              <div className="flex flex-col gap-4">
+                <div className="flex items-center justify-between">
+                  <div className={`w-12 h-12 rounded-xl ${stat.bgColor} flex items-center justify-center group-hover:scale-110 transition-transform shadow-sm`}>
+                    <stat.icon className={`h-6 w-6 ${stat.color}`} />
+                  </div>
+                  <div className="text-right">
+                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{stat.title}</p>
+                  </div>
                 </div>
                 <div>
-                  <p className="text-xs text-muted-foreground">{stat.title}</p>
                   <div className="flex items-baseline gap-2">
-                    <p className="text-2xl font-bold">{stat.value}</p>
+                    <p className="text-3xl sm:text-4xl font-bold bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text">{stat.value}</p>
                     {stat.implemented !== undefined && stat.value > 0 && (
-                      <span className="text-xs text-muted-foreground">
-                        ({stat.implemented} done)
+                      <span className="text-sm font-medium text-muted-foreground">
+                        / {stat.implemented} done
                       </span>
                     )}
                   </div>
+                  {stat.implemented !== undefined && stat.value > 0 && (
+                    <div className="mt-2">
+                      <Progress 
+                        value={(stat.implemented / stat.value) * 100} 
+                        className="h-1.5"
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
             </CardContent>
