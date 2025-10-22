@@ -348,10 +348,10 @@ const JumpinAIStudio = () => {
             <div className="mb-8 sm:mb-12 animate-fade-in-up px-2 sm:px-0" style={{ animationDelay: '0.5s' }}>
               <div className="relative group">
                 {/* Subtle backdrop */}
-                <div className="absolute -inset-1 bg-gradient-to-r from-primary/10 via-accent/8 to-secondary/10 dark:from-primary/8 dark:via-accent/6 dark:to-secondary/8 rounded-2xl blur-xl opacity-40"></div>
+                <div className="absolute -inset-1 bg-gradient-to-r from-primary/10 via-accent/8 to-secondary/10 rounded-2xl blur-xl opacity-40"></div>
                 
                 {/* Compact glass container */}
-                <div className="relative glass-dark rounded-2xl p-4 sm:p-6 border border-border backdrop-blur-2xl bg-gradient-to-br from-card/50 via-card/25 to-card/10 overflow-hidden">
+                <div className="relative glass rounded-2xl p-4 sm:p-6 border border-border backdrop-blur-2xl bg-card/80 overflow-hidden">
                   {/* Minimal glass overlay */}
                   <div className="absolute inset-0 bg-gradient-to-br from-primary/4 via-transparent to-secondary/4 rounded-2xl"></div>
                   <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>

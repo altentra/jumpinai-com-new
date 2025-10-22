@@ -358,7 +358,7 @@ const Jumps = () => {
                         )}
                         
                         {hasPurchased || (subInfo?.subscribed && subInfo?.subscription_tier === "JumpinAI Pro") ? (
-                          <Button asChild={false} className="w-full bg-primary hover:bg-primary/90 text-white rounded-2xl glass backdrop-blur-sm border border-primary/20" onClick={() => {
+                          <Button asChild={false} className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-2xl glass backdrop-blur-sm border border-primary/20" onClick={() => {
                             if (order?.download_token) {
                               window.location.href = `/download/${order.download_token}`;
                             } else {
