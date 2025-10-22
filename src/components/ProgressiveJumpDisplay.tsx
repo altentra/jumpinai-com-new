@@ -656,7 +656,11 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                                           {milestone.success_criteria.map((criteria: string, cIdx: number) => (
                                             <li key={cIdx} className="text-xs text-muted-foreground flex items-start gap-2">
                                               <CheckCircle className="h-3 w-3 text-green-600 dark:text-green-400 mt-0.5 flex-shrink-0" />
-                                              <span>{criteria}</span>
+                                              <div className="prose prose-sm dark:prose-invert max-w-none flex-1">
+                                                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                                  {criteria}
+                                                </ReactMarkdown>
+                                              </div>
                                             </li>
                                           ))}
                                         </ul>
