@@ -370,7 +370,7 @@ const Index = () => {
               Flexible plans designed to accelerate your business growth
             </p>
             <p className="text-base text-muted-foreground max-w-3xl mx-auto">
-              <span className="font-semibold text-foreground">1 credit = 1 Jump generation</span> - each Jump includes a comprehensive AI transformation plan with strategies, tools, workflows, and actionable blueprints tailored to your business.
+              <span className="font-semibold text-foreground">1 credit = 1 Jump generation</span> - each Jump delivers a comprehensive transformation plan including situation analysis, strategic vision with success metrics, detailed action plan with phases and milestones, plus 6 AI tool-prompt combinations to execute your strategy.
             </p>
           </div>
 
