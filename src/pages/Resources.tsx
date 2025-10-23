@@ -2142,26 +2142,26 @@ export default function Resources() {
 
           {/* Resource type tabs - Mobile Optimized */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="flex flex-wrap justify-center w-full mb-4 sm:mb-6 glass border-white/10 shadow-modern h-auto p-1 sm:p-1.5 gap-1 sm:gap-1.5">
-              <TabsTrigger value="tools" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-4 flex-shrink-0">
-                <Zap className="h-3 w-3 sm:h-4 sm:w-4" />
-                <span className="hidden sm:inline">Tools</span>
+            <TabsList className="flex flex-wrap justify-center w-full mb-4 sm:mb-6 glass border-white/10 shadow-modern h-auto p-1.5 sm:p-2 gap-1.5 sm:gap-2">
+              <TabsTrigger value="tools" className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm px-3 sm:px-4 py-2 flex-shrink-0">
+                <Zap className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <span>Tools</span>
               </TabsTrigger>
-              <TabsTrigger value="prompts" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-4 flex-shrink-0">
-                <FileText className="h-3 w-3 sm:h-4 sm:w-4" />
-                <span className="hidden sm:inline">Prompts</span>
+              <TabsTrigger value="prompts" className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm px-3 sm:px-4 py-2 flex-shrink-0">
+                <FileText className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <span>Prompts</span>
               </TabsTrigger>
-              <TabsTrigger value="workflows" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-4 flex-shrink-0">
-                <GitBranch className="h-3 w-3 sm:h-4 sm:w-4" />
-                <span className="hidden sm:inline">Workflows</span>
+              <TabsTrigger value="workflows" className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm px-3 sm:px-4 py-2 flex-shrink-0">
+                <GitBranch className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <span>Workflows</span>
               </TabsTrigger>
-              <TabsTrigger value="blueprints" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-4 flex-shrink-0">
-                <Layers className="h-3 w-3 sm:h-4 sm:w-4" />
-                <span className="hidden sm:inline">Blueprints</span>
+              <TabsTrigger value="blueprints" className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm px-3 sm:px-4 py-2 flex-shrink-0">
+                <Layers className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <span>Blueprints</span>
               </TabsTrigger>
-              <TabsTrigger value="strategies" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-4 flex-shrink-0">
-                <Target className="h-3 w-3 sm:h-4 sm:w-4" />
-                <span className="hidden sm:inline">Strategies</span>
+              <TabsTrigger value="strategies" className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm px-3 sm:px-4 py-2 flex-shrink-0">
+                <Target className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <span>Strategies</span>
               </TabsTrigger>
             </TabsList>
 
