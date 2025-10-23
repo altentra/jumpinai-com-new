@@ -16,6 +16,17 @@ const DownloadPro = () => {
   const [productInfo, setProductInfo] = useState<any>(null);
   const { toast } = useToast();
 
+  useEffect(() => {
+    const meta = document.createElement('meta');
+    meta.name = 'robots';
+    meta.content = 'noindex, nofollow';
+    document.head.appendChild(meta);
+    
+    return () => {
+      document.head.removeChild(meta);
+    };
+  }, []);
+
   // Get product info when component loads
   useEffect(() => {
     const getProductInfo = async () => {

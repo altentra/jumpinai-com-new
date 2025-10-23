@@ -17,7 +17,7 @@ import {
   Globe
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Navigation from "@/components/Navigation";
@@ -1932,6 +1932,17 @@ export default function Resources() {
   // Modal states
   const [selectedBlueprint, setSelectedBlueprint] = useState<Blueprint | null>(null);
   const [isBlueprintModalOpen, setIsBlueprintModalOpen] = useState(false);
+
+  useEffect(() => {
+    const meta = document.createElement('meta');
+    meta.name = 'robots';
+    meta.content = 'noindex, nofollow';
+    document.head.appendChild(meta);
+    
+    return () => {
+      document.head.removeChild(meta);
+    };
+  }, []);
 
   // Show all content if user has Pro subscription
   const showAllContent = subscription?.subscribed && subscription.subscription_tier === 'JumpinAI Pro';

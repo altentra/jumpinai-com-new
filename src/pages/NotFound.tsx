@@ -5,6 +5,17 @@ const NotFound = () => {
   const location = useLocation();
 
   useEffect(() => {
+    const meta = document.createElement('meta');
+    meta.name = 'robots';
+    meta.content = 'noindex, nofollow';
+    document.head.appendChild(meta);
+    
+    return () => {
+      document.head.removeChild(meta);
+    };
+  }, []);
+
+  useEffect(() => {
     console.error(
       "404 Error: User attempted to access non-existent route:",
       location.pathname

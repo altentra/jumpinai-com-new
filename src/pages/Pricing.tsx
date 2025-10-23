@@ -48,6 +48,17 @@ export default function Pricing() {
   const { getAuthHeaders } = useAuth0Token();
 
   useEffect(() => {
+    const meta = document.createElement('meta');
+    meta.name = 'robots';
+    meta.content = 'noindex, nofollow';
+    document.head.appendChild(meta);
+    
+    return () => {
+      document.head.removeChild(meta);
+    };
+  }, []);
+
+  useEffect(() => {
     if (isAuthenticated && user) {
       checkSubscriptionStatus();
     }

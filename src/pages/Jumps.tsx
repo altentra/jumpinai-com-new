@@ -43,6 +43,17 @@ const Jumps = () => {
   const { toast } = useToast();
   const { user, isAuthenticated } = useAuth();
 
+  useEffect(() => {
+    const meta = document.createElement('meta');
+    meta.name = 'robots';
+    meta.content = 'noindex, nofollow';
+    document.head.appendChild(meta);
+    
+    return () => {
+      document.head.removeChild(meta);
+    };
+  }, []);
+
   const purchasedByProduct = useMemo(() => {
     const map = new Map<string, Order>();
     orders.forEach((o) => {

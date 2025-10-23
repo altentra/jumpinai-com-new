@@ -10,6 +10,17 @@ const SyncStripe = () => {
   const [syncing, setSyncing] = useState(false);
   const [results, setResults] = useState<any>(null);
 
+  React.useEffect(() => {
+    const meta = document.createElement('meta');
+    meta.name = 'robots';
+    meta.content = 'noindex, nofollow';
+    document.head.appendChild(meta);
+    
+    return () => {
+      document.head.removeChild(meta);
+    };
+  }, []);
+
   const handleSync = async () => {
     setSyncing(true);
     setResults(null);

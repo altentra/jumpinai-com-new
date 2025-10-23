@@ -19,6 +19,17 @@ export default function Auth() {
   const { isAuthenticated } = useAuth();
   const next = useMemo(() => searchParams.get("next") || "/dashboard", [searchParams]);
 
+  useEffect(() => {
+    const meta = document.createElement('meta');
+    meta.name = 'robots';
+    meta.content = 'noindex, nofollow';
+    document.head.appendChild(meta);
+    
+    return () => {
+      document.head.removeChild(meta);
+    };
+  }, []);
+
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [signupName, setSignupName] = useState("");

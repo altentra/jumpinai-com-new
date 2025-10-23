@@ -153,6 +153,17 @@ export default function AdminDashboard() {
   const ADMIN_EMAIL = "info@jumpinai.com";
   
   useEffect(() => {
+    const meta = document.createElement('meta');
+    meta.name = 'robots';
+    meta.content = 'noindex, nofollow';
+    document.head.appendChild(meta);
+    
+    return () => {
+      document.head.removeChild(meta);
+    };
+  }, []);
+  
+  useEffect(() => {
     if (isLoading) return; // Wait for auth to resolve
 
     // Debug admin gate state

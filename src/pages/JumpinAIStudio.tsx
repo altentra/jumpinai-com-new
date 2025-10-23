@@ -23,6 +23,17 @@ const JumpinAIStudio = () => {
   const generateButtonRef = useRef<HTMLDivElement>(null);
   const goalsTextareaRef = useRef<HTMLTextAreaElement>(null);
   const challengesTextareaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    const meta = document.createElement('meta');
+    meta.name = 'robots';
+    meta.content = 'noindex, nofollow';
+    document.head.appendChild(meta);
+    
+    return () => {
+      document.head.removeChild(meta);
+    };
+  }, []);
   
   // Helper function to format time
   const formatTime = (seconds: number) => {

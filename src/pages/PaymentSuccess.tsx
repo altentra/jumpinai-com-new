@@ -23,6 +23,17 @@ const PaymentSuccess = () => {
   const { toast } = useToast();
 
   useEffect(() => {
+    const meta = document.createElement('meta');
+    meta.name = 'robots';
+    meta.content = 'noindex, nofollow';
+    document.head.appendChild(meta);
+    
+    return () => {
+      document.head.removeChild(meta);
+    };
+  }, []);
+
+  useEffect(() => {
     const sessionId = searchParams.get("session_id");
     if (sessionId) {
       verifyPayment(sessionId);

@@ -18,6 +18,17 @@ export default function Dashboard() {
   const { isAuthenticated, isLoading, user, login } = useAuth();
 
   useEffect(() => {
+    const meta = document.createElement('meta');
+    meta.name = 'robots';
+    meta.content = 'noindex, nofollow';
+    document.head.appendChild(meta);
+    
+    return () => {
+      document.head.removeChild(meta);
+    };
+  }, []);
+
+  useEffect(() => {
     if (!isLoading) {
       if (!isAuthenticated) {
         login('/dashboard');
