@@ -73,8 +73,8 @@ export default function Dashboard() {
           <main className="flex-1 relative z-10 w-full max-w-full overflow-x-hidden">
             <header className="h-12 flex items-center justify-between border-b px-3 sm:px-4">
               <div className="flex items-center min-w-0">
-                <SidebarTrigger className="mr-2 hover:bg-muted/50 transition-colors rounded-md p-1 shrink-0" />
-                <h1 className="text-sm sm:text-base font-medium truncate">My Dashboard</h1>
+                <SidebarTrigger className="mr-2 hover:bg-muted/50 transition-colors rounded-md p-1 shrink-0 text-base sm:text-base" />
+                <h1 className="text-base sm:text-base font-medium truncate">My Dashboard</h1>
               </div>
             </header>
 

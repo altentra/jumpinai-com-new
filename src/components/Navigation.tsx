@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
+import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
 import ThemeToggle from "@/components/ThemeToggle";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -189,15 +190,24 @@ const Navigation = React.memo(() => {
                   {item.name}
                 </button>
               ))}
-              {companyItems.map((item) => (
-                <button
-                  key={item.name}
-                  onClick={() => handleNavClick(item.href)}
-                  className="text-muted-foreground hover:text-foreground block w-full text-left px-4 py-3 rounded-2xl text-base font-medium hover:bg-accent transition-all duration-300"
-                >
-                  {item.name}
-                </button>
-              ))}
+              
+              {/* Company collapsible menu */}
+              <Collapsible>
+                <CollapsibleTrigger className="text-muted-foreground hover:text-foreground flex items-center justify-between w-full text-left px-4 py-3 rounded-2xl text-base font-medium hover:bg-accent transition-all duration-300">
+                  Company <ChevronDown className="ml-1 h-4 w-4" />
+                </CollapsibleTrigger>
+                <CollapsibleContent className="pl-4">
+                  {companyItems.map((item) => (
+                    <button
+                      key={item.name}
+                      onClick={() => handleNavClick(item.href)}
+                      className="text-muted-foreground hover:text-foreground block w-full text-left px-4 py-2 rounded-2xl text-sm font-medium hover:bg-accent transition-all duration-300"
+                    >
+                      {item.name}
+                    </button>
+                  ))}
+                </CollapsibleContent>
+              </Collapsible>
               <div className="pt-2 border-t border-border mt-2">
                 {isAuthenticated ? (
                   <>

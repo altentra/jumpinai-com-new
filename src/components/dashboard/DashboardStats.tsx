@@ -64,7 +64,7 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({ stats, isLoading
   return (
     <div className="space-y-4 sm:space-y-6">
       {/* Stats Grid - Centered and Beautiful */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 md:gap-6 max-w-4xl mx-auto px-2 sm:px-0">
+      <div className="grid grid-cols-3 gap-3 sm:gap-4 md:gap-6 max-w-4xl mx-auto px-2 sm:px-0">
         {statCards.map((stat) => (
           <Card 
             key={stat.title} 
