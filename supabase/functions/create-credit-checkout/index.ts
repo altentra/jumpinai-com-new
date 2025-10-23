@@ -89,18 +89,18 @@ serve(async (req) => {
     let stripeProduct;
     try {
       const existingProducts = await stripe.products.search({
-        query: `name:'JumpinAI ${creditPackage.name}'`,
+        query: `name:'JumpinAI ${creditPackage.credits} credits. ${creditPackage.name}.'`,
       });
       
       if (existingProducts.data.length > 0) {
         stripeProduct = await stripe.products.update(existingProducts.data[0].id, {
-          name: `JumpinAI ${creditPackage.name}`,
+          name: `JumpinAI ${creditPackage.credits} credits. ${creditPackage.name}.`,
           description: `${creditPackage.credits} credits for AI transformation plans`,
         });
         console.log(`Updated existing Stripe product: ${stripeProduct.id}`);
       } else {
         stripeProduct = await stripe.products.create({
-          name: `JumpinAI ${creditPackage.name}`,
+          name: `JumpinAI ${creditPackage.credits} credits. ${creditPackage.name}.`,
           description: `${creditPackage.credits} credits for AI transformation plans`,
         });
         console.log(`Created new Stripe product: ${stripeProduct.id}`);
@@ -108,7 +108,7 @@ serve(async (req) => {
     } catch (err) {
       // Fallback: just create new product
       stripeProduct = await stripe.products.create({
-        name: `JumpinAI ${creditPackage.name}`,
+        name: `JumpinAI ${creditPackage.credits} credits. ${creditPackage.name}.`,
         description: `${creditPackage.credits} credits for AI transformation plans`,
       });
       console.log(`Created new Stripe product (fallback): ${stripeProduct.id}`);

@@ -53,7 +53,7 @@ serve(async (req) => {
       if (!productId) {
         const product = await stripe.products.create({
           name: `JumpinAI ${plan.name}`,
-          description: plan.description || `${plan.credits_per_month} monthly credits with ${plan.name}`,
+          description: `${plan.credits_per_month} credits per month`,
         });
         productId = product.id;
         console.log(`Created new Stripe product: ${productId}`);
@@ -61,7 +61,7 @@ serve(async (req) => {
         // Update existing product
         await stripe.products.update(productId, {
           name: `JumpinAI ${plan.name}`,
-          description: plan.description || `${plan.credits_per_month} monthly credits with ${plan.name}`,
+          description: `${plan.credits_per_month} credits per month`,
         });
         console.log(`Updated Stripe product: ${productId}`);
       }
@@ -121,13 +121,13 @@ serve(async (req) => {
         
         if (existingProducts.data.length > 0) {
           product = await stripe.products.update(existingProducts.data[0].id, {
-            name: `JumpinAI ${pkg.name}`,
+            name: `JumpinAI ${pkg.credits} credits. ${pkg.name}.`,
             description: `${pkg.credits} credits for AI transformation plans`,
           });
           console.log(`Updated existing Stripe product: ${product.id}`);
         } else {
           product = await stripe.products.create({
-            name: `JumpinAI ${pkg.name}`,
+            name: `JumpinAI ${pkg.credits} credits. ${pkg.name}.`,
             description: `${pkg.credits} credits for AI transformation plans`,
           });
           console.log(`Created new Stripe product: ${product.id}`);
@@ -135,7 +135,7 @@ serve(async (req) => {
       } catch (err) {
         // If search fails, just create a new product
         product = await stripe.products.create({
-          name: `JumpinAI ${pkg.name}`,
+          name: `JumpinAI ${pkg.credits} credits. ${pkg.name}.`,
           description: `${pkg.credits} credits for AI transformation plans`,
         });
         console.log(`Created new Stripe product: ${product.id}`);

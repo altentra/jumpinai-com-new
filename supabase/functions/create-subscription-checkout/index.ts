@@ -99,7 +99,7 @@ serve(async (req) => {
     if (!stripeProductId) {
       const product = await stripe.products.create({
         name: `JumpinAI ${subscriptionPlan.name}`,
-        description: subscriptionPlan.description || `${subscriptionPlan.credits_per_month} monthly credits with ${subscriptionPlan.name}`,
+        description: `${subscriptionPlan.credits_per_month} credits per month`,
       });
       stripeProductId = product.id;
       console.log(`Created new Stripe product: ${stripeProductId}`);
@@ -107,7 +107,7 @@ serve(async (req) => {
       // Update existing product to ensure name/description are current
       await stripe.products.update(stripeProductId, {
         name: `JumpinAI ${subscriptionPlan.name}`,
-        description: subscriptionPlan.description || `${subscriptionPlan.credits_per_month} monthly credits with ${subscriptionPlan.name}`,
+        description: `${subscriptionPlan.credits_per_month} credits per month`,
       });
       console.log(`Updated Stripe product: ${stripeProductId}`);
     }
