@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import logo from "@/assets/logo.png";
 
 const Hero = () => {
   const [isDark, setIsDark] = useState(false);
@@ -222,7 +223,7 @@ const Hero = () => {
               <div className="absolute inset-0 bg-primary/50 rounded-2xl blur-md opacity-60 animate-glow"></div>
               <div className="relative bg-primary rounded-2xl w-16 h-16 sm:w-20 sm:h-20 p-0 overflow-hidden">
                 <img 
-                  src="/lovable-uploads/156b282b-1e93-436c-914a-a886a6a5cdfd.png" 
+                  src={logo}
                   alt="JumpinAI Logo" 
                   className="w-full h-full object-cover scale-140"
                 />

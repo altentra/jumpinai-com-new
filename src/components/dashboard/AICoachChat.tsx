@@ -11,6 +11,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Bot, User, Send, Sparkles, Download, Copy, Lock } from 'lucide-react';
 import { UserProfile } from '@/services/userProfileService';
 import { createJump, updateJump, extractTitle, extractSummary } from '@/services/jumpService';
+import logo from "@/assets/logo.png";
 
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -632,7 +633,7 @@ export default function AICoachChat({
 <Avatar className="h-10 w-10 bg-gradient-to-br from-primary/20 to-primary/10 border-2 border-primary/20 shadow-lg backdrop-blur-sm">
                       <AvatarFallback className="p-0">
                         <img 
-                          src="/lovable-uploads/156b282b-1e93-436c-914a-a886a6a5cdfd.png" 
+                          src={logo}
                           alt="JumpinAI" 
                           className="w-full h-full object-cover rounded-full"
                         />
@@ -730,7 +731,7 @@ export default function AICoachChat({
                   <Avatar className="h-10 w-10 bg-gradient-to-br from-primary/20 to-primary/10 border-2 border-primary/20 shadow-lg backdrop-blur-sm">
                     <AvatarFallback className="p-0">
                       <img 
-                        src="/lovable-uploads/156b282b-1e93-436c-914a-a886a6a5cdfd.png" 
+                        src={logo}
                         alt="JumpinAI" 
                         className="w-full h-full object-cover rounded-full"
                       />

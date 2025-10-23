@@ -5,6 +5,7 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuIte
 import ThemeToggle from "@/components/ThemeToggle";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import logo from "@/assets/logo.png";
 
 const Navigation = React.memo(() => {
   const [isOpen, setIsOpen] = useState(false);
@@ -88,7 +89,7 @@ const Navigation = React.memo(() => {
               <div className="pointer-events-none absolute -inset-1 rounded-3xl bg-primary/20 blur-md opacity-0 group-hover:opacity-60 transition-opacity duration-300"></div>
               <div className="relative w-10 h-10 rounded-2xl overflow-hidden group-hover:scale-105 transition-transform duration-300 ring-1 ring-border shadow-lg">
                 <img 
-                  src="/lovable-uploads/156b282b-1e93-436c-914a-a886a6a5cdfd.png" 
+                  src={logo}
                   alt="JumpinAI Logo" 
                   width="40"
                   height="40"

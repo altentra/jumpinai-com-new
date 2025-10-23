@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Helmet, HelmetProvider } from "react-helmet-async";
+import logo from "@/assets/logo.png";
 
 // Component to handle lead magnet functionality
 const LeadMagnetButton = () => {
@@ -269,7 +270,7 @@ const AboutUs = () => {
             '@type': 'Organization',
             name: 'JumpinAI',
             url: 'https://jumpinai.com',
-            logo: 'https://jumpinai.com/lovable-uploads/156b282b-1e93-436c-914a-a886a6a5cdfd.png',
+            logo: 'https://jumpinai.com/logo.png',
             sameAs: ['https://twitter.com/jumpinai'],
             description: 'Pioneering personalized AI transformation through individualized learning paths, custom strategies, and human-centered AI implementation.'
           })}</script>
@@ -307,7 +308,7 @@ const AboutUs = () => {
               <div className="md:col-span-2 flex justify-center">
                 <div className="relative glass backdrop-blur-sm bg-background/30 dark:bg-background/20 border border-primary/30 rounded-3xl p-6 shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/25 transition-all duration-300 hover:scale-105">
                   <img
-                    src="/lovable-uploads/156b282b-1e93-436c-914a-a886a6a5cdfd.png"
+                    src={logo}
                     alt="JumpinAI brand logo"
                     className="w-48 h-48 rounded-2xl object-contain"
                     loading="lazy"
