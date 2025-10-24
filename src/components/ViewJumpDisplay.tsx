@@ -314,8 +314,8 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
                           {phase.milestones?.length > 0 && (
                             <ul className="space-y-1">
                               {phase.milestones.map((milestone: string, idx: number) => (
-                                <li key={idx} className="text-sm flex items-start gap-2">
-                                  <CheckCircle className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                                <li key={idx} className="text-sm flex items-center gap-2">
+                                  <CheckCircle className="w-4 h-4 text-primary flex-shrink-0" />
                                   <div className="prose prose-sm dark:prose-invert max-w-none flex-1">
                                     <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                       {formatAIText(milestone)}
@@ -345,8 +345,8 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
                     <CardContent>
                       <ul className="space-y-3">
                         {result.comprehensive_plan.keyObjectives.map((obj: string, idx: number) => (
-                          <li key={idx} className="text-sm flex items-start gap-2">
-                            <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <li key={idx} className="text-sm flex items-center gap-2">
+                            <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
                               <span className="text-xs font-semibold text-primary">{idx + 1}</span>
                             </div>
                             <div className="prose prose-sm dark:prose-invert max-w-none flex-1">
@@ -372,8 +372,8 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
                     <CardContent>
                       <ul className="space-y-3">
                         {result.comprehensive_plan.successMetrics.map((metric: string, idx: number) => (
-                          <li key={idx} className="text-sm flex items-start gap-2">
-                            <TrendingUp className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                          <li key={idx} className="text-sm flex items-center gap-2">
+                            <TrendingUp className="w-4 h-4 text-primary flex-shrink-0" />
                             <div className="prose prose-sm dark:prose-invert max-w-none flex-1">
                               <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                 {formatAIText(metric)}
