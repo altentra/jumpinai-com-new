@@ -240,9 +240,12 @@ const Hero = () => {
           </div>
           
           {/* Main Heading with Professional Typography */}
-          <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black mb-3 sm:mb-4 tracking-tight font-display">
-            <span className="block gradient-text-primary">JumpinAI</span>
-          </h1>
+          <div className="relative mb-6">
+            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black mb-3 sm:mb-4 tracking-tight font-display">
+              <span className="block gradient-text-primary">JumpinAI</span>
+            </h1>
+            <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 sm:w-32 h-1 bg-gradient-to-r from-transparent via-primary/60 to-transparent rounded-full"></div>
+          </div>
           
           {/* Subheading */}
           <p className="text-xl sm:text-2xl md:text-3xl lg:text-4xl text-muted-foreground mb-4 sm:mb-6 font-light max-w-4xl mx-auto leading-relaxed px-2">
