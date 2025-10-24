@@ -304,8 +304,9 @@ export const jumpinAIStudioService = {
                 result.components!.toolPrompts = validToolPrompts;
                 console.log(`✅ Processed ${validToolPrompts.length} tool prompts (${validToolPrompts.filter((t: any) => !t.isError).length} valid, ${validToolPrompts.filter((t: any) => t.isError).length} errors)`);
                 
+                // Pass the validated and processed tool prompts to onProgress
                 if (onProgress) {
-                  onProgress(step, type, data);
+                  onProgress(step, type, { tool_prompts: validToolPrompts });
                 }
                 
                 // Save only the valid (non-error) tool prompts to database
