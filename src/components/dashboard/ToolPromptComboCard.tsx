@@ -15,17 +15,34 @@ export function ToolPromptComboCard({ combo, onClick, index }: ToolPromptComboCa
   const { toast } = useToast();
   const [copied, setCopied] = useState(false);
 
+  // Add comprehensive null safety
+  if (!combo) {
+    console.error('❌ ToolPromptComboCard: combo is null/undefined');
+    return (
+      <div className="p-6 border border-destructive/30 rounded-lg bg-destructive/5 text-center">
+        <p className="text-sm text-muted-foreground">Invalid tool data</p>
+      </div>
+    );
+  }
+
+  console.log('✅ ToolPromptComboCard rendering with data:', combo);
+
   const copyPrompt = async (e: React.MouseEvent) => {
     e.stopPropagation();
     try {
-      await navigator.clipboard.writeText(combo.prompt_text || combo.custom_prompt || combo.prompt);
+      const promptToCopy = combo.prompt_text || combo.custom_prompt || combo.prompt;
+      if (!promptToCopy) {
+        throw new Error('No prompt text available');
+      }
+      await navigator.clipboard.writeText(promptToCopy);
       setCopied(true);
       toast({
         title: "Prompt Copied!",
-        description: "Ready to paste into " + (combo.tool_name || combo.name),
+        description: "Ready to paste into " + (combo.tool_name || combo.name || 'the tool'),
       });
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
+      console.error('Copy error:', err);
       toast({
         title: "Failed to copy",
         description: "Please try selecting the text manually.",
@@ -51,11 +68,21 @@ export function ToolPromptComboCard({ combo, onClick, index }: ToolPromptComboCa
   };
 
   const toolUrl = combo.tool_url || combo.url || combo.website_url || combo.website;
-  const toolName = combo.tool_name || combo.name;
-  const promptText = combo.prompt_text || combo.custom_prompt || combo.prompt;
+  const toolName = combo.tool_name || combo.name || 'Unknown Tool';
+  const promptText = combo.prompt_text || combo.custom_prompt || combo.prompt || '';
   const whenToUse = combo.when_to_use;
   const whyCombo = combo.why_this_combo || combo.why_this_tool;
   const alternatives = combo.alternatives || [];
+
+  // Validate essential data
+  if (!promptText) {
+    console.warn('⚠️ ToolPromptComboCard: Missing prompt text for combo:', combo);
+    return (
+      <div className="p-6 border border-destructive/30 rounded-lg bg-destructive/5 text-center">
+        <p className="text-sm text-muted-foreground">Missing prompt data</p>
+      </div>
+    );
+  }
 
   return (
     <div className="relative group">
