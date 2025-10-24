@@ -112,13 +112,16 @@ const ForInvestors = () => {
           <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-3xl p-6 sm:p-8 md:p-12 lg:p-16 shadow-2xl shadow-primary/10 hover:shadow-3xl hover:shadow-primary/15 transition-all duration-500">
             <div className="text-center space-y-6 sm:space-y-8">
               <div className="space-y-4 sm:space-y-6">
-                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight">
-                  Invest in the Future of
-                  <span className="block bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
-                    Personalized AI Transformation
-                  </span>
-                </h1>
+                <div className="relative inline-block">
+                  <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent leading-tight tracking-tight">
+                    For Investors
+                  </h1>
+                  <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 sm:w-32 h-1 bg-gradient-to-r from-transparent via-primary/60 to-transparent rounded-full"></div>
+                </div>
                 <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed px-2">
+                  Invest in the Future of Personalized AI Transformation
+                </p>
+                <p className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed px-2">
                   JumpinAI Studio creates personalized AI transformation roadmaps in 5 minutes, delivering 16 ready-to-use resources tailored specifically to each individual's goals and context.
                 </p>
               </div>

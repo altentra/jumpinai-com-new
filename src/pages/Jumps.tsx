@@ -309,9 +309,12 @@ const Jumps = () => {
         <div className="container mx-auto max-w-6xl relative z-10">
           <div className="text-center mb-12 sm:mb-20 animate-fade-in-up">
             <div className="space-y-6">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold mb-2 bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent leading-tight tracking-tight px-4 sm:px-0">
-                Jumps in AI. Guides.
-              </h1>
+              <div className="relative inline-block">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold mb-2 bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent leading-tight tracking-tight px-4 sm:px-0">
+                  Jumps in AI. Guides.
+                </h1>
+                <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 sm:w-32 h-1 bg-gradient-to-r from-transparent via-primary/60 to-transparent rounded-full"></div>
+              </div>
               <p className="text-base sm:text-lg md:text-xl text-muted-foreground/90 mb-8 sm:mb-12 max-w-4xl mx-auto leading-relaxed font-light">
                 Take your first steps into AI mastery across different areas. Each guide provides clear insights and practical steps to build your AI skills.
               </p>
