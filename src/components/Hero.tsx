@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import logo from "@/assets/logo.png";
+import logoTransparent from "@/assets/logo-transparent.png";
 
 const Hero = () => {
   const [isDark, setIsDark] = useState(false);
@@ -217,18 +217,13 @@ const Hero = () => {
       
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div className="animate-fade-in-up">
-          {/* Logo with Professional Glow */}
-          <div className="flex items-center justify-center mb-4 sm:mb-6">
-            <div className="relative">
-              <div className="absolute inset-0 bg-primary/50 rounded-2xl blur-md opacity-60 animate-glow"></div>
-              <div className="relative bg-primary rounded-2xl w-16 h-16 sm:w-20 sm:h-20 p-0 overflow-hidden">
-                <img 
-                  src={logo}
-                  alt="JumpinAI Logo" 
-                  className="w-full h-full object-cover scale-140"
-                />
-              </div>
-            </div>
+          {/* Logo */}
+          <div className="flex items-center justify-center mb-6 sm:mb-8">
+            <img 
+              src={logoTransparent}
+              alt="JumpinAI Logo" 
+              className="w-[280px] sm:w-[400px] md:w-[500px] lg:w-[600px] h-auto"
+            />
           </div>
           
           {/* Main Heading with Professional Typography */}
