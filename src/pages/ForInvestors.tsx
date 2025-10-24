@@ -128,7 +128,7 @@ const ForInvestors = () => {
                   </span>
                 </h2>
                 <p className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed px-2">
-                  JumpinAI Studio creates personalized AI transformation roadmaps in 5 minutes, delivering 16 ready-to-use resources tailored specifically to each individual's goals and context.
+                  JumpinAI Studio empowers creators, professionals, and entrepreneurs to confidently adapt to the AI era—generating comprehensive transformation plans in just 2 minutes with situation analysis, strategic vision with success metrics, detailed action plans, and 9 personalized AI tool-prompt combinations.
                 </p>
               </div>
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
@@ -179,7 +179,7 @@ const ForInvestors = () => {
                 <Target className="h-10 w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
                 <h3 className="text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Breakthrough Innovation</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  5-minute AI questionnaire creates 16 personalized resources. No competitor offers this level of individualization at scale.
+                  2-minute AI-powered process delivers comprehensive transformation plans with situational analysis, strategic roadmaps, and 9 personalized tool-prompt batches. No competitor offers this depth of individualization at scale.
                 </p>
               </div>
               
@@ -224,9 +224,9 @@ const ForInvestors = () => {
                       <Users className="h-6 w-6 text-primary" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-bold mb-2 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">5-Minute Personalization</h3>
+                      <h3 className="text-lg font-bold mb-2 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">2-Minute Personalization</h3>
                       <p className="text-sm text-muted-foreground leading-relaxed">
-                        Proprietary AI engine creates complete personalized transformation roadmaps in minutes, not months.
+                        Proprietary AI engine creates complete personalized transformation roadmaps with comprehensive analysis in 2 minutes, not months—joining 15,000+ professionals who've already made the leap.
                       </p>
                     </div>
                   </div>
@@ -238,9 +238,9 @@ const ForInvestors = () => {
                       <Globe className="h-6 w-6 text-primary" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-bold mb-2 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">16 Ready-to-Use Resources</h3>
+                      <h3 className="text-lg font-bold mb-2 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Comprehensive Transformation Package</h3>
                       <p className="text-sm text-muted-foreground leading-relaxed">
-                        Each Jump delivers 4 custom prompts, 4 workflows, 4 blueprints, and 4 strategies - all personalized and implementation-ready.
+                        Each Jump delivers a complete transformation plan: situation analysis, strategic vision with success metrics, detailed action plan with phases and milestones, plus 9 personalized batches of AI tools and prompts—all implementation-ready.
                       </p>
                     </div>
                   </div>
