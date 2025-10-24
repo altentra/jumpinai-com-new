@@ -462,7 +462,7 @@ const Jumps = () => {
           {/* All-Access CTA - Only show if user is not subscribed to Pro */}
           {!(subInfo?.subscribed && subInfo?.subscription_tier === "JumpinAI Pro") && (
             <div className="mt-12 flex justify-center">
-              <div className="w-full sm:w-[320px] md:w-[340px]">
+              <div className="w-full sm:w-[360px] md:w-[400px]">
                 <Card className="glass hover:shadow-2xl transition-all duration-500 border-primary/30 h-full flex flex-col rounded-3xl backdrop-blur-xl hover:scale-[1.02]">
                   <CardHeader className="pb-3 p-5 text-center">
                     <div className="flex justify-center mb-3">
@@ -511,8 +511,7 @@ const Jumps = () => {
                         asChild
                       >
                         <a href="https://whop.com/jumpinai/" target="_blank" rel="noopener noreferrer">
-                          <ShoppingCart className="h-4 w-4 mr-2" />
-                          Join on Whop
+                          Join our Whop
                         </a>
                       </Button>
                     </div>
