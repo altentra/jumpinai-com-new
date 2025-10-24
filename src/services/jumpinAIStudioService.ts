@@ -308,17 +308,24 @@ export const jumpinAIStudioService = {
                   onProgress(step, type, data);
                 }
                 
-                if (userId && jumpId && toolPromptsArray.length > 0) {
-                  console.log(`💾 Saving ${toolPromptsArray.length} tool prompts...`);
+                // Save only the valid (non-error) tool prompts to database
+                const validForSave = validToolPrompts.filter((t: any) => !t.isError);
+                if (userId && jumpId && validForSave.length > 0) {
+                  console.log(`💾 Saving ${validForSave.length} valid tool prompts...`);
                   (async () => {
                     try {
                       const { toolPromptsService } = await import('@/services/toolPromptsService');
-                      await toolPromptsService.saveToolPrompts(toolPromptsArray, userId, jumpId);
+                      await toolPromptsService.saveToolPrompts(validForSave, userId, jumpId);
                       console.log('✅ Tool prompts saved successfully');
                     } catch (error) {
                       console.error('❌ Error saving tool prompts:', error);
                     }
                   })();
+                }
+              } else if (type === 'complete') {
+                console.log('🎊 Generation complete event received');
+                if (onProgress) {
+                  onProgress(step, type, data);
                 }
               } else if (type === 'workflows') {
                 console.log('⚙️ Workflows data received (not saved - feature removed)');
