@@ -624,8 +624,34 @@ Create world-class, executive-level content that inspires action and provides cr
     case 4:
       // STEP 4: Tools & Prompts
       return {
-        systemPrompt: `You are an AI tools specialist. Analyze what the person is trying to achieve to understand their situation, then create tailored tool+prompt combos.`,
-        userPrompt: `Create 6 tool+prompt combinations:
+        systemPrompt: `You are an AI tool recommendation and prompt engineering expert with real-time knowledge of the latest AI tools and technologies as of October 24, 2025.
+
+CRITICAL: TOOL SELECTION & DIVERSITY REQUIREMENTS:
+1. Generate exactly 9 tool + prompt combinations (increased from 6)
+2. MUST use at least 6 DIFFERENT tools across the 9 combos
+3. Only repeat a tool if it's genuinely optimal for distinct use cases
+4. Strategic mix required:
+   - 2-3 AI writing/reasoning tools (ChatGPT, Claude, Gemini, etc.)
+   - 3-4 specialized tools (video: Veo3/InVideo, image: Midjourney/DALL-E, code: Cursor/Replit, etc.)
+   - 2-3 productivity/workflow tools (Notion, Make.com, Zapier, etc.)
+5. PRIORITIZE latest and greatest tools as of October 2025
+6. Consider cutting-edge releases and trending tools in the market RIGHT NOW
+
+CRITICAL: TOOL-SPECIFIC PROMPT FORMATS:
+- Add "prompt_format" field: "json" | "detailed_descriptive" | "structured_requirements" | "conversational"
+- Video tools (Veo3, InVideo, Runway): Use JSON format with structured parameters
+- Image tools (Midjourney, DALL-E, Stable Diffusion): Use detailed descriptive format
+- Code tools (Cursor, Replit, GitHub Copilot): Use structured requirements format
+- General AI (ChatGPT, Claude, Gemini): Use conversational but detailed format
+
+CRITICAL: PHASE ALIGNMENT:
+- Add "phase" field: 1, 2, or 3
+- Phase 1 (Combos 1-3): Foundation tools - research, planning, initial setup
+- Phase 2 (Combos 4-6): Growth tools - content creation, automation, scaling
+- Phase 3 (Combos 7-9): Mastery tools - optimization, analytics, advanced features
+
+Analyze what the person is trying to achieve to understand their situation, then create tailored tool+prompt combos.`,
+        userPrompt: `Create 9 tool+prompt combinations with diversity and phase alignment:
 
 ${baseContext}
 
@@ -638,8 +664,18 @@ CRITICAL INSTRUCTIONS:
 3. Fit their budget: ${context.budget}
 4. Match AI experience: ${context.aiKnowledge}
 5. Work with urgency: ${context.timeCommitment}
+6. MUST use at least 6 DIFFERENT tools across the 9 combos
+7. Use tool-specific prompt formats (JSON for video, detailed for images, etc.)
+8. Align 3 combos per phase (foundation/growth/mastery)
+9. Recommend latest October 2025 tools when appropriate
 
 DO NOT use generic roles. Tailor to THEIR specific situation.
+
+EXAMPLE of proper format-specific prompts:
+- JSON (for video tools): {"scene": "sunset over mountains", "duration": 5, "style": "cinematic", "mood": "peaceful"}
+- Detailed descriptive (for image): "A photorealistic sunset over mountains, golden hour lighting, 8K resolution, cinematic composition"
+- Structured requirements (for code): "Requirements: 1) Create React component 2) Use TypeScript 3) Include error handling"
+- Conversational detailed (for general AI): "I need help creating a comprehensive strategy. Please analyze my situation and provide..."
 
 Return ONLY valid JSON:
 {
@@ -651,8 +687,9 @@ Return ONLY valid JSON:
       "tool_name": "Specific tool",
       "tool_url": "https://url.com",
       "tool_type": "Tool type",
-      "prompt_text": "200-300 word ready-to-copy prompt tailored to what they're trying to achieve. Reference what's preventing them. Include industry: ${context.industry}.",
-      "prompt_instructions": "Steps for THEIR use case",
+      "prompt_text": "200-300 word ready-to-copy prompt in the appropriate format for this tool. Tailored to what they're trying to achieve. Reference what's preventing them. Include industry: ${context.industry}.",
+      "prompt_format": "json|detailed_descriptive|structured_requirements|conversational",
+      "prompt_instructions": "Steps for THEIR use case, including format-specific guidance",
       "when_to_use": "When in their journey",
       "why_this_combo": "Why perfect for their situation",
       "alternatives": [
@@ -663,13 +700,14 @@ Return ONLY valid JSON:
       "tags": ["relevant-tags"],
       "difficulty_level": "${context.aiKnowledge}",
       "setup_time": "Fits ${context.timeCommitment}",
-      "cost_estimate": "Within ${context.budget}"
+      "cost_estimate": "Within ${context.budget}",
+      "phase": 1|2|3
     }
   ]
 }
 
-Generate EXACTLY 6 combos tailored to THEIR input.`,
-        expectedTokens: 25000
+Generate EXACTLY 9 combos tailored to THEIR input with diversity and phase alignment.`,
+        expectedTokens: 35000
       };
 
     default:
