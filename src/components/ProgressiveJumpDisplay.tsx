@@ -247,7 +247,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                   transition-all duration-300 rounded-xl hover:scale-[1.02]"
               >
                 {getStatusIcon('tool_prompts', (result.components?.toolPrompts?.length || 0) > 0)}
-                <span className="tracking-wide">Tools & Prompts ({result.components?.toolPrompts?.length || 0}/6)</span>
+                <span className="tracking-wide">Tools & Prompts</span>
               </TabsTrigger>
             </TabsList>
           </div>
@@ -294,7 +294,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
               <span className="transition-transform duration-300 group-hover:scale-110">
                 {getStatusIcon('tool_prompts', (result.components?.toolPrompts?.length || 0) > 0)}
               </span>
-              <span className="tracking-wide">Tools & Prompts ({result.components?.toolPrompts?.length || 0}/6)</span>
+              <span className="tracking-wide">Tools & Prompts</span>
             </TabsTrigger>
           </TabsList>
         </div>
@@ -770,6 +770,40 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                                         </div>
                                       </div>
                                     )}
+                                    {action.tool_references && action.tool_references.length > 0 && (
+                                      <div className="mt-3 pt-3 border-t border-border/50 pl-11">
+                                        <div className="flex items-center gap-2 flex-wrap">
+                                          <span className="text-xs font-medium text-foreground flex items-center gap-1">
+                                            <Wrench className="w-3 h-3" />
+                                            Recommended Tools:
+                                          </span>
+                                          {action.tool_references.map((toolNum: number) => (
+                                            <button
+                                              key={toolNum}
+                                              onClick={(e) => {
+                                                e.stopPropagation();
+                                                // Scroll to tool combo in Tools & Prompts tab
+                                                const toolPromptTab = document.querySelector('[value="toolPrompts"]');
+                                                if (toolPromptTab) {
+                                                  (toolPromptTab as HTMLElement).click();
+                                                  setTimeout(() => {
+                                                    const comboCards = document.querySelectorAll('[data-tool-combo]');
+                                                    const targetCard = comboCards[toolNum - 1];
+                                                    if (targetCard) {
+                                                      targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                                    }
+                                                  }, 300);
+                                                }
+                                              }}
+                                              className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-primary/10 hover:bg-primary/20 border border-primary/30 text-primary text-xs font-medium transition-all duration-200 hover:scale-105"
+                                            >
+                                              <Wrench className="w-3 h-3" />
+                                              Tool #{toolNum}
+                                            </button>
+                                          ))}
+                                        </div>
+                                      </div>
+                                    )}
                                   </CardContent>
                                 </Card>
                               ))}
@@ -862,11 +896,13 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
           <div className="grid gap-4">
             {result.components?.toolPrompts && result.components.toolPrompts.length > 0 ? (
               result.components.toolPrompts.map((combo: any, index: number) => (
-                <ToolPromptComboCard
-                  key={index}
-                  combo={combo}
-                  onClick={() => {/* Detail modal will be added later */}}
-                />
+                <div key={index} data-tool-combo={index + 1}>
+                  <ToolPromptComboCard
+                    combo={combo}
+                    index={index + 1}
+                    onClick={() => {/* Detail modal will be added later */}}
+                  />
+                </div>
               ))
             ) : (
               <div className="flex items-center justify-center h-32 text-muted-foreground">

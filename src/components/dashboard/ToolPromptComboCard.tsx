@@ -8,9 +8,10 @@ import { useToast } from "@/hooks/use-toast";
 interface ToolPromptComboCardProps {
   combo: any;
   onClick?: () => void;
+  index?: number; // For numbering (1-9)
 }
 
-export function ToolPromptComboCard({ combo, onClick }: ToolPromptComboCardProps) {
+export function ToolPromptComboCard({ combo, onClick, index }: ToolPromptComboCardProps) {
   const { toast } = useToast();
   const [copied, setCopied] = useState(false);
 
@@ -67,7 +68,7 @@ export function ToolPromptComboCard({ combo, onClick }: ToolPromptComboCardProps
           <div className="flex items-start justify-between gap-3 mb-2">
             <CardTitle className="flex items-center gap-2 text-lg">
               <Sparkles className="w-5 h-5 text-primary" />
-              <span className="font-semibold">{combo.title || toolName}</span>
+              <span className="font-semibold">{index !== undefined && `${index}. `}{combo.title || toolName}</span>
             </CardTitle>
             {combo.category && (
               <Badge variant="outline" className="shrink-0 text-xs">

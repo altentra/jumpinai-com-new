@@ -363,6 +363,7 @@ CRITICAL REQUIREMENTS:
 3. Include realistic timelines and effort estimates
 4. Make every action measurable and verifiable
 5. Ensure professional, executive-level quality throughout
+6. **IMPORTANT**: Include tool references in key_actions - reference "Tool #1-3" for Phase 1 actions, "Tool #4-6" for Phase 2 actions, and "Tool #7-9" for Phase 3 actions where relevant. These will link to the AI tool+prompt combos generated later.
 
 Return ONLY valid JSON in this EXACT structure:
 {
@@ -382,24 +383,27 @@ Return ONLY valid JSON in this EXACT structure:
       "key_actions": [
         {
           "action": "**Set up professional AI workspace** with essential tools and systems",
-          "description": "Install and configure **ChatGPT Plus**, **Claude Pro**, and **Notion AI**. Create organized workspace with folders for projects, prompts, and learning resources. Establish daily practice routine of **30 minutes** for skill building. Set up tracking system for progress and insights.",
+          "description": "Install and configure **ChatGPT Plus**, **Claude Pro**, and **Notion AI**. Create organized workspace with folders for projects, prompts, and learning resources. Establish daily practice routine of **30 minutes** for skill building. Set up tracking system for progress and insights. → Use **Tool #1** for initial setup guidance.",
           "priority": "High",
           "effort_level": "2-3 hours",
-          "dependencies": []
+          "dependencies": [],
+          "tool_references": [1]
         },
         {
           "action": "**Complete foundational AI literacy training** through structured learning",
-          "description": "Enroll in **AI fundamentals course** covering prompt engineering, tool selection, and best practices. Complete **5 hands-on exercises** building real-world outputs. Document learnings and create personal **AI playbook** with proven prompts and techniques.",
+          "description": "Enroll in **AI fundamentals course** covering prompt engineering, tool selection, and best practices. Complete **5 hands-on exercises** building real-world outputs. Document learnings and create personal **AI playbook** with proven prompts and techniques. → Use **Tool #2** for learning optimization.",
           "priority": "High",
           "effort_level": "5-6 hours",
-          "dependencies": ["Set up professional AI workspace"]
+          "dependencies": ["Set up professional AI workspace"],
+          "tool_references": [2]
         },
         {
           "action": "**Create first AI-powered project** demonstrating core capabilities",
-          "description": "Design and build **[specific deliverable]** using AI tools learned so far. Focus on **quality over speed**, iterating prompts for optimal results. Document entire process including prompts used, tools selected, and results achieved. Present finished project to **3 peers or mentors** for feedback.",
+          "description": "Design and build **[specific deliverable]** using AI tools learned so far. Focus on **quality over speed**, iterating prompts for optimal results. Document entire process including prompts used, tools selected, and results achieved. Present finished project to **3 peers or mentors** for feedback. → Use **Tool #3** for project execution.",
           "priority": "High",
           "effort_level": "8-10 hours",
-          "dependencies": ["Complete foundational AI literacy training"]
+          "dependencies": ["Complete foundational AI literacy training"],
+          "tool_references": [3]
         },
         {
           "action": "**Establish daily AI practice routine** for consistent skill development",
@@ -464,24 +468,27 @@ Return ONLY valid JSON in this EXACT structure:
       "key_actions": [
         {
           "action": "**Launch revenue-generating AI service** with first paying clients",
-          "description": "Package **3 core AI services** with clear deliverables and pricing (**$500-2000 per project**). Create **professional service page** with portfolio examples. Execute outreach campaign to **20 qualified prospects**. Deliver first **3 paid projects** with exceptional quality, gathering testimonials and case studies.",
+          "description": "Package **3 core AI services** with clear deliverables and pricing (**$500-2000 per project**). Create **professional service page** with portfolio examples. Execute outreach campaign to **20 qualified prospects**. Deliver first **3 paid projects** with exceptional quality, gathering testimonials and case studies. → Use **Tool #4** for service design.",
           "priority": "High",
           "effort_level": "15-20 hours",
-          "dependencies": ["First AI Project Delivered"]
+          "dependencies": ["First AI Project Delivered"],
+          "tool_references": [4]
         },
         {
           "action": "**Master advanced AI techniques** for competitive advantage",
-          "description": "Deep-dive into **prompt chaining**, **multi-model workflows**, and **AI automation**. Complete **advanced training program** with hands-on projects. Build **10 sophisticated prompt sequences** for complex tasks. Create **automation workflows** saving **5+ hours per week**.",
+          "description": "Deep-dive into **prompt chaining**, **multi-model workflows**, and **AI automation**. Complete **advanced training program** with hands-on projects. Build **10 sophisticated prompt sequences** for complex tasks. Create **automation workflows** saving **5+ hours per week**. → Use **Tool #5** for advanced learning.",
           "priority": "High",
           "effort_level": "12-15 hours",
-          "dependencies": ["Core AI Competency Achieved"]
+          "dependencies": ["Core AI Competency Achieved"],
+          "tool_references": [5]
         },
         {
           "action": "**Build thought leadership presence** in AI community",
-          "description": "Publish **2 high-quality articles** sharing insights and case studies on **LinkedIn** and **Medium**. Create **weekly content** demonstrating expertise (**tips, examples, results**). Engage actively in **3 AI communities** providing valuable input. Speak at **1 virtual event** or host **workshop** for 20+ attendees.",
+          "description": "Publish **2 high-quality articles** sharing insights and case studies on **LinkedIn** and **Medium**. Create **weekly content** demonstrating expertise (**tips, examples, results**). Engage actively in **3 AI communities** providing valuable input. Speak at **1 virtual event** or host **workshop** for 20+ attendees. → Use **Tool #6** for content creation.",
           "priority": "Medium",
           "effort_level": "6-8 hours",
-          "dependencies": ["First AI Project Delivered"]
+          "dependencies": ["First AI Project Delivered"],
+          "tool_references": [6]
         },
         {
           "action": "**Develop proprietary AI methodology** as unique competitive advantage",
@@ -546,24 +553,28 @@ Return ONLY valid JSON in this EXACT structure:
       "key_actions": [
         {
           "action": "**Scale to consistent revenue target** with predictable client pipeline",
-          "description": "Achieve **$5,000-10,000 monthly revenue** from AI services. Establish **systematic marketing** generating **10+ qualified leads monthly**. Build **subscription or retainer model** for **3-5 ongoing clients**. Create **referral system** generating **30% of new business**. Document all systems for consistency and scalability.",
+          "description": "Achieve **$5,000-10,000 monthly revenue** from AI services. Establish **systematic marketing** generating **10+ qualified leads monthly**. Build **subscription or retainer model** for **3-5 ongoing clients**. Create **referral system** generating **30% of new business**. Document all systems for consistency and scalability. → Use **Tool #7** for scaling strategy.",
           "priority": "High",
           "effort_level": "20-25 hours",
-          "dependencies": ["First Revenue Generated", "Market Presence Established"]
+          "dependencies": ["First Revenue Generated", "Market Presence Established"],
+          "tool_references": [7]
         },
         {
           "action": "**Launch signature program or product** leveraging unique expertise",
-          "description": "Package methodology into **online course**, **coaching program**, or **SaaS tool**. Create compelling **marketing assets** including **sales page**, **demo videos**, and **case studies**. Execute **strategic launch** to **audience of 500+**. Generate **$3,000-5,000** from initial launch with **recurring revenue potential**.",
+          "description": "Package methodology into **online course**, **coaching program**, or **SaaS tool**. Create compelling **marketing assets** including **sales page**, **demo videos**, and **case studies**. Execute **strategic launch** to **audience of 500+**. Generate **$3,000-5,000** from initial launch with **recurring revenue potential**. → Use **Tool #8** for product development.",
           "priority": "High",
           "effort_level": "25-30 hours",
-          "dependencies": ["Develop proprietary AI methodology", "Advanced Skills Mastered"]
-        },
-        {
+          "dependencies": ["Develop proprietary AI methodology", "Advanced Skills Mastered"],
+          "tool_references": [8]
+        },</invoke>
+<invoke name="lov-line-replace">
+<parameter name="replace">        {
           "action": "**Build team or automation** for leverage and scaling",
-          "description": "Hire **1-2 contractors** or **virtual assistants** for task delegation. Implement **advanced automation** handling **60%+ of routine work**. Create **comprehensive SOPs** for all key processes. Establish **quality control system** maintaining excellence at scale. Reduce personal time to **10-12 hours weekly** while maintaining or growing revenue.",
+          "description": "Hire **1-2 contractors** or **virtual assistants** for task delegation. Implement **advanced automation** handling **60%+ of routine work**. Create **comprehensive SOPs** for all key processes. Establish **quality control system** maintaining excellence at scale. Reduce personal time to **10-12 hours weekly** while maintaining or growing revenue. → Use **Tool #9** for automation setup.",
           "priority": "High",
           "effort_level": "15-20 hours initial setup",
-          "dependencies": ["Scale to consistent revenue target"]
+          "dependencies": ["Scale to consistent revenue target"],
+          "tool_references": [9]
         },
         {
           "action": "**Establish industry authority** through strategic visibility",
@@ -707,7 +718,7 @@ Return ONLY valid JSON:
 }
 
 Generate EXACTLY 9 combos tailored to THEIR input with diversity and phase alignment.`,
-        expectedTokens: 35000
+        expectedTokens: 50000
       };
 
     default:
