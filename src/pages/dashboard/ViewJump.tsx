@@ -42,11 +42,6 @@ export default function ViewJump() {
       // Fetch tool prompts for this jump
       const toolPromptsResult = await supabase.from('user_tool_prompts').select('*').eq('jump_id', jumpId);
 
-      console.log('ViewJump: Components fetched:', {
-        toolPrompts: toolPromptsResult.data?.length || 0,
-        rawData: toolPromptsResult.data
-      });
-
       // Transform and validate database tool-prompts
       const validToolPrompts: any[] = [];
       let toolCounter = 1;
@@ -128,8 +123,7 @@ export default function ViewJump() {
         toolCounter++;
       });
 
-      console.log('✅ ViewJump: Validated and transformed', validToolPrompts.length, 'tool prompts');
-      console.log('ViewJump: validToolPrompts data:', validToolPrompts);
+      console.log('✅ Validated and transformed', validToolPrompts.length, 'tool prompts');
 
       // For backward compatibility, also extract tools from comprehensive_plan if no tools in database
       const fallbackToolPrompts = validToolPrompts.length ? [] : extractToolsFromJump(jumpData);
@@ -162,11 +156,7 @@ export default function ViewJump() {
         jumpId: jumpData.id
       };
 
-      console.log('ViewJump: Final result with tool prompts:', {
-        hasComponents: !!result.components,
-        toolPromptsCount: result.components?.toolPrompts?.length || 0,
-        toolPrompts: result.components?.toolPrompts
-      });
+      console.log('ViewJump: Transformed result:', result);
       setProgressiveResult(result);
     } catch (error) {
       console.error('ViewJump: Error loading jump data:', error);
