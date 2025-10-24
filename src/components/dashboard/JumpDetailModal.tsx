@@ -43,56 +43,92 @@ export default function JumpDetailModal({ jump, isOpen, onClose }: JumpDetailMod
         toolPrompts: toolPromptsResult.data?.length || 0
       });
 
-      // Transform database tool-prompts to display format with complete data structure
-      const transformedDbToolPrompts = (toolPromptsResult.data || []).map((dbToolPrompt: any) => {
-        console.log('Transforming tool prompt:', dbToolPrompt.title);
+      // Transform and validate database tool-prompts
+      const validToolPrompts: any[] = [];
+      let toolCounter = 1;
+      
+      (toolPromptsResult.data || []).forEach((dbToolPrompt: any) => {
+        console.log(`Validating tool prompt #${toolCounter}:`, dbToolPrompt.title);
         
         // Merge content object with top-level fields for complete data
         const content = dbToolPrompt.content || {};
         
-        return {
-          // Core identification
-          id: dbToolPrompt.id,
-          name: dbToolPrompt.tool_name || content.name || dbToolPrompt.title || 'Unnamed Tool',
-          category: dbToolPrompt.category || content.category || 'General',
+        // Validate required fields
+        const hasTitle = !!(dbToolPrompt.title || content.title);
+        const hasDescription = !!(dbToolPrompt.description || content.description);
+        const hasToolName = !!(dbToolPrompt.tool_name || content.name);
+        const hasPromptText = !!(dbToolPrompt.prompt_text || content.custom_prompt);
+        
+        if (!hasTitle || !hasDescription || !hasToolName || !hasPromptText) {
+          console.warn(`⚠️ Tool #${toolCounter} missing required fields:`, {
+            hasTitle,
+            hasDescription,
+            hasToolName,
+            hasPromptText,
+            data: dbToolPrompt
+          });
           
-          // Description and URLs
-          description: dbToolPrompt.description || content.description || 'No description available',
-          website_url: dbToolPrompt.tool_url || content.website_url || content.url || '',
-          
-          // Usage information (CRITICAL for display)
-          when_to_use: content.when_to_use || dbToolPrompt.use_cases?.[0] || 'Use as needed',
-          why_this_tool: content.why_this_tool || 'Recommended for your project',
-          how_to_integrate: content.how_to_integrate || 'Follow setup instructions',
-          
-          // Prompt data
-          custom_prompt: dbToolPrompt.prompt_text || content.custom_prompt || '',
-          prompt_instructions: dbToolPrompt.prompt_instructions || content.prompt_instructions || '',
-          
-          // Metadata
-          alternatives: content.alternatives || [],
-          skill_level: content.skill_level || dbToolPrompt.difficulty_level || 'Beginner',
-          cost_model: content.cost_model || dbToolPrompt.cost_estimate || 'Varies',
-          implementation_timeline: content.implementation_timeline || dbToolPrompt.setup_time || 'Quick setup',
-          implementation_time: content.implementation_timeline || dbToolPrompt.setup_time || 'Quick setup',
-          
-          // Arrays
-          use_cases: dbToolPrompt.use_cases || [],
-          ai_tools: dbToolPrompt.ai_tools || [],
-          features: dbToolPrompt.features || [],
-          tags: dbToolPrompt.tags || [],
-          
-          // Keep all original fields for compatibility
-          ...dbToolPrompt
-        };
+          // Create error placeholder
+          validToolPrompts.push({
+            id: `error-${toolCounter}`,
+            isError: true,
+            errorMessage: `Error loading tool #${toolCounter}`,
+            errorDetails: `This tool combo was incomplete. Missing: ${[
+              !hasTitle && 'title',
+              !hasDescription && 'description',
+              !hasToolName && 'tool name',
+              !hasPromptText && 'prompt text'
+            ].filter(Boolean).join(', ')}`,
+            name: dbToolPrompt.tool_name || 'Unknown Tool',
+            category: 'Error'
+          });
+        } else {
+          // Transform valid tool prompt
+          validToolPrompts.push({
+            // Core identification
+            id: dbToolPrompt.id,
+            name: dbToolPrompt.tool_name || content.name || dbToolPrompt.title || 'Unnamed Tool',
+            category: dbToolPrompt.category || content.category || 'General',
+            
+            // Description and URLs
+            description: dbToolPrompt.description || content.description || 'No description available',
+            website_url: dbToolPrompt.tool_url || content.website_url || content.url || '',
+            
+            // Usage information (CRITICAL for display)
+            when_to_use: content.when_to_use || dbToolPrompt.use_cases?.[0] || 'Use as needed',
+            why_this_tool: content.why_this_tool || 'Recommended for your project',
+            how_to_integrate: content.how_to_integrate || 'Follow setup instructions',
+            
+            // Prompt data
+            custom_prompt: dbToolPrompt.prompt_text || content.custom_prompt || '',
+            prompt_instructions: dbToolPrompt.prompt_instructions || content.prompt_instructions || '',
+            
+            // Metadata
+            alternatives: content.alternatives || [],
+            skill_level: content.skill_level || dbToolPrompt.difficulty_level || 'Beginner',
+            cost_model: content.cost_model || dbToolPrompt.cost_estimate || 'Varies',
+            implementation_timeline: content.implementation_timeline || dbToolPrompt.setup_time || 'Quick setup',
+            implementation_time: content.implementation_timeline || dbToolPrompt.setup_time || 'Quick setup',
+            
+            // Arrays
+            use_cases: dbToolPrompt.use_cases || [],
+            ai_tools: dbToolPrompt.ai_tools || [],
+            features: dbToolPrompt.features || [],
+            tags: dbToolPrompt.tags || [],
+            
+            // Keep all original fields for compatibility
+            ...dbToolPrompt
+          });
+        }
+        
+        toolCounter++;
       });
 
-      console.log('✅ Transformed', transformedDbToolPrompts.length, 'tool prompts');
-      console.log('Sample transformed tool:', transformedDbToolPrompts[0]);
+      console.log('✅ Validated and transformed', validToolPrompts.length, 'tool prompts');
 
       // For backward compatibility, also extract tools from comprehensive_plan if no tools in database
-      const fallbackToolPrompts = transformedDbToolPrompts.length ? [] : extractToolsFromJump(jump);
-      const allToolPrompts = [...transformedDbToolPrompts, ...fallbackToolPrompts];
+      const fallbackToolPrompts = validToolPrompts.length ? [] : extractToolsFromJump(jump);
+      const allToolPrompts = [...validToolPrompts, ...fallbackToolPrompts];
 
       // Create structured_plan from comprehensive_plan if it exists
       const structuredPlan = createStructuredPlan(jump);
