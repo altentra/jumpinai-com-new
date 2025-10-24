@@ -26,6 +26,38 @@ export function ToolPromptComboCard({ combo, onClick, index }: ToolPromptComboCa
   }
 
   console.log('✅ ToolPromptComboCard rendering with data:', combo);
+  
+  // Check if this is an error tool
+  if (combo.isError) {
+    return (
+      <div className="relative group">
+        <div className="absolute -inset-0.5 bg-gradient-to-r from-destructive/20 via-destructive/15 to-destructive/20 rounded-xl blur opacity-30"></div>
+        <div className="relative p-6 border border-destructive/30 rounded-lg bg-destructive/5">
+          <div className="flex items-start gap-3">
+            <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-destructive/20 flex items-center justify-center">
+              <span className="text-2xl">⚠️</span>
+            </div>
+            <div className="flex-1">
+              <h3 className="text-lg font-semibold mb-2 text-destructive">
+                {index !== undefined && `${index}. `}{combo.title || 'Error generating tool'}
+              </h3>
+              <p className="text-sm text-muted-foreground mb-3">{combo.description}</p>
+              <div className="text-xs text-muted-foreground bg-muted/50 p-3 rounded border border-border">
+                <p className="font-semibold mb-1">Why this happened:</p>
+                <p>The AI generated this tool combo but it was incomplete or malformed. This can happen when:</p>
+                <ul className="list-disc list-inside mt-2 space-y-1">
+                  <li>The response was too long and got cut off</li>
+                  <li>The AI didn't follow the required format</li>
+                  <li>Essential fields were missing from the generation</li>
+                </ul>
+                <p className="mt-3 text-primary">💡 Try generating again for a complete set of tools!</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const copyPrompt = async (e: React.MouseEvent) => {
     e.stopPropagation();

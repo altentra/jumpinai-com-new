@@ -194,6 +194,26 @@ async function callXAI(
   try {
     const parsed = JSON.parse(content);
     console.log(`Step ${step} parsed successfully:`, JSON.stringify(parsed).substring(0, 200));
+    
+    // SPECIAL VALIDATION FOR TOOL PROMPTS (Step 4)
+    if (step === 4 && parsed.tool_prompts) {
+      console.log(`🔍 Validating ${parsed.tool_prompts.length} tool prompts...`);
+      
+      // Check each tool for required fields
+      parsed.tool_prompts.forEach((tool: any, index: number) => {
+        const toolNum = index + 1;
+        const required = ['title', 'description', 'tool_name', 'prompt_text'];
+        const missing = required.filter(field => !tool[field]);
+        
+        if (missing.length > 0) {
+          console.error(`❌ Tool #${toolNum} missing required fields:`, missing);
+          console.error(`Tool #${toolNum} data:`, JSON.stringify(tool).substring(0, 500));
+        } else {
+          console.log(`✅ Tool #${toolNum} "${tool.title}" - valid`);
+        }
+      });
+    }
+    
     return parsed;
   } catch (parseError) {
     console.error(`JSON parse error for step ${step}:`, parseError);
@@ -633,7 +653,7 @@ Return ONLY valid JSON in this EXACT structure:
 }
 
 Create world-class, executive-level content that inspires action and provides crystal-clear guidance. Every element must be specific, measurable, and actionable.`,
-        expectedTokens: 21000
+        expectedTokens: 24000
       };
 
     case 4:
@@ -722,7 +742,7 @@ Return ONLY valid JSON:
 }
 
 Generate EXACTLY 9 combos tailored to THEIR input with diversity and phase alignment.`,
-        expectedTokens: 50000
+        expectedTokens: 53000
       };
 
     default:

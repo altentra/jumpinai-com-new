@@ -275,7 +275,34 @@ export const jumpinAIStudioService = {
                 const toolPromptsArray = data.tool_prompts || [];
                 console.log(`📦 Extracted ${toolPromptsArray.length} tool prompts`);
                 
-                result.components!.toolPrompts = toolPromptsArray;
+                // VALIDATE AND FILTER TOOL PROMPTS
+                const validToolPrompts: any[] = [];
+                const requiredFields = ['title', 'description', 'tool_name', 'prompt_text'];
+                
+                toolPromptsArray.forEach((tool: any, index: number) => {
+                  const toolNum = index + 1;
+                  const missingFields = requiredFields.filter(field => !tool[field] || tool[field].trim() === '');
+                  
+                  if (missingFields.length > 0) {
+                    console.error(`❌ Tool #${toolNum} has missing/empty required fields:`, missingFields);
+                    console.error(`Tool #${toolNum} data preview:`, JSON.stringify(tool).substring(0, 300));
+                    // Create a placeholder error tool to maintain numbering
+                    validToolPrompts.push({
+                      title: `Error generating tool #${toolNum}`,
+                      description: `This tool combo could not be generated properly. Missing fields: ${missingFields.join(', ')}`,
+                      tool_name: 'Error',
+                      prompt_text: 'This tool prompt is incomplete.',
+                      category: 'Error',
+                      isError: true
+                    });
+                  } else {
+                    console.log(`✅ Tool #${toolNum} "${tool.title}" - valid`);
+                    validToolPrompts.push(tool);
+                  }
+                });
+                
+                result.components!.toolPrompts = validToolPrompts;
+                console.log(`✅ Processed ${validToolPrompts.length} tool prompts (${validToolPrompts.filter((t: any) => !t.isError).length} valid, ${validToolPrompts.filter((t: any) => t.isError).length} errors)`);
                 
                 if (onProgress) {
                   onProgress(step, type, data);
