@@ -34,23 +34,23 @@ const Hero = () => {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Sophisticated Background - Light: Almost White, Dark: Deep Premium Black */}
-      <div className="absolute inset-0 bg-gradient-to-b from-gray-50 via-slate-100 to-stone-200 dark:from-black dark:via-gray-950 dark:to-black"></div>
+      {/* Sophisticated Background - Matching Premium Gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-slate-100 to-stone-200 dark:from-black dark:via-gray-950/90 dark:to-gray-900/60"></div>
       
-      {/* Premium Deep Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-blue-50/30 via-indigo-100/20 to-slate-300/40 dark:from-black/98 dark:via-slate-950/95 dark:to-black/98"></div>
+      {/* Premium Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-blue-50/30 via-indigo-100/20 to-slate-300/40 dark:from-black/50 dark:via-gray-950/40 dark:to-gray-900/50"></div>
       
       {/* Radial Depth Effect */}
-      <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-blue-950/40 dark:from-slate-950/50 dark:via-black/80 dark:to-black/95"></div>
+      <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-blue-950/40 dark:from-transparent dark:via-gray-950/30 dark:to-gray-900/40"></div>
       
       {/* Vertical Curtain Drapes Effect */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-200/40 via-transparent to-slate-200/40 dark:from-black/95 dark:via-transparent dark:to-black/95"></div>
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-100/20 to-transparent dark:via-slate-950/70"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-200/40 via-transparent to-slate-200/40 dark:from-gray-950/80 dark:via-transparent dark:to-gray-950/80"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-100/20 to-transparent dark:via-gray-900/50"></div>
       </div>
       
       {/* Bottom Sophisticated Light Effect */}
-      <div className="absolute bottom-0 left-0 right-0 h-96 bg-gradient-to-t from-white/60 via-slate-50/30 to-transparent dark:from-black/95 dark:via-gray-950/80 dark:to-transparent"></div>
+      <div className="absolute bottom-0 left-0 right-0 h-96 bg-gradient-to-t from-white/60 via-slate-50/30 to-transparent dark:from-gray-950/70 dark:via-gray-900/40 dark:to-transparent"></div>
 
       {/* Advanced Animated Grid Pattern */}
       <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.08]">
@@ -98,12 +98,11 @@ const Hero = () => {
         <div className="absolute top-1/3 left-1/4 w-full h-full bg-gradient-conic from-blue-200/30 via-indigo-300/20 via-slate-200/25 to-blue-200/30 dark:from-blue-900/40 dark:via-indigo-950/30 dark:via-slate-900/35 dark:to-blue-900/40 rounded-full blur-3xl transform rotate-45 animate-spin" style={{ animationDuration: '60s' }}></div>
       </div>
       
-      {/* Advanced AI Neural Network Pattern */}
-      <div className="absolute inset-0 opacity-20 dark:opacity-30">
-        <div className="absolute top-20 left-10 w-64 h-64 bg-gradient-radial from-indigo-200/40 via-indigo-300/20 to-transparent dark:from-indigo-950/50 dark:via-indigo-900/25 dark:to-transparent rounded-full animate-pulse"></div>
-        <div className="absolute top-40 right-20 w-48 h-48 bg-gradient-radial from-blue-200/30 via-blue-300/15 to-transparent dark:from-blue-950/40 dark:via-blue-900/20 dark:to-transparent rounded-full animate-pulse animation-delay-2000"></div>
-        <div className="absolute bottom-32 left-1/3 w-56 h-56 bg-gradient-radial from-slate-300/35 via-slate-400/18 to-transparent dark:from-slate-900/45 dark:via-slate-800/22 dark:to-transparent rounded-full animate-pulse animation-delay-4000"></div>
-      </div>
+      {/* Premium Accent Orbs - Matching Other Pages */}
+      <div className="absolute -top-40 -right-40 w-[28rem] h-[28rem] bg-gradient-to-br from-primary/25 via-primary/15 to-primary/5 rounded-full blur-3xl animate-pulse opacity-60"></div>
+      <div className="absolute -bottom-40 -left-40 w-[32rem] h-[32rem] bg-gradient-to-tr from-secondary/20 via-accent/10 to-secondary/5 rounded-full blur-3xl animate-pulse opacity-50" style={{animationDelay: '2s'}}></div>
+      <div className="absolute top-1/4 left-1/3 w-72 h-72 bg-gradient-conic from-primary/15 via-accent/10 to-secondary/15 rounded-full blur-2xl animate-pulse opacity-40" style={{animationDelay: '1s'}}></div>
+      <div className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-gradient-radial from-accent/20 via-primary/10 to-transparent rounded-full blur-xl animate-pulse opacity-30" style={{animationDelay: '3s'}}></div>
 
       {/* Floating Particles */}
       <div className="absolute inset-0 overflow-hidden">
