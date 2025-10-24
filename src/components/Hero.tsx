@@ -218,7 +218,7 @@ const Hero = () => {
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div className="animate-fade-in-up">
           {/* Logo */}
-          <div className="flex items-center justify-center mb-4 sm:mb-5 overflow-hidden">
+          <div className="flex items-center justify-center mt-8 sm:mt-12 mb-4 sm:mb-5 overflow-hidden">
             <img 
               src={logoTransparent}
               alt="JumpinAI Logo" 
