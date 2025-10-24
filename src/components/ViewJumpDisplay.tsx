@@ -525,14 +525,14 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
 
             // Render phases
             return (
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {/* Implementation Phases */}
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {/* Executive Summary */}
                   <div className="relative group">
-                    <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
-                    <Card className="relative glass backdrop-blur-lg bg-card/80 border border-border hover:border-primary/40 transition-all">
-                      <CardContent className="p-4">
+                    <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/10 via-accent/8 to-secondary/10 rounded-xl blur opacity-20 group-hover:opacity-30 transition duration-300"></div>
+                    <Card className="relative glass backdrop-blur-lg bg-card/80 border border-border/30 hover:border-primary/30 transition-all">
+                      <CardContent className="p-3.5">
                         <div className="flex items-center gap-2 mb-1">
                           <Zap className="h-4 w-4 text-primary" />
                           <h3 className="text-sm font-semibold">Your Transformation Roadmap</h3>
@@ -554,11 +554,11 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
                     
                     return (
                     <div key={index} className="relative group">
-                      <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
-                      <Card className="relative glass backdrop-blur-lg bg-card/80 border border-border hover:border-primary/40 transition-all duration-300">
-                        <CardContent className="p-4 space-y-4">
+                      <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/10 via-accent/8 to-secondary/10 rounded-xl blur opacity-20 group-hover:opacity-30 transition duration-300"></div>
+                      <Card className="relative glass backdrop-blur-lg bg-card/80 border border-border/30 hover:border-primary/30 transition-all duration-300">
+                        <CardContent className="p-3.5 space-y-3">
                           {/* Phase Header */}
-                          <div className="flex items-start gap-3">
+                          <div className="flex items-start gap-3 pb-2.5 border-b border-border/20">
                             <div className="flex items-center justify-center w-8 h-8 bg-primary text-primary-foreground rounded-lg font-bold text-sm flex-shrink-0">
                               {phase.phase_number || index + 1}
                             </div>
@@ -574,7 +574,7 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
                                 </div>
                               )}
                               {phase.duration && (
-                                <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-1">
+                                <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-1.5">
                                   <Calendar className="h-3 w-3" />
                                   <div className="prose prose-sm dark:prose-invert max-w-none">
                                     <ReactMarkdown remarkPlugins={[remarkGfm]}>
@@ -588,14 +588,14 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
 
                           {/* Objectives Section */}
                           {phase.objectives && phase.objectives.length > 0 && (
-                            <div className="space-y-2">
+                            <div className="space-y-1.5">
                               <div className="flex items-center gap-2">
                                 <Target className="h-4 w-4 text-primary" />
                                 <h4 className="font-medium text-sm">Phase Objectives</h4>
                               </div>
                               <div className="space-y-1.5">
                                 {phase.objectives.map((objective: string, idx: number) => (
-                                  <div key={idx} className="flex items-start gap-2 p-2.5 bg-muted/20 rounded-lg border border-border">
+                                  <div key={idx} className="flex items-start gap-2 p-2 bg-muted/20 rounded-lg border border-border/20">
                                     <CheckCircle className="h-3.5 w-3.5 text-primary mt-0.5 flex-shrink-0" />
                                     <div className="prose prose-sm dark:prose-invert max-w-none flex-1 text-xs text-muted-foreground">
                                       <ReactMarkdown remarkPlugins={[remarkGfm]}>
@@ -610,14 +610,14 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
 
                           {/* Key Actions Section */}
                           {phase.key_actions && phase.key_actions.length > 0 && (
-                            <div className="space-y-2">
+                            <div className="space-y-1.5">
                               <div className="flex items-center gap-2">
                                 <Play className="h-4 w-4 text-primary" />
                                 <h4 className="font-medium text-sm">Action Steps</h4>
                               </div>
-                              <div className="space-y-2">
+                              <div className="space-y-1.5">
                                 {phase.key_actions.map((action: any, actionIdx: number) => (
-                                  <div key={actionIdx} className="p-3 bg-muted/20 rounded-lg border border-border space-y-2">
+                                  <div key={actionIdx} className="p-2.5 bg-muted/20 rounded-lg border border-border/20 space-y-1.5">
                                     <div className="flex items-start justify-between gap-2">
                                       <div className="flex items-start gap-2 flex-1">
                                         <div className="flex items-center justify-center w-5 h-5 bg-primary/10 text-primary rounded-md font-semibold text-xs flex-shrink-0">
@@ -648,14 +648,14 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
                                       </div>
                                     </div>
                                     {action.description && (
-                                      <div className="prose prose-sm dark:prose-invert max-w-none text-xs text-muted-foreground leading-relaxed pl-7">
+                                      <div className="prose prose-sm dark:prose-invert max-w-none text-xs text-muted-foreground leading-relaxed pl-6">
                                         <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                           {action.description}
                                         </ReactMarkdown>
                                       </div>
                                     )}
                                     {action.dependencies && action.dependencies.length > 0 && (
-                                      <div className="pt-2 border-t border-border pl-7">
+                                      <div className="pt-1.5 border-t border-border/20 pl-6">
                                         <div className="text-xs text-muted-foreground flex items-center gap-2">
                                           <span className="font-medium">Dependencies:</span> 
                                           <span>{action.dependencies.join(' • ')}</span>
@@ -663,7 +663,7 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
                                       </div>
                                     )}
                                     {action.tool_references && action.tool_references.length > 0 && (
-                                      <div className="pt-2 border-t border-border pl-7">
+                                      <div className="pt-1.5 border-t border-border/20 pl-6">
                                         <div className="flex items-center gap-2 flex-wrap">
                                           <span className="text-xs font-medium flex items-center gap-1">
                                             <Wrench className="w-3 h-3" />
@@ -702,14 +702,14 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
 
                           {/* Milestones Section */}
                           {phase.milestones && phase.milestones.length > 0 && (
-                            <div className="space-y-2">
+                            <div className="space-y-1.5">
                               <div className="flex items-center gap-2">
                                 <Flag className="h-4 w-4 text-primary" />
                                 <h4 className="font-medium text-sm">Phase Milestones</h4>
                               </div>
                               <div className="space-y-1.5">
                                 {phase.milestones.map((milestone: any, idx: number) => (
-                                  <div key={idx} className="p-2.5 bg-muted/20 rounded-lg border border-border space-y-2">
+                                  <div key={idx} className="p-2 bg-muted/20 rounded-lg border border-border/20 space-y-1.5">
                                     <div className="flex items-start justify-between gap-2">
                                       <div className="font-medium text-sm prose prose-sm dark:prose-invert max-w-none flex-1">
                                         <ReactMarkdown remarkPlugins={[remarkGfm]}>
@@ -724,7 +724,7 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
                                       )}
                                     </div>
                                     {milestone.success_criteria && milestone.success_criteria.length > 0 && (
-                                      <div className="pt-2 border-t border-border">
+                                      <div className="pt-1.5 border-t border-border/20">
                                         <p className="text-xs font-medium text-muted-foreground mb-1">Success Criteria:</p>
                                         <ul className="space-y-1">
                                           {milestone.success_criteria.map((criteria: string, cIdx: number) => (
@@ -750,27 +750,30 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
                     </div>
                   );
                   })}
-                  
+                
                 {/* Success Metrics */}
                 {result.structured_plan.successMetrics && result.structured_plan.successMetrics.length > 0 && (
-                  <Card className="border-border/40">
-                    <CardContent className="p-5">
-                      <h3 className="text-base font-semibold text-foreground mb-3 flex items-center gap-2">
-                        <TrendingUp className="w-4 h-4 text-primary" />
-                        Success Metrics
-                      </h3>
-                      <ul className="space-y-2">
-                        {result.structured_plan.successMetrics.map((metric: string, idx: number) => (
-                          <li key={idx} className="text-sm text-muted-foreground flex items-start gap-2">
-                            <div className="w-5 h-5 rounded-md bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                              <span className="text-xs font-semibold text-primary">{idx + 1}</span>
-                            </div>
-                            <span>{metric}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </CardContent>
-                  </Card>
+                  <div className="relative group">
+                    <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/10 via-accent/8 to-secondary/10 rounded-xl blur opacity-20 group-hover:opacity-30 transition duration-300"></div>
+                    <Card className="relative glass backdrop-blur-lg bg-card/80 border border-border/30 hover:border-primary/30 transition-all">
+                      <CardContent className="p-3.5">
+                        <h3 className="text-sm font-semibold text-foreground mb-2 flex items-center gap-2">
+                          <TrendingUp className="w-4 h-4 text-primary" />
+                          Success Metrics
+                        </h3>
+                        <ul className="space-y-1.5">
+                          {result.structured_plan.successMetrics.map((metric: string, idx: number) => (
+                            <li key={idx} className="text-xs text-muted-foreground flex items-start gap-2">
+                              <div className="w-5 h-5 rounded-md bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <span className="text-xs font-semibold text-primary">{idx + 1}</span>
+                              </div>
+                              <span className="leading-relaxed">{metric}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </CardContent>
+                    </Card>
+                  </div>
                 )}
                 </div>
               </div>
@@ -782,7 +785,7 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
           <div className="grid gap-4">
             {result.components?.toolPrompts && result.components.toolPrompts.length > 0 ? (
               result.components.toolPrompts.map((combo: any, index: number) => (
-                <div key={index} data-tool-combo={index + 1}>
+                <div key={index} data-tool-combo={index + 1} className="animate-fade-in">
                   <ToolPromptComboCard
                     combo={combo}
                     index={index + 1}
@@ -791,7 +794,7 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
                 </div>
               ))
             ) : (
-              <div className="flex items-center justify-center h-32 text-muted-foreground">
+              <div className="glass backdrop-blur-lg bg-card/80 border border-border rounded-xl flex items-center justify-center h-32 text-muted-foreground">
                 <Loader2 className="w-6 h-6 animate-spin mr-2" />
                 Generating tools & prompts...
               </div>
