@@ -106,7 +106,7 @@ const ForInvestors = () => {
       <Navigation />
       
       {/* Premium Hero Section - Glass Morphism */}
-      <section className="relative py-12 sm:py-16 md:py-24 px-4 bg-gradient-to-br from-primary/5 via-background to-secondary/5">
+      <section className="relative pt-32 pb-12 px-4 bg-gradient-to-br from-primary/5 via-background to-secondary/5">
         <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:50px_50px]" />
         <div className="relative max-w-6xl mx-auto">
           <div className="text-center mb-8 sm:mb-12">
