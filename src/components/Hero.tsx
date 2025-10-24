@@ -34,23 +34,23 @@ const Hero = () => {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Sophisticated Background - Light: Almost White, Dark: Deep Blue Premium */}
-      <div className="absolute inset-0 bg-gradient-to-b from-gray-50 via-slate-100 to-stone-200 dark:from-slate-950 dark:via-blue-950 dark:to-slate-900"></div>
+      {/* Sophisticated Background - Light: Almost White, Dark: Deep Premium Black */}
+      <div className="absolute inset-0 bg-gradient-to-b from-gray-50 via-slate-100 to-stone-200 dark:from-black dark:via-gray-950 dark:to-black"></div>
       
-      {/* Premium Deep Blue Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-blue-50/30 via-indigo-100/20 to-slate-300/40 dark:from-blue-950/95 dark:via-indigo-950/90 dark:to-blue-900/95"></div>
+      {/* Premium Deep Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-blue-50/30 via-indigo-100/20 to-slate-300/40 dark:from-black/98 dark:via-slate-950/95 dark:to-black/98"></div>
       
-      {/* Radial Blue Depth Effect */}
-      <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-blue-950/40 dark:from-transparent dark:via-blue-950/30 dark:to-blue-950/80"></div>
+      {/* Radial Depth Effect */}
+      <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-blue-950/40 dark:from-slate-950/50 dark:via-black/80 dark:to-black/95"></div>
       
       {/* Vertical Curtain Drapes Effect */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-200/40 via-transparent to-slate-200/40 dark:from-black/80 dark:via-transparent dark:to-black/80"></div>
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-100/20 to-transparent dark:via-slate-950/50"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-200/40 via-transparent to-slate-200/40 dark:from-black/95 dark:via-transparent dark:to-black/95"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-100/20 to-transparent dark:via-slate-950/70"></div>
       </div>
       
       {/* Bottom Sophisticated Light Effect */}
-      <div className="absolute bottom-0 left-0 right-0 h-96 bg-gradient-to-t from-white/60 via-slate-50/30 to-transparent dark:from-black/80 dark:via-gray-950/50 dark:to-transparent"></div>
+      <div className="absolute bottom-0 left-0 right-0 h-96 bg-gradient-to-t from-white/60 via-slate-50/30 to-transparent dark:from-black/95 dark:via-gray-950/80 dark:to-transparent"></div>
 
       {/* Advanced Animated Grid Pattern */}
       <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.08]">
@@ -162,11 +162,11 @@ const Hero = () => {
       </div>
 
       {/* Advanced Mesh Gradient Overlay */}
-      <div className="absolute inset-0 opacity-30 dark:opacity-50">
-        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-blue-100/20 via-transparent via-transparent to-indigo-200/30 dark:from-blue-900/50 dark:via-indigo-950/40 dark:to-blue-950/60"></div>
-        <div className="absolute top-0 right-0 w-2/3 h-2/3 bg-gradient-to-bl from-slate-200/25 via-transparent to-blue-300/20 dark:from-blue-900/45 dark:via-indigo-950/30 dark:to-blue-950/50 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-3/4 h-3/4 bg-gradient-to-tr from-indigo-100/30 via-transparent to-slate-300/25 dark:from-indigo-900/50 dark:via-blue-950/35 dark:to-blue-900/55 rounded-full blur-2xl"></div>
-        <div className="absolute top-1/4 left-1/2 w-1/2 h-1/2 bg-gradient-to-br from-blue-900/40 via-indigo-950/30 to-transparent dark:from-blue-800/45 dark:via-indigo-900/35 dark:to-transparent rounded-full blur-3xl"></div>
+      <div className="absolute inset-0 opacity-30 dark:opacity-60">
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-blue-100/20 via-transparent via-transparent to-indigo-200/30 dark:from-slate-950/70 dark:via-black/90 dark:to-black/95"></div>
+        <div className="absolute top-0 right-0 w-2/3 h-2/3 bg-gradient-to-bl from-slate-200/25 via-transparent to-blue-300/20 dark:from-slate-950/60 dark:via-black/80 dark:to-slate-950/70 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-3/4 h-3/4 bg-gradient-to-tr from-indigo-100/30 via-transparent to-slate-300/25 dark:from-black/85 dark:via-slate-950/75 dark:to-black/90 rounded-full blur-2xl"></div>
+        <div className="absolute top-1/4 left-1/2 w-1/2 h-1/2 bg-gradient-to-br from-blue-900/40 via-indigo-950/30 to-transparent dark:from-slate-950/50 dark:via-black/70 dark:to-transparent rounded-full blur-3xl"></div>
       </div>
 
       {/* Dynamic Light Rays */}
