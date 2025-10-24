@@ -208,65 +208,37 @@ const ForInvestors = () => {
               </p>
             </div>
             
-            <div className="grid md:grid-cols-2 gap-8 items-start">
-              <div className="space-y-6">
-                <div className="glass backdrop-blur-sm bg-background/20 dark:bg-background/10 border border-primary/25 rounded-2xl p-6 shadow-lg shadow-primary/10 hover:shadow-xl hover:shadow-primary/15 transition-all duration-300 group">
-                  <div className="flex items-start space-x-4">
-                    <div className="flex-shrink-0 w-12 h-12 glass backdrop-blur-sm bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                      <Users className="h-6 w-6 text-primary" />
-                    </div>
-                    <div>
-                      <h3 className="text-base md:text-lg font-bold mb-2 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">2-Minute Personalization</h3>
-                      <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
-                        Proprietary AI engine creates complete personalized transformation roadmaps with comprehensive analysis in 2 minutes, not months—joining 15,000+ professionals who've already made the leap.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="glass backdrop-blur-sm bg-background/20 dark:bg-background/10 border border-primary/25 rounded-2xl p-6 shadow-lg shadow-primary/10 hover:shadow-xl hover:shadow-primary/15 transition-all duration-300 group">
-                  <div className="flex items-start space-x-4">
-                    <div className="flex-shrink-0 w-12 h-12 glass backdrop-blur-sm bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                      <Globe className="h-6 w-6 text-primary" />
-                    </div>
-                    <div>
-                      <h3 className="text-base md:text-lg font-bold mb-2 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Comprehensive Transformation Package</h3>
-                      <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
-                        Each Jump delivers a complete transformation plan: situation analysis, strategic vision with success metrics, detailed action plan with phases and milestones, plus 9 personalized batches of AI tools and prompts—all implementation-ready.
-                      </p>
-                    </div>
-                  </div>
-                </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-2xl p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/40 transition-all duration-300 group hover:scale-105 hover:-translate-y-2 text-center">
+                <Users className="h-8 w-8 md:h-10 md:w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
+                <h3 className="text-base md:text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">2-Minute Personalization</h3>
+                <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
+                  Proprietary AI engine creates complete personalized transformation roadmaps with comprehensive analysis in 2 minutes, not months—joining 15,000+ professionals who've already made the leap.
+                </p>
               </div>
               
-              <div className="space-y-6">
-                <div className="glass backdrop-blur-sm bg-background/20 dark:bg-background/10 border border-primary/25 rounded-2xl p-6 shadow-lg shadow-primary/10 hover:shadow-xl hover:shadow-primary/15 transition-all duration-300 group">
-                  <div className="flex items-start space-x-4">
-                    <div className="flex-shrink-0 w-12 h-12 glass backdrop-blur-sm bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                      <Users className="h-6 w-6 text-primary" />
-                    </div>
-                    <div>
-                      <h3 className="text-base md:text-lg font-bold mb-2 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">AI Coach Integration</h3>
-                      <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
-                        Ongoing personalized guidance through intelligent coaching, creating deeper engagement and retention.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="glass backdrop-blur-sm bg-background/20 dark:bg-background/10 border border-primary/25 rounded-2xl p-6 shadow-lg shadow-primary/10 hover:shadow-xl hover:shadow-primary/15 transition-all duration-300 group">
-                  <div className="flex items-start space-x-4">
-                    <div className="flex-shrink-0 w-12 h-12 glass backdrop-blur-sm bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                      <Lightbulb className="h-6 w-6 text-primary" />
-                    </div>
-                    <div>
-                      <h3 className="text-base md:text-lg font-bold mb-2 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Human-Centered AI Architecture</h3>
-                      <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
-                        AI amplifies human potential rather than replacing it, creating sustainable transformation and loyalty.
-                      </p>
-                    </div>
-                  </div>
-                </div>
+              <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-2xl p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/40 transition-all duration-300 group hover:scale-105 hover:-translate-y-2 text-center">
+                <Globe className="h-8 w-8 md:h-10 md:w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
+                <h3 className="text-base md:text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Comprehensive Transformation Package</h3>
+                <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
+                  Each Jump delivers a complete transformation plan: situation analysis, strategic vision with success metrics, detailed action plan with phases and milestones, plus 9 personalized batches of AI tools and prompts—all implementation-ready.
+                </p>
+              </div>
+              
+              <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-2xl p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/40 transition-all duration-300 group hover:scale-105 hover:-translate-y-2 text-center">
+                <Users className="h-8 w-8 md:h-10 md:w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
+                <h3 className="text-base md:text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">AI Coach Integration</h3>
+                <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
+                  Ongoing personalized guidance through intelligent coaching, creating deeper engagement and retention.
+                </p>
+              </div>
+              
+              <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-2xl p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/40 transition-all duration-300 group hover:scale-105 hover:-translate-y-2 text-center">
+                <Lightbulb className="h-8 w-8 md:h-10 md:w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
+                <h3 className="text-base md:text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Human-Centered AI Architecture</h3>
+                <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
+                  AI amplifies human potential rather than replacing it, creating sustainable transformation and loyalty.
+                </p>
               </div>
             </div>
           </div>
