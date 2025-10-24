@@ -34,11 +34,14 @@ const Hero = () => {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Sophisticated Background - Light: Almost White, Dark: Much Darker */}
-      <div className="absolute inset-0 bg-gradient-to-b from-gray-50 via-slate-100 to-stone-200 dark:from-gray-950 dark:via-slate-950 dark:to-black"></div>
+      {/* Sophisticated Background - Light: Almost White, Dark: Deep Blue Premium */}
+      <div className="absolute inset-0 bg-gradient-to-b from-gray-50 via-slate-100 to-stone-200 dark:from-slate-950 dark:via-blue-950 dark:to-slate-900"></div>
       
-      {/* Innovative Color Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-blue-50/30 via-indigo-100/20 to-slate-300/40 dark:from-slate-950/90 dark:via-gray-950/80 dark:to-stone-950/90"></div>
+      {/* Premium Deep Blue Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-blue-50/30 via-indigo-100/20 to-slate-300/40 dark:from-blue-950/95 dark:via-indigo-950/90 dark:to-blue-900/95"></div>
+      
+      {/* Radial Blue Depth Effect */}
+      <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-blue-950/40 dark:from-transparent dark:via-blue-950/30 dark:to-blue-950/80"></div>
       
       {/* Vertical Curtain Drapes Effect */}
       <div className="absolute inset-0">
@@ -104,9 +107,18 @@ const Hero = () => {
 
       {/* Floating Particles */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-blue-300/60 dark:bg-blue-400/40 rounded-full animate-bounce" style={{ animationDuration: '3s', animationDelay: '0s' }}></div>
-        <div className="absolute bottom-1/3 left-1/5 w-3 h-3 bg-slate-400/50 dark:bg-slate-300/30 rounded-full animate-bounce" style={{ animationDuration: '5s', animationDelay: '2s' }}></div>
-        <div className="absolute bottom-1/4 right-1/5 w-2 h-2 bg-indigo-300/80 dark:bg-indigo-400/50 rounded-full animate-bounce" style={{ animationDuration: '4.5s', animationDelay: '1.5s' }}></div>
+        <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-blue-300/60 dark:bg-blue-400/60 rounded-full animate-bounce" style={{ animationDuration: '3s', animationDelay: '0s' }}></div>
+        <div className="absolute bottom-1/3 left-1/5 w-3 h-3 bg-slate-400/50 dark:bg-indigo-300/50 rounded-full animate-bounce" style={{ animationDuration: '5s', animationDelay: '2s' }}></div>
+        <div className="absolute bottom-1/4 right-1/5 w-2 h-2 bg-indigo-300/80 dark:bg-indigo-400/70 rounded-full animate-bounce" style={{ animationDuration: '4.5s', animationDelay: '1.5s' }}></div>
+        
+        {/* Additional Logo Area Particles */}
+        <div className="absolute top-[20%] left-[35%] w-1.5 h-1.5 bg-blue-400/70 dark:bg-blue-300/80 rounded-full animate-pulse" style={{ animationDuration: '2s', animationDelay: '0.5s' }}></div>
+        <div className="absolute top-[18%] right-[38%] w-2 h-2 bg-indigo-400/60 dark:bg-indigo-300/70 rounded-full animate-pulse" style={{ animationDuration: '2.5s', animationDelay: '1s' }}></div>
+        <div className="absolute top-[25%] left-[42%] w-1 h-1 bg-blue-300/80 dark:bg-blue-400/90 rounded-full animate-bounce" style={{ animationDuration: '3.5s', animationDelay: '0.8s' }}></div>
+        <div className="absolute top-[22%] right-[45%] w-1.5 h-1.5 bg-indigo-300/70 dark:bg-indigo-400/80 rounded-full animate-pulse" style={{ animationDuration: '2.8s', animationDelay: '1.2s' }}></div>
+        <div className="absolute top-[28%] left-[48%] w-1 h-1 bg-blue-400/60 dark:bg-blue-300/70 rounded-full animate-bounce" style={{ animationDuration: '4s', animationDelay: '0.3s' }}></div>
+        <div className="absolute top-[16%] right-[32%] w-2 h-2 bg-indigo-400/50 dark:bg-indigo-300/60 rounded-full animate-pulse" style={{ animationDuration: '3.2s', animationDelay: '1.5s' }}></div>
+        <div className="absolute top-[30%] left-[55%] w-1.5 h-1.5 bg-blue-300/70 dark:bg-blue-400/80 rounded-full animate-bounce" style={{ animationDuration: '3.8s', animationDelay: '0.6s' }}></div>
       </div>
 
       {/* Neural Connection Lines */}
@@ -150,10 +162,11 @@ const Hero = () => {
       </div>
 
       {/* Advanced Mesh Gradient Overlay */}
-      <div className="absolute inset-0 opacity-30 dark:opacity-40">
-        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-blue-100/20 via-transparent via-transparent to-indigo-200/30 dark:from-blue-950/30 dark:via-transparent dark:to-indigo-950/40"></div>
-        <div className="absolute top-0 right-0 w-2/3 h-2/3 bg-gradient-to-bl from-slate-200/25 via-transparent to-blue-300/20 dark:from-slate-800/35 dark:via-transparent dark:to-blue-900/30 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-3/4 h-3/4 bg-gradient-to-tr from-indigo-100/30 via-transparent to-slate-300/25 dark:from-indigo-950/40 dark:via-transparent dark:to-slate-800/35 rounded-full blur-2xl"></div>
+      <div className="absolute inset-0 opacity-30 dark:opacity-50">
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-blue-100/20 via-transparent via-transparent to-indigo-200/30 dark:from-blue-900/50 dark:via-indigo-950/40 dark:to-blue-950/60"></div>
+        <div className="absolute top-0 right-0 w-2/3 h-2/3 bg-gradient-to-bl from-slate-200/25 via-transparent to-blue-300/20 dark:from-blue-900/45 dark:via-indigo-950/30 dark:to-blue-950/50 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-3/4 h-3/4 bg-gradient-to-tr from-indigo-100/30 via-transparent to-slate-300/25 dark:from-indigo-900/50 dark:via-blue-950/35 dark:to-blue-900/55 rounded-full blur-2xl"></div>
+        <div className="absolute top-1/4 left-1/2 w-1/2 h-1/2 bg-gradient-to-br from-blue-900/40 via-indigo-950/30 to-transparent dark:from-blue-800/45 dark:via-indigo-900/35 dark:to-transparent rounded-full blur-3xl"></div>
       </div>
 
       {/* Dynamic Light Rays */}
