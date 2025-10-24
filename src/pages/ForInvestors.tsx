@@ -121,28 +121,20 @@ const ForInvestors = () => {
           <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-3xl p-6 sm:p-8 md:p-12 lg:p-16 shadow-2xl shadow-primary/10 hover:shadow-3xl hover:shadow-primary/15 transition-all duration-500">
             <div className="text-center space-y-6 sm:space-y-8">
               <div className="space-y-4 sm:space-y-6">
-                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground leading-tight">
+                <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-foreground leading-tight">
                   Invest in the Future of
                   <span className="block bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
                     Personalized AI Transformation
                   </span>
                 </h2>
-                <p className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed px-2">
+                <p className="text-xs sm:text-sm md:text-base text-muted-foreground max-w-3xl mx-auto leading-relaxed px-2">
                   JumpinAI Studio empowers creators, professionals, and entrepreneurs to confidently adapt to the AI era—generating comprehensive transformation plans in just 2 minutes with situation analysis, strategic vision with success metrics, detailed action plans, and 9 personalized AI tool-prompt combinations.
                 </p>
               </div>
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+              <div className="flex justify-center">
                 <Button 
                   size="lg" 
-                  className="text-sm sm:text-base px-6 sm:px-8 py-3 bg-gradient-to-r from-primary/90 to-primary hover:from-primary hover:to-primary/80 text-primary-foreground border border-primary/30 rounded-2xl shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 hover:scale-105 group backdrop-blur-sm w-full sm:w-auto"
-                  onClick={() => setIsDeckModalOpen(true)}
-                >
-                  Explore Investment Deck
-                </Button>
-                <Button 
-                  variant="outline" 
-                  size="lg" 
-                  className="text-sm sm:text-base px-6 sm:px-8 py-3 glass backdrop-blur-sm bg-background/20 border-primary/30 hover:bg-primary/10 hover:border-primary/40 rounded-2xl shadow-lg shadow-primary/10 hover:shadow-xl hover:shadow-primary/15 transition-all duration-300 w-full sm:w-auto"
+                  className="text-sm sm:text-base px-8 sm:px-12 py-3 bg-gradient-to-r from-primary/90 to-primary hover:from-primary hover:to-primary/80 text-primary-foreground border border-primary/30 rounded-2xl shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 hover:scale-105 group backdrop-blur-sm w-full sm:w-auto"
                   onClick={scrollToContactForm}
                 >
                   Contact Our Team
@@ -154,47 +146,47 @@ const ForInvestors = () => {
       </section>
 
       {/* Why Invest Section - Premium Glass Morphism */}
-      <section className="py-20 px-4 relative z-10">
+      <section className="py-12 px-4 relative z-10">
         <div className="max-w-6xl mx-auto">
           <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-3xl p-8 md:p-12 shadow-2xl shadow-primary/10 hover:shadow-3xl hover:shadow-primary/15 transition-all duration-500">
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-br from-foreground via-foreground to-primary/70 bg-clip-text text-transparent">
+              <h2 className="text-2xl md:text-3xl font-bold mb-4 bg-gradient-to-br from-foreground via-foreground to-primary/70 bg-clip-text text-transparent">
                 Why Invest in JumpinAI
               </h2>
-              <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              <p className="text-sm md:text-base text-muted-foreground max-w-3xl mx-auto leading-relaxed">
                 The world's first platform for truly personalized AI transformation at scale
               </p>
             </div>
             
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-2xl p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/40 transition-all duration-300 group hover:scale-105 hover:-translate-y-2 text-center">
-                <TrendingUp className="h-10 w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
-                <h3 className="text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Massive Untapped Market</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
+                <TrendingUp className="h-8 w-8 md:h-10 md:w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
+                <h3 className="text-base md:text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Massive Untapped Market</h3>
+                <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
                   Billions struggle with generic AI solutions. We're the first to deliver truly personalized AI transformation at scale.
                 </p>
               </div>
               
               <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-2xl p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/40 transition-all duration-300 group hover:scale-105 hover:-translate-y-2 text-center">
-                <Target className="h-10 w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
-                <h3 className="text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Breakthrough Innovation</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
+                <Target className="h-8 w-8 md:h-10 md:w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
+                <h3 className="text-base md:text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Breakthrough Innovation</h3>
+                <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
                   2-minute AI-powered process delivers comprehensive transformation plans with situational analysis, strategic roadmaps, and 9 personalized tool-prompt batches. No competitor offers this depth of individualization at scale.
                 </p>
               </div>
               
               <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-2xl p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/40 transition-all duration-300 group hover:scale-105 hover:-translate-y-2 text-center">
-                <DollarSign className="h-10 w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
-                <h3 className="text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Scalable AI Engine</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
+                <DollarSign className="h-8 w-8 md:h-10 md:w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
+                <h3 className="text-base md:text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Scalable AI Engine</h3>
+                <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
                   AI-powered personalization engine generates unlimited unique transformations with minimal marginal cost.
                 </p>
               </div>
               
               <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-2xl p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/40 transition-all duration-300 group hover:scale-105 hover:-translate-y-2 text-center">
-                <Rocket className="h-10 w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
-                <h3 className="text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Perfect Timing</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
+                <Rocket className="h-8 w-8 md:h-10 md:w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
+                <h3 className="text-base md:text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Perfect Timing</h3>
+                <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
                   AI revolution creating demand for personalized transformation. We're first-to-market with this approach.
                 </p>
               </div>
@@ -204,14 +196,14 @@ const ForInvestors = () => {
       </section>
 
       {/* What Makes Us Unique - Premium Glass Morphism */}
-      <section className="py-20 px-4 relative z-10">
+      <section className="py-12 px-4 relative z-10">
         <div className="max-w-6xl mx-auto">
           <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-3xl p-8 md:p-12 shadow-2xl shadow-primary/10 hover:shadow-3xl hover:shadow-primary/15 transition-all duration-500">
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-br from-foreground via-foreground to-primary/70 bg-clip-text text-transparent">
+              <h2 className="text-2xl md:text-3xl font-bold mb-4 bg-gradient-to-br from-foreground via-foreground to-primary/70 bg-clip-text text-transparent">
                 What Makes Us Unique
               </h2>
-              <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              <p className="text-sm md:text-base text-muted-foreground max-w-3xl mx-auto leading-relaxed">
                 The world's first platform to deliver truly personalized AI transformation at enterprise scale
               </p>
             </div>
@@ -224,8 +216,8 @@ const ForInvestors = () => {
                       <Users className="h-6 w-6 text-primary" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-bold mb-2 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">2-Minute Personalization</h3>
-                      <p className="text-sm text-muted-foreground leading-relaxed">
+                      <h3 className="text-base md:text-lg font-bold mb-2 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">2-Minute Personalization</h3>
+                      <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
                         Proprietary AI engine creates complete personalized transformation roadmaps with comprehensive analysis in 2 minutes, not months—joining 15,000+ professionals who've already made the leap.
                       </p>
                     </div>
@@ -238,8 +230,8 @@ const ForInvestors = () => {
                       <Globe className="h-6 w-6 text-primary" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-bold mb-2 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Comprehensive Transformation Package</h3>
-                      <p className="text-sm text-muted-foreground leading-relaxed">
+                      <h3 className="text-base md:text-lg font-bold mb-2 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Comprehensive Transformation Package</h3>
+                      <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
                         Each Jump delivers a complete transformation plan: situation analysis, strategic vision with success metrics, detailed action plan with phases and milestones, plus 9 personalized batches of AI tools and prompts—all implementation-ready.
                       </p>
                     </div>
@@ -254,8 +246,8 @@ const ForInvestors = () => {
                       <Users className="h-6 w-6 text-primary" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-bold mb-2 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">AI Coach Integration</h3>
-                      <p className="text-sm text-muted-foreground leading-relaxed">
+                      <h3 className="text-base md:text-lg font-bold mb-2 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">AI Coach Integration</h3>
+                      <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
                         Ongoing personalized guidance through intelligent coaching, creating deeper engagement and retention.
                       </p>
                     </div>
@@ -268,8 +260,8 @@ const ForInvestors = () => {
                       <Lightbulb className="h-6 w-6 text-primary" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-bold mb-2 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Human-Centered AI Architecture</h3>
-                      <p className="text-sm text-muted-foreground leading-relaxed">
+                      <h3 className="text-base md:text-lg font-bold mb-2 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Human-Centered AI Architecture</h3>
+                      <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
                         AI amplifies human potential rather than replacing it, creating sustainable transformation and loyalty.
                       </p>
                     </div>
@@ -282,61 +274,61 @@ const ForInvestors = () => {
       </section>
 
       {/* Use of Funds - Premium Glass Morphism */}
-      <section className="py-20 px-4 relative z-10">
+      <section className="py-12 px-4 relative z-10">
         <div className="max-w-6xl mx-auto">
           <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-3xl p-8 md:p-12 shadow-2xl shadow-primary/10 hover:shadow-3xl hover:shadow-primary/15 transition-all duration-500">
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-br from-foreground via-foreground to-primary/70 bg-clip-text text-transparent">
+              <h2 className="text-2xl md:text-3xl font-bold mb-4 bg-gradient-to-br from-foreground via-foreground to-primary/70 bg-clip-text text-transparent">
                 Use of Funds
               </h2>
-              <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              <p className="text-sm md:text-base text-muted-foreground max-w-3xl mx-auto leading-relaxed">
                 Strategic investment in AI technology, platform expansion, and market leadership
               </p>
             </div>
             
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-2xl p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/40 transition-all duration-300 group hover:scale-105 hover:-translate-y-2 text-center">
-                <div className="w-14 h-14 glass backdrop-blur-sm bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-                  <Rocket className="h-7 w-7 text-primary" />
+                <div className="w-12 h-12 md:w-14 md:h-14 glass backdrop-blur-sm bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <Rocket className="h-6 w-6 md:h-7 md:w-7 text-primary" />
                 </div>
-                <h3 className="text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">AI Engine Enhancement</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+                <h3 className="text-base md:text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">AI Engine Enhancement</h3>
+                <p className="text-xs md:text-sm text-muted-foreground leading-relaxed mb-4">
                   Advanced personalization algorithms, multi-language support, and enterprise-grade AI capabilities
                 </p>
-                <div className="text-2xl font-bold text-primary">40%</div>
+                <div className="text-xl md:text-2xl font-bold text-primary">40%</div>
               </div>
               
               <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-2xl p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/40 transition-all duration-300 group hover:scale-105 hover:-translate-y-2 text-center">
-                <div className="w-14 h-14 glass backdrop-blur-sm bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-                  <TrendingUp className="h-7 w-7 text-primary" />
+                <div className="w-12 h-12 md:w-14 md:h-14 glass backdrop-blur-sm bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <TrendingUp className="h-6 w-6 md:h-7 md:w-7 text-primary" />
                 </div>
-                <h3 className="text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Market Expansion</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+                <h3 className="text-base md:text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Market Expansion</h3>
+                <p className="text-xs md:text-sm text-muted-foreground leading-relaxed mb-4">
                   Strategic partnerships, enterprise sales, and global market penetration initiatives
                 </p>
-                <div className="text-2xl font-bold text-primary">30%</div>
+                <div className="text-xl md:text-2xl font-bold text-primary">30%</div>
               </div>
               
               <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-2xl p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/40 transition-all duration-300 group hover:scale-105 hover:-translate-y-2 text-center">
-                <div className="w-14 h-14 glass backdrop-blur-sm bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-                  <Globe className="h-7 w-7 text-primary" />
+                <div className="w-12 h-12 md:w-14 md:h-14 glass backdrop-blur-sm bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <Globe className="h-6 w-6 md:h-7 md:w-7 text-primary" />
                 </div>
-                <h3 className="text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Technology Infrastructure</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+                <h3 className="text-base md:text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Technology Infrastructure</h3>
+                <p className="text-xs md:text-sm text-muted-foreground leading-relaxed mb-4">
                   Scalable cloud architecture, security enhancements, and enterprise-level platform reliability
                 </p>
-                <div className="text-2xl font-bold text-primary">20%</div>
+                <div className="text-xl md:text-2xl font-bold text-primary">20%</div>
               </div>
               
               <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-2xl p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/40 transition-all duration-300 group hover:scale-105 hover:-translate-y-2 text-center">
-                <div className="w-14 h-14 glass backdrop-blur-sm bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-                  <Users className="h-7 w-7 text-primary" />
+                <div className="w-12 h-12 md:w-14 md:h-14 glass backdrop-blur-sm bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <Users className="h-6 w-6 md:h-7 md:w-7 text-primary" />
                 </div>
-                <h3 className="text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Talent & Operations</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+                <h3 className="text-base md:text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Talent & Operations</h3>
+                <p className="text-xs md:text-sm text-muted-foreground leading-relaxed mb-4">
                   World-class AI talent acquisition, operational excellence, and strategic leadership expansion
                 </p>
-                <div className="text-2xl font-bold text-primary">10%</div>
+                <div className="text-xl md:text-2xl font-bold text-primary">10%</div>
               </div>
             </div>
           </div>
@@ -344,7 +336,7 @@ const ForInvestors = () => {
       </section>
 
       {/* Crunchbase Profile - Premium Glass */}
-      <section className="py-8 px-4 relative z-10">
+      <section className="py-6 px-4 relative z-10">
         <div className="max-w-2xl mx-auto">
           <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-2xl p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/20 transition-all duration-300 hover:scale-105">
             <div className="flex items-center justify-center gap-4">
@@ -367,14 +359,14 @@ const ForInvestors = () => {
       </section>
 
       {/* Call to Action - Premium Glass Morphism */}
-      <section id="contact-form-section" className="py-20 px-4 relative z-10">
+      <section id="contact-form-section" className="py-12 px-4 relative z-10">
         <div className="max-w-5xl mx-auto">
           <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-3xl p-8 md:p-12 shadow-2xl shadow-primary/10 hover:shadow-3xl hover:shadow-primary/15 transition-all duration-500">
             <div className="text-center mb-10">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-br from-foreground via-foreground to-primary/70 bg-clip-text text-transparent">
+              <h2 className="text-2xl md:text-3xl font-bold mb-4 bg-gradient-to-br from-foreground via-foreground to-primary/70 bg-clip-text text-transparent">
                 Ready to Lead the AI Transformation Revolution?
               </h2>
-              <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
+              <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
                 Partner with us to scale the world's first truly personalized AI transformation platform and define the future of human-AI collaboration.
               </p>
             </div>
