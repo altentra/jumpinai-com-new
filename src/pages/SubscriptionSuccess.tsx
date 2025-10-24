@@ -25,28 +25,8 @@ const SubscriptionSuccess = () => {
   }, []);
 
   useEffect(() => {
-    // Send welcome email to the customer
-    const sendWelcomeEmail = async () => {
-      if (user?.email) {
-        try {
-          console.log("Sending welcome email to:", user.email);
-          await supabase.functions.invoke('send-subscription-welcome', {
-            body: {
-              customerEmail: user.email,
-              customerName: user.display_name || user.email?.split('@')[0],
-              subscriptionTier: 'JumpinAI Pro'
-            }
-          });
-          console.log("✅ Welcome email sent successfully");
-        } catch (error) {
-          console.error("⚠️ Failed to send welcome email:", error);
-          // Don't block the page if email fails
-        }
-      }
-    };
-
-    // Send welcome email after a short delay to ensure subscription is processed
-    const emailTimer = setTimeout(sendWelcomeEmail, 2000);
+    // NOTE: Welcome email is now sent automatically via Stripe webhook
+    // after payment confirmation. No need to send it here.
     
     // Clean up URL parameters after a delay
     const urlTimer = setTimeout(() => {
@@ -54,10 +34,9 @@ const SubscriptionSuccess = () => {
     }, 3000);
 
     return () => {
-      clearTimeout(emailTimer);
       clearTimeout(urlTimer);
     };
-  }, [user]);
+  }, []);
 
   return (
     <>

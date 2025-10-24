@@ -226,6 +226,10 @@ const handler = async (req: Request): Promise<Response> => {
       subject: welcomeSubject,
       html: `
         <div style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+          <div style="text-align: center; padding: 20px;">
+            <img src="https://cieczaajcgkgdgenfdzi.supabase.co/storage/v1/object/public/digital-products/logo.png" alt="JumpinAI" style="max-width: 150px; height: auto;" />
+          </div>
+          
           <div style="background: linear-gradient(135deg, #374151 0%, #1f2937 100%); padding: 30px; text-align: center;">
             <h1 style="color: white; margin: 0; font-size: 28px;">${isResubscription ? 'Welcome Back to JumpinAI!' : 'Welcome to JumpinAI!'}</h1>
             <p style="color: #d1d5db; margin: 10px 0 0 0; font-size: 16px;">Your AI transformation journey ${isResubscription ? 'continues' : 'starts now'}</p>

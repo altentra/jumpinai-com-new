@@ -202,22 +202,10 @@ serve(async (req) => {
       // Continue anyway - the payment processing will handle it
     }
 
-    // Send purchase notification
-    try {
-      await supabase.functions.invoke('send-purchase-notification', {
-        body: {
-          user_email: user.email,
-          product_name: creditPackage.name,
-          amount: creditPackage.price_cents / 100,
-          currency: 'usd'
-        }
-      });
-    } catch (notificationError) {
-      console.error('Error sending purchase notification:', notificationError);
-      // Don't fail the checkout for notification errors
-    }
+    // NOTE: Purchase notification will be sent via Stripe webhook
+    // after payment is confirmed, not here at checkout creation
 
-    return new Response(JSON.stringify({ 
+    return new Response(JSON.stringify({
       url: session.url,
       sessionId: session.id 
     }), {

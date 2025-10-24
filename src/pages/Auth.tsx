@@ -62,7 +62,7 @@ export default function Auth() {
     if (!signupName || !signupEmail || !signupPassword) return toast.error("Please enter name, email and password");
     setLoading(true);
     try {
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email: signupEmail,
         password: signupPassword,
         options: { 
@@ -73,6 +73,24 @@ export default function Auth() {
         },
       });
       if (error) throw error;
+      
+      // Send signup notification to admin
+      if (data.user) {
+        try {
+          await supabase.functions.invoke('send-user-signup-notification', {
+            body: {
+              email: signupEmail,
+              name: signupName,
+              provider: 'email'
+            }
+          });
+          console.log("✅ Signup notification sent to admin");
+        } catch (notifError) {
+          console.error("⚠️ Failed to send signup notification:", notifError);
+          // Don't fail signup if notification fails
+        }
+      }
+      
       toast.success("Account created successfully! Welcome to JumpinAI!");
       navigate(next, { replace: true });
     } catch (e: any) {
