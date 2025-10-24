@@ -652,7 +652,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                           <Zap className="h-4 w-4 text-primary" />
                           <h3 className="text-sm font-semibold">Your Transformation Roadmap</h3>
                         </div>
-                        <p className="text-xs text-muted-foreground leading-relaxed">
+                        <p className="text-sm text-muted-foreground leading-relaxed">
                           This comprehensive action plan breaks down your transformation into {phases.length} strategic phases. 
                           Each phase builds on the previous one, with clear objectives, actionable steps, and measurable milestones.
                         </p>
@@ -682,14 +682,14 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                                 {phase.title || phase.name}
                               </h3>
                               {phase.description && (
-                                <div className="prose prose-sm dark:prose-invert max-w-none text-muted-foreground text-xs leading-relaxed">
+                                <div className="prose prose-sm dark:prose-invert max-w-none text-muted-foreground text-sm leading-relaxed">
                                   <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                     {phase.description}
                                   </ReactMarkdown>
                                 </div>
                               )}
                               {phase.duration && (
-                                <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-1.5">
+                                <div className="flex items-center gap-1.5 text-sm text-muted-foreground mt-1.5">
                                   <Calendar className="h-3 w-3 flex-shrink-0" />
                                   <div className="prose prose-sm dark:prose-invert max-w-none">
                                     <ReactMarkdown remarkPlugins={[remarkGfm]}>
@@ -712,7 +712,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                                 {phase.objectives.map((objective: string, idx: number) => (
                                   <div key={idx} className="flex items-center gap-2 p-2 bg-muted/20 rounded-lg border border-border/20">
                                     <CheckCircle className="h-3.5 w-3.5 text-primary flex-shrink-0" />
-                                    <div className="prose prose-sm dark:prose-invert max-w-none flex-1 text-xs text-muted-foreground leading-tight">
+                                    <div className="prose prose-sm dark:prose-invert max-w-none flex-1 text-sm text-muted-foreground leading-relaxed">
                                       <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                         {objective}
                                       </ReactMarkdown>
@@ -739,7 +739,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                                           {actionIdx + 1}
                                         </div>
                                         <div className="flex-1">
-                                          <div className="font-medium text-sm leading-tight prose prose-sm dark:prose-invert max-w-none">
+                                          <div className="text-sm leading-relaxed prose prose-sm dark:prose-invert max-w-none">
                                             <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                               {action.action}
                                             </ReactMarkdown>
@@ -763,7 +763,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                                       </div>
                                     </div>
                                     {action.description && (
-                                      <div className="prose prose-sm dark:prose-invert max-w-none text-xs text-muted-foreground leading-relaxed pl-6">
+                                      <div className="prose prose-sm dark:prose-invert max-w-none text-sm text-muted-foreground leading-relaxed pl-6">
                                         <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                           {action.description}
                                         </ReactMarkdown>
@@ -771,8 +771,8 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                                     )}
                                     {action.dependencies && action.dependencies.length > 0 && (
                                       <div className="pt-1.5 border-t border-border/20 pl-6">
-                                        <div className="text-xs text-muted-foreground flex items-center gap-2 p-1.5 bg-muted/10 rounded border border-border/10">
-                                          <span className="font-medium">Dependencies:</span> 
+                                        <div className="text-sm text-muted-foreground flex items-center gap-2 p-1.5 bg-muted/10 rounded border border-border/10">
+                                          <span className="font-semibold">Dependencies:</span> 
                                           <span>{action.dependencies.join(' • ')}</span>
                                         </div>
                                       </div>
@@ -780,7 +780,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                                     {action.tool_references && action.tool_references.length > 0 && (
                                       <div className="pt-1.5 border-t border-border/20 pl-6">
                                         <div className="flex items-center gap-2 flex-wrap p-1.5 bg-muted/10 rounded border border-border/10">
-                                          <span className="text-xs font-medium flex items-center gap-1">
+                                          <span className="text-sm font-semibold flex items-center gap-1">
                                             <Wrench className="w-3 h-3 flex-shrink-0" />
                                             Recommended Tools:
                                           </span>
@@ -840,12 +840,12 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                                     </div>
                                     {milestone.success_criteria && milestone.success_criteria.length > 0 && (
                                       <div className="pt-1.5 border-t border-border/20">
-                                        <p className="text-xs font-medium text-muted-foreground mb-1">Success Criteria:</p>
+                                        <p className="text-sm font-semibold text-muted-foreground mb-1">Success Criteria:</p>
                                         <ul className="space-y-1 p-1.5 bg-muted/10 rounded border border-border/10">
                                           {milestone.success_criteria.map((criteria: string, cIdx: number) => (
-                                            <li key={cIdx} className="text-xs text-muted-foreground flex items-center gap-1.5">
+                                            <li key={cIdx} className="text-sm text-muted-foreground flex items-center gap-1.5">
                                               <CheckCircle className="h-3 w-3 text-primary flex-shrink-0" />
-                                              <div className="prose prose-sm dark:prose-invert max-w-none flex-1 leading-tight">
+                                              <div className="prose prose-sm dark:prose-invert max-w-none flex-1 leading-relaxed">
                                                 <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                                   {criteria}
                                                 </ReactMarkdown>
@@ -878,8 +878,8 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                         </h3>
                         <ul className="space-y-1.5">
                           {result.structured_plan.successMetrics.map((metric: string, idx: number) => (
-                            <li key={idx} className="text-xs text-muted-foreground flex items-start gap-2 p-2 bg-muted/20 rounded-lg border border-border/20">
-                              <div className="w-5 h-5 rounded-md bg-primary/10 flex items-center justify-center flex-shrink-0 translate-y-[0.125rem]">
+                            <li key={idx} className="text-sm text-muted-foreground flex items-start gap-2 p-2 bg-muted/20 rounded-lg border border-border/20">
+                              <div className="w-5 h-5 rounded-md bg-primary/10 flex items-center justify-center flex-shrink-0">
                                 <span className="text-xs font-semibold text-primary">{idx + 1}</span>
                               </div>
                               <span className="leading-relaxed">{metric}</span>
