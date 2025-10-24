@@ -40,6 +40,10 @@ const handler = async (req: Request): Promise<Response> => {
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
         </head>
         <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <div style="text-align: center; margin-bottom: 20px;">
+            <img src="https://jumpinai.com/images/jumpinai-logo-email.png" alt="JumpinAI" style="max-width: 150px; height: auto;" />
+          </div>
+          
           <div style="background: linear-gradient(135deg, #059669 0%, #047857 100%); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
             <h1 style="color: white; margin: 0; font-size: 28px;">🎉 New User Signup!</h1>
             <p style="color: #d1fae5; margin: 10px 0 0 0; font-size: 16px;">Someone just joined JumpinAI</p>
@@ -83,7 +87,7 @@ const handler = async (req: Request): Promise<Response> => {
           
           <div style="text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
             <p style="color: #6b7280; margin: 0; font-size: 12px;">
-              This notification was sent automatically from JumpinAI user signup system
+              <strong>JumpinAI - Your Personalized AI Adaptation Studio</strong>
             </p>
           </div>
         </body>

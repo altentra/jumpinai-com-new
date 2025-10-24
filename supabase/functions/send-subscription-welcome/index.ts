@@ -33,11 +33,13 @@ const handler = async (req: Request): Promise<Response> => {
     // Create a beautiful welcome email
     const welcomeHtml = `
       <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #ffffff;">
+        <!-- Logo -->
+        <div style="text-align: center; margin-bottom: 30px;">
+          <img src="https://jumpinai.com/images/jumpinai-logo-email.png" alt="JumpinAI" style="max-width: 150px; height: auto;" />
+        </div>
+        
         <!-- Header with gradient -->
-        <div style="text-align: center; margin-bottom: 30px; padding: 30px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px;">
-          <div style="background-color: rgba(255,255,255,0.2); width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;">
-            <span style="font-size: 36px; color: white;">👑</span>
-          </div>
+        <div style="text-align: center; margin-bottom: 30px; padding: 30px 20px; background: linear-gradient(135deg, #374151 0%, #1f2937 100%); border-radius: 12px;">
           <h1 style="color: white; margin: 0 0 10px 0; font-size: 28px; font-weight: bold;">Welcome to JumpinAI Pro!</h1>
           <p style="color: rgba(255,255,255,0.9); margin: 0; font-size: 18px;">You're now part of our exclusive Pro community</p>
         </div>
@@ -126,11 +128,11 @@ const handler = async (req: Request): Promise<Response> => {
         <!-- Footer -->
         <div style="text-align: center; padding-top: 20px; border-top: 1px solid #e2e8f0;">
           <p style="color: #718096; font-size: 14px; margin: 0 0 10px 0;">
-            Welcome to the future of AI productivity!
+            <strong>JumpinAI - Your Personalized AI Adaptation Studio</strong>
           </p>
           <p style="color: #a0aec0; font-size: 12px; margin: 0;">
-            <a href="https://www.jumpinai.com" style="color: #667eea; text-decoration: none;">JumpinAI</a> | 
-            <a href="https://www.jumpinai.com/dashboard/subscription" style="color: #667eea; text-decoration: none; margin-left: 10px;">Manage Subscription</a>
+            <a href="https://www.jumpinai.com" style="color: #374151; text-decoration: none;">Visit Website</a> | 
+            <a href="https://www.jumpinai.com/dashboard/subscription" style="color: #374151; text-decoration: none; margin-left: 10px;">Manage Subscription</a>
           </p>
         </div>
       </div>

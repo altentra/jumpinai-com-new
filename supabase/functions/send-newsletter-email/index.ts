@@ -227,7 +227,7 @@ const handler = async (req: Request): Promise<Response> => {
       html: `
         <div style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
           <div style="text-align: center; padding: 20px;">
-            <img src="https://cieczaajcgkgdgenfdzi.supabase.co/storage/v1/object/public/digital-products/logo.png" alt="JumpinAI" style="max-width: 150px; height: auto;" />
+            <img src="https://jumpinai.com/images/jumpinai-logo-email.png" alt="JumpinAI" style="max-width: 150px; height: auto;" />
           </div>
           
           <div style="background: linear-gradient(135deg, #374151 0%, #1f2937 100%); padding: 30px; text-align: center;">
@@ -271,7 +271,7 @@ const handler = async (req: Request): Promise<Response> => {
           <div style="background: #374151; padding: 20px; text-align: center;">
             <p style="color: white; margin: 0; font-size: 14px;">
               ${isResubscription ? 'Welcome back!' : 'Welcome aboard!'}<br>
-              <strong>The JumpinAI Team</strong><br>
+              <strong>JumpinAI - Your Personalized AI Adaptation Studio</strong><br>
               <a href="mailto:info@jumpinai.com" style="color: #d1d5db;">info@jumpinai.com</a>
             </p>
             <p style="color: #9ca3af; margin: 15px 0 0 0; font-size: 12px;">
@@ -324,7 +324,7 @@ const handler = async (req: Request): Promise<Response> => {
           </div>
           
           <div style="background: #374151; padding: 20px; text-align: center;">
-            <p style="color: white; margin: 0; font-size: 14px;">JumpinAI Newsletter System</p>
+            <p style="color: white; margin: 0; font-size: 14px;">JumpinAI - Your Personalized AI Adaptation Studio</p>
           </div>
         </div>
       `,

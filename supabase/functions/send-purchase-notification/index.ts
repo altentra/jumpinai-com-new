@@ -56,6 +56,10 @@ const handler = async (req: Request): Promise<Response> => {
       subject = `🎉 New Pro Subscription - ${customerEmail}`;
       htmlContent = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <div style="text-align: center; margin-bottom: 20px;">
+            <img src="https://jumpinai.com/images/jumpinai-logo-email.png" alt="JumpinAI" style="max-width: 120px; height: auto;" />
+          </div>
+          
           <h1 style="color: #2563eb; margin-bottom: 20px;">🎉 New Pro Subscription!</h1>
           
           <div style="background-color: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
@@ -84,8 +88,8 @@ const handler = async (req: Request): Promise<Response> => {
           
           <hr style="margin: 30px 0; border: none; border-top: 1px solid #e2e8f0;">
           
-          <p style="color: #64748b; font-size: 14px; margin: 0;">
-            This notification was sent automatically from JumpinAI when a new Pro subscription was created.
+          <p style="color: #64748b; font-size: 14px; text-align: center; margin: 0;">
+            <strong>JumpinAI - Your Personalized AI Adaptation Studio</strong>
           </p>
         </div>
       `;
@@ -93,6 +97,10 @@ const handler = async (req: Request): Promise<Response> => {
       subject = `🛒 New Product Purchase - ${productName}`;
       htmlContent = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <div style="text-align: center; margin-bottom: 20px;">
+            <img src="https://jumpinai.com/images/jumpinai-logo-email.png" alt="JumpinAI" style="max-width: 120px; height: auto;" />
+          </div>
+          
           <h1 style="color: #2563eb; margin-bottom: 20px;">🛒 New Product Purchase!</h1>
           
           <div style="background-color: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
@@ -122,8 +130,8 @@ const handler = async (req: Request): Promise<Response> => {
           
           <hr style="margin: 30px 0; border: none; border-top: 1px solid #e2e8f0;">
           
-          <p style="color: #64748b; font-size: 14px; margin: 0;">
-            This notification was sent automatically from JumpinAI when a new product purchase was completed.
+          <p style="color: #64748b; font-size: 14px; text-align: center; margin: 0;">
+            <strong>JumpinAI - Your Personalized AI Adaptation Studio</strong>
           </p>
         </div>
       `;

@@ -114,6 +114,10 @@ const handler = async (req: Request): Promise<Response> => {
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <div style="text-align: center; margin-bottom: 20px;">
+              <img src="https://jumpinai.com/images/jumpinai-logo-email.png" alt="JumpinAI" style="max-width: 120px; height: auto;" />
+            </div>
+            
             <div style="text-align: center; margin-bottom: 30px;">
               <h1 style="color: #2563eb; margin: 0;">New Investor Inquiry</h1>
               <div style="width: 50px; height: 3px; background: linear-gradient(to right, #2563eb, #3b82f6); margin: 10px auto;"></div>
@@ -133,7 +137,7 @@ const handler = async (req: Request): Promise<Response> => {
             
             <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
               <p style="color: #64748b; font-size: 14px; margin: 0;">
-                This inquiry was submitted through the JumpinAI investor portal.
+                <strong>JumpinAI - Your Personalized AI Adaptation Studio</strong>
               </p>
             </div>
           </div>
@@ -155,6 +159,10 @@ const handler = async (req: Request): Promise<Response> => {
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <div style="text-align: center; margin-bottom: 20px;">
+              <img src="https://jumpinai.com/images/jumpinai-logo-email.png" alt="JumpinAI" style="max-width: 120px; height: auto;" />
+            </div>
+            
             <div style="text-align: center; margin-bottom: 30px;">
               <h1 style="color: #2563eb; margin: 0;">Thank You, ${sanitizedData.name}!</h1>
               <div style="width: 50px; height: 3px; background: linear-gradient(to right, #2563eb, #3b82f6); margin: 10px auto;"></div>
@@ -162,7 +170,7 @@ const handler = async (req: Request): Promise<Response> => {
             
             <div style="margin-bottom: 25px;">
               <p style="font-size: 16px; line-height: 1.6; color: #334155; margin-bottom: 15px;">
-                We've received your investment inquiry and are excited about your interest in JumpinAI's mission to democratize AI education.
+                We've received your investment inquiry and are excited about your interest in JumpinAI - Your Personalized AI Adaptation Studio's mission to democratize AI education.
               </p>
               
               <p style="font-size: 16px; line-height: 1.6; color: #334155; margin-bottom: 15px;">
@@ -189,10 +197,10 @@ const handler = async (req: Request): Promise<Response> => {
             <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
               <p style="color: #64748b; font-size: 14px; margin: 5px 0;">
                 Best regards,<br>
-                <strong style="color: #2563eb;">The JumpinAI Team</strong>
+                <strong>JumpinAI - Your Personalized AI Adaptation Studio</strong>
               </p>
               <p style="color: #64748b; font-size: 12px; margin-top: 15px;">
-                Building the future of AI education, one learner at a time.
+                Empowering professionals with personalized AI adaptation strategies.
               </p>
             </div>
           </div>

@@ -17,7 +17,7 @@ const supabase = createClient(
 
 const webhookSecret = Deno.env.get("STRIPE_WEBHOOK_SECRET");
 
-const logoUrl = "https://cieczaajcgkgdgenfdzi.supabase.co/storage/v1/object/public/digital-products/logo.png";
+const logoUrl = "https://jumpinai.com/images/jumpinai-logo-email.png";
 
 serve(async (req) => {
   const signature = req.headers.get("stripe-signature");
@@ -162,6 +162,7 @@ async function handleSubscriptionSuccess(
           
           <div style="background: #374151; padding: 20px; text-align: center; border-radius: 0 0 10px 10px;">
             <p style="color: white; margin: 0; font-size: 14px;">
+              <strong>JumpinAI - Your Personalized AI Adaptation Studio</strong><br>
               Questions? Reply to this email or contact us at <a href="mailto:support@jumpinai.com" style="color: #d1d5db;">support@jumpinai.com</a>
             </p>
           </div>
@@ -272,6 +273,7 @@ async function handlePaymentSuccess(
           
           <div style="background: #374151; padding: 20px; text-align: center; border-radius: 0 0 10px 10px;">
             <p style="color: white; margin: 0; font-size: 14px;">
+              <strong>JumpinAI - Your Personalized AI Adaptation Studio</strong><br>
               Questions? Reply to this email or contact us at <a href="mailto:support@jumpinai.com" style="color: #d1d5db;">support@jumpinai.com</a>
             </p>
           </div>

@@ -176,7 +176,7 @@ serve(async (req: Request) => {
         <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
           
           <div style="text-align: center; margin-bottom: 20px;">
-            <img src="https://cieczaajcgkgdgenfdzi.supabase.co/storage/v1/object/public/digital-products/logo.png" alt="JumpinAI" style="max-width: 150px; height: auto;" />
+            <img src="https://jumpinai.com/images/jumpinai-logo-email.png" alt="JumpinAI" style="max-width: 150px; height: auto;" />
           </div>
 
           <div style="text-align: center; margin-bottom: 30px;">
@@ -238,7 +238,7 @@ serve(async (req: Request) => {
             </p>
             <p style="color: #64748b; font-size: 14px; margin: 0;">
               Best regards,<br>
-              <strong>The JumpinAI Team</strong>
+              <strong>JumpinAI - Your Personalized AI Adaptation Studio</strong>
             </p>
           </div>
 
