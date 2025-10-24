@@ -703,16 +703,16 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
 
                           {/* Objectives Section */}
                           {phase.objectives && phase.objectives.length > 0 && (
-                            <div className="space-y-1.5">
+                            <div className="p-3 bg-green-500/10 border border-green-500/20 rounded-lg space-y-2">
                               <div className="flex items-center gap-2">
-                                <Target className="h-4 w-4 text-primary flex-shrink-0" />
-                                <h4 className="font-medium text-sm">Phase Objectives</h4>
+                                <Target className="h-4 w-4 text-green-400 flex-shrink-0" />
+                                <h4 className="font-medium text-sm text-green-400">Phase Objectives</h4>
                               </div>
                               <div className="space-y-1.5">
                                 {phase.objectives.map((objective: string, idx: number) => (
-                                  <div key={idx} className="flex items-center gap-2 p-2 bg-muted/20 rounded-lg border border-border/20">
-                                    <CheckCircle className="h-3.5 w-3.5 text-primary flex-shrink-0" />
-                                    <div className="prose prose-sm dark:prose-invert max-w-none flex-1 text-sm text-muted-foreground leading-relaxed">
+                                  <div key={idx} className="flex items-center gap-2 p-2 bg-background/50 rounded border border-border/30">
+                                    <CheckCircle className="h-3.5 w-3.5 text-green-400 flex-shrink-0" />
+                                    <div className="prose prose-sm dark:prose-invert max-w-none flex-1 text-sm text-foreground leading-relaxed">
                                       <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                         {objective}
                                       </ReactMarkdown>
@@ -725,17 +725,17 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
 
                           {/* Key Actions Section */}
                           {phase.key_actions && phase.key_actions.length > 0 && (
-                            <div className="space-y-1.5">
+                            <div className="p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg space-y-2">
                               <div className="flex items-center gap-2">
-                                <Play className="h-4 w-4 text-primary flex-shrink-0" />
-                                <h4 className="font-medium text-sm">Action Steps</h4>
+                                <Play className="h-4 w-4 text-blue-400 flex-shrink-0" />
+                                <h4 className="font-medium text-sm text-blue-400">Action Steps</h4>
                               </div>
                               <div className="space-y-1.5">
                                 {phase.key_actions.map((action: any, actionIdx: number) => (
-                                  <div key={actionIdx} className="p-2.5 bg-muted/20 rounded-lg border border-border/20 space-y-1.5">
+                                  <div key={actionIdx} className="p-2.5 bg-background/50 rounded-lg border border-border/30 space-y-1.5">
                                     <div className="flex items-start justify-between gap-2">
                                       <div className="flex items-center gap-2 flex-1">
-                                        <div className="flex items-center justify-center w-5 h-5 bg-primary/10 text-primary rounded-md font-semibold text-xs flex-shrink-0">
+                                        <div className="flex items-center justify-center w-5 h-5 bg-blue-400/20 text-blue-400 rounded-md font-semibold text-xs flex-shrink-0">
                                           {actionIdx + 1}
                                         </div>
                                         <div className="flex-1">
@@ -771,7 +771,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                                     )}
                                     {action.dependencies && action.dependencies.length > 0 && (
                                       <div className="pt-1.5 border-t border-border/20 pl-6">
-                                        <div className="text-sm text-muted-foreground flex items-center gap-2 p-1.5 bg-muted/10 rounded border border-border/10">
+                                        <div className="text-sm text-muted-foreground flex items-center gap-2 p-2 bg-muted/30 rounded border border-border/30">
                                           <span className="font-semibold">Dependencies:</span> 
                                           <span>{action.dependencies.join(' • ')}</span>
                                         </div>
@@ -779,7 +779,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                                     )}
                                     {action.tool_references && action.tool_references.length > 0 && (
                                       <div className="pt-1.5 border-t border-border/20 pl-6">
-                                        <div className="flex items-center gap-2 flex-wrap p-1.5 bg-muted/10 rounded border border-border/10">
+                                        <div className="flex items-center gap-2 flex-wrap p-2 bg-muted/30 rounded border border-border/30">
                                           <span className="text-sm font-semibold flex items-center gap-1">
                                             <Wrench className="w-3 h-3 flex-shrink-0" />
                                             Recommended Tools:
@@ -817,14 +817,14 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
 
                           {/* Milestones Section */}
                           {phase.milestones && phase.milestones.length > 0 && (
-                            <div className="space-y-1.5">
+                            <div className="p-3 bg-green-500/10 border border-green-500/20 rounded-lg space-y-2">
                               <div className="flex items-center gap-2">
-                                <Flag className="h-4 w-4 text-primary flex-shrink-0" />
-                                <h4 className="font-medium text-sm">Phase Milestones</h4>
+                                <Flag className="h-4 w-4 text-green-400 flex-shrink-0" />
+                                <h4 className="font-medium text-sm text-green-400">Phase Milestones</h4>
                               </div>
                               <div className="space-y-1.5">
                                 {phase.milestones.map((milestone: any, idx: number) => (
-                                  <div key={idx} className="p-2 bg-muted/20 rounded-lg border border-border/20 space-y-1.5">
+                                  <div key={idx} className="p-2 bg-background/50 rounded-lg border border-border/30 space-y-1.5">
                                     <div className="flex items-start justify-between gap-2">
                                       <div className="font-medium text-sm prose prose-sm dark:prose-invert max-w-none flex-1">
                                         <ReactMarkdown remarkPlugins={[remarkGfm]}>
@@ -832,19 +832,19 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                                         </ReactMarkdown>
                                       </div>
                                       {milestone.target_date && (
-                                        <Badge variant="outline" className="text-xs whitespace-nowrap h-5 flex items-center">
-                                          <Calendar className="h-3 w-3 mr-1 flex-shrink-0" />
+                                        <Badge variant="outline" className="text-xs whitespace-nowrap h-5 flex items-center border-green-400/30">
+                                          <Calendar className="h-3 w-3 mr-1 flex-shrink-0 text-green-400" />
                                           {milestone.target_date}
                                         </Badge>
                                       )}
                                     </div>
                                     {milestone.success_criteria && milestone.success_criteria.length > 0 && (
                                       <div className="pt-1.5 border-t border-border/20">
-                                        <p className="text-sm font-semibold text-muted-foreground mb-1">Success Criteria:</p>
-                                        <ul className="space-y-1 p-1.5 bg-muted/10 rounded border border-border/10">
+                                        <p className="text-sm font-semibold text-green-400 mb-1">Success Criteria:</p>
+                                        <ul className="space-y-1 p-2 bg-muted/30 rounded border border-border/30">
                                           {milestone.success_criteria.map((criteria: string, cIdx: number) => (
-                                            <li key={cIdx} className="text-sm text-muted-foreground flex items-center gap-1.5">
-                                              <CheckCircle className="h-3 w-3 text-primary flex-shrink-0" />
+                                            <li key={cIdx} className="text-sm text-foreground flex items-center gap-1.5">
+                                              <CheckCircle className="h-3 w-3 text-green-400 flex-shrink-0" />
                                               <div className="prose prose-sm dark:prose-invert max-w-none flex-1 leading-relaxed">
                                                 <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                                   {criteria}
