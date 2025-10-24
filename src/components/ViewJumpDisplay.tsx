@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Loader2, CheckCircle, Clock, Zap, Timer, Copy, Check, Wrench, AlertTriangle, Lightbulb, Target, Compass, TrendingUp, Shield, DollarSign, Heart, MapPin, Calendar, Play, LayoutDashboard, Eye } from 'lucide-react';
+import { Loader2, CheckCircle, Clock, Zap, Timer, Copy, Check, Wrench, AlertTriangle, Lightbulb, Target, Compass, TrendingUp, Shield, DollarSign, Heart, MapPin, Calendar, Play, Flag, LayoutDashboard, Eye } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
@@ -529,18 +529,21 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
                 {/* Implementation Phases */}
                 <div className="space-y-4">
                   {/* Executive Summary */}
-                  <Card className="border-border/40">
-                    <CardContent className="p-5">
-                      <div className="flex items-center gap-3 mb-2">
-                        <Zap className="h-5 w-5 text-primary" />
-                        <h3 className="text-base font-semibold text-foreground">Your Transformation Roadmap</h3>
-                      </div>
-                      <p className="text-sm text-muted-foreground leading-relaxed">
-                        This comprehensive action plan breaks down your transformation into {phases.length} strategic phases. 
-                        Each phase builds on the previous one, with clear objectives, actionable steps, and measurable milestones.
-                      </p>
-                    </CardContent>
-                  </Card>
+                  <div className="relative group">
+                    <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
+                    <Card className="relative glass backdrop-blur-lg bg-card/80 border border-border hover:border-primary/40 transition-all">
+                      <CardContent className="p-4">
+                        <div className="flex items-center gap-2 mb-1">
+                          <Zap className="h-4 w-4 text-primary" />
+                          <h3 className="text-sm font-semibold">Your Transformation Roadmap</h3>
+                        </div>
+                        <p className="text-xs text-muted-foreground leading-relaxed">
+                          This comprehensive action plan breaks down your transformation into {phases.length} strategic phases. 
+                          Each phase builds on the previous one, with clear objectives, actionable steps, and measurable milestones.
+                        </p>
+                      </CardContent>
+                    </Card>
+                  </div>
 
                   {phases.map((phase: any, index: number) => {
                     // Validate each phase
@@ -550,198 +553,201 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
                     }
                     
                     return (
-                  <Card key={index} className="border-border/40">
-                    <CardContent className="p-5 space-y-4">
-                      {/* Enhanced Phase Header */}
-                      <div className="flex items-start gap-3">
-                        <div className="flex items-center justify-center w-10 h-10 bg-primary text-primary-foreground rounded-lg font-bold text-base flex-shrink-0">
-                          {phase.phase_number || index + 1}
-                        </div>
-                        <div className="flex-1">
-                          <h3 className="text-lg font-bold text-foreground mb-1 leading-tight">
-                            {phase.title || phase.name}
-                          </h3>
-                          {phase.description && (
-                            <div className="prose prose-sm dark:prose-invert max-w-none text-muted-foreground leading-relaxed mb-2">
-                              <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                {phase.description}
-                              </ReactMarkdown>
+                    <div key={index} className="relative group">
+                      <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
+                      <Card className="relative glass backdrop-blur-lg bg-card/80 border border-border hover:border-primary/40 transition-all duration-300">
+                        <CardContent className="p-4 space-y-4">
+                          {/* Phase Header */}
+                          <div className="flex items-start gap-3">
+                            <div className="flex items-center justify-center w-8 h-8 bg-primary text-primary-foreground rounded-lg font-bold text-sm flex-shrink-0">
+                              {phase.phase_number || index + 1}
                             </div>
-                          )}
-                          {phase.duration && (
-                            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                              <Calendar className="h-3.5 w-3.5" />
-                              <div className="prose prose-sm dark:prose-invert max-w-none">
-                                <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                  {phase.duration}
-                                </ReactMarkdown>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Objectives Section */}
-                      {phase.objectives && phase.objectives.length > 0 && (
-                        <div>
-                          <h4 className="font-semibold text-foreground mb-3 flex items-center gap-2 text-sm">
-                            <Target className="h-4 w-4 text-primary" />
-                            Phase Objectives
-                          </h4>
-                          <div className="grid gap-2">
-                            {phase.objectives.map((objective: string, idx: number) => (
-                              <div key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
-                                <CheckCircle className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
-                                <div className="prose prose-sm dark:prose-invert max-w-none flex-1">
+                            <div className="flex-1">
+                              <h3 className="text-base font-semibold mb-1">
+                                {phase.title || phase.name}
+                              </h3>
+                              {phase.description && (
+                                <div className="prose prose-sm dark:prose-invert max-w-none text-muted-foreground text-xs leading-relaxed">
                                   <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                    {objective}
+                                    {phase.description}
                                   </ReactMarkdown>
                                 </div>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                        {/* Key Actions Section */}
-                        {phase.key_actions && phase.key_actions.length > 0 && (
-                          <div>
-                            <h4 className="font-semibold text-foreground mb-3 flex items-center gap-2 text-sm">
-                              <Play className="h-4 w-4 text-primary" />
-                              Action Steps
-                            </h4>
-                            <div className="space-y-3">
-                              {phase.key_actions.map((action: any, actionIdx: number) => (
-                                <div key={actionIdx} className="border border-border/40 rounded-lg p-4">
-                                  <div className="flex items-start justify-between gap-3 mb-2">
-                                    <div className="flex items-start gap-2 flex-1">
-                                      <div className="flex items-center justify-center w-6 h-6 bg-primary/10 text-primary rounded-md font-semibold text-xs flex-shrink-0">
-                                        {actionIdx + 1}
-                                      </div>
-                                      <div className="flex-1">
-                                        <div className="font-semibold text-foreground text-sm mb-1 leading-snug prose prose-sm dark:prose-invert max-w-none">
-                                          <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                            {action.action}
-                                          </ReactMarkdown>
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div className="flex gap-1.5 flex-shrink-0">
-                                      {action.priority && (
-                                        <Badge 
-                                          variant={action.priority === 'High' ? 'destructive' : action.priority === 'Medium' ? 'default' : 'secondary'}
-                                          className="text-xs whitespace-nowrap h-5"
-                                        >
-                                          {action.priority}
-                                        </Badge>
-                                      )}
-                                      {action.effort_level && (
-                                        <Badge variant="outline" className="text-xs whitespace-nowrap h-5">
-                                          {action.effort_level}
-                                        </Badge>
-                                      )}
-                                    </div>
-                                  </div>
-                                  {action.description && (
-                                    <div className="prose prose-sm dark:prose-invert max-w-none text-xs text-muted-foreground leading-relaxed pl-8">
-                                      <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                        {action.description}
-                                      </ReactMarkdown>
-                                    </div>
-                                  )}
-                                  {action.dependencies && action.dependencies.length > 0 && (
-                                    <div className="mt-2 pt-2 border-t border-border/40 pl-8">
-                                      <div className="text-xs text-muted-foreground flex items-center gap-2">
-                                        <span className="font-medium text-foreground">Dependencies:</span> 
-                                        <span>{action.dependencies.join(' • ')}</span>
-                                      </div>
-                                    </div>
-                                  )}
-                                  {action.tool_references && action.tool_references.length > 0 && (
-                                    <div className="mt-2 pt-2 border-t border-border/40 pl-8">
-                                      <div className="flex items-center gap-2 flex-wrap">
-                                        <span className="text-xs font-medium text-foreground flex items-center gap-1">
-                                          <Wrench className="w-3 h-3" />
-                                          Recommended Tools:
-                                        </span>
-                                        {action.tool_references.map((toolNum: number) => (
-                                          <button
-                                            key={toolNum}
-                                            onClick={(e) => {
-                                              e.stopPropagation();
-                                              const toolPromptTab = document.querySelector('[value="toolPrompts"]');
-                                              if (toolPromptTab) {
-                                                (toolPromptTab as HTMLElement).click();
-                                                setTimeout(() => {
-                                                  const comboCards = document.querySelectorAll('[data-tool-combo]');
-                                                  const targetCard = comboCards[toolNum - 1];
-                                                  if (targetCard) {
-                                                    targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                                                  }
-                                                }, 300);
-                                              }
-                                            }}
-                                            className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-primary/10 hover:bg-primary/20 border border-primary/30 text-primary text-xs font-medium transition-colors"
-                                          >
-                                            🔧 Tool #{toolNum}
-                                          </button>
-                                        ))}
-                                      </div>
-                                    </div>
-                                  )}
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-
-                      {/* Milestones Section */}
-                      {phase.milestones && phase.milestones.length > 0 && (
-                        <div>
-                          <h4 className="font-semibold text-foreground mb-3 flex items-center gap-2 text-sm">
-                            <CheckCircle className="h-4 w-4 text-primary" />
-                            Phase Milestones
-                          </h4>
-                          <div className="space-y-2">
-                            {phase.milestones.map((milestone: any, idx: number) => (
-                              <div key={idx} className="border border-border/40 rounded-lg p-3">
-                                <div className="flex items-start justify-between gap-3 mb-1">
-                                  <div className="font-medium text-foreground text-sm prose prose-sm dark:prose-invert max-w-none">
+                              )}
+                              {phase.duration && (
+                                <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-1">
+                                  <Calendar className="h-3 w-3" />
+                                  <div className="prose prose-sm dark:prose-invert max-w-none">
                                     <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                      {typeof milestone === 'string' ? milestone : milestone.milestone}
+                                      {phase.duration}
                                     </ReactMarkdown>
                                   </div>
-                                  {milestone.target_date && (
-                                    <Badge variant="outline" className="text-xs whitespace-nowrap h-5">
-                                      <Calendar className="h-3 w-3 mr-1" />
-                                      {milestone.target_date}
-                                    </Badge>
-                                  )}
                                 </div>
-                                {milestone.success_criteria && milestone.success_criteria.length > 0 && (
-                                  <div className="mt-2 pt-2 border-t border-border/40">
-                                    <p className="text-xs font-medium text-muted-foreground mb-1.5">Success Criteria:</p>
-                                    <ul className="space-y-1">
-                                      {milestone.success_criteria.map((criteria: string, cIdx: number) => (
-                                        <li key={cIdx} className="text-xs text-muted-foreground flex items-start gap-1.5">
-                                          <CheckCircle className="h-3 w-3 text-primary mt-0.5 flex-shrink-0" />
-                                          <div className="prose prose-sm dark:prose-invert max-w-none flex-1">
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Objectives Section */}
+                          {phase.objectives && phase.objectives.length > 0 && (
+                            <div className="space-y-2">
+                              <div className="flex items-center gap-2">
+                                <Target className="h-4 w-4 text-primary" />
+                                <h4 className="font-medium text-sm">Phase Objectives</h4>
+                              </div>
+                              <div className="space-y-1.5">
+                                {phase.objectives.map((objective: string, idx: number) => (
+                                  <div key={idx} className="flex items-start gap-2 p-2.5 bg-muted/20 rounded-lg border border-border">
+                                    <CheckCircle className="h-3.5 w-3.5 text-primary mt-0.5 flex-shrink-0" />
+                                    <div className="prose prose-sm dark:prose-invert max-w-none flex-1 text-xs text-muted-foreground">
+                                      <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                        {objective}
+                                      </ReactMarkdown>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Key Actions Section */}
+                          {phase.key_actions && phase.key_actions.length > 0 && (
+                            <div className="space-y-2">
+                              <div className="flex items-center gap-2">
+                                <Play className="h-4 w-4 text-primary" />
+                                <h4 className="font-medium text-sm">Action Steps</h4>
+                              </div>
+                              <div className="space-y-2">
+                                {phase.key_actions.map((action: any, actionIdx: number) => (
+                                  <div key={actionIdx} className="p-3 bg-muted/20 rounded-lg border border-border space-y-2">
+                                    <div className="flex items-start justify-between gap-2">
+                                      <div className="flex items-start gap-2 flex-1">
+                                        <div className="flex items-center justify-center w-5 h-5 bg-primary/10 text-primary rounded-md font-semibold text-xs flex-shrink-0">
+                                          {actionIdx + 1}
+                                        </div>
+                                        <div className="flex-1">
+                                          <div className="font-medium text-sm leading-snug prose prose-sm dark:prose-invert max-w-none">
                                             <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                              {criteria}
+                                              {action.action}
                                             </ReactMarkdown>
                                           </div>
-                                        </li>
-                                      ))}
-                                    </ul>
+                                        </div>
+                                      </div>
+                                      <div className="flex gap-1.5 flex-shrink-0">
+                                        {action.priority && (
+                                          <Badge 
+                                            variant={action.priority === 'High' ? 'destructive' : action.priority === 'Medium' ? 'default' : 'secondary'}
+                                            className="text-xs whitespace-nowrap h-5"
+                                          >
+                                            {action.priority}
+                                          </Badge>
+                                        )}
+                                        {action.effort_level && (
+                                          <Badge variant="outline" className="text-xs whitespace-nowrap h-5">
+                                            {action.effort_level}
+                                          </Badge>
+                                        )}
+                                      </div>
+                                    </div>
+                                    {action.description && (
+                                      <div className="prose prose-sm dark:prose-invert max-w-none text-xs text-muted-foreground leading-relaxed pl-7">
+                                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                          {action.description}
+                                        </ReactMarkdown>
+                                      </div>
+                                    )}
+                                    {action.dependencies && action.dependencies.length > 0 && (
+                                      <div className="pt-2 border-t border-border pl-7">
+                                        <div className="text-xs text-muted-foreground flex items-center gap-2">
+                                          <span className="font-medium">Dependencies:</span> 
+                                          <span>{action.dependencies.join(' • ')}</span>
+                                        </div>
+                                      </div>
+                                    )}
+                                    {action.tool_references && action.tool_references.length > 0 && (
+                                      <div className="pt-2 border-t border-border pl-7">
+                                        <div className="flex items-center gap-2 flex-wrap">
+                                          <span className="text-xs font-medium flex items-center gap-1">
+                                            <Wrench className="w-3 h-3" />
+                                            Recommended Tools:
+                                          </span>
+                                          {action.tool_references.map((toolNum: number) => (
+                                            <button
+                                              key={toolNum}
+                                              onClick={(e) => {
+                                                e.stopPropagation();
+                                                const toolPromptTab = document.querySelector('[value="toolPrompts"]');
+                                                if (toolPromptTab) {
+                                                  (toolPromptTab as HTMLElement).click();
+                                                  setTimeout(() => {
+                                                    const comboCards = document.querySelectorAll('[data-tool-combo]');
+                                                    const targetCard = comboCards[toolNum - 1];
+                                                    if (targetCard) {
+                                                      targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                                    }
+                                                  }, 300);
+                                                }
+                                              }}
+                                              className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-primary/10 hover:bg-primary/20 border border-primary/30 text-primary text-xs font-medium transition-colors"
+                                            >
+                                              🔧 Tool #{toolNum}
+                                            </button>
+                                          ))}
+                                        </div>
+                                      </div>
+                                    )}
                                   </div>
-                                )}
+                                ))}
                               </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                      </CardContent>
-                    </Card>
+                            </div>
+                          )}
+
+                          {/* Milestones Section */}
+                          {phase.milestones && phase.milestones.length > 0 && (
+                            <div className="space-y-2">
+                              <div className="flex items-center gap-2">
+                                <Flag className="h-4 w-4 text-primary" />
+                                <h4 className="font-medium text-sm">Phase Milestones</h4>
+                              </div>
+                              <div className="space-y-1.5">
+                                {phase.milestones.map((milestone: any, idx: number) => (
+                                  <div key={idx} className="p-2.5 bg-muted/20 rounded-lg border border-border space-y-2">
+                                    <div className="flex items-start justify-between gap-2">
+                                      <div className="font-medium text-sm prose prose-sm dark:prose-invert max-w-none flex-1">
+                                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                          {typeof milestone === 'string' ? milestone : milestone.milestone}
+                                        </ReactMarkdown>
+                                      </div>
+                                      {milestone.target_date && (
+                                        <Badge variant="outline" className="text-xs whitespace-nowrap h-5">
+                                          <Calendar className="h-3 w-3 mr-1" />
+                                          {milestone.target_date}
+                                        </Badge>
+                                      )}
+                                    </div>
+                                    {milestone.success_criteria && milestone.success_criteria.length > 0 && (
+                                      <div className="pt-2 border-t border-border">
+                                        <p className="text-xs font-medium text-muted-foreground mb-1">Success Criteria:</p>
+                                        <ul className="space-y-1">
+                                          {milestone.success_criteria.map((criteria: string, cIdx: number) => (
+                                            <li key={cIdx} className="text-xs text-muted-foreground flex items-start gap-1.5">
+                                              <CheckCircle className="h-3 w-3 text-primary mt-0.5 flex-shrink-0" />
+                                              <div className="prose prose-sm dark:prose-invert max-w-none flex-1">
+                                                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                                  {criteria}
+                                                </ReactMarkdown>
+                                              </div>
+                                            </li>
+                                          ))}
+                                        </ul>
+                                      </div>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </CardContent>
+                      </Card>
+                    </div>
                   );
                   })}
                   
