@@ -595,9 +595,9 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
                               </div>
                               <div className="space-y-1.5">
                                 {phase.objectives.map((objective: string, idx: number) => (
-                                  <div key={idx} className="flex items-start gap-2 p-2 bg-muted/20 rounded-lg border border-border/20">
-                                    <CheckCircle className="h-3.5 w-3.5 text-primary flex-shrink-0 translate-y-[0.125rem]" />
-                                    <div className="prose prose-sm dark:prose-invert max-w-none flex-1 text-xs text-muted-foreground">
+                                  <div key={idx} className="flex items-center gap-2 p-2 bg-muted/20 rounded-lg border border-border/20">
+                                    <CheckCircle className="h-3.5 w-3.5 text-primary flex-shrink-0" />
+                                    <div className="prose prose-sm dark:prose-invert max-w-none flex-1 text-xs text-muted-foreground leading-tight">
                                       <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                         {objective}
                                       </ReactMarkdown>
@@ -619,12 +619,12 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
                                 {phase.key_actions.map((action: any, actionIdx: number) => (
                                   <div key={actionIdx} className="p-2.5 bg-muted/20 rounded-lg border border-border/20 space-y-1.5">
                                     <div className="flex items-start justify-between gap-2">
-                                      <div className="flex items-start gap-2 flex-1">
-                                        <div className="flex items-center justify-center w-5 h-5 bg-primary/10 text-primary rounded-md font-semibold text-xs flex-shrink-0 translate-y-[0.125rem]">
+                                      <div className="flex items-center gap-2 flex-1">
+                                        <div className="flex items-center justify-center w-5 h-5 bg-primary/10 text-primary rounded-md font-semibold text-xs flex-shrink-0">
                                           {actionIdx + 1}
                                         </div>
                                         <div className="flex-1">
-                                          <div className="font-medium text-sm leading-snug prose prose-sm dark:prose-invert max-w-none">
+                                          <div className="font-medium text-sm leading-tight prose prose-sm dark:prose-invert max-w-none">
                                             <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                               {action.action}
                                             </ReactMarkdown>
@@ -688,7 +688,7 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
                                               }}
                                               className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-primary/10 hover:bg-primary/20 border border-primary/30 text-primary text-xs font-medium transition-colors"
                                             >
-                                              <span className="translate-y-[-0.05rem]">🔧</span> Tool #{toolNum}
+                                              <span>🔧</span> Tool #{toolNum}
                                             </button>
                                           ))}
                                         </div>
@@ -728,9 +728,9 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
                                         <p className="text-xs font-medium text-muted-foreground mb-1">Success Criteria:</p>
                                         <ul className="space-y-1 p-1.5 bg-muted/10 rounded border border-border/10">
                                           {milestone.success_criteria.map((criteria: string, cIdx: number) => (
-                                            <li key={cIdx} className="text-xs text-muted-foreground flex items-start gap-1.5">
-                                              <CheckCircle className="h-3 w-3 text-primary flex-shrink-0 translate-y-[0.125rem]" />
-                                              <div className="prose prose-sm dark:prose-invert max-w-none flex-1">
+                                            <li key={cIdx} className="text-xs text-muted-foreground flex items-center gap-1.5">
+                                              <CheckCircle className="h-3 w-3 text-primary flex-shrink-0" />
+                                              <div className="prose prose-sm dark:prose-invert max-w-none flex-1 leading-tight">
                                                 <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                                   {criteria}
                                                 </ReactMarkdown>
