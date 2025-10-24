@@ -136,12 +136,12 @@ const Index = () => {
             <div className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-300">
               <h3 className="text-lg font-bold mb-3 font-display">Ready Resources</h3>
               <p className="text-sm text-muted-foreground mb-4">
-                Comprehensive analysis of your situation, strategic action plan, and 6 personalized batches of tools and prompts to get you started immediately.
+                Comprehensive analysis of your situation, strategic action plan, and 9 personalized batches of tools and prompts to get you started immediately.
               </p>
               <div className="text-xs text-white space-y-1">
                 <div>✓ Situational analysis</div>
                 <div>✓ Strategic action plan</div>
-                <div>✓ 6 personalized tool & prompt batches</div>
+                <div>✓ 9 personalized tool & prompt batches</div>
               </div>
             </div>
 
@@ -309,7 +309,7 @@ const Index = () => {
                 </div>
                 <div>
                   <h3 className="text-xl font-bold mb-2 font-display">Complete Resource Package</h3>
-                  <p className="text-muted-foreground">No more hunting for resources. Get detailed analysis of your situation, a strategic action plan, and 6 personalized batches of tools and prompts all in one place.</p>
+                  <p className="text-muted-foreground">No more hunting for resources. Get detailed analysis of your situation, a strategic action plan, and 9 personalized batches of tools and prompts all in one place.</p>
                 </div>
               </div>
 
@@ -341,7 +341,7 @@ const Index = () => {
                   <div className="flex items-center justify-between p-4 bg-secondary/5 rounded-lg">
                     <span className="font-medium">Ready-to-use resources</span>
                     <div className="flex gap-2">
-                      <span className="text-green-500 font-bold">✓ Analysis + 6 batches</span>
+                      <span className="text-green-500 font-bold">✓ Analysis + 9 batches</span>
                       <span className="text-red-500">✗ DIY research</span>
                     </div>
                   </div>
@@ -370,7 +370,7 @@ const Index = () => {
               Flexible plans designed to accelerate your business growth
             </p>
             <p className="text-base text-muted-foreground max-w-3xl mx-auto">
-              <span className="font-semibold text-foreground">1 credit = 1 Jump generation</span> - each Jump delivers a comprehensive transformation plan including situation analysis, strategic vision with success metrics, detailed action plan with phases and milestones, plus 6 AI tool-prompt combinations to execute your strategy.
+              <span className="font-semibold text-foreground">1 credit = 1 Jump generation</span> - each Jump delivers a comprehensive transformation plan including situation analysis, strategic vision with success metrics, detailed action plan with phases and milestones, plus 9 AI tool-prompt combinations to execute your strategy.
             </p>
           </div>
 
@@ -467,7 +467,7 @@ const Index = () => {
 
             <div className="p-5 rounded-xl glass hover:glass-dark transition-all duration-300">
               <h3 className="text-lg font-bold mb-2 font-display">What exactly do I get in each Jump plan?</h3>
-              <p className="text-sm text-muted-foreground">Every Jump includes a detailed analysis of your situation, a strategic action plan, and 6 personalized batches of tools and prompts to help you get started - all tailored to your specific goals and industry.</p>
+              <p className="text-sm text-muted-foreground">Every Jump includes a detailed analysis of your situation, a strategic action plan, and 9 personalized batches of tools and prompts to help you get started - all tailored to your specific goals and industry.</p>
             </div>
 
             <div className="p-5 rounded-xl glass hover:glass-dark transition-all duration-300">

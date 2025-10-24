@@ -191,7 +191,7 @@ const PricingNew = () => {
                   </div>
                 </div>
                 <p className="text-sm sm:text-base md:text-lg text-muted-foreground/90 max-w-3xl mx-auto mb-4 leading-relaxed px-4">
-                  <span className="font-semibold text-foreground">1 credit = 1 jump generation</span> - each jump delivers a comprehensive transformation plan including situation analysis, strategic vision with success metrics, detailed action plan with phases and milestones, plus 6 AI tool-prompt combinations to execute your strategy.
+                  <span className="font-semibold text-foreground">1 credit = 1 jump generation</span> - each jump delivers a comprehensive transformation plan including situation analysis, strategic vision with success metrics, detailed action plan with phases and milestones, plus 9 AI tool-prompt combinations to execute your strategy.
                 </p>
             </div>
           </section>
