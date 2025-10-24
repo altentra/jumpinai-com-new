@@ -581,15 +581,15 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
 
                         {/* Objectives Section */}
                         {phase.objectives && phase.objectives.length > 0 && (
-                          <div className="bg-gradient-to-br from-blue-50 to-blue-100/50 dark:from-blue-950/20 dark:to-blue-900/10 rounded-lg p-5 border border-blue-200/50 dark:border-blue-800/30">
+                          <div className="rounded-xl p-5 border border-border/30 bg-background/50">
                             <h4 className="font-semibold text-foreground mb-4 flex items-center gap-2 text-lg">
-                              <Target className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                              <Target className="h-5 w-5 text-primary" />
                               Phase Objectives
                             </h4>
                             <div className="grid gap-3">
                               {phase.objectives.map((objective: string, idx: number) => (
-                                <div key={idx} className="flex items-start gap-3 bg-white/50 dark:bg-background/30 rounded-md p-3 border border-blue-200/30 dark:border-blue-800/20">
-                                  <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400 mt-0.5 flex-shrink-0" />
+                                <div key={idx} className="flex items-start gap-3 bg-card rounded-md p-3 border border-border/30">
+                                  <CheckCircle className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
                                   <div className="prose prose-sm dark:prose-invert max-w-none flex-1">
                                     <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                       {objective}
@@ -610,7 +610,7 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
                             </h4>
                             <div className="space-y-4">
                               {phase.key_actions.map((action: any, actionIdx: number) => (
-                                <Card key={actionIdx} className="border-border/50 hover:border-primary/30 transition-all duration-200 hover:shadow-lg bg-gradient-to-br from-background to-muted/20">
+                                <Card key={actionIdx} className="border-border/50 hover:border-primary/30 transition-all duration-200 bg-card">
                                   <CardContent className="p-5">
                                     <div className="flex items-start justify-between gap-3 mb-3">
                                       <div className="flex items-start gap-3 flex-1">
@@ -699,14 +699,14 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
 
                         {/* Milestones Section */}
                         {phase.milestones && phase.milestones.length > 0 && (
-                          <div className="bg-gradient-to-br from-slate-50 to-slate-100/50 dark:from-slate-950/20 dark:to-slate-900/10 rounded-lg p-5 border border-slate-200/50 dark:border-slate-800/30">
+                          <div className="rounded-xl p-5 border border-border/30 bg-background/50">
                             <h4 className="font-semibold text-foreground mb-4 flex items-center gap-2 text-lg">
-                              <CheckCircle className="h-5 w-5 text-slate-600 dark:text-slate-400" />
+                              <CheckCircle className="h-5 w-5 text-primary" />
                               Phase Milestones
                             </h4>
                             <div className="space-y-3">
                               {phase.milestones.map((milestone: any, idx: number) => (
-                                <Card key={idx} className="border-slate-200/30 dark:border-slate-800/20 bg-white/50 dark:bg-background/30">
+                                <Card key={idx} className="border-border/30 bg-card">
                                   <CardContent className="p-4">
                                     <div className="flex items-start justify-between gap-3 mb-2">
                                       <div className="font-medium text-foreground prose prose-sm dark:prose-invert max-w-none">
@@ -722,12 +722,12 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
                                       )}
                                     </div>
                                     {milestone.success_criteria && milestone.success_criteria.length > 0 && (
-                                      <div className="mt-2 pt-2 border-t border-slate-200/30 dark:border-slate-800/20">
+                                      <div className="mt-2 pt-2 border-t border-border/30">
                                         <p className="text-xs font-medium text-muted-foreground mb-1">Success Criteria:</p>
                                         <ul className="space-y-1">
                                           {milestone.success_criteria.map((criteria: string, cIdx: number) => (
                                             <li key={cIdx} className="text-xs text-muted-foreground flex items-start gap-2">
-                                              <CheckCircle className="h-3 w-3 text-green-600 dark:text-green-400 mt-0.5 flex-shrink-0" />
+                                              <CheckCircle className="h-3 w-3 text-primary mt-0.5 flex-shrink-0" />
                                               <div className="prose prose-sm dark:prose-invert max-w-none flex-1">
                                                 <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                                   {criteria}
