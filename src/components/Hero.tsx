@@ -218,11 +218,12 @@ const Hero = () => {
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div className="animate-fade-in-up">
           {/* Logo */}
-          <div className="flex items-center justify-center mb-6 sm:mb-8">
+          <div className="flex items-center justify-center mb-4 sm:mb-5 overflow-hidden">
             <img 
               src={logoTransparent}
               alt="JumpinAI Logo" 
-              className="w-[280px] sm:w-[400px] md:w-[500px] lg:w-[600px] h-auto"
+              className="w-[140px] sm:w-[200px] md:w-[250px] lg:w-[300px] h-[70px] sm:h-[100px] md:h-[125px] lg:h-[150px] object-cover object-center"
+              style={{ objectPosition: 'center 45%' }}
             />
           </div>
           
