@@ -79,18 +79,10 @@ export const jumpinAIStudioService = {
           buffer = lines.pop() || '';
 
           for (const line of lines) {
-            // CRITICAL FIX: Type-safe parsing to prevent "trim is not a function" errors
-            if (typeof line !== 'string' || !line || line.trim() === '' || !line.includes('data: ')) {
-              continue;
-            }
+            if (!line.trim() || !line.startsWith('data: ')) continue;
 
             try {
-              const dataIndex = line.indexOf('data: ');
-              if (dataIndex === -1) continue;
-              
-              const jsonStr = line.substring(dataIndex + 6).trim();
-              if (!jsonStr || jsonStr === '[DONE]') continue;
-              
+              const jsonStr = line.substring(6);
               const parsed = JSON.parse(jsonStr);
               const { step, type, data } = parsed;
 
@@ -283,58 +275,23 @@ export const jumpinAIStudioService = {
                 const toolPromptsArray = data.tool_prompts || [];
                 console.log(`📦 Extracted ${toolPromptsArray.length} tool prompts`);
                 
-                // VALIDATE AND FILTER TOOL PROMPTS
-                const validToolPrompts: any[] = [];
-                const requiredFields = ['title', 'description', 'tool_name', 'prompt_text'];
+                result.components!.toolPrompts = toolPromptsArray;
                 
-                toolPromptsArray.forEach((tool: any, index: number) => {
-                  const toolNum = index + 1;
-                  const missingFields = requiredFields.filter(field => !tool[field] || tool[field].trim() === '');
-                  
-                  if (missingFields.length > 0) {
-                    console.error(`❌ Tool #${toolNum} has missing/empty required fields:`, missingFields);
-                    console.error(`Tool #${toolNum} data preview:`, JSON.stringify(tool).substring(0, 300));
-                    // Create a placeholder error tool to maintain numbering
-                    validToolPrompts.push({
-                      title: `Error generating tool #${toolNum}`,
-                      description: `This tool combo could not be generated properly. Missing fields: ${missingFields.join(', ')}`,
-                      tool_name: 'Error',
-                      prompt_text: 'This tool prompt is incomplete.',
-                      category: 'Error',
-                      isError: true
-                    });
-                  } else {
-                    console.log(`✅ Tool #${toolNum} "${tool.title}" - valid`);
-                    validToolPrompts.push(tool);
-                  }
-                });
-                
-                result.components!.toolPrompts = validToolPrompts;
-                console.log(`✅ Processed ${validToolPrompts.length} tool prompts (${validToolPrompts.filter((t: any) => !t.isError).length} valid, ${validToolPrompts.filter((t: any) => t.isError).length} errors)`);
-                
-                // Pass the validated and processed tool prompts to onProgress
                 if (onProgress) {
-                  onProgress(step, type, { tool_prompts: validToolPrompts });
+                  onProgress(step, type, data);
                 }
                 
-                // Save only the valid (non-error) tool prompts to database
-                const validForSave = validToolPrompts.filter((t: any) => !t.isError);
-                if (userId && jumpId && validForSave.length > 0) {
-                  console.log(`💾 Saving ${validForSave.length} valid tool prompts...`);
+                if (userId && jumpId && toolPromptsArray.length > 0) {
+                  console.log(`💾 Saving ${toolPromptsArray.length} tool prompts...`);
                   (async () => {
                     try {
                       const { toolPromptsService } = await import('@/services/toolPromptsService');
-                      await toolPromptsService.saveToolPrompts(validForSave, userId, jumpId);
+                      await toolPromptsService.saveToolPrompts(toolPromptsArray, userId, jumpId);
                       console.log('✅ Tool prompts saved successfully');
                     } catch (error) {
                       console.error('❌ Error saving tool prompts:', error);
                     }
                   })();
-                }
-              } else if (type === 'complete') {
-                console.log('🎊 Generation complete event received');
-                if (onProgress) {
-                  onProgress(step, type, data);
                 }
               } else if (type === 'workflows') {
                 console.log('⚙️ Workflows data received (not saved - feature removed)');

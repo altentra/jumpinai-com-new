@@ -897,34 +897,50 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
         </TabsContent>
 
         <TabsContent value="toolPrompts" className="mt-0">
-          <div className="grid gap-4">
-            {result.components?.toolPrompts && result.components.toolPrompts.length > 0 ? (
-              result.components.toolPrompts.map((combo: any, index: number) => (
-                <ErrorBoundary 
-                  key={index}
-                  fallback={
-                    <div className="p-6 border border-destructive/30 rounded-lg bg-destructive/5 text-center">
-                      <h3 className="text-lg font-semibold mb-2">Error loading tool #{index + 1}</h3>
-                      <p className="text-sm text-muted-foreground">This tool-prompt combo couldn't be displayed.</p>
-                    </div>
-                  }
-                >
-                  <div data-tool-combo={index + 1} className="animate-fade-in">
-                    <ToolPromptComboCard
-                      combo={combo}
-                      index={index + 1}
-                      onClick={() => {/* Detail modal will be added later */}}
-                    />
-                  </div>
-                </ErrorBoundary>
-              ))
-            ) : (
-              <div className="glass backdrop-blur-lg bg-card/80 border border-border rounded-xl flex items-center justify-center h-32 text-muted-foreground">
-                <Loader2 className="w-6 h-6 animate-spin mr-2" />
-                Generating tools & prompts...
+          {(() => {
+            console.log('🔍 Tools & Prompts Tab - Checking data:', {
+              hasComponents: !!result.components,
+              hasToolPrompts: !!result.components?.toolPrompts,
+              toolPromptsLength: result.components?.toolPrompts?.length,
+              toolPromptsData: result.components?.toolPrompts
+            });
+
+            if (!result.components?.toolPrompts || result.components.toolPrompts.length === 0) {
+              return (
+                <div className="glass backdrop-blur-lg bg-card/80 border border-border rounded-xl flex items-center justify-center h-32 text-muted-foreground">
+                  <Loader2 className="w-6 h-6 animate-spin mr-2" />
+                  Generating tools & prompts...
+                </div>
+              );
+            }
+
+            return (
+              <div className="grid gap-4">
+                {result.components.toolPrompts.map((combo: any, index: number) => {
+                  console.log(`🔧 Rendering combo ${index + 1}:`, combo);
+                  return (
+                    <ErrorBoundary 
+                      key={index}
+                      fallback={
+                        <div className="p-6 border border-destructive/30 rounded-lg bg-destructive/5 text-center">
+                          <h3 className="text-lg font-semibold mb-2">Error loading tool #{index + 1}</h3>
+                          <p className="text-sm text-muted-foreground">This tool-prompt combo couldn't be displayed.</p>
+                        </div>
+                      }
+                    >
+                      <div data-tool-combo={index + 1} className="animate-fade-in">
+                        <ToolPromptComboCard
+                          combo={combo}
+                          index={index + 1}
+                          onClick={() => {/* Detail modal will be added later */}}
+                        />
+                      </div>
+                    </ErrorBoundary>
+                  );
+                })}
               </div>
-            )}
-          </div>
+            );
+          })()}
         </TabsContent>
       </Tabs>
     </div>

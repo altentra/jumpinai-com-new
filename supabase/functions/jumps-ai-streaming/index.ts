@@ -194,26 +194,6 @@ async function callXAI(
   try {
     const parsed = JSON.parse(content);
     console.log(`Step ${step} parsed successfully:`, JSON.stringify(parsed).substring(0, 200));
-    
-    // SPECIAL VALIDATION FOR TOOL PROMPTS (Step 4)
-    if (step === 4 && parsed.tool_prompts) {
-      console.log(`🔍 Validating ${parsed.tool_prompts.length} tool prompts...`);
-      
-      // Check each tool for required fields
-      parsed.tool_prompts.forEach((tool: any, index: number) => {
-        const toolNum = index + 1;
-        const required = ['title', 'description', 'tool_name', 'prompt_text'];
-        const missing = required.filter(field => !tool[field]);
-        
-        if (missing.length > 0) {
-          console.error(`❌ Tool #${toolNum} missing required fields:`, missing);
-          console.error(`Tool #${toolNum} data:`, JSON.stringify(tool).substring(0, 500));
-        } else {
-          console.log(`✅ Tool #${toolNum} "${tool.title}" - valid`);
-        }
-      });
-    }
-    
     return parsed;
   } catch (parseError) {
     console.error(`JSON parse error for step ${step}:`, parseError);
@@ -369,25 +349,21 @@ Focus on clarity, professional formatting, and actionable content.`,
     case 3:
       // STEP 3: Action Plan - WORLD-CLASS DETAILED EXECUTION ROADMAP
       return {
-        systemPrompt: `You are a world-class execution strategist and AI transformation advisor specializing in strategic adaptation to the era of AI. You create exceptionally detailed, actionable implementation plans that demonstrate exactly HOW artificial intelligence accelerates achievement and enables superior outcomes. Your expertise combines strategic thinking, tactical precision, and visionary guidance. Use **bold** markdown strategically to highlight critical information, especially AI-powered capabilities and competitive advantages.`,
-        userPrompt: `Create a comprehensive, world-class strategic action plan for AI-powered transformation:
+        systemPrompt: `You are a world-class execution strategist and business advisor. Create exceptionally detailed, actionable implementation plans with professional formatting. Use **bold** markdown strategically to highlight critical information. Your plans should inspire confidence and provide crystal-clear guidance.`,
+        userPrompt: `Create a comprehensive, world-class action plan for transformation:
 
 ${baseContext}
 
 Overview Context:
 ${overviewContent}
 
-CRITICAL REQUIREMENTS - STRATEGIC AI ADAPTATION FOCUS:
-1. **PRIMARY FOCUS**: Demonstrate exactly HOW AI tools and capabilities enable them to achieve their goals FASTER, BETTER, and MORE EFFICIENTLY than traditional methods
-2. Every key action MUST explicitly show the AI-powered advantage - what becomes possible with AI that wasn't before, or what becomes 10x faster/better
-3. Emphasize STRATEGIC ADAPTATION: This is not just about achieving goals, but about adapting to the era of AI and leveraging it for competitive advantage
-4. Use **bold** markdown for ALL AI capabilities, tools, efficiency gains, time savings, quality improvements, and competitive advantages
-5. Include realistic timelines showing AI-accelerated speed vs traditional approaches where relevant
-6. Make every action measurable with clear AI-powered outcomes (e.g., "Generate in 2 hours what traditionally took 2 weeks")
-7. Show tactical precision: specific AI tools, specific prompts approaches, specific efficiency multipliers
-8. Demonstrate visionary thinking: how AI creates new possibilities and strategic positioning
-9. Address their challenges specifically with AI-powered solutions
-10. **IMPORTANT**: Include tool references in key_actions - reference "Tool #1-3" for Phase 1 actions, "Tool #4-6" for Phase 2 actions, and "Tool #7-9" for Phase 3 actions where relevant. These will link to the AI tool+prompt combos generated later.
+CRITICAL REQUIREMENTS:
+1. Use **bold** markdown for ALL key terms, actions, deliverables, and metrics
+2. Provide specific, actionable steps with clear outcomes
+3. Include realistic timelines and effort estimates
+4. Make every action measurable and verifiable
+5. Ensure professional, executive-level quality throughout
+6. **IMPORTANT**: Include tool references in key_actions - reference "Tool #1-3" for Phase 1 actions, "Tool #4-6" for Phase 2 actions, and "Tool #7-9" for Phase 3 actions where relevant. These will link to the AI tool+prompt combos generated later.
 
 Return ONLY valid JSON in this EXACT structure:
 {
@@ -406,42 +382,42 @@ Return ONLY valid JSON in this EXACT structure:
       ],
       "key_actions": [
         {
-          "action": "**Set up AI-powered transformation workspace** with cutting-edge tools and systems",
-          "description": "Install and configure essential AI platforms: **ChatGPT Plus**, **Claude Pro**, and **Gemini Advanced** for reasoning and content generation. Create organized digital workspace with AI-enhanced project management (**Notion AI**) for tracking and documentation. Establish **30-minute daily AI practice routine** that builds exponential capabilities. Set up AI-powered analytics to track efficiency gains and progress. **AI ADVANTAGE**: Complete setup that traditionally took 2-3 days of research and configuration now done in 3-4 hours with AI guidance. → Use **Tool #1** for optimized setup guidance.",
+          "action": "**Set up professional AI workspace** with essential tools and systems",
+          "description": "Install and configure **ChatGPT Plus**, **Claude Pro**, and **Notion AI**. Create organized workspace with folders for projects, prompts, and learning resources. Establish daily practice routine of **30 minutes** for skill building. Set up tracking system for progress and insights. → Use **Tool #1** for initial setup guidance.",
           "priority": "High",
-          "effort_level": "2-3 hours (vs 2-3 days traditional)",
+          "effort_level": "2-3 hours",
           "dependencies": [],
           "tool_references": [1]
         },
         {
-          "action": "**Master AI literacy through accelerated learning** with AI-powered education",
-          "description": "Complete **AI fundamentals training** leveraging AI tutors for personalized learning paths. Use **AI-powered practice exercises** that adapt to your skill level and provide instant feedback. Build personal **AI capability portfolio** with 10+ real outputs demonstrating mastery. Document proven prompt patterns and AI workflows. **AI ADVANTAGE**: Achieve in 5-6 focused hours what traditionally required 40+ hours of trial-and-error learning. AI tutors provide personalized feedback 24/7, eliminating learning delays. → Use **Tool #2** for accelerated skill acquisition.",
+          "action": "**Complete foundational AI literacy training** through structured learning",
+          "description": "Enroll in **AI fundamentals course** covering prompt engineering, tool selection, and best practices. Complete **5 hands-on exercises** building real-world outputs. Document learnings and create personal **AI playbook** with proven prompts and techniques. → Use **Tool #2** for learning optimization.",
           "priority": "High",
-          "effort_level": "5-6 hours (10x faster than traditional 50+ hours)",
-          "dependencies": ["Set up AI-powered transformation workspace"],
+          "effort_level": "5-6 hours",
+          "dependencies": ["Set up professional AI workspace"],
           "tool_references": [2]
         },
         {
-          "action": "**Create breakthrough first project** leveraging AI for professional-quality output",
-          "description": "Design and execute **portfolio-worthy deliverable** using AI tools to achieve professional results immediately. Use AI for research (minutes vs hours), content creation (instant iterations vs days of drafts), design (professional quality without design skills), and quality assurance (AI-powered editing and refinement). Document the **efficiency multiplier** achieved. **AI ADVANTAGE**: Produce in 8-10 hours what would traditionally require 40-60 hours and multiple specialist skills. Quality matches or exceeds traditional expert output. → Use **Tool #3** for project execution excellence.",
+          "action": "**Create first AI-powered project** demonstrating core capabilities",
+          "description": "Design and build **[specific deliverable]** using AI tools learned so far. Focus on **quality over speed**, iterating prompts for optimal results. Document entire process including prompts used, tools selected, and results achieved. Present finished project to **3 peers or mentors** for feedback. → Use **Tool #3** for project execution.",
           "priority": "High",
-          "effort_level": "8-10 hours (produces 40-60 hours of traditional work)",
-          "dependencies": ["Master AI literacy through accelerated learning"],
+          "effort_level": "8-10 hours",
+          "dependencies": ["Complete foundational AI literacy training"],
           "tool_references": [3]
         },
         {
-          "action": "**Build AI-powered daily practice system** for continuous compound growth",
-          "description": "Establish **30-minute daily AI capability building** with AI-generated personalized exercises. Use AI to analyze your progress and suggest optimal focus areas. Build library of **30+ battle-tested prompts** for your specific use cases. Leverage AI communities enhanced with AI-powered search and synthesis. **AI ADVANTAGE**: AI personalizes your learning path and accelerates skill building 5x through targeted practice vs generic training.",
+          "action": "**Establish daily AI practice routine** for consistent skill development",
+          "description": "Create **30-minute daily practice schedule** focused on one AI skill per week. Build library of **20+ proven prompts** for common tasks. Join **2 AI communities** for support and learning. Track progress with **weekly reflection log** documenting wins and challenges.",
           "priority": "Medium",
-          "effort_level": "3-4 hours/week (with 5x effectiveness multiplier)",
+          "effort_level": "3-4 hours/week",
           "dependencies": []
         },
         {
-          "action": "**Generate initial opportunities** using AI-powered market research and positioning",
-          "description": "Use AI to identify and analyze **5-10 high-potential opportunities** in hours vs weeks of manual research. Generate **compelling portfolio materials** with AI assistance for professional presentation. Create **personalized outreach messages** at scale using AI while maintaining authenticity. Leverage AI for competitive analysis and positioning strategy. **AI ADVANTAGE**: Complete market research and positioning in 4-5 hours that traditionally took 2-3 weeks.",
+          "action": "**Build initial client/project pipeline** to apply new skills",
+          "description": "Identify **3-5 potential projects** where AI can add immediate value. Create **compelling portfolio piece** showcasing AI capabilities. Develop **pitch template** explaining AI benefits. Schedule **5 conversations** with potential clients or stakeholders to discuss opportunities.",
           "priority": "Medium",
-          "effort_level": "4-5 hours (replaces 2-3 weeks traditional research)",
-          "dependencies": ["Create breakthrough first project"]
+          "effort_level": "4-5 hours",
+          "dependencies": ["Create first AI-powered project"]
         }
       ],
       "milestones": [
@@ -491,42 +467,42 @@ Return ONLY valid JSON in this EXACT structure:
       ],
       "key_actions": [
         {
-          "action": "**Launch AI-powered service offering** generating immediate revenue",
-          "description": "Package **3 AI-enhanced service offerings** with clear deliverables and premium pricing (**$500-2000 per project**). Use AI to create **professional service materials** (landing page, proposals, case studies) in hours vs weeks. Deploy AI-powered outreach to **20 qualified prospects** with personalized messaging at scale. Deliver first **3 projects** with AI acceleration showing 3-5x faster delivery than competitors. **AI ADVANTAGE**: Launch complete service business in 15-20 hours vs traditional 6-8 weeks. AI handles marketing materials, client research, and execution support. → Use **Tool #4** for rapid service design and launch.",
+          "action": "**Launch revenue-generating AI service** with first paying clients",
+          "description": "Package **3 core AI services** with clear deliverables and pricing (**$500-2000 per project**). Create **professional service page** with portfolio examples. Execute outreach campaign to **20 qualified prospects**. Deliver first **3 paid projects** with exceptional quality, gathering testimonials and case studies. → Use **Tool #4** for service design.",
           "priority": "High",
-          "effort_level": "15-20 hours (replaces 6-8 weeks traditional setup)",
+          "effort_level": "15-20 hours",
           "dependencies": ["First AI Project Delivered"],
           "tool_references": [4]
         },
         {
-          "action": "**Master advanced AI capabilities** for competitive dominance",
-          "description": "Deep-dive into **cutting-edge AI techniques**: multi-agent workflows, AI automation chains, advanced prompt engineering, and AI tool integration. Build **10 sophisticated AI workflow systems** automating complex processes. Create **AI automation stack** saving **10-15 hours weekly** on routine tasks. Develop proprietary AI methodologies competitors can't match. **AI ADVANTAGE**: Achieve in 12-15 hours what traditionally required months of technical learning. AI-powered learning accelerators provide instant practice environments and feedback. → Use **Tool #5** for advanced capability mastery.",
+          "action": "**Master advanced AI techniques** for competitive advantage",
+          "description": "Deep-dive into **prompt chaining**, **multi-model workflows**, and **AI automation**. Complete **advanced training program** with hands-on projects. Build **10 sophisticated prompt sequences** for complex tasks. Create **automation workflows** saving **5+ hours per week**. → Use **Tool #5** for advanced learning.",
           "priority": "High",
-          "effort_level": "12-15 hours (traditional: 3-6 months of experimentation)",
+          "effort_level": "12-15 hours",
           "dependencies": ["Core AI Competency Achieved"],
           "tool_references": [5]
         },
         {
-          "action": "**Build AI-accelerated thought leadership** establishing market authority",
-          "description": "Use AI to research trending topics and generate **2 high-impact articles** weekly on **LinkedIn** and **Medium**. Deploy AI for content ideation, drafting, editing, and optimization. Create **daily micro-content** (tips, insights, examples) using AI assistance. Engage strategically in **3 AI communities** with AI-enhanced responses providing exceptional value. Leverage AI to prepare and deliver **compelling presentations** or workshops. **AI ADVANTAGE**: Produce professional thought leadership content in 6-8 hours weekly that traditionally required 20-30 hours plus creative expertise. → Use **Tool #6** for content excellence.",
+          "action": "**Build thought leadership presence** in AI community",
+          "description": "Publish **2 high-quality articles** sharing insights and case studies on **LinkedIn** and **Medium**. Create **weekly content** demonstrating expertise (**tips, examples, results**). Engage actively in **3 AI communities** providing valuable input. Speak at **1 virtual event** or host **workshop** for 20+ attendees. → Use **Tool #6** for content creation.",
           "priority": "Medium",
-          "effort_level": "6-8 hours/week (vs 20-30 traditional hours)",
+          "effort_level": "6-8 hours",
           "dependencies": ["First AI Project Delivered"],
           "tool_references": [6]
         },
         {
-          "action": "**Create proprietary AI-powered methodology** as unfair advantage",
-          "description": "Document your unique **AI-enhanced workflow system** combining best practices from all projects. Use AI to analyze patterns and optimize processes. Build **comprehensive template library** and **quality frameworks** powered by AI validation. Package methodology into **sellable intellectual property** (course, certification, licensing). **AI ADVANTAGE**: AI helps codify and systematize knowledge in 10-12 hours vs months of manual documentation. Creates defensible competitive moat.",
+          "action": "**Develop proprietary AI methodology** as unique competitive advantage",
+          "description": "Document proven **AI workflow system** combining best practices from all projects. Create **standardized templates** for common use cases. Build **quality checklist** ensuring consistent excellence. Package methodology into **sellable framework** or **training program**.",
           "priority": "High",
-          "effort_level": "10-12 hours (with AI vs 2-3 months manual)",
-          "dependencies": ["Master advanced AI capabilities"]
+          "effort_level": "10-12 hours",
+          "dependencies": ["Master advanced AI techniques"]
         },
         {
-          "action": "**Deploy intelligent automation systems** for exponential scaling",
-          "description": "Implement **AI-powered project management** with smart workflows and predictive analytics. Build **automation chains** using AI tools + **Zapier/Make** handling 60-70% of routine work. Create **AI-enhanced template library** with **50+ production-ready assets**. Establish **AI-assisted quality assurance** ensuring consistent excellence. **AI ADVANTAGE**: Automate in 8-10 hours what traditionally required months of systems building and significant technical expertise.",
+          "action": "**Scale operations with systems** for efficiency and growth",
+          "description": "Implement **project management system** for client work. Create **automated workflows** for repetitive tasks using **Zapier/Make**. Build **template library** with **30+ proven assets**. Establish **quality assurance process** ensuring consistent output excellence.",
           "priority": "Medium",
-          "effort_level": "8-10 hours (vs months of technical setup)",
-          "dependencies": ["Launch AI-powered service offering"]
+          "effort_level": "8-10 hours",
+          "dependencies": ["Launch revenue-generating AI service"]
         }
       ],
       "milestones": [
@@ -653,7 +629,7 @@ Return ONLY valid JSON in this EXACT structure:
 }
 
 Create world-class, executive-level content that inspires action and provides crystal-clear guidance. Every element must be specific, measurable, and actionable.`,
-        expectedTokens: 24000
+        expectedTokens: 16000
       };
 
     case 4:
@@ -742,7 +718,7 @@ Return ONLY valid JSON:
 }
 
 Generate EXACTLY 9 combos tailored to THEIR input with diversity and phase alignment.`,
-        expectedTokens: 53000
+        expectedTokens: 50000
       };
 
     default:
