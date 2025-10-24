@@ -79,10 +79,18 @@ export const jumpinAIStudioService = {
           buffer = lines.pop() || '';
 
           for (const line of lines) {
-            if (!line.trim() || !line.startsWith('data: ')) continue;
+            // CRITICAL FIX: Type-safe parsing to prevent "trim is not a function" errors
+            if (typeof line !== 'string' || !line || line.trim() === '' || !line.includes('data: ')) {
+              continue;
+            }
 
             try {
-              const jsonStr = line.substring(6);
+              const dataIndex = line.indexOf('data: ');
+              if (dataIndex === -1) continue;
+              
+              const jsonStr = line.substring(dataIndex + 6).trim();
+              if (!jsonStr || jsonStr === '[DONE]') continue;
+              
               const parsed = JSON.parse(jsonStr);
               const { step, type, data } = parsed;
 

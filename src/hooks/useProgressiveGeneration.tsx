@@ -316,15 +316,8 @@ export const useProgressiveGeneration = () => {
             
           } else if (type === 'tool_prompts' || type === 'tools') {
             // STEP 4: Tools & Prompts complete
-            console.log('🔧 Processing tool-prompts step data:', stepData);
-            console.log('🔧 stepData.tool_prompts:', stepData.tool_prompts);
-            console.log('🔧 stepData.tools:', stepData.tools);
-            
-            const toolPrompts = stepData.tool_prompts || stepData.tools || [];
-            console.log('🔧 Final toolPrompts array:', toolPrompts);
-            console.log('🔧 ToolPrompts count:', toolPrompts.length);
-            
-            progressiveResult.components.toolPrompts = toolPrompts;
+            console.log('Processing tool-prompts step data:', stepData);
+            progressiveResult.components.toolPrompts = stepData.tool_prompts || stepData.tools || [];
             
             const progress = 100;
             progressiveResult.processing_status = {
