@@ -249,25 +249,25 @@ const Index = () => {
 
           <div className="flex flex-wrap justify-center items-center gap-8 lg:gap-12">
             <div className="text-center">
-              <div className="text-3xl font-bold gradient-text-primary mb-1">15K+</div>
+              <div className="text-2xl font-bold gradient-text-primary mb-1">15K+</div>
               <div className="text-sm font-semibold mb-1">Jump Plans Created</div>
               <div className="text-xs text-muted-foreground">Personalized strategies delivered</div>
             </div>
 
             <div className="text-center">
-              <div className="text-3xl font-bold gradient-text-primary mb-1">94%</div>
+              <div className="text-2xl font-bold gradient-text-primary mb-1">94%</div>
               <div className="text-sm font-semibold mb-1">Implementation Rate</div>
               <div className="text-xs text-muted-foreground">Users deploy their plans</div>
             </div>
 
             <div className="text-center">
-              <div className="text-3xl font-bold gradient-text-primary mb-1">3.2x</div>
+              <div className="text-2xl font-bold gradient-text-primary mb-1">3.2x</div>
               <div className="text-sm font-semibold mb-1">Faster Results</div>
               <div className="text-xs text-muted-foreground">vs DIY approaches</div>
             </div>
 
             <div className="text-center">
-              <div className="text-3xl font-bold gradient-text-primary mb-1">4.8★</div>
+              <div className="text-2xl font-bold gradient-text-primary mb-1">4.8★</div>
               <div className="text-sm font-semibold mb-1">User Rating</div>
               <div className="text-xs text-muted-foreground">2,800+ reviews</div>
             </div>
