@@ -303,7 +303,6 @@ const PrivacyPolicy = () => {
               <p className="text-sm sm:text-base font-semibold text-foreground">JumpinAI, LLC</p>
               <p className="text-sm sm:text-base text-muted-foreground"><strong>Email:</strong> privacy@jumpinai.com</p>
               <p className="text-sm sm:text-base text-muted-foreground"><strong>Support:</strong> support@jumpinai.com</p>
-              <p className="text-sm sm:text-base text-muted-foreground"><strong>Website:</strong> www.jumpinai.com/contact</p>
               <p className="text-sm sm:text-base text-muted-foreground"><strong>Data Protection Officer:</strong> dpo@jumpinai.com</p>
             </div>
             <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
