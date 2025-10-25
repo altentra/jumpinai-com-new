@@ -205,19 +205,25 @@ const Index = () => {
           <div className="max-w-6xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
               <div className="text-center p-6 rounded-xl glass h-full flex flex-col">
-                <div className="w-12 h-12 mx-auto mb-3 bg-gradient-to-r from-primary to-primary/70 rounded-full flex items-center justify-center text-primary-foreground text-lg font-bold">01</div>
+                <div className="w-10 h-10 mx-auto mb-4 backdrop-blur-xl bg-primary/5 ring-1 ring-primary/30 rounded-xl flex items-center justify-center text-primary text-sm font-bold shadow-lg">
+                  01
+                </div>
                 <h3 className="text-lg font-bold mb-2 font-display">Share Your Goals</h3>
                 <p className="text-sm text-muted-foreground flex-1">Tell us your objectives, challenges, industry, and AI experience level.</p>
               </div>
               
               <div className="text-center p-6 rounded-xl glass h-full flex flex-col">
-                <div className="w-12 h-12 mx-auto mb-3 bg-gradient-to-r from-primary to-primary/70 rounded-full flex items-center justify-center text-primary-foreground text-lg font-bold">02</div>
+                <div className="w-10 h-10 mx-auto mb-4 backdrop-blur-xl bg-primary/5 ring-1 ring-primary/30 rounded-xl flex items-center justify-center text-primary text-sm font-bold shadow-lg">
+                  02
+                </div>
                 <h3 className="text-lg font-bold mb-2 font-display">AI Analysis</h3>
                 <p className="text-sm text-muted-foreground flex-1">Our AI generates your comprehensive Jump plan with roadmap, tools, and resources.</p>
               </div>
               
               <div className="text-center p-6 rounded-xl glass h-full flex flex-col">
-                <div className="w-12 h-12 mx-auto mb-3 bg-gradient-to-r from-primary to-primary/70 rounded-full flex items-center justify-center text-primary-foreground text-lg font-bold">03</div>
+                <div className="w-10 h-10 mx-auto mb-4 backdrop-blur-xl bg-primary/5 ring-1 ring-primary/30 rounded-xl flex items-center justify-center text-primary text-sm font-bold shadow-lg">
+                  03
+                </div>
                 <h3 className="text-lg font-bold mb-2 font-display">Start Implementing</h3>
                 <p className="text-sm text-muted-foreground flex-1">Follow your plan and use custom resources immediately with dashboard access.</p>
               </div>
