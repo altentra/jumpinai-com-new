@@ -86,19 +86,17 @@ const PaymentSuccess = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-background/90 to-primary/5 dark:bg-gradient-to-br dark:from-black dark:via-gray-950/90 dark:to-gray-900/60">
-        {/* Enhanced floating background elements */}
+      <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-background/90">
+        {/* Glassmorphism background elements */}
         <div className="fixed inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-primary/20 to-primary/5 dark:bg-gradient-to-br dark:from-gray-800/30 dark:to-gray-700/15 rounded-full blur-3xl"></div>
-          <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-tr from-secondary/15 to-secondary/5 dark:bg-gradient-to-tr dark:from-gray-700/25 dark:to-gray-600/15 rounded-full blur-3xl"></div>
-          <div className="absolute top-1/3 left-1/2 transform -translate-x-1/2 w-64 h-64 bg-accent/10 dark:bg-gradient-radial dark:from-gray-800/20 dark:to-transparent rounded-full blur-2xl"></div>
-          <div className="absolute top-20 right-20 w-32 h-32 bg-gradient-to-br from-primary/10 to-transparent dark:bg-gradient-to-br dark:from-gray-700/20 dark:to-transparent rounded-full blur-xl"></div>
-          <div className="absolute bottom-20 left-20 w-40 h-40 bg-gradient-to-tr from-secondary/8 to-transparent dark:bg-gradient-to-tr dark:from-gray-600/15 dark:to-transparent rounded-full blur-xl"></div>
+          <div className="absolute -top-40 -right-40 w-96 h-96 bg-primary/10 rounded-full blur-3xl"></div>
+          <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-primary/10 rounded-full blur-3xl"></div>
+          <div className="absolute top-1/3 left-1/2 transform -translate-x-1/2 w-64 h-64 bg-primary/5 rounded-full blur-2xl"></div>
         </div>
         <Navigation />
         <div className="flex items-center justify-center min-h-[60vh]">
           <div className="text-center">
-            <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+            <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-primary" />
             <p className="text-muted-foreground">Verifying your payment...</p>
           </div>
         </div>
@@ -108,25 +106,23 @@ const PaymentSuccess = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background/90 to-primary/5 dark:bg-gradient-to-br dark:from-black dark:via-gray-950/90 dark:to-gray-900/60">
-      {/* Enhanced floating background elements */}
+    <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-background/90">
+      {/* Glassmorphism background elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-primary/20 to-primary/5 dark:bg-gradient-to-br dark:from-gray-800/30 dark:to-gray-700/15 rounded-full blur-3xl"></div>
-        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-tr from-secondary/15 to-secondary/5 dark:bg-gradient-to-tr dark:from-gray-700/25 dark:to-gray-600/15 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/3 left-1/2 transform -translate-x-1/2 w-64 h-64 bg-accent/10 dark:bg-gradient-radial dark:from-gray-800/20 dark:to-transparent rounded-full blur-2xl"></div>
-        <div className="absolute top-20 right-20 w-32 h-32 bg-gradient-to-br from-primary/10 to-transparent dark:bg-gradient-to-br dark:from-gray-700/20 dark:to-transparent rounded-full blur-xl"></div>
-        <div className="absolute bottom-20 left-20 w-40 h-40 bg-gradient-to-tr from-secondary/8 to-transparent dark:bg-gradient-to-tr dark:from-gray-600/15 dark:to-transparent rounded-full blur-xl"></div>
+        <div className="absolute -top-40 -right-40 w-96 h-96 bg-primary/10 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-primary/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/3 left-1/2 transform -translate-x-1/2 w-64 h-64 bg-primary/5 rounded-full blur-2xl"></div>
       </div>
       <Navigation />
       
-      <section className="py-20 px-4">
+      <section className="relative py-20 px-4">
         <div className="container mx-auto max-w-2xl">
           <div className="text-center mb-8">
-            <div className="mx-auto mb-6 w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
-              <CheckCircle className="h-8 w-8 text-green-600" />
+            <div className="mx-auto mb-6 w-16 h-16 bg-primary/10 backdrop-blur-sm rounded-full flex items-center justify-center border border-primary/20">
+              <CheckCircle className="h-8 w-8 text-primary" />
             </div>
-            <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Payment Successful!
+            <h1 className="text-3xl md:text-4xl font-bold gradient-text-primary mb-4">
+              Payment Successful
             </h1>
             <p className="text-xl text-muted-foreground">
               Thank you for your purchase. Your digital product is ready.
@@ -134,10 +130,10 @@ const PaymentSuccess = () => {
           </div>
 
           {orderDetails ? (
-            <Card className="mb-8">
+            <Card className="mb-8 bg-card/50 backdrop-blur-sm border-border/50">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Download className="h-5 w-5" />
+                  <Download className="h-5 w-5 text-primary" />
                   Your Purchase
                 </CardTitle>
                 <CardDescription>
@@ -153,9 +149,9 @@ const PaymentSuccess = () => {
                   </p>
                 </div>
 
-                <div className="bg-gradient-to-br from-primary/5 to-primary/10 p-6 rounded-xl border border-primary/20">
+                <div className="bg-primary/5 backdrop-blur-sm p-6 rounded-xl border border-primary/10">
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center">
+                    <div className="h-8 w-8 rounded-full bg-primary/20 backdrop-blur-sm flex items-center justify-center border border-primary/10">
                       <Mail className="h-4 w-4 text-primary" />
                     </div>
                     <span className="font-semibold text-foreground">Your Download is Ready</span>
@@ -182,7 +178,7 @@ const PaymentSuccess = () => {
               </CardContent>
             </Card>
           ) : (
-            <Card className="mb-8">
+            <Card className="mb-8 bg-card/50 backdrop-blur-sm border-border/50">
               <CardContent className="py-8 text-center">
                 <p className="text-muted-foreground">
                   Unable to retrieve order details. Please check your email for the download link 
@@ -193,8 +189,7 @@ const PaymentSuccess = () => {
           )}
 
           <div className="text-center space-y-6">
-            {/* Account creation suggestion for non-logged users */}
-            <Card className="bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
+            <Card className="bg-primary/5 backdrop-blur-sm border-primary/10">
               <CardHeader>
                 <CardTitle className="flex items-center justify-center gap-2 text-primary">
                   <User className="h-5 w-5" />
@@ -206,7 +201,7 @@ const PaymentSuccess = () => {
                   Create a free JumpinAI account to access all your purchases from one convenient dashboard, 
                   track your AI learning journey, and get exclusive updates.
                 </p>
-                <Button asChild className="hover-scale">
+                <Button asChild>
                   <Link to="/auth">
                     <User className="h-4 w-4 mr-2" />
                     Create Free Account

@@ -299,20 +299,33 @@ async function handlePaymentSuccess(
   customerEmail: string
 ) {
   try {
+    console.log('🔄 Processing credit purchase payment...');
+    console.log('Session ID:', session.id);
+    console.log('Session metadata:', JSON.stringify(session.metadata));
+    
     const userId = session.metadata?.user_id;
     const packageId = session.metadata?.package_id;
     const credits = parseInt(session.metadata?.credits || "0");
     const amount = session.amount_total || 0;
     const customerName = session.metadata?.user_email?.split('@')[0] || customerEmail.split('@')[0];
 
-    if (!userId || !credits) {
-      console.error("Missing user_id or credits in session metadata");
+    console.log(`User ID: ${userId}, Credits: ${credits}, Amount: ${amount}`);
+
+    if (!userId) {
+      console.error('❌ CRITICAL: Missing user_id in session metadata');
+      console.error('Session metadata:', session.metadata);
       return;
     }
 
-    // **CRITICAL FIX: Actually add credits to user's account**
-    console.log(`Adding ${credits} credits to user ${userId}`);
-    const { error: creditsError } = await supabase.rpc('add_user_credits', {
+    if (!credits || credits === 0) {
+      console.error('❌ CRITICAL: Missing or zero credits in session metadata');
+      console.error('Session metadata:', session.metadata);
+      return;
+    }
+
+    // **CRITICAL: Add credits to user's account**
+    console.log(`💰 Adding ${credits} credits to user ${userId}...`);
+    const { data: rpcData, error: creditsError } = await supabase.rpc('add_user_credits', {
       p_user_id: userId,
       p_credits: credits,
       p_description: `Purchased credit package`,
@@ -320,23 +333,30 @@ async function handlePaymentSuccess(
     });
 
     if (creditsError) {
-      console.error('Error adding credits:', creditsError);
-      // Don't throw - still send confirmation email
+      console.error('❌ ERROR adding credits:', creditsError);
+      console.error('RPC error details:', JSON.stringify(creditsError));
+      // Don't throw - still try to update order and send email
     } else {
       console.log(`✅ Successfully added ${credits} credits to user ${userId}`);
+      console.log('RPC response:', rpcData);
     }
 
     // Update order status
-    const { error: orderError } = await supabase
+    console.log(`📦 Updating order status for session ${session.id}...`);
+    const { data: orderData, error: orderError } = await supabase
       .from('orders')
       .update({
         status: 'completed',
         stripe_payment_intent_id: session.payment_intent as string || null
       })
-      .eq('stripe_session_id', session.id);
+      .eq('stripe_session_id', session.id)
+      .select();
 
     if (orderError) {
-      console.error('Error updating order:', orderError);
+      console.error('❌ Error updating order:', orderError);
+      console.error('Order error details:', JSON.stringify(orderError));
+    } else {
+      console.log('✅ Order updated successfully:', orderData);
     }
 
     // Send confirmation email to customer
