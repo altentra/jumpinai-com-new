@@ -16,6 +16,7 @@ const ContactUs = lazy(() => import("./pages/ContactUs"));
 const TestSync = lazy(() => import("./pages/TestSync"));
 const Jumps = lazy(() => import("./pages/Jumps"));
 const PaymentSuccess = lazy(() => import("./pages/PaymentSuccess"));
+const CreditPurchaseSuccess = lazy(() => import("./pages/CreditPurchaseSuccess"));
 const SubscriptionSuccess = lazy(() => import("./pages/SubscriptionSuccess"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const Download = lazy(() => import("./pages/Download"));
@@ -85,6 +86,7 @@ const App = () => {
               <Route path="/jumps" element={<Jumps />} />
               <Route path="/for-investors" element={<ForInvestors />} />
               <Route path="/payment-success" element={<PaymentSuccess />} />
+              <Route path="/credit-purchase-success" element={<CreditPurchaseSuccess />} />
               <Route path="/subscription-success" element={<SubscriptionSuccess />} />
               <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/download/:token" element={<Download />} />
