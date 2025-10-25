@@ -39,6 +39,11 @@ const CreditPurchaseSuccess = () => {
         await new Promise(resolve => setTimeout(resolve, 2000));
         await fetchCredits();
         setVerifying(false);
+        
+        // Force a page refresh to show updated transactions
+        setTimeout(() => {
+          window.location.href = '/dashboard/subscription';
+        }, 1500);
       }
     };
 

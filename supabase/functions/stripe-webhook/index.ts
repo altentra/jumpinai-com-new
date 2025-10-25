@@ -110,7 +110,7 @@ serve(async (req) => {
             const { error: creditsError } = await supabase.rpc('add_user_credits', {
               p_user_id: user.id,
               p_credits: creditsPerMonth,
-              p_description: `${planName} monthly renewal`,
+              p_description: `${planName} subscription renewal - ${creditsPerMonth} monthly credits`,
               p_reference_id: invoice.id
             });
 
@@ -161,7 +161,7 @@ async function handleSubscriptionSuccess(
       const { error: creditsError } = await supabase.rpc('add_user_credits', {
         p_user_id: userId,
         p_credits: creditsPerMonth,
-        p_description: `${planName} monthly credits`,
+        p_description: `${planName} subscription - ${creditsPerMonth} monthly credits added`,
         p_reference_id: session.id
       });
 
@@ -323,12 +323,15 @@ async function handlePaymentSuccess(
       return;
     }
 
+    // Get package name for better description
+    const packageName = session.metadata?.package_name || 'Credit Package';
+    
     // **CRITICAL: Add credits to user's account**
     console.log(`💰 Adding ${credits} credits to user ${userId}...`);
     const { data: rpcData, error: creditsError } = await supabase.rpc('add_user_credits', {
       p_user_id: userId,
       p_credits: credits,
-      p_description: `Purchased credit package`,
+      p_description: `${packageName} - ${credits} credits purchased`,
       p_reference_id: session.id
     });
 

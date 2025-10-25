@@ -124,6 +124,7 @@ serve(async (req) => {
         user_id: user.id,
         user_email: user.email,
         package_id: packageId,
+        package_name: creditPackage.name,
         credits: creditPackage.credits.toString(),
       },
     });

@@ -40,6 +40,11 @@ const SubscriptionSuccess = () => {
         await new Promise(resolve => setTimeout(resolve, 2000));
         await fetchCredits();
         setVerifying(false);
+        
+        // Redirect to subscription page to show updated transactions
+        setTimeout(() => {
+          window.location.href = '/dashboard/subscription';
+        }, 1500);
       }
     };
 
