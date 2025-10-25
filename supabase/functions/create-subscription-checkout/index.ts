@@ -98,8 +98,7 @@ serve(async (req) => {
       unit_amount: subscriptionPlan.price_cents,
       recurring: { interval: 'month' },
       product_data: {
-        name: `${subscriptionPlan.name}`,
-        description: `${subscriptionPlan.credits_per_month} credits per month`,
+        name: `${subscriptionPlan.name} - ${subscriptionPlan.credits_per_month} monthly credits`,
       },
     });
     

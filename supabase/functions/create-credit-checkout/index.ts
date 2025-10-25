@@ -89,8 +89,7 @@ serve(async (req) => {
       currency: 'usd',
       unit_amount: creditPackage.price_cents,
       product_data: {
-        name: `${creditPackage.name}`,
-        description: `${creditPackage.credits} credits for AI transformation plans`,
+        name: `${creditPackage.name} - ${creditPackage.credits} credits`,
       },
     });
     
