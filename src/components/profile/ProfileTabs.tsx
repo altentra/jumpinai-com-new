@@ -504,45 +504,6 @@ export default function ProfileTabs() {
 
           {/* Profile & Overview Combined */}
           <TabsContent value="profile" className="mt-4 sm:mt-6 animate-fade-in space-y-4 sm:space-y-6">
-            {/* Subscription Overview */}
-            <Card>
-              <CardHeader className="pb-3 sm:pb-6">
-                <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
-                  <Crown className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" /> 
-                  Subscription Overview
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3 sm:space-y-4 pt-0">
-                <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
-                  {subInfo?.subscribed
-                    ? `You're on ${subInfo.subscription_tier || 'JumpinAI Pro'}. Next renewal: ${subInfo.subscription_end ? new Date(subInfo.subscription_end).toLocaleDateString() : '—'}`
-                    : 'You are on the Free plan. Upgrade to JumpinAI Pro to unlock all blueprints and workflows.'}
-                </p>
-              </CardContent>
-              <CardFooter className="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-3 pt-3 sm:pt-6">
-                {!subInfo?.subscribed ? (
-                  <Button onClick={subscribe} className="hover-scale w-full sm:w-auto">
-                    <Crown className="mr-2 h-4 w-4" /> Get JumpinAI Pro
-                  </Button>
-                ) : (
-                  <>
-                    <Button variant="secondary" onClick={manage} className="hover-scale w-full sm:w-auto">
-                      <ExternalLink className="mr-2 h-4 w-4" /> 
-                      <span className="sm:inline">Manage billing</span>
-                    </Button>
-                    <Button variant="outline" onClick={refreshSubscription} className="hover-scale w-full sm:w-auto">
-                      <RefreshCw className="mr-2 h-4 w-4" /> 
-                      <span className="sm:inline">Refresh status</span>
-                    </Button>
-                    <Button variant="destructive" onClick={cancelSubscription} className="hover-scale w-full sm:w-auto">
-                      <AlertTriangle className="mr-2 h-4 w-4" /> 
-                      <span className="sm:inline">Cancel subscription</span>
-                    </Button>
-                  </>
-                )}
-              </CardFooter>
-            </Card>
-
             {/* Email & Account Status */}
             <Card>
               <CardHeader className="pb-3 sm:pb-6">
