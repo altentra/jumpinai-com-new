@@ -301,7 +301,7 @@ export default function Subscription() {
               variant="outline" 
               onClick={fetchCredits} 
               size="sm"
-              className="glass border-primary/30 hover:border-primary/50 backdrop-blur-md hover:bg-primary/5 rounded-2xl transition-all duration-300"
+              className="backdrop-blur-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 rounded-2xl transition-all duration-300 shadow-lg"
             >
               <RefreshCw className="h-4 w-4 mr-2" />
               Refresh
@@ -410,7 +410,7 @@ export default function Subscription() {
                           size="sm"
                           onClick={() => downloadReceipt(transaction.reference_id!)}
                           disabled={downloadingReceipt === transaction.reference_id}
-                          className="h-8 px-3 text-xs glass border-primary/30 hover:border-primary/50 backdrop-blur-md hover:bg-primary/5 rounded-2xl transition-all duration-300"
+                          className="h-8 px-3 text-xs backdrop-blur-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 rounded-2xl transition-all duration-300"
                         >
                           {downloadingReceipt === transaction.reference_id ? (
                             <Loader2 className="w-3 h-3 animate-spin" />
@@ -460,7 +460,7 @@ export default function Subscription() {
               <Button 
                 onClick={manage}
                 size="lg"
-                className="w-full max-w-md text-lg py-6 bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl hover:shadow-2xl transition-all duration-300 rounded-2xl font-semibold"
+                className="w-full max-w-md text-lg py-6 backdrop-blur-xl bg-primary/20 hover:bg-primary/30 border border-primary/30 hover:border-primary/40 text-primary-foreground shadow-xl hover:shadow-2xl transition-all duration-300 rounded-2xl font-semibold"
               >
                 <ExternalLink className="mr-2 h-5 w-5" />
                 Manage Billing
@@ -468,7 +468,7 @@ export default function Subscription() {
               <Button 
                 variant="outline" 
                 onClick={handleRefreshSubscription}
-                className="glass border-primary/30 hover:border-primary/50 backdrop-blur-md hover:bg-primary/5 rounded-2xl transition-all duration-300"
+                className="backdrop-blur-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 rounded-2xl transition-all duration-300 shadow-lg"
               >
                 <RefreshCw className="mr-2 h-4 w-4" />
                 Refresh Status
@@ -558,7 +558,7 @@ export default function Subscription() {
                 <CardFooter className="mt-auto pt-4">
                   {isCurrent ? (
                     <Button 
-                      className="w-full glass border-2 border-primary/60 backdrop-blur-md bg-primary/10 text-primary rounded-2xl font-semibold shadow-md"
+                      className="w-full backdrop-blur-xl bg-primary/15 border-2 border-primary/40 text-primary rounded-2xl font-semibold shadow-md hover:bg-primary/15"
                       disabled
                     >
                       <Crown className="w-4 h-4 mr-2" />
@@ -567,7 +567,7 @@ export default function Subscription() {
                   ) : isFree ? (
                     <Button 
                       variant="outline" 
-                      className="w-full glass border-muted/50 backdrop-blur-md text-muted-foreground rounded-2xl font-medium"
+                      className="w-full backdrop-blur-xl bg-white/5 border border-muted/30 text-muted-foreground rounded-2xl font-medium hover:bg-white/5"
                       disabled
                     >
                       Free Forever
@@ -576,7 +576,7 @@ export default function Subscription() {
                     <Button
                       onClick={() => handleSubscribe(plan.id)}
                       disabled={isLoading}
-                      className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 rounded-2xl"
+                      className="w-full backdrop-blur-xl bg-primary/20 hover:bg-primary/30 border border-primary/30 hover:border-primary/40 text-primary-foreground font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 rounded-2xl"
                     >
                       {isLoading ? (
                         <>
@@ -647,7 +647,7 @@ export default function Subscription() {
                   <Button 
                     onClick={() => handleBuyCredits(pkg.id)}
                     disabled={isLoading}
-                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 rounded-2xl"
+                    className="w-full backdrop-blur-xl bg-primary/20 hover:bg-primary/30 border border-primary/30 hover:border-primary/40 text-primary-foreground font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 rounded-2xl"
                   >
                     {isLoading ? (
                       <>
