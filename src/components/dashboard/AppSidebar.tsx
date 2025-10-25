@@ -11,8 +11,9 @@ import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
+import { useCredits } from "@/hooks/useCredits";
 import { supabase } from "@/integrations/supabase/client";
-import { User, Settings, Home, FileText, Workflow, Lightbulb, Boxes, ChevronDown, CreditCard, Palette, Sparkles } from "lucide-react";
+import { User, Settings, Home, FileText, Workflow, Lightbulb, Boxes, ChevronDown, CreditCard, Palette, Sparkles, Zap } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { useAuth0Token } from "@/hooks/useAuth0Token";
 
@@ -29,6 +30,7 @@ export default function AppSidebar() {
   const [subInfo, setSubInfo] = useState<SubscriberInfo | null>(null);
   const { user, isAuthenticated } = useAuth();
   const { getAuthHeaders } = useAuth0Token();
+  const { creditsBalance } = useCredits();
 
   useEffect(() => {
     if (isMobile) setOpenMobile(false);
@@ -79,7 +81,7 @@ export default function AppSidebar() {
           ) : "!"}
         </div>
         {subInfo && (
-          <div className="flex justify-center">
+          <div className="flex justify-center mb-2">
             <Badge 
               variant="outline" 
               className={cn(
@@ -87,10 +89,15 @@ export default function AppSidebar() {
                 subInfo.subscribed ? "border-primary/20 text-primary" : "border-muted text-muted-foreground"
               )}
             >
-              {subInfo.subscribed ? subInfo.subscription_tier || 'Pro Plan' : 'Free Plan'}
+              {subInfo.subscribed ? subInfo.subscription_tier || 'Free Plan' : 'Free Plan'}
             </Badge>
           </div>
         )}
+        <div className="flex items-center justify-center gap-1.5 bg-gradient-to-r from-primary/10 to-accent/10 dark:from-primary/8 dark:to-accent/8 rounded-lg px-2.5 py-1.5 border border-primary/20">
+          <Zap className="w-3.5 h-3.5 text-primary" />
+          <span className="text-sm font-semibold text-foreground">{creditsBalance}</span>
+          <span className="text-xs text-muted-foreground">{creditsBalance === 1 ? 'credit' : 'credits'}</span>
+        </div>
       </SidebarHeader>
 
       <SidebarContent>
@@ -118,8 +125,6 @@ export default function AppSidebar() {
             <FileText className="h-4 w-4" />
             My Jumps
           </Link>
-
-          <Separator className="my-1.5" />
 
           <Link 
             to="/dashboard/tools-prompts" 

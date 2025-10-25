@@ -76,8 +76,17 @@ serve(async (req) => {
       subscriptionEnd = new Date(subscription.current_period_end * 1000).toISOString();
       const price = subscription.items.data[0].price;
       const amount = price.unit_amount || 0;
-      // Map tiers by price if needed; only one plan now
-      subscriptionTier = amount === 1000 ? "JumpinAI Pro" : "Other";
+      
+      // Map Stripe prices to subscription tiers
+      if (amount === 900) {
+        subscriptionTier = "Starter Plan";
+      } else if (amount === 2500) {
+        subscriptionTier = "Pro Plan";
+      } else if (amount === 4900) {
+        subscriptionTier = "Growth Plan";
+      } else {
+        subscriptionTier = "Free Plan";
+      }
     }
 
     await supabaseClient.from("subscribers").upsert(
