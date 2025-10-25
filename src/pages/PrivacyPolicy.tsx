@@ -217,7 +217,7 @@ const PrivacyPolicy = () => {
 
             <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 mt-6 sm:mt-8 text-foreground">How to Exercise Your Rights</h3>
             <p className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 leading-relaxed">
-              To exercise any of these rights, please contact us at <strong>privacy@jumpinai.com</strong> or through your account settings. We will respond to your request within 30 days. You may need to verify your identity before we process your request.
+              To exercise any of these rights, please contact us at <strong>privacy@jumpinai.com</strong> or through your account settings. We will respond to your request within 5-7 business days. You may need to verify your identity before we process your request.
             </p>
 
             <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 mt-8 sm:mt-10 bg-gradient-to-br from-foreground to-primary/70 bg-clip-text text-transparent">10. Cookie Policy</h2>
@@ -307,7 +307,7 @@ const PrivacyPolicy = () => {
               <p className="text-sm sm:text-base text-muted-foreground"><strong>Data Protection Officer:</strong> dpo@jumpinai.com</p>
             </div>
             <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-              We will respond to your inquiry within 30 days.
+              We will respond to your inquiry within 5-7 business days.
             </p>
           </div>
         </div>
