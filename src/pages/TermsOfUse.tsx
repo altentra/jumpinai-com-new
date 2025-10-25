@@ -30,33 +30,39 @@ const TermsOfUse = () => {
       <Navigation />
       
       {/* Hero Section */}
-      <section className="pt-32 pb-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black gradient-text-primary mb-6 animate-fade-in-up">
-            Terms of Use
-          </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto animate-fade-in-up animate-delay-100">
-            Please read these terms carefully before using our website and services.
-          </p>
+      <section className="relative px-4 pt-24 sm:pt-28 pb-8 sm:pb-10">
+        <div className="relative z-10 max-w-4xl mx-auto text-center">
+          <div className="space-y-3 sm:space-y-4">
+            <div className="relative mb-4">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent leading-tight tracking-tight">
+                Terms of Use
+              </h1>
+              <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-20 sm:w-24 h-0.5 sm:h-1 bg-gradient-to-r from-transparent via-primary/60 to-transparent rounded-full"></div>
+            </div>
+            <p className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+              Please read these terms carefully before using our website and services.
+            </p>
+          </div>
         </div>
       </section>
 
       {/* Terms of Use Content */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto prose prose-lg dark:prose-invert">
-          <div className="bg-muted/30 p-8 rounded-2xl mb-8">
-            <p className="text-sm text-muted-foreground mb-2">Last updated: August 1, 2025</p>
-            <p className="text-base">
-              These Terms of Use ("Terms") govern your use of the JumpinAI website and services operated by JumpinAI, LLC ("we," "our," or "us").
-            </p>
-          </div>
+      <section className="px-4 py-8 sm:py-10 relative z-10">
+        <div className="max-w-4xl mx-auto">
+          <div className="glass backdrop-blur-md bg-background/40 dark:bg-background/20 border border-primary/20 rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-2xl shadow-primary/10">
+            <div className="glass backdrop-blur-sm bg-primary/5 dark:bg-primary/10 border border-primary/20 rounded-xl p-4 sm:p-6 mb-6 sm:mb-8">
+              <p className="text-xs sm:text-sm text-muted-foreground mb-2">Last updated: August 1, 2025</p>
+              <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+                These Terms of Use ("Terms") govern your use of the JumpinAI website and services operated by JumpinAI, LLC ("we," "our," or "us").
+              </p>
+            </div>
 
-          <h2 className="text-3xl font-bold mb-6 mt-12 font-display">Acceptance of Terms</h2>
-          <p className="mb-8">By accessing and using our website, you accept and agree to be bound by these Terms. If you do not agree to these Terms, please do not use our services.</p>
+            <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 mt-8 sm:mt-10 bg-gradient-to-br from-foreground to-primary/70 bg-clip-text text-transparent">Acceptance of Terms</h2>
+            <p className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 leading-relaxed">By accessing and using our website, you accept and agree to be bound by these Terms. If you do not agree to these Terms, please do not use our services.</p>
 
-          <h2 className="text-3xl font-bold mb-6 mt-12 font-display">Description of Service</h2>
-          <p className="mb-6">JumpinAI provides educational content, insights, and resources related to artificial intelligence for professionals and organizations. Our services include:</p>
-          <ul className="mb-8">
+            <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 mt-8 sm:mt-10 bg-gradient-to-br from-foreground to-primary/70 bg-clip-text text-transparent">Description of Service</h2>
+            <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6 leading-relaxed">JumpinAI provides educational content, insights, and resources related to artificial intelligence for professionals and organizations. Our services include:</p>
+            <ul className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 space-y-2 list-disc list-inside">
             <li>Educational content and articles</li>
             <li>Digital products and downloadable resources</li>
             <li>AI strategy guidance and templates</li>
@@ -65,9 +71,9 @@ const TermsOfUse = () => {
             <li>Payment processing for digital products</li>
           </ul>
 
-          <h2 className="text-3xl font-bold mb-6 mt-12 font-display">User Responsibilities</h2>
-          <p className="mb-6">You agree to:</p>
-          <ul className="mb-8">
+            <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 mt-8 sm:mt-10 bg-gradient-to-br from-foreground to-primary/70 bg-clip-text text-transparent">User Responsibilities</h2>
+            <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6 leading-relaxed">You agree to:</p>
+            <ul className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 space-y-2 list-disc list-inside">
             <li>Use our services for lawful purposes only</li>
             <li>Provide accurate information when required</li>
             <li>Respect intellectual property rights</li>
@@ -75,9 +81,9 @@ const TermsOfUse = () => {
             <li>Not use our services for spam or unauthorized marketing</li>
           </ul>
 
-          <h2 className="text-3xl font-bold mb-6 mt-12 font-display">Digital Products and Purchases</h2>
-          <p className="mb-6">When you purchase digital products from us:</p>
-          <ul className="mb-8">
+            <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 mt-8 sm:mt-10 bg-gradient-to-br from-foreground to-primary/70 bg-clip-text text-transparent">Digital Products and Purchases</h2>
+            <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6 leading-relaxed">When you purchase digital products from us:</p>
+            <ul className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 space-y-2 list-disc list-inside">
             <li>You receive a limited, non-exclusive license to use the digital content for personal or commercial use as specified</li>
             <li>Digital products are delivered electronically via download links</li>
             <li>You are responsible for downloading and storing your purchased content</li>
@@ -85,24 +91,24 @@ const TermsOfUse = () => {
             <li>Unauthorized redistribution or sharing of purchased content is prohibited</li>
           </ul>
 
-          <h2 className="text-3xl font-bold mb-6 mt-12 font-display">Payment and Billing</h2>
-          <p className="mb-6">Payment processing is handled securely through Stripe. By making a purchase, you agree to:</p>
-          <ul className="mb-8">
+            <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 mt-8 sm:mt-10 bg-gradient-to-br from-foreground to-primary/70 bg-clip-text text-transparent">Payment and Billing</h2>
+            <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6 leading-relaxed">Payment processing is handled securely through Stripe. By making a purchase, you agree to:</p>
+            <ul className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 space-y-2 list-disc list-inside">
             <li>Provide accurate billing information</li>
             <li>Pay all charges associated with your purchases</li>
             <li>Accept that prices may change without notice</li>
             <li>Understand that failed payments may result in service suspension</li>
           </ul>
 
-          <h2 className="text-3xl font-bold mb-6 mt-12 font-display">Refunds and Cancellations</h2>
-          <p className="mb-8">Due to the instant delivery nature of digital products, all sales are generally final. However, we may provide refunds at our sole discretion in cases of technical issues preventing download or other exceptional circumstances. Refund requests must be made within 7 days of purchase.</p>
+            <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 mt-8 sm:mt-10 bg-gradient-to-br from-foreground to-primary/70 bg-clip-text text-transparent">Refunds and Cancellations</h2>
+            <p className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 leading-relaxed">Due to the instant delivery nature of digital products, all sales are generally final. However, we may provide refunds at our sole discretion in cases of technical issues preventing download or other exceptional circumstances. Refund requests must be made within 7 days of purchase.</p>
 
-          <h2 className="text-3xl font-bold mb-6 mt-12 font-display">Intellectual Property</h2>
-          <p className="mb-8">All content on our website, including text, graphics, logos, software, and digital products, is the property of JumpinAI, LLC or our licensors and is protected by copyright and other intellectual property laws. Purchased digital products grant you specific usage rights as outlined in the product description.</p>
+            <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 mt-8 sm:mt-10 bg-gradient-to-br from-foreground to-primary/70 bg-clip-text text-transparent">Intellectual Property</h2>
+            <p className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 leading-relaxed">All content on our website, including text, graphics, logos, software, and digital products, is the property of JumpinAI, LLC or our licensors and is protected by copyright and other intellectual property laws. Purchased digital products grant you specific usage rights as outlined in the product description.</p>
 
-          <h2 className="text-3xl font-bold mb-6 mt-12 font-display">Prohibited Uses</h2>
-          <p className="mb-6">You may not use our services to:</p>
-          <ul className="mb-8">
+            <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 mt-8 sm:mt-10 bg-gradient-to-br from-foreground to-primary/70 bg-clip-text text-transparent">Prohibited Uses</h2>
+            <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6 leading-relaxed">You may not use our services to:</p>
+            <ul className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 space-y-2 list-disc list-inside">
             <li>Violate any applicable laws or regulations</li>
             <li>Infringe on intellectual property rights</li>
             <li>Redistribute, resell, or share purchased digital content without authorization</li>
@@ -113,29 +119,30 @@ const TermsOfUse = () => {
             <li>Attempt to reverse engineer or extract our digital products</li>
           </ul>
 
-          <h2 className="text-3xl font-bold mb-6 mt-12 font-display">Disclaimer of Warranties</h2>
-          <p className="mb-8">Our services are provided "as is" without warranties of any kind, either express or implied. We do not guarantee that our services will be uninterrupted, secure, or error-free.</p>
+            <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 mt-8 sm:mt-10 bg-gradient-to-br from-foreground to-primary/70 bg-clip-text text-transparent">Disclaimer of Warranties</h2>
+            <p className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 leading-relaxed">Our services are provided "as is" without warranties of any kind, either express or implied. We do not guarantee that our services will be uninterrupted, secure, or error-free.</p>
 
-          <h2 className="text-3xl font-bold mb-6 mt-12 font-display">Limitation of Liability</h2>
-          <p className="mb-8">To the fullest extent permitted by law, JumpinAI, LLC shall not be liable for any indirect, incidental, special, or consequential damages arising from your use of our services.</p>
+            <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 mt-8 sm:mt-10 bg-gradient-to-br from-foreground to-primary/70 bg-clip-text text-transparent">Limitation of Liability</h2>
+            <p className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 leading-relaxed">To the fullest extent permitted by law, JumpinAI, LLC shall not be liable for any indirect, incidental, special, or consequential damages arising from your use of our services.</p>
 
-          <h2 className="text-3xl font-bold mb-6 mt-12 font-display">Privacy</h2>
-          <p className="mb-8">Your privacy is important to us. Please review our Privacy Policy, which governs how we collect, use, and protect your information.</p>
+            <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 mt-8 sm:mt-10 bg-gradient-to-br from-foreground to-primary/70 bg-clip-text text-transparent">Privacy</h2>
+            <p className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 leading-relaxed">Your privacy is important to us. Please review our Privacy Policy, which governs how we collect, use, and protect your information.</p>
 
-          <h2 className="text-3xl font-bold mb-6 mt-12 font-display">Termination</h2>
-          <p className="mb-8">We may terminate or suspend your access to our services at any time, without notice, for any reason, including breach of these Terms.</p>
+            <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 mt-8 sm:mt-10 bg-gradient-to-br from-foreground to-primary/70 bg-clip-text text-transparent">Termination</h2>
+            <p className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 leading-relaxed">We may terminate or suspend your access to our services at any time, without notice, for any reason, including breach of these Terms.</p>
 
-          <h2 className="text-3xl font-bold mb-6 mt-12 font-display">Changes to Terms</h2>
-          <p className="mb-8">We reserve the right to modify these Terms at any time. Changes will be effective immediately upon posting. Your continued use of our services constitutes acceptance of the modified Terms.</p>
+            <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 mt-8 sm:mt-10 bg-gradient-to-br from-foreground to-primary/70 bg-clip-text text-transparent">Changes to Terms</h2>
+            <p className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 leading-relaxed">We reserve the right to modify these Terms at any time. Changes will be effective immediately upon posting. Your continued use of our services constitutes acceptance of the modified Terms.</p>
 
-          <h2 className="text-3xl font-bold mb-6 mt-12 font-display">Governing Law</h2>
-          <p className="mb-8">These Terms shall be governed by and construed in accordance with the laws of the United States, without regard to conflict of law principles.</p>
+            <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 mt-8 sm:mt-10 bg-gradient-to-br from-foreground to-primary/70 bg-clip-text text-transparent">Governing Law</h2>
+            <p className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 leading-relaxed">These Terms shall be governed by and construed in accordance with the laws of the United States, without regard to conflict of law principles.</p>
 
-          <h2 className="text-3xl font-bold mb-6 mt-12 font-display">Contact Information</h2>
-          <p className="mb-6">If you have any questions about these Terms of Use, please contact us at:</p>
-          <div className="bg-muted/30 p-6 rounded-xl">
-            <p><strong>JumpinAI, LLC</strong></p>
-            <p>Email: info@jumpinai.com</p>
+            <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 mt-8 sm:mt-10 bg-gradient-to-br from-foreground to-primary/70 bg-clip-text text-transparent">Contact Information</h2>
+            <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6 leading-relaxed">If you have any questions about these Terms of Use, please contact us at:</p>
+            <div className="glass backdrop-blur-sm bg-primary/5 dark:bg-primary/10 border border-primary/20 rounded-xl p-4 sm:p-6">
+              <p className="text-sm sm:text-base font-semibold text-foreground">JumpinAI, LLC</p>
+              <p className="text-sm sm:text-base text-muted-foreground">Email: info@jumpinai.com</p>
+            </div>
           </div>
         </div>
       </section>
