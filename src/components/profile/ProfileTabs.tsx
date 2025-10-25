@@ -761,11 +761,14 @@ export default function ProfileTabs() {
                           <div className="grid grid-cols-2 gap-4 text-sm">
                             <div>
                               <div className="text-xs text-muted-foreground mb-1">Date</div>
-                              <div>
-                                {new Date(order.created_at).toLocaleDateString('en-US', { 
+                              <div className="text-sm">
+                                {new Date(order.created_at).toLocaleString('en-US', { 
                                   year: 'numeric', 
                                   month: 'short', 
-                                  day: 'numeric' 
+                                  day: 'numeric',
+                                  hour: 'numeric',
+                                  minute: '2-digit',
+                                  hour12: true
                                 })}
                               </div>
                             </div>
@@ -875,11 +878,22 @@ export default function ProfileTabs() {
                                   </div>
                                 </TableCell>
                                 <TableCell className="text-sm whitespace-nowrap">
-                                  {new Date(order.created_at).toLocaleDateString('en-US', { 
-                                    year: 'numeric', 
-                                    month: 'short', 
-                                    day: 'numeric' 
-                                  })}
+                                  <div>
+                                    <div>
+                                      {new Date(order.created_at).toLocaleDateString('en-US', { 
+                                        year: 'numeric', 
+                                        month: 'short', 
+                                        day: 'numeric' 
+                                      })}
+                                    </div>
+                                    <div className="text-xs text-muted-foreground">
+                                      {new Date(order.created_at).toLocaleTimeString('en-US', { 
+                                        hour: 'numeric',
+                                        minute: '2-digit',
+                                        hour12: true
+                                      })}
+                                    </div>
+                                  </div>
                                 </TableCell>
                                 <TableCell className="text-sm whitespace-nowrap">
                                   ${(order.amount / 100).toFixed(2)} {order.currency?.toUpperCase() || 'USD'}
