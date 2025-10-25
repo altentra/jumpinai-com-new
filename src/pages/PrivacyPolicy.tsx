@@ -62,7 +62,7 @@ const PrivacyPolicy = () => {
             <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 mt-6 sm:mt-8 text-foreground">Information You Provide</h3>
             <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6 leading-relaxed">We collect information you provide directly to us, such as when you:</p>
             <ul className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 space-y-2 list-disc list-inside">
-              <li>Create an account using email/password or third-party authentication (Google)</li>
+              <li>Create an account using email/password or third-party authentication (Google, Apple)</li>
               <li>Subscribe to our newsletter or monthly subscription plans</li>
               <li>Purchase digital products, credits, or services</li>
               <li>Contact us through our contact form</li>
@@ -116,6 +116,7 @@ const PrivacyPolicy = () => {
             <p className="text-sm sm:text-base text-muted-foreground mb-3 sm:mb-4 leading-relaxed">We share data with trusted third-party service providers including:</p>
             <ul className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 space-y-2 list-disc list-inside">
               <li><strong>Supabase:</strong> Database hosting and authentication services</li>
+              <li><strong>Google & Apple:</strong> Third-party authentication services (subject to their respective privacy policies)</li>
               <li><strong>Stripe:</strong> Payment processing (complies with PCI-DSS standards)</li>
               <li><strong>AI Providers:</strong> OpenAI, Anthropic Claude, Google Gemini, and xAI for content generation</li>
               <li><strong>Analytics Providers:</strong> Website performance monitoring and user behavior analysis</li>
@@ -136,11 +137,29 @@ const PrivacyPolicy = () => {
             </p>
             <ul className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6 space-y-2 list-disc list-inside">
               <li><strong>Google:</strong> Authentication services (subject to Google's Privacy Policy)</li>
+              <li><strong>Apple:</strong> Sign in with Apple authentication services (subject to Apple's Privacy Policy)</li>
               <li><strong>Stripe:</strong> Payment processing (subject to Stripe's Privacy Policy)</li>
               <li><strong>AI Providers:</strong> Content generation services with their respective privacy policies</li>
             </ul>
+            
+            <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 mt-6 sm:mt-8 text-foreground">Third-Party Authentication</h3>
+            <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6 leading-relaxed">
+              When you choose to sign in with Google or Apple, we collect basic profile information from your account including:
+            </p>
+            <ul className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6 space-y-2 list-disc list-inside">
+              <li>Your email address</li>
+              <li>Your profile name</li>
+              <li>Your profile picture (if available and authorized)</li>
+              <li>Basic account information necessary for authentication</li>
+            </ul>
+            <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6 leading-relaxed">
+              We use this information to create and manage your account, verify your identity, and provide our services. Your use of Google Sign-In is subject to Google's Privacy Policy, and your use of Sign in with Apple is subject to Apple's Privacy Policy. We do not store your Google or Apple passwords or access your accounts beyond the basic profile information you authorize.
+            </p>
             <p className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 leading-relaxed">
-              We encourage you to review the privacy policies of these third-party services. We are not responsible for their privacy practices.
+              <strong>Apple Sign In:</strong> If you use Sign in with Apple and choose to hide your email address, Apple will provide us with a unique, random email address that forwards to your actual email. You can manage this in your Apple ID settings.
+            </p>
+            <p className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 leading-relaxed">
+              We encourage you to review the privacy policies of these third-party services. We are not responsible for their privacy practices or how they handle your information.
             </p>
 
             <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 mt-8 sm:mt-10 bg-gradient-to-br from-foreground to-primary/70 bg-clip-text text-transparent">6. International Data Transfers</h2>

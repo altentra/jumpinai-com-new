@@ -175,6 +175,7 @@ export const PrivacyChoices = ({ isOpen, onClose }: PrivacyChoicesProps) => {
           <div className="bg-muted/30 p-4 rounded-lg space-y-2">
             <h4 className="font-medium text-sm">Third-Party Services We Use</h4>
             <ul className="text-xs text-muted-foreground space-y-1">
+              <li>• <strong>Google & Apple:</strong> Authentication services</li>
               <li>• <strong>Stripe:</strong> Payment processing</li>
               <li>• <strong>Supabase:</strong> Database and authentication</li>
               <li>• <strong>AI Providers:</strong> OpenAI, Anthropic, Google, xAI for content generation</li>

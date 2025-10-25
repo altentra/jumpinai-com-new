@@ -79,7 +79,7 @@ const TermsOfUse = () => {
             
             <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 mt-6 sm:mt-8 text-foreground">Account Creation</h3>
             <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6 leading-relaxed">
-              To access certain features, you must create an account. You must be at least 13 years old to use our Service. By creating an account, you represent that you meet this age requirement and that all information you provide is accurate, current, and complete.
+              To access certain features, you must create an account using email/password or third-party authentication services (Google, Apple). You must be at least 13 years old to use our Service. By creating an account, you represent that you meet this age requirement and that all information you provide is accurate, current, and complete.
             </p>
 
             <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 mt-6 sm:mt-8 text-foreground">Account Security</h3>
@@ -90,6 +90,11 @@ const TermsOfUse = () => {
               <li>Notifying us immediately of any unauthorized access or security breach at support@jumpinai.com</li>
               <li>Ensuring your account information remains accurate and up-to-date</li>
             </ul>
+
+            <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 mt-6 sm:mt-8 text-foreground">Third-Party Authentication</h3>
+            <p className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 leading-relaxed">
+              If you choose to create an account or sign in using third-party authentication services (Google or Apple), you acknowledge and agree that: (a) your use of these services is subject to their respective terms of service and privacy policies; (b) we will receive basic profile information from these providers as authorized by you; (c) you are responsible for maintaining the security of your third-party accounts; (d) we are not responsible for any issues arising from the use of third-party authentication services.
+            </p>
 
             <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 mt-6 sm:mt-8 text-foreground">Account Termination</h3>
             <p className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 leading-relaxed">
