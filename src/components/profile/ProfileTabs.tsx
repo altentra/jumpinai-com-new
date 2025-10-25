@@ -734,7 +734,7 @@ export default function ProfileTabs() {
                       let productDescription = 'Order completed';
                       
                       if (order.products?.name) {
-                        // Digital product
+                        // Digital product (PDF guide)
                         productName = order.products.name;
                         productDescription = order.products.description || 'Digital product download';
                       } else if (order.credit_packages?.name) {
@@ -753,7 +753,8 @@ export default function ProfileTabs() {
                         productDescription = 'Credits purchase';
                       }
                       
-                      const isPhysicalProduct = order.products?.file_name && order.download_token;
+                      // Only show download for actual digital products (PDF guides), not credit packs or subscriptions
+                      const isDownloadableProduct = order.products?.file_name && order.download_token;
                       
                       return (
                         <div key={order.id} className="border border-border rounded-lg p-4 space-y-3">
@@ -781,7 +782,7 @@ export default function ProfileTabs() {
                             </div>
                           </div>
                           
-                          {isPhysicalProduct && (
+                          {isDownloadableProduct && (
                             <div>
                               <div className="text-xs text-muted-foreground mb-1">Downloads</div>
                               <div className="text-sm">
@@ -791,7 +792,7 @@ export default function ProfileTabs() {
                           )}
                           
                           <div className="flex flex-col gap-2 pt-2">
-                            {isPhysicalProduct && (
+                            {isDownloadableProduct && (
                               <Button 
                                 variant="outline" 
                                 size="sm"
@@ -800,7 +801,7 @@ export default function ProfileTabs() {
                                 disabled={(order.download_count || 0) >= (order.max_downloads || 5)}
                               >
                                 <Download className="mr-2 h-3 w-3" />
-                                Download
+                                Download PDF
                               </Button>
                             )}
                             {order.stripe_session_id && (
@@ -847,7 +848,7 @@ export default function ProfileTabs() {
                             let productDescription = 'Order completed';
                             
                             if (order.products?.name) {
-                              // Digital product
+                              // Digital product (PDF guide)
                               productName = order.products.name;
                               productDescription = order.products.description || 'Digital product download';
                             } else if (order.credit_packages?.name) {
@@ -866,7 +867,8 @@ export default function ProfileTabs() {
                               productDescription = 'Credits purchase';
                             }
                             
-                            const isPhysicalProduct = order.products?.file_name && order.download_token;
+                            // Only show download for actual digital products (PDF guides), not credit packs or subscriptions
+                            const isDownloadableProduct = order.products?.file_name && order.download_token;
                             
                             return (
                               <TableRow key={order.id}>
@@ -889,7 +891,7 @@ export default function ProfileTabs() {
                                   ${(order.amount / 100).toFixed(2)} {order.currency?.toUpperCase() || 'USD'}
                                 </TableCell>
                                 <TableCell className="text-sm">
-                                  {isPhysicalProduct ? (
+                                  {isDownloadableProduct ? (
                                     <div className="text-sm">
                                       <div>{order.download_count || 0} / {order.max_downloads || 5}</div>
                                       <div className="text-xs text-muted-foreground">downloads</div>
@@ -900,7 +902,7 @@ export default function ProfileTabs() {
                                 </TableCell>
                                 <TableCell>
                                   <div className="flex flex-col lg:flex-row gap-1 lg:gap-2">
-                                    {isPhysicalProduct && (
+                                    {isDownloadableProduct && (
                                       <Button 
                                         variant="outline" 
                                         size="sm"
@@ -909,7 +911,7 @@ export default function ProfileTabs() {
                                         disabled={(order.download_count || 0) >= (order.max_downloads || 5)}
                                       >
                                         <Download className="mr-1 h-3 w-3" />
-                                        Download
+                                        Download PDF
                                       </Button>
                                     )}
                                     {order.stripe_session_id && (
