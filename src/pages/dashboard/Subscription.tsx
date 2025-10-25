@@ -301,7 +301,7 @@ export default function Subscription() {
               variant="outline" 
               onClick={fetchCredits} 
               size="sm"
-              className="border-2 border-primary/40 hover:border-primary/60 bg-background hover:bg-primary/10 rounded-2xl transition-all duration-300 hover:shadow-lg text-foreground"
+              className="glass border-primary/30 hover:border-primary/50 backdrop-blur-md hover:bg-primary/5 rounded-2xl transition-all duration-300"
             >
               <RefreshCw className="h-4 w-4 mr-2" />
               Refresh
@@ -410,7 +410,7 @@ export default function Subscription() {
                           size="sm"
                           onClick={() => downloadReceipt(transaction.reference_id!)}
                           disabled={downloadingReceipt === transaction.reference_id}
-                          className="h-8 px-3 text-xs border-2 border-primary/40 hover:border-primary/60 bg-background hover:bg-primary/10 rounded-2xl transition-all duration-300 text-foreground"
+                          className="h-8 px-3 text-xs glass border-primary/30 hover:border-primary/50 backdrop-blur-md hover:bg-primary/5 rounded-2xl transition-all duration-300"
                         >
                           {downloadingReceipt === transaction.reference_id ? (
                             <Loader2 className="w-3 h-3 animate-spin" />
@@ -458,10 +458,9 @@ export default function Subscription() {
           {subInfo?.subscribed ? (
             <>
               <Button 
-                variant="default" 
                 onClick={manage}
                 size="lg"
-                className="w-full max-w-md text-lg py-6 !bg-gradient-to-r !from-primary !to-accent hover:!from-primary/80 hover:!to-accent/80 shadow-xl hover:shadow-2xl transition-all duration-300 rounded-2xl !text-white font-semibold border-0"
+                className="w-full max-w-md text-lg py-6 bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl hover:shadow-2xl transition-all duration-300 rounded-2xl font-semibold"
               >
                 <ExternalLink className="mr-2 h-5 w-5" />
                 Manage Billing
@@ -469,7 +468,7 @@ export default function Subscription() {
               <Button 
                 variant="outline" 
                 onClick={handleRefreshSubscription}
-                className="border-2 border-primary/40 hover:border-primary/60 !bg-background hover:!bg-primary/10 rounded-2xl transition-all duration-300 hover:shadow-lg !text-foreground"
+                className="glass border-primary/30 hover:border-primary/50 backdrop-blur-md hover:bg-primary/5 rounded-2xl transition-all duration-300"
               >
                 <RefreshCw className="mr-2 h-4 w-4" />
                 Refresh Status
@@ -559,8 +558,7 @@ export default function Subscription() {
                 <CardFooter className="mt-auto pt-4">
                   {isCurrent ? (
                     <Button 
-                      variant="default" 
-                      className="w-full !bg-primary/20 hover:!bg-primary/20 border-2 border-primary/60 !text-primary rounded-2xl font-semibold shadow-md cursor-not-allowed"
+                      className="w-full glass border-2 border-primary/60 backdrop-blur-md bg-primary/10 text-primary rounded-2xl font-semibold shadow-md"
                       disabled
                     >
                       <Crown className="w-4 h-4 mr-2" />
@@ -569,7 +567,7 @@ export default function Subscription() {
                   ) : isFree ? (
                     <Button 
                       variant="outline" 
-                      className="w-full border-2 border-border/50 !bg-muted/50 hover:!bg-muted/50 !text-muted-foreground rounded-2xl font-medium cursor-not-allowed"
+                      className="w-full glass border-muted/50 backdrop-blur-md text-muted-foreground rounded-2xl font-medium"
                       disabled
                     >
                       Free Forever
@@ -578,11 +576,11 @@ export default function Subscription() {
                     <Button
                       onClick={() => handleSubscribe(plan.id)}
                       disabled={isLoading}
-                      className="w-full !bg-gradient-to-r !from-primary !to-accent hover:!from-primary/80 hover:!to-accent/80 !text-white font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 rounded-2xl border-0"
+                      className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 rounded-2xl"
                     >
                       {isLoading ? (
                         <>
-                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                          <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin mr-2" />
                           Processing...
                         </>
                       ) : (
@@ -649,11 +647,11 @@ export default function Subscription() {
                   <Button 
                     onClick={() => handleBuyCredits(pkg.id)}
                     disabled={isLoading}
-                    className="w-full !bg-gradient-to-r !from-primary !to-accent hover:!from-primary/80 hover:!to-accent/80 !text-white font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 rounded-2xl border-0"
+                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 rounded-2xl"
                   >
                     {isLoading ? (
                       <>
-                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                        <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin mr-2" />
                         Processing...
                       </>
                     ) : (
