@@ -171,6 +171,17 @@ export const PrivacyChoices = ({ isOpen, onClose }: PrivacyChoicesProps) => {
 
           <Separator />
 
+          {/* Third-Party Services Section */}
+          <div className="bg-muted/30 p-4 rounded-lg space-y-2">
+            <h4 className="font-medium text-sm">Third-Party Services We Use</h4>
+            <ul className="text-xs text-muted-foreground space-y-1">
+              <li>• <strong>Stripe:</strong> Payment processing</li>
+              <li>• <strong>Supabase:</strong> Database and authentication</li>
+              <li>• <strong>AI Providers:</strong> OpenAI, Anthropic, Google, xAI for content generation</li>
+              <li>• <strong>Analytics Services:</strong> Website performance and user behavior tracking</li>
+            </ul>
+          </div>
+
           {/* Additional Information */}
           <div className="bg-muted/30 p-4 rounded-lg space-y-2">
             <h4 className="font-medium text-sm">Important Information</h4>
@@ -179,17 +190,50 @@ export const PrivacyChoices = ({ isOpen, onClose }: PrivacyChoicesProps) => {
               <li>• You can change these preferences at any time</li>
               <li>• Some features may not work properly if you disable certain cookies</li>
               <li>• Necessary cookies cannot be disabled as they are essential for site functionality</li>
+              <li>• For more details, see our <a href="/privacy-policy" className="text-primary hover:underline">Privacy Policy</a></li>
             </ul>
           </div>
 
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-3 pt-4">
             <Button 
+              onClick={() => {
+                setPreferences({
+                  analytics: true,
+                  marketing: true,
+                  necessary: true,
+                  personalization: true,
+                });
+                toast.success("All preferences enabled");
+              }}
+              variant="outline"
+              className="flex-1"
+            >
+              Accept All
+            </Button>
+            <Button 
+              onClick={() => {
+                setPreferences({
+                  analytics: false,
+                  marketing: false,
+                  necessary: true,
+                  personalization: false,
+                });
+                toast.success("Only necessary cookies enabled");
+              }}
+              variant="outline"
+              className="flex-1"
+            >
+              Reject All
+            </Button>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Button 
               onClick={handleSavePreferences}
               disabled={isSaving}
               className="flex-1"
             >
-              {isSaving ? "Saving..." : "Save Preferences"}
+              {isSaving ? "Saving..." : "Save Custom Preferences"}
             </Button>
             <Button 
               variant="outline" 
