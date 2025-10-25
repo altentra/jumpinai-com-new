@@ -252,25 +252,25 @@ export default function Subscription() {
   }
 
   return (
-    <div className="animate-fade-in space-y-6">
+    <div className="animate-fade-in space-y-4 sm:space-y-6 px-3 sm:px-0">
       {/* Header */}
       <header>
-        <div className="rounded-2xl border border-border glass p-6 md:p-8 shadow-modern">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div>
-              <h1 className="text-3xl md:text-4xl font-bold flex items-center gap-3 gradient-text-primary">
-                <CreditCard className="h-7 w-7" />
-                Subscription & Credits
+        <div className="rounded-2xl border border-border glass p-4 sm:p-6 md:p-8 shadow-modern">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 sm:gap-4">
+            <div className="min-w-0">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold flex items-center gap-2 sm:gap-3 gradient-text-primary">
+                <CreditCard className="h-6 w-6 sm:h-7 sm:w-7 flex-shrink-0" />
+                <span className="truncate">Subscription & Credits</span>
               </h1>
-              <p className="text-muted-foreground mt-2">{email}</p>
+              <p className="text-muted-foreground mt-1 sm:mt-2 text-sm sm:text-base truncate">{email}</p>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3">
               {subInfo?.subscribed ? (
-                <Badge className="bg-primary/10 text-primary border-primary/20 text-sm px-3 py-1">
+                <Badge className="bg-primary/10 text-primary border-primary/20 text-xs sm:text-sm px-2 sm:px-3 py-1 whitespace-nowrap">
                   {subInfo.subscription_tier || 'Pro Plan'}
                 </Badge>
               ) : (
-                <Badge variant="secondary" className="border-muted text-sm px-3 py-1">
+                <Badge variant="secondary" className="border-muted text-xs sm:text-sm px-2 sm:px-3 py-1 whitespace-nowrap">
                   Free Plan
                 </Badge>
               )}
@@ -281,19 +281,19 @@ export default function Subscription() {
 
       {/* Credits Balance Card */}
       <Card className="glass border-primary/20 shadow-modern">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Zap className="h-5 w-5 text-primary" />
-            Your Credits Balance
+        <CardHeader className="pb-3 sm:pb-6">
+          <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+            <Zap className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" />
+            <span>Your Credits Balance</span>
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-4xl font-bold gradient-text-primary">
+          <div className="flex items-center justify-between gap-4">
+            <div className="min-w-0 flex-1">
+              <div className="text-3xl sm:text-4xl font-bold gradient-text-primary">
                 {creditsLoading ? "..." : credits?.credits_balance || 0}
               </div>
-              <p className="text-sm text-muted-foreground mt-1">
+              <p className="text-xs sm:text-sm text-muted-foreground mt-1">
                 Available credits for generating Jumps
               </p>
             </div>
@@ -301,10 +301,10 @@ export default function Subscription() {
               variant="outline" 
               onClick={fetchCredits} 
               size="sm"
-              className="backdrop-blur-xl bg-transparent border border-white/20 hover:border-white/30 hover:bg-white/5 rounded-2xl transition-all duration-300 shadow-lg text-white"
+              className="backdrop-blur-xl bg-transparent border border-white/20 hover:border-white/30 hover:bg-white/5 rounded-2xl transition-all duration-300 shadow-lg text-white flex-shrink-0"
             >
-              <RefreshCw className="h-4 w-4 mr-2" />
-              Refresh
+              <RefreshCw className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
+              <span className="hidden sm:inline">Refresh</span>
             </Button>
           </div>
         </CardContent>
@@ -433,36 +433,36 @@ export default function Subscription() {
 
       {/* Current Subscription Overview */}
       <Card className="glass shadow-modern">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Crown className="h-5 w-5 text-primary" />
-            Current Subscription Status
+        <CardHeader className="pb-3 sm:pb-6">
+          <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+            <Crown className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" />
+            <span>Current Subscription Status</span>
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <p className="text-muted-foreground">
+        <CardContent className="space-y-3 sm:space-y-4">
+          <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
             {subInfo?.subscribed
               ? `You're currently on ${subInfo.subscription_tier || 'Pro Plan'}. Your subscription ${subInfo.subscription_end ? `renews on ${new Date(subInfo.subscription_end).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}` : 'is active'}.`
               : 'You are on the Free Plan. Upgrade to a paid plan to receive monthly credits and access advanced features.'}
           </p>
           {subInfo?.subscribed && (
-            <div className="flex items-center gap-2 p-3 bg-primary/5 rounded-lg border border-primary/10">
-              <Sparkles className="h-4 w-4 text-primary" />
-              <p className="text-sm text-foreground">
+            <div className="flex items-start gap-2 sm:gap-3 p-3 bg-primary/5 rounded-lg border border-primary/10">
+              <Sparkles className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
+              <p className="text-xs sm:text-sm text-foreground">
                 Monthly credits automatically renew with your subscription
               </p>
             </div>
           )}
         </CardContent>
-        <CardFooter className="flex flex-col items-center gap-3">
+        <CardFooter className="flex flex-col items-center gap-2 sm:gap-3 pt-3 sm:pt-6">
           {subInfo?.subscribed ? (
             <>
               <Button 
                 onClick={manage}
                 size="lg"
-                className="w-full max-w-md text-lg py-6 backdrop-blur-xl bg-transparent border border-white/20 hover:border-white/30 hover:bg-white/5 text-white shadow-xl hover:shadow-2xl transition-all duration-300 rounded-2xl font-semibold"
+                className="w-full max-w-md text-base sm:text-lg py-5 sm:py-6 backdrop-blur-xl bg-transparent border border-white/20 hover:border-white/30 hover:bg-white/5 text-white shadow-xl hover:shadow-2xl transition-all duration-300 rounded-2xl font-semibold"
               >
-                <ExternalLink className="mr-2 h-5 w-5" />
+                <ExternalLink className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
                 Manage Billing
               </Button>
               <Button 
@@ -470,34 +470,34 @@ export default function Subscription() {
                 onClick={handleRefreshSubscription}
                 className="backdrop-blur-xl bg-transparent border border-white/20 hover:border-white/30 hover:bg-white/5 rounded-2xl transition-all duration-300 shadow-lg text-white"
               >
-                <RefreshCw className="mr-2 h-4 w-4" />
-                Refresh Status
+                <RefreshCw className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+                <span className="text-sm sm:text-base">Refresh Status</span>
               </Button>
             </>
           ) : (
-            <p className="text-sm text-muted-foreground">
+            <p className="text-xs sm:text-sm text-muted-foreground text-center px-4">
               Choose a subscription plan below to get started with monthly credits.
             </p>
           )}
         </CardFooter>
       </Card>
 
-      <Separator className="my-8" />
+      <Separator className="my-6 sm:my-8" />
 
       {/* Subscription Plans */}
       <div>
-        <div className="text-center mb-8">
-          <h2 className="text-2xl sm:text-3xl font-bold gradient-text-primary mb-3">
+        <div className="text-center mb-6 sm:mb-8 px-3">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold gradient-text-primary mb-2 sm:mb-3">
             Subscription Plans
           </h2>
-          <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-xs sm:text-sm md:text-base text-muted-foreground max-w-2xl mx-auto leading-relaxed">
             Get monthly credits that roll over, plus access to all our resources and tools. 
-            <br />
+            <br className="hidden sm:block" />
             <span className="font-semibold text-foreground">1 credit = 1 comprehensive Jump generation</span>
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 px-3 sm:px-0">
           {subscriptionPlans.map((plan) => {
             const PlanIcon = getPlanIcon(plan.name);
             const badge = getPlanBadge(plan.name);
@@ -598,20 +598,20 @@ export default function Subscription() {
         </div>
       </div>
 
-      <Separator className="my-8" />
+      <Separator className="my-6 sm:my-8" />
 
       {/* Credit Packages */}
       <div>
-        <div className="text-center mb-8">
-          <h2 className="text-2xl sm:text-3xl font-bold gradient-text-primary mb-3">
+        <div className="text-center mb-6 sm:mb-8 px-3">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold gradient-text-primary mb-2 sm:mb-3">
             Need More Credits?
           </h2>
-          <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-xs sm:text-sm md:text-base text-muted-foreground max-w-2xl mx-auto leading-relaxed">
             Purchase additional credits anytime to supplement your subscription or as a one-time boost.
           </p>
         </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 max-w-4xl mx-auto px-3 sm:px-0">
           {creditPackages.map((pkg) => {
             const isLoading = packageLoading[pkg.id];
             const isPopular = pkg.credits === 100;
@@ -632,12 +632,12 @@ export default function Subscription() {
                 )}
                 
                 <CardHeader className="text-center pb-4">
-                  <CardTitle className="text-base font-semibold">{pkg.name}</CardTitle>
+                  <CardTitle className="text-sm sm:text-base font-semibold">{pkg.name}</CardTitle>
                   <div className="mt-3">
-                    <div className="text-3xl font-bold gradient-text-primary">
+                    <div className="text-xl sm:text-2xl font-bold gradient-text-primary">
                       {pkg.credits} credits
                     </div>
-                    <div className="text-base font-medium text-muted-foreground mt-1">
+                    <div className="text-sm sm:text-base font-medium text-muted-foreground mt-1">
                       {formatPrice(pkg.price_cents)}
                     </div>
                   </div>
