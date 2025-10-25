@@ -42,9 +42,10 @@ const SubscriptionSuccess = () => {
         await fetchCredits();
         setVerifying(false);
         
-        // Redirect to subscription page with subscription success flag
+        // Redirect to subscription page with subscription success flag AND profile refresh
         setTimeout(() => {
-          window.location.href = '/dashboard/subscription?subscription=success';
+          // Use replace to avoid back button issues
+          window.location.replace('/dashboard/subscription?subscription=success&profile_refresh=true');
         }, 1000);
       }
     };

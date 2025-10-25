@@ -70,6 +70,24 @@ export default function ProfileTabs() {
     }
   }, [isAuthenticated, authLoading, user, subscription, login]);
 
+  // Auto-refresh order history after purchases from subscription page
+  useEffect(() => {
+    const profileRefresh = searchParams.get('profile_refresh');
+    if (profileRefresh === 'true') {
+      console.log('Purchase detected from subscription page, refreshing order history...');
+      setTimeout(() => {
+        fetchOrders();
+      }, 1000);
+      
+      // Remove the parameter from URL
+      setSearchParams(prev => {
+        const newParams = new URLSearchParams(prev);
+        newParams.delete('profile_refresh');
+        return newParams;
+      });
+    }
+  }, [searchParams, setSearchParams]);
+
   // Check for email verification success parameter
   useEffect(() => {
     const emailVerified = searchParams.get('emailVerified');
@@ -266,6 +284,14 @@ export default function ProfileTabs() {
             name,
             description,
             file_name
+          ),
+          credit_packages (
+            name,
+            credits
+          ),
+          subscription_plans (
+            name,
+            credits_per_month
           )
         `)
         .eq("user_email", userEmail)
@@ -703,11 +729,30 @@ export default function ProfileTabs() {
                   <div className="space-y-4 sm:hidden">
                     {/* Mobile Card View */}
                     {orders.map((order) => {
-                      // Determine product display name
-                      const productName = order.products?.name || 
-                        (order.download_token ? 'Digital Product' : 'Credit Package or Subscription');
-                      const productDescription = order.products?.description || 
-                        (!order.download_token ? 'Purchase' : 'Digital product download');
+                      // Determine product display name with better descriptions
+                      let productName = 'Purchase';
+                      let productDescription = 'Order completed';
+                      
+                      if (order.products?.name) {
+                        // Digital product
+                        productName = order.products.name;
+                        productDescription = order.products.description || 'Digital product download';
+                      } else if (order.credit_packages?.name) {
+                        // Credit package purchase
+                        productName = order.credit_packages.name;
+                        productDescription = `${order.credit_packages.credits} credits purchased`;
+                      } else if (order.subscription_plans?.name) {
+                        // Subscription purchase
+                        productName = order.subscription_plans.name;
+                        productDescription = `Subscription - ${order.subscription_plans.credits_per_month} credits/month`;
+                      } else if (order.download_token) {
+                        productName = 'Digital Product';
+                        productDescription = 'Digital product download';
+                      } else {
+                        productName = 'Credit Package';
+                        productDescription = 'Credits purchase';
+                      }
+                      
                       const isPhysicalProduct = order.products?.file_name && order.download_token;
                       
                       return (
@@ -797,11 +842,30 @@ export default function ProfileTabs() {
                         </TableHeader>
                         <TableBody>
                            {orders.map((order) => {
-                            // Determine product display name
-                            const productName = order.products?.name || 
-                              (order.download_token ? 'Digital Product' : 'Credit Package or Subscription');
-                            const productDescription = order.products?.description || 
-                              (!order.download_token ? 'Purchase' : 'Digital product download');
+                            // Determine product display name with better descriptions
+                            let productName = 'Purchase';
+                            let productDescription = 'Order completed';
+                            
+                            if (order.products?.name) {
+                              // Digital product
+                              productName = order.products.name;
+                              productDescription = order.products.description || 'Digital product download';
+                            } else if (order.credit_packages?.name) {
+                              // Credit package purchase
+                              productName = order.credit_packages.name;
+                              productDescription = `${order.credit_packages.credits} credits purchased`;
+                            } else if (order.subscription_plans?.name) {
+                              // Subscription purchase
+                              productName = order.subscription_plans.name;
+                              productDescription = `Subscription - ${order.subscription_plans.credits_per_month} credits/month`;
+                            } else if (order.download_token) {
+                              productName = 'Digital Product';
+                              productDescription = 'Digital product download';
+                            } else {
+                              productName = 'Credit Package';
+                              productDescription = 'Credits purchase';
+                            }
+                            
                             const isPhysicalProduct = order.products?.file_name && order.download_token;
                             
                             return (

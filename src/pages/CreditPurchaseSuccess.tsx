@@ -40,9 +40,10 @@ const CreditPurchaseSuccess = () => {
         await fetchCredits();
         setVerifying(false);
         
-        // Redirect to subscription page with success flag
+        // Redirect to subscription page AND profile page with success flag
         setTimeout(() => {
-          window.location.href = '/dashboard/subscription?payment=success';
+          // Use replace to avoid back button issues
+          window.location.replace('/dashboard/subscription?payment=success&profile_refresh=true');
         }, 1000);
       }
     };

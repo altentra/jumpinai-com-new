@@ -1,138 +1,149 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@14.21.0";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
 serve(async (req) => {
-  if (req.method === "OPTIONS") {
+  // Handle CORS preflight requests
+  if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    console.log("Download receipt function called");
+    const stripeSecretKey = Deno.env.get('STRIPE_SECRET_KEY');
+    
+    if (!stripeSecretKey) {
+      console.error('STRIPE_SECRET_KEY is not configured');
+      throw new Error('Stripe configuration error');
+    }
+
+    const stripe = new Stripe(stripeSecretKey, {
+      apiVersion: '2023-10-16',
+    });
+
     const { sessionId } = await req.json();
-    console.log("Session ID received:", sessionId);
 
     if (!sessionId) {
-      console.error("No session ID provided");
-      throw new Error("Session ID is required");
+      return new Response(
+        JSON.stringify({ error: 'Session ID is required' }),
+        { 
+          status: 400, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        }
+      );
     }
 
-    // Initialize Stripe
-    const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
-    if (!stripeKey) {
-      console.error("STRIPE_SECRET_KEY not found");
-      throw new Error("Stripe configuration error");
-    }
-    
-    const stripe = new Stripe(stripeKey, {
-      apiVersion: "2023-10-16",
+    console.log('Retrieving receipt for session:', sessionId);
+
+    // Retrieve the checkout session
+    const session = await stripe.checkout.sessions.retrieve(sessionId, {
+      expand: ['payment_intent', 'subscription', 'invoice']
     });
 
-    console.log("Retrieving checkout session from Stripe...");
-    // Get the checkout session
-    const session = await stripe.checkout.sessions.retrieve(sessionId);
-    console.log("Session retrieved:", { id: session.id, payment_intent: session.payment_intent });
-    
-    // Handle both one-time payments and subscription checkouts
-    if (session.payment_intent) {
-      console.log("Retrieving payment intent...");
-      const paymentIntent = await stripe.paymentIntents.retrieve(session.payment_intent as string, {
-        expand: ['charges']
+    console.log('Session retrieved:', {
+      mode: session.mode,
+      payment_status: session.payment_status,
+      hasPaymentIntent: !!session.payment_intent,
+      hasSubscription: !!session.subscription,
+      hasInvoice: !!session.invoice
+    });
+
+    let receiptUrl: string | null = null;
+
+    // Handle one-time payments
+    if (session.mode === 'payment' && session.payment_intent) {
+      const paymentIntent = typeof session.payment_intent === 'string'
+        ? await stripe.paymentIntents.retrieve(session.payment_intent, { expand: ['charges'] })
+        : session.payment_intent;
+
+      console.log('Payment intent retrieved:', {
+        id: paymentIntent.id,
+        chargesCount: paymentIntent.charges?.data?.length
       });
-      console.log("Payment intent retrieved:", { id: paymentIntent.id, charges_count: paymentIntent.charges?.data?.length });
 
-      let charges;
-      if (!paymentIntent.charges || paymentIntent.charges.data.length === 0) {
-        console.log("No charges in payment intent, fetching charges directly...");
-        charges = await stripe.charges.list({ payment_intent: paymentIntent.id, limit: 1 });
-        console.log("Direct charges fetch result:", { count: charges.data.length });
-      } else {
-        charges = paymentIntent.charges;
+      // Get the charge's receipt URL
+      if (paymentIntent.charges?.data?.[0]?.receipt_url) {
+        receiptUrl = paymentIntent.charges.data[0].receipt_url;
+        console.log('Found receipt URL from payment intent charge');
       }
-
-      if (!charges || charges.data.length === 0) {
-        console.error("No charges found for payment intent:", paymentIntent.id);
-        throw new Error("No charges found for this payment");
-      }
-
-      const charge = charges.data[0];
-      console.log("Charge found:", { id: charge.id, receipt_url: charge.receipt_url });
-
-      if (!charge.receipt_url) {
-        console.error("No receipt URL found for charge:", charge.id);
-        throw new Error("Receipt not available for this charge");
-      }
-
-      console.log("Success! Receipt URL:", charge.receipt_url);
-      return new Response(JSON.stringify({ receiptUrl: charge.receipt_url, success: true }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 200,
-      });
     }
+    // Handle subscriptions
+    else if (session.mode === 'subscription') {
+      // Try to get invoice first
+      if (session.invoice) {
+        const invoice = typeof session.invoice === 'string'
+          ? await stripe.invoices.retrieve(session.invoice)
+          : session.invoice;
 
-    // Subscription flow: session.payment_intent is often null; use the invoice
-    if (session.invoice) {
-      console.log("Retrieving invoice for session", sessionId);
-      const invoice = await stripe.invoices.retrieve(session.invoice as string);
-      console.log("Invoice retrieved:", { id: invoice.id, hosted_invoice_url: invoice.hosted_invoice_url, invoice_pdf: (invoice as any).invoice_pdf });
-
-      if (invoice.hosted_invoice_url) {
-        console.log("Success! Hosted invoice URL:", invoice.hosted_invoice_url);
-        return new Response(JSON.stringify({ receiptUrl: invoice.hosted_invoice_url, success: true }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-          status: 200,
+        console.log('Invoice retrieved:', {
+          id: invoice.id,
+          hasHostedUrl: !!invoice.hosted_invoice_url,
+          hasPdfUrl: !!invoice.invoice_pdf
         });
-      }
 
-      if ((invoice as any).invoice_pdf) {
-        console.log("Success! Invoice PDF URL:", (invoice as any).invoice_pdf);
-        return new Response(JSON.stringify({ receiptUrl: (invoice as any).invoice_pdf, success: true }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-          status: 200,
-        });
-      }
-
-      // Fallback: get charge via invoice.payment_intent or invoice.charge
-      if (invoice.payment_intent) {
-        const pi = await stripe.paymentIntents.retrieve(invoice.payment_intent as string, { expand: ['charges'] });
-        const ch = pi.charges?.data?.[0];
-        if (ch?.receipt_url) {
-          return new Response(JSON.stringify({ receiptUrl: ch.receipt_url, success: true }), {
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-            status: 200,
-          });
+        // Prefer hosted invoice URL
+        if (invoice.hosted_invoice_url) {
+          receiptUrl = invoice.hosted_invoice_url;
+          console.log('Found hosted invoice URL');
+        } else if (invoice.invoice_pdf) {
+          receiptUrl = invoice.invoice_pdf;
+          console.log('Found invoice PDF URL');
         }
-      }
-      if ((invoice as any).charge) {
-        const ch = await stripe.charges.retrieve((invoice as any).charge as string);
-        if (ch.receipt_url) {
-          return new Response(JSON.stringify({ receiptUrl: ch.receipt_url, success: true }), {
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-            status: 200,
-          });
+
+        // Fallback: try to get charge receipt from invoice
+        if (!receiptUrl && invoice.charge) {
+          const charge = await stripe.charges.retrieve(invoice.charge as string);
+          if (charge.receipt_url) {
+            receiptUrl = charge.receipt_url;
+            console.log('Found receipt URL from invoice charge');
+          }
         }
       }
 
-      console.error("No receipt or invoice URL available for invoice:", invoice.id);
-      throw new Error("Receipt not available for this invoice");
+      // If no invoice, try to get from payment intent
+      if (!receiptUrl && session.payment_intent) {
+        const paymentIntent = typeof session.payment_intent === 'string'
+          ? await stripe.paymentIntents.retrieve(session.payment_intent, { expand: ['charges'] })
+          : session.payment_intent;
+
+        if (paymentIntent.charges?.data?.[0]?.receipt_url) {
+          receiptUrl = paymentIntent.charges.data[0].receipt_url;
+          console.log('Found receipt URL from subscription payment intent');
+        }
+      }
     }
 
-    console.error("No payment intent or invoice found for session:", sessionId);
-    throw new Error("No receipt available for this session");
+    if (!receiptUrl) {
+      console.error('No receipt URL found for session:', sessionId);
+      return new Response(
+        JSON.stringify({ error: 'Receipt not available' }),
+        { 
+          status: 404, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        }
+      );
+    }
 
+    console.log('Receipt URL found:', receiptUrl);
+
+    return new Response(
+      JSON.stringify({ receiptUrl }),
+      { 
+        status: 200, 
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+      }
+    );
   } catch (error: any) {
-    console.error("Error downloading receipt:", error);
-    return new Response(JSON.stringify({ 
-      error: error.message,
-      success: false 
-    }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-      status: 500,
-    });
+    console.error('Error retrieving receipt:', error);
+    return new Response(
+      JSON.stringify({ error: error.message || 'Failed to retrieve receipt' }),
+      { 
+        status: 500, 
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+      }
+    );
   }
 });
