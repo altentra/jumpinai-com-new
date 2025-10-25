@@ -147,7 +147,7 @@ serve(async (req) => {
         },
       ],
       mode: 'subscription',
-      success_url: `${req.headers.get('origin')}/subscription-success?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${req.headers.get('origin')}/subscription-success?session_id={CHECKOUT_SESSION_ID}&plan=${encodeURIComponent(subscriptionPlan.name)}&credits=${subscriptionPlan.credits_per_month}`,
       cancel_url: `${req.headers.get('origin')}/dashboard/subscription`,
       metadata: {
         user_id: user.id,
@@ -155,6 +155,15 @@ serve(async (req) => {
         plan_id: planId,
         plan_name: subscriptionPlan.name,
         credits_per_month: subscriptionPlan.credits_per_month.toString(),
+      },
+      subscription_data: {
+        metadata: {
+          user_id: user.id,
+          user_email: user.email,
+          plan_id: planId,
+          plan_name: subscriptionPlan.name,
+          credits_per_month: subscriptionPlan.credits_per_month.toString(),
+        },
       },
     });
 

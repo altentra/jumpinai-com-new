@@ -76,7 +76,51 @@ serve(async (req) => {
       case "invoice.paid": {
         const invoice = event.data.object as Stripe.Invoice;
         console.log("Invoice paid:", invoice.id);
+        
         // Handle recurring subscription payments
+        if (invoice.subscription && invoice.billing_reason === 'subscription_cycle') {
+          console.log("Processing recurring subscription payment");
+          
+          // Get subscription details
+          const subscription = await stripe.subscriptions.retrieve(invoice.subscription as string);
+          const customerEmail = typeof invoice.customer_email === 'string' 
+            ? invoice.customer_email 
+            : (await stripe.customers.retrieve(invoice.customer as string) as Stripe.Customer).email;
+          
+          if (!customerEmail) {
+            console.error("No customer email found for recurring payment");
+            break;
+          }
+
+          // Find user by email
+          const { data: userData } = await supabase.auth.admin.listUsers();
+          const user = userData?.users?.find(u => u.email === customerEmail);
+          
+          if (!user) {
+            console.error("User not found for recurring payment:", customerEmail);
+            break;
+          }
+
+          // Get plan details from subscription metadata
+          const planName = subscription.metadata?.plan_name || "Subscription";
+          const creditsPerMonth = parseInt(subscription.metadata?.credits_per_month || "0");
+
+          if (creditsPerMonth > 0) {
+            console.log(`Adding ${creditsPerMonth} recurring credits to user ${user.id}`);
+            const { error: creditsError } = await supabase.rpc('add_user_credits', {
+              p_user_id: user.id,
+              p_credits: creditsPerMonth,
+              p_description: `${planName} monthly renewal`,
+              p_reference_id: invoice.id
+            });
+
+            if (creditsError) {
+              console.error('Error adding recurring credits:', creditsError);
+            } else {
+              console.log(`✅ Successfully added ${creditsPerMonth} recurring credits`);
+            }
+          }
+        }
         break;
       }
 
@@ -105,16 +149,35 @@ async function handleSubscriptionSuccess(
   customerEmail: string
 ) {
   try {
-    const subscriptionTier = session.metadata?.plan_name || "JumpinAI Pro";
+    const userId = session.metadata?.user_id;
+    const planName = session.metadata?.plan_name || "Subscription";
+    const creditsPerMonth = parseInt(session.metadata?.credits_per_month || "0");
     const amount = session.amount_total || 0;
-    const customerName = session.metadata?.user_email?.split('@')[0] || customerEmail.split('@')[0];
+    const customerName = customerEmail.split('@')[0];
+
+    // **CRITICAL: Add monthly credits to user's balance**
+    if (userId && creditsPerMonth > 0) {
+      console.log(`Adding ${creditsPerMonth} subscription credits to user ${userId}`);
+      const { error: creditsError } = await supabase.rpc('add_user_credits', {
+        p_user_id: userId,
+        p_credits: creditsPerMonth,
+        p_description: `${planName} monthly credits`,
+        p_reference_id: session.id
+      });
+
+      if (creditsError) {
+        console.error('Error adding subscription credits:', creditsError);
+      } else {
+        console.log(`✅ Successfully added ${creditsPerMonth} credits to user ${userId}`);
+      }
+    }
 
     // Send welcome email to customer
     console.log("Sending subscription welcome email to:", customerEmail);
     await resend.emails.send({
-      from: "JumpinAI Pro <welcome@jumpinai.com>",
+      from: "JumpinAI <welcome@jumpinai.com>",
       to: [customerEmail],
-      subject: `🎉 Welcome to ${subscriptionTier}!`,
+      subject: `🎉 Welcome to ${planName}!`,
       html: `
         <!DOCTYPE html>
         <html>
@@ -128,7 +191,7 @@ async function handleSubscriptionSuccess(
           </div>
 
           <div style="background: linear-gradient(135deg, #374151 0%, #1f2937 100%); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
-            <h1 style="color: white; margin: 0; font-size: 28px;">Welcome to ${subscriptionTier}! 🎉</h1>
+            <h1 style="color: white; margin: 0; font-size: 28px;">Welcome to ${planName}! 🎉</h1>
             <p style="color: #d1d5db; margin: 10px 0 0 0; font-size: 16px;">Your subscription is now active</p>
           </div>
           
@@ -137,24 +200,30 @@ async function handleSubscriptionSuccess(
               <h2 style="color: #374151; margin-bottom: 20px;">Hi ${customerName}!</h2>
               
               <p style="font-size: 16px; margin-bottom: 20px;">
-                Thank you for subscribing to ${subscriptionTier}! Your payment has been confirmed and you now have full access to all premium features.
+                Thank you for subscribing to ${planName}! Your payment has been confirmed and <strong>${creditsPerMonth} credits</strong> have been added to your account.
               </p>
+              
+              <div style="background: #f3f4f6; padding: 20px; border-radius: 6px; margin: 20px 0; text-align: center;">
+                <div style="font-size: 48px; font-weight: bold; color: #374151;">${creditsPerMonth}</div>
+                <div style="font-size: 18px; color: #6b7280;">Credits Added to Your Account</div>
+                <div style="font-size: 14px; color: #9ca3af; margin-top: 5px;">Renews monthly</div>
+              </div>
               
               <div style="background: #f3f4f6; padding: 20px; border-radius: 6px; margin: 20px 0;">
                 <h3 style="color: #374151; margin-top: 0;">What's included:</h3>
                 <ul style="margin: 10px 0; padding-left: 20px;">
-                  <li>Complete Blueprints Library</li>
-                  <li>Premium Prompt Collection (300+)</li>
-                  <li>Advanced Workflows & Strategies</li>
-                  <li>Priority Support</li>
-                  <li>Monthly Training Sessions</li>
+                  <li>${creditsPerMonth} monthly credits (roll over if unused)</li>
+                  <li>Access to all guides & resources library</li>
+                  <li>JumpinAI Studio for comprehensive transformation plans</li>
+                  <li>Priority customer support</li>
+                  <li>Early access to new features</li>
                 </ul>
               </div>
               
               <div style="text-align: center; margin: 25px 0;">
                 <a href="https://www.jumpinai.com/dashboard" 
                    style="background: linear-gradient(135deg, #374151 0%, #1f2937 100%); color: white; padding: 12px 25px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: 600;">
-                  Access Your Dashboard
+                  Start Using Your Credits Now
                 </a>
               </div>
             </div>
@@ -176,7 +245,7 @@ async function handleSubscriptionSuccess(
     await resend.emails.send({
       from: "JumpinAI Notifications <notifications@jumpinai.com>",
       to: ["info@jumpinai.com"],
-      subject: `💰 New Subscription: ${subscriptionTier}`,
+      subject: `💰 New Subscription: ${planName}`,
       html: `
         <!DOCTYPE html>
         <html>
@@ -194,11 +263,15 @@ async function handleSubscriptionSuccess(
               </div>
               
               <div style="margin-bottom: 15px;">
-                <strong>Plan:</strong> ${subscriptionTier}
+                <strong>Plan:</strong> ${planName}
               </div>
               
               <div style="margin-bottom: 15px;">
-                <strong>Amount:</strong> $${(amount / 100).toFixed(2)}
+                <strong>Monthly Credits:</strong> ${creditsPerMonth}
+              </div>
+              
+              <div style="margin-bottom: 15px;">
+                <strong>Amount:</strong> $${(amount / 100).toFixed(2)}/month
               </div>
               
               <div style="margin-bottom: 15px;">
