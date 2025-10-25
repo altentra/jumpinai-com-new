@@ -136,21 +136,6 @@ const DashboardHome = () => {
           <p className="text-sm sm:text-base text-muted-foreground mb-5 sm:mb-6 max-w-2xl mx-auto leading-relaxed px-2">
             Get your personalized AI transformation plan in 2 minutes. JumpinAI Studio analyzes your unique situation and creates a complete strategic action plan with 9 personalized batches of curated tools and prompts tailored to your exact goals.
           </p>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-5 sm:mb-6 max-w-2xl mx-auto px-2">
-            <div className="glass p-3 rounded-xl">
-              <div className="text-base sm:text-lg font-bold text-foreground font-display mb-1">Situational Analysis</div>
-              <div className="text-xs text-muted-foreground">Comprehensive assessment</div>
-            </div>
-            <div className="glass p-3 rounded-xl">
-              <div className="text-base sm:text-lg font-bold text-foreground font-display mb-1">Strategic Plan</div>
-              <div className="text-xs text-muted-foreground">Step-by-step roadmap</div>
-            </div>
-            <div className="glass p-3 rounded-xl">
-              <div className="text-base sm:text-lg font-bold text-foreground font-display mb-1">9 Tool Batches</div>
-              <div className="text-xs text-muted-foreground">Curated for your goals</div>
-            </div>
-          </div>
 
           <Button 
             onClick={() => navigate("/jumpinai-studio")}
