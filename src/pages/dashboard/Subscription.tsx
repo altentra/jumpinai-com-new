@@ -301,7 +301,7 @@ export default function Subscription() {
               variant="outline" 
               onClick={fetchCredits} 
               size="sm"
-              className="backdrop-blur-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 rounded-2xl transition-all duration-300 shadow-lg"
+              className="backdrop-blur-xl bg-transparent border border-white/20 hover:border-white/30 hover:bg-white/5 rounded-2xl transition-all duration-300 shadow-lg text-white"
             >
               <RefreshCw className="h-4 w-4 mr-2" />
               Refresh
@@ -410,7 +410,7 @@ export default function Subscription() {
                           size="sm"
                           onClick={() => downloadReceipt(transaction.reference_id!)}
                           disabled={downloadingReceipt === transaction.reference_id}
-                          className="h-8 px-3 text-xs backdrop-blur-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 rounded-2xl transition-all duration-300"
+                          className="h-8 px-3 text-xs backdrop-blur-xl bg-transparent border border-white/20 hover:border-white/30 hover:bg-white/5 rounded-2xl transition-all duration-300 text-white"
                         >
                           {downloadingReceipt === transaction.reference_id ? (
                             <Loader2 className="w-3 h-3 animate-spin" />
@@ -460,7 +460,7 @@ export default function Subscription() {
               <Button 
                 onClick={manage}
                 size="lg"
-                className="w-full max-w-md text-lg py-6 backdrop-blur-xl bg-primary/20 hover:bg-primary/30 border border-primary/30 hover:border-primary/40 text-primary-foreground shadow-xl hover:shadow-2xl transition-all duration-300 rounded-2xl font-semibold"
+                className="w-full max-w-md text-lg py-6 backdrop-blur-xl bg-transparent border border-white/20 hover:border-white/30 hover:bg-white/5 text-white shadow-xl hover:shadow-2xl transition-all duration-300 rounded-2xl font-semibold"
               >
                 <ExternalLink className="mr-2 h-5 w-5" />
                 Manage Billing
@@ -468,7 +468,7 @@ export default function Subscription() {
               <Button 
                 variant="outline" 
                 onClick={handleRefreshSubscription}
-                className="backdrop-blur-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 rounded-2xl transition-all duration-300 shadow-lg"
+                className="backdrop-blur-xl bg-transparent border border-white/20 hover:border-white/30 hover:bg-white/5 rounded-2xl transition-all duration-300 shadow-lg text-white"
               >
                 <RefreshCw className="mr-2 h-4 w-4" />
                 Refresh Status
@@ -558,7 +558,7 @@ export default function Subscription() {
                 <CardFooter className="mt-auto pt-4">
                   {isCurrent ? (
                     <Button 
-                      className="w-full backdrop-blur-xl bg-primary/15 border-2 border-primary/40 text-primary rounded-2xl font-semibold shadow-md hover:bg-primary/15"
+                      className="w-full backdrop-blur-xl bg-transparent border-2 border-primary/50 text-primary rounded-2xl font-semibold shadow-md hover:bg-transparent"
                       disabled
                     >
                       <Crown className="w-4 h-4 mr-2" />
@@ -567,7 +567,7 @@ export default function Subscription() {
                   ) : isFree ? (
                     <Button 
                       variant="outline" 
-                      className="w-full backdrop-blur-xl bg-white/5 border border-muted/30 text-muted-foreground rounded-2xl font-medium hover:bg-white/5"
+                      className="w-full backdrop-blur-xl bg-transparent border border-white/20 text-foreground rounded-2xl font-medium hover:bg-transparent"
                       disabled
                     >
                       Free Forever
@@ -576,11 +576,11 @@ export default function Subscription() {
                     <Button
                       onClick={() => handleSubscribe(plan.id)}
                       disabled={isLoading}
-                      className="w-full backdrop-blur-xl bg-primary/20 hover:bg-primary/30 border border-primary/30 hover:border-primary/40 text-primary-foreground font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 rounded-2xl"
+                      className="w-full backdrop-blur-xl bg-transparent border border-white/20 hover:border-white/30 hover:bg-white/5 text-white font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 rounded-2xl"
                     >
                       {isLoading ? (
                         <>
-                          <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin mr-2" />
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
                           Processing...
                         </>
                       ) : (
@@ -647,11 +647,11 @@ export default function Subscription() {
                   <Button 
                     onClick={() => handleBuyCredits(pkg.id)}
                     disabled={isLoading}
-                    className="w-full backdrop-blur-xl bg-primary/20 hover:bg-primary/30 border border-primary/30 hover:border-primary/40 text-primary-foreground font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 rounded-2xl"
+                    className="w-full backdrop-blur-xl bg-transparent border border-white/20 hover:border-white/30 hover:bg-white/5 text-white font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 rounded-2xl"
                   >
                     {isLoading ? (
                       <>
-                        <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin mr-2" />
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
                         Processing...
                       </>
                     ) : (
