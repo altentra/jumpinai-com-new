@@ -486,18 +486,27 @@ export default function ProfileTabs() {
       {/* Tabs */}
       <section className="mt-4 sm:mt-6">
         <Tabs defaultValue="profile" className="w-full">
-          <TabsList className="flex flex-col sm:flex-row w-full gap-1 sm:gap-2 rounded-xl bg-muted/30 p-1 h-auto sm:justify-center sm:max-w-4xl sm:mx-auto">
-            <TabsTrigger value="profile" className="w-full sm:flex-1 sm:max-w-48 flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm py-3 px-3 sm:px-6 transition-all duration-200 hover:bg-background/80">
-              <User className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" /> 
+          <TabsList className="flex flex-col sm:flex-row w-full gap-2 rounded-2xl glass border border-border/50 p-1.5 h-auto sm:justify-center sm:max-w-4xl sm:mx-auto backdrop-blur-sm">
+            <TabsTrigger 
+              value="profile" 
+              className="w-full sm:flex-1 sm:max-w-52 flex items-center justify-center gap-2 text-xs sm:text-sm py-3.5 px-4 sm:px-6 transition-all duration-300 hover:bg-background/60 data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/10 data-[state=active]:to-accent/10 data-[state=active]:border data-[state=active]:border-primary/20 data-[state=active]:shadow-sm rounded-xl font-medium"
+            >
+              <User className="h-4 w-4 flex-shrink-0" /> 
               <span className="sm:hidden">Overview</span>
               <span className="hidden sm:inline">Profile & Overview</span>
             </TabsTrigger>
-            <TabsTrigger value="security" className="w-full sm:flex-1 sm:max-w-48 flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm py-3 px-3 sm:px-6 transition-all duration-200 hover:bg-background/80">
-              <Shield className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" /> 
+            <TabsTrigger 
+              value="security" 
+              className="w-full sm:flex-1 sm:max-w-52 flex items-center justify-center gap-2 text-xs sm:text-sm py-3.5 px-4 sm:px-6 transition-all duration-300 hover:bg-background/60 data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/10 data-[state=active]:to-accent/10 data-[state=active]:border data-[state=active]:border-primary/20 data-[state=active]:shadow-sm rounded-xl font-medium"
+            >
+              <Shield className="h-4 w-4 flex-shrink-0" /> 
               <span>Security</span>
             </TabsTrigger>
-            <TabsTrigger value="orders" className="w-full sm:flex-1 sm:max-w-48 flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm py-3 px-3 sm:px-6 transition-all duration-200 hover:bg-background/80">
-              <History className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" /> 
+            <TabsTrigger 
+              value="orders" 
+              className="w-full sm:flex-1 sm:max-w-52 flex items-center justify-center gap-2 text-xs sm:text-sm py-3.5 px-4 sm:px-6 transition-all duration-300 hover:bg-background/60 data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/10 data-[state=active]:to-accent/10 data-[state=active]:border data-[state=active]:border-primary/20 data-[state=active]:shadow-sm rounded-xl font-medium"
+            >
+              <History className="h-4 w-4 flex-shrink-0" /> 
               <span>Order History</span>
             </TabsTrigger>
           </TabsList>
