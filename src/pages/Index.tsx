@@ -276,80 +276,150 @@ const Index = () => {
       </section>
 
       {/* Why Choose JumpinAI Section */}
-      <section className="py-20 lg:py-32">
+      <section className="py-12 sm:py-16 lg:py-24">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl lg:text-5xl font-bold mb-6 font-display">
-              Why JumpinAI Studio Beats <span className="gradient-text-primary">Everything Else</span>
+          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 font-display">
+              The <span className="gradient-text-primary">JumpinAI Advantage</span>
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Stop wasting time on generic advice and expensive consultants. Get personalized, actionable AI strategies that actually work.
+            <p className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto px-4">
+              Transform how you approach AI implementation with personalized strategies designed specifically for your business needs.
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div className="space-y-8">
-              <div className="flex gap-4">
-                <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-start">
+            {/* Benefits List */}
+            <div className="space-y-6 sm:space-y-8 order-2 lg:order-1">
+              <div className="flex gap-3 sm:gap-4">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <svg className="w-5 h-5 sm:w-6 sm:h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                   </svg>
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold mb-2 font-display">Instant Personalization</h3>
-                  <p className="text-muted-foreground">Skip months of research. Get AI strategies tailored to your exact industry, role, and experience level in 2 minutes.</p>
+                  <h3 className="text-lg sm:text-xl font-bold mb-2 font-display">Personalized AI Roadmaps</h3>
+                  <p className="text-sm sm:text-base text-muted-foreground">Every Jump plan is customized to your industry, role, experience level, and specific business goals—helping you cut through the noise and focus on what matters.</p>
                 </div>
               </div>
 
-              <div className="flex gap-4">
-                <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="flex gap-3 sm:gap-4">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <svg className="w-5 h-5 sm:w-6 sm:h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                   </svg>
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold mb-2 font-display">Complete Resource Package</h3>
-                  <p className="text-muted-foreground">No more hunting for resources. Get detailed analysis of your situation, a strategic action plan, and 9 personalized batches of tools and prompts all in one place.</p>
+                  <h3 className="text-lg sm:text-xl font-bold mb-2 font-display">Complete Implementation Kit</h3>
+                  <p className="text-sm sm:text-base text-muted-foreground">Receive a comprehensive package including situational analysis, strategic action plan, and 9 curated tool-prompt combinations ready to deploy immediately.</p>
                 </div>
               </div>
 
-              <div className="flex gap-4">
-                <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="flex gap-3 sm:gap-4">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <svg className="w-5 h-5 sm:w-6 sm:h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-lg sm:text-xl font-bold mb-2 font-display">Rapid Implementation</h3>
+                  <p className="text-sm sm:text-base text-muted-foreground">Get your complete AI transformation strategy in minutes instead of spending weeks researching. Start implementing immediately with clear, actionable steps.</p>
+                </div>
+              </div>
+
+              <div className="flex gap-3 sm:gap-4">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <svg className="w-5 h-5 sm:w-6 sm:h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
                   </svg>
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold mb-2 font-display">Fraction of Consultant Cost</h3>
-                  <p className="text-muted-foreground">Get enterprise-level AI strategy for the price of a coffee. No $10,000 consultant fees, no month-long delays.</p>
+                  <h3 className="text-lg sm:text-xl font-bold mb-2 font-display">Accessible & Affordable</h3>
+                  <p className="text-sm sm:text-base text-muted-foreground">Professional AI strategy guidance at a fraction of traditional consulting costs, with flexible plans that scale with your needs.</p>
                 </div>
               </div>
             </div>
 
-            <div className="relative">
+            {/* Comparison Table */}
+            <div className="relative order-1 lg:order-2">
               <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20 rounded-2xl blur-3xl opacity-50"></div>
-              <div className="relative bg-gradient-to-br from-background via-muted/30 to-background rounded-2xl p-8 border border-border/50">
-                <h3 className="text-2xl font-bold mb-6 text-center font-display">What You Get vs Alternatives</h3>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between p-4 bg-primary/5 rounded-lg">
-                    <span className="font-medium">Personalized strategy</span>
-                    <div className="flex gap-2">
-                      <span className="text-green-500 font-bold">✓ JumpinAI</span>
-                      <span className="text-red-500">✗ Generic guides</span>
+              <div className="relative bg-gradient-to-br from-background via-muted/30 to-background rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 border border-border/50">
+                <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-center font-display">JumpinAI vs Traditional Approaches</h3>
+                
+                {/* Mobile-optimized table */}
+                <div className="space-y-3 sm:space-y-4">
+                  {/* Row 1 */}
+                  <div className="glass rounded-lg p-3 sm:p-4">
+                    <div className="font-medium text-sm sm:text-base mb-2 sm:mb-3">Personalized Strategy</div>
+                    <div className="grid grid-cols-2 gap-2 sm:gap-3 text-xs sm:text-sm">
+                      <div className="flex items-center gap-1.5 sm:gap-2 text-primary font-semibold">
+                        <svg className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span>JumpinAI</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 sm:gap-2 text-muted-foreground">
+                        <svg className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                        <span>Generic Guides</span>
+                      </div>
                     </div>
                   </div>
-                  <div className="flex items-center justify-between p-4 bg-secondary/5 rounded-lg">
-                    <span className="font-medium">Ready-to-use resources</span>
-                    <div className="flex gap-2">
-                      <span className="text-green-500 font-bold">✓ Analysis + 9 batches</span>
-                      <span className="text-red-500">✗ DIY research</span>
+
+                  {/* Row 2 */}
+                  <div className="glass rounded-lg p-3 sm:p-4">
+                    <div className="font-medium text-sm sm:text-base mb-2 sm:mb-3">Implementation Resources</div>
+                    <div className="grid grid-cols-2 gap-2 sm:gap-3 text-xs sm:text-sm">
+                      <div className="flex items-center gap-1.5 sm:gap-2 text-primary font-semibold">
+                        <svg className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span>Complete Kit</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 sm:gap-2 text-muted-foreground">
+                        <svg className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                        <span>Self Research</span>
+                      </div>
                     </div>
                   </div>
-                  <div className="flex items-center justify-between p-4 bg-accent/5 rounded-lg">
-                    <span className="font-medium">Implementation time</span>
-                    <div className="flex gap-2">
-                      <span className="text-green-500 font-bold">✓ 2 minutes</span>
-                      <span className="text-red-500">✗ Weeks/months</span>
+
+                  {/* Row 3 */}
+                  <div className="glass rounded-lg p-3 sm:p-4">
+                    <div className="font-medium text-sm sm:text-base mb-2 sm:mb-3">Time to Start</div>
+                    <div className="grid grid-cols-2 gap-2 sm:gap-3 text-xs sm:text-sm">
+                      <div className="flex items-center gap-1.5 sm:gap-2 text-primary font-semibold">
+                        <svg className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span>2 Minutes</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 sm:gap-2 text-muted-foreground">
+                        <svg className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                        <span>Weeks/Months</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Row 4 */}
+                  <div className="glass rounded-lg p-3 sm:p-4">
+                    <div className="font-medium text-sm sm:text-base mb-2 sm:mb-3">Cost</div>
+                    <div className="grid grid-cols-2 gap-2 sm:gap-3 text-xs sm:text-sm">
+                      <div className="flex items-center gap-1.5 sm:gap-2 text-primary font-semibold">
+                        <svg className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span>Affordable Plans</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 sm:gap-2 text-muted-foreground">
+                        <svg className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                        <span>$10K+ Consulting</span>
+                      </div>
                     </div>
                   </div>
                 </div>
