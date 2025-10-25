@@ -419,17 +419,6 @@ const AboutUs = () => {
               ))}
             </div>
 
-            <div className="glass backdrop-blur-sm bg-gradient-to-br from-primary/10 via-primary/5 to-secondary/8 border border-primary/30 rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 text-center shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/25 transition-all duration-300">
-              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-4 bg-gradient-to-br from-foreground to-primary/70 bg-clip-text text-transparent">
-                From Confusion to Your Personal Jump in 2 Minutes
-              </h3>
-              <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6 max-w-3xl mx-auto leading-relaxed">
-                Whether you're an entrepreneur, professional, creator, or simply curious about AI—we create your comprehensive personalized transformation plan in 2 minutes, not months. Your unique Jump plan includes everything you need to start implementing AI immediately.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <LeadMagnetButton />
-              </div>
-            </div>
           </div>
         </div>
       </section>
