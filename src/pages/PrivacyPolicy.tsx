@@ -51,7 +51,7 @@ const PrivacyPolicy = () => {
         <div className="max-w-4xl mx-auto">
           <div className="glass backdrop-blur-md bg-background/40 dark:bg-background/20 border border-primary/20 rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-2xl shadow-primary/10">
             <div className="glass backdrop-blur-sm bg-primary/5 dark:bg-primary/10 border border-primary/20 rounded-xl p-4 sm:p-6 mb-6 sm:mb-8">
-              <p className="text-xs sm:text-sm text-muted-foreground mb-2">Last updated: January 15, 2025</p>
+              <p className="text-xs sm:text-sm text-muted-foreground mb-2">Last updated: October 1, 2025</p>
               <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
                 This Privacy Policy describes how JumpinAI, LLC ("we," "our," or "us"), a Wyoming limited liability company, collects, uses, and shares information about you when you use our website and services.
               </p>
