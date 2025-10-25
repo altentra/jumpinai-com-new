@@ -297,7 +297,12 @@ export default function Subscription() {
                 Available credits for generating Jumps
               </p>
             </div>
-            <Button variant="outline" onClick={fetchCredits} size="sm">
+            <Button 
+              variant="outline" 
+              onClick={fetchCredits} 
+              size="sm"
+              className="glass hover:bg-primary/10 border-primary/20 hover:border-primary/30 rounded-2xl backdrop-blur-sm transition-all duration-300 hover:shadow-lg hover:scale-105"
+            >
               <RefreshCw className="h-4 w-4 mr-2" />
               Refresh
             </Button>
@@ -405,7 +410,7 @@ export default function Subscription() {
                           size="sm"
                           onClick={() => downloadReceipt(transaction.reference_id!)}
                           disabled={downloadingReceipt === transaction.reference_id}
-                          className="h-8 px-3 text-xs"
+                          className="h-8 px-3 text-xs glass hover:bg-primary/10 border-primary/20 hover:border-primary/30 rounded-2xl backdrop-blur-sm transition-all duration-300 hover:shadow-md"
                         >
                           {downloadingReceipt === transaction.reference_id ? (
                             <Loader2 className="w-3 h-3 animate-spin" />
@@ -456,12 +461,16 @@ export default function Subscription() {
                 variant="default" 
                 onClick={manage}
                 size="lg"
-                className="w-full max-w-md text-lg py-6 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary/80 shadow-lg hover:shadow-xl transition-all"
+                className="w-full max-w-md text-lg py-6 glass bg-gradient-to-r from-primary via-primary/95 to-accent hover:from-primary/90 hover:via-primary/85 hover:to-accent/90 shadow-lg hover:shadow-2xl transition-all duration-300 rounded-2xl backdrop-blur-sm border border-primary/20 hover:scale-[1.02]"
               >
                 <ExternalLink className="mr-2 h-5 w-5" />
                 Manage Billing
               </Button>
-              <Button variant="outline" onClick={handleRefreshSubscription}>
+              <Button 
+                variant="outline" 
+                onClick={handleRefreshSubscription}
+                className="glass hover:bg-primary/10 border-primary/20 hover:border-primary/30 rounded-2xl backdrop-blur-sm transition-all duration-300 hover:shadow-lg hover:scale-105"
+              >
                 <RefreshCw className="mr-2 h-4 w-4" />
                 Refresh Status
               </Button>
@@ -549,22 +558,30 @@ export default function Subscription() {
                 
                 <CardFooter className="mt-auto pt-4">
                   {isCurrent ? (
-                    <Button variant="outline" className="w-full" disabled>
+                    <Button 
+                      variant="outline" 
+                      className="w-full glass border-primary/30 text-primary rounded-2xl backdrop-blur-sm"
+                      disabled
+                    >
                       Current Plan
                     </Button>
                   ) : isFree ? (
-                    <Button variant="outline" className="w-full" disabled>
+                    <Button 
+                      variant="outline" 
+                      className="w-full glass border-border/40 rounded-2xl backdrop-blur-sm"
+                      disabled
+                    >
                       Free Forever
                     </Button>
                   ) : (
                     <Button
                       onClick={() => handleSubscribe(plan.id)}
                       disabled={isLoading}
-                      className="w-full bg-foreground hover:bg-foreground/90 text-background"
+                      className="w-full glass bg-gradient-to-r from-primary via-primary/95 to-accent hover:from-primary/90 hover:via-primary/85 hover:to-accent/90 text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-300 rounded-2xl backdrop-blur-sm border border-primary/20 hover:scale-[1.02]"
                     >
                       {isLoading ? (
                         <>
-                          <div className="w-4 h-4 border-2 border-background border-t-transparent rounded-full animate-spin mr-2" />
+                          <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin mr-2" />
                           Processing...
                         </>
                       ) : (
@@ -631,11 +648,11 @@ export default function Subscription() {
                   <Button 
                     onClick={() => handleBuyCredits(pkg.id)}
                     disabled={isLoading}
-                    className="w-full bg-foreground hover:bg-foreground/90 text-background"
+                    className="w-full glass bg-gradient-to-r from-primary via-primary/95 to-accent hover:from-primary/90 hover:via-primary/85 hover:to-accent/90 text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-300 rounded-2xl backdrop-blur-sm border border-primary/20 hover:scale-[1.02]"
                   >
                     {isLoading ? (
                       <>
-                        <div className="w-4 h-4 border-2 border-background border-t-transparent rounded-full animate-spin mr-2" />
+                        <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin mr-2" />
                         Processing...
                       </>
                     ) : (
