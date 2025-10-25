@@ -160,12 +160,12 @@ const Newsletter = () => {
                 type="submit"
                 size="lg"
                 disabled={isSubmitting}
-                className="glass hover:glass-dark px-5 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-semibold rounded-2xl transition-all duration-300 shadow-modern hover:shadow-modern-lg group"
+                className="glass px-5 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-semibold rounded-2xl transition-all duration-300 shadow-modern hover:shadow-modern-lg group hover:scale-[1.02]"
               >
-                <span className="gradient-text-primary group-hover:text-foreground transition-colors">
+                <span className="gradient-text-primary transition-all">
                   {isSubmitting ? "Processing..." : "Join Now"}
                 </span>
-                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform text-primary group-hover:text-foreground" />
+                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform text-primary" />
               </Button>
             </div>
           </form>
