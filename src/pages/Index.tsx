@@ -574,7 +574,7 @@ const Index = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mb-8 sm:mb-10 px-4">
-              <a href="/jumpinai-studio" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 glass px-5 sm:px-6 py-2.5 sm:py-3 rounded-2xl text-sm sm:text-base font-semibold transition-all duration-300 shadow-modern hover:shadow-modern-lg hover:scale-[1.02] group">
+              <a href="/jumpinai-studio" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 glass px-5 sm:px-6 py-2.5 sm:py-3 rounded-2xl text-sm sm:text-base font-semibold transition-all duration-300 shadow-[0_8px_30px_rgb(0,0,0,0.12),0_0_20px_hsl(var(--primary)/0.15)] hover:shadow-[0_12px_40px_rgb(0,0,0,0.15),0_0_30px_hsl(var(--primary)/0.25)] hover:scale-[1.02] ring-1 ring-primary/20 hover:ring-primary/40 group">
                 <span className="gradient-text-primary transition-colors">Start Your Jump Now - Free Try</span>
                 <svg className="w-4 h-4 text-primary transition-all group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
