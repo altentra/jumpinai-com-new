@@ -263,7 +263,7 @@ export default function ProfileTabs() {
         return;
       }
       
-      // Fetch all paid orders including subscriptions and credit purchases
+      // Fetch all paid orders - only join products table since that's the only foreign key
       const { data, error } = await supabase
         .from("orders")
         .select(`
@@ -284,14 +284,6 @@ export default function ProfileTabs() {
             name,
             description,
             file_name
-          ),
-          credit_packages (
-            name,
-            credits
-          ),
-          subscription_plans (
-            name,
-            credits_per_month
           )
         `)
         .eq("user_email", userEmail)
@@ -303,7 +295,7 @@ export default function ProfileTabs() {
         throw error;
       }
       
-      console.log("Fetched orders with products:", data);
+      console.log("Fetched orders:", data);
       setOrders(data || []);
     } catch (error: any) {
       console.error("Error fetching orders:", error);
@@ -737,20 +729,21 @@ export default function ProfileTabs() {
                         // Digital product (PDF guide)
                         productName = order.products.name;
                         productDescription = order.products.description || 'Digital product download';
-                      } else if (order.credit_packages?.name) {
-                        // Credit package purchase
-                        productName = order.credit_packages.name;
-                        productDescription = `${order.credit_packages.credits} credits purchased`;
-                      } else if (order.subscription_plans?.name) {
-                        // Subscription purchase
-                        productName = order.subscription_plans.name;
-                        productDescription = `Subscription - ${order.subscription_plans.credits_per_month} credits/month`;
                       } else if (order.download_token) {
+                        // Has download token but no product - likely a digital product
                         productName = 'Digital Product';
                         productDescription = 'Digital product download';
                       } else {
-                        productName = 'Credit Package';
-                        productDescription = 'Credits purchase';
+                        // No product and no download token - it's a credit package or subscription
+                        // Determine based on amount ranges (subscriptions are typically monthly, credits are one-time)
+                        const amountInDollars = order.amount / 100;
+                        if (amountInDollars >= 10 && amountInDollars <= 50) {
+                          productName = 'Subscription Plan';
+                          productDescription = 'Monthly subscription with credits';
+                        } else {
+                          productName = 'Credit Package';
+                          productDescription = 'Credits purchase';
+                        }
                       }
                       
                       // Only show download for actual digital products (PDF guides), not credit packs or subscriptions
@@ -851,20 +844,21 @@ export default function ProfileTabs() {
                               // Digital product (PDF guide)
                               productName = order.products.name;
                               productDescription = order.products.description || 'Digital product download';
-                            } else if (order.credit_packages?.name) {
-                              // Credit package purchase
-                              productName = order.credit_packages.name;
-                              productDescription = `${order.credit_packages.credits} credits purchased`;
-                            } else if (order.subscription_plans?.name) {
-                              // Subscription purchase
-                              productName = order.subscription_plans.name;
-                              productDescription = `Subscription - ${order.subscription_plans.credits_per_month} credits/month`;
                             } else if (order.download_token) {
+                              // Has download token but no product - likely a digital product
                               productName = 'Digital Product';
                               productDescription = 'Digital product download';
                             } else {
-                              productName = 'Credit Package';
-                              productDescription = 'Credits purchase';
+                              // No product and no download token - it's a credit package or subscription
+                              // Determine based on amount ranges (subscriptions are typically monthly, credits are one-time)
+                              const amountInDollars = order.amount / 100;
+                              if (amountInDollars >= 10 && amountInDollars <= 50) {
+                                productName = 'Subscription Plan';
+                                productDescription = 'Monthly subscription with credits';
+                              } else {
+                                productName = 'Credit Package';
+                                productDescription = 'Credits purchase';
+                              }
                             }
                             
                             // Only show download for actual digital products (PDF guides), not credit packs or subscriptions
