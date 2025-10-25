@@ -316,7 +316,7 @@ export default function Subscription() {
               variant="outline" 
               onClick={fetchCredits} 
               size="sm"
-              className="backdrop-blur-xl bg-transparent border border-white/20 hover:border-primary/40 hover:bg-primary/5 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl text-white flex-shrink-0 group"
+              className="backdrop-blur-xl bg-transparent border border-primary/30 hover:border-primary/50 hover:bg-primary/5 rounded-2xl transition-all duration-300 shadow-lg shadow-primary/10 hover:shadow-xl hover:shadow-primary/20 text-white flex-shrink-0 group"
             >
               <RefreshCw className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2 group-hover:rotate-180 transition-transform duration-500" />
               <span className="hidden sm:inline">Refresh</span>
@@ -513,9 +513,9 @@ export default function Subscription() {
               <Button 
                 onClick={manage}
                 size="lg"
-                className="w-full max-w-md text-base sm:text-lg py-5 sm:py-6 backdrop-blur-xl bg-transparent border border-primary/30 hover:border-primary/50 hover:bg-primary/5 text-white shadow-xl hover:shadow-2xl hover:scale-[1.01] transition-all duration-300 rounded-2xl font-semibold relative overflow-hidden group"
+                className="w-full max-w-md text-base sm:text-lg py-5 sm:py-6 backdrop-blur-xl bg-gradient-to-r from-primary/10 to-primary/5 border-2 border-primary/40 hover:border-primary/60 hover:from-primary/15 hover:to-primary/10 text-white shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/30 hover:scale-[1.02] transition-all duration-300 rounded-2xl font-semibold relative overflow-hidden group"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/5 to-primary/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/20 to-primary/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <ExternalLink className="mr-2 h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300" />
                 Manage Billing & Subscription
               </Button>
@@ -525,7 +525,7 @@ export default function Subscription() {
               <Button 
                 variant="outline" 
                 onClick={handleRefreshSubscription}
-                className="backdrop-blur-xl bg-transparent border border-white/20 hover:border-primary/40 hover:bg-primary/5 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl text-white group"
+                className="backdrop-blur-xl bg-transparent border border-primary/30 hover:border-primary/50 hover:bg-primary/5 rounded-2xl transition-all duration-300 shadow-lg shadow-primary/10 hover:shadow-xl hover:shadow-primary/20 text-white group"
               >
                 <RefreshCw className="mr-2 h-3 w-3 sm:h-4 sm:w-4 group-hover:rotate-180 transition-transform duration-500" />
                 <span className="text-sm sm:text-base">Refresh Status</span>
@@ -615,7 +615,7 @@ export default function Subscription() {
                 <CardFooter className="mt-auto pt-4">
                   {isCurrent ? (
                     <Button 
-                      className="w-full backdrop-blur-xl bg-transparent border-2 border-primary/50 text-primary rounded-2xl font-semibold shadow-md hover:bg-transparent hover:border-primary/60 hover:shadow-lg transition-all duration-300"
+                      className="w-full backdrop-blur-xl bg-transparent border-2 border-primary/60 text-primary rounded-2xl font-semibold shadow-md shadow-primary/20 hover:bg-transparent hover:border-primary/70 hover:shadow-lg hover:shadow-primary/30 transition-all duration-300"
                       disabled
                     >
                       <Crown className="w-4 h-4 mr-2" />
@@ -633,9 +633,9 @@ export default function Subscription() {
                     <Button
                       onClick={() => handleSubscribe(plan.id)}
                       disabled={isLoading}
-                      className="w-full backdrop-blur-xl bg-transparent border border-primary/30 hover:border-primary/50 hover:bg-primary/5 text-white font-semibold shadow-xl hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 rounded-2xl relative overflow-hidden group"
+                      className="w-full backdrop-blur-xl bg-gradient-to-r from-primary/10 to-primary/5 border-2 border-primary/40 hover:border-primary/60 hover:from-primary/15 hover:to-primary/10 text-white font-semibold shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/30 hover:scale-[1.03] transition-all duration-300 rounded-2xl relative overflow-hidden group"
                     >
-                      <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/5 to-primary/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/20 to-primary/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       {isLoading ? (
                         <>
                           <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
@@ -644,7 +644,7 @@ export default function Subscription() {
                       ) : (
                         <>
                           Upgrade Now
-                          <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-0.5 transition-transform duration-300" />
+                          <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
                         </>
                       )}
                     </Button>
@@ -705,9 +705,9 @@ export default function Subscription() {
                   <Button 
                     onClick={() => handleBuyCredits(pkg.id)}
                     disabled={isLoading}
-                    className="w-full backdrop-blur-xl bg-transparent border border-primary/30 hover:border-primary/50 hover:bg-primary/5 text-white font-semibold shadow-xl hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 rounded-2xl relative overflow-hidden group"
+                    className="w-full backdrop-blur-xl bg-gradient-to-r from-primary/10 to-primary/5 border-2 border-primary/40 hover:border-primary/60 hover:from-primary/15 hover:to-primary/10 text-white font-semibold shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/30 hover:scale-[1.03] transition-all duration-300 rounded-2xl relative overflow-hidden group"
                   >
-                    <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/5 to-primary/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/20 to-primary/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     {isLoading ? (
                       <>
                         <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
@@ -715,7 +715,7 @@ export default function Subscription() {
                       </>
                     ) : (
                       <>
-                        <Zap className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform duration-300" />
+                        <Zap className="w-4 h-4 mr-2 group-hover:scale-125 transition-transform duration-300" />
                         Buy Now
                       </>
                     )}
