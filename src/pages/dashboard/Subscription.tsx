@@ -461,7 +461,7 @@ export default function Subscription() {
                 variant="default" 
                 onClick={manage}
                 size="lg"
-                className="w-full max-w-md text-lg py-6 bg-gradient-to-r from-primary to-accent hover:from-primary/80 hover:to-accent/80 shadow-xl hover:shadow-2xl transition-all duration-300 rounded-2xl text-white font-semibold"
+                className="w-full max-w-md text-lg py-6 !bg-gradient-to-r !from-primary !to-accent hover:!from-primary/80 hover:!to-accent/80 shadow-xl hover:shadow-2xl transition-all duration-300 rounded-2xl !text-white font-semibold border-0"
               >
                 <ExternalLink className="mr-2 h-5 w-5" />
                 Manage Billing
@@ -469,7 +469,7 @@ export default function Subscription() {
               <Button 
                 variant="outline" 
                 onClick={handleRefreshSubscription}
-                className="border-2 border-primary/40 hover:border-primary/60 bg-background hover:bg-primary/10 rounded-2xl transition-all duration-300 hover:shadow-lg text-foreground"
+                className="border-2 border-primary/40 hover:border-primary/60 !bg-background hover:!bg-primary/10 rounded-2xl transition-all duration-300 hover:shadow-lg !text-foreground"
               >
                 <RefreshCw className="mr-2 h-4 w-4" />
                 Refresh Status
@@ -560,7 +560,7 @@ export default function Subscription() {
                   {isCurrent ? (
                     <Button 
                       variant="default" 
-                      className="w-full bg-primary/20 hover:bg-primary/20 border-2 border-primary/60 text-primary rounded-2xl font-semibold shadow-md cursor-not-allowed"
+                      className="w-full !bg-primary/20 hover:!bg-primary/20 border-2 border-primary/60 !text-primary rounded-2xl font-semibold shadow-md cursor-not-allowed"
                       disabled
                     >
                       <Crown className="w-4 h-4 mr-2" />
@@ -569,7 +569,7 @@ export default function Subscription() {
                   ) : isFree ? (
                     <Button 
                       variant="outline" 
-                      className="w-full border-2 border-border/50 bg-muted/50 hover:bg-muted/50 text-muted-foreground rounded-2xl font-medium cursor-not-allowed"
+                      className="w-full border-2 border-border/50 !bg-muted/50 hover:!bg-muted/50 !text-muted-foreground rounded-2xl font-medium cursor-not-allowed"
                       disabled
                     >
                       Free Forever
@@ -578,7 +578,7 @@ export default function Subscription() {
                     <Button
                       onClick={() => handleSubscribe(plan.id)}
                       disabled={isLoading}
-                      className="w-full bg-gradient-to-r from-primary to-accent hover:from-primary/80 hover:to-accent/80 text-white font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 rounded-2xl"
+                      className="w-full !bg-gradient-to-r !from-primary !to-accent hover:!from-primary/80 hover:!to-accent/80 !text-white font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 rounded-2xl border-0"
                     >
                       {isLoading ? (
                         <>
@@ -649,7 +649,7 @@ export default function Subscription() {
                   <Button 
                     onClick={() => handleBuyCredits(pkg.id)}
                     disabled={isLoading}
-                    className="w-full bg-gradient-to-r from-primary to-accent hover:from-primary/80 hover:to-accent/80 text-white font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 rounded-2xl"
+                    className="w-full !bg-gradient-to-r !from-primary !to-accent hover:!from-primary/80 hover:!to-accent/80 !text-white font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 rounded-2xl border-0"
                   >
                     {isLoading ? (
                       <>
