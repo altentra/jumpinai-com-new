@@ -554,36 +554,35 @@ const Index = () => {
       </section>
 
       {/* Major Final CTA Section */}
-      <section className="py-20 lg:py-32 bg-gradient-to-br from-background via-background/80 to-background dark:from-black dark:via-gray-950/80 dark:to-black relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-secondary/5 to-accent/5 dark:from-primary/10 dark:via-secondary/10 dark:to-accent/10"></div>
-        <div className="relative container mx-auto px-4 text-center">
+      <section className="py-12 sm:py-16 lg:py-24 relative">
+        <div className="container mx-auto px-4 text-center">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-4xl lg:text-6xl font-bold mb-6 font-display gradient-text-primary">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4 font-display gradient-text-primary">
               Ready to Jump into AI Success?
             </h2>
-            <p className="text-xl lg:text-2xl mb-8 text-muted-foreground">
+            <p className="text-base sm:text-lg mb-4 sm:mb-6 text-muted-foreground">
               Join 15,000+ professionals who've transformed their AI journey with personalized Jump plans
             </p>
-            <p className="text-lg mb-12 text-muted-foreground max-w-3xl mx-auto">
+            <p className="text-sm sm:text-base mb-8 sm:mb-10 text-muted-foreground max-w-3xl mx-auto px-4">
               Stop struggling with AI implementation. Get your complete transformation blueprint in 2 minutes, not months. Your competitive advantage starts today.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-              <a href="/jumpinai-studio" className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-8 py-4 rounded-lg text-lg font-bold hover:bg-primary/90 transition-colors shadow-2xl">
-                Start Your Jump Now - Free Try
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mb-8 sm:mb-10 px-4">
+              <a href="/jumpinai-studio" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 glass hover:glass-dark px-5 sm:px-6 py-2.5 sm:py-3 rounded-2xl text-sm sm:text-base font-semibold transition-all duration-300 shadow-modern hover:shadow-modern-lg group">
+                <span className="gradient-text-primary group-hover:text-foreground transition-colors">Start Your Jump Now - Free Try</span>
+                <svg className="w-4 h-4 text-primary group-hover:text-foreground transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                 </svg>
               </a>
-              <a href="/pricing" className="inline-flex items-center gap-2 border border-border bg-card hover:bg-accent hover:text-accent-foreground px-8 py-4 rounded-lg text-lg font-semibold transition-colors">
-                View Plans & Pricing
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <a href="/pricing" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 glass hover:glass-dark px-5 sm:px-6 py-2.5 sm:py-3 rounded-2xl text-sm sm:text-base font-medium transition-all duration-300 shadow-modern hover:shadow-modern-lg group">
+                <span className="text-muted-foreground group-hover:text-foreground transition-colors">View Plans & Pricing</span>
+                <svg className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
                 </svg>
               </a>
             </div>
 
-            <div className="flex flex-wrap justify-center items-center gap-8 text-sm text-muted-foreground">
+            <div className="flex flex-wrap justify-center items-center gap-4 sm:gap-6 lg:gap-8 text-xs sm:text-sm text-muted-foreground px-4">
               <div className="flex items-center gap-2">
                 <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
