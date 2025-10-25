@@ -35,15 +35,15 @@ const CreditPurchaseSuccess = () => {
         const currentBalance = credits?.credits_balance || 0;
         setPreviousBalance(currentBalance);
         
-        // Wait for webhook to process
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        // Wait longer for webhook to process (4 seconds)
+        await new Promise(resolve => setTimeout(resolve, 4000));
         await fetchCredits();
         setVerifying(false);
         
-        // Force a page refresh to show updated transactions
+        // Redirect to subscription page with success flag
         setTimeout(() => {
-          window.location.href = '/dashboard/subscription';
-        }, 1500);
+          window.location.href = '/dashboard/subscription?payment=success';
+        }, 1000);
       }
     };
 
@@ -51,7 +51,7 @@ const CreditPurchaseSuccess = () => {
 
     const urlTimer = setTimeout(() => {
       window.history.replaceState({}, document.title, window.location.pathname);
-    }, 3000);
+    }, 6000);
 
     return () => {
       clearTimeout(urlTimer);

@@ -46,12 +46,27 @@ export default function Subscription() {
         fetchSubscriptionPlans();
         fetchCreditTransactions();
         
-        // Show success message if user just returned from payment
+        // Handle success redirects and auto-refresh
         const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('payment') === 'success') {
-          toast.success("Payment successful! Your account has been updated.", {
+        const paymentSuccess = urlParams.get('payment') === 'success';
+        const subscriptionSuccess = urlParams.get('subscription') === 'success';
+        
+        if (paymentSuccess) {
+          toast.success("Payment successful! Your credits have been added.", {
             duration: 5000,
           });
+          // Force refresh credits and transactions
+          fetchCredits();
+          fetchCreditTransactions();
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }
+        
+        if (subscriptionSuccess) {
+          toast.success("Subscription activated! Your credits have been added.", {
+            duration: 5000,
+          });
+          // Force refresh both subscription status and credits
+          handleRefreshSubscription();
           window.history.replaceState({}, document.title, window.location.pathname);
         }
       }
@@ -440,18 +455,56 @@ export default function Subscription() {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3 sm:space-y-4">
-          <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-            {subInfo?.subscribed
-              ? `You're currently on ${subInfo.subscription_tier || 'Pro Plan'}. Your subscription ${subInfo.subscription_end ? `renews on ${new Date(subInfo.subscription_end).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}` : 'is active'}.`
-              : 'You are on the Free Plan. Upgrade to a paid plan to receive monthly credits and access advanced features.'}
-          </p>
-          {subInfo?.subscribed && (
-            <div className="flex items-start gap-2 sm:gap-3 p-3 bg-primary/5 rounded-lg border border-primary/10">
-              <Sparkles className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
-              <p className="text-xs sm:text-sm text-foreground">
-                Monthly credits automatically renew with your subscription
-              </p>
-            </div>
+          {subInfo?.subscribed ? (
+            <>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between p-3 bg-primary/5 rounded-lg border border-primary/10">
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">Plan</p>
+                    <p className="text-xs text-muted-foreground">{subInfo.subscription_tier || 'Pro Plan'}</p>
+                  </div>
+                  <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20">
+                    Active
+                  </Badge>
+                </div>
+                
+                {subInfo.subscription_end && (
+                  <div className="p-3 bg-card/50 rounded-lg border border-border/50">
+                    <p className="text-sm font-semibold text-foreground mb-1">Next Billing Date</p>
+                    <p className="text-xs text-muted-foreground">
+                      {new Date(subInfo.subscription_end).toLocaleDateString('en-US', { 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric',
+                        weekday: 'long'
+                      })}
+                    </p>
+                    <p className="text-xs text-muted-foreground/70 mt-1">
+                      Your monthly credits will automatically renew on this date
+                    </p>
+                  </div>
+                )}
+                
+                <div className="flex items-start gap-2 sm:gap-3 p-3 bg-primary/5 rounded-lg border border-primary/10">
+                  <Sparkles className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-xs sm:text-sm text-foreground font-medium mb-1">
+                      Active Benefits
+                    </p>
+                    <ul className="text-xs text-muted-foreground space-y-1">
+                      <li>• Monthly credits that roll over if unused</li>
+                      <li>• Access to all guides and resources</li>
+                      <li>• Priority customer support</li>
+                      <li>• Cancel anytime from billing portal</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </>
+          ) : (
+            <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+              You are on the Free Plan. Upgrade to a paid plan to receive monthly credits and access advanced features.
+            </p>
           )}
         </CardContent>
         <CardFooter className="flex flex-col items-center gap-2 sm:gap-3 pt-3 sm:pt-6">
@@ -463,8 +516,11 @@ export default function Subscription() {
                 className="w-full max-w-md text-base sm:text-lg py-5 sm:py-6 backdrop-blur-xl bg-transparent border border-white/20 hover:border-white/30 hover:bg-white/5 text-white shadow-xl hover:shadow-2xl transition-all duration-300 rounded-2xl font-semibold"
               >
                 <ExternalLink className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-                Manage Billing
+                Manage Billing & Subscription
               </Button>
+              <p className="text-xs text-center text-muted-foreground max-w-md">
+                Access your Stripe Customer Portal to update payment methods, view invoices, manage your subscription, or cancel anytime
+              </p>
               <Button 
                 variant="outline" 
                 onClick={handleRefreshSubscription}

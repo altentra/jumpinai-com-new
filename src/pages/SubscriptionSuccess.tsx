@@ -37,14 +37,15 @@ const SubscriptionSuccess = () => {
 
     const refreshCredits = async () => {
       if (user?.id) {
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        // Wait longer for webhook to fully process (4 seconds)
+        await new Promise(resolve => setTimeout(resolve, 4000));
         await fetchCredits();
         setVerifying(false);
         
-        // Redirect to subscription page to show updated transactions
+        // Redirect to subscription page with subscription success flag
         setTimeout(() => {
-          window.location.href = '/dashboard/subscription';
-        }, 1500);
+          window.location.href = '/dashboard/subscription?subscription=success';
+        }, 1000);
       }
     };
 
@@ -52,7 +53,7 @@ const SubscriptionSuccess = () => {
     
     const urlTimer = setTimeout(() => {
       window.history.replaceState({}, document.title, window.location.pathname);
-    }, 3000);
+    }, 6000);
 
     return () => {
       clearTimeout(urlTimer);
