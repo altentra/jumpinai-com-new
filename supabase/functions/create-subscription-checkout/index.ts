@@ -90,45 +90,26 @@ serve(async (req) => {
       customerId = newCustomer.id;
     }
 
-    // ALWAYS create fresh Stripe price with current database amount to ensure sync
+    // Create a fresh Stripe price (product will be auto-created)
     console.log(`Processing subscription: ${subscriptionPlan.name} - $${subscriptionPlan.price_cents / 100}/month`);
     
-    let stripeProductId = subscriptionPlan.stripe_product_id;
-
-    // Create or update Stripe product
-    if (!stripeProductId) {
-      const product = await stripe.products.create({
-        name: `JumpinAI ${subscriptionPlan.name}`,
-        description: `${subscriptionPlan.credits_per_month} credits per month`,
-      });
-      stripeProductId = product.id;
-      console.log(`Created new Stripe product: ${stripeProductId}`);
-    } else {
-      // Update existing product to ensure name/description are current
-      await stripe.products.update(stripeProductId, {
-        name: `JumpinAI ${subscriptionPlan.name}`,
-        description: `${subscriptionPlan.credits_per_month} credits per month`,
-      });
-      console.log(`Updated Stripe product: ${stripeProductId}`);
-    }
-
-    // ALWAYS create a fresh price with the current database amount
-    // This ensures we're always using the latest pricing
-    console.log(`Creating new Stripe price: $${subscriptionPlan.price_cents / 100} for ${subscriptionPlan.name}`);
     const price = await stripe.prices.create({
-      product: stripeProductId,
-      unit_amount: subscriptionPlan.price_cents,
       currency: 'usd',
+      unit_amount: subscriptionPlan.price_cents,
       recurring: { interval: 'month' },
+      product_data: {
+        name: `${subscriptionPlan.name}`,
+        description: `${subscriptionPlan.credits_per_month} credits per month`,
+      },
     });
-    const stripePriceId = price.id;
-    console.log(`Created new Stripe price: ${stripePriceId} - $${subscriptionPlan.price_cents / 100}`);
     
-    // Update database with the new product and price IDs
+    const stripePriceId = price.id;
+    console.log(`Created Stripe price: ${stripePriceId} - $${subscriptionPlan.price_cents / 100}/month`);
+    
+    // Update database with the new price ID
     await supabase
       .from('subscription_plans')
       .update({ 
-        stripe_product_id: stripeProductId,
         stripe_price_id: stripePriceId,
         updated_at: new Date().toISOString()
       })

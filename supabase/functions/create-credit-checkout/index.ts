@@ -82,47 +82,20 @@ serve(async (req) => {
       customerId = newCustomer.id;
     }
 
-    // ALWAYS create fresh Stripe price with current database amount to ensure sync
+    // Create a fresh Stripe price (product will be auto-created)
     console.log(`Processing credit package: ${creditPackage.name} - ${creditPackage.credits} credits for $${creditPackage.price_cents / 100}`);
     
-    // Create or find Stripe product
-    let stripeProduct;
-    try {
-      const existingProducts = await stripe.products.search({
-        query: `name:'JumpinAI ${creditPackage.credits} credits. ${creditPackage.name}.'`,
-      });
-      
-      if (existingProducts.data.length > 0) {
-        stripeProduct = await stripe.products.update(existingProducts.data[0].id, {
-          name: `JumpinAI ${creditPackage.credits} credits. ${creditPackage.name}.`,
-          description: `${creditPackage.credits} credits for AI transformation plans`,
-        });
-        console.log(`Updated existing Stripe product: ${stripeProduct.id}`);
-      } else {
-        stripeProduct = await stripe.products.create({
-          name: `JumpinAI ${creditPackage.credits} credits. ${creditPackage.name}.`,
-          description: `${creditPackage.credits} credits for AI transformation plans`,
-        });
-        console.log(`Created new Stripe product: ${stripeProduct.id}`);
-      }
-    } catch (err) {
-      // Fallback: just create new product
-      stripeProduct = await stripe.products.create({
-        name: `JumpinAI ${creditPackage.credits} credits. ${creditPackage.name}.`,
-        description: `${creditPackage.credits} credits for AI transformation plans`,
-      });
-      console.log(`Created new Stripe product (fallback): ${stripeProduct.id}`);
-    }
-
-    // ALWAYS create a fresh price with the current database amount
-    console.log(`Creating new Stripe price: $${creditPackage.price_cents / 100} for ${creditPackage.name}`);
     const price = await stripe.prices.create({
-      product: stripeProduct.id,
-      unit_amount: creditPackage.price_cents,
       currency: 'usd',
+      unit_amount: creditPackage.price_cents,
+      product_data: {
+        name: `${creditPackage.name}`,
+        description: `${creditPackage.credits} credits for AI transformation plans`,
+      },
     });
+    
     const stripePriceId = price.id;
-    console.log(`Created new Stripe price: ${stripePriceId} - $${creditPackage.price_cents / 100}`);
+    console.log(`Created Stripe price: ${stripePriceId} - $${creditPackage.price_cents / 100}`);
 
     // Update database with stripe_price_id
     await supabase
