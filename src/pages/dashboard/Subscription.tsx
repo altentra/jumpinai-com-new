@@ -461,7 +461,7 @@ export default function Subscription() {
                 variant="default" 
                 onClick={manage}
                 size="lg"
-                className="w-full max-w-md text-lg py-6 glass bg-gradient-to-r from-primary via-primary/95 to-accent hover:from-primary/90 hover:via-primary/85 hover:to-accent/90 shadow-lg hover:shadow-2xl transition-all duration-300 rounded-2xl backdrop-blur-sm border border-white/10 hover:scale-[1.02] text-white font-semibold"
+                className="w-full max-w-md text-lg py-6 bg-gradient-to-r from-primary via-primary to-accent hover:from-primary hover:via-primary hover:to-accent shadow-lg hover:shadow-2xl transition-all duration-300 rounded-2xl border border-white/10 hover:scale-[1.02] hover:brightness-110 text-white font-semibold"
               >
                 <ExternalLink className="mr-2 h-5 w-5" />
                 Manage Billing
@@ -469,7 +469,7 @@ export default function Subscription() {
               <Button 
                 variant="outline" 
                 onClick={handleRefreshSubscription}
-                className="glass hover:bg-primary/10 border-primary/30 hover:border-primary/40 rounded-2xl backdrop-blur-sm transition-all duration-300 hover:shadow-lg hover:scale-105 text-foreground"
+                className="glass hover:bg-primary/10 border-primary/30 hover:border-primary/40 rounded-2xl backdrop-blur-sm transition-all duration-300 hover:shadow-lg hover:scale-105 text-foreground hover:text-foreground"
               >
                 <RefreshCw className="mr-2 h-4 w-4" />
                 Refresh Status
@@ -560,7 +560,7 @@ export default function Subscription() {
                   {isCurrent ? (
                     <Button 
                       variant="outline" 
-                      className="w-full glass border-2 border-primary/50 bg-primary/5 text-primary rounded-2xl backdrop-blur-sm font-semibold shadow-md"
+                      className="w-full glass border-2 border-primary/50 bg-primary/5 text-primary rounded-2xl backdrop-blur-sm font-semibold shadow-md hover:bg-primary/5"
                       disabled
                     >
                       <Crown className="w-4 h-4 mr-2" />
@@ -569,7 +569,7 @@ export default function Subscription() {
                   ) : isFree ? (
                     <Button 
                       variant="outline" 
-                      className="w-full glass border-border/50 bg-muted/30 text-muted-foreground rounded-2xl backdrop-blur-sm font-medium"
+                      className="w-full glass border-border/50 bg-muted/30 text-muted-foreground rounded-2xl backdrop-blur-sm font-medium hover:bg-muted/30"
                       disabled
                     >
                       Free Forever
@@ -578,7 +578,7 @@ export default function Subscription() {
                     <Button
                       onClick={() => handleSubscribe(plan.id)}
                       disabled={isLoading}
-                      className="w-full glass bg-gradient-to-r from-primary via-primary/95 to-accent hover:from-primary/90 hover:via-primary/85 hover:to-accent/90 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300 rounded-2xl backdrop-blur-sm border border-white/10 hover:scale-[1.02]"
+                      className="w-full bg-gradient-to-r from-primary via-primary to-accent hover:from-primary hover:via-primary hover:to-accent text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300 rounded-2xl border border-white/10 hover:scale-[1.02] hover:brightness-110"
                     >
                       {isLoading ? (
                         <>
@@ -649,7 +649,7 @@ export default function Subscription() {
                   <Button 
                     onClick={() => handleBuyCredits(pkg.id)}
                     disabled={isLoading}
-                    className="w-full glass bg-gradient-to-r from-primary via-primary/95 to-accent hover:from-primary/90 hover:via-primary/85 hover:to-accent/90 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300 rounded-2xl backdrop-blur-sm border border-white/10 hover:scale-[1.02]"
+                    className="w-full bg-gradient-to-r from-primary via-primary to-accent hover:from-primary hover:via-primary hover:to-accent text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300 rounded-2xl border border-white/10 hover:scale-[1.02] hover:brightness-110"
                   >
                     {isLoading ? (
                       <>
