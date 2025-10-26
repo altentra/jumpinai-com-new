@@ -38,9 +38,9 @@ serve(async (req) => {
 
     console.log('Retrieving receipt for session:', sessionId);
 
-    // Retrieve the checkout session with charges expanded
+    // Retrieve the checkout session
     const session = await stripe.checkout.sessions.retrieve(sessionId, {
-      expand: ['payment_intent.charges', 'subscription', 'invoice']
+      expand: ['subscription', 'invoice']
     });
 
     console.log('Session retrieved:', {
@@ -55,19 +55,36 @@ serve(async (req) => {
 
     // Handle one-time payments
     if (session.mode === 'payment' && session.payment_intent) {
-      const paymentIntent = typeof session.payment_intent === 'string'
-        ? await stripe.paymentIntents.retrieve(session.payment_intent, { expand: ['charges'] })
-        : session.payment_intent;
+      // Always retrieve payment intent with charges expanded
+      const paymentIntentId = typeof session.payment_intent === 'string'
+        ? session.payment_intent
+        : session.payment_intent.id;
+
+      const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId, {
+        expand: ['charges.data']
+      });
 
       console.log('Payment intent retrieved:', {
         id: paymentIntent.id,
+        status: paymentIntent.status,
+        hasCharges: !!paymentIntent.charges,
         chargesCount: paymentIntent.charges?.data?.length
       });
 
       // Get the charge's receipt URL
-      if (paymentIntent.charges?.data?.[0]?.receipt_url) {
-        receiptUrl = paymentIntent.charges.data[0].receipt_url;
-        console.log('Found receipt URL from payment intent charge');
+      if (paymentIntent.charges?.data?.length > 0) {
+        const charge = paymentIntent.charges.data[0];
+        console.log('Charge details:', {
+          id: charge.id,
+          hasReceiptUrl: !!charge.receipt_url
+        });
+        
+        if (charge.receipt_url) {
+          receiptUrl = charge.receipt_url;
+          console.log('Found receipt URL from payment intent charge');
+        }
+      } else {
+        console.log('No charges found on payment intent');
       }
     }
     // Handle subscriptions
