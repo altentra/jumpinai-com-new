@@ -34,8 +34,8 @@ serve(async (req) => {
   try {
     const body = await req.text();
     
-    // Verify webhook signature
-    const event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
+    // Verify webhook signature using async method for Deno
+    const event = await stripe.webhooks.constructEventAsync(body, signature, webhookSecret);
     
     console.log("Webhook event received:", event.type);
 
