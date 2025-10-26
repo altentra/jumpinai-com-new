@@ -147,48 +147,20 @@ serve(async (req) => {
       },
     });
 
-    // Create a virtual product record for this subscription if it doesn't exist
-    const { data: existingProduct } = await supabase
-      .from('products')
-      .select('id')
-      .eq('name', `${subscriptionPlan.name} Subscription`)
-      .maybeSingle();
+    // Record the pending order for tracking (no product for subscriptions)
+    await supabase
+      .from('orders')
+      .insert({
+        user_id: user.id,
+        user_email: user.email,
+        product_id: null, // Subscriptions are not products
+        amount: subscriptionPlan.price_cents,
+        currency: 'usd',
+        status: 'pending',
+        stripe_session_id: session.id,
+        download_token: null, // No download for subscriptions
+      });
 
-    let productId = existingProduct?.id;
-
-    if (!productId) {
-      const { data: newProduct, error: productError } = await supabase
-        .from('products')
-        .insert({
-          name: `${subscriptionPlan.name} Subscription`,
-          description: `${subscriptionPlan.credits_per_month} monthly credits with ${subscriptionPlan.name}`,
-          price: subscriptionPlan.price_cents,
-          file_path: 'virtual',
-          file_name: 'subscription',
-          status: 'active'
-        })
-        .select('id')
-        .single();
-
-      if (!productError && newProduct) {
-        productId = newProduct.id;
-      }
-    }
-
-    // Record the pending order for tracking
-    if (productId) {
-      await supabase
-        .from('orders')
-        .insert({
-          user_id: user.id,
-          user_email: user.email,
-          product_id: productId,
-          amount: subscriptionPlan.price_cents,
-          currency: 'usd',
-          status: 'pending',
-          stripe_session_id: session.id,
-        });
-    }
 
     return new Response(JSON.stringify({ 
       url: session.url,

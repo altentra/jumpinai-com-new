@@ -129,45 +129,18 @@ serve(async (req) => {
       },
     });
 
-    // Create a virtual product record for this credit package if it doesn't exist
-    const { data: existingProduct } = await supabase
-      .from('products')
-      .select('id')
-      .eq('name', `${creditPackage.name}`)
-      .maybeSingle();
-
-    let productId = existingProduct?.id;
-
-    if (!productId) {
-      const { data: newProduct, error: productError } = await supabase
-        .from('products')
-        .insert({
-          name: creditPackage.name,
-          description: `${creditPackage.credits} credits for AI transformation plans`,
-          price: creditPackage.price_cents,
-          file_path: 'virtual',
-          file_name: 'credits_package',
-          status: 'active'
-        })
-        .select('id')
-        .single();
-
-      if (!productError && newProduct) {
-        productId = newProduct.id;
-      }
-    }
-
-    // Record the pending order
+    // Record the pending order (no product for credit packages)
     const { error: orderError } = await supabase
       .from('orders')
       .insert({
         user_id: user.id,
         user_email: user.email,
-        product_id: productId,
+        product_id: null, // Credit packages are not products
         amount: creditPackage.price_cents,
         currency: 'usd',
         status: 'pending',
         stripe_session_id: session.id,
+        download_token: null, // No download for credit packages
       });
 
     if (orderError) {

@@ -4,7 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useCredits } from "@/hooks/useCredits";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { CheckCircle, Zap, ArrowRight, Sparkles, Loader2 } from "lucide-react";
+import { CheckCircle, Zap, ArrowRight, Sparkles, Loader2, Receipt } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Helmet } from "react-helmet-async";
@@ -39,12 +39,6 @@ const CreditPurchaseSuccess = () => {
         await new Promise(resolve => setTimeout(resolve, 4000));
         await fetchCredits();
         setVerifying(false);
-        
-        // Redirect to subscription page AND profile page with success flag
-        setTimeout(() => {
-          // Use replace to avoid back button issues
-          window.location.replace('/dashboard/subscription?payment=success&profile_refresh=true');
-        }, 1000);
       }
     };
 
@@ -154,52 +148,52 @@ const CreditPurchaseSuccess = () => {
               </CardContent>
             </Card>
 
-            {/* Action Cards */}
-            <Card className="mb-8 bg-card/50 backdrop-blur-sm border-border/50">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Sparkles className="h-6 w-6 text-primary" />
-                  Start Creating Your AI Plan
-                </CardTitle>
-                <CardDescription>
-                  Ready to transform your business with AI?
-                </CardDescription>
-              </CardHeader>
+            {/* Action Buttons */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+              <Button asChild size="lg" className="w-full">
+                <Link to="/jumpinai-studio">
+                  <Sparkles className="h-5 w-5 mr-2" />
+                  JumpinAI Studio
+                </Link>
+              </Button>
               
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="text-center p-6 rounded-lg border border-border/50 hover:border-primary/50 transition-all bg-card/30 backdrop-blur-sm">
-                    <div className="text-4xl mb-3">
-                      <Sparkles className="h-12 w-12 mx-auto text-primary" />
-                    </div>
-                    <h3 className="font-semibold mb-2">JumpinAI Studio</h3>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Generate your personalized AI transformation plan
-                    </p>
-                    <Button asChild size="sm" className="w-full">
-                      <Link to="/jumpinai-studio">
-                        Start Creating
-                      </Link>
-                    </Button>
-                  </div>
-                  
-                  <div className="text-center p-6 rounded-lg border border-border/50 hover:border-primary/50 transition-all bg-card/30 backdrop-blur-sm">
-                    <div className="text-4xl mb-3">
-                      <Zap className="h-12 w-12 mx-auto text-primary" />
-                    </div>
-                    <h3 className="font-semibold mb-2">My Dashboard</h3>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      View your credits and manage your plans
-                    </p>
-                    <Button asChild variant="outline" size="sm" className="w-full">
-                      <Link to="/dashboard">
-                        Go to Dashboard
-                      </Link>
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+              <Button asChild variant="outline" size="lg" className="w-full">
+                <Link to="/dashboard">
+                  <ArrowRight className="h-5 w-5 mr-2" />
+                  My Dashboard
+                </Link>
+              </Button>
+
+              <Button 
+                onClick={async () => {
+                  try {
+                    const sessionId = searchParams.get('session_id');
+                    if (!sessionId) {
+                      console.error('No session ID found');
+                      return;
+                    }
+                    
+                    const { supabase } = await import('@/integrations/supabase/client');
+                    const { data, error } = await supabase.functions.invoke('download-receipt', {
+                      body: { sessionId }
+                    });
+                    
+                    if (error) throw error;
+                    if (data?.receiptUrl) {
+                      window.open(data.receiptUrl, '_blank');
+                    }
+                  } catch (e: any) {
+                    console.error('Receipt error:', e);
+                  }
+                }}
+                variant="outline" 
+                size="lg" 
+                className="w-full"
+              >
+                <Receipt className="h-5 w-5 mr-2" />
+                Download Receipt
+              </Button>
+            </div>
 
             {/* Email Confirmation */}
             <Card className="bg-card/50 backdrop-blur-sm border-border/50">
