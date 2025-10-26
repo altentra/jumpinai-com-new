@@ -61,7 +61,7 @@ serve(async (req) => {
         : session.payment_intent.id;
 
       const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId, {
-        expand: ['charges.data']
+        expand: ['charges']
       });
 
       console.log('Payment intent retrieved:', {
