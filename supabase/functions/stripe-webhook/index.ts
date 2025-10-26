@@ -349,7 +349,7 @@ async function handlePaymentSuccess(
     const { data: orderData, error: orderError } = await supabase
       .from('orders')
       .update({
-        status: 'completed',
+        status: 'paid',
         stripe_payment_intent_id: session.payment_intent as string || null
       })
       .eq('stripe_session_id', session.id)

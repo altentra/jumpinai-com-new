@@ -4,7 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useCredits } from "@/hooks/useCredits";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { CheckCircle, Crown, ArrowRight, Sparkles, Zap, Loader2 } from "lucide-react";
+import { CheckCircle, Crown, ArrowRight, Sparkles, Zap, Loader2, CreditCard } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Helmet } from "react-helmet-async";
@@ -41,12 +41,6 @@ const SubscriptionSuccess = () => {
         await new Promise(resolve => setTimeout(resolve, 4000));
         await fetchCredits();
         setVerifying(false);
-        
-        // Redirect to subscription page with subscription success flag AND profile refresh
-        setTimeout(() => {
-          // Use replace to avoid back button issues
-          window.location.replace('/dashboard/subscription?subscription=success&profile_refresh=true');
-        }, 1000);
       }
     };
 
@@ -227,18 +221,52 @@ const SubscriptionSuccess = () => {
             </Card>
 
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
-              <Button asChild size="lg" className="w-full sm:w-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+              <Button asChild size="lg" className="w-full">
                 <Link to="/jumpinai-studio">
                   <Sparkles className="h-5 w-5 mr-2" />
-                  Create Your First Jump
+                  JumpinAI Studio
                 </Link>
               </Button>
               
-              <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
-                <Link to="/resources">
+              <Button asChild variant="outline" size="lg" className="w-full">
+                <Link to="/dashboard">
                   <ArrowRight className="h-5 w-5 mr-2" />
-                  Browse Resource Library
+                  My Dashboard
+                </Link>
+              </Button>
+
+              <Button 
+                onClick={async () => {
+                  try {
+                    const { supabase } = await import('@/integrations/supabase/client');
+                    const { data: session } = await supabase.auth.getSession();
+                    const accessToken = session.session?.access_token;
+                    
+                    const { data, error } = await supabase.functions.invoke("customer-portal", {
+                      body: { source: 'subscription-success' },
+                      headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
+                    });
+                    
+                    if (error) throw error;
+                    const url = (data as any)?.url;
+                    if (url) window.open(url, '_blank');
+                  } catch (e: any) {
+                    console.error(e);
+                  }
+                }}
+                variant="outline" 
+                size="lg" 
+                className="w-full"
+              >
+                <CreditCard className="h-5 w-5 mr-2" />
+                Billing Portal
+              </Button>
+
+              <Button asChild variant="outline" size="lg" className="w-full">
+                <Link to="/dashboard/subscription">
+                  <Crown className="h-5 w-5 mr-2" />
+                  Subscription
                 </Link>
               </Button>
             </div>
