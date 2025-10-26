@@ -38,9 +38,9 @@ serve(async (req) => {
 
     console.log('Retrieving receipt for session:', sessionId);
 
-    // Retrieve the checkout session
+    // Retrieve the checkout session with charges expanded
     const session = await stripe.checkout.sessions.retrieve(sessionId, {
-      expand: ['payment_intent', 'subscription', 'invoice']
+      expand: ['payment_intent.charges', 'subscription', 'invoice']
     });
 
     console.log('Session retrieved:', {
