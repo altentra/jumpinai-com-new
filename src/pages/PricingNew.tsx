@@ -12,7 +12,7 @@ import { toast } from 'sonner';
 import { creditsService, type CreditPackage, type SubscriptionPlan } from '@/services/creditsService';
 
 const PricingNew = () => {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, subscription } = useAuth();
   const [creditPackages, setCreditPackages] = useState<CreditPackage[]>([]);
   const [subscriptionPlans, setSubscriptionPlans] = useState<SubscriptionPlan[]>([]);
   const [loadingSubscription, setLoadingSubscription] = useState<Record<string, boolean>>({});
@@ -138,6 +138,12 @@ const PricingNew = () => {
     }
   };
 
+  const isCurrentPlan = (planName: string) => {
+    if (!subscription) return false;
+    if (!subscription.subscribed && planName.toLowerCase().includes('free')) return true;
+    return subscription.subscription_tier === planName;
+  };
+
   return (
     <>
       <Helmet>
@@ -211,13 +217,21 @@ const PricingNew = () => {
                 const badge = getPlanBadge(plan.name);
                 const isLoading = loadingSubscription[plan.id];
                 const isFree = plan.price_cents === 0;
+                const isUsersPlan = isCurrentPlan(plan.name);
                 
                 return (
                   <Card key={plan.id} className={`relative flex flex-col w-72 sm:w-56 md:w-64 lg:w-72 flex-shrink-0 min-h-[500px] glass hover:glass-dark transition-all duration-300 shadow-modern hover:shadow-modern-lg rounded-2xl border-0 ${plan.name.toLowerCase().includes('pro') ? 'shadow-steel' : ''}`}>
-                    {badge && (
+                    {badge && !isUsersPlan && (
                       <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
                         <Badge className={`${badge.color} shadow-modern rounded-full px-3 py-1`}>
                           {badge.text}
+                        </Badge>
+                      </div>
+                    )}
+                    {isUsersPlan && (
+                      <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
+                        <Badge className="bg-primary text-primary-foreground shadow-modern rounded-full px-3 py-1">
+                          Current Plan
                         </Badge>
                       </div>
                     )}
@@ -251,17 +265,17 @@ const PricingNew = () => {
                       
                       <div className="mt-auto">
                         <Button
-                         onClick={() => isFree ? null : handleSubscribe(plan.id)}
-                         disabled={isLoading || isFree}
-                         className={`w-full modern-button shadow-modern ${isFree ? '' : 'bg-foreground hover:bg-foreground/90'}`}
-                         variant={isFree ? "outline" : "default"}
+                         onClick={() => isUsersPlan ? null : handleSubscribe(plan.id)}
+                         disabled={isLoading || isUsersPlan}
+                         className={`w-full modern-button shadow-modern ${isUsersPlan ? '' : 'bg-foreground hover:bg-foreground/90'}`}
+                         variant={isUsersPlan ? "outline" : "default"}
                        >
                         {isLoading ? (
                           <>
                             <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
                             Processing...
                           </>
-                        ) : isFree ? (
+                        ) : isUsersPlan ? (
                           'Current Plan'
                         ) : (
                           <>

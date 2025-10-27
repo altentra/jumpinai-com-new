@@ -1944,14 +1944,14 @@ export default function Resources() {
     };
   }, []);
 
-  // Show all content if user has Pro subscription
-  const showAllContent = subscription?.subscribed && subscription.subscription_tier === 'JumpinAI Pro';
+  // Show all content if user has any paid subscription (Starter, Pro, or Growth)
+  const showAllContent = subscription?.subscribed && subscription.subscription_tier !== null;
 
   const UpgradeSection = ({ message }: { message: string }) => (
     <div className="glass rounded-2xl border border-white/10 p-6 text-center mt-6 shadow-modern">
       <Lock className="h-6 w-6 text-primary mb-3 mx-auto" />
       <p className="text-base font-medium mb-2">{message}</p>
-      <p className="text-sm text-muted-foreground mb-4">Upgrade to Pro to unlock all premium resources</p>
+      <p className="text-sm text-muted-foreground mb-4">Upgrade to any our paid subscription plan to unlock all premium resources</p>
       <Button 
         onClick={() => {
           if (!isAuthenticated) {
@@ -1963,7 +1963,7 @@ export default function Resources() {
         size="sm"
         className="text-xs"
       >
-        {!isAuthenticated ? 'Login to Subscribe' : 'Upgrade to Pro'} - $10/month
+        {!isAuthenticated ? 'Login to Subscribe' : 'Upgrade'}
       </Button>
     </div>
   );

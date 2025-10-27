@@ -13,7 +13,7 @@ import { toast } from 'sonner';
 import { creditsService, type SubscriptionPlan } from '@/services/creditsService';
 
 const Index = () => {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, subscription } = useAuth();
   const [subscriptionPlans, setSubscriptionPlans] = useState<SubscriptionPlan[]>([]);
   const [loadingSubscription, setLoadingSubscription] = useState<Record<string, boolean>>({});
 
@@ -34,6 +34,12 @@ const Index = () => {
       console.error('Error fetching subscription plans:', error);
       toast.error('Failed to load subscription plans');
     }
+  };
+
+  const isCurrentPlan = (planName: string) => {
+    if (!subscription) return false;
+    if (!subscription.subscribed && planName.toLowerCase().includes('free')) return true;
+    return subscription.subscription_tier === planName;
   };
 
   const handleSubscribe = async (planName: string) => {
@@ -459,13 +465,21 @@ const Index = () => {
                 const isFree = plan.price_cents === 0;
                 const isMostPopular = plan.name.toLowerCase().includes('pro');
                 const isBestValue = plan.name.toLowerCase().includes('growth');
+                const isUsersPlan = isCurrentPlan(plan.name);
                 
                 return (
                   <div key={plan.id} className={`relative flex flex-col w-72 sm:w-56 md:w-64 lg:w-72 flex-shrink-0 min-h-[500px] glass hover:glass-dark transition-all duration-300 shadow-modern hover:shadow-modern-lg rounded-2xl border-0 ${isMostPopular ? 'shadow-steel' : ''}`}>
-                    {(isMostPopular || isBestValue) && (
+                    {(isMostPopular || isBestValue) && !isUsersPlan && (
                       <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
                         <div className={`${isBestValue ? 'bg-gradient-to-r from-purple-500 to-pink-500' : 'bg-primary'} text-${isBestValue ? 'white' : 'primary-foreground'} shadow-modern rounded-full px-3 py-1 text-sm font-semibold`}>
                           {isBestValue ? 'Best Value' : 'Most Popular'}
+                        </div>
+                      </div>
+                    )}
+                    {isUsersPlan && (
+                      <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
+                        <div className="bg-primary text-primary-foreground shadow-modern rounded-full px-3 py-1 text-sm font-semibold">
+                          Current Plan
                         </div>
                       </div>
                     )}
@@ -498,11 +512,11 @@ const Index = () => {
                       
                       <div className="mt-auto">
                         <button 
-                          onClick={() => isFree ? null : handleSubscribe(plan.name)}
-                          disabled={isLoading || isFree}
-                          className={`w-full modern-button shadow-modern ${isFree ? 'border border-border bg-card hover:bg-accent hover:text-accent-foreground text-foreground' : 'bg-primary hover:bg-primary/90 text-primary-foreground'} px-4 py-2 rounded-lg font-semibold cursor-pointer text-center transition-colors disabled:opacity-50`}
+                          onClick={() => isUsersPlan ? null : handleSubscribe(plan.name)}
+                          disabled={isLoading || isUsersPlan}
+                          className={`w-full modern-button shadow-modern ${isUsersPlan ? 'border border-border bg-card hover:bg-accent hover:text-accent-foreground text-foreground' : 'bg-primary hover:bg-primary/90 text-primary-foreground'} px-4 py-2 rounded-lg font-semibold cursor-pointer text-center transition-colors disabled:opacity-50`}
                         >
-                          {isLoading ? 'Processing...' : isFree ? 'Current Plan' : 'Get Started'}
+                          {isLoading ? 'Processing...' : isUsersPlan ? 'Current Plan' : 'Get Started'}
                         </button>
                       </div>
                     </div>
