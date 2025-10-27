@@ -747,7 +747,9 @@ export default function ProfileTabs() {
                       }
                       
                       // Only show download for actual digital products (PDF guides), not credit packs or subscriptions
-                      const isDownloadableProduct = order.products?.file_name && order.download_token;
+                      const isDownloadableProduct = order.products?.file_name && 
+                                                    order.products.file_name.endsWith('.pdf') && 
+                                                    order.download_token;
                       
                       return (
                         <div key={order.id} className="border border-border rounded-lg p-4 space-y-3">
@@ -865,7 +867,9 @@ export default function ProfileTabs() {
                             }
                             
                             // Only show download for actual digital products (PDF guides), not credit packs or subscriptions
-                            const isDownloadableProduct = order.products?.file_name && order.download_token;
+                            const isDownloadableProduct = order.products?.file_name && 
+                                                         order.products.file_name.endsWith('.pdf') && 
+                                                         order.download_token;
                             
                             return (
                               <TableRow key={order.id}>
