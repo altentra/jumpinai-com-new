@@ -212,11 +212,11 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
       <Tabs defaultValue="overview" className="w-full">
         <div className="relative mb-8">
           {/* Mobile: Horizontal scroll container */}
-          <div className="sm:hidden overflow-x-auto scrollbar-hide pb-4">
-            <TabsList className="inline-flex h-auto w-max min-w-full gap-2 p-3 bg-gradient-to-r from-background/80 via-background/70 to-background/80 backdrop-blur-xl rounded-2xl border border-border/50 shadow-lg shadow-primary/5">
+          <div className="sm:hidden overflow-x-auto scrollbar-hide pb-4 -mx-2 px-2">
+            <TabsList className="inline-flex h-auto w-max gap-1.5 p-2 bg-gradient-to-r from-background/80 via-background/70 to-background/80 backdrop-blur-xl rounded-2xl border border-border/50 shadow-lg shadow-primary/5">
               <TabsTrigger 
                 value="overview" 
-                className="relative flex items-center gap-2 text-sm font-semibold whitespace-nowrap px-5 py-3 
+                className="relative flex items-center gap-1.5 text-xs font-semibold whitespace-nowrap px-3 py-2.5 
                   data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary/20 data-[state=active]:to-primary/10 
                   data-[state=active]:text-primary data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20
                   data-[state=active]:border data-[state=active]:border-primary/30
@@ -228,7 +228,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
               </TabsTrigger>
               <TabsTrigger 
                 value="plan" 
-                className="relative flex items-center gap-2 text-sm font-semibold whitespace-nowrap px-5 py-3 
+                className="relative flex items-center gap-1.5 text-xs font-semibold whitespace-nowrap px-3 py-2.5 
                   data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary/20 data-[state=active]:to-primary/10 
                   data-[state=active]:text-primary data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20
                   data-[state=active]:border data-[state=active]:border-primary/30
@@ -240,7 +240,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
               </TabsTrigger>
               <TabsTrigger 
                 value="toolPrompts" 
-                className="relative flex items-center gap-2 text-sm font-semibold whitespace-nowrap px-5 py-3 
+                className="relative flex items-center gap-1.5 text-xs font-semibold whitespace-nowrap px-3 py-2.5 
                   data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary/20 data-[state=active]:to-primary/10 
                   data-[state=active]:text-primary data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20
                   data-[state=active]:border data-[state=active]:border-primary/30

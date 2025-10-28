@@ -289,7 +289,7 @@ export default function ToolsPrompts() {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-                  {prompts.map((tp) => (
+                  {prompts.map((tp, index) => (
                     <Card 
                       key={tp.id}
                       className="glass cursor-pointer hover:shadow-lg transition-all duration-300 rounded-xl group"
@@ -298,7 +298,7 @@ export default function ToolsPrompts() {
                       <CardHeader className="pb-3">
                         <div className="flex items-start justify-between mb-2">
                           <CardTitle className="text-sm sm:text-base line-clamp-2 group-hover:text-primary transition-colors">
-                            {tp.title}
+                            {index + 1}. {tp.title}
                           </CardTitle>
                         </div>
                         {tp.tool_name && (
