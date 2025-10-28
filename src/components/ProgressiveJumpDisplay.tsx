@@ -211,9 +211,9 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
       {/* Content Tabs - Ultra Premium Design */}
       <Tabs defaultValue="overview" className="w-full">
         <div className="relative mb-8">
-          {/* Mobile: Horizontal scroll container */}
-          <div className="sm:hidden overflow-x-auto scrollbar-hide pb-4 -mx-2 px-2">
-            <TabsList className="inline-flex h-auto w-max gap-1.5 p-2 bg-gradient-to-r from-background/80 via-background/70 to-background/80 backdrop-blur-xl rounded-2xl border border-border/50 shadow-lg shadow-primary/5">
+          {/* Mobile: Full width tabs */}
+          <div className="sm:hidden pb-4">
+            <TabsList className="flex h-auto w-full gap-1.5 p-2 bg-gradient-to-r from-background/80 via-background/70 to-background/80 backdrop-blur-xl rounded-2xl border border-border/50 shadow-lg shadow-primary/5">
               <TabsTrigger 
                 value="overview" 
                 className="relative flex items-center gap-1.5 text-xs font-semibold whitespace-nowrap px-3 py-2.5 
