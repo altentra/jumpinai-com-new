@@ -108,40 +108,6 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({ stats, isLoading
         ))}
       </div>
 
-      {/* Implementation Progress */}
-      {totalItems > 0 && (
-        <Card className="glass border-border rounded-xl mx-2 sm:mx-0">
-          <CardHeader className="pb-2 sm:pb-3 px-4 sm:px-6 pt-4 sm:pt-6">
-            <CardTitle className="text-sm sm:text-base flex items-center gap-1.5 sm:gap-2">
-              <CheckCircle2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary" />
-              Implementation Progress
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2 sm:space-y-3 px-4 sm:px-6 pb-4 sm:pb-6">
-            <div className="flex items-center justify-between text-xs sm:text-sm">
-              <span className="text-muted-foreground">
-                {totalImplemented} of {totalItems} items implemented
-              </span>
-              <span className="font-semibold text-foreground">
-                {implementationRate.toFixed(1)}%
-              </span>
-            </div>
-            <Progress value={implementationRate} className="h-1.5 sm:h-2" />
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 sm:gap-2 text-[10px] sm:text-xs">
-              {statCards.slice(1).map((stat) => (
-                stat.value > 0 && (
-                  <div key={stat.title} className="flex items-center gap-1 sm:gap-1.5">
-                    <stat.icon className={`h-2.5 w-2.5 sm:h-3 sm:w-3 ${stat.color}`} />
-                    <span className="text-muted-foreground truncate">
-                      {stat.title}: {stat.implemented}/{stat.value}
-                    </span>
-                  </div>
-                )
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
     </div>
   );
 };
