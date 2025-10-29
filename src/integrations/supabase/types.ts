@@ -676,14 +676,8 @@ export type Database = {
         }
         Returns: undefined
       }
-      allocate_drip_credits: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
-      allocate_monthly_credits: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
+      allocate_drip_credits: { Args: never; Returns: undefined }
+      allocate_monthly_credits: { Args: never; Returns: undefined }
       check_rate_limit: {
         Args: {
           email_col: string
