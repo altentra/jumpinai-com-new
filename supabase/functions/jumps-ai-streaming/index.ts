@@ -248,15 +248,20 @@ Examples of good names:
     case 2:
       // STEP 2: Strategic Overview - extract ALL context from goals & challenges
       return {
-        systemPrompt: `You are a senior strategy consultant and business analyst. From the user's goals and challenges alone, you will intelligently infer their full context (industry, role, experience level, timeline, budget constraints) and create a comprehensive strategic overview. Be perceptive and read between the lines.`,
+        systemPrompt: `You are a senior strategy consultant and business analyst. From the user's goals and challenges alone, you will intelligently infer their full context and create a comprehensive strategic overview. Be perceptive and read between the lines.`,
         userPrompt: `Deeply analyze this person's transformation journey from what they've shared:
 
 ${baseContext}
 
-CRITICAL ANALYSIS REQUIREMENTS:
-1. From their GOALS, infer: Industry/field, current role, desired outcome, scope of transformation, what success looks like
-2. From their CHALLENGES, deduce: Experience level, resource constraints (time/budget), urgency, specific blockers, what they've tried before
-3. Synthesize insights: Connect goals to challenges to understand the full picture and strategic needs
+CRITICAL ANALYSIS & INFERENCE REQUIREMENTS:
+1. From their GOALS, infer: Industry/field (from context clues in their language), current role, desired outcome, scope of transformation, what success looks like
+2. From their CHALLENGES, deduce: Experience level (assume standard AI learning curve unless clear indicators suggest otherwise), resource constraints, urgency, specific blockers
+3. Apply sensible defaults when not explicitly stated:
+   - Timeline: As soon as realistically possible given the transformation scope
+   - Budget: Assume lean/efficient approach - prioritize free and cost-effective solutions unless goals clearly indicate premium resources available
+   - AI Experience: Assume standard learning curve - comfortable with technology but new to AI implementation
+   - Industry: Determine from language, terminology, and context in their goals and challenges
+4. Synthesize insights: Connect goals to challenges to understand the full picture and strategic needs
 
 FORMATTING REQUIREMENTS:
 - Use **bold** for key terms, numbers, and metrics
@@ -360,9 +365,10 @@ Overview Context (already analyzed):
 ${overviewContent}
 
 CONTEXT INFERENCE REQUIREMENTS:
-1. From GOALS: Understand their industry, desired outcomes, scope, what success means to them
-2. From CHALLENGES: Deduce experience level, resource constraints (time/money), urgency, specific blockers
-3. Create plan that addresses THEIR specific situation, not generic advice
+1. From GOALS: Understand their industry (from language/context), desired outcomes, scope, what success means to them
+2. From CHALLENGES: Deduce experience level (default: standard AI learning curve), resource constraints, urgency (default: as soon as realistic)
+3. Apply sensible defaults: Budget-conscious approach (free/affordable tools prioritized), reasonable urgency, standard tech-savvy but AI-new persona
+4. Create plan that addresses THEIR specific situation, not generic advice
 
 FORMATTING REQUIREMENTS:
 1. Use **bold** markdown for ALL key terms, actions, deliverables, and metrics
@@ -668,9 +674,14 @@ CRITICAL: PHASE ALIGNMENT:
 - Phase 2 (Combos 4-6): Growth tools - content creation, automation, scaling
 - Phase 3 (Combos 7-9): Mastery tools - optimization, analytics, advanced features
 
-CRITICAL: CONTEXT INFERENCE:
-- From GOALS: Infer their industry, desired tools/capabilities, complexity needs
-- From CHALLENGES: Deduce their experience level, budget sensitivity, time constraints`,
+CRITICAL: CONTEXT INFERENCE & DEFAULTS:
+- From GOALS: Infer their industry (from language/context), desired tools/capabilities, complexity needs
+- From CHALLENGES: Deduce their experience level, budget sensitivity, time constraints
+- Apply smart defaults when unclear:
+  * Experience: Standard AI learning curve (tech-savvy but new to AI)
+  * Budget: Lean approach - prioritize free/affordable tools, only premium when truly optimal
+  * Urgency: As soon as realistically achievable given transformation scope
+  * Industry: Determine from terminology, language patterns, and context clues`,
         userPrompt: `Create 9 deeply personalized tool+prompt combinations with diversity and phase alignment:
 
 ${baseContext}
@@ -679,15 +690,20 @@ Overview Context (already analyzed):
 ${overviewContent}
 
 CRITICAL ANALYSIS & INFERENCE:
-1. From GOALS, understand: What industry are they in? What tools would best serve their objectives? What complexity level is appropriate?
+1. From GOALS, understand: What industry are they in (from context/language)? What tools would best serve their objectives? What complexity level is appropriate?
 2. From CHALLENGES, deduce: What's their AI experience level? What budget constraints exist? How urgent is their timeline?
-3. Tailor EVERYTHING: tool complexity, budget appropriateness, time-to-value, learning curve
+3. Apply sensible defaults when not explicitly stated:
+   - Budget: LEAN APPROACH - default to free and cost-effective tools; only recommend premium when clearly optimal for their goals
+   - Experience: Standard AI learning curve - assume tech-savvy but new to AI implementation (beginner-to-intermediate friendly)
+   - Urgency: As soon as realistically achievable - balance speed with quality
+   - Industry: Infer from terminology, language patterns, and goals/challenges context
+4. Tailor EVERYTHING: tool complexity, budget appropriateness, time-to-value, learning curve
 
 REQUIREMENTS:
 1. Each combo must directly address their goals and overcome their challenges
-2. Recommend tools appropriate to their inferred budget level (free/affordable if challenges suggest constraints, premium if goals indicate resources)
-3. Match complexity to their inferred AI experience (beginner-friendly if challenges suggest inexperience, advanced if goals indicate sophistication)
-4. Consider their inferred urgency (quick-win tools if challenges suggest time pressure, comprehensive tools if goals indicate patient building)
+2. DEFAULT to free/affordable tools unless goals clearly indicate premium resources available
+3. Match complexity to standard learning curve - beginner-friendly with growth path, unless clear sophistication indicators
+4. Assume reasonable urgency - quick wins balanced with sustainable progress
 5. MUST use at least 6 DIFFERENT tools across the 9 combos
 6. Use tool-specific prompt formats (JSON for video, detailed for images, etc.)
 7. Align 3 combos per phase (foundation/growth/mastery)
