@@ -33,8 +33,10 @@ export default function ToolsPrompts() {
 
   useEffect(() => {
     if (user?.id) {
+      console.log('🔄 ToolsPrompts: Loading data for user:', user.id);
       loadData();
     } else {
+      console.log('⚠️ ToolsPrompts: No user ID, skipping load');
       setLoading(false);
     }
   }, [user?.id]);

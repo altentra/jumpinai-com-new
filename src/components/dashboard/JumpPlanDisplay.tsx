@@ -322,7 +322,11 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
                       {/* Tools & Prompts Combo Section - Only for first 3 steps of each phase */}
                       {(() => {
                         const comboIndex = getToolPromptComboIndex(phaseIndex, stepIndex);
-                        if (comboIndex === null || !jumpId || !toolPromptIds || !toolPromptIds[comboIndex]) {
+                        if (comboIndex === null) return null;
+                        
+                        // Show placeholder if jumpId or toolPromptIds are not available yet
+                        if (!jumpId || !toolPromptIds || !toolPromptIds[comboIndex]) {
+                          console.log(`⚠️ Missing data for combo ${comboIndex + 1}:`, { jumpId, toolPromptIdsLength: toolPromptIds?.length });
                           return null;
                         }
                         
