@@ -208,17 +208,23 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
               </div>
               <div className="flex-1 min-w-0">
                 <CardTitle className="text-2xl font-bold mb-2 bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">
-                  {phase.title || `Phase ${phaseIndex + 1}`}
+                  <ReactMarkdown className="prose max-w-none [&>p]:m-0 [&_strong]:font-bold">
+                    {phase.title || `Phase ${phaseIndex + 1}`}
+                  </ReactMarkdown>
                 </CardTitle>
                 {phase.description && (
-                  <p className="text-muted-foreground leading-relaxed">
-                    {phase.description}
-                  </p>
+                  <div className="text-muted-foreground leading-relaxed">
+                    <ReactMarkdown className="prose prose-sm max-w-none [&>p]:mb-2 [&>p:last-child]:mb-0 [&_strong]:font-bold [&_em]:italic">
+                      {phase.description}
+                    </ReactMarkdown>
+                  </div>
                 )}
                 {phase.duration && (
                   <div className="flex items-center gap-2 mt-3">
                     <Badge variant="secondary" className="bg-primary/20 text-primary border-primary/30 rounded-full">
-                      Duration: {phase.duration}
+                      <ReactMarkdown className="inline [&>p]:inline [&>p]:m-0 [&_strong]:font-bold">
+                        {`Duration: ${phase.duration}`}
+                      </ReactMarkdown>
                     </Badge>
                   </div>
                 )}
