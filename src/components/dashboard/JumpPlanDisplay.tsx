@@ -52,11 +52,7 @@ function buildDefaultPlan(title: string = 'Your Jump Plan') {
         title: `Phase ${n}`,
         description: '',
         duration: '',
-        objectives: [] as string[],
-        key_actions: [] as any[],
-        milestones: [] as any[],
-        deliverables: [] as string[],
-        risks: [] as any[]
+        steps: [] as any[]
       }))
     },
     tools_prompts: {
@@ -122,11 +118,7 @@ function normalizeToComprehensive(input: any): any {
       title: p.title || `Phase ${idx + 1}`,
       description: p.description || '',
       duration: p.duration || p.timeline || '',
-      objectives: Array.isArray(p.objectives) ? p.objectives : [],
-      key_actions: Array.isArray(p.key_actions) ? p.key_actions : [],
-      milestones: Array.isArray(p.milestones) ? p.milestones : [],
-      deliverables: Array.isArray(p.deliverables) ? p.deliverables : [],
-      risks: Array.isArray(p.risks) ? p.risks : []
+      steps: Array.isArray(p.steps) ? p.steps : []
     }));
   }
 
