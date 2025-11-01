@@ -28,24 +28,20 @@ function isComprehensiveStructure(plan: any): boolean {
 function buildDefaultPlan(title: string = 'Your Jump Plan') {
   return {
     title,
-    executive_summary: '',
-    overview: {
-      vision_statement: '',
-      transformation_scope: '',
-      expected_outcomes: [] as string[],
-      timeline_overview: ''
+    executiveSummary: '',
+    situationAnalysis: {
+      currentState: '',
+      challenges: [] as string[],
+      opportunities: [] as string[]
     },
-    analysis: {
-      current_state: {
-        strengths: [] as string[],
-        weaknesses: [] as string[],
-        opportunities: [] as string[],
-        threats: [] as string[]
-      },
-      gap_analysis: [] as string[],
-      readiness_assessment: { score: 0, factors: [] as any[] },
-      market_context: ''
+    strategicVision: '',
+    roadmap: {
+      immediate: '',
+      shortTerm: '',
+      longTerm: ''
     },
+    successFactors: [] as string[],
+    riskMitigation: [] as string[],
     action_plan: {
       phases: [1,2,3].map((n) => ({
         phase_number: n,
@@ -85,30 +81,46 @@ function normalizeToComprehensive(input: any): any {
 
   if (!source || typeof source !== 'object') return base;
 
-  // Direct fields
-  if (typeof source.executive_summary === 'string') base.executive_summary = source.executive_summary;
-
-  // Overview
-  const ov = source.overview || {};
-  if (typeof ov.vision_statement === 'string') base.overview.vision_statement = ov.vision_statement;
-  if (typeof ov.transformation_scope === 'string') base.overview.transformation_scope = ov.transformation_scope;
-  if (Array.isArray(ov.expected_outcomes)) base.overview.expected_outcomes = ov.expected_outcomes;
-  if (typeof ov.timeline_overview === 'string') base.overview.timeline_overview = ov.timeline_overview;
-  if (!base.overview.timeline_overview && typeof (source.timeline || source.timeline_overview) === 'string') base.overview.timeline_overview = source.timeline || source.timeline_overview;
-
-  // Analysis
-  const an = source.analysis || {};
-  const cs = an.current_state || {};
-  if (Array.isArray(cs.strengths)) base.analysis.current_state.strengths = cs.strengths;
-  if (Array.isArray(cs.weaknesses)) base.analysis.current_state.weaknesses = cs.weaknesses;
-  if (Array.isArray(cs.opportunities)) base.analysis.current_state.opportunities = cs.opportunities;
-  if (Array.isArray(cs.threats)) base.analysis.current_state.threats = cs.threats;
-  if (Array.isArray(an.gap_analysis)) base.analysis.gap_analysis = an.gap_analysis;
-  if (an.readiness_assessment && typeof an.readiness_assessment === 'object') base.analysis.readiness_assessment = {
-    score: typeof an.readiness_assessment.score === 'number' ? an.readiness_assessment.score : 0,
-    factors: Array.isArray(an.readiness_assessment.factors) ? an.readiness_assessment.factors : []
-  };
-  if (typeof an.market_context === 'string') base.analysis.market_context = an.market_context;
+  // Map XAI response format to ComprehensiveJump format
+  // XAI uses: executiveSummary, situationAnalysis, strategicVision, roadmap, successFactors, riskMitigation
+  
+  // Direct executiveSummary mapping
+  if (typeof source.executiveSummary === 'string') {
+    base.executiveSummary = source.executiveSummary;
+  }
+  
+  // situationAnalysis mapping
+  if (source.situationAnalysis && typeof source.situationAnalysis === 'object') {
+    base.situationAnalysis = {
+      currentState: source.situationAnalysis.currentState || '',
+      challenges: Array.isArray(source.situationAnalysis.challenges) ? source.situationAnalysis.challenges : [],
+      opportunities: Array.isArray(source.situationAnalysis.opportunities) ? source.situationAnalysis.opportunities : []
+    };
+  }
+  
+  // strategicVision mapping
+  if (typeof source.strategicVision === 'string') {
+    base.strategicVision = source.strategicVision;
+  }
+  
+  // roadmap mapping (XAI uses: immediate, shortTerm, longTerm)
+  if (source.roadmap && typeof source.roadmap === 'object') {
+    base.roadmap = {
+      immediate: source.roadmap.immediate || '',
+      shortTerm: source.roadmap.shortTerm || '',
+      longTerm: source.roadmap.longTerm || ''
+    };
+  }
+  
+  // successFactors mapping
+  if (Array.isArray(source.successFactors)) {
+    base.successFactors = source.successFactors;
+  }
+  
+  // riskMitigation mapping
+  if (Array.isArray(source.riskMitigation)) {
+    base.riskMitigation = source.riskMitigation;
+  }
 
   // Phases (accept either root phases[] or action_plan.phases[])
   const phases = Array.isArray(source?.action_plan?.phases) ? source.action_plan.phases : (Array.isArray(source?.phases) ? source.phases : []);
@@ -187,7 +199,7 @@ const finalPlan = React.useMemo(() => {
 
   if (planContent && planContent.trim() && !isJSONish) {
     const text = enhancedContent.replace(/[#>*`]/g, '').trim();
-    fallback.executive_summary = text;
+    fallback.executiveSummary = text;
   }
   return fallback;
 }, [comprehensivePlan, planContent, enhancedContent]);

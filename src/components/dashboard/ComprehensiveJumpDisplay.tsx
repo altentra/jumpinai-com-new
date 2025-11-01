@@ -190,68 +190,80 @@ export default function ComprehensiveJumpDisplay({ jump, onEdit, onDownload, cla
         <Separator />
 
         {/* Current State */}
-        <div>
-          <SectionHeader 
-            icon={<Target className="h-5 w-5" />} 
-            title="Current State"
-          />
-          <div className="bg-gradient-to-r from-primary/5 to-primary/10 p-4 rounded-lg border-l-4 border-primary">
-            <p className="text-foreground font-medium">{jump.situationAnalysis.currentState}</p>
+        {jump.situationAnalysis?.currentState && (
+          <div>
+            <SectionHeader 
+              icon={<Target className="h-5 w-5" />} 
+              title="Current State"
+            />
+            <div className="bg-gradient-to-r from-primary/5 to-primary/10 p-4 rounded-lg border-l-4 border-primary">
+              <p className="text-foreground font-medium">{jump.situationAnalysis.currentState}</p>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Strategic Vision */}
-        <div>
-          <SectionHeader 
-            icon={<Rocket className="h-5 w-5" />} 
-            title="Strategic Vision"
-          />
-          <div className="bg-gradient-to-r from-primary/5 to-primary/10 p-4 rounded-lg border-l-4 border-primary">
-            <p className="text-foreground font-medium">{jump.strategicVision}</p>
+        {jump.strategicVision && (
+          <div>
+            <SectionHeader 
+              icon={<Rocket className="h-5 w-5" />} 
+              title="Strategic Vision"
+            />
+            <div className="bg-gradient-to-r from-primary/5 to-primary/10 p-4 rounded-lg border-l-4 border-primary">
+              <p className="text-foreground font-medium">{jump.strategicVision}</p>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Roadmap */}
-        <div className="grid md:grid-cols-3 gap-4">
-          <Card className="border-border/30">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base flex items-center gap-2">
-                <Clock className="h-4 w-4" />
-                Immediate (0-30 days)
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">{jump.roadmap.immediate}</p>
-            </CardContent>
-          </Card>
+        {jump.roadmap && (jump.roadmap.immediate || jump.roadmap.shortTerm || jump.roadmap.longTerm) && (
+          <div className="grid md:grid-cols-3 gap-4">
+            {jump.roadmap.immediate && (
+              <Card className="border-border/30">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-base flex items-center gap-2">
+                    <Clock className="h-4 w-4" />
+                    Immediate (0-30 days)
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">{jump.roadmap.immediate}</p>
+                </CardContent>
+              </Card>
+            )}
 
-          <Card className="border-border/30">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base flex items-center gap-2">
-                <TrendingUp className="h-4 w-4" />
-                Short-term (30-90 days)
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">{jump.roadmap.shortTerm}</p>
-            </CardContent>
-          </Card>
+            {jump.roadmap.shortTerm && (
+              <Card className="border-border/30">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-base flex items-center gap-2">
+                    <TrendingUp className="h-4 w-4" />
+                    Short-term (30-90 days)
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">{jump.roadmap.shortTerm}</p>
+                </CardContent>
+              </Card>
+            )}
 
-          <Card className="border-border/30">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base flex items-center gap-2">
-                <Target className="h-4 w-4" />
-                Long-term (90+ days)
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">{jump.roadmap.longTerm}</p>
-            </CardContent>
-          </Card>
-        </div>
+            {jump.roadmap.longTerm && (
+              <Card className="border-border/30">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-base flex items-center gap-2">
+                    <Target className="h-4 w-4" />
+                    Long-term (90+ days)
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">{jump.roadmap.longTerm}</p>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        )}
 
         {/* Challenges */}
-        {jump.situationAnalysis.challenges?.length > 0 && (
+        {jump.situationAnalysis?.challenges?.length > 0 && (
           <div>
             <SectionHeader 
               icon={<AlertTriangle className="h-5 w-5" />} 
@@ -269,7 +281,7 @@ export default function ComprehensiveJumpDisplay({ jump, onEdit, onDownload, cla
         )}
 
         {/* Opportunities */}
-        {jump.situationAnalysis.opportunities?.length > 0 && (
+        {jump.situationAnalysis?.opportunities?.length > 0 && (
           <div>
             <SectionHeader 
               icon={<CheckCircle2 className="h-5 w-5" />} 
