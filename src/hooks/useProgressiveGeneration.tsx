@@ -248,39 +248,62 @@ export const useProgressiveGeneration = () => {
             // Update UI immediately
             setResult({ ...progressiveResult });
             
-                } else if (type === 'overview') {
+          } else if (type === 'overview') {
             // STEP 2: Overview complete - show it and start plan
             console.log('Processing overview step data:', stepData);
             
-            progressiveResult.comprehensive_plan = stepData;
+            // Store the complete overview data with proper structure for ComprehensiveJumpDisplay
+            progressiveResult.comprehensive_plan = {
+              title: jumpName,
+              executive_summary: stepData.executive_summary || '',
+              overview: stepData.overview || {
+                vision_statement: '',
+                transformation_scope: '',
+                expected_outcomes: [],
+                timeline_overview: ''
+              },
+              analysis: stepData.analysis || {
+                current_state: {
+                  strengths: [],
+                  weaknesses: [],
+                  opportunities: [],
+                  threats: []
+                },
+                gap_analysis: [],
+                readiness_assessment: {
+                  score: 0,
+                  factors: []
+                },
+                market_context: ''
+              },
+              action_plan: { phases: [] } // Will be filled in step 3
+            };
             
-            // Build full overview content from all sections
+            // Build full overview content from all sections for display
             let overviewText = '';
-            if (stepData.executiveSummary) overviewText += `## Executive Summary\n\n${stepData.executiveSummary}\n\n`;
-            if (stepData.situationAnalysis) {
-              overviewText += `## Situation Analysis\n\n`;
-              if (stepData.situationAnalysis.currentState) overviewText += `### Current State\n${stepData.situationAnalysis.currentState}\n\n`;
-              if (stepData.situationAnalysis.challenges?.length) {
-                overviewText += `### Key Challenges\n`;
-                stepData.situationAnalysis.challenges.forEach((c: string) => overviewText += `- ${c}\n`);
-                overviewText += '\n';
-              }
-              if (stepData.situationAnalysis.opportunities?.length) {
-                overviewText += `### Opportunities\n`;
-                stepData.situationAnalysis.opportunities.forEach((o: string) => overviewText += `- ${o}\n`);
+            if (stepData.executive_summary) overviewText += `## Executive Summary\n\n${stepData.executive_summary}\n\n`;
+            if (stepData.overview) {
+              overviewText += `## Vision\n\n${stepData.overview.vision_statement}\n\n`;
+              overviewText += `## Transformation Scope\n\n${stepData.overview.transformation_scope}\n\n`;
+              if (stepData.overview.expected_outcomes?.length) {
+                overviewText += `## Expected Outcomes\n\n`;
+                stepData.overview.expected_outcomes.forEach((o: string) => overviewText += `- ${o}\n`);
                 overviewText += '\n';
               }
             }
-            if (stepData.strategicVision) overviewText += `## Strategic Vision\n\n${stepData.strategicVision}\n\n`;
-            if (stepData.successFactors?.length) {
-              overviewText += `## Success Factors\n\n`;
-              stepData.successFactors.forEach((f: string) => overviewText += `- ${f}\n`);
-              overviewText += '\n';
-            }
-            if (stepData.riskMitigation?.length) {
-              overviewText += `## Risk Mitigation\n\n`;
-              stepData.riskMitigation.forEach((r: string) => overviewText += `- ${r}\n`);
-              overviewText += '\n';
+            if (stepData.analysis) {
+              if (stepData.analysis.current_state) {
+                if (stepData.analysis.current_state.strengths?.length) {
+                  overviewText += `## Strengths\n`;
+                  stepData.analysis.current_state.strengths.forEach((s: string) => overviewText += `- ${s}\n`);
+                  overviewText += '\n';
+                }
+                if (stepData.analysis.current_state.opportunities?.length) {
+                  overviewText += `## Opportunities\n`;
+                  stepData.analysis.current_state.opportunities.forEach((o: string) => overviewText += `- ${o}\n`);
+                  overviewText += '\n';
+                }
+              }
             }
             
             progressiveResult.full_content = overviewText.trim();
@@ -299,9 +322,15 @@ export const useProgressiveGeneration = () => {
           } else if (type === 'comprehensive' || type === 'plan') {
             // STEP 3: Plan complete - show it and start tools
             console.log('📋 Received strategic action plan:', stepData);
-            // Store the plan data directly (no implementationPlan wrapper)
+            
+            // Store the plan data and update comprehensive_plan with action_plan
             progressiveResult.structured_plan = stepData;
             progressiveResult.components.plan = stepData;
+            
+            // Update comprehensive_plan with the action plan
+            if (progressiveResult.comprehensive_plan) {
+              progressiveResult.comprehensive_plan.action_plan = stepData;
+            }
             
             progressiveResult.processing_status = {
               stage: 'Generating',

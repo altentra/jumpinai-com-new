@@ -183,6 +183,7 @@ async function callXAI(
     .replace(/```\n?/g, '')
     .replace(/^[^{[]*/, '') // Remove any text before first { or [
     .replace(/[^}\]]*$/, '') // Remove any text after last } or ]
+    .replace(/,(\s*[}\]])/g, '$1') // Remove trailing commas before } or ]
     .trim();
   
   try {
@@ -193,13 +194,33 @@ async function callXAI(
     console.error(`JSON parse error for step ${step}:`, parseError);
     console.log('Failed content preview:', content.substring(0, 500));
     
+    // Try additional cleanup for common issues
+    try {
+      // Fix common XAI JSON issues
+      let fixed = content
+        .replace(/,(\s*[}\]])/g, '$1') // Remove trailing commas
+        .replace(/\n/g, ' ')           // Remove newlines within strings
+        .replace(/\r/g, '')            // Remove carriage returns
+        .replace(/\t/g, ' ')           // Replace tabs with spaces
+        .replace(/\s+/g, ' ')          // Normalize whitespace
+        .replace(/"\s*:\s*"/g, '":"')  // Normalize key-value spacing
+        .replace(/}\s*{/g, '},{');     // Fix adjacent objects
+      
+      const parsed = JSON.parse(fixed);
+      console.log(`Step ${step} fixed and parsed successfully`);
+      return parsed;
+    } catch (fixError) {
+      console.error('Fixed parsing also failed:', fixError);
+    }
+    
     // Try to extract JSON object from text
     const jsonMatch = content.match(/\{[\s\S]*\}|\[[\s\S]*\]/);
     if (jsonMatch) {
       try {
-        const extracted = JSON.parse(jsonMatch[0]);
+        let extracted = jsonMatch[0].replace(/,(\s*[}\]])/g, '$1');
+        const parsed = JSON.parse(extracted);
         console.log(`Step ${step} extracted and parsed successfully`);
-        return extracted;
+        return parsed;
       } catch (e) {
         console.error('Extraction also failed:', e);
       }
@@ -248,106 +269,55 @@ Examples of good names:
     case 2:
       // STEP 2: Strategic Overview - extract ALL context from goals & challenges
       return {
-        systemPrompt: `You are a senior strategy consultant and business analyst. From the user's goals and challenges alone, you will intelligently infer their full context and create a comprehensive strategic overview. Be perceptive and read between the lines.`,
-        userPrompt: `Deeply analyze this person's transformation journey from what they've shared:
+        systemPrompt: `You are a strategic consultant. Analyze the user's goals and challenges to create a clear strategic overview. Return ONLY valid JSON - no extra text.`,
+        userPrompt: `Analyze this transformation:
 
 ${baseContext}
 
-CRITICAL ANALYSIS & INFERENCE REQUIREMENTS:
-1. From their GOALS, infer: Industry/field (from context clues in their language), current role, desired outcome, scope of transformation, what success looks like
-2. From their CHALLENGES, deduce: Experience level (assume standard AI learning curve unless clear indicators suggest otherwise), resource constraints, urgency, specific blockers
-3. Apply sensible defaults when not explicitly stated:
-   - Timeline: As soon as realistically possible given the transformation scope
-   - Budget: Assume lean/efficient approach - prioritize free and cost-effective solutions unless goals clearly indicate premium resources available
-   - AI Experience: Assume standard learning curve - comfortable with technology but new to AI implementation
-   - Industry: Determine from language, terminology, and context in their goals and challenges
-4. Synthesize insights: Connect goals to challenges to understand the full picture and strategic needs
+Infer context intelligently:
+- Industry/role from goals and challenges
+- Experience: assume standard AI learning curve
+- Resources: assume lean approach with free/low-cost tools
+- Timeline: as soon as realistically possible
 
-FORMATTING REQUIREMENTS:
-- Use **bold** for key terms, numbers, and metrics
-- Use bullet points for lists
-- Keep paragraphs 2-4 sentences max
-- Make it scannable and actionable
-
-Return ONLY valid JSON:
+Return ONLY this JSON structure (ensure valid JSON, no trailing commas):
 {
-  "executiveSummary": "Write 3-4 well-structured paragraphs. Para 1: Current situation inferred from their goals & challenges, and transformation goal. Para 2: Core challenges and what's blocking them. Para 3: Strategic approach tailored to their inferred context. Para 4: Expected outcomes with realistic timeline and resource considerations inferred from their challenges. Use markdown for emphasis.",
-  
-  "situationAnalysis": {
-    "currentState": "3-4 sentences analyzing their current position inferred from goals & challenges, what's driving their transformation, and key constraints you can deduce. Use **bold** for critical points.",
-    "challenges": [
-      "Challenge 1: Primary obstacle from their input with inferred impact (1-2 sentences)",
-      "Challenge 2: Secondary challenge deduced from context with impact (1-2 sentences)",
-      "Challenge 3: Resource or knowledge constraint inferred from their situation (1-2 sentences)",
-      "Challenge 4: Additional challenge if relevant from their input (1-2 sentences)"
+  "executive_summary": "3 concise paragraphs: 1) Current situation and goals, 2) Core challenges, 3) Expected outcomes with timeline. Use **bold** for emphasis.",
+  "overview": {
+    "vision_statement": "Clear 2-3 sentence vision of success",
+    "transformation_scope": "2-3 sentences describing scope of change",
+    "expected_outcomes": [
+      "Specific measurable outcome 1",
+      "Specific measurable outcome 2",
+      "Specific measurable outcome 3"
     ],
-    "opportunities": [
-      "Opportunity 1: What they can leverage based on their goals and why (1-2 sentences)",
-      "Opportunity 2: Key advantage or strength inferred from their situation (1-2 sentences)",
-      "Opportunity 3: Market or timing opportunity relevant to their goals (1-2 sentences)",
-      "Opportunity 4: Additional opportunity if relevant to their transformation (1-2 sentences)"
-    ]
+    "timeline_overview": "2 sentences on realistic timeframes"
   },
-  
-  "strategicVision": "3-4 paragraphs painting a clear picture of their success based on their stated goals. Include specific outcomes relevant to their aspirations, lifestyle/work changes they're seeking, measurable impact aligned with their objectives, and transformation milestones. Use **bold** for key achievements and metrics. DO NOT include word counts.",
-  
-  "roadmap": {
-    "phase1": {
-      "name": "Clear name for foundation phase aligned with their goals",
-      "timeline": "Realistic timeline based on inferred urgency (e.g., 'Weeks 1-4' or 'Month 1')",
-      "milestones": [
-        "**Milestone 1**: Clear, measurable achievement relevant to their goals",
-        "**Milestone 2**: Clear, measurable achievement addressing their challenges",
-        "**Milestone 3**: Clear, measurable achievement building momentum"
+  "analysis": {
+    "current_state": {
+      "strengths": ["Strength 1", "Strength 2", "Strength 3"],
+      "weaknesses": ["Weakness 1", "Weakness 2", "Weakness 3"],
+      "opportunities": ["Opportunity 1", "Opportunity 2", "Opportunity 3"],
+      "threats": ["Threat 1", "Threat 2", "Threat 3"]
+    },
+    "gap_analysis": [
+      "Key gap 1",
+      "Key gap 2",
+      "Key gap 3"
+    ],
+    "readiness_assessment": {
+      "score": 7,
+      "factors": [
+        {"factor": "Motivation", "level": "High", "description": "Brief description"},
+        {"factor": "Resources", "level": "Medium", "description": "Brief description"},
+        {"factor": "Foundation", "level": "Medium", "description": "Brief description"}
       ]
     },
-    "phase2": {
-      "name": "Clear name for growth phase toward their objectives",
-      "timeline": "Realistic timeline continuing the journey",
-      "milestones": [
-        "**Milestone 1**: Clear, measurable achievement scaling their progress",
-        "**Milestone 2**: Clear, measurable achievement overcoming key obstacles",
-        "**Milestone 3**: Clear, measurable achievement approaching goals"
-      ]
-    },
-    "phase3": {
-      "name": "Clear name for mastery phase achieving their vision",
-      "timeline": "Realistic timeline to full transformation",
-      "milestones": [
-        "**Milestone 1**: Major achievement with metric aligned to goals",
-        "**Milestone 2**: Major achievement with metric delivering on vision",
-        "**Milestone 3**: Final success proof achieving stated objectives"
-      ]
-    }
-  },
-  
-  "keyObjectives": [
-    "**Objective 1**: Primary goal derived directly from their stated aspirations with clear outcome and realistic timeline",
-    "**Objective 2**: Second key objective addressing their main challenges with specifics",
-    "**Objective 3**: Third strategic objective supporting their transformation",
-    "**Objective 4**: Fourth important goal relevant to their context"
-  ],
-  
-  "successMetrics": [
-    "**KPI 1**: Specific metric aligned to their goals with realistic target and timeline",
-    "**KPI 2**: Measurable goal addressing their challenges with clear success criteria",
-    "**KPI 3**: Quantifiable metric relevant to their desired transformation",
-    "**KPI 4**: Success indicator with measurement method appropriate to their context"
-  ],
-  
-  "riskAssessment": {
-    "risks": [
-      "**Risk 1**: Potential obstacle inferred from their challenges with impact",
-      "**Risk 2**: Resource or timing risk deduced from their situation with impact",
-      "**Risk 3**: Implementation risk relevant to their goals with potential impact"
-    ],
-    "mitigations": [
-      "**Mitigation 1**: Practical strategy to address risk 1 with specific action steps",
-      "**Mitigation 2**: Realistic strategy to address risk 2 with concrete steps",
-      "**Mitigation 3**: Actionable strategy to address risk 3 with clear implementation"
-    ]
+    "market_context": "2 sentences on market conditions and trends"
   }
 }
+
+CRITICAL: Return ONLY the JSON object above. No markdown, no extra text. Ensure all strings are properly escaped. No trailing commas.
 
 IMPORTANT: Infer ALL context intelligently from the user's goals and challenges. Read between the lines to understand their industry, role, experience level, urgency, and resource constraints. Make realistic assumptions based on what they've shared. Focus on clarity, professional formatting, and deeply personalized, actionable content.`,
         expectedTokens: 8000
