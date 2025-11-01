@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { safeParseJSON } from '@/utils/safeJson';
+import ReactMarkdown from 'react-markdown';
 
 interface JumpPlanDisplayProps {
   planContent: string;
@@ -228,34 +229,41 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
             <div className="space-y-4">
               {Array.isArray(phase.steps) && phase.steps.length > 0 ? (
                 phase.steps.map((step: any, stepIndex: number) => (
-                  <Card key={stepIndex} className="group overflow-hidden border-primary/20 bg-gradient-to-br from-card to-primary/5 hover:border-primary/40 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 rounded-3xl">
+                  <Card key={stepIndex} className="group overflow-hidden border-2 border-primary/30 bg-gradient-to-br from-card via-card/95 to-primary/5 hover:border-primary/50 transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-primary/20 hover:-translate-y-1 rounded-[24px]">
                     <CardHeader className="pb-3">
                       <div className="flex items-start gap-4">
                         <div className="flex-shrink-0">
-                          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/30 to-primary/20 flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
-                            <span className="text-xl font-bold text-primary">
+                          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/40 via-primary/30 to-primary/20 flex flex-col items-center justify-center shadow-lg group-hover:shadow-xl group-hover:scale-105 transition-all duration-300">
+                            <span className="text-[10px] font-semibold text-primary/80 uppercase tracking-wider">Step</span>
+                            <span className="text-xl font-bold text-primary leading-none">
                               {stepIndex + 1}
                             </span>
                           </div>
                         </div>
                         <div className="flex-1 min-w-0">
                           <CardTitle className="text-lg font-semibold mb-1 group-hover:text-primary transition-colors">
-                            {step.title || step.action || `Step ${stepIndex + 1}`}
+                            <ReactMarkdown className="prose prose-sm max-w-none [&>p]:m-0 [&_strong]:font-bold [&_strong]:text-primary">
+                              {step.title || step.action || `Step ${stepIndex + 1}`}
+                            </ReactMarkdown>
                           </CardTitle>
                           {step.brief_description && (
-                            <p className="text-sm text-muted-foreground/90 font-medium">
-                              {step.brief_description}
-                            </p>
+                            <div className="text-sm text-muted-foreground/90 font-medium">
+                              <ReactMarkdown className="prose prose-sm max-w-none [&>p]:m-0 [&_strong]:font-bold">
+                                {step.brief_description}
+                              </ReactMarkdown>
+                            </div>
                           )}
                         </div>
                       </div>
                     </CardHeader>
                     <CardContent className="pt-0 pb-4">
-                      <p className="text-sm text-muted-foreground leading-relaxed ml-16">
-                        {step.description || step.details || 'No description available'}
-                      </p>
+                      <div className="text-sm text-muted-foreground leading-relaxed ml-[72px]">
+                        <ReactMarkdown className="prose prose-sm max-w-none [&>p]:mb-2 [&>p:last-child]:mb-0 [&_strong]:font-bold [&_strong]:text-foreground/90 [&_em]:italic">
+                          {step.description || step.details || 'No description available'}
+                        </ReactMarkdown>
+                      </div>
                       {step.tools_prompts && Array.isArray(step.tools_prompts) && step.tools_prompts.length > 0 && (
-                        <div className="mt-4 ml-16 space-y-2">
+                        <div className="mt-4 ml-[72px] space-y-2">
                           <p className="text-xs font-semibold text-primary uppercase tracking-wide">Recommended Tools:</p>
                           <div className="flex flex-wrap gap-2">
                             {step.tools_prompts.map((tool: string, toolIndex: number) => (
