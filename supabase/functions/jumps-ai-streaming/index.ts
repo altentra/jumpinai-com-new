@@ -7,14 +7,8 @@ const corsHeaders = {
 };
 
 interface StudioFormData {
-  currentRole: string;
-  industry: string;
-  experienceLevel: string;
-  aiKnowledge: string;
   goals: string;
   challenges: string;
-  timeCommitment: string;
-  budget: string;
 }
 
 serve(async (req) => {
@@ -216,152 +210,165 @@ async function callXAI(
 }
 
 function getStepPrompts(step: number, context: StudioFormData, overviewContent: string) {
-  // Build context from user input - NO hardcoded role
+  // Build context from user input - extract ALL insights from the 2 main fields
   const baseContext = `
-What they're working toward: ${context.goals || 'Not specified'}
-What's keeping them from getting there: ${context.challenges || 'Not specified'}
-Industry: ${context.industry || 'Not specified'}
-AI Experience: ${context.aiKnowledge || 'Not specified'}
-Urgency: ${context.timeCommitment || 'Not specified'}
-Budget: ${context.budget || 'Not specified'}
+USER'S GOALS AND ASPIRATIONS:
+${context.goals || 'Not specified'}
+
+USER'S CHALLENGES AND OBSTACLES:
+${context.challenges || 'Not specified'}
   `.trim();
 
   switch (step) {
     case 1:
-      // STEP 1: Quick name generation
+      // STEP 1: Quick name generation - extract insights from goals & challenges
       return {
-        systemPrompt: `You are a creative naming expert. First ANALYZE what the person is trying to achieve to understand their situation, then create an inspiring journey name.`,
-        userPrompt: `Read what this person is trying to achieve and understand their situation:
+        systemPrompt: `You are a creative naming expert and business analyst. From the user's goals and challenges, you will intelligently infer their context (industry, role, experience level, urgency) and create an inspiring journey name.`,
+        userPrompt: `Analyze this person's situation deeply from what they've shared:
 
 ${baseContext}
 
-Steps:
-1. Analyze their goals to understand their current role/situation
-2. Identify what transformation they're seeking
-3. Create an inspiring 3-5 word name that captures their journey
+Your task:
+1. From their GOALS, infer: What industry/field are they in? What's their likely role? What transformation do they seek?
+2. From their CHALLENGES, understand: What's blocking them? What's their experience level? How urgent is this?
+3. Create an inspiring, specific 3-5 word name that captures their unique transformation journey
 
 Return ONLY valid JSON:
 {
-  "jumpName": "3-5 word name reflecting THEIR specific transformation"
-}`,
+  "jumpName": "3-5 word name reflecting THEIR specific transformation journey"
+}
+
+Examples of good names:
+- "AI-Powered Content Creator Launch"
+- "Corporate to Consultant Transition"
+- "Scale Agency with AI Automation"`,
         expectedTokens: 500
       };
     
     case 2:
-      // STEP 2: Strategic Overview - HIGH QUALITY, WELL-FORMATTED
+      // STEP 2: Strategic Overview - extract ALL context from goals & challenges
       return {
-        systemPrompt: `You are a senior strategy consultant. Provide clear, actionable insights with excellent structure and formatting. Use markdown formatting for emphasis and clarity. Be professional yet concise.`,
-        userPrompt: `Analyze this transformation journey comprehensively:
+        systemPrompt: `You are a senior strategy consultant and business analyst. From the user's goals and challenges alone, you will intelligently infer their full context (industry, role, experience level, timeline, budget constraints) and create a comprehensive strategic overview. Be perceptive and read between the lines.`,
+        userPrompt: `Deeply analyze this person's transformation journey from what they've shared:
 
 ${baseContext}
+
+CRITICAL ANALYSIS REQUIREMENTS:
+1. From their GOALS, infer: Industry/field, current role, desired outcome, scope of transformation, what success looks like
+2. From their CHALLENGES, deduce: Experience level, resource constraints (time/budget), urgency, specific blockers, what they've tried before
+3. Synthesize insights: Connect goals to challenges to understand the full picture and strategic needs
 
 FORMATTING REQUIREMENTS:
 - Use **bold** for key terms, numbers, and metrics
 - Use bullet points for lists
-- Use clear section headers
 - Keep paragraphs 2-4 sentences max
-- Make it scannable and easy to read
+- Make it scannable and actionable
 
 Return ONLY valid JSON:
 {
-  "executiveSummary": "Write 3-4 well-structured paragraphs. Para 1: Current situation and transformation goal. Para 2: Core challenges. Para 3: Strategic approach. Para 4: Expected outcomes with timeline: ${context.timeCommitment} and budget: ${context.budget}. Use markdown for emphasis.",
+  "executiveSummary": "Write 3-4 well-structured paragraphs. Para 1: Current situation inferred from their goals & challenges, and transformation goal. Para 2: Core challenges and what's blocking them. Para 3: Strategic approach tailored to their inferred context. Para 4: Expected outcomes with realistic timeline and resource considerations inferred from their challenges. Use markdown for emphasis.",
   
   "situationAnalysis": {
-    "currentState": "3-4 sentences analyzing their current position, what's driving change, and key constraints. Use **bold** for critical points.",
+    "currentState": "3-4 sentences analyzing their current position inferred from goals & challenges, what's driving their transformation, and key constraints you can deduce. Use **bold** for critical points.",
     "challenges": [
-      "Challenge 1: Clear description with impact (1-2 sentences)",
-      "Challenge 2: Clear description with impact (1-2 sentences)",
-      "Challenge 3: Clear description with impact (1-2 sentences)",
-      "Challenge 4: Additional challenge if relevant (1-2 sentences)"
+      "Challenge 1: Primary obstacle from their input with inferred impact (1-2 sentences)",
+      "Challenge 2: Secondary challenge deduced from context with impact (1-2 sentences)",
+      "Challenge 3: Resource or knowledge constraint inferred from their situation (1-2 sentences)",
+      "Challenge 4: Additional challenge if relevant from their input (1-2 sentences)"
     ],
     "opportunities": [
-      "Opportunity 1: What they can leverage and why (1-2 sentences)",
-      "Opportunity 2: Key advantage with context (1-2 sentences)",
-      "Opportunity 3: Strategic opportunity (1-2 sentences)",
-      "Opportunity 4: Additional opportunity if relevant (1-2 sentences)"
+      "Opportunity 1: What they can leverage based on their goals and why (1-2 sentences)",
+      "Opportunity 2: Key advantage or strength inferred from their situation (1-2 sentences)",
+      "Opportunity 3: Market or timing opportunity relevant to their goals (1-2 sentences)",
+      "Opportunity 4: Additional opportunity if relevant to their transformation (1-2 sentences)"
     ]
   },
   
-  "strategicVision": "3-4 paragraphs painting a clear picture of success. Include specific outcomes, lifestyle changes, measurable impact, and transformation milestones. Use **bold** for key achievements and metrics. DO NOT include word counts.",
+  "strategicVision": "3-4 paragraphs painting a clear picture of their success based on their stated goals. Include specific outcomes relevant to their aspirations, lifestyle/work changes they're seeking, measurable impact aligned with their objectives, and transformation milestones. Use **bold** for key achievements and metrics. DO NOT include word counts.",
   
   "roadmap": {
     "phase1": {
-      "name": "Clear name for foundation phase",
-      "timeline": "Specific timeline (e.g., 'Weeks 1-4')",
+      "name": "Clear name for foundation phase aligned with their goals",
+      "timeline": "Realistic timeline based on inferred urgency (e.g., 'Weeks 1-4' or 'Month 1')",
       "milestones": [
-        "**Milestone 1**: Clear, measurable achievement",
-        "**Milestone 2**: Clear, measurable achievement",
-        "**Milestone 3**: Clear, measurable achievement"
+        "**Milestone 1**: Clear, measurable achievement relevant to their goals",
+        "**Milestone 2**: Clear, measurable achievement addressing their challenges",
+        "**Milestone 3**: Clear, measurable achievement building momentum"
       ]
     },
     "phase2": {
-      "name": "Clear name for growth phase",
-      "timeline": "Specific timeline",
+      "name": "Clear name for growth phase toward their objectives",
+      "timeline": "Realistic timeline continuing the journey",
       "milestones": [
-        "**Milestone 1**: Clear, measurable achievement",
-        "**Milestone 2**: Clear, measurable achievement",
-        "**Milestone 3**: Clear, measurable achievement"
+        "**Milestone 1**: Clear, measurable achievement scaling their progress",
+        "**Milestone 2**: Clear, measurable achievement overcoming key obstacles",
+        "**Milestone 3**: Clear, measurable achievement approaching goals"
       ]
     },
     "phase3": {
-      "name": "Clear name for mastery phase",
-      "timeline": "Specific timeline",
+      "name": "Clear name for mastery phase achieving their vision",
+      "timeline": "Realistic timeline to full transformation",
       "milestones": [
-        "**Milestone 1**: Major achievement with metric",
-        "**Milestone 2**: Major achievement with metric",
-        "**Milestone 3**: Final success proof"
+        "**Milestone 1**: Major achievement with metric aligned to goals",
+        "**Milestone 2**: Major achievement with metric delivering on vision",
+        "**Milestone 3**: Final success proof achieving stated objectives"
       ]
     }
   },
   
   "keyObjectives": [
-    "**Objective 1**: Primary goal with clear outcome and timeline",
-    "**Objective 2**: Second key objective with specifics",
-    "**Objective 3**: Third strategic objective",
-    "**Objective 4**: Fourth important goal"
+    "**Objective 1**: Primary goal derived directly from their stated aspirations with clear outcome and realistic timeline",
+    "**Objective 2**: Second key objective addressing their main challenges with specifics",
+    "**Objective 3**: Third strategic objective supporting their transformation",
+    "**Objective 4**: Fourth important goal relevant to their context"
   ],
   
   "successMetrics": [
-    "**KPI 1**: Specific metric with target (e.g., '**Generate $5K/month** by month 3')",
-    "**KPI 2**: Another measurable goal with timeline",
-    "**KPI 3**: Third quantifiable metric with clear benchmark",
-    "**KPI 4**: Fourth success indicator with measurement method"
+    "**KPI 1**: Specific metric aligned to their goals with realistic target and timeline",
+    "**KPI 2**: Measurable goal addressing their challenges with clear success criteria",
+    "**KPI 3**: Quantifiable metric relevant to their desired transformation",
+    "**KPI 4**: Success indicator with measurement method appropriate to their context"
   ],
   
   "riskAssessment": {
     "risks": [
-      "**Risk 1**: Description with potential impact",
-      "**Risk 2**: Description with potential impact",
-      "**Risk 3**: Description with potential impact"
+      "**Risk 1**: Potential obstacle inferred from their challenges with impact",
+      "**Risk 2**: Resource or timing risk deduced from their situation with impact",
+      "**Risk 3**: Implementation risk relevant to their goals with potential impact"
     ],
     "mitigations": [
-      "**Mitigation 1**: Strategy to address risk 1 with action steps",
-      "**Mitigation 2**: Strategy to address risk 2 with action steps",
-      "**Mitigation 3**: Strategy to address risk 3 with action steps"
+      "**Mitigation 1**: Practical strategy to address risk 1 with specific action steps",
+      "**Mitigation 2**: Realistic strategy to address risk 2 with concrete steps",
+      "**Mitigation 3**: Actionable strategy to address risk 3 with clear implementation"
     ]
   }
 }
 
-Focus on clarity, professional formatting, and actionable content.`,
+IMPORTANT: Infer ALL context intelligently from the user's goals and challenges. Read between the lines to understand their industry, role, experience level, urgency, and resource constraints. Make realistic assumptions based on what they've shared. Focus on clarity, professional formatting, and deeply personalized, actionable content.`,
         expectedTokens: 8000
       };
 
     case 3:
-      // STEP 3: Action Plan - WORLD-CLASS DETAILED EXECUTION ROADMAP
+      // STEP 3: Action Plan - infer context and create detailed execution roadmap
       return {
-        systemPrompt: `You are a world-class execution strategist and business advisor. Create exceptionally detailed, actionable implementation plans with professional formatting. Use **bold** markdown strategically to highlight critical information. Your plans should inspire confidence and provide crystal-clear guidance.`,
-        userPrompt: `Create a comprehensive, world-class action plan for transformation:
+        systemPrompt: `You are a world-class execution strategist and business analyst. From the user's goals and challenges, intelligently infer their full context (industry, role, experience, resources, urgency) and create an exceptionally detailed, personalized implementation plan. Use **bold** markdown strategically. Your plans should inspire confidence through specificity and relevance.`,
+        userPrompt: `Create a comprehensive, deeply personalized action plan for this transformation:
 
 ${baseContext}
 
-Overview Context:
+Overview Context (already analyzed):
 ${overviewContent}
 
-CRITICAL REQUIREMENTS:
+CONTEXT INFERENCE REQUIREMENTS:
+1. From GOALS: Understand their industry, desired outcomes, scope, what success means to them
+2. From CHALLENGES: Deduce experience level, resource constraints (time/money), urgency, specific blockers
+3. Create plan that addresses THEIR specific situation, not generic advice
+
+FORMATTING REQUIREMENTS:
 1. Use **bold** markdown for ALL key terms, actions, deliverables, and metrics
-2. Provide specific, actionable steps with clear outcomes
-3. Include realistic timelines and effort estimates
-4. Make every action measurable and verifiable
+2. Provide specific, actionable steps directly relevant to their goals
+3. Include realistic timelines based on inferred urgency and resources
+4. Make every action measurable and tailored to their challenges
 5. Ensure professional, executive-level quality throughout
 6. **IMPORTANT**: Include tool references in key_actions - reference "Tool #1-3" for Phase 1 actions, "Tool #4-6" for Phase 2 actions, and "Tool #7-9" for Phase 3 actions where relevant. These will link to the AI tool+prompt combos generated later.
 
@@ -633,12 +640,12 @@ Create world-class, executive-level content that inspires action and provides cr
       };
 
     case 4:
-      // STEP 4: Tools & Prompts
+      // STEP 4: Tools & Prompts - infer all context from goals & challenges
       return {
-        systemPrompt: `You are an AI tool recommendation and prompt engineering expert with real-time knowledge of the latest AI tools and technologies as of October 24, 2025.
+        systemPrompt: `You are an AI tool recommendation and prompt engineering expert with real-time knowledge of the latest AI tools and technologies as of October 24, 2025. You will analyze the user's goals and challenges to intelligently infer their industry, experience level, budget constraints, and urgency to recommend perfectly tailored tool+prompt combinations.
 
 CRITICAL: TOOL SELECTION & DIVERSITY REQUIREMENTS:
-1. Generate exactly 9 tool + prompt combinations (increased from 6)
+1. Generate exactly 9 tool + prompt combinations
 2. MUST use at least 6 DIFFERENT tools across the 9 combos
 3. Only repeat a tool if it's genuinely optimal for distinct use cases
 4. Strategic mix required:
@@ -661,26 +668,32 @@ CRITICAL: PHASE ALIGNMENT:
 - Phase 2 (Combos 4-6): Growth tools - content creation, automation, scaling
 - Phase 3 (Combos 7-9): Mastery tools - optimization, analytics, advanced features
 
-Analyze what the person is trying to achieve to understand their situation, then create tailored tool+prompt combos.`,
-        userPrompt: `Create 9 tool+prompt combinations with diversity and phase alignment:
+CRITICAL: CONTEXT INFERENCE:
+- From GOALS: Infer their industry, desired tools/capabilities, complexity needs
+- From CHALLENGES: Deduce their experience level, budget sensitivity, time constraints`,
+        userPrompt: `Create 9 deeply personalized tool+prompt combinations with diversity and phase alignment:
 
 ${baseContext}
 
-Overview Context:
+Overview Context (already analyzed):
 ${overviewContent}
 
-CRITICAL INSTRUCTIONS:
-1. Understand their situation from what they're trying to achieve
-2. Each combo must solve what's preventing them
-3. Fit their budget: ${context.budget}
-4. Match AI experience: ${context.aiKnowledge}
-5. Work with urgency: ${context.timeCommitment}
-6. MUST use at least 6 DIFFERENT tools across the 9 combos
-7. Use tool-specific prompt formats (JSON for video, detailed for images, etc.)
-8. Align 3 combos per phase (foundation/growth/mastery)
-9. Recommend latest October 2025 tools when appropriate
+CRITICAL ANALYSIS & INFERENCE:
+1. From GOALS, understand: What industry are they in? What tools would best serve their objectives? What complexity level is appropriate?
+2. From CHALLENGES, deduce: What's their AI experience level? What budget constraints exist? How urgent is their timeline?
+3. Tailor EVERYTHING: tool complexity, budget appropriateness, time-to-value, learning curve
 
-DO NOT use generic roles. Tailor to THEIR specific situation.
+REQUIREMENTS:
+1. Each combo must directly address their goals and overcome their challenges
+2. Recommend tools appropriate to their inferred budget level (free/affordable if challenges suggest constraints, premium if goals indicate resources)
+3. Match complexity to their inferred AI experience (beginner-friendly if challenges suggest inexperience, advanced if goals indicate sophistication)
+4. Consider their inferred urgency (quick-win tools if challenges suggest time pressure, comprehensive tools if goals indicate patient building)
+5. MUST use at least 6 DIFFERENT tools across the 9 combos
+6. Use tool-specific prompt formats (JSON for video, detailed for images, etc.)
+7. Align 3 combos per phase (foundation/growth/mastery)
+8. Recommend latest October 2025 tools when appropriate
+
+DO NOT use generic content. Every word should reflect THEIR specific situation inferred from their input.
 
 EXAMPLE of proper format-specific prompts:
 - JSON (for video tools): {"scene": "sunset over mountains", "duration": 5, "style": "cinematic", "mood": "peaceful"}
@@ -692,32 +705,32 @@ Return ONLY valid JSON:
 {
   "tool_prompts": [
     {
-      "title": "Use case for their situation",
-      "description": "How this helps them achieve their goals and overcome obstacles",
-      "category": "Relevant category",
-      "tool_name": "Specific tool",
+      "title": "Specific use case directly from their stated goals",
+      "description": "How this helps them achieve their specific goals and overcome their stated obstacles",
+      "category": "Category relevant to their inferred industry/field",
+      "tool_name": "Specific tool appropriate to their inferred budget and experience",
       "tool_url": "https://url.com",
       "tool_type": "Tool type",
-      "prompt_text": "200-300 word ready-to-copy prompt in the appropriate format for this tool. Tailored to what they're trying to achieve. Reference what's preventing them. Include industry: ${context.industry}.",
+      "prompt_text": "200-300 word ready-to-copy prompt in the appropriate format for this tool. Deeply tailored to their stated goals. Directly addresses their challenges. References their specific situation inferred from input.",
       "prompt_format": "json|detailed_descriptive|structured_requirements|conversational",
-      "prompt_instructions": "Steps for THEIR use case, including format-specific guidance",
-      "when_to_use": "When in their journey",
-      "why_this_combo": "Why perfect for their situation",
+      "prompt_instructions": "Step-by-step guidance for THEIR specific use case, considering their inferred experience level, including format-specific guidance",
+      "when_to_use": "When in their specific transformation journey based on their goals",
+      "why_this_combo": "Why perfect for their unique situation, goals, and challenges",
       "alternatives": [
-        {"tool": "Alt", "url": "url", "note": "Why for them"},
-        {"tool": "Alt", "url": "url", "note": "Why for them"}
+        {"tool": "Alternative", "url": "url", "note": "Why appropriate for their context and constraints"},
+        {"tool": "Alternative", "url": "url", "note": "Why fits their budget/experience/urgency"}
       ],
-      "use_cases": ["For their situation", "For their goal", "For their challenge"],
-      "tags": ["relevant-tags"],
-      "difficulty_level": "${context.aiKnowledge}",
-      "setup_time": "Fits ${context.timeCommitment}",
-      "cost_estimate": "Within ${context.budget}",
+      "use_cases": ["For their specific goal #1", "For their goal #2", "To overcome their challenge"],
+      "tags": ["tags-relevant-to-their-inferred-industry"],
+      "difficulty_level": "Appropriate to their inferred AI experience",
+      "setup_time": "Realistic for their inferred time constraints and urgency",
+      "cost_estimate": "Appropriate to their inferred budget constraints",
       "phase": 1|2|3
     }
   ]
 }
 
-Generate EXACTLY 9 combos tailored to THEIR input with diversity and phase alignment.`,
+Generate EXACTLY 9 combos deeply tailored to THEIR specific situation inferred from goals & challenges, with diversity and phase alignment.`,
         expectedTokens: 50000
       };
 
