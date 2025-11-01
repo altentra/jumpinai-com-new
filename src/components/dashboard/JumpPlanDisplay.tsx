@@ -200,9 +200,9 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
           <CardHeader className="pb-4 bg-gradient-to-r from-primary/15 via-primary/10 to-primary/5 border-b border-primary/20">
             <div className="flex items-start gap-4">
               <div className="flex-shrink-0">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-600 flex flex-col items-center justify-center shadow-lg border-2 border-slate-400 dark:border-slate-500">
-                  <span className="text-[10px] font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">Phase</span>
-                  <span className="text-2xl font-bold text-slate-700 dark:text-slate-200 leading-none mt-0.5">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600 flex flex-col items-center justify-center shadow-lg border-2 border-gray-400 dark:border-gray-500">
+                  <span className="text-[10px] font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Phase</span>
+                  <span className="text-2xl font-bold text-gray-800 dark:text-gray-100 leading-none mt-0.5">
                     {phase.phase_number || phaseIndex + 1}
                   </span>
                 </div>
