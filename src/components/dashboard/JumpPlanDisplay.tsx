@@ -1,11 +1,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Download, Edit, Sparkles } from 'lucide-react';
-import { formatAIText } from '@/utils/aiTextFormatter';
 import { safeParseJSON } from '@/utils/safeJson';
-import ComprehensiveJumpDisplay from './ComprehensiveJumpDisplay';
 
 interface JumpPlanDisplayProps {
   planContent: string;
@@ -182,76 +178,104 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
     return null;
   }
 
-const candidate = React.useMemo(() => {
-  const parsedStructured = typeof structuredPlan === 'string' ? safeParseJSON(structuredPlan) : structuredPlan;
-  return parsedStructured || safeParseJSON(planContent);
-}, [structuredPlan, planContent]);
-const comprehensivePlan = React.useMemo(() => candidate ? normalizeToComprehensive(candidate) : null, [candidate]);
-const enhancedContent = React.useMemo(() => formatAIText(planContent), [planContent]);
-const finalPlan = React.useMemo(() => {
-  if (comprehensivePlan) return comprehensivePlan;
-  const fallback = buildDefaultPlan();
+  const candidate = React.useMemo(() => {
+    const parsedStructured = typeof structuredPlan === 'string' ? safeParseJSON(structuredPlan) : structuredPlan;
+    return parsedStructured || safeParseJSON(planContent);
+  }, [structuredPlan, planContent]);
+  
+  const comprehensivePlan = React.useMemo(() => candidate ? normalizeToComprehensive(candidate) : null, [candidate]);
+  
+  const finalPlan = React.useMemo(() => {
+    if (comprehensivePlan) return comprehensivePlan;
+    return buildDefaultPlan();
+  }, [comprehensivePlan]);
 
-  // Avoid dumping raw JSON into the executive summary if parsing failed
-  const isJSONish = typeof planContent === 'string'
-    && /[{\[][\s\S]*[}\]]/.test(planContent)
-    && /"title"|"overview"|"action_plan"|"metrics_tracking"/.test(planContent);
-
-  if (planContent && planContent.trim() && !isJSONish) {
-    const text = enhancedContent.replace(/[#>*`]/g, '').trim();
-    fallback.executiveSummary = text;
-  }
-  return fallback;
-}, [comprehensivePlan, planContent, enhancedContent]);
+  const phases = finalPlan?.action_plan?.phases || [];
 
   return (
-    <Card className="w-full bg-gradient-to-br from-card/95 to-primary/5 border-primary/20 shadow-2xl shadow-primary/10 backdrop-blur-xl rounded-3xl overflow-hidden">
-      <CardHeader className="pb-6 bg-gradient-to-r from-primary/10 via-secondary/5 to-primary/5 backdrop-blur-sm border-b border-primary/20">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="p-3 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/10 backdrop-blur-sm shadow-lg">
-              <Sparkles className="h-6 w-6 text-primary" />
+    <div className="w-full space-y-8">
+      {phases.map((phase: any, phaseIndex: number) => (
+        <Card key={phaseIndex} className="overflow-hidden border-primary/20 bg-gradient-to-br from-card/95 to-primary/5 shadow-xl rounded-3xl backdrop-blur-sm">
+          <CardHeader className="pb-4 bg-gradient-to-r from-primary/15 via-primary/10 to-primary/5 border-b border-primary/20">
+            <div className="flex items-start gap-4">
+              <div className="flex-shrink-0">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center shadow-lg shadow-primary/30">
+                  <span className="text-2xl font-bold text-primary-foreground">
+                    {phase.phase_number || phaseIndex + 1}
+                  </span>
+                </div>
+              </div>
+              <div className="flex-1 min-w-0">
+                <CardTitle className="text-2xl font-bold mb-2 bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">
+                  {phase.title || `Phase ${phaseIndex + 1}`}
+                </CardTitle>
+                {phase.description && (
+                  <p className="text-muted-foreground leading-relaxed">
+                    {phase.description}
+                  </p>
+                )}
+                {phase.duration && (
+                  <div className="flex items-center gap-2 mt-3">
+                    <Badge variant="secondary" className="bg-primary/20 text-primary border-primary/30 rounded-full">
+                      Duration: {phase.duration}
+                    </Badge>
+                  </div>
+                )}
+              </div>
             </div>
-            <div>
-              <CardTitle className="text-2xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">Your AI-Generated Jump Plan</CardTitle>
-              <p className="text-sm text-muted-foreground mt-1">
-                Your personalized transformation roadmap
-              </p>
+          </CardHeader>
+          <CardContent className="p-6">
+            <div className="space-y-4">
+              {Array.isArray(phase.steps) && phase.steps.length > 0 ? (
+                phase.steps.map((step: any, stepIndex: number) => (
+                  <Card key={stepIndex} className="group overflow-hidden border-primary/20 bg-gradient-to-br from-card to-primary/5 hover:border-primary/40 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 rounded-3xl">
+                    <CardHeader className="pb-3">
+                      <div className="flex items-start gap-4">
+                        <div className="flex-shrink-0">
+                          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/30 to-primary/20 flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
+                            <span className="text-xl font-bold text-primary">
+                              {stepIndex + 1}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <CardTitle className="text-lg font-semibold mb-1 group-hover:text-primary transition-colors">
+                            {step.title || step.action || `Step ${stepIndex + 1}`}
+                          </CardTitle>
+                          {step.brief_description && (
+                            <p className="text-sm text-muted-foreground/90 font-medium">
+                              {step.brief_description}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="pt-0 pb-4">
+                      <p className="text-sm text-muted-foreground leading-relaxed ml-16">
+                        {step.description || step.details || 'No description available'}
+                      </p>
+                      {step.tools_prompts && Array.isArray(step.tools_prompts) && step.tools_prompts.length > 0 && (
+                        <div className="mt-4 ml-16 space-y-2">
+                          <p className="text-xs font-semibold text-primary uppercase tracking-wide">Recommended Tools:</p>
+                          <div className="flex flex-wrap gap-2">
+                            {step.tools_prompts.map((tool: string, toolIndex: number) => (
+                              <Badge key={toolIndex} variant="outline" className="text-xs border-primary/30 bg-primary/10">
+                                {tool}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                ))
+              ) : (
+                <p className="text-muted-foreground text-center py-8">No steps defined for this phase</p>
+              )}
             </div>
-          </div>
-          <Badge variant="secondary" className="bg-primary/20 text-primary border-primary/30 rounded-full px-4 py-1 shadow-sm">
-            Generated by AI
-          </Badge>
-        </div>
-        <div className="flex gap-3 mt-6">
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={onDownload}
-            className="gap-2 rounded-2xl border-primary/30 hover:bg-primary/10 hover:border-primary/40 transition-all duration-300 hover:scale-105"
-          >
-            <Download className="h-4 w-4" />
-            Download Plan
-          </Button>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={onEdit}
-            className="gap-2 rounded-2xl border-primary/30 hover:bg-primary/10 hover:border-primary/40 transition-all duration-300 hover:scale-105"
-          >
-            <Edit className="h-4 w-4" />
-            Refine with Chat
-          </Button>
-        </div>
-      </CardHeader>
-      <CardContent className="p-0">
-        <ComprehensiveJumpDisplay 
-          jump={finalPlan}
-          onEdit={onEdit}
-          onDownload={onDownload}
-          className="border-0 shadow-none rounded-none"
-        />
-      </CardContent>
-    </Card>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
   );
 }
