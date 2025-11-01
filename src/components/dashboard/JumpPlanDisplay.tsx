@@ -324,39 +324,44 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
                         const comboIndex = getToolPromptComboIndex(phaseIndex, stepIndex);
                         if (comboIndex === null) return null;
                         
-                        // Show placeholder if jumpId or toolPromptIds are not available yet
-                        if (!jumpId || !toolPromptIds || !toolPromptIds[comboIndex]) {
-                          console.log(`⚠️ Missing data for combo ${comboIndex + 1}:`, { jumpId, toolPromptIdsLength: toolPromptIds?.length });
-                          return null;
-                        }
+                        const hasToolPrompt = jumpId && toolPromptIds && toolPromptIds[comboIndex];
                         
                         return (
                           <div className="mt-4 ml-[72px]">
-                            <div className="p-4 rounded-xl border-2 border-primary/30 bg-gradient-to-br from-primary/5 via-primary/10 to-accent/5 backdrop-blur-sm">
+                            <div className={`p-4 rounded-xl border-2 ${hasToolPrompt ? 'border-primary/30 bg-gradient-to-br from-primary/5 via-primary/10 to-accent/5' : 'border-muted-foreground/20 bg-muted/20'} backdrop-blur-sm animate-fade-in`}>
                               <div className="flex items-center justify-between gap-3">
                                 <div className="flex items-start gap-2 flex-1">
-                                  <Sparkles className="w-4 h-4 text-primary mt-1 shrink-0" />
+                                  <Sparkles className={`w-4 h-4 mt-1 shrink-0 ${hasToolPrompt ? 'text-primary' : 'text-muted-foreground'}`} />
                                   <div className="space-y-1">
-                                    <p className="text-xs font-bold text-primary uppercase tracking-wide">
+                                    <p className={`text-xs font-bold uppercase tracking-wide ${hasToolPrompt ? 'text-primary' : 'text-muted-foreground'}`}>
                                       Tools & Prompts for this Step
                                     </p>
                                     <p className="text-xs text-muted-foreground leading-relaxed">
-                                      We've created a custom AI tool & ready-to-use prompt specifically for this step
+                                      {hasToolPrompt 
+                                        ? "We've created a custom AI tool & ready-to-use prompt specifically for this step"
+                                        : "Custom tool & prompt combo will be available once generation completes"
+                                      }
                                     </p>
                                   </div>
                                 </div>
-                                <Button
-                                  size="sm"
-                                  variant="default"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleToolPromptClick(comboIndex);
-                                  }}
-                                  className="shrink-0 gap-2 bg-primary hover:bg-primary/90 shadow-lg hover:shadow-xl transition-all"
-                                >
-                                  View Combo #{comboIndex + 1}
-                                  <ExternalLink className="w-3 h-3" />
-                                </Button>
+                                {hasToolPrompt ? (
+                                  <Button
+                                    size="sm"
+                                    variant="default"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleToolPromptClick(comboIndex);
+                                    }}
+                                    className="shrink-0 gap-2 bg-primary hover:bg-primary/90 shadow-lg hover:shadow-xl transition-all"
+                                  >
+                                    View Combo #{comboIndex + 1}
+                                    <ExternalLink className="w-3 h-3" />
+                                  </Button>
+                                ) : (
+                                  <Badge variant="outline" className="shrink-0 text-xs border-muted-foreground/30 text-muted-foreground">
+                                    Combo #{comboIndex + 1}
+                                  </Badge>
+                                )}
                               </div>
                             </div>
                           </div>
