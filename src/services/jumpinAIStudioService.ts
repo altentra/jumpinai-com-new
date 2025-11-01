@@ -134,49 +134,46 @@ export const jumpinAIStudioService = {
               } else if (type === 'overview') {
                 console.log('📋 Processing overview data:', data);
                 result.comprehensivePlan = {
-                  executive_summary: data.executive_summary || '',
-                  overview: data.overview || {},
-                  analysis: data.analysis || {},
+                  executiveSummary: data.executiveSummary || '',
+                  situationAnalysis: data.situationAnalysis || {},
+                  strategicVision: data.strategicVision || '',
+                  roadmap: data.roadmap || {},
+                  successFactors: data.successFactors || [],
+                  riskMitigation: data.riskMitigation || [],
                   action_plan: { phases: [] } // Will be filled by plan step
                 };
                 
                 let overviewText = '';
-                if (data.executive_summary) {
-                  overviewText += `## Executive Summary\n\n${data.executive_summary}\n\n`;
+                if (data.executiveSummary) {
+                  overviewText += `## Executive Summary\n\n${data.executiveSummary}\n\n`;
                 }
-                if (data.overview) {
-                  if (data.overview.vision_statement) {
-                    overviewText += `## Vision\n\n${data.overview.vision_statement}\n\n`;
+                if (data.situationAnalysis) {
+                  if (data.situationAnalysis.currentState) {
+                    overviewText += `## Current State\n\n${data.situationAnalysis.currentState}\n\n`;
                   }
-                  if (data.overview.transformation_scope) {
-                    overviewText += `## Transformation Scope\n\n${data.overview.transformation_scope}\n\n`;
-                  }
-                  if (data.overview.expected_outcomes?.length) {
-                    overviewText += `## Expected Outcomes\n\n`;
-                    data.overview.expected_outcomes.forEach((o: string) => {
-                      overviewText += `- ${o}\n`;
+                  if (data.situationAnalysis.challenges?.length) {
+                    overviewText += `## Challenges\n`;
+                    data.situationAnalysis.challenges.forEach((c: string) => {
+                      overviewText += `- ${c}\n`;
                     });
                     overviewText += '\n';
                   }
-                  if (data.overview.timeline_overview) {
-                    overviewText += `## Timeline\n\n${data.overview.timeline_overview}\n\n`;
-                  }
-                }
-                if (data.analysis?.current_state) {
-                  if (data.analysis.current_state.strengths?.length) {
-                    overviewText += `## Strengths\n`;
-                    data.analysis.current_state.strengths.forEach((s: string) => {
-                      overviewText += `- ${s}\n`;
-                    });
-                    overviewText += '\n';
-                  }
-                  if (data.analysis.current_state.opportunities?.length) {
+                  if (data.situationAnalysis.opportunities?.length) {
                     overviewText += `## Opportunities\n`;
-                    data.analysis.current_state.opportunities.forEach((o: string) => {
+                    data.situationAnalysis.opportunities.forEach((o: string) => {
                       overviewText += `- ${o}\n`;
                     });
                     overviewText += '\n';
                   }
+                }
+                if (data.strategicVision) {
+                  overviewText += `## Strategic Vision\n\n${data.strategicVision}\n\n`;
+                }
+                if (data.roadmap) {
+                  overviewText += `## Roadmap\n\n`;
+                  if (data.roadmap.immediate) overviewText += `**Immediate (0-30 days):** ${data.roadmap.immediate}\n\n`;
+                  if (data.roadmap.shortTerm) overviewText += `**Short-term (30-90 days):** ${data.roadmap.shortTerm}\n\n`;
+                  if (data.roadmap.longTerm) overviewText += `**Long-term (90+ days):** ${data.roadmap.longTerm}\n\n`;
                 }
                 
                 result.fullContent = overviewText.trim();

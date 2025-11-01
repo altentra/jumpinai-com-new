@@ -267,59 +267,30 @@ Examples of good names:
       };
     
     case 2:
-      // STEP 2: Strategic Overview - extract ALL context from goals & challenges
+      // STEP 2: Strategic Overview - ORIGINAL working format
       return {
-        systemPrompt: `You are a strategic consultant. Analyze the user's goals and challenges to create a clear strategic overview. Return ONLY valid JSON - no extra text.`,
-        userPrompt: `Analyze this transformation:
+        systemPrompt: `You are a strategic consultant creating comprehensive transformation plans. Return ONLY valid JSON.`,
+        userPrompt: `Create a strategic overview for:
 
 ${baseContext}
 
-Infer context intelligently:
-- Industry/role from goals and challenges
-- Experience: assume standard AI learning curve
-- Resources: assume lean approach with free/low-cost tools
-- Timeline: as soon as realistically possible
-
-Return ONLY this JSON structure (ensure valid JSON, no trailing commas):
+Return ONLY this JSON (no markdown, no extra text):
 {
-  "executive_summary": "3 concise paragraphs: 1) Current situation and goals, 2) Core challenges, 3) Expected outcomes with timeline. Use **bold** for emphasis.",
-  "overview": {
-    "vision_statement": "Clear 2-3 sentence vision of success",
-    "transformation_scope": "2-3 sentences describing scope of change",
-    "expected_outcomes": [
-      "Specific measurable outcome 1",
-      "Specific measurable outcome 2",
-      "Specific measurable outcome 3"
-    ],
-    "timeline_overview": "2 sentences on realistic timeframes"
+  "executiveSummary": "3-4 detailed paragraphs covering: current situation, goals, challenges, and expected transformation outcome",
+  "situationAnalysis": {
+    "currentState": "Detailed analysis of where they are now",
+    "challenges": ["Challenge 1", "Challenge 2", "Challenge 3"],
+    "opportunities": ["Opportunity 1", "Opportunity 2", "Opportunity 3"]
   },
-  "analysis": {
-    "current_state": {
-      "strengths": ["Strength 1", "Strength 2", "Strength 3"],
-      "weaknesses": ["Weakness 1", "Weakness 2", "Weakness 3"],
-      "opportunities": ["Opportunity 1", "Opportunity 2", "Opportunity 3"],
-      "threats": ["Threat 1", "Threat 2", "Threat 3"]
-    },
-    "gap_analysis": [
-      "Key gap 1",
-      "Key gap 2",
-      "Key gap 3"
-    ],
-    "readiness_assessment": {
-      "score": 7,
-      "factors": [
-        {"factor": "Motivation", "level": "High", "description": "Brief description"},
-        {"factor": "Resources", "level": "Medium", "description": "Brief description"},
-        {"factor": "Foundation", "level": "Medium", "description": "Brief description"}
-      ]
-    },
-    "market_context": "2 sentences on market conditions and trends"
-  }
-}
-
-CRITICAL: Return ONLY the JSON object above. No markdown, no extra text. Ensure all strings are properly escaped. No trailing commas.
-
-IMPORTANT: Infer ALL context intelligently from the user's goals and challenges. Read between the lines to understand their industry, role, experience level, urgency, and resource constraints. Make realistic assumptions based on what they've shared. Focus on clarity, professional formatting, and deeply personalized, actionable content.`,
+  "strategicVision": "Clear vision of success with specific outcomes",
+  "roadmap": {
+    "immediate": "First 30 days actions",
+    "shortTerm": "30-90 days milestones",  
+    "longTerm": "90+ days goals"
+  },
+  "successFactors": ["Factor 1", "Factor 2", "Factor 3"],
+  "riskMitigation": ["Risk 1 and mitigation", "Risk 2 and mitigation"]
+}`,
         expectedTokens: 8000
       };
 

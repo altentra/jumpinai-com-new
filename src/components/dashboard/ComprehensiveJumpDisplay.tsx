@@ -28,27 +28,20 @@ import remarkGfm from 'remark-gfm';
 
 interface ComprehensiveJump {
   title: string;
-  executive_summary: string;
-  overview: {
-    vision_statement: string;
-    transformation_scope: string;
-    expected_outcomes: string[];
-    timeline_overview: string;
+  executiveSummary: string;
+  situationAnalysis: {
+    currentState: string;
+    challenges: string[];
+    opportunities: string[];
   };
-  analysis: {
-    current_state: {
-      strengths: string[];
-      weaknesses: string[];
-      opportunities: string[];
-      threats: string[];
-    };
-    gap_analysis: string[];
-    readiness_assessment: {
-      score: number;
-      factors: Array<{ factor: string; level: string; description: string; }>;
-    };
-    market_context: string;
+  strategicVision: string;
+  roadmap: {
+    immediate: string;
+    shortTerm: string;
+    longTerm: string;
   };
+  successFactors: string[];
+  riskMitigation: string[];
   action_plan: {
     phases: Array<{
       phase_number: number;
@@ -191,143 +184,136 @@ export default function ComprehensiveJumpDisplay({ jump, onEdit, onDownload, cla
             title="Executive Summary"
             description="Your transformation journey at a glance"
           />
-          <p className="text-xs sm:text-sm text-foreground leading-relaxed">{jump.executive_summary}</p>
+          <p className="text-xs sm:text-sm text-foreground leading-relaxed">{jump.executiveSummary}</p>
         </div>
 
         <Separator />
 
-        {/* Vision Statement */}
+        {/* Current State */}
         <div>
           <SectionHeader 
             icon={<Target className="h-5 w-5" />} 
-            title="Vision Statement"
+            title="Current State"
           />
           <div className="bg-gradient-to-r from-primary/5 to-primary/10 p-4 rounded-lg border-l-4 border-primary">
-            <p className="text-foreground font-medium">{jump.overview.vision_statement}</p>
+            <p className="text-foreground font-medium">{jump.situationAnalysis.currentState}</p>
           </div>
         </div>
 
-        {/* Key Information Grid */}
-        <div className="grid md:grid-cols-2 gap-6">
-          <Card className="border-border/30">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base flex items-center gap-2">
-                <TrendingUp className="h-4 w-4" />
-                Transformation Scope
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">{jump.overview.transformation_scope}</p>
-            </CardContent>
-          </Card>
+        {/* Strategic Vision */}
+        <div>
+          <SectionHeader 
+            icon={<Rocket className="h-5 w-5" />} 
+            title="Strategic Vision"
+          />
+          <div className="bg-gradient-to-r from-primary/5 to-primary/10 p-4 rounded-lg border-l-4 border-primary">
+            <p className="text-foreground font-medium">{jump.strategicVision}</p>
+          </div>
+        </div>
 
+        {/* Roadmap */}
+        <div className="grid md:grid-cols-3 gap-4">
           <Card className="border-border/30">
             <CardHeader className="pb-3">
               <CardTitle className="text-base flex items-center gap-2">
                 <Clock className="h-4 w-4" />
-                Timeline Overview
+                Immediate (0-30 days)
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-muted-foreground">{jump.overview.timeline_overview}</p>
+              <p className="text-muted-foreground">{jump.roadmap.immediate}</p>
+            </CardContent>
+          </Card>
+
+          <Card className="border-border/30">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base flex items-center gap-2">
+                <TrendingUp className="h-4 w-4" />
+                Short-term (30-90 days)
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">{jump.roadmap.shortTerm}</p>
+            </CardContent>
+          </Card>
+
+          <Card className="border-border/30">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base flex items-center gap-2">
+                <Target className="h-4 w-4" />
+                Long-term (90+ days)
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">{jump.roadmap.longTerm}</p>
             </CardContent>
           </Card>
         </div>
 
-        {/* Expected Outcomes */}
-        <div>
-          <SectionHeader 
-            icon={<CheckCircle2 className="h-5 w-5" />} 
-            title="Expected Outcomes"
-          />
-          <div className="grid gap-3">
-            {jump.overview.expected_outcomes.map((outcome, index) => (
-              <div key={index} className="flex items-center gap-3 p-3 bg-muted/20 rounded-lg">
-                <CheckCircle2 className="h-4 w-4 text-green-500 flex-shrink-0" />
-                <span className="text-foreground">{outcome}</span>
-              </div>
-            ))}
+        {/* Challenges */}
+        {jump.situationAnalysis.challenges?.length > 0 && (
+          <div>
+            <SectionHeader 
+              icon={<AlertTriangle className="h-5 w-5" />} 
+              title="Key Challenges"
+            />
+            <div className="grid gap-3">
+              {jump.situationAnalysis.challenges.map((challenge, index) => (
+                <div key={index} className="flex items-center gap-3 p-3 bg-muted/20 rounded-lg">
+                  <AlertTriangle className="h-4 w-4 text-orange-500 flex-shrink-0" />
+                  <span className="text-foreground">{challenge}</span>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
+
+        {/* Opportunities */}
+        {jump.situationAnalysis.opportunities?.length > 0 && (
+          <div>
+            <SectionHeader 
+              icon={<CheckCircle2 className="h-5 w-5" />} 
+              title="Key Opportunities"
+            />
+            <div className="grid gap-3">
+              {jump.situationAnalysis.opportunities.map((opportunity, index) => (
+                <div key={index} className="flex items-center gap-3 p-3 bg-muted/20 rounded-lg">
+                  <CheckCircle2 className="h-4 w-4 text-green-500 flex-shrink-0" />
+                  <span className="text-foreground">{opportunity}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Success Factors */}
+        {jump.successFactors?.length > 0 && (
+          <div>
+            <SectionHeader 
+              icon={<Star className="h-5 w-5" />} 
+              title="Success Factors"
+            />
+            <div className="grid gap-3">
+              {jump.successFactors.map((factor, index) => (
+                <div key={index} className="flex items-center gap-3 p-3 bg-muted/20 rounded-lg">
+                  <Star className="h-4 w-4 text-yellow-500 flex-shrink-0" />
+                  <span className="text-foreground">{factor}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </TabCard>
   );
 
   const renderAnalysis = () => (
     <div className="space-y-6">
-      {/* SWOT Analysis */}
       <TabCard>
-        <SectionHeader 
-          icon={<BarChart3 className="h-5 w-5" />} 
-          title="SWOT Analysis"
-          description="Understanding your current position"
-        />
-        <div className="grid md:grid-cols-2 gap-6">
-          <div className="space-y-4">
-            <div className="p-4 bg-green-50 dark:bg-green-900/10 rounded-lg">
-              <h4 className="font-medium text-green-800 dark:text-green-400 mb-2">Strengths</h4>
-              <ul className="space-y-1">
-                {jump.analysis.current_state.strengths.map((strength, index) => (
-                  <li key={index} className="text-sm text-green-700 dark:text-green-300">• {strength}</li>
-                ))}
-              </ul>
-            </div>
-            <div className="p-4 bg-blue-50 dark:bg-blue-900/10 rounded-lg">
-              <h4 className="font-medium text-blue-800 dark:text-blue-400 mb-2">Opportunities</h4>
-              <ul className="space-y-1">
-                {jump.analysis.current_state.opportunities.map((opportunity, index) => (
-                  <li key={index} className="text-sm text-blue-700 dark:text-blue-300">• {opportunity}</li>
-                ))}
-              </ul>
-            </div>
-          </div>
-          <div className="space-y-4">
-            <div className="p-4 bg-red-50 dark:bg-red-900/10 rounded-lg">
-              <h4 className="font-medium text-red-800 dark:text-red-400 mb-2">Weaknesses</h4>
-              <ul className="space-y-1">
-                {jump.analysis.current_state.weaknesses.map((weakness, index) => (
-                  <li key={index} className="text-sm text-red-700 dark:text-red-300">• {weakness}</li>
-                ))}
-              </ul>
-            </div>
-            <div className="p-4 bg-orange-50 dark:bg-orange-900/10 rounded-lg">
-              <h4 className="font-medium text-orange-800 dark:text-orange-400 mb-2">Threats</h4>
-              <ul className="space-y-1">
-                {jump.analysis.current_state.threats.map((threat, index) => (
-                  <li key={index} className="text-sm text-orange-700 dark:text-orange-300">• {threat}</li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </div>
-      </TabCard>
-
-      {/* Readiness Assessment */}
-      <TabCard>
-        <SectionHeader 
-          icon={<CheckCircle2 className="h-5 w-5" />} 
-          title="Readiness Assessment"
-        />
-        <div className="space-y-4">
-          <div className="flex items-center gap-4">
-            <div className="text-3xl font-bold text-primary">{jump.analysis.readiness_assessment.score}/10</div>
-            <Progress value={jump.analysis.readiness_assessment.score * 10} className="flex-1" />
-          </div>
-          <div className="grid gap-4">
-            {jump.analysis.readiness_assessment.factors.map((factor, index) => (
-              <Card key={index} className="border-border/30">
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <h5 className="font-medium text-foreground">{factor.factor}</h5>
-                    <Badge variant={factor.level === 'High' ? 'default' : factor.level === 'Medium' ? 'secondary' : 'outline'}>
-                      {factor.level}
-                    </Badge>
-                  </div>
-                  <p className="text-sm text-muted-foreground">{factor.description}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+        <div className="text-center py-8">
+          <BarChart3 className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+          <h3 className="text-lg font-semibold text-foreground mb-2">Analysis Tab</h3>
+          <p className="text-muted-foreground">This tab is being redesigned. Check back soon!</p>
         </div>
       </TabCard>
     </div>
@@ -953,7 +939,7 @@ export default function ComprehensiveJumpDisplay({ jump, onEdit, onDownload, cla
         <div className="flex flex-col gap-3 sm:gap-4">
           <div className="w-full max-w-full overflow-hidden">
             <h1 className="text-base sm:text-lg lg:text-xl font-bold text-foreground mb-2 break-words hyphens-auto leading-tight max-w-full">{jump.title}</h1>
-            <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed break-words max-w-full overflow-wrap-anywhere">{jump.executive_summary}</p>
+            <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed break-words max-w-full overflow-wrap-anywhere">{jump.executiveSummary}</p>
           </div>
           <div className="flex flex-wrap gap-1 justify-start sm:justify-end">
             {onEdit && (

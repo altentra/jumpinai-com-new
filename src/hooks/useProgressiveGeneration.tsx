@@ -249,61 +249,36 @@ export const useProgressiveGeneration = () => {
             setResult({ ...progressiveResult });
             
           } else if (type === 'overview') {
-            // STEP 2: Overview complete - show it and start plan
+            // STEP 2: Overview complete - ORIGINAL format
             console.log('Processing overview step data:', stepData);
             
-            // Store the complete overview data with proper structure for ComprehensiveJumpDisplay
             progressiveResult.comprehensive_plan = {
               title: jumpName,
-              executive_summary: stepData.executive_summary || '',
-              overview: stepData.overview || {
-                vision_statement: '',
-                transformation_scope: '',
-                expected_outcomes: [],
-                timeline_overview: ''
-              },
-              analysis: stepData.analysis || {
-                current_state: {
-                  strengths: [],
-                  weaknesses: [],
-                  opportunities: [],
-                  threats: []
-                },
-                gap_analysis: [],
-                readiness_assessment: {
-                  score: 0,
-                  factors: []
-                },
-                market_context: ''
-              },
+              executiveSummary: stepData.executiveSummary || '',
+              situationAnalysis: stepData.situationAnalysis || {},
+              strategicVision: stepData.strategicVision || '',
+              roadmap: stepData.roadmap || {},
+              successFactors: stepData.successFactors || [],
+              riskMitigation: stepData.riskMitigation || [],
               action_plan: { phases: [] } // Will be filled in step 3
             };
             
-            // Build full overview content from all sections for display
             let overviewText = '';
-            if (stepData.executive_summary) overviewText += `## Executive Summary\n\n${stepData.executive_summary}\n\n`;
-            if (stepData.overview) {
-              overviewText += `## Vision\n\n${stepData.overview.vision_statement}\n\n`;
-              overviewText += `## Transformation Scope\n\n${stepData.overview.transformation_scope}\n\n`;
-              if (stepData.overview.expected_outcomes?.length) {
-                overviewText += `## Expected Outcomes\n\n`;
-                stepData.overview.expected_outcomes.forEach((o: string) => overviewText += `- ${o}\n`);
+            if (stepData.executiveSummary) {
+              overviewText += `## Executive Summary\n\n${stepData.executiveSummary}\n\n`;
+            }
+            if (stepData.situationAnalysis) {
+              if (stepData.situationAnalysis.currentState) {
+                overviewText += `## Current State\n\n${stepData.situationAnalysis.currentState}\n\n`;
+              }
+              if (stepData.situationAnalysis.challenges?.length) {
+                overviewText += `## Challenges\n`;
+                stepData.situationAnalysis.challenges.forEach((c: string) => overviewText += `- ${c}\n`);
                 overviewText += '\n';
               }
             }
-            if (stepData.analysis) {
-              if (stepData.analysis.current_state) {
-                if (stepData.analysis.current_state.strengths?.length) {
-                  overviewText += `## Strengths\n`;
-                  stepData.analysis.current_state.strengths.forEach((s: string) => overviewText += `- ${s}\n`);
-                  overviewText += '\n';
-                }
-                if (stepData.analysis.current_state.opportunities?.length) {
-                  overviewText += `## Opportunities\n`;
-                  stepData.analysis.current_state.opportunities.forEach((o: string) => overviewText += `- ${o}\n`);
-                  overviewText += '\n';
-                }
-              }
+            if (stepData.strategicVision) {
+              overviewText += `## Strategic Vision\n\n${stepData.strategicVision}\n\n`;
             }
             
             progressiveResult.full_content = overviewText.trim();
