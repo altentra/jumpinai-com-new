@@ -609,7 +609,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
               }}
               onDownload={() => handleDownload()}
               jumpId={result.jumpId}
-              toolPromptIds={result.components?.toolPrompts?.map((tp: any) => tp.id).filter(Boolean) || []}
+              toolPromptIds={result.components?.toolPrompts?.map((tp: any) => tp?.id || null) || []}
             />
           ) : (
             <div className="flex items-center justify-center h-32">

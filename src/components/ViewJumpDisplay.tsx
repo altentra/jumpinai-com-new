@@ -461,7 +461,7 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
                 toast.info('Download feature coming soon!');
               }}
               jumpId={result.jumpId || undefined}
-              toolPromptIds={result.components?.toolPrompts?.map((tp: any) => tp.id).filter(Boolean) || []}
+              toolPromptIds={result.components?.toolPrompts?.map((tp: any) => tp?.id || null) || []}
             />
           ) : (
             <div className="flex items-center justify-center h-32">
