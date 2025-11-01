@@ -260,9 +260,16 @@ export const jumpinAIStudioService = {
                 }
               } else if (type === 'tool_prompts') {
                 console.log('✨ Processing tool_prompts data');
+                console.log('📊 Raw data received:', JSON.stringify(data, null, 2));
                 
                 const toolPromptsArray = data.tool_prompts || [];
                 console.log(`📦 Extracted ${toolPromptsArray.length} tool prompts`);
+                console.log('📋 Tool prompts structure:', toolPromptsArray.map((tp: any) => ({
+                  title: tp.title,
+                  tool_name: tp.tool_name,
+                  hasPromptText: !!tp.prompt_text,
+                  phase: tp.phase
+                })));
                 
                 result.components!.toolPrompts = toolPromptsArray;
                 
@@ -271,16 +278,26 @@ export const jumpinAIStudioService = {
                 }
                 
                 if (userId && jumpId && toolPromptsArray.length > 0) {
-                  console.log(`💾 Saving ${toolPromptsArray.length} tool prompts...`);
+                  console.log(`💾 Attempting to save ${toolPromptsArray.length} tool prompts...`);
+                  console.log('💾 Save context:', { userId, jumpId, arrayLength: toolPromptsArray.length });
                   (async () => {
                     try {
                       const { toolPromptsService } = await import('@/services/toolPromptsService');
+                      console.log('💾 toolPromptsService loaded, calling saveToolPrompts...');
                       await toolPromptsService.saveToolPrompts(toolPromptsArray, userId, jumpId);
                       console.log('✅ Tool prompts saved successfully');
                     } catch (error) {
                       console.error('❌ Error saving tool prompts:', error);
+                      console.error('❌ Error details:', error instanceof Error ? error.message : String(error));
                     }
                   })();
+                } else {
+                  console.warn('⚠️ NOT saving tool prompts. Conditions:', {
+                    hasUserId: !!userId,
+                    hasJumpId: !!jumpId,
+                    arrayLength: toolPromptsArray.length,
+                    arrayIsEmpty: toolPromptsArray.length === 0
+                  });
                 }
               } else if (type === 'workflows') {
                 console.log('⚙️ Workflows data received (not saved - feature removed)');
