@@ -269,58 +269,65 @@ Examples of good names:
     case 2:
       // STEP 2: Strategic Overview - ORIGINAL working format
       return {
-        systemPrompt: `You are a strategic consultant creating comprehensive transformation plans. Return ONLY valid JSON.`,
-        userPrompt: `Create a strategic overview for:
+        systemPrompt: `You are a strategic consultant creating comprehensive transformation plans. Analyze the user's goals and challenges deeply, then provide a detailed strategic overview. Return ONLY valid JSON with NO markdown formatting, NO code blocks, NO extra text.`,
+        userPrompt: `Create a comprehensive strategic overview for this transformation:
 
 ${baseContext}
 
-Return ONLY this JSON (no markdown, no extra text):
+CRITICAL REQUIREMENTS:
+1. Provide DETAILED, SPECIFIC content - NO generic placeholders
+2. The roadmap MUST contain concrete, actionable plans for each timeframe
+3. All arrays must have at least 3-4 substantive items
+4. Every field must be filled with meaningful, personalized content
+
+Return ONLY this JSON structure (NO markdown, NO code blocks):
 {
-  "executiveSummary": "3-4 detailed paragraphs covering: current situation, goals, challenges, and expected transformation outcome",
+  "executiveSummary": "Write 3-4 detailed paragraphs that: 1) Describe their current situation based on their goals and challenges, 2) Outline the transformation journey ahead, 3) Highlight key milestones and expected outcomes, 4) Paint a compelling vision of success. Make it specific to THEIR situation.",
   "situationAnalysis": {
-    "currentState": "Detailed analysis of where they are now",
-    "challenges": ["Challenge 1", "Challenge 2", "Challenge 3"],
-    "opportunities": ["Opportunity 1", "Opportunity 2", "Opportunity 3"]
+    "currentState": "Provide a detailed 4-5 sentence analysis of where they are now based on their stated challenges. Be specific about their pain points, current limitations, and why transformation is needed NOW.",
+    "challenges": ["Identify the PRIMARY obstacle blocking their progress", "Another critical challenge inferred from their input", "A third significant barrier they must overcome", "An additional challenge that could impact success"],
+    "opportunities": ["The BIGGEST opportunity unlocked by this transformation", "A second major opportunity aligned with their goals", "A third significant opportunity for growth", "An additional opportunity they can leverage"]
   },
-  "strategicVision": "Clear vision of success with specific outcomes",
+  "strategicVision": "Write a compelling 4-5 sentence vision of their success state. What does life look like after this transformation? Be specific about outcomes, capabilities gained, and impact achieved. Make it inspirational yet grounded in their stated goals.",
   "roadmap": {
-    "immediate": "First 30 days actions",
-    "shortTerm": "30-90 days milestones",  
-    "longTerm": "90+ days goals"
+    "immediate": "Detailed 3-4 sentence plan for the FIRST 30 days. Include: specific actions to take, quick wins to achieve, foundations to establish. Example: 'Complete initial tool research and setup by week 1. Create first 3 test workflows in weeks 2-3. Achieve first measurable result by day 30.'",
+    "shortTerm": "Comprehensive 3-4 sentence plan for days 31-90. Include: major milestones to hit, systems to implement, skills to develop. Be specific about what gets built and accomplished in this phase.",
+    "longTerm": "Strategic 3-4 sentence plan for 90+ days. Include: advanced capabilities, scale targets, transformation completion markers. Paint the picture of full implementation and sustained success."
   },
-  "successFactors": ["Factor 1", "Factor 2", "Factor 3"],
-  "riskMitigation": ["Risk 1 and mitigation", "Risk 2 and mitigation"]
-}`,
+  "successFactors": ["The #1 most critical factor for their success", "A second essential success factor", "A third key element needed", "An additional important factor"],
+  "riskMitigation": ["Biggest risk they'll face and how to mitigate it", "Second major risk and prevention strategy", "Third risk and mitigation approach"]
+}
+
+REMEMBER: Every field must be deeply personalized to THEIR specific goals and challenges. NO generic content allowed.`,
         expectedTokens: 8000
       };
 
     case 3:
-      // STEP 3: Action Plan - simplified 3 phases with 5 steps each
+      // STEP 3: Action Plan - 3 phases with 5 steps each
       return {
-        systemPrompt: `You are a world-class execution strategist and business analyst. From the user's goals and challenges, intelligently infer their full context (industry, role, experience, resources, urgency) and create an exceptionally clear, actionable implementation plan. Use **bold** markdown strategically. Your plans should inspire confidence through clarity and specificity.`,
-        userPrompt: `Create a strategic action plan for this transformation organized into exactly 3 phases with exactly 5 steps each:
+        systemPrompt: `You are a world-class strategic execution expert. Create clear, actionable implementation plans organized into 3 phases with 5 steps each. Use **bold** markdown strategically for emphasis. Every step must be concrete, measurable, and directly tied to the user's specific goals and challenges. Return ONLY valid JSON.`,
+        userPrompt: `Create a world-class strategic action plan for this transformation:
 
 ${baseContext}
 
-Overview Context (already analyzed):
+Strategic Overview Context:
 ${overviewContent}
 
-CONTEXT INFERENCE REQUIREMENTS:
-1. From GOALS: Understand their industry, desired outcomes, scope, what success means
-2. From CHALLENGES: Deduce experience level (default: standard AI learning curve), resource constraints, urgency (default: as soon as realistic)
-3. Apply sensible defaults: Budget-conscious approach, reasonable urgency, standard tech-savvy persona
-4. Create plan that addresses THEIR specific situation, not generic advice
+CRITICAL REQUIREMENTS:
+1. EXACTLY 3 phases with EXACTLY 5 steps per phase (total 15 steps)
+2. Each step must be SPECIFIC and ACTIONABLE - no vague advice
+3. Steps must build logically from foundation to mastery
+4. Use **bold** markdown for key terms, deliverables, and tool references
+5. Reference Tool #1-9 where appropriate (Tools 1-3 in Phase 1, Tools 4-6 in Phase 2, Tools 7-9 in Phase 3)
+6. Each step title should be action-oriented and inspiring
+7. Each step description should be 3-4 sentences with specific guidance
 
-STRUCTURE REQUIREMENTS:
-- EXACTLY 3 phases (Foundation → Growth → Mastery)
-- EXACTLY 5 steps per phase (no more, no less)
-- Each step must be clear, actionable, and measurable
-- Use **bold** markdown for all key terms and deliverables
-- Phase 1 steps can reference Tool #1, #2, #3
-- Phase 2 steps can reference Tool #4, #5, #6  
-- Phase 3 steps can reference Tool #7, #8, #9
+PHASE STRUCTURE:
+- Phase 1 (Foundation): Setup, research, initial implementation, quick wins
+- Phase 2 (Growth): Scaling, optimization, system building, expansion  
+- Phase 3 (Mastery): Advanced features, automation, sustained excellence, future-proofing
 
-Return ONLY valid JSON in this EXACT structure:
+Return ONLY this exact JSON structure (NO markdown blocks, NO extra text):
 {
   "phases": [
     {

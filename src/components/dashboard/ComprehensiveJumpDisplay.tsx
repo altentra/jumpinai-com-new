@@ -351,15 +351,31 @@ export default function ComprehensiveJumpDisplay({ jump, onEdit, onDownload, cla
         {/* Phases */}
         {jump.action_plan.phases.map((phase, phaseIndex) => (
           <div key={phaseIndex} className="space-y-6">
-            {/* Phase Header */}
-            <div className="bg-gradient-to-r from-muted/50 to-muted/30 border border-muted rounded-xl p-6">
-              <div className="flex items-start gap-4">
-                <div className="flex items-center justify-center w-16 h-16 bg-foreground/10 text-foreground rounded-xl font-bold text-2xl flex-shrink-0 border border-foreground/20">
+            {/* Phase Header - Beautiful Professional Design */}
+            <div className="relative bg-gradient-to-br from-primary/10 via-primary/5 to-transparent border-2 border-primary/30 rounded-3xl p-8 shadow-xl shadow-primary/10">
+              {/* Decorative gradient background */}
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-primary/5 rounded-3xl"></div>
+              
+              <div className="relative flex items-start gap-6">
+                {/* Phase Number Badge */}
+                <div className="flex items-center justify-center w-20 h-20 bg-gradient-to-br from-primary to-primary/80 text-primary-foreground rounded-2xl font-bold text-3xl flex-shrink-0 shadow-2xl shadow-primary/30 border-4 border-primary/20">
                   {phase.phase_number}
                 </div>
+                
+                {/* Phase Content */}
                 <div className="flex-1">
-                  <h3 className="text-2xl font-bold text-foreground mb-3">{phase.title}</h3>
-                  <div className="text-foreground/80 leading-relaxed mb-3">
+                  <h3 className="text-3xl font-bold text-foreground mb-4 leading-tight">
+                    <ReactMarkdown 
+                      remarkPlugins={[remarkGfm]}
+                      components={{
+                        p: ({node, ...props}) => <span {...props} />,
+                        strong: ({node, ...props}) => <strong className="text-primary" {...props} />
+                      }}
+                    >
+                      {phase.title}
+                    </ReactMarkdown>
+                  </h3>
+                  <div className="text-foreground/80 leading-relaxed mb-4 text-base">
                     <ReactMarkdown 
                       remarkPlugins={[remarkGfm]}
                       components={{
@@ -370,13 +386,13 @@ export default function ComprehensiveJumpDisplay({ jump, onEdit, onDownload, cla
                       {phase.description}
                     </ReactMarkdown>
                   </div>
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <Clock className="h-4 w-4" />
+                  <div className="flex items-center gap-3 text-muted-foreground bg-background/50 rounded-xl px-4 py-2 border border-primary/10 w-fit">
+                    <Clock className="h-5 w-5 text-primary" />
                     <ReactMarkdown 
                       remarkPlugins={[remarkGfm]}
                       components={{
-                        p: ({node, ...props}) => <span className="text-sm" {...props} />,
-                        strong: ({node, ...props}) => <strong className="font-semibold text-foreground" {...props} />
+                        p: ({node, ...props}) => <span className="text-sm font-medium" {...props} />,
+                        strong: ({node, ...props}) => <strong className="font-bold text-primary" {...props} />
                       }}
                     >
                       {phase.duration}
@@ -386,44 +402,59 @@ export default function ComprehensiveJumpDisplay({ jump, onEdit, onDownload, cla
               </div>
             </div>
 
-            {/* Steps */}
-            <div className="grid gap-4 ml-0 sm:ml-10">
+            {/* Steps - Beautiful Professional Cards */}
+            <div className="grid gap-5 ml-0 sm:ml-10">
               {phase.steps && phase.steps.map((step, stepIndex) => (
                 <div 
                   key={stepIndex} 
-                  className="bg-gradient-to-br from-muted/40 to-muted/20 border-2 border-muted rounded-xl p-6 hover:border-muted-foreground/30 transition-all duration-200 hover:shadow-lg"
+                  className="group relative bg-gradient-to-br from-card via-card/95 to-primary/5 border-2 border-primary/20 rounded-3xl p-8 hover:border-primary/40 transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-1"
                 >
-                  <div className="flex items-start gap-4 mb-4">
-                    <div className="flex items-center justify-center w-10 h-10 bg-foreground/10 text-foreground rounded-lg font-bold text-lg flex-shrink-0 border border-foreground/20">
-                      {step.step_number}
-                    </div>
-                    <div className="flex-1">
-                      <div className="text-lg font-bold text-foreground mb-2 leading-tight">
-                        <ReactMarkdown 
-                          remarkPlugins={[remarkGfm]}
-                          components={{
-                            p: ({node, ...props}) => <span {...props} />,
-                            strong: ({node, ...props}) => <strong {...props} />
-                          }}
-                        >
-                          {step.title}
-                        </ReactMarkdown>
+                  {/* Subtle gradient overlay for depth */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-primary/5 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  
+                  <div className="relative">
+                    {/* Step Header */}
+                    <div className="flex items-start gap-5 mb-5">
+                      {/* Step Number Badge */}
+                      <div className="flex items-center justify-center min-w-[56px] h-14 bg-gradient-to-br from-primary/20 to-primary/10 text-primary rounded-2xl font-bold text-xl flex-shrink-0 border-2 border-primary/30 shadow-lg shadow-primary/10 group-hover:scale-110 transition-transform duration-300">
+                        {step.step_number}
                       </div>
-                      <Badge variant="outline" className="text-xs bg-muted/50">
-                        {step.estimated_time}
-                      </Badge>
+                      
+                      {/* Title & Time */}
+                      <div className="flex-1">
+                        <div className="text-xl font-bold text-foreground mb-3 leading-tight">
+                          <ReactMarkdown 
+                            remarkPlugins={[remarkGfm]}
+                            components={{
+                              p: ({node, ...props}) => <span {...props} />,
+                              strong: ({node, ...props}) => <strong className="text-primary" {...props} />
+                            }}
+                          >
+                            {step.title}
+                          </ReactMarkdown>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Clock className="h-4 w-4 text-muted-foreground" />
+                          <Badge variant="secondary" className="text-xs font-medium bg-primary/10 text-primary border-primary/20 rounded-xl px-3 py-1">
+                            {step.estimated_time}
+                          </Badge>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  <div className="text-sm text-foreground/70 leading-relaxed pl-14">
-                    <ReactMarkdown 
-                      remarkPlugins={[remarkGfm]}
-                      components={{
-                        p: ({node, ...props}) => <p className="mb-2" {...props} />,
-                        strong: ({node, ...props}) => <strong className="font-semibold text-foreground" {...props} />
-                      }}
-                    >
-                      {step.description}
-                    </ReactMarkdown>
+                    
+                    {/* Step Description */}
+                    <div className="text-sm text-foreground/80 leading-relaxed pl-[76px] space-y-2">
+                      <ReactMarkdown 
+                        remarkPlugins={[remarkGfm]}
+                        components={{
+                          p: ({node, ...props}) => <p className="mb-3" {...props} />,
+                          strong: ({node, ...props}) => <strong className="font-semibold text-foreground" {...props} />,
+                          em: ({node, ...props}) => <em className="text-primary" {...props} />
+                        }}
+                      >
+                        {step.description}
+                      </ReactMarkdown>
+                    </div>
                   </div>
                 </div>
               ))}
