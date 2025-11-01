@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Loader2, Search, Sparkles, Clock, DollarSign, Tag, Rocket, RefreshCw, ExternalLink } from "lucide-react";
 import { ToolPromptDetailModal } from "@/components/ToolPromptDetailModal";
 import type { Database } from "@/integrations/supabase/types";
+import { useLocation } from "react-router-dom";
 
 type UserToolPrompt = Database['public']['Tables']['user_tool_prompts']['Row'];
 type UserJump = Database['public']['Tables']['user_jumps']['Row'];
@@ -28,6 +29,7 @@ export default function ToolsPrompts() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCategory, setFilterCategory] = useState<string>("all");
   const { user } = useAuth();
+  const location = useLocation();
 
   useEffect(() => {
     if (user?.id) {
@@ -40,6 +42,21 @@ export default function ToolsPrompts() {
   useEffect(() => {
     filterData();
   }, [jumpsWithPrompts, searchTerm, filterCategory]);
+
+  // Handle hash navigation to highlight specific combo
+  useEffect(() => {
+    if (location.hash && !loading) {
+      const comboId = location.hash.substring(1); // Remove the '#'
+      setTimeout(() => {
+        const element = document.getElementById(comboId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          element.classList.add('highlight-pulse');
+          setTimeout(() => element.classList.remove('highlight-pulse'), 3000);
+        }
+      }, 300);
+    }
+  }, [location.hash, loading]);
 
   const loadData = async () => {
     if (!user?.id) return;
@@ -292,6 +309,7 @@ export default function ToolsPrompts() {
                   {prompts.map((tp, index) => (
                     <Card 
                       key={tp.id}
+                      id={tp.id}
                       className="glass cursor-pointer hover:shadow-lg transition-all duration-300 rounded-xl group"
                       onClick={() => handleToolPromptClick(tp)}
                     >

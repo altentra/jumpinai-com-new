@@ -1,14 +1,19 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { safeParseJSON } from '@/utils/safeJson';
 import ReactMarkdown from 'react-markdown';
+import { ExternalLink, Sparkles } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface JumpPlanDisplayProps {
   planContent: string;
   structuredPlan?: any; // Optional structured data for enhanced display
   onEdit: () => void;
   onDownload: () => void;
+  jumpId?: string; // Jump ID for linking to tool/prompt combos
+  toolPromptIds?: string[]; // Array of 9 tool/prompt IDs in order
 }
 
 // Helper function to check if structured plan matches comprehensive format
@@ -174,7 +179,7 @@ function normalizeToComprehensive(input: any): any {
   return base;
 }
 
-export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, onDownload }: JumpPlanDisplayProps) {
+export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, onDownload, jumpId, toolPromptIds }: JumpPlanDisplayProps) {
   if (!planContent.trim() && !structuredPlan) {
     return null;
   }
@@ -192,6 +197,38 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
   }, [comprehensivePlan]);
 
   const phases = finalPlan?.action_plan?.phases || [];
+  const navigate = useNavigate();
+
+  // Helper function to get the tool/prompt combo index for a given phase and step
+  const getToolPromptComboIndex = (phaseIndex: number, stepIndex: number): number | null => {
+    // First 3 steps of each phase map to tool/prompt combos
+    if (stepIndex >= 3) return null; // Only first 3 steps per phase
+    
+    // Calculate the combo index (0-8) based on phase and step
+    const comboIndex = phaseIndex * 3 + stepIndex;
+    return comboIndex < 9 ? comboIndex : null; // We only have 9 combos
+  };
+
+  const handleToolPromptClick = (comboIndex: number) => {
+    if (!jumpId || !toolPromptIds || !toolPromptIds[comboIndex]) {
+      console.warn('Missing jumpId or toolPromptIds for navigation');
+      return;
+    }
+    
+    // Navigate to tools & prompts tab with the specific combo ID as a hash
+    const comboId = toolPromptIds[comboIndex];
+    navigate(`/dashboard/tools-prompts#${comboId}`);
+    
+    // After navigation, scroll to and highlight the element
+    setTimeout(() => {
+      const element = document.getElementById(comboId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        element.classList.add('highlight-pulse');
+        setTimeout(() => element.classList.remove('highlight-pulse'), 3000);
+      }
+    }, 100);
+  };
 
   return (
     <div className="w-full space-y-8">
@@ -281,6 +318,46 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
                           </div>
                         </div>
                       )}
+                      
+                      {/* Tools & Prompts Combo Section - Only for first 3 steps of each phase */}
+                      {(() => {
+                        const comboIndex = getToolPromptComboIndex(phaseIndex, stepIndex);
+                        if (comboIndex === null || !jumpId || !toolPromptIds || !toolPromptIds[comboIndex]) {
+                          return null;
+                        }
+                        
+                        return (
+                          <div className="mt-4 ml-[72px]">
+                            <div className="p-4 rounded-xl border-2 border-primary/30 bg-gradient-to-br from-primary/5 via-primary/10 to-accent/5 backdrop-blur-sm">
+                              <div className="flex items-center justify-between gap-3">
+                                <div className="flex items-start gap-2 flex-1">
+                                  <Sparkles className="w-4 h-4 text-primary mt-1 shrink-0" />
+                                  <div className="space-y-1">
+                                    <p className="text-xs font-bold text-primary uppercase tracking-wide">
+                                      Tools & Prompts for this Step
+                                    </p>
+                                    <p className="text-xs text-muted-foreground leading-relaxed">
+                                      We've created a custom AI tool & ready-to-use prompt specifically for this step
+                                    </p>
+                                  </div>
+                                </div>
+                                <Button
+                                  size="sm"
+                                  variant="default"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleToolPromptClick(comboIndex);
+                                  }}
+                                  className="shrink-0 gap-2 bg-primary hover:bg-primary/90 shadow-lg hover:shadow-xl transition-all"
+                                >
+                                  View Combo #{comboIndex + 1}
+                                  <ExternalLink className="w-3 h-3" />
+                                </Button>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })()}
                     </CardContent>
                   </Card>
                 ))

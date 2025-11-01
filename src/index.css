@@ -397,3 +397,20 @@
 .dark .prose em {
   @apply text-foreground/90;
 }
+
+/* Highlight pulse animation for tool/prompt combos */
+@keyframes highlight-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 hsl(var(--primary) / 0.4);
+    border-color: hsl(var(--primary) / 0.6);
+  }
+  50% {
+    box-shadow: 0 0 20px 10px hsl(var(--primary) / 0.2);
+    border-color: hsl(var(--primary));
+  }
+}
+
+.highlight-pulse {
+  animation: highlight-pulse 1.5s ease-in-out 2;
+  border: 2px solid hsl(var(--primary) / 0.6) !important;
+}
