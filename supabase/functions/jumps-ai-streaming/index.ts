@@ -463,11 +463,10 @@ Return ONLY valid JSON in this EXACT structure:
           "title": "**[Action-oriented title]**",
           "description": "Detailed description.",
           "estimated_time": "10-15 hours"
-        }
-      ]
-    }
-  ]
-}
+         }
+       ]
+     }
+   ]
 }
 
 Create world-class, executive-level content that inspires action and provides crystal-clear guidance. Every element must be specific, measurable, and actionable.`,

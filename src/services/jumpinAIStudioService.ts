@@ -132,63 +132,48 @@ export const jumpinAIStudioService = {
                   })();
                 }
               } else if (type === 'overview') {
-                console.log('📋 Processing overview data');
-                result.comprehensivePlan = data;
+                console.log('📋 Processing overview data:', data);
+                result.comprehensivePlan = {
+                  executive_summary: data.executive_summary || '',
+                  overview: data.overview || {},
+                  analysis: data.analysis || {},
+                  action_plan: { phases: [] } // Will be filled by plan step
+                };
                 
                 let overviewText = '';
-                if (data.executiveSummary) {
-                  overviewText += `## Executive Summary\n\n${data.executiveSummary}\n\n`;
+                if (data.executive_summary) {
+                  overviewText += `## Executive Summary\n\n${data.executive_summary}\n\n`;
                 }
-                if (data.situationAnalysis) {
-                  overviewText += `## Situation Analysis\n\n`;
-                  if (data.situationAnalysis.currentState) {
-                    overviewText += `### Current State\n${data.situationAnalysis.currentState}\n\n`;
+                if (data.overview) {
+                  if (data.overview.vision_statement) {
+                    overviewText += `## Vision\n\n${data.overview.vision_statement}\n\n`;
                   }
-                  if (data.situationAnalysis.challenges?.length) {
-                    overviewText += `### Key Challenges\n`;
-                    data.situationAnalysis.challenges.forEach((c: string) => {
-                      overviewText += `- ${c}\n`;
-                    });
-                    overviewText += '\n';
+                  if (data.overview.transformation_scope) {
+                    overviewText += `## Transformation Scope\n\n${data.overview.transformation_scope}\n\n`;
                   }
-                  if (data.situationAnalysis.opportunities?.length) {
-                    overviewText += `### Opportunities\n`;
-                    data.situationAnalysis.opportunities.forEach((o: string) => {
+                  if (data.overview.expected_outcomes?.length) {
+                    overviewText += `## Expected Outcomes\n\n`;
+                    data.overview.expected_outcomes.forEach((o: string) => {
                       overviewText += `- ${o}\n`;
                     });
                     overviewText += '\n';
                   }
+                  if (data.overview.timeline_overview) {
+                    overviewText += `## Timeline\n\n${data.overview.timeline_overview}\n\n`;
+                  }
                 }
-                if (data.strategicVision) {
-                  overviewText += `## Strategic Vision\n\n${data.strategicVision}\n\n`;
-                }
-                if (data.keyObjectives?.length) {
-                  overviewText += `## Key Objectives\n\n`;
-                  data.keyObjectives.forEach((obj: string, idx: number) => {
-                    overviewText += `${idx + 1}. ${obj}\n`;
-                  });
-                  overviewText += '\n';
-                }
-                if (data.successMetrics?.length) {
-                  overviewText += `## Success Metrics\n\n`;
-                  data.successMetrics.forEach((metric: string) => {
-                    overviewText += `- ${metric}\n`;
-                  });
-                  overviewText += '\n';
-                }
-                if (data.riskAssessment) {
-                  overviewText += `## Risk Assessment\n\n`;
-                  if (data.riskAssessment.risks?.length) {
-                    overviewText += `### Potential Risks\n`;
-                    data.riskAssessment.risks.forEach((risk: string) => {
-                      overviewText += `- ${risk}\n`;
+                if (data.analysis?.current_state) {
+                  if (data.analysis.current_state.strengths?.length) {
+                    overviewText += `## Strengths\n`;
+                    data.analysis.current_state.strengths.forEach((s: string) => {
+                      overviewText += `- ${s}\n`;
                     });
                     overviewText += '\n';
                   }
-                  if (data.riskAssessment.mitigations?.length) {
-                    overviewText += `### Mitigation Strategies\n`;
-                    data.riskAssessment.mitigations.forEach((mitigation: string) => {
-                      overviewText += `- ${mitigation}\n`;
+                  if (data.analysis.current_state.opportunities?.length) {
+                    overviewText += `## Opportunities\n`;
+                    data.analysis.current_state.opportunities.forEach((o: string) => {
+                      overviewText += `- ${o}\n`;
                     });
                     overviewText += '\n';
                   }
@@ -209,8 +194,8 @@ export const jumpinAIStudioService = {
                         .update({
                           summary: result.fullContent.slice(0, 500),
                           full_content: result.fullContent,
-                          comprehensive_plan: data,
-                          completion_percentage: 19,
+                          comprehensive_plan: result.comprehensivePlan,
+                          completion_percentage: 30,
                           status: 'active'
                         })
                         .eq('id', jumpId);
@@ -222,27 +207,33 @@ export const jumpinAIStudioService = {
                   })();
                 }
               } else if (type === 'comprehensive' || type === 'plan') {
-                console.log('📝 Processing plan/comprehensive data');
-                // Handle both direct structure and wrapped structure
-                const planData = data.implementationPlan || data;
+                console.log('📝 Processing plan data:', data);
+                const planData = data.phases ? data : data.action_plan || data;
                 result.structuredPlan = planData;
                 console.log('✅ Plan has', planData.phases?.length || 0, 'phases');
                 
-                let planText = '\n\n=== IMPLEMENTATION PLAN ===\n';
-                if (planData.phases) {
-                  planText += '\nPHASES:\n';
-                  planData.phases.forEach((phase: any, idx: number) => {
-                      planText += `\n${idx + 1}. ${phase.name} (${phase.duration})\n`;
-                      if (phase.objectives?.length) {
-                        planText += '   Objectives:\n' + phase.objectives.map((o: string) => `   • ${o}`).join('\n') + '\n';
-                      }
-                      if (phase.actions?.length) {
-                        planText += '   Actions:\n' + phase.actions.map((a: string) => `   • ${a}`).join('\n') + '\n';
-                      }
-                  });
+                // Update comprehensive_plan with action_plan
+                if (result.comprehensivePlan) {
+                  result.comprehensivePlan.action_plan = planData;
                 }
-                if (planData.successMetrics?.length) {
-                    planText += '\nSUCCESS METRICS:\n' + planData.successMetrics.map((m: string) => `• ${m}`).join('\n');
+                
+                let planText = '\n\n=== STRATEGIC ACTION PLAN ===\n';
+                if (planData.phases?.length) {
+                  planData.phases.forEach((phase: any, idx: number) => {
+                    planText += `\n### Phase ${phase.phase_number || idx + 1}: ${phase.title}\n`;
+                    planText += `Duration: ${phase.duration}\n`;
+                    planText += `${phase.description}\n\n`;
+                    
+                    if (phase.steps?.length) {
+                      planText += 'Steps:\n';
+                      phase.steps.forEach((step: any) => {
+                        planText += `\n${step.step_number}. ${step.title}\n`;
+                        planText += `   ${step.description}\n`;
+                        planText += `   Time: ${step.estimated_time}\n`;
+                      });
+                      planText += '\n';
+                    }
+                  });
                 }
                 result.fullContent += planText;
                 console.log('✅ Plan appended, total', result.fullContent.length, 'chars');
@@ -258,8 +249,9 @@ export const jumpinAIStudioService = {
                         .from('user_jumps')
                         .update({
                           structured_plan: planData,
+                          comprehensive_plan: result.comprehensivePlan,
                           full_content: result.fullContent,
-                          completion_percentage: 32
+                          completion_percentage: 60
                         })
                         .eq('id', jumpId);
                       
