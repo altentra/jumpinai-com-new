@@ -276,12 +276,12 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
                 {Array.isArray(phase.steps) && phase.steps.length > 0 ? (
                   phase.steps.map((step: any, stepIndex: number) => (
                     <div key={stepIndex} className="group">
-                      <div className="bg-background/40 backdrop-blur-[2px] border-l-4 border-primary/30 rounded-lg p-4 hover:border-primary/60 hover:bg-background/60 transition-all duration-300">
+                      <div className="bg-background/40 backdrop-blur-[2px] border-2 border-primary/50 rounded-2xl p-4 hover:border-primary/70 hover:bg-background/60 transition-all duration-300">
                         <div className="flex items-start gap-3 mb-3">
                           <div className="flex-shrink-0">
-                            <div className="w-10 h-10 rounded-md bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center border border-primary/20">
-                              <span className="text-base font-bold text-primary">
-                                {stepIndex + 1}
+                            <div className="px-3 py-2 rounded-lg bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center border border-primary/30">
+                              <span className="text-sm font-bold text-primary whitespace-nowrap">
+                                Step {stepIndex + 1}
                               </span>
                             </div>
                           </div>
