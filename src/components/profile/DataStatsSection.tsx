@@ -19,13 +19,17 @@ interface DataStats {
 }
 
 const formatBytes = (bytes: number): string => {
-  if (bytes === 0) return "0 Bytes";
+  if (bytes === 0) return "0 KB";
   
   const k = 1024;
-  const sizes = ["Bytes", "KB", "MB", "GB"];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  const mb = bytes / (k * k);
   
-  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
+  if (mb >= 1) {
+    return `${mb.toFixed(2)} MB`;
+  } else {
+    const kb = bytes / k;
+    return `${kb.toFixed(2)} KB`;
+  }
 };
 
 export default function DataStatsSection() {
@@ -217,12 +221,7 @@ export default function DataStatsSection() {
           </div>
           <div className="p-3 sm:p-4 bg-muted/50 rounded-lg border space-y-1">
             <p className="text-xs text-muted-foreground">Storage Used</p>
-            <div className="flex items-baseline gap-2">
-              <p className="text-2xl font-bold">{formatBytes(stats.storageBytes)}</p>
-              <Badge variant="outline" className="text-xs">
-                {stats.storageBytes.toLocaleString()} bytes
-              </Badge>
-            </div>
+            <p className="text-2xl font-bold">{formatBytes(stats.storageBytes)}</p>
           </div>
         </div>
 
