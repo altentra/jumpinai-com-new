@@ -365,16 +365,6 @@ export default function ViewJump() {
                   </p>
                 )}
               </div>
-              <div className="flex items-center gap-2 sm:gap-3 shrink-0 w-full sm:w-auto">
-                <Button 
-                  onClick={downloadPlan}
-                  size="sm"
-                  className="gap-2 rounded-xl bg-primary/10 hover:bg-primary/20 text-primary border border-primary/30 backdrop-blur-sm transition-all duration-300 hover:shadow-lg hover:shadow-primary/20 flex-1 sm:flex-none text-xs sm:text-sm"
-                >
-                  <Download className="w-3 h-3 sm:w-4 sm:h-4" />
-                  Download PDF
-                </Button>
-              </div>
             </div>
           </div>
         </div>
