@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { safeParseJSON } from '@/utils/safeJson';
 import ReactMarkdown from 'react-markdown';
-import { ArrowRight, Sparkles, Lightbulb, GitBranch, ChevronDown, ChevronUp, Loader2 } from 'lucide-react';
+import { ArrowRight, Sparkles, Lightbulb, GitBranch, ChevronDown, ChevronUp, Loader2, CheckCircle2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { updateJump } from '@/services/jumpService';
@@ -641,10 +641,10 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
 
                                      <Button
                                        size="sm"
-                                       className="w-full gap-2"
+                                       className="w-full gap-2 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground font-semibold shadow-lg hover:shadow-xl transition-all duration-300 border-0"
                                        onClick={() => handleChooseRoute(phaseIndex, stepIndex, dirIndex)}
                                      >
-                                       <Sparkles className="h-4 w-4" />
+                                       <CheckCircle2 className="h-4 w-4" />
                                        Choose this route
                                      </Button>
                                    </div>
