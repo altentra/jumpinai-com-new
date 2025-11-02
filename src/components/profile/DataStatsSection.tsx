@@ -268,11 +268,11 @@ export default function DataStatsSection() {
 
         {/* Delete All Data Action */}
         <div className="space-y-3">
-          <h3 className="text-sm font-semibold text-destructive flex items-center gap-2">
-            <AlertTriangle className="h-4 w-4" />
-            Danger Zone
-          </h3>
-          <div className="p-3 sm:p-4 bg-black rounded-lg border border-destructive/20">
+          <div className="p-3 sm:p-4 bg-black rounded-lg border border-destructive/20 space-y-3">
+            <h3 className="text-sm font-semibold text-destructive flex items-center gap-2">
+              <AlertTriangle className="h-4 w-4" />
+              Danger Zone
+            </h3>
             <p className="text-xs text-muted-foreground mb-3 leading-relaxed">
               Permanently delete all your generated jumps and tool prompts. This action cannot be undone. Your credits and account will remain intact.
             </p>
