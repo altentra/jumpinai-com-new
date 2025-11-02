@@ -276,7 +276,13 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
                 {Array.isArray(phase.steps) && phase.steps.length > 0 ? (
                   phase.steps.map((step: any, stepIndex: number) => (
                     <div key={stepIndex} className="group">
-                      <div className="bg-background/40 backdrop-blur-[2px] border border-primary/50 rounded-3xl p-5 hover:border-primary/70 hover:bg-background/60 transition-all duration-300">
+                      <div className="relative">
+                        {/* Premium gradient border effect */}
+                        <div className="absolute -inset-[1px] bg-gradient-to-r from-primary/20 via-primary/60 to-primary/20 rounded-3xl opacity-70 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <div className="absolute -inset-[2px] bg-gradient-to-br from-primary/10 via-transparent to-primary/10 rounded-3xl blur-sm opacity-50 group-hover:opacity-70 transition-opacity duration-300"></div>
+                        
+                        {/* Main card */}
+                        <div className="relative bg-background/40 backdrop-blur-[2px] rounded-3xl p-5 hover:bg-background/60 transition-all duration-300 shadow-[0_0_15px_rgba(0,0,0,0.1)]">
                         <div className="flex items-start gap-3 mb-3">
                           <div className="flex-shrink-0">
                             <div className="px-3 py-2 rounded-lg bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center border border-primary/30">
@@ -367,6 +373,7 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
                               </div>
                             );
                           })()}
+                        </div>
                         </div>
                       </div>
                     </div>
