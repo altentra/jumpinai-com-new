@@ -275,47 +275,43 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
               <div className="space-y-4">
                 {Array.isArray(phase.steps) && phase.steps.length > 0 ? (
                   phase.steps.map((step: any, stepIndex: number) => (
-                    <div key={stepIndex} className="relative group">
-                      <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/15 via-accent/10 to-secondary/15 rounded-lg blur opacity-20 group-hover:opacity-40 transition duration-300"></div>
-                      <Card className="relative glass backdrop-blur-sm bg-card/60 border border-border hover:border-primary/40 transition-all duration-300">
-                        <CardHeader className="pb-3">
-                          <div className="flex items-start gap-3">
-                            <div className="flex-shrink-0">
-                              <div className="w-12 h-12 rounded-lg bg-primary/10 flex flex-col items-center justify-center border border-primary/30 group-hover:border-primary/50 transition-colors">
-                                <span className="text-[9px] font-semibold text-primary uppercase tracking-wider">Step</span>
-                                <span className="text-lg font-bold text-primary leading-none">
-                                  {stepIndex + 1}
-                                </span>
-                              </div>
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <CardTitle className="text-lg font-semibold mb-1">
-                                <ReactMarkdown className="prose prose-sm max-w-none [&>p]:m-0 [&_strong]:font-bold">
-                                  {step.title || step.action || `Step ${stepIndex + 1}`}
-                                </ReactMarkdown>
-                              </CardTitle>
-                              {step.brief_description && (
-                                <div className="text-sm text-muted-foreground">
-                                  <ReactMarkdown className="prose prose-sm max-w-none [&>p]:m-0 [&_strong]:font-bold">
-                                    {step.brief_description}
-                                  </ReactMarkdown>
-                                </div>
-                              )}
+                    <div key={stepIndex} className="group">
+                      <div className="bg-background/40 backdrop-blur-[2px] border-l-4 border-primary/30 rounded-lg p-4 hover:border-primary/60 hover:bg-background/60 transition-all duration-300">
+                        <div className="flex items-start gap-3 mb-3">
+                          <div className="flex-shrink-0">
+                            <div className="w-10 h-10 rounded-md bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center border border-primary/20">
+                              <span className="text-base font-bold text-primary">
+                                {stepIndex + 1}
+                              </span>
                             </div>
                           </div>
-                        </CardHeader>
-                        <CardContent className="pt-0 pb-4 space-y-4">
-                          <div className="text-sm text-muted-foreground leading-relaxed">
+                          <div className="flex-1 min-w-0">
+                            <h4 className="text-base font-semibold mb-1.5 text-foreground">
+                              <ReactMarkdown className="prose prose-sm max-w-none [&>p]:m-0 [&_strong]:font-bold">
+                                {step.title || step.action || `Step ${stepIndex + 1}`}
+                              </ReactMarkdown>
+                            </h4>
+                            {step.brief_description && (
+                              <div className="text-sm text-muted-foreground/90">
+                                <ReactMarkdown className="prose prose-sm max-w-none [&>p]:m-0 [&_strong]:font-bold">
+                                  {step.brief_description}
+                                </ReactMarkdown>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        <div className="space-y-3 pl-13">
+                          <div className="text-sm text-muted-foreground/90 leading-relaxed">
                             <ReactMarkdown className="prose prose-sm max-w-none [&>p]:mb-2 [&>p:last-child]:mb-0 [&_strong]:font-bold [&_em]:italic">
                               {step.description || step.details || 'No description available'}
                             </ReactMarkdown>
                           </div>
                           {step.tools_prompts && Array.isArray(step.tools_prompts) && step.tools_prompts.length > 0 && (
-                            <div className="space-y-2">
-                              <p className="text-xs font-semibold text-primary uppercase tracking-wide">Recommended Tools:</p>
-                              <div className="flex flex-wrap gap-2">
+                            <div className="space-y-1.5">
+                              <p className="text-xs font-semibold text-primary/80 uppercase tracking-wide">Recommended Tools</p>
+                              <div className="flex flex-wrap gap-1.5">
                                 {step.tools_prompts.map((tool: string, toolIndex: number) => (
-                                  <Badge key={toolIndex} variant="outline" className="text-xs">
+                                  <Badge key={toolIndex} variant="secondary" className="text-xs">
                                     {tool}
                                   </Badge>
                                 ))}
@@ -333,18 +329,18 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
                             const hasValidToolPromptId = toolPromptId && toolPromptId !== 'null' && toolPromptId !== null;
                             
                             return (
-                              <div className={`p-3 rounded-lg border ${hasValidToolPromptId ? 'bg-blue-500/10 border-blue-500/20' : 'bg-muted/20 border-border'}`}>
+                              <div className={`p-3 rounded-md border ${hasValidToolPromptId ? 'bg-blue-500/5 border-blue-500/30' : 'bg-muted/30 border-border/50'}`}>
                                 <div className="flex items-center justify-between gap-3">
                                   <div className="flex items-start gap-2 flex-1">
-                                    <Sparkles className={`w-4 h-4 mt-0.5 shrink-0 ${hasValidToolPromptId ? 'text-blue-400' : 'text-muted-foreground'}`} />
+                                    <Sparkles className={`w-3.5 h-3.5 mt-0.5 shrink-0 ${hasValidToolPromptId ? 'text-blue-400' : 'text-muted-foreground'}`} />
                                     <div>
-                                      <p className={`text-xs font-medium mb-1 ${hasValidToolPromptId ? 'text-blue-400' : 'text-muted-foreground'}`}>
+                                      <p className={`text-xs font-medium mb-0.5 ${hasValidToolPromptId ? 'text-blue-400' : 'text-muted-foreground'}`}>
                                         Tools & Prompts for this Step
                                       </p>
-                                      <p className="text-xs text-muted-foreground leading-relaxed">
+                                      <p className="text-xs text-muted-foreground/80 leading-snug">
                                         {hasValidToolPromptId 
-                                          ? "We've created a custom AI tool & ready-to-use prompt specifically for this step"
-                                          : "Custom tool & prompt combo will be available once generation completes"
+                                          ? "Custom AI tool & prompt ready for this step"
+                                          : "Tool & prompt combo generating..."
                                         }
                                       </p>
                                     </div>
@@ -357,22 +353,22 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
                                         e.stopPropagation();
                                         handleToolPromptClick(comboIndex);
                                       }}
-                                      className="shrink-0 gap-1 h-8 text-xs"
+                                      className="shrink-0 gap-1 h-7 text-xs"
                                     >
                                       <Sparkles className="w-3 h-3" />
-                                      View Combo
+                                      View
                                     </Button>
                                   ) : (
-                                    <Badge variant="secondary" className="text-xs shrink-0">
-                                      Generating...
+                                    <Badge variant="secondary" className="text-[10px] shrink-0 h-6">
+                                      Generating
                                     </Badge>
                                   )}
                                 </div>
                               </div>
                             );
                           })()}
-                        </CardContent>
-                      </Card>
+                        </div>
+                      </div>
                     </div>
                   ))
                 ) : (
