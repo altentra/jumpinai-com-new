@@ -188,6 +188,8 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
   const [hoveredStep, setHoveredStep] = React.useState<{ phaseIndex: number; stepIndex: number } | null>(null);
   const [expandedSubSteps, setExpandedSubSteps] = React.useState<Set<string>>(new Set());
   const [loadingClarify, setLoadingClarify] = React.useState<Set<string>>(new Set());
+  const [loadingReroute, setLoadingReroute] = React.useState<Set<string>>(new Set());
+  const [rerouteOptions, setRerouteOptions] = React.useState<Record<string, any>>({});
   const [localPlan, setLocalPlan] = React.useState<any>(null);
   
   if (!planContent.trim() && !structuredPlan) {
@@ -317,6 +319,97 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
     }
   };
 
+  const handleRerouteStep = async (phaseIndex: number, stepIndex: number) => {
+    if (!jumpId) {
+      toast.error('Jump ID is required');
+      return;
+    }
+
+    const stepKey = `${phaseIndex}-${stepIndex}`;
+    setLoadingReroute(prev => new Set(prev).add(stepKey));
+
+    try {
+      const phase = finalPlan.action_plan.phases[phaseIndex];
+      const step = phase.steps[stepIndex];
+
+      const jumpOverview = `
+Executive Summary: ${finalPlan.executiveSummary || ''}
+Strategic Vision: ${finalPlan.strategicVision || ''}
+Current State: ${finalPlan.situationAnalysis?.currentState || ''}
+      `.trim();
+
+      const requestBody = {
+        jumpOverview,
+        phaseTitle: phase.title,
+        phaseNumber: phase.phase_number,
+        stepTitle: step.title,
+        stepDescription: step.description,
+        stepNumber: step.step_number,
+      };
+
+      console.log('Calling reroute-step function:', requestBody);
+
+      const { data, error } = await supabase.functions.invoke('reroute-step', {
+        body: requestBody,
+      });
+
+      if (error) throw error;
+
+      if (!data || !data.directions) {
+        throw new Error('Invalid response from reroute-step function');
+      }
+
+      console.log('Received directions:', data.directions);
+
+      setRerouteOptions(prev => ({ ...prev, [stepKey]: data.directions }));
+      toast.success('Alternative routes generated successfully!');
+    } catch (error) {
+      console.error('Error generating reroute options:', error);
+      toast.error('Failed to generate alternative routes. Please try again.');
+    } finally {
+      setLoadingReroute(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(stepKey);
+        return newSet;
+      });
+    }
+  };
+
+  const handleChooseRoute = async (phaseIndex: number, stepIndex: number, directionIndex: number) => {
+    if (!jumpId) {
+      toast.error('Jump ID is required');
+      return;
+    }
+
+    const stepKey = `${phaseIndex}-${stepIndex}`;
+    const directions = rerouteOptions[stepKey];
+    const chosenDirection = directions[directionIndex];
+
+    try {
+      const updatedPlan = { ...finalPlan };
+      updatedPlan.action_plan.phases[phaseIndex].steps[stepIndex].reroute = {
+        overview: chosenDirection.overview,
+        sub_steps: chosenDirection.sub_steps,
+      };
+      setLocalPlan(updatedPlan);
+
+      await updateJump(jumpId, {
+        comprehensive_plan: updatedPlan,
+      });
+
+      setRerouteOptions(prev => {
+        const newOptions = { ...prev };
+        delete newOptions[stepKey];
+        return newOptions;
+      });
+
+      toast.success('Route selected successfully!');
+    } catch (error) {
+      console.error('Error choosing route:', error);
+      toast.error('Failed to save chosen route. Please try again.');
+    }
+  };
+
   const toggleSubSteps = (phaseIndex: number, stepIndex: number) => {
     const stepKey = `${phaseIndex}-${stepIndex}`;
     setExpandedSubSteps(prev => {
@@ -380,6 +473,9 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                     const hasSubSteps = step.sub_steps && Array.isArray(step.sub_steps) && step.sub_steps.length > 0;
                     const isExpanded = expandedSubSteps.has(stepKey);
                     const isLoading = loadingClarify.has(stepKey);
+                    const isRerouteLoading = loadingReroute.has(stepKey);
+                    const hasRerouteOptions = rerouteOptions[stepKey];
+                    const hasChosenRoute = step.reroute;
                     
                     return (
                       <div key={stepIndex} className="group">
@@ -485,8 +581,134 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                             );
                           })()}
                           
-                          {/* Sub-steps display */}
-                          {hasSubSteps && (
+                           {/* Reroute options display */}
+                           {hasRerouteOptions && (
+                             <div className="mt-4 space-y-4">
+                               <div className="flex items-center gap-2">
+                                 <GitBranch className="w-4 h-4 text-primary" />
+                                 <h4 className="text-sm font-semibold text-foreground">Choose Your Route:</h4>
+                               </div>
+                               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                 {rerouteOptions[stepKey].map((direction: any, dirIndex: number) => (
+                                   <div
+                                     key={dirIndex}
+                                     className="bg-background/40 border border-primary/30 rounded-xl p-4 flex flex-col"
+                                   >
+                                     <div className="mb-3">
+                                       <div className="flex items-center gap-2 mb-2">
+                                         <div className="px-2.5 py-1.5 rounded-lg bg-gradient-to-br from-primary/50 to-primary/30 flex items-center justify-center border border-primary/60 shadow-sm">
+                                           <span className="text-xs font-bold text-primary whitespace-nowrap">
+                                             Direction {dirIndex + 1}
+                                           </span>
+                                         </div>
+                                       </div>
+                                       <div className="text-sm text-muted-foreground/90 leading-relaxed">
+                                         <ReactMarkdown className="prose prose-sm max-w-none [&>p]:mb-2 [&>p:last-child]:mb-0">
+                                           {direction.overview}
+                                         </ReactMarkdown>
+                                       </div>
+                                     </div>
+
+                                     <div className="space-y-2 mb-4 flex-grow">
+                                       {direction.sub_steps?.map((subStep: any, subStepIndex: number) => (
+                                         <div
+                                           key={subStepIndex}
+                                           className="bg-background/30 border border-primary/20 rounded-xl p-3"
+                                         >
+                                           <div className="flex items-start gap-2 mb-2">
+                                             <div className="flex-shrink-0 px-2.5 py-1.5 rounded-lg bg-gradient-to-br from-primary/40 to-primary/30 flex items-center justify-center border border-primary/60 shadow-sm">
+                                               <span className="text-xs font-bold text-primary/90 whitespace-nowrap">
+                                                 Sub-Step {subStepIndex + 1}
+                                               </span>
+                                             </div>
+                                             <h5 className="text-xs font-semibold text-foreground flex-1 leading-tight">
+                                               <ReactMarkdown className="prose prose-sm max-w-none [&>p]:mb-0">
+                                                 {subStep.title}
+                                               </ReactMarkdown>
+                                             </h5>
+                                           </div>
+                                           <div className="text-xs text-muted-foreground/90 leading-relaxed">
+                                             <ReactMarkdown className="prose prose-sm max-w-none [&>p]:mb-1 [&>p:last-child]:mb-0 [&_strong]:font-bold">
+                                               {subStep.description}
+                                             </ReactMarkdown>
+                                           </div>
+                                           {subStep.estimated_time && (
+                                             <div className="mt-2">
+                                               <Badge variant="outline" className="text-xs">
+                                                 {subStep.estimated_time}
+                                               </Badge>
+                                             </div>
+                                           )}
+                                         </div>
+                                       ))}
+                                     </div>
+
+                                     <Button
+                                       size="sm"
+                                       className="w-full gap-2"
+                                       onClick={() => handleChooseRoute(phaseIndex, stepIndex, dirIndex)}
+                                     >
+                                       <Sparkles className="h-4 w-4" />
+                                       Choose this route
+                                     </Button>
+                                   </div>
+                                 ))}
+                               </div>
+                             </div>
+                           )}
+
+                           {/* Chosen reroute display */}
+                           {hasChosenRoute && (
+                             <div className="mt-4">
+                               <div className="bg-background/40 border border-primary/30 rounded-xl p-4">
+                                 <div className="flex items-center gap-2 mb-3">
+                                   <GitBranch className="h-4 w-4 text-primary" />
+                                   <h4 className="text-sm font-semibold text-foreground">Alternative Route Selected</h4>
+                                 </div>
+                                 <div className="text-sm text-muted-foreground/90 leading-relaxed mb-4">
+                                   <ReactMarkdown className="prose prose-sm max-w-none [&>p]:mb-2 [&>p:last-child]:mb-0">
+                                     {step.reroute.overview}
+                                   </ReactMarkdown>
+                                 </div>
+                                 <div className="space-y-2">
+                                   {step.reroute.sub_steps?.map((subStep: any, subStepIndex: number) => (
+                                     <div
+                                       key={subStepIndex}
+                                       className="bg-background/30 border border-primary/20 rounded-xl p-3"
+                                     >
+                                       <div className="flex items-start gap-2 mb-2">
+                                         <div className="flex-shrink-0 px-2.5 py-1.5 rounded-lg bg-gradient-to-br from-primary/40 to-primary/30 flex items-center justify-center border border-primary/60 shadow-sm">
+                                           <span className="text-xs font-bold text-primary/90 whitespace-nowrap">
+                                             Sub-Step {subStepIndex + 1}
+                                           </span>
+                                         </div>
+                                         <h5 className="text-xs font-semibold text-foreground flex-1 leading-tight">
+                                           <ReactMarkdown className="prose prose-sm max-w-none [&>p]:mb-0">
+                                             {subStep.title}
+                                           </ReactMarkdown>
+                                         </h5>
+                                       </div>
+                                       <div className="text-xs text-muted-foreground/90 leading-relaxed">
+                                         <ReactMarkdown className="prose prose-sm max-w-none [&>p]:mb-1 [&>p:last-child]:mb-0 [&_strong]:font-bold">
+                                           {subStep.description}
+                                         </ReactMarkdown>
+                                       </div>
+                                       {subStep.estimated_time && (
+                                         <div className="mt-2">
+                                           <Badge variant="outline" className="text-xs">
+                                             {subStep.estimated_time}
+                                           </Badge>
+                                         </div>
+                                       )}
+                                     </div>
+                                   ))}
+                                 </div>
+                               </div>
+                             </div>
+                           )}
+
+                           {/* Sub-steps display */}
+                           {hasSubSteps && (
                             <div className="mt-3 pt-3 border-t border-primary/20">
                               <button
                                 onClick={() => toggleSubSteps(phaseIndex, stepIndex)}
@@ -595,31 +817,52 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                     </TooltipContent>
                                   </Tooltip>
                                   
-                                  <Tooltip>
-                                    <TooltipTrigger asChild>
-                                      <Button
-                                        size="sm"
-                                        variant="outline"
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          console.log('Reroute clicked for step:', phaseIndex, stepIndex);
-                                        }}
-                                        className="relative px-6 py-2.5 text-sm font-semibold
-                                          bg-background/60 hover:bg-background/80
-                                          border border-primary/40 hover:border-primary/70
-                                          text-primary
-                                          shadow-sm hover:shadow-md shadow-primary/10 hover:shadow-primary/20
-                                          transition-all duration-300 rounded-xl hover:scale-[1.05]
-                                          backdrop-blur-sm flex items-center gap-2"
-                                      >
-                                        <GitBranch className="w-3.5 h-3.5" />
-                                        Reroute
-                                      </Button>
-                                    </TooltipTrigger>
-                                    <TooltipContent className="max-w-xs">
-                                      <p className="text-sm">Explore 3 alternative approaches with different strategies, each containing 3 actionable steps</p>
-                                    </TooltipContent>
-                                  </Tooltip>
+                                   <Tooltip>
+                                     <TooltipTrigger asChild>
+                                       <Button
+                                         size="sm"
+                                         variant="outline"
+                                         onClick={(e) => {
+                                           e.stopPropagation();
+                                           handleRerouteStep(phaseIndex, stepIndex);
+                                         }}
+                                         disabled={isRerouteLoading || hasRerouteOptions || hasChosenRoute}
+                                         className="relative px-6 py-2.5 text-sm font-semibold
+                                           bg-background/60 hover:bg-background/80
+                                           border border-primary/40 hover:border-primary/70
+                                           text-primary
+                                           shadow-sm hover:shadow-md shadow-primary/10 hover:shadow-primary/20
+                                           transition-all duration-300 rounded-xl hover:scale-[1.05]
+                                           backdrop-blur-sm flex items-center gap-2
+                                           disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                                       >
+                                         {isRerouteLoading ? (
+                                           <>
+                                             <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                             Generating...
+                                           </>
+                                         ) : hasChosenRoute ? (
+                                           <>
+                                             <Sparkles className="w-3.5 h-3.5" />
+                                             Rerouted
+                                           </>
+                                         ) : (
+                                           <>
+                                             <GitBranch className="w-3.5 h-3.5" />
+                                             Reroute
+                                           </>
+                                         )}
+                                       </Button>
+                                     </TooltipTrigger>
+                                     <TooltipContent className="max-w-xs">
+                                       <p className="text-sm">
+                                         {hasChosenRoute
+                                           ? 'This step has already been rerouted with an alternative approach'
+                                           : 'Explore 3 alternative approaches with different strategies, each containing 3 actionable steps'
+                                         }
+                                       </p>
+                                     </TooltipContent>
+                                   </Tooltip>
                                 </div>
                               </TooltipProvider>
                             </div>

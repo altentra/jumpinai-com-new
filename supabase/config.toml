@@ -88,6 +88,9 @@ verify_jwt = false
 [functions.clarify-step]
 verify_jwt = true
 
+[functions.reroute-step]
+verify_jwt = true
+
 [realtime]
 enabled = true
 port = 54323
