@@ -383,33 +383,33 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
                               <div className="flex items-center justify-center gap-3">
                                 <Button
                                   size="sm"
-                                  variant="outline"
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     console.log('Clarify clicked for step:', phaseIndex, stepIndex);
                                   }}
-                                  className="relative flex items-center gap-2 px-4 py-2 text-sm font-semibold
-                                    bg-gradient-to-br from-primary/10 to-primary/5
-                                    border border-primary/30 hover:border-primary/50
+                                  className="relative flex items-center gap-2 px-6 py-2.5 text-sm font-semibold
+                                    bg-gradient-to-br from-primary/20 to-primary/10
+                                    border border-primary/30 hover:border-primary/60
                                     text-primary hover:text-primary
-                                    shadow-sm hover:shadow-md hover:shadow-primary/20
-                                    transition-all duration-300 rounded-lg hover:scale-105"
+                                    shadow-lg hover:shadow-xl hover:shadow-primary/30
+                                    transition-all duration-300 rounded-xl hover:scale-[1.05]
+                                    backdrop-blur-sm"
                                 >
                                   Clarify
                                 </Button>
                                 <Button
                                   size="sm"
-                                  variant="outline"
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     console.log('Reroute clicked for step:', phaseIndex, stepIndex);
                                   }}
-                                  className="relative flex items-center gap-2 px-4 py-2 text-sm font-semibold
-                                    bg-gradient-to-br from-primary/10 to-primary/5
-                                    border border-primary/30 hover:border-primary/50
+                                  className="relative flex items-center gap-2 px-6 py-2.5 text-sm font-semibold
+                                    bg-gradient-to-br from-primary/20 to-primary/10
+                                    border border-primary/30 hover:border-primary/60
                                     text-primary hover:text-primary
-                                    shadow-sm hover:shadow-md hover:shadow-primary/20
-                                    transition-all duration-300 rounded-lg hover:scale-105"
+                                    shadow-lg hover:shadow-xl hover:shadow-primary/30
+                                    transition-all duration-300 rounded-xl hover:scale-[1.05]
+                                    backdrop-blur-sm"
                                 >
                                   Reroute
                                 </Button>
