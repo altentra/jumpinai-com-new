@@ -513,7 +513,7 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                       className="bg-background/30 border border-primary/20 rounded-xl p-3 ml-4"
                                     >
                                       <div className="flex items-start gap-2 mb-2">
-                                        <div className="flex-shrink-0 px-2.5 py-1.5 rounded-lg bg-gradient-to-br from-primary/30 to-primary/20 flex items-center justify-center border border-primary/50 shadow-sm">
+                                        <div className="flex-shrink-0 px-2.5 py-1.5 rounded-lg bg-gradient-to-br from-primary/40 to-primary/30 flex items-center justify-center border border-primary/60 shadow-sm">
                                           <span className="text-xs font-bold text-primary/90 whitespace-nowrap">
                                             Sub-Step {subStepIndex + 1}
                                           </span>
@@ -524,13 +524,13 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                           </ReactMarkdown>
                                         </h5>
                                       </div>
-                                      <div className="text-xs text-muted-foreground/90 leading-relaxed ml-8">
+                                      <div className="text-xs text-muted-foreground/90 leading-relaxed">
                                         <ReactMarkdown className="prose prose-sm max-w-none [&>p]:mb-1 [&>p:last-child]:mb-0 [&_strong]:font-bold">
                                           {subStep.description}
                                         </ReactMarkdown>
                                       </div>
                                       {subStep.estimated_time && (
-                                        <div className="mt-2 ml-8">
+                                        <div className="mt-2">
                                           <Badge variant="outline" className="text-xs">
                                             {subStep.estimated_time}
                                           </Badge>
