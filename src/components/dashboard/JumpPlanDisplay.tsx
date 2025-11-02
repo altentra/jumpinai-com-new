@@ -513,10 +513,12 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                       className="bg-background/30 border border-primary/20 rounded-xl p-3 ml-4"
                                     >
                                       <div className="flex items-start gap-2 mb-2">
-                                        <Badge variant="secondary" className="text-xs shrink-0">
-                                          {subStepIndex + 1}
-                                        </Badge>
-                                        <h5 className="text-sm font-semibold text-foreground">
+                                        <div className="flex-shrink-0 px-2.5 py-1.5 rounded-lg bg-gradient-to-br from-primary/30 to-primary/20 flex items-center justify-center border border-primary/50 shadow-sm">
+                                          <span className="text-xs font-bold text-primary/90 whitespace-nowrap">
+                                            Sub-Step {subStepIndex + 1}
+                                          </span>
+                                        </div>
+                                        <h5 className="text-sm font-semibold text-foreground pt-0.5">
                                           <ReactMarkdown className="prose prose-sm max-w-none [&>p]:m-0 [&_strong]:font-bold">
                                             {subStep.title}
                                           </ReactMarkdown>
