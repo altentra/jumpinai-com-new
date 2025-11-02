@@ -392,7 +392,7 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
                                     bg-background/60 hover:bg-background/80
                                     border border-primary/40 hover:border-primary/70
                                     text-primary
-                                    shadow-lg hover:shadow-xl shadow-primary/20 hover:shadow-primary/30
+                                    shadow-sm hover:shadow-md shadow-primary/10 hover:shadow-primary/20
                                     transition-all duration-300 rounded-xl hover:scale-[1.05]
                                     backdrop-blur-sm"
                                 >
@@ -409,7 +409,7 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
                                     bg-background/60 hover:bg-background/80
                                     border border-primary/40 hover:border-primary/70
                                     text-primary
-                                    shadow-lg hover:shadow-xl shadow-primary/20 hover:shadow-primary/30
+                                    shadow-sm hover:shadow-md shadow-primary/10 hover:shadow-primary/20
                                     transition-all duration-300 rounded-xl hover:scale-[1.05]
                                     backdrop-blur-sm"
                                 >
