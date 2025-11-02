@@ -678,8 +678,8 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                              Sub-Step {subStepIndex + 1}
                                            </span>
                                          </div>
-                                         <h5 className="text-sm font-semibold text-foreground flex-1 leading-tight pt-0.5">
-                                           <ReactMarkdown className="prose prose-sm max-w-none [&>p]:mb-0">
+                                         <h5 className="text-sm font-semibold text-foreground pt-0.5">
+                                           <ReactMarkdown className="prose prose-sm max-w-none [&>p]:m-0 [&_strong]:font-bold">
                                              {subStep.title}
                                            </ReactMarkdown>
                                          </h5>
