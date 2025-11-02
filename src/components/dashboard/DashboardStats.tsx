@@ -87,20 +87,7 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({ stats, isLoading
                 <div>
                   <div className="flex items-baseline gap-1.5 sm:gap-2">
                     <p className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text">{stat.value}</p>
-                    {stat.implemented !== undefined && stat.value > 0 && (
-                      <span className="text-xs sm:text-sm font-medium text-muted-foreground">
-                        / {stat.implemented} done
-                      </span>
-                    )}
                   </div>
-                  {stat.implemented !== undefined && stat.value > 0 && (
-                    <div className="mt-1.5 sm:mt-2">
-                      <Progress 
-                        value={(stat.implemented / stat.value) * 100} 
-                        className="h-1 sm:h-1.5"
-                      />
-                    </div>
-                  )}
                 </div>
               </div>
             </CardContent>
