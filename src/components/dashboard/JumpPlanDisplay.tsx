@@ -595,13 +595,9 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                      className="bg-background/40 border border-primary/30 rounded-xl p-4 flex flex-col"
                                    >
                                      <div className="mb-3">
-                                       <div className="flex items-center gap-2 mb-2">
-                                         <div className="px-2.5 py-1.5 rounded-lg bg-gradient-to-br from-primary/50 to-primary/30 flex items-center justify-center border border-primary/60 shadow-sm">
-                                           <span className="text-xs font-bold text-primary whitespace-nowrap">
-                                             Direction {dirIndex + 1}
-                                           </span>
-                                         </div>
-                                       </div>
+                                       <h4 className="text-sm font-semibold text-foreground text-center mb-3">
+                                         Direction {dirIndex + 1}
+                                       </h4>
                                        <div className="text-sm text-muted-foreground/90 leading-relaxed">
                                          <ReactMarkdown className="prose prose-sm max-w-none [&>p]:mb-2 [&>p:last-child]:mb-0">
                                            {direction.overview}
