@@ -233,151 +233,157 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
   return (
     <div className="w-full space-y-8">
       {phases.map((phase: any, phaseIndex: number) => (
-        <Card key={phaseIndex} className="overflow-hidden border-primary/20 bg-gradient-to-br from-card/95 to-primary/5 shadow-xl rounded-3xl backdrop-blur-sm">
-          <CardHeader className="pb-4 bg-gradient-to-r from-primary/15 via-primary/10 to-primary/5 border-b border-primary/20">
-            <div className="flex items-start gap-4">
-              <div className="flex-shrink-0">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600 flex flex-col items-center justify-center shadow-lg border-2 border-gray-400 dark:border-gray-500">
-                  <span className="text-[10px] font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Phase</span>
-                  <span className="text-2xl font-bold text-gray-800 dark:text-gray-100 leading-none mt-0.5">
-                    {phase.phase_number || phaseIndex + 1}
-                  </span>
+        <div key={phaseIndex} className="relative group">
+          <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
+          <Card className="relative glass backdrop-blur-lg bg-card/80 border border-border hover:border-primary/40 transition-all duration-300">
+            <CardHeader className="pb-4">
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0">
+                  <div className="w-16 h-16 rounded-xl bg-primary/10 flex flex-col items-center justify-center border border-primary/30">
+                    <span className="text-[10px] font-semibold text-primary uppercase tracking-wider">Phase</span>
+                    <span className="text-2xl font-bold text-primary leading-none mt-0.5">
+                      {phase.phase_number || phaseIndex + 1}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <CardTitle className="text-2xl font-bold mb-2">
+                    <ReactMarkdown className="prose max-w-none [&>p]:m-0 [&_strong]:font-bold">
+                      {phase.title || `Phase ${phaseIndex + 1}`}
+                    </ReactMarkdown>
+                  </CardTitle>
+                  {phase.description && (
+                    <div className="text-muted-foreground leading-relaxed">
+                      <ReactMarkdown className="prose prose-sm max-w-none [&>p]:mb-2 [&>p:last-child]:mb-0 [&_strong]:font-bold [&_em]:italic">
+                        {phase.description}
+                      </ReactMarkdown>
+                    </div>
+                  )}
+                  {phase.duration && (
+                    <div className="flex items-center gap-2 mt-3">
+                      <Badge variant="outline" className="text-xs">
+                        <ReactMarkdown className="inline [&>p]:inline [&>p]:m-0 [&_strong]:font-bold">
+                          {`Duration: ${phase.duration}`}
+                        </ReactMarkdown>
+                      </Badge>
+                    </div>
+                  )}
                 </div>
               </div>
-              <div className="flex-1 min-w-0">
-                <CardTitle className="text-2xl font-bold mb-2 bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">
-                  <ReactMarkdown className="prose max-w-none [&>p]:m-0 [&_strong]:font-bold">
-                    {phase.title || `Phase ${phaseIndex + 1}`}
-                  </ReactMarkdown>
-                </CardTitle>
-                {phase.description && (
-                  <div className="text-muted-foreground leading-relaxed">
-                    <ReactMarkdown className="prose prose-sm max-w-none [&>p]:mb-2 [&>p:last-child]:mb-0 [&_strong]:font-bold [&_em]:italic">
-                      {phase.description}
-                    </ReactMarkdown>
-                  </div>
-                )}
-                {phase.duration && (
-                  <div className="flex items-center gap-2 mt-3">
-                    <Badge variant="secondary" className="bg-primary/20 text-primary border-primary/30 rounded-full">
-                      <ReactMarkdown className="inline [&>p]:inline [&>p]:m-0 [&_strong]:font-bold">
-                        {`Duration: ${phase.duration}`}
-                      </ReactMarkdown>
-                    </Badge>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="space-y-4">
+                {Array.isArray(phase.steps) && phase.steps.length > 0 ? (
+                  phase.steps.map((step: any, stepIndex: number) => (
+                    <div key={stepIndex} className="relative group">
+                      <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/15 via-accent/10 to-secondary/15 rounded-lg blur opacity-20 group-hover:opacity-40 transition duration-300"></div>
+                      <Card className="relative glass backdrop-blur-sm bg-card/60 border border-border hover:border-primary/40 transition-all duration-300">
+                        <CardHeader className="pb-3">
+                          <div className="flex items-start gap-3">
+                            <div className="flex-shrink-0">
+                              <div className="w-12 h-12 rounded-lg bg-primary/10 flex flex-col items-center justify-center border border-primary/30 group-hover:border-primary/50 transition-colors">
+                                <span className="text-[9px] font-semibold text-primary uppercase tracking-wider">Step</span>
+                                <span className="text-lg font-bold text-primary leading-none">
+                                  {stepIndex + 1}
+                                </span>
+                              </div>
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <CardTitle className="text-lg font-semibold mb-1">
+                                <ReactMarkdown className="prose prose-sm max-w-none [&>p]:m-0 [&_strong]:font-bold">
+                                  {step.title || step.action || `Step ${stepIndex + 1}`}
+                                </ReactMarkdown>
+                              </CardTitle>
+                              {step.brief_description && (
+                                <div className="text-sm text-muted-foreground">
+                                  <ReactMarkdown className="prose prose-sm max-w-none [&>p]:m-0 [&_strong]:font-bold">
+                                    {step.brief_description}
+                                  </ReactMarkdown>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </CardHeader>
+                        <CardContent className="pt-0 pb-4 space-y-4">
+                          <div className="text-sm text-muted-foreground leading-relaxed">
+                            <ReactMarkdown className="prose prose-sm max-w-none [&>p]:mb-2 [&>p:last-child]:mb-0 [&_strong]:font-bold [&_em]:italic">
+                              {step.description || step.details || 'No description available'}
+                            </ReactMarkdown>
+                          </div>
+                          {step.tools_prompts && Array.isArray(step.tools_prompts) && step.tools_prompts.length > 0 && (
+                            <div className="space-y-2">
+                              <p className="text-xs font-semibold text-primary uppercase tracking-wide">Recommended Tools:</p>
+                              <div className="flex flex-wrap gap-2">
+                                {step.tools_prompts.map((tool: string, toolIndex: number) => (
+                                  <Badge key={toolIndex} variant="outline" className="text-xs">
+                                    {tool}
+                                  </Badge>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                      
+                          {/* Tools & Prompts Combo Section - Only for first 3 steps of each phase */}
+                          {(() => {
+                            const comboIndex = getToolPromptComboIndex(phaseIndex, stepIndex);
+                            if (comboIndex === null) return null;
+                            
+                            // Get the actual tool prompt ID (check if it exists and is not null)
+                            const toolPromptId = toolPromptIds?.[comboIndex];
+                            const hasValidToolPromptId = toolPromptId && toolPromptId !== 'null' && toolPromptId !== null;
+                            
+                            return (
+                              <div className={`p-3 rounded-lg border ${hasValidToolPromptId ? 'bg-blue-500/10 border-blue-500/20' : 'bg-muted/20 border-border'}`}>
+                                <div className="flex items-center justify-between gap-3">
+                                  <div className="flex items-start gap-2 flex-1">
+                                    <Sparkles className={`w-4 h-4 mt-0.5 shrink-0 ${hasValidToolPromptId ? 'text-blue-400' : 'text-muted-foreground'}`} />
+                                    <div>
+                                      <p className={`text-xs font-medium mb-1 ${hasValidToolPromptId ? 'text-blue-400' : 'text-muted-foreground'}`}>
+                                        Tools & Prompts for this Step
+                                      </p>
+                                      <p className="text-xs text-muted-foreground leading-relaxed">
+                                        {hasValidToolPromptId 
+                                          ? "We've created a custom AI tool & ready-to-use prompt specifically for this step"
+                                          : "Custom tool & prompt combo will be available once generation completes"
+                                        }
+                                      </p>
+                                    </div>
+                                  </div>
+                                  {hasValidToolPromptId ? (
+                                    <Button
+                                      size="sm"
+                                      variant="outline"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleToolPromptClick(comboIndex);
+                                      }}
+                                      className="shrink-0 gap-1 h-8 text-xs"
+                                    >
+                                      <Sparkles className="w-3 h-3" />
+                                      View Combo
+                                    </Button>
+                                  ) : (
+                                    <Badge variant="secondary" className="text-xs shrink-0">
+                                      Generating...
+                                    </Badge>
+                                  )}
+                                </div>
+                              </div>
+                            );
+                          })()}
+                        </CardContent>
+                      </Card>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-center py-4">
+                    <p className="text-sm text-muted-foreground">No steps available</p>
                   </div>
                 )}
               </div>
-            </div>
-          </CardHeader>
-          <CardContent className="p-6">
-            <div className="space-y-4">
-              {Array.isArray(phase.steps) && phase.steps.length > 0 ? (
-                phase.steps.map((step: any, stepIndex: number) => (
-                  <Card key={stepIndex} className="group overflow-hidden border-2 border-primary/30 bg-gradient-to-br from-card via-card/95 to-primary/5 hover:border-primary/50 transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-primary/20 hover:-translate-y-1 rounded-[24px]">
-                    <CardHeader className="pb-3">
-                      <div className="flex items-start gap-4">
-                        <div className="flex-shrink-0">
-                          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/40 via-primary/30 to-primary/20 flex flex-col items-center justify-center shadow-lg group-hover:shadow-xl group-hover:scale-105 transition-all duration-300">
-                            <span className="text-[10px] font-semibold text-primary/80 uppercase tracking-wider">Step</span>
-                            <span className="text-xl font-bold text-primary leading-none">
-                              {stepIndex + 1}
-                            </span>
-                          </div>
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <CardTitle className="text-lg font-semibold mb-1 group-hover:text-primary transition-colors">
-                            <ReactMarkdown className="prose prose-sm max-w-none [&>p]:m-0 [&_strong]:font-bold [&_strong]:text-primary">
-                              {step.title || step.action || `Step ${stepIndex + 1}`}
-                            </ReactMarkdown>
-                          </CardTitle>
-                          {step.brief_description && (
-                            <div className="text-sm text-muted-foreground/90 font-medium">
-                              <ReactMarkdown className="prose prose-sm max-w-none [&>p]:m-0 [&_strong]:font-bold">
-                                {step.brief_description}
-                              </ReactMarkdown>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="pt-0 pb-4">
-                      <div className="text-sm text-muted-foreground leading-relaxed ml-[72px]">
-                        <ReactMarkdown className="prose prose-sm max-w-none [&>p]:mb-2 [&>p:last-child]:mb-0 [&_strong]:font-bold [&_strong]:text-foreground/90 [&_em]:italic">
-                          {step.description || step.details || 'No description available'}
-                        </ReactMarkdown>
-                      </div>
-                      {step.tools_prompts && Array.isArray(step.tools_prompts) && step.tools_prompts.length > 0 && (
-                        <div className="mt-4 ml-[72px] space-y-2">
-                          <p className="text-xs font-semibold text-primary uppercase tracking-wide">Recommended Tools:</p>
-                          <div className="flex flex-wrap gap-2">
-                            {step.tools_prompts.map((tool: string, toolIndex: number) => (
-                              <Badge key={toolIndex} variant="outline" className="text-xs border-primary/30 bg-primary/10">
-                                {tool}
-                              </Badge>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                      
-                      {/* Tools & Prompts Combo Section - Only for first 3 steps of each phase */}
-                      {(() => {
-                        const comboIndex = getToolPromptComboIndex(phaseIndex, stepIndex);
-                        if (comboIndex === null) return null;
-                        
-                        // Get the actual tool prompt ID (check if it exists and is not null)
-                        const toolPromptId = toolPromptIds?.[comboIndex];
-                        const hasValidToolPromptId = toolPromptId && toolPromptId !== 'null' && toolPromptId !== null;
-                        
-                        return (
-                          <div className="mt-4 ml-[72px]">
-                            <div className={`p-4 rounded-xl border-2 ${hasValidToolPromptId ? 'border-primary/30 bg-gradient-to-br from-primary/5 via-primary/10 to-accent/5' : 'border-muted-foreground/20 bg-muted/20'} backdrop-blur-sm animate-fade-in`}>
-                              <div className="flex items-center justify-between gap-3">
-                                <div className="flex items-start gap-2 flex-1">
-                                  <Sparkles className={`w-4 h-4 mt-1 shrink-0 ${hasValidToolPromptId ? 'text-primary' : 'text-muted-foreground'}`} />
-                                  <div className="space-y-1">
-                                    <p className={`text-xs font-bold uppercase tracking-wide ${hasValidToolPromptId ? 'text-primary' : 'text-muted-foreground'}`}>
-                                      Tools & Prompts for this Step
-                                    </p>
-                                    <p className="text-xs text-muted-foreground leading-relaxed">
-                                      {hasValidToolPromptId 
-                                        ? "We've created a custom AI tool & ready-to-use prompt specifically for this step"
-                                        : "Custom tool & prompt combo will be available once generation completes"
-                                      }
-                                    </p>
-                                  </div>
-                                </div>
-                                {hasValidToolPromptId ? (
-                                  <Button
-                                    size="sm"
-                                    variant="default"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      handleToolPromptClick(comboIndex);
-                                    }}
-                                    className="shrink-0 gap-2 bg-primary hover:bg-primary/90 shadow-lg hover:shadow-xl transition-all"
-                                  >
-                                    View Combo #{comboIndex + 1}
-                                    <ExternalLink className="w-3 h-3" />
-                                  </Button>
-                                ) : (
-                                  <Badge variant="outline" className="shrink-0 text-xs border-muted-foreground/30 text-muted-foreground">
-                                    Combo #{comboIndex + 1}
-                                  </Badge>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      })()}
-                    </CardContent>
-                  </Card>
-                ))
-              ) : (
-                <p className="text-muted-foreground text-center py-8">No steps defined for this phase</p>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </div>
       ))}
     </div>
   );
