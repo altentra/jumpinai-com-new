@@ -231,7 +231,7 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
   };
 
   return (
-    <div className="w-full max-w-full overflow-x-hidden space-y-6 sm:space-y-8">
+    <div className="w-full max-w-full space-y-6 sm:space-y-8" style={{ overflow: 'visible' }}>
       {phases.map((phase: any, phaseIndex: number) => (
         <div key={phaseIndex} className="relative group">
           <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
