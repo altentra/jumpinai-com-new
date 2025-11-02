@@ -230,7 +230,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
       )}
 
       {/* Content Tabs - Ultra Premium Design */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full [&>[role=tabpanel]]:!overflow-visible [&>[role=tabpanel]]:!max-h-none">
         <div className="relative mb-8">
           {/* Mobile: Full width tabs */}
           <div className="sm:hidden pb-4">

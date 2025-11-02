@@ -443,3 +443,25 @@
     overflow-wrap: anywhere;
   }
 }
+
+/* Force Radix Tabs to not create internal scroll */
+[data-radix-scroll-area-viewport] {
+  overflow: visible !important;
+  max-height: none !important;
+  height: auto !important;
+}
+
+/* Ensure TabsContent doesn't create scroll containers */
+[role="tabpanel"] {
+  overflow: visible !important;
+  max-height: none !important;
+  height: auto !important;
+}
+
+/* Ensure Tabs root doesn't restrict height */
+[data-orientation="horizontal"][role="tablist"] ~ * {
+  overflow: visible !important;
+  max-height: none !important;
+}
+
+
