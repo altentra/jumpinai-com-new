@@ -26,7 +26,7 @@ export default function JumpCard({ jump, jumpNumber, onView, onDelete }: JumpCar
   };
 
   const jumpName = getJumpName(jump.title);
-  const displayTitle = `Jump #${jumpNumber}: ${jumpName}`;
+  const displayTitle = jumpName;
 
   const handleCardClick = (e: React.MouseEvent) => {
     // Don't trigger if clicking delete button
@@ -55,11 +55,6 @@ export default function JumpCard({ jump, jumpNumber, onView, onDelete }: JumpCar
       <CardHeader className="pb-4 relative z-10">
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1 min-w-0 space-y-3">
-          {/* Badge */}
-            <Badge className="bg-gradient-to-br from-background/95 via-background/90 to-background/85 dark:from-background/98 dark:via-background/95 dark:to-background/90 text-foreground border border-primary/20 shadow-lg shadow-primary/10 text-xs font-bold px-3 py-1.5 rounded-full backdrop-blur-xl">
-              #{jumpNumber}
-            </Badge>
-            
             {/* Title */}
             <CardTitle className="text-xl font-display font-bold line-clamp-2 bg-gradient-to-r from-foreground via-foreground to-foreground/70 bg-clip-text text-transparent leading-tight group-hover:from-primary group-hover:via-primary group-hover:to-primary/70 transition-all duration-500">
               {displayTitle}
@@ -72,6 +67,13 @@ export default function JumpCard({ jump, jumpNumber, onView, onDelete }: JumpCar
               </div>
               <span>Created {formatDate(jump.created_at)}</span>
             </div>
+            
+            {/* Summary */}
+            {jump.summary && (
+              <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed">
+                {jump.summary}
+              </p>
+            )}
           </div>
           
           {/* Delete Button - Top Right */}
