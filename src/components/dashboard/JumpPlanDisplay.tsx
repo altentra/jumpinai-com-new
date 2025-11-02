@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { safeParseJSON } from '@/utils/safeJson';
 import ReactMarkdown from 'react-markdown';
-import { ExternalLink, Sparkles } from 'lucide-react';
+import { ArrowRight, Sparkles } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 interface JumpPlanDisplayProps {
@@ -371,7 +371,7 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
                                          backdrop-blur-sm flex items-center gap-2"
                                      >
                                        View
-                                       <ExternalLink className="w-3.5 h-3.5" />
+                                       <ArrowRight className="w-3.5 h-3.5" />
                                      </Button>
                                   ) : (
                                     <Badge variant="secondary" className="text-[10px] shrink-0 h-6">
