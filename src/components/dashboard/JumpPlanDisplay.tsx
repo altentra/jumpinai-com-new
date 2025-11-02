@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { safeParseJSON } from '@/utils/safeJson';
 import ReactMarkdown from 'react-markdown';
 import { ArrowRight, Sparkles, Lightbulb, GitBranch } from 'lucide-react';
@@ -386,44 +387,61 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
                           {/* Expandable Action Buttons Row - Only visible on hover */}
                           {isHovered && (
                             <div className="mt-3 pt-3 border-t border-primary/20 animate-fade-in">
-                              <div className="flex items-center justify-center gap-3">
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    console.log('Clarify clicked for step:', phaseIndex, stepIndex);
-                                  }}
-                                  className="relative px-6 py-2.5 text-sm font-semibold
-                                    bg-background/60 hover:bg-background/80
-                                    border border-primary/40 hover:border-primary/70
-                                    text-primary
-                                    shadow-sm hover:shadow-md shadow-primary/10 hover:shadow-primary/20
-                                    transition-all duration-300 rounded-xl hover:scale-[1.05]
-                                    backdrop-blur-sm flex items-center gap-2"
-                                >
-                                  <Sparkles className="w-3.5 h-3.5" />
-                                  Clarify
-                                </Button>
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    console.log('Reroute clicked for step:', phaseIndex, stepIndex);
-                                  }}
-                                  className="relative px-6 py-2.5 text-sm font-semibold
-                                    bg-background/60 hover:bg-background/80
-                                    border border-primary/40 hover:border-primary/70
-                                    text-primary
-                                    shadow-sm hover:shadow-md shadow-primary/10 hover:shadow-primary/20
-                                    transition-all duration-300 rounded-xl hover:scale-[1.05]
-                                    backdrop-blur-sm flex items-center gap-2"
-                                >
-                                  <GitBranch className="w-3.5 h-3.5" />
-                                  Reroute
-                                </Button>
-                              </div>
+                              <TooltipProvider>
+                                <div className="flex items-center justify-center gap-3">
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <Button
+                                        size="sm"
+                                        variant="outline"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          console.log('Clarify clicked for step:', phaseIndex, stepIndex);
+                                        }}
+                                        className="relative px-6 py-2.5 text-sm font-semibold
+                                          bg-background/60 hover:bg-background/80
+                                          border border-primary/40 hover:border-primary/70
+                                          text-primary
+                                          shadow-sm hover:shadow-md shadow-primary/10 hover:shadow-primary/20
+                                          transition-all duration-300 rounded-xl hover:scale-[1.05]
+                                          backdrop-blur-sm flex items-center gap-2"
+                                      >
+                                        <Sparkles className="w-3.5 h-3.5" />
+                                        Clarify
+                                      </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent className="max-w-xs">
+                                      <p className="text-sm">Generate 5 detailed sub-steps to break down this action with greater clarity and precision</p>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                  
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <Button
+                                        size="sm"
+                                        variant="outline"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          console.log('Reroute clicked for step:', phaseIndex, stepIndex);
+                                        }}
+                                        className="relative px-6 py-2.5 text-sm font-semibold
+                                          bg-background/60 hover:bg-background/80
+                                          border border-primary/40 hover:border-primary/70
+                                          text-primary
+                                          shadow-sm hover:shadow-md shadow-primary/10 hover:shadow-primary/20
+                                          transition-all duration-300 rounded-xl hover:scale-[1.05]
+                                          backdrop-blur-sm flex items-center gap-2"
+                                      >
+                                        <GitBranch className="w-3.5 h-3.5" />
+                                        Reroute
+                                      </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent className="max-w-xs">
+                                      <p className="text-sm">Explore 3 alternative approaches with different strategies, each containing 3 actionable steps</p>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </div>
+                              </TooltipProvider>
                             </div>
                           )}
                         </div>
