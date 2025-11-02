@@ -14,6 +14,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { User, Shield, Crown, CreditCard, RefreshCw, Save, LogOut, ExternalLink, AlertTriangle, History, Trash2, Download, Loader2 } from "lucide-react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { useIsMobile } from "@/hooks/use-mobile";
+import DataStatsSection from "@/components/profile/DataStatsSection";
 
 interface SubscriberInfo {
   subscribed: boolean;
@@ -532,7 +533,7 @@ export default function ProfileTabs() {
           {/* Profile & Overview Combined */}
           <TabsContent value="profile" className="mt-4 sm:mt-6 animate-fade-in space-y-4 sm:space-y-6">
             {/* Email & Account Status */}
-            <Card>
+            <Card className="glass border-border/40 shadow-modern">
               <CardHeader className="pb-3 sm:pb-6">
                 <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
                   <User className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" /> 
@@ -583,6 +584,9 @@ export default function ProfileTabs() {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Data Statistics Section */}
+            <DataStatsSection />
 
             {/* Account Actions */}
             <div className="flex flex-col sm:flex-row gap-3 pt-2">
@@ -649,7 +653,7 @@ export default function ProfileTabs() {
 
           {/* Security */}
           <TabsContent value="security" className="mt-4 sm:mt-6 animate-fade-in">
-            <Card>
+            <Card className="glass border-border/40 shadow-modern">
               <CardHeader className="pb-3 sm:pb-6">
                 <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
                   <Shield className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" /> 
@@ -703,7 +707,7 @@ export default function ProfileTabs() {
 
           {/* Order History */}
           <TabsContent value="orders" className="mt-4 sm:mt-6 animate-fade-in">
-            <Card>
+            <Card className="glass border-border/40 shadow-modern">
               <CardHeader className="pb-3 sm:pb-6">
                 <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
                   <History className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" /> 
