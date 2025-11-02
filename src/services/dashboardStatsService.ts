@@ -14,6 +14,8 @@ export interface ActivityData {
   date: string;
   jumps: number;
   components: number;
+  clarifications: number;
+  reroutes: number;
   total: number;
 }
 
@@ -82,19 +84,21 @@ export const dashboardStatsService = {
       startDate.setDate(startDate.getDate() - days);
 
       // Fetch all data with created_at timestamps
-      const [jumpsRes, toolPromptsRes] = await Promise.all([
+      const [jumpsRes, toolPromptsRes, clarificationsRes, reroutesRes] = await Promise.all([
         supabase.from('user_jumps').select('created_at').eq('user_id', userId).gte('created_at', startDate.toISOString()),
         supabase.from('user_tool_prompts').select('created_at').eq('user_id', userId).gte('created_at', startDate.toISOString()),
+        supabase.from('user_jump_actions').select('created_at').eq('user_id', userId).eq('action_type', 'clarify').gte('created_at', startDate.toISOString()),
+        supabase.from('user_jump_actions').select('created_at').eq('user_id', userId).eq('action_type', 'reroute').gte('created_at', startDate.toISOString()),
       ]);
 
       // Create a map for all dates in range
-      const dateMap = new Map<string, { jumps: number; components: number }>();
+      const dateMap = new Map<string, { jumps: number; components: number; clarifications: number; reroutes: number }>();
       
       for (let i = 0; i < days; i++) {
         const date = new Date();
         date.setDate(date.getDate() - i);
         const dateKey = date.toISOString().split('T')[0];
-        dateMap.set(dateKey, { jumps: 0, components: 0 });
+        dateMap.set(dateKey, { jumps: 0, components: 0, clarifications: 0, reroutes: 0 });
       }
 
       // Count jumps per day
@@ -113,13 +117,31 @@ export const dashboardStatsService = {
         }
       });
 
+      // Count clarifications per day
+      clarificationsRes.data?.forEach(item => {
+        const dateKey = new Date(item.created_at).toISOString().split('T')[0];
+        if (dateMap.has(dateKey)) {
+          dateMap.get(dateKey)!.clarifications += 1;
+        }
+      });
+
+      // Count reroutes per day
+      reroutesRes.data?.forEach(item => {
+        const dateKey = new Date(item.created_at).toISOString().split('T')[0];
+        if (dateMap.has(dateKey)) {
+          dateMap.get(dateKey)!.reroutes += 1;
+        }
+      });
+
       // Convert to array and sort by date
       const activityData: ActivityData[] = Array.from(dateMap.entries())
         .map(([date, counts]) => ({
           date,
           jumps: counts.jumps,
           components: counts.components,
-          total: counts.jumps + counts.components,
+          clarifications: counts.clarifications,
+          reroutes: counts.reroutes,
+          total: counts.jumps + counts.components + counts.clarifications + counts.reroutes,
         }))
         .sort((a, b) => a.date.localeCompare(b.date));
 
