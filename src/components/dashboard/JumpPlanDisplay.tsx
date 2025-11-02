@@ -181,6 +181,8 @@ function normalizeToComprehensive(input: any): any {
 }
 
 export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, onDownload, jumpId, toolPromptIds, onToolPromptClick }: JumpPlanDisplayProps) {
+  const [hoveredStep, setHoveredStep] = React.useState<{ phaseIndex: number; stepIndex: number } | null>(null);
+  
   if (!planContent.trim() && !structuredPlan) {
     return null;
   }
@@ -274,9 +276,16 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
             <CardContent className="p-3 sm:p-4 md:p-6">
               <div className="space-y-3 sm:space-y-4">
                 {Array.isArray(phase.steps) && phase.steps.length > 0 ? (
-                  phase.steps.map((step: any, stepIndex: number) => (
-                    <div key={stepIndex} className="group">
-                      <div className="bg-background/40 backdrop-blur-[2px] border border-primary/40 border-l-2 border-l-primary/50 hover:border-primary/70 hover:border-l-primary/80 rounded-2xl sm:rounded-3xl p-3 sm:p-4 md:p-5 hover:bg-background/60 transition-all duration-300 shadow-[0_2px_8px_rgba(var(--primary),0.15)] hover:shadow-[0_4px_16px_rgba(var(--primary),0.25)]">
+                  phase.steps.map((step: any, stepIndex: number) => {
+                    const isHovered = hoveredStep?.phaseIndex === phaseIndex && hoveredStep?.stepIndex === stepIndex;
+                    
+                    return (
+                      <div key={stepIndex} className="group">
+                        <div 
+                          className="bg-background/40 backdrop-blur-[2px] border border-primary/40 border-l-2 border-l-primary/50 hover:border-primary/70 hover:border-l-primary/80 rounded-2xl sm:rounded-3xl p-3 sm:p-4 md:p-5 hover:bg-background/60 transition-all duration-300 shadow-[0_2px_8px_rgba(var(--primary),0.15)] hover:shadow-[0_4px_16px_rgba(var(--primary),0.25)]"
+                          onMouseEnter={() => setHoveredStep({ phaseIndex, stepIndex })}
+                          onMouseLeave={() => setHoveredStep(null)}
+                        >
                         <div className="flex items-start gap-3 sm:gap-4 mb-3">
                           <div className="flex-shrink-0 pt-0.5">
                             <div className="px-3 py-2 rounded-xl bg-gradient-to-br from-primary/25 to-primary/15 flex items-center justify-center border border-primary/40 shadow-sm">
@@ -367,10 +376,51 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
                               </div>
                             );
                           })()}
+                          
+                          {/* Expandable Action Buttons Row - Only visible on hover */}
+                          {isHovered && (
+                            <div className="mt-3 pt-3 border-t border-primary/20 animate-fade-in">
+                              <div className="flex items-center justify-center gap-3">
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    console.log('Clarify clicked for step:', phaseIndex, stepIndex);
+                                  }}
+                                  className="relative flex items-center gap-2 px-4 py-2 text-sm font-semibold
+                                    bg-gradient-to-br from-primary/10 to-primary/5
+                                    border border-primary/30 hover:border-primary/50
+                                    text-primary hover:text-primary
+                                    shadow-sm hover:shadow-md hover:shadow-primary/20
+                                    transition-all duration-300 rounded-lg hover:scale-105"
+                                >
+                                  Clarify
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    console.log('Reroute clicked for step:', phaseIndex, stepIndex);
+                                  }}
+                                  className="relative flex items-center gap-2 px-4 py-2 text-sm font-semibold
+                                    bg-gradient-to-br from-primary/10 to-primary/5
+                                    border border-primary/30 hover:border-primary/50
+                                    text-primary hover:text-primary
+                                    shadow-sm hover:shadow-md hover:shadow-primary/20
+                                    transition-all duration-300 rounded-lg hover:scale-105"
+                                >
+                                  Reroute
+                                </Button>
+                              </div>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
-                  ))
+                  );
+                  })
                 ) : (
                   <div className="text-center py-4">
                     <p className="text-sm text-muted-foreground">No steps available</p>
