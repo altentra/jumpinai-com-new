@@ -431,3 +431,15 @@
   animation: highlight-pulse 1.5s ease-in-out 2;
   border: 2px solid hsl(var(--primary) / 0.6) !important;
 }
+
+/* Mobile Optimization Utilities */
+@layer utilities {
+  .overflow-wrap-anywhere {
+    overflow-wrap: anywhere;
+  }
+  
+  .break-anywhere {
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+}

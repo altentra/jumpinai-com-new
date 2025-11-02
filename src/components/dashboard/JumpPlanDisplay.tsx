@@ -231,30 +231,30 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
   };
 
   return (
-    <div className="w-full space-y-8">
+    <div className="w-full max-w-full overflow-x-hidden space-y-6 sm:space-y-8">
       {phases.map((phase: any, phaseIndex: number) => (
         <div key={phaseIndex} className="relative group">
           <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
           <Card className="relative glass backdrop-blur-lg bg-card/80 border border-border hover:border-primary/40 transition-all duration-300">
             <CardHeader className="pb-4">
-              <div className="flex items-start gap-4">
+              <div className="flex items-start gap-3 sm:gap-4">
                 <div className="flex-shrink-0">
-                  <div className="w-16 h-16 rounded-xl bg-primary/10 flex flex-col items-center justify-center border border-primary/30">
-                    <span className="text-[10px] font-semibold text-primary uppercase tracking-wider">Phase</span>
-                    <span className="text-2xl font-bold text-primary leading-none mt-0.5">
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl bg-primary/10 flex flex-col items-center justify-center border border-primary/30">
+                    <span className="text-[9px] sm:text-[10px] font-semibold text-primary uppercase tracking-wider">Phase</span>
+                    <span className="text-xl sm:text-2xl font-bold text-primary leading-none mt-0.5">
                       {phase.phase_number || phaseIndex + 1}
                     </span>
                   </div>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <CardTitle className="text-2xl font-bold mb-2">
-                    <ReactMarkdown className="prose max-w-none [&>p]:m-0 [&_strong]:font-bold">
+                  <CardTitle className="text-lg sm:text-xl md:text-2xl font-bold mb-2">
+                    <ReactMarkdown className="prose max-w-none break-words [&>p]:m-0 [&_strong]:font-bold">
                       {phase.title || `Phase ${phaseIndex + 1}`}
                     </ReactMarkdown>
                   </CardTitle>
                   {phase.description && (
                     <div className="text-muted-foreground leading-relaxed">
-                      <ReactMarkdown className="prose prose-sm max-w-none [&>p]:mb-2 [&>p:last-child]:mb-0 [&_strong]:font-bold [&_em]:italic">
+                      <ReactMarkdown className="prose prose-sm max-w-none break-words overflow-wrap-anywhere [&>p]:mb-2 [&>p:last-child]:mb-0 [&_strong]:font-bold [&_em]:italic">
                         {phase.description}
                       </ReactMarkdown>
                     </div>
@@ -271,13 +271,13 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="p-6">
-              <div className="space-y-4">
+            <CardContent className="p-3 sm:p-4 md:p-6">
+              <div className="space-y-3 sm:space-y-4">
                 {Array.isArray(phase.steps) && phase.steps.length > 0 ? (
                   phase.steps.map((step: any, stepIndex: number) => (
                     <div key={stepIndex} className="group">
-                      <div className="bg-background/40 backdrop-blur-[2px] border border-primary/40 border-l-2 border-l-primary/50 hover:border-primary/70 hover:border-l-primary/80 rounded-3xl p-5 hover:bg-background/60 transition-all duration-300 shadow-[0_2px_8px_rgba(var(--primary),0.15)] hover:shadow-[0_4px_16px_rgba(var(--primary),0.25)]">
-                        <div className="flex items-start gap-3 mb-3">
+                      <div className="bg-background/40 backdrop-blur-[2px] border border-primary/40 border-l-2 border-l-primary/50 hover:border-primary/70 hover:border-l-primary/80 rounded-2xl sm:rounded-3xl p-3 sm:p-4 md:p-5 hover:bg-background/60 transition-all duration-300 shadow-[0_2px_8px_rgba(var(--primary),0.15)] hover:shadow-[0_4px_16px_rgba(var(--primary),0.25)]">
+                        <div className="flex items-start gap-2 sm:gap-3 mb-2 sm:mb-3">
                           <div className="flex-shrink-0">
                             <div className="px-3 py-2 rounded-lg bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center border border-primary/30">
                               <span className="text-sm font-bold text-primary whitespace-nowrap">
@@ -286,8 +286,8 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
                             </div>
                           </div>
                           <div className="flex-1 min-w-0">
-                            <h4 className="text-[17px] font-semibold mb-1.5 text-foreground">
-                              <ReactMarkdown className="prose prose-sm max-w-none [&>p]:m-0 [&_strong]:font-bold">
+                            <h4 className="text-sm sm:text-base md:text-[17px] font-semibold mb-1.5 text-foreground">
+                              <ReactMarkdown className="prose prose-sm max-w-none break-words [&>p]:m-0 [&_strong]:font-bold">
                                 {step.title || step.action || `Step ${stepIndex + 1}`}
                               </ReactMarkdown>
                             </h4>
@@ -300,9 +300,9 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
                             )}
                           </div>
                         </div>
-                        <div className="space-y-3 pl-13">
-                          <div className="text-sm text-muted-foreground/90 leading-relaxed">
-                            <ReactMarkdown className="prose prose-sm max-w-none [&>p]:mb-2 [&>p:last-child]:mb-0 [&_strong]:font-bold [&_em]:italic">
+                        <div className="space-y-2 sm:space-y-3 pl-0 sm:pl-13">
+                          <div className="text-xs sm:text-sm text-muted-foreground/90 leading-relaxed">
+                            <ReactMarkdown className="prose prose-sm max-w-none break-words overflow-wrap-anywhere [&>p]:mb-2 [&>p:last-child]:mb-0 [&_strong]:font-bold [&_em]:italic">
                               {step.description || step.details || 'No description available'}
                             </ReactMarkdown>
                           </div>

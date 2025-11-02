@@ -353,7 +353,7 @@ export default function ViewJump() {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-accent/3 to-transparent opacity-40"></div>
       </div>
 
-      <div className="relative container mx-auto py-4 sm:py-6 px-2 sm:px-4 space-y-4 sm:space-y-6">
+      <div className="relative w-full max-w-7xl mx-auto py-4 sm:py-6 px-3 sm:px-4 lg:px-6 space-y-4 sm:space-y-6">
       {/* Enhanced Header - Mobile Optimized */}
       <div className="relative group">
         <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 dark:from-primary/15 dark:via-accent/12 dark:to-secondary/15 rounded-2xl sm:rounded-3xl blur-xl opacity-40"></div>
