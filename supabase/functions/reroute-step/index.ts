@@ -78,6 +78,7 @@ Return ONLY valid JSON, no markdown formatting.`;
           { role: 'user', content: userPrompt }
         ],
         temperature: 0.8,
+        max_tokens: 4000,
       }),
     });
 
