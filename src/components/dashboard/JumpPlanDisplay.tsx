@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { safeParseJSON } from '@/utils/safeJson';
 import ReactMarkdown from 'react-markdown';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowRight, Sparkles, MessageCircleQuestion, GitBranch } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 interface JumpPlanDisplayProps {
@@ -400,8 +400,9 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
                                     text-primary
                                     shadow-sm hover:shadow-md shadow-primary/10 hover:shadow-primary/20
                                     transition-all duration-300 rounded-xl hover:scale-[1.05]
-                                    backdrop-blur-sm"
+                                    backdrop-blur-sm flex items-center gap-2"
                                 >
+                                  <MessageCircleQuestion className="w-3.5 h-3.5" />
                                   Clarify
                                 </Button>
                                 <Button
@@ -417,8 +418,9 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
                                     text-primary
                                     shadow-sm hover:shadow-md shadow-primary/10 hover:shadow-primary/20
                                     transition-all duration-300 rounded-xl hover:scale-[1.05]
-                                    backdrop-blur-sm"
+                                    backdrop-blur-sm flex items-center gap-2"
                                 >
+                                  <GitBranch className="w-3.5 h-3.5" />
                                   Reroute
                                 </Button>
                               </div>
