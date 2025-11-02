@@ -319,32 +319,59 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    {['phase1', 'phase2', 'phase3'].map((phaseKey) => {
-                      const phase = result.comprehensive_plan.roadmap[phaseKey];
-                      if (!phase) return null;
-                      return (
-                        <div key={phaseKey} className="p-4 rounded-xl border border-border/30 bg-background/50">
-                          <div className="flex items-start justify-between mb-3">
-                            <h4 className="font-semibold">{phase.name}</h4>
-                            <Badge variant="outline" className="text-xs">{phase.timeline}</Badge>
-                          </div>
-                          {phase.milestones?.length > 0 && (
-                            <ul className="space-y-1">
-                              {phase.milestones.map((milestone: string, idx: number) => (
-                                <li key={idx} className="text-sm flex items-center gap-2">
-                                  <CheckCircle className="w-4 h-4 text-primary flex-shrink-0" />
-                                  <div className="prose prose-sm dark:prose-invert max-w-none flex-1">
-                                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                      {formatAIText(milestone)}
-                                    </ReactMarkdown>
-                                  </div>
-                                </li>
-                              ))}
-                            </ul>
-                          )}
+                    {/* Immediate (0-30 days) */}
+                    {result.comprehensive_plan.roadmap.immediate && (
+                      <div className="p-4 rounded-xl border border-primary/30 bg-primary/5">
+                        <div className="flex items-start justify-between mb-3">
+                          <h4 className="font-semibold text-primary flex items-center gap-2">
+                            <Clock className="w-4 h-4" />
+                            Immediate Actions
+                          </h4>
+                          <Badge variant="outline" className="text-xs bg-primary/10 text-primary border-primary/30">0-30 days</Badge>
                         </div>
-                      );
-                    })}
+                        <div className="prose prose-sm dark:prose-invert max-w-none">
+                          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                            {formatAIText(result.comprehensive_plan.roadmap.immediate)}
+                          </ReactMarkdown>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Short-term (30-90 days) */}
+                    {result.comprehensive_plan.roadmap.shortTerm && (
+                      <div className="p-4 rounded-xl border border-border/30 bg-background/50">
+                        <div className="flex items-start justify-between mb-3">
+                          <h4 className="font-semibold flex items-center gap-2">
+                            <TrendingUp className="w-4 h-4 text-foreground" />
+                            Short-term Milestones
+                          </h4>
+                          <Badge variant="outline" className="text-xs">30-90 days</Badge>
+                        </div>
+                        <div className="prose prose-sm dark:prose-invert max-w-none">
+                          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                            {formatAIText(result.comprehensive_plan.roadmap.shortTerm)}
+                          </ReactMarkdown>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Long-term (90+ days) */}
+                    {result.comprehensive_plan.roadmap.longTerm && (
+                      <div className="p-4 rounded-xl border border-border/30 bg-background/50">
+                        <div className="flex items-start justify-between mb-3">
+                          <h4 className="font-semibold flex items-center gap-2">
+                            <Target className="w-4 h-4 text-foreground" />
+                            Long-term Goals
+                          </h4>
+                          <Badge variant="outline" className="text-xs">90+ days</Badge>
+                        </div>
+                        <div className="prose prose-sm dark:prose-invert max-w-none">
+                          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                            {formatAIText(result.comprehensive_plan.roadmap.longTerm)}
+                          </ReactMarkdown>
+                        </div>
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               )}
