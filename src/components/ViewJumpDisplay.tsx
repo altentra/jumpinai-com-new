@@ -109,7 +109,7 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
   }
 
   return (
-    <div className="w-full space-y-4">
+    <div className="w-full max-w-full overflow-x-hidden space-y-4">
       {/* Content Tabs - Ultra Premium Design */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <div className="relative mb-8">
@@ -215,7 +215,7 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="prose prose-sm dark:prose-invert max-w-none">
+                    <div className="prose prose-sm dark:prose-invert max-w-none break-words overflow-wrap-anywhere">
                       <ReactMarkdown remarkPlugins={[remarkGfm]}>
                         {formatAIText(result.comprehensive_plan.executiveSummary)}
                       </ReactMarkdown>
@@ -245,7 +245,7 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
                       </div>
                     )}
                     
-                    <div className="grid md:grid-cols-2 gap-4 mt-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                       {result.comprehensive_plan.situationAnalysis.challenges?.length > 0 && (
                         <div className="space-y-2">
                           <h4 className="font-semibold text-sm flex items-center gap-2">
@@ -377,7 +377,7 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
               )}
 
               {/* Key Objectives & Success Metrics */}
-              <div className="grid md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                 {result.comprehensive_plan.keyObjectives?.length > 0 && (
                   <Card className="glass backdrop-blur-xl border border-border/40 rounded-2xl">
                     <CardHeader>
@@ -440,7 +440,7 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
                       Risk Assessment
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="grid md:grid-cols-2 gap-4">
+                  <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {result.comprehensive_plan.riskAssessment.risks?.length > 0 && (
                       <div className="space-y-2">
                         <h4 className="font-semibold text-sm flex items-center gap-2">

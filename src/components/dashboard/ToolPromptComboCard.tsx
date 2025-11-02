@@ -144,10 +144,10 @@ export function ToolPromptComboCard({ combo, onClick, index }: ToolPromptComboCa
 
         <CardContent className="space-y-4">
           {/* Tool Information with Link */}
-          <div className="flex items-center justify-between p-3 bg-muted/20 rounded-lg border border-border">
-            <div className="flex items-center gap-2">
-              <ExternalLink className="w-4 h-4 text-primary" />
-              <span className="text-sm font-medium">Tool: {toolName}</span>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-3 p-3 bg-muted/20 rounded-lg border border-border">
+            <div className="flex items-center gap-2 min-w-0">
+              <ExternalLink className="w-4 h-4 text-primary flex-shrink-0" />
+              <span className="text-sm font-medium truncate">Tool: {toolName}</span>
             </div>
             {toolUrl && (
               <a
@@ -155,7 +155,7 @@ export function ToolPromptComboCard({ combo, onClick, index }: ToolPromptComboCa
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
-                className="text-primary hover:text-primary/80 transition-colors text-sm font-medium flex items-center gap-1"
+                className="text-primary hover:text-primary/80 transition-colors text-sm font-medium flex items-center gap-1 whitespace-nowrap flex-shrink-0"
               >
                 Open Tool
                 <ExternalLink className="w-3 h-3" />
