@@ -293,7 +293,16 @@ export const jumpinAIStudioService = {
                           ...tp,
                           id: savedIds[idx]
                         }));
-                        console.log('✅ Updated tool prompts with database IDs');
+                        console.log('✅ Updated tool prompts with database IDs:', savedIds);
+                        
+                        // Trigger progress update to notify components about the ID update
+                        if (onProgress) {
+                          console.log('🔄 Notifying components of tool prompt ID updates');
+                          onProgress(step, 'tool_prompts_ids_updated', { 
+                            tool_prompts: result.components!.toolPrompts,
+                            ids: savedIds
+                          });
+                        }
                       }
                     } catch (error) {
                       console.error('❌ Error saving tool prompts:', error);

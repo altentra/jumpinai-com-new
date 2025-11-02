@@ -335,6 +335,14 @@ export const useProgressiveGeneration = () => {
             setProcessingStatus(progressiveResult.processing_status);
             setResult({ ...progressiveResult });
             
+          } else if (type === 'tool_prompts_ids_updated') {
+            // Update tool prompts with database IDs after save completes
+            console.log('🆔 Updating tool prompts with database IDs:', stepData);
+            progressiveResult.components.toolPrompts = stepData.tool_prompts || [];
+            
+            // Trigger re-render to update the UI with new IDs
+            setResult({ ...progressiveResult });
+            
           } else if (type === 'complete') {
             // Generation complete
             console.log('All steps complete');

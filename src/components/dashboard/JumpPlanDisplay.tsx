@@ -210,13 +210,20 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
   };
 
   const handleToolPromptClick = (comboIndex: number) => {
-    if (!jumpId || !toolPromptIds || !toolPromptIds[comboIndex]) {
+    if (!jumpId || !toolPromptIds || comboIndex >= toolPromptIds.length) {
       console.warn('Missing jumpId or toolPromptIds for navigation');
       return;
     }
     
-    // Navigate to tools & prompts tab with the specific combo ID as a hash
     const comboId = toolPromptIds[comboIndex];
+    
+    // Check if the ID is valid (not null, undefined, or the string 'null')
+    if (!comboId || comboId === 'null' || comboId === null) {
+      console.warn('Tool prompt ID not available yet for combo index:', comboIndex);
+      return;
+    }
+    
+    // Navigate to tools & prompts tab with the specific combo ID as a hash
     navigate(`/dashboard/tools-prompts#${comboId}`);
     
     // After navigation, scroll to and highlight the element
@@ -324,27 +331,29 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
                         const comboIndex = getToolPromptComboIndex(phaseIndex, stepIndex);
                         if (comboIndex === null) return null;
                         
-                        const hasToolPrompt = jumpId && toolPromptIds && toolPromptIds[comboIndex];
+                        // Get the actual tool prompt ID (check if it exists and is not null)
+                        const toolPromptId = toolPromptIds?.[comboIndex];
+                        const hasValidToolPromptId = toolPromptId && toolPromptId !== 'null' && toolPromptId !== null;
                         
                         return (
                           <div className="mt-4 ml-[72px]">
-                            <div className={`p-4 rounded-xl border-2 ${hasToolPrompt ? 'border-primary/30 bg-gradient-to-br from-primary/5 via-primary/10 to-accent/5' : 'border-muted-foreground/20 bg-muted/20'} backdrop-blur-sm animate-fade-in`}>
+                            <div className={`p-4 rounded-xl border-2 ${hasValidToolPromptId ? 'border-primary/30 bg-gradient-to-br from-primary/5 via-primary/10 to-accent/5' : 'border-muted-foreground/20 bg-muted/20'} backdrop-blur-sm animate-fade-in`}>
                               <div className="flex items-center justify-between gap-3">
                                 <div className="flex items-start gap-2 flex-1">
-                                  <Sparkles className={`w-4 h-4 mt-1 shrink-0 ${hasToolPrompt ? 'text-primary' : 'text-muted-foreground'}`} />
+                                  <Sparkles className={`w-4 h-4 mt-1 shrink-0 ${hasValidToolPromptId ? 'text-primary' : 'text-muted-foreground'}`} />
                                   <div className="space-y-1">
-                                    <p className={`text-xs font-bold uppercase tracking-wide ${hasToolPrompt ? 'text-primary' : 'text-muted-foreground'}`}>
+                                    <p className={`text-xs font-bold uppercase tracking-wide ${hasValidToolPromptId ? 'text-primary' : 'text-muted-foreground'}`}>
                                       Tools & Prompts for this Step
                                     </p>
                                     <p className="text-xs text-muted-foreground leading-relaxed">
-                                      {hasToolPrompt 
+                                      {hasValidToolPromptId 
                                         ? "We've created a custom AI tool & ready-to-use prompt specifically for this step"
                                         : "Custom tool & prompt combo will be available once generation completes"
                                       }
                                     </p>
                                   </div>
                                 </div>
-                                {hasToolPrompt ? (
+                                {hasValidToolPromptId ? (
                                   <Button
                                     size="sm"
                                     variant="default"
