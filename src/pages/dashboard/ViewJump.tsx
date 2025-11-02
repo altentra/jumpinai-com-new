@@ -292,10 +292,13 @@ export default function ViewJump() {
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
+    return new Date(dateString).toLocaleString('en-US', {
       year: 'numeric',
       month: 'long', 
-      day: 'numeric'
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true
     });
   };
 
@@ -334,7 +337,23 @@ export default function ViewJump() {
   }
 
   return (
-    <div className="container mx-auto py-4 sm:py-6 px-2 sm:px-4 space-y-4 sm:space-y-6">
+    <div className="min-h-screen scroll-snap-container bg-gradient-to-br from-background/95 via-background to-primary/5 dark:bg-gradient-to-br dark:from-black dark:via-gray-950/90 dark:to-gray-900/60 relative overflow-hidden">
+      {/* Premium floating background elements with liquid glass effects */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        {/* Main gradient orbs with enhanced blur and liquid animation */}
+        <div className="absolute -top-40 -right-40 w-[28rem] h-[28rem] bg-gradient-to-br from-primary/25 via-primary/15 to-primary/5 rounded-full blur-3xl animate-pulse opacity-60"></div>
+        <div className="absolute -bottom-40 -left-40 w-[32rem] h-[32rem] bg-gradient-to-tr from-secondary/20 via-accent/10 to-secondary/5 rounded-full blur-3xl animate-pulse opacity-50" style={{animationDelay: '2s'}}></div>
+        
+        {/* Liquid glass floating elements */}
+        <div className="absolute top-1/4 left-1/3 w-72 h-72 bg-gradient-conic from-primary/15 via-accent/10 to-secondary/15 rounded-full blur-2xl animate-pulse opacity-40" style={{animationDelay: '1s'}}></div>
+        <div className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-gradient-radial from-accent/20 via-primary/10 to-transparent rounded-full blur-xl animate-pulse opacity-30" style={{animationDelay: '3s'}}></div>
+        
+        {/* Subtle mesh gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent opacity-50"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-accent/3 to-transparent opacity-40"></div>
+      </div>
+
+      <div className="relative container mx-auto py-4 sm:py-6 px-2 sm:px-4 space-y-4 sm:space-y-6">
       {/* Enhanced Header - Mobile Optimized */}
       <div className="relative group">
         <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 dark:from-primary/15 dark:via-accent/12 dark:to-secondary/15 rounded-2xl sm:rounded-3xl blur-xl opacity-40"></div>
@@ -365,16 +384,6 @@ export default function ViewJump() {
                   </p>
                 )}
               </div>
-              <div className="flex items-center gap-2 sm:gap-3 shrink-0 w-full sm:w-auto">
-                <Button 
-                  onClick={downloadPlan}
-                  size="sm"
-                  className="gap-2 rounded-xl bg-primary/10 hover:bg-primary/20 text-primary border border-primary/30 backdrop-blur-sm transition-all duration-300 hover:shadow-lg hover:shadow-primary/20 flex-1 sm:flex-none text-xs sm:text-sm"
-                >
-                  <Download className="w-3 h-3 sm:w-4 sm:h-4" />
-                  Download PDF
-                </Button>
-              </div>
             </div>
           </div>
         </div>
@@ -402,6 +411,7 @@ export default function ViewJump() {
           </div>
         )}
       </ErrorBoundary>
+      </div>
     </div>
   );
 }
