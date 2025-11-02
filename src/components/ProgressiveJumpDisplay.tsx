@@ -230,7 +230,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
       )}
 
       {/* Content Tabs - Ultra Premium Design */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full overflow-visible">
         <div className="relative mb-8">
           {/* Mobile: Full width tabs */}
           <div className="sm:hidden pb-4">
@@ -321,7 +321,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
           </TabsList>
         </div>
 
-        <TabsContent value="overview" className="mt-0">
+        <TabsContent value="overview" className="mt-0 overflow-visible">
           {result.comprehensive_plan ? (
             <div className="space-y-6">
               {/* Executive Summary */}
@@ -611,7 +611,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
           )}
         </TabsContent>
 
-        <TabsContent value="plan" className="mt-0">
+        <TabsContent value="plan" className="mt-0 overflow-visible">
           {result.structured_plan && result.structured_plan.phases ? (
             <JumpPlanDisplay
               planContent={result.full_content || ''}
@@ -636,7 +636,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
           )}
         </TabsContent>
 
-        <TabsContent value="toolPrompts" className="mt-0">
+        <TabsContent value="toolPrompts" className="mt-0 overflow-visible">
           {(() => {
             console.log('🔍 Tools & Prompts Tab - Checking data:', {
               hasComponents: !!result.components,
@@ -686,7 +686,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
             const isGenerating = validCombosWithIndices.length < expectedCount && result.components.toolPrompts.length < expectedCount;
 
             return (
-              <div className="grid gap-4">
+              <div className="grid gap-4 overflow-visible">
                 {validCombosWithIndices.map(({ combo, originalIndex }) => {
                   const displayNumber = originalIndex + 1;
                   console.log(`🔧 Rendering valid combo ${displayNumber}:`, {

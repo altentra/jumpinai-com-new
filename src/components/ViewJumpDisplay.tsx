@@ -111,7 +111,7 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
   return (
     <div className="w-full max-w-full overflow-x-hidden space-y-4">
       {/* Content Tabs - Ultra Premium Design */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full overflow-visible">
         <div className="relative mb-8">
           {/* Mobile: Full width tabs */}
           <div className="sm:hidden pb-4">
@@ -202,7 +202,7 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
           </TabsList>
         </div>
 
-        <TabsContent value="overview" className="mt-0">
+        <TabsContent value="overview" className="mt-0 overflow-visible">
           {result.comprehensive_plan ? (
             <div className="space-y-6">
               {/* Executive Summary */}
@@ -492,7 +492,7 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
           )}
         </TabsContent>
 
-        <TabsContent value="plan" className="mt-0">
+        <TabsContent value="plan" className="mt-0 overflow-visible">
           {result.structured_plan && result.structured_plan.phases ? (
             <JumpPlanDisplay
               planContent={result.full_content || ''}
@@ -515,8 +515,8 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
           )}
         </TabsContent>
 
-        <TabsContent value="toolPrompts" className="mt-0">
-          <div className="grid gap-4">
+        <TabsContent value="toolPrompts" className="mt-0 overflow-visible">
+          <div className="grid gap-4 overflow-visible">
             {result.components?.toolPrompts && result.components.toolPrompts.length > 0 ? (
               result.components.toolPrompts.map((combo: any, index: number) => (
                 <div key={index} data-tool-combo={index + 1} className="animate-fade-in">
