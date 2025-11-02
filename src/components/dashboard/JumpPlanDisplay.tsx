@@ -354,19 +354,25 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
                                       </p>
                                     </div>
                                   </div>
-                                  {hasValidToolPromptId ? (
-                                    <Button
-                                      size="sm"
-                                      variant="outline"
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleToolPromptClick(comboIndex);
-                                      }}
-                                      className="shrink-0 gap-1 h-7 text-xs"
-                                    >
-                                      <Sparkles className="w-3 h-3" />
-                                      View
-                                    </Button>
+                                   {hasValidToolPromptId ? (
+                                     <Button
+                                       size="sm"
+                                       variant="outline"
+                                       onClick={(e) => {
+                                         e.stopPropagation();
+                                         handleToolPromptClick(comboIndex);
+                                       }}
+                                       className="relative px-6 py-2.5 text-sm font-semibold
+                                         bg-background/60 hover:bg-background/80
+                                         border border-primary/40 hover:border-primary/70
+                                         text-primary
+                                         shadow-sm hover:shadow-md shadow-primary/10 hover:shadow-primary/20
+                                         transition-all duration-300 rounded-xl hover:scale-[1.05]
+                                         backdrop-blur-sm flex items-center gap-2"
+                                     >
+                                       View
+                                       <ExternalLink className="w-3.5 h-3.5" />
+                                     </Button>
                                   ) : (
                                     <Badge variant="secondary" className="text-[10px] shrink-0 h-6">
                                       Generating
