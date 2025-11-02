@@ -83,13 +83,13 @@ export const toolPromptsService = {
     return data;
   },
 
-  async saveToolPrompts(toolPrompts: any[], userId: string, jumpId: string): Promise<void> {
+  async saveToolPrompts(toolPrompts: any[], userId: string, jumpId: string): Promise<string[]> {
     console.log('💾 STARTING saveToolPrompts with', toolPrompts.length, 'items');
     console.log('📋 Raw tool prompts data:', JSON.stringify(toolPrompts, null, 2));
     
     if (!toolPrompts || toolPrompts.length === 0) {
       console.log('⚠️ No tool prompts to save');
-      return;
+      return [];
     }
 
     try {
@@ -165,6 +165,9 @@ export const toolPromptsService = {
       }
 
       console.log(`✅ Successfully saved ${data?.length || 0} tool prompts to database`);
+      
+      // Return array of IDs in the same order
+      return data?.map(item => item.id) || [];
     } catch (error) {
       console.error('❌ CRITICAL ERROR in saveToolPrompts:', error);
       throw error;

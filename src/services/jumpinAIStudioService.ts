@@ -132,27 +132,34 @@ export const jumpinAIStudioService = {
                   })();
                 }
               } else if (type === 'overview') {
-                console.log('📋 Processing overview data');
-                result.comprehensivePlan = data;
+                console.log('📋 Processing overview data:', data);
+                result.comprehensivePlan = {
+                  executiveSummary: data.executiveSummary || '',
+                  situationAnalysis: data.situationAnalysis || {},
+                  strategicVision: data.strategicVision || '',
+                  roadmap: data.roadmap || {},
+                  successFactors: data.successFactors || [],
+                  riskMitigation: data.riskMitigation || [],
+                  action_plan: { phases: [] } // Will be filled by plan step
+                };
                 
                 let overviewText = '';
                 if (data.executiveSummary) {
                   overviewText += `## Executive Summary\n\n${data.executiveSummary}\n\n`;
                 }
                 if (data.situationAnalysis) {
-                  overviewText += `## Situation Analysis\n\n`;
                   if (data.situationAnalysis.currentState) {
-                    overviewText += `### Current State\n${data.situationAnalysis.currentState}\n\n`;
+                    overviewText += `## Current State\n\n${data.situationAnalysis.currentState}\n\n`;
                   }
                   if (data.situationAnalysis.challenges?.length) {
-                    overviewText += `### Key Challenges\n`;
+                    overviewText += `## Challenges\n`;
                     data.situationAnalysis.challenges.forEach((c: string) => {
                       overviewText += `- ${c}\n`;
                     });
                     overviewText += '\n';
                   }
                   if (data.situationAnalysis.opportunities?.length) {
-                    overviewText += `### Opportunities\n`;
+                    overviewText += `## Opportunities\n`;
                     data.situationAnalysis.opportunities.forEach((o: string) => {
                       overviewText += `- ${o}\n`;
                     });
@@ -162,36 +169,11 @@ export const jumpinAIStudioService = {
                 if (data.strategicVision) {
                   overviewText += `## Strategic Vision\n\n${data.strategicVision}\n\n`;
                 }
-                if (data.keyObjectives?.length) {
-                  overviewText += `## Key Objectives\n\n`;
-                  data.keyObjectives.forEach((obj: string, idx: number) => {
-                    overviewText += `${idx + 1}. ${obj}\n`;
-                  });
-                  overviewText += '\n';
-                }
-                if (data.successMetrics?.length) {
-                  overviewText += `## Success Metrics\n\n`;
-                  data.successMetrics.forEach((metric: string) => {
-                    overviewText += `- ${metric}\n`;
-                  });
-                  overviewText += '\n';
-                }
-                if (data.riskAssessment) {
-                  overviewText += `## Risk Assessment\n\n`;
-                  if (data.riskAssessment.risks?.length) {
-                    overviewText += `### Potential Risks\n`;
-                    data.riskAssessment.risks.forEach((risk: string) => {
-                      overviewText += `- ${risk}\n`;
-                    });
-                    overviewText += '\n';
-                  }
-                  if (data.riskAssessment.mitigations?.length) {
-                    overviewText += `### Mitigation Strategies\n`;
-                    data.riskAssessment.mitigations.forEach((mitigation: string) => {
-                      overviewText += `- ${mitigation}\n`;
-                    });
-                    overviewText += '\n';
-                  }
+                if (data.roadmap) {
+                  overviewText += `## Roadmap\n\n`;
+                  if (data.roadmap.immediate) overviewText += `**Immediate (0-30 days):** ${data.roadmap.immediate}\n\n`;
+                  if (data.roadmap.shortTerm) overviewText += `**Short-term (30-90 days):** ${data.roadmap.shortTerm}\n\n`;
+                  if (data.roadmap.longTerm) overviewText += `**Long-term (90+ days):** ${data.roadmap.longTerm}\n\n`;
                 }
                 
                 result.fullContent = overviewText.trim();
@@ -209,8 +191,8 @@ export const jumpinAIStudioService = {
                         .update({
                           summary: result.fullContent.slice(0, 500),
                           full_content: result.fullContent,
-                          comprehensive_plan: data,
-                          completion_percentage: 19,
+                          comprehensive_plan: result.comprehensivePlan,
+                          completion_percentage: 30,
                           status: 'active'
                         })
                         .eq('id', jumpId);
@@ -222,27 +204,33 @@ export const jumpinAIStudioService = {
                   })();
                 }
               } else if (type === 'comprehensive' || type === 'plan') {
-                console.log('📝 Processing plan/comprehensive data');
-                // Handle both direct structure and wrapped structure
-                const planData = data.implementationPlan || data;
+                console.log('📝 Processing plan data:', data);
+                const planData = data.phases ? data : data.action_plan || data;
                 result.structuredPlan = planData;
                 console.log('✅ Plan has', planData.phases?.length || 0, 'phases');
                 
-                let planText = '\n\n=== IMPLEMENTATION PLAN ===\n';
-                if (planData.phases) {
-                  planText += '\nPHASES:\n';
-                  planData.phases.forEach((phase: any, idx: number) => {
-                      planText += `\n${idx + 1}. ${phase.name} (${phase.duration})\n`;
-                      if (phase.objectives?.length) {
-                        planText += '   Objectives:\n' + phase.objectives.map((o: string) => `   • ${o}`).join('\n') + '\n';
-                      }
-                      if (phase.actions?.length) {
-                        planText += '   Actions:\n' + phase.actions.map((a: string) => `   • ${a}`).join('\n') + '\n';
-                      }
-                  });
+                // Update comprehensive_plan with action_plan
+                if (result.comprehensivePlan) {
+                  result.comprehensivePlan.action_plan = planData;
                 }
-                if (planData.successMetrics?.length) {
-                    planText += '\nSUCCESS METRICS:\n' + planData.successMetrics.map((m: string) => `• ${m}`).join('\n');
+                
+                let planText = '\n\n=== STRATEGIC ACTION PLAN ===\n';
+                if (planData.phases?.length) {
+                  planData.phases.forEach((phase: any, idx: number) => {
+                    planText += `\n### Phase ${phase.phase_number || idx + 1}: ${phase.title}\n`;
+                    planText += `Duration: ${phase.duration}\n`;
+                    planText += `${phase.description}\n\n`;
+                    
+                    if (phase.steps?.length) {
+                      planText += 'Steps:\n';
+                      phase.steps.forEach((step: any) => {
+                        planText += `\n${step.step_number}. ${step.title}\n`;
+                        planText += `   ${step.description}\n`;
+                        planText += `   Time: ${step.estimated_time}\n`;
+                      });
+                      planText += '\n';
+                    }
+                  });
                 }
                 result.fullContent += planText;
                 console.log('✅ Plan appended, total', result.fullContent.length, 'chars');
@@ -258,8 +246,9 @@ export const jumpinAIStudioService = {
                         .from('user_jumps')
                         .update({
                           structured_plan: planData,
+                          comprehensive_plan: result.comprehensivePlan,
                           full_content: result.fullContent,
-                          completion_percentage: 32
+                          completion_percentage: 60
                         })
                         .eq('id', jumpId);
                       
@@ -271,9 +260,16 @@ export const jumpinAIStudioService = {
                 }
               } else if (type === 'tool_prompts') {
                 console.log('✨ Processing tool_prompts data');
+                console.log('📊 Raw data received:', JSON.stringify(data, null, 2));
                 
                 const toolPromptsArray = data.tool_prompts || [];
                 console.log(`📦 Extracted ${toolPromptsArray.length} tool prompts`);
+                console.log('📋 Tool prompts structure:', toolPromptsArray.map((tp: any) => ({
+                  title: tp.title,
+                  tool_name: tp.tool_name,
+                  hasPromptText: !!tp.prompt_text,
+                  phase: tp.phase
+                })));
                 
                 result.components!.toolPrompts = toolPromptsArray;
                 
@@ -282,16 +278,44 @@ export const jumpinAIStudioService = {
                 }
                 
                 if (userId && jumpId && toolPromptsArray.length > 0) {
-                  console.log(`💾 Saving ${toolPromptsArray.length} tool prompts...`);
+                  console.log(`💾 Attempting to save ${toolPromptsArray.length} tool prompts...`);
+                  console.log('💾 Save context:', { userId, jumpId, arrayLength: toolPromptsArray.length });
                   (async () => {
                     try {
                       const { toolPromptsService } = await import('@/services/toolPromptsService');
-                      await toolPromptsService.saveToolPrompts(toolPromptsArray, userId, jumpId);
-                      console.log('✅ Tool prompts saved successfully');
+                      console.log('💾 toolPromptsService loaded, calling saveToolPrompts...');
+                      const savedIds = await toolPromptsService.saveToolPrompts(toolPromptsArray, userId, jumpId);
+                      console.log('✅ Tool prompts saved successfully with IDs:', savedIds);
+                      
+                      // Update the result with saved IDs
+                      if (savedIds && savedIds.length === toolPromptsArray.length) {
+                        result.components!.toolPrompts = toolPromptsArray.map((tp, idx) => ({
+                          ...tp,
+                          id: savedIds[idx]
+                        }));
+                        console.log('✅ Updated tool prompts with database IDs:', savedIds);
+                        
+                        // Trigger progress update to notify components about the ID update
+                        if (onProgress) {
+                          console.log('🔄 Notifying components of tool prompt ID updates');
+                          onProgress(step, 'tool_prompts_ids_updated', { 
+                            tool_prompts: result.components!.toolPrompts,
+                            ids: savedIds
+                          });
+                        }
+                      }
                     } catch (error) {
                       console.error('❌ Error saving tool prompts:', error);
+                      console.error('❌ Error details:', error instanceof Error ? error.message : String(error));
                     }
                   })();
+                } else {
+                  console.warn('⚠️ NOT saving tool prompts. Conditions:', {
+                    hasUserId: !!userId,
+                    hasJumpId: !!jumpId,
+                    arrayLength: toolPromptsArray.length,
+                    arrayIsEmpty: toolPromptsArray.length === 0
+                  });
                 }
               } else if (type === 'workflows') {
                 console.log('⚙️ Workflows data received (not saved - feature removed)');

@@ -248,39 +248,37 @@ export const useProgressiveGeneration = () => {
             // Update UI immediately
             setResult({ ...progressiveResult });
             
-                } else if (type === 'overview') {
-            // STEP 2: Overview complete - show it and start plan
+          } else if (type === 'overview') {
+            // STEP 2: Overview complete - ORIGINAL format
             console.log('Processing overview step data:', stepData);
             
-            progressiveResult.comprehensive_plan = stepData;
+            progressiveResult.comprehensive_plan = {
+              title: jumpName,
+              executiveSummary: stepData.executiveSummary || '',
+              situationAnalysis: stepData.situationAnalysis || {},
+              strategicVision: stepData.strategicVision || '',
+              roadmap: stepData.roadmap || {},
+              successFactors: stepData.successFactors || [],
+              riskMitigation: stepData.riskMitigation || [],
+              action_plan: { phases: [] } // Will be filled in step 3
+            };
             
-            // Build full overview content from all sections
             let overviewText = '';
-            if (stepData.executiveSummary) overviewText += `## Executive Summary\n\n${stepData.executiveSummary}\n\n`;
+            if (stepData.executiveSummary) {
+              overviewText += `## Executive Summary\n\n${stepData.executiveSummary}\n\n`;
+            }
             if (stepData.situationAnalysis) {
-              overviewText += `## Situation Analysis\n\n`;
-              if (stepData.situationAnalysis.currentState) overviewText += `### Current State\n${stepData.situationAnalysis.currentState}\n\n`;
+              if (stepData.situationAnalysis.currentState) {
+                overviewText += `## Current State\n\n${stepData.situationAnalysis.currentState}\n\n`;
+              }
               if (stepData.situationAnalysis.challenges?.length) {
-                overviewText += `### Key Challenges\n`;
+                overviewText += `## Challenges\n`;
                 stepData.situationAnalysis.challenges.forEach((c: string) => overviewText += `- ${c}\n`);
                 overviewText += '\n';
               }
-              if (stepData.situationAnalysis.opportunities?.length) {
-                overviewText += `### Opportunities\n`;
-                stepData.situationAnalysis.opportunities.forEach((o: string) => overviewText += `- ${o}\n`);
-                overviewText += '\n';
-              }
             }
-            if (stepData.strategicVision) overviewText += `## Strategic Vision\n\n${stepData.strategicVision}\n\n`;
-            if (stepData.successFactors?.length) {
-              overviewText += `## Success Factors\n\n`;
-              stepData.successFactors.forEach((f: string) => overviewText += `- ${f}\n`);
-              overviewText += '\n';
-            }
-            if (stepData.riskMitigation?.length) {
-              overviewText += `## Risk Mitigation\n\n`;
-              stepData.riskMitigation.forEach((r: string) => overviewText += `- ${r}\n`);
-              overviewText += '\n';
+            if (stepData.strategicVision) {
+              overviewText += `## Strategic Vision\n\n${stepData.strategicVision}\n\n`;
             }
             
             progressiveResult.full_content = overviewText.trim();
@@ -299,9 +297,15 @@ export const useProgressiveGeneration = () => {
           } else if (type === 'comprehensive' || type === 'plan') {
             // STEP 3: Plan complete - show it and start tools
             console.log('📋 Received strategic action plan:', stepData);
-            // Store the plan data directly (no implementationPlan wrapper)
+            
+            // Store the plan data and update comprehensive_plan with action_plan
             progressiveResult.structured_plan = stepData;
             progressiveResult.components.plan = stepData;
+            
+            // Update comprehensive_plan with the action plan
+            if (progressiveResult.comprehensive_plan) {
+              progressiveResult.comprehensive_plan.action_plan = stepData;
+            }
             
             progressiveResult.processing_status = {
               stage: 'Generating',
@@ -329,6 +333,14 @@ export const useProgressiveGeneration = () => {
             };
             progressiveResult.stepTimes = { ...progressiveResult.stepTimes, tool_prompts: stepDuration };
             setProcessingStatus(progressiveResult.processing_status);
+            setResult({ ...progressiveResult });
+            
+          } else if (type === 'tool_prompts_ids_updated') {
+            // Update tool prompts with database IDs after save completes
+            console.log('🆔 Updating tool prompts with database IDs:', stepData);
+            progressiveResult.components.toolPrompts = stepData.tool_prompts || [];
+            
+            // Trigger re-render to update the UI with new IDs
             setResult({ ...progressiveResult });
             
           } else if (type === 'complete') {

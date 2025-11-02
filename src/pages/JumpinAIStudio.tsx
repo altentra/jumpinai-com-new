@@ -412,7 +412,7 @@ const JumpinAIStudio = () => {
                         
                         <div className="group">
                           <label className="block text-xs sm:text-sm font-medium text-foreground/90 mb-2 sm:mb-3 transition-colors duration-300 group-focus-within:text-primary">
-                            What's keeping you from getting there?
+                            What's keeping you from getting there? *
                           </label>
                           <div className="relative">
                             <textarea
@@ -422,82 +422,6 @@ const JumpinAIStudio = () => {
                               className="w-full min-h-[120px] sm:min-h-[140px] md:min-h-[160px] p-3 sm:p-4 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-2xl sm:rounded-3xl shadow-xl hover:shadow-2xl focus:shadow-2xl focus:shadow-primary/10 resize-none placeholder:text-muted-foreground/60 text-sm sm:text-base text-foreground bg-card/60 overflow-hidden"
                               placeholder="Your obstacles & challenges..."
                             />
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="grid md:grid-cols-2 gap-3 sm:gap-4 md:gap-5">
-                        <div className="group">
-                          <label className="block text-xs sm:text-sm font-medium text-foreground/90 mb-2 sm:mb-3 transition-colors duration-300 group-focus-within:text-primary">
-                            Industry
-                          </label>
-                          <div className="relative">
-                            <input
-                              type="text"
-                              value={formData.industry}
-                              onChange={(e) => setFormData(prev => ({ ...prev, industry: e.target.value }))}
-                              className="w-full p-2.5 sm:p-3 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl focus:shadow-2xl focus:shadow-primary/10 placeholder:text-muted-foreground/60 text-sm sm:text-base text-foreground bg-card/60"
-                              placeholder="Marketing, Tech, Finance..."
-                            />
-                          </div>
-                        </div>
-                        
-                        <div className="group">
-                          <label className="block text-xs sm:text-sm font-medium text-foreground/90 mb-2 sm:mb-3 transition-colors duration-300 group-focus-within:text-primary">
-                            AI Experience
-                          </label>
-                          <div className="relative">
-                            <select 
-                              value={formData.aiKnowledge}
-                              onChange={(e) => setFormData(prev => ({ ...prev, aiKnowledge: e.target.value }))}
-                              className="w-full p-2.5 sm:p-3 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl focus:shadow-2xl focus:shadow-primary/10 text-sm sm:text-base text-foreground bg-card/60"
-                            >
-                              <option value="">Select level</option>
-                              <option value="beginner">Beginner</option>
-                              <option value="intermediate">Intermediate</option>
-                              <option value="advanced">Advanced</option>
-                              <option value="expert">Expert</option>
-                            </select>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="grid md:grid-cols-2 gap-3 sm:gap-4 md:gap-5">
-                        <div className="group">
-                          <label className="block text-xs sm:text-sm font-medium text-foreground/90 mb-2 sm:mb-3 transition-colors duration-300 group-focus-within:text-primary">
-                            Urgency
-                          </label>
-                          <div className="relative">
-                            <select 
-                              value={formData.timeCommitment}
-                              onChange={(e) => setFormData(prev => ({ ...prev, timeCommitment: e.target.value }))}
-                              className="w-full p-2.5 sm:p-3 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl focus:shadow-2xl focus:shadow-primary/10 text-sm sm:text-base text-foreground bg-card/60"
-                            >
-                              <option value="">Select urgency</option>
-                              <option value="asap">ASAP - Need immediate results</option>
-                              <option value="weeks">Within few weeks</option>
-                              <option value="months">Within few months</option>
-                              <option value="exploring">Just exploring</option>
-                            </select>
-                          </div>
-                        </div>
-
-                        <div className="group">
-                          <label className="block text-xs sm:text-sm font-medium text-foreground/90 mb-2 sm:mb-3 transition-colors duration-300 group-focus-within:text-primary">
-                            Budget
-                          </label>
-                          <div className="relative">
-                            <select 
-                              value={formData.budget}
-                              onChange={(e) => setFormData(prev => ({ ...prev, budget: e.target.value }))}
-                              className="w-full p-2.5 sm:p-3 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl focus:shadow-2xl focus:shadow-primary/10 text-sm sm:text-base text-foreground bg-card/60"
-                            >
-                              <option value="">Select budget</option>
-                              <option value="minimal">Minimal ($0-500)</option>
-                              <option value="moderate">Moderate ($500-2K)</option>
-                              <option value="substantial">Substantial ($2K-10K)</option>
-                              <option value="enterprise">Enterprise ($10K+)</option>
-                            </select>
                           </div>
                         </div>
                       </div>
