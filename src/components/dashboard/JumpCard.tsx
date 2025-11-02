@@ -26,7 +26,7 @@ export default function JumpCard({ jump, jumpNumber, onView, onDelete }: JumpCar
   };
 
   const jumpName = getJumpName(jump.title);
-  const displayTitle = jumpName;
+  const displayTitle = `Jump #${jumpNumber}: ${jumpName}`;
 
   const handleCardClick = (e: React.MouseEvent) => {
     // Don't trigger if clicking delete button
