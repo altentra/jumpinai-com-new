@@ -14,6 +14,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { User, Shield, Crown, CreditCard, RefreshCw, Save, LogOut, ExternalLink, AlertTriangle, History, Trash2, Download, Loader2 } from "lucide-react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { useIsMobile } from "@/hooks/use-mobile";
+import DataStatsSection from "@/components/profile/DataStatsSection";
 
 interface SubscriberInfo {
   subscribed: boolean;
@@ -583,6 +584,9 @@ export default function ProfileTabs() {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Data Statistics Section */}
+            <DataStatsSection />
 
             {/* Account Actions */}
             <div className="flex flex-col sm:flex-row gap-3 pt-2">
