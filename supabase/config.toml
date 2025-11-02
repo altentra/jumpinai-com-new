@@ -85,6 +85,9 @@ verify_jwt = false
 [functions.send-user-signup-notification]
 verify_jwt = false
 
+[functions.clarify-step]
+verify_jwt = true
+
 [realtime]
 enabled = true
 port = 54323

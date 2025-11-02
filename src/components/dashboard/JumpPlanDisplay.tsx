@@ -5,8 +5,11 @@ import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { safeParseJSON } from '@/utils/safeJson';
 import ReactMarkdown from 'react-markdown';
-import { ArrowRight, Sparkles, Lightbulb, GitBranch } from 'lucide-react';
+import { ArrowRight, Sparkles, Lightbulb, GitBranch, ChevronDown, ChevronUp, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
+import { updateJump } from '@/services/jumpService';
+import { toast } from 'sonner';
 
 interface JumpPlanDisplayProps {
   planContent: string;
@@ -183,6 +186,9 @@ function normalizeToComprehensive(input: any): any {
 
 export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, onDownload, jumpId, toolPromptIds, onToolPromptClick }: JumpPlanDisplayProps) {
   const [hoveredStep, setHoveredStep] = React.useState<{ phaseIndex: number; stepIndex: number } | null>(null);
+  const [expandedSubSteps, setExpandedSubSteps] = React.useState<Set<string>>(new Set());
+  const [loadingClarify, setLoadingClarify] = React.useState<Set<string>>(new Set());
+  const [localPlan, setLocalPlan] = React.useState<any>(null);
   
   if (!planContent.trim() && !structuredPlan) {
     return null;
@@ -196,9 +202,17 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
   const comprehensivePlan = React.useMemo(() => candidate ? normalizeToComprehensive(candidate) : null, [candidate]);
   
   const finalPlan = React.useMemo(() => {
+    if (localPlan) return localPlan;
     if (comprehensivePlan) return comprehensivePlan;
     return buildDefaultPlan();
-  }, [comprehensivePlan]);
+  }, [localPlan, comprehensivePlan]);
+
+  // Initialize localPlan when comprehensivePlan changes
+  React.useEffect(() => {
+    if (comprehensivePlan && !localPlan) {
+      setLocalPlan(comprehensivePlan);
+    }
+  }, [comprehensivePlan, localPlan]);
 
   const phases = finalPlan?.action_plan?.phases || [];
   const navigate = useNavigate();
@@ -231,6 +245,89 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
     if (onToolPromptClick) {
       onToolPromptClick(comboIndex, comboId);
     }
+  };
+
+  const handleClarifyStep = async (phaseIndex: number, stepIndex: number) => {
+    if (!jumpId) {
+      toast.error('Jump ID is required');
+      return;
+    }
+
+    const stepKey = `${phaseIndex}-${stepIndex}`;
+    setLoadingClarify(prev => new Set(prev).add(stepKey));
+
+    try {
+      const phase = finalPlan.action_plan.phases[phaseIndex];
+      const step = phase.steps[stepIndex];
+
+      // Prepare context for the API call
+      const jumpOverview = `
+Executive Summary: ${finalPlan.executiveSummary || ''}
+Strategic Vision: ${finalPlan.strategicVision || ''}
+Current State: ${finalPlan.situationAnalysis?.currentState || ''}
+      `.trim();
+
+      const requestBody = {
+        jumpOverview,
+        phaseTitle: phase.title,
+        phaseNumber: phase.phase_number,
+        stepTitle: step.title,
+        stepDescription: step.description,
+        stepNumber: step.step_number,
+      };
+
+      console.log('Calling clarify-step function:', requestBody);
+
+      const { data, error } = await supabase.functions.invoke('clarify-step', {
+        body: requestBody,
+      });
+
+      if (error) throw error;
+
+      if (!data || !data.subSteps) {
+        throw new Error('Invalid response from clarify-step function');
+      }
+
+      console.log('Received sub-steps:', data.subSteps);
+
+      // Update the local plan with sub-steps
+      const updatedPlan = { ...finalPlan };
+      updatedPlan.action_plan.phases[phaseIndex].steps[stepIndex].sub_steps = data.subSteps;
+      
+      setLocalPlan(updatedPlan);
+
+      // Save to database
+      await updateJump(jumpId, {
+        comprehensive_plan: updatedPlan,
+      });
+
+      // Expand the sub-steps
+      setExpandedSubSteps(prev => new Set(prev).add(stepKey));
+
+      toast.success('Sub-steps generated successfully!');
+    } catch (error) {
+      console.error('Error clarifying step:', error);
+      toast.error('Failed to generate sub-steps. Please try again.');
+    } finally {
+      setLoadingClarify(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(stepKey);
+        return newSet;
+      });
+    }
+  };
+
+  const toggleSubSteps = (phaseIndex: number, stepIndex: number) => {
+    const stepKey = `${phaseIndex}-${stepIndex}`;
+    setExpandedSubSteps(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(stepKey)) {
+        newSet.delete(stepKey);
+      } else {
+        newSet.add(stepKey);
+      }
+      return newSet;
+    });
   };
 
   return (
@@ -279,6 +376,10 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
                 {Array.isArray(phase.steps) && phase.steps.length > 0 ? (
                   phase.steps.map((step: any, stepIndex: number) => {
                     const isHovered = hoveredStep?.phaseIndex === phaseIndex && hoveredStep?.stepIndex === stepIndex;
+                    const stepKey = `${phaseIndex}-${stepIndex}`;
+                    const hasSubSteps = step.sub_steps && Array.isArray(step.sub_steps) && step.sub_steps.length > 0;
+                    const isExpanded = expandedSubSteps.has(stepKey);
+                    const isLoading = loadingClarify.has(stepKey);
                     
                     return (
                       <div key={stepIndex} className="group">
@@ -384,6 +485,62 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
                             );
                           })()}
                           
+                          {/* Sub-steps display */}
+                          {hasSubSteps && (
+                            <div className="mt-3 pt-3 border-t border-primary/20">
+                              <button
+                                onClick={() => toggleSubSteps(phaseIndex, stepIndex)}
+                                className="flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
+                              >
+                                {isExpanded ? (
+                                  <>
+                                    <ChevronUp className="w-4 h-4" />
+                                    Hide Sub-Steps
+                                  </>
+                                ) : (
+                                  <>
+                                    <ChevronDown className="w-4 h-4" />
+                                    Show {step.sub_steps.length} Sub-Steps
+                                  </>
+                                )}
+                              </button>
+
+                              {isExpanded && (
+                                <div className="mt-3 space-y-2 animate-fade-in">
+                                  {step.sub_steps.map((subStep: any, subStepIndex: number) => (
+                                    <div
+                                      key={subStepIndex}
+                                      className="bg-background/30 border border-primary/20 rounded-xl p-3 ml-4"
+                                    >
+                                      <div className="flex items-start gap-2 mb-2">
+                                        <Badge variant="secondary" className="text-xs shrink-0">
+                                          {subStepIndex + 1}
+                                        </Badge>
+                                        <h5 className="text-sm font-semibold text-foreground">
+                                          <ReactMarkdown className="prose prose-sm max-w-none [&>p]:m-0 [&_strong]:font-bold">
+                                            {subStep.title}
+                                          </ReactMarkdown>
+                                        </h5>
+                                      </div>
+                                      <div className="text-xs text-muted-foreground/90 leading-relaxed ml-8">
+                                        <ReactMarkdown className="prose prose-sm max-w-none [&>p]:mb-1 [&>p:last-child]:mb-0 [&_strong]:font-bold">
+                                          {subStep.description}
+                                        </ReactMarkdown>
+                                      </div>
+                                      {subStep.estimated_time && (
+                                        <div className="mt-2 ml-8">
+                                          <Badge variant="outline" className="text-xs">
+                                            {subStep.estimated_time}
+                                          </Badge>
+                                        </div>
+                                      )}
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          )}
+                          
                           {/* Expandable Action Buttons Row - Only visible on hover */}
                           {isHovered && (
                             <div className="mt-3 pt-3 border-t border-primary/20 animate-fade-in">
@@ -396,22 +553,43 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
                                         variant="outline"
                                         onClick={(e) => {
                                           e.stopPropagation();
-                                          console.log('Clarify clicked for step:', phaseIndex, stepIndex);
+                                          handleClarifyStep(phaseIndex, stepIndex);
                                         }}
+                                        disabled={isLoading || hasSubSteps}
                                         className="relative px-6 py-2.5 text-sm font-semibold
                                           bg-background/60 hover:bg-background/80
                                           border border-primary/40 hover:border-primary/70
                                           text-primary
                                           shadow-sm hover:shadow-md shadow-primary/10 hover:shadow-primary/20
                                           transition-all duration-300 rounded-xl hover:scale-[1.05]
-                                          backdrop-blur-sm flex items-center gap-2"
+                                          backdrop-blur-sm flex items-center gap-2
+                                          disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                                       >
-                                        <Sparkles className="w-3.5 h-3.5" />
-                                        Clarify
+                                        {isLoading ? (
+                                          <>
+                                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                            Generating...
+                                          </>
+                                        ) : hasSubSteps ? (
+                                          <>
+                                            <Sparkles className="w-3.5 h-3.5" />
+                                            Clarified
+                                          </>
+                                        ) : (
+                                          <>
+                                            <Sparkles className="w-3.5 h-3.5" />
+                                            Clarify
+                                          </>
+                                        )}
                                       </Button>
                                     </TooltipTrigger>
                                     <TooltipContent className="max-w-xs">
-                                      <p className="text-sm">Generate 5 detailed sub-steps to break down this action with greater clarity and precision</p>
+                                      <p className="text-sm">
+                                        {hasSubSteps 
+                                          ? 'This step has already been clarified with sub-steps'
+                                          : 'Generate 5 detailed sub-steps to break down this action with greater clarity and precision'
+                                        }
+                                      </p>
                                     </TooltipContent>
                                   </Tooltip>
                                   
