@@ -195,7 +195,7 @@ export default function DataStatsSection() {
   }
 
   return (
-    <Card>
+    <Card className="glass border-border/40 shadow-modern">
       <CardHeader className="pb-3 sm:pb-6">
         <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
           <Database className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" />
