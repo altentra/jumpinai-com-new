@@ -114,7 +114,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
   }
 
   return (
-    <div className="w-full space-y-4">
+    <div className="w-full space-y-4" style={{ overflow: 'visible' }}>
       {/* Compact Glass Progress Header with enhanced glass morphism */}
       <div className="relative group">
         <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 rounded-2xl blur-xl opacity-40"></div>
@@ -230,7 +230,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
       )}
 
       {/* Content Tabs - Ultra Premium Design */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full [&>[role=tabpanel]]:!overflow-visible [&>[role=tabpanel]]:!max-h-none">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full" style={{ overflow: 'visible', display: 'block' }}>
         <div className="relative mb-8">
           {/* Mobile: Full width tabs */}
           <div className="sm:hidden pb-4">

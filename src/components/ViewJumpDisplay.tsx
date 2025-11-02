@@ -109,9 +109,9 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
   }
 
   return (
-    <div className="w-full max-w-full overflow-x-hidden space-y-4">
+    <div className="w-full max-w-full space-y-4" style={{ overflow: 'visible' }}>
       {/* Content Tabs - Ultra Premium Design */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full [&>[role=tabpanel]]:!overflow-visible [&>[role=tabpanel]]:!max-h-none">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full" style={{ overflow: 'visible', display: 'block' }}>
         <div className="relative mb-8">
           {/* Mobile: Full width tabs */}
           <div className="sm:hidden pb-4">

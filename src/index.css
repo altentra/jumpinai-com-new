@@ -444,27 +444,25 @@
   }
 }
 
-/* Force Radix Tabs to not create internal scroll */
+/* Force Radix Tabs to not create internal scroll - NUCLEAR OPTION */
 [data-radix-scroll-area-viewport] {
   overflow: visible !important;
   max-height: none !important;
   height: auto !important;
 }
 
-/* Ensure TabsContent doesn't create scroll containers */
 [role="tabpanel"] {
   overflow: visible !important;
   max-height: none !important;
   height: auto !important;
+  min-height: 0 !important;
 }
 
-/* Ensure Tabs root doesn't restrict height */
 [data-orientation="horizontal"][role="tablist"] ~ * {
   overflow: visible !important;
   max-height: none !important;
 }
 
-/* Nuclear option - force all children of tabs to be visible */
 [data-radix-tabs-content] {
   overflow: visible !important;
   max-height: none !important;
@@ -475,6 +473,21 @@
   overflow: visible !important;
   max-height: none !important;
 }
+
+/* Target ALL possible Radix containers */
+[data-radix-tabs-root],
+[data-radix-tabs-root] > *,
+[data-state="active"] {
+  overflow: visible !important;
+  max-height: none !important;
+  height: auto !important;
+}
+
+/* Remove any viewport restrictions */
+* [role="tabpanel"] * {
+  max-height: none !important;
+}
+
 
 
 
