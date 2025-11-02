@@ -264,6 +264,12 @@ export const jumpinAIStudioService = {
                 
                 const toolPromptsArray = data.tool_prompts || [];
                 console.log(`📦 Extracted ${toolPromptsArray.length} tool prompts`);
+                console.log('📋 Tool prompts structure:', toolPromptsArray.map((tp: any) => ({
+                  title: tp.title,
+                  tool_name: tp.tool_name,
+                  hasPromptText: !!tp.prompt_text,
+                  phase: tp.phase
+                })));
                 
                 // Validate each tool prompt has required fields
                 const validatedPrompts = toolPromptsArray.map((tp: any, idx: number) => {
