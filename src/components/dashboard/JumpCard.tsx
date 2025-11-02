@@ -56,7 +56,7 @@ export default function JumpCard({ jump, jumpNumber, onView, onDelete }: JumpCar
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1 min-w-0 space-y-3">
           {/* Badge */}
-            <Badge className="bg-gradient-to-br from-primary/90 to-primary/70 dark:from-primary/80 dark:to-primary/60 text-primary-foreground border border-primary/40 shadow-lg shadow-primary/20 text-xs font-bold px-3 py-1.5 rounded-full ring-1 ring-primary/20">
+            <Badge className="bg-gradient-to-br from-background/95 via-background/90 to-background/85 dark:from-background/98 dark:via-background/95 dark:to-background/90 text-foreground border border-primary/30 shadow-lg shadow-primary/10 text-xs font-bold px-3 py-1.5 rounded-full backdrop-blur-xl ring-1 ring-primary/20">
               #{jumpNumber}
             </Badge>
             
@@ -94,7 +94,7 @@ export default function JumpCard({ jump, jumpNumber, onView, onDelete }: JumpCar
           <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/15 via-accent/10 to-secondary/15 rounded-full blur-lg opacity-50 group-hover/btn:opacity-70 transition-all duration-500"></div>
           
           <Button 
-            className="w-full relative overflow-hidden rounded-full bg-gradient-to-br from-primary to-primary/80 dark:from-primary/90 dark:to-primary/70 border border-primary/40 hover:border-primary/60 shadow-xl hover:shadow-2xl hover:shadow-primary/30 transition-all duration-500 hover:scale-[1.02] font-bold text-primary-foreground h-12 ring-1 ring-primary/30 hover:ring-primary/50"
+            className="w-full relative overflow-hidden rounded-full bg-gradient-to-br from-background/95 via-background/90 to-background/85 dark:from-background/98 dark:via-background/95 dark:to-background/90 backdrop-blur-xl border border-primary/40 hover:border-primary/60 shadow-xl hover:shadow-2xl hover:shadow-primary/25 transition-all duration-500 hover:scale-[1.02] font-bold text-foreground h-12 ring-1 ring-primary/30 hover:ring-primary/50"
             onClick={(e) => {
               e.stopPropagation();
               navigate(`/dashboard/jump/${jump.id}`);
