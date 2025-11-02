@@ -458,7 +458,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                     
                     {/* Short-term (30-90 days) */}
                     {result.comprehensive_plan.roadmap.shortTerm && (
-                      <div className="p-4 rounded-xl border border-primary/30 bg-primary/5">
+                      <div className="p-4 rounded-xl border border-border/30 bg-background/50">
                         <div className="flex items-start justify-between mb-3">
                           <h4 className="font-semibold flex items-center gap-2">
                             <TrendingUp className="w-4 h-4 text-foreground" />
@@ -476,7 +476,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                     
                     {/* Long-term (90+ days) */}
                     {result.comprehensive_plan.roadmap.longTerm && (
-                      <div className="p-4 rounded-xl border border-primary/30 bg-primary/5">
+                      <div className="p-4 rounded-xl border border-border/30 bg-background/50">
                         <div className="flex items-start justify-between mb-3">
                           <h4 className="font-semibold flex items-center gap-2">
                             <Target className="w-4 h-4 text-foreground" />

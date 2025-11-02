@@ -328,7 +328,7 @@ export default function ToolsPrompts() {
                     <Card 
                       key={tp.id}
                       id={tp.id}
-                      className="group glass border-0 ring-1 ring-white/10 rounded-3xl shadow-2xl backdrop-blur-2xl bg-gradient-to-br from-background/80 via-card/60 to-primary/5 hover:ring-primary/30 hover:shadow-3xl hover:shadow-primary/10 transition-all duration-500 relative overflow-hidden hover:scale-[1.02] cursor-pointer"
+                      className="glass cursor-pointer hover:shadow-lg transition-all duration-300 rounded-xl group"
                       onClick={() => handleToolPromptClick(tp)}
                     >
                       {/* Premium gradient overlay */}

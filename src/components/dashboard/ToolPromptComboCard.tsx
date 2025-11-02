@@ -181,8 +181,8 @@ export function ToolPromptComboCard({ combo, onClick, index }: ToolPromptComboCa
                   {copied ? "Copied!" : "Copy"}
                 </Button>
               </div>
-              <div className="bg-muted/30 border border-border rounded-lg p-3 max-h-32 overflow-y-auto overflow-x-hidden">
-                <pre className="text-xs text-muted-foreground whitespace-pre-wrap font-mono leading-relaxed break-words overflow-wrap-anywhere">
+              <div className="bg-muted/30 border border-border rounded-lg p-3 max-h-32 overflow-y-auto">
+                <pre className="text-xs text-muted-foreground whitespace-pre-wrap font-mono leading-relaxed">
                   {promptText}
                 </pre>
               </div>
