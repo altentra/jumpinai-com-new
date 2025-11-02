@@ -67,11 +67,27 @@ export function ToolPromptComboCard({ combo, onClick, index }: ToolPromptComboCa
     }
   };
 
+  // Helper to safely convert any value to string for rendering
+  const safeString = (value: any): string => {
+    if (!value) return '';
+    if (typeof value === 'string') return value;
+    if (typeof value === 'object') {
+      // If it's an object, stringify it in a readable way
+      try {
+        return JSON.stringify(value, null, 2);
+      } catch {
+        return String(value);
+      }
+    }
+    return String(value);
+  };
+
   const toolUrl = combo.tool_url || combo.url || combo.website_url || combo.website;
   const toolName = combo.tool_name || combo.name || 'Unknown Tool';
   const promptText = combo.prompt_text || combo.custom_prompt || combo.prompt || '';
-  const whenToUse = combo.when_to_use;
-  const whyCombo = combo.why_this_combo || combo.why_this_tool;
+  const description = safeString(combo.description);
+  const whenToUse = safeString(combo.when_to_use);
+  const whyCombo = safeString(combo.why_this_combo || combo.why_this_tool);
   const alternatives = combo.alternatives || [];
 
   // Validate essential data - this should never happen with upstream filtering, but just in case
@@ -105,7 +121,7 @@ export function ToolPromptComboCard({ combo, onClick, index }: ToolPromptComboCa
             )}
           </div>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            {combo.description}
+            {description}
           </p>
         </CardHeader>
 
