@@ -171,7 +171,7 @@ const ForInvestors = () => {
                 <Target className="h-8 w-8 md:h-10 md:w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
                 <h3 className="text-base md:text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Breakthrough Innovation</h3>
                 <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
-                  2-minute AI-powered process delivers comprehensive transformation plans with situational analysis, strategic roadmaps, and 9 personalized tool-prompt batches. No competitor offers this depth of individualization at scale.
+                  2-minute AI-powered process delivers comprehensive transformation plans with situational analysis, strategic roadmaps, and 9 personalized tool-prompt batches—including step-by-step clarification and alternative pathway exploration. No competitor offers this depth of individualization at scale.
                 </p>
               </div>
               
@@ -221,7 +221,7 @@ const ForInvestors = () => {
                 <Globe className="h-8 w-8 md:h-10 md:w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
                 <h3 className="text-base md:text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Comprehensive Transformation Package</h3>
                 <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
-                  Each Jump delivers a complete transformation plan: situation analysis, strategic vision with success metrics, detailed action plan with phases and milestones, plus 9 personalized batches of AI tools and prompts—all implementation-ready.
+                  Each Jump delivers a complete transformation plan: situation analysis, strategic vision with success metrics, detailed action plan with phases and milestones, plus 9 personalized batches of AI tools and prompts—with interactive plan refinement capabilities. All implementation-ready.
                 </p>
               </div>
               

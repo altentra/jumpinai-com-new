@@ -116,7 +116,7 @@ const Index = () => {
             <div className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-300">
               <h3 className="text-lg font-bold mb-3 font-display">Strategic Action Plans</h3>
               <p className="text-sm text-muted-foreground mb-4">
-                Clear, step-by-step roadmaps tailored to your exact goals, industry, and experience level.
+                Clear, step-by-step roadmaps tailored to your exact goals, industry, and experience level—with the ability to dive deeper into any step or explore alternative approaches.
               </p>
               <div className="text-xs text-primary space-y-1">
                 <div>✓ Industry-specific strategies</div>
@@ -155,7 +155,7 @@ const Index = () => {
             <div className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-300">
               <h3 className="text-lg font-bold mb-3 font-display">AI Coach & Support</h3>
               <p className="text-sm text-muted-foreground mb-4">
-                Ongoing guidance with AI coach conversations and comprehensive support system.
+                Ongoing guidance with AI coach conversations, plan refinement, route exploration capabilities, and comprehensive support system.
               </p>
               <div className="text-xs text-white space-y-1">
                 <div>✓ AI coaching sessions</div>

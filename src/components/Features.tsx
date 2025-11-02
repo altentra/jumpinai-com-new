@@ -97,8 +97,10 @@ const Features = () => {
                 helps you <strong className="text-primary bg-primary/10 px-1 rounded">implement AI in your life and business</strong>.
               </p>
               <p className="text-sm sm:text-base text-foreground leading-relaxed">
-                Each Jump includes personalized prompts, actionable tools, and strategic plans 
-                and strategic guidance - everything you need to <strong className="text-primary bg-primary/10 px-1 rounded">literally Jump into AI fast</strong> and 
+                Each Jump includes personalized prompts, actionable tools, strategic plans, and strategic guidance. 
+                You can <strong className="text-primary bg-primary/10 px-1 rounded">clarify any step for detailed sub-steps</strong> or 
+                <strong className="text-primary bg-primary/10 px-1 rounded"> explore alternative routes</strong> for maximum flexibility—everything you need to 
+                <strong className="text-primary bg-primary/10 px-1 rounded"> literally Jump into AI fast</strong> and 
                 start using it to your advantage ASAP in the most professional, efficient, and transformative way possible.
               </p>
             </div>

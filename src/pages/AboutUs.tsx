@@ -241,7 +241,7 @@ const AboutUs = () => {
     {
       icon: Zap,
       title: "Personalized Transformation Plans",
-      description: "Your unique AI transformation roadmap created in 2 minutes—comprehensive situation analysis, strategic vision with success metrics, and detailed action plan with phases and milestones."
+      description: "Your unique AI transformation roadmap created in 2 minutes—comprehensive situation analysis, strategic vision with success metrics, and detailed action plan with phases and milestones. Includes built-in step clarification and alternative route exploration for complete adaptability."
     },
     {
       icon: Target,
