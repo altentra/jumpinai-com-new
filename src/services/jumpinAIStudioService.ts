@@ -264,14 +264,31 @@ export const jumpinAIStudioService = {
                 
                 const toolPromptsArray = data.tool_prompts || [];
                 console.log(`📦 Extracted ${toolPromptsArray.length} tool prompts`);
-                console.log('📋 Tool prompts structure:', toolPromptsArray.map((tp: any) => ({
-                  title: tp.title,
-                  tool_name: tp.tool_name,
-                  hasPromptText: !!tp.prompt_text,
-                  phase: tp.phase
-                })));
                 
-                result.components!.toolPrompts = toolPromptsArray;
+                // Validate each tool prompt has required fields
+                const validatedPrompts = toolPromptsArray.map((tp: any, idx: number) => {
+                  const promptText = tp.prompt_text || tp.custom_prompt || tp.prompt;
+                  const toolName = tp.tool_name || tp.name;
+                  
+                  console.log(`📋 Tool prompt ${idx + 1} validation:`, {
+                    title: tp.title,
+                    tool_name: toolName,
+                    hasPromptText: !!promptText,
+                    hasToolName: !!toolName,
+                    phase: tp.phase,
+                    isValid: !!(promptText && toolName)
+                  });
+                  
+                  return tp;
+                });
+                
+                console.log(`✅ Tool prompts validation complete: ${validatedPrompts.filter((tp: any) => {
+                  const promptText = tp.prompt_text || tp.custom_prompt || tp.prompt;
+                  const toolName = tp.tool_name || tp.name;
+                  return promptText && toolName;
+                }).length}/${validatedPrompts.length} have complete required data`);
+                
+                result.components!.toolPrompts = validatedPrompts;
                 
                 if (onProgress) {
                   onProgress(step, type, data);

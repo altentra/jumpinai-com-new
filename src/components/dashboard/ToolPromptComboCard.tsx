@@ -74,12 +74,13 @@ export function ToolPromptComboCard({ combo, onClick, index }: ToolPromptComboCa
   const whyCombo = combo.why_this_combo || combo.why_this_tool;
   const alternatives = combo.alternatives || [];
 
-  // Validate essential data
+  // Validate essential data - this should never happen with upstream filtering, but just in case
   if (!promptText) {
-    console.warn('⚠️ ToolPromptComboCard: Missing prompt text for combo:', combo);
+    console.error('❌ ToolPromptComboCard: Missing prompt text despite filtering. This should not happen!', combo);
     return (
-      <div className="p-6 border border-destructive/30 rounded-lg bg-destructive/5 text-center">
-        <p className="text-sm text-muted-foreground">Missing prompt data</p>
+      <div className="p-6 border border-yellow-500/30 rounded-lg bg-yellow-500/5 text-center">
+        <Sparkles className="w-8 h-8 text-yellow-500 mx-auto mb-2" />
+        <p className="text-sm text-muted-foreground">Tool combo is being generated...</p>
       </div>
     );
   }
