@@ -24,8 +24,10 @@ Your task is to generate 3 completely different but viable alternative direction
 Each direction should:
 1. Offer a unique approach or perspective
 2. Be practical and actionable
-3. Include 3 detailed sub-steps
+3. Include 3 detailed sub-steps with comprehensive descriptions
 4. Maintain similar scope and effort as the original step
+
+IMPORTANT: Each sub-step description should be substantial and detailed - approximately half to two-thirds the length of the original step's description. Provide clear, actionable guidance with specific examples and context.
 
 Format your response as valid JSON with this exact structure:
 {
@@ -37,7 +39,7 @@ Format your response as valid JSON with this exact structure:
         {
           "sub_step_number": 1,
           "title": "Clear, actionable title",
-          "description": "Detailed description of what to do",
+          "description": "Detailed, comprehensive description with specific guidance, examples, and actionable steps. This should be substantial - aim for half to two-thirds the length of the original step description.",
           "estimated_time": "Time estimate (e.g., '30 minutes', '2 hours')"
         }
       ]
@@ -59,7 +61,7 @@ Make each direction:
 - Distinctly different from the others
 - Practical and actionable
 - Similar in scope to the original step
-- Include specific, clear sub-steps
+- Include specific, clear sub-steps with substantial descriptions (each sub-step description should be approximately half to two-thirds the length of the original step description)
 
 Return ONLY valid JSON, no markdown formatting.`;
 
