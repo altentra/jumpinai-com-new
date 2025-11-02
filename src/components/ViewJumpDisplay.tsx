@@ -202,7 +202,7 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
           </TabsList>
         </div>
 
-        <TabsContent value="overview" className="mt-0 overflow-visible">
+        <TabsContent value="overview" className="mt-0">
           {result.comprehensive_plan ? (
             <div className="space-y-6">
               {/* Executive Summary */}
@@ -493,32 +493,30 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
         </TabsContent>
 
         <TabsContent value="plan" className="mt-0">
-          <div className="overflow-visible min-h-0">
-            {result.structured_plan && result.structured_plan.phases ? (
-              <JumpPlanDisplay
-                planContent={result.full_content || ''}
-                structuredPlan={result.comprehensive_plan}
-                onEdit={() => {
-                  toast.info('Edit feature coming soon!');
-                }}
-                onDownload={() => {
-                  toast.info('Download feature coming soon!');
-                }}
-                jumpId={result.jumpId || undefined}
-                toolPromptIds={result.components?.toolPrompts?.map((tp: any) => tp?.id || null) || []}
-                onToolPromptClick={handleToolPromptClick}
-              />
-            ) : (
-              <div className="flex items-center justify-center h-32">
-                <Loader2 className="w-6 h-6 animate-spin mr-2" />
-                Creating implementation plan...
-              </div>
-            )}
-          </div>
+          {result.structured_plan && result.structured_plan.phases ? (
+            <JumpPlanDisplay
+              planContent={result.full_content || ''}
+              structuredPlan={result.comprehensive_plan}
+              onEdit={() => {
+                toast.info('Edit feature coming soon!');
+              }}
+              onDownload={() => {
+                toast.info('Download feature coming soon!');
+              }}
+              jumpId={result.jumpId || undefined}
+              toolPromptIds={result.components?.toolPrompts?.map((tp: any) => tp?.id || null) || []}
+              onToolPromptClick={handleToolPromptClick}
+            />
+          ) : (
+            <div className="flex items-center justify-center h-32">
+              <Loader2 className="w-6 h-6 animate-spin mr-2" />
+              Creating implementation plan...
+            </div>
+          )}
         </TabsContent>
 
-        <TabsContent value="toolPrompts" className="mt-0 overflow-visible">
-          <div className="grid gap-4 overflow-visible">
+        <TabsContent value="toolPrompts" className="mt-0">
+          <div className="grid gap-4">
             {result.components?.toolPrompts && result.components.toolPrompts.length > 0 ? (
               result.components.toolPrompts.map((combo: any, index: number) => (
                 <div key={index} data-tool-combo={index + 1} className="animate-fade-in">
