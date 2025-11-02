@@ -230,7 +230,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
       )}
 
       {/* Content Tabs - Ultra Premium Design */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full overflow-visible">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <div className="relative mb-8">
           {/* Mobile: Full width tabs */}
           <div className="sm:hidden pb-4">
@@ -611,29 +611,31 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
           )}
         </TabsContent>
 
-        <TabsContent value="plan" className="mt-0 overflow-visible">
-          {result.structured_plan && result.structured_plan.phases ? (
-            <JumpPlanDisplay
-              planContent={result.full_content || ''}
-              structuredPlan={result.comprehensive_plan}
-              onEdit={() => {
-                // Scroll to chat to refine
-                const chatSection = document.querySelector('[data-chat-section]');
-                if (chatSection) {
-                  chatSection.scrollIntoView({ behavior: 'smooth' });
-                }
-              }}
-              onDownload={() => handleDownload()}
-              jumpId={result.jumpId}
-              toolPromptIds={result.components?.toolPrompts?.map((tp: any) => tp?.id || null) || []}
-              onToolPromptClick={handleToolPromptClick}
-            />
-          ) : (
-            <div className="flex items-center justify-center h-32">
-              <Loader2 className="w-6 h-6 animate-spin mr-2" />
-              Creating implementation plan...
-            </div>
-          )}
+        <TabsContent value="plan" className="mt-0">
+          <div className="overflow-visible min-h-0">
+            {result.structured_plan && result.structured_plan.phases ? (
+              <JumpPlanDisplay
+                planContent={result.full_content || ''}
+                structuredPlan={result.comprehensive_plan}
+                onEdit={() => {
+                  // Scroll to chat to refine
+                  const chatSection = document.querySelector('[data-chat-section]');
+                  if (chatSection) {
+                    chatSection.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
+                onDownload={() => handleDownload()}
+                jumpId={result.jumpId}
+                toolPromptIds={result.components?.toolPrompts?.map((tp: any) => tp?.id || null) || []}
+                onToolPromptClick={handleToolPromptClick}
+              />
+            ) : (
+              <div className="flex items-center justify-center h-32">
+                <Loader2 className="w-6 h-6 animate-spin mr-2" />
+                Creating implementation plan...
+              </div>
+            )}
+          </div>
         </TabsContent>
 
         <TabsContent value="toolPrompts" className="mt-0 overflow-visible">
