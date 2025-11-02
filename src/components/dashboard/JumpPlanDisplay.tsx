@@ -672,13 +672,13 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                        key={subStepIndex}
                                        className="bg-background/30 border border-primary/20 rounded-xl p-3"
                                      >
-                                       <div className="flex items-center gap-2 mb-2">
+                                       <div className="flex items-start gap-2 mb-2">
                                          <div className="flex-shrink-0 px-2.5 py-1.5 rounded-lg bg-gradient-to-br from-primary/40 to-primary/30 flex items-center justify-center border border-primary/60 shadow-sm">
                                            <span className="text-xs font-bold text-primary/90 whitespace-nowrap">
                                              Sub-Step {subStepIndex + 1}
                                            </span>
                                          </div>
-                                         <h5 className="text-sm font-semibold text-foreground flex-1 leading-tight">
+                                         <h5 className="text-sm font-semibold text-foreground flex-1 leading-tight pt-0.5">
                                            <ReactMarkdown className="prose prose-sm max-w-none [&>p]:mb-0">
                                              {subStep.title}
                                            </ReactMarkdown>
