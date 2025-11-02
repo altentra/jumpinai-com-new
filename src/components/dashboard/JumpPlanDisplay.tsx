@@ -595,7 +595,7 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                      className="bg-background/40 border border-primary/30 rounded-xl p-4 flex flex-col"
                                    >
                                      <div className="mb-3">
-                                       <h4 className="text-sm font-semibold text-foreground text-center mb-3">
+                                       <h4 className="text-base font-semibold text-foreground text-center mb-3">
                                          Direction {dirIndex + 1}
                                        </h4>
                                        <div className="text-sm text-muted-foreground/90 leading-relaxed">
@@ -611,13 +611,13 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                            key={subStepIndex}
                                            className="bg-background/30 border border-primary/20 rounded-xl p-3"
                                          >
-                                           <div className="flex items-start gap-2 mb-2">
-                                             <div className="flex-shrink-0 px-2.5 py-1.5 rounded-lg bg-gradient-to-br from-primary/40 to-primary/30 flex items-center justify-center border border-primary/60 shadow-sm">
+                                           <div className="flex flex-col gap-2 mb-2">
+                                             <div className="flex-shrink-0 px-2.5 py-1.5 rounded-lg bg-gradient-to-br from-primary/40 to-primary/30 flex items-center justify-center border border-primary/60 shadow-sm w-fit">
                                                <span className="text-xs font-bold text-primary/90 whitespace-nowrap">
                                                  Sub-Step {subStepIndex + 1}
                                                </span>
                                              </div>
-                                             <h5 className="text-xs font-semibold text-foreground flex-1 leading-tight">
+                                             <h5 className="text-sm font-semibold text-foreground leading-tight">
                                                <ReactMarkdown className="prose prose-sm max-w-none [&>p]:mb-0">
                                                  {subStep.title}
                                                </ReactMarkdown>
