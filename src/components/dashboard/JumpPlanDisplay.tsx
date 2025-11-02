@@ -402,7 +402,7 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
                                     transition-all duration-300 rounded-xl hover:scale-[1.05]
                                     backdrop-blur-sm flex items-center gap-2"
                                 >
-                                  <Lightbulb className="w-3.5 h-3.5" />
+                                  <Sparkles className="w-3.5 h-3.5" />
                                   Clarify
                                 </Button>
                                 <Button
