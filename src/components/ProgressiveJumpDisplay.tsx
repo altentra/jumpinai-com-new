@@ -654,30 +654,78 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
               );
             }
 
+            // Validate and map combos with original indices preserved
+            const validCombosWithIndices = result.components.toolPrompts
+              .map((combo: any, originalIndex: number) => ({ combo, originalIndex }))
+              .filter(({ combo, originalIndex }) => {
+                const promptText = combo.prompt_text || combo.custom_prompt || combo.prompt;
+                const toolName = combo.tool_name || combo.name;
+                const hasTitle = combo.title;
+                const hasDescription = combo.description;
+                
+                // More robust validation - check all essential rendering fields
+                const isValid = !!(promptText && toolName && hasTitle);
+                
+                if (!isValid) {
+                  console.warn(`⚠️ Combo ${originalIndex + 1} missing required fields:`, {
+                    hasPromptText: !!promptText,
+                    hasToolName: !!toolName,
+                    hasTitle: !!hasTitle,
+                    hasDescription: !!hasDescription,
+                    combo
+                  });
+                }
+                
+                return isValid;
+              });
+
+            console.log(`✅ Validated: ${validCombosWithIndices.length} of ${result.components.toolPrompts.length} combos have complete data`);
+
+            // Show loading if we're expecting more combos (target is 9)
+            const expectedCount = 9;
+            const isGenerating = validCombosWithIndices.length < expectedCount && result.components.toolPrompts.length < expectedCount;
+
             return (
               <div className="grid gap-4">
-                {result.components.toolPrompts.map((combo: any, index: number) => {
-                  console.log(`🔧 Rendering combo ${index + 1}:`, combo);
+                {validCombosWithIndices.map(({ combo, originalIndex }) => {
+                  const displayNumber = originalIndex + 1;
+                  console.log(`🔧 Rendering valid combo ${displayNumber}:`, {
+                    title: combo.title,
+                    tool_name: combo.tool_name,
+                    hasPrompt: !!(combo.prompt_text || combo.custom_prompt),
+                    hasDescription: !!combo.description
+                  });
                   return (
                     <ErrorBoundary 
-                      key={index}
+                      key={combo.id || `combo-${originalIndex}`}
                       fallback={
                         <div className="p-6 border border-destructive/30 rounded-lg bg-destructive/5 text-center">
-                          <h3 className="text-lg font-semibold mb-2">Error loading tool #{index + 1}</h3>
+                          <h3 className="text-lg font-semibold mb-2">Error loading tool #{displayNumber}</h3>
                           <p className="text-sm text-muted-foreground">This tool-prompt combo couldn't be displayed.</p>
                         </div>
                       }
                     >
-                      <div data-tool-combo={index + 1} className="animate-fade-in">
+                      <div data-tool-combo={displayNumber} className="animate-fade-in">
                         <ToolPromptComboCard
                           combo={combo}
-                          index={index + 1}
+                          index={displayNumber}
                           onClick={() => {/* Detail modal will be added later */}}
                         />
                       </div>
                     </ErrorBoundary>
                   );
                 })}
+                
+                {/* Show loading indicators for remaining combos */}
+                {isGenerating && Array.from({ length: expectedCount - validCombosWithIndices.length }).map((_, idx) => (
+                  <div 
+                    key={`loading-${idx}`}
+                    className="glass backdrop-blur-lg bg-card/80 border border-border rounded-xl p-6 flex items-center justify-center h-32 text-muted-foreground animate-pulse"
+                  >
+                    <Loader2 className="w-6 h-6 animate-spin mr-2" />
+                    Generating tool combo #{validCombosWithIndices.length + idx + 1}...
+                  </div>
+                ))}
               </div>
             );
           })()}
