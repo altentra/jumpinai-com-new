@@ -321,7 +321,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
           </TabsList>
         </div>
 
-        <TabsContent value="overview" className="mt-0">
+        <TabsContent value="overview" className="mt-0" style={{ overflow: 'visible', maxHeight: 'none', height: 'auto', display: 'block' }}>
           {result.comprehensive_plan ? (
             <div className="space-y-6">
               {/* Executive Summary */}
@@ -611,7 +611,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
           )}
         </TabsContent>
 
-        <TabsContent value="plan" className="mt-0">
+        <TabsContent value="plan" className="mt-0" style={{ overflow: 'visible', maxHeight: 'none', height: 'auto', display: 'block' }}>
           {result.structured_plan && result.structured_plan.phases ? (
             <JumpPlanDisplay
               planContent={result.full_content || ''}
@@ -636,7 +636,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
           )}
         </TabsContent>
 
-        <TabsContent value="toolPrompts" className="mt-0">
+        <TabsContent value="toolPrompts" className="mt-0" style={{ overflow: 'visible', maxHeight: 'none', height: 'auto', display: 'block' }}>
           {(() => {
             console.log('🔍 Tools & Prompts Tab - Checking data:', {
               hasComponents: !!result.components,

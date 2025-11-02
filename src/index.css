@@ -464,4 +464,17 @@
   max-height: none !important;
 }
 
+/* Nuclear option - force all children of tabs to be visible */
+[data-radix-tabs-content] {
+  overflow: visible !important;
+  max-height: none !important;
+  height: auto !important;
+}
+
+[data-radix-tabs-content] > * {
+  overflow: visible !important;
+  max-height: none !important;
+}
+
+
 
