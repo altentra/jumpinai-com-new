@@ -471,6 +471,38 @@ export type Database = {
         }
         Relationships: []
       }
+      user_jump_actions: {
+        Row: {
+          action_type: string
+          created_at: string
+          id: string
+          jump_id: string | null
+          user_id: string
+        }
+        Insert: {
+          action_type: string
+          created_at?: string
+          id?: string
+          jump_id?: string | null
+          user_id: string
+        }
+        Update: {
+          action_type?: string
+          created_at?: string
+          id?: string
+          jump_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_jump_actions_jump_id_fkey"
+            columns: ["jump_id"]
+            isOneToOne: false
+            referencedRelation: "user_jumps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_jumps: {
         Row: {
           completion_percentage: number | null

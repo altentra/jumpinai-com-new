@@ -6,6 +6,8 @@ export interface DashboardStats {
   totalToolPrompts: number;
   implementedJumps: number;
   implementedToolPrompts: number;
+  totalClarifications: number;
+  totalReroutes: number;
 }
 
 export interface ActivityData {
@@ -37,12 +39,28 @@ export const dashboardStatsService = {
         .select('id, implemented')
         .eq('user_id', userId) as any;
 
+      // Get clarifications count
+      const { data: clarificationsData } = await supabase
+        .from('user_jump_actions')
+        .select('id')
+        .eq('user_id', userId)
+        .eq('action_type', 'clarify') as any;
+
+      // Get reroutes count
+      const { data: reroutesData } = await supabase
+        .from('user_jump_actions')
+        .select('id')
+        .eq('user_id', userId)
+        .eq('action_type', 'reroute') as any;
+
       return {
         credits: creditsData?.credits_balance || 0,
         totalJumps: jumpsData?.length || 0,
         totalToolPrompts: toolPromptsData?.length || 0,
         implementedJumps: jumpsData?.filter((j: any) => j.implemented).length || 0,
         implementedToolPrompts: toolPromptsData?.filter((tp: any) => tp.implemented).length || 0,
+        totalClarifications: clarificationsData?.length || 0,
+        totalReroutes: reroutesData?.length || 0,
       };
     } catch (error) {
       console.error('Error fetching dashboard stats:', error);
@@ -52,6 +70,8 @@ export const dashboardStatsService = {
         totalToolPrompts: 0,
         implementedJumps: 0,
         implementedToolPrompts: 0,
+        totalClarifications: 0,
+        totalReroutes: 0,
       };
     }
   },

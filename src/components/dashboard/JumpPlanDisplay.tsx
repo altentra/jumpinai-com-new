@@ -249,6 +249,25 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
     }
   };
 
+  // Helper function to track user actions (clarify/reroute)
+  const trackAction = async (actionType: 'clarify' | 'reroute') => {
+    if (!jumpId) return;
+    
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      await supabase.from('user_jump_actions').insert({
+        user_id: user.id,
+        jump_id: jumpId,
+        action_type: actionType,
+      });
+    } catch (error) {
+      console.error('Error tracking action:', error);
+      // Don't show error to user, this is background tracking
+    }
+  };
+
   const handleClarifyStep = async (phaseIndex: number, stepIndex: number) => {
     if (!jumpId) {
       toast.error('Jump ID is required');
@@ -306,6 +325,9 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
       // Expand the sub-steps
       setExpandedSubSteps(prev => new Set(prev).add(stepKey));
 
+      // Track the clarify action
+      await trackAction('clarify');
+
       toast.success('Sub-steps generated successfully!');
     } catch (error) {
       console.error('Error clarifying step:', error);
@@ -362,6 +384,10 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
       console.log('Received directions:', data.directions);
 
       setRerouteOptions(prev => ({ ...prev, [stepKey]: data.directions }));
+      
+      // Track the reroute action
+      await trackAction('reroute');
+      
       toast.success('Alternative routes generated successfully!');
     } catch (error) {
       console.error('Error generating reroute options:', error);

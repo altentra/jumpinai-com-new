@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Zap, Rocket, Wrench, Lightbulb, GitBranch, Boxes, Target, CheckCircle2 } from 'lucide-react';
+import { Zap, Rocket, Wrench, Lightbulb, GitBranch, Boxes, Target, CheckCircle2, Sparkles, GitCompare } from 'lucide-react';
 import { DashboardStats as StatsType } from '@/services/dashboardStatsService';
 import { Progress } from '@/components/ui/progress';
 import { useNavigate } from 'react-router-dom';
@@ -45,12 +45,28 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({ stats, isLoading
       bgColor: 'bg-purple-500/10',
       path: '/dashboard/tools-prompts',
     },
+    {
+      title: 'Clarifications',
+      value: stats.totalClarifications,
+      icon: Sparkles,
+      color: 'text-green-500',
+      bgColor: 'bg-green-500/10',
+      path: '/dashboard/jumps',
+    },
+    {
+      title: 'Reroutes',
+      value: stats.totalReroutes,
+      icon: GitCompare,
+      color: 'text-orange-500',
+      bgColor: 'bg-orange-500/10',
+      path: '/dashboard/jumps',
+    },
   ];
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 max-w-4xl mx-auto">
-        {Array.from({ length: 3 }).map((_, i) => (
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 max-w-6xl mx-auto">
+        {Array.from({ length: 5 }).map((_, i) => (
           <Card key={i} className="glass animate-pulse">
             <CardContent className="p-6">
               <div className="h-24 bg-muted/20 rounded" />
@@ -64,7 +80,7 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({ stats, isLoading
   return (
     <div className="space-y-4 sm:space-y-6">
       {/* Stats Grid - Centered and Beautiful */}
-      <div className="grid grid-cols-3 gap-3 sm:gap-4 md:gap-6 max-w-4xl mx-auto px-2 sm:px-0">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 max-w-6xl mx-auto px-2 sm:px-0">
         {statCards.map((stat) => (
           <Card 
             key={stat.title} 
