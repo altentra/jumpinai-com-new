@@ -85,7 +85,7 @@ export function ToolPromptComboCard({ combo, onClick, index }: ToolPromptComboCa
   }
 
   return (
-    <div className="relative group">
+    <div id={combo.id || `combo-${index}`} className="relative group">
       <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
       <Card 
         className="relative glass backdrop-blur-lg bg-card/80 border border-border hover:border-primary/40 transition-all duration-300 cursor-pointer"

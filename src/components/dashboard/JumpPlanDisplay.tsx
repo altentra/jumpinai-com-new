@@ -14,6 +14,7 @@ interface JumpPlanDisplayProps {
   onDownload: () => void;
   jumpId?: string; // Jump ID for linking to tool/prompt combos
   toolPromptIds?: string[]; // Array of 9 tool/prompt IDs in order
+  onToolPromptClick?: (comboIndex: number, comboId: string) => void; // Callback to switch tabs and scroll to combo
 }
 
 // Helper function to check if structured plan matches comprehensive format
@@ -179,7 +180,7 @@ function normalizeToComprehensive(input: any): any {
   return base;
 }
 
-export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, onDownload, jumpId, toolPromptIds }: JumpPlanDisplayProps) {
+export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, onDownload, jumpId, toolPromptIds, onToolPromptClick }: JumpPlanDisplayProps) {
   if (!planContent.trim() && !structuredPlan) {
     return null;
   }
@@ -210,8 +211,8 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
   };
 
   const handleToolPromptClick = (comboIndex: number) => {
-    if (!jumpId || !toolPromptIds || comboIndex >= toolPromptIds.length) {
-      console.warn('Missing jumpId or toolPromptIds for navigation');
+    if (!toolPromptIds || comboIndex >= toolPromptIds.length) {
+      console.warn('Missing toolPromptIds or invalid index:', comboIndex);
       return;
     }
     
@@ -223,18 +224,10 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
       return;
     }
     
-    // Navigate to tools & prompts tab with the specific combo ID as a hash
-    navigate(`/dashboard/tools-prompts#${comboId}`);
-    
-    // After navigation, scroll to and highlight the element
-    setTimeout(() => {
-      const element = document.getElementById(comboId);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        element.classList.add('highlight-pulse');
-        setTimeout(() => element.classList.remove('highlight-pulse'), 3000);
-      }
-    }, 100);
+    // Use the callback if provided (for switching tabs in the same module)
+    if (onToolPromptClick) {
+      onToolPromptClick(comboIndex, comboId);
+    }
   };
 
   return (

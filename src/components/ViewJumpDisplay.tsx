@@ -24,6 +24,7 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
 }) => {
   const navigate = useNavigate();
   const [copiedPrompts, setCopiedPrompts] = React.useState<Set<number>>(new Set());
+  const [activeTab, setActiveTab] = React.useState('overview');
 
   const handleCopyPrompt = async (promptText: string, index: number) => {
     try {
@@ -48,6 +49,21 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+  
+  const handleToolPromptClick = (comboIndex: number, comboId: string) => {
+    // Switch to the Tools & Prompts tab
+    setActiveTab('toolPrompts');
+    
+    // Wait for tab to switch, then scroll to the combo
+    setTimeout(() => {
+      const element = document.getElementById(comboId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        element.classList.add('highlight-pulse');
+        setTimeout(() => element.classList.remove('highlight-pulse'), 3000);
+      }
+    }, 100);
   };
 
   const getStatusIcon = (stepName: string, hasContent: boolean) => {
@@ -95,7 +111,7 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
   return (
     <div className="w-full space-y-4">
       {/* Content Tabs - Ultra Premium Design */}
-      <Tabs defaultValue="overview" className="w-full">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <div className="relative mb-8">
           {/* Mobile: Full width tabs */}
           <div className="sm:hidden pb-4">
@@ -462,6 +478,7 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
               }}
               jumpId={result.jumpId || undefined}
               toolPromptIds={result.components?.toolPrompts?.map((tp: any) => tp?.id || null) || []}
+              onToolPromptClick={handleToolPromptClick}
             />
           ) : (
             <div className="flex items-center justify-center h-32">

@@ -25,6 +25,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
 }) => {
   const navigate = useNavigate();
   const [copiedPrompts, setCopiedPrompts] = React.useState<Set<number>>(new Set());
+  const [activeTab, setActiveTab] = React.useState('overview');
 
   const handleCopyPrompt = async (promptText: string, index: number) => {
     try {
@@ -47,6 +48,21 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
 
   const handleDownload = () => {
     toast.info('Download feature coming soon!');
+  };
+  
+  const handleToolPromptClick = (comboIndex: number, comboId: string) => {
+    // Switch to the Tools & Prompts tab
+    setActiveTab('toolPrompts');
+    
+    // Wait for tab to switch, then scroll to the combo
+    setTimeout(() => {
+      const element = document.getElementById(comboId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        element.classList.add('highlight-pulse');
+        setTimeout(() => element.classList.remove('highlight-pulse'), 3000);
+      }
+    }, 100);
   };
 
   const formatTime = (seconds: number) => {
@@ -214,7 +230,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
       )}
 
       {/* Content Tabs - Ultra Premium Design */}
-      <Tabs defaultValue="overview" className="w-full">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <div className="relative mb-8">
           {/* Mobile: Full width tabs */}
           <div className="sm:hidden pb-4">
@@ -610,6 +626,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
               onDownload={() => handleDownload()}
               jumpId={result.jumpId}
               toolPromptIds={result.components?.toolPrompts?.map((tp: any) => tp?.id || null) || []}
+              onToolPromptClick={handleToolPromptClick}
             />
           ) : (
             <div className="flex items-center justify-center h-32">
