@@ -126,10 +126,10 @@ export function ToolPromptComboCard({ combo, onClick, index }: ToolPromptComboCa
         onClick={onClick}
       >
         <CardHeader className="pb-3">
-          <div className="flex items-start justify-between gap-3 mb-2">
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <Sparkles className="w-5 h-5 text-primary" />
-              <span className="font-semibold">{index !== undefined && `${index}. `}{title}</span>
+          <div className="flex items-start justify-between gap-2 mb-2 flex-wrap">
+            <CardTitle className="flex items-center gap-2 text-lg flex-1 min-w-0">
+              <Sparkles className="w-5 h-5 text-primary flex-shrink-0" />
+              <span className="font-semibold break-words">{index !== undefined && `${index}. `}{title}</span>
             </CardTitle>
             {category && (
               <Badge variant="outline" className="shrink-0 text-xs">
