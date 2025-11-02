@@ -279,9 +279,9 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
                       <div className="bg-background/40 backdrop-blur-[2px] border border-primary/40 border-l-2 border-l-primary/50 hover:border-primary/70 hover:border-l-primary/80 rounded-2xl sm:rounded-3xl p-3 sm:p-4 md:p-5 hover:bg-background/60 transition-all duration-300 shadow-[0_2px_8px_rgba(var(--primary),0.15)] hover:shadow-[0_4px_16px_rgba(var(--primary),0.25)]">
                         <div className="flex items-start gap-3 sm:gap-4 mb-3">
                           <div className="flex-shrink-0 pt-0.5">
-                            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-primary/25 to-primary/15 flex items-center justify-center border border-primary/40 shadow-sm">
-                              <span className="text-base sm:text-lg font-bold text-primary">
-                                {stepIndex + 1}
+                            <div className="px-3 py-2 rounded-xl bg-gradient-to-br from-primary/25 to-primary/15 flex items-center justify-center border border-primary/40 shadow-sm">
+                              <span className="text-sm sm:text-base font-bold text-primary whitespace-nowrap">
+                                Step {stepIndex + 1}
                               </span>
                             </div>
                           </div>
