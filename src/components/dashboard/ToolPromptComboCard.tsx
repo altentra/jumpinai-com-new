@@ -132,7 +132,7 @@ export function ToolPromptComboCard({ combo, onClick, index }: ToolPromptComboCa
               <span className="font-semibold break-words">{index !== undefined && `${index}. `}{title}</span>
             </CardTitle>
             {category && (
-              <Badge variant="outline" className="w-fit text-xs self-end">
+              <Badge variant="outline" className="w-fit text-xs sm:self-end">
                 {category}
               </Badge>
             )}
