@@ -328,10 +328,16 @@ export default function ToolsPrompts() {
                     <Card 
                       key={tp.id}
                       id={tp.id}
-                      className="glass cursor-pointer hover:shadow-lg transition-all duration-300 rounded-xl group"
+                      className="group glass border-0 ring-1 ring-white/10 rounded-3xl shadow-2xl backdrop-blur-2xl bg-gradient-to-br from-background/80 via-card/60 to-primary/5 hover:ring-primary/30 hover:shadow-3xl hover:shadow-primary/10 transition-all duration-500 relative overflow-hidden hover:scale-[1.02] cursor-pointer"
                       onClick={() => handleToolPromptClick(tp)}
                     >
-                      <CardHeader className="pb-3">
+                      {/* Premium gradient overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                      
+                      {/* Animated shimmer effect */}
+                      <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/5 to-transparent"></div>
+                      
+                      <CardHeader className="pb-3 relative z-10">
                         <div className="flex items-start justify-between mb-2">
                           <CardTitle className="text-sm sm:text-base line-clamp-2 group-hover:text-primary transition-colors">
                             {index + 1}. {tp.title}
@@ -344,7 +350,7 @@ export default function ToolsPrompts() {
                           </div>
                         )}
                       </CardHeader>
-                      <CardContent className="pt-0">
+                      <CardContent className="pt-0 relative z-10">
                         <CardDescription className="text-xs sm:text-sm line-clamp-2 mb-3">
                           {tp.description || 'No description available'}
                         </CardDescription>
