@@ -188,8 +188,8 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
               
               return (
                 <div className="mb-3 inline-block">
-                  <div className="text-[10px] font-medium mb-1.5 text-muted-foreground/70 flex items-center gap-1">
-                    <Zap className="w-2.5 h-2.5 text-primary" />
+                  <div className="text-xs font-semibold mb-1.5 text-muted-foreground flex items-center gap-1.5">
+                    <Zap className="w-3 h-3 text-primary" />
                     Generation Performance
                   </div>
                   <div className="space-y-0.5">

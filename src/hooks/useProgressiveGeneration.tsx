@@ -229,13 +229,16 @@ export const useProgressiveGeneration = () => {
             progressiveResult.processing_status = {
               stage: 'Generating',
               progress: 5,
-              currentTask: `Name has been generated (${stepDuration}s). Generating Overview...`,
+              currentTask: `Generating Overview...`,
               isComplete: false,
               currentStep: 'overview'
             };
             progressiveResult.stepTimes = { naming: stepDuration };
             setProcessingStatus(progressiveResult.processing_status);
             setResult({ ...progressiveResult });
+            
+            // Show toast notification
+            toast.success('Name has been generated');
             
           } else if (type === 'jump_created') {
             // IMMEDIATE UPDATE: Jump created with Jump# formatting right after naming
@@ -286,13 +289,16 @@ export const useProgressiveGeneration = () => {
             progressiveResult.processing_status = {
               stage: 'Generating',
               progress: 30,
-              currentTask: `Overview has been generated (${stepDuration}s). Generating Plan...`,
+              currentTask: `Generating Plan...`,
               isComplete: false,
               currentStep: 'plan'
             };
             progressiveResult.stepTimes = { ...progressiveResult.stepTimes, overview: stepDuration };
             setProcessingStatus(progressiveResult.processing_status);
             setResult({ ...progressiveResult });
+            
+            // Show toast notification
+            toast.success('Overview has been generated');
             
           } else if (type === 'comprehensive' || type === 'plan') {
             // STEP 3: Plan complete - show it and start tools
@@ -310,13 +316,16 @@ export const useProgressiveGeneration = () => {
             progressiveResult.processing_status = {
               stage: 'Generating',
               progress: 60,
-              currentTask: `Plan has been generated (${stepDuration}s). Generating Tools & Prompts...`,
+              currentTask: `Generating Tools & Prompts...`,
               isComplete: false,
               currentStep: 'tool_prompts'
             };
             progressiveResult.stepTimes = { ...progressiveResult.stepTimes, comprehensive: stepDuration };
             setProcessingStatus(progressiveResult.processing_status);
             setResult({ ...progressiveResult });
+            
+            // Show toast notification
+            toast.success('Plan has been generated');
             
           } else if (type === 'tool_prompts' || type === 'tools') {
             // STEP 4: Tools & Prompts complete - GENERATION IS DONE!
@@ -348,6 +357,12 @@ export const useProgressiveGeneration = () => {
             progressiveResult.stepTimes = updatedStepTimes;
             setProcessingStatus(progressiveResult.processing_status);
             setResult({ ...progressiveResult });
+            
+            // Show toast notifications
+            toast.success('Tools & Prompts has been generated');
+            setTimeout(() => {
+              toast.success('Jump has been generated');
+            }, 2000);
             
           } else if (type === 'tool_prompts_ids_updated') {
             // Update tool prompts with database IDs after save completes
