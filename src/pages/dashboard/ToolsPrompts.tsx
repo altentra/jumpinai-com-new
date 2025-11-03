@@ -239,13 +239,11 @@ export default function ToolsPrompts() {
               <Badge variant="secondary" className="text-xs">{totalItems} items</Badge>
             </div>
             <Button
-              variant="outline"
-              size="sm"
               onClick={() => loadData()}
               disabled={loading}
-              className="shrink-0 self-end sm:self-auto"
+              className="rounded-xl glass bg-card/40 backdrop-blur-xl border-0 ring-1 ring-white/10 hover:ring-white/20 text-foreground hover:bg-card/60 shadow-lg hover:shadow-xl transition-all duration-300 font-semibold h-9 sm:h-10 px-4 shrink-0 self-end sm:self-auto"
             >
-              <RefreshCw className={`w-3 h-3 mr-1 ${loading ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`h-4 w-4 mr-1.5 ${loading ? 'animate-spin' : ''}`} />
               Refresh
             </Button>
           </div>
@@ -259,11 +257,11 @@ export default function ToolsPrompts() {
                     placeholder="Search tools and prompts..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-9 text-sm"
+                    className="pl-9 text-sm rounded-xl glass bg-card/40 backdrop-blur-xl border-0 ring-1 ring-white/10 focus-visible:ring-white/20 shadow-lg h-9 sm:h-10"
                   />
                 </div>
                 <Select value={filterCategory} onValueChange={setFilterCategory}>
-                  <SelectTrigger className="w-full sm:w-[180px] text-sm">
+                  <SelectTrigger className="w-full sm:w-[180px] text-sm rounded-xl glass bg-card/40 backdrop-blur-xl border-0 ring-1 ring-white/10 hover:ring-white/20 shadow-lg h-9 sm:h-10">
                     <SelectValue placeholder="Filter by category" />
                   </SelectTrigger>
                   <SelectContent>
