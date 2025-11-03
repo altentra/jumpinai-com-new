@@ -166,7 +166,7 @@ export const useProgressiveGeneration = () => {
       };
       
       const stepProgress: Record<string, number> = {
-        naming: 10,
+        naming: 5,
         overview: 30,
         comprehensive: 60,
         plan: 60,
@@ -190,7 +190,7 @@ export const useProgressiveGeneration = () => {
         },
         processing_status: {
           stage: 'Generating',
-          progress: 5,
+          progress: 0,
           currentTask: 'Generating Jump Name...',
           isComplete: false,
           currentStep: 'naming'
@@ -228,7 +228,7 @@ export const useProgressiveGeneration = () => {
             
             progressiveResult.processing_status = {
               stage: 'Generating',
-              progress: 10,
+              progress: 5,
               currentTask: `Name has been generated (${stepDuration}s). Generating Overview...`,
               isComplete: false,
               currentStep: 'overview'
@@ -323,15 +323,19 @@ export const useProgressiveGeneration = () => {
             console.log('Processing tool-prompts step data:', stepData);
             progressiveResult.components.toolPrompts = stepData.tool_prompts || stepData.tools || [];
             
+            // Calculate total generation time
+            const updatedStepTimes = { ...progressiveResult.stepTimes, tool_prompts: stepDuration };
+            const totalTime = Object.values(updatedStepTimes).reduce((sum, time) => sum + time, 0);
+            
             const progress = 100;
             progressiveResult.processing_status = {
               stage: 'Complete',
               progress,
-              currentTask: `Jump generation complete! (${stepDuration}s)`,
+              currentTask: `Jump generation complete! (${totalTime}s)`,
               isComplete: true,
               currentStep: 'complete'
             };
-            progressiveResult.stepTimes = { ...progressiveResult.stepTimes, tool_prompts: stepDuration };
+            progressiveResult.stepTimes = updatedStepTimes;
             setProcessingStatus(progressiveResult.processing_status);
             setResult({ ...progressiveResult });
             

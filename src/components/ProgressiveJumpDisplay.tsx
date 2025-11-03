@@ -178,19 +178,19 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                 );
               
               return (
-                <div className="mb-4 glass backdrop-blur-md bg-muted/30 rounded-lg border border-border/40 p-4">
-                  <div className="text-sm font-semibold mb-3 text-muted-foreground flex items-center gap-2">
-                    <Zap className="w-4 h-4 text-primary" />
+                <div className="mb-4 glass backdrop-blur-md bg-muted/20 rounded-lg border border-border/30 p-2">
+                  <div className="text-xs font-medium mb-2 text-muted-foreground/80 flex items-center gap-1.5">
+                    <Zap className="w-3 h-3 text-primary" />
                     Generation Performance
                   </div>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
                     {displaySteps.map((step, index) => (
                       <div 
                         key={step.label}
-                        className="text-center p-3 glass backdrop-blur-sm bg-card/60 rounded-lg border border-border/30"
+                        className="text-center p-1.5 glass backdrop-blur-sm bg-card/50 rounded-md border border-border/20"
                       >
-                        <div className="font-medium text-sm text-foreground/90 mb-1">{step.label}</div>
-                        <div className="text-primary font-semibold text-base">{step.time}s</div>
+                        <div className="font-medium text-[10px] text-foreground/80 mb-0.5">{step.label}</div>
+                        <div className="text-primary font-semibold text-xs">{step.time}s</div>
                       </div>
                     ))}
                   </div>
@@ -203,7 +203,20 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                 <span className="text-muted-foreground">{result.processing_status?.currentTask || 'Starting...'}</span>
                 <span className="text-foreground font-semibold">{result.processing_status?.progress || 0}%</span>
               </div>
-              <Progress value={result.processing_status?.progress || 0} className="h-2" />
+              <div className="relative">
+                {/* Premium Progress Bar with gradient and glow effects */}
+                <Progress 
+                  value={result.processing_status?.progress || 0} 
+                  className="h-3 bg-gradient-to-r from-muted/50 via-muted/40 to-muted/50 border border-border/30 shadow-inner" 
+                />
+                {/* Animated glow effect on the progress */}
+                {(result.processing_status?.progress || 0) > 0 && (
+                  <div 
+                    className="absolute top-0 left-0 h-full bg-gradient-to-r from-primary/0 via-primary/30 to-primary/0 rounded-full blur-sm pointer-events-none transition-all duration-300"
+                    style={{ width: `${result.processing_status?.progress || 0}%` }}
+                  />
+                )}
+              </div>
             </div>
           </div>
         </div>

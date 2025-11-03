@@ -146,6 +146,14 @@ export default {
 						transform: 'translateY(0)'
 					}
 				},
+				'shimmer': {
+					'0%': {
+						backgroundPosition: '-200% 0'
+					},
+					'100%': {
+						backgroundPosition: '200% 0'
+					}
+				},
 				'glow': {
 					'0%, 100%': {
 						boxShadow: '0 0 20px rgba(0, 0, 0, 0.4)'
@@ -170,6 +178,7 @@ export default {
 				'fade-in-up': 'fade-in-up 0.6s ease-out',
 				'scale-in': 'scale-in 0.6s ease-out',
 				'slide-up': 'slide-up 0.8s ease-out',
+				'shimmer': 'shimmer 2s ease-in-out infinite',
 				'glow': 'glow 2s ease-in-out infinite',
 				'glow-dark': 'glow-dark 2s ease-in-out infinite',
 			},
