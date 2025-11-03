@@ -71,6 +71,15 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
+  const formatDuration = (seconds: number) => {
+    if (seconds >= 60) {
+      const mins = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      return `${mins}m ${secs}s`;
+    }
+    return `${seconds}s`;
+  };
+
   const getStatusIcon = (stepName: string, hasContent: boolean) => {
     const currentStep = result.processing_status?.currentStep;
     const isComplete = result.processing_status?.isComplete;
@@ -153,7 +162,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
               </div>
             </div>
             
-            {/* Enhanced Generation Timing Summary */}
+            {/* Compact Generation Performance Section */}
             {result.processing_status?.isComplete && result.stepTimes && (() => {
               // Map technical step names to user-friendly labels
               const stepLabels: Record<string, string> = {
@@ -178,19 +187,19 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                 );
               
               return (
-                <div className="mb-4 glass backdrop-blur-md bg-muted/20 rounded-lg border border-border/30 p-2">
-                  <div className="text-xs font-medium mb-2 text-muted-foreground/80 flex items-center gap-1.5">
-                    <Zap className="w-3 h-3 text-primary" />
+                <div className="mb-3 inline-block">
+                  <div className="text-[10px] font-medium mb-1.5 text-muted-foreground/70 flex items-center gap-1">
+                    <Zap className="w-2.5 h-2.5 text-primary" />
                     Generation Performance
                   </div>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
-                    {displaySteps.map((step, index) => (
+                  <div className="space-y-0.5">
+                    {displaySteps.map((step) => (
                       <div 
                         key={step.label}
-                        className="text-center p-1.5 glass backdrop-blur-sm bg-card/50 rounded-md border border-border/20"
+                        className="text-[11px] font-medium text-foreground/70 flex items-center gap-1.5"
                       >
-                        <div className="font-medium text-[10px] text-foreground/80 mb-0.5">{step.label}</div>
-                        <div className="text-primary font-semibold text-xs">{step.time}s</div>
+                        <span className="min-w-[110px]">{step.label}</span>
+                        <span className="text-primary font-semibold">{step.time}s</span>
                       </div>
                     ))}
                   </div>
@@ -200,22 +209,20 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
             
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">{result.processing_status?.currentTask || 'Starting...'}</span>
+                <span className="text-muted-foreground">
+                  {result.processing_status?.currentTask?.replace(/\(\d+s\)/, (match) => {
+                    const seconds = parseInt(match.match(/\d+/)?.[0] || '0');
+                    return `(${formatDuration(seconds)})`;
+                  }) || 'Starting...'}
+                </span>
                 <span className="text-foreground font-semibold">{result.processing_status?.progress || 0}%</span>
               </div>
               <div className="relative">
-                {/* Premium Progress Bar with gradient and glow effects */}
+                {/* Premium Animated Progress Bar */}
                 <Progress 
                   value={result.processing_status?.progress || 0} 
-                  className="h-3 bg-gradient-to-r from-muted/50 via-muted/40 to-muted/50 border border-border/30 shadow-inner" 
+                  className="h-3 bg-muted/40 border border-border/30 shadow-inner" 
                 />
-                {/* Animated glow effect on the progress */}
-                {(result.processing_status?.progress || 0) > 0 && (
-                  <div 
-                    className="absolute top-0 left-0 h-full bg-gradient-to-r from-primary/0 via-primary/30 to-primary/0 rounded-full blur-sm pointer-events-none transition-all duration-300"
-                    style={{ width: `${result.processing_status?.progress || 0}%` }}
-                  />
-                )}
               </div>
             </div>
           </div>

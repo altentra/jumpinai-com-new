@@ -166,12 +166,20 @@ export const useProgressiveGeneration = () => {
       };
       
       const stepProgress: Record<string, number> = {
-        naming: 5,
+        naming: 0,
         overview: 30,
         comprehensive: 60,
         plan: 60,
         tool_prompts: 100,
         tools: 100
+      };
+      
+      // Expected durations for smooth progress animation (in seconds)
+      const expectedDurations: Record<string, number> = {
+        naming: 5,
+        overview: 14,
+        plan: 18,
+        tool_prompts: 36
       };
       
       // Initial empty structure
@@ -198,6 +206,32 @@ export const useProgressiveGeneration = () => {
         stepTimes: {}
       };
       setResult(progressiveResult);
+      
+      // Smooth progress animation helper
+      const animateProgress = (fromProgress: number, toProgress: number, duration: number, currentStep: string) => {
+        const startTime = Date.now();
+        const progressDiff = toProgress - fromProgress;
+        
+        const animate = () => {
+          const elapsed = Date.now() - startTime;
+          const progress = Math.min(elapsed / (duration * 1000), 1);
+          const currentProgress = fromProgress + (progressDiff * progress);
+          
+          progressiveResult.processing_status = {
+            ...progressiveResult.processing_status,
+            progress: Math.round(currentProgress),
+            currentStep
+          };
+          setProcessingStatus(progressiveResult.processing_status);
+          setResult({ ...progressiveResult });
+          
+          if (progress < 1) {
+            requestAnimationFrame(animate);
+          }
+        };
+        
+        animate();
+      };
 
       // Generate with real-time streaming progress
       const rawResponse = await jumpinAIStudioService.generateJumpStreaming(
@@ -236,6 +270,9 @@ export const useProgressiveGeneration = () => {
             progressiveResult.stepTimes = { naming: stepDuration };
             setProcessingStatus(progressiveResult.processing_status);
             setResult({ ...progressiveResult });
+            
+            // Start smooth animation to 30% over expected duration
+            animateProgress(5, 30, expectedDurations.overview, 'overview');
             
           } else if (type === 'jump_created') {
             // IMMEDIATE UPDATE: Jump created with Jump# formatting right after naming
@@ -294,6 +331,9 @@ export const useProgressiveGeneration = () => {
             setProcessingStatus(progressiveResult.processing_status);
             setResult({ ...progressiveResult });
             
+            // Start smooth animation to 60% over expected duration
+            animateProgress(30, 60, expectedDurations.plan, 'plan');
+            
           } else if (type === 'comprehensive' || type === 'plan') {
             // STEP 3: Plan complete - show it and start tools
             console.log('📋 Received strategic action plan:', stepData);
@@ -317,6 +357,9 @@ export const useProgressiveGeneration = () => {
             progressiveResult.stepTimes = { ...progressiveResult.stepTimes, comprehensive: stepDuration };
             setProcessingStatus(progressiveResult.processing_status);
             setResult({ ...progressiveResult });
+            
+            // Start smooth animation to 100% over expected duration
+            animateProgress(60, 100, expectedDurations.tool_prompts, 'tool_prompts');
             
           } else if (type === 'tool_prompts' || type === 'tools') {
             // STEP 4: Tools & Prompts complete - GENERATION IS DONE!
