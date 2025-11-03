@@ -4,6 +4,7 @@ import { Calendar, Trash2, ArrowRight } from "lucide-react";
 import { UserJump } from "@/services/jumpService";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
+import logoTransparent from "@/assets/logo-transparent.png";
 
 interface JumpListCardProps {
   jump: UserJump;
@@ -57,10 +58,17 @@ export default function JumpListCard({ jump, jumpNumber, onView, onDelete }: Jum
         <div className="flex flex-col sm:flex-row sm:items-center gap-4">
           {/* Left section - Jump info */}
           <div className="flex-1 min-w-0 space-y-2">
-            {/* Jump title */}
-            <h3 className="text-base sm:text-lg font-bold line-clamp-2 bg-gradient-to-r from-foreground via-foreground to-foreground/70 bg-clip-text text-transparent leading-snug group-hover:from-primary group-hover:via-primary group-hover:to-primary/70 transition-all duration-300">
-              {jump.title}
-            </h3>
+            {/* Jump title with logo */}
+            <div className="flex items-center gap-2">
+              <img 
+                src={logoTransparent} 
+                alt="JumpinAI" 
+                className="w-5 h-5 sm:w-6 sm:h-6 object-contain shrink-0 opacity-80 group-hover:opacity-100 transition-opacity duration-300"
+              />
+              <h3 className="flex-1 text-base sm:text-lg font-bold line-clamp-2 bg-gradient-to-r from-foreground via-foreground to-foreground/70 bg-clip-text text-transparent leading-snug group-hover:from-primary group-hover:via-primary group-hover:to-primary/70 transition-all duration-300">
+                {jump.title}
+              </h3>
+            </div>
             
             {/* Date */}
             <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
