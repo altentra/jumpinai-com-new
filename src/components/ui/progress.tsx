@@ -16,22 +16,22 @@ const Progress = React.forwardRef<
     {...props}
   >
     <ProgressPrimitive.Indicator
-      className="h-full w-full flex-1 bg-gradient-to-r from-blue-500 via-primary to-purple-500 transition-all duration-[2000ms] ease-out relative overflow-hidden shadow-lg"
+      className="h-full w-full flex-1 bg-gradient-to-r from-gray-400 via-gray-500 to-gray-600 dark:from-gray-500 dark:via-gray-400 dark:to-gray-300 transition-all duration-500 ease-out relative overflow-hidden shadow-lg"
       style={{ 
         transform: `translateX(-${100 - (value || 0)}%)`,
-        boxShadow: '0 0 20px rgba(59, 130, 246, 0.5)'
+        boxShadow: '0 0 15px rgba(107, 114, 128, 0.4)'
       }}
     >
       {/* Animated shimmer effect */}
       <div 
-        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent"
         style={{
           backgroundSize: '200% 100%',
           animation: 'shimmer 2s ease-in-out infinite'
         }}
       />
-      {/* Glow effect */}
-      <div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 via-primary/30 to-purple-400/20 blur-sm" />
+      {/* Subtle glow effect */}
+      <div className="absolute inset-0 bg-gradient-to-r from-gray-300/20 via-gray-200/30 to-gray-300/20 blur-sm" />
     </ProgressPrimitive.Indicator>
   </ProgressPrimitive.Root>
 ))
