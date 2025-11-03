@@ -376,7 +376,7 @@ export default function Subscription() {
                   usage: { icon: Zap, label: 'Credit Used', color: 'text-blue-500', bgColor: 'bg-blue-500/10' },
                   welcome_bonus: { icon: Gift, label: 'Welcome Bonus', color: 'text-violet-500', bgColor: 'bg-violet-500/10' },
                   monthly_allocation: { icon: Calendar, label: 'Monthly Credits', color: 'text-cyan-500', bgColor: 'bg-cyan-500/10' },
-                  drip_credit: { icon: TrendingUp, label: 'Drip Credit', color: 'text-amber-500', bgColor: 'bg-amber-500/10' },
+                  drip_bonus: { icon: TrendingUp, label: 'Bonus credit 48hr', color: 'text-amber-500', bgColor: 'bg-amber-500/10' },
                 };
                 const config = typeConfig[transaction.transaction_type as keyof typeof typeConfig] || { 
                   icon: Coins, 
