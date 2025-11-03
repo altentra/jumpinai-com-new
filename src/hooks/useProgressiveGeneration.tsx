@@ -229,7 +229,7 @@ export const useProgressiveGeneration = () => {
             progressiveResult.processing_status = {
               stage: 'Generating',
               progress: 5,
-              currentTask: `Generating Overview...`,
+              currentTask: `Name has been generated. (${stepDuration}s) Generating Overview...`,
               isComplete: false,
               currentStep: 'overview'
             };
@@ -289,7 +289,7 @@ export const useProgressiveGeneration = () => {
             progressiveResult.processing_status = {
               stage: 'Generating',
               progress: 30,
-              currentTask: `Generating Plan...`,
+              currentTask: `Overview has been generated. (${stepDuration}s) Generating Plan...`,
               isComplete: false,
               currentStep: 'plan'
             };
@@ -316,7 +316,7 @@ export const useProgressiveGeneration = () => {
             progressiveResult.processing_status = {
               stage: 'Generating',
               progress: 60,
-              currentTask: `Generating Tools & Prompts...`,
+              currentTask: `Plan has been generated. (${stepDuration}s) Generating Tools & Prompts...`,
               isComplete: false,
               currentStep: 'tool_prompts'
             };
