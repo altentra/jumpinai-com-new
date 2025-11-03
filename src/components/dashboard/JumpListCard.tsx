@@ -1,6 +1,5 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Calendar, Trash2, ArrowRight } from "lucide-react";
 import { UserJump } from "@/services/jumpService";
 import { format } from "date-fns";
@@ -24,13 +23,6 @@ export default function JumpListCard({ jump, jumpNumber, onView, onDelete }: Jum
     return format(new Date(dateString), 'MMM dd, yyyy');
   };
 
-  // Extract name from title if it has "Jump #X: " prefix
-  const getJumpName = (title: string) => {
-    const match = title.match(/^Jump #\d+:\s*(.+)$/);
-    return match ? match[1] : title;
-  };
-
-  const jumpName = getJumpName(jump.title);
 
   const handleCardClick = (e: React.MouseEvent) => {
     // Don't trigger if clicking delete button
@@ -65,31 +57,16 @@ export default function JumpListCard({ jump, jumpNumber, onView, onDelete }: Jum
         <div className="flex flex-col sm:flex-row sm:items-center gap-4">
           {/* Left section - Jump info */}
           <div className="flex-1 min-w-0 space-y-2">
-            {/* Top row - Number badge and title */}
-            <div className="flex items-start gap-3">
-              <Badge 
-                variant="secondary" 
-                className="shrink-0 px-2.5 py-1 text-xs font-bold bg-primary/10 text-primary ring-1 ring-primary/20 group-hover:bg-primary/15 group-hover:ring-primary/30 transition-colors duration-300"
-              >
-                #{jumpNumber}
-              </Badge>
-              <h3 className="flex-1 text-base sm:text-lg font-bold line-clamp-2 bg-gradient-to-r from-foreground via-foreground to-foreground/70 bg-clip-text text-transparent leading-snug group-hover:from-primary group-hover:via-primary group-hover:to-primary/70 transition-all duration-300">
-                {jumpName}
-              </h3>
-            </div>
+            {/* Jump title */}
+            <h3 className="text-base sm:text-lg font-bold line-clamp-2 bg-gradient-to-r from-foreground via-foreground to-foreground/70 bg-clip-text text-transparent leading-snug group-hover:from-primary group-hover:via-primary group-hover:to-primary/70 transition-all duration-300">
+              {jump.title}
+            </h3>
             
-            {/* Bottom row - Date and summary */}
-            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-              <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
-                <Calendar className="h-3.5 w-3.5 shrink-0" />
-                <span className="hidden sm:inline">{formatDate(jump.created_at)}</span>
-                <span className="sm:hidden">{formatDateShort(jump.created_at)}</span>
-              </div>
-              {jump.summary && (
-                <p className="text-xs sm:text-sm text-muted-foreground line-clamp-1 hidden md:block">
-                  {jump.summary}
-                </p>
-              )}
+            {/* Date */}
+            <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
+              <Calendar className="h-3.5 w-3.5 shrink-0" />
+              <span className="hidden sm:inline">{formatDate(jump.created_at)}</span>
+              <span className="sm:hidden">{formatDateShort(jump.created_at)}</span>
             </div>
           </div>
           
@@ -99,7 +76,7 @@ export default function JumpListCard({ jump, jumpNumber, onView, onDelete }: Jum
             <Button
               onClick={handleViewClick}
               size="sm"
-              className="flex-1 sm:flex-initial rounded-xl bg-gradient-to-br from-primary via-primary to-primary/90 hover:from-primary/90 hover:via-primary hover:to-primary shadow-md hover:shadow-lg hover:shadow-primary/25 transition-all duration-300 font-semibold h-9 sm:h-10 px-4"
+              className="flex-1 sm:flex-initial rounded-xl glass bg-card/40 backdrop-blur-xl border-0 ring-1 ring-white/10 hover:ring-white/20 text-foreground hover:bg-card/60 shadow-lg hover:shadow-xl transition-all duration-300 font-semibold h-9 sm:h-10 px-4"
             >
               <span className="hidden sm:inline">View Jump</span>
               <span className="sm:hidden">View</span>
