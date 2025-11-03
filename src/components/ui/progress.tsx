@@ -16,13 +16,8 @@ const Progress = React.forwardRef<
     {...props}
   >
     <ProgressPrimitive.Indicator
-      className="h-full rounded-full transition-all duration-500 shadow-sm relative overflow-hidden"
-      style={{ 
-        width: `${value || 0}%`,
-        background: 'linear-gradient(90deg, hsl(var(--primary)) 0%, hsl(var(--primary) / 0.6) 25%, hsl(var(--primary)) 50%, hsl(var(--primary) / 0.6) 75%, hsl(var(--primary)) 100%)',
-        backgroundSize: '200% 100%',
-        animation: 'shimmer 5s ease-in-out infinite'
-      }}
+      className="h-full bg-primary rounded-full transition-all duration-500 shadow-sm"
+      style={{ width: `${value || 0}%` }}
     />
   </ProgressPrimitive.Root>
 ))
