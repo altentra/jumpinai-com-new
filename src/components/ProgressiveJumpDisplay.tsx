@@ -252,12 +252,12 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
       {/* Content Tabs - Ultra Premium Design */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full" style={{ overflow: 'visible', display: 'block' }}>
         <div className="relative mb-8">
-          {/* Mobile: Full width tabs */}
+          {/* Mobile: Equal width tabs */}
           <div className="sm:hidden pb-4">
-            <TabsList className="flex h-auto w-full gap-1.5 p-2 bg-gradient-to-r from-background/80 via-background/70 to-background/80 backdrop-blur-xl rounded-2xl border border-border/50 shadow-lg shadow-primary/5">
+            <TabsList className="grid h-auto w-full grid-cols-3 gap-1.5 p-2 bg-gradient-to-r from-background/80 via-background/70 to-background/80 backdrop-blur-xl rounded-2xl border border-border/50 shadow-lg shadow-primary/5">
               <TabsTrigger 
                 value="overview" 
-                className="relative flex items-center gap-1.5 text-xs font-semibold whitespace-nowrap px-3 py-2.5 
+                className="relative flex flex-col items-center justify-center gap-0.5 text-[0.7rem] font-semibold px-1.5 py-2.5 
                   data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary/20 data-[state=active]:to-primary/10 
                   data-[state=active]:text-primary data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20
                   data-[state=active]:border data-[state=active]:border-primary/30
@@ -265,11 +265,11 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                   transition-all duration-300 rounded-xl hover:scale-[1.02]"
               >
                 {getStatusIcon('overview', !!result.full_content)}
-                <span className="tracking-wide">Overview</span>
+                <span className="tracking-wide text-center">Overview</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="plan" 
-                className="relative flex items-center gap-1.5 text-xs font-semibold whitespace-nowrap px-3 py-2.5 
+                className="relative flex flex-col items-center justify-center gap-0.5 text-[0.7rem] font-semibold px-1.5 py-2.5 
                   data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary/20 data-[state=active]:to-primary/10 
                   data-[state=active]:text-primary data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20
                   data-[state=active]:border data-[state=active]:border-primary/30
@@ -277,11 +277,11 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                   transition-all duration-300 rounded-xl hover:scale-[1.02]"
               >
                 {getStatusIcon('plan', !!result.structured_plan)}
-                <span className="tracking-wide">Plan</span>
+                <span className="tracking-wide text-center">Plan</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="toolPrompts" 
-                className="relative flex items-center gap-1.5 text-xs font-semibold whitespace-nowrap px-3 py-2.5 
+                className="relative flex flex-col items-center justify-center gap-0.5 text-[0.7rem] font-semibold px-1.5 py-2.5 
                   data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary/20 data-[state=active]:to-primary/10 
                   data-[state=active]:text-primary data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20
                   data-[state=active]:border data-[state=active]:border-primary/30
@@ -289,7 +289,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                   transition-all duration-300 rounded-xl hover:scale-[1.02]"
               >
                 {getStatusIcon('tool_prompts', (result.components?.toolPrompts?.length || 0) > 0)}
-                <span className="tracking-wide">Tools & Prompts</span>
+                <span className="tracking-wide text-center">Tools & Prompts</span>
               </TabsTrigger>
             </TabsList>
           </div>
