@@ -77,37 +77,7 @@ const JumpinAIStudio = () => {
     };
   }, [isGenerating]);
 
-  // Auto-scroll to results when they appear
-  useEffect(() => {
-    if (result && !isGenerating && progressDisplayRef.current) {
-      console.log('Auto-scroll triggered - result exists and generation complete');
-      setTimeout(() => {
-        if (progressDisplayRef.current) {
-          console.log('Scrolling to jump display...');
-          progressDisplayRef.current.scrollIntoView({ 
-            behavior: 'smooth', 
-            block: 'start' 
-          });
-        }
-      }, 500); // Increased delay to ensure content is rendered
-    }
-  }, [result, isGenerating]);
-
-  // Alternative scroll trigger when result first appears
-  useEffect(() => {
-    if (result && progressDisplayRef.current) {
-      console.log('Alternative scroll trigger - result appeared');
-      setTimeout(() => {
-        if (progressDisplayRef.current) {
-          console.log('Alternative scroll executing...');
-          progressDisplayRef.current.scrollIntoView({ 
-            behavior: 'smooth', 
-            block: 'start' 
-          });
-        }
-      }, 800);
-    }
-  }, [result]);
+  // Auto-scroll removed - let user scroll manually
 
   // Auto-adjust textarea heights when content changes - keep both equal
   useEffect(() => {
