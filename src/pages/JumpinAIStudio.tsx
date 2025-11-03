@@ -242,7 +242,7 @@ const JumpinAIStudio = () => {
       }
       
       if (result.jumpId) {
-        toast.success('Your Jump in AI has been saved to your dashboard! 1 credit used.');
+        toast.success('Jump has been generated. 1 credit used. It was saved to your Dashboard.');
       } else if (!isAuthenticated) {
         toast.success('Your Jump in AI is ready! Sign up to get 5 welcome credits and save your jumps.');
       }
