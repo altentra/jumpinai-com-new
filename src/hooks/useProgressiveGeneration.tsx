@@ -319,16 +319,16 @@ export const useProgressiveGeneration = () => {
             setResult({ ...progressiveResult });
             
           } else if (type === 'tool_prompts' || type === 'tools') {
-            // STEP 4: Tools & Prompts complete
+            // STEP 4: Tools & Prompts complete - GENERATION IS DONE!
             console.log('Processing tool-prompts step data:', stepData);
             progressiveResult.components.toolPrompts = stepData.tool_prompts || stepData.tools || [];
             
             const progress = 100;
             progressiveResult.processing_status = {
-              stage: 'Generating',
+              stage: 'Complete',
               progress,
-              currentTask: `Tools & Prompts have been generated (${stepDuration}s). Finalizing...`,
-              isComplete: false,
+              currentTask: `Jump generation complete! (${stepDuration}s)`,
+              isComplete: true,
               currentStep: 'complete'
             };
             progressiveResult.stepTimes = { ...progressiveResult.stepTimes, tool_prompts: stepDuration };
@@ -339,6 +339,12 @@ export const useProgressiveGeneration = () => {
             // Update tool prompts with database IDs after save completes
             console.log('🆔 Updating tool prompts with database IDs:', stepData);
             progressiveResult.components.toolPrompts = stepData.tool_prompts || [];
+            
+            // CRITICAL: Preserve the isComplete: true state when updating IDs
+            if (!progressiveResult.processing_status.isComplete && progressiveResult.processing_status.progress === 100) {
+              progressiveResult.processing_status.isComplete = true;
+              progressiveResult.processing_status.stage = 'Complete';
+            }
             
             // Trigger re-render to update the UI with new IDs
             setResult({ ...progressiveResult });
