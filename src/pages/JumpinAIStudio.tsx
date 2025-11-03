@@ -77,7 +77,20 @@ const JumpinAIStudio = () => {
     };
   }, [isGenerating]);
 
-  // Auto-scroll removed - let user scroll manually
+  // Auto-scroll ONLY when generation starts (button click)
+  useEffect(() => {
+    if (isGenerating && progressDisplayRef.current) {
+      console.log('Generation started - scrolling to jump module');
+      setTimeout(() => {
+        if (progressDisplayRef.current) {
+          progressDisplayRef.current.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start' 
+          });
+        }
+      }, 300);
+    }
+  }, [isGenerating]);
 
   // Auto-adjust textarea heights when content changes - keep both equal
   useEffect(() => {
