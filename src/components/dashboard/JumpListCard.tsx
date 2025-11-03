@@ -63,7 +63,7 @@ export default function JumpListCard({ jump, jumpNumber, onView, onDelete }: Jum
               <img 
                 src={logoTransparent} 
                 alt="JumpinAI" 
-                className="w-5 h-5 sm:w-6 sm:h-6 object-contain shrink-0 opacity-80 group-hover:opacity-100 transition-opacity duration-300"
+                className="w-6 h-6 sm:w-7 sm:h-7 object-contain shrink-0 opacity-80 group-hover:opacity-100 transition-opacity duration-300"
               />
               <h3 className="flex-1 text-base sm:text-lg font-bold line-clamp-2 bg-gradient-to-r from-foreground via-foreground to-foreground/70 bg-clip-text text-transparent leading-snug group-hover:from-primary group-hover:via-primary group-hover:to-primary/70 transition-all duration-300">
                 {jump.title}
