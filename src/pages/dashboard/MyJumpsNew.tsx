@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { getUserJumpsLight, deleteJump } from "@/services/jumpService";
 import { useOptimizedAuth } from "@/hooks/useOptimizedAuth";
-import JumpCard from "@/components/dashboard/JumpCard";
+import JumpListCard from "@/components/dashboard/JumpListCard";
 import { toast } from 'sonner';
 import { Link } from 'react-router-dom';
 
@@ -143,7 +143,7 @@ export default function MyJumpsNew() {
 
       {jumps.length > 0 ? (
         <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+          <div className="space-y-3 sm:space-y-4">
             {displayedJumps.map((jump, index) => {
               // Calculate jump number (oldest = #1, newest = highest)
               const jumpNumber = jumps.length - index;
@@ -154,7 +154,7 @@ export default function MyJumpsNew() {
                   className="animate-fade-in-up"
                   style={{ animationDelay: `${Math.min(index, 20) * 50}ms` }}
                 >
-                  <JumpCard
+                  <JumpListCard
                     jump={jump as any}
                     jumpNumber={jumpNumber}
                     onView={handleViewJump}
