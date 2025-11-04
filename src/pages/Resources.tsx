@@ -1800,6 +1800,1785 @@ const blueprints: Blueprint[] = [
 - Feedback collection and analysis`,
     topicCategory: "Web/App Dev",
     category: "Product Launch"
+  },
+  {
+    name: "Email Marketing Automation Blueprint",
+    whatItIs: "Complete framework for building automated email marketing campaigns",
+    whatItsFor: "Scaling email marketing with personalized automation sequences",
+    desiredOutcome: "High-converting email campaigns that nurture leads automatically",
+    template: `# Email Marketing Automation Blueprint
+
+## Campaign Overview
+### Campaign Objective: [Primary goal]
+### Target Audience: [Segment details]
+### Expected Duration: [Timeline]
+
+## Email Sequences
+### Welcome Series
+- Email 1 (Day 0): [Subject and content outline]
+- Email 2 (Day 2): [Subject and content outline]
+- Email 3 (Day 5): [Subject and content outline]
+
+### Nurture Sequence
+- Email 4 (Week 2): [Educational content]
+- Email 5 (Week 3): [Case study or social proof]
+- Email 6 (Week 4): [Product benefits and features]
+
+### Conversion Sequence
+- Email 7 (Week 5): [Special offer or demo invitation]
+- Email 8 (Week 6): [Urgency and final CTA]
+
+## Segmentation Strategy
+### Behavioral Triggers
+- Email opens: [Follow-up actions]
+- Link clicks: [Interest-based segmentation]
+- No engagement: [Re-engagement sequence]
+
+### Demographic Segments
+- [Segment 1]: [Customized messaging]
+- [Segment 2]: [Customized messaging]
+
+## Personalization Elements
+- Dynamic content: [Name, company, industry]
+- Behavioral triggers: [Based on user actions]
+- A/B testing: [Subject lines, CTAs, send times]
+
+## Success Metrics
+- Open rate target: [Percentage]
+- Click-through rate: [Percentage]
+- Conversion rate: [Percentage]
+- Unsubscribe rate: [Acceptable threshold]`,
+    topicCategory: "Text",
+    category: "Email Marketing"
+  },
+  {
+    name: "Social Media Content Calendar",
+    whatItIs: "Organized template for planning and scheduling social media content",
+    whatItsFor: "Maintaining consistent, strategic social media presence",
+    desiredOutcome: "Engaging social content that drives audience growth and engagement",
+    template: `# Social Media Content Calendar Blueprint
+
+## Monthly Theme
+### Month: [Month name]
+### Theme: [Overarching content theme]
+### Goals: [Monthly objectives]
+
+## Platform Strategy
+### Platform 1: [Instagram/Facebook]
+- Posting frequency: [Posts per week]
+- Best posting times: [Optimal schedule]
+- Content mix: [80% value, 20% promotional]
+
+### Platform 2: [LinkedIn]
+- Posting frequency: [Posts per week]
+- Best posting times: [Optimal schedule]
+- Content mix: [Professional insights and thought leadership]
+
+### Platform 3: [Twitter/X]
+- Posting frequency: [Posts per day]
+- Best posting times: [Optimal schedule]
+- Content mix: [News, insights, engagement]
+
+## Content Pillars
+### Pillar 1: Educational Content (40%)
+- Tips and tutorials
+- Industry insights
+- How-to guides
+
+### Pillar 2: Entertainment (30%)
+- Behind-the-scenes content
+- User-generated content
+- Trending topics
+
+### Pillar 3: Engagement (20%)
+- Questions and polls
+- Contests and giveaways
+- Community features
+
+### Pillar 4: Promotional (10%)
+- Product launches
+- Special offers
+- Events and webinars
+
+## Weekly Content Grid
+### Monday: [Content type and theme]
+### Tuesday: [Content type and theme]
+### Wednesday: [Content type and theme]
+### Thursday: [Content type and theme]
+### Friday: [Content type and theme]
+
+## Content Repository
+- Stock photos: [Source and usage]
+- Templates: [Canva, Adobe]
+- Hashtag library: [Categorized by topic]
+- Caption templates: [Pre-written copy]
+
+## Performance Tracking
+- Weekly metrics review: [Engagement rates]
+- Monthly analysis: [Growth and reach]
+- Quarterly strategy adjustment: [Based on data]`,
+    topicCategory: "Text",
+    category: "Social Media"
+  },
+  {
+    name: "Social Media Asset Package",
+    whatItIs: "Complete set of branded social media graphics and templates",
+    whatItsFor: "Maintaining visual consistency across all social platforms",
+    desiredOutcome: "Professional, on-brand social content that stands out",
+    template: `# Social Media Asset Package Blueprint
+
+## Platform Specifications
+### Instagram
+- Feed posts: 1080x1080px
+- Stories: 1080x1920px
+- Reels: 1080x1920px
+- Carousel: 1080x1080px per slide
+
+### Facebook
+- Feed posts: 1200x630px
+- Stories: 1080x1920px
+- Cover photo: 820x312px
+
+### LinkedIn
+- Feed posts: 1200x627px
+- Company cover: 1128x191px
+- Personal cover: 1584x396px
+
+### Twitter/X
+- Posts: 1200x675px
+- Header: 1500x500px
+
+## Template Types
+### Announcement Templates
+- Product launches
+- Event promotions
+- Company news
+
+### Educational Templates
+- Tips and tricks
+- Statistics and data
+- Step-by-step guides
+
+### Engagement Templates
+- Questions and polls
+- Quote graphics
+- User testimonials
+
+## Design Elements
+### Brand Colors
+- Primary: [Hex codes]
+- Secondary: [Hex codes]
+- Accent: [Hex codes]
+
+### Typography
+- Headlines: [Font and size]
+- Body text: [Font and size]
+- CTAs: [Font and size]
+
+### Visual Style
+- Photography: [Style guidelines]
+- Icons: [Source and usage]
+- Filters: [Consistent look]
+
+## Usage Guidelines
+- Logo placement: [Position and size]
+- Text hierarchy: [Readability rules]
+- White space: [Breathing room]
+- Call-to-action: [Placement and visibility]
+
+## Asset Organization
+- Folder structure: [By platform and type]
+- Naming convention: [Consistent format]
+- Version control: [Update tracking]`,
+    topicCategory: "Image",
+    category: "Social Media"
+  },
+  {
+    name: "E-commerce Product Photography Guide",
+    whatItIs: "Comprehensive template for creating compelling product images",
+    whatItsFor: "Showcasing products effectively to drive online sales",
+    desiredOutcome: "Professional product imagery that increases conversion rates",
+    template: `# E-commerce Product Photography Blueprint
+
+## Photography Setup
+### Equipment Needed
+- Camera: [Specifications]
+- Lighting: [3-point lighting setup]
+- Backdrop: [White seamless or contextual]
+- Props: [Complementary items]
+
+### Camera Settings
+- Aperture: [f/8-f/16 for product detail]
+- ISO: [100-400 for low noise]
+- Shutter speed: [Based on lighting]
+- White balance: [Manual for consistency]
+
+## Shot List Template
+### Essential Shots
+1. **Hero Shot**: Main product angle with best features
+2. **Detail Shots**: Close-ups of textures, materials, quality
+3. **Scale Shots**: Product in context or with size reference
+4. **Lifestyle Shots**: Product in use or real environment
+5. **360° Views**: Multiple angles for comprehensive view
+
+### Per Product Checklist
+- [ ] Clean product thoroughly
+- [ ] Check for defects or damage
+- [ ] Capture all color variations
+- [ ] Include packaging shots
+- [ ] Show product from all sides
+- [ ] Highlight unique features
+
+## Post-Processing Workflow
+### Basic Edits
+- Color correction: [Match real product]
+- Background removal: [Clean white or transparent]
+- Shadow and highlight adjustment
+- Sharpening: [Enhance detail without artifacts]
+
+### Advanced Techniques
+- Clipping path: [For precise cutouts]
+- Retouching: [Remove imperfections]
+- Color grading: [Consistent look across products]
+- File optimization: [Balance quality and file size]
+
+## Platform Requirements
+### Amazon
+- Main image: White background, 1000x1000px minimum
+- Additional images: Lifestyle and detail shots
+- Image requirements: JPEG or TIFF, RGB color mode
+
+### Shopify/Website
+- Product thumbnails: 800x800px
+- Full-size images: 2048x2048px
+- Mobile optimization: [Responsive sizing]
+
+### Social Media
+- Instagram shop: Square 1080x1080px
+- Pinterest pins: Vertical 1000x1500px
+- Facebook shop: 1200x1200px
+
+## Quality Control
+### Image Checklist
+- [ ] Sharp and in focus
+- [ ] Accurate colors
+- [ ] Proper exposure
+- [ ] Clean background
+- [ ] Consistent style across products
+- [ ] Optimized file size
+- [ ] Proper naming and tagging`,
+    topicCategory: "Image",
+    category: "E-commerce"
+  },
+  {
+    name: "YouTube Channel Growth Blueprint",
+    whatItIs: "Strategic framework for building and monetizing a YouTube channel",
+    whatItsFor: "Content creators looking to grow audience and revenue on YouTube",
+    desiredOutcome: "Monetized YouTube channel with engaged subscriber base",
+    template: `# YouTube Channel Growth Blueprint
+
+## Channel Foundation
+### Channel Identity
+- Channel name: [Memorable and searchable]
+- Niche: [Specific target audience]
+- Value proposition: [What viewers gain]
+- Upload schedule: [Consistency is key]
+
+### Channel Branding
+- Channel art: 2560x1440px banner
+- Profile picture: 800x800px logo or face
+- Channel description: [SEO-optimized with keywords]
+- Links: [Website, social media, email]
+
+## Content Strategy
+### Video Types
+1. **Pillar Content** (Weekly)
+   - Main topic videos
+   - 10-15 minutes ideal length
+   - High production value
+
+2. **Shorts** (3-5x per week)
+   - Under 60 seconds
+   - Trending topics and hooks
+   - Drive channel discovery
+
+3. **Live Streams** (Biweekly)
+   - Community engagement
+   - Q&A sessions
+   - Behind-the-scenes
+
+### Content Calendar
+- Week 1: [Main topic + 3 Shorts]
+- Week 2: [Main topic + 3 Shorts + Live]
+- Week 3: [Main topic + 3 Shorts]
+- Week 4: [Main topic + 3 Shorts + Live]
+
+## SEO Optimization
+### Video Optimization
+- Title: [Keyword-rich, under 60 characters]
+- Description: [Detailed with timestamps and links]
+- Tags: [15-20 relevant tags]
+- Thumbnail: 1280x720px, high contrast, readable text
+- Cards and end screens: [Drive watch time]
+
+### Keyword Research
+- Main keywords: [High volume, relevant]
+- Long-tail keywords: [Specific, less competitive]
+- Competitor analysis: [Gap opportunities]
+
+## Growth Tactics
+### First 48 Hours Strategy
+- Share on all social platforms
+- Email list notification
+- Community post on YouTube
+- Engage with early comments
+- Pin top comment with CTA
+
+### Community Building
+- Reply to comments within 24 hours
+- Create community posts weekly
+- Host live Q&A sessions
+- Collaborate with similar creators
+- Create exclusive content for members
+
+## Monetization Strategy
+### Revenue Streams
+1. **YouTube Partner Program**
+   - Requirements: 1,000 subs + 4,000 watch hours
+   - Ad revenue: [Estimated CPM]
+
+2. **Sponsorships**
+   - Brand deals: [Rate per video]
+   - Affiliate marketing: [Commission structure]
+
+3. **Channel Memberships**
+   - Exclusive perks: [Member-only content]
+   - Pricing tiers: [$4.99, $9.99, $24.99]
+
+4. **Digital Products**
+   - Courses or ebooks
+   - Templates or presets
+   - Merchandise
+
+## Analytics & Optimization
+### Key Metrics
+- Watch time: [Goal: Increase monthly]
+- Average view duration: [Target: >50%]
+- Click-through rate: [Target: >5%]
+- Subscriber growth: [Target: X per month]
+
+### Monthly Review
+- Top-performing videos: [Analyze why]
+- Audience demographics: [Adjust content]
+- Traffic sources: [Optimize discovery]
+- Engagement patterns: [Best practices]
+
+## Growth Milestones
+- 0-1K subscribers: [Focus on consistency]
+- 1K-10K: [Optimize for algorithm]
+- 10K-100K: [Scale and monetize]
+- 100K+: [Diversify revenue streams]`,
+    topicCategory: "Video",
+    category: "Content Strategy"
+  },
+  {
+    name: "Video Ad Campaign Framework",
+    whatItIs: "Template for creating high-converting video advertising campaigns",
+    whatItsFor: "Businesses running paid video ads across platforms",
+    desiredOutcome: "Effective video ads that drive conversions and ROI",
+    template: `# Video Ad Campaign Blueprint
+
+## Campaign Setup
+### Objectives
+- Primary goal: [Brand awareness, leads, sales]
+- Target audience: [Demographics and interests]
+- Budget: [Daily/lifetime spend]
+- Duration: [Campaign timeline]
+
+## Video Ad Specs by Platform
+### Meta (Facebook/Instagram)
+- Feed video: 1080x1080px, 15-60 seconds
+- Stories: 1080x1920px, up to 15 seconds
+- Reels: 1080x1920px, 15-90 seconds
+
+### YouTube
+- Skippable in-stream: 12 seconds to 6 minutes
+- Non-skippable: 15-20 seconds
+- Bumper ads: 6 seconds
+- Discovery ads: Thumbnail + text
+
+### TikTok
+- In-feed ads: 9:16 aspect ratio, 5-60 seconds
+- Top View: Full screen, 5-60 seconds
+- Branded effects: Custom filters and stickers
+
+### LinkedIn
+- Sponsored content: 1920x1080px, 3 seconds to 30 minutes
+- Message ads: Video in conversation ads
+
+## Video Structure
+### Hook (First 3 Seconds)
+- Pattern interrupt: [Unexpected visual or statement]
+- Clear value proposition: [What's in it for viewer]
+- Brand visibility: [Logo or product early]
+
+### Body (Middle Section)
+- Problem agitation: [Pain points]
+- Solution presentation: [Your product/service]
+- Social proof: [Testimonials or results]
+- Benefits over features: [Transform outcomes]
+
+### Call-to-Action (Final Seconds)
+- Clear directive: [What to do next]
+- Urgency or incentive: [Limited time offer]
+- Easy next step: [Simple action]
+
+## Creative Testing
+### A/B Test Variables
+- Hook variations: [3 different openers]
+- Length: [15s vs 30s vs 60s]
+- CTA: [Different offers or wording]
+- Thumbnails: [For discovery ads]
+
+### Creative Refresh
+- Weekly: [New hooks on existing footage]
+- Monthly: [New creative concepts]
+- Quarterly: [Complete campaign refresh]
+
+## Targeting Strategy
+### Audience Segments
+1. **Cold Audience**
+   - Interest-based targeting
+   - Lookalike audiences
+   - Competitor audiences
+
+2. **Warm Audience**
+   - Website visitors
+   - Engaged social users
+   - Email list subscribers
+
+3. **Hot Audience**
+   - Cart abandoners
+   - Previous customers
+   - High-intent behaviors
+
+## Campaign Optimization
+### Week 1: Learning Phase
+- Monitor daily performance
+- Let algorithm optimize
+- No major changes
+
+### Week 2-4: Optimization
+- Pause low performers
+- Scale winning ads
+- Test new audiences
+- Adjust bidding strategy
+
+### Success Metrics
+- Cost per view (CPV): [Target]
+- View-through rate: [Target %]
+- Click-through rate: [Target %]
+- Cost per acquisition: [Target]
+- Return on ad spend: [Target X:1]
+
+## Budget Allocation
+- Testing budget: 20% [New creatives and audiences]
+- Scaling budget: 80% [Proven winners]
+- Platform split: [Based on performance data]`,
+    topicCategory: "Video",
+    category: "Advertising"
+  },
+  {
+    name: "Voice-Over Style Guide",
+    whatItIs: "Comprehensive framework for maintaining consistent voice branding",
+    whatItsFor: "Ensuring consistent audio branding across all voice content",
+    desiredOutcome: "Professional, recognizable voice presence that reinforces brand identity",
+    template: `# Voice-Over Style Guide Blueprint
+
+## Brand Voice Characteristics
+### Personality Traits
+- Primary trait: [Professional, friendly, authoritative, etc.]
+- Secondary traits: [Helpful, innovative, trustworthy]
+- Brand archetype: [Hero, sage, creator, etc.]
+
+### Voice Description
+- Tone: [Warm, energetic, calm, commanding]
+- Pace: [Fast-paced, moderate, slow and deliberate]
+- Pitch: [High, medium, low]
+- Energy level: [High energy, moderate, subdued]
+
+## Technical Specifications
+### Voice Talent Requirements
+- Age range: [20s, 30s, 40s+]
+- Gender: [Male, female, non-binary, or any]
+- Accent: [Neutral American, British, regional]
+- Special qualities: [Raspy, smooth, animated]
+
+### Recording Standards
+- Sample rate: 48kHz
+- Bit depth: 24-bit
+- Format: WAV (uncompressed)
+- Room tone: Capture 30 seconds for editing
+
+## Content-Specific Guidelines
+### Commercials (15-60 seconds)
+- Delivery: [Energetic and engaging]
+- Emphasis: [Key product benefits]
+- Pacing: [Brisk but clear]
+- Call-to-action: [Strong and motivating]
+
+### Explainer Videos (2-5 minutes)
+- Delivery: [Conversational and educational]
+- Emphasis: [Key concepts and benefits]
+- Pacing: [Moderate with strategic pauses]
+- Tone: [Helpful and approachable]
+
+### E-learning Content (10+ minutes)
+- Delivery: [Clear and authoritative]
+- Emphasis: [Important information and instructions]
+- Pacing: [Moderate with defined sections]
+- Tone: [Professional and engaging]
+
+### Audiobooks (Long-form)
+- Delivery: [Consistent character voices]
+- Emphasis: [Emotional beats and dialogue]
+- Pacing: [Natural reading speed]
+- Tone: [Appropriate to content and genre]
+
+## Pronunciation Guide
+### Brand Terminology
+- Company name: [Phonetic spelling]
+- Product names: [Phonetic spelling]
+- Technical terms: [Phonetic spelling]
+- Industry jargon: [Phonetic spelling]
+
+### Common Mistakes to Avoid
+- [Word/phrase]: [Incorrect] → [Correct]
+- [Word/phrase]: [Incorrect] → [Correct]
+
+## Emotional Range
+### Appropriate Emotions by Content Type
+- Excitement: [Product launches, promotions]
+- Empathy: [Problem-solution narratives]
+- Authority: [Industry expertise, tutorials]
+- Enthusiasm: [Brand storytelling, testimonials]
+
+### Emotions to Avoid
+- [Emotion]: [Why it doesn't fit brand]
+- [Emotion]: [Why it doesn't fit brand]
+
+## Quality Control Checklist
+### Before Recording
+- [ ] Script reviewed and approved
+- [ ] Pronunciation guide consulted
+- [ ] Technical specs confirmed
+- [ ] Quiet recording environment prepared
+
+### During Recording
+- [ ] Consistent delivery matching style guide
+- [ ] Multiple takes of key sections
+- [ ] Room tone captured
+- [ ] No mouth clicks or plosives
+
+### Post-Recording Review
+- [ ] Consistent tone throughout
+- [ ] Clear pronunciation
+- [ ] Appropriate pacing
+- [ ] Brand personality conveyed
+- [ ] Technical quality meets standards
+
+## Usage Examples
+### Do's
+- Match energy to content purpose
+- Use natural pauses for emphasis
+- Maintain consistent character throughout
+- Convey genuine enthusiasm
+
+### Don'ts
+- Don't rush through important information
+- Don't sound robotic or over-scripted
+- Don't deviate from brand personality
+- Don't use vocal fry or uptalk
+
+## Revision Protocol
+- Voice talent: [How to request changes]
+- Approval process: [Who signs off]
+- Turnaround time: [Expected timeline]`,
+    topicCategory: "Audio",
+    category: "Brand Audio"
+  },
+  {
+    name: "Podcast Monetization Strategy",
+    whatItIs: "Framework for generating revenue from podcast content",
+    whatItsFor: "Podcast creators looking to monetize their audience",
+    desiredOutcome: "Sustainable podcast revenue through multiple income streams",
+    template: `# Podcast Monetization Blueprint
+
+## Audience Requirements
+### Minimum Thresholds
+- Episodes published: 10+ episodes
+- Downloads per episode: 100+ consistently
+- Email subscribers: 500+ engaged listeners
+- Social media: Active community
+
+### Audience Quality
+- Engagement rate: [Comment, share, review]
+- Demographics: [Valuable to advertisers]
+- Loyalty: [Return listener rate]
+- Growth rate: [Month-over-month increase]
+
+## Revenue Streams
+### 1. Sponsorships & Advertising
+**CPM Rates by Tier**
+- Pre-roll (15s): $15-25 CPM
+- Mid-roll (60s): $25-40 CPM
+- Post-roll (30s): $10-20 CPM
+
+**Sponsor Acquisition**
+- Join ad networks: [Megaphone, Podcorn]
+- Direct outreach: [Relevant brands]
+- Media kit: [Audience stats and testimonials]
+
+**Ad Integration**
+- Host-read ads: [Authentic and conversational]
+- Dynamic insertion: [Automated ad placement]
+- Evergreen vs dated: [Content considerations]
+
+### 2. Premium Content
+**Membership Tiers**
+- Tier 1 ($5/month): [Ad-free episodes, early access]
+- Tier 2 ($10/month): [Bonus episodes, Q&A sessions]
+- Tier 3 ($25/month): [1-on-1 consultations, masterclasses]
+
+**Platform Options**
+- Patreon: [Established platform with tools]
+- Supercast: [Podcast-specific hosting]
+- Apple Podcasts Subscriptions: [Built-in audience]
+
+### 3. Affiliate Marketing
+**Product Recommendations**
+- Relevant tools and software
+- Books and courses
+- Services and platforms
+- Physical products
+
+**Promotion Strategy**
+- Genuine use and endorsement
+- Trackable affiliate links
+- Discount codes for listeners
+- Regular but not excessive mentions
+
+### 4. Digital Products
+**Course Creation**
+- Topic: [Expertise area from podcast]
+- Format: [Video lessons, workbooks, templates]
+- Price: [$99-$999 based on depth]
+- Launch: [Special podcast audience pricing]
+
+**Ebook or Guide**
+- Compilation: [Best episodes and insights]
+- Exclusive content: [Deeper dives and frameworks]
+- Price: [$9-$49]
+- Formats: [PDF, ePub, Kindle]
+
+### 5. Live Events
+**Virtual Events**
+- Live recordings: [Ticket sales $10-50]
+- Workshops: [In-depth training $99-499]
+- Networking sessions: [Community building]
+
+**In-Person Events**
+- Live show tours: [Ticket sales $20-100]
+- Conferences: [Multiple revenue streams]
+- VIP experiences: [Premium pricing $200+]
+
+### 6. Consulting & Services
+**Leveraging Authority**
+- Consulting packages: [Hourly or project-based]
+- Speaking engagements: [Keynote fees]
+- Workshops and training: [Corporate or public]
+- Coaching programs: [1-on-1 or group]
+
+## Monetization Timeline
+### 0-6 Months: Foundation
+- Focus on content quality and consistency
+- Build audience and engagement
+- Start email list
+- Create media kit
+
+### 6-12 Months: Initial Monetization
+- Launch first sponsor or ad network
+- Create affiliate partnerships
+- Develop free lead magnet
+- Test premium content
+
+### 12-18 Months: Diversification
+- Multiple sponsor relationships
+- Membership program launch
+- First digital product
+- Virtual event series
+
+### 18+ Months: Optimization
+- Premium pricing for sponsors
+- Expanded product line
+- In-person events
+- Consulting and speaking
+
+## Financial Projections
+### Revenue Goals by Stage
+**Stage 1** (1,000 downloads/ep)
+- Sponsorships: $200-500/episode
+- Affiliates: $100-300/month
+- Total: $1,000-2,500/month
+
+**Stage 2** (5,000 downloads/ep)
+- Sponsorships: $1,000-2,000/episode
+- Memberships: $500-1,500/month
+- Affiliates: $500-1,000/month
+- Total: $5,000-10,000/month
+
+**Stage 3** (10,000+ downloads/ep)
+- Sponsorships: $2,500-5,000/episode
+- Memberships: $2,000-5,000/month
+- Products: $2,000-10,000/month
+- Events: $1,000-5,000/month
+- Total: $15,000-50,000+/month
+
+## Metrics to Track
+### Audience Growth
+- Total downloads
+- Subscriber count
+- Email list growth
+- Social media following
+
+### Engagement
+- Reviews and ratings
+- Social media engagement
+- Email open rates
+- Community participation
+
+### Revenue
+- Revenue per episode
+- Revenue per download
+- Listener lifetime value
+- Profit margins by stream`,
+    topicCategory: "Audio",
+    category: "Monetization"
+  },
+  {
+    name: "Web Application Architecture Blueprint",
+    whatItIs: "Comprehensive template for planning scalable web application structure",
+    whatItsFor: "Developers designing robust, maintainable web applications",
+    desiredOutcome: "Well-architected application that scales efficiently and maintains code quality",
+    template: `# Web Application Architecture Blueprint
+
+## Application Overview
+### Project Details
+- Application name: [Project name]
+- Purpose: [Primary function and goals]
+- Target users: [User personas]
+- Expected scale: [Users, traffic, data volume]
+
+### Technology Stack
+**Frontend**
+- Framework: [React, Vue, Angular, Next.js]
+- State management: [Redux, Context API, Zustand]
+- Styling: [Tailwind, CSS Modules, Styled Components]
+- Build tool: [Vite, Webpack, Turbopack]
+
+**Backend**
+- Runtime: [Node.js, Python, Go, Rust]
+- Framework: [Express, FastAPI, Gin, Actix]
+- API type: [REST, GraphQL, tRPC]
+- Authentication: [JWT, OAuth, Supabase Auth]
+
+**Database**
+- Primary: [PostgreSQL, MySQL, MongoDB]
+- Cache: [Redis, Memcached]
+- Search: [Elasticsearch, Algolia, Typesense]
+- Vector DB: [Pinecone, Weaviate, Qdrant]
+
+**Infrastructure**
+- Hosting: [Vercel, Netlify, AWS, Google Cloud]
+- CDN: [Cloudflare, AWS CloudFront]
+- Storage: [S3, Google Cloud Storage]
+- Email: [SendGrid, Postmark, Resend]
+
+## System Architecture
+### Application Layers
+1. **Presentation Layer**
+   - UI components
+   - Routing and navigation
+   - Client-side state management
+   - Form handling and validation
+
+2. **Business Logic Layer**
+   - API endpoints and controllers
+   - Service layer (business rules)
+   - Data validation and transformation
+   - Integration with third-party services
+
+3. **Data Access Layer**
+   - Database models and schemas
+   - Query builders and ORMs
+   - Data repositories
+   - Caching strategies
+
+4. **Infrastructure Layer**
+   - Authentication and authorization
+   - Logging and monitoring
+   - Error handling
+   - Background jobs and queues
+
+## Database Schema Design
+### Core Entities
+**Users Table**
+- id (UUID/Primary Key)
+- email (Unique, indexed)
+- password_hash
+- created_at, updated_at
+- Relationships: [One-to-many with other tables]
+
+**[Entity 1] Table**
+- Schema definition
+- Indexes for performance
+- Foreign key relationships
+
+**[Entity 2] Table**
+- Schema definition
+- Indexes for performance
+- Foreign key relationships
+
+### Data Relationships
+- One-to-many: [Description]
+- Many-to-many: [Description with join table]
+- One-to-one: [Description]
+
+## API Design
+### RESTful Endpoints
+**Authentication**
+- POST /api/auth/register
+- POST /api/auth/login
+- POST /api/auth/logout
+- POST /api/auth/refresh
+
+**Resources**
+- GET /api/[resource] - List all
+- GET /api/[resource]/:id - Get one
+- POST /api/[resource] - Create
+- PUT /api/[resource]/:id - Update
+- DELETE /api/[resource]/:id - Delete
+
+### API Response Format
+\`\`\`json
+{
+  "success": true,
+  "data": {},
+  "error": null,
+  "meta": {
+    "page": 1,
+    "limit": 20,
+    "total": 100
+  }
+}
+\`\`\`
+
+## Security Implementation
+### Authentication
+- Password requirements: [Minimum length, complexity]
+- Password hashing: [bcrypt, argon2]
+- Session management: [JWT, cookies]
+- Two-factor authentication: [Optional, required for admin]
+
+### Authorization
+- Role-based access control (RBAC)
+- Resource-level permissions
+- API rate limiting
+- CORS configuration
+
+### Data Protection
+- Input validation and sanitization
+- SQL injection prevention (parameterized queries)
+- XSS protection
+- CSRF tokens
+- Encrypted sensitive data at rest
+
+## Performance Optimization
+### Caching Strategy
+- Browser caching: [Static assets]
+- CDN caching: [Global distribution]
+- Application caching: [Frequently accessed data]
+- Database query caching: [Expensive queries]
+
+### Database Optimization
+- Proper indexing strategy
+- Query optimization
+- Connection pooling
+- Read replicas for scaling reads
+
+### Frontend Optimization
+- Code splitting and lazy loading
+- Image optimization (WebP, lazy loading)
+- Tree shaking and minification
+- Service workers for offline capability
+
+## Monitoring & Observability
+### Application Monitoring
+- Error tracking: [Sentry, Rollbar]
+- Performance monitoring: [New Relic, DataDog]
+- Uptime monitoring: [Pingdom, UptimeRobot]
+- User analytics: [Google Analytics, PostHog]
+
+### Logging Strategy
+- Structured logging format
+- Log levels (DEBUG, INFO, WARN, ERROR)
+- Centralized log aggregation
+- Log retention policy
+
+## Deployment Strategy
+### CI/CD Pipeline
+1. **Development**
+   - Local development environment
+   - Feature branch workflow
+   - Automated testing on commit
+
+2. **Staging**
+   - Automatic deployment from main branch
+   - Integration testing
+   - QA and user acceptance testing
+
+3. **Production**
+   - Tagged release deployment
+   - Blue-green or canary deployment
+   - Automatic rollback on failures
+
+### Environment Configuration
+- Development: [Local, Docker Compose]
+- Staging: [Cloud environment matching production]
+- Production: [Scalable cloud infrastructure]
+
+## Scalability Plan
+### Horizontal Scaling
+- Load balancer configuration
+- Stateless application design
+- Session storage in Redis
+- Database read replicas
+
+### Vertical Scaling
+- Server resource monitoring
+- Upgrade thresholds
+- Performance benchmarks
+
+### Database Scaling
+- Sharding strategy (if needed)
+- Partitioning large tables
+- Archive old data
+- NoSQL for specific use cases
+
+## Backup & Disaster Recovery
+### Backup Strategy
+- Database: [Daily automated backups, 30-day retention]
+- File storage: [Versioning, replication]
+- Configuration: [Version controlled]
+
+### Recovery Procedures
+- Recovery time objective (RTO): [Target]
+- Recovery point objective (RPO): [Target]
+- Disaster recovery plan documentation
+- Regular recovery drills
+
+## Development Workflow
+### Code Standards
+- Linting: [ESLint, Prettier]
+- Type safety: [TypeScript strict mode]
+- Code review requirements
+- Documentation standards
+
+### Testing Strategy
+- Unit tests: [Jest, Vitest]
+- Integration tests: [Supertest, Playwright]
+- E2E tests: [Cypress, Playwright]
+- Performance tests: [k6, Artillery]
+- Test coverage target: [80%+]`,
+    topicCategory: "Web/App Dev",
+    category: "Software Architecture"
+  },
+  {
+    name: "AI Agent Workflow Builder",
+    whatItIs: "Framework for designing and implementing AI-powered automation agents",
+    whatItsFor: "Creating intelligent automation systems that handle complex workflows",
+    desiredOutcome: "Autonomous AI agents that execute multi-step workflows efficiently",
+    template: `# AI Agent Workflow Blueprint
+
+## Agent Overview
+### Agent Identity
+- Agent name: [Descriptive name]
+- Primary purpose: [Main objective]
+- Scope: [What the agent does and doesn't do]
+- Autonomy level: [Fully autonomous, semi-autonomous, supervised]
+
+### Agent Capabilities
+- Natural language understanding
+- Task planning and execution
+- Tool usage and integration
+- Memory and context retention
+- Error handling and recovery
+
+## Workflow Architecture
+### Input Processing
+**Trigger Types**
+- User request: [Chat, form, API call]
+- Scheduled: [Cron job, time-based]
+- Event-driven: [Webhook, database change]
+- Conditional: [Business rule triggered]
+
+**Input Validation**
+- Required parameters: [List and format]
+- Optional parameters: [Defaults]
+- Error handling: [Invalid input responses]
+
+### Task Planning
+**Goal Decomposition**
+1. Parse user intent
+2. Break down into subtasks
+3. Identify required tools/APIs
+4. Create execution plan
+5. Validate plan feasibility
+
+**Decision Logic**
+- IF/THEN conditions
+- Priority rules
+- Fallback options
+- Human escalation criteria
+
+### Execution Flow
+**Step 1: [Task Name]**
+- Action: [What the agent does]
+- Tools used: [APIs, databases, services]
+- Success criteria: [How to verify completion]
+- Error handling: [What to do if it fails]
+- Next step: [Conditional or sequential]
+
+**Step 2: [Task Name]**
+- [Same structure as Step 1]
+
+**Step 3: [Task Name]**
+- [Same structure as Step 1]
+
+### Memory Management
+**Short-term Memory**
+- Current conversation context
+- Temporary variables
+- Intermediate results
+- Session data
+
+**Long-term Memory**
+- User preferences
+- Historical interactions
+- Learned patterns
+- Knowledge base
+
+## Tool Integration
+### Available Tools
+**Tool 1: [Name]**
+- Purpose: [What it does]
+- API endpoint: [URL or service]
+- Authentication: [Method]
+- Rate limits: [Constraints]
+- Example usage: [Sample call]
+
+**Tool 2: [Name]**
+- [Same structure]
+
+**Tool 3: [Name]**
+- [Same structure]
+
+### Tool Selection Logic
+- Match tool to task requirements
+- Consider cost and latency
+- Handle tool unavailability
+- Parallel vs sequential execution
+
+## AI Model Configuration
+### LLM Selection
+**Primary Model**
+- Model: [GPT-5, Claude, Gemini]
+- Purpose: [Complex reasoning, planning]
+- Context window: [Token limit]
+- Temperature: [0.0-1.0 for creativity]
+
+**Secondary Model**
+- Model: [GPT-5-mini, fast model]
+- Purpose: [Simple tasks, classification]
+- Cost optimization: [When to use]
+
+### Prompt Engineering
+**System Prompt**
+\`\`\`
+You are an AI agent specialized in [domain].
+Your responsibilities include:
+1. [Responsibility 1]
+2. [Responsibility 2]
+3. [Responsibility 3]
+
+Guidelines:
+- Always verify information before acting
+- Ask for clarification when uncertain
+- Provide explanations for your actions
+- Escalate to humans when appropriate
+\`\`\`
+
+**Task-Specific Prompts**
+- [Task 1 prompt template]
+- [Task 2 prompt template]
+- [Task 3 prompt template]
+
+## Error Handling & Recovery
+### Error Types
+**System Errors**
+- API failures: [Retry with exponential backoff]
+- Timeout: [Increase timeout or split task]
+- Rate limits: [Queue and retry later]
+
+**Logical Errors**
+- Unclear input: [Ask clarifying questions]
+- Impossible task: [Explain limitations]
+- Conflicting instructions: [Seek resolution]
+
+### Recovery Strategies
+1. Retry failed steps (up to 3 times)
+2. Use alternative tools/approaches
+3. Request human intervention
+4. Gracefully fail with explanation
+
+## Safety & Guardrails
+### Content Safety
+- Filter harmful content
+- Detect and reject malicious requests
+- Protect sensitive information
+- Comply with regulations
+
+### Operational Safety
+- Spending limits per action
+- Require confirmation for critical actions
+- Human-in-the-loop for high-risk tasks
+- Audit trail of all actions
+
+## Performance Monitoring
+### Key Metrics
+- Task completion rate: [Target: 95%+]
+- Average completion time: [Target: X seconds]
+- Error rate: [Target: <5%]
+- User satisfaction: [Feedback scores]
+- Cost per task: [Budget constraint]
+
+### Optimization Opportunities
+- Identify bottlenecks
+- Improve prompt efficiency
+- Cache common results
+- Optimize tool selection
+
+## Testing & Validation
+### Test Scenarios
+**Happy Path**
+- Standard use case
+- Expected inputs
+- Successful completion
+
+**Edge Cases**
+- Unusual inputs
+- Extreme values
+- Boundary conditions
+
+**Error Scenarios**
+- Invalid inputs
+- Tool failures
+- Timeout situations
+
+### Validation Checklist
+- [ ] Agent completes intended task
+- [ ] Handles errors gracefully
+- [ ] Provides clear explanations
+- [ ] Respects safety guardrails
+- [ ] Stays within budget
+- [ ] Meets performance targets
+
+## Implementation Guide
+### Development Setup
+1. Choose agent framework: [LangChain, AutoGPT, CrewAI]
+2. Set up development environment
+3. Configure API keys and credentials
+4. Implement core workflow logic
+5. Add tool integrations
+6. Build testing suite
+
+### Deployment
+1. Environment variables: [Secrets management]
+2. Hosting: [Serverless, containers, VMs]
+3. Monitoring: [Logging and alerts]
+4. Rate limiting: [Protect against abuse]
+5. Documentation: [User guide and API docs]
+
+## Continuous Improvement
+### Feedback Loop
+- Collect user feedback
+- Analyze failure cases
+- Track performance metrics
+- Update prompts and logic
+- Expand capabilities based on demand
+
+### Version Control
+- Document changes
+- A/B test improvements
+- Maintain backwards compatibility
+- Gradual rollout of updates`,
+    topicCategory: "Workflow/AI Agents",
+    category: "AI Automation"
+  },
+  {
+    name: "Marketing Automation Hub",
+    whatItIs: "Central framework for orchestrating all marketing automation workflows",
+    whatItsFor: "Businesses looking to create seamless, integrated marketing automation",
+    desiredOutcome: "Unified marketing automation that drives leads through the entire customer journey",
+    template: `# Marketing Automation Hub Blueprint
+
+## Hub Overview
+### Business Context
+- Company name: [Your company]
+- Industry: [Your industry]
+- Target audience: [Primary customer profile]
+- Marketing goals: [Revenue, leads, brand awareness]
+
+### Automation Scope
+- Lead generation
+- Lead nurturing
+- Customer onboarding
+- Retention and upselling
+- Re-engagement campaigns
+
+## Platform Architecture
+### Core Systems
+**Marketing Automation Platform**
+- Primary tool: [HubSpot, Marketo, ActiveCampaign]
+- Purpose: [Email automation, lead scoring]
+- Integration: [CRM sync, API connections]
+
+**CRM System**
+- Tool: [Salesforce, Pipedrive, Close]
+- Purpose: [Sales pipeline management]
+- Data flow: [Bi-directional sync with MA platform]
+
+**Analytics & Attribution**
+- Tool: [Google Analytics, Mixpanel, Amplitude]
+- Purpose: [Track customer journey and ROI]
+- Custom dashboards: [Key marketing metrics]
+
+### Integration Map
+\`\`\`
+Website Forms → Marketing Automation → CRM
+Social Media → Marketing Automation → CRM
+Chatbot → Marketing Automation → CRM
+Webinar Platform → Marketing Automation → Email Sequences
+E-commerce → Marketing Automation → Customer Journey Workflows
+\`\`\`
+
+## Lead Generation Workflows
+### Website Lead Capture
+**Form Submission Flow**
+1. Visitor fills form on website
+2. Lead created in CRM with source attribution
+3. Thank you email sent immediately
+4. Lead assigned to appropriate sales rep based on criteria
+5. Internal notification to sales team
+6. Lead enters relevant nurture sequence
+
+**Chatbot Qualification**
+1. Visitor engages with website chatbot
+2. Chatbot asks qualifying questions
+3. High-intent leads immediately connected to sales
+4. Other leads enter automated nurture sequence
+5. Data synced to CRM with chat transcript
+
+### Content Marketing
+**Lead Magnet Workflow**
+1. Visitor downloads ebook/guide/template
+2. Lead created or updated in database
+3. Delivery email with download link
+4. Follow-up email series (5-7 emails over 2 weeks)
+5. Content personalized based on download topic
+6. Sales notification for high-value leads
+
+## Lead Nurturing Workflows
+### Segmentation Strategy
+**By Lifecycle Stage**
+- Subscriber: [Awareness content]
+- Lead: [Consideration content]
+- Marketing Qualified Lead (MQL): [Decision content]
+- Sales Qualified Lead (SQL): [Sales enablement]
+- Customer: [Onboarding and success]
+- Evangelist: [Referral programs]
+
+**By Behavior**
+- Engagement level: [Active, moderate, cold]
+- Content interests: [Topic-based segmentation]
+- Product interest: [Which solution they explored]
+- Industry/company size: [Vertical-specific messaging]
+
+### Email Nurture Sequences
+**General Nurture (10 emails over 8 weeks)**
+- Email 1 (Day 0): Welcome and set expectations
+- Email 2 (Day 3): Educational content - Problem awareness
+- Email 3 (Day 7): Case study - Social proof
+- Email 4 (Day 11): Product introduction - Solution awareness
+- Email 5 (Day 15): Comparison guide - Competitive advantages
+- Email 6 (Day 21): Customer testimonial - Build trust
+- Email 7 (Day 28): Demo/trial invitation - Soft CTA
+- Email 8 (Day 35): ROI calculator or assessment - Value demonstration
+- Email 9 (Day 42): Limited-time offer - Create urgency
+- Email 10 (Day 56): Direct sales outreach - Human touch
+
+**Product-Specific Nurture**
+- Triggered by: [Product page visit, feature interest]
+- Duration: [5 emails over 3 weeks]
+- Focus: [Specific product benefits and use cases]
+- Conversion goal: [Demo request or trial signup]
+
+## Lead Scoring Framework
+### Demographic Scoring
+- Job title (decision-maker): +20 points
+- Company size (ideal range): +15 points
+- Industry (target vertical): +10 points
+- Geographic location (target region): +5 points
+
+### Behavioral Scoring
+- Email opens: +1 point
+- Email clicks: +3 points
+- Website visits: +2 points per visit
+- Pricing page view: +10 points
+- Case study download: +5 points
+- Demo request: +50 points
+- Free trial signup: +75 points
+
+### Engagement Decay
+- Inactive 30 days: -10 points
+- Inactive 60 days: -20 points
+- Inactive 90 days: -30 points
+- Email unsubscribe: -100 points
+
+### Threshold Actions
+- 50+ points: Tag as Marketing Qualified Lead (MQL)
+- 75+ points: Notify sales team
+- 100+ points: Create task for immediate sales follow-up
+
+## Customer Onboarding Automation
+### New Customer Welcome
+**Day 1: Welcome Email**
+- Celebrate the decision
+- Set expectations for onboarding
+- Provide immediate resources
+- Assign customer success manager
+
+**Day 2-3: Getting Started Guide**
+- Step-by-step setup instructions
+- Video tutorials
+- Knowledge base links
+- Book onboarding call
+
+**Week 1: Feature Highlights**
+- Daily emails highlighting key features
+- Use case examples
+- Quick-win templates
+
+**Week 2-4: Deeper Engagement**
+- Advanced features education
+- Integration guides
+- Community invitations
+- Feedback surveys
+
+### Adoption Tracking
+- Login frequency monitoring
+- Feature usage tracking
+- Milestone achievements
+- Engagement scoring
+
+## Retention & Expansion Workflows
+### Usage-Based Triggers
+**Low Usage Alert**
+- Trigger: Less than 2 logins in 30 days
+- Action: Re-engagement email sequence
+- Offer: Personalized training or consultation
+
+**Feature Adoption**
+- Trigger: Using core features regularly
+- Action: Introduce complementary features
+- Goal: Increase product stickiness
+
+**Upgrade Opportunities**
+- Trigger: Approaching plan limits
+- Action: Upgrade invitation with ROI case
+- Offer: Limited-time upgrade incentive
+
+### Customer Success Automation
+**Health Score Monitoring**
+- Calculate based on usage, support tickets, NPS
+- Low health score: Proactive outreach
+- High health score: Upsell and referral requests
+
+**Renewal Management**
+- 90 days before renewal: Value recap
+- 60 days: Success story and ROI report
+- 30 days: Renewal offer with incentive
+- 7 days: Final reminder
+
+## Re-engagement Campaigns
+### Lapsed Lead Reactivation
+**Trigger**: No engagement in 90+ days
+
+**3-Email Sequence**
+- Email 1: "We miss you" - Soft touch
+- Email 2: New features/content - Value update
+- Email 3: Last chance offer - Urgency
+
+**Segmentation**
+- Re-engaged: Back to appropriate nurture
+- Still inactive: Remove from active campaigns
+
+### Win-back Campaign (Churned Customers)
+**Trigger**: Canceled subscription
+
+**Immediate Actions**
+- Exit survey to understand reason
+- Offer to pause instead of cancel
+- Provide special win-back offer
+
+**Follow-up Sequence (3-6 months later)**
+- Email about product improvements
+- Case studies of successful customers
+- Limited-time return offer
+
+## Performance Tracking
+### Key Metrics Dashboard
+**Lead Generation**
+- Lead volume by source
+- Cost per lead by channel
+- Lead quality (conversion rate to customer)
+
+**Engagement**
+- Email open rates: [Target: 25%+]
+- Click-through rates: [Target: 3%+]
+- Website engagement: [Page views, time on site]
+
+**Conversion**
+- MQL to SQL conversion: [Target: 30%+]
+- SQL to customer conversion: [Target: 20%+]
+- Marketing-influenced revenue
+
+**Retention**
+- Customer churn rate: [Target: <5%]
+- Net revenue retention: [Target: 110%+]
+- Customer lifetime value
+
+### Optimization Process
+**Weekly Reviews**
+- Monitor workflow performance
+- Identify drop-off points
+- A/B test improvements
+
+**Monthly Analysis**
+- Comprehensive metric review
+- Attribution modeling
+- Budget reallocation based on ROI
+
+**Quarterly Strategy**
+- Workflow audits and updates
+- New automation opportunities
+- Technology stack evaluation
+
+## Compliance & Best Practices
+### Data Privacy
+- GDPR compliance: [Consent tracking]
+- CCPA compliance: [Opt-out mechanisms]
+- Data retention policies
+- Privacy policy updates
+
+### Email Deliverability
+- List hygiene: [Remove bounces, inactive]
+- Authentication: [SPF, DKIM, DMARC]
+- Engagement-based sending
+- Avoid spam triggers
+
+### Personalization Ethics
+- Transparent data usage
+- Value-driven messaging
+- Respect preferences
+- Easy opt-out options`,
+    topicCategory: "Workflow/AI Agents",
+    category: "Marketing Automation"
+  },
+  {
+    name: "No-Code Automation Workflow",
+    whatItIs: "Step-by-step framework for building automation without coding",
+    whatItsFor: "Non-technical users creating powerful business automations",
+    desiredOutcome: "Functional automations that save time and reduce manual work",
+    template: `# No-Code Automation Workflow Blueprint
+
+## Automation Planning
+### Use Case Definition
+- **What process needs automation?**
+  [Describe the current manual process]
+
+- **Why automate it?**
+  - Time savings: [Hours saved per week]
+  - Error reduction: [Fewer mistakes]
+  - Consistency: [Standardized process]
+  - Scalability: [Handle increased volume]
+
+- **Success criteria:**
+  - [Specific, measurable outcomes]
+  - [Timeline for implementation]
+  - [ROI expectations]
+
+### Process Mapping
+**Current State (Manual)**
+1. [Step 1 of current process]
+2. [Step 2 of current process]
+3. [Step 3 of current process]
+4. [etc.]
+
+**Pain Points**
+- [Bottleneck 1]
+- [Error-prone step]
+- [Time-consuming task]
+
+**Future State (Automated)**
+1. [Automated step 1]
+2. [Automated step 2]
+3. [Automated step 3]
+4. [etc.]
+
+## Platform Selection
+### No-Code Tools Comparison
+**Zapier**
+- Best for: Simple integrations between apps
+- Pros: Largest app library, easy to use
+- Cons: Can get expensive, limited logic
+- Pricing: [Current tier and limits]
+
+**Make (formerly Integromat)**
+- Best for: Complex workflows with logic
+- Pros: Visual workflow builder, powerful
+- Cons: Steeper learning curve
+- Pricing: [Current tier and limits]
+
+**n8n**
+- Best for: Self-hosted, cost-effective at scale
+- Pros: Full control, unlimited executions
+- Cons: Requires technical setup
+- Pricing: [Open-source or cloud]
+
+### Platform Features Needed
+- [ ] Triggers: [What starts the automation]
+- [ ] Actions: [What the automation does]
+- [ ] Integrations: [Apps that need to connect]
+- [ ] Logic: [Conditional branching, filters]
+- [ ] Data transformation: [Format changes]
+- [ ] Error handling: [Retry, notifications]
+
+## Workflow Design
+### Trigger Setup
+**Trigger Type**: [Schedule, Webhook, New Item, etc.]
+- Platform: [Which app triggers the workflow]
+- Trigger event: [Specific action that starts it]
+- Trigger frequency: [How often it checks]
+- Filter conditions: [Only trigger when...]
+
+### Data Flow
+**Step 1: Trigger Event**
+- App: [Source application]
+- Event: [What happens]
+- Data captured: [Fields/variables available]
+
+**Step 2: Data Transformation**
+- Parse/extract: [Get specific data points]
+- Format: [Change date format, capitalize, etc.]
+- Validate: [Check if data meets requirements]
+
+**Step 3: Conditional Logic**
+\`\`\`
+IF [condition 1]
+  THEN [action A]
+ELSE IF [condition 2]
+  THEN [action B]
+ELSE
+  THEN [action C]
+\`\`\`
+
+**Step 4: Primary Action**
+- App: [Destination application]
+- Action: [What to do]
+- Data mapping: [Source field → Destination field]
+
+**Step 5: Follow-up Actions**
+- Notifications: [Who to notify and how]
+- Logging: [Record the automation ran]
+- Secondary updates: [Update other systems]
+
+### Error Handling
+**Common Errors**
+- Missing data: [How to handle]
+- API failures: [Retry strategy]
+- Invalid format: [Validation and fallback]
+
+**Error Notifications**
+- Email alert: [To whom]
+- Slack message: [Channel]
+- Log entry: [For troubleshooting]
+
+## Integration Setup
+### App Connections
+**App 1: [Name]**
+- Authentication method: [OAuth, API key, etc.]
+- Permissions needed: [Read, write, admin]
+- Rate limits: [Requests per hour/day]
+- Setup instructions: [Step-by-step connection]
+
+**App 2: [Name]**
+- [Same structure as App 1]
+
+**App 3: [Name]**
+- [Same structure as App 1]
+
+### Data Mapping
+**Field Mapping Table**
+| Source App | Source Field | → | Destination App | Destination Field | Transformation |
+|------------|--------------|---|-----------------|-------------------|----------------|
+| [App name] | [Field 1]    | → | [App name]      | [Field A]         | [None/Format]  |
+| [App name] | [Field 2]    | → | [App name]      | [Field B]         | [None/Format]  |
+
+## Testing & Deployment
+### Test Scenarios
+**Scenario 1: Happy Path**
+- Input: [Normal, expected data]
+- Expected outcome: [Successful automation]
+- Verification: [Check destination system]
+
+**Scenario 2: Edge Cases**
+- Input: [Unusual but valid data]
+- Expected outcome: [Handles gracefully]
+- Verification: [Appropriate action taken]
+
+**Scenario 3: Error Cases**
+- Input: [Invalid or missing data]
+- Expected outcome: [Error handling kicks in]
+- Verification: [Notification sent, logged]
+
+### Testing Checklist
+- [ ] Test with sample data
+- [ ] Verify all integrations work
+- [ ] Check data accuracy in destination
+- [ ] Test error handling
+- [ ] Verify notifications work
+- [ ] Check timing/scheduling
+- [ ] Confirm no data loss
+
+### Deployment
+**Pre-Launch**
+1. Document the workflow: [What it does]
+2. Inform stakeholders: [Who needs to know]
+3. Set up monitoring: [How to track]
+4. Create rollback plan: [How to undo]
+
+**Launch**
+1. Enable automation: [Turn it on]
+2. Monitor first runs: [Watch closely]
+3. Gather feedback: [User experience]
+4. Make adjustments: [Iterate and improve]
+
+## Monitoring & Maintenance
+### Success Metrics
+- Execution count: [How many times it runs]
+- Success rate: [Percentage that complete]
+- Time saved: [Estimated hours per week]
+- Errors: [Number and types]
+- Cost: [Platform usage and pricing]
+
+### Regular Maintenance
+**Daily**
+- Check for failed executions
+- Review error notifications
+- Quick fixes for common issues
+
+**Weekly**
+- Review execution logs
+- Analyze success rate trends
+- Optimize slow steps
+
+**Monthly**
+- Performance review
+- Cost analysis
+- Feature updates and improvements
+- Documentation updates
+
+### Troubleshooting Guide
+**Automation not triggering?**
+- Check trigger setup and conditions
+- Verify source app connection
+- Confirm trigger is enabled
+- Review automation logs
+
+**Data not appearing correctly?**
+- Check field mapping
+- Verify data transformation logic
+- Test with sample data
+- Review API changes in integrated apps
+
+**Automation timing out?**
+- Reduce data processing volume
+- Split into multiple workflows
+- Optimize API calls
+- Increase timeout settings
+
+## Scaling & Optimization
+### Performance Optimization
+- Batch processing: [Process multiple items at once]
+- Caching: [Store frequently used data]
+- Scheduling: [Run during off-peak hours]
+- Parallel execution: [Run steps simultaneously]
+
+### Cost Optimization
+- Monitor task usage
+- Consolidate similar automations
+- Use filters early to reduce executions
+- Choose right pricing tier
+
+### Expansion Opportunities
+- Identify related processes to automate
+- Add more complex logic as needed
+- Integrate additional apps
+- Create automation templates for reuse
+
+## Best Practices
+### Design Principles
+- Keep it simple: [Start small, add complexity later]
+- Document everything: [Comments, descriptions]
+- Test thoroughly: [Before going live]
+- Plan for errors: [Always have fallbacks]
+
+### Security
+- Use secure authentication methods
+- Minimize data exposure
+- Encrypt sensitive data
+- Regular access reviews
+- Follow data protection regulations
+
+### Collaboration
+- Share automation documentation
+- Train team on how it works
+- Establish ownership
+- Create feedback channels
+- Version control for major changes`,
+    topicCategory: "Workflow/AI Agents",
+    category: "Automation"
   }
 ];
 
