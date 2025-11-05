@@ -74,10 +74,10 @@ verify_jwt = true
 verify_jwt = false
 
 [functions.jumps-ai-coach]
-verify_jwt = false
+verify_jwt = true
 
 [functions.jumps-ai-streaming]
-verify_jwt = false
+verify_jwt = true
 
 [functions.stripe-webhook]
 verify_jwt = false

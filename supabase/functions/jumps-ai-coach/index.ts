@@ -1,5 +1,6 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.4';
 
 const xaiApiKey = Deno.env.get('XAI_API_KEY');
 
@@ -18,6 +19,48 @@ serve(async (req) => {
   let step = 1;
 
   try {
+    // Authentication check
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      return new Response(JSON.stringify({ error: 'Unauthorized - Missing authorization header' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
+    const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? '';
+    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    const token = authHeader.replace('Bearer ', '');
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    
+    if (authError || !user) {
+      console.error('Authentication failed:', authError);
+      return new Response(JSON.stringify({ error: 'Unauthorized - Invalid token' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
+    console.log('✅ Authenticated user:', user.id);
+
+    // Check and deduct credit before processing
+    const { data: creditSuccess, error: creditError } = await supabase.rpc('deduct_user_credit', {
+      p_user_id: user.id,
+      p_description: 'JumpinAI Studio generation - Step ' + (step || 1)
+    });
+
+    if (creditError || !creditSuccess) {
+      console.error('Credit deduction failed:', creditError);
+      return new Response(JSON.stringify({ error: 'Insufficient credits' }), {
+        status: 402,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
+    console.log('✅ Credit deducted for user:', user.id);
+
     // Validate xAI API key first
     if (!xaiApiKey) {
       console.error('❌ CRITICAL: xAI API key is not set in environment variables');
