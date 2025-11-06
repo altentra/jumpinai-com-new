@@ -209,13 +209,13 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
               {result.comprehensive_plan.executiveSummary && (
                 <Card className="glass backdrop-blur-xl border border-border/40 rounded-2xl">
                   <CardHeader>
-                    <CardTitle className="text-lg flex items-center gap-2">
-                      <Lightbulb className="w-5 h-5 text-primary" />
+                    <CardTitle className="text-base sm:text-lg flex items-center gap-2">
+                      <Lightbulb className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                       Executive Summary
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="prose prose-sm dark:prose-invert max-w-none break-words overflow-wrap-anywhere">
+                    <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-none break-words overflow-wrap-anywhere text-sm sm:text-base">
                       <ReactMarkdown remarkPlugins={[remarkGfm]}>
                         {formatAIText(result.comprehensive_plan.executiveSummary)}
                       </ReactMarkdown>
@@ -228,16 +228,16 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
               {result.comprehensive_plan.situationAnalysis && (
                 <Card className="glass backdrop-blur-xl border border-border/40 rounded-2xl">
                   <CardHeader>
-                    <CardTitle className="text-lg flex items-center gap-2">
-                      <Compass className="w-5 h-5 text-primary" />
+                    <CardTitle className="text-base sm:text-lg flex items-center gap-2">
+                      <Compass className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                       Situation Analysis
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     {result.comprehensive_plan.situationAnalysis.currentState && (
                       <div>
-                        <h4 className="font-semibold text-sm mb-2">Current State</h4>
-                        <div className="prose prose-sm dark:prose-invert max-w-none">
+                        <h4 className="font-semibold text-xs sm:text-sm mb-2">Current State</h4>
+                        <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-none text-sm sm:text-base">
                           <ReactMarkdown remarkPlugins={[remarkGfm]}>
                             {formatAIText(result.comprehensive_plan.situationAnalysis.currentState)}
                           </ReactMarkdown>
@@ -248,14 +248,14 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                       {result.comprehensive_plan.situationAnalysis.challenges?.length > 0 && (
                         <div className="space-y-2">
-                          <h4 className="font-semibold text-sm flex items-center gap-2">
-                            <AlertTriangle className="w-4 h-4 text-destructive" />
+                          <h4 className="font-semibold text-xs sm:text-sm flex items-center gap-2">
+                            <AlertTriangle className="w-3 h-3 sm:w-4 sm:h-4 text-destructive" />
                             Key Challenges
                           </h4>
                           <ul className="space-y-2">
                             {result.comprehensive_plan.situationAnalysis.challenges.map((challenge: string, idx: number) => (
-                              <li key={idx} className="text-sm pl-4 border-l-2 border-destructive/30">
-                                <div className="prose prose-sm dark:prose-invert max-w-none">
+                              <li key={idx} className="text-xs sm:text-sm pl-4 border-l-2 border-destructive/30">
+                                <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-none text-xs sm:text-sm">
                                   <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                     {formatAIText(challenge)}
                                   </ReactMarkdown>
@@ -268,14 +268,14 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
                       
                       {result.comprehensive_plan.situationAnalysis.opportunities?.length > 0 && (
                         <div className="space-y-2">
-                          <h4 className="font-semibold text-sm flex items-center gap-2">
-                            <TrendingUp className="w-4 h-4 text-primary" />
+                          <h4 className="font-semibold text-xs sm:text-sm flex items-center gap-2">
+                            <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 text-primary" />
                             Opportunities
                           </h4>
                           <ul className="space-y-2">
                             {result.comprehensive_plan.situationAnalysis.opportunities.map((opp: string, idx: number) => (
-                              <li key={idx} className="text-sm pl-4 border-l-2 border-primary/30">
-                                <div className="prose prose-sm dark:prose-invert max-w-none">
+                              <li key={idx} className="text-xs sm:text-sm pl-4 border-l-2 border-primary/30">
+                                <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-none text-xs sm:text-sm">
                                   <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                     {formatAIText(opp)}
                                   </ReactMarkdown>
@@ -294,13 +294,13 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
               {result.comprehensive_plan.strategicVision && (
                 <Card className="glass backdrop-blur-xl border border-border/40 rounded-2xl">
                   <CardHeader>
-                    <CardTitle className="text-lg flex items-center gap-2">
-                      <Target className="w-5 h-5 text-primary" />
+                    <CardTitle className="text-base sm:text-lg flex items-center gap-2">
+                      <Target className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                       Strategic Vision
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="prose prose-sm dark:prose-invert max-w-none">
+                    <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-none text-sm sm:text-base">
                       <ReactMarkdown remarkPlugins={[remarkGfm]}>
                         {formatAIText(result.comprehensive_plan.strategicVision)}
                       </ReactMarkdown>
@@ -313,23 +313,23 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
               {result.comprehensive_plan.roadmap && (
                 <Card className="glass backdrop-blur-xl border border-border/40 rounded-2xl">
                   <CardHeader>
-                    <CardTitle className="text-lg flex items-center gap-2">
-                      <MapPin className="w-5 h-5 text-primary" />
+                    <CardTitle className="text-base sm:text-lg flex items-center gap-2">
+                      <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                       Roadmap
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     {/* Immediate (0-30 days) */}
                     {result.comprehensive_plan.roadmap.immediate && (
-                      <div className="p-4 rounded-xl border border-primary/30 bg-primary/5">
+                      <div className="p-3 sm:p-4 rounded-xl border border-primary/30 bg-primary/5">
                         <div className="flex items-start justify-between mb-3">
-                          <h4 className="font-semibold text-primary flex items-center gap-2">
-                            <Clock className="w-4 h-4" />
+                          <h4 className="font-semibold text-xs sm:text-sm text-primary flex items-center gap-2">
+                            <Clock className="w-3 h-3 sm:w-4 sm:h-4" />
                             Immediate Actions
                           </h4>
-                          <Badge variant="outline" className="text-xs bg-primary/10 text-primary border-primary/30">0-30 days</Badge>
+                          <Badge variant="outline" className="text-[10px] sm:text-xs bg-primary/10 text-primary border-primary/30">0-30 days</Badge>
                         </div>
-                        <div className="prose prose-sm dark:prose-invert max-w-none">
+                        <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-none text-xs sm:text-sm">
                           <ReactMarkdown remarkPlugins={[remarkGfm]}>
                             {formatAIText(result.comprehensive_plan.roadmap.immediate)}
                           </ReactMarkdown>
@@ -339,15 +339,15 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
                     
                     {/* Short-term (30-90 days) */}
                     {result.comprehensive_plan.roadmap.shortTerm && (
-                      <div className="p-4 rounded-xl border border-primary/30 bg-primary/5">
+                      <div className="p-3 sm:p-4 rounded-xl border border-primary/30 bg-primary/5">
                         <div className="flex items-start justify-between mb-3">
-                          <h4 className="font-semibold flex items-center gap-2">
-                            <TrendingUp className="w-4 h-4 text-foreground" />
+                          <h4 className="font-semibold text-xs sm:text-sm flex items-center gap-2">
+                            <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 text-foreground" />
                             Short-term Milestones
                           </h4>
-                          <Badge variant="outline" className="text-xs">30-90 days</Badge>
+                          <Badge variant="outline" className="text-[10px] sm:text-xs">30-90 days</Badge>
                         </div>
-                        <div className="prose prose-sm dark:prose-invert max-w-none">
+                        <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-none text-xs sm:text-sm">
                           <ReactMarkdown remarkPlugins={[remarkGfm]}>
                             {formatAIText(result.comprehensive_plan.roadmap.shortTerm)}
                           </ReactMarkdown>
@@ -357,15 +357,15 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
                     
                     {/* Long-term (90+ days) */}
                     {result.comprehensive_plan.roadmap.longTerm && (
-                      <div className="p-4 rounded-xl border border-primary/30 bg-primary/5">
+                      <div className="p-3 sm:p-4 rounded-xl border border-primary/30 bg-primary/5">
                         <div className="flex items-start justify-between mb-3">
-                          <h4 className="font-semibold flex items-center gap-2">
-                            <Target className="w-4 h-4 text-foreground" />
+                          <h4 className="font-semibold text-xs sm:text-sm flex items-center gap-2">
+                            <Target className="w-3 h-3 sm:w-4 sm:h-4 text-foreground" />
                             Long-term Goals
                           </h4>
-                          <Badge variant="outline" className="text-xs">90+ days</Badge>
+                          <Badge variant="outline" className="text-[10px] sm:text-xs">90+ days</Badge>
                         </div>
-                        <div className="prose prose-sm dark:prose-invert max-w-none">
+                        <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-none text-xs sm:text-sm">
                           <ReactMarkdown remarkPlugins={[remarkGfm]}>
                             {formatAIText(result.comprehensive_plan.roadmap.longTerm)}
                           </ReactMarkdown>
@@ -381,19 +381,19 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
                 {result.comprehensive_plan.keyObjectives?.length > 0 && (
                   <Card className="glass backdrop-blur-xl border border-border/40 rounded-2xl">
                     <CardHeader>
-                      <CardTitle className="text-lg flex items-center gap-2">
-                        <Target className="w-5 h-5 text-primary" />
+                      <CardTitle className="text-base sm:text-lg flex items-center gap-2">
+                        <Target className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                         Key Objectives
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
                       <ul className="space-y-3">
                         {result.comprehensive_plan.keyObjectives.map((obj: string, idx: number) => (
-                          <li key={idx} className="text-sm flex items-center gap-2">
-                            <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                              <span className="text-xs font-semibold text-primary">{idx + 1}</span>
+                          <li key={idx} className="text-xs sm:text-sm flex items-center gap-2">
+                            <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                              <span className="text-[10px] sm:text-xs font-semibold text-primary">{idx + 1}</span>
                             </div>
-                            <div className="prose prose-sm dark:prose-invert max-w-none flex-1">
+                            <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-none flex-1 text-xs sm:text-sm">
                               <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                 {formatAIText(obj)}
                               </ReactMarkdown>
@@ -408,17 +408,17 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
                 {result.comprehensive_plan.successMetrics?.length > 0 && (
                   <Card className="glass backdrop-blur-xl border border-border/40 rounded-2xl">
                     <CardHeader>
-                      <CardTitle className="text-lg flex items-center gap-2">
-                        <DollarSign className="w-5 h-5 text-primary" />
+                      <CardTitle className="text-base sm:text-lg flex items-center gap-2">
+                        <DollarSign className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                         Success Metrics
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
                       <ul className="space-y-3">
                         {result.comprehensive_plan.successMetrics.map((metric: string, idx: number) => (
-                          <li key={idx} className="text-sm flex items-center gap-2">
-                            <TrendingUp className="w-4 h-4 text-primary flex-shrink-0" />
-                            <div className="prose prose-sm dark:prose-invert max-w-none flex-1">
+                          <li key={idx} className="text-xs sm:text-sm flex items-center gap-2">
+                            <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 text-primary flex-shrink-0" />
+                            <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-none flex-1 text-xs sm:text-sm">
                               <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                 {formatAIText(metric)}
                               </ReactMarkdown>
@@ -435,22 +435,22 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
               {result.comprehensive_plan.riskAssessment && (
                 <Card className="glass backdrop-blur-xl border border-border/40 rounded-2xl">
                   <CardHeader>
-                    <CardTitle className="text-lg flex items-center gap-2">
-                      <Shield className="w-5 h-5 text-primary" />
+                    <CardTitle className="text-base sm:text-lg flex items-center gap-2">
+                      <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                       Risk Assessment
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {result.comprehensive_plan.riskAssessment.risks?.length > 0 && (
                       <div className="space-y-2">
-                        <h4 className="font-semibold text-sm flex items-center gap-2">
-                          <AlertTriangle className="w-4 h-4 text-destructive" />
+                        <h4 className="font-semibold text-xs sm:text-sm flex items-center gap-2">
+                          <AlertTriangle className="w-3 h-3 sm:w-4 sm:h-4 text-destructive" />
                           Potential Risks
                         </h4>
                         <ul className="space-y-2">
                           {result.comprehensive_plan.riskAssessment.risks.map((risk: string, idx: number) => (
-                            <li key={idx} className="text-sm pl-4 border-l-2 border-destructive/30">
-                              <div className="prose prose-sm dark:prose-invert max-w-none">
+                            <li key={idx} className="text-xs sm:text-sm pl-4 border-l-2 border-destructive/30">
+                              <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-none text-xs sm:text-sm">
                                 <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                   {formatAIText(risk)}
                                 </ReactMarkdown>
@@ -463,14 +463,14 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
                     
                     {result.comprehensive_plan.riskAssessment.mitigations?.length > 0 && (
                       <div className="space-y-2">
-                        <h4 className="font-semibold text-sm flex items-center gap-2">
-                          <Heart className="w-4 h-4 text-primary" />
+                        <h4 className="font-semibold text-xs sm:text-sm flex items-center gap-2">
+                          <Heart className="w-3 h-3 sm:w-4 sm:h-4 text-primary" />
                           Mitigation Strategies
                         </h4>
                         <ul className="space-y-2">
                           {result.comprehensive_plan.riskAssessment.mitigations.map((mitigation: string, idx: number) => (
-                            <li key={idx} className="text-sm pl-4 border-l-2 border-primary/30">
-                              <div className="prose prose-sm dark:prose-invert max-w-none">
+                            <li key={idx} className="text-xs sm:text-sm pl-4 border-l-2 border-primary/30">
+                              <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-none text-xs sm:text-sm">
                                 <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                   {formatAIText(mitigation)}
                                 </ReactMarkdown>

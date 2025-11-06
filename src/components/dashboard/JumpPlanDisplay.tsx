@@ -466,21 +466,21 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                   </div>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <CardTitle className="text-lg sm:text-xl md:text-2xl font-bold mb-2">
+                  <CardTitle className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold mb-2">
                     <ReactMarkdown className="prose max-w-none break-words [&>p]:m-0 [&_strong]:font-bold">
                       {phase.title || `Phase ${phaseIndex + 1}`}
                     </ReactMarkdown>
                   </CardTitle>
                   {phase.description && (
                     <div className="text-muted-foreground leading-relaxed">
-                      <ReactMarkdown className="prose prose-sm max-w-none break-words overflow-wrap-anywhere [&>p]:mb-2 [&>p:last-child]:mb-0 [&_strong]:font-bold [&_em]:italic">
+                      <ReactMarkdown className="prose prose-xs sm:prose-sm max-w-none break-words overflow-wrap-anywhere text-xs sm:text-sm [&>p]:mb-2 [&>p:last-child]:mb-0 [&_strong]:font-bold [&_em]:italic">
                         {phase.description}
                       </ReactMarkdown>
                     </div>
                   )}
                   {phase.duration && (
                     <div className="flex items-center gap-2 mt-3">
-                      <Badge variant="outline" className="text-xs">
+                      <Badge variant="outline" className="text-[10px] sm:text-xs">
                         <ReactMarkdown className="inline [&>p]:inline [&>p]:m-0 [&_strong]:font-bold">
                           {`Duration: ${phase.duration}`}
                         </ReactMarkdown>
