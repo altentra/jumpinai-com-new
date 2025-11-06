@@ -1,6 +1,7 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.4';
+import { z } from 'https://deno.land/x/zod@v3.22.4/mod.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -11,6 +12,12 @@ interface StudioFormData {
   goals: string;
   challenges: string;
 }
+
+// Validation schema
+const StudioFormSchema = z.object({
+  goals: z.string().trim().min(10, 'Goals must be at least 10 characters').max(2000, 'Goals must be less than 2000 characters'),
+  challenges: z.string().trim().min(10, 'Challenges must be at least 10 characters').max(2000, 'Challenges must be less than 2000 characters')
+});
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -65,8 +72,27 @@ serve(async (req) => {
       throw new Error('XAI_API_KEY not configured');
     }
 
-    // CRITICAL FIX: Frontend sends { formData: {...} }, so we need to destructure
-    const { formData }: { formData: StudioFormData } = await req.json();
+    // Parse and validate input
+    const body = await req.json();
+    const { formData }: { formData: StudioFormData } = body;
+    
+    // Validate formData using Zod
+    try {
+      StudioFormSchema.parse(formData);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        console.error('Validation error:', error.errors);
+        return new Response(JSON.stringify({ 
+          error: 'Invalid input',
+          details: error.errors 
+        }), {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      }
+      throw error;
+    }
+    
     console.log('Starting streaming generation for:', { formData });
 
     const encoder = new TextEncoder();

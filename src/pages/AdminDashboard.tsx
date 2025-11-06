@@ -20,7 +20,8 @@ import {
   FileSpreadsheet,
   Shield,
   UserCheck,
-  Clock
+  Clock,
+  Loader2
 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -148,9 +149,7 @@ export default function AdminDashboard() {
   
   const { user, isAuthenticated, isLoading } = useAuth();
   const navigate = useNavigate();
-
-  // Admin access control - only specific email can access
-  const ADMIN_EMAIL = "info@jumpinai.com";
+  const [isCheckingAdmin, setIsCheckingAdmin] = useState(true);
   
   useEffect(() => {
     const meta = document.createElement('meta');
@@ -164,28 +163,44 @@ export default function AdminDashboard() {
   }, []);
   
   useEffect(() => {
-    if (isLoading) return; // Wait for auth to resolve
+    const checkAdminAccess = async () => {
+      if (isLoading) return; // Wait for auth to resolve
 
-    // Debug admin gate state
-    console.log('Admin access check', {
-      isLoading,
-      isAuthenticated,
-      email: user?.email,
-    });
+      if (!isAuthenticated) {
+        navigate('/auth?next=/admin');
+        return;
+      }
+      
+      // Check if user has admin role using RPC
+      try {
+        const { data: isAdmin, error } = await supabase.rpc('has_role', {
+          _user_id: user?.id,
+          _role: 'admin'
+        });
+        
+        if (error) {
+          console.error('Error checking admin role:', error);
+          toast.error("Access denied. Admin only.");
+          navigate('/');
+          return;
+        }
+        
+        if (!isAdmin) {
+          toast.error("Access denied. Admin only.");
+          navigate('/');
+          return;
+        }
+        
+        setIsCheckingAdmin(false);
+        fetchAdminData();
+      } catch (error) {
+        console.error('Error checking admin access:', error);
+        toast.error("Access denied. Admin only.");
+        navigate('/');
+      }
+    };
 
-    if (!isAuthenticated) {
-      // Preserve intended destination so Auth sends us back here
-      navigate('/auth?next=/admin');
-      return;
-    }
-    
-    if (user?.email !== ADMIN_EMAIL) {
-      toast.error("Access denied. Admin only.");
-      navigate('/');
-      return;
-    }
-    
-    fetchAdminData();
+    checkAdminAccess();
     
     // Set up real-time subscriptions for continuous updates
     const ordersChannel = supabase
@@ -357,14 +372,32 @@ export default function AdminDashboard() {
     }
   };
 
-  if (!user || user.email !== ADMIN_EMAIL) {
-    return null; // Prevent flash of content
+  if (isCheckingAdmin) {
+    return (
+      <div className="container mx-auto p-6">
+        <Card>
+          <CardContent className="flex items-center justify-center p-12">
+            <div className="text-center space-y-3">
+              <Loader2 className="h-8 w-8 animate-spin mx-auto text-primary" />
+              <p className="text-muted-foreground">Verifying admin access...</p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
   }
 
   if (loading) {
     return (
       <div className="container mx-auto p-6">
-        <div className="animate-pulse">Loading admin dashboard...</div>
+        <Card>
+          <CardContent className="flex items-center justify-center p-12">
+            <Loader2 className="h-8 w-8 animate-spin mx-auto text-primary" />
+            <div className="text-center space-y-3">
+              <p className="text-muted-foreground">Loading admin dashboard...</p>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     );
   }
