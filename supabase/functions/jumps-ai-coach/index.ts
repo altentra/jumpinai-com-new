@@ -1,5 +1,7 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.4';
+import { z } from 'https://deno.land/x/zod@v3.22.4/mod.ts';
 
 const xaiApiKey = Deno.env.get('XAI_API_KEY');
 
@@ -7,6 +9,18 @@ const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
+
+// Validation schema
+const CoachFormSchema = z.object({
+  goals: z.string().trim().min(10, 'Goals must be at least 10 characters').max(1000, 'Goals must be less than 1000 characters'),
+  challenges: z.string().trim().max(1000, 'Challenges must be less than 1000 characters').optional(),
+  industry: z.string().max(100, 'Industry must be less than 100 characters').optional(),
+  ai_experience: z.enum(['beginner', 'intermediate', 'advanced']).optional(),
+  urgency: z.enum(['urgent', 'moderate', 'flexible']).optional(),
+  budget: z.string().max(100, 'Budget must be less than 100 characters').optional(),
+  step: z.number().int().min(1).max(10),
+  overview_content: z.string().max(10000, 'Overview content must be less than 10000 characters').optional()
+});
 
 serve(async (req) => {
   // Handle CORS preflight requests
@@ -18,6 +32,48 @@ serve(async (req) => {
   let step = 1;
 
   try {
+    // Authentication check
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      return new Response(JSON.stringify({ error: 'Unauthorized - Missing authorization header' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
+    const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? '';
+    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    const token = authHeader.replace('Bearer ', '');
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    
+    if (authError || !user) {
+      console.error('Authentication failed:', authError);
+      return new Response(JSON.stringify({ error: 'Unauthorized - Invalid token' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
+    console.log('✅ Authenticated user:', user.id);
+
+    // Check and deduct credit before processing
+    const { data: creditSuccess, error: creditError } = await supabase.rpc('deduct_user_credit', {
+      p_user_id: user.id,
+      p_description: 'JumpinAI Studio generation - Step ' + (step || 1)
+    });
+
+    if (creditError || !creditSuccess) {
+      console.error('Credit deduction failed:', creditError);
+      return new Response(JSON.stringify({ error: 'Insufficient credits' }), {
+        status: 402,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
+    console.log('✅ Credit deducted for user:', user.id);
+
     // Validate xAI API key first
     if (!xaiApiKey) {
       console.error('❌ CRITICAL: xAI API key is not set in environment variables');
@@ -33,8 +89,27 @@ serve(async (req) => {
 
     console.log('✅ xAI API key is available');
 
-    const { goals, challenges, industry, ai_experience, urgency, budget, step: requestStep = 1, overview_content = '' } = await req.json();
+    // Parse and validate input
+    const body = await req.json();
+    const { goals, challenges, industry, ai_experience, urgency, budget, step: requestStep = 1, overview_content = '' } = body;
     step = requestStep; // Assign to outer scope variable
+    
+    // Validate input using Zod
+    try {
+      CoachFormSchema.parse({ goals, challenges, industry, ai_experience, urgency, budget, step, overview_content });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        console.error('Validation error:', error.errors);
+        return new Response(JSON.stringify({ 
+          error: 'Invalid input',
+          details: error.errors 
+        }), {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      }
+      throw error;
+    }
 
     console.log('🚀 Generating Jump Step', step, 'with parameters:', { goals, challenges, industry, ai_experience, urgency, budget });
 

@@ -6,9 +6,6 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-// Change this if you want to allow multiple admins
-const ADMIN_EMAIL = "info@jumpinai.com";
-
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -46,7 +43,14 @@ serve(async (req) => {
       });
     }
 
-    if (userData.user.email !== ADMIN_EMAIL) {
+    // Check if user has admin role using RPC
+    const { data: isAdmin, error: roleError } = await supabaseUser.rpc('has_role', {
+      _user_id: userData.user.id,
+      _role: 'admin'
+    });
+
+    if (roleError || !isAdmin) {
+      console.error('Admin role check failed:', roleError);
       return new Response(JSON.stringify({ error: "Forbidden" }), {
         status: 403,
         headers: { ...corsHeaders, "Content-Type": "application/json" },

@@ -3682,6 +3682,142 @@ const strategies: Strategy[] = [
     approach: "Conduct user research, identify friction points in user journey, implement A/B testing framework, make data-driven improvements, and continuously monitor and optimize based on user behavior and feedback",
     topicCategory: "Web/App Dev",
     category: "User Experience"
+  },
+  {
+    name: "AI-Accelerated Development",
+    whatItIs: "Modern development approach leveraging AI coding assistants to boost productivity",
+    whatItsFor: "Development teams looking to accelerate delivery without compromising quality",
+    desiredOutcome: "Faster development cycles, reduced bugs, and improved code quality",
+    approach: "Integrate AI coding assistants like GitHub Copilot and Cursor into development workflow, establish best practices for AI-assisted coding, train team on prompt engineering for code generation, and implement quality controls to ensure AI-generated code meets standards",
+    topicCategory: "Web/App Dev",
+    category: "Development Strategy"
+  },
+  {
+    name: "Progressive Web App Strategy",
+    whatItIs: "Strategy for building modern web applications that work like native apps",
+    whatItsFor: "Businesses wanting app-like experiences without app store dependencies",
+    desiredOutcome: "Cross-platform functionality with single codebase and lower maintenance costs",
+    approach: "Design offline-first architecture, implement service workers for caching and background sync, optimize for mobile performance, enable install prompts, and leverage web APIs for native-like features while maintaining web accessibility",
+    topicCategory: "Web/App Dev",
+    category: "Architecture"
+  },
+
+  // Workflow/AI Agent Strategies
+  {
+    name: "AI Agent Orchestration Strategy",
+    whatItIs: "Framework for coordinating multiple AI agents to handle complex business workflows",
+    whatItsFor: "Organizations looking to automate sophisticated multi-step processes",
+    desiredOutcome: "Streamlined operations with autonomous AI agents handling routine and complex tasks",
+    approach: "Map current workflows, identify automation opportunities, design agent roles and responsibilities, implement communication protocols between agents, and establish monitoring and intervention mechanisms for edge cases",
+    topicCategory: "Workflow/AI Agents",
+    category: "AI Automation"
+  },
+  {
+    name: "Business Process Automation Roadmap",
+    whatItIs: "Strategic plan for systematically automating business processes using AI and no-code tools",
+    whatItsFor: "Companies looking to reduce operational costs and scale efficiently",
+    desiredOutcome: "Significant operational efficiency gains and freed-up team capacity for strategic work",
+    approach: "Audit current processes, prioritize based on ROI and complexity, start with high-impact low-complexity automations, progressively tackle complex workflows, and continuously measure time savings and error reduction",
+    topicCategory: "Workflow/AI Agents",
+    category: "Operations Strategy"
+  },
+  {
+    name: "No-Code Automation Ecosystem",
+    whatItIs: "Comprehensive strategy for building integrated automation systems without traditional coding",
+    whatItsFor: "Non-technical teams and small businesses wanting to automate without developers",
+    desiredOutcome: "Fully automated workflows connecting all business tools and systems",
+    approach: "Select core no-code platforms (Zapier, Make, n8n), map integration points between systems, design modular workflows for reusability, implement error handling and notifications, and train team members to maintain and extend automations",
+    topicCategory: "Workflow/AI Agents",
+    category: "No-Code Strategy"
+  },
+  {
+    name: "Intelligent Workflow Integration",
+    whatItIs: "Strategy for embedding AI capabilities into existing business workflows seamlessly",
+    whatItsFor: "Companies wanting to enhance current processes with AI without disruption",
+    desiredOutcome: "Enhanced productivity and decision-making without changing core workflows",
+    approach: "Identify workflow pain points where AI adds value, integrate AI tools as assistants rather than replacements, provide training and change management, measure impact on productivity and quality, and iterate based on user feedback and usage patterns",
+    topicCategory: "Workflow/AI Agents",
+    category: "AI Integration"
+  },
+
+  // Additional Text Strategies
+  {
+    name: "Brand Voice Framework",
+    whatItIs: "Systematic approach to developing and maintaining consistent brand voice across all content",
+    whatItsFor: "Growing companies needing to scale content while maintaining brand consistency",
+    desiredOutcome: "Recognizable and authentic brand voice that resonates with target audience",
+    approach: "Define brand personality traits, create voice and tone guidelines with examples, develop content templates, train content creators on brand voice, implement review process, and use AI tools calibrated to brand voice for efficient scaling",
+    topicCategory: "Text",
+    category: "Brand Strategy"
+  },
+  {
+    name: "AI-Enhanced Content Production",
+    whatItIs: "Modern content strategy leveraging AI tools to scale quality content creation",
+    whatItsFor: "Content teams looking to increase output without proportional headcount growth",
+    desiredOutcome: "10x content production while maintaining quality and brand consistency",
+    approach: "Establish AI-human collaboration workflows, use AI for research and first drafts, maintain human oversight for strategy and editing, implement quality control processes, and continuously refine AI prompts and templates based on performance data",
+    topicCategory: "Text",
+    category: "Content Operations"
+  },
+
+  // Additional Image Strategies
+  {
+    name: "AI-Powered Visual Content Scale",
+    whatItIs: "Strategy for leveraging AI image generation to produce high-volume visual content",
+    whatItsFor: "Marketing teams needing diverse visual assets without high production costs",
+    desiredOutcome: "Unlimited visual content variations optimized for different platforms and audiences",
+    approach: "Define visual style guidelines, create prompt templates for consistency, use AI image generation for rapid prototyping and testing, maintain human art direction for quality, and build library of successful prompts and styles",
+    topicCategory: "Image",
+    category: "Visual Strategy"
+  },
+  {
+    name: "Product Visual Optimization",
+    whatItIs: "Data-driven approach to optimizing product imagery for maximum conversion",
+    whatItsFor: "E-commerce businesses looking to increase product page conversions",
+    desiredOutcome: "Higher conversion rates through optimized product photography and presentation",
+    approach: "A/B test image styles and angles, implement 360-degree views and zoom features, optimize image loading for performance, use lifestyle and context images alongside product shots, and continuously analyze which visual approaches drive conversions",
+    topicCategory: "Image",
+    category: "E-commerce Strategy"
+  },
+
+  // Additional Video Strategies
+  {
+    name: "Short-Form Video Dominance",
+    whatItIs: "Strategy for building massive audience through TikTok, Reels, and Shorts content",
+    whatItsFor: "Brands and creators wanting to reach younger audiences and build viral presence",
+    desiredOutcome: "Viral growth and engagement through platform-native short-form content",
+    approach: "Study platform algorithms and trending formats, create hooks in first 3 seconds, batch produce content for consistency, engage with trends quickly, analyze performance metrics, and iterate based on what resonates with audience",
+    topicCategory: "Video",
+    category: "Social Video"
+  },
+  {
+    name: "Video Sales Funnel Strategy",
+    whatItIs: "Comprehensive video strategy designed to guide prospects through entire sales journey",
+    whatItsFor: "B2B and high-ticket B2C businesses with complex sales processes",
+    desiredOutcome: "Higher conversion rates and shorter sales cycles through strategic video content",
+    approach: "Create awareness videos for top of funnel, educational content for consideration stage, demo and testimonial videos for decision stage, track video engagement and tie to conversions, and optimize video content based on funnel performance",
+    topicCategory: "Video",
+    category: "Sales Strategy"
+  },
+
+  // Additional Audio Strategies
+  {
+    name: "Podcast Monetization Framework",
+    whatItIs: "Multi-stream revenue strategy for building sustainable podcast business",
+    whatItsFor: "Podcasters looking to turn their show into a profitable business",
+    desiredOutcome: "Diversified revenue streams providing sustainable income from podcast content",
+    approach: "Develop sponsorship packages, create premium content tiers, build community membership program, offer related products or services, leverage podcast for consulting or speaking opportunities, and track ROI of different revenue streams",
+    topicCategory: "Audio",
+    category: "Monetization Strategy"
+  },
+  {
+    name: "Multi-Platform Audio Distribution",
+    whatItIs: "Strategy for maximizing podcast reach across all audio platforms and channels",
+    whatItsFor: "Podcasters wanting to grow audience and increase discoverability",
+    desiredOutcome: "Maximum reach and listener growth through omnipresent audio distribution",
+    approach: "Publish to all major podcast platforms, create YouTube versions with visualizations, repurpose into blog posts and social snippets, optimize show notes and metadata for SEO, cross-promote on social media, and leverage guest appearances for audience growth",
+    topicCategory: "Audio",
+    category: "Distribution Strategy"
   }
 ];
 

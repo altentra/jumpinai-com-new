@@ -1,5 +1,7 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.4';
+import { z } from 'https://deno.land/x/zod@v3.22.4/mod.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -11,19 +13,86 @@ interface StudioFormData {
   challenges: string;
 }
 
+// Validation schema
+const StudioFormSchema = z.object({
+  goals: z.string().trim().min(10, 'Goals must be at least 10 characters').max(2000, 'Goals must be less than 2000 characters'),
+  challenges: z.string().trim().min(10, 'Challenges must be at least 10 characters').max(2000, 'Challenges must be less than 2000 characters')
+});
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
+    // Authentication check
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      return new Response(JSON.stringify({ error: 'Unauthorized - Missing authorization header' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
+    const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? '';
+    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    const token = authHeader.replace('Bearer ', '');
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    
+    if (authError || !user) {
+      console.error('Authentication failed:', authError);
+      return new Response(JSON.stringify({ error: 'Unauthorized - Invalid token' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
+    console.log('✅ Authenticated user:', user.id);
+
+    // Check and deduct credit before processing
+    const { data: creditSuccess, error: creditError } = await supabase.rpc('deduct_user_credit', {
+      p_user_id: user.id,
+      p_description: 'JumpinAI Studio generation'
+    });
+
+    if (creditError || !creditSuccess) {
+      console.error('Credit deduction failed:', creditError);
+      return new Response(JSON.stringify({ error: 'Insufficient credits' }), {
+        status: 402,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
+    console.log('✅ Credit deducted for user:', user.id);
+
     const XAI_API_KEY = Deno.env.get('XAI_API_KEY');
     if (!XAI_API_KEY) {
       throw new Error('XAI_API_KEY not configured');
     }
 
-    // CRITICAL FIX: Frontend sends { formData: {...} }, so we need to destructure
-    const { formData }: { formData: StudioFormData } = await req.json();
+    // Parse and validate input
+    const body = await req.json();
+    const { formData }: { formData: StudioFormData } = body;
+    
+    // Validate formData using Zod
+    try {
+      StudioFormSchema.parse(formData);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        console.error('Validation error:', error.errors);
+        return new Response(JSON.stringify({ 
+          error: 'Invalid input',
+          details: error.errors 
+        }), {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      }
+      throw error;
+    }
+    
     console.log('Starting streaming generation for:', { formData });
 
     const encoder = new TextEncoder();
