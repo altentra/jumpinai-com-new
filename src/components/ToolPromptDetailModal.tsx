@@ -58,181 +58,228 @@ export function ToolPromptDetailModal({ toolPrompt, isOpen, onClose }: ToolPromp
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-background/95 backdrop-blur-lg border-border">
-        <DialogHeader className="pb-2">
-          <DialogTitle className="text-2xl flex items-center gap-2">
-            <Sparkles className="h-6 w-6 text-primary" />
-            {toolPrompt.title || 'Tool & Prompt'}
-          </DialogTitle>
-          {toolPrompt.category && (
-            <Badge variant="outline" className="w-fit text-xs">
-              {String(toolPrompt.category)}
-            </Badge>
-          )}
-        </DialogHeader>
-
-        <div className="space-y-4 mt-2">
-          {/* Description */}
-          {toolPrompt.description && (
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              {String(toolPrompt.description)}
-            </p>
-          )}
-
-          {/* Tool Information with Link */}
-          {toolPrompt.tool_name && (
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-3 p-3 bg-muted/20 rounded-lg border border-border">
-              <div className="flex items-center gap-2 min-w-0">
-                <ExternalLink className="w-4 h-4 text-primary flex-shrink-0" />
-                <span className="text-sm font-medium truncate">
-                  Tool: {String(toolPrompt.tool_name)}
+      <DialogContent className="max-w-5xl max-h-[92vh] overflow-hidden p-0 border-2 border-primary/20 bg-gradient-to-br from-background/40 via-background/60 to-background/40 backdrop-blur-2xl shadow-2xl rounded-3xl animate-scale-in">
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 pointer-events-none rounded-3xl" />
+        
+        {/* Glass Effect Border */}
+        <div className="absolute inset-0 rounded-3xl border border-white/10 pointer-events-none" />
+        
+        <div className="relative overflow-y-auto max-h-[92vh] p-8 custom-scrollbar">
+          <DialogHeader className="pb-4 space-y-3">
+            <div className="flex items-start justify-between gap-4">
+              <DialogTitle className="text-3xl font-bold flex items-center gap-3 flex-1">
+                <div className="p-2.5 bg-gradient-to-br from-primary/20 to-accent/20 rounded-2xl backdrop-blur-sm border border-primary/20">
+                  <Sparkles className="h-7 w-7 text-primary" />
+                </div>
+                <span className="bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-transparent">
+                  {toolPrompt.title || 'Tool & Prompt'}
                 </span>
-              </div>
-              {toolPrompt.tool_url && (
-                <a
-                  href={String(toolPrompt.tool_url)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-primary hover:text-primary/80 transition-colors text-sm font-medium flex items-center gap-1 whitespace-nowrap flex-shrink-0"
+              </DialogTitle>
+              {toolPrompt.category && (
+                <Badge 
+                  variant="outline" 
+                  className="text-xs px-3 py-1 bg-primary/10 border-primary/30 backdrop-blur-sm rounded-full"
                 >
-                  Open Tool
-                  <ExternalLink className="w-3 h-3" />
-                </a>
+                  {String(toolPrompt.category)}
+                </Badge>
               )}
             </div>
-          )}
+          </DialogHeader>
 
-          {/* Prompt Display */}
-          {toolPrompt.prompt_text && (
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-primary" />
-                  Ready-to-Use Prompt
-                </span>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={copyToClipboard}
-                  className="gap-2 h-8 text-xs"
-                >
-                  <Copy className="w-3 h-3" />
-                  {copied ? "Copied!" : "Copy"}
-                </Button>
+          <div className="space-y-5 mt-4">
+            {/* Description */}
+            {toolPrompt.description && (
+              <div className="animate-fade-in">
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {String(toolPrompt.description)}
+                </p>
               </div>
-              <div className="bg-muted/30 border border-border rounded-lg p-4">
-                <pre className="text-xs text-muted-foreground whitespace-pre-wrap font-mono leading-relaxed break-words overflow-wrap-anywhere max-h-64 overflow-y-auto">
-                  {String(toolPrompt.prompt_text)}
-                </pre>
-              </div>
-            </div>
-          )}
+            )}
 
-          {/* Instructions */}
-          {toolPrompt.prompt_instructions && (
-            <div className="p-3 bg-purple-500/10 border border-purple-500/20 rounded-lg">
-              <div className="flex items-start gap-2">
-                <Sparkles className="w-4 h-4 text-purple-400 mt-0.5 shrink-0" />
-                <div className="flex-1">
-                  <p className="text-xs font-medium text-purple-400 mb-1">How to Use</p>
-                  <p className="text-xs text-muted-foreground leading-relaxed">
-                    {String(toolPrompt.prompt_instructions)}
-                  </p>
+            {/* Tool Information with Link */}
+            {toolPrompt.tool_name && (
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 bg-gradient-to-r from-muted/30 via-muted/20 to-muted/30 backdrop-blur-sm rounded-2xl border border-border/50 hover:border-primary/30 transition-all duration-300 animate-fade-in">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="p-2 bg-primary/10 rounded-xl">
+                    <ExternalLink className="w-4 h-4 text-primary flex-shrink-0" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-muted-foreground/70 mb-0.5">AI Tool</p>
+                    <span className="text-sm font-semibold truncate">
+                      {String(toolPrompt.tool_name)}
+                    </span>
+                  </div>
+                </div>
+                {toolPrompt.tool_url && (
+                  <a
+                    href={String(toolPrompt.tool_url)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group px-4 py-2 bg-primary/10 hover:bg-primary/20 rounded-xl transition-all duration-300 text-sm font-medium flex items-center gap-2 whitespace-nowrap flex-shrink-0 border border-primary/20"
+                  >
+                    Open Tool
+                    <ExternalLink className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                  </a>
+                )}
+              </div>
+            )}
+
+            {/* Prompt Display */}
+            {toolPrompt.prompt_text && (
+              <div className="space-y-3 animate-fade-in">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-semibold flex items-center gap-2">
+                    <div className="p-1.5 bg-gradient-to-br from-primary/20 to-accent/20 rounded-lg">
+                      <Sparkles className="w-4 h-4 text-primary" />
+                    </div>
+                    Ready-to-Use Prompt
+                  </span>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={copyToClipboard}
+                    className="gap-2 h-9 px-4 rounded-xl bg-background/50 backdrop-blur-sm border-border/50 hover:border-primary/30 hover:bg-primary/5 transition-all duration-300"
+                  >
+                    <Copy className="w-3.5 h-3.5" />
+                    {copied ? "✓ Copied!" : "Copy"}
+                  </Button>
+                </div>
+                <div className="relative group">
+                  <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 via-accent/15 to-primary/20 rounded-2xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
+                  <div className="relative bg-gradient-to-br from-muted/40 via-muted/30 to-muted/40 backdrop-blur-sm border border-border/50 rounded-2xl p-5 overflow-hidden">
+                    <pre className="text-xs text-muted-foreground/90 whitespace-pre-wrap font-mono leading-relaxed break-words overflow-wrap-anywhere max-h-72 overflow-y-auto custom-scrollbar">
+                      {String(toolPrompt.prompt_text)}
+                    </pre>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* When to Use */}
-          {content.when_to_use && (
-            <div className="p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg">
-              <div className="flex items-start gap-2">
-                <Clock className="w-4 h-4 text-blue-400 mt-0.5 shrink-0" />
-                <div className="flex-1">
-                  <p className="text-xs font-medium text-blue-400 mb-1">When to Use</p>
-                  <p className="text-xs text-muted-foreground leading-relaxed">
-                    {String(content.when_to_use)}
-                  </p>
+            {/* Instructions */}
+            {toolPrompt.prompt_instructions && (
+              <div className="relative group animate-fade-in">
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-2xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
+                <div className="relative p-4 bg-gradient-to-br from-purple-500/10 via-purple-500/5 to-pink-500/10 backdrop-blur-sm border border-purple-500/20 rounded-2xl hover:border-purple-500/30 transition-all duration-300">
+                  <div className="flex items-start gap-3">
+                    <div className="p-2 bg-purple-500/10 rounded-xl">
+                      <Sparkles className="w-4 h-4 text-purple-400 shrink-0" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold text-purple-400 mb-2">How to Use</p>
+                      <p className="text-xs text-muted-foreground/90 leading-relaxed">
+                        {String(toolPrompt.prompt_instructions)}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Why This Combo */}
-          {(content.why_this_tool || content.why_this_combo) && (
-            <div className="p-3 bg-green-500/10 border border-green-500/20 rounded-lg">
-              <div className="flex items-start gap-2">
-                <CheckCircle className="w-4 h-4 text-green-400 mt-0.5 shrink-0" />
-                <div className="flex-1">
-                  <p className="text-xs font-medium text-green-400 mb-1">Why This Combo</p>
-                  <p className="text-xs text-muted-foreground leading-relaxed">
-                    {String(content.why_this_tool || content.why_this_combo)}
-                  </p>
+            {/* When to Use */}
+            {content.when_to_use && (
+              <div className="relative group animate-fade-in">
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 rounded-2xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
+                <div className="relative p-4 bg-gradient-to-br from-blue-500/10 via-blue-500/5 to-cyan-500/10 backdrop-blur-sm border border-blue-500/20 rounded-2xl hover:border-blue-500/30 transition-all duration-300">
+                  <div className="flex items-start gap-3">
+                    <div className="p-2 bg-blue-500/10 rounded-xl">
+                      <Clock className="w-4 h-4 text-blue-400 shrink-0" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold text-blue-400 mb-2">When to Use</p>
+                      <p className="text-xs text-muted-foreground/90 leading-relaxed">
+                        {String(content.when_to_use)}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Alternatives */}
-          {Array.isArray(content.alternatives) && content.alternatives.length > 0 && (
-            <div className="space-y-2">
-              <p className="text-xs font-medium text-foreground/80">Alternative Tools:</p>
-              <div className="space-y-2">
-                {content.alternatives.map((alt: any, idx: number) => {
-                  const altName = alt?.tool || alt?.name || alt;
-                  const altUrl = alt?.url || alt?.tool_url;
-                  const altNote = alt?.note || alt?.description;
-                  
-                  return (
-                    <div key={idx} className="flex items-center justify-between p-2 bg-muted/20 rounded border border-border text-xs">
-                      <div className="flex-1">
-                        <span className="text-muted-foreground">{String(altName)}</span>
-                        {altNote && (
-                          <p className="text-xs text-muted-foreground/70 mt-1">
-                            {String(altNote)}
-                          </p>
+            {/* Why This Combo */}
+            {(content.why_this_tool || content.why_this_combo) && (
+              <div className="relative group animate-fade-in">
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-2xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
+                <div className="relative p-4 bg-gradient-to-br from-green-500/10 via-green-500/5 to-emerald-500/10 backdrop-blur-sm border border-green-500/20 rounded-2xl hover:border-green-500/30 transition-all duration-300">
+                  <div className="flex items-start gap-3">
+                    <div className="p-2 bg-green-500/10 rounded-xl">
+                      <CheckCircle className="w-4 h-4 text-green-400 shrink-0" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold text-green-400 mb-2">Why This Combo</p>
+                      <p className="text-xs text-muted-foreground/90 leading-relaxed">
+                        {String(content.why_this_tool || content.why_this_combo)}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Alternatives */}
+            {Array.isArray(content.alternatives) && content.alternatives.length > 0 && (
+              <div className="space-y-3 animate-fade-in">
+                <p className="text-sm font-semibold text-foreground/80 flex items-center gap-2">
+                  <div className="w-1 h-4 bg-gradient-to-b from-primary to-accent rounded-full"></div>
+                  Alternative Tools
+                </p>
+                <div className="space-y-2.5">
+                  {content.alternatives.map((alt: any, idx: number) => {
+                    const altName = alt?.tool || alt?.name || alt;
+                    const altUrl = alt?.url || alt?.tool_url;
+                    const altNote = alt?.note || alt?.description;
+                    
+                    return (
+                      <div key={idx} className="group flex items-center justify-between p-3.5 bg-gradient-to-r from-muted/20 via-muted/30 to-muted/20 backdrop-blur-sm rounded-xl border border-border/50 hover:border-primary/30 transition-all duration-300 text-xs">
+                        <div className="flex-1">
+                          <span className="text-sm font-medium text-foreground">{String(altName)}</span>
+                          {altNote && (
+                            <p className="text-xs text-muted-foreground/70 mt-1.5 leading-relaxed">
+                              {String(altNote)}
+                            </p>
+                          )}
+                        </div>
+                        {altUrl && (
+                          <a
+                            href={String(altUrl)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-3 py-1.5 bg-primary/10 hover:bg-primary/20 rounded-lg transition-all duration-300 text-primary flex items-center gap-1.5 ml-3 border border-primary/20 group-hover:border-primary/30"
+                          >
+                            <span className="text-xs font-medium">Visit</span>
+                            <ExternalLink className="w-3 h-3 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                          </a>
                         )}
                       </div>
-                      {altUrl && (
-                        <a
-                          href={String(altUrl)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-primary hover:text-primary/80 transition-colors flex items-center gap-1 ml-2"
-                        >
-                          Visit
-                          <ExternalLink className="w-3 h-3" />
-                        </a>
-                      )}
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Meta Information */}
-          <div className="flex gap-2 flex-wrap pt-2 border-t border-border">
-            {toolPrompt.difficulty_level && (
-              <Badge 
-                className={getDifficultyColor(String(toolPrompt.difficulty_level))} 
-                variant="outline"
-              >
-                {String(toolPrompt.difficulty_level)}
-              </Badge>
-            )}
-            {toolPrompt.setup_time && (
-              <Badge variant="secondary" className="text-xs gap-1">
-                <Clock className="w-3 h-3" />
-                {String(toolPrompt.setup_time)}
-              </Badge>
-            )}
-            {toolPrompt.cost_estimate && (
-              <Badge variant="secondary" className="text-xs gap-1">
-                <DollarSign className="w-3 h-3" />
-                {String(toolPrompt.cost_estimate)}
-              </Badge>
-            )}
+            {/* Meta Information */}
+            <div className="flex gap-2.5 flex-wrap pt-4 border-t border-border/50 animate-fade-in">
+              {toolPrompt.difficulty_level && (
+                <Badge 
+                  className={`${getDifficultyColor(String(toolPrompt.difficulty_level))} px-3 py-1.5 rounded-xl text-xs font-medium backdrop-blur-sm`}
+                  variant="outline"
+                >
+                  {String(toolPrompt.difficulty_level)}
+                </Badge>
+              )}
+              {toolPrompt.setup_time && (
+                <Badge variant="secondary" className="text-xs gap-1.5 px-3 py-1.5 rounded-xl backdrop-blur-sm bg-muted/30">
+                  <Clock className="w-3.5 h-3.5" />
+                  {String(toolPrompt.setup_time)}
+                </Badge>
+              )}
+              {toolPrompt.cost_estimate && (
+                <Badge variant="secondary" className="text-xs gap-1.5 px-3 py-1.5 rounded-xl backdrop-blur-sm bg-muted/30">
+                  <DollarSign className="w-3.5 h-3.5" />
+                  {String(toolPrompt.cost_estimate)}
+                </Badge>
+              )}
+            </div>
           </div>
         </div>
       </DialogContent>
