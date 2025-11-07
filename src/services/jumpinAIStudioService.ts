@@ -53,10 +53,18 @@ export const jumpinAIStudioService = {
 
       let jumpId: string | undefined;
 
+      // Get the session to include auth token
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        reject(new Error('Not authenticated'));
+        return;
+      }
+
       fetch('https://cieczaajcgkgdgenfdzi.supabase.co/functions/v1/jumps-ai-streaming', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`
         },
         body: JSON.stringify({ formData })
       }).then(async response => {
