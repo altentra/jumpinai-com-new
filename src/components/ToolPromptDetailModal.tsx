@@ -159,14 +159,14 @@ export function ToolPromptDetailModal({ toolPrompt, isOpen, onClose }: ToolPromp
             {/* Instructions */}
             {toolPrompt.prompt_instructions && (
               <div className="relative group animate-fade-in">
-                <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-2xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
-                <div className="relative p-4 bg-gradient-to-br from-purple-500/10 via-purple-500/5 to-pink-500/10 backdrop-blur-sm border border-purple-500/20 rounded-2xl hover:border-purple-500/30 transition-all duration-300">
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-yellow-500/20 to-amber-500/20 rounded-2xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
+                <div className="relative p-4 bg-gradient-to-br from-yellow-500/10 via-yellow-500/5 to-amber-500/10 backdrop-blur-sm border border-yellow-500/20 rounded-2xl hover:border-yellow-500/30 transition-all duration-300">
                   <div className="flex items-start gap-3">
-                    <div className="p-2 bg-purple-500/10 rounded-xl">
-                      <Sparkles className="w-4 h-4 text-purple-400 shrink-0" />
+                    <div className="p-2 bg-yellow-500/10 rounded-xl">
+                      <Sparkles className="w-4 h-4 text-yellow-400 shrink-0" />
                     </div>
                     <div className="flex-1">
-                      <p className="text-sm font-semibold text-purple-400 mb-2">How to Use</p>
+                      <p className="text-sm font-semibold text-yellow-400 mb-2">How to Use</p>
                       <p className="text-xs text-muted-foreground/90 leading-relaxed">
                         {String(toolPrompt.prompt_instructions)}
                       </p>
