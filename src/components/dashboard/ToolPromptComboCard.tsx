@@ -182,7 +182,7 @@ export function ToolPromptComboCard({ combo, onClick, index }: ToolPromptComboCa
                 </Button>
               </div>
               <div className="bg-muted/30 border border-border rounded-lg p-3">
-                <pre className="text-xs text-foreground whitespace-pre-wrap font-mono leading-relaxed break-words overflow-wrap-anywhere">
+                <pre className="text-xs text-muted-foreground whitespace-pre-wrap font-mono leading-relaxed break-words overflow-wrap-anywhere">
                   {promptText}
                 </pre>
               </div>
