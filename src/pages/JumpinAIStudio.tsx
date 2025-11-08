@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { User, AlertCircle, Loader2, LogIn, Zap } from 'lucide-react';
+import { Turnstile } from '@marsidev/react-turnstile';
 import Navigation from '@/components/Navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { useCredits } from '@/hooks/useCredits';
@@ -19,6 +20,7 @@ const JumpinAIStudio = () => {
   const [guestCanUse, setGuestCanUse] = useState(true);
   const [guestUsageCount, setGuestUsageCount] = useState(0);
   const [generationTimer, setGenerationTimer] = useState(0);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const progressDisplayRef = useRef<HTMLDivElement>(null);
   const generateButtonRef = useRef<HTMLDivElement>(null);
   const goalsTextareaRef = useRef<HTMLTextAreaElement>(null);
@@ -208,9 +210,15 @@ const JumpinAIStudio = () => {
         return;
       }
     } else {
-      // Guest users: 3 tries per 24 hours
+      // Guest users: Check usage limit
       if (guestUsageCount >= 3) {
         toast.error('You\'ve used all 3 free tries. Please sign up and get 5 welcome credits to continue!');
+        return;
+      }
+      
+      // Verify Turnstile token for guests
+      if (!turnstileToken) {
+        toast.error('Please complete the security verification');
         return;
       }
     }
@@ -240,7 +248,11 @@ const JumpinAIStudio = () => {
       }
 
       // Generate with progressive display
-      const result = await generateWithProgression(formData, user?.id);
+      const result = await generateWithProgression(
+        formData, 
+        user?.id, 
+        isAuthenticated ? undefined : turnstileToken || undefined
+      );
       
       // Update credit transaction with actual jump ID
       if (result.jumpId && tempReferenceId && isAuthenticated && user?.id) {
@@ -531,6 +543,27 @@ const JumpinAIStudio = () => {
                 </div>
               </div>
             </div>
+
+            {/* Invisible Turnstile - Only for guests */}
+            {!isAuthenticated && (
+              <div className="hidden">
+                <Turnstile
+                  siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY || "1x00000000000000000000AA"}
+                  onSuccess={(token) => {
+                    setTurnstileToken(token);
+                    console.log('✅ Turnstile verified');
+                  }}
+                  onError={() => {
+                    console.error('❌ Turnstile verification failed');
+                    toast.error('Security verification failed. Please refresh the page.');
+                  }}
+                  options={{
+                    theme: 'light',
+                    size: 'invisible',
+                  }}
+                />
+              </div>
+            )}
 
             {/* Progressive Results Display */}
             {result && (

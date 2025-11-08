@@ -11,6 +11,7 @@ const corsHeaders = {
 interface StudioFormData {
   goals: string;
   challenges: string;
+  turnstileToken?: string;
 }
 
 // Validation schema
@@ -85,7 +86,7 @@ serve(async (req) => {
 
     // Parse and validate input
     const body = await req.json();
-    const { formData }: { formData: StudioFormData } = body;
+    const { formData, turnstileToken }: { formData: StudioFormData; turnstileToken?: string } = body;
     
     // Validate formData using Zod
     try {
@@ -103,6 +104,61 @@ serve(async (req) => {
         });
       }
       throw error;
+    }
+
+    // Verify Turnstile token for guest users
+    if (isGuest && turnstileToken) {
+      console.log('🔒 Verifying Turnstile token for guest user');
+      
+      const turnstileVerifyUrl = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
+      const turnstileSecret = Deno.env.get('TURNSTILE_SECRET_KEY');
+      
+      if (!turnstileSecret) {
+        console.error('❌ TURNSTILE_SECRET_KEY not configured');
+        await logApiUsage(supabase, 'jumps-ai-streaming', null, ipAddress, userAgent, 500, Date.now() - startTime, 'Turnstile config error');
+        return new Response(
+          JSON.stringify({ error: 'Server configuration error' }),
+          { status: 500, headers: corsHeaders }
+        );
+      }
+
+      try {
+        const turnstileResponse = await fetch(turnstileVerifyUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            secret: turnstileSecret,
+            response: turnstileToken,
+          }),
+        });
+
+        const turnstileResult = await turnstileResponse.json();
+        
+        if (!turnstileResult.success) {
+          console.error('❌ Turnstile verification failed:', turnstileResult);
+          await logApiUsage(supabase, 'jumps-ai-streaming', null, ipAddress, userAgent, 403, Date.now() - startTime, 'Turnstile verification failed');
+          return new Response(
+            JSON.stringify({ error: 'Security verification failed. Please try again.' }),
+            { status: 403, headers: corsHeaders }
+          );
+        }
+        
+        console.log('✅ Turnstile verification successful');
+      } catch (error) {
+        console.error('❌ Error verifying Turnstile:', error);
+        await logApiUsage(supabase, 'jumps-ai-streaming', null, ipAddress, userAgent, 500, Date.now() - startTime, 'Turnstile verification error');
+        return new Response(
+          JSON.stringify({ error: 'Security verification error' }),
+          { status: 500, headers: corsHeaders }
+        );
+      }
+    } else if (isGuest && !turnstileToken) {
+      console.error('❌ Guest user missing Turnstile token');
+      await logApiUsage(supabase, 'jumps-ai-streaming', null, ipAddress, userAgent, 403, Date.now() - startTime, 'Missing Turnstile token');
+      return new Response(
+        JSON.stringify({ error: 'Security verification required' }),
+        { status: 403, headers: corsHeaders }
+      );
     }
 
     // Server-side rate limiting check using database
