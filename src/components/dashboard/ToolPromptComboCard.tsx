@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Copy, ExternalLink, Sparkles, CheckCircle, Clock, DollarSign, ArrowLeftRight } from "lucide-react";
+import { Copy, ExternalLink, Sparkles, CheckCircle, Clock, DollarSign, ArrowLeftRight, MessageSquare } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -184,7 +184,7 @@ export function ToolPromptComboCard({ combo, onClick, index }: ToolPromptComboCa
           {promptText && (
             <div className="space-y-3">
               <span className="text-sm font-medium flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-primary" />
+                <MessageSquare className="w-4 h-4 text-primary" />
                 Ready-to-Use Prompt
               </span>
               <div 
