@@ -67,7 +67,7 @@ export function ToolPromptDetailModal({ toolPrompt, isOpen, onClose, index }: To
         <div className="absolute inset-0 rounded-[2rem] sm:rounded-[2.5rem] border border-white/10 pointer-events-none" />
         
         <div className="relative overflow-y-auto max-h-[92vh] p-8 custom-scrollbar">
-          <DialogHeader className="pb-4 space-y-3">
+          <DialogHeader className="pb-4 space-y-3 pr-14 sm:pr-16">
             <div className="flex flex-col sm:flex-row items-start sm:justify-between gap-3 sm:gap-4">
               <DialogTitle className="text-xl sm:text-2xl font-bold flex items-center gap-2 flex-1">
                 <div className="p-1.5 sm:p-2 bg-gradient-to-br from-primary/20 to-accent/20 rounded-2xl backdrop-blur-sm border border-primary/20">
