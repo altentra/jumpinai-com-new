@@ -243,7 +243,9 @@ export default function ToolsPrompts() {
             <Button
               onClick={() => loadData()}
               disabled={loading}
-              className="rounded-xl glass bg-card/40 backdrop-blur-xl border-0 ring-1 ring-white/10 hover:ring-white/20 text-foreground hover:bg-card/60 shadow-lg hover:shadow-xl transition-all duration-300 font-semibold h-9 sm:h-10 px-4 shrink-0 self-end sm:self-auto"
+              variant="glass"
+              size="sm"
+              className="shrink-0 self-end sm:self-auto"
             >
               <RefreshCw className={`h-4 w-4 mr-1.5 ${loading ? 'animate-spin' : ''}`} />
               Refresh

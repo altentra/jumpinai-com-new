@@ -329,10 +329,10 @@ export default function Subscription() {
               </p>
             </div>
             <Button 
-              variant="outline" 
+              variant="glass"
               onClick={fetchCredits} 
               size="sm"
-              className="backdrop-blur-xl bg-transparent border border-white/20 hover:border-primary/40 hover:bg-primary/5 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl text-white flex-shrink-0 group"
+              className="flex-shrink-0 group"
             >
               <RefreshCw className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2 group-hover:rotate-180 transition-transform duration-500" />
               <span className="hidden sm:inline">Refresh</span>
@@ -528,10 +528,10 @@ export default function Subscription() {
             <>
               <Button 
                 onClick={manage}
+                variant="glass"
                 size="lg"
-                className="w-full max-w-md text-base sm:text-lg py-5 sm:py-6 backdrop-blur-xl bg-transparent border border-primary/30 hover:border-primary/50 hover:bg-primary/5 text-white shadow-xl hover:shadow-2xl hover:scale-[1.01] transition-all duration-300 rounded-2xl font-semibold relative overflow-hidden group"
+                className="w-full max-w-md text-base sm:text-lg py-5 sm:py-6 hover:scale-[1.01] group"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/5 to-primary/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <ExternalLink className="mr-2 h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300" />
                 Manage Billing & Subscription
               </Button>
@@ -539,9 +539,9 @@ export default function Subscription() {
                 Access your Stripe Customer Portal to update payment methods, view invoices, manage your subscription, or cancel anytime
               </p>
               <Button 
-                variant="outline" 
+                variant="glass"
                 onClick={handleRefreshSubscription}
-                className="backdrop-blur-xl bg-transparent border border-white/20 hover:border-primary/40 hover:bg-primary/5 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl text-white group"
+                className="group"
               >
                 <RefreshCw className="mr-2 h-3 w-3 sm:h-4 sm:w-4 group-hover:rotate-180 transition-transform duration-500" />
                 <span className="text-sm sm:text-base">Refresh Status</span>
@@ -649,12 +649,12 @@ export default function Subscription() {
                     <Button
                       onClick={() => handleSubscribe(plan.id)}
                       disabled={isLoading}
-                      className="w-full backdrop-blur-xl bg-transparent border border-primary/30 hover:border-primary/50 hover:bg-primary/5 text-white font-semibold shadow-xl hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 rounded-2xl relative overflow-hidden group"
+                      variant="glass"
+                      className="w-full hover:scale-[1.02] group"
                     >
-                      <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/5 to-primary/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       {isLoading ? (
                         <>
-                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                          <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2" />
                           Processing...
                         </>
                       ) : (
@@ -721,12 +721,12 @@ export default function Subscription() {
                   <Button 
                     onClick={() => handleBuyCredits(pkg.id)}
                     disabled={isLoading}
-                    className="w-full backdrop-blur-xl bg-transparent border border-primary/30 hover:border-primary/50 hover:bg-primary/5 text-white font-semibold shadow-xl hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 rounded-2xl relative overflow-hidden group"
+                    variant="glass"
+                    className="w-full hover:scale-[1.02] group"
                   >
-                    <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/5 to-primary/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     {isLoading ? (
                       <>
-                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                        <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2" />
                         Processing...
                       </>
                     ) : (

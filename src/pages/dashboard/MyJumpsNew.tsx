@@ -124,13 +124,15 @@ export default function MyJumpsNew() {
             <Button
               onClick={() => loadJumps()}
               disabled={loading}
-              className="rounded-xl glass bg-card/40 backdrop-blur-xl border-0 ring-1 ring-white/10 hover:ring-white/20 text-foreground hover:bg-card/60 shadow-lg hover:shadow-xl transition-all duration-300 font-semibold h-9 sm:h-10 px-4 shrink-0"
+              variant="glass"
+              size="sm"
+              className="shrink-0"
             >
               <RefreshCw className={`h-4 w-4 mr-1.5 ${loading ? 'animate-spin' : ''}`} />
               Refresh
             </Button>
             <Link to="/jumpinai-studio" className="flex-1 sm:flex-initial">
-              <Button className="rounded-xl glass bg-card/40 backdrop-blur-xl border-0 ring-1 ring-white/10 hover:ring-white/20 text-foreground hover:bg-card/60 shadow-lg hover:shadow-xl transition-all duration-300 font-semibold h-9 sm:h-10 px-4 w-full sm:w-auto">
+              <Button variant="glass" size="sm" className="w-full sm:w-auto">
                 <Plus className="h-4 w-4 mr-1.5" />
                 Create New
               </Button>

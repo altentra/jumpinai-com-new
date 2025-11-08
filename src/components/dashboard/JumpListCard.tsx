@@ -83,8 +83,9 @@ export default function JumpListCard({ jump, jumpNumber, onView, onDelete }: Jum
             {/* View Button */}
             <Button
               onClick={handleViewClick}
+              variant="glass"
               size="sm"
-              className="flex-1 sm:flex-initial rounded-xl glass bg-card/40 backdrop-blur-xl border-0 ring-1 ring-white/10 hover:ring-white/20 text-foreground hover:bg-card/60 shadow-lg hover:shadow-xl transition-all duration-300 font-semibold h-9 sm:h-10 px-4"
+              className="flex-1 sm:flex-initial"
             >
               View Jump
               <ArrowRight className="h-4 w-4 ml-1.5 transition-transform duration-300 group-hover:translate-x-0.5" />

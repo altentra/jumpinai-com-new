@@ -592,7 +592,7 @@ export default function ProfileTabs() {
             <div className="flex flex-col sm:flex-row gap-3 pt-2">
               <AlertDialog>
                 <AlertDialogTrigger asChild>
-                  <Button variant="destructive" className="w-full sm:w-auto hover-scale">
+                  <Button variant="glass" className="w-full sm:w-auto bg-gradient-to-br from-destructive/10 via-destructive/5 to-destructive/10 border-destructive/20 text-destructive hover:from-destructive/15 hover:via-destructive/8 hover:to-destructive/15 hover:border-destructive/30">
                     <Trash2 className="mr-2 h-4 w-4" /> Delete Account
                   </Button>
                 </AlertDialogTrigger>
@@ -645,7 +645,7 @@ export default function ProfileTabs() {
                 </AlertDialogContent>
               </AlertDialog>
 
-              <Button variant="outline" onClick={() => logout()} className="w-full sm:w-auto hover-scale">
+              <Button variant="glass" onClick={() => logout()} className="w-full sm:w-auto">
                 <LogOut className="mr-2 h-4 w-4" /> Log Out
               </Button>
             </div>
@@ -694,11 +694,11 @@ export default function ProfileTabs() {
               </CardContent>
               <CardFooter className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-3 sm:pt-6">
                 {!user?.isGoogleUser && (
-                  <Button onClick={changePassword} className="hover-scale w-full sm:w-auto">
+                  <Button onClick={changePassword} variant="glass" className="w-full sm:w-auto">
                     <Shield className="mr-2 h-4 w-4" /> Update password
                   </Button>
                 )}
-                <Button variant="outline" onClick={() => logout()} className="hover-scale w-full sm:w-auto">
+                <Button variant="glass" onClick={() => logout()} className="w-full sm:w-auto">
                   <LogOut className="mr-2 h-4 w-4" /> Sign out
                 </Button>
               </CardFooter>

@@ -155,10 +155,12 @@ const DashboardHome = () => {
 
           <Button 
             onClick={() => navigate("/jumpinai-studio")}
-            className="glass hover:bg-black hover:scale-[1.02] px-5 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-semibold rounded-2xl transition-all duration-300 shadow-modern hover:shadow-modern-lg group w-full sm:w-auto"
+            variant="glass"
+            size="lg"
+            className="hover:scale-[1.02] w-full sm:w-auto group"
           >
-            <span className="gradient-text-primary">Start Your Jump in Studio</span>
-            <ArrowRight className="ml-2 h-4 w-4 text-primary group-hover:translate-x-0.5 transition-transform" />
+            Start Your Jump in Studio
+            <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
           </Button>
         </CardContent>
       </Card>
