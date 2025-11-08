@@ -25,47 +25,45 @@ serve(async (req) => {
   }
 
   try {
-    // Authentication check
-    const authHeader = req.headers.get('Authorization');
-    if (!authHeader) {
-      return new Response(JSON.stringify({ error: 'Unauthorized - Missing authorization header' }), {
-        status: 401,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-      });
-    }
-
     const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? '';
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    const token = authHeader.replace('Bearer ', '');
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
-    
-    if (authError || !user) {
-      console.error('Authentication failed:', authError);
-      return new Response(JSON.stringify({ error: 'Unauthorized - Invalid token' }), {
-        status: 401,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-      });
+    // Check if user is authenticated (optional)
+    const authHeader = req.headers.get('Authorization');
+    let user = null;
+    let isGuest = true;
+
+    if (authHeader) {
+      const token = authHeader.replace('Bearer ', '');
+      const { data: { user: authUser }, error: authError } = await supabase.auth.getUser(token);
+      
+      if (!authError && authUser) {
+        user = authUser;
+        isGuest = false;
+        console.log('✅ Authenticated user:', user.id);
+
+        // Check and deduct credit for authenticated users only
+        const { data: creditSuccess, error: creditError } = await supabase.rpc('deduct_user_credit', {
+          p_user_id: user.id,
+          p_description: 'JumpinAI Studio generation'
+        });
+
+        if (creditError || !creditSuccess) {
+          console.error('Credit deduction failed:', creditError);
+          return new Response(JSON.stringify({ error: 'Insufficient credits' }), {
+            status: 402,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        }
+
+        console.log('✅ Credit deducted for user:', user.id);
+      } else {
+        console.log('⚠️ Invalid auth token, treating as guest');
+      }
+    } else {
+      console.log('👤 Guest user detected (no auth header)');
     }
-
-    console.log('✅ Authenticated user:', user.id);
-
-    // Check and deduct credit before processing
-    const { data: creditSuccess, error: creditError } = await supabase.rpc('deduct_user_credit', {
-      p_user_id: user.id,
-      p_description: 'JumpinAI Studio generation'
-    });
-
-    if (creditError || !creditSuccess) {
-      console.error('Credit deduction failed:', creditError);
-      return new Response(JSON.stringify({ error: 'Insufficient credits' }), {
-        status: 402,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-      });
-    }
-
-    console.log('✅ Credit deducted for user:', user.id);
 
     const XAI_API_KEY = Deno.env.get('XAI_API_KEY');
     if (!XAI_API_KEY) {
