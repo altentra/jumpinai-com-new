@@ -436,15 +436,6 @@ const JumpinAIStudio = () => {
                         </div>
                       </div>
 
-                      {/* Hidden reCAPTCHA for verification */}
-                      <div className="flex justify-center mb-4">
-                        <ReCAPTCHA
-                          ref={recaptchaRef}
-                          size="invisible"
-                          sitekey={RECAPTCHA_SITE_KEY}
-                        />
-                      </div>
-
                       {/* Glass Morphism Generate Button - Mobile Optimized */}
                       <div ref={generateButtonRef} className="text-center mt-4 sm:mt-6 md:mt-8">
                         <div className="relative inline-block group w-full sm:w-auto">
@@ -592,12 +583,14 @@ const JumpinAIStudio = () => {
           </div>
         </main>
 
-        {/* Invisible reCAPTCHA - required for verification */}
+      </div>
+      
+      {/* Invisible reCAPTCHA - must be rendered once for verification */}
+      <div style={{ visibility: 'hidden', position: 'absolute', bottom: 0, right: 0, width: '256px', height: '60px', overflow: 'hidden' }}>
         <ReCAPTCHA
           ref={recaptchaRef}
           sitekey={RECAPTCHA_SITE_KEY}
           size="invisible"
-          badge="bottomright"
         />
       </div>
     </>
