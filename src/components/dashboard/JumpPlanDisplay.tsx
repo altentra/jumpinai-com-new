@@ -650,9 +650,9 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                          >
                                            <div className="flex flex-col gap-2 mb-2">
                                              <div className="flex-shrink-0 px-2.5 py-1.5 rounded-lg bg-gradient-to-br from-primary/40 to-primary/30 flex items-center justify-center border border-primary/60 shadow-sm w-fit">
-                                               <span className="text-xs font-bold text-primary/90 whitespace-nowrap">
-                                                 Sub-Step {subStepIndex + 1}
-                                               </span>
+                                                <span className="text-xs font-bold text-primary/90 whitespace-nowrap">
+                                                  Sub-Step {subStepIndex + 1}.
+                                                </span>
                                              </div>
                                              <h5 className="text-sm font-semibold text-foreground leading-tight">
                                                <ReactMarkdown className="prose prose-sm max-w-none [&>p]:mb-0">
@@ -711,9 +711,9 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                      >
                                        <div className="flex items-start gap-2 mb-2">
                                          <div className="flex-shrink-0 px-2.5 py-1.5 rounded-lg bg-gradient-to-br from-primary/40 to-primary/30 flex items-center justify-center border border-primary/60 shadow-sm">
-                                           <span className="text-xs font-bold text-primary/90 whitespace-nowrap">
-                                             Sub-Step {subStepIndex + 1}
-                                           </span>
+                                            <span className="text-xs font-bold text-primary/90 whitespace-nowrap">
+                                              Sub-Step {subStepIndex + 1}.
+                                            </span>
                                          </div>
                                          <h5 className="text-sm font-semibold text-foreground pt-0.5">
                                            <ReactMarkdown className="prose prose-sm max-w-none [&>p]:m-0 [&_strong]:font-bold">
@@ -769,9 +769,9 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                     >
                                       <div className="flex items-start gap-2 mb-2">
                                         <div className="flex-shrink-0 px-2.5 py-1.5 rounded-lg bg-gradient-to-br from-primary/40 to-primary/30 flex items-center justify-center border border-primary/60 shadow-sm">
-                                          <span className="text-xs font-bold text-primary/90 whitespace-nowrap">
-                                            Sub-Step {subStepIndex + 1}
-                                          </span>
+                                           <span className="text-xs font-bold text-primary/90 whitespace-nowrap">
+                                             Sub-Step {subStepIndex + 1}.
+                                           </span>
                                         </div>
                                         <h5 className="text-sm font-semibold text-foreground pt-0.5">
                                           <ReactMarkdown className="prose prose-sm max-w-none [&>p]:m-0 [&_strong]:font-bold">
