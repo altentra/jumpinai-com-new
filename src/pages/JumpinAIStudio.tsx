@@ -14,7 +14,7 @@ import { CreditsDisplay } from '@/components/CreditsDisplay';
 import { supabase } from '@/integrations/supabase/client';
 
 // reCAPTCHA site key (public key - safe to expose)
-const RECAPTCHA_SITE_KEY = '6LfYourSiteKeyHere';
+const RECAPTCHA_SITE_KEY = '6LcNLAYsAAAAANpysLVw3g_CdlDs8zHaozOZG_7k';
 
 const JumpinAIStudio = () => {
   const { user, isAuthenticated, login } = useAuth();
