@@ -234,10 +234,10 @@ export function ToolPromptComboCard({ combo, onClick, index }: ToolPromptComboCa
 
           {/* Alternatives */}
           {alternatives.length > 0 && (
-            <div className="p-3 bg-purple-500/10 border border-purple-500/20 rounded-lg">
+            <div className="p-3 bg-orange-500/10 border border-orange-500/20 rounded-lg">
               <div className="flex items-start gap-2 mb-3">
-                <ArrowLeftRight className="w-4 h-4 text-purple-400 mt-0.5 shrink-0" />
-                <p className="text-xs font-medium text-purple-400">Alternative Tools:</p>
+                <ArrowLeftRight className="w-4 h-4 text-orange-400 mt-0.5 shrink-0" />
+                <p className="text-xs font-medium text-orange-400">Alternative Tools:</p>
               </div>
               <div className="space-y-3">
                 {alternatives.map((alt: any, idx: number) => {
