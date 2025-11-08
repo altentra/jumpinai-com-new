@@ -152,30 +152,30 @@ export function ToolPromptComboCard({ combo, onClick, index }: ToolPromptComboCa
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
-                className="relative flex-1 group/tool"
+                className="relative group/tool"
               >
                 {/* Liquid glass glow effect */}
-                <div className="absolute -inset-0.5 bg-gradient-to-r from-primary via-accent to-primary rounded-xl blur-md opacity-40 group-hover/tool:opacity-70 transition duration-500 animate-pulse"></div>
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-2xl blur-md opacity-30 group-hover/tool:opacity-60 transition duration-500"></div>
                 
                 {/* Button */}
-                <div className="relative flex items-center justify-between px-4 py-3 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-xl border border-primary/30 group-hover/tool:border-primary/50 transition-all duration-300 overflow-hidden">
+                <div className="relative flex items-center gap-3 px-5 py-3 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-2xl border border-primary/30 group-hover/tool:border-primary/50 transition-all duration-300 overflow-hidden">
                   {/* Shimmer effect */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover/tool:translate-x-full transition-transform duration-1000"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover/tool:translate-x-full transition-transform duration-1000"></div>
                   
                   {/* Content */}
-                  <span className="relative text-sm sm:text-base font-bold text-foreground group-hover/tool:text-primary transition-colors duration-300 truncate pr-2">
+                  <span className="relative text-sm sm:text-base font-bold text-foreground group-hover/tool:text-primary transition-colors duration-300 whitespace-nowrap">
                     {toolName}
                   </span>
                   
                   {/* Arrow icon */}
-                  <div className="relative flex items-center justify-center w-6 h-6 rounded-lg bg-primary/20 group-hover/tool:bg-primary/30 transition-all duration-300 flex-shrink-0">
+                  <div className="relative flex items-center justify-center w-6 h-6 rounded-lg bg-primary/20 group-hover/tool:bg-primary/30 transition-all duration-300">
                     <ExternalLink className="w-4 h-4 text-primary group-hover/tool:translate-x-0.5 group-hover/tool:-translate-y-0.5 transition-transform duration-300" />
                   </div>
                 </div>
               </a>
             ) : (
-              <div className="flex-1 px-4 py-3 bg-muted/20 rounded-xl border border-border">
-                <span className="text-sm font-medium text-muted-foreground">{toolName}</span>
+              <div className="px-5 py-3 bg-muted/20 rounded-2xl border border-border">
+                <span className="text-sm font-medium text-muted-foreground whitespace-nowrap">{toolName}</span>
               </div>
             )}
           </div>
