@@ -265,16 +265,16 @@ const Hero = () => {
               <div className="absolute -inset-0.5 bg-gradient-to-r from-white/40 via-white/30 to-white/40 rounded-[2rem] blur-md opacity-40 group-hover:opacity-70 transition duration-500"></div>
               
               {/* Button */}
-              <div className="relative flex items-center justify-center gap-2 px-6 sm:px-8 py-2.5 sm:py-3 bg-gradient-to-br from-white/95 via-white to-white/95 backdrop-blur-xl rounded-[2rem] border border-white/50 group-hover:border-white/70 transition-all duration-300 overflow-hidden shadow-lg">
+              <div className="relative flex items-center justify-center gap-2 px-6 sm:px-8 py-2.5 sm:py-3 bg-gradient-to-br from-white/30 via-white/40 to-white/30 backdrop-blur-xl rounded-[2rem] border border-white/40 group-hover:border-white/60 transition-all duration-300 overflow-hidden shadow-lg">
                 {/* Shimmer effect */}
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                 
                 {/* Content */}
-                <Sparkles className="relative h-4 w-4 sm:h-5 sm:w-5 text-black group-hover:animate-spin" />
-                <span className="relative text-base sm:text-lg font-bold text-black whitespace-nowrap">
+                <Sparkles className="relative h-4 w-4 sm:h-5 sm:w-5 text-foreground group-hover:animate-spin" />
+                <span className="relative text-base sm:text-lg font-bold text-foreground whitespace-nowrap">
                   Get Started
                 </span>
-                <ArrowRight className="relative h-4 w-4 sm:h-5 sm:w-5 text-black group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="relative h-4 w-4 sm:h-5 sm:w-5 text-foreground group-hover:translate-x-1 transition-transform" />
               </div>
             </Link>
           </div>
