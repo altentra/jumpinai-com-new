@@ -149,7 +149,7 @@ export function ToolPromptDetailModal({ toolPrompt, isOpen, onClose, index }: To
                     copied ? 'border-green-500/50 bg-green-500/10 scale-[1.01]' : 'hover:border-primary/30 hover:bg-muted/40'
                   }`}
                 >
-                  <pre className="text-xs text-muted-foreground whitespace-pre-wrap font-mono leading-relaxed break-words overflow-wrap-anywhere max-h-72 overflow-y-auto custom-scrollbar">
+                  <pre className="text-xs text-muted-foreground whitespace-pre-wrap font-mono leading-relaxed break-words overflow-wrap-anywhere">
                     {String(toolPrompt.prompt_text)}
                   </pre>
                 </div>
