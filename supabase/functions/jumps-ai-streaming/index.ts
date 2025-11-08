@@ -30,6 +30,8 @@ serve(async (req) => {
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     // Check if user is authenticated (optional)
+    // NOTE: Credit deduction is handled on the frontend before calling this function
+    // This function just processes the generation request
     const authHeader = req.headers.get('Authorization');
     let user = null;
     let isGuest = true;
@@ -42,22 +44,6 @@ serve(async (req) => {
         user = authUser;
         isGuest = false;
         console.log('✅ Authenticated user:', user.id);
-
-        // Check and deduct credit for authenticated users only
-        const { data: creditSuccess, error: creditError } = await supabase.rpc('deduct_user_credit', {
-          p_user_id: user.id,
-          p_description: 'JumpinAI Studio generation'
-        });
-
-        if (creditError || !creditSuccess) {
-          console.error('Credit deduction failed:', creditError);
-          return new Response(JSON.stringify({ error: 'Insufficient credits' }), {
-            status: 402,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-          });
-        }
-
-        console.log('✅ Credit deducted for user:', user.id);
       } else {
         console.log('⚠️ Invalid auth token, treating as guest');
       }
