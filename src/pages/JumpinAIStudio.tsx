@@ -444,7 +444,7 @@ const JumpinAIStudio = () => {
                           
                           <button
                             onClick={handleGenerate}
-                            disabled={isGenerating || (!isAuthenticated && guestUsageCount >= 3)}
+                            disabled={isGenerating}
                             className="relative w-full sm:max-w-4xl px-8 sm:px-16 md:px-24 py-3 sm:py-4 md:py-5 glass backdrop-blur-xl border border-border/40 hover:border-primary/50 focus:border-primary/60 transition-all duration-500 rounded-full shadow-xl hover:shadow-2xl hover:shadow-primary/20 bg-card/70 hover:scale-[1.02] active:scale-98 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100 group overflow-hidden"
                           >
                             {/* Glass morphism overlay effects */}
