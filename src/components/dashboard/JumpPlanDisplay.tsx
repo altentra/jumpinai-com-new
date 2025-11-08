@@ -582,24 +582,32 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                     </div>
                                   </div>
                                    {hasValidToolPromptId ? (
-                                     <Button
-                                       size="sm"
-                                       variant="outline"
+                                     <button
                                        onClick={(e) => {
                                          e.stopPropagation();
                                          handleToolPromptClick(comboIndex);
                                        }}
-                                       className="relative px-6 py-2.5 text-sm font-semibold
-                                         bg-background/60 hover:bg-background/80
-                                         border border-primary/40 hover:border-primary/70
-                                         text-primary
-                                         shadow-sm hover:shadow-md shadow-primary/10 hover:shadow-primary/20
-                                         transition-all duration-300 rounded-xl hover:scale-[1.05]
-                                         backdrop-blur-sm flex items-center gap-2"
+                                       className="relative group/view shrink-0"
                                      >
-                                       View
-                                       <ArrowRight className="w-3.5 h-3.5" />
-                                     </Button>
+                                       {/* Liquid glass glow effect */}
+                                       <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover/view:opacity-60 transition duration-500"></div>
+                                       
+                                       {/* Button */}
+                                       <div className="relative flex items-center gap-2 px-4 py-2 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover/view:border-primary/50 transition-all duration-300 overflow-hidden">
+                                         {/* Shimmer effect */}
+                                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover/view:translate-x-full transition-transform duration-1000"></div>
+                                         
+                                         {/* Content */}
+                                         <span className="relative text-sm font-bold text-foreground group-hover/view:text-primary transition-colors duration-300 whitespace-nowrap">
+                                           View
+                                         </span>
+                                         
+                                         {/* Arrow icon */}
+                                         <div className="relative flex items-center justify-center w-5 h-5 rounded-xl bg-primary/20 group-hover/view:bg-primary/30 transition-all duration-300">
+                                           <ArrowRight className="w-3.5 h-3.5 text-primary group-hover/view:translate-x-0.5 transition-transform duration-300" />
+                                         </div>
+                                       </div>
+                                     </button>
                                   ) : (
                                     <Badge variant="secondary" className="text-[10px] shrink-0 h-6">
                                       Generating
@@ -795,43 +803,44 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                             <div className="mt-3 pt-3 border-t border-primary/20 animate-fade-in">
                               <TooltipProvider>
                                 <div className="flex items-center justify-center gap-3">
-                                  <Tooltip>
-                                    <TooltipTrigger asChild>
-                                      <Button
-                                        size="sm"
-                                        variant="outline"
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          handleClarifyStep(phaseIndex, stepIndex);
-                                        }}
-                                        disabled={isLoading || hasSubSteps}
-                                        className="relative px-6 py-2.5 text-sm font-semibold
-                                          bg-background/60 hover:bg-background/80
-                                          border border-primary/40 hover:border-primary/70
-                                          text-primary
-                                          shadow-sm hover:shadow-md shadow-primary/10 hover:shadow-primary/20
-                                          transition-all duration-300 rounded-xl hover:scale-[1.05]
-                                          backdrop-blur-sm flex items-center gap-2
-                                          disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-                                      >
-                                        {isLoading ? (
-                                          <>
-                                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                                            Generating...
-                                          </>
-                                        ) : hasSubSteps ? (
-                                          <>
-                                            <Sparkles className="w-3.5 h-3.5" />
-                                            Clarified
-                                          </>
-                                        ) : (
-                                          <>
-                                            <Sparkles className="w-3.5 h-3.5" />
-                                            Clarify
-                                          </>
-                                        )}
-                                      </Button>
-                                    </TooltipTrigger>
+                                   <Tooltip>
+                                     <TooltipTrigger asChild>
+                                       <button
+                                         onClick={(e) => {
+                                           e.stopPropagation();
+                                           handleClarifyStep(phaseIndex, stepIndex);
+                                         }}
+                                         disabled={isLoading || hasSubSteps}
+                                         className="relative group/clarify disabled:opacity-50 disabled:cursor-not-allowed"
+                                       >
+                                         {/* Liquid glass glow effect */}
+                                         <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover/clarify:opacity-60 transition duration-500"></div>
+                                         
+                                         {/* Button */}
+                                         <div className="relative flex items-center gap-2 px-4 py-2 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover/clarify:border-primary/50 transition-all duration-300 overflow-hidden">
+                                           {/* Shimmer effect */}
+                                           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover/clarify:translate-x-full transition-transform duration-1000"></div>
+                                           
+                                           {/* Content */}
+                                           {isLoading ? (
+                                             <>
+                                               <Loader2 className="relative w-3.5 h-3.5 animate-spin text-primary" />
+                                               <span className="relative text-sm font-bold text-foreground whitespace-nowrap">Generating...</span>
+                                             </>
+                                           ) : hasSubSteps ? (
+                                             <>
+                                               <Sparkles className="relative w-3.5 h-3.5 text-primary" />
+                                               <span className="relative text-sm font-bold text-foreground whitespace-nowrap">Clarified</span>
+                                             </>
+                                           ) : (
+                                             <>
+                                               <Sparkles className="relative w-3.5 h-3.5 text-primary" />
+                                               <span className="relative text-sm font-bold text-foreground group-hover/clarify:text-primary transition-colors duration-300 whitespace-nowrap">Clarify</span>
+                                             </>
+                                           )}
+                                         </div>
+                                       </button>
+                                     </TooltipTrigger>
                                     <TooltipContent className="max-w-xs">
                                       <p className="text-sm">
                                         {hasSubSteps 
@@ -844,40 +853,41 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                   
                                    <Tooltip>
                                      <TooltipTrigger asChild>
-                                       <Button
-                                         size="sm"
-                                         variant="outline"
+                                       <button
                                          onClick={(e) => {
                                            e.stopPropagation();
                                            handleRerouteStep(phaseIndex, stepIndex);
                                          }}
                                          disabled={isRerouteLoading || hasRerouteOptions || hasChosenRoute}
-                                         className="relative px-6 py-2.5 text-sm font-semibold
-                                           bg-background/60 hover:bg-background/80
-                                           border border-primary/40 hover:border-primary/70
-                                           text-primary
-                                           shadow-sm hover:shadow-md shadow-primary/10 hover:shadow-primary/20
-                                           transition-all duration-300 rounded-xl hover:scale-[1.05]
-                                           backdrop-blur-sm flex items-center gap-2
-                                           disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                                         className="relative group/reroute disabled:opacity-50 disabled:cursor-not-allowed"
                                        >
-                                         {isRerouteLoading ? (
-                                           <>
-                                             <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                                             Generating...
-                                           </>
-                                         ) : hasChosenRoute ? (
-                                           <>
-                                             <Sparkles className="w-3.5 h-3.5" />
-                                             Rerouted
-                                           </>
-                                         ) : (
-                                           <>
-                                             <GitBranch className="w-3.5 h-3.5" />
-                                             Reroute
-                                           </>
-                                         )}
-                                       </Button>
+                                         {/* Liquid glass glow effect */}
+                                         <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover/reroute:opacity-60 transition duration-500"></div>
+                                         
+                                         {/* Button */}
+                                         <div className="relative flex items-center gap-2 px-4 py-2 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover/reroute:border-primary/50 transition-all duration-300 overflow-hidden">
+                                           {/* Shimmer effect */}
+                                           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover/reroute:translate-x-full transition-transform duration-1000"></div>
+                                           
+                                           {/* Content */}
+                                           {isRerouteLoading ? (
+                                             <>
+                                               <Loader2 className="relative w-3.5 h-3.5 animate-spin text-primary" />
+                                               <span className="relative text-sm font-bold text-foreground whitespace-nowrap">Generating...</span>
+                                             </>
+                                           ) : hasChosenRoute ? (
+                                             <>
+                                               <Sparkles className="relative w-3.5 h-3.5 text-primary" />
+                                               <span className="relative text-sm font-bold text-foreground whitespace-nowrap">Rerouted</span>
+                                             </>
+                                           ) : (
+                                             <>
+                                               <GitBranch className="relative w-3.5 h-3.5 text-primary" />
+                                               <span className="relative text-sm font-bold text-foreground group-hover/reroute:text-primary transition-colors duration-300 whitespace-nowrap">Reroute</span>
+                                             </>
+                                           )}
+                                         </div>
+                                       </button>
                                      </TooltipTrigger>
                                      <TooltipContent className="max-w-xs">
                                        <p className="text-sm">
