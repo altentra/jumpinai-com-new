@@ -517,7 +517,7 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                           <div className="flex-shrink-0 pt-0.5">
                             <div className="px-3 py-2 rounded-2xl bg-gradient-to-br from-primary/25 to-primary/15 flex items-center justify-center border border-primary/40 shadow-sm">
                               <span className="text-sm sm:text-base font-bold text-primary whitespace-nowrap">
-                                Step {stepIndex + 1}
+                                Step {stepIndex + 1}.
                               </span>
                             </div>
                           </div>
