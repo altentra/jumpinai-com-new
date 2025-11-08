@@ -236,30 +236,47 @@ export function ToolPromptComboCard({ combo, onClick, index }: ToolPromptComboCa
           {alternatives.length > 0 && (
             <div className="space-y-2">
               <p className="text-xs font-medium text-foreground/80">Alternative Tools:</p>
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {alternatives.map((alt: any, idx: number) => {
                   const altTool = safeExtract(alt, 'tool', 'name') || `Alternative ${idx + 1}`;
                   const altUrl = alt?.url || alt?.tool_url;
                   const altNote = safeExtract(alt, 'note', 'description');
                   
                   return (
-                    <div key={idx} className="flex items-center justify-between p-2 bg-muted/20 rounded border border-border text-xs">
-                      <div className="flex-1">
-                        <span className="text-foreground">{altTool}</span>
-                        {altNote && <p className="text-xs text-foreground/70 mt-1">{altNote}</p>}
-                      </div>
-                      {altUrl && (
+                    <div key={idx} className="space-y-2">
+                      {altUrl ? (
                         <a
                           href={altUrl}
                           target="_blank"
                           rel="noopener noreferrer"
                           onClick={(e) => e.stopPropagation()}
-                          className="text-primary hover:text-primary/80 transition-colors flex items-center gap-1 ml-2"
+                          className="relative group/alt inline-block"
                         >
-                          Visit
-                          <ExternalLink className="w-3 h-3" />
+                          {/* Liquid glass glow effect */}
+                          <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover/alt:opacity-60 transition duration-500"></div>
+                          
+                          {/* Button */}
+                          <div className="relative flex items-center gap-3 px-5 py-3 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover/alt:border-primary/50 transition-all duration-300 overflow-hidden">
+                            {/* Shimmer effect */}
+                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover/alt:translate-x-full transition-transform duration-1000"></div>
+                            
+                            {/* Content */}
+                            <span className="relative text-sm font-bold text-foreground group-hover/alt:text-primary transition-colors duration-300 whitespace-nowrap">
+                              {altTool}
+                            </span>
+                            
+                            {/* Arrow icon */}
+                            <div className="relative flex items-center justify-center w-6 h-6 rounded-xl bg-primary/20 group-hover/alt:bg-primary/30 transition-all duration-300">
+                              <ExternalLink className="w-4 h-4 text-primary group-hover/alt:translate-x-0.5 group-hover/alt:-translate-y-0.5 transition-transform duration-300" />
+                            </div>
+                          </div>
                         </a>
+                      ) : (
+                        <div className="inline-block px-5 py-3 bg-muted/20 rounded-[2rem] border border-border">
+                          <span className="text-sm font-medium text-muted-foreground whitespace-nowrap">{altTool}</span>
+                        </div>
                       )}
+                      {altNote && <p className="text-xs text-foreground/70 pl-1">{altNote}</p>}
                     </div>
                   );
                 })}
