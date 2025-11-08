@@ -81,16 +81,12 @@ const DropdownMenuItem = React.forwardRef<
   <DropdownMenuPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex cursor-pointer select-none items-center rounded-xl px-3 py-2.5 text-sm font-medium outline-none transition-all duration-300 focus:bg-gradient-to-br focus:from-primary/10 focus:via-accent/5 focus:to-primary/10 focus:backdrop-blur-xl focus:border focus:border-primary/20 focus:text-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 overflow-hidden group",
+      "relative flex cursor-pointer select-none items-center rounded-xl px-3 py-2.5 text-sm font-medium outline-none transition-all duration-300 focus:bg-gradient-to-br focus:from-primary/10 focus:via-accent/5 focus:to-primary/10 focus:backdrop-blur-xl focus:border focus:border-primary/20 focus:text-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       inset && "pl-8",
       className
     )}
     {...props}
-  >
-    {/* Liquid glass shimmer effect on hover */}
-    <span className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-focus:translate-x-full transition-transform duration-1000 pointer-events-none" />
-    {props.children}
-  </DropdownMenuPrimitive.Item>
+  />
 ))
 DropdownMenuItem.displayName = DropdownMenuPrimitive.Item.displayName
 
