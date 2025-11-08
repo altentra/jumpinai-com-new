@@ -317,10 +317,13 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
       
       setLocalPlan(updatedPlan);
 
-      // Save to database
-      await updateJump(jumpId, {
-        comprehensive_plan: updatedPlan,
-      });
+      // Save to database only if this is a real (authenticated) jump
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        await updateJump(jumpId, {
+          comprehensive_plan: updatedPlan,
+        });
+      }
 
       // Expand the sub-steps
       setExpandedSubSteps(prev => new Set(prev).add(stepKey));
@@ -385,7 +388,7 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
 
       setRerouteOptions(prev => ({ ...prev, [stepKey]: data.directions }));
       
-      // Track the reroute action
+      // Track the reroute action (only for authenticated users)
       await trackAction('reroute');
       
       toast.success('Alternative routes generated successfully!');
@@ -557,9 +560,9 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                             const comboIndex = getToolPromptComboIndex(phaseIndex, stepIndex);
                             if (comboIndex === null) return null;
                             
-                            // Get the actual tool prompt ID (check if it exists and is not null)
+                            // Get the actual tool prompt ID (check if it exists and is not null/undefined)
                             const toolPromptId = toolPromptIds?.[comboIndex];
-                            const hasValidToolPromptId = toolPromptId && toolPromptId !== 'null' && toolPromptId !== null;
+                            const hasValidToolPromptId = toolPromptId && toolPromptId !== 'null' && toolPromptId !== null && toolPromptId !== undefined && toolPromptId.trim() !== '';
                             
                             return (
                               <div className={`p-3 rounded-md border ${hasValidToolPromptId ? 'bg-blue-500/5 border-blue-500/30' : 'bg-muted/30 border-border/50'}`}>
