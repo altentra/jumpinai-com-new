@@ -2,7 +2,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Copy, Sparkles, ExternalLink, Clock, CheckCircle, DollarSign, AlertTriangle } from "lucide-react";
+import { Copy, Sparkles, ExternalLink, Clock, CheckCircle, DollarSign, AlertTriangle, MessageSquare } from "lucide-react";
 import type { Database } from "@/integrations/supabase/types";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
@@ -91,36 +91,46 @@ export function ToolPromptDetailModal({ toolPrompt, isOpen, onClose }: ToolPromp
             {/* Description */}
             {toolPrompt.description && (
               <div className="animate-fade-in">
-                <p className="text-sm text-muted-foreground leading-relaxed">
+                <p className="text-sm text-foreground leading-relaxed">
                   {String(toolPrompt.description)}
                 </p>
               </div>
             )}
 
-            {/* Tool Information with Link */}
+            {/* Tool Information with Epic Liquid Glass Button */}
             {toolPrompt.tool_name && (
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 bg-gradient-to-r from-muted/30 via-muted/20 to-muted/30 backdrop-blur-sm rounded-2xl border border-border/50 hover:border-primary/30 transition-all duration-300 animate-fade-in">
-                <div className="flex items-center gap-3 min-w-0">
-                  <div className="p-2 bg-primary/10 rounded-xl">
-                    <ExternalLink className="w-4 h-4 text-primary flex-shrink-0" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-muted-foreground/70 mb-0.5">AI Tool</p>
-                    <span className="text-sm font-semibold truncate">
-                      {String(toolPrompt.tool_name)}
-                    </span>
-                  </div>
-                </div>
-                {toolPrompt.tool_url && (
+              <div className="flex items-center gap-3 animate-fade-in">
+                <span className="text-sm font-semibold text-foreground/90 whitespace-nowrap">Tool:</span>
+                {toolPrompt.tool_url ? (
                   <a
                     href={String(toolPrompt.tool_url)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group px-4 py-2 bg-primary/10 hover:bg-primary/20 rounded-xl transition-all duration-300 text-sm font-medium flex items-center gap-2 whitespace-nowrap flex-shrink-0 border border-primary/20"
+                    className="relative group/tool"
                   >
-                    Open Tool
-                    <ExternalLink className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                    {/* Liquid glass glow effect */}
+                    <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover/tool:opacity-60 transition duration-500"></div>
+                    
+                    {/* Button */}
+                    <div className="relative flex items-center gap-3 px-5 py-3 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover/tool:border-primary/50 transition-all duration-300 overflow-hidden">
+                      {/* Shimmer effect */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover/tool:translate-x-full transition-transform duration-1000"></div>
+                      
+                      {/* Content */}
+                      <span className="relative text-sm sm:text-base font-bold text-foreground group-hover/tool:text-primary transition-colors duration-300 whitespace-nowrap">
+                        {String(toolPrompt.tool_name)}
+                      </span>
+                      
+                      {/* Arrow icon */}
+                      <div className="relative flex items-center justify-center w-6 h-6 rounded-xl bg-primary/20 group-hover/tool:bg-primary/30 transition-all duration-300">
+                        <ExternalLink className="w-4 h-4 text-primary group-hover/tool:translate-x-0.5 group-hover/tool:-translate-y-0.5 transition-transform duration-300" />
+                      </div>
+                    </div>
                   </a>
+                ) : (
+                  <div className="px-5 py-3 bg-muted/20 rounded-[2rem] border border-border">
+                    <span className="text-sm font-medium text-muted-foreground whitespace-nowrap">{String(toolPrompt.tool_name)}</span>
+                  </div>
                 )}
               </div>
             )}
@@ -128,31 +138,49 @@ export function ToolPromptDetailModal({ toolPrompt, isOpen, onClose }: ToolPromp
             {/* Prompt Display */}
             {toolPrompt.prompt_text && (
               <div className="space-y-3 animate-fade-in">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-semibold flex items-center gap-2">
-                    <div className="p-1.5 bg-gradient-to-br from-primary/20 to-accent/20 rounded-lg">
-                      <Sparkles className="w-4 h-4 text-primary" />
+                <span className="text-sm font-medium flex items-center gap-2">
+                  <MessageSquare className="w-4 h-4 text-primary" />
+                  Ready-to-Use Prompt
+                </span>
+                <div 
+                  onClick={copyToClipboard}
+                  className={`bg-muted/30 border border-border rounded-lg p-4 cursor-pointer transition-all duration-300 ${
+                    copied ? 'border-green-500/50 bg-green-500/10 scale-[1.01]' : 'hover:border-primary/30 hover:bg-muted/40'
+                  }`}
+                >
+                  <pre className="text-xs text-foreground whitespace-pre-wrap font-mono leading-relaxed break-words overflow-wrap-anywhere max-h-72 overflow-y-auto custom-scrollbar">
+                    {String(toolPrompt.prompt_text)}
+                  </pre>
+                </div>
+                
+                {/* Copy Button with Liquid Glass Design */}
+                <button
+                  onClick={copyToClipboard}
+                  className="relative group/copy"
+                >
+                  {/* Liquid glass glow effect */}
+                  <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover/copy:opacity-60 transition duration-500"></div>
+                  
+                  {/* Button */}
+                  <div className="relative flex items-center gap-3 px-5 py-3 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover/copy:border-primary/50 transition-all duration-300 overflow-hidden">
+                    {/* Shimmer effect */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover/copy:translate-x-full transition-transform duration-1000"></div>
+                    
+                    {/* Content */}
+                    <span className="relative text-sm font-bold text-foreground group-hover/copy:text-primary transition-colors duration-300 whitespace-nowrap">
+                      {copied ? "Copied!" : "Copy Prompt"}
+                    </span>
+                    
+                    {/* Icon */}
+                    <div className="relative flex items-center justify-center w-6 h-6 rounded-xl bg-primary/20 group-hover/copy:bg-primary/30 transition-all duration-300">
+                      {copied ? (
+                        <CheckCircle className="w-4 h-4 text-primary" />
+                      ) : (
+                        <Copy className="w-4 h-4 text-primary group-hover/copy:scale-110 transition-transform duration-300" />
+                      )}
                     </div>
-                    Ready-to-Use Prompt
-                  </span>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={copyToClipboard}
-                    className="gap-2 h-9 px-4 rounded-xl bg-background/50 backdrop-blur-sm border-border/50 hover:border-primary/30 hover:bg-primary/5 transition-all duration-300"
-                  >
-                    <Copy className="w-3.5 h-3.5" />
-                    {copied ? "✓ Copied!" : "Copy"}
-                  </Button>
-                </div>
-                <div className="relative group">
-                  <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 via-accent/15 to-primary/20 rounded-2xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
-                  <div className="relative bg-gradient-to-br from-muted/40 via-muted/30 to-muted/40 backdrop-blur-sm border border-border/50 rounded-2xl p-5 overflow-hidden">
-                    <pre className="text-xs text-muted-foreground/90 whitespace-pre-wrap font-mono leading-relaxed break-words overflow-wrap-anywhere max-h-72 overflow-y-auto custom-scrollbar">
-                      {String(toolPrompt.prompt_text)}
-                    </pre>
                   </div>
-                </div>
+                </button>
               </div>
             )}
 
@@ -167,7 +195,7 @@ export function ToolPromptDetailModal({ toolPrompt, isOpen, onClose }: ToolPromp
                     </div>
                     <div className="flex-1">
                       <p className="text-sm font-semibold text-yellow-400 mb-2">How to Use</p>
-                      <p className="text-xs text-muted-foreground/90 leading-relaxed">
+                      <p className="text-xs text-foreground leading-relaxed">
                         {String(toolPrompt.prompt_instructions)}
                       </p>
                     </div>
@@ -187,7 +215,7 @@ export function ToolPromptDetailModal({ toolPrompt, isOpen, onClose }: ToolPromp
                     </div>
                     <div className="flex-1">
                       <p className="text-sm font-semibold text-blue-400 mb-2">When to Use</p>
-                      <p className="text-xs text-muted-foreground/90 leading-relaxed">
+                      <p className="text-xs text-foreground leading-relaxed">
                         {String(content.when_to_use)}
                       </p>
                     </div>
@@ -207,7 +235,7 @@ export function ToolPromptDetailModal({ toolPrompt, isOpen, onClose }: ToolPromp
                     </div>
                     <div className="flex-1">
                       <p className="text-sm font-semibold text-green-400 mb-2">Why This Combo</p>
-                      <p className="text-xs text-muted-foreground/90 leading-relaxed">
+                      <p className="text-xs text-foreground leading-relaxed">
                         {String(content.why_this_tool || content.why_this_combo)}
                       </p>
                     </div>
@@ -230,26 +258,39 @@ export function ToolPromptDetailModal({ toolPrompt, isOpen, onClose }: ToolPromp
                     const altNote = alt?.note || alt?.description;
                     
                     return (
-                      <div key={idx} className="group flex items-center justify-between p-3.5 bg-gradient-to-r from-muted/20 via-muted/30 to-muted/20 backdrop-blur-sm rounded-xl border border-border/50 hover:border-primary/30 transition-all duration-300 text-xs">
-                        <div className="flex-1">
-                          <span className="text-sm font-medium text-foreground">{String(altName)}</span>
-                          {altNote && (
-                            <p className="text-xs text-muted-foreground/70 mt-1.5 leading-relaxed">
-                              {String(altNote)}
-                            </p>
-                          )}
-                        </div>
-                        {altUrl && (
+                      <div key={idx} className="space-y-2">
+                        {altUrl ? (
                           <a
                             href={String(altUrl)}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="px-3 py-1.5 bg-primary/10 hover:bg-primary/20 rounded-lg transition-all duration-300 text-primary flex items-center gap-1.5 ml-3 border border-primary/20 group-hover:border-primary/30"
+                            className="relative group/alt inline-block"
                           >
-                            <span className="text-xs font-medium">Visit</span>
-                            <ExternalLink className="w-3 h-3 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                            {/* Liquid glass glow effect */}
+                            <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover/alt:opacity-60 transition duration-500"></div>
+                            
+                            {/* Button */}
+                            <div className="relative flex items-center gap-3 px-5 py-3 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover/alt:border-primary/50 transition-all duration-300 overflow-hidden">
+                              {/* Shimmer effect */}
+                              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover/alt:translate-x-full transition-transform duration-1000"></div>
+                              
+                              {/* Content */}
+                              <span className="relative text-sm font-bold text-foreground group-hover/alt:text-primary transition-colors duration-300 whitespace-nowrap">
+                                {String(altName)}
+                              </span>
+                              
+                              {/* Arrow icon */}
+                              <div className="relative flex items-center justify-center w-6 h-6 rounded-xl bg-primary/20 group-hover/alt:bg-primary/30 transition-all duration-300">
+                                <ExternalLink className="w-4 h-4 text-primary group-hover/alt:translate-x-0.5 group-hover/alt:-translate-y-0.5 transition-transform duration-300" />
+                              </div>
+                            </div>
                           </a>
+                        ) : (
+                          <div className="inline-block px-5 py-3 bg-muted/20 rounded-[2rem] border border-border">
+                            <span className="text-sm font-medium text-muted-foreground whitespace-nowrap">{String(altName)}</span>
+                          </div>
                         )}
+                        {altNote && <p className="text-xs text-foreground leading-relaxed">{String(altNote)}</p>}
                       </div>
                     );
                   })}
