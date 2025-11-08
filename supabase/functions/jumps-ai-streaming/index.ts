@@ -20,27 +20,54 @@ const StudioFormSchema = z.object({
   recaptchaToken: z.string().min(1, 'reCAPTCHA verification is required') // reCAPTCHA is now mandatory
 });
 
-// Rate limiting and API monitoring
+// Verify reCAPTCHA Enterprise token with Google's API
 async function verifyRecaptcha(token: string): Promise<boolean> {
-  const recaptchaSecret = Deno.env.get('RECAPTCHA_SECRET_KEY');
-  if (!recaptchaSecret) {
-    console.warn('RECAPTCHA_SECRET_KEY not configured - skipping verification');
-    return true; // Allow in development if not configured
+  const apiKey = Deno.env.get('GOOGLE_RECAPTCHA_API_KEY');
+  const projectId = 'jumpinai'; // Your Google Cloud Project ID
+  const siteKey = Deno.env.get('RECAPTCHA_SECRET_KEY'); // This is actually the site key
+  
+  if (!apiKey) {
+    console.error('GOOGLE_RECAPTCHA_API_KEY not configured');
+    return false; // Fail closed for security
   }
 
   try {
-    const response = await fetch('https://www.google.com/recaptcha/api/siteverify', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: `secret=${recaptchaSecret}&response=${token}`
-    });
+    const response = await fetch(
+      `https://recaptchaenterprise.googleapis.com/v1/projects/${projectId}/assessments?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          event: {
+            token: token,
+            siteKey: siteKey,
+            expectedAction: 'GENERATE_JUMP' // This should match the action in your frontend
+          }
+        })
+      }
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('reCAPTCHA Enterprise API error:', response.status, errorText);
+      return false;
+    }
 
     const data = await response.json();
-    console.log('reCAPTCHA verification result:', data.success);
-    return data.success === true;
+    console.log('reCAPTCHA Enterprise verification:', {
+      valid: data.tokenProperties?.valid,
+      action: data.tokenProperties?.action,
+      score: data.riskAnalysis?.score
+    });
+
+    // Check if token is valid and action matches
+    const isValid = data.tokenProperties?.valid === true;
+    const actionMatches = data.tokenProperties?.action === 'GENERATE_JUMP';
+    
+    return isValid && actionMatches;
   } catch (error) {
     console.error('reCAPTCHA verification error:', error);
-    return false;
+    return false; // Fail closed for security
   }
 }
 
