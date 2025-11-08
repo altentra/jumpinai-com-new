@@ -67,19 +67,19 @@ export function ToolPromptDetailModal({ toolPrompt, isOpen, onClose }: ToolPromp
         
         <div className="relative overflow-y-auto max-h-[92vh] p-8 custom-scrollbar">
           <DialogHeader className="pb-4 space-y-3">
-            <div className="flex items-start justify-between gap-4">
-              <DialogTitle className="text-3xl font-bold flex items-center gap-3 flex-1">
-                <div className="p-2.5 bg-gradient-to-br from-primary/20 to-accent/20 rounded-2xl backdrop-blur-sm border border-primary/20">
-                  <Sparkles className="h-7 w-7 text-primary" />
+            <div className="flex flex-col sm:flex-row items-start sm:justify-between gap-3 sm:gap-4">
+              <DialogTitle className="text-2xl sm:text-3xl font-bold flex items-center gap-2.5 sm:gap-3 flex-1">
+                <div className="p-2 sm:p-2.5 bg-gradient-to-br from-primary/20 to-accent/20 rounded-2xl backdrop-blur-sm border border-primary/20">
+                  <Sparkles className="h-6 w-6 sm:h-7 sm:w-7 text-primary" />
                 </div>
-                <span className="bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-transparent leading-tight">
                   {toolPrompt.title || 'Tool & Prompt'}
                 </span>
               </DialogTitle>
               {toolPrompt.category && (
                 <Badge 
                   variant="outline" 
-                  className="text-xs px-3 py-1 bg-primary/10 border-primary/30 backdrop-blur-sm rounded-full"
+                  className="text-xs px-3 py-1 bg-primary/10 border-primary/30 backdrop-blur-sm rounded-full self-start sm:self-auto"
                 >
                   {String(toolPrompt.category)}
                 </Badge>
