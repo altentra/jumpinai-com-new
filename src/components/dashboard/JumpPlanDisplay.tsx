@@ -509,13 +509,13 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                     return (
                       <div key={stepIndex} className="group">
                         <div 
-                          className="bg-background/40 backdrop-blur-[2px] border border-primary/40 border-l-2 border-l-primary/50 hover:border-primary/70 hover:border-l-primary/80 rounded-2xl sm:rounded-3xl p-3 sm:p-4 md:p-5 hover:bg-background/60 transition-all duration-300 shadow-[0_2px_8px_rgba(var(--primary),0.15)] hover:shadow-[0_4px_16px_rgba(var(--primary),0.25)]"
+                          className="bg-background/40 backdrop-blur-[2px] border border-primary/40 border-l-2 border-l-primary/50 hover:border-primary/70 hover:border-l-primary/80 rounded-3xl p-3 sm:p-4 md:p-5 hover:bg-background/60 transition-all duration-300 shadow-[0_2px_8px_rgba(var(--primary),0.15)] hover:shadow-[0_4px_16px_rgba(var(--primary),0.25)]"
                           onMouseEnter={() => setHoveredStep({ phaseIndex, stepIndex })}
                           onMouseLeave={() => setHoveredStep(null)}
                         >
                         <div className="flex items-start gap-3 sm:gap-4 mb-3">
                           <div className="flex-shrink-0 pt-0.5">
-                            <div className="px-3 py-2 rounded-xl bg-gradient-to-br from-primary/25 to-primary/15 flex items-center justify-center border border-primary/40 shadow-sm">
+                            <div className="px-3 py-2 rounded-2xl bg-gradient-to-br from-primary/25 to-primary/15 flex items-center justify-center border border-primary/40 shadow-sm">
                               <span className="text-sm sm:text-base font-bold text-primary whitespace-nowrap">
                                 Step {stepIndex + 1}
                               </span>
@@ -565,7 +565,7 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                             const hasValidToolPromptId = toolPromptId && toolPromptId !== 'null' && toolPromptId !== null && toolPromptId !== undefined && toolPromptId.trim() !== '';
                             
                             return (
-                              <div className={`p-3 rounded-md border ${hasValidToolPromptId ? 'bg-blue-500/5 border-blue-500/30' : 'bg-muted/30 border-border/50'}`}>
+                              <div className={`p-3 rounded-2xl border ${hasValidToolPromptId ? 'bg-blue-500/5 border-blue-500/30' : 'bg-muted/30 border-border/50'}`}>
                                 <div className="flex items-center justify-between gap-3">
                                   <div className="flex items-start gap-2 flex-1">
                                     <Sparkles className={`w-3.5 h-3.5 mt-0.5 shrink-0 ${hasValidToolPromptId ? 'text-blue-400' : 'text-muted-foreground'}`} />
