@@ -143,23 +143,40 @@ export function ToolPromptComboCard({ combo, onClick, index }: ToolPromptComboCa
         </CardHeader>
 
         <CardContent className="space-y-4">
-          {/* Tool Information with Link */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-3 p-3 bg-muted/20 rounded-lg border border-border">
-            <div className="flex items-center gap-2 min-w-0">
-              <ExternalLink className="w-4 h-4 text-primary flex-shrink-0" />
-              <span className="text-sm font-medium truncate">Tool: {toolName}</span>
-            </div>
-            {toolUrl && (
+          {/* Tool Information with Epic Liquid Glass Button */}
+          <div className="flex items-center gap-3">
+            <span className="text-sm font-semibold text-foreground/90 whitespace-nowrap">Tool:</span>
+            {toolUrl ? (
               <a
                 href={toolUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
-                className="text-primary hover:text-primary/80 transition-colors text-sm font-medium flex items-center gap-1 whitespace-nowrap flex-shrink-0"
+                className="relative flex-1 group/tool"
               >
-                Open Tool
-                <ExternalLink className="w-3 h-3" />
+                {/* Liquid glass glow effect */}
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-primary via-accent to-primary rounded-xl blur-md opacity-40 group-hover/tool:opacity-70 transition duration-500 animate-pulse"></div>
+                
+                {/* Button */}
+                <div className="relative flex items-center justify-between px-4 py-3 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-xl border border-primary/30 group-hover/tool:border-primary/50 transition-all duration-300 overflow-hidden">
+                  {/* Shimmer effect */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover/tool:translate-x-full transition-transform duration-1000"></div>
+                  
+                  {/* Content */}
+                  <span className="relative text-sm sm:text-base font-bold text-foreground group-hover/tool:text-primary transition-colors duration-300 truncate pr-2">
+                    {toolName}
+                  </span>
+                  
+                  {/* Arrow icon */}
+                  <div className="relative flex items-center justify-center w-6 h-6 rounded-lg bg-primary/20 group-hover/tool:bg-primary/30 transition-all duration-300 flex-shrink-0">
+                    <ExternalLink className="w-4 h-4 text-primary group-hover/tool:translate-x-0.5 group-hover/tool:-translate-y-0.5 transition-transform duration-300" />
+                  </div>
+                </div>
               </a>
+            ) : (
+              <div className="flex-1 px-4 py-3 bg-muted/20 rounded-xl border border-border">
+                <span className="text-sm font-medium text-muted-foreground">{toolName}</span>
+              </div>
             )}
           </div>
 
