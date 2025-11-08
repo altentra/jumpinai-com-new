@@ -16,67 +16,8 @@ interface StudioFormData {
 // Validation schema
 const StudioFormSchema = z.object({
   goals: z.string().trim().min(10, 'Goals must be at least 10 characters').max(2000, 'Goals must be less than 2000 characters'),
-  challenges: z.string().trim().min(10, 'Challenges must be at least 10 characters').max(2000, 'Challenges must be less than 2000 characters'),
-  recaptchaToken: z.string().min(1, 'reCAPTCHA verification is required') // reCAPTCHA is now mandatory
+  challenges: z.string().trim().min(10, 'Challenges must be at least 10 characters').max(2000, 'Challenges must be less than 2000 characters')
 });
-
-// Verify reCAPTCHA Enterprise token with Google's API
-async function verifyRecaptcha(token: string): Promise<boolean> {
-  const apiKey = Deno.env.get('GOOGLE_RECAPTCHA_API_KEY');
-  const projectId = 'jumpinai'; // Your Google Cloud Project ID
-  const expectedAction = 'GENERATE_JUMP'; // Must match frontend action
-  
-  if (!apiKey) {
-    console.error('GOOGLE_RECAPTCHA_API_KEY not configured');
-    return false;
-  }
-
-  try {
-    console.log('Verifying reCAPTCHA Enterprise token...');
-    const response = await fetch(
-      `https://recaptchaenterprise.googleapis.com/v1/projects/${projectId}/assessments?key=${apiKey}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          event: {
-            token: token,
-            siteKey: '6LcNLAYsAAAAANpysLVw3g_CdlDs8zHaozOZG_7k',
-            expectedAction: expectedAction
-          }
-        })
-      }
-    );
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('reCAPTCHA Enterprise API error:', response.status, errorText);
-      return false;
-    }
-
-    const data = await response.json();
-    console.log('reCAPTCHA Enterprise verification:', {
-      valid: data.tokenProperties?.valid,
-      action: data.tokenProperties?.action,
-      score: data.riskAnalysis?.score,
-      reasons: data.riskAnalysis?.reasons
-    });
-
-    // Check if token is valid and action matches
-    const isValid = data.tokenProperties?.valid === true;
-    const actionMatches = data.tokenProperties?.action === expectedAction;
-    const score = data.riskAnalysis?.score || 0;
-    
-    console.log('Verification result:', { isValid, actionMatches, score });
-    
-    // For Enterprise, we accept valid tokens with matching action
-    // Score is informational but we don't reject based on it alone
-    return isValid && actionMatches;
-  } catch (error) {
-    console.error('reCAPTCHA verification error:', error);
-    return false;
-  }
-}
 
 async function logApiUsage(
   supabase: any,
@@ -144,11 +85,11 @@ serve(async (req) => {
 
     // Parse and validate input
     const body = await req.json();
-    const { formData, recaptchaToken }: { formData: StudioFormData; recaptchaToken?: string } = body;
+    const { formData }: { formData: StudioFormData } = body;
     
     // Validate formData using Zod
     try {
-      StudioFormSchema.parse({ ...formData, recaptchaToken });
+      StudioFormSchema.parse(formData);
     } catch (error) {
       if (error instanceof z.ZodError) {
         console.error('Validation error:', error.errors);
@@ -162,23 +103,6 @@ serve(async (req) => {
         });
       }
       throw error;
-    }
-
-    // Verify reCAPTCHA token
-    if (recaptchaToken) {
-      const isValidRecaptcha = await verifyRecaptcha(recaptchaToken);
-      if (!isValidRecaptcha) {
-        console.error('Invalid reCAPTCHA token');
-        await logApiUsage(supabase, 'jumps-ai-streaming', user?.id || null, ipAddress, userAgent, 403, Date.now() - startTime, 'Invalid reCAPTCHA');
-        return new Response(JSON.stringify({ 
-          error: 'reCAPTCHA verification failed. Please try again.' 
-        }), {
-          status: 403,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-        });
-      }
-    } else {
-      console.warn('No reCAPTCHA token provided');
     }
 
     // Server-side rate limiting check using database
