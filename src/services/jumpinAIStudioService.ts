@@ -66,10 +66,16 @@ export const jumpinAIStudioService = {
         headers['Authorization'] = `Bearer ${session.access_token}`;
       }
 
+      // Build request body - only include recaptchaToken if it's not null
+      const requestBody: any = { formData };
+      if (recaptchaToken) {
+        requestBody.recaptchaToken = recaptchaToken;
+      }
+
       fetch('https://cieczaajcgkgdgenfdzi.supabase.co/functions/v1/jumps-ai-streaming', {
         method: 'POST',
         headers,
-        body: JSON.stringify({ formData, recaptchaToken })
+        body: JSON.stringify(requestBody)
       }).then(async response => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);

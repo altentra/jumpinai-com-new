@@ -17,7 +17,7 @@ interface StudioFormData {
 const StudioFormSchema = z.object({
   goals: z.string().trim().min(10, 'Goals must be at least 10 characters').max(2000, 'Goals must be less than 2000 characters'),
   challenges: z.string().trim().min(10, 'Challenges must be at least 10 characters').max(2000, 'Challenges must be less than 2000 characters'),
-  recaptchaToken: z.string().optional()
+  recaptchaToken: z.string().optional().nullable() // Allow null for testing domains where reCAPTCHA is bypassed
 });
 
 // Rate limiting and API monitoring
