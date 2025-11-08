@@ -590,12 +590,12 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                        className="relative group/view shrink-0"
                                      >
                                        {/* Liquid glass glow effect */}
-                                       <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover/view:opacity-60 transition duration-500"></div>
+                                       <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/35 via-accent/25 to-primary/35 rounded-[2rem] blur-md opacity-35 group-hover/view:opacity-65 transition duration-500"></div>
                                        
                                        {/* Button */}
-                                       <div className="relative flex items-center gap-2 px-4 py-2 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover/view:border-primary/50 transition-all duration-300 overflow-hidden">
+                                       <div className="relative flex items-center gap-2 px-5 py-2.5 bg-gradient-to-br from-primary/15 via-accent/8 to-primary/15 backdrop-blur-xl rounded-[2rem] border border-primary/35 group-hover/view:border-primary/55 transition-all duration-300 overflow-hidden">
                                          {/* Shimmer effect */}
-                                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover/view:translate-x-full transition-transform duration-1000"></div>
+                                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/15 to-transparent -translate-x-full group-hover/view:translate-x-full transition-transform duration-1000"></div>
                                          
                                          {/* Content */}
                                          <span className="relative text-sm font-bold text-foreground group-hover/view:text-primary transition-colors duration-300 whitespace-nowrap">
@@ -603,7 +603,7 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                          </span>
                                          
                                          {/* Arrow icon */}
-                                         <div className="relative flex items-center justify-center w-5 h-5 rounded-xl bg-primary/20 group-hover/view:bg-primary/30 transition-all duration-300">
+                                         <div className="relative flex items-center justify-center w-5 h-5 rounded-xl bg-primary/25 group-hover/view:bg-primary/35 transition-all duration-300">
                                            <ArrowRight className="w-3.5 h-3.5 text-primary group-hover/view:translate-x-0.5 transition-transform duration-300" />
                                          </div>
                                        </div>
@@ -814,12 +814,12 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                          className="relative group/clarify disabled:opacity-50 disabled:cursor-not-allowed"
                                        >
                                          {/* Liquid glass glow effect */}
-                                         <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover/clarify:opacity-60 transition duration-500"></div>
+                                         <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/35 via-accent/25 to-primary/35 rounded-[2rem] blur-md opacity-35 group-hover/clarify:opacity-65 transition duration-500"></div>
                                          
                                          {/* Button */}
-                                         <div className="relative flex items-center gap-2 px-4 py-2 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover/clarify:border-primary/50 transition-all duration-300 overflow-hidden">
+                                         <div className="relative flex items-center gap-2 px-5 py-2.5 bg-gradient-to-br from-primary/15 via-accent/8 to-primary/15 backdrop-blur-xl rounded-[2rem] border border-primary/35 group-hover/clarify:border-primary/55 transition-all duration-300 overflow-hidden">
                                            {/* Shimmer effect */}
-                                           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover/clarify:translate-x-full transition-transform duration-1000"></div>
+                                           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/15 to-transparent -translate-x-full group-hover/clarify:translate-x-full transition-transform duration-1000"></div>
                                            
                                            {/* Content */}
                                            {isLoading ? (
@@ -862,12 +862,12 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                          className="relative group/reroute disabled:opacity-50 disabled:cursor-not-allowed"
                                        >
                                          {/* Liquid glass glow effect */}
-                                         <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover/reroute:opacity-60 transition duration-500"></div>
+                                         <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/35 via-accent/25 to-primary/35 rounded-[2rem] blur-md opacity-35 group-hover/reroute:opacity-65 transition duration-500"></div>
                                          
                                          {/* Button */}
-                                         <div className="relative flex items-center gap-2 px-4 py-2 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover/reroute:border-primary/50 transition-all duration-300 overflow-hidden">
+                                         <div className="relative flex items-center gap-2 px-5 py-2.5 bg-gradient-to-br from-primary/15 via-accent/8 to-primary/15 backdrop-blur-xl rounded-[2rem] border border-primary/35 group-hover/reroute:border-primary/55 transition-all duration-300 overflow-hidden">
                                            {/* Shimmer effect */}
-                                           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover/reroute:translate-x-full transition-transform duration-1000"></div>
+                                           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/15 to-transparent -translate-x-full group-hover/reroute:translate-x-full transition-transform duration-1000"></div>
                                            
                                            {/* Content */}
                                            {isRerouteLoading ? (
