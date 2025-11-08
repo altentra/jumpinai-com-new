@@ -2,7 +2,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Copy, Sparkles, ExternalLink, Clock, CheckCircle, DollarSign, AlertTriangle, MessageSquare } from "lucide-react";
+import { Copy, Sparkles, ExternalLink, Clock, CheckCircle, DollarSign, AlertTriangle, MessageSquare, ArrowLeftRight } from "lucide-react";
 import type { Database } from "@/integrations/supabase/types";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
@@ -13,9 +13,10 @@ interface ToolPromptDetailModalProps {
   toolPrompt: UserToolPrompt | null;
   isOpen: boolean;
   onClose: () => void;
+  index?: number;
 }
 
-export function ToolPromptDetailModal({ toolPrompt, isOpen, onClose }: ToolPromptDetailModalProps) {
+export function ToolPromptDetailModal({ toolPrompt, isOpen, onClose, index }: ToolPromptDetailModalProps) {
   const { toast } = useToast();
   const [copied, setCopied] = useState(false);
   
@@ -68,12 +69,12 @@ export function ToolPromptDetailModal({ toolPrompt, isOpen, onClose }: ToolPromp
         <div className="relative overflow-y-auto max-h-[92vh] p-8 custom-scrollbar">
           <DialogHeader className="pb-4 space-y-3">
             <div className="flex flex-col sm:flex-row items-start sm:justify-between gap-3 sm:gap-4">
-              <DialogTitle className="text-2xl sm:text-3xl font-bold flex items-center gap-2.5 sm:gap-3 flex-1">
-                <div className="p-2 sm:p-2.5 bg-gradient-to-br from-primary/20 to-accent/20 rounded-2xl backdrop-blur-sm border border-primary/20">
-                  <Sparkles className="h-6 w-6 sm:h-7 sm:w-7 text-primary" />
+              <DialogTitle className="text-xl sm:text-2xl font-bold flex items-center gap-2 flex-1">
+                <div className="p-1.5 sm:p-2 bg-gradient-to-br from-primary/20 to-accent/20 rounded-2xl backdrop-blur-sm border border-primary/20">
+                  <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                 </div>
                 <span className="bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-transparent leading-tight">
-                  {toolPrompt.title || 'Tool & Prompt'}
+                  {index !== undefined && `${index}. `}{toolPrompt.title || 'Tool & Prompt'}
                 </span>
               </DialogTitle>
               {toolPrompt.category && (
@@ -251,7 +252,7 @@ export function ToolPromptDetailModal({ toolPrompt, isOpen, onClose }: ToolPromp
                 <div className="relative p-4 bg-gradient-to-br from-orange-500/10 via-orange-500/5 to-red-500/10 backdrop-blur-sm border border-orange-500/20 rounded-2xl hover:border-orange-500/30 transition-all duration-300">
                   <div className="flex items-start gap-3 mb-3">
                     <div className="p-2 bg-orange-500/10 rounded-xl">
-                      <ExternalLink className="w-4 h-4 text-orange-400 shrink-0" />
+                      <ArrowLeftRight className="w-4 h-4 text-orange-400 shrink-0" />
                     </div>
                     <p className="text-sm font-semibold text-orange-400">Alternative Tools</p>
                   </div>

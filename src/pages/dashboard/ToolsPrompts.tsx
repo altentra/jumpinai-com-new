@@ -25,6 +25,7 @@ export default function ToolsPrompts() {
   const [filteredJumps, setFilteredJumps] = useState<JumpWithPrompts[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedToolPrompt, setSelectedToolPrompt] = useState<UserToolPrompt | null>(null);
+  const [selectedIndex, setSelectedIndex] = useState<number | undefined>(undefined);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCategory, setFilterCategory] = useState<string>("all");
@@ -167,7 +168,7 @@ export default function ToolsPrompts() {
     }
   };
 
-  const handleToolPromptClick = async (toolPrompt: UserToolPrompt) => {
+  const handleToolPromptClick = async (toolPrompt: UserToolPrompt, index: number) => {
     try {
       // Fetch the complete tool prompt data including prompt_text, prompt_instructions, and content
       const { data: fullPrompt, error } = await supabase
@@ -179,6 +180,7 @@ export default function ToolsPrompts() {
       if (error) throw error;
       
       setSelectedToolPrompt(fullPrompt);
+      setSelectedIndex(index + 1); // Add 1 for display (1-indexed)
       setIsModalOpen(true);
     } catch (error) {
       console.error('Error loading full prompt details:', error);
@@ -327,7 +329,7 @@ export default function ToolsPrompts() {
                       key={tp.id}
                       id={tp.id}
                       className="group glass border-0 ring-1 ring-white/10 rounded-3xl shadow-2xl backdrop-blur-2xl bg-gradient-to-br from-background/80 via-card/60 to-primary/5 hover:ring-primary/30 hover:shadow-3xl hover:shadow-primary/10 transition-all duration-500 relative overflow-hidden hover:scale-[1.02] cursor-pointer"
-                      onClick={() => handleToolPromptClick(tp)}
+                      onClick={() => handleToolPromptClick(tp, index)}
                     >
                       {/* Premium gradient overlay */}
                       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -402,6 +404,7 @@ export default function ToolsPrompts() {
         toolPrompt={selectedToolPrompt}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+        index={selectedIndex}
       />
       </div>
     </>
