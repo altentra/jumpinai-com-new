@@ -59,14 +59,14 @@ export function ToolPromptDetailModal({ toolPrompt, isOpen, onClose, index }: To
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-5xl max-h-[92vh] mx-4 sm:mx-auto overflow-hidden p-0 border-2 border-primary/20 bg-gradient-to-br from-background/40 via-background/60 to-background/40 backdrop-blur-2xl shadow-2xl rounded-[2rem] sm:rounded-[2.5rem] animate-scale-in">
+      <DialogContent className="max-w-5xl max-h-[85vh] m-4 sm:mx-auto sm:my-auto overflow-hidden p-0 border-2 border-primary/20 bg-gradient-to-br from-background/40 via-background/60 to-background/40 backdrop-blur-2xl shadow-2xl rounded-[2rem] sm:rounded-[2.5rem] animate-scale-in">
         {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 pointer-events-none rounded-[2rem] sm:rounded-[2.5rem]" />
         
         {/* Glass Effect Border */}
         <div className="absolute inset-0 rounded-[2rem] sm:rounded-[2.5rem] border border-white/10 pointer-events-none" />
         
-        <div className="relative overflow-y-auto max-h-[92vh] p-8 custom-scrollbar">
+        <div className="relative overflow-y-auto max-h-[85vh] p-6 sm:p-8 custom-scrollbar">
           <DialogHeader className="pb-4 space-y-3 pr-14 sm:pr-16">
             <div className="flex flex-col sm:flex-row items-start sm:justify-between gap-3 sm:gap-4">
               <DialogTitle className="text-xl sm:text-2xl font-bold flex items-center gap-2 flex-1">
