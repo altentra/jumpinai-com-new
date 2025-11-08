@@ -215,17 +215,41 @@ const JumpinAIStudio = () => {
 
     console.log('Attempting reCAPTCHA verification...');
     let recaptchaToken: string | null = null;
+    
+    // Check if we're on a testing/development domain
+    const isTestingDomain = window.location.hostname.includes('testing.') || 
+                           window.location.hostname.includes('localhost') ||
+                           window.location.hostname.includes('127.0.0.1');
+    
     try {
       recaptchaToken = await recaptchaRef.current.executeAsync();
       console.log('reCAPTCHA token received:', recaptchaToken ? 'SUCCESS' : 'FAILED');
+      
       if (!recaptchaToken) {
-        toast.error('Please complete the reCAPTCHA verification');
-        return;
+        if (isTestingDomain) {
+          console.warn('⚠️ reCAPTCHA failed on testing domain - proceeding anyway');
+          console.warn('⚠️ Domain:', window.location.hostname);
+          console.warn('⚠️ This reCAPTCHA key may not be authorized for this domain');
+          toast.warning('reCAPTCHA verification skipped (testing mode)');
+          // Allow to proceed on testing domains
+        } else {
+          toast.error('Please complete the reCAPTCHA verification');
+          return;
+        }
       }
     } catch (error) {
-      console.error('reCAPTCHA error:', error);
-      toast.error('reCAPTCHA verification failed. Please try again.');
-      return;
+      console.error('❌ reCAPTCHA error:', error);
+      console.error('Current domain:', window.location.hostname);
+      console.error('reCAPTCHA key:', RECAPTCHA_SITE_KEY);
+      
+      if (isTestingDomain) {
+        console.warn('⚠️ reCAPTCHA error on testing domain - proceeding anyway');
+        toast.warning('reCAPTCHA verification skipped (testing mode)');
+        // Allow to proceed on testing domains
+      } else {
+        toast.error('reCAPTCHA verification failed. Please try again or contact support.');
+        return;
+      }
     }
 
     // Check limits based on user authentication status
