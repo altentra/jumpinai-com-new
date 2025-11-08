@@ -354,7 +354,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="prose prose-sm dark:prose-invert max-w-none">
+                    <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-none break-words overflow-wrap-anywhere text-xs sm:text-sm">
                       <ReactMarkdown remarkPlugins={[remarkGfm]}>
                         {formatAIText(result.comprehensive_plan.executiveSummary)}
                       </ReactMarkdown>
@@ -375,8 +375,8 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                   <CardContent className="space-y-4">
                     {result.comprehensive_plan.situationAnalysis.currentState && (
                       <div>
-                        <h4 className="font-semibold text-sm mb-2">Current State</h4>
-                        <div className="prose prose-sm dark:prose-invert max-w-none">
+                        <h4 className="font-semibold text-xs sm:text-sm mb-2">Current State</h4>
+                        <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-none text-xs sm:text-sm">
                           <ReactMarkdown remarkPlugins={[remarkGfm]}>
                             {formatAIText(result.comprehensive_plan.situationAnalysis.currentState)}
                           </ReactMarkdown>
@@ -439,7 +439,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="prose prose-sm dark:prose-invert max-w-none">
+                    <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-none text-xs sm:text-sm">
                       <ReactMarkdown remarkPlugins={[remarkGfm]}>
                         {formatAIText(result.comprehensive_plan.strategicVision)}
                       </ReactMarkdown>
@@ -468,7 +468,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                           </h4>
                           <Badge variant="outline" className="text-xs bg-primary/10 text-primary border-primary/30">0-30 days</Badge>
                         </div>
-                        <div className="prose prose-sm dark:prose-invert max-w-none">
+                        <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-none text-xs sm:text-sm">
                           <ReactMarkdown remarkPlugins={[remarkGfm]}>
                             {formatAIText(result.comprehensive_plan.roadmap.immediate)}
                           </ReactMarkdown>
@@ -486,7 +486,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                           </h4>
                           <Badge variant="outline" className="text-xs">30-90 days</Badge>
                         </div>
-                        <div className="prose prose-sm dark:prose-invert max-w-none">
+                        <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-none text-xs sm:text-sm">
                           <ReactMarkdown remarkPlugins={[remarkGfm]}>
                             {formatAIText(result.comprehensive_plan.roadmap.shortTerm)}
                           </ReactMarkdown>
@@ -504,7 +504,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                           </h4>
                           <Badge variant="outline" className="text-xs">90+ days</Badge>
                         </div>
-                        <div className="prose prose-sm dark:prose-invert max-w-none">
+                        <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-none text-xs sm:text-sm">
                           <ReactMarkdown remarkPlugins={[remarkGfm]}>
                             {formatAIText(result.comprehensive_plan.roadmap.longTerm)}
                           </ReactMarkdown>

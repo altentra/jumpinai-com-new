@@ -215,7 +215,7 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-none break-words overflow-wrap-anywhere text-sm sm:text-base">
+                    <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-none break-words overflow-wrap-anywhere text-xs sm:text-sm">
                       <ReactMarkdown remarkPlugins={[remarkGfm]}>
                         {formatAIText(result.comprehensive_plan.executiveSummary)}
                       </ReactMarkdown>
@@ -237,7 +237,7 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
                     {result.comprehensive_plan.situationAnalysis.currentState && (
                       <div>
                         <h4 className="font-semibold text-xs sm:text-sm mb-2">Current State</h4>
-                        <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-none text-sm sm:text-base">
+                        <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-none text-xs sm:text-sm">
                           <ReactMarkdown remarkPlugins={[remarkGfm]}>
                             {formatAIText(result.comprehensive_plan.situationAnalysis.currentState)}
                           </ReactMarkdown>
@@ -300,7 +300,7 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-none text-sm sm:text-base">
+                    <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-none text-xs sm:text-sm">
                       <ReactMarkdown remarkPlugins={[remarkGfm]}>
                         {formatAIText(result.comprehensive_plan.strategicVision)}
                       </ReactMarkdown>
