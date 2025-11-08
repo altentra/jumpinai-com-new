@@ -66,11 +66,11 @@ export const jumpinAIStudioService = {
         headers['Authorization'] = `Bearer ${session.access_token}`;
       }
 
-      // Build request body - only include recaptchaToken if it's not null
-      const requestBody: any = { formData };
-      if (recaptchaToken) {
-        requestBody.recaptchaToken = recaptchaToken;
-      }
+      // Build request body - recaptchaToken is now required
+      const requestBody = { 
+        formData,
+        recaptchaToken
+      };
 
       fetch('https://cieczaajcgkgdgenfdzi.supabase.co/functions/v1/jumps-ai-streaming', {
         method: 'POST',

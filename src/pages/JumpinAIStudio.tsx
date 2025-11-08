@@ -23,6 +23,7 @@ const JumpinAIStudio = () => {
   const [guestCanUse, setGuestCanUse] = useState(true);
   const [guestUsageCount, setGuestUsageCount] = useState(0);
   const [generationTimer, setGenerationTimer] = useState(0);
+  const [recaptchaReady, setRecaptchaReady] = useState(false);
   const progressDisplayRef = useRef<HTMLDivElement>(null);
   const generateButtonRef = useRef<HTMLDivElement>(null);
   const goalsTextareaRef = useRef<HTMLTextAreaElement>(null);
@@ -196,6 +197,7 @@ const JumpinAIStudio = () => {
     console.log('=== GENERATE BUTTON CLICKED ===');
     console.log('Form data:', formData);
     console.log('recaptchaRef.current:', recaptchaRef.current);
+    console.log('recaptchaReady:', recaptchaReady);
     console.log('isAuthenticated:', isAuthenticated);
     console.log('guestUsageCount:', guestUsageCount);
     
@@ -206,62 +208,45 @@ const JumpinAIStudio = () => {
       return;
     }
 
-    // Verify reCAPTCHA
-    if (!recaptchaRef.current) {
-      console.log('reCAPTCHA ref is null!');
-      toast.error('reCAPTCHA not loaded. Please refresh the page.');
+    // Verify reCAPTCHA is loaded and ready
+    if (!recaptchaRef.current || !recaptchaReady) {
+      console.error('reCAPTCHA not ready!', { ref: !!recaptchaRef.current, ready: recaptchaReady });
+      toast.error('reCAPTCHA is loading... Please wait a moment and try again.');
       return;
     }
 
     console.log('Attempting reCAPTCHA verification...');
     let recaptchaToken: string | null = null;
     
-    // Check if we're on a testing/development domain
-    const isTestingDomain = window.location.hostname.includes('testing.') || 
-                           window.location.hostname.includes('localhost') ||
-                           window.location.hostname.includes('127.0.0.1');
-    
     try {
-      // CRITICAL FIX: Reset the reCAPTCHA widget before executing
-      // This clears any previous state that might cause executeAsync to return null
+      // Reset the widget first to clear any previous state
       console.log('Resetting reCAPTCHA widget...');
       recaptchaRef.current.reset();
       
-      // Small delay to allow reset to complete
-      await new Promise(resolve => setTimeout(resolve, 100));
+      // Wait for reset to complete
+      await new Promise(resolve => setTimeout(resolve, 200));
       
       console.log('Executing reCAPTCHA...');
       recaptchaToken = await recaptchaRef.current.executeAsync();
-      console.log('reCAPTCHA token received:', recaptchaToken ? 'SUCCESS' : 'FAILED');
+      console.log('✅ reCAPTCHA token received:', recaptchaToken ? 'SUCCESS' : 'FAILED');
       console.log('Token length:', recaptchaToken?.length || 0);
       
       if (!recaptchaToken) {
-        if (isTestingDomain) {
-          console.warn('⚠️ reCAPTCHA failed on testing domain - proceeding anyway');
-          console.warn('⚠️ Domain:', window.location.hostname);
-          console.warn('⚠️ This reCAPTCHA key may not be authorized for this domain');
-          toast.warning('reCAPTCHA verification skipped (testing mode)');
-          // Allow to proceed on testing domains
-        } else {
-          toast.error('Please complete the reCAPTCHA verification');
-          return;
-        }
+        console.error('❌ reCAPTCHA returned null token');
+        toast.error('reCAPTCHA verification failed. Please try again.');
+        return;
       }
+      
+      // Reset the widget after successful execution
+      recaptchaRef.current.reset();
+      
     } catch (error) {
       console.error('❌ reCAPTCHA error:', error);
       console.error('Error type:', typeof error);
-      console.error('Error details:', JSON.stringify(error));
       console.error('Current domain:', window.location.hostname);
       console.error('reCAPTCHA key:', RECAPTCHA_SITE_KEY);
-      
-      if (isTestingDomain) {
-        console.warn('⚠️ reCAPTCHA error on testing domain - proceeding anyway');
-        toast.warning('reCAPTCHA verification skipped (testing mode)');
-        // Allow to proceed on testing domains
-      } else {
-        toast.error('reCAPTCHA verification failed. Please try again or contact support.');
-        return;
-      }
+      toast.error('reCAPTCHA verification failed. Please refresh the page and try again.');
+      return;
     }
 
     // Check limits based on user authentication status
@@ -637,6 +622,21 @@ const JumpinAIStudio = () => {
           ref={recaptchaRef}
           sitekey={RECAPTCHA_SITE_KEY}
           size="invisible"
+          onLoad={() => {
+            console.log('✅ reCAPTCHA loaded successfully');
+            setRecaptchaReady(true);
+          }}
+          onError={() => {
+            console.error('❌ reCAPTCHA failed to load');
+            setRecaptchaReady(false);
+            toast.error('reCAPTCHA failed to load. Please check your internet connection.');
+          }}
+          onExpired={() => {
+            console.warn('⚠️ reCAPTCHA expired');
+            if (recaptchaRef.current) {
+              recaptchaRef.current.reset();
+            }
+          }}
         />
       </div>
     </>
