@@ -68,7 +68,9 @@ export default function AppSidebar() {
   };
 
   const getNavCls = ({ isActive }: { isActive: boolean }) =>
-    isActive ? "bg-muted text-primary font-medium" : "hover:bg-muted/50";
+    isActive 
+      ? "bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl border border-primary/20 text-foreground font-medium" 
+      : "hover:bg-gradient-to-br hover:from-primary/10 hover:via-accent/5 hover:to-primary/10 hover:backdrop-blur-xl hover:border hover:border-primary/20";
 
   return (
     <Sidebar className="w-52 mt-20">
@@ -106,7 +108,7 @@ export default function AppSidebar() {
           <Link 
             to="/dashboard" 
             className={cn(
-              "flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm transition-colors",
+              "flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-300",
               getNavCls({ isActive: currentPath === "/dashboard" })
             )}
           >
@@ -118,7 +120,7 @@ export default function AppSidebar() {
           <Link 
             to="/dashboard/jumps" 
             className={cn(
-              "flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm transition-colors",
+              "flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-300",
               getNavCls({ isActive: currentPath === "/dashboard/jumps" })
             )}
           >
@@ -129,7 +131,7 @@ export default function AppSidebar() {
           <Link 
             to="/dashboard/tools-prompts" 
             className={cn(
-              "flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm transition-colors",
+              "flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-300",
               getNavCls({ isActive: currentPath === "/dashboard/tools-prompts" })
             )}
           >
@@ -143,7 +145,7 @@ export default function AppSidebar() {
           <Link 
             to="/dashboard/profile" 
             className={cn(
-              "flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm hover:bg-muted/50 transition-colors",
+              "flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-300",
               getNavCls({ isActive: currentPath === "/dashboard/profile" })
             )}
           >
@@ -155,7 +157,7 @@ export default function AppSidebar() {
           <Link 
             to="/dashboard/subscription" 
             className={cn(
-              "flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm hover:bg-muted/50 transition-colors",
+              "flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-300",
               getNavCls({ isActive: currentPath === "/dashboard/subscription" })
             )}
           >
