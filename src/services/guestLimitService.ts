@@ -8,7 +8,7 @@ interface GuestUsage {
 }
 
 export const guestLimitService = {
-  // STRICT ENFORCEMENT: Check if guest has remaining usage (3 TRIES ALLOWED)
+  // STRICT ENFORCEMENT: Check if guest has remaining usage (3 TRIES LIFETIME - NO RESET)
   async checkGuestLimit(): Promise<{ canUse: boolean; usageCount: number }> {
     try {
       // Get client IP through edge function for robust tracking
@@ -22,20 +22,18 @@ export const guestLimitService = {
         'jumpinai_guest_usage_fallback'
       ];
       
-      const today = new Date().toDateString();
       let maxUsageCount = 0;
       
-      // Check all tracking methods - track the highest usage count
+      // Check all tracking methods - track the highest usage count (PERMANENT - NO DATE CHECK)
       for (const key of trackingKeys) {
         const localUsage = localStorage.getItem(key);
         if (localUsage) {
           try {
             const usage = JSON.parse(localUsage);
-            if (usage.date === today) {
-              maxUsageCount = Math.max(maxUsageCount, usage.count || 0);
-              if (usage.count >= 3) {
-                return { canUse: false, usageCount: usage.count };
-              }
+            const count = usage.count || 0;
+            maxUsageCount = Math.max(maxUsageCount, count);
+            if (count >= 3) {
+              return { canUse: false, usageCount: count };
             }
           } catch (parseError) {
             // Invalid data, continue checking other keys
@@ -64,13 +62,11 @@ export const guestLimitService = {
       if (fallbackUsage) {
         try {
           const usage = JSON.parse(fallbackUsage);
-          const today = new Date().toDateString();
-          if (usage.date === today && usage.count >= 3) {
-            return { canUse: false, usageCount: usage.count };
+          const count = usage.count || 0;
+          if (count >= 3) {
+            return { canUse: false, usageCount: count };
           }
-          if (usage.date === today) {
-            return { canUse: true, usageCount: usage.count || 0 };
-          }
+          return { canUse: true, usageCount: count };
         } catch (parseError) {
           // Corrupted data, allow usage but will be tracked on next attempt
         }
@@ -80,14 +76,12 @@ export const guestLimitService = {
     }
   },
 
-  // STRICT ENFORCEMENT: Record guest usage across multiple tracking methods
+  // STRICT ENFORCEMENT: Record guest usage across multiple tracking methods (PERMANENT COUNT)
   async recordGuestUsage(): Promise<void> {
     try {
       // Get client IP for robust tracking
       const { data: ipData } = await supabase.functions.invoke('get-client-ip');
       const clientIP = ipData?.ip || 'unknown';
-      
-      const today = new Date().toDateString();
       
       // Update multiple tracking methods for strict enforcement
       const trackingMethods = [
@@ -96,20 +90,16 @@ export const guestLimitService = {
         { key: 'jumpinai_guest_usage_fallback', storage: localStorage }
       ];
       
-      // Record usage in all tracking methods
+      // Record usage in all tracking methods (PERMANENT - NO DATE RESET)
       for (const method of trackingMethods) {
         try {
           const currentUsage = method.storage.getItem(method.key);
           if (currentUsage) {
             const usage = JSON.parse(currentUsage);
-            if (usage.date === today) {
-              usage.count += 1;
-              method.storage.setItem(method.key, JSON.stringify(usage));
-            } else {
-              method.storage.setItem(method.key, JSON.stringify({ date: today, count: 1 }));
-            }
+            usage.count = (usage.count || 0) + 1;
+            method.storage.setItem(method.key, JSON.stringify(usage));
           } else {
-            method.storage.setItem(method.key, JSON.stringify({ date: today, count: 1 }));
+            method.storage.setItem(method.key, JSON.stringify({ count: 1 }));
           }
         } catch (error) {
           console.error(`Error updating tracking method ${method.key}:`, error);
@@ -121,7 +111,7 @@ export const guestLimitService = {
       const newCount = currentSessionCount ? parseInt(currentSessionCount, 10) + 1 : 1;
       sessionStorage.setItem('jumpinai_session_count', newCount.toString());
       
-      console.log('Guest usage recorded across all tracking methods');
+      console.log('Guest usage recorded permanently across all tracking methods');
       
     } catch (error) {
       console.error('Error recording guest usage:', error);
@@ -129,8 +119,14 @@ export const guestLimitService = {
       // Fallback: still record in localStorage
       try {
         const fallbackKey = 'jumpinai_guest_usage_fallback';
-        const today = new Date().toDateString();
-        localStorage.setItem(fallbackKey, JSON.stringify({ date: today, count: 1 }));
+        const currentUsage = localStorage.getItem(fallbackKey);
+        if (currentUsage) {
+          const usage = JSON.parse(currentUsage);
+          usage.count = (usage.count || 0) + 1;
+          localStorage.setItem(fallbackKey, JSON.stringify(usage));
+        } else {
+          localStorage.setItem(fallbackKey, JSON.stringify({ count: 1 }));
+        }
         const currentSessionCount = sessionStorage.getItem('jumpinai_session_count');
         const newCount = currentSessionCount ? parseInt(currentSessionCount, 10) + 1 : 1;
         sessionStorage.setItem('jumpinai_session_count', newCount.toString());

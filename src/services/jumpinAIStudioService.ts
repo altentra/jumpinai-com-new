@@ -35,7 +35,7 @@ export const jumpinAIStudioService = {
   async generateJumpStreaming(
     formData: StudioFormData,
     userId?: string,
-    recaptchaToken?: string,
+    turnstileToken?: string,
     onProgress?: (step: number, type: string, data: any) => void
   ): Promise<GenerationResult> {
     return new Promise(async (resolve, reject) => {
@@ -69,10 +69,10 @@ export const jumpinAIStudioService = {
         headers['Authorization'] = `Bearer ${session.access_token}`;
       }
 
-      // Build request body - recaptchaToken is now required
+      // Build request body - turnstileToken only for guests
       const requestBody = { 
         formData,
-        recaptchaToken
+        turnstileToken
       };
 
       fetch('https://cieczaajcgkgdgenfdzi.supabase.co/functions/v1/jumps-ai-streaming', {
