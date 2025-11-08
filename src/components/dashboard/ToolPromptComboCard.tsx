@@ -137,7 +137,7 @@ export function ToolPromptComboCard({ combo, onClick, index }: ToolPromptComboCa
               </Badge>
             )}
           </div>
-          <p className="text-sm text-muted-foreground leading-relaxed">
+          <p className="text-xs sm:text-sm text-foreground leading-relaxed">
             {description}
           </p>
         </CardHeader>
@@ -182,7 +182,7 @@ export function ToolPromptComboCard({ combo, onClick, index }: ToolPromptComboCa
                 </Button>
               </div>
               <div className="bg-muted/30 border border-border rounded-lg p-3">
-                <pre className="text-xs text-muted-foreground whitespace-pre-wrap font-mono leading-relaxed break-words overflow-wrap-anywhere">
+                <pre className="text-xs text-foreground whitespace-pre-wrap font-mono leading-relaxed break-words overflow-wrap-anywhere">
                   {promptText}
                 </pre>
               </div>
@@ -196,7 +196,7 @@ export function ToolPromptComboCard({ combo, onClick, index }: ToolPromptComboCa
                 <Clock className="w-4 h-4 text-blue-400 mt-0.5 shrink-0" />
                 <div>
                   <p className="text-xs font-medium text-blue-400 mb-1">When to Use</p>
-                  <p className="text-xs text-muted-foreground leading-relaxed">{whenToUse}</p>
+                  <p className="text-xs sm:text-sm text-foreground leading-relaxed">{whenToUse}</p>
                 </div>
               </div>
             </div>
@@ -209,7 +209,7 @@ export function ToolPromptComboCard({ combo, onClick, index }: ToolPromptComboCa
                 <CheckCircle className="w-4 h-4 text-green-400 mt-0.5 shrink-0" />
                 <div>
                   <p className="text-xs font-medium text-green-400 mb-1">Why This Combo</p>
-                  <p className="text-xs text-muted-foreground leading-relaxed">{whyCombo}</p>
+                  <p className="text-xs sm:text-sm text-foreground leading-relaxed">{whyCombo}</p>
                 </div>
               </div>
             </div>
@@ -228,8 +228,8 @@ export function ToolPromptComboCard({ combo, onClick, index }: ToolPromptComboCa
                   return (
                     <div key={idx} className="flex items-center justify-between p-2 bg-muted/20 rounded border border-border text-xs">
                       <div className="flex-1">
-                        <span className="text-muted-foreground">{altTool}</span>
-                        {altNote && <p className="text-xs text-muted-foreground/70 mt-1">{altNote}</p>}
+                        <span className="text-foreground">{altTool}</span>
+                        {altNote && <p className="text-xs text-foreground/70 mt-1">{altNote}</p>}
                       </div>
                       {altUrl && (
                         <a
