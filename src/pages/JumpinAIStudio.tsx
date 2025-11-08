@@ -202,9 +202,9 @@ const JumpinAIStudio = () => {
         return;
       }
     } else {
-      // Guest users: Strict 1-try limit
-      if (!guestCanUse) {
-        toast.error('You\'ve used your free try. Please sign up and get 5 welcome credits to continue!');
+      // Guest users: 3 tries per 24 hours
+      if (guestUsageCount >= 3) {
+        toast.error('You\'ve used all 3 free tries. Please sign up and get 5 welcome credits to continue!');
         return;
       }
     }
@@ -247,10 +247,13 @@ const JumpinAIStudio = () => {
         toast.success('Your Jump in AI is ready! Sign up to get 5 welcome credits and save your jumps.');
       }
 
-      // Update guest limits
+      // Update guest limits - increment count and check if limit reached
       if (!isAuthenticated) {
-        setGuestCanUse(false);
-        setGuestUsageCount(1);
+        const newCount = guestUsageCount + 1;
+        setGuestUsageCount(newCount);
+        if (newCount >= 3) {
+          setGuestCanUse(false);
+        }
       }
 
     } catch (error) {
@@ -319,7 +322,7 @@ const JumpinAIStudio = () => {
                           <div className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-amber-500 rounded-full"></div>
                         </div>
                         <span className="font-medium text-xs sm:text-sm">
-                          Guest: {guestCanUse ? '1 free try remaining' : 'limit reached'}
+                          Guest: {guestUsageCount >= 3 ? 'limit reached' : `${3 - guestUsageCount} free tries remaining`}
                         </span>
                       </div>
                     )}
@@ -417,7 +420,7 @@ const JumpinAIStudio = () => {
                           
                           <button
                             onClick={handleGenerate}
-                            disabled={isGenerating || (!isAuthenticated && !guestCanUse)}
+                            disabled={isGenerating || (!isAuthenticated && guestUsageCount >= 3)}
                             className="relative w-full sm:max-w-4xl px-8 sm:px-16 md:px-24 py-3 sm:py-4 md:py-5 glass backdrop-blur-xl border border-border/40 hover:border-primary/50 focus:border-primary/60 transition-all duration-500 rounded-full shadow-xl hover:shadow-2xl hover:shadow-primary/20 bg-card/70 hover:scale-[1.02] active:scale-98 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100 group overflow-hidden"
                           >
                             {/* Glass morphism overlay effects */}

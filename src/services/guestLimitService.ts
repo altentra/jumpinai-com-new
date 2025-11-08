@@ -23,15 +23,19 @@ export const guestLimitService = {
       ];
       
       const today = new Date().toDateString();
+      let maxUsageCount = 0;
       
-      // Check all tracking methods - if ANY shows usage, deny access
+      // Check all tracking methods - track the highest usage count
       for (const key of trackingKeys) {
         const localUsage = localStorage.getItem(key);
         if (localUsage) {
           try {
             const usage = JSON.parse(localUsage);
-            if (usage.date === today && usage.count >= 3) {
-              return { canUse: false, usageCount: usage.count };
+            if (usage.date === today) {
+              maxUsageCount = Math.max(maxUsageCount, usage.count || 0);
+              if (usage.count >= 3) {
+                return { canUse: false, usageCount: usage.count };
+              }
             }
           } catch (parseError) {
             // Invalid data, continue checking other keys
@@ -45,12 +49,13 @@ export const guestLimitService = {
       const sessionCount = sessionStorage.getItem(sessionKey);
       if (sessionCount) {
         const count = parseInt(sessionCount, 10);
+        maxUsageCount = Math.max(maxUsageCount, count);
         if (count >= 3) {
           return { canUse: false, usageCount: count };
         }
       }
       
-      return { canUse: true, usageCount: 0 };
+      return { canUse: true, usageCount: maxUsageCount };
     } catch (error) {
       console.error('Error checking guest limit:', error);
       
@@ -62,6 +67,9 @@ export const guestLimitService = {
           const today = new Date().toDateString();
           if (usage.date === today && usage.count >= 3) {
             return { canUse: false, usageCount: usage.count };
+          }
+          if (usage.date === today) {
+            return { canUse: true, usageCount: usage.count || 0 };
           }
         } catch (parseError) {
           // Corrupted data, allow usage but will be tracked on next attempt
