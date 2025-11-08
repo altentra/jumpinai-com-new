@@ -156,17 +156,30 @@ const Newsletter = () => {
                   className="w-full px-4 sm:px-5 py-2.5 sm:py-3 text-sm sm:text-base rounded-2xl glass focus:glass-dark transition-all duration-300 focus:ring-2 focus:ring-primary/20"
                 />
               </div>
-              <Button 
+              <button
                 type="submit"
-                size="lg"
                 disabled={isSubmitting}
-                className="bg-primary/10 hover:bg-primary/20 border border-primary/20 hover:border-primary/40 px-5 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-semibold rounded-2xl transition-all duration-300 shadow-modern hover:shadow-modern-lg group hover:scale-[1.02]"
+                className="relative group overflow-hidden"
               >
-                <span className="text-primary font-semibold">
-                  {isSubmitting ? "Processing..." : "Join Now"}
-                </span>
-                <ArrowRight className="ml-2 h-4 w-4 text-primary group-hover:translate-x-1 transition-transform" />
-              </Button>
+                {/* Liquid glass glow effect */}
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover:opacity-60 transition duration-500"></div>
+                
+                {/* Button */}
+                <div className="relative flex items-center justify-center gap-3 px-5 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover:border-primary/50 transition-all duration-300 overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed">
+                  {/* Shimmer effect */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                  
+                  {/* Content */}
+                  <span className="relative text-sm sm:text-base font-bold text-foreground group-hover:text-primary transition-colors duration-300">
+                    {isSubmitting ? "Processing..." : "Join Now"}
+                  </span>
+                  
+                  {/* Arrow icon */}
+                  <div className="relative flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 rounded-xl bg-primary/20 group-hover:bg-primary/30 transition-all duration-300">
+                    <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 text-primary group-hover:translate-x-1 transition-transform" />
+                  </div>
+                </div>
+              </button>
             </div>
           </form>
           

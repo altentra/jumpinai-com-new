@@ -514,9 +514,23 @@ const Index = () => {
                         <button 
                           onClick={() => isUsersPlan ? null : handleSubscribe(plan.name)}
                           disabled={isLoading || isUsersPlan}
-                          className={`w-full modern-button shadow-modern ${isUsersPlan ? 'border border-border bg-card hover:bg-accent hover:text-accent-foreground text-foreground' : 'bg-primary hover:bg-primary/90 text-primary-foreground'} px-4 py-2 rounded-lg font-semibold cursor-pointer text-center transition-colors disabled:opacity-50`}
+                          className="relative group w-full overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                          {isLoading ? 'Processing...' : isUsersPlan ? 'Current Plan' : 'Get Started'}
+                          {/* Liquid glass glow effect */}
+                          <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover:opacity-60 transition duration-500"></div>
+                          
+                          {/* Button */}
+                          <div className={`relative flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border transition-all duration-300 overflow-hidden ${isUsersPlan ? 'border-border/30' : 'border-primary/30 group-hover:border-primary/50'}`}>
+                            {/* Shimmer effect */}
+                            {!isUsersPlan && (
+                              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                            )}
+                            
+                            {/* Content */}
+                            <span className={`relative font-bold transition-colors duration-300 ${isUsersPlan ? 'text-muted-foreground' : 'text-foreground group-hover:text-primary'}`}>
+                              {isLoading ? 'Processing...' : isUsersPlan ? 'Current Plan' : 'Get Started'}
+                            </span>
+                          </div>
                         </button>
                       </div>
                     </div>
@@ -527,11 +541,27 @@ const Index = () => {
           </div>
 
           <div className="text-center pt-8">
-            <a href="/pricing" className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-xl text-base font-semibold hover:bg-primary/90 transition-all duration-300 shadow-lg hover:shadow-xl">
-              View All Plans & Pricing
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-              </svg>
+            <a href="/pricing" className="relative group inline-block">
+              {/* Liquid glass glow effect */}
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover:opacity-60 transition duration-500"></div>
+              
+              {/* Button */}
+              <div className="relative flex items-center gap-3 px-6 py-3 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover:border-primary/50 transition-all duration-300 overflow-hidden">
+                {/* Shimmer effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                
+                {/* Content */}
+                <span className="relative text-base font-bold text-foreground group-hover:text-primary transition-colors duration-300">
+                  View All Plans & Pricing
+                </span>
+                
+                {/* Arrow icon */}
+                <div className="relative flex items-center justify-center w-6 h-6 rounded-xl bg-primary/20 group-hover:bg-primary/30 transition-all duration-300">
+                  <svg className="w-4 h-4 text-primary group-hover:translate-x-0.5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                  </svg>
+                </div>
+              </div>
             </a>
           </div>
         </div>
@@ -588,17 +618,49 @@ const Index = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mb-8 sm:mb-10 px-4">
-              <a href="/jumpinai-studio" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 glass px-5 sm:px-6 py-2.5 sm:py-3 rounded-2xl text-sm sm:text-base font-semibold transition-all duration-300 shadow-[0_8px_30px_rgb(0,0,0,0.12),0_0_20px_hsl(var(--primary)/0.15)] hover:shadow-[0_12px_40px_rgb(0,0,0,0.15),0_0_30px_hsl(var(--primary)/0.25)] hover:scale-[1.02] ring-1 ring-primary/20 hover:ring-primary/40 group">
-                <span className="gradient-text-primary transition-colors">Start Your Jump Now - Free Try</span>
-                <svg className="w-4 h-4 text-primary transition-all group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                </svg>
+              <a href="/jumpinai-studio" className="relative group w-full sm:w-auto inline-block">
+                {/* Liquid glass glow effect */}
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover:opacity-60 transition duration-500"></div>
+                
+                {/* Button */}
+                <div className="relative flex items-center justify-center gap-3 px-5 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover:border-primary/50 transition-all duration-300 overflow-hidden">
+                  {/* Shimmer effect */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                  
+                  {/* Content */}
+                  <span className="relative text-sm sm:text-base font-bold text-foreground group-hover:text-primary transition-colors duration-300">
+                    Start Your Jump Now - Free Try
+                  </span>
+                  
+                  {/* Icon */}
+                  <div className="relative flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 rounded-xl bg-primary/20 group-hover:bg-primary/30 transition-all duration-300">
+                    <svg className="w-3 h-3 sm:w-4 sm:h-4 text-primary group-hover:translate-x-0.5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                  </div>
+                </div>
               </a>
-              <a href="/pricing" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 glass px-5 sm:px-6 py-2.5 sm:py-3 rounded-2xl text-sm sm:text-base font-medium transition-all duration-300 shadow-modern hover:shadow-modern-lg hover:scale-[1.02] group">
-                <span className="text-muted-foreground group-hover:text-foreground transition-colors">View Plans & Pricing</span>
-                <svg className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-all group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                </svg>
+              <a href="/pricing" className="relative group w-full sm:w-auto inline-block">
+                {/* Liquid glass glow effect */}
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-muted-foreground/20 via-muted-foreground/10 to-muted-foreground/20 rounded-[2rem] blur-md opacity-30 group-hover:opacity-60 transition duration-500"></div>
+                
+                {/* Button */}
+                <div className="relative flex items-center justify-center gap-3 px-5 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-br from-muted/20 via-muted/10 to-muted/20 backdrop-blur-xl rounded-[2rem] border border-border/30 group-hover:border-border/50 transition-all duration-300 overflow-hidden">
+                  {/* Shimmer effect */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-muted-foreground/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                  
+                  {/* Content */}
+                  <span className="relative text-sm sm:text-base font-medium text-muted-foreground group-hover:text-foreground transition-colors duration-300">
+                    View Plans & Pricing
+                  </span>
+                  
+                  {/* Icon */}
+                  <div className="relative flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 rounded-xl bg-muted-foreground/10 group-hover:bg-muted-foreground/20 transition-all duration-300">
+                    <svg className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground group-hover:text-foreground group-hover:translate-x-0.5 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                    </svg>
+                  </div>
+                </div>
               </a>
             </div>
 

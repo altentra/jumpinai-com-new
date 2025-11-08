@@ -144,11 +144,22 @@ const Navigation = React.memo(() => {
             {isAuthenticated ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button 
-                    className="modern-button bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-2.5 rounded-2xl font-semibold transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
-                  >
-                    My Account <ChevronDown className="ml-2 h-4 w-4" />
-                  </Button>
+                  <button className="relative group">
+                    {/* Liquid glass glow effect */}
+                    <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover:opacity-60 transition duration-500"></div>
+                    
+                    {/* Button */}
+                    <div className="relative flex items-center gap-2 px-6 py-2.5 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover:border-primary/50 transition-all duration-300 overflow-hidden">
+                      {/* Shimmer effect */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                      
+                      {/* Content */}
+                      <span className="relative font-bold text-foreground group-hover:text-primary transition-colors duration-300">
+                        My Account
+                      </span>
+                      <ChevronDown className="relative h-4 w-4 text-primary" />
+                    </div>
+                  </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="min-w-[200px] z-50">
                   <DropdownMenuItem onSelect={() => navigate('/dashboard')}>Dashboard</DropdownMenuItem>
@@ -156,12 +167,24 @@ const Navigation = React.memo(() => {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <Button 
+              <button 
                 onClick={handleCtaClick}
-                className="modern-button bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-2.5 rounded-2xl font-semibold transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
+                className="relative group"
               >
-                Log In
-              </Button>
+                {/* Liquid glass glow effect */}
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover:opacity-60 transition duration-500"></div>
+                
+                {/* Button */}
+                <div className="relative flex items-center justify-center px-6 py-2.5 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover:border-primary/50 transition-all duration-300 overflow-hidden">
+                  {/* Shimmer effect */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                  
+                  {/* Content */}
+                  <span className="relative font-bold text-foreground group-hover:text-primary transition-colors duration-300">
+                    Log In
+                  </span>
+                </div>
+              </button>
             )}
           </div>
 
@@ -231,12 +254,24 @@ const Navigation = React.memo(() => {
                     </button>
                   </>
                 ) : (
-                  <Button 
+                  <button 
                     onClick={handleCtaClick}
-                    className="w-full modern-button bg-primary hover:bg-primary/90 text-primary-foreground py-3 rounded-2xl font-semibold shadow-lg hover:shadow-xl"
+                    className="relative group w-full overflow-hidden"
                   >
-                    Log In
-                  </Button>
+                    {/* Liquid glass glow effect */}
+                    <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover:opacity-60 transition duration-500"></div>
+                    
+                    {/* Button */}
+                    <div className="relative flex items-center justify-center py-3 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover:border-primary/50 transition-all duration-300 overflow-hidden">
+                      {/* Shimmer effect */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                      
+                      {/* Content */}
+                      <span className="relative font-bold text-foreground group-hover:text-primary transition-colors duration-300">
+                        Log In
+                      </span>
+                    </div>
+                  </button>
                 )}
               </div>
             </div>
