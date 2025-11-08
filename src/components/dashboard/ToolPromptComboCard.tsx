@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Copy, ExternalLink, Sparkles, CheckCircle, Clock, DollarSign } from "lucide-react";
+import { Copy, ExternalLink, Sparkles, CheckCircle, Clock, DollarSign, ArrowLeftRight } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -234,8 +234,11 @@ export function ToolPromptComboCard({ combo, onClick, index }: ToolPromptComboCa
 
           {/* Alternatives */}
           {alternatives.length > 0 && (
-            <div className="space-y-2">
-              <p className="text-xs font-medium text-foreground/80">Alternative Tools:</p>
+            <div className="p-3 bg-purple-500/10 border border-purple-500/20 rounded-lg">
+              <div className="flex items-start gap-2 mb-3">
+                <ArrowLeftRight className="w-4 h-4 text-purple-400 mt-0.5 shrink-0" />
+                <p className="text-xs font-medium text-purple-400">Alternative Tools:</p>
+              </div>
               <div className="space-y-3">
                 {alternatives.map((alt: any, idx: number) => {
                   const altTool = safeExtract(alt, 'tool', 'name') || `Alternative ${idx + 1}`;
@@ -276,7 +279,7 @@ export function ToolPromptComboCard({ combo, onClick, index }: ToolPromptComboCa
                           <span className="text-sm font-medium text-muted-foreground whitespace-nowrap">{altTool}</span>
                         </div>
                       )}
-                      {altNote && <p className="text-xs text-foreground/70 pl-1">{altNote}</p>}
+                      {altNote && <p className="text-xs sm:text-sm text-foreground leading-relaxed">{altNote}</p>}
                     </div>
                   );
                 })}
