@@ -16,10 +16,64 @@ interface StudioFormData {
 // Validation schema
 const StudioFormSchema = z.object({
   goals: z.string().trim().min(10, 'Goals must be at least 10 characters').max(2000, 'Goals must be less than 2000 characters'),
-  challenges: z.string().trim().min(10, 'Challenges must be at least 10 characters').max(2000, 'Challenges must be less than 2000 characters')
+  challenges: z.string().trim().min(10, 'Challenges must be at least 10 characters').max(2000, 'Challenges must be less than 2000 characters'),
+  recaptchaToken: z.string().optional()
 });
 
+// Rate limiting and API monitoring
+async function verifyRecaptcha(token: string): Promise<boolean> {
+  const recaptchaSecret = Deno.env.get('RECAPTCHA_SECRET_KEY');
+  if (!recaptchaSecret) {
+    console.warn('RECAPTCHA_SECRET_KEY not configured - skipping verification');
+    return true; // Allow in development if not configured
+  }
+
+  try {
+    const response = await fetch('https://www.google.com/recaptcha/api/siteverify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: `secret=${recaptchaSecret}&response=${token}`
+    });
+
+    const data = await response.json();
+    console.log('reCAPTCHA verification result:', data.success);
+    return data.success === true;
+  } catch (error) {
+    console.error('reCAPTCHA verification error:', error);
+    return false;
+  }
+}
+
+async function logApiUsage(
+  supabase: any,
+  endpoint: string,
+  userId: string | null,
+  ipAddress: string | null,
+  userAgent: string | null,
+  statusCode: number,
+  durationMs: number,
+  errorMessage?: string
+) {
+  try {
+    await supabase.from('api_usage_logs').insert({
+      endpoint,
+      user_id: userId,
+      ip_address: ipAddress,
+      user_agent: userAgent,
+      status_code: statusCode,
+      request_duration_ms: durationMs,
+      error_message: errorMessage
+    });
+  } catch (error) {
+    console.error('Failed to log API usage:', error);
+  }
+}
+
 serve(async (req) => {
+  const startTime = Date.now();
+  const ipAddress = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+  const userAgent = req.headers.get('user-agent') || 'unknown';
+  
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
@@ -29,9 +83,7 @@ serve(async (req) => {
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Check if user is authenticated (optional)
-    // NOTE: Credit deduction is handled on the frontend before calling this function
-    // This function just processes the generation request
+    // Check if user is authenticated
     const authHeader = req.headers.get('Authorization');
     let user = null;
     let isGuest = true;
@@ -58,14 +110,15 @@ serve(async (req) => {
 
     // Parse and validate input
     const body = await req.json();
-    const { formData }: { formData: StudioFormData } = body;
+    const { formData, recaptchaToken }: { formData: StudioFormData; recaptchaToken?: string } = body;
     
     // Validate formData using Zod
     try {
-      StudioFormSchema.parse(formData);
+      StudioFormSchema.parse({ ...formData, recaptchaToken });
     } catch (error) {
       if (error instanceof z.ZodError) {
         console.error('Validation error:', error.errors);
+        await logApiUsage(supabase, 'jumps-ai-streaming', user?.id || null, ipAddress, userAgent, 400, Date.now() - startTime, 'Validation error');
         return new Response(JSON.stringify({ 
           error: 'Invalid input',
           details: error.errors 
@@ -75,6 +128,43 @@ serve(async (req) => {
         });
       }
       throw error;
+    }
+
+    // Verify reCAPTCHA token
+    if (recaptchaToken) {
+      const isValidRecaptcha = await verifyRecaptcha(recaptchaToken);
+      if (!isValidRecaptcha) {
+        console.error('Invalid reCAPTCHA token');
+        await logApiUsage(supabase, 'jumps-ai-streaming', user?.id || null, ipAddress, userAgent, 403, Date.now() - startTime, 'Invalid reCAPTCHA');
+        return new Response(JSON.stringify({ 
+          error: 'reCAPTCHA verification failed. Please try again.' 
+        }), {
+          status: 403,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      }
+    } else {
+      console.warn('No reCAPTCHA token provided');
+    }
+
+    // Server-side rate limiting check using database
+    if (isGuest) {
+      const { data: usageData } = await supabase.rpc('check_and_record_guest_usage', {
+        p_ip_address: ipAddress,
+        p_user_agent: userAgent
+      });
+
+      if (usageData && !usageData.can_use) {
+        console.log('Guest rate limit exceeded:', ipAddress);
+        await logApiUsage(supabase, 'jumps-ai-streaming', null, ipAddress, userAgent, 429, Date.now() - startTime, 'Rate limit exceeded');
+        return new Response(JSON.stringify({ 
+          error: 'Rate limit exceeded. Please sign up to continue using JumpinAI Studio.',
+          resetAt: usageData.reset_at
+        }), {
+          status: 429,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      }
     }
     
     console.log('Starting streaming generation for:', { formData });
@@ -151,11 +241,16 @@ serve(async (req) => {
             sendEvent(9, 'complete', { message: 'Generation complete' });
           }
 
+          // Log successful API usage
+          await logApiUsage(supabase, 'jumps-ai-streaming', user?.id || null, ipAddress, userAgent, 200, Date.now() - startTime);
+
         } catch (error) {
           console.error('Generation error:', error);
           if (!isClosed) {
             sendEvent(-1, 'error', { message: error.message });
           }
+          // Log failed API usage
+          await logApiUsage(supabase, 'jumps-ai-streaming', user?.id || null, ipAddress, userAgent, 500, Date.now() - startTime, error.message);
         } finally {
           // Always close the stream at the end
           if (!isClosed) {
@@ -181,6 +276,17 @@ serve(async (req) => {
 
   } catch (error) {
     console.error('Error:', error);
+    
+    // Log error to database if we have supabase instance
+    try {
+      const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? '';
+      const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
+      const supabase = createClient(supabaseUrl, supabaseKey);
+      await logApiUsage(supabase, 'jumps-ai-streaming', null, ipAddress, userAgent, 500, Date.now() - startTime, error.message);
+    } catch (logError) {
+      console.error('Failed to log error:', logError);
+    }
+    
     return new Response(
       JSON.stringify({ error: error.message }),
       { 

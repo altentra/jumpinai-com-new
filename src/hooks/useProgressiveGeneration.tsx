@@ -140,7 +140,8 @@ export const useProgressiveGeneration = () => {
 
   const generateWithProgression = useCallback(async (
     formData: StudioFormData,
-    userId?: string
+    userId?: string,
+    recaptchaToken?: string
   ): Promise<ProgressiveResult> => {
     setIsGenerating(true);
     setResult(null);
@@ -203,6 +204,7 @@ export const useProgressiveGeneration = () => {
       const rawResponse = await jumpinAIStudioService.generateJumpStreaming(
         formData, 
         userId,
+        recaptchaToken,
         // Real-time progress callback
         (step: number, type: string, stepData: any) => {
           console.log(`Step ${step} (${type}) completed:`, stepData);

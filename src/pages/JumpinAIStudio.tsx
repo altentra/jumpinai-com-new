@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { User, AlertCircle, Loader2, LogIn, Zap } from 'lucide-react';
+import ReCAPTCHA from 'react-google-recaptcha';
 import Navigation from '@/components/Navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { useCredits } from '@/hooks/useCredits';
@@ -11,6 +12,9 @@ import ProgressiveJumpDisplay from '@/components/ProgressiveJumpDisplay';
 import { useProgressiveGeneration } from '@/hooks/useProgressiveGeneration';
 import { CreditsDisplay } from '@/components/CreditsDisplay';
 import { supabase } from '@/integrations/supabase/client';
+
+// reCAPTCHA site key (public key - safe to expose)
+const RECAPTCHA_SITE_KEY = '6LfYourSiteKeyHere';
 
 const JumpinAIStudio = () => {
   const { user, isAuthenticated, login } = useAuth();
@@ -23,6 +27,7 @@ const JumpinAIStudio = () => {
   const generateButtonRef = useRef<HTMLDivElement>(null);
   const goalsTextareaRef = useRef<HTMLTextAreaElement>(null);
   const challengesTextareaRef = useRef<HTMLTextAreaElement>(null);
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
 
   useEffect(() => {
     const meta = document.createElement('meta');
@@ -194,6 +199,25 @@ const JumpinAIStudio = () => {
       return;
     }
 
+    // Verify reCAPTCHA
+    if (!recaptchaRef.current) {
+      toast.error('reCAPTCHA not loaded. Please refresh the page.');
+      return;
+    }
+
+    let recaptchaToken: string | null = null;
+    try {
+      recaptchaToken = await recaptchaRef.current.executeAsync();
+      if (!recaptchaToken) {
+        toast.error('Please complete the reCAPTCHA verification');
+        return;
+      }
+    } catch (error) {
+      console.error('reCAPTCHA error:', error);
+      toast.error('reCAPTCHA verification failed. Please try again.');
+      return;
+    }
+
     // Check limits based on user authentication status
     if (isAuthenticated) {
       // Authenticated users: Check credits
@@ -233,8 +257,8 @@ const JumpinAIStudio = () => {
         await guestLimitService.recordGuestUsage();
       }
 
-      // Generate with progressive display
-      const result = await generateWithProgression(formData, user?.id);
+      // Generate with progressive display (pass recaptcha token)
+      const result = await generateWithProgression(formData, user?.id, recaptchaToken!);
       
       // Update credit transaction with actual jump ID
       if (result.jumpId && tempReferenceId && isAuthenticated && user?.id) {
@@ -410,6 +434,15 @@ const JumpinAIStudio = () => {
                             />
                           </div>
                         </div>
+                      </div>
+
+                      {/* Hidden reCAPTCHA for verification */}
+                      <div className="flex justify-center mb-4">
+                        <ReCAPTCHA
+                          ref={recaptchaRef}
+                          size="invisible"
+                          sitekey={RECAPTCHA_SITE_KEY}
+                        />
                       </div>
 
                       {/* Glass Morphism Generate Button - Mobile Optimized */}

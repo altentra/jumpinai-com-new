@@ -35,6 +35,7 @@ export const jumpinAIStudioService = {
   async generateJumpStreaming(
     formData: StudioFormData,
     userId?: string,
+    recaptchaToken?: string,
     onProgress?: (step: number, type: string, data: any) => void
   ): Promise<GenerationResult> {
     return new Promise(async (resolve, reject) => {
@@ -68,7 +69,7 @@ export const jumpinAIStudioService = {
       fetch('https://cieczaajcgkgdgenfdzi.supabase.co/functions/v1/jumps-ai-streaming', {
         method: 'POST',
         headers,
-        body: JSON.stringify({ formData })
+        body: JSON.stringify({ formData, recaptchaToken })
       }).then(async response => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
