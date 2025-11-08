@@ -591,6 +591,14 @@ const JumpinAIStudio = () => {
             </div>
           </div>
         </main>
+
+        {/* Invisible reCAPTCHA - required for verification */}
+        <ReCAPTCHA
+          ref={recaptchaRef}
+          sitekey={RECAPTCHA_SITE_KEY}
+          size="invisible"
+          badge="bottomright"
+        />
       </div>
     </>
   );
