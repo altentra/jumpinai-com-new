@@ -199,13 +199,24 @@ export default function Pricing() {
                 <div className="w-full">
                   {!isAuthenticated ? (
                     <div className="space-y-2">
-                      <Button 
+                      <button
                         onClick={() => login('/pricing')}
-                        variant="glass"
-                        className="w-full py-2.5 text-xs md:text-sm hover:scale-105 transition-all duration-300 font-semibold"
+                        className="relative group inline-block w-full"
                       >
-                        Get Started Free
-                      </Button>
+                        {/* Liquid glass glow effect */}
+                        <div className="absolute -inset-0.5 bg-gradient-to-r from-white/50 via-white/40 to-white/50 rounded-[2rem] blur-md opacity-50 group-hover:opacity-80 transition duration-500"></div>
+                        
+                        {/* Button */}
+                        <div className="relative flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-br from-white/60 via-white/70 to-white/60 backdrop-blur-xl rounded-[2rem] border border-white/60 group-hover:border-white/80 transition-all duration-300 overflow-hidden shadow-lg">
+                          {/* Shimmer effect */}
+                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                          
+                          {/* Content */}
+                          <span className="relative text-xs md:text-sm font-bold text-black whitespace-nowrap">
+                            Get Started Free
+                          </span>
+                        </div>
+                      </button>
                       <p className="text-xs text-center text-muted-foreground invisible" aria-hidden="true">
                         helper
                       </p>
@@ -263,43 +274,76 @@ export default function Pricing() {
               <CardFooter className="p-3 md:p-5 pt-0 mt-auto">
                 {!isAuthenticated ? (
                   <div className="w-full space-y-2">
-                    <Button 
+                    <button
                       onClick={handleSubscribe}
                       disabled={loading}
-                      variant="glass"
-                      className="w-full text-xs md:text-sm py-2.5 font-semibold hover:scale-105 transition-all duration-300"
+                      className="relative group inline-block w-full"
                     >
-                      <Crown className="mr-1.5 h-3.5 w-3.5" />
-                      {loading ? 'Processing...' : 'Start Pro Journey'}
-                    </Button>
+                      {/* Liquid glass glow effect */}
+                      <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/50 via-primary/40 to-primary/50 rounded-[2rem] blur-md opacity-50 group-hover:opacity-80 transition duration-500"></div>
+                      
+                      {/* Button */}
+                      <div className="relative flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-br from-primary/60 via-primary/70 to-primary/60 backdrop-blur-xl rounded-[2rem] border border-primary/60 group-hover:border-primary/80 transition-all duration-300 overflow-hidden shadow-lg">
+                        {/* Shimmer effect */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                        
+                        {/* Content */}
+                        <Crown className="relative h-3.5 w-3.5 text-white" />
+                        <span className="relative text-xs md:text-sm font-bold text-white whitespace-nowrap">
+                          {loading ? 'Processing...' : 'Start Pro Journey'}
+                        </span>
+                      </div>
+                    </button>
                     <p className="text-xs text-center text-muted-foreground">
                       Create account and upgrade to Pro instantly
                     </p>
                   </div>
                 ) : !subInfo?.subscribed ? (
                   <div className="w-full space-y-2">
-                    <Button 
+                    <button
                       onClick={handleSubscribe}
                       disabled={loading}
-                      variant="glass"
-                      className="w-full text-xs md:text-sm py-2.5 font-semibold hover:scale-105 transition-all duration-300"
+                      className="relative group inline-block w-full"
                     >
-                      <Crown className="mr-1.5 h-3.5 w-3.5" />
-                      {loading ? 'Processing...' : 'Upgrade to Pro'}
-                    </Button>
+                      {/* Liquid glass glow effect */}
+                      <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/50 via-primary/40 to-primary/50 rounded-[2rem] blur-md opacity-50 group-hover:opacity-80 transition duration-500"></div>
+                      
+                      {/* Button */}
+                      <div className="relative flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-br from-primary/60 via-primary/70 to-primary/60 backdrop-blur-xl rounded-[2rem] border border-primary/60 group-hover:border-primary/80 transition-all duration-300 overflow-hidden shadow-lg">
+                        {/* Shimmer effect */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                        
+                        {/* Content */}
+                        <Crown className="relative h-3.5 w-3.5 text-white" />
+                        <span className="relative text-xs md:text-sm font-bold text-white whitespace-nowrap">
+                          {loading ? 'Processing...' : 'Upgrade to Pro'}
+                        </span>
+                      </div>
+                    </button>
                     <p className="text-xs text-center text-muted-foreground">
                       Cancel anytime • No long-term commitment
                     </p>
                   </div>
                 ) : (
                   <div className="w-full space-y-2">
-                    <Button 
+                    <button
                       onClick={handleManageDashboard}
-                      variant="glass"
-                      className="w-full text-xs md:text-sm py-2.5 font-semibold hover:scale-105 transition-all duration-300"
+                      className="relative group inline-block w-full"
                     >
-                      Manage Subscription
-                    </Button>
+                      {/* Liquid glass glow effect */}
+                      <div className="absolute -inset-0.5 bg-gradient-to-r from-white/50 via-white/40 to-white/50 rounded-[2rem] blur-md opacity-50 group-hover:opacity-80 transition duration-500"></div>
+                      
+                      {/* Button */}
+                      <div className="relative flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-br from-white/60 via-white/70 to-white/60 backdrop-blur-xl rounded-[2rem] border border-white/60 group-hover:border-white/80 transition-all duration-300 overflow-hidden shadow-lg">
+                        {/* Shimmer effect */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                        
+                        {/* Content */}
+                        <span className="relative text-xs md:text-sm font-bold text-black whitespace-nowrap">
+                          Manage Subscription
+                        </span>
+                      </div>
+                    </button>
                     <p className="text-xs text-center text-muted-foreground">
                       Next renewal: {subInfo.subscription_end ? new Date(subInfo.subscription_end).toLocaleDateString() : '—'}
                     </p>
