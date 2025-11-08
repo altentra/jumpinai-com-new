@@ -39,8 +39,11 @@ export const jumpinAIStudioService = {
     onProgress?: (step: number, type: string, data: any) => void
   ): Promise<GenerationResult> {
     return new Promise(async (resolve, reject) => {
+      // For guest users, generate a temporary jump ID so features like clarify/reroute work
+      const tempJumpId = crypto.randomUUID();
+      
       const result: GenerationResult = {
-        jumpId: undefined,
+        jumpId: userId ? undefined : tempJumpId, // Use temp ID for guests immediately
         fullContent: '',
         structuredPlan: null,
         comprehensivePlan: null,
@@ -52,7 +55,7 @@ export const jumpinAIStudioService = {
         }
       };
 
-      let jumpId: string | undefined;
+      let jumpId: string | undefined = userId ? undefined : tempJumpId;
 
       // Get the session for auth token (optional for guests)
       const { data: { session } } = await supabase.auth.getSession();
@@ -147,6 +150,16 @@ export const jumpinAIStudioService = {
                       console.error('❌ Error creating jump:', error);
                     }
                   })();
+                } else {
+                  // For guest users, send jump_created event with temp ID
+                  console.log('✅ Guest jump using temp ID:', jumpId);
+                  if (onProgress) {
+                    onProgress(step, 'jump_created', { 
+                      jumpId, 
+                      jumpNumber: null, 
+                      fullTitle: result.jumpName 
+                    });
+                  }
                 }
               } else if (type === 'overview') {
                 console.log('📋 Processing overview data:', data);
@@ -343,6 +356,23 @@ export const jumpinAIStudioService = {
                       console.error('❌ Error details:', error instanceof Error ? error.message : String(error));
                     }
                   })();
+                } else if (jumpId && toolPromptsArray.length > 0) {
+                  // For guest users, generate temporary IDs so UI can display properly
+                  console.log('🎯 Guest mode: Generating temp IDs for tool prompts');
+                  const tempIds = toolPromptsArray.map(() => crypto.randomUUID());
+                  result.components!.toolPrompts = toolPromptsArray.map((tp, idx) => ({
+                    ...tp,
+                    id: tempIds[idx]
+                  }));
+                  
+                  // Notify components about the temp IDs
+                  if (onProgress) {
+                    console.log('🔄 Notifying components of temp tool prompt IDs');
+                    onProgress(step, 'tool_prompts_ids_updated', { 
+                      tool_prompts: result.components!.toolPrompts,
+                      ids: tempIds
+                    });
+                  }
                 } else {
                   console.warn('⚠️ NOT saving tool prompts. Conditions:', {
                     hasUserId: !!userId,
