@@ -571,6 +571,7 @@ const JumpinAIStudio = () => {
                 <ProgressiveJumpDisplay 
                   result={result}
                   generationTimer={generationTimer}
+                  isAuthenticated={isAuthenticated}
                 />
               </div>
             )}

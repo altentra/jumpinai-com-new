@@ -17,11 +17,13 @@ import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 interface ProgressiveJumpDisplayProps {
   result: ProgressiveResult;
   generationTimer: number;
+  isAuthenticated?: boolean;
 }
 
 const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({ 
   result, 
-  generationTimer 
+  generationTimer,
+  isAuthenticated = false
 }) => {
   const navigate = useNavigate();
   const [copiedPrompts, setCopiedPrompts] = React.useState<Set<number>>(new Set());
@@ -229,8 +231,8 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
         </div>
       </div>
 
-      {/* Navigation Buttons */}
-      {result.processing_status?.isComplete && result.jumpId && (
+      {/* Navigation Buttons - Only for authenticated users */}
+      {isAuthenticated && result.processing_status?.isComplete && result.jumpId && (
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full">
           <button
             onClick={() => navigate('/dashboard/jumps')}
