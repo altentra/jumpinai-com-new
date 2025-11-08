@@ -222,8 +222,18 @@ const JumpinAIStudio = () => {
                            window.location.hostname.includes('127.0.0.1');
     
     try {
+      // CRITICAL FIX: Reset the reCAPTCHA widget before executing
+      // This clears any previous state that might cause executeAsync to return null
+      console.log('Resetting reCAPTCHA widget...');
+      recaptchaRef.current.reset();
+      
+      // Small delay to allow reset to complete
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      console.log('Executing reCAPTCHA...');
       recaptchaToken = await recaptchaRef.current.executeAsync();
       console.log('reCAPTCHA token received:', recaptchaToken ? 'SUCCESS' : 'FAILED');
+      console.log('Token length:', recaptchaToken?.length || 0);
       
       if (!recaptchaToken) {
         if (isTestingDomain) {
@@ -239,6 +249,8 @@ const JumpinAIStudio = () => {
       }
     } catch (error) {
       console.error('❌ reCAPTCHA error:', error);
+      console.error('Error type:', typeof error);
+      console.error('Error details:', JSON.stringify(error));
       console.error('Current domain:', window.location.hostname);
       console.error('reCAPTCHA key:', RECAPTCHA_SITE_KEY);
       
