@@ -8,7 +8,7 @@ interface GuestUsage {
 }
 
 export const guestLimitService = {
-  // STRICT ENFORCEMENT: Check if guest has remaining usage (ONLY 1 TRY ALLOWED)
+  // STRICT ENFORCEMENT: Check if guest has remaining usage (3 TRIES ALLOWED)
   async checkGuestLimit(): Promise<{ canUse: boolean; usageCount: number }> {
     try {
       // Get client IP through edge function for robust tracking
@@ -30,7 +30,7 @@ export const guestLimitService = {
         if (localUsage) {
           try {
             const usage = JSON.parse(localUsage);
-            if (usage.date === today && usage.count >= 1) {
+            if (usage.date === today && usage.count >= 3) {
               return { canUse: false, usageCount: usage.count };
             }
           } catch (parseError) {
@@ -40,11 +40,14 @@ export const guestLimitService = {
         }
       }
       
-      // Additional check: session storage for extra security
-      const sessionKey = 'jumpinai_session_used';
-      const sessionUsed = sessionStorage.getItem(sessionKey);
-      if (sessionUsed === 'true') {
-        return { canUse: false, usageCount: 1 };
+      // Additional check: session storage for extra security (count up to 3)
+      const sessionKey = 'jumpinai_session_count';
+      const sessionCount = sessionStorage.getItem(sessionKey);
+      if (sessionCount) {
+        const count = parseInt(sessionCount, 10);
+        if (count >= 3) {
+          return { canUse: false, usageCount: count };
+        }
       }
       
       return { canUse: true, usageCount: 0 };
@@ -57,7 +60,7 @@ export const guestLimitService = {
         try {
           const usage = JSON.parse(fallbackUsage);
           const today = new Date().toDateString();
-          if (usage.date === today && usage.count >= 1) {
+          if (usage.date === today && usage.count >= 3) {
             return { canUse: false, usageCount: usage.count };
           }
         } catch (parseError) {
@@ -105,8 +108,10 @@ export const guestLimitService = {
         }
       }
       
-      // Mark session as used for immediate enforcement
-      sessionStorage.setItem('jumpinai_session_used', 'true');
+      // Update session count for immediate enforcement
+      const currentSessionCount = sessionStorage.getItem('jumpinai_session_count');
+      const newCount = currentSessionCount ? parseInt(currentSessionCount, 10) + 1 : 1;
+      sessionStorage.setItem('jumpinai_session_count', newCount.toString());
       
       console.log('Guest usage recorded across all tracking methods');
       
@@ -118,7 +123,9 @@ export const guestLimitService = {
         const fallbackKey = 'jumpinai_guest_usage_fallback';
         const today = new Date().toDateString();
         localStorage.setItem(fallbackKey, JSON.stringify({ date: today, count: 1 }));
-        sessionStorage.setItem('jumpinai_session_used', 'true');
+        const currentSessionCount = sessionStorage.getItem('jumpinai_session_count');
+        const newCount = currentSessionCount ? parseInt(currentSessionCount, 10) + 1 : 1;
+        sessionStorage.setItem('jumpinai_session_count', newCount.toString());
       } catch (fallbackError) {
         console.error('Error in fallback usage recording:', fallbackError);
       }
