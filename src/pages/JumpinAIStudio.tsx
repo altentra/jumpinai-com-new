@@ -193,21 +193,31 @@ const JumpinAIStudio = () => {
   };
 
   const handleGenerate = async () => {
+    console.log('=== GENERATE BUTTON CLICKED ===');
+    console.log('Form data:', formData);
+    console.log('recaptchaRef.current:', recaptchaRef.current);
+    console.log('isAuthenticated:', isAuthenticated);
+    console.log('guestUsageCount:', guestUsageCount);
+    
     // Validate required fields
     if (!formData.goals.trim() || !formData.challenges.trim()) {
+      console.log('Validation failed: missing goals or challenges');
       toast.error('Please fill in your goals and challenges');
       return;
     }
 
     // Verify reCAPTCHA
     if (!recaptchaRef.current) {
+      console.log('reCAPTCHA ref is null!');
       toast.error('reCAPTCHA not loaded. Please refresh the page.');
       return;
     }
 
+    console.log('Attempting reCAPTCHA verification...');
     let recaptchaToken: string | null = null;
     try {
       recaptchaToken = await recaptchaRef.current.executeAsync();
+      console.log('reCAPTCHA token received:', recaptchaToken ? 'SUCCESS' : 'FAILED');
       if (!recaptchaToken) {
         toast.error('Please complete the reCAPTCHA verification');
         return;
