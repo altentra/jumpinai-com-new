@@ -346,173 +346,185 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
             <div className="space-y-6">
               {/* Executive Summary */}
               {result.comprehensive_plan.executiveSummary && (
-                <Card className="glass backdrop-blur-xl border border-border/40 rounded-2xl">
-                  <CardHeader>
-                    <CardTitle className="text-lg flex items-center gap-2">
-                      <Lightbulb className="w-5 h-5 text-primary" />
-                      Executive Summary
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-none break-words overflow-wrap-anywhere text-xs sm:text-sm">
-                      <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                        {formatAIText(result.comprehensive_plan.executiveSummary)}
-                      </ReactMarkdown>
-                    </div>
-                  </CardContent>
-                </Card>
+                <div className="relative group">
+                  <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
+                  <Card className="relative glass backdrop-blur-lg bg-card/80 border border-border hover:border-primary/40 transition-all duration-300 rounded-2xl">
+                    <CardHeader>
+                      <CardTitle className="text-lg flex items-center gap-2">
+                        <Lightbulb className="w-5 h-5 text-primary" />
+                        Executive Summary
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-none break-words overflow-wrap-anywhere text-xs sm:text-sm">
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                          {formatAIText(result.comprehensive_plan.executiveSummary)}
+                        </ReactMarkdown>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
               )}
 
               {/* Situation Analysis */}
               {result.comprehensive_plan.situationAnalysis && (
-                <Card className="glass backdrop-blur-xl border border-border/40 rounded-2xl">
-                  <CardHeader>
-                    <CardTitle className="text-lg flex items-center gap-2">
-                      <Compass className="w-5 h-5 text-primary" />
-                      Situation Analysis
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    {result.comprehensive_plan.situationAnalysis.currentState && (
-                      <div>
-                        <h4 className="font-semibold text-xs sm:text-sm mb-2">Current State</h4>
-                        <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-none text-xs sm:text-sm">
-                          <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                            {formatAIText(result.comprehensive_plan.situationAnalysis.currentState)}
-                          </ReactMarkdown>
-                        </div>
-                      </div>
-                    )}
-                    
-                    <div className="grid md:grid-cols-2 gap-4 mt-4">
-                      {result.comprehensive_plan.situationAnalysis.challenges?.length > 0 && (
-                        <div className="space-y-2">
-                          <h4 className="font-semibold text-sm flex items-center gap-2">
-                            <AlertTriangle className="w-4 h-4 text-destructive" />
-                            Key Challenges
-                          </h4>
-                          <ul className="space-y-2">
-                            {result.comprehensive_plan.situationAnalysis.challenges.map((challenge: string, idx: number) => (
-                              <li key={idx} className="text-sm pl-4 border-l-2 border-destructive/30">
-                                <div className="prose prose-sm dark:prose-invert max-w-none">
-                                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                    {formatAIText(challenge)}
-                                  </ReactMarkdown>
-                                </div>
-                              </li>
-                            ))}
-                          </ul>
+                <div className="relative group">
+                  <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
+                  <Card className="relative glass backdrop-blur-lg bg-card/80 border border-border hover:border-primary/40 transition-all duration-300 rounded-2xl">
+                    <CardHeader>
+                      <CardTitle className="text-lg flex items-center gap-2">
+                        <Compass className="w-5 h-5 text-primary" />
+                        Situation Analysis
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      {result.comprehensive_plan.situationAnalysis.currentState && (
+                        <div>
+                          <h4 className="font-semibold text-xs sm:text-sm mb-2">Current State</h4>
+                          <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-none text-xs sm:text-sm">
+                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                              {formatAIText(result.comprehensive_plan.situationAnalysis.currentState)}
+                            </ReactMarkdown>
+                          </div>
                         </div>
                       )}
                       
-                      {result.comprehensive_plan.situationAnalysis.opportunities?.length > 0 && (
-                        <div className="space-y-2">
-                          <h4 className="font-semibold text-sm flex items-center gap-2">
-                            <TrendingUp className="w-4 h-4 text-primary" />
-                            Opportunities
-                          </h4>
-                          <ul className="space-y-2">
-                            {result.comprehensive_plan.situationAnalysis.opportunities.map((opp: string, idx: number) => (
-                              <li key={idx} className="text-sm pl-4 border-l-2 border-primary/30">
-                                <div className="prose prose-sm dark:prose-invert max-w-none">
-                                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                    {formatAIText(opp)}
-                                  </ReactMarkdown>
-                                </div>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
+                      <div className="grid md:grid-cols-2 gap-4 mt-4">
+                        {result.comprehensive_plan.situationAnalysis.challenges?.length > 0 && (
+                          <div className="space-y-2">
+                            <h4 className="font-semibold text-sm flex items-center gap-2">
+                              <AlertTriangle className="w-4 h-4 text-destructive" />
+                              Key Challenges
+                            </h4>
+                            <ul className="space-y-2">
+                              {result.comprehensive_plan.situationAnalysis.challenges.map((challenge: string, idx: number) => (
+                                <li key={idx} className="text-xs pl-4 border-l-2 border-destructive/30">
+                                  <div className="prose prose-2xs dark:prose-invert max-w-none text-xs">
+                                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                      {formatAIText(challenge)}
+                                    </ReactMarkdown>
+                                  </div>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                        
+                        {result.comprehensive_plan.situationAnalysis.opportunities?.length > 0 && (
+                          <div className="space-y-2">
+                            <h4 className="font-semibold text-sm flex items-center gap-2">
+                              <TrendingUp className="w-4 h-4 text-primary" />
+                              Opportunities
+                            </h4>
+                            <ul className="space-y-2">
+                              {result.comprehensive_plan.situationAnalysis.opportunities.map((opp: string, idx: number) => (
+                                <li key={idx} className="text-xs pl-4 border-l-2 border-primary/30">
+                                  <div className="prose prose-2xs dark:prose-invert max-w-none text-xs">
+                                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                      {formatAIText(opp)}
+                                    </ReactMarkdown>
+                                  </div>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
               )}
 
               {/* Strategic Vision */}
               {result.comprehensive_plan.strategicVision && (
-                <Card className="glass backdrop-blur-xl border border-border/40 rounded-2xl">
-                  <CardHeader>
-                    <CardTitle className="text-lg flex items-center gap-2">
-                      <Target className="w-5 h-5 text-primary" />
-                      Strategic Vision
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-none text-xs sm:text-sm">
-                      <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                        {formatAIText(result.comprehensive_plan.strategicVision)}
-                      </ReactMarkdown>
-                    </div>
-                  </CardContent>
-                </Card>
+                <div className="relative group">
+                  <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
+                  <Card className="relative glass backdrop-blur-lg bg-card/80 border border-border hover:border-primary/40 transition-all duration-300 rounded-2xl">
+                    <CardHeader>
+                      <CardTitle className="text-lg flex items-center gap-2">
+                        <Target className="w-5 h-5 text-primary" />
+                        Strategic Vision
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-none text-xs sm:text-sm">
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                          {formatAIText(result.comprehensive_plan.strategicVision)}
+                        </ReactMarkdown>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
               )}
 
               {/* Roadmap */}
               {result.comprehensive_plan.roadmap && (
-                <Card className="glass backdrop-blur-xl border border-border/40 rounded-2xl">
-                  <CardHeader>
-                    <CardTitle className="text-lg flex items-center gap-2">
-                      <MapPin className="w-5 h-5 text-primary" />
-                      Roadmap
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    {/* Immediate (0-30 days) */}
-                    {result.comprehensive_plan.roadmap.immediate && (
-                      <div className="p-4 rounded-xl border border-primary/30 bg-primary/5">
-                        <div className="flex items-start justify-between mb-3">
-                          <h4 className="font-semibold text-primary flex items-center gap-2">
-                            <Clock className="w-4 h-4" />
-                            Immediate Actions
-                          </h4>
-                          <Badge variant="outline" className="text-xs bg-primary/10 text-primary border-primary/30">0-30 days</Badge>
+                <div className="relative group">
+                  <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
+                  <Card className="relative glass backdrop-blur-lg bg-card/80 border border-border hover:border-primary/40 transition-all duration-300 rounded-2xl">
+                    <CardHeader>
+                      <CardTitle className="text-lg flex items-center gap-2">
+                        <MapPin className="w-5 h-5 text-primary" />
+                        Roadmap
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      {/* Immediate (0-30 days) */}
+                      {result.comprehensive_plan.roadmap.immediate && (
+                        <div className="p-4 rounded-xl border border-primary/30 bg-primary/5">
+                          <div className="flex items-start justify-between mb-3">
+                            <h4 className="font-semibold text-primary flex items-center gap-2">
+                              <Clock className="w-4 h-4" />
+                              Immediate Actions
+                            </h4>
+                            <Badge variant="outline" className="text-xs bg-primary/10 text-primary border-primary/30">0-30 days</Badge>
+                          </div>
+                          <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-none text-xs sm:text-sm">
+                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                              {formatAIText(result.comprehensive_plan.roadmap.immediate)}
+                            </ReactMarkdown>
+                          </div>
                         </div>
-                        <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-none text-xs sm:text-sm">
-                          <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                            {formatAIText(result.comprehensive_plan.roadmap.immediate)}
-                          </ReactMarkdown>
+                      )}
+                      
+                      {/* Short-term (30-90 days) */}
+                      {result.comprehensive_plan.roadmap.shortTerm && (
+                        <div className="p-4 rounded-xl border border-primary/30 bg-primary/5">
+                          <div className="flex items-start justify-between mb-3">
+                            <h4 className="font-semibold flex items-center gap-2">
+                              <TrendingUp className="w-4 h-4 text-foreground" />
+                              Short-term Milestones
+                            </h4>
+                            <Badge variant="outline" className="text-xs">30-90 days</Badge>
+                          </div>
+                          <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-none text-xs sm:text-sm">
+                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                              {formatAIText(result.comprehensive_plan.roadmap.shortTerm)}
+                            </ReactMarkdown>
+                          </div>
                         </div>
-                      </div>
-                    )}
-                    
-                    {/* Short-term (30-90 days) */}
-                    {result.comprehensive_plan.roadmap.shortTerm && (
-                      <div className="p-4 rounded-xl border border-primary/30 bg-primary/5">
-                        <div className="flex items-start justify-between mb-3">
-                          <h4 className="font-semibold flex items-center gap-2">
-                            <TrendingUp className="w-4 h-4 text-foreground" />
-                            Short-term Milestones
-                          </h4>
-                          <Badge variant="outline" className="text-xs">30-90 days</Badge>
+                      )}
+                      
+                      {/* Long-term (90+ days) */}
+                      {result.comprehensive_plan.roadmap.longTerm && (
+                        <div className="p-4 rounded-xl border border-primary/30 bg-primary/5">
+                          <div className="flex items-start justify-between mb-3">
+                            <h4 className="font-semibold flex items-center gap-2">
+                              <Target className="w-4 h-4 text-foreground" />
+                              Long-term Goals
+                            </h4>
+                            <Badge variant="outline" className="text-xs">90+ days</Badge>
+                          </div>
+                          <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-none text-xs sm:text-sm">
+                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                              {formatAIText(result.comprehensive_plan.roadmap.longTerm)}
+                            </ReactMarkdown>
+                          </div>
                         </div>
-                        <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-none text-xs sm:text-sm">
-                          <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                            {formatAIText(result.comprehensive_plan.roadmap.shortTerm)}
-                          </ReactMarkdown>
-                        </div>
-                      </div>
-                    )}
-                    
-                    {/* Long-term (90+ days) */}
-                    {result.comprehensive_plan.roadmap.longTerm && (
-                      <div className="p-4 rounded-xl border border-primary/30 bg-primary/5">
-                        <div className="flex items-start justify-between mb-3">
-                          <h4 className="font-semibold flex items-center gap-2">
-                            <Target className="w-4 h-4 text-foreground" />
-                            Long-term Goals
-                          </h4>
-                          <Badge variant="outline" className="text-xs">90+ days</Badge>
-                        </div>
-                        <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-none text-xs sm:text-sm">
-                          <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                            {formatAIText(result.comprehensive_plan.roadmap.longTerm)}
-                          </ReactMarkdown>
-                        </div>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
+                      )}
+                    </CardContent>
+                  </Card>
+                </div>
               )}
 
               {/* Key Objectives & Success Metrics */}
