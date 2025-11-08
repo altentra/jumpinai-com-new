@@ -182,27 +182,50 @@ export function ToolPromptComboCard({ combo, onClick, index }: ToolPromptComboCa
 
           {/* Prompt Display */}
           {promptText && (
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-primary" />
-                  Ready-to-Use Prompt
-                </span>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={copyPrompt}
-                  className="gap-2 h-8 text-xs"
-                >
-                  <Copy className="w-3 h-3" />
-                  {copied ? "Copied!" : "Copy"}
-                </Button>
-              </div>
-              <div className="bg-muted/30 border border-border rounded-lg p-3">
+            <div className="space-y-3">
+              <span className="text-sm font-medium flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-primary" />
+                Ready-to-Use Prompt
+              </span>
+              <div 
+                onClick={copyPrompt}
+                className={`bg-muted/30 border border-border rounded-lg p-3 cursor-pointer transition-all duration-300 ${
+                  copied ? 'border-green-500/50 bg-green-500/10 scale-[1.01]' : 'hover:border-primary/30 hover:bg-muted/40'
+                }`}
+              >
                 <pre className="text-xs text-muted-foreground whitespace-pre-wrap font-mono leading-relaxed break-words overflow-wrap-anywhere">
                   {promptText}
                 </pre>
               </div>
+              
+              {/* Copy Button with Liquid Glass Design */}
+              <button
+                onClick={copyPrompt}
+                className="relative group/copy"
+              >
+                {/* Liquid glass glow effect */}
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover/copy:opacity-60 transition duration-500"></div>
+                
+                {/* Button */}
+                <div className="relative flex items-center gap-3 px-5 py-3 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover/copy:border-primary/50 transition-all duration-300 overflow-hidden">
+                  {/* Shimmer effect */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover/copy:translate-x-full transition-transform duration-1000"></div>
+                  
+                  {/* Content */}
+                  <span className="relative text-sm font-bold text-foreground group-hover/copy:text-primary transition-colors duration-300 whitespace-nowrap">
+                    {copied ? "Copied!" : "Copy Prompt"}
+                  </span>
+                  
+                  {/* Icon */}
+                  <div className="relative flex items-center justify-center w-6 h-6 rounded-xl bg-primary/20 group-hover/copy:bg-primary/30 transition-all duration-300">
+                    {copied ? (
+                      <CheckCircle className="w-4 h-4 text-primary" />
+                    ) : (
+                      <Copy className="w-4 h-4 text-primary group-hover/copy:scale-110 transition-transform duration-300" />
+                    )}
+                  </div>
+                </div>
+              </button>
             </div>
           )}
 
