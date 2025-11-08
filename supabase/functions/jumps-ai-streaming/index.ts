@@ -20,41 +20,58 @@ const StudioFormSchema = z.object({
   recaptchaToken: z.string().min(1, 'reCAPTCHA verification is required') // reCAPTCHA is now mandatory
 });
 
-// Verify reCAPTCHA v2 token with Google's API
+// Verify reCAPTCHA Enterprise token with Google's API
 async function verifyRecaptcha(token: string): Promise<boolean> {
-  const recaptchaSecret = Deno.env.get('RECAPTCHA_SECRET_KEY');
+  const apiKey = Deno.env.get('GOOGLE_RECAPTCHA_API_KEY');
+  const projectId = 'jumpinai'; // Your Google Cloud Project ID
+  const expectedAction = 'GENERATE_JUMP'; // Must match frontend action
   
-  if (!recaptchaSecret) {
-    console.error('RECAPTCHA_SECRET_KEY not configured');
+  if (!apiKey) {
+    console.error('GOOGLE_RECAPTCHA_API_KEY not configured');
     return false;
   }
 
   try {
-    console.log('Verifying reCAPTCHA token...');
-    const response = await fetch('https://www.google.com/recaptcha/api/siteverify', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: `secret=${recaptchaSecret}&response=${token}`
-    });
+    console.log('Verifying reCAPTCHA Enterprise token...');
+    const response = await fetch(
+      `https://recaptchaenterprise.googleapis.com/v1/projects/${projectId}/assessments?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          event: {
+            token: token,
+            siteKey: '6LcNLAYsAAAAANpysLVw3g_CdlDs8zHaozOZG_7k',
+            expectedAction: expectedAction
+          }
+        })
+      }
+    );
 
     if (!response.ok) {
-      console.error('reCAPTCHA API returned error:', response.status);
+      const errorText = await response.text();
+      console.error('reCAPTCHA Enterprise API error:', response.status, errorText);
       return false;
     }
 
     const data = await response.json();
-    console.log('reCAPTCHA verification response:', {
-      success: data.success,
-      hostname: data.hostname,
-      challenge_ts: data.challenge_ts,
-      error_codes: data['error-codes']
+    console.log('reCAPTCHA Enterprise verification:', {
+      valid: data.tokenProperties?.valid,
+      action: data.tokenProperties?.action,
+      score: data.riskAnalysis?.score,
+      reasons: data.riskAnalysis?.reasons
     });
 
-    if (!data.success) {
-      console.error('reCAPTCHA verification failed:', data['error-codes']);
-    }
-
-    return data.success === true;
+    // Check if token is valid and action matches
+    const isValid = data.tokenProperties?.valid === true;
+    const actionMatches = data.tokenProperties?.action === expectedAction;
+    const score = data.riskAnalysis?.score || 0;
+    
+    console.log('Verification result:', { isValid, actionMatches, score });
+    
+    // For Enterprise, we accept valid tokens with matching action
+    // Score is informational but we don't reject based on it alone
+    return isValid && actionMatches;
   } catch (error) {
     console.error('reCAPTCHA verification error:', error);
     return false;

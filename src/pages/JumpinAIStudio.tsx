@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { User, AlertCircle, Loader2, LogIn, Zap } from 'lucide-react';
-import ReCAPTCHA from 'react-google-recaptcha';
 import Navigation from '@/components/Navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { useCredits } from '@/hooks/useCredits';
@@ -13,8 +12,21 @@ import { useProgressiveGeneration } from '@/hooks/useProgressiveGeneration';
 import { CreditsDisplay } from '@/components/CreditsDisplay';
 import { supabase } from '@/integrations/supabase/client';
 
-// reCAPTCHA site key (public key - safe to expose)
+// reCAPTCHA Enterprise site key (public key - safe to expose)
 const RECAPTCHA_SITE_KEY = '6LcNLAYsAAAAANpysLVw3g_CdlDs8zHaozOZG_7k';
+const RECAPTCHA_ACTION = 'GENERATE_JUMP';
+
+// Declare grecaptcha for TypeScript
+declare global {
+  interface Window {
+    grecaptcha: {
+      enterprise: {
+        ready: (callback: () => void) => void;
+        execute: (siteKey: string, options: { action: string }) => Promise<string>;
+      };
+    };
+  }
+}
 
 const JumpinAIStudio = () => {
   const { user, isAuthenticated, login } = useAuth();
@@ -28,7 +40,6 @@ const JumpinAIStudio = () => {
   const generateButtonRef = useRef<HTMLDivElement>(null);
   const goalsTextareaRef = useRef<HTMLTextAreaElement>(null);
   const challengesTextareaRef = useRef<HTMLTextAreaElement>(null);
-  const recaptchaRef = useRef<ReCAPTCHA>(null);
 
   useEffect(() => {
     const meta = document.createElement('meta');
@@ -116,6 +127,43 @@ const JumpinAIStudio = () => {
     }
   }, [formData.goals, formData.challenges]);
 
+  // Load reCAPTCHA Enterprise script
+  useEffect(() => {
+    const loadRecaptchaScript = () => {
+      // Check if already loaded
+      if (window.grecaptcha?.enterprise) {
+        console.log('✅ reCAPTCHA Enterprise already loaded');
+        setRecaptchaReady(true);
+        return;
+      }
+
+      console.log('Loading reCAPTCHA Enterprise script...');
+      const script = document.createElement('script');
+      script.src = `https://www.google.com/recaptcha/enterprise.js?render=${RECAPTCHA_SITE_KEY}`;
+      script.async = true;
+      script.defer = true;
+      
+      script.onload = () => {
+        if (window.grecaptcha?.enterprise) {
+          window.grecaptcha.enterprise.ready(() => {
+            console.log('✅ reCAPTCHA Enterprise loaded and ready');
+            setRecaptchaReady(true);
+          });
+        }
+      };
+      
+      script.onerror = () => {
+        console.error('❌ Failed to load reCAPTCHA Enterprise script');
+        setRecaptchaReady(false);
+        toast.error('reCAPTCHA failed to load. Please check your internet connection.');
+      };
+      
+      document.head.appendChild(script);
+    };
+
+    loadRecaptchaScript();
+  }, []);
+
   const loadSavedFormData = async () => {
     // SECURITY: Only load data for authenticated users with verified user ID
     if (!isAuthenticated || !user?.id) {
@@ -196,7 +244,6 @@ const JumpinAIStudio = () => {
   const handleGenerate = async () => {
     console.log('=== GENERATE BUTTON CLICKED ===');
     console.log('Form data:', formData);
-    console.log('recaptchaRef.current:', recaptchaRef.current);
     console.log('recaptchaReady:', recaptchaReady);
     console.log('isAuthenticated:', isAuthenticated);
     console.log('guestUsageCount:', guestUsageCount);
@@ -209,39 +256,31 @@ const JumpinAIStudio = () => {
     }
 
     // Verify reCAPTCHA is loaded and ready
-    if (!recaptchaRef.current || !recaptchaReady) {
-      console.error('reCAPTCHA not ready!', { ref: !!recaptchaRef.current, ready: recaptchaReady });
+    if (!recaptchaReady || !window.grecaptcha?.enterprise) {
+      console.error('reCAPTCHA Enterprise not ready!', { ready: recaptchaReady, available: !!window.grecaptcha?.enterprise });
       toast.error('reCAPTCHA is loading... Please wait a moment and try again.');
       return;
     }
 
-    console.log('Attempting reCAPTCHA verification...');
+    console.log('Attempting reCAPTCHA Enterprise verification...');
     let recaptchaToken: string | null = null;
     
     try {
-      // Reset the widget first to clear any previous state
-      console.log('Resetting reCAPTCHA widget...');
-      recaptchaRef.current.reset();
-      
-      // Wait for reset to complete
-      await new Promise(resolve => setTimeout(resolve, 200));
-      
-      console.log('Executing reCAPTCHA...');
-      recaptchaToken = await recaptchaRef.current.executeAsync();
-      console.log('✅ reCAPTCHA token received:', recaptchaToken ? 'SUCCESS' : 'FAILED');
+      console.log('Executing reCAPTCHA Enterprise with action:', RECAPTCHA_ACTION);
+      recaptchaToken = await window.grecaptcha.enterprise.execute(RECAPTCHA_SITE_KEY, { 
+        action: RECAPTCHA_ACTION 
+      });
+      console.log('✅ reCAPTCHA Enterprise token received:', recaptchaToken ? 'SUCCESS' : 'FAILED');
       console.log('Token length:', recaptchaToken?.length || 0);
       
       if (!recaptchaToken) {
-        console.error('❌ reCAPTCHA returned null token');
+        console.error('❌ reCAPTCHA Enterprise returned null token');
         toast.error('reCAPTCHA verification failed. Please try again.');
         return;
       }
       
-      // Reset the widget after successful execution
-      recaptchaRef.current.reset();
-      
     } catch (error) {
-      console.error('❌ reCAPTCHA error:', error);
+      console.error('❌ reCAPTCHA Enterprise error:', error);
       console.error('Error type:', typeof error);
       console.error('Current domain:', window.location.hostname);
       console.error('reCAPTCHA key:', RECAPTCHA_SITE_KEY);
@@ -614,30 +653,7 @@ const JumpinAIStudio = () => {
           </div>
         </main>
 
-      </div>
-      
-      {/* Invisible reCAPTCHA - must be rendered once for verification */}
-      <div style={{ visibility: 'hidden', position: 'absolute', bottom: 0, right: 0, width: '256px', height: '60px', overflow: 'hidden' }}>
-        <ReCAPTCHA
-          ref={recaptchaRef}
-          sitekey={RECAPTCHA_SITE_KEY}
-          size="invisible"
-          onLoad={() => {
-            console.log('✅ reCAPTCHA loaded successfully');
-            setRecaptchaReady(true);
-          }}
-          onError={() => {
-            console.error('❌ reCAPTCHA failed to load');
-            setRecaptchaReady(false);
-            toast.error('reCAPTCHA failed to load. Please check your internet connection.');
-          }}
-          onExpired={() => {
-            console.warn('⚠️ reCAPTCHA expired');
-            if (recaptchaRef.current) {
-              recaptchaRef.current.reset();
-            }
-          }}
-        />
+
       </div>
     </>
   );
