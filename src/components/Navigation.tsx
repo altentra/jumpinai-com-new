@@ -127,7 +127,7 @@ const Navigation = React.memo(() => {
                     <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="min-w-[150px] z-50">
+                <DropdownMenuContent align="start" className="min-w-[150px]">
                   {companyItems.map((item) => (
                     <DropdownMenuItem key={item.name} onSelect={() => handleNavClick(item.href)}>
                       {item.name}
@@ -161,7 +161,7 @@ const Navigation = React.memo(() => {
                     </div>
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="min-w-[200px] z-50">
+                <DropdownMenuContent align="end" className="min-w-[200px]">
                   <DropdownMenuItem onSelect={() => navigate('/dashboard')}>Dashboard</DropdownMenuItem>
                   <DropdownMenuItem onSelect={() => logout()}>Log Out</DropdownMenuItem>
                 </DropdownMenuContent>
