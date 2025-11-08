@@ -148,7 +148,7 @@ export function ToolPromptDetailModal({ toolPrompt, isOpen, onClose }: ToolPromp
                     copied ? 'border-green-500/50 bg-green-500/10 scale-[1.01]' : 'hover:border-primary/30 hover:bg-muted/40'
                   }`}
                 >
-                  <pre className="text-xs text-foreground whitespace-pre-wrap font-mono leading-relaxed break-words overflow-wrap-anywhere max-h-72 overflow-y-auto custom-scrollbar">
+                  <pre className="text-xs text-muted-foreground whitespace-pre-wrap font-mono leading-relaxed break-words overflow-wrap-anywhere max-h-72 overflow-y-auto custom-scrollbar">
                     {String(toolPrompt.prompt_text)}
                   </pre>
                 </div>
@@ -246,54 +246,59 @@ export function ToolPromptDetailModal({ toolPrompt, isOpen, onClose }: ToolPromp
 
             {/* Alternatives */}
             {Array.isArray(content.alternatives) && content.alternatives.length > 0 && (
-              <div className="space-y-3 animate-fade-in">
-                <p className="text-sm font-semibold text-foreground/80 flex items-center gap-2">
-                  <div className="w-1 h-4 bg-gradient-to-b from-primary to-accent rounded-full"></div>
-                  Alternative Tools
-                </p>
-                <div className="space-y-2.5">
-                  {content.alternatives.map((alt: any, idx: number) => {
-                    const altName = alt?.tool || alt?.name || alt;
-                    const altUrl = alt?.url || alt?.tool_url;
-                    const altNote = alt?.note || alt?.description;
-                    
-                    return (
-                      <div key={idx} className="space-y-2">
-                        {altUrl ? (
-                          <a
-                            href={String(altUrl)}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="relative group/alt inline-block"
-                          >
-                            {/* Liquid glass glow effect */}
-                            <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover/alt:opacity-60 transition duration-500"></div>
-                            
-                            {/* Button */}
-                            <div className="relative flex items-center gap-3 px-5 py-3 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover/alt:border-primary/50 transition-all duration-300 overflow-hidden">
-                              {/* Shimmer effect */}
-                              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover/alt:translate-x-full transition-transform duration-1000"></div>
+              <div className="relative group animate-fade-in">
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-orange-500/20 to-red-500/20 rounded-2xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
+                <div className="relative p-4 bg-gradient-to-br from-orange-500/10 via-orange-500/5 to-red-500/10 backdrop-blur-sm border border-orange-500/20 rounded-2xl hover:border-orange-500/30 transition-all duration-300">
+                  <div className="flex items-start gap-3 mb-3">
+                    <div className="p-2 bg-orange-500/10 rounded-xl">
+                      <ExternalLink className="w-4 h-4 text-orange-400 shrink-0" />
+                    </div>
+                    <p className="text-sm font-semibold text-orange-400">Alternative Tools</p>
+                  </div>
+                  <div className="space-y-3">
+                    {content.alternatives.map((alt: any, idx: number) => {
+                      const altName = alt?.tool || alt?.name || alt;
+                      const altUrl = alt?.url || alt?.tool_url;
+                      const altNote = alt?.note || alt?.description;
+                      
+                      return (
+                        <div key={idx} className="space-y-2">
+                          {altUrl ? (
+                            <a
+                              href={String(altUrl)}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="relative group/alt inline-block"
+                            >
+                              {/* Liquid glass glow effect */}
+                              <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover/alt:opacity-60 transition duration-500"></div>
                               
-                              {/* Content */}
-                              <span className="relative text-sm font-bold text-foreground group-hover/alt:text-primary transition-colors duration-300 whitespace-nowrap">
-                                {String(altName)}
-                              </span>
-                              
-                              {/* Arrow icon */}
-                              <div className="relative flex items-center justify-center w-6 h-6 rounded-xl bg-primary/20 group-hover/alt:bg-primary/30 transition-all duration-300">
-                                <ExternalLink className="w-4 h-4 text-primary group-hover/alt:translate-x-0.5 group-hover/alt:-translate-y-0.5 transition-transform duration-300" />
+                              {/* Button */}
+                              <div className="relative flex items-center gap-3 px-5 py-3 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover/alt:border-primary/50 transition-all duration-300 overflow-hidden">
+                                {/* Shimmer effect */}
+                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover/alt:translate-x-full transition-transform duration-1000"></div>
+                                
+                                {/* Content */}
+                                <span className="relative text-sm font-bold text-foreground group-hover/alt:text-primary transition-colors duration-300 whitespace-nowrap">
+                                  {String(altName)}
+                                </span>
+                                
+                                {/* Arrow icon */}
+                                <div className="relative flex items-center justify-center w-6 h-6 rounded-xl bg-primary/20 group-hover/alt:bg-primary/30 transition-all duration-300">
+                                  <ExternalLink className="w-4 h-4 text-primary group-hover/alt:translate-x-0.5 group-hover/alt:-translate-y-0.5 transition-transform duration-300" />
+                                </div>
                               </div>
+                            </a>
+                          ) : (
+                            <div className="inline-block px-5 py-3 bg-muted/20 rounded-[2rem] border border-border">
+                              <span className="text-sm font-medium text-muted-foreground whitespace-nowrap">{String(altName)}</span>
                             </div>
-                          </a>
-                        ) : (
-                          <div className="inline-block px-5 py-3 bg-muted/20 rounded-[2rem] border border-border">
-                            <span className="text-sm font-medium text-muted-foreground whitespace-nowrap">{String(altName)}</span>
-                          </div>
-                        )}
-                        {altNote && <p className="text-xs text-foreground leading-relaxed">{String(altNote)}</p>}
-                      </div>
-                    );
-                  })}
+                          )}
+                          {altNote && <p className="text-xs text-foreground leading-relaxed">{String(altNote)}</p>}
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
             )}
