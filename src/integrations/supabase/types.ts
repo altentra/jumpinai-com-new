@@ -10,10 +10,46 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "13.0.4"
+    PostgrestVersion: "13.0.5"
   }
   public: {
     Tables: {
+      api_usage_logs: {
+        Row: {
+          created_at: string
+          endpoint: string
+          error_message: string | null
+          id: string
+          ip_address: string | null
+          request_duration_ms: number | null
+          status_code: number | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          endpoint: string
+          error_message?: string | null
+          id?: string
+          ip_address?: string | null
+          request_duration_ms?: number | null
+          status_code?: number | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          endpoint?: string
+          error_message?: string | null
+          id?: string
+          ip_address?: string | null
+          request_duration_ms?: number | null
+          status_code?: number | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       contact_activities: {
         Row: {
           activity_type: string
@@ -184,6 +220,36 @@ export type Database = {
           last_drip_at?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      guest_usage_tracking: {
+        Row: {
+          created_at: string
+          id: string
+          ip_address: string
+          last_used_at: string
+          updated_at: string
+          usage_count: number
+          user_agent: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          ip_address: string
+          last_used_at?: string
+          updated_at?: string
+          usage_count?: number
+          user_agent?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          ip_address?: string
+          last_used_at?: string
+          updated_at?: string
+          usage_count?: number
+          user_agent?: string | null
         }
         Relationships: []
       }
@@ -731,6 +797,10 @@ export type Database = {
       }
       allocate_drip_credits: { Args: never; Returns: undefined }
       allocate_monthly_credits: { Args: never; Returns: undefined }
+      check_and_record_guest_usage: {
+        Args: { p_ip_address: string; p_user_agent?: string }
+        Returns: Json
+      }
       check_rate_limit: {
         Args: {
           email_col: string
@@ -742,6 +812,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      clean_old_guest_usage: { Args: never; Returns: undefined }
       deduct_user_credit: {
         Args: {
           p_description?: string
