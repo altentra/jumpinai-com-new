@@ -77,12 +77,12 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
     
     // If generation is complete, all steps get checkmark
     if (isComplete && hasContent) {
-      return <CheckCircle className="w-4 h-4 text-green-500" />;
+      return <CheckCircle className="w-4 h-4 text-green-600 dark:text-green-500" />;
     }
     
     // If current step is past this step and we have content, it's complete
     if (currentStepIndex > thisStepIndex && hasContent) {
-      return <CheckCircle className="w-4 h-4 text-green-500" />;
+      return <CheckCircle className="w-4 h-4 text-green-600 dark:text-green-500" />;
     }
     
     // If this is the current step, show spinning
