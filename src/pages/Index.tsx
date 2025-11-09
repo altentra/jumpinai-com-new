@@ -310,14 +310,14 @@ const Index = () => {
 
               {/* Multi-Level Breakdown */}
               <div className="space-y-3 sm:space-y-4">
-                {/* Level 1 */}
+                {/* Level 0 */}
                 <div className="relative pl-4 sm:pl-6 border-l-2 border-primary/40">
                   <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full backdrop-blur-xl bg-primary/90 ring-2 ring-primary/30 flex items-center justify-center text-xs font-bold text-primary-foreground">
-                    1
+                    0
                   </div>
                   <div className="glass bg-muted/30 p-3 sm:p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-2">
-                      <h4 className="font-bold text-xs sm:text-sm">Level 1: Original Generated Plan</h4>
+                      <h4 className="font-bold text-xs sm:text-sm">Level 0: Original Generated Plan</h4>
                       <span className="text-xs px-2 py-0.5 rounded-full backdrop-blur-xl bg-primary/20 border border-primary/30 text-primary font-semibold">Your Jump</span>
                     </div>
                     <p className="text-xs text-muted-foreground mb-2">
@@ -339,18 +339,18 @@ const Index = () => {
                   </div>
                 </div>
 
-                {/* Level 2 */}
+                {/* Level 1 */}
                 <div className="relative pl-4 sm:pl-6 border-l-2 border-primary/30 ml-2 sm:ml-4">
                   <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full backdrop-blur-xl bg-primary/80 ring-2 ring-primary/20 flex items-center justify-center text-xs font-bold text-primary-foreground">
-                    2
+                    1
                   </div>
                   <div className="glass bg-muted/30 p-3 sm:p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-2">
-                      <h4 className="font-bold text-xs sm:text-sm">Level 2: First Clarification</h4>
+                      <h4 className="font-bold text-xs sm:text-sm">Level 1: First Clarification</h4>
                       <span className="text-xs px-2 py-0.5 rounded-full bg-green-600/90 text-white font-semibold border border-green-700/50">5 sub-steps</span>
                     </div>
                     <p className="text-xs text-muted-foreground mb-2">
-                      After clicking "Clarify" on the Level 1 step
+                      After clicking "Clarify" on the original step
                     </p>
                     <div className="space-y-1.5 text-xs">
                       <div className="p-2 rounded glass bg-muted/30 border border-primary/15 hover:border-primary/30 transition-colors backdrop-blur-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
@@ -376,14 +376,14 @@ const Index = () => {
                   </div>
                 </div>
 
-                {/* Level 3 */}
+                {/* Level 2 */}
                 <div className="relative pl-4 sm:pl-6 border-l-2 border-primary/20 ml-4 sm:ml-8">
                   <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full backdrop-blur-xl bg-primary/70 ring-2 ring-primary/15 flex items-center justify-center text-xs font-bold text-primary-foreground">
-                    3
+                    2
                   </div>
                   <div className="glass bg-muted/30 p-3 sm:p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-2">
-                      <h4 className="font-bold text-xs sm:text-sm">Level 3: Clarify the Sub-Step</h4>
+                      <h4 className="font-bold text-xs sm:text-sm">Level 2: Clarify the Sub-Step</h4>
                       <span className="text-xs px-2 py-0.5 rounded-full bg-green-600/90 text-white font-semibold border border-green-700/50">5 more</span>
                     </div>
                     <p className="text-xs text-muted-foreground mb-2">
@@ -413,22 +413,26 @@ const Index = () => {
                   </div>
                 </div>
 
-                {/* Level 4 */}
+                {/* Level 3 */}
                 <div className="relative pl-4 sm:pl-6 border-l-2 border-primary/15 ml-6 sm:ml-12">
                   <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full backdrop-blur-xl bg-primary/60 ring-2 ring-primary/10 flex items-center justify-center text-xs font-bold text-primary-foreground">
-                    4
+                    3
                   </div>
                   <div className="glass bg-muted/30 p-3 sm:p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-2">
-                      <h4 className="font-bold text-xs sm:text-sm">Level 4: Maximum Detail</h4>
-                      <span className="text-xs px-2 py-0.5 rounded-full bg-green-600/90 text-white font-semibold border border-green-700/50">Crystal clear</span>
+                      <h4 className="font-bold text-xs sm:text-sm">Level 3: Clarify the Level 2 Sub-Step</h4>
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-green-600/90 text-white font-semibold border border-green-700/50">5 more</span>
                     </div>
                     <p className="text-xs text-muted-foreground mb-2">
                       Clicked "Clarify" on "Analyze current customer data"
                     </p>
                     <div className="space-y-1 text-xs">
-                      <div className="p-1.5 rounded glass bg-muted/30 border border-primary/10 text-muted-foreground backdrop-blur-sm break-words">
-                        → Export customer purchase history from CRM
+                      <div className="p-1.5 rounded glass bg-muted/30 border border-primary/15 hover:border-primary/30 transition-colors backdrop-blur-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                        <span className="text-muted-foreground break-words">→ Export customer purchase history from CRM</span>
+                        <div className="flex gap-1 sm:opacity-0 sm:hover:opacity-100 transition-opacity flex-shrink-0">
+                          <button className="px-1.5 py-0.5 rounded backdrop-blur-xl bg-primary/90 text-primary-foreground text-xs font-semibold">Clarify</button>
+                          <button className="px-1.5 py-0.5 rounded backdrop-blur-xl bg-primary/90 text-primary-foreground text-xs font-semibold">Reroute</button>
+                        </div>
                       </div>
                       <div className="p-1.5 rounded glass bg-muted/30 border border-primary/10 text-muted-foreground backdrop-blur-sm break-words">
                         → Identify top 20% of customers by revenue
@@ -441,6 +445,39 @@ const Index = () => {
                       </div>
                       <div className="p-1.5 rounded glass bg-muted/30 border border-primary/10 text-muted-foreground backdrop-blur-sm break-words">
                         → Share findings with marketing team
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Level 4 */}
+                <div className="relative pl-4 sm:pl-6 border-l-2 border-primary/10 ml-8 sm:ml-16">
+                  <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full backdrop-blur-xl bg-primary/50 ring-2 ring-primary/5 flex items-center justify-center text-xs font-bold text-primary-foreground">
+                    4
+                  </div>
+                  <div className="glass bg-muted/30 p-3 sm:p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-2">
+                      <h4 className="font-bold text-xs sm:text-sm">Level 4: Maximum Detail</h4>
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-green-600/90 text-white font-semibold border border-green-700/50">Crystal clear</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground mb-2">
+                      Clicked "Clarify" on "Export customer purchase history from CRM"
+                    </p>
+                    <div className="space-y-1 text-xs">
+                      <div className="p-1.5 rounded glass bg-muted/30 border border-primary/10 text-muted-foreground backdrop-blur-sm break-words">
+                        → Log into your CRM system (Salesforce/HubSpot)
+                      </div>
+                      <div className="p-1.5 rounded glass bg-muted/30 border border-primary/10 text-muted-foreground backdrop-blur-sm break-words">
+                        → Navigate to Reports → Customer Purchase History
+                      </div>
+                      <div className="p-1.5 rounded glass bg-muted/30 border border-primary/10 text-muted-foreground backdrop-blur-sm break-words">
+                        → Set date range to last 12 months
+                      </div>
+                      <div className="p-1.5 rounded glass bg-muted/30 border border-primary/10 text-muted-foreground backdrop-blur-sm break-words">
+                        → Export as CSV with customer ID, purchase date, amount
+                      </div>
+                      <div className="p-1.5 rounded glass bg-muted/30 border border-primary/10 text-muted-foreground backdrop-blur-sm break-words">
+                        → Save file to shared marketing folder
                       </div>
                     </div>
                     <p className="text-xs text-muted-foreground mt-2 italic">
@@ -541,7 +578,7 @@ const Index = () => {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11"></path>
                     </svg>
                   </div>
-                  <h4 className="font-bold text-xs sm:text-sm mb-1">4 Levels Deep</h4>
+                  <h4 className="font-bold text-xs sm:text-sm mb-1">4 Clarification Levels</h4>
                   <p className="text-xs text-muted-foreground">Complete clarity</p>
                 </div>
               </div>
