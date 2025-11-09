@@ -212,10 +212,10 @@ export function ToolPromptDetailModal({ toolPrompt, isOpen, onClose, index }: To
                 <div className="relative p-4 bg-gradient-to-br from-blue-500/10 via-blue-500/5 to-cyan-500/10 backdrop-blur-sm border border-blue-500/20 rounded-2xl hover:border-blue-500/30 transition-all duration-300">
                   <div className="flex items-start gap-3">
                     <div className="p-2 bg-blue-500/10 rounded-xl">
-                      <Clock className="w-4 h-4 text-blue-400 shrink-0" />
+                      <Clock className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0" />
                     </div>
                     <div className="flex-1">
-                      <p className="text-sm font-semibold text-blue-400 mb-2">When to Use</p>
+                      <p className="text-sm font-semibold text-blue-600 dark:text-blue-400 mb-2">When to Use</p>
                       <p className="text-xs text-foreground leading-relaxed">
                         {String(content.when_to_use)}
                       </p>
@@ -232,10 +232,10 @@ export function ToolPromptDetailModal({ toolPrompt, isOpen, onClose, index }: To
                 <div className="relative p-4 bg-gradient-to-br from-green-500/10 via-green-500/5 to-emerald-500/10 backdrop-blur-sm border border-green-500/20 rounded-2xl hover:border-green-500/30 transition-all duration-300">
                   <div className="flex items-start gap-3">
                     <div className="p-2 bg-green-500/10 rounded-xl">
-                      <CheckCircle className="w-4 h-4 text-green-400 shrink-0" />
+                      <CheckCircle className="w-4 h-4 text-green-600 dark:text-green-400 shrink-0" />
                     </div>
                     <div className="flex-1">
-                      <p className="text-sm font-semibold text-green-400 mb-2">Why This Combo</p>
+                      <p className="text-sm font-semibold text-green-600 dark:text-green-400 mb-2">Why This Combo</p>
                       <p className="text-xs text-foreground leading-relaxed">
                         {String(content.why_this_tool || content.why_this_combo)}
                       </p>
@@ -252,9 +252,9 @@ export function ToolPromptDetailModal({ toolPrompt, isOpen, onClose, index }: To
                 <div className="relative p-4 bg-gradient-to-br from-orange-500/10 via-orange-500/5 to-red-500/10 backdrop-blur-sm border border-orange-500/20 rounded-2xl hover:border-orange-500/30 transition-all duration-300">
                   <div className="flex items-start gap-3 mb-3">
                     <div className="p-2 bg-orange-500/10 rounded-xl">
-                      <ArrowLeftRight className="w-4 h-4 text-orange-400 shrink-0" />
+                      <ArrowLeftRight className="w-4 h-4 text-orange-600 dark:text-orange-400 shrink-0" />
                     </div>
-                    <p className="text-sm font-semibold text-orange-400">Alternative Tools</p>
+                    <p className="text-sm font-semibold text-orange-600 dark:text-orange-400">Alternative Tools</p>
                   </div>
                   <div className="space-y-3">
                     {content.alternatives.map((alt: any, idx: number) => {
