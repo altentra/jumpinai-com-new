@@ -29,27 +29,41 @@ serve(async (req) => {
 
     const requestData: ClarifyStepRequest = await req.json();
     const level = requestData.level || 1; // Default to level 1 if not specified
-    const labelPrefix = level === 2 ? 'Level 2. Sub-Step' : 'Sub-Step';
+    const labelPrefix = level === 2 ? 'Level 2. Sub-Step' : 
+                       level === 3 ? 'Level 3. Sub-Step' :
+                       level === 4 ? 'Level 4. Sub-Step' : 'Sub-Step';
     console.log(`Clarifying ${labelPrefix}:`, requestData);
 
     const systemPrompt = `You are an expert strategic planner specializing in breaking down complex tasks into clear, manageable sub-steps. Your goal is to provide detailed, actionable guidance that helps users execute each step with clarity and confidence.
 
-${level === 2 ? 'NOTE: You are generating Level 2 sub-steps (breaking down a sub-step into even more detailed actions). Label these as "Level 2. Sub-Step 1", "Level 2. Sub-Step 2", etc.' : ''}`;
+${level === 2 ? 'NOTE: You are generating Level 2 sub-steps (breaking down a sub-step into even more detailed actions). Label these as "Level 2. Sub-Step 1", "Level 2. Sub-Step 2", etc.' : ''}
+${level === 3 ? 'NOTE: You are generating Level 3 sub-steps (breaking down a Level 2 sub-step into ultra-detailed micro-actions). Label these as "Level 3. Sub-Step 1", "Level 3. Sub-Step 2", etc.' : ''}
+${level === 4 ? 'NOTE: You are generating Level 4 sub-steps (breaking down a Level 3 sub-step into the most granular possible actions). Label these as "Level 4. Sub-Step 1", "Level 4. Sub-Step 2", etc.' : ''}`;
 
-    const userPrompt = `I need you to break down a specific ${level === 2 ? 'sub-step' : 'step'} from an implementation plan into 5 detailed ${level === 2 ? 'Level 2 sub-steps' : 'sub-steps'}.
+    const levelLabel = level === 2 ? 'sub-step' : 
+                      level === 3 ? 'Level 2 sub-step' :
+                      level === 4 ? 'Level 3 sub-step' : 'step';
+    const outputLabel = level === 2 ? 'Level 2 sub-steps' : 
+                       level === 3 ? 'Level 3 sub-steps' :
+                       level === 4 ? 'Level 4 sub-steps' : 'sub-steps';
+    const stepLabel = level === 2 ? 'Sub-Step' :
+                     level === 3 ? 'Level 2 Sub-Step' :
+                     level === 4 ? 'Level 3 Sub-Step' : 'Step';
+
+    const userPrompt = `I need you to break down a specific ${levelLabel} from an implementation plan into 5 detailed ${outputLabel}.
 
 JUMP OVERVIEW CONTEXT:
 ${requestData.jumpOverview}
 
 CURRENT PHASE: ${requestData.phaseTitle} (Phase ${requestData.phaseNumber})
 
-${level === 2 ? 'SUB-STEP' : 'STEP'} TO CLARIFY:
+${stepLabel.toUpperCase()} TO CLARIFY:
 Title: ${requestData.stepTitle}
 Description: ${requestData.stepDescription}
-${level === 2 ? 'Sub-Step' : 'Step'} Number: ${requestData.stepNumber}
+${stepLabel} Number: ${requestData.stepNumber}
 
 Your task:
-Generate EXACTLY 5 detailed ${level === 2 ? 'Level 2 sub-steps' : 'sub-steps'} that break down the above ${level === 2 ? 'sub-step' : 'step'} into more manageable, executable actions. Each ${level === 2 ? 'Level 2 sub-step' : 'sub-step'} should:
+Generate EXACTLY 5 detailed ${outputLabel} that break down the above ${levelLabel} into more manageable, executable actions. Each ${outputLabel.slice(0, -1)} should:
 1. Be specific and actionable (not vague or generic)
 2. Follow a logical sequence
 3. Include clear guidance on HOW to execute it
