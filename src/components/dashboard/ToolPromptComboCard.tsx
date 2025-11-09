@@ -229,6 +229,26 @@ export function ToolPromptComboCard({ combo, onClick, index }: ToolPromptComboCa
             </div>
           )}
 
+          {/* How to Use */}
+          {promptInstructions && (
+            <div className="p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
+              <div className="flex items-start gap-2">
+                <Sparkles className="w-4 h-4 text-yellow-700 dark:text-yellow-400 mt-0.5 shrink-0" />
+                <div className="flex-1">
+                  <p className="text-xs font-medium text-yellow-700 dark:text-yellow-400 mb-1">How to Use</p>
+                  <div className="text-xs sm:text-sm text-foreground leading-relaxed space-y-1">
+                    {String(promptInstructions)
+                      .split(/(?=\d+\.\s)/)
+                      .filter(step => step.trim())
+                      .map((step, idx) => (
+                        <div key={idx}>{step.trim()}</div>
+                      ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* When to Use */}
           {whenToUse && (
             <div className="p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg">
