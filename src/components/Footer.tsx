@@ -104,7 +104,7 @@ const Footer = () => {
           </div>
 
           {/* What We Do */}
-          <div>
+          <div className="pt-6">
             <h3 className="text-lg font-bold mb-4 text-foreground font-display">What We Do</h3>
             <ul className="space-y-[0.4rem]">
               <li>
@@ -126,7 +126,7 @@ const Footer = () => {
           </div>
 
           {/* Who We Are */}
-          <div>
+          <div className="pt-6">
             <h3 className="text-lg font-bold mb-4 text-foreground font-display">Who We Are</h3>
             <ul className="space-y-[0.4rem]">
               <li>
@@ -148,7 +148,7 @@ const Footer = () => {
           </div>
 
           {/* Legal */}
-          <div>
+          <div className="pt-6">
             <h3 className="text-lg font-bold mb-4 text-foreground font-display">Legal</h3>
             <ul className="space-y-[0.4rem]">
               <li>
