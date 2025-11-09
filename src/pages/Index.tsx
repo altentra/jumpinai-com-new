@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Sparkles, GitBranch } from 'lucide-react';
 import Navigation from "@/components/Navigation";
 import Hero from "@/components/Hero";
 import Features from "@/components/Features";
@@ -285,8 +286,14 @@ const Index = () => {
                     <div className="grid sm:grid-cols-2 gap-3">
                       <div className="glass bg-muted/30 p-3 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
                         <div className="flex items-center gap-2 mb-2">
-                          <div className="px-2 py-0.5 rounded backdrop-blur-xl bg-primary/90 text-primary-foreground text-xs font-bold">
-                            CLARIFY
+                          {/* Clarify Button - Exact replica from JumpPlanDisplay */}
+                          <div className="relative group/clarify">
+                            <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/40 via-accent/30 to-primary/40 rounded-[2rem] blur-md opacity-40 transition duration-500"></div>
+                            <div className="relative flex items-center gap-2 px-5 py-2.5 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2rem] border border-primary/40 transition-all duration-300 overflow-hidden shadow-lg shadow-primary/10 cursor-default">
+                              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full transition-transform duration-1000"></div>
+                              <Sparkles className="relative w-3.5 h-3.5 text-primary" />
+                              <span className="relative text-sm font-bold text-foreground whitespace-nowrap">Clarify</span>
+                            </div>
                           </div>
                         </div>
                         <p className="text-xs sm:text-sm text-muted-foreground">
@@ -295,8 +302,14 @@ const Index = () => {
                       </div>
                       <div className="glass bg-muted/30 p-3 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
                         <div className="flex items-center gap-2 mb-2">
-                          <div className="px-2 py-0.5 rounded backdrop-blur-xl bg-primary/90 text-primary-foreground text-xs font-bold">
-                            REROUTE
+                          {/* Reroute Button - Exact replica from JumpPlanDisplay */}
+                          <div className="relative group/reroute">
+                            <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/40 via-accent/30 to-primary/40 rounded-[2rem] blur-md opacity-40 transition duration-500"></div>
+                            <div className="relative flex items-center gap-2 px-5 py-2.5 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2rem] border border-primary/40 transition-all duration-300 overflow-hidden shadow-lg shadow-primary/10 cursor-default">
+                              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full transition-transform duration-1000"></div>
+                              <GitBranch className="relative w-3.5 h-3.5 text-primary" />
+                              <span className="relative text-sm font-bold text-foreground whitespace-nowrap">Reroute</span>
+                            </div>
                           </div>
                         </div>
                         <p className="text-xs sm:text-sm text-muted-foreground">
