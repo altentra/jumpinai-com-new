@@ -21,6 +21,7 @@ interface SubscriberInfo {
 const planFeatures = {
   free: [
     "Create 1 comprehensive Jump plan",
+    "Step clarification and alternative route discovery",
     "Access to JumpinAI Studio",
     "Basic AI transformation planning",
     "Download your Jump as PDF",
@@ -30,6 +31,7 @@ const planFeatures = {
   pro: [
     "Everything in Free plan",
     "Unlimited Jump creations",
+    "Clarify and reroute steps up to 3 levels deep",
     "AI Coach Chat for continuous editing",
     "Advanced Jump refinement & optimization",
     "Priority prompts, workflows & blueprints library",
