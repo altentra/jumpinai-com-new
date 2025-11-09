@@ -264,26 +264,37 @@ const PricingNew = () => {
                       </ul>
                       
                       <div className="mt-auto">
-                        <Button
-                         onClick={() => isUsersPlan ? null : handleSubscribe(plan.id)}
-                         disabled={isLoading || isUsersPlan}
-                         className={`w-full modern-button shadow-modern ${isUsersPlan ? '' : 'bg-foreground hover:bg-foreground/90'}`}
-                         variant={isUsersPlan ? "outline" : "default"}
-                       >
-                        {isLoading ? (
-                          <>
-                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                            Processing...
-                          </>
-                        ) : isUsersPlan ? (
-                          'Current Plan'
-                        ) : (
-                          <>
-                            Get Started
-                            <ArrowRight className="w-4 h-4 ml-2" />
-                          </>
-                        )}
-                        </Button>
+                        <button 
+                          onClick={() => isUsersPlan ? null : handleSubscribe(plan.id)}
+                          disabled={isLoading || isUsersPlan}
+                          className="relative group w-full overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          {/* Liquid glass glow effect */}
+                          <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover:opacity-60 transition duration-500"></div>
+                          
+                          {/* Button */}
+                          <div className={`relative flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border transition-all duration-300 overflow-hidden ${isUsersPlan ? 'border-border/30' : 'border-primary/30 group-hover:border-primary/50'}`}>
+                            {/* Shimmer effect */}
+                            {!isUsersPlan && (
+                              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                            )}
+                            
+                            {/* Content */}
+                            {isLoading ? (
+                              <>
+                                <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                                <span className="relative font-bold">Processing...</span>
+                              </>
+                            ) : isUsersPlan ? (
+                              <span className="relative font-bold text-muted-foreground">Current Plan</span>
+                            ) : (
+                              <>
+                                <span className="relative font-bold text-foreground group-hover:text-primary transition-colors duration-300">Get Started</span>
+                                <ArrowRight className="w-4 h-4 relative text-foreground group-hover:text-primary transition-colors duration-300" />
+                              </>
+                            )}
+                          </div>
+                        </button>
                       </div>
                     </CardContent>
                   </Card>
@@ -332,24 +343,33 @@ const PricingNew = () => {
                     </CardHeader>
                     
                     <CardContent className="flex-1 flex flex-col justify-end">
-                      <Button 
+                      <button 
                         onClick={() => handleBuyCredits(pkg.id)}
                         disabled={isLoading}
-                        className="w-full modern-button shadow-modern bg-foreground hover:bg-foreground/90"
-                        size="sm"
+                        className="relative group w-full overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        {isLoading ? (
-                          <>
-                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                            Processing...
-                          </>
-                        ) : (
-                          <>
-                            <Zap className="w-4 h-4 mr-2" />
-                            Buy Credits
-                          </>
-                        )}
-                      </Button>
+                        {/* Liquid glass glow effect */}
+                        <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover:opacity-60 transition duration-500"></div>
+                        
+                        {/* Button */}
+                        <div className="relative flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover:border-primary/50 transition-all duration-300 overflow-hidden">
+                          {/* Shimmer effect */}
+                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                          
+                          {/* Content */}
+                          {isLoading ? (
+                            <>
+                              <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                              <span className="relative font-bold text-foreground group-hover:text-primary transition-colors duration-300">Processing...</span>
+                            </>
+                          ) : (
+                            <>
+                              <Zap className="w-4 h-4 relative text-foreground group-hover:text-primary transition-colors duration-300" />
+                              <span className="relative font-bold text-foreground group-hover:text-primary transition-colors duration-300">Buy Credits</span>
+                            </>
+                          )}
+                        </div>
+                      </button>
                     </CardContent>
                   </Card>
                 );
@@ -386,24 +406,33 @@ const PricingNew = () => {
                     </CardHeader>
                     
                     <CardContent className="flex-1 flex flex-col justify-end">
-                      <Button 
+                      <button 
                         onClick={() => handleBuyCredits(pkg.id)}
                         disabled={isLoading}
-                        className="w-full modern-button shadow-modern bg-foreground hover:bg-foreground/90"
-                        size="sm"
+                        className="relative group w-full overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        {isLoading ? (
-                          <>
-                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                            Processing...
-                          </>
-                        ) : (
-                          <>
-                            <Zap className="w-4 h-4 mr-2" />
-                            Buy Credits
-                          </>
-                        )}
-                      </Button>
+                        {/* Liquid glass glow effect */}
+                        <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover:opacity-60 transition duration-500"></div>
+                        
+                        {/* Button */}
+                        <div className="relative flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover:border-primary/50 transition-all duration-300 overflow-hidden">
+                          {/* Shimmer effect */}
+                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                          
+                          {/* Content */}
+                          {isLoading ? (
+                            <>
+                              <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                              <span className="relative font-bold text-foreground group-hover:text-primary transition-colors duration-300">Processing...</span>
+                            </>
+                          ) : (
+                            <>
+                              <Zap className="w-4 h-4 relative text-foreground group-hover:text-primary transition-colors duration-300" />
+                              <span className="relative font-bold text-foreground group-hover:text-primary transition-colors duration-300">Buy Credits</span>
+                            </>
+                          )}
+                        </div>
+                      </button>
                     </CardContent>
                   </Card>
                 );
@@ -441,24 +470,33 @@ const PricingNew = () => {
                       </CardHeader>
                       
                       <CardContent className="flex-1 flex flex-col justify-end">
-                        <Button 
+                        <button 
                           onClick={() => handleBuyCredits(pkg.id)}
                           disabled={isLoading}
-                          className="w-full modern-button shadow-modern bg-foreground hover:bg-foreground/90"
-                          size="sm"
+                          className="relative group w-full overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                          {isLoading ? (
-                            <>
-                              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                              Processing...
-                            </>
-                          ) : (
-                            <>
-                              <Zap className="w-4 h-4 mr-2" />
-                              Buy Credits
-                            </>
-                          )}
-                        </Button>
+                          {/* Liquid glass glow effect */}
+                          <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover:opacity-60 transition duration-500"></div>
+                          
+                          {/* Button */}
+                          <div className="relative flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover:border-primary/50 transition-all duration-300 overflow-hidden">
+                            {/* Shimmer effect */}
+                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                            
+                            {/* Content */}
+                            {isLoading ? (
+                              <>
+                                <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                                <span className="relative font-bold text-foreground group-hover:text-primary transition-colors duration-300">Processing...</span>
+                              </>
+                            ) : (
+                              <>
+                                <Zap className="w-4 h-4 relative text-foreground group-hover:text-primary transition-colors duration-300" />
+                                <span className="relative font-bold text-foreground group-hover:text-primary transition-colors duration-300">Buy Credits</span>
+                              </>
+                            )}
+                          </div>
+                        </button>
                       </CardContent>
                     </Card>
                   );
