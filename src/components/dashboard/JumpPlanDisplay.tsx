@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { updateJump } from '@/services/jumpService';
 import { toast } from 'sonner';
+import { useAuth } from '@/hooks/useAuth';
 
 interface JumpPlanDisplayProps {
   planContent: string;
@@ -185,12 +186,18 @@ function normalizeToComprehensive(input: any): any {
 }
 
 export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, onDownload, jumpId, toolPromptIds, onToolPromptClick }: JumpPlanDisplayProps) {
+  const { subscription } = useAuth();
   const [hoveredStep, setHoveredStep] = React.useState<{ phaseIndex: number; stepIndex: number } | null>(null);
+  const [hoveredSubStep, setHoveredSubStep] = React.useState<{ phaseIndex: number; stepIndex: number; subStepIndex: number } | null>(null);
   const [expandedSubSteps, setExpandedSubSteps] = React.useState<Set<string>>(new Set());
+  const [expandedLevel2SubSteps, setExpandedLevel2SubSteps] = React.useState<Set<string>>(new Set());
   const [loadingClarify, setLoadingClarify] = React.useState<Set<string>>(new Set());
   const [loadingReroute, setLoadingReroute] = React.useState<Set<string>>(new Set());
   const [rerouteOptions, setRerouteOptions] = React.useState<Record<string, any>>({});
   const [localPlan, setLocalPlan] = React.useState<any>(null);
+  
+  // Check if user has Starter plan or higher (not Free)
+  const hasStarterPlan = subscription?.subscribed && subscription?.subscription_tier !== null;
   
   if (!planContent.trim() && !structuredPlan) {
     return null;
@@ -450,6 +457,195 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
       }
       return newSet;
     });
+  };
+
+  const toggleLevel2SubSteps = (phaseIndex: number, stepIndex: number, subStepIndex: number) => {
+    const subStepKey = `${phaseIndex}-${stepIndex}-${subStepIndex}`;
+    setExpandedLevel2SubSteps(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(subStepKey)) {
+        newSet.delete(subStepKey);
+      } else {
+        newSet.add(subStepKey);
+      }
+      return newSet;
+    });
+  };
+
+  // Handler for Level 2 clarification (clarifying a sub-step)
+  const handleClarifySubStep = async (phaseIndex: number, stepIndex: number, subStepIndex: number) => {
+    if (!jumpId) {
+      toast.error('Jump ID is required');
+      return;
+    }
+
+    const subStepKey = `${phaseIndex}-${stepIndex}-${subStepIndex}`;
+    setLoadingClarify(prev => new Set(prev).add(subStepKey));
+
+    try {
+      const phase = finalPlan.action_plan.phases[phaseIndex];
+      const step = phase.steps[stepIndex];
+      const subStep = step.sub_steps[subStepIndex];
+
+      const jumpOverview = `
+Executive Summary: ${finalPlan.executiveSummary || ''}
+Strategic Vision: ${finalPlan.strategicVision || ''}
+Current State: ${finalPlan.situationAnalysis?.currentState || ''}
+      `.trim();
+
+      const requestBody = {
+        jumpOverview,
+        phaseTitle: phase.title,
+        phaseNumber: phase.phase_number,
+        stepTitle: subStep.title,
+        stepDescription: subStep.description,
+        stepNumber: subStep.sub_step_number,
+        level: 2, // Indicate this is Level 2
+      };
+
+      console.log('Calling clarify-step function for Level 2:', requestBody);
+
+      const { data, error } = await supabase.functions.invoke('clarify-step', {
+        body: requestBody,
+      });
+
+      if (error) throw error;
+
+      if (!data || !data.subSteps) {
+        throw new Error('Invalid response from clarify-step function');
+      }
+
+      console.log('Received Level 2 sub-steps:', data.subSteps);
+
+      // Update the local plan with Level 2 sub-steps
+      const updatedPlan = { ...finalPlan };
+      updatedPlan.action_plan.phases[phaseIndex].steps[stepIndex].sub_steps[subStepIndex].level_2_sub_steps = data.subSteps;
+      
+      setLocalPlan(updatedPlan);
+
+      // Save to database
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        await updateJump(jumpId, {
+          comprehensive_plan: updatedPlan,
+        });
+      }
+
+      // Expand the Level 2 sub-steps
+      setExpandedLevel2SubSteps(prev => new Set(prev).add(subStepKey));
+
+      // Track the clarify action
+      await trackAction('clarify');
+
+      toast.success('Level 2 sub-steps generated successfully!');
+    } catch (error) {
+      console.error('Error clarifying sub-step:', error);
+      toast.error('Failed to generate Level 2 sub-steps. Please try again.');
+    } finally {
+      setLoadingClarify(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(subStepKey);
+        return newSet;
+      });
+    }
+  };
+
+  // Handler for Level 2 rerouting (rerouting a sub-step)
+  const handleRerouteSubStep = async (phaseIndex: number, stepIndex: number, subStepIndex: number) => {
+    if (!jumpId) {
+      toast.error('Jump ID is required');
+      return;
+    }
+
+    const subStepKey = `${phaseIndex}-${stepIndex}-${subStepIndex}`;
+    setLoadingReroute(prev => new Set(prev).add(subStepKey));
+
+    try {
+      const phase = finalPlan.action_plan.phases[phaseIndex];
+      const step = phase.steps[stepIndex];
+      const subStep = step.sub_steps[subStepIndex];
+
+      const jumpOverview = `
+Executive Summary: ${finalPlan.executiveSummary || ''}
+Strategic Vision: ${finalPlan.strategicVision || ''}
+Current State: ${finalPlan.situationAnalysis?.currentState || ''}
+      `.trim();
+
+      const requestBody = {
+        jumpOverview,
+        phaseTitle: phase.title,
+        phaseNumber: phase.phase_number,
+        stepTitle: subStep.title,
+        stepDescription: subStep.description,
+        stepNumber: subStep.sub_step_number,
+      };
+
+      console.log('Calling reroute-step function for Level 2:', requestBody);
+
+      const { data, error } = await supabase.functions.invoke('reroute-step', {
+        body: requestBody,
+      });
+
+      if (error) throw error;
+
+      if (!data || !data.directions) {
+        throw new Error('Invalid response from reroute-step function');
+      }
+
+      console.log('Received Level 2 directions:', data.directions);
+
+      setRerouteOptions(prev => ({ ...prev, [subStepKey]: data.directions }));
+      
+      // Track the reroute action
+      await trackAction('reroute');
+      
+      toast.success('Alternative routes generated successfully!');
+    } catch (error) {
+      console.error('Error generating Level 2 reroute options:', error);
+      toast.error('Failed to generate alternative routes. Please try again.');
+    } finally {
+      setLoadingReroute(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(subStepKey);
+        return newSet;
+      });
+    }
+  };
+
+  // Handler for choosing a Level 2 route
+  const handleChooseSubStepRoute = async (phaseIndex: number, stepIndex: number, subStepIndex: number, directionIndex: number) => {
+    if (!jumpId) {
+      toast.error('Jump ID is required');
+      return;
+    }
+
+    const subStepKey = `${phaseIndex}-${stepIndex}-${subStepIndex}`;
+    const directions = rerouteOptions[subStepKey];
+    const chosenDirection = directions[directionIndex];
+
+    try {
+      const updatedPlan = { ...finalPlan };
+      updatedPlan.action_plan.phases[phaseIndex].steps[stepIndex].sub_steps[subStepIndex].reroute = {
+        overview: chosenDirection.overview,
+        sub_steps: chosenDirection.sub_steps,
+      };
+      setLocalPlan(updatedPlan);
+
+      await updateJump(jumpId, {
+        comprehensive_plan: updatedPlan,
+      });
+
+      setRerouteOptions(prev => {
+        const newOptions = { ...prev };
+        delete newOptions[subStepKey];
+        return newOptions;
+      });
+
+      toast.success('Route selected successfully!');
+    } catch (error) {
+      console.error('Error choosing Level 2 route:', error);
+      toast.error('Failed to save chosen route. Please try again.');
+    }
   };
 
   return (
@@ -762,37 +958,335 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
 
                               {isExpanded && (
                                 <div className="mt-3 space-y-2 animate-fade-in">
-                                  {step.sub_steps.map((subStep: any, subStepIndex: number) => (
-                                    <div
-                                      key={subStepIndex}
-                                      className="bg-background/30 border border-primary/20 rounded-xl p-3 ml-4"
-                                    >
-                                      <div className="flex items-start gap-2 mb-2">
-                                        <div className="flex-shrink-0 px-2.5 py-1.5 rounded-lg bg-gradient-to-br from-primary/40 to-primary/30 flex items-center justify-center border border-primary/60 shadow-sm">
-                                           <span className="text-xs font-bold text-primary/90 whitespace-nowrap">
-                                             Sub-Step {subStepIndex + 1}.
-                                           </span>
+                                  {step.sub_steps.map((subStep: any, subStepIndex: number) => {
+                                    const isSubStepHovered = hasStarterPlan && hoveredSubStep?.phaseIndex === phaseIndex && hoveredSubStep?.stepIndex === stepIndex && hoveredSubStep?.subStepIndex === subStepIndex;
+                                    const subStepKey = `${phaseIndex}-${stepIndex}-${subStepIndex}`;
+                                    const hasLevel2SubSteps = subStep.level_2_sub_steps && Array.isArray(subStep.level_2_sub_steps) && subStep.level_2_sub_steps.length > 0;
+                                    const isLevel2Expanded = expandedLevel2SubSteps.has(subStepKey);
+                                    const isSubStepLoading = loadingClarify.has(subStepKey);
+                                    const isSubStepRerouteLoading = loadingReroute.has(subStepKey);
+                                    const hasSubStepRerouteOptions = rerouteOptions[subStepKey];
+                                    const hasSubStepChosenRoute = subStep.reroute;
+                                    
+                                    return (
+                                      <div
+                                        key={subStepIndex}
+                                        className="bg-background/30 border border-primary/20 rounded-xl p-3 ml-4"
+                                        onMouseEnter={() => hasStarterPlan && setHoveredSubStep({ phaseIndex, stepIndex, subStepIndex })}
+                                        onMouseLeave={() => hasStarterPlan && setHoveredSubStep(null)}
+                                      >
+                                        <div className="flex items-start gap-2 mb-2">
+                                          <div className="flex-shrink-0 px-2.5 py-1.5 rounded-lg bg-gradient-to-br from-primary/40 to-primary/30 flex items-center justify-center border border-primary/60 shadow-sm">
+                                             <span className="text-xs font-bold text-primary/90 whitespace-nowrap">
+                                               Sub-Step {subStepIndex + 1}.
+                                             </span>
+                                          </div>
+                                          <h5 className="text-sm font-semibold text-foreground pt-0.5">
+                                            <ReactMarkdown className="prose prose-sm max-w-none [&>p]:m-0 [&_strong]:font-bold">
+                                              {subStep.title}
+                                            </ReactMarkdown>
+                                          </h5>
                                         </div>
-                                        <h5 className="text-sm font-semibold text-foreground pt-0.5">
-                                          <ReactMarkdown className="prose prose-sm max-w-none [&>p]:m-0 [&_strong]:font-bold">
-                                            {subStep.title}
+                                        <div className="text-xs text-muted-foreground/90 leading-relaxed">
+                                          <ReactMarkdown className="prose prose-sm max-w-none [&>p]:mb-1 [&>p:last-child]:mb-0 [&_strong]:font-bold">
+                                            {subStep.description}
                                           </ReactMarkdown>
-                                        </h5>
-                                      </div>
-                                      <div className="text-xs text-muted-foreground/90 leading-relaxed">
-                                        <ReactMarkdown className="prose prose-sm max-w-none [&>p]:mb-1 [&>p:last-child]:mb-0 [&_strong]:font-bold">
-                                          {subStep.description}
-                                        </ReactMarkdown>
-                                      </div>
-                                      {subStep.estimated_time && (
-                                        <div className="mt-2">
-                                          <Badge variant="outline" className="text-xs">
-                                            {subStep.estimated_time}
-                                          </Badge>
                                         </div>
-                                      )}
-                                    </div>
-                                  ))}
+                                        {subStep.estimated_time && (
+                                          <div className="mt-2">
+                                            <Badge variant="outline" className="text-xs">
+                                              {subStep.estimated_time}
+                                            </Badge>
+                                          </div>
+                                        )}
+
+                                        {/* Level 2 Reroute options display */}
+                                        {hasSubStepRerouteOptions && (
+                                          <div className="mt-4 space-y-4">
+                                            <div className="flex items-center gap-2">
+                                              <GitBranch className="w-3.5 h-3.5 text-primary" />
+                                              <h4 className="text-xs font-semibold text-foreground">Choose Your Route:</h4>
+                                            </div>
+                                            <div className="grid grid-cols-1 gap-3">
+                                              {rerouteOptions[subStepKey].map((direction: any, dirIndex: number) => (
+                                                <div
+                                                  key={dirIndex}
+                                                  className="bg-background/40 border border-primary/30 rounded-xl p-3 flex flex-col"
+                                                >
+                                                  <div className="mb-2">
+                                                    <h4 className="text-sm font-semibold text-foreground mb-2">
+                                                      Direction {dirIndex + 1}
+                                                    </h4>
+                                                    <div className="text-xs text-muted-foreground/90 leading-relaxed">
+                                                      <ReactMarkdown className="prose prose-sm max-w-none [&>p]:mb-2 [&>p:last-child]:mb-0">
+                                                        {direction.overview}
+                                                      </ReactMarkdown>
+                                                    </div>
+                                                  </div>
+
+                                                  <div className="space-y-2 mb-3 flex-grow">
+                                                    {direction.sub_steps?.map((level2SubStep: any, level2SubStepIndex: number) => (
+                                                      <div
+                                                        key={level2SubStepIndex}
+                                                        className="bg-background/30 border border-primary/20 rounded-lg p-2"
+                                                      >
+                                                        <div className="flex flex-col gap-1 mb-1">
+                                                          <div className="flex-shrink-0 px-2 py-1 rounded-lg bg-gradient-to-br from-primary/40 to-primary/30 flex items-center justify-center border border-primary/60 shadow-sm w-fit">
+                                                             <span className="text-[10px] font-bold text-primary/90 whitespace-nowrap">
+                                                               Level 2. Sub-Step {level2SubStepIndex + 1}.
+                                                             </span>
+                                                          </div>
+                                                          <h5 className="text-xs font-semibold text-foreground leading-tight">
+                                                            <ReactMarkdown className="prose prose-sm max-w-none [&>p]:mb-0">
+                                                              {level2SubStep.title}
+                                                            </ReactMarkdown>
+                                                          </h5>
+                                                        </div>
+                                                        <div className="text-[11px] text-muted-foreground/90 leading-relaxed">
+                                                          <ReactMarkdown className="prose prose-sm max-w-none [&>p]:mb-1 [&>p:last-child]:mb-0 [&_strong]:font-bold">
+                                                            {level2SubStep.description}
+                                                          </ReactMarkdown>
+                                                        </div>
+                                                        {level2SubStep.estimated_time && (
+                                                          <div className="mt-1">
+                                                            <Badge variant="outline" className="text-[10px]">
+                                                              {level2SubStep.estimated_time}
+                                                            </Badge>
+                                                          </div>
+                                                        )}
+                                                      </div>
+                                                    ))}
+                                                  </div>
+
+                                                  <Button
+                                                    size="sm"
+                                                    className="w-full gap-2 bg-gradient-to-r from-gray-900 to-gray-800 hover:from-gray-800 hover:to-gray-700 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-700/50 text-xs py-1"
+                                                    onClick={() => handleChooseSubStepRoute(phaseIndex, stepIndex, subStepIndex, dirIndex)}
+                                                  >
+                                                    <Check className="h-3 w-3" />
+                                                    Choose this route
+                                                  </Button>
+                                                </div>
+                                              ))}
+                                            </div>
+                                          </div>
+                                        )}
+
+                                        {/* Level 2 Chosen reroute display */}
+                                        {hasSubStepChosenRoute && (
+                                          <div className="mt-3">
+                                            <div className="bg-background/40 border border-primary/30 rounded-xl p-3">
+                                              <div className="flex items-center gap-2 mb-2">
+                                                <GitBranch className="h-3.5 w-3.5 text-primary" />
+                                                <h4 className="text-xs font-semibold text-foreground">Alternative Route Selected</h4>
+                                              </div>
+                                              <div className="text-xs text-muted-foreground/90 leading-relaxed mb-3">
+                                                <ReactMarkdown className="prose prose-sm max-w-none [&>p]:mb-2 [&>p:last-child]:mb-0">
+                                                  {subStep.reroute.overview}
+                                                </ReactMarkdown>
+                                              </div>
+                                              <div className="space-y-2">
+                                                {subStep.reroute.sub_steps?.map((level2SubStep: any, level2SubStepIndex: number) => (
+                                                  <div
+                                                    key={level2SubStepIndex}
+                                                    className="bg-background/30 border border-primary/20 rounded-lg p-2"
+                                                  >
+                                                    <div className="flex items-start gap-2 mb-1">
+                                                      <div className="flex-shrink-0 px-2 py-1 rounded-lg bg-gradient-to-br from-primary/40 to-primary/30 flex items-center justify-center border border-primary/60 shadow-sm">
+                                                         <span className="text-[10px] font-bold text-primary/90 whitespace-nowrap">
+                                                           Level 2. Sub-Step {level2SubStepIndex + 1}.
+                                                         </span>
+                                                      </div>
+                                                      <h5 className="text-xs font-semibold text-foreground pt-0.5">
+                                                        <ReactMarkdown className="prose prose-sm max-w-none [&>p]:m-0 [&_strong]:font-bold">
+                                                          {level2SubStep.title}
+                                                        </ReactMarkdown>
+                                                      </h5>
+                                                    </div>
+                                                    <div className="text-[11px] text-muted-foreground/90 leading-relaxed">
+                                                      <ReactMarkdown className="prose prose-sm max-w-none [&>p]:mb-1 [&>p:last-child]:mb-0 [&_strong]:font-bold">
+                                                        {level2SubStep.description}
+                                                      </ReactMarkdown>
+                                                    </div>
+                                                    {level2SubStep.estimated_time && (
+                                                      <div className="mt-1">
+                                                        <Badge variant="outline" className="text-[10px]">
+                                                          {level2SubStep.estimated_time}
+                                                        </Badge>
+                                                      </div>
+                                                    )}
+                                                  </div>
+                                                ))}
+                                              </div>
+                                            </div>
+                                          </div>
+                                        )}
+
+                                        {/* Level 2 Sub-steps display */}
+                                        {hasLevel2SubSteps && (
+                                          <div className="mt-3 pt-3 border-t border-primary/20">
+                                            <button
+                                              onClick={() => toggleLevel2SubSteps(phaseIndex, stepIndex, subStepIndex)}
+                                              className="flex items-center gap-2 text-xs font-medium text-primary hover:text-primary/80 transition-colors"
+                                            >
+                                              {isLevel2Expanded ? (
+                                                <>
+                                                  <ChevronUp className="w-3.5 h-3.5" />
+                                                  Hide Level 2 Sub-Steps
+                                                </>
+                                              ) : (
+                                                <>
+                                                  <ChevronDown className="w-3.5 h-3.5" />
+                                                  Show {subStep.level_2_sub_steps.length} Level 2 Sub-Steps
+                                                </>
+                                              )}
+                                            </button>
+
+                                            {isLevel2Expanded && (
+                                              <div className="mt-2 space-y-2 animate-fade-in">
+                                                {subStep.level_2_sub_steps.map((level2SubStep: any, level2SubStepIndex: number) => (
+                                                  <div
+                                                    key={level2SubStepIndex}
+                                                    className="bg-background/30 border border-primary/20 rounded-lg p-2 ml-2"
+                                                  >
+                                                    <div className="flex items-start gap-2 mb-1">
+                                                      <div className="flex-shrink-0 px-2 py-1 rounded-lg bg-gradient-to-br from-primary/40 to-primary/30 flex items-center justify-center border border-primary/60 shadow-sm">
+                                                         <span className="text-[10px] font-bold text-primary/90 whitespace-nowrap">
+                                                           Level 2. Sub-Step {level2SubStepIndex + 1}.
+                                                         </span>
+                                                      </div>
+                                                      <h5 className="text-xs font-semibold text-foreground pt-0.5">
+                                                        <ReactMarkdown className="prose prose-sm max-w-none [&>p]:m-0 [&_strong]:font-bold">
+                                                          {level2SubStep.title}
+                                                        </ReactMarkdown>
+                                                      </h5>
+                                                    </div>
+                                                    <div className="text-[11px] text-muted-foreground/90 leading-relaxed">
+                                                      <ReactMarkdown className="prose prose-sm max-w-none [&>p]:mb-1 [&>p:last-child]:mb-0 [&_strong]:font-bold">
+                                                        {level2SubStep.description}
+                                                      </ReactMarkdown>
+                                                    </div>
+                                                    {level2SubStep.estimated_time && (
+                                                      <div className="mt-1">
+                                                        <Badge variant="outline" className="text-[10px]">
+                                                          {level2SubStep.estimated_time}
+                                                        </Badge>
+                                                      </div>
+                                                    )}
+                                                  </div>
+                                                ))}
+                                              </div>
+                                            )}
+                                          </div>
+                                        )}
+
+                                        {/* Level 2 Action Buttons - Only visible on hover for Starter plan */}
+                                        {hasStarterPlan && isSubStepHovered && (
+                                          <div className="mt-3 pt-3 border-t border-primary/20 animate-fade-in">
+                                            <TooltipProvider>
+                                              <div className="flex items-center justify-center gap-2">
+                                                 <Tooltip>
+                                                   <TooltipTrigger asChild>
+                                                     <button
+                                                       onClick={(e) => {
+                                                         e.stopPropagation();
+                                                         handleClarifySubStep(phaseIndex, stepIndex, subStepIndex);
+                                                       }}
+                                                       disabled={isSubStepLoading || hasLevel2SubSteps}
+                                                       className="relative group/clarify disabled:opacity-50 disabled:cursor-not-allowed"
+                                                     >
+                                                       {/* Liquid glass glow effect */}
+                                                       <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/40 via-accent/30 to-primary/40 rounded-[2rem] blur-md opacity-40 group-hover/clarify:opacity-70 transition duration-500"></div>
+                                                       
+                                                       {/* Button */}
+                                                       <div className="relative flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2rem] border border-primary/40 group-hover/clarify:border-primary/60 transition-all duration-300 overflow-hidden shadow-lg shadow-primary/10">
+                                                         {/* Shimmer effect */}
+                                                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/clarify:translate-x-full transition-transform duration-1000"></div>
+                                                         
+                                                         {/* Content */}
+                                                         {isSubStepLoading ? (
+                                                           <>
+                                                             <Loader2 className="relative w-3 h-3 animate-spin text-primary" />
+                                                             <span className="relative text-xs font-bold text-foreground whitespace-nowrap">Generating...</span>
+                                                           </>
+                                                         ) : hasLevel2SubSteps ? (
+                                                           <>
+                                                             <Sparkles className="relative w-3 h-3 text-primary" />
+                                                             <span className="relative text-xs font-bold text-foreground whitespace-nowrap">Clarified</span>
+                                                           </>
+                                                         ) : (
+                                                           <>
+                                                             <Sparkles className="relative w-3 h-3 text-primary" />
+                                                             <span className="relative text-xs font-bold text-foreground group-hover/clarify:text-primary transition-colors duration-300 whitespace-nowrap">Clarify</span>
+                                                           </>
+                                                         )}
+                                                       </div>
+                                                     </button>
+                                                   </TooltipTrigger>
+                                                  <TooltipContent className="max-w-xs">
+                                                    <p className="text-xs">
+                                                      {hasLevel2SubSteps 
+                                                        ? 'This sub-step has already been clarified with Level 2 sub-steps'
+                                                        : 'Generate 5 detailed Level 2 sub-steps to break down this sub-step with greater clarity'
+                                                      }
+                                                    </p>
+                                                  </TooltipContent>
+                                                </Tooltip>
+                                                
+                                                 <Tooltip>
+                                                   <TooltipTrigger asChild>
+                                                     <button
+                                                       onClick={(e) => {
+                                                         e.stopPropagation();
+                                                         handleRerouteSubStep(phaseIndex, stepIndex, subStepIndex);
+                                                       }}
+                                                       disabled={isSubStepRerouteLoading || hasSubStepRerouteOptions || hasSubStepChosenRoute}
+                                                       className="relative group/reroute disabled:opacity-50 disabled:cursor-not-allowed"
+                                                     >
+                                                       {/* Liquid glass glow effect */}
+                                                       <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/40 via-accent/30 to-primary/40 rounded-[2rem] blur-md opacity-40 group-hover/reroute:opacity-70 transition duration-500"></div>
+                                                       
+                                                       {/* Button */}
+                                                       <div className="relative flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2rem] border border-primary/40 group-hover/reroute:border-primary/60 transition-all duration-300 overflow-hidden shadow-lg shadow-primary/10">
+                                                         {/* Shimmer effect */}
+                                                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/reroute:translate-x-full transition-transform duration-1000"></div>
+                                                         
+                                                         {/* Content */}
+                                                         {isSubStepRerouteLoading ? (
+                                                           <>
+                                                             <Loader2 className="relative w-3 h-3 animate-spin text-primary" />
+                                                             <span className="relative text-xs font-bold text-foreground whitespace-nowrap">Generating...</span>
+                                                           </>
+                                                         ) : hasSubStepChosenRoute ? (
+                                                           <>
+                                                             <Sparkles className="relative w-3 h-3 text-primary" />
+                                                             <span className="relative text-xs font-bold text-foreground whitespace-nowrap">Rerouted</span>
+                                                           </>
+                                                         ) : (
+                                                           <>
+                                                             <GitBranch className="relative w-3 h-3 text-primary" />
+                                                             <span className="relative text-xs font-bold text-foreground group-hover/reroute:text-primary transition-colors duration-300 whitespace-nowrap">Reroute</span>
+                                                           </>
+                                                         )}
+                                                       </div>
+                                                     </button>
+                                                   </TooltipTrigger>
+                                                   <TooltipContent className="max-w-xs">
+                                                     <p className="text-xs">
+                                                       {hasSubStepChosenRoute
+                                                         ? 'This sub-step has already been rerouted with an alternative approach'
+                                                         : 'Explore 3 alternative approaches for this sub-step'
+                                                       }
+                                                     </p>
+                                                   </TooltipContent>
+                                                 </Tooltip>
+                                              </div>
+                                            </TooltipProvider>
+                                          </div>
+                                        )}
+                                      </div>
+                                    );
+                                  })}
                                 </div>
                               )}
                             </div>
