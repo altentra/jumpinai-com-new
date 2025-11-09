@@ -197,10 +197,10 @@ const Hero = () => {
           />
           <defs>
             <linearGradient id="jumpGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="rgb(203 213 225)" stopOpacity="0.7" />
-              <stop offset="30%" stopColor="rgb(226 232 240)" stopOpacity="0.8" />
-              <stop offset="70%" stopColor="rgb(241 245 249)" stopOpacity="0.75" />
-              <stop offset="100%" stopColor="rgb(203 213 225)" stopOpacity="0.6" />
+              <stop offset="0%" stopColor="rgb(100 116 139)" stopOpacity="0.5" />
+              <stop offset="30%" stopColor="rgb(148 163 184)" stopOpacity="0.7" />
+              <stop offset="70%" stopColor="rgb(148 163 184)" stopOpacity="0.65" />
+              <stop offset="100%" stopColor="rgb(100 116 139)" stopOpacity="0.45" />
             </linearGradient>
             <linearGradient id="jumpGradientDark" x1="0%" y1="0%" x2="100%" y2="0%">
               <stop offset="0%" stopColor="rgb(15 23 42)" stopOpacity="0.8" />
@@ -209,9 +209,9 @@ const Hero = () => {
               <stop offset="100%" stopColor="rgb(30 41 59)" stopOpacity="0.6" />
             </linearGradient>
             <linearGradient id="jumpGradient2" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="rgb(226 232 240)" stopOpacity="0.5" />
-              <stop offset="50%" stopColor="rgb(241 245 249)" stopOpacity="0.7" />
-              <stop offset="100%" stopColor="rgb(226 232 240)" stopOpacity="0.4" />
+              <stop offset="0%" stopColor="rgb(148 163 184)" stopOpacity="0.4" />
+              <stop offset="50%" stopColor="rgb(203 213 225)" stopOpacity="0.6" />
+              <stop offset="100%" stopColor="rgb(148 163 184)" stopOpacity="0.35" />
             </linearGradient>
             <linearGradient id="jumpGradient2Dark" x1="0%" y1="0%" x2="100%" y2="0%">
               <stop offset="0%" stopColor="rgb(51 65 85)" stopOpacity="0.6" />
