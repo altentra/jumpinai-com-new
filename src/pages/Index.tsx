@@ -225,7 +225,7 @@ const Index = () => {
       </section>
 
       {/* Trust by Association Section */}
-      <section className="py-12 bg-muted/30 dark:bg-muted/10">
+      <section className="py-12 bg-transparent">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">
             <p className="text-sm uppercase tracking-wider text-muted-foreground font-semibold">
@@ -293,7 +293,7 @@ const Index = () => {
             </div>
 
             <div className="text-center mt-8">
-              <div className="inline-flex flex-col items-center gap-2 p-4 bg-gradient-to-r from-primary/10 to-primary/10 rounded-xl border border-primary/20">
+              <div className="inline-flex flex-col items-center gap-2 p-4 bg-gradient-to-r from-primary/10 to-primary/10 rounded-3xl border border-primary/20">
                 <div className="flex items-center gap-3">
                   <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -308,18 +308,13 @@ const Index = () => {
       </section>
 
       {/* Multi-Level Clarification & Route Discovery Section */}
-      <section className="py-12 sm:py-16 lg:py-20 relative">
+      <section className="py-10 sm:py-12 lg:py-16 relative">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8 sm:mb-10 lg:mb-12">
-            <div className="inline-block mb-3">
-              <span className="px-3 py-1.5 rounded-full backdrop-blur-xl bg-primary/10 border border-primary/20 text-primary text-xs sm:text-sm font-semibold shadow-sm">
-                Breakthrough Feature
-              </span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 font-display">
-              Adaptive Intelligence: <span className="gradient-text-primary">Multi-Level Clarification</span>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold gradient-text-primary mb-3 sm:mb-4 font-display">
+              Adaptive Intelligence: Multi-Level Clarification
             </h2>
-            <p className="text-sm sm:text-base lg:text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+            <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto">
               Never feel stuck with a vague step again. Our revolutionary system lets you drill down up to 4 levels deep into any step, or discover completely alternative routes to achieve your goals.
             </p>
           </div>
@@ -601,13 +596,13 @@ const Index = () => {
       </section>
 
       {/* Success Metrics Section */}
-      <section className="py-12 bg-gradient-to-r from-muted/20 via-muted/5 to-muted/20">
+      <section className="py-10 lg:py-16 bg-transparent">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">
-            <h2 className="text-2xl lg:text-3xl font-bold mb-3 font-display">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold gradient-text-primary mb-3 sm:mb-4 font-display">
               Proven Results Speak Louder Than Promises
             </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto">
               Join thousands who've transformed their AI journey from overwhelming to outstanding
             </p>
           </div>
@@ -641,13 +636,13 @@ const Index = () => {
       </section>
 
       {/* Why Choose JumpinAI Section */}
-      <section className="py-12 sm:py-16">
+      <section className="py-10 sm:py-12 lg:py-16">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8 sm:mb-10">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 font-display">
-              The <span className="gradient-text-primary">JumpinAI Advantage</span>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold gradient-text-primary mb-3 sm:mb-4 font-display">
+              The JumpinAI Advantage
             </h2>
-            <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto">
               Complete 3-tab system designed for clarity, adaptability, and immediate action
             </p>
           </div>
@@ -794,13 +789,13 @@ const Index = () => {
       </section>
 
       {/* Pricing Section - Complete Clone from Pricing Page */}
-      <section className="py-20 lg:py-32 bg-gradient-to-br from-background via-background to-secondary/10">
+      <section className="py-10 lg:py-16 bg-transparent">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl lg:text-5xl font-bold gradient-text-primary mb-6 font-display">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold gradient-text-primary mb-3 sm:mb-4 font-display">
               Choose Your AI Transformation Plan
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-4">
+            <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto mb-4">
               Flexible plans designed to accelerate your business growth
             </p>
             <p className="text-base text-muted-foreground max-w-3xl mx-auto">
@@ -920,13 +915,13 @@ const Index = () => {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-12 sm:py-14">
+      <section className="py-6 sm:py-7">
         <div className="container mx-auto px-6 sm:px-8 lg:px-12">
           <div className="text-center mb-10">
-            <h2 className="text-2xl lg:text-3xl font-bold mb-3 font-display">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold gradient-text-primary mb-3 sm:mb-4 font-display">
               Frequently Asked Questions
             </h2>
-            <p className="text-base text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto">
               Everything you need to know about transforming your business with JumpinAI Studio
             </p>
           </div>
@@ -966,7 +961,7 @@ const Index = () => {
       </section>
 
       {/* Major Final CTA Section */}
-      <section className="py-12 sm:py-16 lg:py-24 relative">
+      <section className="py-4 sm:py-5 lg:py-8 relative">
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4 font-display gradient-text-primary">
