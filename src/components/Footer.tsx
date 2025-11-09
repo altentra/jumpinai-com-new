@@ -1,5 +1,5 @@
 
-import { Circle } from "lucide-react";
+
 import { 
   FaInstagram, 
   FaFacebookF, 
@@ -70,58 +70,55 @@ const Footer = () => {
               </div>
               <span className="ml-3 text-2xl font-black font-display text-foreground">JumpinAI</span>
             </Link>
-            <p className="text-xs text-muted-foreground leading-relaxed mb-8 max-w-md font-light">
+            <p className="text-xs text-foreground/70 leading-relaxed mb-8 max-w-md font-light">
               Empowering creators, professionals, and entrepreneurs to adapt to the era of AI — guiding every step from exploration to confident mastery with clarity and precision.
             </p>
             
             {/* Social Links - Professional Design */}
-            <div className="flex flex-wrap gap-2 max-w-sm">
+            <div className="grid grid-cols-4 gap-2 max-w-sm">
               <a href="https://www.instagram.com/jumpinai" target="_blank" rel="noopener noreferrer" className="group relative bg-muted/80 hover:bg-muted p-2.5 rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-sm flex items-center justify-center border border-transparent hover:border-muted-foreground/20 backdrop-blur-sm">
-                <FaInstagram className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors duration-300" />
+                <FaInstagram className="h-4 w-4 text-foreground/70 group-hover:text-foreground transition-colors duration-300" />
               </a>
               <a href="https://x.com/jump_in_ai" target="_blank" rel="noopener noreferrer" className="group relative bg-muted/80 hover:bg-muted p-2.5 rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-sm flex items-center justify-center border border-transparent hover:border-muted-foreground/20 backdrop-blur-sm">
-                <FaXTwitter className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors duration-300" />
+                <FaXTwitter className="h-4 w-4 text-foreground/70 group-hover:text-foreground transition-colors duration-300" />
               </a>
               <a href="https://facebook.com/jumpinai/" target="_blank" rel="noopener noreferrer" className="group relative bg-muted/80 hover:bg-muted p-2.5 rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-sm flex items-center justify-center border border-transparent hover:border-muted-foreground/20 backdrop-blur-sm">
-                <FaFacebookF className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors duration-300" />
+                <FaFacebookF className="h-4 w-4 text-foreground/70 group-hover:text-foreground transition-colors duration-300" />
               </a>
               <a href="https://www.youtube.com/@JumpinAI" target="_blank" rel="noopener noreferrer" className="group relative bg-muted/80 hover:bg-muted p-2.5 rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-sm flex items-center justify-center border border-transparent hover:border-muted-foreground/20 backdrop-blur-sm">
-                <FaYoutube className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors duration-300" />
+                <FaYoutube className="h-4 w-4 text-foreground/70 group-hover:text-foreground transition-colors duration-300" />
               </a>
               <a href="https://www.tiktok.com/@jump_in_ai" target="_blank" rel="noopener noreferrer" className="group relative bg-muted/80 hover:bg-muted p-2.5 rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-sm flex items-center justify-center border border-transparent hover:border-muted-foreground/20 backdrop-blur-sm">
-                <FaTiktok className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors duration-300" />
+                <FaTiktok className="h-4 w-4 text-foreground/70 group-hover:text-foreground transition-colors duration-300" />
               </a>
               <a href="https://www.threads.com/@jumpinai" target="_blank" rel="noopener noreferrer" className="group relative bg-muted/80 hover:bg-muted p-2.5 rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-sm flex items-center justify-center border border-transparent hover:border-muted-foreground/20 backdrop-blur-sm">
-                <SiThreads className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors duration-300" />
+                <SiThreads className="h-4 w-4 text-foreground/70 group-hover:text-foreground transition-colors duration-300" />
               </a>
               <a href="https://www.linkedin.com/company/jumpinai/" target="_blank" rel="noopener noreferrer" className="group relative bg-muted/80 hover:bg-muted p-2.5 rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-sm flex items-center justify-center border border-transparent hover:border-muted-foreground/20 backdrop-blur-sm">
-                <FaLinkedinIn className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors duration-300" />
+                <FaLinkedinIn className="h-4 w-4 text-foreground/70 group-hover:text-foreground transition-colors duration-300" />
               </a>
               <a href="https://www.pinterest.com/jumpinai/" target="_blank" rel="noopener noreferrer" className="group relative bg-muted/80 hover:bg-muted p-2.5 rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-sm flex items-center justify-center border border-transparent hover:border-muted-foreground/20 backdrop-blur-sm">
-                <FaPinterestP className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors duration-300" />
+                <FaPinterestP className="h-4 w-4 text-foreground/70 group-hover:text-foreground transition-colors duration-300" />
               </a>
             </div>
           </div>
 
           {/* What We Do */}
           <div>
-            <h3 className="text-sm font-bold mb-4 text-foreground font-display">What We Do</h3>
+            <h3 className="text-2xl font-bold mb-4 text-foreground font-display">What We Do</h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/jumpinai-studio" className="group flex items-center text-xs text-muted-foreground hover:text-foreground transition-colors duration-300">
-                  <Circle className="h-1.5 w-1.5 mr-2 fill-current" />
+                <Link to="/jumpinai-studio" className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300">
                   JumpinAI Studio
                 </Link>
               </li>
               <li>
-                <Link to="/jumps" className="group flex items-center text-xs text-muted-foreground hover:text-foreground transition-colors duration-300">
-                  <Circle className="h-1.5 w-1.5 mr-2 fill-current" />
+                <Link to="/jumps" className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300">
                   Guides
                 </Link>
               </li>
               <li>
-                <Link to="/resources" className="group flex items-center text-xs text-muted-foreground hover:text-foreground transition-colors duration-300">
-                  <Circle className="h-1.5 w-1.5 mr-2 fill-current" />
+                <Link to="/resources" className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300">
                   Resources
                 </Link>
               </li>
@@ -130,23 +127,20 @@ const Footer = () => {
 
           {/* Who We Are */}
           <div>
-            <h3 className="text-sm font-bold mb-4 text-foreground font-display">Who We Are</h3>
+            <h3 className="text-2xl font-bold mb-4 text-foreground font-display">Who We Are</h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/about-us" className="group flex items-center text-xs text-muted-foreground hover:text-foreground transition-colors duration-300">
-                  <Circle className="h-1.5 w-1.5 mr-2 fill-current" />
+                <Link to="/about-us" className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300">
                   About Us
                 </Link>
               </li>
               <li>
-                <Link to="/contact-us" className="group flex items-center text-xs text-muted-foreground hover:text-foreground transition-colors duration-300">
-                  <Circle className="h-1.5 w-1.5 mr-2 fill-current" />
+                <Link to="/contact-us" className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300">
                   Contact Us
                 </Link>
               </li>
               <li>
-                <Link to="/for-investors" className="group flex items-center text-xs text-muted-foreground hover:text-foreground transition-colors duration-300">
-                  <Circle className="h-1.5 w-1.5 mr-2 fill-current" />
+                <Link to="/for-investors" className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300">
                   For Investors
                 </Link>
               </li>
@@ -155,26 +149,23 @@ const Footer = () => {
 
           {/* Legal */}
           <div>
-            <h3 className="text-sm font-bold mb-4 text-foreground font-display">Legal</h3>
+            <h3 className="text-2xl font-bold mb-4 text-foreground font-display">Legal</h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/terms-of-use" className="group flex items-center text-xs text-muted-foreground hover:text-foreground transition-colors duration-300">
-                  <Circle className="h-1.5 w-1.5 mr-2 fill-current" />
+                <Link to="/terms-of-use" className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300">
                   Terms of Use
                 </Link>
               </li>
               <li>
-                <Link to="/privacy-policy" className="group flex items-center text-xs text-muted-foreground hover:text-foreground transition-colors duration-300">
-                  <Circle className="h-1.5 w-1.5 mr-2 fill-current" />
+                <Link to="/privacy-policy" className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300">
                   Privacy Policy
                 </Link>
               </li>
               <li>
                 <button 
                   onClick={() => setIsPrivacyChoicesOpen(true)}
-                  className="group flex items-center text-xs text-muted-foreground hover:text-foreground transition-colors duration-300 text-left"
+                  className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300 text-left"
                 >
-                  <Circle className="h-1.5 w-1.5 mr-2 fill-current" />
                   Your Privacy Choices
                 </button>
               </li>
@@ -185,8 +176,8 @@ const Footer = () => {
         {/* Bottom Section */}
         <div className="border-t border-border pt-6">
           <div className="text-center">
-            <p className="text-xs text-muted-foreground font-light">
-              © 2025 JumpinAI, LLC. All rights reserved.
+            <p className="text-xs text-foreground/70 font-light">
+              Copyright © 2025 JumpinAI, LLC. All rights reserved.
             </p>
           </div>
         </div>
