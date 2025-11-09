@@ -272,7 +272,7 @@ const Index = () => {
                   1
                 </div>
                 <h3 className="text-lg font-bold mb-2 font-display">Describe Your Goal</h3>
-                <p className="text-sm text-muted-foreground flex-1">Answer 2 simple questions: What you're working toward and what's keeping you from getting there. That's all we need.</p>
+                <p className="text-sm text-muted-foreground flex-1">Answer 2 focused questions: your objectives and the challenges you're facing. Our AI analyzes your input to create your personalized transformation plan.</p>
               </div>
               
               <div className="text-center p-6 rounded-xl glass h-full flex flex-col">
