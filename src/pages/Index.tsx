@@ -114,55 +114,98 @@ const Index = () => {
 
           <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-6">
             {/* Strategic Action Plans */}
-            <div className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-300">
-              <h3 className="text-lg font-bold mb-3 font-display">Adaptive Strategic Plans</h3>
-              <p className="text-sm text-muted-foreground mb-4">
+            <div className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-300 border border-primary/10 hover:border-primary/20 shadow-sm hover:shadow-md">
+              <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <h3 className="text-lg font-bold mb-3 font-display relative">Adaptive Strategic Plans</h3>
+              <p className="text-sm text-muted-foreground mb-4 leading-relaxed relative">
                 Clear, step-by-step roadmaps tailored to your exact goals, industry, and experience level—with revolutionary multi-level clarification (up to 4 levels deep) and alternative route discovery at every step.
               </p>
-              <div className="text-xs text-muted-foreground space-y-1 font-medium">
-                <div>✓ Industry-specific strategies</div>
-                <div>✓ 4-level deep clarifications</div>
-                <div>✓ Alternative routes discovery</div>
-                <div>✓ Never feel stuck again</div>
+              <div className="text-xs text-muted-foreground space-y-2 font-medium relative">
+                <div className="flex items-start gap-2">
+                  <span className="text-primary mt-0.5">✓</span>
+                  <span>Industry-specific strategies</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-primary mt-0.5">✓</span>
+                  <span>4-level deep clarifications</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-primary mt-0.5">✓</span>
+                  <span>Alternative routes discovery</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-primary mt-0.5">✓</span>
+                  <span>Never feel stuck again</span>
+                </div>
               </div>
             </div>
 
             {/* AI Tool Selection */}
-            <div className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-300">
-              <h3 className="text-lg font-bold mb-3 font-display">Curated AI Tool Lists</h3>
-              <p className="text-sm text-muted-foreground mb-4">
+            <div className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-300 border border-primary/10 hover:border-primary/20 shadow-sm hover:shadow-md">
+              <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <h3 className="text-lg font-bold mb-3 font-display relative">Curated AI Tool Lists</h3>
+              <p className="text-sm text-muted-foreground mb-4 leading-relaxed relative">
                 Hand-picked AI tools specifically chosen for your use case with setup guides and optimization tips.
               </p>
-              <div className="text-xs text-muted-foreground space-y-1">
-                <div>✓ Pre-vetted tools only</div>
-                <div>✓ Cost-benefit analysis</div>
-                <div>✓ Integration guidance included</div>
+              <div className="text-xs text-muted-foreground space-y-2 relative">
+                <div className="flex items-start gap-2">
+                  <span className="text-primary mt-0.5">✓</span>
+                  <span>Pre-vetted tools only</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-primary mt-0.5">✓</span>
+                  <span>Cost-benefit analysis</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-primary mt-0.5">✓</span>
+                  <span>Integration guidance included</span>
+                </div>
               </div>
             </div>
 
             {/* Complete Resource Package */}
-            <div className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-300">
-              <h3 className="text-lg font-bold mb-3 font-display">Ready Resources</h3>
-              <p className="text-sm text-muted-foreground mb-4">
+            <div className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-300 border border-primary/10 hover:border-primary/20 shadow-sm hover:shadow-md">
+              <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <h3 className="text-lg font-bold mb-3 font-display relative">Ready Resources</h3>
+              <p className="text-sm text-muted-foreground mb-4 leading-relaxed relative">
                 Comprehensive analysis of your situation, strategic action plan, and 9 personalized batches of tools and prompts to get you started immediately.
               </p>
-              <div className="text-xs text-muted-foreground space-y-1">
-                <div>✓ Situational analysis</div>
-                <div>✓ Strategic action plan</div>
-                <div>✓ 9 personalized tool & prompt batches</div>
+              <div className="text-xs text-muted-foreground space-y-2 relative">
+                <div className="flex items-start gap-2">
+                  <span className="text-primary mt-0.5">✓</span>
+                  <span>Situational analysis</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-primary mt-0.5">✓</span>
+                  <span>Strategic action plan</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-primary mt-0.5">✓</span>
+                  <span>9 personalized tool & prompt batches</span>
+                </div>
               </div>
             </div>
 
             {/* AI Coach & Support */}
-            <div className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-300">
-              <h3 className="text-lg font-bold mb-3 font-display">AI Coach & Support</h3>
-              <p className="text-sm text-muted-foreground mb-4">
+            <div className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-300 border border-primary/10 hover:border-primary/20 shadow-sm hover:shadow-md">
+              <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <h3 className="text-lg font-bold mb-3 font-display relative">AI Coach & Support</h3>
+              <p className="text-sm text-muted-foreground mb-4 leading-relaxed relative">
                 Ongoing guidance with AI coach conversations, plan refinement, route exploration capabilities, and comprehensive support system.
               </p>
-              <div className="text-xs text-muted-foreground space-y-1">
-                <div>✓ AI coaching sessions</div>
-                <div>✓ Implementation support</div>
-                <div>✓ Progress tracking</div>
+              <div className="text-xs text-muted-foreground space-y-2 relative">
+                <div className="flex items-start gap-2">
+                  <span className="text-primary mt-0.5">✓</span>
+                  <span>AI coaching sessions</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-primary mt-0.5">✓</span>
+                  <span>Implementation support</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-primary mt-0.5">✓</span>
+                  <span>Progress tracking</span>
+                </div>
               </div>
             </div>
           </div>
