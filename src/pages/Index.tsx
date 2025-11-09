@@ -918,10 +918,10 @@ const Index = () => {
       <section className="py-6 sm:py-7">
         <div className="container mx-auto px-6 sm:px-8 lg:px-12">
           <div className="text-center mb-10">
-            <h2 className="text-2xl lg:text-3xl font-bold mb-3 font-display">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold gradient-text-primary mb-3 sm:mb-4 font-display">
               Frequently Asked Questions
             </h2>
-            <p className="text-base text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto">
               Everything you need to know about transforming your business with JumpinAI Studio
             </p>
           </div>
