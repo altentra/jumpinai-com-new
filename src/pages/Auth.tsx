@@ -214,7 +214,7 @@ export default function Auth() {
                 disabled={loading}
                 aria-label="Continue with Apple"
                 variant="outline"
-                className="w-full h-11 mt-2 text-base font-medium bg-white hover:bg-gray-50 dark:bg-black dark:hover:bg-gray-950 border-2 border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700 text-gray-700 dark:text-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02]"
+                className="w-full h-11 mt-2 text-base font-medium bg-card hover:bg-muted border-2 border-border hover:border-primary/50 text-foreground rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02]"
               >
                 <svg
                   className="mr-3 h-5 w-5"
@@ -293,7 +293,8 @@ export default function Auth() {
                   <Button 
                     onClick={handleSignup} 
                     disabled={loading} 
-                    className="w-full h-10 mt-4 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground font-medium rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
+                    variant="glass"
+                    className="w-full h-10 mt-4"
                   >
                     {loading ? "Creating account..." : "Create account"}
                   </Button>
@@ -330,7 +331,8 @@ export default function Auth() {
                       <Button 
                         onClick={handleLogin} 
                         disabled={loading} 
-                        className="w-full h-10 mt-4 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground font-medium rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
+                        variant="glass"
+                        className="w-full h-10 mt-4"
                       >
                         {loading ? "Logging in..." : "Login"}
                       </Button>
