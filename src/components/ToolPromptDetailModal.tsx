@@ -192,10 +192,10 @@ export function ToolPromptDetailModal({ toolPrompt, isOpen, onClose, index }: To
                 <div className="relative p-4 bg-gradient-to-br from-yellow-500/10 via-yellow-500/5 to-amber-500/10 backdrop-blur-sm border border-yellow-500/20 rounded-2xl hover:border-yellow-500/30 transition-all duration-300">
                   <div className="flex items-start gap-3">
                     <div className="p-2 bg-yellow-500/10 rounded-xl">
-                      <Sparkles className="w-4 h-4 text-yellow-400 shrink-0" />
+                      <Sparkles className="w-4 h-4 text-yellow-700 dark:text-yellow-400 shrink-0" />
                     </div>
                     <div className="flex-1">
-                      <p className="text-sm font-semibold text-yellow-400 mb-2">How to Use</p>
+                      <p className="text-sm font-semibold text-yellow-700 dark:text-yellow-400 mb-2">How to Use</p>
                       <p className="text-xs text-foreground leading-relaxed">
                         {String(toolPrompt.prompt_instructions)}
                       </p>
