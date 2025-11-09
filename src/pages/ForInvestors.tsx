@@ -316,27 +316,25 @@ const ForInvestors = () => {
         </div>
       </section>
 
-      {/* Crunchbase Profile - Premium Glass */}
+      {/* Crunchbase Profile */}
       <section className="py-6 px-4 relative z-10">
-        <div className="max-w-2xl mx-auto">
+        <div className="max-w-2xl mx-auto flex justify-center">
           <button 
             onClick={() => window.open('https://www.crunchbase.com/organization/jumpinai', '_blank')}
-            className="relative group overflow-hidden w-full"
+            className="relative group overflow-hidden"
           >
             {/* Liquid glass glow effect */}
-            <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-2xl blur-md opacity-30 group-hover:opacity-60 transition duration-500"></div>
+            <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover:opacity-60 transition duration-500"></div>
             
             {/* Button */}
-            <div className="relative glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 group-hover:border-primary/40 rounded-2xl p-6 shadow-xl shadow-primary/15 group-hover:shadow-2xl group-hover:shadow-primary/20 transition-all duration-300 group-hover:scale-105 overflow-hidden">
+            <div className="relative flex items-center justify-center gap-3 px-8 py-3 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover:border-primary/50 transition-all duration-300 overflow-hidden">
               {/* Shimmer effect */}
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
               
               {/* Content */}
-              <div className="relative flex items-center justify-center gap-3">
-                <Globe className="h-5 w-5 text-primary flex-shrink-0 group-hover:scale-110 transition-transform duration-300" />
-                <span className="text-sm font-bold text-foreground group-hover:text-primary transition-colors duration-300">View Our Profile & Metrics on Crunchbase</span>
-                <ExternalLink className="h-4 w-4 text-primary flex-shrink-0 group-hover:scale-110 transition-transform duration-300" />
-              </div>
+              <Globe className="relative h-5 w-5 text-primary flex-shrink-0 group-hover:scale-110 transition-transform duration-300" />
+              <span className="relative text-sm font-bold text-foreground group-hover:text-primary transition-colors duration-300">View Our Profile & Metrics on Crunchbase</span>
+              <ExternalLink className="relative h-4 w-4 text-primary flex-shrink-0 group-hover:scale-110 transition-transform duration-300" />
             </div>
           </button>
         </div>
