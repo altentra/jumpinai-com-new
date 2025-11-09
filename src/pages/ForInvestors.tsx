@@ -132,13 +132,22 @@ const ForInvestors = () => {
                 </p>
               </div>
               <div className="flex justify-center">
-                <Button 
-                  size="lg" 
-                  className="text-sm sm:text-base px-8 sm:px-12 py-3 bg-gradient-to-r from-primary/90 to-primary hover:from-primary hover:to-primary/80 text-primary-foreground border border-primary/30 rounded-2xl shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 hover:scale-105 group backdrop-blur-sm w-full sm:w-auto"
+                <button 
                   onClick={scrollToContactForm}
+                  className="relative group overflow-hidden w-full sm:w-auto"
                 >
-                  Contact Our Team
-                </Button>
+                  {/* Liquid glass glow effect */}
+                  <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover:opacity-60 transition duration-500"></div>
+                  
+                  {/* Button */}
+                  <div className="relative flex items-center justify-center gap-2 px-8 sm:px-12 py-3 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover:border-primary/50 transition-all duration-300 overflow-hidden">
+                    {/* Shimmer effect */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                    
+                    {/* Content */}
+                    <span className="relative text-sm sm:text-base font-bold text-foreground group-hover:text-primary transition-colors duration-300">Contact Our Team</span>
+                  </div>
+                </button>
               </div>
             </div>
           </div>
@@ -317,14 +326,22 @@ const ForInvestors = () => {
                 <p className="text-sm font-bold text-foreground">View our company profile</p>
                 <p className="text-xs text-muted-foreground">Detailed metrics on Crunchbase</p>
               </div>
-              <Button 
-                size="sm" 
-                variant="outline"
-                className="text-sm px-4 py-2 glass backdrop-blur-sm bg-background/20 border-primary/30 hover:border-primary hover:bg-primary/10 rounded-xl shadow-lg shadow-primary/10 hover:shadow-xl hover:shadow-primary/15 transition-all duration-300"
+              <button 
                 onClick={() => window.open('https://www.crunchbase.com/organization/jumpinai', '_blank')}
+                className="relative group overflow-hidden"
               >
-                View
-              </Button>
+                {/* Liquid glass glow effect */}
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover:opacity-60 transition duration-500"></div>
+                
+                {/* Button */}
+                <div className="relative flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover:border-primary/50 transition-all duration-300 overflow-hidden">
+                  {/* Shimmer effect */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                  
+                  {/* Content */}
+                  <span className="relative text-sm font-bold text-foreground group-hover:text-primary transition-colors duration-300">View</span>
+                </div>
+              </button>
             </div>
           </div>
         </div>
@@ -412,23 +429,30 @@ const ForInvestors = () => {
                 </div>
                 
                 <div className="text-center">
-                  <Button 
+                  <button 
                     type="submit" 
-                    size="lg" 
-                    className="text-base px-12 py-3 bg-gradient-to-r from-primary/90 to-primary hover:from-primary hover:to-primary/80 text-primary-foreground border border-primary/30 rounded-2xl shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 hover:scale-105 group backdrop-blur-sm" 
                     disabled={isSubmitting}
+                    className="relative group overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {isSubmitting ? (
-                      <>
-                        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                        Sending...
-                      </>
-                    ) : (
-                      <>
-                        Invest or Partner With Us
-                      </>
-                    )}
-                  </Button>
+                    {/* Liquid glass glow effect */}
+                    <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover:opacity-60 transition duration-500"></div>
+                    
+                    {/* Button */}
+                    <div className="relative flex items-center justify-center gap-2 px-12 py-3 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover:border-primary/50 transition-all duration-300 overflow-hidden">
+                      {/* Shimmer effect */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                      
+                      {/* Content */}
+                      {isSubmitting ? (
+                        <>
+                          <Loader2 className="relative h-5 w-5 animate-spin text-foreground group-hover:text-primary transition-colors duration-300" />
+                          <span className="relative text-base font-bold text-foreground group-hover:text-primary transition-colors duration-300">Sending...</span>
+                        </>
+                      ) : (
+                        <span className="relative text-base font-bold text-foreground group-hover:text-primary transition-colors duration-300">Invest or Partner With Us</span>
+                      )}
+                    </div>
+                  </button>
                   <p className="text-sm text-muted-foreground mt-4">
                     We'll respond within 24 hours to discuss opportunities and next steps.
                   </p>

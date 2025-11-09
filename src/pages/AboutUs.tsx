@@ -109,10 +109,20 @@ const LeadMagnetButton = () => {
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
-        <Button size="lg" className="text-lg px-8 py-4 bg-gradient-to-r from-primary/90 to-primary hover:from-primary hover:to-primary/80 text-primary-foreground border border-primary/30 rounded-2xl shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 hover:scale-105 group backdrop-blur-sm">
-          Get Your Free AI Jumpstart Guide
-          <ArrowRight className="ml-2 w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
-        </Button>
+        <button className="relative group overflow-hidden">
+          {/* Liquid glass glow effect */}
+          <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover:opacity-60 transition duration-500"></div>
+          
+          {/* Button */}
+          <div className="relative flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover:border-primary/50 transition-all duration-300 overflow-hidden">
+            {/* Shimmer effect */}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+            
+            {/* Content */}
+            <span className="relative text-lg font-bold text-foreground group-hover:text-primary transition-colors duration-300">Get Your Free AI Jumpstart Guide</span>
+            <ArrowRight className="relative w-5 h-5 text-foreground group-hover:text-primary transition-colors duration-300 group-hover:translate-x-1" />
+          </div>
+        </button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md glass backdrop-blur-md bg-background/95 dark:bg-background/90 border border-primary/30 rounded-3xl shadow-2xl shadow-primary/20">
         <DialogHeader>
@@ -139,15 +149,26 @@ const LeadMagnetButton = () => {
                 className="w-full px-4 py-3 text-base rounded-xl glass backdrop-blur-sm bg-background/50 border-primary/30 focus:border-primary/50 shadow-lg shadow-primary/5"
               />
               
-              <Button 
+              <button 
                 type="submit"
-                size="lg"
                 disabled={isSubmitting}
-                className="w-full bg-gradient-to-r from-primary/90 to-primary hover:from-primary hover:to-primary/80 text-primary-foreground py-3 text-base font-semibold rounded-2xl border border-primary/30 shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 backdrop-blur-sm"
+                className="relative group w-full overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isSubmitting ? "Sending..." : "Send Me The PDF"}
-                <Download className="ml-2 h-4 w-4" />
-              </Button>
+                {/* Liquid glass glow effect */}
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover:opacity-60 transition duration-500"></div>
+                
+                {/* Button */}
+                <div className="relative flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover:border-primary/50 transition-all duration-300 overflow-hidden">
+                  {/* Shimmer effect */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                  
+                  {/* Content */}
+                  <span className="relative text-base font-bold text-foreground group-hover:text-primary transition-colors duration-300">
+                    {isSubmitting ? "Sending..." : "Send Me The PDF"}
+                  </span>
+                  <Download className="relative h-4 w-4 text-foreground group-hover:text-primary transition-colors duration-300" />
+                </div>
+              </button>
             </div>
             
             <p className="text-xs text-muted-foreground text-center opacity-70">
@@ -169,14 +190,23 @@ const LeadMagnetButton = () => {
               </p>
             </div>
             
-            <Button 
+            <button 
               onClick={handleDirectDownload}
-              size="lg"
-              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-3 text-base font-semibold rounded-2xl border border-primary/30 shadow-lg hover:shadow-xl transition-all duration-300 backdrop-blur-sm"
+              className="relative group w-full overflow-hidden"
             >
-              <Download className="mr-2 h-4 w-4" />
-              Download PDF Now
-            </Button>
+              {/* Liquid glass glow effect */}
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover:opacity-60 transition duration-500"></div>
+              
+              {/* Button */}
+              <div className="relative flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover:border-primary/50 transition-all duration-300 overflow-hidden">
+                {/* Shimmer effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                
+                {/* Content */}
+                <Download className="relative h-4 w-4 text-foreground group-hover:text-primary transition-colors duration-300" />
+                <span className="relative text-base font-bold text-foreground group-hover:text-primary transition-colors duration-300">Download PDF Now</span>
+              </div>
+            </button>
             
             <Button 
               onClick={() => {
@@ -300,14 +330,23 @@ const AboutUs = () => {
                 <p className="text-sm sm:text-base md:text-lg text-muted-foreground/90 mb-4 sm:mb-6 max-w-3xl mx-auto leading-relaxed">Pioneering the future of human-AI collaboration. We're not just building tools—we're architecting the bridge between human potential and artificial intelligence, one personalized journey at a time.</p>
               </div>
               <div className="flex justify-center mt-4 sm:mt-6">
-                <Button 
-                  size="lg" 
+                <button 
                   onClick={handleStartBuilding}
-                  className="text-sm sm:text-base px-6 sm:px-8 py-2.5 sm:py-3 bg-gradient-to-r from-primary/90 to-primary hover:from-primary hover:to-primary/80 text-primary-foreground border border-primary/30 rounded-2xl shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 hover:scale-105 group backdrop-blur-sm w-full sm:w-auto"
+                  className="relative group overflow-hidden w-full sm:w-auto"
                 >
-                  Get Your Personal Jump
-                  <ArrowRight className="ml-2 w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-                </Button>
+                  {/* Liquid glass glow effect */}
+                  <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover:opacity-60 transition duration-500"></div>
+                  
+                  {/* Button */}
+                  <div className="relative flex items-center justify-center gap-2 px-6 sm:px-8 py-2.5 sm:py-3 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover:border-primary/50 transition-all duration-300 overflow-hidden">
+                    {/* Shimmer effect */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                    
+                    {/* Content */}
+                    <span className="relative text-sm sm:text-base font-bold text-foreground group-hover:text-primary transition-colors duration-300">Get Your Personal Jump</span>
+                    <ArrowRight className="relative w-4 h-4 text-foreground group-hover:text-primary transition-colors duration-300 group-hover:translate-x-1" />
+                  </div>
+                </button>
               </div>
             </div>
           </div>
@@ -456,14 +495,25 @@ const AboutUs = () => {
             </div>
             
             <div className="flex justify-center">
-              <Button 
-                size="lg" 
+              <button 
                 onClick={handleStartBuilding}
-                className="text-sm sm:text-base px-6 sm:px-8 py-2.5 sm:py-3 bg-gradient-to-r from-primary/90 to-primary hover:from-primary hover:to-primary/80 text-primary-foreground border border-primary/30 rounded-2xl shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 hover:scale-105 group backdrop-blur-sm w-full sm:w-auto"
+                className="relative group overflow-hidden w-full sm:w-auto"
               >
-                {isAuthenticated ? 'Create My Jump Plan' : 'Get My Personal Jump'}
-                <ArrowRight className="ml-2 w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-              </Button>
+                {/* Liquid glass glow effect */}
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover:opacity-60 transition duration-500"></div>
+                
+                {/* Button */}
+                <div className="relative flex items-center justify-center gap-2 px-6 sm:px-8 py-2.5 sm:py-3 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover:border-primary/50 transition-all duration-300 overflow-hidden">
+                  {/* Shimmer effect */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                  
+                  {/* Content */}
+                  <span className="relative text-sm sm:text-base font-bold text-foreground group-hover:text-primary transition-colors duration-300">
+                    {isAuthenticated ? 'Create My Jump Plan' : 'Get My Personal Jump'}
+                  </span>
+                  <ArrowRight className="relative w-4 h-4 text-foreground group-hover:text-primary transition-colors duration-300 group-hover:translate-x-1" />
+                </div>
+              </button>
             </div>
           </div>
         </div>

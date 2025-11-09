@@ -269,13 +269,25 @@ const ContactUs = () => {
                         />
 
                         <div className="pt-4">
-                          <Button 
+                          <button 
                             type="submit" 
                             disabled={isSubmitting}
-                            className="w-full h-10 text-sm font-bold bg-gradient-to-r from-primary/90 to-primary hover:from-primary hover:to-primary/80 text-primary-foreground border border-primary/30 rounded-3xl shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 hover:scale-105 group backdrop-blur-sm"
+                            className="relative group w-full overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
                           >
-                            {isSubmitting ? "Sending Message..." : "Send Message"}
-                          </Button>
+                            {/* Liquid glass glow effect */}
+                            <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover:opacity-60 transition duration-500"></div>
+                            
+                            {/* Button */}
+                            <div className="relative flex items-center justify-center gap-2 px-4 h-10 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover:border-primary/50 transition-all duration-300 overflow-hidden">
+                              {/* Shimmer effect */}
+                              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                              
+                              {/* Content */}
+                              <span className="relative text-sm font-bold text-foreground group-hover:text-primary transition-colors duration-300">
+                                {isSubmitting ? "Sending Message..." : "Send Message"}
+                              </span>
+                            </div>
+                          </button>
                         </div>
                       </form>
                     </Form>
