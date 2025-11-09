@@ -114,14 +114,15 @@ const Index = () => {
           <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-6">
             {/* Strategic Action Plans */}
             <div className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-300">
-              <h3 className="text-lg font-bold mb-3 font-display">Strategic Action Plans</h3>
+              <h3 className="text-lg font-bold mb-3 font-display">Adaptive Strategic Plans</h3>
               <p className="text-sm text-muted-foreground mb-4">
-                Clear, step-by-step roadmaps tailored to your exact goals, industry, and experience level—with the ability to dive deeper into any step or explore alternative approaches.
+                Clear, step-by-step roadmaps tailored to your exact goals, industry, and experience level—with revolutionary multi-level clarification (up to 4 levels deep) and alternative route discovery at every step.
               </p>
               <div className="text-xs text-primary space-y-1">
                 <div>✓ Industry-specific strategies</div>
-                <div>✓ Clear execution timelines</div>
-                <div>✓ Risk-assessed recommendations</div>
+                <div>✓ 4-level deep clarifications</div>
+                <div>✓ Alternative routes discovery</div>
+                <div>✓ Never feel stuck again</div>
               </div>
             </div>
 
@@ -242,6 +243,213 @@ const Index = () => {
                 </svg>
                 <span className="font-semibold">Complete personalized plan generated in 2 minutes</span>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Multi-Level Clarification & Route Discovery Section */}
+      <section className="py-16 lg:py-24 relative overflow-hidden">
+        {/* Premium background effects */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-secondary/5"></div>
+        <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:50px_50px]"></div>
+        
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="text-center mb-12 lg:mb-16">
+            <div className="inline-block mb-4">
+              <span className="px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-semibold">
+                Breakthrough Feature
+              </span>
+            </div>
+            <h2 className="text-3xl lg:text-4xl xl:text-5xl font-bold mb-6 font-display">
+              Adaptive Intelligence: <span className="gradient-text-primary">Multi-Level Clarification</span>
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              Never feel stuck with a vague step again. Our revolutionary system lets you drill down up to 4 levels deep into any step, or discover completely alternative routes to achieve your goals.
+            </p>
+          </div>
+
+          {/* Visual Demonstration */}
+          <div className="max-w-5xl mx-auto mb-12">
+            <div className="glass backdrop-blur-md bg-background/40 rounded-3xl p-8 lg:p-12 border border-primary/20 shadow-2xl">
+              <h3 className="text-xl lg:text-2xl font-bold mb-8 text-center font-display">
+                How Multi-Level Clarification Works
+              </h3>
+              
+              {/* Interactive Step Breakdown */}
+              <div className="space-y-6">
+                {/* Level 1 - Initial Plan */}
+                <div className="relative pl-8 border-l-4 border-primary/30">
+                  <div className="absolute -left-3 top-0 w-6 h-6 rounded-full bg-primary flex items-center justify-center text-xs font-bold text-primary-foreground">
+                    1
+                  </div>
+                  <div className="glass-dark p-4 rounded-xl">
+                    <div className="flex items-center justify-between mb-2">
+                      <h4 className="font-bold text-foreground">Level 1: Your Initial Jump Plan</h4>
+                      <span className="text-xs px-3 py-1 rounded-full bg-primary/20 text-primary">Generated</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      "Implement AI-powered content strategy for your marketing team"
+                    </p>
+                  </div>
+                </div>
+
+                {/* Level 2 - First Clarification */}
+                <div className="relative pl-8 border-l-4 border-primary/40 ml-6">
+                  <div className="absolute -left-3 top-0 w-6 h-6 rounded-full bg-primary/80 flex items-center justify-center text-xs font-bold text-primary-foreground">
+                    2
+                  </div>
+                  <div className="glass-dark p-4 rounded-xl">
+                    <div className="flex items-center justify-between mb-2">
+                      <h4 className="font-bold text-foreground">Level 2: First Clarification</h4>
+                      <span className="text-xs px-3 py-1 rounded-full bg-primary/20 text-primary border border-primary/30">Click to clarify →</span>
+                    </div>
+                    <div className="space-y-2 text-sm text-muted-foreground">
+                      <p>→ Audit current content processes</p>
+                      <p>→ Select AI writing tools</p>
+                      <p>→ Train team on new workflows</p>
+                      <p>→ Establish quality guidelines</p>
+                      <p>→ Measure content performance</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Level 3 - Deeper Clarification */}
+                <div className="relative pl-8 border-l-4 border-primary/50 ml-12">
+                  <div className="absolute -left-3 top-0 w-6 h-6 rounded-full bg-primary/60 flex items-center justify-center text-xs font-bold text-primary-foreground">
+                    3
+                  </div>
+                  <div className="glass-dark p-4 rounded-xl">
+                    <div className="flex items-center justify-between mb-2">
+                      <h4 className="font-bold text-foreground">Level 3: Drill Deeper</h4>
+                      <span className="text-xs px-3 py-1 rounded-full bg-primary/20 text-primary border border-primary/30">Clarify this step →</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground mb-2">
+                      "Select AI writing tools" breaks down to:
+                    </p>
+                    <div className="space-y-1 text-xs text-muted-foreground pl-4">
+                      <p>→ Define tool requirements & budget</p>
+                      <p>→ Research & compare 5-7 options</p>
+                      <p>→ Run pilot tests with 2-3 finalists</p>
+                      <p>→ Evaluate results & team feedback</p>
+                      <p>→ Make final selection & purchase</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Level 4 - Maximum Detail */}
+                <div className="relative pl-8 border-l-4 border-primary/60 ml-18">
+                  <div className="absolute -left-3 top-0 w-6 h-6 rounded-full bg-primary/40 flex items-center justify-center text-xs font-bold text-primary-foreground">
+                    4
+                  </div>
+                  <div className="glass-dark p-4 rounded-xl">
+                    <div className="flex items-center justify-between mb-2">
+                      <h4 className="font-bold text-foreground">Level 4: Maximum Detail</h4>
+                      <span className="text-xs px-3 py-1 rounded-full bg-green-500/20 text-green-500 border border-green-500/30">Actionable steps</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground mb-2">
+                      "Run pilot tests" becomes crystal clear:
+                    </p>
+                    <div className="space-y-1 text-xs text-muted-foreground pl-4">
+                      <p>→ Create 3 identical content briefs</p>
+                      <p>→ Assign 1 brief per tool to test</p>
+                      <p>→ Track time, quality & ease-of-use</p>
+                      <p>→ Document issues & strengths</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Alternative Routes */}
+              <div className="mt-10 p-6 rounded-2xl bg-gradient-to-br from-secondary/10 to-accent/10 border border-secondary/30">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-secondary/20 flex items-center justify-center">
+                    <svg className="w-5 h-5 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="font-bold text-foreground mb-2 flex items-center gap-2">
+                      Alternative Routes Discovery
+                      <span className="text-xs px-2 py-1 rounded-full bg-secondary/20 text-secondary">At any level</span>
+                    </h4>
+                    <p className="text-sm text-muted-foreground mb-3">
+                      Not sure about a specific approach? At any level, discover alternative routes to achieve the same goal:
+                    </p>
+                    <div className="grid md:grid-cols-3 gap-3">
+                      <div className="glass p-3 rounded-lg">
+                        <p className="text-xs font-semibold text-foreground mb-1">Route A</p>
+                        <p className="text-xs text-muted-foreground">Premium tools, faster results</p>
+                      </div>
+                      <div className="glass p-3 rounded-lg">
+                        <p className="text-xs font-semibold text-foreground mb-1">Route B</p>
+                        <p className="text-xs text-muted-foreground">Budget-friendly, gradual approach</p>
+                      </div>
+                      <div className="glass p-3 rounded-lg">
+                        <p className="text-xs font-semibold text-foreground mb-1">Route C</p>
+                        <p className="text-xs text-muted-foreground">Hybrid model, balanced risk</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Key Benefits Grid */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+            <div className="glass p-6 rounded-2xl text-center hover:glass-dark transition-all duration-300">
+              <div className="w-12 h-12 mx-auto mb-4 rounded-xl bg-primary/10 flex items-center justify-center">
+                <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+              <h4 className="font-bold mb-2">Never Feel Stuck</h4>
+              <p className="text-sm text-muted-foreground">Every vague step can be clarified to crystal-clear actions</p>
+            </div>
+
+            <div className="glass p-6 rounded-2xl text-center hover:glass-dark transition-all duration-300">
+              <div className="w-12 h-12 mx-auto mb-4 rounded-xl bg-primary/10 flex items-center justify-center">
+                <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+              </div>
+              <h4 className="font-bold mb-2">Adapt As You Learn</h4>
+              <p className="text-sm text-muted-foreground">Discover new approaches as you progress through your journey</p>
+            </div>
+
+            <div className="glass p-6 rounded-2xl text-center hover:glass-dark transition-all duration-300">
+              <div className="w-12 h-12 mx-auto mb-4 rounded-xl bg-primary/10 flex items-center justify-center">
+                <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
+                </svg>
+              </div>
+              <h4 className="font-bold mb-2">Multiple Pathways</h4>
+              <p className="text-sm text-muted-foreground">Choose the route that fits your budget, timeline, and risk tolerance</p>
+            </div>
+
+            <div className="glass p-6 rounded-2xl text-center hover:glass-dark transition-all duration-300">
+              <div className="w-12 h-12 mx-auto mb-4 rounded-xl bg-primary/10 flex items-center justify-center">
+                <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11"></path>
+                </svg>
+              </div>
+              <h4 className="font-bold mb-2">Maximum Control</h4>
+              <p className="text-sm text-muted-foreground">You decide how deep to go and which path to take</p>
+            </div>
+          </div>
+
+          {/* Availability Info */}
+          <div className="mt-12 text-center">
+            <div className="inline-flex items-center gap-3 px-6 py-4 rounded-2xl glass border border-primary/20">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+                <span className="text-sm font-semibold">Available on Pro & Growth Plans</span>
+              </div>
+              <span className="text-xs text-muted-foreground">|</span>
+              <span className="text-sm text-muted-foreground">Up to 4 levels deep</span>
+              <span className="text-xs text-muted-foreground">|</span>
+              <span className="text-sm text-muted-foreground">Unlimited route exploration</span>
             </div>
           </div>
         </div>
