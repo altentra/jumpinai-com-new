@@ -1013,11 +1013,6 @@ const Index = () => {
             </div>
 
             <div className="p-4 rounded-lg glass hover:glass-dark transition-all duration-300">
-              <h3 className="text-base font-bold mb-1.5 font-display">How quickly can I generate my Jump and start implementing?</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">Your complete Jump generates in approximately 2 minutes. You'll immediately have access to all 3 tabs with your strategic overview, detailed action plan, and implementation tools - ready to execute right away.</p>
-            </div>
-
-            <div className="p-4 rounded-lg glass hover:glass-dark transition-all duration-300">
               <h3 className="text-base font-bold mb-1.5 font-display">Is my Jump personalized to my specific situation?</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">Absolutely. Every Jump is fully customized based on your specific business context, industry, role, current AI experience level, resources, and goals. No generic templates - each Jump is uniquely crafted for your situation.</p>
             </div>
