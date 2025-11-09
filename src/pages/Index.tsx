@@ -308,13 +308,13 @@ const Index = () => {
       </section>
 
       {/* Multi-Level Clarification & Route Discovery Section */}
-      <section className="py-6 sm:py-8 lg:py-10 relative">
+      <section className="py-10 sm:py-12 lg:py-16 relative">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8 sm:mb-10 lg:mb-12">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 font-display">
-              Adaptive Intelligence: <span className="gradient-text-primary">Multi-Level Clarification</span>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold gradient-text-primary mb-3 sm:mb-4 font-display">
+              Adaptive Intelligence: Multi-Level Clarification
             </h2>
-            <p className="text-sm sm:text-base lg:text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+            <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto">
               Never feel stuck with a vague step again. Our revolutionary system lets you drill down up to 4 levels deep into any step, or discover completely alternative routes to achieve your goals.
             </p>
           </div>
@@ -596,13 +596,13 @@ const Index = () => {
       </section>
 
       {/* Success Metrics Section */}
-      <section className="py-6 bg-transparent">
+      <section className="py-10 lg:py-16 bg-transparent">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">
-            <h2 className="text-2xl lg:text-3xl font-bold mb-3 font-display">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold gradient-text-primary mb-3 sm:mb-4 font-display">
               Proven Results Speak Louder Than Promises
             </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto">
               Join thousands who've transformed their AI journey from overwhelming to outstanding
             </p>
           </div>
@@ -636,13 +636,13 @@ const Index = () => {
       </section>
 
       {/* Why Choose JumpinAI Section */}
-      <section className="py-6 sm:py-8">
+      <section className="py-10 sm:py-12 lg:py-16">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8 sm:mb-10">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 font-display">
-              The <span className="gradient-text-primary">JumpinAI Advantage</span>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold gradient-text-primary mb-3 sm:mb-4 font-display">
+              The JumpinAI Advantage
             </h2>
-            <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto">
               Complete 3-tab system designed for clarity, adaptability, and immediate action
             </p>
           </div>
@@ -789,13 +789,13 @@ const Index = () => {
       </section>
 
       {/* Pricing Section - Complete Clone from Pricing Page */}
-      <section className="py-10 lg:py-16 bg-gradient-to-br from-background via-background to-secondary/10">
+      <section className="py-10 lg:py-16 bg-transparent">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl lg:text-5xl font-bold gradient-text-primary mb-6 font-display">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold gradient-text-primary mb-3 sm:mb-4 font-display">
               Choose Your AI Transformation Plan
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-4">
+            <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto mb-4">
               Flexible plans designed to accelerate your business growth
             </p>
             <p className="text-base text-muted-foreground max-w-3xl mx-auto">
