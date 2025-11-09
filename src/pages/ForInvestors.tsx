@@ -188,7 +188,7 @@ const ForInvestors = () => {
                 <DollarSign className="h-8 w-8 md:h-10 md:w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
                 <h3 className="text-base md:text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Scalable AI Engine</h3>
                 <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
-                  AI-powered personalization engine generates unlimited unique transformations with minimal marginal cost.
+                  Our AI-powered personalization engine generates unlimited unique transformations with minimal marginal cost per Jump. Unlike traditional consulting models with linear cost scaling, our technology enables exponential growth without proportional expense increases. This creates exceptional unit economics and sustainable competitive advantages through network effects and continuous learning.
                 </p>
               </div>
               
@@ -196,7 +196,7 @@ const ForInvestors = () => {
                 <Rocket className="h-8 w-8 md:h-10 md:w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
                 <h3 className="text-base md:text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Perfect Timing</h3>
                 <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
-                  AI revolution creating demand for personalized transformation. We're first-to-market with this approach.
+                  The AI revolution is creating unprecedented demand for personalized transformation solutions. We're first-to-market with this adaptive approach, capturing early-mover advantages before competitors can replicate our depth of personalization. The convergence of AI maturity, market readiness, and growing transformation urgency creates a unique window of opportunity for exponential growth.
                 </p>
               </div>
             </div>
@@ -238,7 +238,7 @@ const ForInvestors = () => {
                 <Users className="h-8 w-8 md:h-10 md:w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
                 <h3 className="text-base md:text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">AI Coach Integration</h3>
                 <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
-                  Ongoing personalized guidance through intelligent coaching, creating deeper engagement and retention.
+                  Our intelligent AI Coach provides ongoing personalized guidance throughout the transformation journey, creating deeper user engagement and exceptional retention rates. This continuous support system learns from each interaction, offering contextual assistance that evolves with user needs. The Coach transforms one-time users into long-term subscribers, significantly increasing lifetime value and creating sustainable recurring revenue.
                 </p>
               </div>
               
@@ -246,7 +246,7 @@ const ForInvestors = () => {
                 <Lightbulb className="h-8 w-8 md:h-10 md:w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
                 <h3 className="text-base md:text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Human-Centered AI Architecture</h3>
                 <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
-                  AI amplifies human potential rather than replacing it, creating sustainable transformation and loyalty.
+                  Our platform is designed with a human-first philosophy where AI amplifies human potential rather than replacing it. This approach creates sustainable transformation outcomes and builds deep user loyalty. By empowering users to make informed decisions while providing AI-powered support, we foster trust and long-term relationships that translate into high retention rates and strong brand advocacy.
                 </p>
               </div>
             </div>
