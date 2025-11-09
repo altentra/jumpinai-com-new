@@ -201,18 +201,18 @@ export default function Pricing() {
                     <div className="space-y-2">
                       <button
                         onClick={() => login('/pricing')}
-                        className="relative group inline-block w-full"
+                        className="relative group w-full overflow-hidden"
                       >
                         {/* Liquid glass glow effect */}
-                        <div className="absolute -inset-0.5 bg-gradient-to-r from-white/50 via-white/40 to-white/50 rounded-[2rem] blur-md opacity-50 group-hover:opacity-80 transition duration-500"></div>
+                        <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover:opacity-60 transition duration-500"></div>
                         
                         {/* Button */}
-                        <div className="relative flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-br from-white/60 via-white/70 to-white/60 backdrop-blur-xl rounded-[2rem] border border-white/60 group-hover:border-white/80 transition-all duration-300 overflow-hidden shadow-lg">
+                        <div className="relative flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover:border-primary/50 transition-all duration-300 overflow-hidden">
                           {/* Shimmer effect */}
-                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                           
                           {/* Content */}
-                          <span className="relative text-xs md:text-sm font-bold text-black whitespace-nowrap">
+                          <span className="relative font-bold text-foreground group-hover:text-primary transition-colors duration-300 text-xs md:text-sm">
                             Get Started Free
                           </span>
                         </div>
@@ -277,19 +277,19 @@ export default function Pricing() {
                     <button
                       onClick={handleSubscribe}
                       disabled={loading}
-                      className="relative group inline-block w-full"
+                      className="relative group w-full overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {/* Liquid glass glow effect */}
-                      <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/50 via-primary/40 to-primary/50 rounded-[2rem] blur-md opacity-50 group-hover:opacity-80 transition duration-500"></div>
+                      <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover:opacity-60 transition duration-500"></div>
                       
                       {/* Button */}
-                      <div className="relative flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-br from-primary/60 via-primary/70 to-primary/60 backdrop-blur-xl rounded-[2rem] border border-primary/60 group-hover:border-primary/80 transition-all duration-300 overflow-hidden shadow-lg">
+                      <div className="relative flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover:border-primary/50 transition-all duration-300 overflow-hidden">
                         {/* Shimmer effect */}
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                         
                         {/* Content */}
-                        <Crown className="relative h-3.5 w-3.5 text-white" />
-                        <span className="relative text-xs md:text-sm font-bold text-white whitespace-nowrap">
+                        <Crown className="relative h-3.5 w-3.5 text-foreground group-hover:text-primary transition-colors duration-300" />
+                        <span className="relative font-bold text-foreground group-hover:text-primary transition-colors duration-300 text-xs md:text-sm">
                           {loading ? 'Processing...' : 'Start Pro Journey'}
                         </span>
                       </div>
@@ -303,19 +303,19 @@ export default function Pricing() {
                     <button
                       onClick={handleSubscribe}
                       disabled={loading}
-                      className="relative group inline-block w-full"
+                      className="relative group w-full overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {/* Liquid glass glow effect */}
-                      <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/50 via-primary/40 to-primary/50 rounded-[2rem] blur-md opacity-50 group-hover:opacity-80 transition duration-500"></div>
+                      <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover:opacity-60 transition duration-500"></div>
                       
                       {/* Button */}
-                      <div className="relative flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-br from-primary/60 via-primary/70 to-primary/60 backdrop-blur-xl rounded-[2rem] border border-primary/60 group-hover:border-primary/80 transition-all duration-300 overflow-hidden shadow-lg">
+                      <div className="relative flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover:border-primary/50 transition-all duration-300 overflow-hidden">
                         {/* Shimmer effect */}
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                         
                         {/* Content */}
-                        <Crown className="relative h-3.5 w-3.5 text-white" />
-                        <span className="relative text-xs md:text-sm font-bold text-white whitespace-nowrap">
+                        <Crown className="relative h-3.5 w-3.5 text-foreground group-hover:text-primary transition-colors duration-300" />
+                        <span className="relative font-bold text-foreground group-hover:text-primary transition-colors duration-300 text-xs md:text-sm">
                           {loading ? 'Processing...' : 'Upgrade to Pro'}
                         </span>
                       </div>
@@ -328,18 +328,18 @@ export default function Pricing() {
                   <div className="w-full space-y-2">
                     <button
                       onClick={handleManageDashboard}
-                      className="relative group inline-block w-full"
+                      className="relative group w-full overflow-hidden"
                     >
                       {/* Liquid glass glow effect */}
-                      <div className="absolute -inset-0.5 bg-gradient-to-r from-white/50 via-white/40 to-white/50 rounded-[2rem] blur-md opacity-50 group-hover:opacity-80 transition duration-500"></div>
+                      <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover:opacity-60 transition duration-500"></div>
                       
                       {/* Button */}
-                      <div className="relative flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-br from-white/60 via-white/70 to-white/60 backdrop-blur-xl rounded-[2rem] border border-white/60 group-hover:border-white/80 transition-all duration-300 overflow-hidden shadow-lg">
+                      <div className="relative flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover:border-primary/50 transition-all duration-300 overflow-hidden">
                         {/* Shimmer effect */}
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                         
                         {/* Content */}
-                        <span className="relative text-xs md:text-sm font-bold text-black whitespace-nowrap">
+                        <span className="relative font-bold text-foreground group-hover:text-primary transition-colors duration-300 text-xs md:text-sm">
                           Manage Subscription
                         </span>
                       </div>
