@@ -101,7 +101,7 @@ const Index = () => {
       <Hero />
 
       {/* What You Get: Complete Jump Structure */}
-      <section className="py-12 sm:py-16 lg:py-24 relative">
+      <section className="py-6 sm:py-8 lg:py-12 relative">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8 sm:mb-12">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold gradient-text-primary mb-3 sm:mb-4 font-display px-4">
@@ -225,7 +225,7 @@ const Index = () => {
       </section>
 
       {/* Trust by Association Section */}
-      <section className="py-12 bg-muted/30 dark:bg-muted/10">
+      <section className="py-6 bg-muted/30 dark:bg-muted/10">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">
             <p className="text-sm uppercase tracking-wider text-muted-foreground font-semibold">
@@ -254,7 +254,7 @@ const Index = () => {
       </section>
 
       {/* How JumpinAI Studio Works */}
-      <section className="py-16 lg:py-24">
+      <section className="py-8 lg:py-12">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl lg:text-4xl font-bold mb-4 font-display">
@@ -308,7 +308,7 @@ const Index = () => {
       </section>
 
       {/* Multi-Level Clarification & Route Discovery Section */}
-      <section className="py-12 sm:py-16 lg:py-20 relative">
+      <section className="py-6 sm:py-8 lg:py-10 relative">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8 sm:mb-10 lg:mb-12">
             <div className="inline-block mb-3">
@@ -601,7 +601,7 @@ const Index = () => {
       </section>
 
       {/* Success Metrics Section */}
-      <section className="py-12 bg-gradient-to-r from-muted/20 via-muted/5 to-muted/20">
+      <section className="py-6 bg-gradient-to-r from-muted/20 via-muted/5 to-muted/20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">
             <h2 className="text-2xl lg:text-3xl font-bold mb-3 font-display">
@@ -641,7 +641,7 @@ const Index = () => {
       </section>
 
       {/* Why Choose JumpinAI Section */}
-      <section className="py-12 sm:py-16">
+      <section className="py-6 sm:py-8">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8 sm:mb-10">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 font-display">
@@ -794,7 +794,7 @@ const Index = () => {
       </section>
 
       {/* Pricing Section - Complete Clone from Pricing Page */}
-      <section className="py-20 lg:py-32 bg-gradient-to-br from-background via-background to-secondary/10">
+      <section className="py-10 lg:py-16 bg-gradient-to-br from-background via-background to-secondary/10">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-4xl lg:text-5xl font-bold gradient-text-primary mb-6 font-display">
@@ -920,7 +920,7 @@ const Index = () => {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-12 sm:py-14">
+      <section className="py-6 sm:py-7">
         <div className="container mx-auto px-6 sm:px-8 lg:px-12">
           <div className="text-center mb-10">
             <h2 className="text-2xl lg:text-3xl font-bold mb-3 font-display">
@@ -966,7 +966,7 @@ const Index = () => {
       </section>
 
       {/* Major Final CTA Section */}
-      <section className="py-12 sm:py-16 lg:py-24 relative">
+      <section className="py-6 sm:py-8 lg:py-12 relative">
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4 font-display gradient-text-primary">
