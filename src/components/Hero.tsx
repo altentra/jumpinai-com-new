@@ -259,7 +259,7 @@ const Hero = () => {
           </p>
           
           {/* Call to Action Button */}
-          <div className="flex justify-center px-4">
+          <div className="flex justify-center px-4 mb-16">
             <Link to="/jumpinai-studio" className="relative group inline-block w-full sm:w-auto">
               {/* Liquid glass glow effect */}
               <div className="absolute -inset-0.5 bg-gradient-to-r from-white/50 via-white/40 to-white/50 rounded-[2rem] blur-md opacity-50 group-hover:opacity-80 transition duration-500"></div>
