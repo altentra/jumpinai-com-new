@@ -1130,9 +1130,9 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                               <div className={`p-3 rounded-2xl border ${hasValidToolPromptId ? 'bg-blue-500/5 border-blue-500/30' : 'bg-muted/30 border-border/50'}`}>
                                 <div className="flex items-center justify-between gap-3">
                                   <div className="flex items-start gap-2 flex-1">
-                                    <Sparkles className={`w-3.5 h-3.5 mt-0.5 shrink-0 ${hasValidToolPromptId ? 'text-blue-400' : 'text-muted-foreground'}`} />
+                                    <Sparkles className={`w-3.5 h-3.5 mt-0.5 shrink-0 ${hasValidToolPromptId ? 'text-blue-600 dark:text-blue-400' : 'text-muted-foreground'}`} />
                                     <div>
-                                      <p className={`text-xs font-medium mb-0.5 ${hasValidToolPromptId ? 'text-blue-400' : 'text-muted-foreground'}`}>
+                                      <p className={`text-xs font-medium mb-0.5 ${hasValidToolPromptId ? 'text-blue-600 dark:text-blue-400' : 'text-muted-foreground'}`}>
                                         Tools & Prompts for this Step
                                       </p>
                                       <p className="text-xs text-muted-foreground/80 leading-snug">

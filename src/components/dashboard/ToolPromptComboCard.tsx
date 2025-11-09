@@ -233,9 +233,9 @@ export function ToolPromptComboCard({ combo, onClick, index }: ToolPromptComboCa
           {whenToUse && (
             <div className="p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg">
               <div className="flex items-start gap-2">
-                <Clock className="w-4 h-4 text-blue-400 mt-0.5 shrink-0" />
+                <Clock className="w-4 h-4 text-blue-600 dark:text-blue-400 mt-0.5 shrink-0" />
                 <div>
-                  <p className="text-xs font-medium text-blue-400 mb-1">When to Use</p>
+                  <p className="text-xs font-medium text-blue-600 dark:text-blue-400 mb-1">When to Use</p>
                   <p className="text-xs sm:text-sm text-foreground leading-relaxed">{whenToUse}</p>
                 </div>
               </div>
@@ -246,9 +246,9 @@ export function ToolPromptComboCard({ combo, onClick, index }: ToolPromptComboCa
           {whyCombo && (
             <div className="p-3 bg-green-500/10 border border-green-500/20 rounded-lg">
               <div className="flex items-start gap-2">
-                <CheckCircle className="w-4 h-4 text-green-400 mt-0.5 shrink-0" />
+                <CheckCircle className="w-4 h-4 text-green-600 dark:text-green-400 mt-0.5 shrink-0" />
                 <div>
-                  <p className="text-xs font-medium text-green-400 mb-1">Why This Combo</p>
+                  <p className="text-xs font-medium text-green-600 dark:text-green-400 mb-1">Why This Combo</p>
                   <p className="text-xs sm:text-sm text-foreground leading-relaxed">{whyCombo}</p>
                 </div>
               </div>
@@ -259,8 +259,8 @@ export function ToolPromptComboCard({ combo, onClick, index }: ToolPromptComboCa
           {alternatives.length > 0 && (
             <div className="p-3 bg-orange-500/10 border border-orange-500/20 rounded-lg">
               <div className="flex items-start gap-2 mb-3">
-                <ArrowLeftRight className="w-4 h-4 text-orange-400 mt-0.5 shrink-0" />
-                <p className="text-xs font-medium text-orange-400">Alternative Tools:</p>
+                <ArrowLeftRight className="w-4 h-4 text-orange-600 dark:text-orange-400 mt-0.5 shrink-0" />
+                <p className="text-xs font-medium text-orange-600 dark:text-orange-400">Alternative Tools:</p>
               </div>
               <div className="space-y-3">
                 {alternatives.map((alt: any, idx: number) => {
