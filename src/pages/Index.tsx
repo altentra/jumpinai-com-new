@@ -273,123 +273,234 @@ const Index = () => {
           <div className="max-w-5xl mx-auto mb-12">
             <div className="glass backdrop-blur-md bg-background/40 rounded-3xl p-8 lg:p-12 border border-primary/20 shadow-2xl">
               <h3 className="text-xl lg:text-2xl font-bold mb-8 text-center font-display">
-                How Multi-Level Clarification Works
+                How It Works: Interactive Step Controls
               </h3>
               
-              {/* Interactive Step Breakdown */}
-              <div className="space-y-6">
-                {/* Level 1 - Initial Plan */}
-                <div className="relative pl-8 border-l-4 border-primary/30">
-                  <div className="absolute -left-3 top-0 w-6 h-6 rounded-full bg-primary flex items-center justify-center text-xs font-bold text-primary-foreground">
-                    1
+              {/* The Core Mechanic */}
+              <div className="mb-8 p-6 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center">
+                    <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"></path>
+                    </svg>
                   </div>
-                  <div className="glass-dark p-4 rounded-xl">
-                    <div className="flex items-center justify-between mb-2">
-                      <h4 className="font-bold text-foreground">Level 1: Your Initial Jump Plan</h4>
-                      <span className="text-xs px-3 py-1 rounded-full bg-primary/20 text-primary">Generated</span>
-                    </div>
-                    <p className="text-sm text-muted-foreground">
-                      "Implement AI-powered content strategy for your marketing team"
-                    </p>
-                  </div>
-                </div>
-
-                {/* Level 2 - First Clarification */}
-                <div className="relative pl-8 border-l-4 border-primary/40 ml-6">
-                  <div className="absolute -left-3 top-0 w-6 h-6 rounded-full bg-primary/80 flex items-center justify-center text-xs font-bold text-primary-foreground">
-                    2
-                  </div>
-                  <div className="glass-dark p-4 rounded-xl">
-                    <div className="flex items-center justify-between mb-2">
-                      <h4 className="font-bold text-foreground">Level 2: First Clarification</h4>
-                      <span className="text-xs px-3 py-1 rounded-full bg-primary/20 text-primary border border-primary/30">Click to clarify →</span>
-                    </div>
-                    <div className="space-y-2 text-sm text-muted-foreground">
-                      <p>→ Audit current content processes</p>
-                      <p>→ Select AI writing tools</p>
-                      <p>→ Train team on new workflows</p>
-                      <p>→ Establish quality guidelines</p>
-                      <p>→ Measure content performance</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Level 3 - Deeper Clarification */}
-                <div className="relative pl-8 border-l-4 border-primary/50 ml-12">
-                  <div className="absolute -left-3 top-0 w-6 h-6 rounded-full bg-primary/60 flex items-center justify-center text-xs font-bold text-primary-foreground">
-                    3
-                  </div>
-                  <div className="glass-dark p-4 rounded-xl">
-                    <div className="flex items-center justify-between mb-2">
-                      <h4 className="font-bold text-foreground">Level 3: Drill Deeper</h4>
-                      <span className="text-xs px-3 py-1 rounded-full bg-primary/20 text-primary border border-primary/30">Clarify this step →</span>
-                    </div>
-                    <p className="text-sm text-muted-foreground mb-2">
-                      "Select AI writing tools" breaks down to:
-                    </p>
-                    <div className="space-y-1 text-xs text-muted-foreground pl-4">
-                      <p>→ Define tool requirements & budget</p>
-                      <p>→ Research & compare 5-7 options</p>
-                      <p>→ Run pilot tests with 2-3 finalists</p>
-                      <p>→ Evaluate results & team feedback</p>
-                      <p>→ Make final selection & purchase</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Level 4 - Maximum Detail */}
-                <div className="relative pl-8 border-l-4 border-primary/60 ml-18">
-                  <div className="absolute -left-3 top-0 w-6 h-6 rounded-full bg-primary/40 flex items-center justify-center text-xs font-bold text-primary-foreground">
-                    4
-                  </div>
-                  <div className="glass-dark p-4 rounded-xl">
-                    <div className="flex items-center justify-between mb-2">
-                      <h4 className="font-bold text-foreground">Level 4: Maximum Detail</h4>
-                      <span className="text-xs px-3 py-1 rounded-full bg-green-500/20 text-green-500 border border-green-500/30">Actionable steps</span>
-                    </div>
-                    <p className="text-sm text-muted-foreground mb-2">
-                      "Run pilot tests" becomes crystal clear:
-                    </p>
-                    <div className="space-y-1 text-xs text-muted-foreground pl-4">
-                      <p>→ Create 3 identical content briefs</p>
-                      <p>→ Assign 1 brief per tool to test</p>
-                      <p>→ Track time, quality & ease-of-use</p>
-                      <p>→ Document issues & strengths</p>
+                  <div className="flex-1">
+                    <h4 className="font-bold text-lg mb-3">Hover Over Any Step = Two Powerful Buttons Appear</h4>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div className="glass-dark p-4 rounded-xl">
+                        <div className="flex items-center gap-2 mb-2">
+                          <div className="px-3 py-1 rounded-lg bg-primary/20 text-primary text-xs font-bold border border-primary/30">
+                            CLARIFY
+                          </div>
+                        </div>
+                        <p className="text-sm text-muted-foreground">
+                          Generates <strong className="text-foreground">5 detailed sub-steps</strong> that break down this step into actionable components
+                        </p>
+                      </div>
+                      <div className="glass-dark p-4 rounded-xl">
+                        <div className="flex items-center gap-2 mb-2">
+                          <div className="px-3 py-1 rounded-lg bg-secondary/20 text-secondary text-xs font-bold border border-secondary/30">
+                            REROUTE
+                          </div>
+                        </div>
+                        <p className="text-sm text-muted-foreground">
+                          Suggests <strong className="text-foreground">3 alternative routes</strong> (each with 3 sub-steps) to achieve the same goal
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Alternative Routes */}
+              {/* Multi-Level Breakdown */}
+              <div className="space-y-6">
+                {/* Level 1 */}
+                <div className="relative pl-8 border-l-4 border-primary">
+                  <div className="absolute -left-3 top-0 w-6 h-6 rounded-full bg-primary flex items-center justify-center text-xs font-bold text-primary-foreground">
+                    1
+                  </div>
+                  <div className="glass-dark p-5 rounded-xl">
+                    <div className="flex items-center justify-between mb-3">
+                      <h4 className="font-bold text-foreground">Level 1: Original Generated Plan</h4>
+                      <span className="text-xs px-3 py-1 rounded-full bg-primary/20 text-primary">Your Jump</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground mb-3">
+                      Initial steps from your generated Jump plan
+                    </p>
+                    <div className="space-y-2">
+                      <div className="p-3 rounded-lg bg-background/50 border border-primary/20 hover:border-primary/40 transition-colors">
+                        <div className="flex items-center justify-between">
+                          <p className="text-sm font-medium">Step: "Launch digital marketing campaign"</p>
+                          <div className="flex gap-2">
+                            <button className="px-2 py-1 rounded bg-primary/20 text-primary text-xs hover:bg-primary/30 transition-colors">
+                              Clarify
+                            </button>
+                            <button className="px-2 py-1 rounded bg-secondary/20 text-secondary text-xs hover:bg-secondary/30 transition-colors">
+                              Reroute
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Level 2 */}
+                <div className="relative pl-8 border-l-4 border-primary/80 ml-6">
+                  <div className="absolute -left-3 top-0 w-6 h-6 rounded-full bg-primary/80 flex items-center justify-center text-xs font-bold text-primary-foreground">
+                    2
+                  </div>
+                  <div className="glass-dark p-5 rounded-xl">
+                    <div className="flex items-center justify-between mb-3">
+                      <h4 className="font-bold text-foreground">Level 2: First Clarification</h4>
+                      <span className="text-xs px-3 py-1 rounded-full bg-green-500/20 text-green-500 border border-green-500/30">5 sub-steps generated</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground mb-3">
+                      After clicking "Clarify" on the Level 1 step
+                    </p>
+                    <div className="space-y-2 text-sm">
+                      <div className="p-2 rounded bg-background/30 border border-primary/10 hover:border-primary/30 transition-colors flex items-center justify-between">
+                        <span className="text-muted-foreground">→ Define target audience & budget</span>
+                        <div className="flex gap-1 opacity-0 hover:opacity-100 transition-opacity">
+                          <button className="px-2 py-0.5 rounded bg-primary/20 text-primary text-xs">Clarify</button>
+                          <button className="px-2 py-0.5 rounded bg-secondary/20 text-secondary text-xs">Reroute</button>
+                        </div>
+                      </div>
+                      <div className="p-2 rounded bg-background/30 border border-primary/10 text-muted-foreground">
+                        → Select marketing channels
+                      </div>
+                      <div className="p-2 rounded bg-background/30 border border-primary/10 text-muted-foreground">
+                        → Create campaign content
+                      </div>
+                      <div className="p-2 rounded bg-background/30 border border-primary/10 text-muted-foreground">
+                        → Set up tracking & analytics
+                      </div>
+                      <div className="p-2 rounded bg-background/30 border border-primary/10 text-muted-foreground">
+                        → Launch & monitor performance
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Level 3 */}
+                <div className="relative pl-8 border-l-4 border-primary/60 ml-12">
+                  <div className="absolute -left-3 top-0 w-6 h-6 rounded-full bg-primary/60 flex items-center justify-center text-xs font-bold text-primary-foreground">
+                    3
+                  </div>
+                  <div className="glass-dark p-5 rounded-xl">
+                    <div className="flex items-center justify-between mb-3">
+                      <h4 className="font-bold text-foreground">Level 3: Clarify the Sub-Step</h4>
+                      <span className="text-xs px-3 py-1 rounded-full bg-green-500/20 text-green-500 border border-green-500/30">5 more sub-steps</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground mb-3">
+                      Clicked "Clarify" on the Level 2 sub-step "Define target audience & budget"
+                    </p>
+                    <div className="space-y-1 text-xs">
+                      <div className="p-2 rounded bg-background/20 border border-primary/10 hover:border-primary/30 transition-colors flex items-center justify-between">
+                        <span className="text-muted-foreground">→ Analyze current customer data</span>
+                        <div className="flex gap-1 opacity-0 hover:opacity-100 transition-opacity">
+                          <button className="px-1.5 py-0.5 rounded bg-primary/20 text-primary text-xs">Clarify</button>
+                          <button className="px-1.5 py-0.5 rounded bg-secondary/20 text-secondary text-xs">Reroute</button>
+                        </div>
+                      </div>
+                      <div className="p-2 rounded bg-background/20 border border-primary/10 text-muted-foreground">
+                        → Research competitor targeting
+                      </div>
+                      <div className="p-2 rounded bg-background/20 border border-primary/10 text-muted-foreground">
+                        → Calculate available marketing budget
+                      </div>
+                      <div className="p-2 rounded bg-background/20 border border-primary/10 text-muted-foreground">
+                        → Create audience personas
+                      </div>
+                      <div className="p-2 rounded bg-background/20 border border-primary/10 text-muted-foreground">
+                        → Allocate budget across channels
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Level 4 */}
+                <div className="relative pl-8 border-l-4 border-primary/40 ml-18">
+                  <div className="absolute -left-3 top-0 w-6 h-6 rounded-full bg-primary/40 flex items-center justify-center text-xs font-bold text-primary-foreground">
+                    4
+                  </div>
+                  <div className="glass-dark p-5 rounded-xl">
+                    <div className="flex items-center justify-between mb-3">
+                      <h4 className="font-bold text-foreground">Level 4: Maximum Detail</h4>
+                      <span className="text-xs px-3 py-1 rounded-full bg-green-500/20 text-green-500 border border-green-500/30">Crystal clear actions</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground mb-3">
+                      Clicked "Clarify" again on "Analyze current customer data"
+                    </p>
+                    <div className="space-y-1 text-xs">
+                      <div className="p-2 rounded bg-background/10 border border-primary/10 text-muted-foreground">
+                        → Export customer purchase history from CRM
+                      </div>
+                      <div className="p-2 rounded bg-background/10 border border-primary/10 text-muted-foreground">
+                        → Identify top 20% of customers by revenue
+                      </div>
+                      <div className="p-2 rounded bg-background/10 border border-primary/10 text-muted-foreground">
+                        → Extract demographic & behavioral patterns
+                      </div>
+                      <div className="p-2 rounded bg-background/10 border border-primary/10 text-muted-foreground">
+                        → Document common characteristics in spreadsheet
+                      </div>
+                      <div className="p-2 rounded bg-background/10 border border-primary/10 text-muted-foreground">
+                        → Share findings with marketing team
+                      </div>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-3 italic">
+                      Now you have specific, actionable steps you can execute immediately!
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Reroute Feature */}
               <div className="mt-10 p-6 rounded-2xl bg-gradient-to-br from-secondary/10 to-accent/10 border border-secondary/30">
                 <div className="flex items-start gap-4">
                   <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-secondary/20 flex items-center justify-center">
                     <svg className="w-5 h-5 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
                     </svg>
                   </div>
                   <div className="flex-1">
                     <h4 className="font-bold text-foreground mb-2 flex items-center gap-2">
                       Alternative Routes Discovery
-                      <span className="text-xs px-2 py-1 rounded-full bg-secondary/20 text-secondary">At any level</span>
+                      <span className="text-xs px-2 py-1 rounded-full bg-secondary/20 text-secondary border border-secondary/30">REROUTE Button</span>
                     </h4>
-                    <p className="text-sm text-muted-foreground mb-3">
-                      Not sure about a specific approach? At any level, discover alternative routes to achieve the same goal:
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Not confident about a specific approach? Click <strong>Reroute</strong> on any step at any level to discover 3 completely different paths:
                     </p>
-                    <div className="grid md:grid-cols-3 gap-3">
-                      <div className="glass p-3 rounded-lg">
-                        <p className="text-xs font-semibold text-foreground mb-1">Route A</p>
-                        <p className="text-xs text-muted-foreground">Premium tools, faster results</p>
+                    <div className="grid md:grid-cols-3 gap-4">
+                      <div className="glass p-4 rounded-lg border border-secondary/20">
+                        <p className="text-xs font-bold text-secondary mb-2">Route A: Premium Approach</p>
+                        <div className="space-y-1 text-xs text-muted-foreground">
+                          <p>• High-end tools</p>
+                          <p>• Faster timeline</p>
+                          <p>• Higher cost</p>
+                        </div>
                       </div>
-                      <div className="glass p-3 rounded-lg">
-                        <p className="text-xs font-semibold text-foreground mb-1">Route B</p>
-                        <p className="text-xs text-muted-foreground">Budget-friendly, gradual approach</p>
+                      <div className="glass p-4 rounded-lg border border-secondary/20">
+                        <p className="text-xs font-bold text-secondary mb-2">Route B: Budget-Friendly</p>
+                        <div className="space-y-1 text-xs text-muted-foreground">
+                          <p>• Free/low-cost tools</p>
+                          <p>• Gradual rollout</p>
+                          <p>• Lower risk</p>
+                        </div>
                       </div>
-                      <div className="glass p-3 rounded-lg">
-                        <p className="text-xs font-semibold text-foreground mb-1">Route C</p>
-                        <p className="text-xs text-muted-foreground">Hybrid model, balanced risk</p>
+                      <div className="glass p-4 rounded-lg border border-secondary/20">
+                        <p className="text-xs font-bold text-secondary mb-2">Route C: Hybrid Model</p>
+                        <div className="space-y-1 text-xs text-muted-foreground">
+                          <p>• Mix of approaches</p>
+                          <p>• Balanced timeline</p>
+                          <p>• Medium investment</p>
+                        </div>
                       </div>
                     </div>
+                    <p className="text-xs text-muted-foreground mt-3 italic">
+                      Each route comes with 3 sub-steps. Choose the one that fits your resources, risk tolerance, and timeline.
+                    </p>
                   </div>
                 </div>
               </div>
@@ -397,7 +508,7 @@ const Index = () => {
           </div>
 
           {/* Key Benefits Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto mb-12">
             <div className="glass p-6 rounded-2xl text-center hover:glass-dark transition-all duration-300">
               <div className="w-12 h-12 mx-auto mb-4 rounded-xl bg-primary/10 flex items-center justify-center">
                 <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -405,7 +516,7 @@ const Index = () => {
                 </svg>
               </div>
               <h4 className="font-bold mb-2">Never Feel Stuck</h4>
-              <p className="text-sm text-muted-foreground">Every vague step can be clarified to crystal-clear actions</p>
+              <p className="text-sm text-muted-foreground">Every vague step can be clarified into crystal-clear, executable actions</p>
             </div>
 
             <div className="glass p-6 rounded-2xl text-center hover:glass-dark transition-all duration-300">
@@ -415,7 +526,7 @@ const Index = () => {
                 </svg>
               </div>
               <h4 className="font-bold mb-2">Adapt As You Learn</h4>
-              <p className="text-sm text-muted-foreground">Discover new approaches as you progress through your journey</p>
+              <p className="text-sm text-muted-foreground">Discover alternative approaches at any moment in your journey</p>
             </div>
 
             <div className="glass p-6 rounded-2xl text-center hover:glass-dark transition-all duration-300">
@@ -434,20 +545,20 @@ const Index = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11"></path>
                 </svg>
               </div>
-              <h4 className="font-bold mb-2">Maximum Control</h4>
-              <p className="text-sm text-muted-foreground">You decide how deep to go and which path to take</p>
+              <h4 className="font-bold mb-2">Up to 4 Levels Deep</h4>
+              <p className="text-sm text-muted-foreground">Drill down as far as you need for complete clarity and confidence</p>
             </div>
           </div>
 
           {/* Availability Info */}
-          <div className="mt-12 text-center">
+          <div className="text-center">
             <div className="inline-flex items-center gap-3 px-6 py-4 rounded-2xl glass border border-primary/20">
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
                 <span className="text-sm font-semibold">Available on Pro & Growth Plans</span>
               </div>
               <span className="text-xs text-muted-foreground">|</span>
-              <span className="text-sm text-muted-foreground">Up to 4 levels deep</span>
+              <span className="text-sm text-muted-foreground">Clarify & Reroute at any level</span>
               <span className="text-xs text-muted-foreground">|</span>
               <span className="text-sm text-muted-foreground">Unlimited route exploration</span>
             </div>
