@@ -414,12 +414,8 @@ const Index = () => {
                       After clicking "Clarify" on the original step
                     </p>
                     <div className="space-y-1.5 text-xs">
-                      <div className="p-2 rounded glass bg-muted/30 border border-primary/15 hover:border-primary/30 transition-colors backdrop-blur-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                      <div className="p-2 rounded glass bg-muted/30 border border-primary/15 hover:border-primary/30 transition-colors backdrop-blur-sm">
                         <span className="text-muted-foreground break-words">→ Define target audience & budget</span>
-                        <div className="flex gap-1 sm:opacity-0 sm:hover:opacity-100 transition-opacity flex-shrink-0">
-                          <button className="px-1.5 py-0.5 rounded backdrop-blur-xl bg-primary/90 text-primary-foreground text-xs font-semibold">Clarify</button>
-                          <button className="px-1.5 py-0.5 rounded backdrop-blur-xl bg-primary/90 text-primary-foreground text-xs font-semibold">Reroute</button>
-                        </div>
                       </div>
                       <div className="p-2 rounded glass bg-muted/30 border border-primary/10 text-muted-foreground backdrop-blur-sm break-words">
                         → Select marketing channels
@@ -451,12 +447,8 @@ const Index = () => {
                       Clicked "Clarify" on "Define target audience & budget"
                     </p>
                     <div className="space-y-1 text-xs">
-                      <div className="p-1.5 rounded glass bg-muted/30 border border-primary/15 hover:border-primary/30 transition-colors backdrop-blur-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                      <div className="p-1.5 rounded glass bg-muted/30 border border-primary/15 hover:border-primary/30 transition-colors backdrop-blur-sm">
                         <span className="text-muted-foreground break-words">→ Analyze current customer data</span>
-                        <div className="flex gap-1 sm:opacity-0 sm:hover:opacity-100 transition-opacity flex-shrink-0">
-                          <button className="px-1.5 py-0.5 rounded backdrop-blur-xl bg-primary/90 text-primary-foreground text-xs font-semibold">Clarify</button>
-                          <button className="px-1.5 py-0.5 rounded backdrop-blur-xl bg-primary/90 text-primary-foreground text-xs font-semibold">Reroute</button>
-                        </div>
                       </div>
                       <div className="p-1.5 rounded glass bg-muted/30 border border-primary/10 text-muted-foreground backdrop-blur-sm break-words">
                         → Research competitor targeting
@@ -488,12 +480,8 @@ const Index = () => {
                       Clicked "Clarify" on "Analyze current customer data"
                     </p>
                     <div className="space-y-1 text-xs">
-                      <div className="p-1.5 rounded glass bg-muted/30 border border-primary/15 hover:border-primary/30 transition-colors backdrop-blur-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                      <div className="p-1.5 rounded glass bg-muted/30 border border-primary/15 hover:border-primary/30 transition-colors backdrop-blur-sm">
                         <span className="text-muted-foreground break-words">→ Export customer purchase history from CRM</span>
-                        <div className="flex gap-1 sm:opacity-0 sm:hover:opacity-100 transition-opacity flex-shrink-0">
-                          <button className="px-1.5 py-0.5 rounded backdrop-blur-xl bg-primary/90 text-primary-foreground text-xs font-semibold">Clarify</button>
-                          <button className="px-1.5 py-0.5 rounded backdrop-blur-xl bg-primary/90 text-primary-foreground text-xs font-semibold">Reroute</button>
-                        </div>
                       </div>
                       <div className="p-1.5 rounded glass bg-muted/30 border border-primary/10 text-muted-foreground backdrop-blur-sm break-words">
                         → Identify top 20% of customers by revenue
@@ -557,9 +545,8 @@ const Index = () => {
                     </svg>
                   </div>
                   <div className="flex-1 w-full">
-                    <h4 className="font-bold mb-2 flex flex-col sm:flex-row items-start sm:items-center gap-2">
+                    <h4 className="font-bold mb-2">
                       <span className="text-sm sm:text-base">Alternative Routes Discovery</span>
-                      <span className="text-xs px-2 py-0.5 rounded-full backdrop-blur-xl bg-primary/90 text-primary-foreground font-semibold">REROUTE</span>
                     </h4>
                     <p className="text-xs sm:text-sm text-muted-foreground mb-3">
                       Not confident about a specific approach? Click <strong className="font-semibold text-foreground">Reroute</strong> on any step at any level to discover 3 completely different paths:
