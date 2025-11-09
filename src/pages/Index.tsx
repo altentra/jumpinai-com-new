@@ -273,17 +273,17 @@ const Index = () => {
               </h3>
               
               {/* The Core Mechanic */}
-              <div className="mb-6 p-4 sm:p-5 rounded-xl glass border border-primary/30 backdrop-blur-sm shadow-sm">
-                <div className="flex items-start gap-3 sm:gap-4">
+              <div className="mb-6 p-4 sm:p-5 rounded-xl glass bg-muted/30 border border-primary/30 backdrop-blur-sm shadow-sm">
+                <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4">
                   <div className="flex-shrink-0 w-10 h-10 rounded-lg backdrop-blur-xl bg-primary/10 ring-1 ring-primary/30 flex items-center justify-center">
                     <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"></path>
                     </svg>
                   </div>
-                  <div className="flex-1">
-                    <h4 className="font-bold text-base sm:text-lg mb-3">Hover Over Any Step = Two Powerful Buttons Appear</h4>
+                  <div className="flex-1 w-full">
+                    <h4 className="font-bold text-sm sm:text-base lg:text-lg mb-3">Hover Over Any Step = Two Powerful Buttons Appear</h4>
                     <div className="grid sm:grid-cols-2 gap-3">
-                      <div className="glass p-3 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
+                      <div className="glass bg-muted/30 p-3 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
                         <div className="flex items-center gap-2 mb-2">
                           <div className="px-2 py-0.5 rounded backdrop-blur-xl bg-primary/90 text-primary-foreground text-xs font-bold">
                             CLARIFY
@@ -293,7 +293,7 @@ const Index = () => {
                           Generates <strong className="font-semibold text-foreground">5 detailed sub-steps</strong> that break down this step into actionable components
                         </p>
                       </div>
-                      <div className="glass p-3 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
+                      <div className="glass bg-muted/30 p-3 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
                         <div className="flex items-center gap-2 mb-2">
                           <div className="px-2 py-0.5 rounded backdrop-blur-xl bg-primary/90 text-primary-foreground text-xs font-bold">
                             REROUTE
@@ -309,23 +309,23 @@ const Index = () => {
               </div>
 
               {/* Multi-Level Breakdown */}
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 {/* Level 1 */}
-                <div className="relative pl-6 border-l-2 border-primary/40">
+                <div className="relative pl-4 sm:pl-6 border-l-2 border-primary/40">
                   <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full backdrop-blur-xl bg-primary/90 ring-2 ring-primary/30 flex items-center justify-center text-xs font-bold text-primary-foreground">
                     1
                   </div>
-                  <div className="glass p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
-                    <div className="flex items-center justify-between mb-2">
-                      <h4 className="font-bold text-sm">Level 1: Original Generated Plan</h4>
+                  <div className="glass bg-muted/30 p-3 sm:p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-2">
+                      <h4 className="font-bold text-xs sm:text-sm">Level 1: Original Generated Plan</h4>
                       <span className="text-xs px-2 py-0.5 rounded-full backdrop-blur-xl bg-primary/20 border border-primary/30 text-primary font-semibold">Your Jump</span>
                     </div>
                     <p className="text-xs text-muted-foreground mb-2">
                       Initial steps from your generated Jump plan
                     </p>
-                    <div className="p-2.5 rounded-lg glass border border-primary/20 hover:border-primary/40 transition-colors backdrop-blur-sm">
-                      <div className="flex items-center justify-between gap-2">
-                        <p className="text-xs sm:text-sm font-medium">Step: "Launch digital marketing campaign"</p>
+                    <div className="p-2.5 rounded-lg glass bg-muted/30 border border-primary/20 hover:border-primary/40 transition-colors backdrop-blur-sm">
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                        <p className="text-xs sm:text-sm font-medium break-words">Step: "Launch digital marketing campaign"</p>
                         <div className="flex gap-1.5 flex-shrink-0">
                           <button className="px-2 py-1 rounded backdrop-blur-xl bg-primary/90 text-primary-foreground text-xs font-semibold hover:bg-primary transition-colors">
                             Clarify
@@ -340,36 +340,36 @@ const Index = () => {
                 </div>
 
                 {/* Level 2 */}
-                <div className="relative pl-6 border-l-2 border-primary/30 ml-4">
+                <div className="relative pl-4 sm:pl-6 border-l-2 border-primary/30 ml-2 sm:ml-4">
                   <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full backdrop-blur-xl bg-primary/80 ring-2 ring-primary/20 flex items-center justify-center text-xs font-bold text-primary-foreground">
                     2
                   </div>
-                  <div className="glass p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
-                    <div className="flex items-center justify-between mb-2">
-                      <h4 className="font-bold text-sm">Level 2: First Clarification</h4>
+                  <div className="glass bg-muted/30 p-3 sm:p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-2">
+                      <h4 className="font-bold text-xs sm:text-sm">Level 2: First Clarification</h4>
                       <span className="text-xs px-2 py-0.5 rounded-full bg-green-600/90 text-white font-semibold border border-green-700/50">5 sub-steps</span>
                     </div>
                     <p className="text-xs text-muted-foreground mb-2">
                       After clicking "Clarify" on the Level 1 step
                     </p>
                     <div className="space-y-1.5 text-xs">
-                      <div className="p-2 rounded glass border border-primary/15 hover:border-primary/30 transition-colors backdrop-blur-sm flex items-center justify-between">
-                        <span className="text-muted-foreground">→ Define target audience & budget</span>
-                        <div className="flex gap-1 opacity-0 hover:opacity-100 transition-opacity">
+                      <div className="p-2 rounded glass bg-muted/30 border border-primary/15 hover:border-primary/30 transition-colors backdrop-blur-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                        <span className="text-muted-foreground break-words">→ Define target audience & budget</span>
+                        <div className="flex gap-1 sm:opacity-0 sm:hover:opacity-100 transition-opacity flex-shrink-0">
                           <button className="px-1.5 py-0.5 rounded backdrop-blur-xl bg-primary/90 text-primary-foreground text-xs font-semibold">Clarify</button>
                           <button className="px-1.5 py-0.5 rounded backdrop-blur-xl bg-primary/90 text-primary-foreground text-xs font-semibold">Reroute</button>
                         </div>
                       </div>
-                      <div className="p-2 rounded glass border border-primary/10 text-muted-foreground backdrop-blur-sm">
+                      <div className="p-2 rounded glass bg-muted/30 border border-primary/10 text-muted-foreground backdrop-blur-sm break-words">
                         → Select marketing channels
                       </div>
-                      <div className="p-2 rounded glass border border-primary/10 text-muted-foreground backdrop-blur-sm">
+                      <div className="p-2 rounded glass bg-muted/30 border border-primary/10 text-muted-foreground backdrop-blur-sm break-words">
                         → Create campaign content
                       </div>
-                      <div className="p-2 rounded glass border border-primary/10 text-muted-foreground backdrop-blur-sm">
+                      <div className="p-2 rounded glass bg-muted/30 border border-primary/10 text-muted-foreground backdrop-blur-sm break-words">
                         → Set up tracking & analytics
                       </div>
-                      <div className="p-2 rounded glass border border-primary/10 text-muted-foreground backdrop-blur-sm">
+                      <div className="p-2 rounded glass bg-muted/30 border border-primary/10 text-muted-foreground backdrop-blur-sm break-words">
                         → Launch & monitor performance
                       </div>
                     </div>
@@ -377,36 +377,36 @@ const Index = () => {
                 </div>
 
                 {/* Level 3 */}
-                <div className="relative pl-6 border-l-2 border-primary/20 ml-8">
+                <div className="relative pl-4 sm:pl-6 border-l-2 border-primary/20 ml-4 sm:ml-8">
                   <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full backdrop-blur-xl bg-primary/70 ring-2 ring-primary/15 flex items-center justify-center text-xs font-bold text-primary-foreground">
                     3
                   </div>
-                  <div className="glass p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
-                    <div className="flex items-center justify-between mb-2">
-                      <h4 className="font-bold text-sm">Level 3: Clarify the Sub-Step</h4>
+                  <div className="glass bg-muted/30 p-3 sm:p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-2">
+                      <h4 className="font-bold text-xs sm:text-sm">Level 3: Clarify the Sub-Step</h4>
                       <span className="text-xs px-2 py-0.5 rounded-full bg-green-600/90 text-white font-semibold border border-green-700/50">5 more</span>
                     </div>
                     <p className="text-xs text-muted-foreground mb-2">
                       Clicked "Clarify" on "Define target audience & budget"
                     </p>
                     <div className="space-y-1 text-xs">
-                      <div className="p-1.5 rounded glass border border-primary/15 hover:border-primary/30 transition-colors backdrop-blur-sm flex items-center justify-between">
-                        <span className="text-muted-foreground">→ Analyze current customer data</span>
-                        <div className="flex gap-1 opacity-0 hover:opacity-100 transition-opacity">
+                      <div className="p-1.5 rounded glass bg-muted/30 border border-primary/15 hover:border-primary/30 transition-colors backdrop-blur-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                        <span className="text-muted-foreground break-words">→ Analyze current customer data</span>
+                        <div className="flex gap-1 sm:opacity-0 sm:hover:opacity-100 transition-opacity flex-shrink-0">
                           <button className="px-1.5 py-0.5 rounded backdrop-blur-xl bg-primary/90 text-primary-foreground text-xs font-semibold">Clarify</button>
                           <button className="px-1.5 py-0.5 rounded backdrop-blur-xl bg-primary/90 text-primary-foreground text-xs font-semibold">Reroute</button>
                         </div>
                       </div>
-                      <div className="p-1.5 rounded glass border border-primary/10 text-muted-foreground backdrop-blur-sm">
+                      <div className="p-1.5 rounded glass bg-muted/30 border border-primary/10 text-muted-foreground backdrop-blur-sm break-words">
                         → Research competitor targeting
                       </div>
-                      <div className="p-1.5 rounded glass border border-primary/10 text-muted-foreground backdrop-blur-sm">
+                      <div className="p-1.5 rounded glass bg-muted/30 border border-primary/10 text-muted-foreground backdrop-blur-sm break-words">
                         → Calculate available marketing budget
                       </div>
-                      <div className="p-1.5 rounded glass border border-primary/10 text-muted-foreground backdrop-blur-sm">
+                      <div className="p-1.5 rounded glass bg-muted/30 border border-primary/10 text-muted-foreground backdrop-blur-sm break-words">
                         → Create audience personas
                       </div>
-                      <div className="p-1.5 rounded glass border border-primary/10 text-muted-foreground backdrop-blur-sm">
+                      <div className="p-1.5 rounded glass bg-muted/30 border border-primary/10 text-muted-foreground backdrop-blur-sm break-words">
                         → Allocate budget across channels
                       </div>
                     </div>
@@ -414,32 +414,32 @@ const Index = () => {
                 </div>
 
                 {/* Level 4 */}
-                <div className="relative pl-6 border-l-2 border-primary/15 ml-12">
+                <div className="relative pl-4 sm:pl-6 border-l-2 border-primary/15 ml-6 sm:ml-12">
                   <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full backdrop-blur-xl bg-primary/60 ring-2 ring-primary/10 flex items-center justify-center text-xs font-bold text-primary-foreground">
                     4
                   </div>
-                  <div className="glass p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
-                    <div className="flex items-center justify-between mb-2">
-                      <h4 className="font-bold text-sm">Level 4: Maximum Detail</h4>
+                  <div className="glass bg-muted/30 p-3 sm:p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-2">
+                      <h4 className="font-bold text-xs sm:text-sm">Level 4: Maximum Detail</h4>
                       <span className="text-xs px-2 py-0.5 rounded-full bg-green-600/90 text-white font-semibold border border-green-700/50">Crystal clear</span>
                     </div>
                     <p className="text-xs text-muted-foreground mb-2">
                       Clicked "Clarify" on "Analyze current customer data"
                     </p>
                     <div className="space-y-1 text-xs">
-                      <div className="p-1.5 rounded glass border border-primary/10 text-muted-foreground backdrop-blur-sm">
+                      <div className="p-1.5 rounded glass bg-muted/30 border border-primary/10 text-muted-foreground backdrop-blur-sm break-words">
                         → Export customer purchase history from CRM
                       </div>
-                      <div className="p-1.5 rounded glass border border-primary/10 text-muted-foreground backdrop-blur-sm">
+                      <div className="p-1.5 rounded glass bg-muted/30 border border-primary/10 text-muted-foreground backdrop-blur-sm break-words">
                         → Identify top 20% of customers by revenue
                       </div>
-                      <div className="p-1.5 rounded glass border border-primary/10 text-muted-foreground backdrop-blur-sm">
+                      <div className="p-1.5 rounded glass bg-muted/30 border border-primary/10 text-muted-foreground backdrop-blur-sm break-words">
                         → Extract demographic & behavioral patterns
                       </div>
-                      <div className="p-1.5 rounded glass border border-primary/10 text-muted-foreground backdrop-blur-sm">
+                      <div className="p-1.5 rounded glass bg-muted/30 border border-primary/10 text-muted-foreground backdrop-blur-sm break-words">
                         → Document common characteristics in spreadsheet
                       </div>
-                      <div className="p-1.5 rounded glass border border-primary/10 text-muted-foreground backdrop-blur-sm">
+                      <div className="p-1.5 rounded glass bg-muted/30 border border-primary/10 text-muted-foreground backdrop-blur-sm break-words">
                         → Share findings with marketing team
                       </div>
                     </div>
@@ -451,23 +451,23 @@ const Index = () => {
               </div>
 
               {/* Reroute Feature */}
-              <div className="mt-6 p-4 sm:p-5 rounded-xl glass border border-primary/20 backdrop-blur-sm shadow-sm">
-                <div className="flex items-start gap-3 sm:gap-4">
+              <div className="mt-4 sm:mt-6 p-4 sm:p-5 rounded-xl glass bg-muted/30 border border-primary/20 backdrop-blur-sm shadow-sm">
+                <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4">
                   <div className="flex-shrink-0 w-10 h-10 rounded-lg backdrop-blur-xl bg-primary/10 ring-1 ring-primary/30 flex items-center justify-center">
                     <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
                     </svg>
                   </div>
-                  <div className="flex-1">
-                    <h4 className="font-bold mb-2 flex items-center gap-2 flex-wrap">
-                      Alternative Routes Discovery
+                  <div className="flex-1 w-full">
+                    <h4 className="font-bold mb-2 flex flex-col sm:flex-row items-start sm:items-center gap-2">
+                      <span className="text-sm sm:text-base">Alternative Routes Discovery</span>
                       <span className="text-xs px-2 py-0.5 rounded-full backdrop-blur-xl bg-primary/90 text-primary-foreground font-semibold">REROUTE</span>
                     </h4>
-                    <p className="text-sm text-muted-foreground mb-3">
+                    <p className="text-xs sm:text-sm text-muted-foreground mb-3">
                       Not confident about a specific approach? Click <strong className="font-semibold text-foreground">Reroute</strong> on any step at any level to discover 3 completely different paths:
                     </p>
                     <div className="grid sm:grid-cols-3 gap-3">
-                      <div className="glass p-3 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
+                      <div className="glass bg-muted/30 p-3 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
                         <p className="text-xs font-bold text-primary mb-1.5">Route A: Premium</p>
                         <div className="space-y-0.5 text-xs text-muted-foreground">
                           <p>• High-end tools</p>
@@ -475,7 +475,7 @@ const Index = () => {
                           <p>• Higher cost</p>
                         </div>
                       </div>
-                      <div className="glass p-3 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
+                      <div className="glass bg-muted/30 p-3 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
                         <p className="text-xs font-bold text-primary mb-1.5">Route B: Budget-Friendly</p>
                         <div className="space-y-0.5 text-xs text-muted-foreground">
                           <p>• Free/low-cost tools</p>
@@ -483,7 +483,7 @@ const Index = () => {
                           <p>• Lower risk</p>
                         </div>
                       </div>
-                      <div className="glass p-3 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
+                      <div className="glass bg-muted/30 p-3 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
                         <p className="text-xs font-bold text-primary mb-1.5">Route C: Hybrid</p>
                         <div className="space-y-0.5 text-xs text-muted-foreground">
                           <p>• Mix of approaches</p>
@@ -503,7 +503,7 @@ const Index = () => {
 
           {/* Compact Key Benefits - Single Row */}
           <div className="max-w-5xl mx-auto mb-6">
-            <div className="glass rounded-xl p-4 border border-primary/20 backdrop-blur-xl shadow-sm">
+            <div className="glass bg-muted/30 rounded-xl p-3 sm:p-4 border border-primary/20 backdrop-blur-xl shadow-sm">
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                 <div className="text-center">
                   <div className="w-8 h-8 mx-auto mb-2 rounded-lg backdrop-blur-xl bg-primary/10 ring-1 ring-primary/30 flex items-center justify-center">
