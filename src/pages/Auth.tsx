@@ -159,17 +159,23 @@ export default function Auth() {
       </Helmet>
       <Navigation />
 
-      <main className="min-h-screen pt-28 pb-24 bg-gradient-to-br from-background/95 via-background to-primary/5">
-        {/* Enhanced floating background elements */}
+      <main className="min-h-screen pt-28 pb-24 bg-gradient-to-br from-background/95 via-background to-primary/5 dark:bg-gradient-to-br dark:from-black dark:via-gray-950/90 dark:to-gray-900/60 relative overflow-hidden">
+        {/* Premium floating background elements with liquid glass effects */}
         <div className="fixed inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-primary/20 to-primary/5 rounded-full blur-3xl"></div>
-          <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-tr from-secondary/15 to-secondary/5 rounded-full blur-3xl"></div>
-          <div className="absolute top-1/3 left-1/2 transform -translate-x-1/2 w-64 h-64 bg-accent/10 rounded-full blur-2xl"></div>
-          <div className="absolute top-20 right-20 w-32 h-32 bg-gradient-to-br from-primary/10 to-transparent rounded-full blur-xl"></div>
-          <div className="absolute bottom-20 left-20 w-40 h-40 bg-gradient-to-tr from-secondary/8 to-transparent rounded-full blur-xl"></div>
+          {/* Main gradient orbs with enhanced blur and liquid animation */}
+          <div className="absolute -top-40 -right-40 w-[28rem] h-[28rem] bg-gradient-to-br from-primary/25 via-primary/15 to-primary/5 rounded-full blur-3xl animate-pulse opacity-60"></div>
+          <div className="absolute -bottom-40 -left-40 w-[32rem] h-[32rem] bg-gradient-to-tr from-secondary/20 via-accent/10 to-secondary/5 rounded-full blur-3xl animate-pulse opacity-50" style={{animationDelay: '2s'}}></div>
+          
+          {/* Liquid glass floating elements */}
+          <div className="absolute top-1/4 left-1/3 w-72 h-72 bg-gradient-conic from-primary/15 via-accent/10 to-secondary/15 rounded-full blur-2xl animate-pulse opacity-40" style={{animationDelay: '1s'}}></div>
+          <div className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-gradient-radial from-accent/20 via-primary/10 to-transparent rounded-full blur-xl animate-pulse opacity-30" style={{animationDelay: '3s'}}></div>
+          
+          {/* Subtle mesh gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent opacity-50"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-accent/3 to-transparent opacity-40"></div>
         </div>
-        <section className="max-w-xl mx-auto px-6">
-          <Card className="animate-fade-in backdrop-blur-xl bg-background/80 border-2 border-border/50 shadow-2xl rounded-3xl overflow-hidden">
+        <section className="max-w-xl mx-auto px-6 relative">
+          <Card className="animate-fade-in backdrop-blur-xl bg-background/80 border border-primary/20 shadow-2xl rounded-3xl overflow-hidden">
             <CardHeader className="text-center space-y-2 pb-4">
               <CardTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
                 Access your JumpinAI account
@@ -181,7 +187,7 @@ export default function Auth() {
                 onClick={handleGoogleLogin} 
                 disabled={loading} 
                 variant="outline" 
-                className="w-full h-11 text-base font-medium bg-card hover:bg-muted border-2 border-border hover:border-primary/50 text-foreground rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02]"
+                className="w-full h-11 text-base font-medium bg-card hover:bg-muted border border-primary/20 hover:border-primary/40 text-foreground rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02]"
               >
                 <svg 
                   className="mr-3 h-6 w-6" 
@@ -214,7 +220,7 @@ export default function Auth() {
                 disabled={loading}
                 aria-label="Continue with Apple"
                 variant="outline"
-                className="w-full h-11 mt-2 text-base font-medium bg-white hover:bg-gray-50 dark:bg-black dark:hover:bg-gray-950 border-2 border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700 text-gray-700 dark:text-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02]"
+                className="w-full h-11 mt-2 text-base font-medium bg-card hover:bg-muted border border-primary/20 hover:border-primary/40 text-foreground rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02]"
               >
                 <svg
                   className="mr-3 h-5 w-5"
@@ -234,14 +240,14 @@ export default function Auth() {
                   <Separator className="w-full bg-gradient-to-r from-transparent via-border to-transparent" />
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background/90 backdrop-blur-sm px-4 py-2 rounded-full text-muted-foreground font-medium border border-border/50">
+                  <span className="bg-background/90 backdrop-blur-sm px-4 py-2 rounded-full text-muted-foreground font-medium border border-primary/15">
                     Or continue with
                   </span>
                 </div>
               </div>
 
               <Tabs defaultValue="signup" className="w-full">
-                <TabsList className="grid grid-cols-2 w-full bg-muted/30 backdrop-blur-sm p-1 rounded-2xl border border-border/30">
+                <TabsList className="grid grid-cols-2 w-full bg-muted/30 backdrop-blur-sm p-1 rounded-2xl border border-primary/15">
                   <TabsTrigger 
                     value="signup" 
                     className="rounded-xl data-[state=active]:bg-background/80 data-[state=active]:shadow-lg data-[state=active]:text-foreground transition-all duration-300"
@@ -265,7 +271,7 @@ export default function Auth() {
                       value={signupName} 
                       onChange={(e) => setSignupName(e.target.value)} 
                       placeholder="Enter your full name" 
-                      className="h-10 bg-background/50 backdrop-blur-sm border-2 border-border/50 rounded-2xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
+                      className="h-10 bg-background/50 backdrop-blur-sm border border-primary/20 rounded-2xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
                     />
                   </div>
                   <div className="space-y-1.5">
@@ -276,7 +282,7 @@ export default function Auth() {
                       value={signupEmail} 
                       onChange={(e) => setSignupEmail(e.target.value)} 
                       placeholder="Enter your email" 
-                      className="h-10 bg-background/50 backdrop-blur-sm border-2 border-border/50 rounded-2xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
+                      className="h-10 bg-background/50 backdrop-blur-sm border border-primary/20 rounded-2xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
                     />
                   </div>
                   <div className="space-y-1.5">
@@ -287,13 +293,14 @@ export default function Auth() {
                       value={signupPassword} 
                       onChange={(e) => setSignupPassword(e.target.value)} 
                       placeholder="Create a password" 
-                      className="h-10 bg-background/50 backdrop-blur-sm border-2 border-border/50 rounded-2xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
+                      className="h-10 bg-background/50 backdrop-blur-sm border border-primary/20 rounded-2xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
                     />
                   </div>
                   <Button 
                     onClick={handleSignup} 
                     disabled={loading} 
-                    className="w-full h-10 mt-4 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground font-medium rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
+                    variant="glass"
+                    className="w-full h-10 mt-4"
                   >
                     {loading ? "Creating account..." : "Create account"}
                   </Button>
@@ -313,7 +320,7 @@ export default function Auth() {
                           value={loginEmail} 
                           onChange={(e) => setLoginEmail(e.target.value)} 
                           placeholder="Enter your email" 
-                          className="h-10 bg-background/50 backdrop-blur-sm border-2 border-border/50 rounded-2xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
+                          className="h-10 bg-background/50 backdrop-blur-sm border border-primary/20 rounded-2xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
                         />
                       </div>
                       <div className="space-y-1.5">
@@ -324,13 +331,14 @@ export default function Auth() {
                           value={loginPassword} 
                           onChange={(e) => setLoginPassword(e.target.value)} 
                           placeholder="Enter your password" 
-                          className="h-10 bg-background/50 backdrop-blur-sm border-2 border-border/50 rounded-2xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
+                          className="h-10 bg-background/50 backdrop-blur-sm border border-primary/20 rounded-2xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
                         />
                       </div>
                       <Button 
                         onClick={handleLogin} 
                         disabled={loading} 
-                        className="w-full h-10 mt-4 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground font-medium rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
+                        variant="glass"
+                        className="w-full h-10 mt-4"
                       >
                         {loading ? "Logging in..." : "Login"}
                       </Button>
@@ -355,13 +363,14 @@ export default function Auth() {
                           value={forgotPasswordEmail} 
                           onChange={(e) => setForgotPasswordEmail(e.target.value)} 
                           placeholder="Enter your email to reset password"
-                          className="h-10 bg-background/50 backdrop-blur-sm border-2 border-border/50 rounded-2xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
+                          className="h-10 bg-background/50 backdrop-blur-sm border border-primary/20 rounded-2xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
                         />
                       </div>
                       <Button 
                         onClick={handleForgotPassword} 
                         disabled={loading} 
-                        className="w-full h-10 mt-4 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground font-medium rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
+                        variant="glass"
+                        className="w-full h-10 mt-4"
                       >
                         {loading ? "Sending reset email..." : "Send reset email"}
                       </Button>
