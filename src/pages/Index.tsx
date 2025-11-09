@@ -980,51 +980,51 @@ const Index = () => {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-16">
+      <section className="py-12 sm:py-14">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-10">
-            <h2 className="text-3xl lg:text-4xl font-bold mb-4 font-display">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl lg:text-3xl font-bold mb-3 font-display">
               Frequently Asked Questions
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-base text-muted-foreground max-w-2xl mx-auto">
               Everything you need to know about transforming your business with JumpinAI Studio
             </p>
           </div>
 
-          <div className="max-w-3xl mx-auto space-y-4">
-            <div className="p-5 rounded-xl glass hover:glass-dark transition-all duration-300">
-              <h3 className="text-lg font-bold mb-2 font-display">What exactly is a "Jump" and what do I receive?</h3>
-              <p className="text-sm text-muted-foreground">A Jump is your complete AI transformation blueprint delivered in 3 comprehensive tabs: Overview (executive summary, situation analysis, strategic vision & roadmap), Plan (detailed action steps with multi-level clarification up to 4 levels deep and 3 alternative routes per step), and Tools & Prompts (9 tool-prompt combinations, each with a main tool plus 2 alternatives and ready-to-use prompts with guidance).</p>
+          <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-3 md:gap-4">
+            <div className="p-4 rounded-lg glass hover:glass-dark transition-all duration-300">
+              <h3 className="text-base font-bold mb-1.5 font-display">What exactly is a "Jump" and what do I receive?</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">A Jump is your complete AI transformation blueprint delivered in 3 comprehensive tabs: Overview (executive summary, situation analysis, strategic vision & roadmap), Plan (detailed action steps with multi-level clarification up to 4 levels deep and 3 alternative routes per step), and Tools & Prompts (9 tool-prompt combinations, each with a main tool plus 2 alternatives and ready-to-use prompts with guidance).</p>
             </div>
 
-            <div className="p-5 rounded-xl glass hover:glass-dark transition-all duration-300">
-              <h3 className="text-lg font-bold mb-2 font-display">How does the multi-level clarification work in the Plan tab?</h3>
-              <p className="text-sm text-muted-foreground">Each step in your action plan can be clarified up to 4 levels deep, breaking down complex tasks into granular, actionable sub-steps. You simply click on any step to reveal deeper layers of detail, ensuring you understand exactly what to do at every stage.</p>
+            <div className="p-4 rounded-lg glass hover:glass-dark transition-all duration-300">
+              <h3 className="text-base font-bold mb-1.5 font-display">How does the multi-level clarification work in the Plan tab?</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">Each step in your action plan can be clarified up to 4 levels deep, breaking down complex tasks into granular, actionable sub-steps. You simply click on any step to reveal deeper layers of detail, ensuring you understand exactly what to do at every stage.</p>
             </div>
 
-            <div className="p-5 rounded-xl glass hover:glass-dark transition-all duration-300">
-              <h3 className="text-lg font-bold mb-2 font-display">What are alternative routes and why do I need them?</h3>
-              <p className="text-sm text-muted-foreground">Every step in your Plan offers 3 different implementation routes - giving you flexibility to choose the approach that best fits your resources, timeline, and constraints. If one path doesn't work, you have two more proven alternatives ready to go.</p>
+            <div className="p-4 rounded-lg glass hover:glass-dark transition-all duration-300">
+              <h3 className="text-base font-bold mb-1.5 font-display">What are alternative routes and why do I need them?</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">Every step in your Plan offers 3 different implementation routes - giving you flexibility to choose the approach that best fits your resources, timeline, and constraints. If one path doesn't work, you have two more proven alternatives ready to go.</p>
             </div>
 
-            <div className="p-5 rounded-xl glass hover:glass-dark transition-all duration-300">
-              <h3 className="text-lg font-bold mb-2 font-display">How do the 9 tool-prompt combinations work?</h3>
-              <p className="text-sm text-muted-foreground">Each of the 9 combos in the Tools & Prompts tab is directly correlated to steps in your Plan. You get a main AI tool recommendation plus 2 alternatives, along with a ready-to-use, customized prompt with complete guidance on how to use it effectively for that specific step.</p>
+            <div className="p-4 rounded-lg glass hover:glass-dark transition-all duration-300">
+              <h3 className="text-base font-bold mb-1.5 font-display">How do the 9 tool-prompt combinations work?</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">Each of the 9 combos in the Tools & Prompts tab is directly correlated to steps in your Plan. You get a main AI tool recommendation plus 2 alternatives, along with a ready-to-use, customized prompt with complete guidance on how to use it effectively for that specific step.</p>
             </div>
 
-            <div className="p-5 rounded-xl glass hover:glass-dark transition-all duration-300">
-              <h3 className="text-lg font-bold mb-2 font-display">How quickly can I generate my Jump and start implementing?</h3>
-              <p className="text-sm text-muted-foreground">Your complete Jump generates in approximately 2 minutes. You'll immediately have access to all 3 tabs with your strategic overview, detailed action plan, and implementation tools - ready to execute right away.</p>
+            <div className="p-4 rounded-lg glass hover:glass-dark transition-all duration-300">
+              <h3 className="text-base font-bold mb-1.5 font-display">How quickly can I generate my Jump and start implementing?</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">Your complete Jump generates in approximately 2 minutes. You'll immediately have access to all 3 tabs with your strategic overview, detailed action plan, and implementation tools - ready to execute right away.</p>
             </div>
 
-            <div className="p-5 rounded-xl glass hover:glass-dark transition-all duration-300">
-              <h3 className="text-lg font-bold mb-2 font-display">Is my Jump personalized to my specific situation?</h3>
-              <p className="text-sm text-muted-foreground">Absolutely. Every Jump is fully customized based on your specific business context, industry, role, current AI experience level, resources, and goals. No generic templates - each Jump is uniquely crafted for your situation.</p>
+            <div className="p-4 rounded-lg glass hover:glass-dark transition-all duration-300">
+              <h3 className="text-base font-bold mb-1.5 font-display">Is my Jump personalized to my specific situation?</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">Absolutely. Every Jump is fully customized based on your specific business context, industry, role, current AI experience level, resources, and goals. No generic templates - each Jump is uniquely crafted for your situation.</p>
             </div>
 
-            <div className="p-5 rounded-xl glass hover:glass-dark transition-all duration-300">
-              <h3 className="text-lg font-bold mb-2 font-display">Do I need technical expertise to implement my Jump?</h3>
-              <p className="text-sm text-muted-foreground">Not at all. Every component of your Jump - from the strategic roadmap to the tool-prompt combinations - is designed for business professionals without technical backgrounds. We provide clear, step-by-step guidance that anyone can follow.</p>
+            <div className="p-4 rounded-lg glass hover:glass-dark transition-all duration-300">
+              <h3 className="text-base font-bold mb-1.5 font-display">Do I need technical expertise to implement my Jump?</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">Not at all. Every component of your Jump - from the strategic roadmap to the tool-prompt combinations - is designed for business professionals without technical backgrounds. We provide clear, step-by-step guidance that anyone can follow.</p>
             </div>
           </div>
         </div>
