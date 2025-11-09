@@ -323,18 +323,8 @@ const Index = () => {
                     <p className="text-xs text-muted-foreground mb-2">
                       Initial steps from your generated Jump plan
                     </p>
-                    <div className="p-2.5 rounded-lg glass bg-muted/30 border border-primary/20 hover:border-primary/40 transition-colors backdrop-blur-sm">
-                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-                        <p className="text-xs sm:text-sm font-medium break-words">Step: "Launch digital marketing campaign"</p>
-                        <div className="flex gap-1.5 flex-shrink-0">
-                          <button className="px-2 py-1 rounded backdrop-blur-xl bg-primary/90 text-primary-foreground text-xs font-semibold hover:bg-primary transition-colors">
-                            Clarify
-                          </button>
-                          <button className="px-2 py-1 rounded backdrop-blur-xl bg-primary/90 text-primary-foreground text-xs font-semibold hover:bg-primary transition-colors">
-                            Reroute
-                          </button>
-                        </div>
-                      </div>
+                    <div className="p-2.5 rounded-lg glass bg-muted/30 border border-primary/20 backdrop-blur-sm">
+                      <p className="text-xs sm:text-sm font-medium break-words">Step: "Launch digital marketing campaign"</p>
                     </div>
                   </div>
                 </div>
