@@ -159,16 +159,22 @@ export default function Auth() {
       </Helmet>
       <Navigation />
 
-      <main className="min-h-screen pt-28 pb-24 bg-gradient-to-br from-background/95 via-background to-primary/5">
-        {/* Enhanced floating background elements */}
+      <main className="min-h-screen pt-28 pb-24 bg-gradient-to-br from-background/95 via-background to-primary/5 dark:bg-gradient-to-br dark:from-black dark:via-gray-950/90 dark:to-gray-900/60 relative overflow-hidden">
+        {/* Premium floating background elements with liquid glass effects */}
         <div className="fixed inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-primary/20 to-primary/5 rounded-full blur-3xl"></div>
-          <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-tr from-secondary/15 to-secondary/5 rounded-full blur-3xl"></div>
-          <div className="absolute top-1/3 left-1/2 transform -translate-x-1/2 w-64 h-64 bg-accent/10 rounded-full blur-2xl"></div>
-          <div className="absolute top-20 right-20 w-32 h-32 bg-gradient-to-br from-primary/10 to-transparent rounded-full blur-xl"></div>
-          <div className="absolute bottom-20 left-20 w-40 h-40 bg-gradient-to-tr from-secondary/8 to-transparent rounded-full blur-xl"></div>
+          {/* Main gradient orbs with enhanced blur and liquid animation */}
+          <div className="absolute -top-40 -right-40 w-[28rem] h-[28rem] bg-gradient-to-br from-primary/25 via-primary/15 to-primary/5 rounded-full blur-3xl animate-pulse opacity-60"></div>
+          <div className="absolute -bottom-40 -left-40 w-[32rem] h-[32rem] bg-gradient-to-tr from-secondary/20 via-accent/10 to-secondary/5 rounded-full blur-3xl animate-pulse opacity-50" style={{animationDelay: '2s'}}></div>
+          
+          {/* Liquid glass floating elements */}
+          <div className="absolute top-1/4 left-1/3 w-72 h-72 bg-gradient-conic from-primary/15 via-accent/10 to-secondary/15 rounded-full blur-2xl animate-pulse opacity-40" style={{animationDelay: '1s'}}></div>
+          <div className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-gradient-radial from-accent/20 via-primary/10 to-transparent rounded-full blur-xl animate-pulse opacity-30" style={{animationDelay: '3s'}}></div>
+          
+          {/* Subtle mesh gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent opacity-50"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-accent/3 to-transparent opacity-40"></div>
         </div>
-        <section className="max-w-xl mx-auto px-6">
+        <section className="max-w-xl mx-auto px-6 relative">
           <Card className="animate-fade-in backdrop-blur-xl bg-background/80 border-2 border-border/50 shadow-2xl rounded-3xl overflow-hidden">
             <CardHeader className="text-center space-y-2 pb-4">
               <CardTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
@@ -363,7 +369,8 @@ export default function Auth() {
                       <Button 
                         onClick={handleForgotPassword} 
                         disabled={loading} 
-                        className="w-full h-10 mt-4 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground font-medium rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
+                        variant="glass"
+                        className="w-full h-10 mt-4"
                       >
                         {loading ? "Sending reset email..." : "Send reset email"}
                       </Button>
