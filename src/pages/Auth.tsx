@@ -175,7 +175,7 @@ export default function Auth() {
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-accent/3 to-transparent opacity-40"></div>
         </div>
         <section className="max-w-xl mx-auto px-6 relative">
-          <Card className="animate-fade-in backdrop-blur-xl bg-background/80 border-2 border-border/50 shadow-2xl rounded-3xl overflow-hidden">
+          <Card className="animate-fade-in backdrop-blur-xl bg-background/80 border border-primary/20 shadow-2xl rounded-3xl overflow-hidden">
             <CardHeader className="text-center space-y-2 pb-4">
               <CardTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
                 Access your JumpinAI account
@@ -187,7 +187,7 @@ export default function Auth() {
                 onClick={handleGoogleLogin} 
                 disabled={loading} 
                 variant="outline" 
-                className="w-full h-11 text-base font-medium bg-card hover:bg-muted border-2 border-border hover:border-primary/50 text-foreground rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02]"
+                className="w-full h-11 text-base font-medium bg-card hover:bg-muted border border-primary/20 hover:border-primary/40 text-foreground rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02]"
               >
                 <svg 
                   className="mr-3 h-6 w-6" 
@@ -220,7 +220,7 @@ export default function Auth() {
                 disabled={loading}
                 aria-label="Continue with Apple"
                 variant="outline"
-                className="w-full h-11 mt-2 text-base font-medium bg-card hover:bg-muted border-2 border-border hover:border-primary/50 text-foreground rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02]"
+                className="w-full h-11 mt-2 text-base font-medium bg-card hover:bg-muted border border-primary/20 hover:border-primary/40 text-foreground rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02]"
               >
                 <svg
                   className="mr-3 h-5 w-5"
@@ -240,14 +240,14 @@ export default function Auth() {
                   <Separator className="w-full bg-gradient-to-r from-transparent via-border to-transparent" />
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background/90 backdrop-blur-sm px-4 py-2 rounded-full text-muted-foreground font-medium border border-border/50">
+                  <span className="bg-background/90 backdrop-blur-sm px-4 py-2 rounded-full text-muted-foreground font-medium border border-primary/15">
                     Or continue with
                   </span>
                 </div>
               </div>
 
               <Tabs defaultValue="signup" className="w-full">
-                <TabsList className="grid grid-cols-2 w-full bg-muted/30 backdrop-blur-sm p-1 rounded-2xl border border-border/30">
+                <TabsList className="grid grid-cols-2 w-full bg-muted/30 backdrop-blur-sm p-1 rounded-2xl border border-primary/15">
                   <TabsTrigger 
                     value="signup" 
                     className="rounded-xl data-[state=active]:bg-background/80 data-[state=active]:shadow-lg data-[state=active]:text-foreground transition-all duration-300"
@@ -271,7 +271,7 @@ export default function Auth() {
                       value={signupName} 
                       onChange={(e) => setSignupName(e.target.value)} 
                       placeholder="Enter your full name" 
-                      className="h-10 bg-background/50 backdrop-blur-sm border-2 border-border/50 rounded-2xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
+                      className="h-10 bg-background/50 backdrop-blur-sm border border-primary/20 rounded-2xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
                     />
                   </div>
                   <div className="space-y-1.5">
@@ -282,7 +282,7 @@ export default function Auth() {
                       value={signupEmail} 
                       onChange={(e) => setSignupEmail(e.target.value)} 
                       placeholder="Enter your email" 
-                      className="h-10 bg-background/50 backdrop-blur-sm border-2 border-border/50 rounded-2xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
+                      className="h-10 bg-background/50 backdrop-blur-sm border border-primary/20 rounded-2xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
                     />
                   </div>
                   <div className="space-y-1.5">
@@ -293,7 +293,7 @@ export default function Auth() {
                       value={signupPassword} 
                       onChange={(e) => setSignupPassword(e.target.value)} 
                       placeholder="Create a password" 
-                      className="h-10 bg-background/50 backdrop-blur-sm border-2 border-border/50 rounded-2xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
+                      className="h-10 bg-background/50 backdrop-blur-sm border border-primary/20 rounded-2xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
                     />
                   </div>
                   <Button 
@@ -320,7 +320,7 @@ export default function Auth() {
                           value={loginEmail} 
                           onChange={(e) => setLoginEmail(e.target.value)} 
                           placeholder="Enter your email" 
-                          className="h-10 bg-background/50 backdrop-blur-sm border-2 border-border/50 rounded-2xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
+                          className="h-10 bg-background/50 backdrop-blur-sm border border-primary/20 rounded-2xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
                         />
                       </div>
                       <div className="space-y-1.5">
@@ -331,7 +331,7 @@ export default function Auth() {
                           value={loginPassword} 
                           onChange={(e) => setLoginPassword(e.target.value)} 
                           placeholder="Enter your password" 
-                          className="h-10 bg-background/50 backdrop-blur-sm border-2 border-border/50 rounded-2xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
+                          className="h-10 bg-background/50 backdrop-blur-sm border border-primary/20 rounded-2xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
                         />
                       </div>
                       <Button 
@@ -363,7 +363,7 @@ export default function Auth() {
                           value={forgotPasswordEmail} 
                           onChange={(e) => setForgotPasswordEmail(e.target.value)} 
                           placeholder="Enter your email to reset password"
-                          className="h-10 bg-background/50 backdrop-blur-sm border-2 border-border/50 rounded-2xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
+                          className="h-10 bg-background/50 backdrop-blur-sm border border-primary/20 rounded-2xl focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
                         />
                       </div>
                       <Button 
