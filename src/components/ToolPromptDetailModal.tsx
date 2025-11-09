@@ -196,9 +196,14 @@ export function ToolPromptDetailModal({ toolPrompt, isOpen, onClose, index }: To
                     </div>
                     <div className="flex-1">
                       <p className="text-sm font-semibold text-yellow-700 dark:text-yellow-400 mb-2">How to Use</p>
-                      <p className="text-xs text-foreground leading-relaxed">
-                        {String(toolPrompt.prompt_instructions)}
-                      </p>
+                      <div className="text-xs text-foreground leading-relaxed space-y-1">
+                        {String(toolPrompt.prompt_instructions)
+                          .split(/(?=\d+\.\s)/)
+                          .filter(step => step.trim())
+                          .map((step, idx) => (
+                            <div key={idx}>{step.trim()}</div>
+                          ))}
+                      </div>
                     </div>
                   </div>
                 </div>
