@@ -1,5 +1,5 @@
 
-import { ArrowRight } from "lucide-react";
+import { Circle } from "lucide-react";
 import { 
   FaInstagram, 
   FaFacebookF, 
@@ -54,9 +54,9 @@ const Footer = () => {
       }}></div>
       
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid md:grid-cols-4 gap-8 mb-8">
+        <div className="grid md:grid-cols-5 gap-8 mb-8">
           {/* Brand */}
-          <div className="md:col-span-2">
+          <div className="md:col-span-2 md:pr-4">
             <Link to="/" className="flex items-center mb-6 group">
               <div className="relative">
                 <div className="pointer-events-none absolute -inset-1 rounded-2xl bg-primary/20 blur-md opacity-0 group-hover:opacity-60 transition-opacity duration-300"></div>
@@ -70,7 +70,7 @@ const Footer = () => {
               </div>
               <span className="ml-3 text-2xl font-black font-display text-foreground">JumpinAI</span>
             </Link>
-            <p className="text-muted-foreground leading-relaxed mb-8 max-w-md font-light">
+            <p className="text-xs text-muted-foreground leading-relaxed mb-8 max-w-md font-light">
               Empowering creators, professionals, and entrepreneurs to adapt to the era of AI — guiding every step from exploration to confident mastery with clarity and precision.
             </p>
             
@@ -103,37 +103,50 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Quick Links */}
+          {/* What We Do */}
           <div>
-            <h3 className="text-lg font-bold mb-6 text-foreground font-display">Quick Links</h3>
-            <ul className="space-y-3">
+            <h3 className="text-sm font-bold mb-4 text-foreground font-display">What We Do</h3>
+            <ul className="space-y-2">
               <li>
-                <Link to="/jumpinai-studio" className="group flex items-center text-muted-foreground hover:text-foreground transition-colors duration-300">
-                  <ArrowRight className="h-4 w-4 mr-2 group-hover:translate-x-1 transition-transform" />
+                <Link to="/jumpinai-studio" className="group flex items-center text-xs text-muted-foreground hover:text-foreground transition-colors duration-300">
+                  <Circle className="h-1.5 w-1.5 mr-2 fill-current" />
                   JumpinAI Studio
                 </Link>
               </li>
               <li>
-                <Link to="/jumps" className="group flex items-center text-muted-foreground hover:text-foreground transition-colors duration-300">
-                  <ArrowRight className="h-4 w-4 mr-2 group-hover:translate-x-1 transition-transform" />
-                  Jumps in AI
+                <Link to="/jumps" className="group flex items-center text-xs text-muted-foreground hover:text-foreground transition-colors duration-300">
+                  <Circle className="h-1.5 w-1.5 mr-2 fill-current" />
+                  Guides
                 </Link>
               </li>
               <li>
-                <Link to="/about-us" className="group flex items-center text-muted-foreground hover:text-foreground transition-colors duration-300">
-                  <ArrowRight className="h-4 w-4 mr-2 group-hover:translate-x-1 transition-transform" />
+                <Link to="/resources" className="group flex items-center text-xs text-muted-foreground hover:text-foreground transition-colors duration-300">
+                  <Circle className="h-1.5 w-1.5 mr-2 fill-current" />
+                  Resources
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Who We Are */}
+          <div>
+            <h3 className="text-sm font-bold mb-4 text-foreground font-display">Who We Are</h3>
+            <ul className="space-y-2">
+              <li>
+                <Link to="/about-us" className="group flex items-center text-xs text-muted-foreground hover:text-foreground transition-colors duration-300">
+                  <Circle className="h-1.5 w-1.5 mr-2 fill-current" />
                   About Us
                 </Link>
               </li>
               <li>
-                <Link to="/contact-us" className="group flex items-center text-muted-foreground hover:text-foreground transition-colors duration-300">
-                  <ArrowRight className="h-4 w-4 mr-2 group-hover:translate-x-1 transition-transform" />
+                <Link to="/contact-us" className="group flex items-center text-xs text-muted-foreground hover:text-foreground transition-colors duration-300">
+                  <Circle className="h-1.5 w-1.5 mr-2 fill-current" />
                   Contact Us
                 </Link>
               </li>
               <li>
-                <Link to="/for-investors" className="group flex items-center text-muted-foreground hover:text-foreground transition-colors duration-300">
-                  <ArrowRight className="h-4 w-4 mr-2 group-hover:translate-x-1 transition-transform" />
+                <Link to="/for-investors" className="group flex items-center text-xs text-muted-foreground hover:text-foreground transition-colors duration-300">
+                  <Circle className="h-1.5 w-1.5 mr-2 fill-current" />
                   For Investors
                 </Link>
               </li>
@@ -142,26 +155,26 @@ const Footer = () => {
 
           {/* Legal */}
           <div>
-            <h3 className="text-lg font-bold mb-6 text-foreground font-display">Legal</h3>
-            <ul className="space-y-3">
+            <h3 className="text-sm font-bold mb-4 text-foreground font-display">Legal</h3>
+            <ul className="space-y-2">
               <li>
-                <Link to="/privacy-policy" className="group flex items-center text-muted-foreground hover:text-foreground transition-colors duration-300">
-                  <ArrowRight className="h-4 w-4 mr-2 group-hover:translate-x-1 transition-transform" />
-                  Privacy Policy
+                <Link to="/terms-of-use" className="group flex items-center text-xs text-muted-foreground hover:text-foreground transition-colors duration-300">
+                  <Circle className="h-1.5 w-1.5 mr-2 fill-current" />
+                  Terms of Use
                 </Link>
               </li>
               <li>
-                <Link to="/terms-of-use" className="group flex items-center text-muted-foreground hover:text-foreground transition-colors duration-300">
-                  <ArrowRight className="h-4 w-4 mr-2 group-hover:translate-x-1 transition-transform" />
-                  Terms of Use
+                <Link to="/privacy-policy" className="group flex items-center text-xs text-muted-foreground hover:text-foreground transition-colors duration-300">
+                  <Circle className="h-1.5 w-1.5 mr-2 fill-current" />
+                  Privacy Policy
                 </Link>
               </li>
               <li>
                 <button 
                   onClick={() => setIsPrivacyChoicesOpen(true)}
-                  className="group flex items-center text-muted-foreground hover:text-foreground transition-colors duration-300 text-left"
+                  className="group flex items-center text-xs text-muted-foreground hover:text-foreground transition-colors duration-300 text-left"
                 >
-                  <ArrowRight className="h-4 w-4 mr-2 group-hover:translate-x-1 transition-transform" />
+                  <Circle className="h-1.5 w-1.5 mr-2 fill-current" />
                   Your Privacy Choices
                 </button>
               </li>
@@ -172,7 +185,7 @@ const Footer = () => {
         {/* Bottom Section */}
         <div className="border-t border-border pt-6">
           <div className="text-center">
-            <p className="text-muted-foreground font-light">
+            <p className="text-xs text-muted-foreground font-light">
               © 2025 JumpinAI, LLC. All rights reserved.
             </p>
           </div>
