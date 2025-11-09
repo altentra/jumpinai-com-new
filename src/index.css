@@ -9,44 +9,44 @@
 
 @layer base {
   :root {
-    /* Light mode - Professional & Readable with soft grey-white */
-    --background: 0 0% 96%;
+    /* Light mode - Premium soft grey (not blinding white) */
+    --background: 0 0% 85%;
     --foreground: 0 0% 10%;
 
-    --card: 0 0% 97%;
+    --card: 0 0% 88%;
     --card-foreground: 0 0% 10%;
 
-    --popover: 0 0% 97%;
+    --popover: 0 0% 88%;
     --popover-foreground: 0 0% 10%;
 
     --primary: 220 13% 18%;
-    --primary-foreground: 0 0% 96%;
+    --primary-foreground: 0 0% 90%;
 
-    --secondary: 220 13% 93%;
+    --secondary: 220 13% 80%;
     --secondary-foreground: 220 13% 18%;
 
-    --muted: 220 13% 93%;
-    --muted-foreground: 220 9% 46%;
+    --muted: 220 13% 80%;
+    --muted-foreground: 220 9% 35%;
 
-    --accent: 220 14% 90%;
+    --accent: 220 14% 78%;
     --accent-foreground: 220 13% 18%;
 
     --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 96%;
+    --destructive-foreground: 0 0% 90%;
 
-    --border: 220 13% 88%;
+    --border: 220 13% 75%;
     --input: 220 13% 88%;
     --ring: 220 13% 18%;
 
     --radius: 0.75rem;
 
-    --sidebar-background: 0 0% 97%;
+    --sidebar-background: 0 0% 88%;
     --sidebar-foreground: 220 13% 18%;
     --sidebar-primary: 220 13% 18%;
-    --sidebar-primary-foreground: 0 0% 96%;
-    --sidebar-accent: 220 14% 94%;
+    --sidebar-primary-foreground: 0 0% 90%;
+    --sidebar-accent: 220 14% 82%;
     --sidebar-accent-foreground: 220 13% 18%;
-    --sidebar-border: 220 13% 91%;
+    --sidebar-border: 220 13% 78%;
     --sidebar-ring: 220 13% 18%;
   }
 
