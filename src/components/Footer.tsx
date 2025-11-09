@@ -70,7 +70,7 @@ const Footer = () => {
               </div>
               <span className="ml-3 text-2xl font-black font-display text-foreground">JumpinAI</span>
             </Link>
-            <p className="text-xs text-foreground/70 leading-relaxed mb-8 max-w-md font-light">
+            <p className="text-sm text-foreground/70 leading-relaxed mb-8 max-w-md font-light">
               Empowering creators, professionals, and entrepreneurs to adapt to the era of AI — guiding every step from exploration to confident mastery with clarity and precision.
             </p>
             
@@ -103,73 +103,76 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* What We Do */}
-          <div className="pt-1">
-            <h3 className="text-lg font-bold mb-8 text-foreground font-display leading-relaxed">What We Do</h3>
-            <ul className="space-y-0">
-              <li>
-                <Link to="/jumpinai-studio" className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300 leading-relaxed block">
-                  JumpinAI Studio
-                </Link>
-              </li>
-              <li>
-                <Link to="/jumps" className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300 leading-relaxed block">
-                  Guides
-                </Link>
-              </li>
-              <li>
-                <Link to="/resources" className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300 leading-relaxed block">
-                  Resources
-                </Link>
-              </li>
-            </ul>
-          </div>
+          {/* Navigation Grid - 3 columns on mobile, part of 5-col grid on desktop */}
+          <div className="col-span-1 md:col-span-3 grid grid-cols-3 gap-4 md:gap-8">
+            {/* What We Do */}
+            <div className="pt-1">
+              <h3 className="text-sm md:text-lg font-bold mb-4 md:mb-8 text-foreground font-display leading-relaxed">What We Do</h3>
+              <ul className="space-y-0">
+                <li>
+                  <Link to="/jumpinai-studio" className="text-xs md:text-sm text-foreground/70 hover:text-foreground transition-colors duration-300 leading-relaxed block">
+                    JumpinAI Studio
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/jumps" className="text-xs md:text-sm text-foreground/70 hover:text-foreground transition-colors duration-300 leading-relaxed block">
+                    Guides
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/resources" className="text-xs md:text-sm text-foreground/70 hover:text-foreground transition-colors duration-300 leading-relaxed block">
+                    Resources
+                  </Link>
+                </li>
+              </ul>
+            </div>
 
-          {/* Who We Are */}
-          <div className="pt-1">
-            <h3 className="text-lg font-bold mb-8 text-foreground font-display leading-relaxed">Who We Are</h3>
-            <ul className="space-y-0">
-              <li>
-                <Link to="/about-us" className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300 leading-relaxed block">
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link to="/contact-us" className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300 leading-relaxed block">
-                  Contact Us
-                </Link>
-              </li>
-              <li>
-                <Link to="/for-investors" className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300 leading-relaxed block">
-                  For Investors
-                </Link>
-              </li>
-            </ul>
-          </div>
+            {/* Who We Are */}
+            <div className="pt-1">
+              <h3 className="text-sm md:text-lg font-bold mb-4 md:mb-8 text-foreground font-display leading-relaxed">Who We Are</h3>
+              <ul className="space-y-0">
+                <li>
+                  <Link to="/about-us" className="text-xs md:text-sm text-foreground/70 hover:text-foreground transition-colors duration-300 leading-relaxed block">
+                    About Us
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/contact-us" className="text-xs md:text-sm text-foreground/70 hover:text-foreground transition-colors duration-300 leading-relaxed block">
+                    Contact Us
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/for-investors" className="text-xs md:text-sm text-foreground/70 hover:text-foreground transition-colors duration-300 leading-relaxed block">
+                    For Investors
+                  </Link>
+                </li>
+              </ul>
+            </div>
 
-          {/* Legal */}
-          <div className="pt-1">
-            <h3 className="text-lg font-bold mb-8 text-foreground font-display leading-relaxed">Legal</h3>
-            <ul className="space-y-0">
-              <li>
-                <Link to="/terms-of-use" className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300 leading-relaxed block">
-                  Terms of Use
-                </Link>
-              </li>
-              <li>
-                <Link to="/privacy-policy" className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300 leading-relaxed block">
-                  Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <button 
-                  onClick={() => setIsPrivacyChoicesOpen(true)}
-                  className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300 text-left leading-relaxed block"
-                >
-                  Your Privacy Choices
-                </button>
-              </li>
-            </ul>
+            {/* Legal */}
+            <div className="pt-1">
+              <h3 className="text-sm md:text-lg font-bold mb-4 md:mb-8 text-foreground font-display leading-relaxed">Legal</h3>
+              <ul className="space-y-0">
+                <li>
+                  <Link to="/terms-of-use" className="text-xs md:text-sm text-foreground/70 hover:text-foreground transition-colors duration-300 leading-relaxed block">
+                    Terms of Use
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/privacy-policy" className="text-xs md:text-sm text-foreground/70 hover:text-foreground transition-colors duration-300 leading-relaxed block">
+                    Privacy Policy
+                  </Link>
+                </li>
+                <li>
+                  <button 
+                    onClick={() => setIsPrivacyChoicesOpen(true)}
+                    className="text-xs md:text-sm text-foreground/70 hover:text-foreground transition-colors duration-300 text-left leading-relaxed block"
+                  >
+                    Your Privacy Choices
+                  </button>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
 
