@@ -795,7 +795,6 @@ export type Database = {
         }
         Returns: undefined
       }
-      allocate_drip_credits: { Args: never; Returns: undefined }
       allocate_monthly_credits: { Args: never; Returns: undefined }
       check_and_record_guest_usage: {
         Args: { p_ip_address: string; p_user_agent?: string }
