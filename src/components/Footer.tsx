@@ -105,20 +105,20 @@ const Footer = () => {
 
           {/* What We Do */}
           <div>
-            <h3 className="text-2xl font-bold mb-4 text-foreground font-display">What We Do</h3>
-            <ul className="space-y-2">
+            <h3 className="text-lg font-bold mb-4 text-foreground font-display">What We Do</h3>
+            <ul className="space-y-[0.4rem]">
               <li>
-                <Link to="/jumpinai-studio" className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300">
+                <Link to="/jumpinai-studio" className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300 leading-relaxed block">
                   JumpinAI Studio
                 </Link>
               </li>
               <li>
-                <Link to="/jumps" className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300">
+                <Link to="/jumps" className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300 leading-relaxed block">
                   Guides
                 </Link>
               </li>
               <li>
-                <Link to="/resources" className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300">
+                <Link to="/resources" className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300 leading-relaxed block">
                   Resources
                 </Link>
               </li>
@@ -127,20 +127,20 @@ const Footer = () => {
 
           {/* Who We Are */}
           <div>
-            <h3 className="text-2xl font-bold mb-4 text-foreground font-display">Who We Are</h3>
-            <ul className="space-y-2">
+            <h3 className="text-lg font-bold mb-4 text-foreground font-display">Who We Are</h3>
+            <ul className="space-y-[0.4rem]">
               <li>
-                <Link to="/about-us" className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300">
+                <Link to="/about-us" className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300 leading-relaxed block">
                   About Us
                 </Link>
               </li>
               <li>
-                <Link to="/contact-us" className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300">
+                <Link to="/contact-us" className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300 leading-relaxed block">
                   Contact Us
                 </Link>
               </li>
               <li>
-                <Link to="/for-investors" className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300">
+                <Link to="/for-investors" className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300 leading-relaxed block">
                   For Investors
                 </Link>
               </li>
@@ -149,22 +149,22 @@ const Footer = () => {
 
           {/* Legal */}
           <div>
-            <h3 className="text-2xl font-bold mb-4 text-foreground font-display">Legal</h3>
-            <ul className="space-y-2">
+            <h3 className="text-lg font-bold mb-4 text-foreground font-display">Legal</h3>
+            <ul className="space-y-[0.4rem]">
               <li>
-                <Link to="/terms-of-use" className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300">
+                <Link to="/terms-of-use" className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300 leading-relaxed block">
                   Terms of Use
                 </Link>
               </li>
               <li>
-                <Link to="/privacy-policy" className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300">
+                <Link to="/privacy-policy" className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300 leading-relaxed block">
                   Privacy Policy
                 </Link>
               </li>
               <li>
                 <button 
                   onClick={() => setIsPrivacyChoicesOpen(true)}
-                  className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300 text-left"
+                  className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300 text-left leading-relaxed block"
                 >
                   Your Privacy Choices
                 </button>
