@@ -374,28 +374,51 @@ const Jumps = () => {
                         )}
                         
                         {hasPurchased || (subInfo?.subscribed && subInfo?.subscription_tier === "JumpinAI Pro") ? (
-                          <Button asChild={false} className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-2xl glass backdrop-blur-sm border border-primary/20" onClick={() => {
-                            if (order?.download_token) {
-                              window.location.href = `/download/${order.download_token}`;
-                            } else {
-                              // For Pro subscribers, go to the dedicated download page
-                              window.location.href = `/download-pro/${product.id}`;
-                            }
-                          }}>
-                            <Download className="h-4 w-4 mr-2" />
-                            Access Your Guide
-                          </Button>
+                          <button 
+                            className="relative group w-full overflow-hidden"
+                            onClick={() => {
+                              if (order?.download_token) {
+                                window.location.href = `/download/${order.download_token}`;
+                              } else {
+                                // For Pro subscribers, go to the dedicated download page
+                                window.location.href = `/download-pro/${product.id}`;
+                              }
+                            }}
+                          >
+                            {/* Liquid glass glow effect */}
+                            <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover:opacity-60 transition duration-500"></div>
+                            
+                            {/* Button */}
+                            <div className="relative flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover:border-primary/50 transition-all duration-300 overflow-hidden">
+                              {/* Shimmer effect */}
+                              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                              
+                              {/* Content */}
+                              <Download className="h-4 w-4 relative text-foreground group-hover:text-primary transition-colors duration-300" />
+                              <span className="relative font-bold text-foreground group-hover:text-primary transition-colors duration-300">Access Your Guide</span>
+                            </div>
+                          </button>
                         ) : (
                           <>
                             <Dialog open={isDialogOpen && selectedProduct?.id === product.id} onOpenChange={setIsDialogOpen}>
                               <DialogTrigger asChild>
-                                <Button 
-                                  className="w-full group-hover:bg-primary/90 transition-all duration-500 rounded-2xl hover:scale-105"
+                                <button 
+                                  className="relative group w-full overflow-hidden"
                                   onClick={() => handleBuyClick(product)}
                                 >
-                                  <ShoppingCart className="h-4 w-4 mr-2" />
-                                  Buy Now
-                                </Button>
+                                  {/* Liquid glass glow effect */}
+                                  <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover:opacity-60 transition duration-500"></div>
+                                  
+                                  {/* Button */}
+                                  <div className="relative flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover:border-primary/50 transition-all duration-300 overflow-hidden">
+                                    {/* Shimmer effect */}
+                                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                                    
+                                    {/* Content */}
+                                    <ShoppingCart className="h-4 w-4 relative text-foreground group-hover:text-primary transition-colors duration-300" />
+                                    <span className="relative font-bold text-foreground group-hover:text-primary transition-colors duration-300">Buy Now</span>
+                                  </div>
+                                </button>
                               </DialogTrigger>
                         
                               <DialogContent className="sm:max-w-md bg-background/95 backdrop-blur-xl border-2 border-primary/20 rounded-3xl shadow-2xl">
@@ -433,18 +456,30 @@ const Jumps = () => {
                                     >
                                       Cancel
                                     </Button>
-                                    <Button 
+                                    <button 
                                       onClick={handlePurchase}
                                       disabled={!customerEmail || isProcessing}
-                                      className="flex-1 h-12 rounded-2xl text-base font-semibold bg-primary hover:bg-primary/90 text-primary-foreground hover:scale-105 transition-all duration-300 shadow-lg"
+                                      className="relative group flex-1 overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
-                                      {isProcessing ? (
-                                        <Loader2 className="h-5 w-5 animate-spin mr-2" />
-                                      ) : (
-                                        <ShoppingCart className="h-5 w-5 mr-2" />
-                                      )}
-                                      {isProcessing ? "Processing..." : "Continue to Payment"}
-                                    </Button>
+                                      {/* Liquid glass glow effect */}
+                                      <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover:opacity-60 transition duration-500"></div>
+                                      
+                                      {/* Button */}
+                                      <div className="relative flex items-center justify-center gap-2 px-4 h-12 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover:border-primary/50 transition-all duration-300 overflow-hidden">
+                                        {/* Shimmer effect */}
+                                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                                        
+                                        {/* Content */}
+                                        {isProcessing ? (
+                                          <Loader2 className="h-5 w-5 animate-spin relative text-foreground group-hover:text-primary transition-colors duration-300" />
+                                        ) : (
+                                          <ShoppingCart className="h-5 w-5 relative text-foreground group-hover:text-primary transition-colors duration-300" />
+                                        )}
+                                        <span className="relative font-bold text-foreground group-hover:text-primary transition-colors duration-300">
+                                          {isProcessing ? "Processing..." : "Continue to Payment"}
+                                        </span>
+                                      </div>
+                                    </button>
                                   </div>
                                 </div>
                               </DialogContent>
@@ -506,14 +541,24 @@ const Jumps = () => {
                         </div>
                       </div>
                       
-                      <Button 
-                        className="w-full group-hover:bg-primary/90 transition-all duration-500 rounded-2xl hover:scale-105"
-                        asChild
+                      <a 
+                        href="https://whop.com/jumpinai/" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="relative group block w-full overflow-hidden"
                       >
-                        <a href="https://whop.com/jumpinai/" target="_blank" rel="noopener noreferrer">
-                          Join our Whop
-                        </a>
-                      </Button>
+                        {/* Liquid glass glow effect */}
+                        <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover:opacity-60 transition duration-500"></div>
+                        
+                        {/* Button */}
+                        <div className="relative flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover:border-primary/50 transition-all duration-300 overflow-hidden">
+                          {/* Shimmer effect */}
+                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                          
+                          {/* Content */}
+                          <span className="relative font-bold text-foreground group-hover:text-primary transition-colors duration-300">Join our Whop</span>
+                        </div>
+                      </a>
                     </div>
                   </CardFooter>
                 </Card>
