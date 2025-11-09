@@ -101,7 +101,7 @@ const Index = () => {
       <Hero />
 
       {/* What You Get: Complete Jump Structure */}
-      <section className="py-6 sm:py-8 lg:py-12 relative">
+      <section className="py-12 sm:py-16 lg:py-24 relative">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8 sm:mb-12">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold gradient-text-primary mb-3 sm:mb-4 font-display px-4">
@@ -225,7 +225,7 @@ const Index = () => {
       </section>
 
       {/* Trust by Association Section */}
-      <section className="py-6 bg-muted/30 dark:bg-muted/10">
+      <section className="py-12 bg-transparent">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">
             <p className="text-sm uppercase tracking-wider text-muted-foreground font-semibold">
@@ -254,7 +254,7 @@ const Index = () => {
       </section>
 
       {/* How JumpinAI Studio Works */}
-      <section className="py-8 lg:py-12">
+      <section className="py-16 lg:py-24">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl lg:text-4xl font-bold mb-4 font-display">
@@ -293,7 +293,7 @@ const Index = () => {
             </div>
 
             <div className="text-center mt-8">
-              <div className="inline-flex flex-col items-center gap-2 p-4 bg-gradient-to-r from-primary/10 to-primary/10 rounded-xl border border-primary/20">
+              <div className="inline-flex flex-col items-center gap-2 p-4 bg-gradient-to-r from-primary/10 to-primary/10 rounded-3xl border border-primary/20">
                 <div className="flex items-center gap-3">
                   <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -311,11 +311,6 @@ const Index = () => {
       <section className="py-6 sm:py-8 lg:py-10 relative">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8 sm:mb-10 lg:mb-12">
-            <div className="inline-block mb-3">
-              <span className="px-3 py-1.5 rounded-full backdrop-blur-xl bg-primary/10 border border-primary/20 text-primary text-xs sm:text-sm font-semibold shadow-sm">
-                Breakthrough Feature
-              </span>
-            </div>
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 font-display">
               Adaptive Intelligence: <span className="gradient-text-primary">Multi-Level Clarification</span>
             </h2>
@@ -601,7 +596,7 @@ const Index = () => {
       </section>
 
       {/* Success Metrics Section */}
-      <section className="py-6 bg-gradient-to-r from-muted/20 via-muted/5 to-muted/20">
+      <section className="py-6 bg-transparent">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">
             <h2 className="text-2xl lg:text-3xl font-bold mb-3 font-display">
@@ -966,7 +961,7 @@ const Index = () => {
       </section>
 
       {/* Major Final CTA Section */}
-      <section className="py-6 sm:py-8 lg:py-12 relative">
+      <section className="py-4 sm:py-5 lg:py-8 relative">
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4 font-display gradient-text-primary">
