@@ -104,8 +104,8 @@ const Footer = () => {
           </div>
 
           {/* What We Do */}
-          <div className="pt-0">
-            <h3 className="text-lg font-bold mb-4 text-foreground font-display leading-relaxed">What We Do</h3>
+          <div className="pt-1">
+            <h3 className="text-lg font-bold mb-6 text-foreground font-display leading-relaxed">What We Do</h3>
             <ul className="space-y-0">
               <li>
                 <Link to="/jumpinai-studio" className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300 leading-relaxed block">
@@ -126,8 +126,8 @@ const Footer = () => {
           </div>
 
           {/* Who We Are */}
-          <div className="pt-0">
-            <h3 className="text-lg font-bold mb-4 text-foreground font-display leading-relaxed">Who We Are</h3>
+          <div className="pt-1">
+            <h3 className="text-lg font-bold mb-6 text-foreground font-display leading-relaxed">Who We Are</h3>
             <ul className="space-y-0">
               <li>
                 <Link to="/about-us" className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300 leading-relaxed block">
@@ -148,8 +148,8 @@ const Footer = () => {
           </div>
 
           {/* Legal */}
-          <div className="pt-0">
-            <h3 className="text-lg font-bold mb-4 text-foreground font-display leading-relaxed">Legal</h3>
+          <div className="pt-1">
+            <h3 className="text-lg font-bold mb-6 text-foreground font-display leading-relaxed">Legal</h3>
             <ul className="space-y-0">
               <li>
                 <Link to="/terms-of-use" className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300 leading-relaxed block">
