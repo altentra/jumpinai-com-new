@@ -85,7 +85,8 @@ export default function Pricing() {
 
   const handleSubscribe = async () => {
     if (!isAuthenticated) {
-      login('/pricing');
+      toast.info('Please sign up or log in to subscribe to a plan');
+      navigate('/auth');
       return;
     }
 

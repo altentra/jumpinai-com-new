@@ -56,7 +56,8 @@ const PricingNew = () => {
 
   const handleBuyCredits = async (packageId: string) => {
     if (!isAuthenticated) {
-      toast.error('Please sign in to purchase credits');
+      toast.info('Please sign up or log in to purchase credits');
+      window.location.href = '/auth';
       return;
     }
 
@@ -84,7 +85,8 @@ const PricingNew = () => {
 
   const handleSubscribe = async (planId: string) => {
     if (!isAuthenticated) {
-      toast.error('Please sign in to subscribe');
+      toast.info('Please sign up or log in to subscribe to a plan');
+      window.location.href = '/auth';
       return;
     }
 
