@@ -599,53 +599,6 @@ const Index = () => {
             </div>
           </div>
 
-          {/* Compact Key Benefits - Single Row */}
-          <div className="max-w-5xl mx-auto mb-6">
-            <div className="glass bg-muted/30 rounded-xl p-3 sm:p-4 border border-primary/20 backdrop-blur-xl shadow-sm">
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-                <div className="text-center">
-                  <div className="w-8 h-8 mx-auto mb-2 rounded-lg backdrop-blur-xl bg-primary/10 ring-1 ring-primary/30 flex items-center justify-center">
-                    <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                  </div>
-                  <h4 className="font-bold text-xs sm:text-sm mb-1">Never Stuck</h4>
-                  <p className="text-xs text-muted-foreground">Crystal-clear actions</p>
-                </div>
-
-                <div className="text-center">
-                  <div className="w-8 h-8 mx-auto mb-2 rounded-lg backdrop-blur-xl bg-primary/10 ring-1 ring-primary/30 flex items-center justify-center">
-                    <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                    </svg>
-                  </div>
-                  <h4 className="font-bold text-xs sm:text-sm mb-1">Adapt & Learn</h4>
-                  <p className="text-xs text-muted-foreground">Alternative routes</p>
-                </div>
-
-                <div className="text-center">
-                  <div className="w-8 h-8 mx-auto mb-2 rounded-lg backdrop-blur-xl bg-primary/10 ring-1 ring-primary/30 flex items-center justify-center">
-                    <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
-                    </svg>
-                  </div>
-                  <h4 className="font-bold text-xs sm:text-sm mb-1">Multiple Paths</h4>
-                  <p className="text-xs text-muted-foreground">Budget & timeline fits</p>
-                </div>
-
-                <div className="text-center">
-                  <div className="w-8 h-8 mx-auto mb-2 rounded-lg backdrop-blur-xl bg-primary/10 ring-1 ring-primary/30 flex items-center justify-center">
-                    <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11"></path>
-                    </svg>
-                  </div>
-                  <h4 className="font-bold text-xs sm:text-sm mb-1">4 Clarification Levels</h4>
-                  <p className="text-xs text-muted-foreground">Complete clarity</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
           {/* Availability Info */}
           <div className="text-center">
             <div className="inline-flex items-center gap-3 px-4 py-2.5 rounded-xl glass border border-primary/20 backdrop-blur-xl shadow-sm">
