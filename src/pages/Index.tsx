@@ -100,114 +100,126 @@ const Index = () => {
       <Navigation />
       <Hero />
 
-      {/* What JumpinAI Studio Actually Does - Features Section */}
+      {/* What You Get: Complete Jump Structure */}
       <section className="py-12 sm:py-16 lg:py-24 relative">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8 sm:mb-12">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold gradient-text-primary mb-3 sm:mb-4 font-display px-4">
-              Ready to Make Your AI Jump?
+              Your Complete AI Jump in 3 Powerful Tabs
             </h2>
             <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto px-4">
-              Don't wait months to see AI results. Get your personalized Jump plan in 2 minutes and start transforming your life and business today. Join 15,000+ professionals who've already made the leap.
+              Every Jump you generate is a comprehensive AI transformation package—strategically designed across three interconnected sections to take you from confusion to clarity to action.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-6">
-            {/* Strategic Action Plans */}
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            {/* Overview Tab */}
             <div className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-300 border border-primary/10 hover:border-primary/20 shadow-sm hover:shadow-md">
               <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              <h3 className="text-lg font-bold mb-3 font-display relative">Adaptive Strategic Plans</h3>
+              <div className="flex items-center gap-3 mb-4 relative">
+                <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                  </svg>
+                </div>
+                <h3 className="text-lg font-bold font-display">Overview</h3>
+              </div>
               <p className="text-sm text-muted-foreground mb-4 leading-relaxed relative">
-                Clear, step-by-step roadmaps tailored to your exact goals, industry, and experience level—with revolutionary multi-level clarification (up to 4 levels deep) and alternative route discovery at every step.
+                Your strategic foundation—deep situational analysis that defines where you are and where you're going.
               </p>
               <div className="text-xs text-muted-foreground space-y-2 font-medium relative">
                 <div className="flex items-start gap-2">
-                  <span className="text-primary mt-0.5">✓</span>
-                  <span>Industry-specific strategies</span>
+                  <span className="text-primary mt-0.5">•</span>
+                  <span>Executive Summary</span>
                 </div>
                 <div className="flex items-start gap-2">
-                  <span className="text-primary mt-0.5">✓</span>
-                  <span>4-level deep clarifications</span>
+                  <span className="text-primary mt-0.5">•</span>
+                  <span>Situation Analysis</span>
                 </div>
                 <div className="flex items-start gap-2">
-                  <span className="text-primary mt-0.5">✓</span>
-                  <span>Alternative routes discovery</span>
+                  <span className="text-primary mt-0.5">•</span>
+                  <span>Key Challenges & Opportunities</span>
                 </div>
                 <div className="flex items-start gap-2">
-                  <span className="text-primary mt-0.5">✓</span>
+                  <span className="text-primary mt-0.5">•</span>
+                  <span>Strategic Vision & Roadmap</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Plan Tab */}
+            <div className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-300 border border-primary/10 hover:border-primary/20 shadow-sm hover:shadow-md">
+              <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="flex items-center gap-3 mb-4 relative">
+                <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                  </svg>
+                </div>
+                <h3 className="text-lg font-bold font-display">Plan</h3>
+              </div>
+              <p className="text-sm text-muted-foreground mb-4 leading-relaxed relative">
+                Your adaptive action roadmap—detailed steps that you can clarify 4 levels deep or reroute with 3 alternatives per step.
+              </p>
+              <div className="text-xs text-muted-foreground space-y-2 font-medium relative">
+                <div className="flex items-start gap-2">
+                  <span className="text-primary mt-0.5">•</span>
+                  <span>Phased Implementation Steps</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-primary mt-0.5">•</span>
+                  <span>Multi-Level Clarification (4 levels)</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-primary mt-0.5">•</span>
+                  <span>Alternative Routes (3 per step)</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-primary mt-0.5">•</span>
                   <span>Never feel stuck again</span>
                 </div>
               </div>
             </div>
 
-            {/* AI Tool Selection */}
+            {/* Tools & Prompts Tab */}
             <div className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-300 border border-primary/10 hover:border-primary/20 shadow-sm hover:shadow-md">
               <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              <h3 className="text-lg font-bold mb-3 font-display relative">Curated AI Tool Lists</h3>
+              <div className="flex items-center gap-3 mb-4 relative">
+                <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                  </svg>
+                </div>
+                <h3 className="text-lg font-bold font-display">Tools & Prompts</h3>
+              </div>
               <p className="text-sm text-muted-foreground mb-4 leading-relaxed relative">
-                Hand-picked AI tools specifically chosen for your use case with setup guides and optimization tips.
+                Your execution toolkit—9 curated tool-prompt combinations perfectly correlated to your plan steps.
               </p>
-              <div className="text-xs text-muted-foreground space-y-2 relative">
+              <div className="text-xs text-muted-foreground space-y-2 font-medium relative">
                 <div className="flex items-start gap-2">
-                  <span className="text-primary mt-0.5">✓</span>
-                  <span>Pre-vetted tools only</span>
+                  <span className="text-primary mt-0.5">•</span>
+                  <span>9 Tool-Prompt Combos</span>
                 </div>
                 <div className="flex items-start gap-2">
-                  <span className="text-primary mt-0.5">✓</span>
-                  <span>Cost-benefit analysis</span>
+                  <span className="text-primary mt-0.5">•</span>
+                  <span>Main Tool + 2 Alternatives Each</span>
                 </div>
                 <div className="flex items-start gap-2">
-                  <span className="text-primary mt-0.5">✓</span>
-                  <span>Integration guidance included</span>
+                  <span className="text-primary mt-0.5">•</span>
+                  <span>Ready-to-Use Prompts</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-primary mt-0.5">•</span>
+                  <span>Complete Implementation Guidance</span>
                 </div>
               </div>
             </div>
+          </div>
 
-            {/* Complete Resource Package */}
-            <div className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-300 border border-primary/10 hover:border-primary/20 shadow-sm hover:shadow-md">
-              <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              <h3 className="text-lg font-bold mb-3 font-display relative">Ready Resources</h3>
-              <p className="text-sm text-muted-foreground mb-4 leading-relaxed relative">
-                Comprehensive analysis of your situation, strategic action plan, and 9 personalized batches of tools and prompts to get you started immediately.
-              </p>
-              <div className="text-xs text-muted-foreground space-y-2 relative">
-                <div className="flex items-start gap-2">
-                  <span className="text-primary mt-0.5">✓</span>
-                  <span>Situational analysis</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span className="text-primary mt-0.5">✓</span>
-                  <span>Strategic action plan</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span className="text-primary mt-0.5">✓</span>
-                  <span>9 personalized tool & prompt batches</span>
-                </div>
-              </div>
-            </div>
-
-            {/* AI Coach & Support */}
-            <div className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-300 border border-primary/10 hover:border-primary/20 shadow-sm hover:shadow-md">
-              <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              <h3 className="text-lg font-bold mb-3 font-display relative">AI Coach & Support</h3>
-              <p className="text-sm text-muted-foreground mb-4 leading-relaxed relative">
-                Ongoing guidance with AI coach conversations, plan refinement, route exploration capabilities, and comprehensive support system.
-              </p>
-              <div className="text-xs text-muted-foreground space-y-2 relative">
-                <div className="flex items-start gap-2">
-                  <span className="text-primary mt-0.5">✓</span>
-                  <span>AI coaching sessions</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span className="text-primary mt-0.5">✓</span>
-                  <span>Implementation support</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span className="text-primary mt-0.5">✓</span>
-                  <span>Progress tracking</span>
-                </div>
-              </div>
-            </div>
+          <div className="text-center mt-10">
+            <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
+              <span className="font-semibold text-foreground">All three tabs work together seamlessly</span>—from strategic understanding (Overview), to adaptive execution (Plan), to practical implementation (Tools & Prompts). Everything you need in one complete Jump.
+            </p>
           </div>
         </div>
       </section>
@@ -249,7 +261,7 @@ const Index = () => {
               From Confusion to <span className="gradient-text-primary">Clarity in Minutes</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Skip months of research and trial-and-error. Our AI analyzes your situation and delivers your personalized Jump in AI plan.
+              Skip months of research. Get your complete 3-tab Jump—strategic overview, adaptive plan, and execution toolkit—delivered instantly.
             </p>
           </div>
 
@@ -259,33 +271,36 @@ const Index = () => {
                 <div className="w-10 h-10 mx-auto mb-4 backdrop-blur-xl bg-primary/5 ring-1 ring-primary/30 rounded-xl flex items-center justify-center text-primary text-sm font-bold shadow-lg">
                   1
                 </div>
-                <h3 className="text-lg font-bold mb-2 font-display">Share Your Goals</h3>
-                <p className="text-sm text-muted-foreground flex-1">Tell us your objectives, challenges, industry, and AI experience level.</p>
+                <h3 className="text-lg font-bold mb-2 font-display">Describe Your Goal</h3>
+                <p className="text-sm text-muted-foreground flex-1">Share your objectives, challenges, industry, and AI experience. Our AI analyzes your unique situation.</p>
               </div>
               
               <div className="text-center p-6 rounded-xl glass h-full flex flex-col">
                 <div className="w-10 h-10 mx-auto mb-4 backdrop-blur-xl bg-primary/5 ring-1 ring-primary/30 rounded-xl flex items-center justify-center text-primary text-sm font-bold shadow-lg">
                   2
                 </div>
-                <h3 className="text-lg font-bold mb-2 font-display">AI Analysis</h3>
-                <p className="text-sm text-muted-foreground flex-1">Our AI generates your comprehensive Jump plan with roadmap, tools, and resources.</p>
+                <h3 className="text-lg font-bold mb-2 font-display">Receive Your Jump</h3>
+                <p className="text-sm text-muted-foreground flex-1">Get your complete 3-tab transformation package: Overview, Plan, and 9 Tools & Prompts combos—all personalized.</p>
               </div>
               
               <div className="text-center p-6 rounded-xl glass h-full flex flex-col">
                 <div className="w-10 h-10 mx-auto mb-4 backdrop-blur-xl bg-primary/5 ring-1 ring-primary/30 rounded-xl flex items-center justify-center text-primary text-sm font-bold shadow-lg">
                   3
                 </div>
-                <h3 className="text-lg font-bold mb-2 font-display">Start Implementing</h3>
-                <p className="text-sm text-muted-foreground flex-1">Follow your plan and use custom resources immediately with dashboard access.</p>
+                <h3 className="text-lg font-bold mb-2 font-display">Execute & Adapt</h3>
+                <p className="text-sm text-muted-foreground flex-1">Follow your roadmap, clarify steps as needed, explore alternative routes, and use ready prompts to implement immediately.</p>
               </div>
             </div>
 
             <div className="text-center mt-8">
-              <div className="inline-flex items-center gap-3 p-4 bg-gradient-to-r from-primary/10 to-primary/10 rounded-xl border border-primary/20">
-                <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-                <span className="font-semibold">Complete personalized plan generated in 2 minutes</span>
+              <div className="inline-flex flex-col items-center gap-2 p-4 bg-gradient-to-r from-primary/10 to-primary/10 rounded-xl border border-primary/20">
+                <div className="flex items-center gap-3">
+                  <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  <span className="font-semibold">Complete 3-tab Jump generated in 2 minutes</span>
+                </div>
+                <p className="text-xs text-muted-foreground">Strategic overview + adaptive plan + 9 tool-prompt combos</p>
               </div>
             </div>
           </div>
@@ -693,7 +708,7 @@ const Index = () => {
               The <span className="gradient-text-primary">JumpinAI Advantage</span>
             </h2>
             <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto">
-              Never feel stuck again with adaptive AI strategies that clarify down to maximum detail
+              Complete 3-tab system designed for clarity, adaptability, and immediate action
             </p>
           </div>
 
@@ -707,20 +722,20 @@ const Index = () => {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="text-base font-bold mb-1 font-display">Multi-Level Clarity System</h3>
-                  <p className="text-sm text-muted-foreground">Clarify any step up to 4 levels deep—turning vague ideas into crystal-clear actions you can execute immediately.</p>
+                  <h3 className="text-base font-bold mb-1 font-display">Strategic Overview Tab</h3>
+                  <p className="text-sm text-muted-foreground">Executive summary, situation analysis with challenges & opportunities, strategic vision, and complete roadmap—understand your entire transformation at a glance.</p>
                 </div>
               </div>
 
               <div className="flex gap-3">
                 <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
                   <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
                   </svg>
                 </div>
                 <div>
-                  <h3 className="text-base font-bold mb-1 font-display">Alternative Route Discovery</h3>
-                  <p className="text-sm text-muted-foreground">Explore 3 different approaches (Premium, Budget, Hybrid) for any step—choose the path that fits your resources and timeline.</p>
+                  <h3 className="text-base font-bold mb-1 font-display">Adaptive Plan Tab</h3>
+                  <p className="text-sm text-muted-foreground">Phased steps with multi-level clarification (4 levels deep) and alternative routes (3 per step)—never feel stuck, always have options to move forward.</p>
                 </div>
               </div>
 
@@ -731,8 +746,8 @@ const Index = () => {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="text-base font-bold mb-1 font-display">Complete Implementation Kit</h3>
-                  <p className="text-sm text-muted-foreground">Strategic analysis, phased action plan, and 9 AI tool-prompt combinations—everything you need to start immediately.</p>
+                  <h3 className="text-base font-bold mb-1 font-display">Tools & Prompts Tab</h3>
+                  <p className="text-sm text-muted-foreground">9 curated tool-prompt combos correlated to your plan—each with main tool + 2 alternatives, ready-to-use prompts, and complete guidance for immediate execution.</p>
                 </div>
               </div>
 
@@ -743,8 +758,8 @@ const Index = () => {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="text-base font-bold mb-1 font-display">Rapid Results</h3>
-                  <p className="text-sm text-muted-foreground">Get your complete strategy in minutes, not weeks. Start implementing today with AI-powered guidance at every step.</p>
+                  <h3 className="text-base font-bold mb-1 font-display">Instant Personalization</h3>
+                  <p className="text-sm text-muted-foreground">Your complete 3-tab Jump generated in 2 minutes—fully customized to your goals, industry, experience level, and specific situation.</p>
                 </div>
               </div>
             </div>
@@ -758,43 +773,62 @@ const Index = () => {
                 <div className="space-y-2.5">
                   {/* Row 1 */}
                   <div className="glass bg-muted/20 rounded-lg p-3 border border-primary/10">
-                    <div className="font-medium text-sm mb-2">Multi-Level Clarification</div>
+                    <div className="font-medium text-sm mb-2">Strategic Foundation</div>
                     <div className="grid grid-cols-2 gap-2 text-xs">
                       <div className="flex items-center gap-1.5 text-primary font-semibold">
                         <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                         </svg>
-                        <span>4 Levels Deep</span>
+                        <span>Complete Overview</span>
                       </div>
                       <div className="flex items-center gap-1.5 text-muted-foreground">
                         <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
                         </svg>
-                        <span>None</span>
+                        <span>Scattered Info</span>
                       </div>
                     </div>
                   </div>
 
                   {/* Row 2 */}
                   <div className="glass bg-muted/20 rounded-lg p-3 border border-primary/10">
-                    <div className="font-medium text-sm mb-2">Alternative Routes</div>
+                    <div className="font-medium text-sm mb-2">Plan Adaptability</div>
                     <div className="grid grid-cols-2 gap-2 text-xs">
                       <div className="flex items-center gap-1.5 text-primary font-semibold">
                         <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                         </svg>
-                        <span>3 Per Step</span>
+                        <span>4 Levels + 3 Routes</span>
                       </div>
                       <div className="flex items-center gap-1.5 text-muted-foreground">
                         <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
                         </svg>
-                        <span>Trial & Error</span>
+                        <span>Static Steps</span>
                       </div>
                     </div>
                   </div>
 
                   {/* Row 3 */}
+                  <div className="glass bg-muted/20 rounded-lg p-3 border border-primary/10">
+                    <div className="font-medium text-sm mb-2">Execution Tools</div>
+                    <div className="grid grid-cols-2 gap-2 text-xs">
+                      <div className="flex items-center gap-1.5 text-primary font-semibold">
+                        <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span>9 Ready Combos</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 text-muted-foreground">
+                        <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                        <span>Find Your Own</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Row 4 */}
                   <div className="glass bg-muted/20 rounded-lg p-3 border border-primary/10">
                     <div className="font-medium text-sm mb-2">Time to Start</div>
                     <div className="grid grid-cols-2 gap-2 text-xs">
@@ -809,25 +843,6 @@ const Index = () => {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
                         </svg>
                         <span>Weeks/Months</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Row 4 */}
-                  <div className="glass bg-muted/20 rounded-lg p-3 border border-primary/10">
-                    <div className="font-medium text-sm mb-2">Personalization</div>
-                    <div className="grid grid-cols-2 gap-2 text-xs">
-                      <div className="flex items-center gap-1.5 text-primary font-semibold">
-                        <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                        <span>Your Context</span>
-                      </div>
-                      <div className="flex items-center gap-1.5 text-muted-foreground">
-                        <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
-                        <span>Generic Info</span>
                       </div>
                     </div>
                   </div>
