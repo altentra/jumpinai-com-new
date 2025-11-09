@@ -522,6 +522,20 @@
   max-height: none !important;
 }
 
+/* Hide Cloudflare Turnstile badge (appears in bottom-left corner) */
+.cf-turnstile,
+[id^="cf-turnstile"],
+[class*="cf-turnstile"],
+iframe[src*="turnstile"],
+iframe[src*="cloudflare"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
 
-
+/* Hide any fixed bottom-left badges in light mode */
+:not(.dark) div[style*="position: fixed"][style*="bottom"][style*="left"] {
+  display: none !important;
+}
 
