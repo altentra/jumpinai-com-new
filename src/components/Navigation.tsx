@@ -79,8 +79,8 @@ const Navigation = React.memo(() => {
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
       isScrolled 
-        ? 'glass border-b border-border shadow-2xl backdrop-blur-xl' 
-        : 'bg-transparent'
+        ? 'bg-background/80 backdrop-blur-2xl border-b border-border/50 shadow-2xl' 
+        : 'bg-background/40 backdrop-blur-lg'
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
