@@ -114,12 +114,12 @@ const Index = () => {
 
           <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-6">
             {/* Strategic Action Plans */}
-            <div className="group relative p-6 rounded-xl bg-card border-2 border-primary/20 hover:bg-accent transition-all duration-300">
-              <h3 className="text-lg font-bold mb-3 font-display text-foreground">Adaptive Strategic Plans</h3>
-              <p className="text-sm text-foreground mb-4">
+            <div className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-300">
+              <h3 className="text-lg font-bold mb-3 font-display">Adaptive Strategic Plans</h3>
+              <p className="text-sm text-muted-foreground mb-4">
                 Clear, step-by-step roadmaps tailored to your exact goals, industry, and experience level—with revolutionary multi-level clarification (up to 4 levels deep) and alternative route discovery at every step.
               </p>
-              <div className="text-xs text-foreground space-y-1 font-medium">
+              <div className="text-xs text-muted-foreground space-y-1 font-medium">
                 <div>✓ Industry-specific strategies</div>
                 <div>✓ 4-level deep clarifications</div>
                 <div>✓ Alternative routes discovery</div>
@@ -128,12 +128,12 @@ const Index = () => {
             </div>
 
             {/* AI Tool Selection */}
-            <div className="group relative p-6 rounded-xl bg-card border-2 border-primary/20 hover:bg-accent transition-all duration-300">
+            <div className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-300">
               <h3 className="text-lg font-bold mb-3 font-display">Curated AI Tool Lists</h3>
               <p className="text-sm text-muted-foreground mb-4">
                 Hand-picked AI tools specifically chosen for your use case with setup guides and optimization tips.
               </p>
-              <div className="text-xs text-white space-y-1">
+              <div className="text-xs text-muted-foreground space-y-1">
                 <div>✓ Pre-vetted tools only</div>
                 <div>✓ Cost-benefit analysis</div>
                 <div>✓ Integration guidance included</div>
@@ -146,7 +146,7 @@ const Index = () => {
               <p className="text-sm text-muted-foreground mb-4">
                 Comprehensive analysis of your situation, strategic action plan, and 9 personalized batches of tools and prompts to get you started immediately.
               </p>
-              <div className="text-xs text-white space-y-1">
+              <div className="text-xs text-muted-foreground space-y-1">
                 <div>✓ Situational analysis</div>
                 <div>✓ Strategic action plan</div>
                 <div>✓ 9 personalized tool & prompt batches</div>
@@ -159,7 +159,7 @@ const Index = () => {
               <p className="text-sm text-muted-foreground mb-4">
                 Ongoing guidance with AI coach conversations, plan refinement, route exploration capabilities, and comprehensive support system.
               </p>
-              <div className="text-xs text-white space-y-1">
+              <div className="text-xs text-muted-foreground space-y-1">
                 <div>✓ AI coaching sessions</div>
                 <div>✓ Implementation support</div>
                 <div>✓ Progress tracking</div>
