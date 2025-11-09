@@ -106,7 +106,7 @@ const ContactUs = () => {
       {/* Premium Hero Section - Glass Morphism */}
       <section className="pt-32 pb-12 px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-8 sm:mb-12 lg:mb-20 animate-fade-in-up px-4">
+          <div className="text-center mb-4 sm:mb-6 lg:mb-8 animate-fade-in-up px-4">
             <div className="space-y-4 sm:space-y-6">
               <div className="relative mb-6">
                 <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-2 bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent leading-tight tracking-tight">
@@ -124,7 +124,7 @@ const ContactUs = () => {
       </section>
 
       {/* Premium Contact Section - Glass Morphism */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 relative z-10">
+      <section className="pb-16 px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="max-w-6xl mx-auto">
           <div className="grid lg:grid-cols-12 gap-6 xl:gap-8">
             
