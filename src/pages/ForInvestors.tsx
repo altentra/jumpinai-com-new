@@ -96,7 +96,7 @@ const ForInvestors = () => {
       </Helmet>
       
       {/* Enhanced floating background elements */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+      <div className="fixed inset-0 overflow-hidden pointer-events-none opacity-30 dark:opacity-100">
         <div className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-primary/20 to-primary/5 dark:bg-gradient-to-br dark:from-gray-800/30 dark:to-gray-700/15 rounded-full blur-3xl"></div>
         <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-tr from-secondary/15 to-secondary/5 dark:bg-gradient-to-tr dark:from-gray-700/25 dark:to-gray-600/15 rounded-full blur-3xl"></div>
         <div className="absolute top-1/3 left-1/2 transform -translate-x-1/2 w-64 h-64 bg-accent/10 dark:bg-gradient-radial dark:from-gray-800/20 dark:to-transparent rounded-full blur-2xl"></div>
@@ -128,7 +128,7 @@ const ForInvestors = () => {
                   </span>
                 </h2>
                 <p className="text-xs sm:text-sm md:text-base text-muted-foreground max-w-3xl mx-auto leading-relaxed px-2">
-                  JumpinAI Studio empowers creators, professionals, and entrepreneurs to confidently adapt to the AI era—generating comprehensive transformation plans in just 2 minutes with situation analysis, strategic vision with success metrics, detailed action plans, and 9 personalized AI tool-prompt combinations.
+                  JumpinAI Studio empowers professionals and entrepreneurs to confidently navigate AI transformation—generating complete 3-tab transformation blueprints in 2 minutes. Each Jump includes: strategic Overview (executive summary, situation analysis, vision & roadmap), adaptive Plan (multi-level clarification up to 4 levels deep + 3 alternative routes per step), and Tools & Prompts (9 tool-prompt combinations with ready-to-use prompts). All from answering just 2 questions.
                 </p>
               </div>
               <div className="flex justify-center">
@@ -172,7 +172,7 @@ const ForInvestors = () => {
                 <TrendingUp className="h-8 w-8 md:h-10 md:w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
                 <h3 className="text-base md:text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Massive Untapped Market</h3>
                 <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
-                  Billions struggle with generic AI solutions. We're the first to deliver truly personalized AI transformation at scale.
+                  Millions of professionals and businesses struggle with generic AI advice and cookie-cutter solutions. We're first to deliver truly personalized AI transformation at scale—each Jump uniquely tailored to user's specific goals, challenges, industry, and context.
                 </p>
               </div>
               
@@ -180,7 +180,7 @@ const ForInvestors = () => {
                 <Target className="h-8 w-8 md:h-10 md:w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
                 <h3 className="text-base md:text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Breakthrough Innovation</h3>
                 <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
-                  2-minute AI-powered process delivers comprehensive transformation plans with situational analysis, strategic roadmaps, and 9 personalized tool-prompt batches—including step-by-step clarification and alternative pathway exploration. No competitor offers this depth of individualization at scale.
+                  Revolutionary 3-tab transformation system: Strategic Overview for understanding, Adaptive Plan with multi-level clarification (4 levels deep) and alternative routes (3 per step), plus 9 tool-prompt combinations for execution. No competitor offers this depth of adaptive personalization at scale.
                 </p>
               </div>
               
@@ -220,17 +220,17 @@ const ForInvestors = () => {
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-2xl p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/40 transition-all duration-300 group hover:scale-105 hover:-translate-y-2 text-center">
                 <Users className="h-8 w-8 md:h-10 md:w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
-                <h3 className="text-base md:text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">2-Minute Personalization</h3>
+                <h3 className="text-base md:text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Simplicity Meets Depth</h3>
                 <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
-                  Proprietary AI engine creates complete personalized transformation roadmaps with comprehensive analysis in 2 minutes, not months—joining 15,000+ professionals who've already made the leap.
+                  Users answer just 2 questions (goals & challenges). Our AI engine generates a complete 3-tab transformation blueprint in 2 minutes—joining 15,000+ professionals who've already experienced instant clarity. Low friction, high value.
                 </p>
               </div>
               
               <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-2xl p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/40 transition-all duration-300 group hover:scale-105 hover:-translate-y-2 text-center">
                 <Globe className="h-8 w-8 md:h-10 md:w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
-                <h3 className="text-base md:text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Comprehensive Transformation Package</h3>
+                <h3 className="text-base md:text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Adaptive Intelligence System</h3>
                 <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
-                  Each Jump delivers a complete transformation plan: situation analysis, strategic vision with success metrics, detailed action plan with phases and milestones, plus 9 personalized batches of AI tools and prompts—with interactive plan refinement capabilities. All implementation-ready.
+                  Revolutionary Plan tab never leaves users stuck: clarify any step up to 4 levels deep for granular detail, or discover 3 alternative routes if a path doesn't fit. Plus Overview tab for strategic context and Tools & Prompts tab with 9 ready-to-execute tool-prompt combinations. Complete ecosystem for transformation.
                 </p>
               </div>
               
