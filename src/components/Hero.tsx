@@ -43,10 +43,10 @@ const Hero = () => {
       {/* Radial Depth Effect */}
       <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-blue-950/40 dark:from-transparent dark:via-gray-950/30 dark:to-gray-900/40"></div>
       
-      {/* Vertical Curtain Drapes Effect */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-200/40 via-transparent to-slate-200/40 dark:from-gray-950/80 dark:via-transparent dark:to-gray-950/80"></div>
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-100/20 to-transparent dark:via-gray-900/50"></div>
+      {/* Vertical Curtain Drapes Effect - Removed in light mode */}
+      <div className="absolute inset-0 hidden dark:block">
+        <div className="absolute inset-0 bg-gradient-to-r from-gray-950/80 via-transparent to-gray-950/80"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-gray-900/50 to-transparent"></div>
       </div>
       
       {/* Bottom Sophisticated Light Effect */}
@@ -70,11 +70,11 @@ const Hero = () => {
         }}></div>
       </div>
 
-      {/* Advanced Ripple Effects */}
-      <div className="absolute inset-0 opacity-5 dark:opacity-15">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 border border-blue-300/20 dark:border-blue-400/30 rounded-full animate-ping" style={{ animationDuration: '6s', animationDelay: '0s' }}></div>
-        <div className="absolute top-1/2 right-1/3 w-64 h-64 border border-indigo-400/25 dark:border-indigo-300/35 rounded-full animate-ping" style={{ animationDuration: '8s', animationDelay: '2s' }}></div>
-        <div className="absolute bottom-1/3 left-1/2 w-80 h-80 border border-slate-400/20 dark:border-slate-300/30 rounded-full animate-ping" style={{ animationDuration: '10s', animationDelay: '4s' }}></div>
+      {/* Advanced Ripple Effects - Enhanced in light mode */}
+      <div className="absolute inset-0 opacity-20 dark:opacity-15">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 border border-primary/30 rounded-full animate-ping" style={{ animationDuration: '6s', animationDelay: '0s' }}></div>
+        <div className="absolute top-1/2 right-1/3 w-64 h-64 border border-accent/35 rounded-full animate-ping" style={{ animationDuration: '8s', animationDelay: '2s' }}></div>
+        <div className="absolute bottom-1/3 left-1/2 w-80 h-80 border border-primary/25 rounded-full animate-ping" style={{ animationDuration: '10s', animationDelay: '4s' }}></div>
       </div>
 
       {/* Sophisticated Hexagonal Pattern */}
@@ -86,11 +86,11 @@ const Hero = () => {
         }}></div>
       </div>
 
-      {/* Advanced Lighting Rays */}
-      <div className="absolute inset-0 opacity-8 dark:opacity-20">
-        <div className="absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-blue-300/40 via-transparent via-transparent to-indigo-400/30 dark:from-blue-400/20 dark:via-transparent dark:to-indigo-300/15 animate-pulse" style={{ animationDuration: '7s' }}></div>
-        <div className="absolute top-0 right-1/3 w-px h-full bg-gradient-to-b from-indigo-400/35 via-transparent via-transparent to-blue-300/25 dark:from-indigo-300/18 dark:via-transparent dark:to-blue-400/12 animate-pulse" style={{ animationDuration: '9s', animationDelay: '2s' }}></div>
-        <div className="absolute top-0 left-2/3 w-px h-full bg-gradient-to-b from-slate-400/30 via-transparent via-transparent to-blue-400/20 dark:from-slate-300/15 dark:via-transparent dark:to-blue-300/10 animate-pulse" style={{ animationDuration: '11s', animationDelay: '4s' }}></div>
+      {/* Advanced Lighting Rays - Removed in light mode */}
+      <div className="absolute inset-0 hidden dark:block opacity-20">
+        <div className="absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-blue-400/20 via-transparent to-indigo-300/15 animate-pulse" style={{ animationDuration: '7s' }}></div>
+        <div className="absolute top-0 right-1/3 w-px h-full bg-gradient-to-b from-indigo-300/18 via-transparent to-blue-400/12 animate-pulse" style={{ animationDuration: '9s', animationDelay: '2s' }}></div>
+        <div className="absolute top-0 left-2/3 w-px h-full bg-gradient-to-b from-slate-300/15 via-transparent to-blue-300/10 animate-pulse" style={{ animationDuration: '11s', animationDelay: '4s' }}></div>
       </div>
 
       {/* Sophisticated Mesh Distortion */}
@@ -104,20 +104,20 @@ const Hero = () => {
       <div className="absolute top-1/4 left-1/3 w-72 h-72 bg-gradient-conic from-primary/15 via-accent/10 to-secondary/15 rounded-full blur-2xl animate-pulse opacity-40" style={{animationDelay: '1s'}}></div>
       <div className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-gradient-radial from-accent/20 via-primary/10 to-transparent rounded-full blur-xl animate-pulse opacity-30" style={{animationDelay: '3s'}}></div>
 
-      {/* Floating Particles */}
+      {/* Floating Particles - Enhanced visibility in light mode */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-blue-300/60 dark:bg-blue-400/60 rounded-full animate-bounce" style={{ animationDuration: '3s', animationDelay: '0s' }}></div>
-        <div className="absolute bottom-1/3 left-1/5 w-3 h-3 bg-slate-400/50 dark:bg-indigo-300/50 rounded-full animate-bounce" style={{ animationDuration: '5s', animationDelay: '2s' }}></div>
-        <div className="absolute bottom-1/4 right-1/5 w-2 h-2 bg-indigo-300/80 dark:bg-indigo-400/70 rounded-full animate-bounce" style={{ animationDuration: '4.5s', animationDelay: '1.5s' }}></div>
+        <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-primary/70 rounded-full animate-bounce shadow-lg shadow-primary/20" style={{ animationDuration: '3s', animationDelay: '0s' }}></div>
+        <div className="absolute bottom-1/3 left-1/5 w-3 h-3 bg-primary/60 rounded-full animate-bounce shadow-lg shadow-primary/20" style={{ animationDuration: '5s', animationDelay: '2s' }}></div>
+        <div className="absolute bottom-1/4 right-1/5 w-2 h-2 bg-accent/80 rounded-full animate-bounce shadow-lg shadow-accent/30" style={{ animationDuration: '4.5s', animationDelay: '1.5s' }}></div>
         
         {/* Additional Logo Area Particles */}
-        <div className="absolute top-[20%] left-[35%] w-1.5 h-1.5 bg-blue-400/70 dark:bg-blue-300/80 rounded-full animate-pulse" style={{ animationDuration: '2s', animationDelay: '0.5s' }}></div>
-        <div className="absolute top-[18%] right-[38%] w-2 h-2 bg-indigo-400/60 dark:bg-indigo-300/70 rounded-full animate-pulse" style={{ animationDuration: '2.5s', animationDelay: '1s' }}></div>
-        <div className="absolute top-[25%] left-[42%] w-1 h-1 bg-blue-300/80 dark:bg-blue-400/90 rounded-full animate-bounce" style={{ animationDuration: '3.5s', animationDelay: '0.8s' }}></div>
-        <div className="absolute top-[22%] right-[45%] w-1.5 h-1.5 bg-indigo-300/70 dark:bg-indigo-400/80 rounded-full animate-pulse" style={{ animationDuration: '2.8s', animationDelay: '1.2s' }}></div>
-        <div className="absolute top-[28%] left-[48%] w-1 h-1 bg-blue-400/60 dark:bg-blue-300/70 rounded-full animate-bounce" style={{ animationDuration: '4s', animationDelay: '0.3s' }}></div>
-        <div className="absolute top-[16%] right-[32%] w-2 h-2 bg-indigo-400/50 dark:bg-indigo-300/60 rounded-full animate-pulse" style={{ animationDuration: '3.2s', animationDelay: '1.5s' }}></div>
-        <div className="absolute top-[30%] left-[55%] w-1.5 h-1.5 bg-blue-300/70 dark:bg-blue-400/80 rounded-full animate-bounce" style={{ animationDuration: '3.8s', animationDelay: '0.6s' }}></div>
+        <div className="absolute top-[20%] left-[35%] w-1.5 h-1.5 bg-primary/80 rounded-full animate-pulse shadow-md shadow-primary/30" style={{ animationDuration: '2s', animationDelay: '0.5s' }}></div>
+        <div className="absolute top-[18%] right-[38%] w-2 h-2 bg-accent/70 rounded-full animate-pulse shadow-md shadow-accent/30" style={{ animationDuration: '2.5s', animationDelay: '1s' }}></div>
+        <div className="absolute top-[25%] left-[42%] w-1 h-1 bg-primary/90 rounded-full animate-bounce shadow-sm shadow-primary/40" style={{ animationDuration: '3.5s', animationDelay: '0.8s' }}></div>
+        <div className="absolute top-[22%] right-[45%] w-1.5 h-1.5 bg-accent/80 rounded-full animate-pulse shadow-md shadow-accent/30" style={{ animationDuration: '2.8s', animationDelay: '1.2s' }}></div>
+        <div className="absolute top-[28%] left-[48%] w-1 h-1 bg-primary/70 rounded-full animate-bounce shadow-sm shadow-primary/30" style={{ animationDuration: '4s', animationDelay: '0.3s' }}></div>
+        <div className="absolute top-[16%] right-[32%] w-2 h-2 bg-accent/60 rounded-full animate-pulse shadow-md shadow-accent/20" style={{ animationDuration: '3.2s', animationDelay: '1.5s' }}></div>
+        <div className="absolute top-[30%] left-[55%] w-1.5 h-1.5 bg-primary/80 rounded-full animate-bounce shadow-md shadow-primary/30" style={{ animationDuration: '3.8s', animationDelay: '0.6s' }}></div>
       </div>
 
       {/* Neural Connection Lines */}
