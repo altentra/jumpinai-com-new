@@ -131,7 +131,24 @@ const ForInvestors = () => {
                   JumpinAI Studio empowers professionals and entrepreneurs to confidently navigate AI transformation—generating complete 3-tab transformation blueprints in 2 minutes. Each Jump includes: strategic Overview (executive summary, situation analysis, vision & roadmap), adaptive Plan (multi-level clarification up to 4 levels deep + 3 alternative routes per step), and Tools & Prompts (9 tool-prompt combinations with ready-to-use prompts). All from answering just 2 questions.
                 </p>
               </div>
-              <div className="flex justify-center">
+              <div className="flex flex-col sm:flex-row justify-center gap-4">
+                <button 
+                  onClick={() => window.location.href = '/pitch-deck'}
+                  className="relative group overflow-hidden w-full sm:w-auto"
+                >
+                  {/* Liquid glass glow effect */}
+                  <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover:opacity-60 transition duration-500"></div>
+                  
+                  {/* Button */}
+                  <div className="relative flex items-center justify-center gap-2 px-8 sm:px-12 py-3 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover:border-primary/50 transition-all duration-300 overflow-hidden">
+                    {/* Shimmer effect */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                    
+                    {/* Content */}
+                    <span className="relative text-sm sm:text-base font-bold text-foreground group-hover:text-primary transition-colors duration-300">View Full Pitch Deck</span>
+                  </div>
+                </button>
+                
                 <button 
                   onClick={scrollToContactForm}
                   className="relative group overflow-hidden w-full sm:w-auto"

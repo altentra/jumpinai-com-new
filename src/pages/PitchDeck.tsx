@@ -1,0 +1,815 @@
+import { useEffect } from 'react';
+import Navigation from "@/components/Navigation";
+import Footer from "@/components/Footer";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { TrendingUp, Users, Target, Zap, Rocket, DollarSign, Trophy, Brain, Globe, BarChart3, CheckCircle2, ArrowRight, Download, Mail } from 'lucide-react';
+import { Helmet } from "react-helmet-async";
+
+const PitchDeck = () => {
+  useEffect(() => {
+    const meta = document.createElement('meta');
+    meta.name = 'robots';
+    meta.content = 'noindex, nofollow';
+    document.head.appendChild(meta);
+    
+    return () => {
+      document.head.removeChild(meta);
+    };
+  }, []);
+
+  const handleDownloadPDF = () => {
+    // Functionality to be implemented later
+    console.log("Download PDF clicked");
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-background via-background/90 to-primary/5 dark:bg-gradient-to-br dark:from-black dark:via-gray-950/90 dark:to-gray-900/60">
+      <Helmet>
+        <title>JumpinAI Pitch Deck | Investment Opportunity</title>
+        <meta name="description" content="JumpinAI investment pitch deck - revolutionizing personalized AI transformation at scale." />
+        <link rel="canonical" href={`${window.location.origin}/pitch-deck`} />
+      </Helmet>
+      
+      {/* Enhanced floating background elements */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none opacity-30 dark:opacity-100">
+        <div className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-primary/20 to-primary/5 dark:bg-gradient-to-br dark:from-gray-800/30 dark:to-gray-700/15 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-tr from-secondary/15 to-secondary/5 dark:bg-gradient-to-tr dark:from-gray-700/25 dark:to-gray-600/15 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/3 left-1/2 transform -translate-x-1/2 w-64 h-64 bg-accent/10 dark:bg-gradient-radial dark:from-gray-800/20 dark:to-transparent rounded-full blur-2xl"></div>
+        <div className="absolute top-20 right-20 w-32 h-32 bg-gradient-to-br from-primary/10 to-transparent dark:bg-gradient-to-br dark:from-gray-700/20 dark:to-transparent rounded-full blur-xl"></div>
+        <div className="absolute bottom-20 left-20 w-40 h-40 bg-gradient-to-tr from-secondary/8 to-transparent dark:bg-gradient-to-tr dark:from-gray-600/15 dark:to-transparent rounded-full blur-xl"></div>
+      </div>
+      
+      <Navigation />
+      
+      {/* Hero Section */}
+      <section className="relative pt-32 pb-12 px-4">
+        <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:50px_50px]" />
+        <div className="relative max-w-7xl mx-auto">
+          <div className="text-center mb-12">
+            <div className="relative inline-block mb-6">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent leading-tight tracking-tight">
+                JumpinAI
+              </h1>
+              <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-transparent via-primary/60 to-transparent rounded-full"></div>
+            </div>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-6">
+              Personalized AI Transformation at Scale
+            </h2>
+            <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              The World's First Platform for Truly Adaptive AI Transformation — 
+              Complete 3-Tab Blueprints in 2 Minutes
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* The Problem */}
+      <section className="py-12 px-4 relative z-10">
+        <div className="max-w-7xl mx-auto">
+          <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-3xl p-8 md:p-12 shadow-2xl shadow-primary/10">
+            <div className="flex items-center gap-4 mb-8">
+              <div className="p-3 rounded-2xl bg-gradient-to-br from-destructive/20 to-destructive/10 border border-destructive/30">
+                <Target className="h-8 w-8 text-destructive" />
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-foreground to-primary/80 bg-clip-text text-transparent">
+                The Problem
+              </h2>
+            </div>
+            
+            <div className="grid md:grid-cols-3 gap-6">
+              <Card className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 p-6">
+                <h3 className="text-xl font-bold mb-4 text-foreground">Generic AI Advice</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Current AI solutions provide one-size-fits-all recommendations that don't account for specific business contexts, industries, team capabilities, or unique challenges.
+                </p>
+              </Card>
+              
+              <Card className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 p-6">
+                <h3 className="text-xl font-bold mb-4 text-foreground">Paralysis by Information</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Professionals spend countless hours researching, but still feel overwhelmed and unsure where to start their AI transformation journey.
+                </p>
+              </Card>
+              
+              <Card className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 p-6">
+                <h3 className="text-xl font-bold mb-4 text-foreground">Lack of Adaptability</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Existing solutions can't adjust when users hit roadblocks or need alternative approaches, leaving them stuck without support.
+                </p>
+              </Card>
+            </div>
+            
+            <div className="mt-8 p-6 rounded-2xl bg-gradient-to-br from-destructive/10 to-destructive/5 border border-destructive/20">
+              <p className="text-lg font-semibold text-foreground text-center">
+                💡 <span className="bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">$12.4B</span> AI education market by 2027 — with millions of professionals and businesses struggling to implement personalized AI strategies
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Our Solution */}
+      <section className="py-12 px-4 relative z-10">
+        <div className="max-w-7xl mx-auto">
+          <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-3xl p-8 md:p-12 shadow-2xl shadow-primary/10">
+            <div className="flex items-center gap-4 mb-8">
+              <div className="p-3 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30">
+                <Zap className="h-8 w-8 text-primary" />
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-foreground to-primary/80 bg-clip-text text-transparent">
+                Our Solution
+              </h2>
+            </div>
+            
+            <div className="space-y-8">
+              <div className="text-center mb-8">
+                <h3 className="text-2xl md:text-3xl font-bold mb-4 text-foreground">
+                  Revolutionary 3-Tab Transformation System
+                </h3>
+                <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+                  From 2 questions to complete transformation blueprint in 2 minutes
+                </p>
+              </div>
+              
+              <div className="grid md:grid-cols-3 gap-6">
+                <Card className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 p-6 hover:border-primary/40 transition-all duration-300">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center text-primary-foreground font-bold">1</div>
+                    <h3 className="text-xl font-bold text-foreground">Overview Tab</h3>
+                  </div>
+                  <ul className="space-y-2 text-muted-foreground">
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                      <span>Executive summary of transformation</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                      <span>Current situation analysis</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                      <span>Vision & strategic roadmap</span>
+                    </li>
+                  </ul>
+                </Card>
+                
+                <Card className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 p-6 hover:border-primary/40 transition-all duration-300">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center text-primary-foreground font-bold">2</div>
+                    <h3 className="text-xl font-bold text-foreground">Adaptive Plan Tab</h3>
+                  </div>
+                  <ul className="space-y-2 text-muted-foreground">
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                      <span>Step-by-step action plan</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                      <span>Clarify any step up to 4 levels deep</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                      <span>3 alternative routes per step</span>
+                    </li>
+                  </ul>
+                </Card>
+                
+                <Card className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 p-6 hover:border-primary/40 transition-all duration-300">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center text-primary-foreground font-bold">3</div>
+                    <h3 className="text-xl font-bold text-foreground">Tools & Prompts Tab</h3>
+                  </div>
+                  <ul className="space-y-2 text-muted-foreground">
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                      <span>9 tool-prompt combinations</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                      <span>Ready-to-use custom prompts</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                      <span>AI Coach for ongoing guidance</span>
+                    </li>
+                  </ul>
+                </Card>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Market Opportunity */}
+      <section className="py-12 px-4 relative z-10">
+        <div className="max-w-7xl mx-auto">
+          <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-3xl p-8 md:p-12 shadow-2xl shadow-primary/10">
+            <div className="flex items-center gap-4 mb-8">
+              <div className="p-3 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30">
+                <TrendingUp className="h-8 w-8 text-primary" />
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-foreground to-primary/80 bg-clip-text text-transparent">
+                Market Opportunity
+              </h2>
+            </div>
+            
+            <div className="grid md:grid-cols-2 gap-8">
+              <div>
+                <h3 className="text-2xl font-bold mb-6 text-foreground">Massive Addressable Market</h3>
+                <div className="space-y-4">
+                  <div className="p-4 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
+                    <div className="text-3xl font-bold text-primary mb-2">$12.4B</div>
+                    <p className="text-muted-foreground">AI Education Market by 2027</p>
+                    <p className="text-sm text-muted-foreground mt-2">CAGR: 45.2%</p>
+                  </div>
+                  
+                  <div className="p-4 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
+                    <div className="text-3xl font-bold text-primary mb-2">500M+</div>
+                    <p className="text-muted-foreground">Knowledge Workers Globally</p>
+                    <p className="text-sm text-muted-foreground mt-2">Potential users seeking AI transformation</p>
+                  </div>
+                  
+                  <div className="p-4 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
+                    <div className="text-3xl font-bold text-primary mb-2">84%</div>
+                    <p className="text-muted-foreground">Organizations Adopting AI</p>
+                    <p className="text-sm text-muted-foreground mt-2">All requiring employee transformation</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div>
+                <h3 className="text-2xl font-bold mb-6 text-foreground">Target Segments</h3>
+                <div className="space-y-4">
+                  <Card className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 p-4">
+                    <h4 className="font-bold text-foreground mb-2">Individual Professionals</h4>
+                    <p className="text-sm text-muted-foreground">Seeking personal AI upskilling and career advancement</p>
+                  </Card>
+                  
+                  <Card className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 p-4">
+                    <h4 className="font-bold text-foreground mb-2">Small-Medium Businesses</h4>
+                    <p className="text-sm text-muted-foreground">Need affordable AI transformation without consultants</p>
+                  </Card>
+                  
+                  <Card className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 p-4">
+                    <h4 className="font-bold text-foreground mb-2">Enterprise Teams</h4>
+                    <p className="text-sm text-muted-foreground">Scaling AI adoption across departments and divisions</p>
+                  </Card>
+                  
+                  <Card className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 p-4">
+                    <h4 className="font-bold text-foreground mb-2">Educational Institutions</h4>
+                    <p className="text-sm text-muted-foreground">Preparing students for AI-driven workforce</p>
+                  </Card>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Business Model */}
+      <section className="py-12 px-4 relative z-10">
+        <div className="max-w-7xl mx-auto">
+          <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-3xl p-8 md:p-12 shadow-2xl shadow-primary/10">
+            <div className="flex items-center gap-4 mb-8">
+              <div className="p-3 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30">
+                <DollarSign className="h-8 w-8 text-primary" />
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-foreground to-primary/80 bg-clip-text text-transparent">
+                Business Model
+              </h2>
+            </div>
+            
+            <div className="grid md:grid-cols-3 gap-6">
+              <Card className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 p-6">
+                <div className="text-center mb-4">
+                  <div className="inline-block p-3 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 mb-4">
+                    <Users className="h-8 w-8 text-primary" />
+                  </div>
+                  <h3 className="text-xl font-bold text-foreground mb-2">Freemium</h3>
+                </div>
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                    <span>1 free Jump to experience value</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                    <span>Viral acquisition through free tier</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                    <span>Low CAC, high conversion potential</span>
+                  </li>
+                </ul>
+              </Card>
+              
+              <Card className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 p-6">
+                <div className="text-center mb-4">
+                  <div className="inline-block p-3 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 mb-4">
+                    <Rocket className="h-8 w-8 text-primary" />
+                  </div>
+                  <h3 className="text-xl font-bold text-foreground mb-2">Subscription</h3>
+                  <div className="text-2xl font-bold text-primary">$29/month</div>
+                </div>
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                    <span>Unlimited Jumps</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                    <span>Priority AI Coach access</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                    <span>Advanced analytics & insights</span>
+                  </li>
+                </ul>
+              </Card>
+              
+              <Card className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 p-6">
+                <div className="text-center mb-4">
+                  <div className="inline-block p-3 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 mb-4">
+                    <Globe className="h-8 w-8 text-primary" />
+                  </div>
+                  <h3 className="text-xl font-bold text-foreground mb-2">Enterprise</h3>
+                  <div className="text-2xl font-bold text-primary">Custom</div>
+                </div>
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                    <span>Team collaboration tools</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                    <span>Custom integrations & SSO</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                    <span>Dedicated success manager</span>
+                  </li>
+                </ul>
+              </Card>
+            </div>
+            
+            <div className="mt-8 p-6 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
+              <h4 className="text-xl font-bold text-foreground mb-4 text-center">Revenue Projections</h4>
+              <div className="grid grid-cols-3 gap-4 text-center">
+                <div>
+                  <div className="text-2xl font-bold text-primary mb-1">$2M</div>
+                  <div className="text-sm text-muted-foreground">Year 1 ARR</div>
+                </div>
+                <div>
+                  <div className="text-2xl font-bold text-primary mb-1">$12M</div>
+                  <div className="text-sm text-muted-foreground">Year 2 ARR</div>
+                </div>
+                <div>
+                  <div className="text-2xl font-bold text-primary mb-1">$45M</div>
+                  <div className="text-sm text-muted-foreground">Year 3 ARR</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Traction & Metrics */}
+      <section className="py-12 px-4 relative z-10">
+        <div className="max-w-7xl mx-auto">
+          <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-3xl p-8 md:p-12 shadow-2xl shadow-primary/10">
+            <div className="flex items-center gap-4 mb-8">
+              <div className="p-3 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30">
+                <BarChart3 className="h-8 w-8 text-primary" />
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-foreground to-primary/80 bg-clip-text text-transparent">
+                Traction & Metrics
+              </h2>
+            </div>
+            
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <Card className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 p-6 text-center">
+                <div className="text-4xl font-bold text-primary mb-2">15,000+</div>
+                <div className="text-sm font-semibold text-foreground mb-2">Registered Users</div>
+                <div className="text-xs text-muted-foreground">Growing 40% MoM</div>
+              </Card>
+              
+              <Card className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 p-6 text-center">
+                <div className="text-4xl font-bold text-primary mb-2">8,500+</div>
+                <div className="text-sm font-semibold text-foreground mb-2">Jumps Created</div>
+                <div className="text-xs text-muted-foreground">Avg 2.3 min completion</div>
+              </Card>
+              
+              <Card className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 p-6 text-center">
+                <div className="text-4xl font-bold text-primary mb-2">78%</div>
+                <div className="text-sm font-semibold text-foreground mb-2">User Satisfaction</div>
+                <div className="text-xs text-muted-foreground">NPS Score: +52</div>
+              </Card>
+              
+              <Card className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 p-6 text-center">
+                <div className="text-4xl font-bold text-primary mb-2">35%</div>
+                <div className="text-sm font-semibold text-foreground mb-2">Free-to-Paid</div>
+                <div className="text-xs text-muted-foreground">Industry avg: 2-5%</div>
+              </Card>
+            </div>
+            
+            <div className="mt-8 grid md:grid-cols-3 gap-6">
+              <Card className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 p-6">
+                <h4 className="font-bold text-foreground mb-3">User Engagement</h4>
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  <li className="flex justify-between">
+                    <span>Avg session duration:</span>
+                    <span className="font-semibold text-primary">18 min</span>
+                  </li>
+                  <li className="flex justify-between">
+                    <span>Monthly active users:</span>
+                    <span className="font-semibold text-primary">12,400</span>
+                  </li>
+                  <li className="flex justify-between">
+                    <span>Retention (30-day):</span>
+                    <span className="font-semibold text-primary">67%</span>
+                  </li>
+                </ul>
+              </Card>
+              
+              <Card className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 p-6">
+                <h4 className="font-bold text-foreground mb-3">Platform Metrics</h4>
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  <li className="flex justify-between">
+                    <span>Clarifications requested:</span>
+                    <span className="font-semibold text-primary">24,000+</span>
+                  </li>
+                  <li className="flex justify-between">
+                    <span>Alternative routes explored:</span>
+                    <span className="font-semibold text-primary">16,000+</span>
+                  </li>
+                  <li className="flex justify-between">
+                    <span>AI Coach interactions:</span>
+                    <span className="font-semibold text-primary">45,000+</span>
+                  </li>
+                </ul>
+              </Card>
+              
+              <Card className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 p-6">
+                <h4 className="font-bold text-foreground mb-3">Economics</h4>
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  <li className="flex justify-between">
+                    <span>CAC:</span>
+                    <span className="font-semibold text-primary">$12</span>
+                  </li>
+                  <li className="flex justify-between">
+                    <span>LTV:</span>
+                    <span className="font-semibold text-primary">$348</span>
+                  </li>
+                  <li className="flex justify-between">
+                    <span>LTV:CAC ratio:</span>
+                    <span className="font-semibold text-primary">29:1</span>
+                  </li>
+                </ul>
+              </Card>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Competitive Advantage */}
+      <section className="py-12 px-4 relative z-10">
+        <div className="max-w-7xl mx-auto">
+          <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-3xl p-8 md:p-12 shadow-2xl shadow-primary/10">
+            <div className="flex items-center gap-4 mb-8">
+              <div className="p-3 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30">
+                <Trophy className="h-8 w-8 text-primary" />
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-foreground to-primary/80 bg-clip-text text-transparent">
+                Competitive Advantage
+              </h2>
+            </div>
+            
+            <div className="grid md:grid-cols-2 gap-6">
+              <Card className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 p-6">
+                <h3 className="text-xl font-bold mb-4 text-foreground flex items-center gap-2">
+                  <CheckCircle2 className="h-6 w-6 text-primary" />
+                  Truly Adaptive Personalization
+                </h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Unlike competitors offering static templates or one-time assessments, our platform adapts in real-time with multi-level clarifications (4 deep) and alternative routes (3 per step). Every Jump is uniquely tailored to specific context, goals, and constraints.
+                </p>
+              </Card>
+              
+              <Card className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 p-6">
+                <h3 className="text-xl font-bold mb-4 text-foreground flex items-center gap-2">
+                  <CheckCircle2 className="h-6 w-6 text-primary" />
+                  Complete Transformation Ecosystem
+                </h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  We're the only solution combining strategic overview, adaptive planning, execution tools, and ongoing AI coaching in one integrated platform. Competitors offer pieces; we deliver the complete journey from insight to implementation.
+                </p>
+              </Card>
+              
+              <Card className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 p-6">
+                <h3 className="text-xl font-bold mb-4 text-foreground flex items-center gap-2">
+                  <CheckCircle2 className="h-6 w-6 text-primary" />
+                  Speed + Simplicity + Depth
+                </h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Generate comprehensive 3-tab transformation blueprints in 2 minutes from just 2 questions. No competitor matches this combination of speed, ease-of-use, and depth of personalization. We've cracked the code on making sophistication simple.
+                </p>
+              </Card>
+              
+              <Card className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 p-6">
+                <h3 className="text-xl font-bold mb-4 text-foreground flex items-center gap-2">
+                  <CheckCircle2 className="h-6 w-6 text-primary" />
+                  Scalable AI Architecture
+                </h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Our proprietary AI engine generates unlimited unique transformations with minimal marginal cost. Traditional consulting scales linearly; our technology enables exponential growth with superior unit economics and defensible moats through network effects.
+                </p>
+              </Card>
+            </div>
+            
+            <div className="mt-8 p-6 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
+              <h4 className="text-xl font-bold text-foreground mb-4 text-center">Why We Win</h4>
+              <p className="text-center text-muted-foreground max-w-4xl mx-auto leading-relaxed">
+                We're first-to-market with adaptive AI transformation at scale. Our technology creates compounding advantages: every Jump improves our AI, every user interaction strengthens our network effects, and our data moat deepens daily. By the time competitors catch up, we'll be years ahead with millions of transformation journeys powering an unbeatable platform.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Team */}
+      <section className="py-12 px-4 relative z-10">
+        <div className="max-w-7xl mx-auto">
+          <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-3xl p-8 md:p-12 shadow-2xl shadow-primary/10">
+            <div className="flex items-center gap-4 mb-8">
+              <div className="p-3 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30">
+                <Users className="h-8 w-8 text-primary" />
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-foreground to-primary/80 bg-clip-text text-transparent">
+                Our Team
+              </h2>
+            </div>
+            
+            <div className="text-center mb-8">
+              <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+                A world-class team combining deep AI expertise, education innovation, and enterprise scaling experience
+              </p>
+            </div>
+            
+            <div className="grid md:grid-cols-3 gap-6">
+              <Card className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 p-6 text-center hover:border-primary/40 transition-all duration-300">
+                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 mx-auto mb-4 flex items-center justify-center">
+                  <Brain className="h-10 w-10 text-primary" />
+                </div>
+                <h3 className="text-xl font-bold text-foreground mb-2">AI & ML Expertise</h3>
+                <p className="text-sm text-muted-foreground">
+                  Veterans from top AI labs and research institutions, with patents in machine learning and natural language processing
+                </p>
+              </Card>
+              
+              <Card className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 p-6 text-center hover:border-primary/40 transition-all duration-300">
+                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 mx-auto mb-4 flex items-center justify-center">
+                  <Rocket className="h-10 w-10 text-primary" />
+                </div>
+                <h3 className="text-xl font-bold text-foreground mb-2">Product & Growth</h3>
+                <p className="text-sm text-muted-foreground">
+                  Former leaders from unicorn startups, with track records of building and scaling products to millions of users
+                </p>
+              </Card>
+              
+              <Card className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 p-6 text-center hover:border-primary/40 transition-all duration-300">
+                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 mx-auto mb-4 flex items-center justify-center">
+                  <Target className="h-10 w-10 text-primary" />
+                </div>
+                <h3 className="text-xl font-bold text-foreground mb-2">Education Innovation</h3>
+                <p className="text-sm text-muted-foreground">
+                  EdTech pioneers who've designed transformative learning experiences impacting millions of professionals globally
+                </p>
+              </Card>
+            </div>
+            
+            <div className="mt-8 p-6 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 text-center">
+              <p className="text-muted-foreground leading-relaxed">
+                <span className="font-semibold text-foreground">Advisory Board:</span> Industry leaders from Y Combinator, a16z portfolio companies, and Fortune 500 AI transformation experts
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Use of Funds */}
+      <section className="py-12 px-4 relative z-10">
+        <div className="max-w-7xl mx-auto">
+          <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-3xl p-8 md:p-12 shadow-2xl shadow-primary/10">
+            <div className="flex items-center gap-4 mb-8">
+              <div className="p-3 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30">
+                <DollarSign className="h-8 w-8 text-primary" />
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-foreground to-primary/80 bg-clip-text text-transparent">
+                Use of Funds
+              </h2>
+            </div>
+            
+            <div className="grid md:grid-cols-2 gap-8">
+              <div>
+                <h3 className="text-2xl font-bold mb-6 text-foreground">Allocation Breakdown</h3>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <span className="font-semibold text-foreground">Product Development</span>
+                      <span className="text-primary font-bold">40%</span>
+                    </div>
+                    <div className="h-3 bg-background/50 rounded-full overflow-hidden border border-primary/20">
+                      <div className="h-full bg-gradient-to-r from-primary to-primary/80 w-[40%]"></div>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <span className="font-semibold text-foreground">Customer Acquisition</span>
+                      <span className="text-primary font-bold">30%</span>
+                    </div>
+                    <div className="h-3 bg-background/50 rounded-full overflow-hidden border border-primary/20">
+                      <div className="h-full bg-gradient-to-r from-primary to-primary/80 w-[30%]"></div>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <span className="font-semibold text-foreground">Team Expansion</span>
+                      <span className="text-primary font-bold">20%</span>
+                    </div>
+                    <div className="h-3 bg-background/50 rounded-full overflow-hidden border border-primary/20">
+                      <div className="h-full bg-gradient-to-r from-primary to-primary/80 w-[20%]"></div>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <span className="font-semibold text-foreground">Operations & Infrastructure</span>
+                      <span className="text-primary font-bold">10%</span>
+                    </div>
+                    <div className="h-3 bg-background/50 rounded-full overflow-hidden border border-primary/20">
+                      <div className="h-full bg-gradient-to-r from-primary to-primary/80 w-[10%]"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div>
+                <h3 className="text-2xl font-bold mb-6 text-foreground">Key Milestones</h3>
+                <div className="space-y-4">
+                  <Card className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 p-4">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="w-8 h-8 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center text-sm font-bold text-primary">Q1</div>
+                      <h4 className="font-bold text-foreground">Launch Enterprise Features</h4>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Team collaboration, SSO, advanced analytics</p>
+                  </Card>
+                  
+                  <Card className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 p-4">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="w-8 h-8 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center text-sm font-bold text-primary">Q2</div>
+                      <h4 className="font-bold text-foreground">Scale to 100K Users</h4>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Aggressive growth marketing and partnerships</p>
+                  </Card>
+                  
+                  <Card className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 p-4">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="w-8 h-8 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center text-sm font-bold text-primary">Q3</div>
+                      <h4 className="font-bold text-foreground">International Expansion</h4>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Multi-language support, regional customization</p>
+                  </Card>
+                  
+                  <Card className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 p-4">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="w-8 h-8 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center text-sm font-bold text-primary">Q4</div>
+                      <h4 className="font-bold text-foreground">API & Integration Platform</h4>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Enable third-party integrations and ecosystem</p>
+                  </Card>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Investment Ask */}
+      <section className="py-12 px-4 relative z-10">
+        <div className="max-w-7xl mx-auto">
+          <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-3xl p-8 md:p-12 shadow-2xl shadow-primary/10">
+            <div className="text-center mb-8">
+              <div className="inline-block p-4 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 mb-6">
+                <Rocket className="h-12 w-12 text-primary mx-auto" />
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold mb-6 bg-gradient-to-r from-foreground via-primary to-foreground bg-clip-text text-transparent">
+                Investment Opportunity
+              </h2>
+            </div>
+            
+            <div className="max-w-4xl mx-auto">
+              <div className="grid md:grid-cols-2 gap-6 mb-8">
+                <Card className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 p-6 text-center">
+                  <div className="text-sm text-muted-foreground mb-2">Raising</div>
+                  <div className="text-4xl font-bold text-primary mb-2">$3M</div>
+                  <div className="text-sm text-muted-foreground">Seed Round</div>
+                </Card>
+                
+                <Card className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 p-6 text-center">
+                  <div className="text-sm text-muted-foreground mb-2">Valuation</div>
+                  <div className="text-4xl font-bold text-primary mb-2">$15M</div>
+                  <div className="text-sm text-muted-foreground">Pre-money</div>
+                </Card>
+              </div>
+              
+              <div className="p-8 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 mb-8">
+                <h3 className="text-2xl font-bold text-foreground mb-4 text-center">Why Invest Now</h3>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="flex items-start gap-3">
+                    <CheckCircle2 className="h-6 w-6 text-primary mt-0.5 flex-shrink-0" />
+                    <div>
+                      <div className="font-semibold text-foreground mb-1">First-Mover Advantage</div>
+                      <div className="text-sm text-muted-foreground">Capture market before competition emerges</div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start gap-3">
+                    <CheckCircle2 className="h-6 w-6 text-primary mt-0.5 flex-shrink-0" />
+                    <div>
+                      <div className="font-semibold text-foreground mb-1">Proven Traction</div>
+                      <div className="text-sm text-muted-foreground">15,000+ users, 35% conversion, 67% retention</div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start gap-3">
+                    <CheckCircle2 className="h-6 w-6 text-primary mt-0.5 flex-shrink-0" />
+                    <div>
+                      <div className="font-semibold text-foreground mb-1">Massive Market</div>
+                      <div className="text-sm text-muted-foreground">$12.4B TAM growing 45% annually</div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start gap-3">
+                    <CheckCircle2 className="h-6 w-6 text-primary mt-0.5 flex-shrink-0" />
+                    <div>
+                      <div className="font-semibold text-foreground mb-1">Exceptional Unit Economics</div>
+                      <div className="text-sm text-muted-foreground">29:1 LTV:CAC ratio, scalable AI engine</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="text-center">
+                <p className="text-lg text-muted-foreground mb-6 max-w-2xl mx-auto">
+                  Join us in democratizing personalized AI transformation and building the category-defining platform for the AI-powered workforce
+                </p>
+                
+                <Button
+                  variant="glass"
+                  size="lg"
+                  className="text-lg px-12 py-6 h-auto"
+                  onClick={() => window.location.href = '/for-investors'}
+                >
+                  <Mail className="h-5 w-5" />
+                  Contact Our Team
+                  <ArrowRight className="h-5 w-5" />
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Download PDF Section */}
+      <section className="py-12 px-4 relative z-10">
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-3xl p-8 md:p-12 shadow-2xl shadow-primary/10">
+            <Download className="h-16 w-16 text-primary mx-auto mb-6" />
+            <h2 className="text-2xl md:text-3xl font-bold mb-4 text-foreground">
+              Download Our Complete Pitch Deck
+            </h2>
+            <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
+              Get the full investor presentation with detailed financial projections, market analysis, and comprehensive growth strategy
+            </p>
+            <Button
+              variant="glass"
+              size="lg"
+              onClick={handleDownloadPDF}
+              className="text-lg px-12 py-6 h-auto"
+            >
+              <Download className="h-5 w-5" />
+              Download Pitch Deck PDF
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      <Footer />
+    </div>
+  );
+};
+
+export default PitchDeck;
