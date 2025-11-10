@@ -34,14 +34,34 @@ serve(async (req) => {
     if (!user?.email) throw new Error("User not authenticated or email not available");
     const userEmail = user.email;
 
-    // Try to find existing subscriber to reuse linked profile id, or use current user id
+    // Check for existing subscriber record with manual subscription
     const { data: existingSub } = await supabaseClient
       .from("subscribers")
-      .select("user_id")
+      .select("*")
       .eq("email", userEmail)
       .maybeSingle();
+    
     const userId = existingSub?.user_id || user.id;
 
+    // If manual subscription exists and is still valid, return it without checking Stripe
+    if (existingSub?.subscribed && existingSub?.subscription_end) {
+      const subEndDate = new Date(existingSub.subscription_end);
+      const now = new Date();
+      
+      // If subscription hasn't expired, return the manual subscription
+      if (subEndDate > now) {
+        return new Response(JSON.stringify({
+          subscribed: existingSub.subscribed,
+          subscription_tier: existingSub.subscription_tier,
+          subscription_end: existingSub.subscription_end,
+        }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 200,
+        });
+      }
+    }
+
+    // Otherwise, check Stripe for active subscription
     const stripe = new Stripe(stripeKey, { apiVersion: "2023-10-16" });
     const customers = await stripe.customers.list({ email: userEmail, limit: 1 });
 
