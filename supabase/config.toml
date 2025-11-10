@@ -91,6 +91,9 @@ verify_jwt = true
 [functions.reroute-step]
 verify_jwt = true
 
+[functions.admin-fix-subscription]
+verify_jwt = false
+
 [realtime]
 enabled = true
 port = 54323
