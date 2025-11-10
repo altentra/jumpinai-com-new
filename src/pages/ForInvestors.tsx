@@ -132,7 +132,7 @@ const ForInvestors = () => {
                 </p>
               </div>
               <div className="flex justify-center">
-                <button 
+                <button
                   onClick={scrollToContactForm}
                   className="relative group overflow-hidden w-full sm:w-auto"
                 >

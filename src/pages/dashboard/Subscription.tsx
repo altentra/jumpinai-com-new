@@ -10,6 +10,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useCredits } from "@/hooks/useCredits";
 import { creditsService, type CreditPackage, type SubscriptionPlan, type CreditTransaction } from "@/services/creditsService";
 import { Separator } from "@/components/ui/separator";
+import { SubscriptionUpgradeModal } from "@/components/SubscriptionUpgradeModal";
 
 interface SubscriberInfo {
   subscribed: boolean;
@@ -33,6 +34,8 @@ export default function Subscription() {
   const [jumpTitles, setJumpTitles] = useState<Record<string, string>>({});
   const [jumpNumbers, setJumpNumbers] = useState<Record<string, number>>({});
   const [downloadingReceipt, setDownloadingReceipt] = useState<string | null>(null);
+  const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
+  const [selectedUpgradePlan, setSelectedUpgradePlan] = useState<SubscriptionPlan | null>(null);
 
   useEffect(() => {
     if (!authLoading) {
@@ -152,6 +155,111 @@ export default function Subscription() {
     } finally {
       setPlanLoading(prev => ({ ...prev, [planId]: false }));
     }
+  };
+
+  const handleUpgradeClick = (plan: SubscriptionPlan) => {
+    setSelectedUpgradePlan(plan);
+    setUpgradeModalOpen(true);
+  };
+
+  const handleUpgradeConfirm = async () => {
+    if (!selectedUpgradePlan) return;
+    
+    setPlanLoading(prev => ({ ...prev, [selectedUpgradePlan.id]: true }));
+    try {
+      const { data, error } = await supabase.functions.invoke('upgrade-subscription', {
+        body: { newPlanId: selectedUpgradePlan.id }
+      });
+      
+      if (error) throw error;
+      
+      toast.success(`Successfully upgraded to ${selectedUpgradePlan.name}!`, {
+        description: `${data.creditsAdded} credits have been added to your account.`,
+        duration: 5000,
+      });
+      
+      setUpgradeModalOpen(false);
+      await handleRefreshSubscription();
+    } catch (e: any) {
+      toast.error(e.message || "Failed to upgrade subscription");
+    } finally {
+      setPlanLoading(prev => ({ ...prev, [selectedUpgradePlan.id]: false }));
+    }
+  };
+
+  const handleDowngradeClick = async (planId: string, planName: string) => {
+    setPlanLoading(prev => ({ ...prev, [planId]: true }));
+    try {
+      const { data, error } = await supabase.functions.invoke('schedule-downgrade', {
+        body: { newPlanId: planId }
+      });
+      
+      if (error) throw error;
+      
+      toast.success(`Downgrade to ${planName} scheduled!`, {
+        description: `Your subscription will change to ${planName} on ${new Date(data.effectiveDate).toLocaleDateString()}.`,
+        duration: 7000,
+      });
+      
+      await handleRefreshSubscription();
+    } catch (e: any) {
+      toast.error(e.message || "Failed to schedule downgrade");
+    } finally {
+      setPlanLoading(prev => ({ ...prev, [planId]: false }));
+    }
+  };
+
+  const getPlanTier = (planName: string): number => {
+    const name = planName.toLowerCase();
+    if (name.includes('free')) return 0;
+    if (name.includes('starter')) return 1;
+    if (name.includes('pro')) return 2;
+    if (name.includes('growth')) return 3;
+    return 0;
+  };
+
+  const getButtonAction = (plan: SubscriptionPlan) => {
+    const isCurrent = isCurrentPlan(plan.name);
+    const isFree = plan.price_cents === 0;
+    const currentTier = getPlanTier(subInfo?.subscription_tier || 'Free Plan');
+    const planTier = getPlanTier(plan.name);
+    const hasSubscription = subInfo?.subscribed;
+
+    if (isCurrent) {
+      return { type: 'current' as const, label: isFree ? 'Free Forever' : 'Current Plan' };
+    }
+
+    if (!hasSubscription && !isFree) {
+      return { type: 'subscribe' as const, label: 'Get Started' };
+    }
+
+    if (isFree) {
+      return { type: 'free' as const, label: 'Free Forever' };
+    }
+
+    if (planTier > currentTier) {
+      return { type: 'upgrade' as const, label: 'Upgrade Now' };
+    }
+
+    if (planTier < currentTier) {
+      return { type: 'downgrade' as const, label: 'Downgrade' };
+    }
+
+    return { type: 'current' as const, label: 'Current Plan' };
+  };
+
+  const getCurrentPlanData = (): SubscriptionPlan | null => {
+    return subscriptionPlans.find(p => p.name === subInfo?.subscription_tier) || null;
+  };
+
+  const calculateUpgradeDetails = (newPlan: SubscriptionPlan) => {
+    const currentPlan = getCurrentPlanData();
+    if (!currentPlan) return { priceDifference: newPlan.price_cents / 100, creditDifference: newPlan.credits_per_month };
+    
+    return {
+      priceDifference: (newPlan.price_cents - currentPlan.price_cents) / 100,
+      creditDifference: newPlan.credits_per_month - currentPlan.credits_per_month,
+    };
   };
 
   const handleBuyCredits = async (packageId: string) => {
@@ -574,25 +682,24 @@ export default function Subscription() {
           {subscriptionPlans.map((plan) => {
             const PlanIcon = getPlanIcon(plan.name);
             const badge = getPlanBadge(plan.name);
-            const isCurrent = isCurrentPlan(plan.name);
-            const isFree = plan.price_cents === 0;
+            const buttonAction = getButtonAction(plan);
             const isLoading = planLoading[plan.id];
 
             return (
               <Card 
                 key={plan.id} 
                 className={`relative flex flex-col glass transition-all duration-300 shadow-modern hover:shadow-modern-lg rounded-2xl ${
-                  isCurrent ? 'ring-2 ring-primary/40 border-primary/60' : 'border-border/40'
+                  buttonAction.type === 'current' ? 'ring-2 ring-primary/40 border-primary/60' : 'border-border/40'
                 }`}
               >
-                {badge && !isCurrent && (
+                {badge && buttonAction.type !== 'current' && (
                   <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
                     <Badge className={`${badge.color} shadow-modern rounded-full px-3 py-1 text-xs`}>
                       {badge.text}
                     </Badge>
                   </div>
                 )}
-                {isCurrent && (
+                {buttonAction.type === 'current' && (
                   <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
                     <Badge className="bg-primary text-primary-foreground shadow-modern rounded-full px-3 py-1 text-xs">
                       Current Plan
@@ -608,11 +715,11 @@ export default function Subscription() {
                   <CardDescription className="text-xs min-h-[40px]">{plan.description}</CardDescription>
                   <div className="mt-3">
                     <div className="text-3xl font-bold gradient-text-primary">
-                      {isFree ? 'Free' : formatPrice(plan.price_cents)}
-                      {!isFree && <span className="text-sm font-normal text-muted-foreground">/mo</span>}
+                      {plan.price_cents === 0 ? 'Free' : formatPrice(plan.price_cents)}
+                      {plan.price_cents > 0 && <span className="text-sm font-normal text-muted-foreground">/mo</span>}
                     </div>
                     <div className="text-sm text-muted-foreground mt-1">
-                      {plan.credits_per_month} credits {!isFree && 'monthly'}
+                      {plan.credits_per_month} credits {plan.price_cents > 0 && 'monthly'}
                     </div>
                   </div>
                 </CardHeader>
@@ -629,23 +736,23 @@ export default function Subscription() {
                 </CardContent>
                 
                 <CardFooter className="mt-auto pt-4">
-                  {isCurrent ? (
+                  {buttonAction.type === 'current' ? (
                     <Button 
                       className="w-full backdrop-blur-xl bg-transparent border-2 border-primary/50 text-primary rounded-2xl font-semibold shadow-md hover:bg-transparent hover:border-primary/60 hover:shadow-lg transition-all duration-300"
                       disabled
                     >
                       <Crown className="w-4 h-4 mr-2" />
-                      Current Plan
+                      {buttonAction.label}
                     </Button>
-                  ) : isFree ? (
+                  ) : buttonAction.type === 'free' ? (
                     <Button 
                       variant="outline" 
                       className="w-full backdrop-blur-xl bg-transparent border border-white/20 text-foreground rounded-2xl font-medium hover:bg-transparent hover:border-white/30 hover:shadow-md transition-all duration-300"
                       disabled
                     >
-                      Free Forever
+                      {buttonAction.label}
                     </Button>
-                  ) : (
+                  ) : buttonAction.type === 'subscribe' ? (
                     <Button
                       onClick={() => handleSubscribe(plan.id)}
                       disabled={isLoading}
@@ -659,8 +766,47 @@ export default function Subscription() {
                         </>
                       ) : (
                         <>
-                          Upgrade Now
+                          {buttonAction.label}
                           <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-0.5 transition-transform duration-300" />
+                        </>
+                      )}
+                    </Button>
+                  ) : buttonAction.type === 'upgrade' ? (
+                    <Button
+                      onClick={() => handleUpgradeClick(plan)}
+                      disabled={isLoading}
+                      variant="glass"
+                      className="w-full hover:scale-[1.02] group bg-primary/10 hover:bg-primary/20"
+                    >
+                      {isLoading ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2" />
+                          Processing...
+                        </>
+                      ) : (
+                        <>
+                          <TrendingUp className="w-4 h-4 mr-2" />
+                          {buttonAction.label}
+                          <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-0.5 transition-transform duration-300" />
+                        </>
+                      )}
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={() => handleDowngradeClick(plan.id, plan.name)}
+                      disabled={isLoading}
+                      variant="outline"
+                      className="w-full hover:scale-[1.02] group"
+                    >
+                      {isLoading ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2" />
+                          Processing...
+                        </>
+                      ) : (
+                        <>
+                          <TrendingDown className="w-4 h-4 mr-2" />
+                          {buttonAction.label}
                         </>
                       )}
                     </Button>
@@ -776,6 +922,21 @@ export default function Subscription() {
         </CardContent>
       </Card>
       </div>
+
+      {/* Upgrade Modal */}
+      {selectedUpgradePlan && (
+        <SubscriptionUpgradeModal
+          isOpen={upgradeModalOpen}
+          onClose={() => setUpgradeModalOpen(false)}
+          onConfirm={handleUpgradeConfirm}
+          currentPlan={subInfo?.subscription_tier || 'Free Plan'}
+          newPlan={selectedUpgradePlan.name}
+          priceDifference={calculateUpgradeDetails(selectedUpgradePlan).priceDifference}
+          creditDifference={calculateUpgradeDetails(selectedUpgradePlan).creditDifference}
+          newPlanFeatures={selectedUpgradePlan.features}
+          isLoading={planLoading[selectedUpgradePlan.id]}
+        />
+      )}
     </div>
   );
 }
