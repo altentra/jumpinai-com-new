@@ -130,20 +130,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return () => subscription.unsubscribe();
   }, []);
 
-  // Fetch subscription data with caching
+  // Fetch subscription data directly from Supabase - NO Stripe calls!
   const fetchSubscription = async (): Promise<SubscriptionInfo | null> => {
-    // Try cache first
-    const cached = subscriptionCache.get();
-    if (cached) {
-      return {
-        subscribed: cached.subscribed,
-        subscription_tier: cached.subscription_tier,
-        subscription_end: cached.subscription_end
-      };
-    }
+    if (!user?.email) return null;
 
     try {
-      const { data, error } = await supabase.functions.invoke('check-subscription');
+      // Query subscribers table directly - fast and efficient
+      const { data, error } = await supabase
+        .from('subscribers')
+        .select('subscribed, subscription_tier, subscription_end')
+        .eq('email', user.email)
+        .maybeSingle();
+      
       if (error) throw error;
       
       const subInfo: SubscriptionInfo = {
