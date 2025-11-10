@@ -132,9 +132,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Fetch subscription data directly from Supabase - NO Stripe calls!
   const fetchSubscription = async (): Promise<SubscriptionInfo | null> => {
-    if (!user?.email) return null;
+    if (!user?.email) {
+      console.log('No user email available');
+      return null;
+    }
 
     try {
+      console.log('Querying subscribers table for email:', user.email);
       // Query subscribers table directly - fast and efficient
       const { data, error } = await supabase
         .from('subscribers')
@@ -142,7 +146,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .eq('email', user.email)
         .maybeSingle();
       
-      if (error) throw error;
+      if (error) {
+        console.error('Error querying subscribers:', error);
+        throw error;
+      }
+      
+      console.log('Subscribers query result:', data);
       
       const subInfo: SubscriptionInfo = {
         subscribed: data?.subscribed || false,
@@ -178,7 +187,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (user) {
       // Clear cache and fetch fresh subscription data on every mount
       subscriptionCache.clear();
-      fetchSubscription().then(setSubscription);
+      console.log('Fetching subscription for user:', user.email);
+      fetchSubscription().then(sub => {
+        console.log('Subscription fetched:', sub);
+        setSubscription(sub);
+      });
     }
   }, [user]);
 
