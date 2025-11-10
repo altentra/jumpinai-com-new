@@ -866,6 +866,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      set_config: {
+        Args: { setting_name: string; setting_value: string }
+        Returns: undefined
+      }
       upsert_contact: {
         Args: {
           p_email: string
