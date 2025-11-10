@@ -437,6 +437,7 @@ export type Database = {
           created_at: string
           email: string
           id: string
+          manual_subscription: boolean | null
           stripe_customer_id: string | null
           subscribed: boolean
           subscription_end: string | null
@@ -448,6 +449,7 @@ export type Database = {
           created_at?: string
           email: string
           id?: string
+          manual_subscription?: boolean | null
           stripe_customer_id?: string | null
           subscribed?: boolean
           subscription_end?: string | null
@@ -459,11 +461,48 @@ export type Database = {
           created_at?: string
           email?: string
           id?: string
+          manual_subscription?: boolean | null
           stripe_customer_id?: string | null
           subscribed?: boolean
           subscription_end?: string | null
           subscription_tier?: string | null
           updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      subscription_audit_log: {
+        Row: {
+          action: string
+          change_source: string
+          changed_by: string | null
+          created_at: string
+          email: string
+          id: string
+          new_data: Json | null
+          old_data: Json | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          change_source: string
+          changed_by?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          new_data?: Json | null
+          old_data?: Json | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          change_source?: string
+          changed_by?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          new_data?: Json | null
+          old_data?: Json | null
           user_id?: string | null
         }
         Relationships: []

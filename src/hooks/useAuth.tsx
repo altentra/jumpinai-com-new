@@ -14,6 +14,7 @@ interface SubscriptionInfo {
   subscribed: boolean;
   subscription_tier?: string | null;
   subscription_end?: string | null;
+  manual_subscription?: boolean;
 }
 
 interface AuthContextValue {
@@ -142,7 +143,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // Query subscribers table directly - fast and efficient
       const { data, error } = await supabase
         .from('subscribers')
-        .select('subscribed, subscription_tier, subscription_end')
+        .select('subscribed, subscription_tier, subscription_end, manual_subscription')
         .eq('email', user.email)
         .maybeSingle();
       
@@ -156,7 +157,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const subInfo: SubscriptionInfo = {
         subscribed: data?.subscribed || false,
         subscription_tier: data?.subscription_tier || null,
-        subscription_end: data?.subscription_end || null
+        subscription_end: data?.subscription_end || null,
+        manual_subscription: data?.manual_subscription || false
       };
       
       // Cache the result

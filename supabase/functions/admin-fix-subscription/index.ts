@@ -23,12 +23,21 @@ serve(async (req) => {
 
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    const { email, action, planName, subscriptionEnd, adminKey } = await req.json();
+    const { email, action, planName, subscriptionEnd, adminKey, adminUserId } = await req.json();
     
-    // Simple admin check - in production you'd want better auth
-    if (adminKey !== ADMIN_SECRET?.slice(0, 20)) {
-      console.log('Skipping admin check for internal use');
+    // STRENGTHENED AUTHENTICATION: Require full admin secret
+    if (!adminKey || adminKey !== ADMIN_SECRET) {
+      console.error('❌ Unauthorized admin access attempt');
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized. Invalid admin credentials.' }),
+        {
+          headers: { 'Content-Type': 'application/json', ...corsHeaders },
+          status: 403,
+        }
+      );
     }
+    
+    console.log(`✅ Admin authenticated: ${adminUserId || 'system'}`);
 
     if (!email || !action) {
       throw new Error('Missing email or action');
@@ -45,20 +54,34 @@ serve(async (req) => {
     }
 
     if (action === 'restore_subscription') {
-      // Restore subscription
+      // Enable manual override for protected subscriptions
+      await supabase.rpc('set_config', {
+        setting_name: 'app.allow_manual_override',
+        setting_value: 'true'
+      });
+      
+      // Set change source for audit log
+      await supabase.rpc('set_config', {
+        setting_name: 'app.change_source',
+        setting_value: `admin_restore_by_${adminUserId || 'system'}`
+      });
+      
+      // Restore subscription with manual flag
       const { error: subError } = await supabase
         .from('subscribers')
-        .update({
+        .upsert({
+          email: email,
+          user_id: user.id,
           subscribed: true,
           subscription_tier: planName || 'Starter Plan',
           subscription_end: subscriptionEnd || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+          manual_subscription: true, // CRITICAL: Mark as manual to protect from overwrites
           updated_at: new Date().toISOString(),
-        })
-        .eq('user_id', user.id);
+        }, { onConflict: 'email' });
 
       if (subError) throw subError;
 
-      console.log(`✅ Restored subscription to ${planName} for ${email}`);
+      console.log(`✅ Restored subscription to ${planName} for ${email} (PROTECTED)`);
 
       return new Response(
         JSON.stringify({

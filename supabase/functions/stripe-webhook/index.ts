@@ -79,6 +79,24 @@ serve(async (req) => {
           const newPlanName = subscription.metadata?.plan_name;
           
           if (userId && newPlanName) {
+            // Check if this is a manual subscription (protected)
+            const { data: existing } = await supabase
+              .from('subscribers')
+              .select('manual_subscription')
+              .eq('user_id', userId)
+              .single();
+            
+            if (existing?.manual_subscription) {
+              console.log('⚠️ Skipping update - manual subscription is protected');
+              break;
+            }
+            
+            // Set change source for audit log
+            await supabase.rpc('set_config', {
+              setting_name: 'app.change_source',
+              setting_value: 'stripe_webhook'
+            });
+            
             // Update subscriber record
             await supabase
               .from('subscribers')
@@ -417,6 +435,24 @@ async function handleSubscriptionUpgrade(
       }
     }
 
+    // Check if this is a manual subscription (protected)
+    const { data: existingSub } = await supabase
+      .from('subscribers')
+      .select('manual_subscription')
+      .eq('user_id', userId)
+      .single();
+    
+    if (existingSub?.manual_subscription) {
+      console.log('⚠️ Cannot upgrade - manual subscription is protected');
+      throw new Error('Manual subscriptions cannot be upgraded through Stripe');
+    }
+    
+    // Set change source for audit log
+    await supabase.rpc('set_config', {
+      setting_name: 'app.change_source',
+      setting_value: 'stripe_webhook_upgrade'
+    });
+    
     // Update subscriber record
     const subscriptionEnd = new Date(updatedSubscription.current_period_end * 1000);
     await supabase
