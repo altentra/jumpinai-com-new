@@ -175,12 +175,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  // Load subscription data when user is available
+  // Load subscription data when user is available - always fetch fresh on mount
   useEffect(() => {
-    if (user && !subscription) {
+    if (user) {
+      // Clear cache and fetch fresh subscription data on every mount
+      subscriptionCache.clear();
       fetchSubscription().then(setSubscription);
     }
-  }, [user, subscription]);
+  }, [user]);
 
   const login = (redirectTo?: string) => {
     const next = redirectTo ?? window.location.pathname + window.location.search;
