@@ -86,8 +86,8 @@ export const SubscriptionUpgradeModal: React.FC<SubscriptionUpgradeModalProps> =
           {/* Important Info */}
           <div className="glass bg-muted/30 border border-border/50 rounded-lg p-3">
             <p className="text-xs text-muted-foreground">
-              <strong className="text-foreground">Note:</strong> The additional ${priceDifference} will be charged today, 
-              and you'll receive {creditDifference} extra credits immediately. Your next billing will be at the new plan rate.
+              <strong className="text-foreground">Note:</strong> You'll be redirected to Stripe to complete the ${priceDifference} prorated charge. 
+              After successful payment, you'll receive {creditDifference} extra credits immediately, and your subscription will be updated to {newPlan}.
             </p>
           </div>
         </div>
@@ -110,7 +110,7 @@ export const SubscriptionUpgradeModal: React.FC<SubscriptionUpgradeModalProps> =
             {isLoading ? (
               <>
                 <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2" />
-                Processing...
+                Redirecting to Stripe...
               </>
             ) : (
               <>

@@ -167,22 +167,30 @@ export default function Subscription() {
     
     setPlanLoading(prev => ({ ...prev, [selectedUpgradePlan.id]: true }));
     try {
-      const { data, error } = await supabase.functions.invoke('upgrade-subscription', {
-        body: { newPlanId: selectedUpgradePlan.id }
+      const upgradeDetails = calculateUpgradeDetails(selectedUpgradePlan);
+      if (!upgradeDetails) {
+        throw new Error('Failed to calculate upgrade details');
+      }
+
+      const { data, error } = await supabase.functions.invoke('create-upgrade-checkout', {
+        body: {
+          newPlanId: selectedUpgradePlan.id,
+          priceDifference: upgradeDetails.priceDifference,
+          creditDifference: upgradeDetails.creditDifference,
+        }
       });
       
       if (error) throw error;
       
-      toast.success(`Successfully upgraded to ${selectedUpgradePlan.name}!`, {
-        description: `${data.creditsAdded} credits have been added to your account.`,
-        duration: 5000,
-      });
-      
-      setUpgradeModalOpen(false);
-      await handleRefreshSubscription();
+      if (data?.url) {
+        // Redirect to Stripe checkout
+        window.location.href = data.url;
+      } else {
+        throw new Error('No checkout URL received');
+      }
     } catch (e: any) {
-      toast.error(e.message || "Failed to upgrade subscription");
-    } finally {
+      console.error('Upgrade error:', e);
+      toast.error(e.message || "Failed to create upgrade checkout");
       setPlanLoading(prev => ({ ...prev, [selectedUpgradePlan.id]: false }));
     }
   };

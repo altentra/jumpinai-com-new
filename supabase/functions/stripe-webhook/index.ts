@@ -54,9 +54,11 @@ serve(async (req) => {
           break;
         }
 
-        // Check if this is a subscription or one-time payment
-        if (session.mode === "subscription") {
-          // Handle subscription
+        // Check if this is a subscription upgrade
+        if (session.metadata?.type === 'subscription_upgrade') {
+          await handleSubscriptionUpgrade(session, customerEmail);
+        } else if (session.mode === "subscription") {
+          // Handle new subscription
           await handleSubscriptionSuccess(session, customerEmail);
         } else if (session.mode === "payment") {
           // Handle one-time payment (credits)
@@ -69,7 +71,28 @@ serve(async (req) => {
       case "customer.subscription.updated": {
         const subscription = event.data.object as Stripe.Subscription;
         console.log("Subscription event:", subscription.id);
-        // Additional subscription handling if needed
+        
+        // Handle subscription updates after upgrade payment
+        if (subscription.metadata?.upgrade_processed === 'true') {
+          console.log("Subscription updated after upgrade");
+          const userId = subscription.metadata?.user_id;
+          const newPlanName = subscription.metadata?.plan_name;
+          
+          if (userId && newPlanName) {
+            // Update subscriber record
+            await supabase
+              .from('subscribers')
+              .update({
+                subscribed: true,
+                subscription_tier: newPlanName,
+                subscription_end: new Date(subscription.current_period_end * 1000).toISOString(),
+                updated_at: new Date().toISOString(),
+              })
+              .eq('user_id', userId);
+            
+            console.log(`✅ Updated subscription tier to ${newPlanName}`);
+          }
+        }
         break;
       }
 
@@ -291,6 +314,125 @@ async function handleSubscriptionSuccess(
     console.log("✅ Subscription emails sent successfully");
   } catch (error) {
     console.error("Error handling subscription:", error);
+  }
+}
+
+async function handleSubscriptionUpgrade(
+  session: Stripe.Checkout.Session,
+  customerEmail: string
+) {
+  try {
+    console.log('🔄 Processing subscription upgrade...');
+    console.log('Session ID:', session.id);
+    
+    const userId = session.metadata?.user_id;
+    const newPlanId = session.metadata?.new_plan_id;
+    const newPlanName = session.metadata?.new_plan_name;
+    const currentPlanName = session.metadata?.current_plan_name;
+    const creditsToAdd = parseInt(session.metadata?.credits_to_add || "0");
+    const newCreditsPerMonth = parseInt(session.metadata?.new_credits_per_month || "0");
+
+    console.log(`Upgrading user ${userId} from ${currentPlanName} to ${newPlanName}`);
+
+    if (!userId || !newPlanId) {
+      console.error('Missing required upgrade metadata');
+      return;
+    }
+
+    // Get user's current subscription
+    const { data: subscriber } = await supabase
+      .from('subscribers')
+      .select('*')
+      .eq('user_id', userId)
+      .single();
+
+    if (!subscriber || !subscriber.stripe_customer_id) {
+      console.error('No active subscription found for user');
+      return;
+    }
+
+    // Get the active Stripe subscription
+    const subscriptions = await stripe.subscriptions.list({
+      customer: subscriber.stripe_customer_id,
+      status: 'active',
+      limit: 1,
+    });
+
+    if (subscriptions.data.length === 0) {
+      console.error('No active Stripe subscription found');
+      return;
+    }
+
+    const currentSubscription = subscriptions.data[0];
+
+    // Get the new plan's Stripe price
+    const { data: newPlan } = await supabase
+      .from('subscription_plans')
+      .select('*')
+      .eq('id', newPlanId)
+      .single();
+
+    if (!newPlan || !newPlan.stripe_price_id) {
+      console.error('New plan or price not found');
+      return;
+    }
+
+    // Update the Stripe subscription to the new plan
+    console.log('Updating Stripe subscription...');
+    const updatedSubscription = await stripe.subscriptions.update(
+      currentSubscription.id,
+      {
+        items: [{
+          id: currentSubscription.items.data[0].id,
+          price: newPlan.stripe_price_id,
+        }],
+        proration_behavior: 'none', // We already charged the prorated amount
+        metadata: {
+          user_id: userId,
+          user_email: customerEmail,
+          plan_id: newPlanId,
+          plan_name: newPlanName,
+          credits_per_month: newCreditsPerMonth.toString(),
+          upgrade_processed: 'true',
+        },
+      }
+    );
+
+    console.log('Stripe subscription updated:', updatedSubscription.id);
+
+    // Add the upgrade credits immediately
+    if (creditsToAdd > 0) {
+      console.log(`Adding ${creditsToAdd} upgrade credits...`);
+      const { error: creditsError } = await supabase.rpc('add_user_credits', {
+        p_user_id: userId,
+        p_credits: creditsToAdd,
+        p_description: `Upgrade to ${newPlanName} - Additional credits`,
+        p_reference_id: session.id,
+      });
+
+      if (creditsError) {
+        console.error('Error adding upgrade credits:', creditsError);
+      } else {
+        console.log(`✅ Successfully added ${creditsToAdd} credits`);
+      }
+    }
+
+    // Update subscriber record
+    const subscriptionEnd = new Date(updatedSubscription.current_period_end * 1000);
+    await supabase
+      .from('subscribers')
+      .update({
+        subscribed: true,
+        subscription_tier: newPlanName,
+        subscription_end: subscriptionEnd.toISOString(),
+        updated_at: new Date().toISOString(),
+      })
+      .eq('user_id', userId);
+
+    console.log(`✅ Subscription upgraded to ${newPlanName}`);
+
+  } catch (error) {
+    console.error("Error handling subscription upgrade:", error);
   }
 }
 
