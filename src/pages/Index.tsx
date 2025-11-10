@@ -12,11 +12,15 @@ import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { creditsService, type SubscriptionPlan } from '@/services/creditsService';
+import { SubscriptionUpgradeModal } from '@/components/SubscriptionUpgradeModal';
 
 const Index = () => {
   const { user, isAuthenticated, subscription } = useAuth();
   const [subscriptionPlans, setSubscriptionPlans] = useState<SubscriptionPlan[]>([]);
   const [loadingSubscription, setLoadingSubscription] = useState<Record<string, boolean>>({});
+  const [planLoading, setPlanLoading] = useState<Record<string, boolean>>({});
+  const [selectedUpgradePlan, setSelectedUpgradePlan] = useState<SubscriptionPlan | null>(null);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
   // Show test component only in development or when URL contains 'test'
   const showTest = window.location.hostname === 'localhost' || 
@@ -43,33 +47,19 @@ const Index = () => {
     return subscription.subscription_tier === planName;
   };
 
-  const handleSubscribe = async (planName: string) => {
-    // Map plan names to loading keys
-    const loadingKey = planName === 'Starter Plan' ? 'starter' : 
-                      planName === 'Pro Plan' ? 'pro' : 
-                      planName === 'Growth Plan' ? 'growth' : 'unknown';
-
-    // Show immediate feedback
-    setLoadingSubscription(prev => ({ ...prev, [loadingKey]: true }));
-    toast.info('Processing your request...');
-
+  const handleSubscribe = async (planId: string) => {
     if (!isAuthenticated) {
-      setLoadingSubscription(prev => ({ ...prev, [loadingKey]: false }));
       toast.error('Please sign in first');
       window.location.href = '/auth';
       return;
     }
 
-    const plan = subscriptionPlans.find(p => p.name === planName);
-    if (!plan) {
-      setLoadingSubscription(prev => ({ ...prev, [loadingKey]: false }));
-      toast.error('Plan not found');
-      return;
-    }
+    setPlanLoading(prev => ({ ...prev, [planId]: true }));
+    toast.info('Processing your request...');
 
     try {
       const { data, error } = await supabase.functions.invoke('create-subscription-checkout', {
-        body: { planId: plan.id }
+        body: { planId }
       });
 
       if (error) throw error;
@@ -84,7 +74,117 @@ const Index = () => {
       console.error('Error creating subscription checkout:', error);
       toast.error('Failed to create subscription checkout');
     } finally {
-      setLoadingSubscription(prev => ({ ...prev, [loadingKey]: false }));
+      setPlanLoading(prev => ({ ...prev, [planId]: false }));
+    }
+  };
+
+  const getPlanTier = (planName: string): number => {
+    const name = planName.toLowerCase();
+    if (name.includes('free')) return 0;
+    if (name.includes('starter')) return 1;
+    if (name.includes('pro')) return 2;
+    if (name.includes('growth')) return 3;
+    return 0;
+  };
+
+  const getButtonAction = (plan: SubscriptionPlan) => {
+    const isCurrent = isCurrentPlan(plan.name);
+    const isFree = plan.price_cents === 0;
+    const currentTier = getPlanTier(subscription?.subscription_tier || 'Free Plan');
+    const planTier = getPlanTier(plan.name);
+    const hasSubscription = subscription?.subscribed;
+
+    if (isCurrent) {
+      return { type: 'current' as const, label: isFree ? 'Free Forever' : 'Current Plan' };
+    }
+
+    if (!hasSubscription && !isFree) {
+      return { type: 'subscribe' as const, label: 'Get Started' };
+    }
+
+    if (isFree) {
+      return { type: 'free' as const, label: 'Free Forever' };
+    }
+
+    if (planTier > currentTier) {
+      return { type: 'upgrade' as const, label: 'Upgrade Now' };
+    }
+
+    if (planTier < currentTier) {
+      return { type: 'downgrade' as const, label: 'Downgrade' };
+    }
+
+    return { type: 'current' as const, label: 'Current Plan' };
+  };
+
+  const getCurrentPlanData = (): SubscriptionPlan | null => {
+    return subscriptionPlans.find(p => p.name === subscription?.subscription_tier) || null;
+  };
+
+  const calculateUpgradeDetails = (newPlan: SubscriptionPlan) => {
+    const currentPlan = getCurrentPlanData();
+    if (!currentPlan) return { priceDifference: newPlan.price_cents / 100, creditDifference: newPlan.credits_per_month };
+    
+    return {
+      priceDifference: (newPlan.price_cents - currentPlan.price_cents) / 100,
+      creditDifference: newPlan.credits_per_month - currentPlan.credits_per_month,
+    };
+  };
+
+  const handleUpgradeClick = (plan: SubscriptionPlan) => {
+    setSelectedUpgradePlan(plan);
+    setShowUpgradeModal(true);
+  };
+
+  const handleUpgradeConfirm = async () => {
+    if (!selectedUpgradePlan) return;
+    
+    setPlanLoading(prev => ({ ...prev, [selectedUpgradePlan.id]: true }));
+    try {
+      const upgradeDetails = calculateUpgradeDetails(selectedUpgradePlan);
+      if (!upgradeDetails) {
+        throw new Error('Failed to calculate upgrade details');
+      }
+
+      const { data, error } = await supabase.functions.invoke('create-upgrade-checkout', {
+        body: {
+          newPlanId: selectedUpgradePlan.id,
+          priceDifference: upgradeDetails.priceDifference,
+          creditDifference: upgradeDetails.creditDifference,
+        }
+      });
+      
+      if (error) throw error;
+      
+      if (data?.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error('No checkout URL received');
+      }
+    } catch (e: any) {
+      console.error('Upgrade error:', e);
+      toast.error(e.message || "Failed to create upgrade checkout");
+      setPlanLoading(prev => ({ ...prev, [selectedUpgradePlan.id]: false }));
+    }
+  };
+
+  const handleDowngradeClick = async (planId: string, planName: string) => {
+    setPlanLoading(prev => ({ ...prev, [planId]: true }));
+    try {
+      const { data, error } = await supabase.functions.invoke('schedule-downgrade', {
+        body: { newPlanId: planId }
+      });
+      
+      if (error) throw error;
+      
+      toast.success(`Downgrade to ${planName} scheduled!`, {
+        description: `Your subscription will change to ${planName} on ${new Date(data.effectiveDate).toLocaleDateString()}.`,
+        duration: 7000,
+      });
+    } catch (e: any) {
+      toast.error(e.message || "Failed to schedule downgrade");
+    } finally {
+      setPlanLoading(prev => ({ ...prev, [planId]: false }));
     }
   };
 
@@ -807,8 +907,8 @@ const Index = () => {
           <div className="w-full overflow-x-auto pb-4">
             <div className="flex gap-4 sm:gap-6 min-w-max px-2 sm:px-4 md:px-0 md:justify-center md:flex-wrap md:max-w-7xl md:mx-auto pt-4">
               {subscriptionPlans.map((plan) => {
-                const loadingKey = plan.name.toLowerCase().replace(' plan', '').replace(' ', '_');
-                const isLoading = loadingSubscription[loadingKey];
+                const action = getButtonAction(plan);
+                const isLoading = planLoading[plan.id];
                 const isFree = plan.price_cents === 0;
                 const isMostPopular = plan.name.toLowerCase().includes('pro');
                 const isBestValue = plan.name.toLowerCase().includes('growth');
@@ -859,23 +959,27 @@ const Index = () => {
                       
                       <div className="mt-auto">
                         <button 
-                          onClick={() => isUsersPlan ? null : handleSubscribe(plan.name)}
-                          disabled={isLoading || isUsersPlan}
+                          onClick={() => {
+                            if (action.type === 'subscribe') handleSubscribe(plan.id);
+                            else if (action.type === 'upgrade') handleUpgradeClick(plan);
+                            else if (action.type === 'downgrade') handleDowngradeClick(plan.id, plan.name);
+                          }}
+                          disabled={isLoading || action.type === 'current' || action.type === 'free'}
                           className="relative group w-full overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           {/* Liquid glass glow effect */}
                           <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover:opacity-60 transition duration-500"></div>
                           
                           {/* Button */}
-                          <div className={`relative flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border transition-all duration-300 overflow-hidden ${isUsersPlan ? 'border-border/30' : 'border-primary/30 group-hover:border-primary/50'}`}>
+                          <div className={`relative flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border transition-all duration-300 overflow-hidden ${(action.type === 'current' || action.type === 'free') ? 'border-border/30' : 'border-primary/30 group-hover:border-primary/50'}`}>
                             {/* Shimmer effect */}
-                            {!isUsersPlan && (
+                            {action.type !== 'current' && action.type !== 'free' && (
                               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                             )}
                             
                             {/* Content */}
-                            <span className={`relative font-bold transition-colors duration-300 ${isUsersPlan ? 'text-muted-foreground' : 'text-foreground group-hover:text-primary'}`}>
-                              {isLoading ? 'Processing...' : isUsersPlan ? 'Current Plan' : 'Get Started'}
+                            <span className={`relative font-bold transition-colors duration-300 ${(action.type === 'current' || action.type === 'free') ? 'text-muted-foreground' : 'text-foreground group-hover:text-primary'}`}>
+                              {isLoading ? 'Processing...' : action.label}
                             </span>
                           </div>
                         </button>
@@ -1050,6 +1154,23 @@ const Index = () => {
       )}
       <Newsletter />
       <Footer />
+
+      {selectedUpgradePlan && (
+        <SubscriptionUpgradeModal
+          isOpen={showUpgradeModal}
+          onClose={() => {
+            setShowUpgradeModal(false);
+            setSelectedUpgradePlan(null);
+          }}
+          onConfirm={handleUpgradeConfirm}
+          currentPlan={getCurrentPlanData()?.name || 'Free Plan'}
+          newPlan={selectedUpgradePlan.name}
+          priceDifference={calculateUpgradeDetails(selectedUpgradePlan).priceDifference}
+          creditDifference={calculateUpgradeDetails(selectedUpgradePlan).creditDifference}
+          newPlanFeatures={selectedUpgradePlan.features}
+          isLoading={planLoading[selectedUpgradePlan.id]}
+        />
+      )}
     </div>
   );
 };
