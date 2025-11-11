@@ -133,7 +133,7 @@ const Newsletter = () => {
           </h2>
           
           <p className="text-sm sm:text-base mb-6 sm:mb-8 text-muted-foreground max-w-2xl mx-auto px-4">
-            Weekly AI insights, exclusive tools and prompts, JumpinAI Studio updates, and strategic guidance—everything you need to stay ahead in the AI revolution.
+            Join the AI revolution. Get weekly insights, exclusive tools and prompts, JumpinAI Studio updates, and expert strategies to transform the way you work—delivered straight to your inbox.
           </p>
           
           {/* Newsletter Form */}
@@ -177,7 +177,7 @@ const Newsletter = () => {
           </form>
           
           <p className="text-muted-foreground text-xs sm:text-sm px-4">
-            No spam. Unsubscribe anytime.
+            Pure value, zero spam. Unsubscribe anytime with one click.
           </p>
         </div>
       </div>
