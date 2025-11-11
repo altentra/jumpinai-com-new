@@ -980,12 +980,50 @@ export const generatePitchDeckPDF = (): void => {
   addParagraph('Future Revenue Streams:', 9, 'bold');
   addBullet('Enterprise Solutions: Team collaboration, white-label, custom integrations');
   addBullet('Premium Resources: Industry-specific templates, advanced analytics, expert consultations');
-  yPosition += 3;
+  yPosition += 5;
 
   addParagraph('Growth Strategy', 9, 'bold');
-  addBullet('Phase 1: Launch — Free tier viral growth, build user base, gather feedback');
-  addBullet('Phase 2: Scale — Convert free users to paid, expand features, optimize funnel');
-  addBullet('Phase 3: Enterprise — Launch team features, enterprise sales, strategic partnerships');
+  addBullet('Launch & Validation: Free tier drives viral growth, community building, rapid iteration based on user feedback, content marketing to establish thought leadership');
+  addBullet('Scale & Monetization: Convert free users through value demonstration, optimize conversion funnel, expand feature set based on user demand, strategic partnerships with AI platforms');
+  addBullet('Enterprise & Expansion: Launch team collaboration features, enterprise sales motion, white-label solutions, API partnerships, international market expansion');
+  yPosition += 3;
+
+  // PROJECTIONS
+  addParagraph('Projections', 9, 'bold');
+  yPosition += 2;
+  
+  checkPageBreak(35);
+  setFillColor({ r: 245, g: 247, b: 250 });
+  pdf.rect(margin, yPosition, maxWidth, 30, 'F');
+  setDrawColor(colors.border);
+  pdf.setLineWidth(0.3);
+  pdf.rect(margin, yPosition, maxWidth, 30, 'S');
+  
+  setTextColor(colors.body);
+  pdf.setFontSize(8.5);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Year 1:', margin + 3, yPosition + 6);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text('10K users | 1.5K paying customers | $180K ARR', margin + 15, yPosition + 6);
+  
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Year 2:', margin + 3, yPosition + 13);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text('50K users | 10K paying customers | $1.2M ARR', margin + 15, yPosition + 13);
+  
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Year 3:', margin + 3, yPosition + 20);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text('200K users | 40K paying customers | $4.8M ARR', margin + 15, yPosition + 20);
+  
+  yPosition += 33;
+  
+  pdf.setFontSize(7.5);
+  setTextColor(colors.muted);
+  pdf.setFont('helvetica', 'italic');
+  const assumptionText = wrapText('Key assumptions: 15% free-to-paid conversion, $10 average monthly revenue per paying user, 10% monthly user growth post-launch.', maxWidth, 7.5);
+  pdf.text(assumptionText, margin, yPosition);
+  yPosition += assumptionText.length * 3;
 
   // COMPETITIVE ADVANTAGE
   pdf.addPage();
@@ -1028,7 +1066,7 @@ export const generatePitchDeckPDF = (): void => {
   pdf.setFontSize(10);
   pdf.setFont('helvetica', 'normal');
   pdf.text('Raising: $500,000', margin + 5, yPosition + 20);
-  pdf.text('Valuation: $2,000,000', margin + 5, yPosition + 27);
+  pdf.text('Valuation: $2,000,000 (Post-money)', margin + 5, yPosition + 27);
   pdf.text('Investor Discount: 20% (Standard)', margin + 5, yPosition + 34);
 
   yPosition += 45;
