@@ -1,5 +1,4 @@
 import { Eye, MessageSquare, GitBranch, MousePointer, Copy, Sparkles, TrendingUp } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 
 interface JumpStatsRowProps {
   stats: {
@@ -14,66 +13,60 @@ interface JumpStatsRowProps {
 }
 
 export default function JumpStatsRow({ stats }: JumpStatsRowProps) {
-  const StatItem = ({ icon: Icon, label, value, color }: any) => (
-    <div className="flex flex-col items-center gap-1.5 px-3 py-2 rounded-xl bg-gradient-to-br from-background/80 to-background/40 backdrop-blur-sm border border-border/40 hover:border-primary/30 transition-all duration-300 group">
-      <div className="flex items-center gap-2">
-        <div className={`p-1.5 rounded-lg ${color} group-hover:scale-110 transition-transform duration-300`}>
-          <Icon className="h-3.5 w-3.5" />
-        </div>
-        <span className="text-xs font-semibold text-muted-foreground group-hover:text-foreground transition-colors duration-300">
-          {label}
-        </span>
+  const StatItem = ({ icon: Icon, label, value, compact }: any) => (
+    <div className="flex items-center gap-2">
+      <div className="p-1 rounded-lg bg-muted/30">
+        <Icon className="h-3 w-3 text-muted-foreground" />
       </div>
-      <span className="text-sm font-bold text-foreground">{value || 0}</span>
+      <div className="flex items-baseline gap-1.5">
+        {!compact && <span className="text-xs text-muted-foreground">{label}:</span>}
+        <span className="text-sm font-bold text-foreground">{value || 0}</span>
+      </div>
+    </div>
+  );
+
+  const Section = ({ title, children, icon: Icon }: any) => (
+    <div className="flex flex-col gap-2 px-3 py-2 rounded-xl bg-gradient-to-br from-background/60 to-background/30 border border-border/30">
+      <div className="flex items-center gap-1.5 pb-1 border-b border-border/30">
+        <Icon className="h-3.5 w-3.5 text-primary" />
+        <span className="text-xs font-semibold text-foreground">{title}</span>
+      </div>
+      <div className="flex flex-col gap-1.5">
+        {children}
+      </div>
     </div>
   );
 
   return (
     <div className="relative mt-4 pt-4 border-t border-border/40">
-      {/* Stats Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2 sm:gap-3">
-        <StatItem
-          icon={Eye}
-          label="Views"
-          value={stats.views_count}
-          color="bg-blue-500/10 text-blue-500"
-        />
-        <StatItem
-          icon={MessageSquare}
-          label="Clarifications"
-          value={stats.clarifications_count}
-          color="bg-purple-500/10 text-purple-500"
-        />
-        <StatItem
-          icon={TrendingUp}
-          label="Max Level"
-          value={stats.max_clarification_level}
-          color="bg-purple-500/10 text-purple-500"
-        />
-        <StatItem
-          icon={GitBranch}
-          label="Reroutes"
-          value={stats.reroutes_count}
-          color="bg-orange-500/10 text-orange-500"
-        />
-        <StatItem
-          icon={MousePointer}
-          label="Tools"
-          value={stats.tools_clicked_count}
-          color="bg-green-500/10 text-green-500"
-        />
-        <StatItem
-          icon={Copy}
-          label="Prompts"
-          value={stats.prompts_copied_count}
-          color="bg-cyan-500/10 text-cyan-500"
-        />
-        <StatItem
-          icon={Sparkles}
-          label="Combos"
-          value={stats.combos_used_count}
-          color="bg-primary/10 text-primary"
-        />
+      {/* 3 Column Layout */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        {/* Column 1: Views */}
+        <div className="flex items-center justify-center px-3 py-3 rounded-xl bg-gradient-to-br from-blue-500/10 to-blue-500/5 border border-blue-500/20">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-blue-500/20">
+              <Eye className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-xs text-muted-foreground font-medium">Views</span>
+              <span className="text-xl font-bold text-foreground">{stats.views_count || 0}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Column 2: Clarification */}
+        <Section title="Clarification" icon={MessageSquare}>
+          <StatItem icon={MessageSquare} label="Clarifications" value={stats.clarifications_count} />
+          <StatItem icon={TrendingUp} label="Max Level" value={stats.max_clarification_level} />
+          <StatItem icon={GitBranch} label="Reroutes" value={stats.reroutes_count} />
+        </Section>
+
+        {/* Column 3: Implementation */}
+        <Section title="Implementation" icon={Sparkles}>
+          <StatItem icon={MousePointer} label="Tools" value={stats.tools_clicked_count} />
+          <StatItem icon={Copy} label="Prompts" value={stats.prompts_copied_count} />
+          <StatItem icon={Sparkles} label="Combos" value={stats.combos_used_count} />
+        </Section>
       </div>
     </div>
   );
