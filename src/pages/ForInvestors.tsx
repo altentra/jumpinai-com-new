@@ -357,6 +357,37 @@ const ForInvestors = () => {
         </div>
       </section>
 
+      {/* Wefunder Campaign */}
+      <section className="py-6 px-4 relative z-10">
+        <div className="max-w-3xl mx-auto">
+          <div className="text-center mb-4">
+            <p className="text-sm md:text-base text-muted-foreground">
+              We're currently raising funds on <span className="font-bold text-foreground">Wefunder</span> to accelerate our growth and expand our impact.
+            </p>
+          </div>
+          <div className="flex justify-center">
+            <button 
+              onClick={() => window.open('https://wefunder.com/jumpinai', '_blank')}
+              className="relative group overflow-hidden"
+            >
+              {/* Liquid glass glow effect */}
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover:opacity-60 transition duration-500"></div>
+              
+              {/* Button */}
+              <div className="relative flex items-center justify-center gap-3 px-8 py-3 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover:border-primary/50 transition-all duration-300 overflow-hidden">
+                {/* Shimmer effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                
+                {/* Content */}
+                <TrendingUp className="relative h-5 w-5 text-primary flex-shrink-0 group-hover:scale-110 transition-transform duration-300" />
+                <span className="relative text-sm font-bold text-foreground group-hover:text-primary transition-colors duration-300">View Our Campaign on Wefunder</span>
+                <ExternalLink className="relative h-4 w-4 text-primary flex-shrink-0 group-hover:scale-110 transition-transform duration-300" />
+              </div>
+            </button>
+          </div>
+        </div>
+      </section>
+
       {/* Call to Action - Premium Glass Morphism */}
       <section id="contact-form-section" className="py-12 px-4 relative z-10">
         <div className="max-w-5xl mx-auto">
