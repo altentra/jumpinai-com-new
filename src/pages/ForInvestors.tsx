@@ -145,7 +145,6 @@ const ForInvestors = () => {
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                     
                     {/* Content */}
-                    <ExternalLink className="relative h-4 w-4 text-foreground group-hover:text-primary transition-colors duration-300" />
                     <span className="relative text-sm sm:text-base font-bold text-foreground group-hover:text-primary transition-colors duration-300">View our Pitch Deck</span>
                   </div>
                 </button>
