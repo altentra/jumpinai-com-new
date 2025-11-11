@@ -42,17 +42,9 @@ export default function JumpStatsRow({ stats }: JumpStatsRowProps) {
       {/* 3 Column Layout */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {/* Column 1: Views */}
-        <div className="flex items-center justify-center px-3 py-3 rounded-xl bg-gradient-to-br from-blue-500/10 to-blue-500/5 border border-blue-500/20">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-blue-500/20">
-              <Eye className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-xs text-muted-foreground font-medium">Views</span>
-              <span className="text-xl font-bold text-foreground">{stats.views_count || 0}</span>
-            </div>
-          </div>
-        </div>
+        <Section title="Views" icon={Eye}>
+          <StatItem icon={Eye} label="Total" value={stats.views_count} />
+        </Section>
 
         {/* Column 2: Clarification */}
         <Section title="Clarification" icon={MessageSquare}>
