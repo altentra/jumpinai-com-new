@@ -1411,12 +1411,12 @@ export const generatePitchDeckPDF = (): void => {
   
   yPosition += 28;
 
-  // Growth Strategy
+  // Growth Strategy - Keep title and content together
+  checkPageBreak(82); // Ensure title + all 3 phase cards stay together
   addSubsectionHeader('Growth Strategy', 10);
   yPosition += 4;
 
   // Phase cards
-  checkPageBreak(70);
   const phaseWidth = (maxWidth - 8) / 3;
   const phaseHeight = 58;
   const phaseY = yPosition;
