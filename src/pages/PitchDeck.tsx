@@ -117,7 +117,7 @@ const PitchDeck = () => {
             </div>
             </div>
             
-            <div className="p-5 rounded-xl bg-gradient-to-br from-destructive/10 to-destructive/5 border border-destructive/20">
+            <div className="p-5 rounded-xl glass backdrop-blur-sm bg-background/25 border border-primary/20">
               <div className="text-center space-y-2">
                 <p className="text-base font-bold text-foreground">
                   Market Opportunity: <span className="text-primary text-xl">$12.4B</span> AI Education & Transformation Market by 2027
@@ -470,20 +470,71 @@ const PitchDeck = () => {
               </div>
             </div>
             
-            <div className="p-5 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 mt-8">
-              <h4 className="text-base font-bold text-foreground mb-3 text-center">Growth Strategy</h4>
-              <div className="grid md:grid-cols-3 gap-4">
-                <div className="text-center">
-                  <h5 className="text-sm font-semibold text-foreground mb-2">Phase 1: Launch</h5>
-                  <p className="text-xs text-muted-foreground">Free tier viral growth, build user base, gather feedback and iterate</p>
+            <div className="p-5 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 mt-10">
+              <h4 className="text-base font-bold text-foreground mb-4 text-center">Growth Strategy</h4>
+              <div className="grid md:grid-cols-3 gap-5">
+                <div className="glass backdrop-blur-sm bg-background/25 border border-primary/20 rounded-xl p-4">
+                  <h5 className="text-sm font-semibold text-foreground mb-2">Phase 1: Launch & Validation</h5>
+                  <ul className="space-y-1.5 text-xs text-muted-foreground">
+                    <li className="flex items-start gap-1.5">
+                      <span className="text-primary mt-0.5">•</span>
+                      <span>Viral freemium growth through word-of-mouth and social proof</span>
+                    </li>
+                    <li className="flex items-start gap-1.5">
+                      <span className="text-primary mt-0.5">•</span>
+                      <span>Product-led growth with low CAC acquisition</span>
+                    </li>
+                    <li className="flex items-start gap-1.5">
+                      <span className="text-primary mt-0.5">•</span>
+                      <span>Gather user feedback, iterate rapidly on core features</span>
+                    </li>
+                    <li className="flex items-start gap-1.5">
+                      <span className="text-primary mt-0.5">•</span>
+                      <span>Build foundational content and community engagement</span>
+                    </li>
+                  </ul>
                 </div>
-                <div className="text-center">
-                  <h5 className="text-sm font-semibold text-foreground mb-2">Phase 2: Scale</h5>
-                  <p className="text-xs text-muted-foreground">Convert free users to paid, expand features, optimize conversion funnel</p>
+                <div className="glass backdrop-blur-sm bg-background/25 border border-primary/20 rounded-xl p-4">
+                  <h5 className="text-sm font-semibold text-foreground mb-2">Phase 2: Scale & Monetization</h5>
+                  <ul className="space-y-1.5 text-xs text-muted-foreground">
+                    <li className="flex items-start gap-1.5">
+                      <span className="text-primary mt-0.5">•</span>
+                      <span>Optimize conversion funnel from free to paid tiers</span>
+                    </li>
+                    <li className="flex items-start gap-1.5">
+                      <span className="text-primary mt-0.5">•</span>
+                      <span>Strategic content marketing and SEO dominance</span>
+                    </li>
+                    <li className="flex items-start gap-1.5">
+                      <span className="text-primary mt-0.5">•</span>
+                      <span>Influencer and thought leader partnerships</span>
+                    </li>
+                    <li className="flex items-start gap-1.5">
+                      <span className="text-primary mt-0.5">•</span>
+                      <span>Targeted paid acquisition with proven LTV/CAC ratios</span>
+                    </li>
+                  </ul>
                 </div>
-                <div className="text-center">
-                  <h5 className="text-sm font-semibold text-foreground mb-2">Phase 3: Enterprise</h5>
-                  <p className="text-xs text-muted-foreground">Launch team features, enterprise sales, strategic partnerships</p>
+                <div className="glass backdrop-blur-sm bg-background/25 border border-primary/20 rounded-xl p-4">
+                  <h5 className="text-sm font-semibold text-foreground mb-2">Phase 3: Enterprise & Expansion</h5>
+                  <ul className="space-y-1.5 text-xs text-muted-foreground">
+                    <li className="flex items-start gap-1.5">
+                      <span className="text-primary mt-0.5">•</span>
+                      <span>Launch team collaboration and enterprise features</span>
+                    </li>
+                    <li className="flex items-start gap-1.5">
+                      <span className="text-primary mt-0.5">•</span>
+                      <span>Build dedicated enterprise sales team</span>
+                    </li>
+                    <li className="flex items-start gap-1.5">
+                      <span className="text-primary mt-0.5">•</span>
+                      <span>Strategic B2B partnerships and integrations</span>
+                    </li>
+                    <li className="flex items-start gap-1.5">
+                      <span className="text-primary mt-0.5">•</span>
+                      <span>International expansion with localized offerings</span>
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>
@@ -491,6 +542,139 @@ const PitchDeck = () => {
         </div>
       </section>
 
+      {/* Projections */}
+      <section className="py-12 px-4 relative z-10">
+        <div className="max-w-5xl mx-auto">
+          <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-2xl p-6 md:p-10 shadow-lg">
+            <div className="mb-8">
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
+                Projections
+              </h2>
+              <div className="w-16 h-0.5 bg-gradient-to-r from-primary/60 to-transparent"></div>
+            </div>
+            
+            <div className="space-y-6">
+              <p className="text-sm text-muted-foreground text-center max-w-2xl mx-auto">
+                As a pre-launch platform, these are conservative estimates based on comparable SaaS benchmarks, freemium conversion rates, and our unique market positioning.
+              </p>
+              
+              <div className="grid md:grid-cols-3 gap-6">
+                <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 rounded-xl p-5">
+                  <div className="text-center mb-4">
+                    <h3 className="text-sm font-bold text-foreground mb-1">Year 1</h3>
+                    <div className="text-xs text-muted-foreground">Launch & Growth</div>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="p-3 rounded-lg bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
+                      <div className="text-xs text-muted-foreground mb-1">Users</div>
+                      <div className="text-lg font-bold text-foreground">15,000</div>
+                    </div>
+                    <div className="p-3 rounded-lg bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
+                      <div className="text-xs text-muted-foreground mb-1">Paying Customers</div>
+                      <div className="text-lg font-bold text-foreground">750</div>
+                      <div className="text-xs text-muted-foreground/80 mt-1">~5% conversion</div>
+                    </div>
+                    <div className="p-3 rounded-lg bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
+                      <div className="text-xs text-muted-foreground mb-1">Annual Revenue</div>
+                      <div className="text-lg font-bold text-primary">$180K</div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 rounded-xl p-5">
+                  <div className="text-center mb-4">
+                    <h3 className="text-sm font-bold text-foreground mb-1">Year 2</h3>
+                    <div className="text-xs text-muted-foreground">Scale & Optimize</div>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="p-3 rounded-lg bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
+                      <div className="text-xs text-muted-foreground mb-1">Users</div>
+                      <div className="text-lg font-bold text-foreground">75,000</div>
+                    </div>
+                    <div className="p-3 rounded-lg bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
+                      <div className="text-xs text-muted-foreground mb-1">Paying Customers</div>
+                      <div className="text-lg font-bold text-foreground">5,250</div>
+                      <div className="text-xs text-muted-foreground/80 mt-1">~7% conversion</div>
+                    </div>
+                    <div className="p-3 rounded-lg bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
+                      <div className="text-xs text-muted-foreground mb-1">Annual Revenue</div>
+                      <div className="text-lg font-bold text-primary">$1.4M</div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 rounded-xl p-5">
+                  <div className="text-center mb-4">
+                    <h3 className="text-sm font-bold text-foreground mb-1">Year 3</h3>
+                    <div className="text-xs text-muted-foreground">Enterprise Entry</div>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="p-3 rounded-lg bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
+                      <div className="text-xs text-muted-foreground mb-1">Users</div>
+                      <div className="text-lg font-bold text-foreground">250,000</div>
+                    </div>
+                    <div className="p-3 rounded-lg bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
+                      <div className="text-xs text-muted-foreground mb-1">Paying Customers</div>
+                      <div className="text-lg font-bold text-foreground">22,500</div>
+                      <div className="text-xs text-muted-foreground/80 mt-1">~9% conversion</div>
+                    </div>
+                    <div className="p-3 rounded-lg bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
+                      <div className="text-xs text-muted-foreground mb-1">Annual Revenue</div>
+                      <div className="text-lg font-bold text-primary">$6.2M</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="grid md:grid-cols-2 gap-4 mt-6">
+                <div className="glass backdrop-blur-sm bg-background/25 border border-primary/20 rounded-xl p-4">
+                  <h4 className="text-sm font-bold text-foreground mb-2">Key Assumptions</h4>
+                  <ul className="space-y-1.5 text-xs text-muted-foreground">
+                    <li className="flex items-start gap-1.5">
+                      <span className="text-primary mt-0.5">•</span>
+                      <span>Average subscription value: $20/month (blended across tiers)</span>
+                    </li>
+                    <li className="flex items-start gap-1.5">
+                      <span className="text-primary mt-0.5">•</span>
+                      <span>Conservative 5-9% freemium conversion rate</span>
+                    </li>
+                    <li className="flex items-start gap-1.5">
+                      <span className="text-primary mt-0.5">•</span>
+                      <span>85% annual retention rate for paid users</span>
+                    </li>
+                    <li className="flex items-start gap-1.5">
+                      <span className="text-primary mt-0.5">•</span>
+                      <span>Additional revenue from one-time credit pack purchases</span>
+                    </li>
+                  </ul>
+                </div>
+                
+                <div className="glass backdrop-blur-sm bg-background/25 border border-primary/20 rounded-xl p-4">
+                  <h4 className="text-sm font-bold text-foreground mb-2">Growth Drivers</h4>
+                  <ul className="space-y-1.5 text-xs text-muted-foreground">
+                    <li className="flex items-start gap-1.5">
+                      <span className="text-primary mt-0.5">•</span>
+                      <span>Product-led growth with viral freemium tier</span>
+                    </li>
+                    <li className="flex items-start gap-1.5">
+                      <span className="text-primary mt-0.5">•</span>
+                      <span>Content marketing and SEO positioning</span>
+                    </li>
+                    <li className="flex items-start gap-1.5">
+                      <span className="text-primary mt-0.5">•</span>
+                      <span>Strategic partnerships and affiliate programs</span>
+                    </li>
+                    <li className="flex items-start gap-1.5">
+                      <span className="text-primary mt-0.5">•</span>
+                      <span>Enterprise features driving higher-tier upgrades</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Competitive Advantage */}
       <section className="py-12 px-4 relative z-10">
@@ -720,7 +904,7 @@ const PitchDeck = () => {
                 <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 rounded-xl p-6 text-center">
                   <div className="text-xs text-muted-foreground mb-2">Valuation</div>
                   <div className="text-3xl font-bold text-primary mb-2">$2M</div>
-                  <div className="text-xs text-muted-foreground">Pre-money</div>
+                  <div className="text-xs text-muted-foreground">Post-money</div>
                 </div>
                 
                 <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 rounded-xl p-6 text-center">
