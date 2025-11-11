@@ -228,13 +228,11 @@ const handler = async (req: Request): Promise<Response> => {
         <div style="max-width: 600px; margin: 0 auto; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; line-height: 1.6; color: #1f2937;">
           <!-- Email Header with Premium Logo -->
           <div style="text-align: center; padding: 32px 24px 24px 24px;">
-            <div style="display: inline-block; background: linear-gradient(135deg, rgba(147, 51, 234, 0.08) 0%, rgba(147, 51, 234, 0.04) 100%); border: 1px solid rgba(147, 51, 234, 0.2); border-radius: 16px; padding: 12px; box-shadow: 0 4px 12px rgba(147, 51, 234, 0.15);">
-              <img 
-                src="https://jumpinai.com/logo.png" 
-                alt="JumpinAI Logo" 
-                style="width: 80px; height: 80px; display: block; border-radius: 12px;"
-              />
-            </div>
+            <img 
+              src="https://jumpinai.com/logo.png" 
+              alt="JumpinAI Logo" 
+              style="width: 84px; height: 84px; display: block; border-radius: 12px; margin: 0 auto;"
+            />
           </div>
           
           <div style="background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%); padding: 28px 24px; text-align: center; border-radius: 8px 8px 0 0;">
@@ -289,25 +287,13 @@ const handler = async (req: Request): Promise<Response> => {
             </p>
             
             <!-- Social Media Links -->
-            <div style="margin: 0 0 14px 0;">
-              <a href="https://x.com/jumpinai" style="display: inline-block; margin: 0 6px; text-decoration: none;">
-                <img src="https://cdn.simpleicons.org/x/1DA1F2" alt="X" style="width: 22px; height: 22px; vertical-align: middle;" />
-              </a>
-              <a href="https://instagram.com/jumpinai" style="display: inline-block; margin: 0 6px; text-decoration: none;">
-                <img src="https://cdn.simpleicons.org/instagram/E4405F" alt="Instagram" style="width: 22px; height: 22px; vertical-align: middle;" />
-              </a>
-              <a href="https://facebook.com/jumpinai" style="display: inline-block; margin: 0 6px; text-decoration: none;">
-                <img src="https://cdn.simpleicons.org/facebook/1877F2" alt="Facebook" style="width: 22px; height: 22px; vertical-align: middle;" />
-              </a>
-              <a href="https://linkedin.com/company/jumpinai" style="display: inline-block; margin: 0 6px; text-decoration: none;">
-                <img src="https://cdn.simpleicons.org/linkedin/0A66C2" alt="LinkedIn" style="width: 22px; height: 22px; vertical-align: middle;" />
-              </a>
-              <a href="https://youtube.com/@jumpinai" style="display: inline-block; margin: 0 6px; text-decoration: none;">
-                <img src="https://cdn.simpleicons.org/youtube/FF0000" alt="YouTube" style="width: 22px; height: 22px; vertical-align: middle;" />
-              </a>
-              <a href="https://tiktok.com/@jumpinai" style="display: inline-block; margin: 0 6px; text-decoration: none;">
-                <img src="https://cdn.simpleicons.org/tiktok/000000" alt="TikTok" style="width: 22px; height: 22px; vertical-align: middle;" />
-              </a>
+            <div style="margin: 0 0 14px 0; font-size: 0;">
+              <a href="https://x.com/jumpinai" style="display: inline-block; margin: 0 10px; text-decoration: none; color: #3b82f6; font-size: 22px; line-height: 1;">𝕏</a>
+              <a href="https://instagram.com/jumpinai" style="display: inline-block; margin: 0 10px; text-decoration: none; color: #E4405F; font-size: 22px; line-height: 1;">📷</a>
+              <a href="https://facebook.com/jumpinai" style="display: inline-block; margin: 0 10px; text-decoration: none; color: #1877F2; font-size: 22px; line-height: 1;">f</a>
+              <a href="https://linkedin.com/company/jumpinai" style="display: inline-block; margin: 0 10px; text-decoration: none; color: #0A66C2; font-size: 22px; line-height: 1;">in</a>
+              <a href="https://youtube.com/@jumpinai" style="display: inline-block; margin: 0 10px; text-decoration: none; color: #FF0000; font-size: 22px; line-height: 1;">▶</a>
+              <a href="https://tiktok.com/@jumpinai" style="display: inline-block; margin: 0 10px; text-decoration: none; color: #000000; font-size: 22px; line-height: 1;">♪</a>
             </div>
             
             <p style="color: #9ca3af; margin: 0; font-size: 12px;">
