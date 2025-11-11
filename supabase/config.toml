@@ -73,6 +73,12 @@ verify_jwt = true
 [functions.send-subscription-welcome]
 verify_jwt = false
 
+[functions.send-subscription-upgrade-email]
+verify_jwt = false
+
+[functions.send-subscription-downgrade-email]
+verify_jwt = false
+
 [functions.jumps-ai-coach]
 verify_jwt = true
 

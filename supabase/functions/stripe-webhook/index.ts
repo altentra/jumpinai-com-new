@@ -227,8 +227,12 @@ async function handleSubscriptionSuccess(
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
         </head>
         <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-          <div style="text-align: center; margin-bottom: 30px;">
-            <img src="${logoUrl}" alt="JumpinAI" style="max-width: 150px; height: auto;" />
+          <div style="text-align: center; padding: 32px 24px 24px 24px;">
+            <img 
+              src="https://jumpinai.com/logo.png" 
+              alt="JumpinAI Logo" 
+              style="width: 84px; height: 84px; display: block; border-radius: 12px; margin: 0 auto;"
+            />
           </div>
 
           <div style="background: linear-gradient(135deg, #374151 0%, #1f2937 100%); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
@@ -250,17 +254,6 @@ async function handleSubscriptionSuccess(
                 <div style="font-size: 14px; color: #9ca3af; margin-top: 5px;">Renews monthly</div>
               </div>
               
-              <div style="background: #f3f4f6; padding: 20px; border-radius: 6px; margin: 20px 0;">
-                <h3 style="color: #374151; margin-top: 0;">What's included:</h3>
-                <ul style="margin: 10px 0; padding-left: 20px;">
-                  <li>${creditsPerMonth} monthly credits (roll over if unused)</li>
-                  <li>Access to all guides & resources library</li>
-                  <li>JumpinAI Studio for comprehensive transformation plans</li>
-                  <li>Priority customer support</li>
-                  <li>Early access to new features</li>
-                </ul>
-              </div>
-              
               <div style="text-align: center; margin: 25px 0;">
                 <a href="https://www.jumpinai.com/dashboard" 
                    style="background: linear-gradient(135deg, #374151 0%, #1f2937 100%); color: white; padding: 12px 25px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: 600;">
@@ -270,10 +263,22 @@ async function handleSubscriptionSuccess(
             </div>
           </div>
           
-          <div style="background: #374151; padding: 20px; text-align: center; border-radius: 0 0 10px 10px;">
-            <p style="color: white; margin: 0; font-size: 14px;">
-              <strong>JumpinAI - Your Personalized AI Adaptation Studio</strong><br>
-              Questions? Reply to this email or contact us at <a href="mailto:support@jumpinai.com" style="color: #d1d5db;">support@jumpinai.com</a>
+          <div style="border-top: 1px solid #e5e7eb; padding-top: 18px; margin-top: 20px; text-align: center;">
+            <p style="margin: 0 0 6px 0; color: #6b7280; font-size: 13px;">Questions? We're always here to help!</p>
+            <p style="margin: 0; color: #1f2937; font-size: 13px;">
+              Email us at <a href="mailto:info@jumpinai.com" style="color: #3b82f6; text-decoration: none; font-weight: 600;">info@jumpinai.com</a>
+            </p>
+          </div>
+
+          <div style="padding: 20px 24px; text-align: center; background: #f9fafb; margin-top: 14px; border-radius: 6px;">
+            <p style="color: #111827; margin: 0 0 4px 0; font-size: 14px; font-weight: 600;">
+              JumpinAI.
+            </p>
+            <p style="color: #6b7280; margin: 0 0 14px 0; font-size: 13px;">
+              Your Personalized AI Adaptation Studio.
+            </p>
+            <p style="color: #9ca3af; margin: 0; font-size: 12px;">
+              <a href="https://www.jumpinai.com/dashboard/subscription" style="color: #6b7280; text-decoration: underline;">Manage Subscription</a>
             </p>
           </div>
         </body>
@@ -550,13 +555,17 @@ async function handlePaymentSuccess(
         <!DOCTYPE html>
         <html>
         <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-          <div style="text-align: center; margin-bottom: 30px;">
-            <img src="${logoUrl}" alt="JumpinAI" style="max-width: 150px; height: auto;" />
+          <div style="text-align: center; padding: 32px 24px 24px 24px;">
+            <img 
+              src="https://jumpinai.com/logo.png" 
+              alt="JumpinAI Logo" 
+              style="width: 84px; height: 84px; display: block; border-radius: 12px; margin: 0 auto;"
+            />
           </div>
 
-          <div style="background: linear-gradient(135deg, #374151 0%, #1f2937 100%); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
+          <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
             <h1 style="color: white; margin: 0; font-size: 28px;">Payment Confirmed! ✅</h1>
-            <p style="color: #d1d5db; margin: 10px 0 0 0; font-size: 16px;">Your credits have been added</p>
+            <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0 0; font-size: 16px;">Your credits have been added</p>
           </div>
           
           <div style="padding: 30px; background: #f9f9f9;">
@@ -564,7 +573,7 @@ async function handlePaymentSuccess(
               <h2 style="color: #374151; margin-bottom: 20px;">Hi ${customerName}!</h2>
               
               <p style="font-size: 16px; margin-bottom: 20px;">
-                Your payment has been successfully processed and ${credits} credits have been added to your account!
+                Your payment has been successfully processed and <strong>${credits} credits</strong> have been added to your account!
               </p>
               
               <div style="background: #f3f4f6; padding: 20px; border-radius: 6px; margin: 20px 0; text-align: center;">
@@ -574,17 +583,26 @@ async function handlePaymentSuccess(
               
               <div style="text-align: center; margin: 25px 0;">
                 <a href="https://www.jumpinai.com/dashboard" 
-                   style="background: linear-gradient(135deg, #374151 0%, #1f2937 100%); color: white; padding: 12px 25px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: 600;">
+                   style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 12px 25px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: 600;">
                   Use Your Credits Now
                 </a>
               </div>
             </div>
           </div>
           
-          <div style="background: #374151; padding: 20px; text-align: center; border-radius: 0 0 10px 10px;">
-            <p style="color: white; margin: 0; font-size: 14px;">
-              <strong>JumpinAI - Your Personalized AI Adaptation Studio</strong><br>
-              Questions? Reply to this email or contact us at <a href="mailto:support@jumpinai.com" style="color: #d1d5db;">support@jumpinai.com</a>
+          <div style="border-top: 1px solid #e5e7eb; padding-top: 18px; margin-top: 20px; text-align: center;">
+            <p style="margin: 0 0 6px 0; color: #6b7280; font-size: 13px;">Questions? We're always here to help!</p>
+            <p style="margin: 0; color: #1f2937; font-size: 13px;">
+              Email us at <a href="mailto:info@jumpinai.com" style="color: #3b82f6; text-decoration: none; font-weight: 600;">info@jumpinai.com</a>
+            </p>
+          </div>
+
+          <div style="padding: 20px 24px; text-align: center; background: #f9fafb; margin-top: 14px; border-radius: 6px;">
+            <p style="color: #111827; margin: 0 0 4px 0; font-size: 14px; font-weight: 600;">
+              JumpinAI.
+            </p>
+            <p style="color: #6b7280; margin: 0; font-size: 13px;">
+              Your Personalized AI Adaptation Studio.
             </p>
           </div>
         </body>
