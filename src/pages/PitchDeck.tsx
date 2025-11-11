@@ -55,7 +55,7 @@ const PitchDeck = () => {
               JumpinAI - Your Personalized AI Adaptation Studio
             </h2>
             <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Revolutionizing how professionals and businesses adopt AI through adaptive, personalized transformation blueprints — delivering unprecedented speed, clarity, and actionability.
+              Revolutionizing how individuals and businesses adopt AI through adaptive, personalized transformation blueprints — delivering unprecedented speed, clarity, and actionability.
             </p>
           </div>
         </div>
@@ -74,7 +74,7 @@ const PitchDeck = () => {
             
             <div className="space-y-6 mb-6">
               <p className="text-base text-muted-foreground leading-relaxed">
-                The AI revolution has created a paradox: while AI capabilities advance exponentially, actual adoption and successful implementation lag dramatically behind. Organizations and professionals face a fundamental disconnect between AI's promise and their ability to harness it effectively.
+                The AI revolution has created a paradox: while AI capabilities advance exponentially, actual adoption and successful implementation lag dramatically behind. Organizations and individuals face a fundamental disconnect between AI's promise and their ability to harness it effectively.
               </p>
               
               <div className="space-y-6">
@@ -91,7 +91,7 @@ const PitchDeck = () => {
                 <div className="glass backdrop-blur-sm bg-background/25 border border-destructive/20 rounded-xl p-6 space-y-4">
                   <h3 className="text-lg font-bold text-foreground">The Implementation Gap</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">
-                    Awareness doesn't equal capability. Professionals understand AI is transformative and feel pressure to adapt, yet face a daunting implementation gap. Research shows <span className="text-foreground font-semibold">professionals invest 40+ hours</span> researching AI strategies, consuming countless articles, webinars, and courses. Despite this investment, they remain paralyzed at the starting line, uncertain about practical first steps, tool selection, workflow integration, or success measurement.
+                    Awareness doesn't equal capability. People understand AI is transformative and feel pressure to adapt, yet face a daunting implementation gap. Research shows <span className="text-foreground font-semibold">individuals invest 40+ hours</span> researching AI strategies, consuming countless articles, webinars, and courses. Despite this investment, they remain paralyzed at the starting line, uncertain about practical first steps, tool selection, workflow integration, or success measurement.
                   </p>
                   <p className="text-sm text-muted-foreground leading-relaxed">
                     This isn't a knowledge problem—it's an <span className="text-foreground font-semibold">actionability problem</span>. The market floods users with conceptual frameworks and theoretical benefits while failing to deliver concrete, personalized, step-by-step guidance that accounts for their specific starting point and constraints. The gap between "understanding AI" and "successfully implementing AI" represents billions in unrealized value and countless stalled careers.
@@ -116,7 +116,7 @@ const PitchDeck = () => {
                   Market Opportunity: <span className="text-primary text-xl">$12.4B</span> AI Education & Transformation Market by 2027
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  Millions of professionals and organizations desperately need a solution that bridges the gap between AI's potential and their ability to realize it
+                  Millions of individuals, entrepreneurs, and organizations desperately need a solution that bridges the gap between AI's potential and their ability to realize it
                 </p>
               </div>
             </div>
@@ -345,8 +345,8 @@ const PitchDeck = () => {
                 <h3 className="text-lg font-bold mb-4 text-foreground">Target Segments</h3>
                 <div className="space-y-3">
                   <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 rounded-xl p-4">
-                    <h4 className="text-sm font-bold text-foreground mb-2">Individual Professionals (Primary)</h4>
-                    <p className="text-xs text-muted-foreground mb-2">Mid-level to senior professionals seeking personal AI upskilling and career advancement</p>
+                    <h4 className="text-sm font-bold text-foreground mb-2">Individuals & Entrepreneurs (Primary)</h4>
+                    <p className="text-xs text-muted-foreground mb-2">Founders, creators, and knowledge workers seeking personal AI upskilling and competitive advantage</p>
                     <p className="text-xs text-muted-foreground/80 italic">Immediate monetization through subscription and credit sales</p>
                   </div>
                   
