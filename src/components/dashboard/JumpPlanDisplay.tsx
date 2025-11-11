@@ -323,13 +323,13 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
 
       console.log('Clarify-step response:', data);
 
-      if (!data || !data.sub_steps || !Array.isArray(data.sub_steps)) {
+      if (!data || !data.subSteps || !Array.isArray(data.subSteps)) {
         throw new Error('Invalid data format from clarify-step');
       }
 
       // Update the local plan
       const updatedPlan = { ...finalPlan };
-      updatedPlan.action_plan.phases[phaseIndex].steps[stepIndex].sub_steps = data.sub_steps;
+      updatedPlan.action_plan.phases[phaseIndex].steps[stepIndex].sub_steps = data.subSteps;
       setLocalPlan(updatedPlan);
 
       // Track clarification (Level 1)
