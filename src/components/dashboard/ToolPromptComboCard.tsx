@@ -231,18 +231,21 @@ export function ToolPromptComboCard({ combo, onClick, index }: ToolPromptComboCa
 
           {/* How to Use */}
           {promptInstructions && (
-            <div className="p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
-              <div className="flex items-start gap-2">
-                <Sparkles className="w-4 h-4 text-yellow-700 dark:text-yellow-400 mt-0.5 shrink-0" />
-                <div className="flex-1">
-                  <p className="text-xs font-medium text-yellow-700 dark:text-yellow-400 mb-1">How to Use</p>
-                  <div className="text-xs sm:text-sm text-foreground leading-relaxed space-y-1">
-                    {String(promptInstructions)
-                      .split(/(?=\d+\.\s)/)
-                      .filter(step => step.trim())
-                      .map((step, idx) => (
-                        <div key={idx}>{step.trim()}</div>
-                      ))}
+            <div className="relative group/section">
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-yellow-500/20 to-amber-500/20 rounded-2xl blur opacity-30 group-hover/section:opacity-50 transition duration-300"></div>
+              <div className="relative p-3 bg-gradient-to-br from-yellow-500/10 via-yellow-500/5 to-amber-500/10 backdrop-blur-sm border border-yellow-500/20 rounded-2xl hover:border-yellow-500/30 transition-all duration-300">
+                <div className="flex items-start gap-2">
+                  <Sparkles className="w-4 h-4 text-yellow-700 dark:text-yellow-400 mt-0.5 shrink-0" />
+                  <div className="flex-1">
+                    <p className="text-xs font-medium text-yellow-700 dark:text-yellow-400 mb-1">How to Use</p>
+                    <div className="text-xs sm:text-sm text-foreground leading-relaxed space-y-1">
+                      {String(promptInstructions)
+                        .split(/(?=\d+\.\s)/)
+                        .filter(step => step.trim())
+                        .map((step, idx) => (
+                          <div key={idx}>{step.trim()}</div>
+                        ))}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -251,12 +254,15 @@ export function ToolPromptComboCard({ combo, onClick, index }: ToolPromptComboCa
 
           {/* When to Use */}
           {whenToUse && (
-            <div className="p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg">
-              <div className="flex items-start gap-2">
-                <Clock className="w-4 h-4 text-blue-600 dark:text-blue-400 mt-0.5 shrink-0" />
-                <div>
-                  <p className="text-xs font-medium text-blue-600 dark:text-blue-400 mb-1">When to Use</p>
-                  <p className="text-xs sm:text-sm text-foreground leading-relaxed">{whenToUse}</p>
+            <div className="relative group/section">
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 rounded-2xl blur opacity-30 group-hover/section:opacity-50 transition duration-300"></div>
+              <div className="relative p-3 bg-gradient-to-br from-blue-500/10 via-blue-500/5 to-cyan-500/10 backdrop-blur-sm border border-blue-500/20 rounded-2xl hover:border-blue-500/30 transition-all duration-300">
+                <div className="flex items-start gap-2">
+                  <Clock className="w-4 h-4 text-blue-600 dark:text-blue-400 mt-0.5 shrink-0" />
+                  <div>
+                    <p className="text-xs font-medium text-blue-600 dark:text-blue-400 mb-1">When to Use</p>
+                    <p className="text-xs sm:text-sm text-foreground leading-relaxed">{whenToUse}</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -264,12 +270,15 @@ export function ToolPromptComboCard({ combo, onClick, index }: ToolPromptComboCa
 
           {/* Why This Combo */}
           {whyCombo && (
-            <div className="p-3 bg-green-500/10 border border-green-500/20 rounded-lg">
-              <div className="flex items-start gap-2">
-                <CheckCircle className="w-4 h-4 text-green-600 dark:text-green-400 mt-0.5 shrink-0" />
-                <div>
-                  <p className="text-xs font-medium text-green-600 dark:text-green-400 mb-1">Why This Combo</p>
-                  <p className="text-xs sm:text-sm text-foreground leading-relaxed">{whyCombo}</p>
+            <div className="relative group/section">
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-2xl blur opacity-30 group-hover/section:opacity-50 transition duration-300"></div>
+              <div className="relative p-3 bg-gradient-to-br from-green-500/10 via-green-500/5 to-emerald-500/10 backdrop-blur-sm border border-green-500/20 rounded-2xl hover:border-green-500/30 transition-all duration-300">
+                <div className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-600 dark:text-green-400 mt-0.5 shrink-0" />
+                  <div>
+                    <p className="text-xs font-medium text-green-600 dark:text-green-400 mb-1">Why This Combo</p>
+                    <p className="text-xs sm:text-sm text-foreground leading-relaxed">{whyCombo}</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -277,55 +286,58 @@ export function ToolPromptComboCard({ combo, onClick, index }: ToolPromptComboCa
 
           {/* Alternatives */}
           {alternatives.length > 0 && (
-            <div className="p-3 bg-orange-500/10 border border-orange-500/20 rounded-lg">
-              <div className="flex items-start gap-2 mb-3">
-                <ArrowLeftRight className="w-4 h-4 text-orange-600 dark:text-orange-400 mt-0.5 shrink-0" />
-                <p className="text-xs font-medium text-orange-600 dark:text-orange-400">Alternative Tools:</p>
-              </div>
-              <div className="space-y-3">
-                {alternatives.map((alt: any, idx: number) => {
-                  const altTool = safeExtract(alt, 'tool', 'name') || `Alternative ${idx + 1}`;
-                  const altUrl = alt?.url || alt?.tool_url;
-                  const altNote = safeExtract(alt, 'note', 'description');
-                  
-                  return (
-                    <div key={idx} className="space-y-2">
-                      {altUrl ? (
-                        <a
-                          href={altUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={(e) => e.stopPropagation()}
-                          className="relative group/alt inline-block"
-                        >
-                          {/* Liquid glass glow effect */}
-                          <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover/alt:opacity-60 transition duration-500"></div>
-                          
-                          {/* Button */}
-                          <div className="relative flex items-center gap-3 px-5 py-3 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover/alt:border-primary/50 transition-all duration-300 overflow-hidden">
-                            {/* Shimmer effect */}
-                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover/alt:translate-x-full transition-transform duration-1000"></div>
+            <div className="relative group/section">
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-orange-500/20 to-red-500/20 rounded-2xl blur opacity-30 group-hover/section:opacity-50 transition duration-300"></div>
+              <div className="relative p-3 bg-gradient-to-br from-orange-500/10 via-orange-500/5 to-red-500/10 backdrop-blur-sm border border-orange-500/20 rounded-2xl hover:border-orange-500/30 transition-all duration-300">
+                <div className="flex items-start gap-2 mb-3">
+                  <ArrowLeftRight className="w-4 h-4 text-orange-600 dark:text-orange-400 mt-0.5 shrink-0" />
+                  <p className="text-xs font-medium text-orange-600 dark:text-orange-400">Alternative Tools:</p>
+                </div>
+                <div className="space-y-3">
+                  {alternatives.map((alt: any, idx: number) => {
+                    const altTool = safeExtract(alt, 'tool', 'name') || `Alternative ${idx + 1}`;
+                    const altUrl = alt?.url || alt?.tool_url;
+                    const altNote = safeExtract(alt, 'note', 'description');
+                    
+                    return (
+                      <div key={idx} className="space-y-2">
+                        {altUrl ? (
+                          <a
+                            href={altUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="relative group/alt inline-block"
+                          >
+                            {/* Liquid glass glow effect */}
+                            <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover/alt:opacity-60 transition duration-500"></div>
                             
-                            {/* Content */}
-                            <span className="relative text-sm font-bold text-foreground group-hover/alt:text-primary transition-colors duration-300 whitespace-nowrap">
-                              {altTool}
-                            </span>
-                            
-                            {/* Arrow icon */}
-                            <div className="relative flex items-center justify-center w-6 h-6 rounded-xl bg-primary/20 group-hover/alt:bg-primary/30 transition-all duration-300">
-                              <ExternalLink className="w-4 h-4 text-primary group-hover/alt:translate-x-0.5 group-hover/alt:-translate-y-0.5 transition-transform duration-300" />
+                            {/* Button */}
+                            <div className="relative flex items-center gap-3 px-5 py-3 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover/alt:border-primary/50 transition-all duration-300 overflow-hidden">
+                              {/* Shimmer effect */}
+                              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover/alt:translate-x-full transition-transform duration-1000"></div>
+                              
+                              {/* Content */}
+                              <span className="relative text-sm font-bold text-foreground group-hover/alt:text-primary transition-colors duration-300 whitespace-nowrap">
+                                {altTool}
+                              </span>
+                              
+                              {/* Arrow icon */}
+                              <div className="relative flex items-center justify-center w-6 h-6 rounded-xl bg-primary/20 group-hover/alt:bg-primary/30 transition-all duration-300">
+                                <ExternalLink className="w-4 h-4 text-primary group-hover/alt:translate-x-0.5 group-hover/alt:-translate-y-0.5 transition-transform duration-300" />
+                              </div>
                             </div>
+                          </a>
+                        ) : (
+                          <div className="inline-block px-5 py-3 bg-muted/20 rounded-[2rem] border border-border">
+                            <span className="text-sm font-medium text-muted-foreground whitespace-nowrap">{altTool}</span>
                           </div>
-                        </a>
-                      ) : (
-                        <div className="inline-block px-5 py-3 bg-muted/20 rounded-[2rem] border border-border">
-                          <span className="text-sm font-medium text-muted-foreground whitespace-nowrap">{altTool}</span>
-                        </div>
-                      )}
-                      {altNote && <p className="text-xs sm:text-sm text-foreground leading-relaxed">{altNote}</p>}
-                    </div>
-                  );
-                })}
+                        )}
+                        {altNote && <p className="text-xs sm:text-sm text-foreground leading-relaxed">{altNote}</p>}
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           )}
