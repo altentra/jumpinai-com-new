@@ -133,7 +133,7 @@ const Newsletter = () => {
           </h2>
           
           <p className="text-sm sm:text-base mb-6 sm:mb-8 text-muted-foreground max-w-2xl mx-auto px-4">
-            Get exclusive access to JumpinAI Studio updates, strategic Jumps for adaptation planning, powerful tools and prompts, and expert insights—delivered weekly to accelerate your AI transformation.
+            Weekly AI insights, exclusive tools and prompts, JumpinAI Studio updates, and strategic guidance—everything you need to stay ahead in the AI revolution.
           </p>
           
           {/* Newsletter Form */}
@@ -177,7 +177,7 @@ const Newsletter = () => {
           </form>
           
           <p className="text-muted-foreground text-xs sm:text-sm px-4">
-            Actionable insights, zero spam. Manage your subscription anytime—unsubscribe or resubscribe with one click.
+            No spam. Unsubscribe anytime.
           </p>
         </div>
       </div>
