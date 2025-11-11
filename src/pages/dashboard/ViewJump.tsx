@@ -20,8 +20,31 @@ export default function ViewJump() {
   useEffect(() => {
     if (jumpId) {
       loadJumpData();
+      // Track view when jump is loaded
+      trackJumpView(jumpId);
     }
   }, [jumpId]);
+
+  const trackJumpView = async (jumpId: string) => {
+    try {
+      const { data: currentJump } = await supabase
+        .from('user_jumps')
+        .select('views_count')
+        .eq('id', jumpId)
+        .single();
+
+      if (currentJump) {
+        const newCount = (currentJump.views_count || 0) + 1;
+        await supabase
+          .from('user_jumps')
+          .update({ views_count: newCount })
+          .eq('id', jumpId);
+        console.log(`✅ Tracked jump view: ${jumpId} (${newCount} views)`);
+      }
+    } catch (error) {
+      console.error('Error tracking jump view:', error);
+    }
+  };
 
   const loadJumpData = async () => {
     if (!jumpId) return;

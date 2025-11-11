@@ -535,6 +535,7 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
                   <ToolPromptComboCard
                     combo={combo}
                     index={index + 1}
+                    jumpId={result.jumpId || undefined}
                     onClick={() => {/* Detail modal will be added later */}}
                   />
                 </div>

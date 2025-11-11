@@ -2,18 +2,29 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Copy, ExternalLink, Sparkles, CheckCircle, Clock, DollarSign, ArrowLeftRight, MessageSquare } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { trackToolClick, trackPromptCopy, trackComboUsage } from "@/services/jumpTrackingService";
 
 interface ToolPromptComboCardProps {
   combo: any;
   onClick?: () => void;
   index?: number; // For numbering (1-9)
+  jumpId?: string; // For tracking
 }
 
-export function ToolPromptComboCard({ combo, onClick, index }: ToolPromptComboCardProps) {
+export function ToolPromptComboCard({ combo, onClick, index, jumpId }: ToolPromptComboCardProps) {
   const { toast } = useToast();
   const [copied, setCopied] = useState(false);
+  const [toolClicked, setToolClicked] = useState(false);
+  const [promptCopied, setPromptCopied] = useState(false);
+
+  // Check for combo usage when both tool and prompt are used
+  useEffect(() => {
+    if (toolClicked && promptCopied && jumpId) {
+      trackComboUsage(jumpId);
+    }
+  }, [toolClicked, promptCopied, jumpId]);
 
   // Add comprehensive null safety
   if (!combo) {
@@ -36,6 +47,13 @@ export function ToolPromptComboCard({ combo, onClick, index }: ToolPromptComboCa
       }
       await navigator.clipboard.writeText(promptToCopy);
       setCopied(true);
+      setPromptCopied(true);
+      
+      // Track prompt copy
+      if (jumpId) {
+        await trackPromptCopy(jumpId);
+      }
+      
       toast({
         title: "Prompt Copied!",
         description: "Ready to paste into " + (combo.tool_name || combo.name || 'the tool'),
@@ -151,7 +169,13 @@ export function ToolPromptComboCard({ combo, onClick, index }: ToolPromptComboCa
                 href={toolUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={(e) => e.stopPropagation()}
+                onClick={async (e) => {
+                  e.stopPropagation();
+                  setToolClicked(true);
+                  if (jumpId) {
+                    await trackToolClick(jumpId);
+                  }
+                }}
                 className="relative group/tool"
               >
                 {/* Liquid glass glow effect */}

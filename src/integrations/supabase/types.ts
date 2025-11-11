@@ -610,6 +610,8 @@ export type Database = {
       }
       user_jumps: {
         Row: {
+          clarifications_count: number | null
+          combos_used_count: number | null
           completion_percentage: number | null
           comprehensive_plan: Json | null
           created_at: string
@@ -617,15 +619,22 @@ export type Database = {
           id: string
           implemented: boolean | null
           jump_type: string | null
+          max_clarification_level: number | null
           profile_id: string | null
+          prompts_copied_count: number | null
+          reroutes_count: number | null
           status: string | null
           structured_plan: Json | null
           summary: string | null
           title: string
+          tools_clicked_count: number | null
           updated_at: string
           user_id: string
+          views_count: number | null
         }
         Insert: {
+          clarifications_count?: number | null
+          combos_used_count?: number | null
           completion_percentage?: number | null
           comprehensive_plan?: Json | null
           created_at?: string
@@ -633,15 +642,22 @@ export type Database = {
           id?: string
           implemented?: boolean | null
           jump_type?: string | null
+          max_clarification_level?: number | null
           profile_id?: string | null
+          prompts_copied_count?: number | null
+          reroutes_count?: number | null
           status?: string | null
           structured_plan?: Json | null
           summary?: string | null
           title: string
+          tools_clicked_count?: number | null
           updated_at?: string
           user_id: string
+          views_count?: number | null
         }
         Update: {
+          clarifications_count?: number | null
+          combos_used_count?: number | null
           completion_percentage?: number | null
           comprehensive_plan?: Json | null
           created_at?: string
@@ -649,13 +665,18 @@ export type Database = {
           id?: string
           implemented?: boolean | null
           jump_type?: string | null
+          max_clarification_level?: number | null
           profile_id?: string | null
+          prompts_copied_count?: number | null
+          reroutes_count?: number | null
           status?: string | null
           structured_plan?: Json | null
           summary?: string | null
           title?: string
+          tools_clicked_count?: number | null
           updated_at?: string
           user_id?: string
+          views_count?: number | null
         }
         Relationships: [
           {

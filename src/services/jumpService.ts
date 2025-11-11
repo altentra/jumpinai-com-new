@@ -12,6 +12,13 @@ export interface UserJump {
   jump_type?: string;
   status?: string;
   completion_percentage?: number;
+  views_count?: number;
+  clarifications_count?: number;
+  max_clarification_level?: number;
+  reroutes_count?: number;
+  tools_clicked_count?: number;
+  prompts_copied_count?: number;
+  combos_used_count?: number;
   created_at: string;
   updated_at: string;
 }
@@ -84,7 +91,7 @@ export const getUserJumps = async (): Promise<UserJump[]> => {
 };
 
 // Get jumps with minimal fields for list view (optimized for performance)
-export const getUserJumpsLight = async (limit?: number): Promise<Pick<UserJump, 'id' | 'title' | 'summary' | 'created_at' | 'jump_type' | 'status' | 'completion_percentage'>[]> => {
+export const getUserJumpsLight = async (limit?: number): Promise<Pick<UserJump, 'id' | 'title' | 'summary' | 'created_at' | 'jump_type' | 'status' | 'completion_percentage' | 'views_count' | 'clarifications_count' | 'max_clarification_level' | 'reroutes_count' | 'tools_clicked_count' | 'prompts_copied_count' | 'combos_used_count'>[]> => {
   const { data: { user } } = await supabase.auth.getUser();
   
   if (!user) {
@@ -93,7 +100,7 @@ export const getUserJumpsLight = async (limit?: number): Promise<Pick<UserJump, 
 
   let query = supabase
     .from('user_jumps')
-    .select('id, title, summary, created_at, jump_type, status, completion_percentage')
+    .select('id, title, summary, created_at, jump_type, status, completion_percentage, views_count, clarifications_count, max_clarification_level, reroutes_count, tools_clicked_count, prompts_copied_count, combos_used_count')
     .eq('user_id', user.id)
     .order('created_at', { ascending: false });
 

@@ -11,6 +11,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { updateJump } from '@/services/jumpService';
 import { toast } from 'sonner';
 import { useAuth } from '@/hooks/useAuth';
+import { trackClarification, trackReroute } from '@/services/jumpTrackingService';
 
 interface JumpPlanDisplayProps {
   planContent: string;
@@ -294,7 +295,6 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
       const phase = finalPlan.action_plan.phases[phaseIndex];
       const step = phase.steps[stepIndex];
 
-      // Prepare context for the API call
       const jumpOverview = `
 Executive Summary: ${finalPlan.executiveSummary || ''}
 Strategic Vision: ${finalPlan.strategicVision || ''}
@@ -308,6 +308,7 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
         stepTitle: step.title,
         stepDescription: step.description,
         stepNumber: step.step_number,
+        level: 1, // Regular step clarification
       };
 
       console.log('Calling clarify-step function:', requestBody);
@@ -316,35 +317,31 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
         body: requestBody,
       });
 
-      if (error) throw error;
-
-      if (!data || !data.subSteps) {
+      if (error) {
         throw new Error('Invalid response from clarify-step function');
       }
 
-      console.log('Received sub-steps:', data.subSteps);
+      console.log('Clarify-step response:', data);
 
-      // Update the local plan with sub-steps
-      const updatedPlan = { ...finalPlan };
-      updatedPlan.action_plan.phases[phaseIndex].steps[stepIndex].sub_steps = data.subSteps;
-      
-      setLocalPlan(updatedPlan);
-
-      // Save to database only if this is a real (authenticated) jump
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        await updateJump(jumpId, {
-          comprehensive_plan: updatedPlan,
-        });
+      if (!data || !data.sub_steps || !Array.isArray(data.sub_steps)) {
+        throw new Error('Invalid data format from clarify-step');
       }
 
-      // Expand the sub-steps
-      setExpandedSubSteps(prev => new Set(prev).add(stepKey));
+      // Update the local plan
+      const updatedPlan = { ...finalPlan };
+      updatedPlan.action_plan.phases[phaseIndex].steps[stepIndex].sub_steps = data.sub_steps;
+      setLocalPlan(updatedPlan);
 
-      // Track the clarify action
+      // Track clarification (Level 1)
+      await trackClarification(jumpId, 1);
       await trackAction('clarify');
 
-      toast.success('Sub-steps generated successfully!');
+      // Save to database
+      if (jumpId) {
+        await updateJump(jumpId, { structured_plan: updatedPlan });
+      }
+
+      toast.success('Sub-steps generated successfully');
     } catch (error) {
       console.error('Error clarifying step:', error);
       toast.error('Failed to generate sub-steps. Please try again.');
@@ -402,6 +399,7 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
       setRerouteOptions(prev => ({ ...prev, [stepKey]: data.directions }));
       
       // Track the reroute action (only for authenticated users)
+      await trackReroute(jumpId);
       await trackAction('reroute');
       
       toast.success('Alternative routes generated successfully!');
@@ -566,7 +564,8 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
       // Expand the Level 2 sub-steps
       setExpandedLevel2SubSteps(prev => new Set(prev).add(subStepKey));
 
-      // Track the clarify action
+      // Track the clarify action (Level 2)
+      await trackClarification(jumpId, 2);
       await trackAction('clarify');
 
       toast.success('Level 2 sub-steps generated successfully!');
@@ -739,6 +738,7 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
       }
 
       setExpandedLevel3SubSteps(prev => new Set(prev).add(level2SubStepKey));
+      await trackClarification(jumpId, 3);
       await trackAction('clarify');
 
       toast.success('Level 3 sub-steps generated successfully!');
@@ -906,6 +906,7 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
       }
 
       setExpandedLevel4SubSteps(prev => new Set(prev).add(level3SubStepKey));
+      await trackClarification(jumpId, 4);
       await trackAction('clarify');
 
       toast.success('Level 4 sub-steps generated successfully!');
