@@ -212,12 +212,12 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send welcome email to the subscriber
     const welcomeSubject = isResubscription 
-      ? "Welcome Back to JumpinAI - Great to Have You Again!" 
-      : "Welcome to JumpinAI - Your AI Transformation Journey Starts Now!";
+      ? "Welcome Back to JumpinAI! 🚀" 
+      : "Welcome to JumpinAI — Let's Transform How You Work with AI 🚀";
 
     const welcomeMessage = isResubscription
-      ? "Welcome back! We're thrilled to have you rejoin our community of AI professionals."
-      : "You're now part of an exclusive community of 30,000+ industry leaders who are strategically implementing AI to transform their businesses.";
+      ? "We're thrilled to have you back! You're reconnecting with a community of forward-thinking professionals who are leveraging AI to work smarter, faster, and more strategically."
+      : "Thank you for joining our community! You've just taken the first step toward mastering AI in your daily work. We're here to guide you every step of the way.";
 
     console.log("Sending welcome email to:", sanitizedEmail);
     const welcomeResponse = await resend.emails.send({
@@ -225,57 +225,63 @@ const handler = async (req: Request): Promise<Response> => {
       to: [sanitizedEmail],
       subject: welcomeSubject,
       html: `
-        <div style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-          <div style="text-align: center; padding: 20px;">
-            <img src="https://jumpinai.com/images/jumpinai-logo-email.png" alt="JumpinAI" style="max-width: 150px; height: auto;" />
+        <div style="max-width: 600px; margin: 0 auto; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; line-height: 1.6; color: #1f2937;">
+          <div style="text-align: center; padding: 30px 20px;">
+            <img src="https://jumpinai.com/images/jumpinai-logo-email.png" alt="JumpinAI" style="max-width: 180px; height: auto;" />
           </div>
           
-          <div style="background: linear-gradient(135deg, #374151 0%, #1f2937 100%); padding: 30px; text-align: center;">
-            <h1 style="color: white; margin: 0; font-size: 28px;">${isResubscription ? 'Welcome Back to JumpinAI!' : 'Welcome to JumpinAI!'}</h1>
-            <p style="color: #d1d5db; margin: 10px 0 0 0; font-size: 16px;">Your AI transformation journey ${isResubscription ? 'continues' : 'starts now'}</p>
+          <div style="background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%); padding: 40px 30px; text-align: center; border-radius: 12px 12px 0 0;">
+            <h1 style="color: white; margin: 0; font-size: 32px; font-weight: 700; letter-spacing: -0.5px;">${isResubscription ? 'Welcome Back! 🎉' : 'Welcome to JumpinAI! 🚀'}</h1>
+            <p style="color: rgba(255,255,255,0.95); margin: 15px 0 0 0; font-size: 18px; font-weight: 400;">Your AI transformation journey ${isResubscription ? 'continues' : 'begins now'}</p>
           </div>
           
-          <div style="padding: 30px; background: #f9f9f9;">
-            <div style="background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-              <h2 style="color: #374151; margin-bottom: 20px;">${isResubscription ? 'Thanks for rejoining' : 'Thanks for joining'} 30,000+ professionals!</h2>
-              
-              <p style="font-size: 16px; margin-bottom: 20px;">
-                ${welcomeMessage}
+          <div style="padding: 40px 30px; background: #ffffff; border-radius: 0 0 12px 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+            <p style="font-size: 17px; line-height: 1.7; margin-bottom: 25px; color: #374151;">
+              ${welcomeMessage}
+            </p>
+            
+            <div style="background: linear-gradient(135deg, #f0f9ff 0%, #f5f3ff 100%); padding: 28px; border-radius: 10px; margin: 30px 0; border-left: 4px solid #3b82f6;">
+              <h3 style="color: #1f2937; margin: 0 0 18px 0; font-size: 20px; font-weight: 600;">What You'll Receive Every Week:</h3>
+              <ul style="margin: 0; padding-left: 22px; color: #374151; font-size: 16px; line-height: 1.8;">
+                <li style="margin-bottom: 12px;"><strong style="color: #1f2937;">Strategic AI Insights:</strong> Expert guidance on integrating AI into your work and business</li>
+                <li style="margin-bottom: 12px;"><strong style="color: #1f2937;">Exclusive Tools & Prompts:</strong> Ready-to-use resources that deliver immediate results</li>
+                <li style="margin-bottom: 12px;"><strong style="color: #1f2937;">JumpinAI Studio Updates:</strong> Latest features and AI models in our adaptation platform</li>
+                <li style="margin-bottom: 12px;"><strong style="color: #1f2937;">Personalized Jumps:</strong> 3-tab adaptation plans with strategic analysis, tools, and prompts</li>
+                <li style="margin-bottom: 0;"><strong style="color: #1f2937;">Industry Breakthroughs:</strong> Stay ahead with the latest AI developments and trends</li>
+              </ul>
+            </div>
+            
+            <div style="background: #fefce8; padding: 20px; border-radius: 8px; border-left: 4px solid #eab308; margin: 25px 0;">
+              <p style="margin: 0; color: #713f12; font-size: 15px; line-height: 1.6;">
+                <strong style="color: #854d0e;">🎯 Pro Tip:</strong> Each newsletter is packed with actionable strategies you can implement immediately. No fluff, just results.
               </p>
-              
-              <div style="background: #f3f4f6; padding: 20px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #374151;">
-                <h3 style="color: #374151; margin-top: 0;">What you'll receive:</h3>
-                <ul style="margin: 10px 0; padding-left: 20px;">
-                  <li><strong>Weekly AI Insights:</strong> Latest tools and strategic workflows</li>
-                  <li><strong>Professional Resources:</strong> Actionable guides and case studies</li>
-                  <li><strong>Industry Updates:</strong> Stay ahead of AI trends and innovations</li>
-                  <li><strong>Exclusive Content:</strong> First access to our premium resources</li>
-                </ul>
-              </div>
-              
-              <p style="font-size: 16px; margin: 20px 0;">
-                Our next newsletter is coming soon with actionable AI strategies you can implement immediately. Get ready to accelerate your transformation!
+            </div>
+            
+            <p style="font-size: 17px; margin: 25px 0; color: #374151; line-height: 1.7;">
+              Your first newsletter is on its way! In the meantime, explore <a href="https://jumpinai.com" style="color: #3b82f6; text-decoration: none; font-weight: 600; border-bottom: 2px solid #3b82f6;">JumpinAI Studio</a> to start creating personalized AI adaptation plans today.
+            </p>
+            
+            <div style="text-align: center; margin: 35px 0;">
+              <a href="https://jumpinai.com" style="background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%); color: white; padding: 14px 32px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: 600; font-size: 16px; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); transition: all 0.3s;">Visit JumpinAI Studio</a>
+            </div>
+            
+            <div style="border-top: 2px solid #f3f4f6; padding-top: 25px; margin-top: 30px; text-align: center;">
+              <p style="margin: 0 0 10px 0; color: #6b7280; font-size: 15px;">Questions? We're always here to help!</p>
+              <p style="margin: 0; color: #374151; font-size: 15px;">
+                Email us at <a href="mailto:info@jumpinai.com" style="color: #3b82f6; text-decoration: none; font-weight: 600;">info@jumpinai.com</a>
               </p>
-              
-              <div style="text-align: center; margin: 25px 0;">
-                <a href="mailto:info@jumpinai.com" style="background: linear-gradient(135deg, #374151 0%, #1f2937 100%); color: white; padding: 12px 25px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: 600;">Get in Touch</a>
-              </div>
-              
-              <div style="border-top: 1px solid #e5e7eb; padding-top: 20px; margin-top: 25px; text-align: center; font-size: 14px; color: #6b7280;">
-                <p style="margin: 5px 0;">Questions? We're here to help!</p>
-                <p style="margin: 5px 0;">Reply to this email or contact us at <a href="mailto:info@jumpinai.com" style="color: #374151;">info@jumpinai.com</a></p>
-              </div>
             </div>
           </div>
           
-          <div style="background: #374151; padding: 20px; text-align: center;">
-            <p style="color: white; margin: 0; font-size: 14px;">
-              ${isResubscription ? 'Welcome back!' : 'Welcome aboard!'}<br>
-              <strong>JumpinAI - Your Personalized AI Adaptation Studio</strong><br>
-              <a href="mailto:info@jumpinai.com" style="color: #d1d5db;">info@jumpinai.com</a>
+          <div style="padding: 25px 30px; text-align: center; background: #f9fafb; margin-top: 20px; border-radius: 8px;">
+            <p style="color: #374151; margin: 0 0 8px 0; font-size: 15px; font-weight: 600;">
+              JumpinAI — Your Personalized AI Adaptation Studio
             </p>
-            <p style="color: #9ca3af; margin: 15px 0 0 0; font-size: 12px;">
-              You can <a href="${unsubscribeUrl}" style="color: #d1d5db; text-decoration: underline;">unsubscribe</a> at any time.
+            <p style="color: #6b7280; margin: 0 0 15px 0; font-size: 14px;">
+              Transforming how professionals work with AI
+            </p>
+            <p style="color: #9ca3af; margin: 0; font-size: 13px;">
+              <a href="${unsubscribeUrl}" style="color: #6b7280; text-decoration: underline;">Unsubscribe</a> anytime with one click
             </p>
           </div>
         </div>

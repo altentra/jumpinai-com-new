@@ -31,6 +31,9 @@ major_version = 15
 [functions.send-newsletter-email]
 verify_jwt = false
 
+[functions.send-test-newsletter-sample]
+verify_jwt = false
+
 [functions.send-contact-email]
 verify_jwt = false
 
