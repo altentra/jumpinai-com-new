@@ -197,7 +197,7 @@ const PitchDeck = () => {
                 <div className="grid md:grid-cols-3 gap-4">
                   <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 rounded-xl p-5 hover:border-primary/40 transition-all duration-300">
                     <div className="flex items-center gap-2 mb-3">
-                      <div className="w-7 h-7 rounded-full bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center text-primary-foreground text-sm font-bold">1</div>
+                      <div className="w-7 h-7 rounded-full bg-gradient-to-br from-primary/20 to-primary/30 border border-primary/40 flex items-center justify-center text-primary text-sm font-bold">1</div>
                       <h4 className="text-base font-bold text-foreground">Overview Tab</h4>
                     </div>
                     <div className="space-y-2 text-xs text-muted-foreground">
@@ -221,7 +221,7 @@ const PitchDeck = () => {
                   
                   <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 rounded-xl p-5 hover:border-primary/40 transition-all duration-300">
                     <div className="flex items-center gap-2 mb-3">
-                      <div className="w-7 h-7 rounded-full bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center text-primary-foreground text-sm font-bold">2</div>
+                      <div className="w-7 h-7 rounded-full bg-gradient-to-br from-primary/20 to-primary/30 border border-primary/40 flex items-center justify-center text-primary text-sm font-bold">2</div>
                       <h4 className="text-base font-bold text-foreground">Adaptive Plan Tab</h4>
                     </div>
                     <div className="space-y-2 text-xs text-muted-foreground">
@@ -245,7 +245,7 @@ const PitchDeck = () => {
                   
                   <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 rounded-xl p-5 hover:border-primary/40 transition-all duration-300">
                     <div className="flex items-center gap-2 mb-3">
-                      <div className="w-7 h-7 rounded-full bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center text-primary-foreground text-sm font-bold">3</div>
+                      <div className="w-7 h-7 rounded-full bg-gradient-to-br from-primary/20 to-primary/30 border border-primary/40 flex items-center justify-center text-primary text-sm font-bold">3</div>
                       <h4 className="text-base font-bold text-foreground">Tools & Prompts Tab</h4>
                     </div>
                     <div className="space-y-2 text-xs text-muted-foreground">
@@ -377,7 +377,11 @@ const PitchDeck = () => {
                 <ul className="space-y-2 text-xs text-muted-foreground">
                   <li className="flex items-start gap-2">
                     <span className="text-primary mt-0.5">•</span>
-                    <span>1 free Jump to experience value</span>
+                    <span>3 free Jumps to experience value</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-0.5">•</span>
+                    <span>5 welcome credits upon sign up</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-primary mt-0.5">•</span>
@@ -459,7 +463,7 @@ const PitchDeck = () => {
               </div>
             </div>
             
-            <div className="p-5 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
+            <div className="p-5 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 mt-8">
               <h4 className="text-base font-bold text-foreground mb-3 text-center">Growth Strategy</h4>
               <div className="grid md:grid-cols-3 gap-4">
                 <div className="text-center">
