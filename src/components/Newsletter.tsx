@@ -133,7 +133,7 @@ const Newsletter = () => {
           </h2>
           
           <p className="text-sm sm:text-base mb-6 sm:mb-8 text-muted-foreground max-w-2xl mx-auto px-4">
-            Unlock AI-powered productivity with JumpinAI Studio, exclusive workflows, cutting-edge tools, and strategic insights—delivered weekly to help you work smarter, not harder.
+            Get exclusive access to JumpinAI Studio updates, strategic Jumps for adaptation planning, powerful tools and prompts, and expert insights—delivered weekly to accelerate your AI transformation.
           </p>
           
           {/* Newsletter Form */}
@@ -175,12 +175,6 @@ const Newsletter = () => {
               </button>
             </div>
           </form>
-          
-          <div className="flex justify-center mb-4 sm:mb-5 px-4">
-            <div className="glass px-6 py-3 rounded-2xl border border-border/50">
-              <div className="text-sm sm:text-base font-semibold text-foreground">📬 Weekly Newsletter</div>
-            </div>
-          </div>
           
           <p className="text-muted-foreground text-xs sm:text-sm px-4">
             Actionable insights, zero spam. Manage your subscription anytime—unsubscribe or resubscribe with one click.
