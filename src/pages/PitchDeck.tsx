@@ -4,6 +4,8 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Download, Mail } from 'lucide-react';
 import { Helmet } from "react-helmet-async";
+import { generatePitchDeckPDF } from "@/utils/pdfGenerator";
+import { toast } from "sonner";
 
 const PitchDeck = () => {
   useEffect(() => {
@@ -18,8 +20,13 @@ const PitchDeck = () => {
   }, []);
 
   const handleDownloadPDF = () => {
-    // Functionality to be implemented later
-    console.log("Download PDF clicked");
+    try {
+      generatePitchDeckPDF();
+      toast.success("Pitch Deck PDF downloaded successfully!");
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+      toast.error("Failed to generate PDF. Please try again.");
+    }
   };
 
   return (
