@@ -34,8 +34,12 @@ const handler = async (req: Request): Promise<Response> => {
     const welcomeHtml = `
       <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #ffffff;">
         <!-- Logo -->
-        <div style="text-align: center; margin-bottom: 30px;">
-          <img src="https://jumpinai.com/images/jumpinai-logo-email.png" alt="JumpinAI" style="max-width: 150px; height: auto;" />
+        <div style="text-align: center; padding: 32px 24px 24px 24px;">
+          <img 
+            src="https://jumpinai.com/logo.png" 
+            alt="JumpinAI Logo" 
+            style="width: 84px; height: 84px; display: block; border-radius: 12px; margin: 0 auto;"
+          />
         </div>
         
         <!-- Header with gradient -->
@@ -90,26 +94,6 @@ const handler = async (req: Request): Promise<Response> => {
           </div>
         </div>
 
-        <!-- Quick start guide -->
-        <div style="background-color: #edf2f7; padding: 25px; border-radius: 8px; margin-bottom: 30px;">
-          <h3 style="color: #2d3748; margin: 0 0 20px 0; font-size: 20px; font-weight: bold;">⚡ Quick Start Guide:</h3>
-          
-          <div style="margin-bottom: 15px;">
-            <strong style="color: #2d3748;">1. Explore Your Dashboard</strong><br>
-            <span style="color: #4a5568; font-size: 14px;">Visit your Pro dashboard to see all available resources</span>
-          </div>
-          
-          <div style="margin-bottom: 15px;">
-            <strong style="color: #2d3748;">2. Try Our Top Blueprints</strong><br>
-            <span style="color: #4a5568; font-size: 14px;">Start with our most popular blueprints for immediate results</span>
-          </div>
-          
-          <div style="margin-bottom: 0;">
-            <strong style="color: #2d3748;">3. Join Our Community</strong><br>
-            <span style="color: #4a5568; font-size: 14px;">Connect with other Pro members and share your wins</span>
-          </div>
-        </div>
-
         <!-- CTA Button -->
         <div style="text-align: center; margin-bottom: 30px;">
           <a href="https://www.jumpinai.com/dashboard" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px 30px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 16px;">
@@ -117,22 +101,23 @@ const handler = async (req: Request): Promise<Response> => {
           </a>
         </div>
 
-        <!-- Support -->
-        <div style="background-color: #fffaf0; padding: 20px; border-radius: 8px; border-left: 4px solid #ed8936; margin-bottom: 30px;">
-          <h4 style="color: #2d3748; margin: 0 0 10px 0; font-size: 16px; font-weight: bold;">💬 Need Help Getting Started?</h4>
-          <p style="color: #4a5568; margin: 0; font-size: 14px; line-height: 1.5;">
-            As a Pro member, you get priority support! Email us at <a href="mailto:support@jumpinai.com" style="color: #667eea; text-decoration: none;">support@jumpinai.com</a> and we'll help you get the most out of your subscription.
+        <!-- Footer -->
+        <div style="border-top: 1px solid #e5e7eb; padding-top: 18px; margin-top: 20px; text-align: center;">
+          <p style="margin: 0 0 6px 0; color: #6b7280; font-size: 13px;">Questions? We're always here to help!</p>
+          <p style="margin: 0; color: #1f2937; font-size: 13px;">
+            Email us at <a href="mailto:info@jumpinai.com" style="color: #3b82f6; text-decoration: none; font-weight: 600;">info@jumpinai.com</a>
           </p>
         </div>
 
-        <!-- Footer -->
-        <div style="text-align: center; padding-top: 20px; border-top: 1px solid #e2e8f0;">
-          <p style="color: #718096; font-size: 14px; margin: 0 0 10px 0;">
-            <strong>JumpinAI - Your Personalized AI Adaptation Studio</strong>
+        <div style="padding: 20px 24px; text-align: center; background: #f9fafb; margin-top: 14px; border-radius: 6px;">
+          <p style="color: #111827; margin: 0 0 4px 0; font-size: 14px; font-weight: 600;">
+            JumpinAI.
           </p>
-          <p style="color: #a0aec0; font-size: 12px; margin: 0;">
-            <a href="https://www.jumpinai.com" style="color: #374151; text-decoration: none;">Visit Website</a> | 
-            <a href="https://www.jumpinai.com/dashboard/subscription" style="color: #374151; text-decoration: none; margin-left: 10px;">Manage Subscription</a>
+          <p style="color: #6b7280; margin: 0 0 14px 0; font-size: 13px;">
+            Your Personalized AI Adaptation Studio.
+          </p>
+          <p style="color: #9ca3af; margin: 0; font-size: 12px;">
+            <a href="https://www.jumpinai.com/dashboard/subscription" style="color: #6b7280; text-decoration: underline;">Manage Subscription</a>
           </p>
         </div>
       </div>

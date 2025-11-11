@@ -1,4 +1,3 @@
-
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "https://esm.sh/resend@2.0.0";
 
@@ -6,37 +5,35 @@ const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-  "X-Content-Type-Options": "nosniff",
-  "X-Frame-Options": "DENY",
-  "X-XSS-Protection": "1; mode=block",
-  "Referrer-Policy": "strict-origin-when-cross-origin",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
 };
 
 interface ContactFormData {
   name: string;
   email: string;
-  subject: string;
   message: string;
 }
 
-// Rate limiting check (basic implementation)
+// Simple in-memory rate limiting
 const rateLimitCache = new Map<string, { count: number; resetTime: number }>();
 
 const checkRateLimit = (ip: string): boolean => {
   const now = Date.now();
-  const limit = rateLimitCache.get(ip);
-  
-  if (!limit || now > limit.resetTime) {
-    rateLimitCache.set(ip, { count: 1, resetTime: now + 60000 }); // 1 minute window
+  const limit = 5; // 5 requests
+  const window = 60 * 1000; // per minute
+
+  const record = rateLimitCache.get(ip);
+  if (!record || now > record.resetTime) {
+    rateLimitCache.set(ip, { count: 1, resetTime: now + window });
     return true;
   }
-  
-  if (limit.count >= 5) { // Max 5 contact requests per minute
+
+  if (record.count >= limit) {
     return false;
   }
-  
-  limit.count++;
+
+  record.count++;
   return true;
 };
 
@@ -50,22 +47,31 @@ const sanitizeInput = (input: string): string => {
 };
 
 const handler = async (req: Request): Promise<Response> => {
-  console.log("Contact form function started");
-  console.log("Environment check - RESEND_API_KEY:", Deno.env.get("RESEND_API_KEY") ? "Present" : "Missing");
-
+  // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
+  if (req.method !== "POST") {
+    return new Response(JSON.stringify({ error: "Method not allowed" }), {
+      status: 405,
+      headers: { "Content-Type": "application/json", ...corsHeaders },
+    });
+  }
+
   try {
-    // Basic rate limiting
-    const clientIP = req.headers.get("x-forwarded-for") || "unknown";
+    // Get client IP for rate limiting
+    const clientIP =
+      req.headers.get("x-forwarded-for") ||
+      req.headers.get("x-real-ip") ||
+      "unknown";
+
+    // Check rate limit
     if (!checkRateLimit(clientIP)) {
-      console.log("Rate limit exceeded for IP:", clientIP);
+      console.log(`Rate limit exceeded for IP: ${clientIP}`);
       return new Response(
-        JSON.stringify({ 
-          success: false,
-          error: "Too many contact attempts. Please try again later." 
+        JSON.stringify({
+          error: "Too many requests. Please try again in a minute.",
         }),
         {
           status: 429,
@@ -74,169 +80,178 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    const { name, email, subject, message }: ContactFormData = await req.json();
-    
-    console.log("Processing contact form submission:", { name, email, subject });
+    const { name, email, message }: ContactFormData = await req.json();
 
-    // Input validation and sanitization
-    if (!name || !email || !subject || !message) {
-      throw new Error("All fields are required");
+    // Validate required fields
+    if (!name || !email || !message) {
+      return new Response(
+        JSON.stringify({ error: "All fields are required" }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
     }
 
-    // Enhanced email validation
-    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      throw new Error("Invalid email format");
+      return new Response(
+        JSON.stringify({ error: "Invalid email format" }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
     }
 
-    // Length validation
-    if (name.length > 100 || subject.length > 200 || message.length > 2000) {
-      throw new Error("Input too long");
+    // Validate input lengths
+    if (name.length > 100 || message.length > 5000) {
+      return new Response(
+        JSON.stringify({ error: "Input too long" }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
     }
 
-    const sanitizedName = sanitizeInput(name.trim());
-    const sanitizedEmail = email.trim().toLowerCase();
-    const sanitizedSubject = sanitizeInput(subject.trim());
-    const sanitizedMessage = sanitizeInput(message.trim());
+    // Sanitize inputs
+    const sanitizedName = sanitizeInput(name);
+    const sanitizedEmail = sanitizeInput(email);
+    const sanitizedMessage = sanitizeInput(message);
 
-    // Generate unsubscribe URL - FIXED to use correct format
-    const supabaseUrl = Deno.env.get('SUPABASE_URL');
-    const unsubscribeUrl = `${supabaseUrl}/functions/v1/unsubscribe-newsletter?email=${encodeURIComponent(sanitizedEmail)}`;
+    console.log(`Processing contact form submission from ${sanitizedEmail}`);
 
-    console.log("Sending notification email");
+    // Send notification email to info@jumpinai.com
     const notificationResponse = await resend.emails.send({
-      from: "info@jumpinai.com",
+      from: "JumpinAI Contact <contact@jumpinai.com>",
       to: ["info@jumpinai.com"],
-      subject: `New Contact Form Submission - ${sanitizedSubject}`,
+      subject: `New Contact Form Submission from ${sanitizedName}`,
       html: `
-        <div style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-          <div style="background: linear-gradient(135deg, #374151 0%, #1f2937 100%); padding: 30px; text-align: center;">
-            <h1 style="color: white; margin: 0; font-size: 24px;">New Contact Form Submission</h1>
-          </div>
-          
-          <div style="padding: 30px; background: #f9f9f9;">
-            <div style="background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-              <h2 style="color: #374151; margin-bottom: 20px;">Contact Details</h2>
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        </head>
+        <body style="margin: 0; padding: 0; background-color: #f5f5f5; font-family: Arial, sans-serif;">
+          <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
               
-              <div style="margin-bottom: 15px;">
-                <strong style="color: #6b7280;">Name:</strong>
-                <span style="margin-left: 10px;">${sanitizedName}</span>
+              <!-- Header with Logo -->
+              <div style="text-align: center; padding: 30px 20px 20px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <img src="https://jumpinai.com/images/jumpinai-logo-email.png" alt="JumpinAI" style="max-width: 120px; height: auto; border-radius: 12px;" />
               </div>
               
-              <div style="margin-bottom: 15px;">
-                <strong style="color: #6b7280;">Email:</strong>
-                <span style="margin-left: 10px;"><a href="mailto:${sanitizedEmail}" style="color: #374151;">${sanitizedEmail}</a></span>
+              <!-- Content -->
+              <div style="padding: 30px;">
+                <h1 style="color: #1a1a1a; font-size: 24px; margin: 0 0 20px 0; text-align: center;">New Contact Form Submission</h1>
+                
+                <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                  <p style="margin: 0 0 10px 0; color: #333;"><strong>Name:</strong> ${sanitizedName}</p>
+                  <p style="margin: 0 0 10px 0; color: #333;"><strong>Email:</strong> ${sanitizedEmail}</p>
+                  <p style="margin: 0; color: #333;"><strong>IP Address:</strong> ${clientIP}</p>
+                </div>
+                
+                <div style="background-color: #ffffff; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px;">
+                  <p style="margin: 0 0 10px 0; color: #333; font-weight: bold;">Message:</p>
+                  <p style="margin: 0; color: #555; line-height: 1.6; white-space: pre-wrap;">${sanitizedMessage}</p>
+                </div>
               </div>
               
-              <div style="margin-bottom: 15px;">
-                <strong style="color: #6b7280;">Subject:</strong>
-                <span style="margin-left: 10px;">${sanitizedSubject}</span>
+              <!-- Footer -->
+              <div style="background-color: #f8f9fa; padding: 20px; text-align: center; border-top: 1px solid #e0e0e0;">
+                <p style="margin: 0 0 10px 0; color: #666; font-size: 14px;">Questions? We're always here to help!</p>
+                <p style="margin: 0 0 15px 0; color: #666; font-size: 14px;">Email us at <a href="mailto:info@jumpinai.com" style="color: #667eea; text-decoration: none;">info@jumpinai.com</a></p>
+                <p style="margin: 0 0 5px 0; color: #999; font-size: 13px; font-weight: bold;">JumpinAI.</p>
+                <p style="margin: 0 0 10px 0; color: #999; font-size: 12px;">Your Personalized AI Adaptation Studio.</p>
               </div>
               
-              <div style="margin-bottom: 20px;">
-                <strong style="color: #6b7280;">Message:</strong>
-                <div style="margin-top: 10px; padding: 15px; background: #f8f9fa; border-radius: 4px; white-space: pre-wrap;">${sanitizedMessage}</div>
-              </div>
             </div>
           </div>
-          
-          <div style="background: #374151; padding: 20px; text-align: center;">
-            <p style="color: white; margin: 0; font-size: 14px;">
-              <strong>JumpinAI - Your Personalized AI Adaptation Studio</strong>
-            </p>
-          </div>
-        </div>
+        </body>
+        </html>
       `,
     });
 
-    console.log("Notification email sent:", notificationResponse);
+    if (notificationResponse.error) {
+      console.error("Failed to send notification email:", notificationResponse.error);
+      throw new Error("Failed to send notification email");
+    }
 
-    console.log("Sending confirmation email");
+    // Send confirmation email to the submitter
     const confirmationResponse = await resend.emails.send({
-      from: "info@jumpinai.com",
-      to: [sanitizedEmail],
-      subject: "Thank you for contacting JumpinAI - We'll be in touch soon!",
+      from: "JumpinAI <noreply@jumpinai.com>",
+      to: [email],
+      subject: "We received your message - JumpinAI",
       html: `
-        <div style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-          <div style="text-align: center; padding: 20px;">
-            <img src="https://jumpinai.com/images/jumpinai-logo-email.png" alt="JumpinAI" style="max-width: 150px; height: auto;" />
-          </div>
-          
-          <div style="background: linear-gradient(135deg, #374151 0%, #1f2937 100%); padding: 30px; text-align: center;">
-            <h1 style="color: white; margin: 0; font-size: 28px;">Thank You for Reaching Out!</h1>
-            <p style="color: #d1d5db; margin: 10px 0 0 0; font-size: 16px;">We've received your message and will respond soon</p>
-          </div>
-          
-          <div style="padding: 30px; background: #f9f9f9;">
-            <div style="background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-              <h2 style="color: #374151; margin-bottom: 20px;">Hi ${sanitizedName},</h2>
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        </head>
+        <body style="margin: 0; padding: 0; background-color: #f5f5f5; font-family: Arial, sans-serif;">
+          <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
               
-              <p style="font-size: 16px; margin-bottom: 20px;">
-                Thank you for contacting JumpinAI! We've received your message about "<strong>${sanitizedSubject}</strong>" and appreciate you taking the time to reach out to us.
-              </p>
-              
-              <div style="background: #f3f4f6; padding: 20px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #374151;">
-                <h3 style="color: #374151; margin-top: 0;">What happens next?</h3>
-                <ul style="margin: 10px 0; padding-left: 20px;">
-                  <li>Our team will review your message within 24 hours</li>
-                  <li>We'll respond directly to this email address: ${sanitizedEmail}</li>
-                  <li>For urgent matters, you can also reach us at info@jumpinai.com</li>
-                </ul>
+              <!-- Header with Logo -->
+              <div style="text-align: center; padding: 30px 20px 20px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <img src="https://jumpinai.com/images/jumpinai-logo-email.png" alt="JumpinAI" style="max-width: 120px; height: auto; border-radius: 12px;" />
               </div>
               
-              <p style="font-size: 16px; margin: 20px 0;">
-                In the meantime, feel free to explore our website and learn more about how AI can transform your business operations.
-              </p>
-              
-              <div style="text-align: center; margin: 25px 0;">
-                <a href="https://www.jumpinai.com" style="background: linear-gradient(135deg, #374151 0%, #1f2937 100%); color: white; padding: 12px 25px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: 600;">Visit Our Website</a>
+              <!-- Content -->
+              <div style="padding: 30px;">
+                <h1 style="color: #1a1a1a; font-size: 24px; margin: 0 0 20px 0; text-align: center;">Thank you for reaching out!</h1>
+                
+                <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 0 0 15px 0;">Hi ${sanitizedName},</p>
+                
+                <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 0 0 15px 0;">
+                  We've received your message and our team will get back to you as soon as possible.
+                </p>
+                
+                <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 0;">
+                  We typically respond within 24-48 hours. In the meantime, feel free to explore our platform and discover how JumpinAI can help you adapt to the AI revolution.
+                </p>
               </div>
               
-              <div style="border-top: 1px solid #e5e7eb; padding-top: 20px; margin-top: 25px; text-align: center; font-size: 14px; color: #6b7280;">
-                <p style="margin: 5px 0;">Want to stay updated with our latest AI insights?</p>
-                <p style="margin: 5px 0;"><a href="https://www.jumpinai.com#newsletter" style="color: #374151;">Subscribe to our newsletter</a> for weekly AI strategies and tools!</p>
+              <!-- Footer -->
+              <div style="background-color: #f8f9fa; padding: 20px; text-align: center; border-top: 1px solid #e0e0e0;">
+                <p style="margin: 0 0 10px 0; color: #666; font-size: 14px;">Questions? We're always here to help!</p>
+                <p style="margin: 0 0 15px 0; color: #666; font-size: 14px;">Email us at <a href="mailto:info@jumpinai.com" style="color: #667eea; text-decoration: none;">info@jumpinai.com</a></p>
+                <p style="margin: 0 0 5px 0; color: #999; font-size: 13px; font-weight: bold;">JumpinAI.</p>
+                <p style="margin: 0 0 10px 0; color: #999; font-size: 12px;">Your Personalized AI Adaptation Studio.</p>
               </div>
+              
             </div>
           </div>
-          
-          <div style="background: #374151; padding: 20px; text-align: center;">
-            <p style="color: white; margin: 0; font-size: 14px;">
-              Best regards,<br>
-              <strong>JumpinAI - Your Personalized AI Adaptation Studio</strong><br>
-              <a href="mailto:info@jumpinai.com" style="color: #d1d5db;">info@jumpinai.com</a>
-            </p>
-            <p style="color: #9ca3af; margin: 15px 0 0 0; font-size: 12px;">
-              If you subscribed to our newsletter, you can <a href="${unsubscribeUrl}" style="color: #d1d5db; text-decoration: underline;">unsubscribe</a> at any time.
-            </p>
-          </div>
-        </div>
+        </body>
+        </html>
       `,
     });
 
-    console.log("Confirmation email sent:", confirmationResponse);
+    if (confirmationResponse.error) {
+      console.error("Failed to send confirmation email:", confirmationResponse.error);
+    }
+
+    console.log("Contact form emails sent successfully");
 
     return new Response(
-      JSON.stringify({ 
-        success: true, 
-        notificationResponse, 
-        confirmationResponse 
+      JSON.stringify({
+        success: true,
+        message: "Your message has been sent successfully",
       }),
       {
         status: 200,
-        headers: {
-          "Content-Type": "application/json",
-          ...corsHeaders,
-        },
+        headers: { "Content-Type": "application/json", ...corsHeaders },
       }
     );
   } catch (error: any) {
     console.error("Error in send-contact-email function:", error);
-    console.error("Error stack:", error.stack);
     return new Response(
-      JSON.stringify({ 
-        success: false,
-        error: "We're experiencing technical difficulties. Please try again in a few moments or contact us directly at info@jumpinai.com.",
-        details: error.message 
+      JSON.stringify({
+        error: "Failed to send message. Please try again later.",
       }),
       {
         status: 500,

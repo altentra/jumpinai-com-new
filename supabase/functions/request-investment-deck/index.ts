@@ -122,7 +122,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Processing investment deck request for:", sanitizedData.email);
 
-    // Generate a secure download token (you would typically store this in a database)
+    // Generate a secure download token
     const downloadToken = crypto.randomUUID();
     const downloadUrl = `https://cieczaajcgkgdgenfdzi.supabase.co/functions/v1/download-investment-deck?token=${downloadToken}&email=${encodeURIComponent(sanitizedData.email)}`;
 
@@ -132,29 +132,53 @@ const handler = async (req: Request): Promise<Response> => {
       to: ["info@jumpinai.com"],
       subject: `📊 Investment Deck Request from ${sanitizedData.name}`,
       html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9;">
-          <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-            <div style="text-align: center; margin-bottom: 30px;">
-              <h1 style="color: #2563eb; margin: 0;">Investment Deck Request</h1>
-              <div style="width: 50px; height: 3px; background: linear-gradient(to right, #2563eb, #3b82f6); margin: 10px auto;"></div>
-            </div>
-            
-            <div style="background-color: #f8fafc; padding: 20px; border-radius: 8px;">
-              <h2 style="color: #1e293b; margin-top: 0;">Professional Details</h2>
-              <p style="margin: 8px 0;"><strong>Name:</strong> ${sanitizedData.name}</p>
-              <p style="margin: 8px 0;"><strong>Email:</strong> ${sanitizedData.email}</p>
-              <p style="margin: 8px 0;"><strong>Company:</strong> ${sanitizedData.company || "Not provided"}</p>
-              <p style="margin: 8px 0;"><strong>Title:</strong> ${sanitizedData.title || "Not provided"}</p>
-              <p style="margin: 8px 0;"><strong>Download Token:</strong> ${downloadToken}</p>
-            </div>
-            
-            <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
-              <p style="color: #64748b; font-size: 14px; margin: 0;">
-                Investment deck download initiated.
-              </p>
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        </head>
+        <body style="margin: 0; padding: 0; background-color: #f5f5f5; font-family: Arial, sans-serif;">
+          <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+              
+              <!-- Header with Logo -->
+              <div style="text-align: center; padding: 30px 20px 20px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <img src="https://jumpinai.com/images/jumpinai-logo-email.png" alt="JumpinAI" style="max-width: 120px; height: auto; border-radius: 12px;" />
+              </div>
+              
+              <!-- Content -->
+              <div style="padding: 30px;">
+                <h1 style="color: #1a1a1a; font-size: 24px; margin: 0 0 20px 0; text-align: center;">Investment Deck Request</h1>
+                
+                <div style="background-color: #f8fafc; padding: 20px; border-radius: 8px;">
+                  <h2 style="color: #1e293b; margin: 0 0 15px 0; font-size: 18px;">Professional Details</h2>
+                  <p style="margin: 5px 0; color: #333;"><strong>Name:</strong> ${sanitizedData.name}</p>
+                  <p style="margin: 5px 0; color: #333;"><strong>Email:</strong> ${sanitizedData.email}</p>
+                  <p style="margin: 5px 0; color: #333;"><strong>Company:</strong> ${sanitizedData.company || "Not provided"}</p>
+                  <p style="margin: 5px 0; color: #333;"><strong>Title:</strong> ${sanitizedData.title || "Not provided"}</p>
+                  <p style="margin: 5px 0; color: #333;"><strong>Download Token:</strong> ${downloadToken}</p>
+                </div>
+                
+                <div style="text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
+                  <p style="color: #64748b; font-size: 14px; margin: 0;">
+                    Investment deck download initiated.
+                  </p>
+                </div>
+              </div>
+              
+              <!-- Footer -->
+              <div style="background-color: #f8f9fa; padding: 20px; text-align: center; border-top: 1px solid #e0e0e0;">
+                <p style="margin: 0 0 10px 0; color: #666; font-size: 14px;">Questions? We're always here to help!</p>
+                <p style="margin: 0 0 15px 0; color: #666; font-size: 14px;">Email us at <a href="mailto:info@jumpinai.com" style="color: #667eea; text-decoration: none;">info@jumpinai.com</a></p>
+                <p style="margin: 0 0 5px 0; color: #999; font-size: 13px; font-weight: bold;">JumpinAI.</p>
+                <p style="margin: 0 0 10px 0; color: #999; font-size: 12px;">Your Personalized AI Adaptation Studio.</p>
+              </div>
+              
             </div>
           </div>
-        </div>
+        </body>
+        </html>
       `,
     });
 
@@ -170,66 +194,78 @@ const handler = async (req: Request): Promise<Response> => {
       to: [sanitizedData.email],
       subject: "Your JumpinAI Investment Deck is Ready",
       html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9;">
-          <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-            <div style="text-align: center; margin-bottom: 30px;">
-              <h1 style="color: #2563eb; margin: 0;">Your Investment Deck is Ready</h1>
-              <div style="width: 50px; height: 3px; background: linear-gradient(to right, #2563eb, #3b82f6); margin: 10px auto;"></div>
-            </div>
-            
-            <div style="margin-bottom: 25px;">
-              <p style="font-size: 16px; line-height: 1.6; color: #334155; margin-bottom: 15px;">
-                Dear ${sanitizedData.name},
-              </p>
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        </head>
+        <body style="margin: 0; padding: 0; background-color: #f5f5f5; font-family: Arial, sans-serif;">
+          <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
               
-              <p style="font-size: 16px; line-height: 1.6; color: #334155; margin-bottom: 15px;">
-                Thank you for your interest in JumpinAI. We're excited to share our investment opportunity with you.
-              </p>
+              <!-- Header with Logo -->
+              <div style="text-align: center; padding: 30px 20px 20px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <img src="https://jumpinai.com/images/jumpinai-logo-email.png" alt="JumpinAI" style="max-width: 120px; height: auto; border-radius: 12px;" />
+              </div>
               
-              <p style="font-size: 16px; line-height: 1.6; color: #334155; margin-bottom: 25px;">
-                You can access our comprehensive investment deck using the secure download link below:
-              </p>
-            </div>
-            
-            <div style="text-align: center; margin: 30px 0;">
-              <a href="${downloadUrl}" style="display: inline-block; background: linear-gradient(135deg, #2563eb, #3b82f6); color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px;">
-                Download Investment Deck
-              </a>
-            </div>
-            
-            <div style="background-color: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
-              <h3 style="color: #1e293b; margin-top: 0; margin-bottom: 15px;">What's included in the deck:</h3>
-              <ul style="margin: 0; padding-left: 20px; color: #334155;">
-                <li style="margin-bottom: 8px;">Market opportunity and size analysis</li>
-                <li style="margin-bottom: 8px;">Business model and revenue streams</li>
-                <li style="margin-bottom: 8px;">Financial projections and growth metrics</li>
-                <li style="margin-bottom: 8px;">Competitive landscape analysis</li>
-                <li style="margin-bottom: 8px;">Team background and expertise</li>
-                <li>Use of funds and investment terms</li>
-              </ul>
-            </div>
-            
-            <div style="background-color: #eff6ff; padding: 20px; border-radius: 8px; border-left: 4px solid #2563eb; margin-bottom: 25px;">
-              <p style="margin: 0; color: #1e40af; font-weight: 500;">
-                <strong>Next Steps:</strong> After reviewing the deck, we'd love to schedule a call to discuss the opportunity in more detail and answer any questions you may have.
-              </p>
-            </div>
-            
-            <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
-              <p style="color: #64748b; font-size: 14px; margin: 5px 0;">
-                Questions? Reply to this email or contact us at<br>
-                <a href="mailto:investors@jumpinai.com" style="color: #2563eb;">investors@jumpinai.com</a>
-              </p>
-              <p style="color: #64748b; font-size: 14px; margin: 15px 0 5px 0;">
-                Best regards,<br>
-                <strong style="color: #2563eb;">The JumpinAI Team</strong>
-              </p>
-              <p style="color: #64748b; font-size: 12px; margin-top: 15px;">
-                This download link is secure and expires in 7 days for security purposes.
-              </p>
+              <!-- Content -->
+              <div style="padding: 30px;">
+                <h1 style="color: #1a1a1a; font-size: 24px; margin: 0 0 20px 0; text-align: center;">Your Investment Deck is Ready</h1>
+                
+                <p style="font-size: 16px; line-height: 1.6; color: #334155; margin: 0 0 15px 0;">
+                  Dear ${sanitizedData.name},
+                </p>
+                
+                <p style="font-size: 16px; line-height: 1.6; color: #334155; margin: 0 0 15px 0;">
+                  Thank you for your interest in JumpinAI. We're excited to share our investment opportunity with you.
+                </p>
+                
+                <p style="font-size: 16px; line-height: 1.6; color: #334155; margin: 0 0 25px 0;">
+                  You can access our comprehensive investment deck using the secure download link below:
+                </p>
+                
+                <div style="text-align: center; margin: 30px 0;">
+                  <a href="${downloadUrl}" style="display: inline-block; background: linear-gradient(135deg, #2563eb, #3b82f6); color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px;">
+                    Download Investment Deck
+                  </a>
+                </div>
+                
+                <div style="background-color: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
+                  <h3 style="color: #1e293b; margin: 0 0 15px 0; font-size: 16px;">What's included in the deck:</h3>
+                  <ul style="margin: 0; padding-left: 20px; color: #334155; font-size: 15px;">
+                    <li style="margin-bottom: 8px;">Market opportunity and size analysis</li>
+                    <li style="margin-bottom: 8px;">Business model and revenue streams</li>
+                    <li style="margin-bottom: 8px;">Financial projections and growth metrics</li>
+                    <li style="margin-bottom: 8px;">Competitive landscape analysis</li>
+                    <li style="margin-bottom: 8px;">Team background and expertise</li>
+                    <li>Use of funds and investment terms</li>
+                  </ul>
+                </div>
+                
+                <div style="background-color: #eff6ff; padding: 20px; border-radius: 8px; border-left: 4px solid #2563eb; margin-bottom: 25px;">
+                  <p style="margin: 0; color: #1e40af; font-weight: 500; font-size: 14px;">
+                    <strong>Next Steps:</strong> After reviewing the deck, we'd love to schedule a call to discuss the opportunity in more detail and answer any questions you may have.
+                  </p>
+                </div>
+                
+                <p style="color: #64748b; font-size: 13px; margin: 15px 0 5px 0; text-align: center;">
+                  This download link is secure and expires in 7 days for security purposes.
+                </p>
+              </div>
+              
+              <!-- Footer -->
+              <div style="background-color: #f8f9fa; padding: 20px; text-align: center; border-top: 1px solid #e0e0e0;">
+                <p style="margin: 0 0 10px 0; color: #666; font-size: 14px;">Questions? We're always here to help!</p>
+                <p style="margin: 0 0 15px 0; color: #666; font-size: 14px;">Email us at <a href="mailto:info@jumpinai.com" style="color: #667eea; text-decoration: none;">info@jumpinai.com</a></p>
+                <p style="margin: 0 0 5px 0; color: #999; font-size: 13px; font-weight: bold;">JumpinAI.</p>
+                <p style="margin: 0 0 10px 0; color: #999; font-size: 12px;">Your Personalized AI Adaptation Studio.</p>
+              </div>
+              
             </div>
           </div>
-        </div>
+        </body>
+        </html>
       `,
     });
 
@@ -252,7 +288,7 @@ const handler = async (req: Request): Promise<Response> => {
       JSON.stringify({ 
         success: true, 
         message: "Investment deck sent to your email",
-        downloadToken: downloadToken // In production, you might not want to return this
+        downloadToken: downloadToken
       }),
       {
         status: 200,

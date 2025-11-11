@@ -39,56 +39,47 @@ const handler = async (req: Request): Promise<Response> => {
           <meta charset="utf-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
         </head>
-        <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-          <div style="text-align: center; margin-bottom: 20px;">
-            <img src="https://jumpinai.com/images/jumpinai-logo-email.png" alt="JumpinAI" style="max-width: 150px; height: auto;" />
-          </div>
-          
-          <div style="background: linear-gradient(135deg, #059669 0%, #047857 100%); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
-            <h1 style="color: white; margin: 0; font-size: 28px;">🎉 New User Signup!</h1>
-            <p style="color: #d1fae5; margin: 10px 0 0 0; font-size: 16px;">Someone just joined JumpinAI</p>
-          </div>
-          
-          <div style="padding: 30px; background: #f9f9f9; border-radius: 0 0 10px 10px;">
-            <div style="background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-              <h2 style="color: #374151; margin-bottom: 20px;">User Details</h2>
+        <body style="margin: 0; padding: 0; background-color: #f5f5f5; font-family: Arial, sans-serif;">
+          <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
               
-              <div style="background: #f0fdf4; padding: 15px; border-radius: 6px; margin-bottom: 15px; border-left: 4px solid #059669;">
-                <div style="margin-bottom: 10px;">
-                  <strong style="color: #065f46;">Email:</strong>
-                  <div style="margin-top: 5px;">
-                    <a href="mailto:${email}" style="color: #374151; text-decoration: none; font-size: 16px;">${email}</a>
-                  </div>
+              <!-- Header with Logo -->
+              <div style="text-align: center; padding: 30px 20px 20px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <img src="https://jumpinai.com/images/jumpinai-logo-email.png" alt="JumpinAI" style="max-width: 120px; height: auto; border-radius: 12px;" />
+              </div>
+              
+              <!-- Content -->
+              <div style="padding: 30px;">
+                <h1 style="color: #1a1a1a; font-size: 24px; margin: 0 0 5px 0; text-align: center;">🎉 New User Signup!</h1>
+                <p style="color: #666; margin: 0 0 20px 0; text-align: center; font-size: 15px;">Someone just joined JumpinAI</p>
+                
+                <div style="background-color: #f0fdf4; padding: 20px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #059669;">
+                  <p style="margin: 0 0 10px 0; color: #333;"><strong style="color: #065f46;">Email:</strong></p>
+                  <p style="margin: 0;"><a href="mailto:${email}" style="color: #374151; text-decoration: none; font-size: 15px;">${email}</a></p>
+                </div>
+                
+                <div style="background-color: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 15px;">
+                  <p style="margin: 0 0 10px 0; color: #333;"><strong>Display Name:</strong> ${displayName}</p>
+                  <p style="margin: 0 0 10px 0; color: #333;"><strong>Signup Method:</strong> ${signupMethod}</p>
+                  <p style="margin: 0; color: #333;"><strong>Timestamp:</strong> ${new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles', dateStyle: 'full', timeStyle: 'long' })}</p>
+                </div>
+                
+                <div style="background-color: #fef3c7; padding: 15px; border-radius: 8px; border-left: 4px solid #f59e0b;">
+                  <p style="margin: 0; color: #78350f; font-size: 14px;">
+                    <strong>💡 Next Steps:</strong> Consider sending a personalized welcome email or adding to your email nurture sequence.
+                  </p>
                 </div>
               </div>
               
-              <div style="margin-bottom: 15px;">
-                <strong style="color: #6b7280;">Display Name:</strong>
-                <span style="margin-left: 10px; color: #374151;">${displayName}</span>
+              <!-- Footer -->
+              <div style="background-color: #f8f9fa; padding: 20px; text-align: center; border-top: 1px solid #e0e0e0;">
+                <p style="margin: 0 0 10px 0; color: #666; font-size: 14px;">Questions? We're always here to help!</p>
+                <p style="margin: 0 0 15px 0; color: #666; font-size: 14px;">Email us at <a href="mailto:info@jumpinai.com" style="color: #667eea; text-decoration: none;">info@jumpinai.com</a></p>
+                <p style="margin: 0 0 5px 0; color: #999; font-size: 13px; font-weight: bold;">JumpinAI.</p>
+                <p style="margin: 0 0 10px 0; color: #999; font-size: 12px;">Your Personalized AI Adaptation Studio.</p>
               </div>
               
-              <div style="margin-bottom: 15px;">
-                <strong style="color: #6b7280;">Signup Method:</strong>
-                <span style="margin-left: 10px; color: #374151;">${signupMethod}</span>
-              </div>
-              
-              <div style="margin-bottom: 15px;">
-                <strong style="color: #6b7280;">Timestamp:</strong>
-                <span style="margin-left: 10px; color: #374151;">${new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles', dateStyle: 'full', timeStyle: 'long' })}</span>
-              </div>
-              
-              <div style="background: #fef3c7; padding: 15px; border-radius: 6px; margin-top: 20px; border-left: 4px solid #f59e0b;">
-                <p style="margin: 0; color: #78350f; font-size: 14px;">
-                  <strong>💡 Next Steps:</strong> Consider sending a personalized welcome email or adding to your email nurture sequence.
-                </p>
-              </div>
             </div>
-          </div>
-          
-          <div style="text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
-            <p style="color: #6b7280; margin: 0; font-size: 12px;">
-              <strong>JumpinAI - Your Personalized AI Adaptation Studio</strong>
-            </p>
           </div>
         </body>
         </html>

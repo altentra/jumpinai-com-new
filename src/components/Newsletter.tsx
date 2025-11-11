@@ -128,19 +128,12 @@ const Newsletter = () => {
     <section id="newsletter" className="py-12 sm:py-16 lg:py-24 relative">
       <div className="container mx-auto px-4 text-center">
         <div className="max-w-4xl mx-auto">
-          {/* Icon */}
-          <div className="flex items-center justify-center mb-4 sm:mb-6">
-            <div className="glass p-2.5 sm:p-3 rounded-2xl shadow-modern">
-              <Mail className="h-6 w-6 sm:h-7 sm:w-7 text-primary" />
-            </div>
-          </div>
-          
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4 font-display gradient-text-primary">
             Stay Updated
           </h2>
           
           <p className="text-sm sm:text-base mb-6 sm:mb-8 text-muted-foreground max-w-2xl mx-auto px-4">
-            Get the latest AI tools, strategic insights, and professional workflows delivered to your inbox. Join thousands of industry leaders already implementing AI strategically.
+            Join the AI revolution. Get weekly insights, exclusive tools and prompts, JumpinAI Studio updates, and expert strategies to transform the way you work—delivered straight to your inbox.
           </p>
           
           {/* Newsletter Form */}
@@ -183,25 +176,8 @@ const Newsletter = () => {
             </div>
           </form>
           
-          <div className="flex flex-wrap justify-center items-center gap-4 sm:gap-6 lg:gap-8 mb-4 sm:mb-5 px-4">
-            <div className="text-center">
-              <div className="text-lg sm:text-xl font-bold text-foreground font-display">15K+</div>
-              <div className="text-muted-foreground text-xs sm:text-sm">Professionals</div>
-            </div>
-            <div className="w-px h-6 bg-border hidden sm:block"></div>
-            <div className="text-center">
-              <div className="text-lg sm:text-xl font-bold text-foreground font-display">98%</div>
-              <div className="text-muted-foreground text-xs sm:text-sm">Satisfaction</div>
-            </div>
-            <div className="w-px h-6 bg-border hidden sm:block"></div>
-            <div className="text-center">
-              <div className="text-lg sm:text-xl font-bold text-foreground font-display">Weekly</div>
-              <div className="text-muted-foreground text-xs sm:text-sm">Updates</div>
-            </div>
-          </div>
-          
           <p className="text-muted-foreground text-xs sm:text-sm px-4">
-            Professional insights only. Unsubscribe anytime. Previously unsubscribed? You can resubscribe here!
+            Pure value, zero spam. Unsubscribe anytime with one click.
           </p>
         </div>
       </div>
