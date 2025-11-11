@@ -54,11 +54,8 @@ const PitchDeck = () => {
             <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-foreground mb-3">
               JumpinAI - Your Personalized AI Adaptation Studio
             </h2>
-            <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-2">
+            <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
               Revolutionizing how professionals and businesses adopt AI through adaptive, personalized transformation blueprints — delivering unprecedented speed, clarity, and actionability.
-            </p>
-            <p className="text-sm sm:text-base text-muted-foreground/80 max-w-2xl mx-auto">
-              The World's First Platform for Truly Adaptive AI Transformation — Complete 3-Tab Blueprints in 2 Minutes
             </p>
           </div>
         </div>
@@ -75,39 +72,53 @@ const PitchDeck = () => {
               <div className="w-16 h-0.5 bg-gradient-to-r from-primary/60 to-transparent"></div>
             </div>
             
-            <div className="space-y-4 mb-6">
+            <div className="space-y-6 mb-6">
               <p className="text-base text-muted-foreground leading-relaxed">
-                The AI transformation landscape is broken. Despite massive market demand and investment, professionals and businesses face critical barriers preventing successful AI adoption:
+                The AI revolution has created a paradox: while AI capabilities advance exponentially, actual adoption and successful implementation lag dramatically behind. Organizations and professionals face a fundamental disconnect between AI's promise and their ability to harness it effectively.
               </p>
               
-              <div className="grid md:grid-cols-3 gap-6">
-                <div className="space-y-3">
-                  <h3 className="text-base font-bold text-foreground">Generic AI Advice</h3>
+              <div className="space-y-6">
+                <div className="glass backdrop-blur-sm bg-background/25 border border-destructive/20 rounded-xl p-6 space-y-4">
+                  <h3 className="text-lg font-bold text-foreground">The Personalization Crisis</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">
-                    Current AI solutions provide one-size-fits-all recommendations that ignore specific business contexts, industries, team capabilities, technical constraints, and unique organizational challenges. This generic approach fails 78% of AI transformation initiatives.
+                    Generic AI consulting and cookie-cutter frameworks fundamentally misunderstand the nature of successful transformation. Every organization operates within unique constraints: distinct industry regulations, legacy technology stacks, team skill distributions, budget limitations, cultural dynamics, and strategic priorities. Yet the market offers predominantly standardized solutions that ignore these critical contextual factors.
+                  </p>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    The result: <span className="text-foreground font-semibold">78% of AI transformation initiatives fail</span> not because AI doesn't work, but because the implementation strategy doesn't fit the specific organizational reality. Professionals waste months following advice that was never designed for their situation, leading to disillusionment, wasted resources, and organizational resistance to future AI initiatives.
                   </p>
                 </div>
                 
-                <div className="space-y-3">
-                  <h3 className="text-base font-bold text-foreground">Paralysis by Information</h3>
+                <div className="glass backdrop-blur-sm bg-background/25 border border-destructive/20 rounded-xl p-6 space-y-4">
+                  <h3 className="text-lg font-bold text-foreground">The Implementation Gap</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">
-                    Professionals spend 40+ hours researching AI strategies, yet remain overwhelmed and uncertain where to begin. The gap between knowing AI exists and successfully implementing it grows wider daily, costing businesses billions in missed opportunities.
+                    Awareness doesn't equal capability. Professionals understand AI is transformative and feel pressure to adapt, yet face a daunting implementation gap. Research shows <span className="text-foreground font-semibold">professionals invest 40+ hours</span> researching AI strategies, consuming countless articles, webinars, and courses. Despite this investment, they remain paralyzed at the starting line, uncertain about practical first steps, tool selection, workflow integration, or success measurement.
+                  </p>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    This isn't a knowledge problem—it's an <span className="text-foreground font-semibold">actionability problem</span>. The market floods users with conceptual frameworks and theoretical benefits while failing to deliver concrete, personalized, step-by-step guidance that accounts for their specific starting point and constraints. The gap between "understanding AI" and "successfully implementing AI" represents billions in unrealized value and countless stalled careers.
                   </p>
                 </div>
                 
-                <div className="space-y-3">
-                  <h3 className="text-base font-bold text-foreground">Zero Adaptability</h3>
+                <div className="glass backdrop-blur-sm bg-background/25 border border-destructive/20 rounded-xl p-6 space-y-4">
+                  <h3 className="text-lg font-bold text-foreground">The Adaptation Void</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">
-                    When users encounter roadblocks or need alternative approaches, existing solutions offer no recourse. Static plans can't pivot, leading to abandoned transformations and wasted investments in tools that never deliver ROI.
+                    Real transformation is non-linear. Even with a personalized initial plan, implementation invariably encounters unexpected obstacles: technology limitations, stakeholder resistance, budget changes, competitive pressures, or shifting organizational priorities. In these critical moments, users need adaptive guidance—alternative approaches, deeper clarification, or strategic pivots.
+                  </p>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    Traditional solutions offer static documents that become obsolete the moment reality deviates from assumptions. Consulting services provide flexibility but at prohibitive costs and timelines. This creates an <span className="text-foreground font-semibold">adaptation void</span>: when users most need intelligent guidance to navigate obstacles, they're abandoned with outdated plans and no recourse. Projects stall, momentum dies, and organizations return to pre-AI status quo, viewing transformation as too complex or risky to pursue.
                   </p>
                 </div>
               </div>
             </div>
             
-            <div className="p-4 rounded-xl bg-gradient-to-br from-destructive/10 to-destructive/5 border border-destructive/20">
-              <p className="text-sm font-semibold text-foreground text-center">
-                <span className="text-primary">$12.4B</span> AI education market by 2027 — with millions struggling to implement personalized AI strategies
-              </p>
+            <div className="p-5 rounded-xl bg-gradient-to-br from-destructive/10 to-destructive/5 border border-destructive/20">
+              <div className="text-center space-y-2">
+                <p className="text-base font-bold text-foreground">
+                  Market Opportunity: <span className="text-primary text-xl">$12.4B</span> AI Education & Transformation Market by 2027
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Millions of professionals and organizations desperately need a solution that bridges the gap between AI's potential and their ability to realize it
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -125,123 +136,159 @@ const PitchDeck = () => {
             </div>
             
             <div className="space-y-8">
-              <div className="space-y-4 mb-6">
+              <div className="space-y-5 mb-6">
                 <div className="text-center">
                   <h3 className="text-xl md:text-2xl font-bold mb-3 text-foreground">
-                    Revolutionary 3-Tab Transformation System
+                    The World's First Truly Adaptive AI Transformation Platform
                   </h3>
                   <p className="text-base text-muted-foreground max-w-2xl mx-auto mb-4">
-                    From 2 questions to complete transformation blueprint in 2 minutes
+                    Revolutionary 3-Tab System: From 2 Questions to Complete Personalized Blueprint in 2 Minutes
                   </p>
                 </div>
                 
-                <div className="glass backdrop-blur-sm bg-primary/10 border border-primary/20 rounded-xl p-5">
+                <div className="glass backdrop-blur-sm bg-primary/10 border border-primary/20 rounded-xl p-6">
                   <p className="text-sm text-foreground leading-relaxed text-center">
-                    JumpinAI is the world's first truly adaptive AI transformation platform. Unlike static consulting or generic AI advice, we provide personalized, comprehensive blueprints that adapt in real-time to your unique context, challenges, and evolving needs. Our proprietary 3-tab system delivers strategic analysis, flexible execution plans, and ready-to-use implementation tools — all in minutes, not months.
+                    JumpinAI solves the personalization crisis, implementation gap, and adaptation void simultaneously. Our proprietary AI engine analyzes your unique context through an intelligent questionnaire, then generates a comprehensive transformation blueprint tailored specifically to your situation. Unlike static consulting or generic AI advice, our platform adapts in real-time as your needs evolve—providing multi-level clarifications, alternative strategies, and continuous optimization through AI coaching.
                   </p>
                 </div>
                 
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="glass backdrop-blur-sm bg-background/25 border border-primary/20 rounded-xl p-4">
-                    <h4 className="text-sm font-bold text-foreground mb-2">What Makes Us Different</h4>
-                    <ul className="space-y-2 text-xs text-muted-foreground">
+                <div className="grid md:grid-cols-2 gap-5">
+                  <div className="glass backdrop-blur-sm bg-background/25 border border-primary/20 rounded-xl p-5">
+                    <h4 className="text-base font-bold text-foreground mb-3">Hyper-Personalization at Scale</h4>
+                    <ul className="space-y-2 text-sm text-muted-foreground">
                       <li className="flex items-start gap-2">
                         <span className="text-primary mt-0.5">✓</span>
-                        <span>Hyper-personalized to your exact situation, industry, team size, and constraints</span>
+                        <span>Every Jump uniquely tailored to your industry, role, team size, budget, technical capabilities, and strategic goals</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <span className="text-primary mt-0.5">✓</span>
-                        <span>Adaptive intelligence that clarifies steps up to 4 levels deep and provides 3 alternative routes</span>
+                        <span>Multi-model AI orchestration (GPT-4o, Claude, Gemini) for optimal analysis depth and personalization accuracy</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <span className="text-primary mt-0.5">✓</span>
-                        <span>Instant implementation with 9 custom tool-prompt combinations per transformation</span>
+                        <span>Comprehensive transformation delivered in ~2 minutes, not months of consulting</span>
                       </li>
                     </ul>
                   </div>
                   
-                  <div className="glass backdrop-blur-sm bg-background/25 border border-primary/20 rounded-xl p-4">
-                    <h4 className="text-sm font-bold text-foreground mb-2">The Technology Edge</h4>
-                    <ul className="space-y-2 text-xs text-muted-foreground">
+                  <div className="glass backdrop-blur-sm bg-background/25 border border-primary/20 rounded-xl p-5">
+                    <h4 className="text-base font-bold text-foreground mb-3">True Adaptability</h4>
+                    <ul className="space-y-2 text-sm text-muted-foreground">
                       <li className="flex items-start gap-2">
                         <span className="text-primary mt-0.5">✓</span>
-                        <span>Multi-model AI orchestration for optimal analysis and planning</span>
+                        <span>4-level deep clarification system: drill down into any step for granular guidance</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <span className="text-primary mt-0.5">✓</span>
-                        <span>Proprietary adaptive algorithm that learns from clarifications and route changes</span>
+                        <span>3 alternative routes per step: pivot when obstacles arise or circumstances change</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <span className="text-primary mt-0.5">✓</span>
-                        <span>AI Coach for continuous refinement and optimization post-generation</span>
+                        <span>AI Coach for continuous refinement and strategic adjustments post-generation</span>
                       </li>
                     </ul>
                   </div>
                 </div>
               </div>
               
-              <div className="grid md:grid-cols-3 gap-6">
-                <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 rounded-xl p-5 hover:border-primary/40 transition-all duration-300">
-                  <div className="flex items-center gap-2 mb-4">
-                    <div className="w-6 h-6 rounded-full bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center text-primary-foreground text-xs font-bold">1</div>
-                    <h3 className="text-base font-bold text-foreground">Overview Tab</h3>
+              <div className="space-y-5">
+                <h3 className="text-lg font-bold text-center text-foreground mb-4">The 3-Tab Transformation System</h3>
+                
+                <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 rounded-xl p-6 hover:border-primary/40 transition-all duration-300">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center text-primary-foreground text-sm font-bold">1</div>
+                    <h4 className="text-lg font-bold text-foreground">Overview Tab: Strategic Foundation</h4>
                   </div>
-                  <ul className="space-y-2 text-sm text-muted-foreground">
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary mt-1">•</span>
-                      <span>Executive summary of transformation</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary mt-1">•</span>
-                      <span>Current situation analysis</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary mt-1">•</span>
-                      <span>Vision & strategic roadmap</span>
-                    </li>
-                  </ul>
+                  <div className="space-y-3 ml-11">
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      Your transformation begins with strategic clarity. The Overview Tab provides executive-level analysis that grounds your entire journey.
+                    </p>
+                    <ul className="space-y-2 text-sm text-muted-foreground">
+                      <li className="flex items-start gap-2">
+                        <span className="text-primary mt-1">•</span>
+                        <span><span className="font-semibold text-foreground">Current Situation Analysis:</span> Comprehensive assessment of your starting point, including strengths, gaps, opportunities, and constraints specific to your context</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-primary mt-1">•</span>
+                        <span><span className="font-semibold text-foreground">Strategic Vision & Objectives:</span> Clear articulation of your transformation goals, success metrics, and expected outcomes aligned with your business priorities</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-primary mt-1">•</span>
+                        <span><span className="font-semibold text-foreground">High-Level Roadmap:</span> Strategic phases and milestones that chart the course from current state to desired future state</span>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
                 
-                <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 rounded-xl p-5 hover:border-primary/40 transition-all duration-300">
-                  <div className="flex items-center gap-2 mb-4">
-                    <div className="w-6 h-6 rounded-full bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center text-primary-foreground text-xs font-bold">2</div>
-                    <h3 className="text-base font-bold text-foreground">Adaptive Plan Tab</h3>
+                <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 rounded-xl p-6 hover:border-primary/40 transition-all duration-300">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center text-primary-foreground text-sm font-bold">2</div>
+                    <h4 className="text-lg font-bold text-foreground">Adaptive Plan Tab: Intelligent Execution</h4>
                   </div>
-                  <ul className="space-y-2 text-sm text-muted-foreground">
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary mt-1">•</span>
-                      <span>Step-by-step action plan</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary mt-1">•</span>
-                      <span>Clarify any step up to 4 levels deep</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary mt-1">•</span>
-                      <span>3 alternative routes per step</span>
-                    </li>
-                  </ul>
+                  <div className="space-y-3 ml-11">
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      This is where JumpinAI's adaptive intelligence truly shines. Your execution plan isn't just detailed—it's living and responsive.
+                    </p>
+                    <ul className="space-y-3 text-sm text-muted-foreground">
+                      <li className="flex items-start gap-2">
+                        <span className="text-primary mt-1">•</span>
+                        <span><span className="font-semibold text-foreground">Detailed Action Plan:</span> Step-by-step guidance organized by phases, with clear milestones, dependencies, timelines, and resource requirements</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-primary mt-1">•</span>
+                        <div className="space-y-2">
+                          <span className="font-semibold text-foreground">4-Level Deep Clarification System:</span>
+                          <div className="ml-4 space-y-1.5 mt-2 p-3 rounded-lg bg-primary/5 border border-primary/10">
+                            <div><span className="font-medium text-foreground">Level 1:</span> Need more detail on a step? Click to clarify and receive expanded guidance with specific tactics and considerations</div>
+                            <div><span className="font-medium text-foreground">Level 2:</span> Still need more? Drill deeper to reveal granular implementation details, potential challenges, and mitigation strategies</div>
+                            <div><span className="font-medium text-foreground">Level 3:</span> Go further to access technical specifics, tool recommendations, and detailed workflows</div>
+                            <div><span className="font-medium text-foreground">Level 4:</span> Maximum depth reveals everything: code examples, configuration details, step-by-step walkthroughs—no stone unturned</div>
+                          </div>
+                        </div>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-primary mt-1">•</span>
+                        <div className="space-y-2">
+                          <span className="font-semibold text-foreground">3 Alternative Routes (Rerouting System):</span>
+                          <div className="ml-4 space-y-1.5 mt-2 p-3 rounded-lg bg-primary/5 border border-primary/10">
+                            <div>Encountered an obstacle? Budget changed? Technology constraints? Click "Reroute" on any step to instantly receive 3 alternative approaches that achieve the same objective through different means</div>
+                            <div className="mt-1.5 text-xs"><span className="font-medium text-foreground">Example:</span> Original step recommends implementing an enterprise CRM. Reroute alternatives might suggest: (1) Start with spreadsheet automation first, (2) Use a lightweight SaaS tool, or (3) Build a custom no-code solution</div>
+                            <div className="mt-1.5">Each alternative respects your constraints while maintaining progress toward your transformation goals</div>
+                          </div>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
                 
-                <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 rounded-xl p-5 hover:border-primary/40 transition-all duration-300">
-                  <div className="flex items-center gap-2 mb-4">
-                    <div className="w-6 h-6 rounded-full bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center text-primary-foreground text-xs font-bold">3</div>
-                    <h3 className="text-base font-bold text-foreground">Tools & Prompts Tab</h3>
+                <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 rounded-xl p-6 hover:border-primary/40 transition-all duration-300">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center text-primary-foreground text-sm font-bold">3</div>
+                    <h4 className="text-lg font-bold text-foreground">Tools & Prompts Tab: Instant Implementation</h4>
                   </div>
-                  <ul className="space-y-2 text-sm text-muted-foreground">
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary mt-1">•</span>
-                      <span>9 tool-prompt combinations</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary mt-1">•</span>
-                      <span>Ready-to-use custom prompts</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary mt-1">•</span>
-                      <span>AI Coach for ongoing guidance</span>
-                    </li>
-                  </ul>
+                  <div className="space-y-3 ml-11">
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      Bridge the gap from strategy to execution with ready-to-use implementation tools.
+                    </p>
+                    <ul className="space-y-2 text-sm text-muted-foreground">
+                      <li className="flex items-start gap-2">
+                        <span className="text-primary mt-1">•</span>
+                        <span><span className="font-semibold text-foreground">9 Custom Tool-Prompt Combinations:</span> Specifically generated for your transformation, each pairing an AI tool with a custom prompt optimized for your use case</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-primary mt-1">•</span>
+                        <span><span className="font-semibold text-foreground">Copy-Paste Ready:</span> No prompt engineering required—simply copy our professionally crafted prompts directly into the recommended tools</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-primary mt-1">•</span>
+                        <span><span className="font-semibold text-foreground">Comprehensive Coverage:</span> Tools and prompts span all phases of your transformation, from initial analysis through ongoing optimization</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-primary mt-1">•</span>
+                        <span><span className="font-semibold text-foreground">AI Coach Access:</span> Get ongoing guidance, optimize your tool usage, and refine your prompts through conversational AI coaching</span>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
               </div>
             </div>
@@ -262,24 +309,34 @@ const PitchDeck = () => {
             
             <div className="grid md:grid-cols-2 gap-8">
               <div>
-                <h3 className="text-lg font-bold mb-4 text-foreground">Massive Addressable Market</h3>
+                <h3 className="text-lg font-bold mb-4 text-foreground">Explosive Market Growth</h3>
                 <div className="space-y-3">
                   <div className="p-4 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
+                    <div className="text-2xl font-bold text-primary mb-1">$340B+</div>
+                    <p className="text-sm text-muted-foreground font-semibold">Global AI Market Size (2024)</p>
+                    <p className="text-xs text-muted-foreground mt-1">Growing at 37.3% CAGR through 2030</p>
+                    <p className="text-xs text-muted-foreground/80 mt-1.5 italic">Source: Fortune Business Insights, November 2024</p>
+                  </div>
+                  
+                  <div className="p-4 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
                     <div className="text-2xl font-bold text-primary mb-1">$12.4B</div>
-                    <p className="text-sm text-muted-foreground">AI Education Market by 2027</p>
-                    <p className="text-xs text-muted-foreground mt-1">CAGR: 45.2%</p>
+                    <p className="text-sm text-muted-foreground font-semibold">AI Education & Training Market (2027)</p>
+                    <p className="text-xs text-muted-foreground mt-1">CAGR: 45.2% from 2024-2027</p>
+                    <p className="text-xs text-muted-foreground/80 mt-1.5 italic">Source: MarketsandMarkets Research</p>
                   </div>
                   
                   <div className="p-4 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
                     <div className="text-2xl font-bold text-primary mb-1">500M+</div>
-                    <p className="text-sm text-muted-foreground">Knowledge Workers Globally</p>
-                    <p className="text-xs text-muted-foreground mt-1">Potential users seeking AI transformation</p>
+                    <p className="text-sm text-muted-foreground font-semibold">Knowledge Workers Globally</p>
+                    <p className="text-xs text-muted-foreground mt-1">All requiring AI transformation guidance</p>
+                    <p className="text-xs text-muted-foreground/80 mt-1.5 italic">Potential addressable market for personalized AI transformation</p>
                   </div>
                   
                   <div className="p-4 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
-                    <div className="text-2xl font-bold text-primary mb-1">84%</div>
-                    <p className="text-sm text-muted-foreground">Organizations Adopting AI</p>
-                    <p className="text-xs text-muted-foreground mt-1">All requiring employee transformation</p>
+                    <div className="text-2xl font-bold text-primary mb-1">90%</div>
+                    <p className="text-sm text-muted-foreground font-semibold">Organizations Adopting AI by 2025</p>
+                    <p className="text-xs text-muted-foreground mt-1">Up from 84% in 2024</p>
+                    <p className="text-xs text-muted-foreground/80 mt-1.5 italic">Source: Gartner AI Adoption Survey, 2024</p>
                   </div>
                 </div>
               </div>
@@ -288,24 +345,34 @@ const PitchDeck = () => {
                 <h3 className="text-lg font-bold mb-4 text-foreground">Target Segments</h3>
                 <div className="space-y-3">
                   <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 rounded-xl p-4">
-                    <h4 className="text-sm font-bold text-foreground mb-1">Individual Professionals</h4>
-                    <p className="text-xs text-muted-foreground">Seeking personal AI upskilling and career advancement</p>
+                    <h4 className="text-sm font-bold text-foreground mb-2">Individual Professionals (Primary)</h4>
+                    <p className="text-xs text-muted-foreground mb-2">Mid-level to senior professionals seeking personal AI upskilling and career advancement</p>
+                    <p className="text-xs text-muted-foreground/80 italic">Immediate monetization through subscription and credit sales</p>
                   </div>
                   
                   <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 rounded-xl p-4">
-                    <h4 className="text-sm font-bold text-foreground mb-1">Small-Medium Businesses</h4>
-                    <p className="text-xs text-muted-foreground">Need affordable AI transformation without consultants</p>
+                    <h4 className="text-sm font-bold text-foreground mb-2">Small-Medium Businesses</h4>
+                    <p className="text-xs text-muted-foreground mb-2">1-200 employee companies needing affordable AI transformation without expensive consultants</p>
+                    <p className="text-xs text-muted-foreground/80 italic">High-value segment with team subscription potential</p>
                   </div>
                   
                   <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 rounded-xl p-4">
-                    <h4 className="text-sm font-bold text-foreground mb-1">Enterprise Teams</h4>
-                    <p className="text-xs text-muted-foreground">Scaling AI adoption across departments and divisions</p>
+                    <h4 className="text-sm font-bold text-foreground mb-2">Enterprise Teams (Future)</h4>
+                    <p className="text-xs text-muted-foreground mb-2">Scaling AI adoption across departments with team collaboration features</p>
+                    <p className="text-xs text-muted-foreground/80 italic">Largest revenue opportunity through enterprise licensing</p>
                   </div>
                   
                   <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 rounded-xl p-4">
-                    <h4 className="text-sm font-bold text-foreground mb-1">Educational Institutions</h4>
-                    <p className="text-xs text-muted-foreground">Preparing students for AI-driven workforce</p>
+                    <h4 className="text-sm font-bold text-foreground mb-2">Educational Institutions</h4>
+                    <p className="text-xs text-muted-foreground mb-2">Universities and training programs preparing students for AI-driven workforce</p>
+                    <p className="text-xs text-muted-foreground/80 italic">Partnership opportunities for bulk licensing</p>
                   </div>
+                </div>
+                
+                <div className="mt-4 p-4 rounded-xl bg-gradient-to-br from-accent/10 to-accent/5 border border-accent/20">
+                  <p className="text-xs text-muted-foreground text-center">
+                    <span className="font-semibold text-foreground">Market Timing:</span> AI adoption urgency at all-time high following ChatGPT's mainstream breakthrough and enterprise AI transformation mandates
+                  </p>
                 </div>
               </div>
             </div>
@@ -349,24 +416,28 @@ const PitchDeck = () => {
               <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 rounded-xl p-5">
                 <div className="text-center mb-4">
                   <h3 className="text-base font-bold text-foreground mb-1">Subscription Tiers</h3>
-                  <div className="text-xl font-bold text-primary">$10-$59/month</div>
+                  <div className="text-xl font-bold text-primary">$10–$59/month</div>
                 </div>
                 <ul className="space-y-2 text-xs text-muted-foreground">
                   <li className="flex items-start gap-2">
                     <span className="text-primary mt-0.5">•</span>
-                    <span>Starter ($10): 25 credits monthly</span>
+                    <span><span className="font-semibold text-foreground">Starter Plan:</span> $10/month — 25 credits monthly</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-primary mt-0.5">•</span>
-                    <span>Pro ($29): 100 credits + AI Coach</span>
+                    <span><span className="font-semibold text-foreground">Pro Plan:</span> $29/month — 100 credits + AI Coach access</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-primary mt-0.5">•</span>
-                    <span>Growth ($59): 250 credits + priority</span>
+                    <span><span className="font-semibold text-foreground">Growth Plan:</span> $59/month — 250 credits + priority support</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-primary mt-0.5">•</span>
-                    <span>Credits roll over, never expire</span>
+                    <span>All credits roll over month-to-month and never expire</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-0.5">•</span>
+                    <span>1 credit = 1 complete Jump (3-tab transformation blueprint)</span>
                   </li>
                 </ul>
               </div>
