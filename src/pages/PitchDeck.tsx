@@ -55,7 +55,7 @@ const PitchDeck = () => {
               JumpinAI - Your Personalized AI Adaptation Studio
             </h2>
             <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Revolutionizing how individuals and businesses integrate AI through adaptive, personalized transformation blueprints — delivering unprecedented speed, clarity, and actionability.
+              Revolutionizing how individuals and businesses adopt AI through intelligent, personalized transformation plans — delivering unprecedented speed, clarity, and actionability.
             </p>
           </div>
         </div>
