@@ -226,61 +226,91 @@ const handler = async (req: Request): Promise<Response> => {
       subject: welcomeSubject,
       html: `
         <div style="max-width: 600px; margin: 0 auto; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; line-height: 1.6; color: #1f2937;">
-          <div style="text-align: center; padding: 24px 20px;">
-            <img src="https://jumpinai.com/images/jumpinai-logo-email.png" alt="JumpinAI" style="max-width: 160px; height: auto;" />
+          <!-- Email Header with Premium Logo -->
+          <div style="text-align: center; padding: 32px 24px 24px 24px;">
+            <div style="display: inline-block; background: linear-gradient(135deg, rgba(147, 51, 234, 0.08) 0%, rgba(147, 51, 234, 0.04) 100%); border: 1px solid rgba(147, 51, 234, 0.2); border-radius: 16px; padding: 12px; box-shadow: 0 4px 12px rgba(147, 51, 234, 0.15);">
+              <img 
+                src="https://jumpinai.com/logo.png" 
+                alt="JumpinAI Logo" 
+                style="width: 80px; height: 80px; display: block; border-radius: 12px;"
+              />
+            </div>
           </div>
           
-          <div style="background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%); padding: 32px 28px; text-align: center; border-radius: 8px 8px 0 0;">
-            <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">${isResubscription ? 'Welcome Back to JumpinAI' : 'Welcome to JumpinAI'}</h1>
-            <p style="color: #ffffff; margin: 12px 0 0 0; font-size: 16px; font-weight: 400;">Your AI transformation journey ${isResubscription ? 'continues' : 'begins now'}</p>
+          <div style="background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%); padding: 28px 24px; text-align: center; border-radius: 8px 8px 0 0;">
+            <h1 style="color: #ffffff; margin: 0; font-size: 26px; font-weight: 700; letter-spacing: -0.5px;">${isResubscription ? 'Welcome Back to JumpinAI' : 'Welcome to JumpinAI'}</h1>
+            <p style="color: #ffffff; margin: 10px 0 0 0; font-size: 15px; font-weight: 400;">Your AI transformation journey ${isResubscription ? 'continues' : 'begins now'}</p>
           </div>
           
-          <div style="padding: 32px 28px; background: #ffffff; border-radius: 0 0 8px 8px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
-            <p style="font-size: 16px; line-height: 1.6; margin-bottom: 20px; color: #1f2937;">
+          <div style="padding: 28px 24px; background: #ffffff; border-radius: 0 0 8px 8px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+            <p style="font-size: 15px; line-height: 1.5; margin-bottom: 16px; color: #1f2937;">
               ${welcomeMessage}
             </p>
             
-            <div style="background: #f8fafc; padding: 24px; border-radius: 6px; margin: 24px 0; border-left: 3px solid #3b82f6;">
-              <h3 style="color: #111827; margin: 0 0 16px 0; font-size: 18px; font-weight: 600;">What You'll Receive Every Week:</h3>
-              <ul style="margin: 0; padding-left: 20px; color: #1f2937; font-size: 15px; line-height: 1.7;">
-                <li style="margin-bottom: 10px;"><strong style="color: #111827;">Strategic AI Insights:</strong> Expert guidance on integrating AI into your work and business</li>
-                <li style="margin-bottom: 10px;"><strong style="color: #111827;">Exclusive Tools & Prompts:</strong> Ready-to-use resources that deliver immediate results</li>
-                <li style="margin-bottom: 10px;"><strong style="color: #111827;">JumpinAI Studio Updates:</strong> Latest features and AI models in our adaptation platform</li>
-                <li style="margin-bottom: 10px;"><strong style="color: #111827;">Personalized Jumps:</strong> 3-tab adaptation plans with strategic analysis, tools, and prompts</li>
+            <div style="background: #f8fafc; padding: 20px; border-radius: 6px; margin: 20px 0; border-left: 3px solid #3b82f6;">
+              <h3 style="color: #111827; margin: 0 0 12px 0; font-size: 17px; font-weight: 600;">What You'll Receive Every Week:</h3>
+              <ul style="margin: 0; padding-left: 20px; color: #1f2937; font-size: 14px; line-height: 1.6;">
+                <li style="margin-bottom: 6px;"><strong style="color: #111827;">Strategic AI Insights:</strong> Expert guidance on integrating AI into your work and business</li>
+                <li style="margin-bottom: 6px;"><strong style="color: #111827;">Exclusive Tools & Prompts:</strong> Ready-to-use resources that deliver immediate results</li>
+                <li style="margin-bottom: 6px;"><strong style="color: #111827;">JumpinAI Studio Updates:</strong> Latest features and AI models in our adaptation platform</li>
+                <li style="margin-bottom: 6px;"><strong style="color: #111827;">Personalized Jumps:</strong> 3-tab adaptation plans with strategic analysis, tools, and prompts</li>
                 <li style="margin-bottom: 0;"><strong style="color: #111827;">Industry Breakthroughs:</strong> Stay ahead with the latest AI developments and trends</li>
               </ul>
             </div>
             
-            <div style="background: #fefce8; padding: 18px; border-radius: 6px; border-left: 3px solid #eab308; margin: 20px 0;">
-              <p style="margin: 0; color: #713f12; font-size: 14px; line-height: 1.6;">
+            <div style="background: #fefce8; padding: 16px; border-radius: 6px; border-left: 3px solid #eab308; margin: 16px 0;">
+              <p style="margin: 0; color: #713f12; font-size: 14px; line-height: 1.5;">
                 <strong style="color: #854d0e;">🎯 Pro Tip:</strong> Each newsletter is packed with actionable strategies you can implement immediately. No fluff, just results.
               </p>
             </div>
             
-            <p style="font-size: 16px; margin: 20px 0; color: #1f2937; line-height: 1.6;">
+            <p style="font-size: 15px; margin: 18px 0; color: #1f2937; line-height: 1.5;">
               Your first newsletter is on its way! In the meantime, explore <a href="https://jumpinai.com" style="color: #3b82f6; text-decoration: none; font-weight: 600; border-bottom: 2px solid #3b82f6;">JumpinAI Studio</a> to start creating personalized AI adaptation plans today.
             </p>
             
-            <div style="text-align: center; margin: 28px 0;">
-              <a href="https://jumpinai.com" style="background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%); color: #ffffff; padding: 12px 28px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: 600; font-size: 15px; box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);">Visit JumpinAI Studio</a>
+            <div style="text-align: center; margin: 24px 0;">
+              <a href="https://jumpinai.com" style="background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%); color: #ffffff; padding: 11px 26px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: 600; font-size: 15px; box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);">Visit JumpinAI Studio</a>
             </div>
             
-            <div style="border-top: 1px solid #e5e7eb; padding-top: 20px; margin-top: 24px; text-align: center;">
-              <p style="margin: 0 0 8px 0; color: #6b7280; font-size: 14px;">Questions? We're always here to help!</p>
-              <p style="margin: 0; color: #1f2937; font-size: 14px;">
+            <div style="border-top: 1px solid #e5e7eb; padding-top: 18px; margin-top: 20px; text-align: center;">
+              <p style="margin: 0 0 6px 0; color: #6b7280; font-size: 13px;">Questions? We're always here to help!</p>
+              <p style="margin: 0; color: #1f2937; font-size: 13px;">
                 Email us at <a href="mailto:info@jumpinai.com" style="color: #3b82f6; text-decoration: none; font-weight: 600;">info@jumpinai.com</a>
               </p>
             </div>
           </div>
           
-          <div style="padding: 20px 28px; text-align: center; background: #f9fafb; margin-top: 16px; border-radius: 6px;">
-            <p style="color: #111827; margin: 0 0 4px 0; font-size: 15px; font-weight: 600;">
-              JumpinAI
+          <div style="padding: 20px 24px; text-align: center; background: #f9fafb; margin-top: 14px; border-radius: 6px;">
+            <p style="color: #111827; margin: 0 0 4px 0; font-size: 14px; font-weight: 600;">
+              JumpinAI.
             </p>
-            <p style="color: #6b7280; margin: 0 0 12px 0; font-size: 14px;">
-              Your Personalized AI Adaptation Studio
+            <p style="color: #6b7280; margin: 0 0 14px 0; font-size: 13px;">
+              Your Personalized AI Adaptation Studio.
             </p>
-            <p style="color: #9ca3af; margin: 0; font-size: 13px;">
+            
+            <!-- Social Media Links -->
+            <div style="margin: 0 0 14px 0;">
+              <a href="https://x.com/jumpinai" style="display: inline-block; margin: 0 6px; text-decoration: none;">
+                <img src="https://cdn.simpleicons.org/x/1DA1F2" alt="X" style="width: 22px; height: 22px; vertical-align: middle;" />
+              </a>
+              <a href="https://instagram.com/jumpinai" style="display: inline-block; margin: 0 6px; text-decoration: none;">
+                <img src="https://cdn.simpleicons.org/instagram/E4405F" alt="Instagram" style="width: 22px; height: 22px; vertical-align: middle;" />
+              </a>
+              <a href="https://facebook.com/jumpinai" style="display: inline-block; margin: 0 6px; text-decoration: none;">
+                <img src="https://cdn.simpleicons.org/facebook/1877F2" alt="Facebook" style="width: 22px; height: 22px; vertical-align: middle;" />
+              </a>
+              <a href="https://linkedin.com/company/jumpinai" style="display: inline-block; margin: 0 6px; text-decoration: none;">
+                <img src="https://cdn.simpleicons.org/linkedin/0A66C2" alt="LinkedIn" style="width: 22px; height: 22px; vertical-align: middle;" />
+              </a>
+              <a href="https://youtube.com/@jumpinai" style="display: inline-block; margin: 0 6px; text-decoration: none;">
+                <img src="https://cdn.simpleicons.org/youtube/FF0000" alt="YouTube" style="width: 22px; height: 22px; vertical-align: middle;" />
+              </a>
+              <a href="https://tiktok.com/@jumpinai" style="display: inline-block; margin: 0 6px; text-decoration: none;">
+                <img src="https://cdn.simpleicons.org/tiktok/000000" alt="TikTok" style="width: 22px; height: 22px; vertical-align: middle;" />
+              </a>
+            </div>
+            
+            <p style="color: #9ca3af; margin: 0; font-size: 12px;">
               <a href="${unsubscribeUrl}" style="color: #6b7280; text-decoration: underline;">Unsubscribe</a> anytime with one click
             </p>
           </div>
