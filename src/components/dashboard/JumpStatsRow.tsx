@@ -39,12 +39,14 @@ export default function JumpStatsRow({ stats }: JumpStatsRowProps) {
 
   return (
     <div className="relative mt-4 pt-4 border-t border-border/40">
-      {/* 3 Column Layout */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        {/* Column 1: Views */}
-        <Section title="Views" icon={Eye}>
-          <StatItem icon={Eye} label="Total" value={stats.views_count} />
-        </Section>
+      {/* Mobile: Views full width on top, Clarification & Implementation side by side | Desktop: 3 columns */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+        {/* Column 1: Views - Full width on mobile */}
+        <div className="col-span-2 sm:col-span-1">
+          <Section title="Views" icon={Eye}>
+            <StatItem icon={Eye} label="Total" value={stats.views_count} />
+          </Section>
+        </div>
 
         {/* Column 2: Clarification */}
         <Section title="Clarification" icon={MessageSquare}>
