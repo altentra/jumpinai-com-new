@@ -93,16 +93,6 @@ const handler = async (req: Request): Promise<Response> => {
                   Your Personalized AI Adaptation Studio.
                 </p>
                 
-                <!-- Social Media Links -->
-                <div style="margin: 0 0 14px 0; font-size: 0;">
-                  <a href="https://x.com/jumpinai" style="display: inline-block; margin: 0 10px; text-decoration: none; color: #3b82f6; font-size: 22px; line-height: 1;">𝕏</a>
-                  <a href="https://instagram.com/jumpinai" style="display: inline-block; margin: 0 10px; text-decoration: none; color: #E4405F; font-size: 22px; line-height: 1;">📷</a>
-                  <a href="https://facebook.com/jumpinai" style="display: inline-block; margin: 0 10px; text-decoration: none; color: #1877F2; font-size: 22px; line-height: 1;">f</a>
-                  <a href="https://linkedin.com/company/jumpinai" style="display: inline-block; margin: 0 10px; text-decoration: none; color: #0A66C2; font-size: 22px; line-height: 1;">in</a>
-                  <a href="https://youtube.com/@jumpinai" style="display: inline-block; margin: 0 10px; text-decoration: none; color: #FF0000; font-size: 22px; line-height: 1;">▶</a>
-                  <a href="https://tiktok.com/@jumpinai" style="display: inline-block; margin: 0 10px; text-decoration: none; color: #000000; font-size: 22px; line-height: 1;">♪</a>
-                </div>
-                
                 <p style="color: #9ca3af; margin: 0; font-size: 12px;">
                   <a href="${unsubscribeUrl}" style="color: #6b7280; text-decoration: underline;">Unsubscribe</a> anytime with one click
                 </p>
