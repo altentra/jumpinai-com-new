@@ -12,25 +12,26 @@ const corsHeaders = {
 interface InvestorContactRequest {
   name: string;
   email: string;
-  investmentLevel: string;
+  company: string;
+  title: string;
   message: string;
 }
 
 // Basic rate limiting storage
-const rateLimitCache = new Map<string, { count: number; timestamp: number }>();
+const rateLimitCache = new Map<string, { count: number; resetTime: number }>();
 
 const checkRateLimit = (ip: string): boolean => {
   const now = Date.now();
-  const windowMs = 15 * 60 * 1000; // 15 minutes
-  const maxRequests = 5;
+  const limit = 3; // 3 requests
+  const window = 60 * 60 * 1000; // per hour
 
   const record = rateLimitCache.get(ip);
-  if (!record || now - record.timestamp > windowMs) {
-    rateLimitCache.set(ip, { count: 1, timestamp: now });
+  if (!record || now > record.resetTime) {
+    rateLimitCache.set(ip, { count: 1, resetTime: now + window });
     return true;
   }
 
-  if (record.count >= maxRequests) {
+  if (record.count >= limit) {
     return false;
   }
 
@@ -48,7 +49,7 @@ const sanitizeInput = (input: string): string => {
 };
 
 const handler = async (req: Request): Promise<Response> => {
-  console.log("Investor contact function called");
+  console.log("Investor contact email function called");
 
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
@@ -83,12 +84,24 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    const { name, email, investmentLevel, message }: InvestorContactRequest = await req.json();
+    const { name, email, company, title, message }: InvestorContactRequest = await req.json();
 
     // Validate required fields
-    if (!name || !email) {
+    if (!name || !email || !company || !title || !message) {
       return new Response(
-        JSON.stringify({ error: "Name and email are required" }),
+        JSON.stringify({ error: "All fields are required" }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return new Response(
+        JSON.stringify({ error: "Invalid email format" }),
         {
           status: 400,
           headers: { "Content-Type": "application/json", ...corsHeaders },
@@ -98,148 +111,157 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Sanitize inputs
     const sanitizedData = {
-      name: sanitizeInput(name.trim()),
-      email: sanitizeInput(email.trim().toLowerCase()),
-      investmentLevel: investmentLevel ? sanitizeInput(investmentLevel) : "Not specified",
-      message: message ? sanitizeInput(message.trim()) : "No message provided"
+      name: sanitizeInput(name),
+      email: sanitizeInput(email),
+      company: sanitizeInput(company),
+      title: sanitizeInput(title),
+      message: sanitizeInput(message)
     };
 
-    console.log("Processing investor inquiry for:", sanitizedData.email);
+    console.log("Processing investor contact from:", sanitizedData.email);
 
-    // Send notification email to admin
-    const adminEmailResponse = await resend.emails.send({
-      from: "JumpinAI Investor Portal <investors@jumpinai.com>",
+    // Send notification email to info@jumpinai.com
+    const notificationResponse = await resend.emails.send({
+      from: "JumpinAI Investors <investors@jumpinai.com>",
       to: ["info@jumpinai.com"],
-      subject: `🚀 New Investor Inquiry from ${sanitizedData.name}`,
+      subject: `Investor Inquiry from ${sanitizedData.name} - ${sanitizedData.company}`,
       html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9;">
-          <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-            <div style="text-align: center; margin-bottom: 20px;">
-              <img src="https://jumpinai.com/images/jumpinai-logo-email.png" alt="JumpinAI" style="max-width: 120px; height: auto;" />
-            </div>
-            
-            <div style="text-align: center; margin-bottom: 30px;">
-              <h1 style="color: #2563eb; margin: 0;">New Investor Inquiry</h1>
-              <div style="width: 50px; height: 3px; background: linear-gradient(to right, #2563eb, #3b82f6); margin: 10px auto;"></div>
-            </div>
-            
-            <div style="background-color: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-              <h2 style="color: #1e293b; margin-top: 0;">Contact Information</h2>
-              <p style="margin: 8px 0;"><strong>Name:</strong> ${sanitizedData.name}</p>
-              <p style="margin: 8px 0;"><strong>Email:</strong> ${sanitizedData.email}</p>
-              <p style="margin: 8px 0;"><strong>Investment Level:</strong> ${sanitizedData.investmentLevel}</p>
-            </div>
-            
-            <div style="background-color: #f1f5f9; padding: 20px; border-radius: 8px;">
-              <h3 style="color: #1e293b; margin-top: 0;">Message</h3>
-              <p style="margin: 0; line-height: 1.6; color: #334155;">${sanitizedData.message}</p>
-            </div>
-            
-            <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
-              <p style="color: #64748b; font-size: 14px; margin: 0;">
-                <strong>JumpinAI - Your Personalized AI Adaptation Studio</strong>
-              </p>
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        </head>
+        <body style="margin: 0; padding: 0; background-color: #f5f5f5; font-family: Arial, sans-serif;">
+          <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+              
+              <!-- Header with Logo -->
+              <div style="text-align: center; padding: 30px 20px 20px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <img src="https://jumpinai.com/images/jumpinai-logo-email.png" alt="JumpinAI" style="max-width: 120px; height: auto; border-radius: 12px;" />
+              </div>
+              
+              <!-- Content -->
+              <div style="padding: 30px;">
+                <h1 style="color: #1a1a1a; font-size: 24px; margin: 0 0 20px 0; text-align: center;">Investor Inquiry</h1>
+                
+                <div style="background-color: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                  <h2 style="margin: 0 0 15px 0; color: #1e293b; font-size: 18px;">Contact Details:</h2>
+                  <p style="margin: 5px 0; color: #333;"><strong>Name:</strong> ${sanitizedData.name}</p>
+                  <p style="margin: 5px 0; color: #333;"><strong>Email:</strong> <a href="mailto:${sanitizedData.email}" style="color: #667eea; text-decoration: none;">${sanitizedData.email}</a></p>
+                  <p style="margin: 5px 0; color: #333;"><strong>Company:</strong> ${sanitizedData.company}</p>
+                  <p style="margin: 5px 0; color: #333;"><strong>Title:</strong> ${sanitizedData.title}</p>
+                </div>
+                
+                <div style="background-color: #ffffff; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px;">
+                  <p style="margin: 0 0 10px 0; color: #333; font-weight: bold;">Message:</p>
+                  <p style="margin: 0; color: #555; line-height: 1.6; white-space: pre-wrap;">${sanitizedData.message}</p>
+                </div>
+              </div>
+              
+              <!-- Footer -->
+              <div style="background-color: #f8f9fa; padding: 20px; text-align: center; border-top: 1px solid #e0e0e0;">
+                <p style="margin: 0 0 10px 0; color: #666; font-size: 14px;">Questions? We're always here to help!</p>
+                <p style="margin: 0 0 15px 0; color: #666; font-size: 14px;">Email us at <a href="mailto:info@jumpinai.com" style="color: #667eea; text-decoration: none;">info@jumpinai.com</a></p>
+                <p style="margin: 0 0 5px 0; color: #999; font-size: 13px; font-weight: bold;">JumpinAI.</p>
+                <p style="margin: 0 0 10px 0; color: #999; font-size: 12px;">Your Personalized AI Adaptation Studio.</p>
+              </div>
+              
             </div>
           </div>
-        </div>
+        </body>
+        </html>
       `,
     });
 
-    if (adminEmailResponse.error) {
-      console.error("Failed to send admin notification:", adminEmailResponse.error);
-    } else {
-      console.log("Admin notification sent successfully");
+    if (notificationResponse.error) {
+      console.error("Failed to send notification email:", notificationResponse.error);
+      throw new Error("Failed to send notification email");
     }
 
-    // Send confirmation email to investor
-    const confirmationEmailResponse = await resend.emails.send({
-      from: "JumpinAI Team <investors@jumpinai.com>",
-      to: [sanitizedData.email],
+    // Send confirmation email to the investor
+    const confirmationResponse = await resend.emails.send({
+      from: "JumpinAI <noreply@jumpinai.com>",
+      to: [email],
       subject: "Thank you for your interest in JumpinAI",
       html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9;">
-          <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-            <div style="text-align: center; margin-bottom: 20px;">
-              <img src="https://jumpinai.com/images/jumpinai-logo-email.png" alt="JumpinAI" style="max-width: 120px; height: auto;" />
-            </div>
-            
-            <div style="text-align: center; margin-bottom: 30px;">
-              <h1 style="color: #2563eb; margin: 0;">Thank You, ${sanitizedData.name}!</h1>
-              <div style="width: 50px; height: 3px; background: linear-gradient(to right, #2563eb, #3b82f6); margin: 10px auto;"></div>
-            </div>
-            
-            <div style="margin-bottom: 25px;">
-              <p style="font-size: 16px; line-height: 1.6; color: #334155; margin-bottom: 15px;">
-                We've received your investment inquiry and are excited about your interest in JumpinAI - Your Personalized AI Adaptation Studio's mission to democratize AI education.
-              </p>
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        </head>
+        <body style="margin: 0; padding: 0; background-color: #f5f5f5; font-family: Arial, sans-serif;">
+          <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
               
-              <p style="font-size: 16px; line-height: 1.6; color: #334155; margin-bottom: 15px;">
-                Our team will review your inquiry and respond within 24 hours with more information about investment opportunities and next steps.
-              </p>
-            </div>
-            
-            <div style="background-color: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
-              <h3 style="color: #1e293b; margin-top: 0; margin-bottom: 15px;">What happens next?</h3>
-              <ul style="margin: 0; padding-left: 20px; color: #334155;">
-                <li style="margin-bottom: 8px;">We'll review your inquiry and investment interests</li>
-                <li style="margin-bottom: 8px;">A team member will reach out to schedule a discovery call</li>
-                <li style="margin-bottom: 8px;">We'll share our investment deck and detailed financials</li>
-                <li>We'll discuss partnership opportunities that align with your goals</li>
-              </ul>
-            </div>
-            
-            <div style="background-color: #eff6ff; padding: 20px; border-radius: 8px; border-left: 4px solid #2563eb;">
-              <p style="margin: 0; color: #1e40af; font-weight: 500;">
-                <strong>Investment Level:</strong> ${sanitizedData.investmentLevel}
-              </p>
-            </div>
-            
-            <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
-              <p style="color: #64748b; font-size: 14px; margin: 5px 0;">
-                Best regards,<br>
-                <strong>JumpinAI - Your Personalized AI Adaptation Studio</strong>
-              </p>
-              <p style="color: #64748b; font-size: 12px; margin-top: 15px;">
-                Empowering professionals with personalized AI adaptation strategies.
-              </p>
+              <!-- Header with Logo -->
+              <div style="text-align: center; padding: 30px 20px 20px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <img src="https://jumpinai.com/images/jumpinai-logo-email.png" alt="JumpinAI" style="max-width: 120px; height: auto; border-radius: 12px;" />
+              </div>
+              
+              <!-- Content -->
+              <div style="padding: 30px;">
+                <h1 style="color: #1a1a1a; font-size: 24px; margin: 0 0 20px 0; text-align: center;">Thank you for reaching out!</h1>
+                
+                <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 0 0 15px 0;">Dear ${sanitizedData.name},</p>
+                
+                <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 0 0 15px 0;">
+                  Thank you for your interest in investing in JumpinAI. We've received your message and our team will review it shortly.
+                </p>
+                
+                <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 0 0 15px 0;">
+                  We typically respond to investment inquiries within 24-48 hours. In the meantime, feel free to explore our platform and learn more about how we're revolutionizing AI adaptation.
+                </p>
+                
+                <div style="background-color: #eff6ff; padding: 20px; border-radius: 8px; border-left: 4px solid #2563eb; margin: 20px 0;">
+                  <p style="margin: 0; color: #1e40af; font-size: 14px;">
+                    <strong>Next Steps:</strong> Our team will review your inquiry and reach out to schedule a meeting to discuss the investment opportunity in detail.
+                  </p>
+                </div>
+                
+                <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 0;">
+                  Best regards,<br>
+                  <strong style="color: #667eea;">The JumpinAI Team</strong>
+                </p>
+              </div>
+              
+              <!-- Footer -->
+              <div style="background-color: #f8f9fa; padding: 20px; text-align: center; border-top: 1px solid #e0e0e0;">
+                <p style="margin: 0 0 10px 0; color: #666; font-size: 14px;">Questions? We're always here to help!</p>
+                <p style="margin: 0 0 15px 0; color: #666; font-size: 14px;">Email us at <a href="mailto:info@jumpinai.com" style="color: #667eea; text-decoration: none;">info@jumpinai.com</a></p>
+                <p style="margin: 0 0 5px 0; color: #999; font-size: 13px; font-weight: bold;">JumpinAI.</p>
+                <p style="margin: 0 0 10px 0; color: #999; font-size: 12px;">Your Personalized AI Adaptation Studio.</p>
+              </div>
+              
             </div>
           </div>
-        </div>
+        </body>
+        </html>
       `,
     });
 
-    if (confirmationEmailResponse.error) {
-      console.error("Failed to send confirmation email:", confirmationEmailResponse.error);
-      return new Response(
-        JSON.stringify({ 
-          success: false, 
-          error: "Failed to send confirmation email" 
-        }),
-        {
-          status: 500,
-          headers: { "Content-Type": "application/json", ...corsHeaders },
-        }
-      );
+    if (confirmationResponse.error) {
+      console.error("Failed to send confirmation email:", confirmationResponse.error);
     }
 
-    console.log("Investor inquiry processed successfully");
+    console.log("Investor contact emails sent successfully");
+
     return new Response(
-      JSON.stringify({ 
-        success: true, 
-        message: "Investment inquiry submitted successfully" 
+      JSON.stringify({
+        success: true,
+        message: "Thank you for your interest. We'll be in touch soon.",
       }),
       {
         status: 200,
         headers: { "Content-Type": "application/json", ...corsHeaders },
       }
     );
-
   } catch (error: any) {
     console.error("Error in send-investor-email function:", error);
     return new Response(
-      JSON.stringify({ 
-        success: false, 
-        error: "Internal server error" 
+      JSON.stringify({
+        error: "Failed to send message. Please try again later.",
       }),
       {
         status: 500,
