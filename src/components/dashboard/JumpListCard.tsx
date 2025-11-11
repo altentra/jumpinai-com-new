@@ -5,6 +5,7 @@ import { UserJump } from "@/services/jumpService";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import logoTransparent from "@/assets/logo-transparent.png";
+import JumpStatsRow from "./JumpStatsRow";
 
 interface JumpListCardProps {
   jump: UserJump;
@@ -55,53 +56,67 @@ export default function JumpListCard({ jump, jumpNumber, onView, onDelete }: Jum
       <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/5 to-transparent"></div>
       
       <div className="relative z-10 p-4 sm:p-5">
-        <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-          {/* Left section - Jump info */}
-          <div className="flex-1 min-w-0 space-y-2">
-            {/* Jump title with logo */}
-            <div className="flex items-center gap-2">
-              <img 
-                src={logoTransparent} 
-                alt="JumpinAI" 
-                className="w-6 h-6 sm:w-7 sm:h-7 object-contain shrink-0 opacity-80 group-hover:opacity-100 transition-opacity duration-300"
-              />
-              <h3 className="flex-1 text-base sm:text-lg font-bold line-clamp-2 bg-gradient-to-r from-foreground via-foreground to-foreground/70 bg-clip-text text-transparent leading-snug group-hover:from-primary group-hover:via-primary group-hover:to-primary/70 transition-all duration-300">
-                {jump.title}
-              </h3>
+        <div className="flex flex-col gap-4">
+          {/* Top section - Jump info and buttons */}
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+            {/* Left section - Jump info */}
+            <div className="flex-1 min-w-0 space-y-2">
+              {/* Jump title with logo */}
+              <div className="flex items-center gap-2">
+                <img 
+                  src={logoTransparent} 
+                  alt="JumpinAI" 
+                  className="w-6 h-6 sm:w-7 sm:h-7 object-contain shrink-0 opacity-80 group-hover:opacity-100 transition-opacity duration-300"
+                />
+                <h3 className="flex-1 text-base sm:text-lg font-bold line-clamp-2 bg-gradient-to-r from-foreground via-foreground to-foreground/70 bg-clip-text text-transparent leading-snug group-hover:from-primary group-hover:via-primary group-hover:to-primary/70 transition-all duration-300">
+                  {jump.title}
+                </h3>
+              </div>
+              
+              {/* Date */}
+              <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
+                <Calendar className="h-3.5 w-3.5 shrink-0" />
+                <span className="hidden sm:inline">{formatDate(jump.created_at)}</span>
+                <span className="sm:hidden">{formatDateShort(jump.created_at)}</span>
+              </div>
             </div>
             
-            {/* Date */}
-            <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
-              <Calendar className="h-3.5 w-3.5 shrink-0" />
-              <span className="hidden sm:inline">{formatDate(jump.created_at)}</span>
-              <span className="sm:hidden">{formatDateShort(jump.created_at)}</span>
+            {/* Right section - Action buttons */}
+            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+              {/* View Button */}
+              <Button
+                onClick={handleViewClick}
+                variant="glass"
+                size="sm"
+                className="flex-1 sm:flex-initial"
+              >
+                View Jump
+                <ArrowRight className="h-4 w-4 ml-1.5 transition-transform duration-300 group-hover:translate-x-0.5" />
+              </Button>
+              
+              {/* Delete Button */}
+              <Button
+                data-delete-button
+                onClick={handleDeleteClick}
+                variant="ghost"
+                size="sm"
+                className="rounded-xl border-0 ring-1 ring-destructive/20 bg-destructive/5 text-destructive hover:bg-destructive/15 hover:ring-destructive/40 transition-all duration-300 h-9 sm:h-10 w-9 sm:w-10 p-0 shrink-0"
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
             </div>
           </div>
-          
-          {/* Right section - Action buttons */}
-          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-            {/* View Button */}
-            <Button
-              onClick={handleViewClick}
-              variant="glass"
-              size="sm"
-              className="flex-1 sm:flex-initial"
-            >
-              View Jump
-              <ArrowRight className="h-4 w-4 ml-1.5 transition-transform duration-300 group-hover:translate-x-0.5" />
-            </Button>
-            
-            {/* Delete Button */}
-            <Button
-              data-delete-button
-              onClick={handleDeleteClick}
-              variant="ghost"
-              size="sm"
-              className="rounded-xl border-0 ring-1 ring-destructive/20 bg-destructive/5 text-destructive hover:bg-destructive/15 hover:ring-destructive/40 transition-all duration-300 h-9 sm:h-10 w-9 sm:w-10 p-0 shrink-0"
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
-          </div>
+
+          {/* Jump Stats Row */}
+          <JumpStatsRow stats={{
+            views_count: jump.views_count,
+            clarifications_count: jump.clarifications_count,
+            max_clarification_level: jump.max_clarification_level,
+            reroutes_count: jump.reroutes_count,
+            tools_clicked_count: jump.tools_clicked_count,
+            prompts_copied_count: jump.prompts_copied_count,
+            combos_used_count: jump.combos_used_count
+          }} />
         </div>
       </div>
     </Card>
