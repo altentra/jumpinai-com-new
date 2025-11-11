@@ -45,16 +45,19 @@ const PitchDeck = () => {
         <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:50px_50px]" />
         <div className="relative max-w-5xl mx-auto">
           <div className="text-center">
-            <div className="relative inline-block mb-6">
+            <div className="relative inline-block mb-4">
               <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent leading-tight tracking-tight">
                 Pitch Deck
               </h1>
               <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 h-0.5 bg-gradient-to-r from-transparent via-primary/60 to-transparent rounded-full"></div>
             </div>
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-foreground mb-4">
-              Personalized AI Transformation at Scale
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-foreground mb-3">
+              JumpinAI - Your Personalized AI Adaptation Studio
             </h2>
-            <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+            <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-2">
+              Revolutionizing how professionals and businesses adopt AI through adaptive, personalized transformation blueprints — delivering unprecedented speed, clarity, and actionability.
+            </p>
+            <p className="text-sm sm:text-base text-muted-foreground/80 max-w-2xl mx-auto">
               The World's First Platform for Truly Adaptive AI Transformation — Complete 3-Tab Blueprints in 2 Minutes
             </p>
           </div>
@@ -72,26 +75,32 @@ const PitchDeck = () => {
               <div className="w-16 h-0.5 bg-gradient-to-r from-primary/60 to-transparent"></div>
             </div>
             
-            <div className="grid md:grid-cols-3 gap-6 mb-6">
-              <div className="space-y-3">
-                <h3 className="text-base font-bold text-foreground">Generic AI Advice</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  Current AI solutions provide one-size-fits-all recommendations that don't account for specific business contexts, industries, team capabilities, or unique challenges.
-                </p>
-              </div>
+            <div className="space-y-4 mb-6">
+              <p className="text-base text-muted-foreground leading-relaxed">
+                The AI transformation landscape is broken. Despite massive market demand and investment, professionals and businesses face critical barriers preventing successful AI adoption:
+              </p>
               
-              <div className="space-y-3">
-                <h3 className="text-base font-bold text-foreground">Paralysis by Information</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  Professionals spend countless hours researching, but still feel overwhelmed and unsure where to start their AI transformation journey.
-                </p>
-              </div>
-              
-              <div className="space-y-3">
-                <h3 className="text-base font-bold text-foreground">Lack of Adaptability</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  Existing solutions can't adjust when users hit roadblocks or need alternative approaches, leaving them stuck without support.
-                </p>
+              <div className="grid md:grid-cols-3 gap-6">
+                <div className="space-y-3">
+                  <h3 className="text-base font-bold text-foreground">Generic AI Advice</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    Current AI solutions provide one-size-fits-all recommendations that ignore specific business contexts, industries, team capabilities, technical constraints, and unique organizational challenges. This generic approach fails 78% of AI transformation initiatives.
+                  </p>
+                </div>
+                
+                <div className="space-y-3">
+                  <h3 className="text-base font-bold text-foreground">Paralysis by Information</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    Professionals spend 40+ hours researching AI strategies, yet remain overwhelmed and uncertain where to begin. The gap between knowing AI exists and successfully implementing it grows wider daily, costing businesses billions in missed opportunities.
+                  </p>
+                </div>
+                
+                <div className="space-y-3">
+                  <h3 className="text-base font-bold text-foreground">Zero Adaptability</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    When users encounter roadblocks or need alternative approaches, existing solutions offer no recourse. Static plans can't pivot, leading to abandoned transformations and wasted investments in tools that never deliver ROI.
+                  </p>
+                </div>
               </div>
             </div>
             
@@ -116,13 +125,59 @@ const PitchDeck = () => {
             </div>
             
             <div className="space-y-8">
-              <div className="text-center mb-6">
-                <h3 className="text-xl md:text-2xl font-bold mb-3 text-foreground">
-                  Revolutionary 3-Tab Transformation System
-                </h3>
-                <p className="text-base text-muted-foreground max-w-2xl mx-auto">
-                  From 2 questions to complete transformation blueprint in 2 minutes
-                </p>
+              <div className="space-y-4 mb-6">
+                <div className="text-center">
+                  <h3 className="text-xl md:text-2xl font-bold mb-3 text-foreground">
+                    Revolutionary 3-Tab Transformation System
+                  </h3>
+                  <p className="text-base text-muted-foreground max-w-2xl mx-auto mb-4">
+                    From 2 questions to complete transformation blueprint in 2 minutes
+                  </p>
+                </div>
+                
+                <div className="glass backdrop-blur-sm bg-primary/10 border border-primary/20 rounded-xl p-5">
+                  <p className="text-sm text-foreground leading-relaxed text-center">
+                    JumpinAI is the world's first truly adaptive AI transformation platform. Unlike static consulting or generic AI advice, we provide personalized, comprehensive blueprints that adapt in real-time to your unique context, challenges, and evolving needs. Our proprietary 3-tab system delivers strategic analysis, flexible execution plans, and ready-to-use implementation tools — all in minutes, not months.
+                  </p>
+                </div>
+                
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="glass backdrop-blur-sm bg-background/25 border border-primary/20 rounded-xl p-4">
+                    <h4 className="text-sm font-bold text-foreground mb-2">What Makes Us Different</h4>
+                    <ul className="space-y-2 text-xs text-muted-foreground">
+                      <li className="flex items-start gap-2">
+                        <span className="text-primary mt-0.5">✓</span>
+                        <span>Hyper-personalized to your exact situation, industry, team size, and constraints</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-primary mt-0.5">✓</span>
+                        <span>Adaptive intelligence that clarifies steps up to 4 levels deep and provides 3 alternative routes</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-primary mt-0.5">✓</span>
+                        <span>Instant implementation with 9 custom tool-prompt combinations per transformation</span>
+                      </li>
+                    </ul>
+                  </div>
+                  
+                  <div className="glass backdrop-blur-sm bg-background/25 border border-primary/20 rounded-xl p-4">
+                    <h4 className="text-sm font-bold text-foreground mb-2">The Technology Edge</h4>
+                    <ul className="space-y-2 text-xs text-muted-foreground">
+                      <li className="flex items-start gap-2">
+                        <span className="text-primary mt-0.5">✓</span>
+                        <span>Multi-model AI orchestration for optimal analysis and planning</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-primary mt-0.5">✓</span>
+                        <span>Proprietary adaptive algorithm that learns from clarifications and route changes</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-primary mt-0.5">✓</span>
+                        <span>AI Coach for continuous refinement and optimization post-generation</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
               </div>
               
               <div className="grid md:grid-cols-3 gap-6">
@@ -293,44 +348,66 @@ const PitchDeck = () => {
               
               <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 rounded-xl p-5">
                 <div className="text-center mb-4">
-                  <h3 className="text-base font-bold text-foreground mb-1">Subscription</h3>
-                  <div className="text-xl font-bold text-primary">$29/month</div>
+                  <h3 className="text-base font-bold text-foreground mb-1">Subscription Tiers</h3>
+                  <div className="text-xl font-bold text-primary">$10-$59/month</div>
                 </div>
                 <ul className="space-y-2 text-xs text-muted-foreground">
                   <li className="flex items-start gap-2">
                     <span className="text-primary mt-0.5">•</span>
-                    <span>Unlimited Jumps</span>
+                    <span>Starter ($10): 25 credits monthly</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-primary mt-0.5">•</span>
-                    <span>Priority AI Coach access</span>
+                    <span>Pro ($29): 100 credits + AI Coach</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-primary mt-0.5">•</span>
-                    <span>Advanced analytics & insights</span>
+                    <span>Growth ($59): 250 credits + priority</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-0.5">•</span>
+                    <span>Credits roll over, never expire</span>
                   </li>
                 </ul>
               </div>
               
               <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 rounded-xl p-5">
                 <div className="text-center mb-4">
-                  <h3 className="text-base font-bold text-foreground mb-1">Enterprise</h3>
-                  <div className="text-xl font-bold text-primary">Custom</div>
+                  <h3 className="text-base font-bold text-foreground mb-1">Credit Packs</h3>
+                  <div className="text-xs text-muted-foreground">One-Time Purchases</div>
                 </div>
                 <ul className="space-y-2 text-xs text-muted-foreground">
                   <li className="flex items-start gap-2">
                     <span className="text-primary mt-0.5">•</span>
-                    <span>Team collaboration tools</span>
+                    <span>Flexible pay-as-you-go option</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-primary mt-0.5">•</span>
-                    <span>Custom integrations & SSO</span>
+                    <span>No recurring commitments</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-primary mt-0.5">•</span>
-                    <span>Dedicated success manager</span>
+                    <span>Perfect for occasional users</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-0.5">•</span>
+                    <span>Credits never expire</span>
                   </li>
                 </ul>
+              </div>
+            </div>
+            
+            <div className="mt-6">
+              <h4 className="text-sm font-bold text-foreground mb-3">Future Revenue Streams</h4>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="glass backdrop-blur-sm bg-background/25 border border-primary/20 rounded-xl p-4">
+                  <h5 className="text-xs font-bold text-foreground mb-2">Enterprise Solutions</h5>
+                  <p className="text-xs text-muted-foreground">Team collaboration, white-label, custom integrations, and dedicated support for organizations scaling AI adoption across departments.</p>
+                </div>
+                <div className="glass backdrop-blur-sm bg-background/25 border border-primary/20 rounded-xl p-4">
+                  <h5 className="text-xs font-bold text-foreground mb-2">Premium Resources</h5>
+                  <p className="text-xs text-muted-foreground">Industry-specific templates, advanced analytics, expert consultations, and exclusive AI transformation guides for power users.</p>
+                </div>
               </div>
             </div>
             
@@ -640,17 +717,23 @@ const PitchDeck = () => {
             </div>
             
             <div className="max-w-3xl mx-auto">
-              <div className="grid md:grid-cols-2 gap-6 mb-6">
+              <div className="grid md:grid-cols-3 gap-6 mb-6">
                 <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 rounded-xl p-6 text-center">
                   <div className="text-xs text-muted-foreground mb-2">Raising</div>
-                  <div className="text-3xl font-bold text-primary mb-2">$3M</div>
+                  <div className="text-3xl font-bold text-primary mb-2">$500K</div>
                   <div className="text-xs text-muted-foreground">Seed Round</div>
                 </div>
                 
                 <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 rounded-xl p-6 text-center">
                   <div className="text-xs text-muted-foreground mb-2">Valuation</div>
-                  <div className="text-3xl font-bold text-primary mb-2">$15M</div>
+                  <div className="text-3xl font-bold text-primary mb-2">$2M</div>
                   <div className="text-xs text-muted-foreground">Pre-money</div>
+                </div>
+                
+                <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 rounded-xl p-6 text-center">
+                  <div className="text-xs text-muted-foreground mb-2">Investor Discount</div>
+                  <div className="text-3xl font-bold text-primary mb-2">20%</div>
+                  <div className="text-xs text-muted-foreground">Standard Discount</div>
                 </div>
               </div>
               
