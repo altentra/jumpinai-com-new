@@ -730,3 +730,354 @@ export const generateJumpPDF = (jumpData: JumpPDFData): void => {
   const fileName = `${cleanTitle || 'jump-plan'}-${timestamp}.pdf`;
   pdf.save(fileName);
 };
+
+// ==================== PITCH DECK PDF GENERATOR ====================
+
+export const generatePitchDeckPDF = (): void => {
+  const pdf = new jsPDF();
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const pageHeight = pdf.internal.pageSize.getHeight();
+  const margin = 20;
+  const maxWidth = pageWidth - 2 * margin;
+  let yPosition = margin;
+
+  // Premium investor-focused color palette
+  const colors = {
+    primary: { r: 30, g: 58, b: 138 },
+    secondary: { r: 55, g: 90, b: 127 },
+    accent: { r: 59, g: 130, b: 246 },
+    heading: { r: 15, g: 23, b: 42 },
+    body: { r: 51, g: 65, b: 85 },
+    muted: { r: 100, g: 116, b: 139 },
+    white: { r: 255, g: 255, b: 255 },
+    sectionBg: { r: 248, g: 250, b: 252 },
+    border: { r: 226, g: 232, b: 240 },
+  };
+
+  const setFillColor = (color: { r: number; g: number; b: number }) => {
+    pdf.setFillColor(color.r, color.g, color.b);
+  };
+
+  const setTextColor = (color: { r: number; g: number; b: number }) => {
+    pdf.setTextColor(color.r, color.g, color.b);
+  };
+
+  const setDrawColor = (color: { r: number; g: number; b: number }) => {
+    pdf.setDrawColor(color.r, color.g, color.b);
+  };
+
+  const checkPageBreak = (neededHeight: number) => {
+    if (yPosition + neededHeight > pageHeight - 25) {
+      pdf.addPage();
+      yPosition = margin;
+    }
+  };
+
+  const wrapText = (text: string, maxW: number, fontSize: number) => {
+    pdf.setFontSize(fontSize);
+    return pdf.splitTextToSize(text, maxW);
+  };
+
+  // Cover Page
+  setFillColor(colors.primary);
+  pdf.rect(0, 0, pageWidth, pageHeight, 'F');
+
+  // Title
+  setTextColor(colors.white);
+  pdf.setFontSize(32);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('JumpinAI', pageWidth / 2, pageHeight / 2 - 30, { align: 'center' });
+
+  pdf.setFontSize(16);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text('Your Personalized AI Adaptation Studio', pageWidth / 2, pageHeight / 2 - 15, { align: 'center' });
+
+  pdf.setFontSize(24);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('PITCH DECK', pageWidth / 2, pageHeight / 2 + 10, { align: 'center' });
+
+  pdf.setFontSize(12);
+  pdf.setFont('helvetica', 'normal');
+  const currentDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
+  pdf.text(currentDate, pageWidth / 2, pageHeight / 2 + 30, { align: 'center' });
+
+  setTextColor({ r: 200, g: 220, b: 255 });
+  pdf.setFontSize(10);
+  pdf.text('Pre-Seed Investment Opportunity', pageWidth / 2, pageHeight - 30, { align: 'center' });
+
+  // New page for content
+  pdf.addPage();
+  yPosition = margin;
+
+  // Helper functions
+  const addSectionHeader = (title: string) => {
+    checkPageBreak(20);
+    setFillColor(colors.sectionBg);
+    pdf.rect(margin - 5, yPosition - 2, maxWidth + 10, 12, 'F');
+    setFillColor(colors.primary);
+    pdf.rect(margin - 5, yPosition - 2, 3, 12, 'F');
+    setTextColor(colors.heading);
+    pdf.setFontSize(14);
+    pdf.setFont('helvetica', 'bold');
+    pdf.text(title, margin, yPosition + 6);
+    yPosition += 18;
+  };
+
+  const addParagraph = (text: string, fontSize: number = 9, fontStyle: 'normal' | 'bold' = 'normal') => {
+    checkPageBreak(10);
+    setTextColor(colors.body);
+    pdf.setFontSize(fontSize);
+    pdf.setFont('helvetica', fontStyle);
+    const lines = wrapText(text, maxWidth, fontSize);
+    pdf.text(lines, margin, yPosition);
+    yPosition += lines.length * (fontSize * 0.4) + 4;
+  };
+
+  const addBullet = (text: string, indent: number = 0) => {
+    checkPageBreak(8);
+    const bulletX = margin + indent;
+    setFillColor(colors.accent);
+    pdf.circle(bulletX + 1.5, yPosition - 1.5, 0.8, 'F');
+    setTextColor(colors.body);
+    pdf.setFontSize(9);
+    pdf.setFont('helvetica', 'normal');
+    const lines = wrapText(text, maxWidth - 6 - indent, 9);
+    pdf.text(lines, bulletX + 5, yPosition);
+    yPosition += lines.length * 3.6 + 2;
+  };
+
+  const addHighlightBox = (title: string, content: string) => {
+    checkPageBreak(25);
+    const boxHeight = 20;
+    setFillColor({ r: 241, g: 245, b: 255 });
+    pdf.rect(margin, yPosition, maxWidth, boxHeight, 'F');
+    setDrawColor(colors.accent);
+    pdf.setLineWidth(0.5);
+    pdf.rect(margin, yPosition, maxWidth, boxHeight, 'S');
+    setTextColor(colors.primary);
+    pdf.setFontSize(11);
+    pdf.setFont('helvetica', 'bold');
+    pdf.text(title, margin + 5, yPosition + 7);
+    setTextColor(colors.body);
+    pdf.setFontSize(9);
+    pdf.setFont('helvetica', 'normal');
+    const lines = wrapText(content, maxWidth - 10, 9);
+    pdf.text(lines, margin + 5, yPosition + 14);
+    yPosition += boxHeight + 5;
+  };
+
+  // THE PROBLEM
+  addSectionHeader('The Problem');
+  addParagraph('The AI revolution has created a paradox: while AI capabilities advance exponentially, actual adoption and successful implementation lag dramatically behind. Organizations and individuals face a fundamental disconnect between AI\'s promise and their ability to harness it effectively.');
+  yPosition += 3;
+
+  addParagraph('The Personalization Crisis', 9, 'bold');
+  addBullet('Generic AI consulting and cookie-cutter frameworks fundamentally misunderstand the nature of successful transformation.');
+  addBullet('78% of AI transformation initiatives fail because the implementation strategy doesn\'t fit the specific organizational reality.');
+  yPosition += 2;
+
+  addParagraph('The Implementation Gap', 9, 'bold');
+  addBullet('Individuals invest 40+ hours researching AI strategies, yet remain paralyzed at the starting line.');
+  addBullet('The market floods users with conceptual frameworks while failing to deliver concrete, personalized, step-by-step guidance.');
+  yPosition += 2;
+
+  addParagraph('The Adaptation Void', 9, 'bold');
+  addBullet('Traditional solutions offer static documents that become obsolete when reality deviates from assumptions.');
+  addBullet('Users are abandoned with outdated plans and no recourse when they most need intelligent guidance.');
+  yPosition += 5;
+
+  addHighlightBox('Market Opportunity', '$12.4B AI Education & Transformation Market by 2027');
+
+  // OUR SOLUTION
+  pdf.addPage();
+  yPosition = margin;
+  addSectionHeader('Our Solution');
+  addParagraph('JumpinAI is the world\'s first truly adaptive AI transformation platform, delivering complete personalized blueprints in 2 minutes from just 2 questions.', 10, 'bold');
+  yPosition += 3;
+
+  addParagraph('The 3-Tab Transformation System', 10, 'bold');
+  yPosition += 2;
+
+  checkPageBreak(30);
+  setFillColor({ r: 245, g: 247, b: 250 });
+  pdf.rect(margin, yPosition, (maxWidth - 4) / 3, 35, 'F');
+  pdf.rect(margin + (maxWidth - 4) / 3 + 2, yPosition, (maxWidth - 4) / 3, 35, 'F');
+  pdf.rect(margin + 2 * ((maxWidth - 4) / 3 + 2), yPosition, (maxWidth - 4) / 3, 35, 'F');
+
+  setTextColor(colors.primary);
+  pdf.setFontSize(10);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('1. Overview Tab', margin + 3, yPosition + 8);
+  pdf.text('2. Adaptive Plan Tab', margin + (maxWidth - 4) / 3 + 5, yPosition + 8);
+  pdf.text('3. Tools & Prompts', margin + 2 * ((maxWidth - 4) / 3 + 2) + 3, yPosition + 8);
+
+  setTextColor(colors.body);
+  pdf.setFontSize(7.5);
+  pdf.setFont('helvetica', 'normal');
+  
+  const tab1Text = wrapText('Strategic foundation with analysis, vision, and high-level roadmap', (maxWidth - 4) / 3 - 6, 7.5);
+  pdf.text(tab1Text, margin + 3, yPosition + 15);
+  
+  const tab2Text = wrapText('Step-by-step guidance with 4-level clarification and 3 alternative routes per step', (maxWidth - 4) / 3 - 6, 7.5);
+  pdf.text(tab2Text, margin + (maxWidth - 4) / 3 + 5, yPosition + 15);
+  
+  const tab3Text = wrapText('9 custom tool-prompt combinations, copy-paste ready, with AI Coach access', (maxWidth - 4) / 3 - 6, 7.5);
+  pdf.text(tab3Text, margin + 2 * ((maxWidth - 4) / 3 + 2) + 3, yPosition + 15);
+
+  yPosition += 40;
+
+  addParagraph('Key Differentiators', 9, 'bold');
+  addBullet('Hyper-personalization at scale using multi-model AI orchestration (xAI as primary choice)');
+  addBullet('True adaptability with multi-level clarifications and alternative routes');
+  addBullet('Complete transformation in ~2 minutes, not months of consulting');
+  addBullet('Ongoing AI Coach for continuous refinement and strategic adjustments');
+
+  // MARKET OPPORTUNITY
+  pdf.addPage();
+  yPosition = margin;
+  addSectionHeader('Market Opportunity');
+  
+  addParagraph('Explosive Market Growth (November 2025)', 9, 'bold');
+  addBullet('$467B+ Global AI Market Size, growing at 37.3% CAGR through 2030');
+  addBullet('$15.8B AI Education & Training Market, 46.3% CAGR through 2028');
+  addBullet('520M+ Knowledge Workers Globally requiring AI transformation guidance');
+  addBullet('92% of Organizations Adopting AI by End of 2025 (up from 84% in early 2025)');
+  yPosition += 3;
+
+  addParagraph('Target Segments', 9, 'bold');
+  addBullet('Individuals & Entrepreneurs (Primary): Founders, creators, knowledge workers seeking competitive advantage');
+  addBullet('Small-Medium Businesses: 1-200 employee companies needing affordable AI transformation');
+  addBullet('Enterprise Teams (Future): Scaling AI adoption across departments');
+  addBullet('Educational Institutions: Universities preparing students for AI-driven workforce');
+
+  // BUSINESS MODEL
+  pdf.addPage();
+  yPosition = margin;
+  addSectionHeader('Business Model');
+  
+  addParagraph('Multi-Revenue Stream Strategy', 9, 'bold');
+  yPosition += 2;
+
+  addParagraph('Freemium Growth Engine:', 9, 'bold');
+  addBullet('3 free Jumps to experience value');
+  addBullet('5 welcome credits upon sign up');
+  addBullet('Viral acquisition through free tier with high conversion potential');
+  yPosition += 2;
+
+  addParagraph('Subscription Tiers ($9–$49/month):', 9, 'bold');
+  addBullet('Starter Plan: $9/month — 25 credits monthly');
+  addBullet('Pro Plan: $25/month — 100 credits + AI Coach access');
+  addBullet('Growth Plan: $49/month — 250 credits + priority support');
+  addBullet('1 credit = 1 complete Jump (3-tab transformation blueprint)');
+  addBullet('All credits roll over month-to-month and never expire');
+  yPosition += 2;
+
+  addParagraph('Credit Packs (One-Time Purchases):', 9, 'bold');
+  addBullet('Flexible pay-as-you-go option for occasional users');
+  addBullet('No recurring commitments, credits never expire');
+  yPosition += 3;
+
+  addParagraph('Future Revenue Streams:', 9, 'bold');
+  addBullet('Enterprise Solutions: Team collaboration, white-label, custom integrations');
+  addBullet('Premium Resources: Industry-specific templates, advanced analytics, expert consultations');
+  yPosition += 3;
+
+  addParagraph('Growth Strategy', 9, 'bold');
+  addBullet('Phase 1: Launch — Free tier viral growth, build user base, gather feedback');
+  addBullet('Phase 2: Scale — Convert free users to paid, expand features, optimize funnel');
+  addBullet('Phase 3: Enterprise — Launch team features, enterprise sales, strategic partnerships');
+
+  // COMPETITIVE ADVANTAGE
+  pdf.addPage();
+  yPosition = margin;
+  addSectionHeader('Competitive Advantage');
+  
+  addParagraph('Truly Adaptive Personalization', 9, 'bold');
+  addParagraph('Unlike competitors offering static templates or one-time assessments, our platform adapts in real-time with multi-level clarifications (4 deep) and alternative routes (3 per step).');
+  yPosition += 2;
+
+  addParagraph('Complete Transformation Ecosystem', 9, 'bold');
+  addParagraph('The only solution combining strategic overview, adaptive planning, execution tools, and ongoing AI coaching in one integrated platform.');
+  yPosition += 2;
+
+  addParagraph('Speed + Simplicity + Depth', 9, 'bold');
+  addParagraph('Generate comprehensive 3-tab transformation blueprints in 2 minutes from just 2 questions. No competitor matches this combination.');
+  yPosition += 2;
+
+  addParagraph('Scalable AI Architecture', 9, 'bold');
+  addParagraph('Our AI engine generates unlimited unique transformations with minimal marginal cost. Traditional consulting scales linearly; our technology enables exponential growth with superior unit economics.');
+
+  // INVESTMENT DETAILS
+  pdf.addPage();
+  yPosition = margin;
+  addSectionHeader('Investment Details');
+  
+  checkPageBreak(45);
+  setFillColor({ r: 240, g: 245, b: 255 });
+  pdf.rect(margin, yPosition, maxWidth, 40, 'F');
+  setDrawColor(colors.primary);
+  pdf.setLineWidth(0.8);
+  pdf.rect(margin, yPosition, maxWidth, 40, 'S');
+
+  setTextColor(colors.primary);
+  pdf.setFontSize(12);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Pre-Seed Round', margin + 5, yPosition + 10);
+
+  setTextColor(colors.body);
+  pdf.setFontSize(10);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text('Raising: $500,000', margin + 5, yPosition + 20);
+  pdf.text('Valuation: $2,000,000', margin + 5, yPosition + 27);
+  pdf.text('Investor Discount: 20% (Standard)', margin + 5, yPosition + 34);
+
+  yPosition += 45;
+
+  addParagraph('Use of Funds', 9, 'bold');
+  addBullet('Product Development (40%): Enhanced AI models, new features, platform optimization');
+  addBullet('Marketing & Growth (30%): User acquisition, brand building, strategic partnerships');
+  addBullet('Operations & Infrastructure (20%): Cloud infrastructure, security, compliance');
+  addBullet('Team Expansion (10%): Key technical and business hires');
+
+  // CONTACT & CLOSING
+  pdf.addPage();
+  yPosition = pageHeight / 2 - 40;
+  
+  setTextColor(colors.primary);
+  pdf.setFontSize(18);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Let\'s Build the Future of AI Adoption Together', pageWidth / 2, yPosition, { align: 'center' });
+  
+  yPosition += 20;
+  setTextColor(colors.body);
+  pdf.setFontSize(11);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text('Contact Us:', pageWidth / 2, yPosition, { align: 'center' });
+  
+  yPosition += 10;
+  pdf.setFontSize(10);
+  pdf.text('Email: info@jumpinai.com', pageWidth / 2, yPosition, { align: 'center' });
+  
+  yPosition += 8;
+  pdf.text('Website: www.jumpinai.com', pageWidth / 2, yPosition, { align: 'center' });
+  
+  yPosition += 20;
+  setTextColor(colors.muted);
+  pdf.setFontSize(8);
+  pdf.text('JumpinAI - Your Personalized AI Adaptation Studio', pageWidth / 2, yPosition, { align: 'center' });
+
+  // Add page numbers
+  const pageCount = pdf.getNumberOfPages();
+  for (let i = 1; i <= pageCount; i++) {
+    if (i === 1) continue; // Skip cover page
+    pdf.setPage(i);
+    setTextColor(colors.muted);
+    pdf.setFontSize(8);
+    const pageText = `${i} of ${pageCount}`;
+    const pageTextWidth = pdf.getTextWidth(pageText);
+    pdf.text(pageText, pageWidth - margin - pageTextWidth, pageHeight - 10);
+  }
+
+  // Save the PDF
+  pdf.save('JumpinAI-Pitch-Deck.pdf');
+};
