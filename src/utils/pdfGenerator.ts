@@ -737,23 +737,28 @@ export const generatePitchDeckPDF = (): void => {
   const pdf = new jsPDF();
   const pageWidth = pdf.internal.pageSize.getWidth();
   const pageHeight = pdf.internal.pageSize.getHeight();
-  const margin = 20;
+  const margin = 18;
   const maxWidth = pageWidth - 2 * margin;
   let yPosition = margin;
 
-  // Premium investor-focused color palette
+  // Premium investor-focused color palette - Professional and elegant
   const colors = {
-    primary: { r: 30, g: 58, b: 138 },
-    secondary: { r: 55, g: 90, b: 127 },
-    accent: { r: 59, g: 130, b: 246 },
-    heading: { r: 15, g: 23, b: 42 },
-    body: { r: 51, g: 65, b: 85 },
-    muted: { r: 100, g: 116, b: 139 },
+    primary: { r: 30, g: 58, b: 138 },        // Deep professional blue
+    primaryLight: { r: 59, g: 130, b: 246 },  // Bright blue accent
+    secondary: { r: 55, g: 90, b: 127 },      // Steel blue
+    accent: { r: 109, g: 88, b: 249 },        // Vibrant accent
+    heading: { r: 15, g: 23, b: 42 },         // Near black
+    body: { r: 51, g: 65, b: 85 },            // Professional gray
+    muted: { r: 100, g: 116, b: 139 },        // Light gray
     white: { r: 255, g: 255, b: 255 },
-    sectionBg: { r: 248, g: 250, b: 252 },
-    border: { r: 226, g: 232, b: 240 },
+    sectionBg: { r: 248, g: 250, b: 252 },    // Very light blue-gray
+    cardBg: { r: 245, g: 247, b: 250 },       // Subtle card background
+    highlightBg: { r: 241, g: 245, b: 255 },  // Light blue highlight
+    border: { r: 226, g: 232, b: 240 },       // Border gray
+    success: { r: 34, g: 197, b: 94 },        // Success green
   };
 
+  // Helper functions
   const setFillColor = (color: { r: number; g: number; b: number }) => {
     pdf.setFillColor(color.r, color.g, color.b);
   };
@@ -769,8 +774,10 @@ export const generatePitchDeckPDF = (): void => {
   const checkPageBreak = (neededHeight: number) => {
     if (yPosition + neededHeight > pageHeight - 25) {
       pdf.addPage();
-      yPosition = margin;
+      yPosition = margin + 5;
+      return true;
     }
+    return false;
   };
 
   const wrapText = (text: string, maxW: number, fontSize: number) => {
@@ -778,342 +785,1422 @@ export const generatePitchDeckPDF = (): void => {
     return pdf.splitTextToSize(text, maxW);
   };
 
-  // Cover Page
+  // ================== COVER PAGE ==================
   setFillColor(colors.primary);
   pdf.rect(0, 0, pageWidth, pageHeight, 'F');
 
-  // Title
+  // Elegant top accent line
+  setFillColor(colors.primaryLight);
+  pdf.rect(0, 0, pageWidth, 2, 'F');
+
+  // Company name - Large and bold
   setTextColor(colors.white);
-  pdf.setFontSize(32);
+  pdf.setFontSize(36);
   pdf.setFont('helvetica', 'bold');
-  pdf.text('JumpinAI', pageWidth / 2, pageHeight / 2 - 30, { align: 'center' });
+  pdf.text('JumpinAI', pageWidth / 2, 80, { align: 'center' });
 
-  pdf.setFontSize(16);
+  // Tagline - Elegant
+  pdf.setFontSize(14);
   pdf.setFont('helvetica', 'normal');
-  pdf.text('Your Personalized AI Adaptation Studio', pageWidth / 2, pageHeight / 2 - 15, { align: 'center' });
-
-  pdf.setFontSize(24);
-  pdf.setFont('helvetica', 'bold');
-  pdf.text('PITCH DECK', pageWidth / 2, pageHeight / 2 + 10, { align: 'center' });
-
-  pdf.setFontSize(12);
-  pdf.setFont('helvetica', 'normal');
-  const currentDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
-  pdf.text(currentDate, pageWidth / 2, pageHeight / 2 + 30, { align: 'center' });
-
   setTextColor({ r: 200, g: 220, b: 255 });
-  pdf.setFontSize(10);
-  pdf.text('Pre-Seed Investment Opportunity', pageWidth / 2, pageHeight - 30, { align: 'center' });
+  pdf.text('Your Personalized AI Adaptation Studio', pageWidth / 2, 95, { align: 'center' });
 
-  // New page for content
+  // Divider line
+  setDrawColor({ r: 200, g: 220, b: 255 });
+  pdf.setLineWidth(0.5);
+  pdf.line(pageWidth / 2 - 40, 105, pageWidth / 2 + 40, 105);
+
+  // Main title
+  setTextColor(colors.white);
+  pdf.setFontSize(28);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('INVESTOR PITCH DECK', pageWidth / 2, 140, { align: 'center' });
+
+  // Subtitle
+  pdf.setFontSize(13);
+  pdf.setFont('helvetica', 'normal');
+  setTextColor({ r: 200, g: 220, b: 255 });
+  pdf.text('Pre-Seed Investment Opportunity', pageWidth / 2, 155, { align: 'center' });
+
+  // Date
+  const currentDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
+  pdf.setFontSize(11);
+  pdf.text(currentDate, pageWidth / 2, pageHeight - 40, { align: 'center' });
+
+  // Footer text
+  pdf.setFontSize(9);
+  setTextColor({ r: 180, g: 200, b: 235 });
+  pdf.text('Confidential & Proprietary', pageWidth / 2, pageHeight - 25, { align: 'center' });
+
+  // ================== NEW PAGE - SETUP CONTENT HELPERS ==================
   pdf.addPage();
-  yPosition = margin;
+  yPosition = margin + 5;
 
-  // Helper functions
   const addSectionHeader = (title: string) => {
-    checkPageBreak(20);
+    checkPageBreak(22);
+    
+    // Background bar
     setFillColor(colors.sectionBg);
-    pdf.rect(margin - 5, yPosition - 2, maxWidth + 10, 12, 'F');
+    pdf.rect(margin - 8, yPosition - 3, maxWidth + 16, 14, 'F');
+    
+    // Left accent bar
     setFillColor(colors.primary);
-    pdf.rect(margin - 5, yPosition - 2, 3, 12, 'F');
+    pdf.rect(margin - 8, yPosition - 3, 3, 14, 'F');
+    
+    // Title text
     setTextColor(colors.heading);
-    pdf.setFontSize(14);
+    pdf.setFontSize(15);
     pdf.setFont('helvetica', 'bold');
     pdf.text(title, margin, yPosition + 6);
-    yPosition += 18;
+    
+    yPosition += 20;
   };
 
-  const addParagraph = (text: string, fontSize: number = 9, fontStyle: 'normal' | 'bold' = 'normal') => {
+  const addSubsectionHeader = (title: string, size: number = 11) => {
+    checkPageBreak(12);
+    setTextColor(colors.heading);
+    pdf.setFontSize(size);
+    pdf.setFont('helvetica', 'bold');
+    pdf.text(title, margin, yPosition);
+    yPosition += size + 3;
+  };
+
+  const addParagraph = (text: string, fontSize: number = 9, fontStyle: 'normal' | 'bold' | 'italic' = 'normal') => {
     checkPageBreak(10);
     setTextColor(colors.body);
     pdf.setFontSize(fontSize);
     pdf.setFont('helvetica', fontStyle);
     const lines = wrapText(text, maxWidth, fontSize);
     pdf.text(lines, margin, yPosition);
-    yPosition += lines.length * (fontSize * 0.4) + 4;
+    yPosition += lines.length * (fontSize * 0.42) + 4;
   };
 
-  const addBullet = (text: string, indent: number = 0) => {
-    checkPageBreak(8);
+  const addBullet = (text: string, fontSize: number = 9, indent: number = 0) => {
+    checkPageBreak(10);
     const bulletX = margin + indent;
-    setFillColor(colors.accent);
-    pdf.circle(bulletX + 1.5, yPosition - 1.5, 0.8, 'F');
+    
+    // Bullet point
+    setFillColor(colors.primaryLight);
+    pdf.circle(bulletX + 1.5, yPosition - 1.5, 0.9, 'F');
+    
+    // Text
     setTextColor(colors.body);
-    pdf.setFontSize(9);
+    pdf.setFontSize(fontSize);
     pdf.setFont('helvetica', 'normal');
-    const lines = wrapText(text, maxWidth - 6 - indent, 9);
+    const lines = wrapText(text, maxWidth - 6 - indent, fontSize);
     pdf.text(lines, bulletX + 5, yPosition);
-    yPosition += lines.length * 3.6 + 2;
+    yPosition += lines.length * (fontSize * 0.42) + 3;
   };
 
-  const addHighlightBox = (title: string, content: string) => {
-    checkPageBreak(25);
-    const boxHeight = 20;
-    setFillColor({ r: 241, g: 245, b: 255 });
-    pdf.rect(margin, yPosition, maxWidth, boxHeight, 'F');
-    setDrawColor(colors.accent);
-    pdf.setLineWidth(0.5);
-    pdf.rect(margin, yPosition, maxWidth, boxHeight, 'S');
+  const addHighlightBox = (title: string, value: string, subtitle?: string) => {
+    checkPageBreak(28);
+    
+    // Box background with gradient effect
+    setFillColor(colors.highlightBg);
+    pdf.rect(margin, yPosition, maxWidth, 22, 'F');
+    
+    // Border
+    setDrawColor(colors.primaryLight);
+    pdf.setLineWidth(0.6);
+    pdf.rect(margin, yPosition, maxWidth, 22, 'S');
+    
+    // Title
     setTextColor(colors.primary);
-    pdf.setFontSize(11);
+    pdf.setFontSize(10);
     pdf.setFont('helvetica', 'bold');
-    pdf.text(title, margin + 5, yPosition + 7);
-    setTextColor(colors.body);
-    pdf.setFontSize(9);
-    pdf.setFont('helvetica', 'normal');
-    const lines = wrapText(content, maxWidth - 10, 9);
-    pdf.text(lines, margin + 5, yPosition + 14);
-    yPosition += boxHeight + 5;
+    pdf.text(title, margin + 5, yPosition + 8);
+    
+    // Value
+    setTextColor(colors.heading);
+    pdf.setFontSize(12);
+    pdf.setFont('helvetica', 'bold');
+    pdf.text(value, margin + 5, yPosition + 16);
+    
+    // Subtitle if provided
+    if (subtitle) {
+      setTextColor(colors.muted);
+      pdf.setFontSize(8);
+      pdf.setFont('helvetica', 'normal');
+      pdf.text(subtitle, margin + 5, yPosition + 20);
+    }
+    
+    yPosition += 26;
   };
 
-  // THE PROBLEM
+  const addMetricCard = (label: string, value: string, x: number, y: number, width: number) => {
+    // Card background
+    setFillColor(colors.cardBg);
+    pdf.rect(x, y, width, 18, 'F');
+    
+    // Border
+    setDrawColor(colors.border);
+    pdf.setLineWidth(0.4);
+    pdf.rect(x, y, width, 18, 'S');
+    
+    // Label
+    setTextColor(colors.muted);
+    pdf.setFontSize(7.5);
+    pdf.setFont('helvetica', 'normal');
+    pdf.text(label, x + width / 2, y + 6, { align: 'center' });
+    
+    // Value
+    setTextColor(colors.primary);
+    pdf.setFontSize(12);
+    pdf.setFont('helvetica', 'bold');
+    pdf.text(value, x + width / 2, y + 14, { align: 'center' });
+  };
+
+  // ================== THE PROBLEM ==================
   addSectionHeader('The Problem');
-  addParagraph('The AI revolution has created a paradox: while AI capabilities advance exponentially, actual adoption and successful implementation lag dramatically behind. Organizations and individuals face a fundamental disconnect between AI\'s promise and their ability to harness it effectively.');
+  
+  addParagraph('The AI revolution has created a paradox: while AI capabilities advance exponentially, actual adoption and successful implementation lag dramatically behind. Organizations and individuals face a fundamental disconnect between AI\'s promise and their ability to harness it effectively.', 9.5);
   yPosition += 3;
 
-  addParagraph('The Personalization Crisis', 9, 'bold');
-  addBullet('Generic AI consulting and cookie-cutter frameworks fundamentally misunderstand the nature of successful transformation.');
-  addBullet('78% of AI transformation initiatives fail because the implementation strategy doesn\'t fit the specific organizational reality.');
-  yPosition += 2;
+  // Problem cards - 3 columns
+  checkPageBreak(65);
+  const cardWidth = (maxWidth - 8) / 3;
+  const cardHeight = 58;
+  const startY = yPosition;
 
-  addParagraph('The Implementation Gap', 9, 'bold');
-  addBullet('Individuals invest 40+ hours researching AI strategies, yet remain paralyzed at the starting line.');
-  addBullet('The market floods users with conceptual frameworks while failing to deliver concrete, personalized, step-by-step guidance.');
-  yPosition += 2;
-
-  addParagraph('The Adaptation Void', 9, 'bold');
-  addBullet('Traditional solutions offer static documents that become obsolete when reality deviates from assumptions.');
-  addBullet('Users are abandoned with outdated plans and no recourse when they most need intelligent guidance.');
-  yPosition += 5;
-
-  addHighlightBox('Market Opportunity', '$12.4B AI Education & Transformation Market by 2027');
-
-  // OUR SOLUTION
-  pdf.addPage();
-  yPosition = margin;
-  addSectionHeader('Our Solution');
-  addParagraph('JumpinAI is the world\'s first truly adaptive AI transformation platform, delivering complete personalized blueprints in 2 minutes from just 2 questions.', 10, 'bold');
-  yPosition += 3;
-
-  addParagraph('The 3-Tab Transformation System', 10, 'bold');
-  yPosition += 2;
-
-  checkPageBreak(30);
-  setFillColor({ r: 245, g: 247, b: 250 });
-  pdf.rect(margin, yPosition, (maxWidth - 4) / 3, 35, 'F');
-  pdf.rect(margin + (maxWidth - 4) / 3 + 2, yPosition, (maxWidth - 4) / 3, 35, 'F');
-  pdf.rect(margin + 2 * ((maxWidth - 4) / 3 + 2), yPosition, (maxWidth - 4) / 3, 35, 'F');
-
-  setTextColor(colors.primary);
-  pdf.setFontSize(10);
+  // Card 1: Personalization Crisis
+  setFillColor(colors.cardBg);
+  pdf.rect(margin, startY, cardWidth, cardHeight, 'F');
+  setDrawColor(colors.border);
+  pdf.setLineWidth(0.4);
+  pdf.rect(margin, startY, cardWidth, cardHeight, 'S');
+  
+  setTextColor(colors.heading);
+  pdf.setFontSize(9.5);
   pdf.setFont('helvetica', 'bold');
-  pdf.text('1. Overview Tab', margin + 3, yPosition + 8);
-  pdf.text('2. Adaptive Plan Tab', margin + (maxWidth - 4) / 3 + 5, yPosition + 8);
-  pdf.text('3. Tools & Prompts', margin + 2 * ((maxWidth - 4) / 3 + 2) + 3, yPosition + 8);
-
+  pdf.text('Personalization Crisis', margin + cardWidth / 2, startY + 7, { align: 'center' });
+  
   setTextColor(colors.body);
   pdf.setFontSize(7.5);
   pdf.setFont('helvetica', 'normal');
+  const crisis1 = wrapText('Generic AI consulting and cookie-cutter frameworks fundamentally misunderstand successful transformation. Every organization operates within unique constraints.', cardWidth - 6, 7.5);
+  pdf.text(crisis1, margin + 3, startY + 15);
   
-  const tab1Text = wrapText('Strategic foundation with analysis, vision, and high-level roadmap', (maxWidth - 4) / 3 - 6, 7.5);
-  pdf.text(tab1Text, margin + 3, yPosition + 15);
+  setTextColor(colors.primary);
+  pdf.setFontSize(9);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('78% of AI initiatives fail', margin + cardWidth / 2, startY + 48, { align: 'center' });
+  setTextColor(colors.muted);
+  pdf.setFontSize(7);
+  pdf.setFont('helvetica', 'italic');
+  pdf.text('due to poor personalization', margin + cardWidth / 2, startY + 54, { align: 'center' });
+
+  // Card 2: Implementation Gap
+  setFillColor(colors.cardBg);
+  pdf.rect(margin + cardWidth + 4, startY, cardWidth, cardHeight, 'F');
+  setDrawColor(colors.border);
+  pdf.setLineWidth(0.4);
+  pdf.rect(margin + cardWidth + 4, startY, cardWidth, cardHeight, 'S');
   
-  const tab2Text = wrapText('Step-by-step guidance with 4-level clarification and 3 alternative routes per step', (maxWidth - 4) / 3 - 6, 7.5);
-  pdf.text(tab2Text, margin + (maxWidth - 4) / 3 + 5, yPosition + 15);
+  setTextColor(colors.heading);
+  pdf.setFontSize(9.5);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Implementation Gap', margin + cardWidth + 4 + cardWidth / 2, startY + 7, { align: 'center' });
   
-  const tab3Text = wrapText('9 custom tool-prompt combinations, copy-paste ready, with AI Coach access', (maxWidth - 4) / 3 - 6, 7.5);
-  pdf.text(tab3Text, margin + 2 * ((maxWidth - 4) / 3 + 2) + 3, yPosition + 15);
+  setTextColor(colors.body);
+  pdf.setFontSize(7.5);
+  pdf.setFont('helvetica', 'normal');
+  const crisis2 = wrapText('People invest 40+ hours researching AI strategies, yet remain paralyzed at the starting line. The market floods users with concepts while failing to deliver actionable guidance.', cardWidth - 6, 7.5);
+  pdf.text(crisis2, margin + cardWidth + 4 + 3, startY + 15);
+  
+  setTextColor(colors.primary);
+  pdf.setFontSize(9);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('40+ hours wasted', margin + cardWidth + 4 + cardWidth / 2, startY + 48, { align: 'center' });
+  setTextColor(colors.muted);
+  pdf.setFontSize(7);
+  pdf.setFont('helvetica', 'italic');
+  pdf.text('without actionable results', margin + cardWidth + 4 + cardWidth / 2, startY + 54, { align: 'center' });
 
-  yPosition += 40;
+  // Card 3: Adaptation Void
+  setFillColor(colors.cardBg);
+  pdf.rect(margin + 2 * (cardWidth + 4), startY, cardWidth, cardHeight, 'F');
+  setDrawColor(colors.border);
+  pdf.setLineWidth(0.4);
+  pdf.rect(margin + 2 * (cardWidth + 4), startY, cardWidth, cardHeight, 'S');
+  
+  setTextColor(colors.heading);
+  pdf.setFontSize(9.5);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Adaptation Void', margin + 2 * (cardWidth + 4) + cardWidth / 2, startY + 7, { align: 'center' });
+  
+  setTextColor(colors.body);
+  pdf.setFontSize(7.5);
+  pdf.setFont('helvetica', 'normal');
+  const crisis3 = wrapText('Traditional solutions offer static documents that become obsolete when reality deviates from assumptions. Users are abandoned when they most need intelligent guidance.', cardWidth - 6, 7.5);
+  pdf.text(crisis3, margin + 2 * (cardWidth + 4) + 3, startY + 15);
+  
+  setTextColor(colors.primary);
+  pdf.setFontSize(9);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Static plans fail', margin + 2 * (cardWidth + 4) + cardWidth / 2, startY + 48, { align: 'center' });
+  setTextColor(colors.muted);
+  pdf.setFontSize(7);
+  pdf.setFont('helvetica', 'italic');
+  pdf.text('when obstacles arise', margin + 2 * (cardWidth + 4) + cardWidth / 2, startY + 54, { align: 'center' });
 
-  addParagraph('Key Differentiators', 9, 'bold');
-  addBullet('Hyper-personalization at scale using multi-model AI orchestration (xAI as primary choice)');
-  addBullet('True adaptability with multi-level clarifications and alternative routes');
-  addBullet('Complete transformation in ~2 minutes, not months of consulting');
-  addBullet('Ongoing AI Coach for continuous refinement and strategic adjustments');
+  yPosition += cardHeight + 8;
 
-  // MARKET OPPORTUNITY
+  // Market Opportunity highlight
+  addHighlightBox('Market Opportunity', '$12.4B AI Education & Transformation Market by 2027', 'Millions desperately need a solution bridging AI\'s potential and their ability to realize it');
+
+  // ================== OUR SOLUTION ==================
   pdf.addPage();
-  yPosition = margin;
+  yPosition = margin + 5;
+  addSectionHeader('Our Solution');
+  
+  addParagraph('JumpinAI is the world\'s first truly adaptive AI transformation platform, delivering complete personalized blueprints in 2 minutes from just 2 questions.', 10, 'bold');
+  yPosition += 2;
+
+  addSubsectionHeader('The 3-Tab Transformation System', 10);
+  yPosition += 2;
+
+  // 3-Tab visual cards
+  checkPageBreak(48);
+  const tabWidth = (maxWidth - 8) / 3;
+  const tabHeight = 42;
+  const tabY = yPosition;
+
+  // Tab 1: Overview
+  setFillColor(colors.cardBg);
+  pdf.rect(margin, tabY, tabWidth, tabHeight, 'F');
+  setDrawColor(colors.primaryLight);
+  pdf.setLineWidth(0.5);
+  pdf.rect(margin, tabY, tabWidth, tabHeight, 'S');
+  
+  // Tab number circle
+  setFillColor(colors.primary);
+  pdf.circle(margin + 8, tabY + 8, 4, 'F');
+  setTextColor(colors.white);
+  pdf.setFontSize(10);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('1', margin + 7, tabY + 10);
+  
+  setTextColor(colors.heading);
+  pdf.setFontSize(9.5);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Overview Tab', margin + tabWidth / 2, tabY + 20, { align: 'center' });
+  
+  setTextColor(colors.body);
+  pdf.setFontSize(7);
+  pdf.setFont('helvetica', 'normal');
+  const tab1Text = wrapText('Strategic foundation with current situation analysis, vision & objectives, and high-level roadmap', tabWidth - 6, 7);
+  pdf.text(tab1Text, margin + 3, tabY + 27);
+
+  // Tab 2: Adaptive Plan
+  setFillColor(colors.cardBg);
+  pdf.rect(margin + tabWidth + 4, tabY, tabWidth, tabHeight, 'F');
+  setDrawColor(colors.primaryLight);
+  pdf.setLineWidth(0.5);
+  pdf.rect(margin + tabWidth + 4, tabY, tabWidth, tabHeight, 'S');
+  
+  setFillColor(colors.primary);
+  pdf.circle(margin + tabWidth + 4 + 8, tabY + 8, 4, 'F');
+  setTextColor(colors.white);
+  pdf.setFontSize(10);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('2', margin + tabWidth + 4 + 7, tabY + 10);
+  
+  setTextColor(colors.heading);
+  pdf.setFontSize(9.5);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Adaptive Plan Tab', margin + tabWidth + 4 + tabWidth / 2, tabY + 20, { align: 'center' });
+  
+  setTextColor(colors.body);
+  pdf.setFontSize(7);
+  pdf.setFont('helvetica', 'normal');
+  const tab2Text = wrapText('Step-by-step guidance with 4-level clarification for granular details and 3 alternative routes to pivot when obstacles arise', tabWidth - 6, 7);
+  pdf.text(tab2Text, margin + tabWidth + 4 + 3, tabY + 27);
+
+  // Tab 3: Tools & Prompts
+  setFillColor(colors.cardBg);
+  pdf.rect(margin + 2 * (tabWidth + 4), tabY, tabWidth, tabHeight, 'F');
+  setDrawColor(colors.primaryLight);
+  pdf.setLineWidth(0.5);
+  pdf.rect(margin + 2 * (tabWidth + 4), tabY, tabWidth, tabHeight, 'S');
+  
+  setFillColor(colors.primary);
+  pdf.circle(margin + 2 * (tabWidth + 4) + 8, tabY + 8, 4, 'F');
+  setTextColor(colors.white);
+  pdf.setFontSize(10);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('3', margin + 2 * (tabWidth + 4) + 7, tabY + 10);
+  
+  setTextColor(colors.heading);
+  pdf.setFontSize(9.5);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Tools & Prompts', margin + 2 * (tabWidth + 4) + tabWidth / 2, tabY + 20, { align: 'center' });
+  
+  setTextColor(colors.body);
+  pdf.setFontSize(7);
+  pdf.setFont('helvetica', 'normal');
+  const tab3Text = wrapText('9 custom tool-prompt combinations, copy-paste ready, with AI Coach access for ongoing guidance', tabWidth - 6, 7);
+  pdf.text(tab3Text, margin + 2 * (tabWidth + 4) + 3, tabY + 27);
+
+  yPosition += tabHeight + 8;
+
+  // Key Differentiators
+  addSubsectionHeader('Key Differentiators', 10);
+  addBullet('Hyper-personalization at scale using multi-model AI orchestration (xAI as primary choice, supplemented by ChatGPT-5, Claude, and Gemini)', 8.5);
+  addBullet('True adaptability with multi-level clarifications and alternative routes—no static templates', 8.5);
+  addBullet('Complete transformation in ~2 minutes, not months of expensive consulting', 8.5);
+  addBullet('Ongoing AI Coach for continuous refinement and strategic adjustments post-generation', 8.5);
+
+  // ================== MARKET OPPORTUNITY ==================
+  pdf.addPage();
+  yPosition = margin + 5;
   addSectionHeader('Market Opportunity');
   
-  addParagraph('Explosive Market Growth (November 2025)', 9, 'bold');
-  addBullet('$467B+ Global AI Market Size, growing at 37.3% CAGR through 2030');
-  addBullet('$15.8B AI Education & Training Market, 46.3% CAGR through 2028');
-  addBullet('520M+ Knowledge Workers Globally requiring AI transformation guidance');
-  addBullet('92% of Organizations Adopting AI by End of 2025 (up from 84% in early 2025)');
-  yPosition += 3;
-
-  addParagraph('Target Segments', 9, 'bold');
-  addBullet('Individuals & Entrepreneurs (Primary): Founders, creators, knowledge workers seeking competitive advantage');
-  addBullet('Small-Medium Businesses: 1-200 employee companies needing affordable AI transformation');
-  addBullet('Enterprise Teams (Future): Scaling AI adoption across departments');
-  addBullet('Educational Institutions: Universities preparing students for AI-driven workforce');
-
-  // BUSINESS MODEL
-  pdf.addPage();
-  yPosition = margin;
-  addSectionHeader('Business Model');
-  
-  addParagraph('Multi-Revenue Stream Strategy', 9, 'bold');
+  addSubsectionHeader('Explosive Market Growth (November 2025)', 10);
   yPosition += 2;
 
-  addParagraph('Freemium Growth Engine:', 9, 'bold');
-  addBullet('3 free Jumps to experience value');
-  addBullet('5 welcome credits upon sign up');
-  addBullet('Viral acquisition through free tier with high conversion potential');
-  yPosition += 2;
-
-  addParagraph('Subscription Tiers ($9–$49/month):', 9, 'bold');
-  addBullet('Starter Plan: $9/month — 25 credits monthly');
-  addBullet('Pro Plan: $25/month — 100 credits + AI Coach access');
-  addBullet('Growth Plan: $49/month — 250 credits + priority support');
-  addBullet('1 credit = 1 complete Jump (3-tab transformation blueprint)');
-  addBullet('All credits roll over month-to-month and never expire');
-  yPosition += 2;
-
-  addParagraph('Credit Packs (One-Time Purchases):', 9, 'bold');
-  addBullet('Flexible pay-as-you-go option for occasional users');
-  addBullet('No recurring commitments, credits never expire');
-  yPosition += 3;
-
-  addParagraph('Future Revenue Streams:', 9, 'bold');
-  addBullet('Enterprise Solutions: Team collaboration, white-label, custom integrations');
-  addBullet('Premium Resources: Industry-specific templates, advanced analytics, expert consultations');
-  yPosition += 5;
-
-  addParagraph('Growth Strategy', 9, 'bold');
-  addBullet('Launch & Validation: Free tier drives viral growth, community building, rapid iteration based on user feedback, content marketing to establish thought leadership');
-  addBullet('Scale & Monetization: Convert free users through value demonstration, optimize conversion funnel, expand feature set based on user demand, strategic partnerships with AI platforms');
-  addBullet('Enterprise & Expansion: Launch team collaboration features, enterprise sales motion, white-label solutions, API partnerships, international market expansion');
-  yPosition += 3;
-
-  // PROJECTIONS
-  addParagraph('Projections', 9, 'bold');
-  yPosition += 2;
+  // Market metrics - Grid layout
+  checkPageBreak(50);
+  const metricCardWidth = (maxWidth - 4) / 2;
+  const metricStartY = yPosition;
   
-  checkPageBreak(35);
-  setFillColor({ r: 245, g: 247, b: 250 });
-  pdf.rect(margin, yPosition, maxWidth, 30, 'F');
-  setDrawColor(colors.border);
-  pdf.setLineWidth(0.3);
-  pdf.rect(margin, yPosition, maxWidth, 30, 'S');
-  
-  setTextColor(colors.body);
-  pdf.setFontSize(8.5);
-  pdf.setFont('helvetica', 'bold');
-  pdf.text('Year 1:', margin + 3, yPosition + 6);
-  pdf.setFont('helvetica', 'normal');
-  pdf.text('10K users | 1.5K paying customers | $180K ARR', margin + 15, yPosition + 6);
-  
-  pdf.setFont('helvetica', 'bold');
-  pdf.text('Year 2:', margin + 3, yPosition + 13);
-  pdf.setFont('helvetica', 'normal');
-  pdf.text('50K users | 10K paying customers | $1.2M ARR', margin + 15, yPosition + 13);
-  
-  pdf.setFont('helvetica', 'bold');
-  pdf.text('Year 3:', margin + 3, yPosition + 20);
-  pdf.setFont('helvetica', 'normal');
-  pdf.text('200K users | 40K paying customers | $4.8M ARR', margin + 15, yPosition + 20);
-  
-  yPosition += 33;
-  
-  pdf.setFontSize(7.5);
-  setTextColor(colors.muted);
-  pdf.setFont('helvetica', 'italic');
-  const assumptionText = wrapText('Key assumptions: 15% free-to-paid conversion, $10 average monthly revenue per paying user, 10% monthly user growth post-launch.', maxWidth, 7.5);
-  pdf.text(assumptionText, margin, yPosition);
-  yPosition += assumptionText.length * 3;
-
-  // COMPETITIVE ADVANTAGE
-  pdf.addPage();
-  yPosition = margin;
-  addSectionHeader('Competitive Advantage');
-  
-  addParagraph('Truly Adaptive Personalization', 9, 'bold');
-  addParagraph('Unlike competitors offering static templates or one-time assessments, our platform adapts in real-time with multi-level clarifications (4 deep) and alternative routes (3 per step).');
-  yPosition += 2;
-
-  addParagraph('Complete Transformation Ecosystem', 9, 'bold');
-  addParagraph('The only solution combining strategic overview, adaptive planning, execution tools, and ongoing AI coaching in one integrated platform.');
-  yPosition += 2;
-
-  addParagraph('Speed + Simplicity + Depth', 9, 'bold');
-  addParagraph('Generate comprehensive 3-tab transformation blueprints in 2 minutes from just 2 questions. No competitor matches this combination.');
-  yPosition += 2;
-
-  addParagraph('Scalable AI Architecture', 9, 'bold');
-  addParagraph('Our AI engine generates unlimited unique transformations with minimal marginal cost. Traditional consulting scales linearly; our technology enables exponential growth with superior unit economics.');
-
-  // INVESTMENT DETAILS
-  pdf.addPage();
-  yPosition = margin;
-  addSectionHeader('Investment Details');
-  
-  checkPageBreak(45);
-  setFillColor({ r: 240, g: 245, b: 255 });
-  pdf.rect(margin, yPosition, maxWidth, 40, 'F');
-  setDrawColor(colors.primary);
-  pdf.setLineWidth(0.8);
-  pdf.rect(margin, yPosition, maxWidth, 40, 'S');
-
-  setTextColor(colors.primary);
-  pdf.setFontSize(12);
-  pdf.setFont('helvetica', 'bold');
-  pdf.text('Pre-Seed Round', margin + 5, yPosition + 10);
-
-  setTextColor(colors.body);
-  pdf.setFontSize(10);
-  pdf.setFont('helvetica', 'normal');
-  pdf.text('Raising: $500,000', margin + 5, yPosition + 20);
-  pdf.text('Valuation: $2,000,000 (Post-money)', margin + 5, yPosition + 27);
-  pdf.text('Investor Discount: 20% (Standard)', margin + 5, yPosition + 34);
-
-  yPosition += 45;
-
-  addParagraph('Use of Funds', 9, 'bold');
-  addBullet('Product Development (40%): Enhanced AI models, new features, platform optimization');
-  addBullet('Marketing & Growth (30%): User acquisition, brand building, strategic partnerships');
-  addBullet('Operations & Infrastructure (20%): Cloud infrastructure, security, compliance');
-  addBullet('Team Expansion (10%): Key technical and business hires');
-
-  // CONTACT & CLOSING
-  pdf.addPage();
-  yPosition = pageHeight / 2 - 40;
-  
-  setTextColor(colors.primary);
-  pdf.setFontSize(18);
-  pdf.setFont('helvetica', 'bold');
-  pdf.text('Let\'s Build the Future of AI Adoption Together', pageWidth / 2, yPosition, { align: 'center' });
+  addMetricCard('Global AI Market', '$467B+', margin, metricStartY, metricCardWidth);
+  addMetricCard('AI Education Market', '$15.8B', margin + metricCardWidth + 4, metricStartY, metricCardWidth);
   
   yPosition += 20;
+  
+  addMetricCard('Knowledge Workers', '520M+', margin, yPosition, metricCardWidth);
+  addMetricCard('Organizations Adopting AI', '92%', margin + metricCardWidth + 4, yPosition, metricCardWidth);
+  
+  yPosition += 22;
+
+  // Additional context bullets
+  addBullet('Global AI Market growing at 37.3% CAGR through 2030 (Fortune Business Insights, Nov 2025)', 8);
+  addBullet('AI Education Market expanding at 46.3% CAGR through 2028 (MarketsandMarkets, Nov 2025)', 8);
+  addBullet('520M+ Knowledge Workers globally all requiring AI transformation guidance', 8);
+  addBullet('92% of organizations adopting AI by end of 2025, up from 84% in early 2025 (Gartner, Nov 2025)', 8);
+  yPosition += 4;
+
+  // Target Segments
+  addSubsectionHeader('Target Segments', 10);
+  yPosition += 2;
+  
+  checkPageBreak(45);
+  const segmentHeight = 21;
+  
+  // Segment 1: Individuals & Entrepreneurs
+  setFillColor(colors.cardBg);
+  pdf.rect(margin, yPosition, maxWidth, segmentHeight, 'F');
+  setDrawColor(colors.border);
+  pdf.setLineWidth(0.4);
+  pdf.rect(margin, yPosition, maxWidth, segmentHeight, 'S');
+  
+  setTextColor(colors.heading);
+  pdf.setFontSize(9);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Individuals & Entrepreneurs (Primary)', margin + 3, yPosition + 6);
+  
   setTextColor(colors.body);
-  pdf.setFontSize(11);
+  pdf.setFontSize(8);
   pdf.setFont('helvetica', 'normal');
-  pdf.text('Contact Us:', pageWidth / 2, yPosition, { align: 'center' });
+  pdf.text('Founders, creators, and knowledge workers seeking personal AI upskilling and competitive advantage', margin + 3, yPosition + 12);
+  
+  setTextColor(colors.muted);
+  pdf.setFontSize(7);
+  pdf.setFont('helvetica', 'italic');
+  pdf.text('Immediate monetization through subscription and credit sales', margin + 3, yPosition + 18);
+  
+  yPosition += segmentHeight + 3;
+
+  // Segment 2: Small-Medium Businesses
+  setFillColor(colors.cardBg);
+  pdf.rect(margin, yPosition, maxWidth, segmentHeight, 'F');
+  setDrawColor(colors.border);
+  pdf.setLineWidth(0.4);
+  pdf.rect(margin, yPosition, maxWidth, segmentHeight, 'S');
+  
+  setTextColor(colors.heading);
+  pdf.setFontSize(9);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Small-Medium Businesses', margin + 3, yPosition + 6);
+  
+  setTextColor(colors.body);
+  pdf.setFontSize(8);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text('1-200 employee companies needing affordable AI transformation without expensive consultants', margin + 3, yPosition + 12);
+  
+  setTextColor(colors.muted);
+  pdf.setFontSize(7);
+  pdf.setFont('helvetica', 'italic');
+  pdf.text('High-value segment with team subscription potential', margin + 3, yPosition + 18);
+  
+  yPosition += segmentHeight + 3;
+
+  // Segment 3: Enterprise Teams
+  setFillColor(colors.cardBg);
+  pdf.rect(margin, yPosition, maxWidth, segmentHeight, 'F');
+  setDrawColor(colors.border);
+  pdf.setLineWidth(0.4);
+  pdf.rect(margin, yPosition, maxWidth, segmentHeight, 'S');
+  
+  setTextColor(colors.heading);
+  pdf.setFontSize(9);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Enterprise Teams (Future)', margin + 3, yPosition + 6);
+  
+  setTextColor(colors.body);
+  pdf.setFontSize(8);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text('Scaling AI adoption across departments with team collaboration features', margin + 3, yPosition + 12);
+  
+  setTextColor(colors.muted);
+  pdf.setFontSize(7);
+  pdf.setFont('helvetica', 'italic');
+  pdf.text('Largest revenue opportunity through enterprise licensing', margin + 3, yPosition + 18);
+  
+  yPosition += segmentHeight + 5;
+
+  // Market timing highlight
+  checkPageBreak(15);
+  setFillColor(colors.highlightBg);
+  pdf.rect(margin, yPosition, maxWidth, 12, 'F');
+  setDrawColor(colors.primaryLight);
+  pdf.setLineWidth(0.4);
+  pdf.rect(margin, yPosition, maxWidth, 12, 'S');
+  
+  setTextColor(colors.heading);
+  pdf.setFontSize(8);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Market Timing:', margin + 3, yPosition + 5);
+  pdf.setFont('helvetica', 'normal');
+  setTextColor(colors.body);
+  pdf.text('AI adoption urgency at all-time high following ChatGPT\'s mainstream breakthrough', margin + 24, yPosition + 5);
+  pdf.text('and enterprise AI transformation mandates', margin + 3, yPosition + 9);
+  
+  yPosition += 14;
+
+  // ================== BUSINESS MODEL ==================
+  pdf.addPage();
+  yPosition = margin + 5;
+  addSectionHeader('Business Model');
+
+  addSubsectionHeader('Multi-Revenue Stream Strategy', 10);
+  yPosition += 3;
+
+  // Freemium
+  checkPageBreak(28);
+  setFillColor(colors.cardBg);
+  pdf.rect(margin, yPosition, maxWidth, 26, 'F');
+  setDrawColor(colors.border);
+  pdf.setLineWidth(0.4);
+  pdf.rect(margin, yPosition, maxWidth, 26, 'S');
+  
+  setTextColor(colors.heading);
+  pdf.setFontSize(9.5);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Freemium Growth Engine', margin + 3, yPosition + 6);
+  
+  setTextColor(colors.muted);
+  pdf.setFontSize(7.5);
+  pdf.setFont('helvetica', 'italic');
+  pdf.text('Viral acquisition with low CAC', margin + 3, yPosition + 11);
+  
+  setTextColor(colors.body);
+  pdf.setFontSize(8);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text('• 3 free Jumps to experience value', margin + 3, yPosition + 16);
+  pdf.text('• 5 welcome credits upon sign up', margin + 3, yPosition + 20);
+  pdf.text('• Product-led growth with high conversion potential', margin + 3, yPosition + 24);
+  
+  yPosition += 28;
+
+  // Subscription Tiers
+  checkPageBreak(38);
+  setFillColor(colors.cardBg);
+  pdf.rect(margin, yPosition, maxWidth, 36, 'F');
+  setDrawColor(colors.border);
+  pdf.setLineWidth(0.4);
+  pdf.rect(margin, yPosition, maxWidth, 36, 'S');
+  
+  setTextColor(colors.heading);
+  pdf.setFontSize(9.5);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Subscription Tiers', margin + 3, yPosition + 6);
+  
+  setTextColor(colors.primary);
+  pdf.setFontSize(10);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('$9–$49/month', margin + 38, yPosition + 6);
+  
+  setTextColor(colors.body);
+  pdf.setFontSize(8);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text('• Starter Plan: $9/month — 25 credits monthly', margin + 3, yPosition + 13);
+  pdf.text('• Pro Plan: $25/month — 100 credits + AI Coach access', margin + 3, yPosition + 17);
+  pdf.text('• Growth Plan: $49/month — 250 credits + priority support', margin + 3, yPosition + 21);
+  pdf.text('• 1 credit = 1 complete Jump (3-tab transformation blueprint)', margin + 3, yPosition + 25);
+  pdf.text('• All credits roll over month-to-month and never expire', margin + 3, yPosition + 29);
+  
+  setTextColor(colors.muted);
+  pdf.setFontSize(7);
+  pdf.setFont('helvetica', 'italic');
+  pdf.text('Recurring revenue with strong retention', margin + 3, yPosition + 34);
+  
+  yPosition += 38;
+
+  // Credit Packs
+  checkPageBreak(22);
+  setFillColor(colors.cardBg);
+  pdf.rect(margin, yPosition, maxWidth, 20, 'F');
+  setDrawColor(colors.border);
+  pdf.setLineWidth(0.4);
+  pdf.rect(margin, yPosition, maxWidth, 20, 'S');
+  
+  setTextColor(colors.heading);
+  pdf.setFontSize(9.5);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Credit Packs (One-Time Purchases)', margin + 3, yPosition + 6);
+  
+  setTextColor(colors.body);
+  pdf.setFontSize(8);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text('• Flexible pay-as-you-go option for occasional users', margin + 3, yPosition + 12);
+  pdf.text('• No recurring commitments, credits never expire', margin + 3, yPosition + 16);
+  
+  yPosition += 22;
+
+  // Future Revenue Streams
+  addSubsectionHeader('Future Revenue Streams', 9.5);
+  yPosition += 2;
+  
+  const futureCardWidth = (maxWidth - 4) / 2;
+  const futureY = yPosition;
+  
+  setFillColor(colors.cardBg);
+  pdf.rect(margin, futureY, futureCardWidth, 22, 'F');
+  setDrawColor(colors.border);
+  pdf.setLineWidth(0.4);
+  pdf.rect(margin, futureY, futureCardWidth, 22, 'S');
+  
+  setTextColor(colors.heading);
+  pdf.setFontSize(8.5);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Enterprise Solutions', margin + 3, futureY + 6);
+  
+  setTextColor(colors.body);
+  pdf.setFontSize(7.5);
+  pdf.setFont('helvetica', 'normal');
+  const enterprise = wrapText('Team collaboration, white-label, custom integrations, and dedicated support for organizations', futureCardWidth - 6, 7.5);
+  pdf.text(enterprise, margin + 3, futureY + 11);
+  
+  setFillColor(colors.cardBg);
+  pdf.rect(margin + futureCardWidth + 4, futureY, futureCardWidth, 22, 'F');
+  setDrawColor(colors.border);
+  pdf.setLineWidth(0.4);
+  pdf.rect(margin + futureCardWidth + 4, futureY, futureCardWidth, 22, 'S');
+  
+  setTextColor(colors.heading);
+  pdf.setFontSize(8.5);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Premium Resources', margin + futureCardWidth + 4 + 3, futureY + 6);
+  
+  setTextColor(colors.body);
+  pdf.setFontSize(7.5);
+  pdf.setFont('helvetica', 'normal');
+  const premium = wrapText('Industry-specific templates, advanced analytics, expert consultations, and exclusive AI transformation guides', futureCardWidth - 6, 7.5);
+  pdf.text(premium, margin + futureCardWidth + 4 + 3, futureY + 11);
+  
+  yPosition += 26;
+
+  // Growth Strategy
+  addSubsectionHeader('Growth Strategy', 10);
+  yPosition += 3;
+
+  // Phase cards
+  checkPageBreak(70);
+  const phaseWidth = (maxWidth - 8) / 3;
+  const phaseHeight = 58;
+  const phaseY = yPosition;
+
+  // Phase 1
+  setFillColor(colors.cardBg);
+  pdf.rect(margin, phaseY, phaseWidth, phaseHeight, 'F');
+  setDrawColor(colors.primaryLight);
+  pdf.setLineWidth(0.5);
+  pdf.rect(margin, phaseY, phaseWidth, phaseHeight, 'S');
+  
+  setTextColor(colors.primary);
+  pdf.setFontSize(9);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Phase 1', margin + phaseWidth / 2, phaseY + 6, { align: 'center' });
+  
+  setTextColor(colors.heading);
+  pdf.setFontSize(8.5);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Launch & Validation', margin + phaseWidth / 2, phaseY + 12, { align: 'center' });
+  
+  setTextColor(colors.body);
+  pdf.setFontSize(7);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text('• Viral freemium growth', margin + 3, phaseY + 20);
+  pdf.text('• Product-led growth', margin + 3, phaseY + 25);
+  pdf.text('• Rapid iteration', margin + 3, phaseY + 30);
+  pdf.text('• Build community', margin + 3, phaseY + 35);
+  pdf.text('• Content marketing', margin + 3, phaseY + 40);
+  pdf.text('• Thought leadership', margin + 3, phaseY + 45);
+
+  // Phase 2
+  setFillColor(colors.cardBg);
+  pdf.rect(margin + phaseWidth + 4, phaseY, phaseWidth, phaseHeight, 'F');
+  setDrawColor(colors.primaryLight);
+  pdf.setLineWidth(0.5);
+  pdf.rect(margin + phaseWidth + 4, phaseY, phaseWidth, phaseHeight, 'S');
+  
+  setTextColor(colors.primary);
+  pdf.setFontSize(9);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Phase 2', margin + phaseWidth + 4 + phaseWidth / 2, phaseY + 6, { align: 'center' });
+  
+  setTextColor(colors.heading);
+  pdf.setFontSize(8.5);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Scale & Monetization', margin + phaseWidth + 4 + phaseWidth / 2, phaseY + 12, { align: 'center' });
+  
+  setTextColor(colors.body);
+  pdf.setFontSize(7);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text('• Optimize funnel', margin + phaseWidth + 4 + 3, phaseY + 20);
+  pdf.text('• Content marketing', margin + phaseWidth + 4 + 3, phaseY + 25);
+  pdf.text('• SEO dominance', margin + phaseWidth + 4 + 3, phaseY + 30);
+  pdf.text('• Influencer partnerships', margin + phaseWidth + 4 + 3, phaseY + 35);
+  pdf.text('• Paid acquisition', margin + phaseWidth + 4 + 3, phaseY + 40);
+  pdf.text('• Strategic partnerships', margin + phaseWidth + 4 + 3, phaseY + 45);
+
+  // Phase 3
+  setFillColor(colors.cardBg);
+  pdf.rect(margin + 2 * (phaseWidth + 4), phaseY, phaseWidth, phaseHeight, 'F');
+  setDrawColor(colors.primaryLight);
+  pdf.setLineWidth(0.5);
+  pdf.rect(margin + 2 * (phaseWidth + 4), phaseY, phaseWidth, phaseHeight, 'S');
+  
+  setTextColor(colors.primary);
+  pdf.setFontSize(9);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Phase 3', margin + 2 * (phaseWidth + 4) + phaseWidth / 2, phaseY + 6, { align: 'center' });
+  
+  setTextColor(colors.heading);
+  pdf.setFontSize(8.5);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Enterprise & Expansion', margin + 2 * (phaseWidth + 4) + phaseWidth / 2, phaseY + 12, { align: 'center' });
+  
+  setTextColor(colors.body);
+  pdf.setFontSize(7);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text('• Team collaboration', margin + 2 * (phaseWidth + 4) + 3, phaseY + 20);
+  pdf.text('• Enterprise sales', margin + 2 * (phaseWidth + 4) + 3, phaseY + 25);
+  pdf.text('• B2B partnerships', margin + 2 * (phaseWidth + 4) + 3, phaseY + 30);
+  pdf.text('• White-label solutions', margin + 2 * (phaseWidth + 4) + 3, phaseY + 35);
+  pdf.text('• API partnerships', margin + 2 * (phaseWidth + 4) + 3, phaseY + 40);
+  pdf.text('• International expansion', margin + 2 * (phaseWidth + 4) + 3, phaseY + 45);
+
+  yPosition += phaseHeight + 5;
+
+  // ================== PROJECTIONS ==================
+  pdf.addPage();
+  yPosition = margin + 5;
+  addSectionHeader('Projections');
+
+  addParagraph('Conservative estimates based on comparable SaaS benchmarks, freemium conversion rates, and our unique market positioning as a pre-launch platform.', 8.5, 'italic');
+  yPosition += 3;
+
+  // Year cards - 3 columns
+  checkPageBreak(75);
+  const yearWidth = (maxWidth - 8) / 3;
+  const yearHeight = 62;
+  const yearY = yPosition;
+
+  // Year 1
+  setFillColor(colors.cardBg);
+  pdf.rect(margin, yearY, yearWidth, yearHeight, 'F');
+  setDrawColor(colors.primary);
+  pdf.setLineWidth(0.5);
+  pdf.rect(margin, yearY, yearWidth, yearHeight, 'S');
+  
+  setTextColor(colors.heading);
+  pdf.setFontSize(9);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Year 1', margin + yearWidth / 2, yearY + 7, { align: 'center' });
+  
+  setTextColor(colors.muted);
+  pdf.setFontSize(7);
+  pdf.setFont('helvetica', 'italic');
+  pdf.text('Launch & Growth', margin + yearWidth / 2, yearY + 12, { align: 'center' });
+  
+  // Metric boxes within card
+  setFillColor(colors.highlightBg);
+  pdf.rect(margin + 3, yearY + 17, yearWidth - 6, 12, 'F');
+  setTextColor(colors.muted);
+  pdf.setFontSize(7);
+  pdf.text('Users', margin + yearWidth / 2, yearY + 21, { align: 'center' });
+  setTextColor(colors.primary);
+  pdf.setFontSize(11);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('15,000', margin + yearWidth / 2, yearY + 27, { align: 'center' });
+  
+  setFillColor(colors.highlightBg);
+  pdf.rect(margin + 3, yearY + 31, yearWidth - 6, 12, 'F');
+  setTextColor(colors.muted);
+  pdf.setFontSize(7);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text('Paying Customers', margin + yearWidth / 2, yearY + 35, { align: 'center' });
+  setTextColor(colors.primary);
+  pdf.setFontSize(11);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('750', margin + yearWidth / 2, yearY + 41, { align: 'center' });
+  
+  setFillColor(colors.highlightBg);
+  pdf.rect(margin + 3, yearY + 45, yearWidth - 6, 12, 'F');
+  setTextColor(colors.muted);
+  pdf.setFontSize(7);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text('Annual Revenue', margin + yearWidth / 2, yearY + 49, { align: 'center' });
+  setTextColor(colors.success);
+  pdf.setFontSize(11);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('$180K', margin + yearWidth / 2, yearY + 55, { align: 'center' });
+
+  // Year 2
+  setFillColor(colors.cardBg);
+  pdf.rect(margin + yearWidth + 4, yearY, yearWidth, yearHeight, 'F');
+  setDrawColor(colors.primary);
+  pdf.setLineWidth(0.5);
+  pdf.rect(margin + yearWidth + 4, yearY, yearWidth, yearHeight, 'S');
+  
+  setTextColor(colors.heading);
+  pdf.setFontSize(9);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Year 2', margin + yearWidth + 4 + yearWidth / 2, yearY + 7, { align: 'center' });
+  
+  setTextColor(colors.muted);
+  pdf.setFontSize(7);
+  pdf.setFont('helvetica', 'italic');
+  pdf.text('Scale & Optimize', margin + yearWidth + 4 + yearWidth / 2, yearY + 12, { align: 'center' });
+  
+  setFillColor(colors.highlightBg);
+  pdf.rect(margin + yearWidth + 4 + 3, yearY + 17, yearWidth - 6, 12, 'F');
+  setTextColor(colors.muted);
+  pdf.setFontSize(7);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text('Users', margin + yearWidth + 4 + yearWidth / 2, yearY + 21, { align: 'center' });
+  setTextColor(colors.primary);
+  pdf.setFontSize(11);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('75,000', margin + yearWidth + 4 + yearWidth / 2, yearY + 27, { align: 'center' });
+  
+  setFillColor(colors.highlightBg);
+  pdf.rect(margin + yearWidth + 4 + 3, yearY + 31, yearWidth - 6, 12, 'F');
+  setTextColor(colors.muted);
+  pdf.setFontSize(7);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text('Paying Customers', margin + yearWidth + 4 + yearWidth / 2, yearY + 35, { align: 'center' });
+  setTextColor(colors.primary);
+  pdf.setFontSize(11);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('5,250', margin + yearWidth + 4 + yearWidth / 2, yearY + 41, { align: 'center' });
+  
+  setFillColor(colors.highlightBg);
+  pdf.rect(margin + yearWidth + 4 + 3, yearY + 45, yearWidth - 6, 12, 'F');
+  setTextColor(colors.muted);
+  pdf.setFontSize(7);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text('Annual Revenue', margin + yearWidth + 4 + yearWidth / 2, yearY + 49, { align: 'center' });
+  setTextColor(colors.success);
+  pdf.setFontSize(11);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('$1.4M', margin + yearWidth + 4 + yearWidth / 2, yearY + 55, { align: 'center' });
+
+  // Year 3
+  setFillColor(colors.cardBg);
+  pdf.rect(margin + 2 * (yearWidth + 4), yearY, yearWidth, yearHeight, 'F');
+  setDrawColor(colors.primary);
+  pdf.setLineWidth(0.5);
+  pdf.rect(margin + 2 * (yearWidth + 4), yearY, yearWidth, yearHeight, 'S');
+  
+  setTextColor(colors.heading);
+  pdf.setFontSize(9);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Year 3', margin + 2 * (yearWidth + 4) + yearWidth / 2, yearY + 7, { align: 'center' });
+  
+  setTextColor(colors.muted);
+  pdf.setFontSize(7);
+  pdf.setFont('helvetica', 'italic');
+  pdf.text('Enterprise Entry', margin + 2 * (yearWidth + 4) + yearWidth / 2, yearY + 12, { align: 'center' });
+  
+  setFillColor(colors.highlightBg);
+  pdf.rect(margin + 2 * (yearWidth + 4) + 3, yearY + 17, yearWidth - 6, 12, 'F');
+  setTextColor(colors.muted);
+  pdf.setFontSize(7);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text('Users', margin + 2 * (yearWidth + 4) + yearWidth / 2, yearY + 21, { align: 'center' });
+  setTextColor(colors.primary);
+  pdf.setFontSize(11);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('250,000', margin + 2 * (yearWidth + 4) + yearWidth / 2, yearY + 27, { align: 'center' });
+  
+  setFillColor(colors.highlightBg);
+  pdf.rect(margin + 2 * (yearWidth + 4) + 3, yearY + 31, yearWidth - 6, 12, 'F');
+  setTextColor(colors.muted);
+  pdf.setFontSize(7);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text('Paying Customers', margin + 2 * (yearWidth + 4) + yearWidth / 2, yearY + 35, { align: 'center' });
+  setTextColor(colors.primary);
+  pdf.setFontSize(11);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('22,500', margin + 2 * (yearWidth + 4) + yearWidth / 2, yearY + 41, { align: 'center' });
+  
+  setFillColor(colors.highlightBg);
+  pdf.rect(margin + 2 * (yearWidth + 4) + 3, yearY + 45, yearWidth - 6, 12, 'F');
+  setTextColor(colors.muted);
+  pdf.setFontSize(7);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text('Annual Revenue', margin + 2 * (yearWidth + 4) + yearWidth / 2, yearY + 49, { align: 'center' });
+  setTextColor(colors.success);
+  pdf.setFontSize(11);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('$6.2M', margin + 2 * (yearWidth + 4) + yearWidth / 2, yearY + 55, { align: 'center' });
+
+  yPosition += yearHeight + 6;
+
+  // Key Assumptions & Growth Drivers - 2 columns
+  addSubsectionHeader('Key Assumptions & Growth Drivers', 9.5);
+  yPosition += 2;
+
+  checkPageBreak(48);
+  const assumptionWidth = (maxWidth - 4) / 2;
+  const assumptionY = yPosition;
+  
+  // Key Assumptions
+  setFillColor(colors.cardBg);
+  pdf.rect(margin, assumptionY, assumptionWidth, 42, 'F');
+  setDrawColor(colors.border);
+  pdf.setLineWidth(0.4);
+  pdf.rect(margin, assumptionY, assumptionWidth, 42, 'S');
+  
+  setTextColor(colors.heading);
+  pdf.setFontSize(8.5);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Key Assumptions', margin + 3, assumptionY + 6);
+  
+  setTextColor(colors.body);
+  pdf.setFontSize(7.5);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text('• Average subscription: $20/mo', margin + 3, assumptionY + 13);
+  pdf.text('  (blended across tiers)', margin + 3, assumptionY + 17);
+  pdf.text('• Conservative 5-9% freemium', margin + 3, assumptionY + 22);
+  pdf.text('  conversion rate', margin + 3, assumptionY + 26);
+  pdf.text('• 85% annual retention rate for', margin + 3, assumptionY + 31);
+  pdf.text('  paid users', margin + 3, assumptionY + 35);
+  pdf.text('• Additional revenue from credit', margin + 3, assumptionY + 40);
+  
+  // Growth Drivers
+  setFillColor(colors.cardBg);
+  pdf.rect(margin + assumptionWidth + 4, assumptionY, assumptionWidth, 42, 'F');
+  setDrawColor(colors.border);
+  pdf.setLineWidth(0.4);
+  pdf.rect(margin + assumptionWidth + 4, assumptionY, assumptionWidth, 42, 'S');
+  
+  setTextColor(colors.heading);
+  pdf.setFontSize(8.5);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Growth Drivers', margin + assumptionWidth + 4 + 3, assumptionY + 6);
+  
+  setTextColor(colors.body);
+  pdf.setFontSize(7.5);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text('• Product-led growth with viral', margin + assumptionWidth + 4 + 3, assumptionY + 13);
+  pdf.text('  freemium tier', margin + assumptionWidth + 4 + 3, assumptionY + 17);
+  pdf.text('• Content marketing and SEO', margin + assumptionWidth + 4 + 3, assumptionY + 22);
+  pdf.text('  positioning', margin + assumptionWidth + 4 + 3, assumptionY + 26);
+  pdf.text('• Strategic partnerships and', margin + assumptionWidth + 4 + 3, assumptionY + 31);
+  pdf.text('  affiliate programs', margin + assumptionWidth + 4 + 3, assumptionY + 35);
+  pdf.text('• Enterprise features driving', margin + assumptionWidth + 4 + 3, assumptionY + 40);
+  
+  yPosition += 45;
+
+  // ================== COMPETITIVE ADVANTAGE ==================
+  pdf.addPage();
+  yPosition = margin + 5;
+  addSectionHeader('Competitive Advantage');
+
+  // 4 advantage cards in 2x2 grid
+  checkPageBreak(90);
+  const advCardWidth = (maxWidth - 4) / 2;
+  const advCardHeight = 40;
+  let advY = yPosition;
+
+  // Card 1: Truly Adaptive Personalization
+  setFillColor(colors.cardBg);
+  pdf.rect(margin, advY, advCardWidth, advCardHeight, 'F');
+  setDrawColor(colors.primaryLight);
+  pdf.setLineWidth(0.5);
+  pdf.rect(margin, advY, advCardWidth, advCardHeight, 'S');
+  
+  setTextColor(colors.heading);
+  pdf.setFontSize(9);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Truly Adaptive Personalization', margin + 3, advY + 7);
+  
+  setTextColor(colors.body);
+  pdf.setFontSize(7.5);
+  pdf.setFont('helvetica', 'normal');
+  const adv1 = wrapText('Unlike competitors offering static templates or one-time assessments, our platform adapts in real-time with multi-level clarifications (4 deep) and alternative routes (3 per step). Every Jump is uniquely tailored to specific context, goals, and constraints.', advCardWidth - 6, 7.5);
+  pdf.text(adv1, margin + 3, advY + 14);
+
+  // Card 2: Complete Transformation Ecosystem
+  setFillColor(colors.cardBg);
+  pdf.rect(margin + advCardWidth + 4, advY, advCardWidth, advCardHeight, 'F');
+  setDrawColor(colors.primaryLight);
+  pdf.setLineWidth(0.5);
+  pdf.rect(margin + advCardWidth + 4, advY, advCardWidth, advCardHeight, 'S');
+  
+  setTextColor(colors.heading);
+  pdf.setFontSize(9);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Complete Transformation Ecosystem', margin + advCardWidth + 4 + 3, advY + 7);
+  
+  setTextColor(colors.body);
+  pdf.setFontSize(7.5);
+  pdf.setFont('helvetica', 'normal');
+  const adv2 = wrapText('We\'re the only solution combining strategic overview, adaptive planning, execution tools, and ongoing AI coaching in one integrated platform. Competitors offer pieces; we deliver the complete journey from insight to implementation.', advCardWidth - 6, 7.5);
+  pdf.text(adv2, margin + advCardWidth + 4 + 3, advY + 14);
+
+  advY += advCardHeight + 4;
+
+  // Card 3: Speed + Simplicity + Depth
+  setFillColor(colors.cardBg);
+  pdf.rect(margin, advY, advCardWidth, advCardHeight, 'F');
+  setDrawColor(colors.primaryLight);
+  pdf.setLineWidth(0.5);
+  pdf.rect(margin, advY, advCardWidth, advCardHeight, 'S');
+  
+  setTextColor(colors.heading);
+  pdf.setFontSize(9);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Speed + Simplicity + Depth', margin + 3, advY + 7);
+  
+  setTextColor(colors.body);
+  pdf.setFontSize(7.5);
+  pdf.setFont('helvetica', 'normal');
+  const adv3 = wrapText('Generate comprehensive 3-tab transformation blueprints in 2 minutes from just 2 questions. No competitor matches this combination of speed, ease-of-use, and depth of personalization. We\'ve cracked the code on making sophistication simple.', advCardWidth - 6, 7.5);
+  pdf.text(adv3, margin + 3, advY + 14);
+
+  // Card 4: Scalable AI Architecture
+  setFillColor(colors.cardBg);
+  pdf.rect(margin + advCardWidth + 4, advY, advCardWidth, advCardHeight, 'F');
+  setDrawColor(colors.primaryLight);
+  pdf.setLineWidth(0.5);
+  pdf.rect(margin + advCardWidth + 4, advY, advCardWidth, advCardHeight, 'S');
+  
+  setTextColor(colors.heading);
+  pdf.setFontSize(9);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Scalable AI Architecture', margin + advCardWidth + 4 + 3, advY + 7);
+  
+  setTextColor(colors.body);
+  pdf.setFontSize(7.5);
+  pdf.setFont('helvetica', 'normal');
+  const adv4 = wrapText('Our AI engine generates unlimited unique transformations with minimal marginal cost. Traditional consulting scales linearly; our technology enables exponential growth with superior unit economics and defensible moats through network effects.', advCardWidth - 6, 7.5);
+  pdf.text(adv4, margin + advCardWidth + 4 + 3, advY + 14);
+
+  yPosition = advY + advCardHeight + 6;
+
+  // Strategic Position highlight
+  checkPageBreak(28);
+  setFillColor(colors.highlightBg);
+  pdf.rect(margin, yPosition, maxWidth, 24, 'F');
+  setDrawColor(colors.primary);
+  pdf.setLineWidth(0.6);
+  pdf.rect(margin, yPosition, maxWidth, 24, 'S');
+  
+  setTextColor(colors.primary);
+  pdf.setFontSize(9.5);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Our Strategic Position', margin + maxWidth / 2, yPosition + 7, { align: 'center' });
+  
+  setTextColor(colors.body);
+  pdf.setFontSize(8);
+  pdf.setFont('helvetica', 'normal');
+  const stratPos = wrapText('We\'re first-to-market with adaptive AI transformation at scale. Our technology creates compounding advantages: every Jump improves our AI, every user interaction strengthens our network effects, and our data moat deepens daily. As the market matures, we\'ll be established with millions of transformation journeys powering a defensible platform.', maxWidth - 10, 8);
+  pdf.text(stratPos, margin + 5, yPosition + 13);
+  
+  yPosition += 28;
+
+  // ================== TEAM ==================
+  pdf.addPage();
+  yPosition = margin + 5;
+  addSectionHeader('Our Team');
+
+  addParagraph('Lean, focused team with complementary expertise in AI, product development, and market strategy', 9, 'italic');
+  yPosition += 4;
+
+  // Team cards - 3 columns
+  checkPageBreak(42);
+  const teamWidth = (maxWidth - 8) / 3;
+  const teamHeight = 38;
+  const teamY = yPosition;
+
+  // Technical Leadership
+  setFillColor(colors.cardBg);
+  pdf.rect(margin, teamY, teamWidth, teamHeight, 'F');
+  setDrawColor(colors.border);
+  pdf.setLineWidth(0.4);
+  pdf.rect(margin, teamY, teamWidth, teamHeight, 'S');
+  
+  setTextColor(colors.heading);
+  pdf.setFontSize(9);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Technical Leadership', margin + teamWidth / 2, teamY + 8, { align: 'center' });
+  
+  setTextColor(colors.body);
+  pdf.setFontSize(7.5);
+  pdf.setFont('helvetica', 'normal');
+  const tech = wrapText('Deep expertise in AI systems architecture, LLM orchestration, and scalable platform development with proven track record', teamWidth - 6, 7.5);
+  pdf.text(tech, margin + 3, teamY + 16);
+
+  // Product & Design
+  setFillColor(colors.cardBg);
+  pdf.rect(margin + teamWidth + 4, teamY, teamWidth, teamHeight, 'F');
+  setDrawColor(colors.border);
+  pdf.setLineWidth(0.4);
+  pdf.rect(margin + teamWidth + 4, teamY, teamWidth, teamHeight, 'S');
+  
+  setTextColor(colors.heading);
+  pdf.setFontSize(9);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Product & Design', margin + teamWidth + 4 + teamWidth / 2, teamY + 8, { align: 'center' });
+  
+  setTextColor(colors.body);
+  pdf.setFontSize(7.5);
+  pdf.setFont('helvetica', 'normal');
+  const product = wrapText('Experience building intuitive, user-centered products with focus on simplifying complex technical capabilities', teamWidth - 6, 7.5);
+  pdf.text(product, margin + teamWidth + 4 + 3, teamY + 16);
+
+  // Strategy & Growth
+  setFillColor(colors.cardBg);
+  pdf.rect(margin + 2 * (teamWidth + 4), teamY, teamWidth, teamHeight, 'F');
+  setDrawColor(colors.border);
+  pdf.setLineWidth(0.4);
+  pdf.rect(margin + 2 * (teamWidth + 4), teamY, teamWidth, teamHeight, 'S');
+  
+  setTextColor(colors.heading);
+  pdf.setFontSize(9);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Strategy & Growth', margin + 2 * (teamWidth + 4) + teamWidth / 2, teamY + 8, { align: 'center' });
+  
+  setTextColor(colors.body);
+  pdf.setFontSize(7.5);
+  pdf.setFont('helvetica', 'normal');
+  const strategy = wrapText('Background in go-to-market strategy, business development, and scaling early-stage technology companies', teamWidth - 6, 7.5);
+  pdf.text(strategy, margin + 2 * (teamWidth + 4) + 3, teamY + 16);
+
+  yPosition += teamHeight + 6;
+
+  // Commitment highlight
+  checkPageBreak(16);
+  setFillColor(colors.highlightBg);
+  pdf.rect(margin, yPosition, maxWidth, 14, 'F');
+  setDrawColor(colors.primaryLight);
+  pdf.setLineWidth(0.4);
+  pdf.rect(margin, yPosition, maxWidth, 14, 'S');
+  
+  setTextColor(colors.heading);
+  pdf.setFontSize(8);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Commitment:', margin + 3, yPosition + 6);
+  
+  setTextColor(colors.body);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text('Dedicated full-time to building the category-defining platform for personalized AI transformation', margin + 22, yPosition + 6);
+  
+  yPosition += 18;
+
+  // ================== USE OF FUNDS ==================
+  addSectionHeader('Use of Funds');
+  yPosition += 2;
+
+  // Allocation bars with percentages
+  checkPageBreak(62);
+  const allocations = [
+    { label: 'Product Development', percentage: 40, color: colors.primary },
+    { label: 'Customer Acquisition', percentage: 30, color: colors.primaryLight },
+    { label: 'Team Expansion', percentage: 20, color: colors.accent },
+    { label: 'Operations & Infrastructure', percentage: 10, color: colors.secondary }
+  ];
+
+  allocations.forEach((alloc, index) => {
+    // Label and percentage
+    setTextColor(colors.heading);
+    pdf.setFontSize(8.5);
+    pdf.setFont('helvetica', 'bold');
+    pdf.text(alloc.label, margin, yPosition + 5);
+    
+    setTextColor(colors.primary);
+    pdf.setFontSize(9);
+    pdf.setFont('helvetica', 'bold');
+    const percentText = `${alloc.percentage}%`;
+    const percentWidth = pdf.getTextWidth(percentText);
+    pdf.text(percentText, margin + maxWidth - percentWidth, yPosition + 5);
+    
+    // Progress bar background
+    setFillColor({ r: 240, g: 242, b: 245 });
+    pdf.rect(margin, yPosition + 8, maxWidth, 4, 'F');
+    
+    // Progress bar fill
+    setFillColor(alloc.color);
+    pdf.rect(margin, yPosition + 8, (maxWidth * alloc.percentage) / 100, 4, 'F');
+    
+    yPosition += 14;
+  });
+
+  yPosition += 4;
+
+  // Key Milestones
+  addSubsectionHeader('Key Milestones (12-Month Roadmap)', 9.5);
+  yPosition += 3;
+
+  const milestones = [
+    { quarter: 'Q1', title: 'Launch Enterprise Features', desc: 'Team collaboration, SSO, advanced analytics' },
+    { quarter: 'Q2', title: 'Scale to 100K Users', desc: 'Aggressive growth marketing and partnerships' },
+    { quarter: 'Q3', title: 'International Expansion', desc: 'Multi-language support, regional customization' },
+    { quarter: 'Q4', title: 'API & Integration Platform', desc: 'Enable third-party integrations and ecosystem' }
+  ];
+
+  milestones.forEach((milestone) => {
+    checkPageBreak(20);
+    
+    setFillColor(colors.cardBg);
+    pdf.rect(margin, yPosition, maxWidth, 16, 'F');
+    setDrawColor(colors.border);
+    pdf.setLineWidth(0.3);
+    pdf.rect(margin, yPosition, maxWidth, 16, 'S');
+    
+    // Quarter badge
+    setFillColor(colors.primary);
+    pdf.circle(margin + 7, yPosition + 8, 3.5, 'F');
+    
+    setTextColor(colors.white);
+    pdf.setFontSize(7);
+    pdf.setFont('helvetica', 'bold');
+    pdf.text(milestone.quarter, margin + 5, yPosition + 9.5);
+    
+    // Title
+    setTextColor(colors.heading);
+    pdf.setFontSize(8.5);
+    pdf.setFont('helvetica', 'bold');
+    pdf.text(milestone.title, margin + 15, yPosition + 7);
+    
+    // Description
+    setTextColor(colors.body);
+    pdf.setFontSize(7.5);
+    pdf.setFont('helvetica', 'normal');
+    pdf.text(milestone.desc, margin + 15, yPosition + 12);
+    
+    yPosition += 18;
+  });
+
+  // ================== INVESTMENT OPPORTUNITY ==================
+  pdf.addPage();
+  yPosition = margin + 5;
+  addSectionHeader('Investment Opportunity');
+  yPosition += 3;
+
+  // Investment metrics - 3 cards
+  checkPageBreak(38);
+  const invCardWidth = (maxWidth - 8) / 3;
+  const invY = yPosition;
+  
+  // Card 1: Raising
+  setFillColor(colors.highlightBg);
+  pdf.rect(margin, invY, invCardWidth, 32, 'F');
+  setDrawColor(colors.primary);
+  pdf.setLineWidth(0.6);
+  pdf.rect(margin, invY, invCardWidth, 32, 'S');
+  
+  setTextColor(colors.muted);
+  pdf.setFontSize(8);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text('Raising', margin + invCardWidth / 2, invY + 7, { align: 'center' });
+  
+  setTextColor(colors.primary);
+  pdf.setFontSize(16);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('$500K', margin + invCardWidth / 2, invY + 18, { align: 'center' });
+  
+  setTextColor(colors.muted);
+  pdf.setFontSize(7.5);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text('Pre-Seed Round', margin + invCardWidth / 2, invY + 26, { align: 'center' });
+
+  // Card 2: Valuation
+  setFillColor(colors.highlightBg);
+  pdf.rect(margin + invCardWidth + 4, invY, invCardWidth, 32, 'F');
+  setDrawColor(colors.primary);
+  pdf.setLineWidth(0.6);
+  pdf.rect(margin + invCardWidth + 4, invY, invCardWidth, 32, 'S');
+  
+  setTextColor(colors.muted);
+  pdf.setFontSize(8);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text('Valuation', margin + invCardWidth + 4 + invCardWidth / 2, invY + 7, { align: 'center' });
+  
+  setTextColor(colors.primary);
+  pdf.setFontSize(16);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('$2M', margin + invCardWidth + 4 + invCardWidth / 2, invY + 18, { align: 'center' });
+  
+  setTextColor(colors.muted);
+  pdf.setFontSize(7.5);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text('Post-money', margin + invCardWidth + 4 + invCardWidth / 2, invY + 26, { align: 'center' });
+
+  // Card 3: Investor Discount
+  setFillColor(colors.highlightBg);
+  pdf.rect(margin + 2 * (invCardWidth + 4), invY, invCardWidth, 32, 'F');
+  setDrawColor(colors.primary);
+  pdf.setLineWidth(0.6);
+  pdf.rect(margin + 2 * (invCardWidth + 4), invY, invCardWidth, 32, 'S');
+  
+  setTextColor(colors.muted);
+  pdf.setFontSize(8);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text('Investor Discount', margin + 2 * (invCardWidth + 4) + invCardWidth / 2, invY + 7, { align: 'center' });
+  
+  setTextColor(colors.primary);
+  pdf.setFontSize(16);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('20%', margin + 2 * (invCardWidth + 4) + invCardWidth / 2, invY + 18, { align: 'center' });
+  
+  setTextColor(colors.muted);
+  pdf.setFontSize(7.5);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text('Standard Discount', margin + 2 * (invCardWidth + 4) + invCardWidth / 2, invY + 26, { align: 'center' });
+
+  yPosition += 38;
+
+  // Why Invest Now - 2x2 grid
+  addSubsectionHeader('Why Invest Now', 10);
+  yPosition += 3;
+
+  checkPageBreak(60);
+  const whyWidth = (maxWidth - 4) / 2;
+  const whyHeight = 28;
+  let whyY = yPosition;
+
+  const whyReasons = [
+    { title: 'First-Mover Advantage', desc: 'Capture market before competition emerges in this greenfield opportunity' },
+    { title: 'Product Ready', desc: 'Fully functional platform, proven technology, ready to scale immediately' },
+    { title: 'Massive Market', desc: '$12.4B TAM growing 45% annually with urgent AI adoption pressure' },
+    { title: 'Scalable Technology', desc: 'AI-powered platform with minimal marginal costs per user and superior unit economics' }
+  ];
+
+  whyReasons.forEach((reason, index) => {
+    const xPos = index % 2 === 0 ? margin : margin + whyWidth + 4;
+    const yPos = whyY + Math.floor(index / 2) * (whyHeight + 3);
+    
+    setFillColor(colors.cardBg);
+    pdf.rect(xPos, yPos, whyWidth, whyHeight, 'F');
+    setDrawColor(colors.border);
+    pdf.setLineWidth(0.4);
+    pdf.rect(xPos, yPos, whyWidth, whyHeight, 'S');
+    
+    // Checkmark circle
+    setFillColor(colors.success);
+    pdf.circle(xPos + 6, yPos + 7, 2.5, 'F');
+    setTextColor(colors.white);
+    pdf.setFontSize(8);
+    pdf.setFont('helvetica', 'bold');
+    pdf.text('✓', xPos + 4.8, yPos + 8.5);
+    
+    // Title
+    setTextColor(colors.heading);
+    pdf.setFontSize(8.5);
+    pdf.setFont('helvetica', 'bold');
+    pdf.text(reason.title, xPos + 12, yPos + 8);
+    
+    // Description
+    setTextColor(colors.body);
+    pdf.setFontSize(7.5);
+    pdf.setFont('helvetica', 'normal');
+    const descLines = wrapText(reason.desc, whyWidth - 14, 7.5);
+    pdf.text(descLines, xPos + 12, yPos + 14);
+  });
+
+  yPosition += 2 * (whyHeight + 3) + 6;
+
+  // Final call to action
+  checkPageBreak(32);
+  setFillColor(colors.primary);
+  pdf.rect(margin, yPosition, maxWidth, 28, 'F');
+  
+  setTextColor(colors.white);
+  pdf.setFontSize(11);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Join us in democratizing personalized AI transformation', margin + maxWidth / 2, yPosition + 10, { align: 'center' });
+  
+  pdf.setFontSize(9);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text('Building the category-defining platform for the AI-powered workforce', margin + maxWidth / 2, yPosition + 18, { align: 'center' });
+
+  yPosition += 32;
+
+  // ================== CLOSING PAGE ==================
+  pdf.addPage();
+  yPosition = pageHeight / 2 - 30;
+
+  setTextColor(colors.primary);
+  pdf.setFontSize(20);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Let\'s Build Together', pageWidth / 2, yPosition, { align: 'center' });
+  
+  yPosition += 16;
+  
+  setTextColor(colors.body);
+  pdf.setFontSize(10);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text('Contact Us', pageWidth / 2, yPosition, { align: 'center' });
   
   yPosition += 10;
-  pdf.setFontSize(10);
+  
+  pdf.setFontSize(9.5);
   pdf.text('Email: info@jumpinai.com', pageWidth / 2, yPosition, { align: 'center' });
   
   yPosition += 8;
   pdf.text('Website: www.jumpinai.com', pageWidth / 2, yPosition, { align: 'center' });
   
-  yPosition += 20;
+  yPosition += 18;
+  
   setTextColor(colors.muted);
   pdf.setFontSize(8);
+  pdf.setFont('helvetica', 'italic');
   pdf.text('JumpinAI - Your Personalized AI Adaptation Studio', pageWidth / 2, yPosition, { align: 'center' });
 
-  // Add page numbers
+  // ================== PAGE NUMBERS & FOOTER ==================
   const pageCount = pdf.getNumberOfPages();
   for (let i = 1; i <= pageCount; i++) {
-    if (i === 1) continue; // Skip cover page
+    if (i === 1 || i === pageCount) continue; // Skip cover and last page
+    
     pdf.setPage(i);
+    
+    // Page number
     setTextColor(colors.muted);
     pdf.setFontSize(8);
+    pdf.setFont('helvetica', 'normal');
     const pageText = `${i} of ${pageCount}`;
     const pageTextWidth = pdf.getTextWidth(pageText);
     pdf.text(pageText, pageWidth - margin - pageTextWidth, pageHeight - 10);
+    
+    // Footer text
+    pdf.setFontSize(7);
+    pdf.text('JumpinAI Investor Pitch Deck', margin, pageHeight - 10);
   }
 
   // Save the PDF
