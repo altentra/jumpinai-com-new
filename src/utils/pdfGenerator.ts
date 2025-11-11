@@ -1366,11 +1366,11 @@ export const generatePitchDeckPDF = (): void => {
   pdf.text('• Flexible pay-as-you-go option for occasional users', margin + 3, yPosition + 12);
   pdf.text('• No recurring commitments, credits never expire', margin + 3, yPosition + 16);
   
-  yPosition += 22;
+  yPosition += 26;
 
   // Future Revenue Streams
   addSubsectionHeader('Future Revenue Streams', 9.5);
-  yPosition += 2;
+  yPosition += 3;
   
   const futureCardWidth = (maxWidth - 4) / 2;
   const futureY = yPosition;
@@ -1409,11 +1409,11 @@ export const generatePitchDeckPDF = (): void => {
   const premium = wrapText('Industry-specific templates, advanced analytics, expert consultations, and exclusive AI transformation guides', futureCardWidth - 6, 7.5);
   pdf.text(premium, margin + futureCardWidth + 4 + 3, futureY + 11);
   
-  yPosition += 26;
+  yPosition += 28;
 
   // Growth Strategy
   addSubsectionHeader('Growth Strategy', 10);
-  yPosition += 3;
+  yPosition += 4;
 
   // Phase cards
   checkPageBreak(70);
