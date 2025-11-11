@@ -162,7 +162,7 @@ const PitchDeck = () => {
                       </li>
                       <li className="flex items-start gap-2">
                         <span className="text-primary mt-0.5">✓</span>
-                        <span>Multi-model AI orchestration with xAI Grok as our primary model, supplemented by ChatGPT-5, Claude, and Gemini for optimal analysis depth and personalization accuracy</span>
+                        <span>Multi-model AI orchestration with xAI as our primary choice, supplemented by ChatGPT-5, Claude, and Gemini for optimal analysis depth and personalization accuracy</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <span className="text-primary mt-0.5">✓</span>
