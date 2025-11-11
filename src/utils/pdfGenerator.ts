@@ -1497,10 +1497,11 @@ export const generatePitchDeckPDF = (): void => {
   pdf.setFont('helvetica', 'normal');
   pdf.text('• Team collaboration', margin + 2 * (phaseWidth + 4) + 3, phaseY + 20);
   pdf.text('• Enterprise sales', margin + 2 * (phaseWidth + 4) + 3, phaseY + 25);
-  pdf.text('• B2B partnerships', margin + 2 * (phaseWidth + 4) + 3, phaseY + 30);
-  pdf.text('• White-label solutions', margin + 2 * (phaseWidth + 4) + 3, phaseY + 35);
+  pdf.text('• Mobile app release', margin + 2 * (phaseWidth + 4) + 3, phaseY + 30);
+  pdf.text('• B2B partnerships', margin + 2 * (phaseWidth + 4) + 3, phaseY + 35);
   pdf.text('• API partnerships', margin + 2 * (phaseWidth + 4) + 3, phaseY + 40);
   pdf.text('• International expansion', margin + 2 * (phaseWidth + 4) + 3, phaseY + 45);
+  pdf.text('• White-label solutions', margin + 2 * (phaseWidth + 4) + 3, phaseY + 50);
 
   yPosition += phaseHeight + 5;
 
@@ -1720,9 +1721,9 @@ export const generatePitchDeckPDF = (): void => {
   pdf.text('  freemium tier', margin + assumptionWidth + 4 + 3, assumptionY + 17);
   pdf.text('• Content marketing and SEO', margin + assumptionWidth + 4 + 3, assumptionY + 22);
   pdf.text('  positioning', margin + assumptionWidth + 4 + 3, assumptionY + 26);
-  pdf.text('• Strategic partnerships and', margin + assumptionWidth + 4 + 3, assumptionY + 31);
-  pdf.text('  affiliate programs', margin + assumptionWidth + 4 + 3, assumptionY + 35);
-  pdf.text('• Enterprise features driving', margin + assumptionWidth + 4 + 3, assumptionY + 40);
+  pdf.text('• Native mobile apps on iOS', margin + assumptionWidth + 4 + 3, assumptionY + 31);
+  pdf.text('  and Android', margin + assumptionWidth + 4 + 3, assumptionY + 35);
+  pdf.text('• Strategic partnerships and', margin + assumptionWidth + 4 + 3, assumptionY + 40);
   
   yPosition += 45;
 
@@ -1969,7 +1970,7 @@ export const generatePitchDeckPDF = (): void => {
 
   const milestones = [
     { quarter: 'Q1', title: 'Launch Enterprise Features', desc: 'Team collaboration, SSO, advanced analytics' },
-    { quarter: 'Q2', title: 'Scale to 100K Users', desc: 'Aggressive growth marketing and partnerships' },
+    { quarter: 'Q2', title: 'Mobile App Launch & Scale to 100K Users', desc: 'Release native apps on iOS and Android; aggressive growth marketing' },
     { quarter: 'Q3', title: 'International Expansion', desc: 'Multi-language support, regional customization' },
     { quarter: 'Q4', title: 'API & Integration Platform', desc: 'Enable third-party integrations and ecosystem' }
   ];

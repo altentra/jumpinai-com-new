@@ -528,6 +528,10 @@ const PitchDeck = () => {
                     </li>
                     <li className="flex items-start gap-1.5">
                       <span className="text-primary mt-0.5">•</span>
+                      <span>Release native mobile apps on Apple App Store and Google Play Store</span>
+                    </li>
+                    <li className="flex items-start gap-1.5">
+                      <span className="text-primary mt-0.5">•</span>
                       <span>Strategic B2B partnerships and integrations</span>
                     </li>
                     <li className="flex items-start gap-1.5">
@@ -659,6 +663,10 @@ const PitchDeck = () => {
                     <li className="flex items-start gap-1.5">
                       <span className="text-primary mt-0.5">•</span>
                       <span>Content marketing and SEO positioning</span>
+                    </li>
+                    <li className="flex items-start gap-1.5">
+                      <span className="text-primary mt-0.5">•</span>
+                      <span>Native mobile apps launching on Apple App Store and Google Play Store</span>
                     </li>
                     <li className="flex items-start gap-1.5">
                       <span className="text-primary mt-0.5">•</span>
@@ -855,9 +863,9 @@ const PitchDeck = () => {
                   <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 rounded-xl p-4">
                     <div className="flex items-center gap-2 mb-2">
                       <div className="w-6 h-6 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center text-xs font-bold text-primary">Q2</div>
-                      <h4 className="text-sm font-bold text-foreground">Scale to 100K Users</h4>
+                      <h4 className="text-sm font-bold text-foreground">Mobile App Launch & Scale to 100K Users</h4>
                     </div>
-                    <p className="text-xs text-muted-foreground">Aggressive growth marketing and partnerships</p>
+                    <p className="text-xs text-muted-foreground">Release native apps on Apple App Store and Google Play Store; aggressive growth marketing and partnerships</p>
                   </div>
                   
                   <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 rounded-xl p-4">
