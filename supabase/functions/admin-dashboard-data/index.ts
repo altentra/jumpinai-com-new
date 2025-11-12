@@ -401,8 +401,8 @@ serve(async (req) => {
 
     // Build guest user activity data
     const guestUsers = guestTracking.map((gt: any) => {
-      // Get all guest jumps that might be from this IP (within reasonable time window)
-      // Since we don't store IP with jumps, we'll match by time proximity (same day)
+      // Get all guest jumps that might be from this IP
+      // Match jumps from the same day as the guest's last activity
       const trackingDate = new Date(gt.last_used_at);
       const startOfDay = new Date(trackingDate);
       startOfDay.setHours(0, 0, 0, 0);
@@ -413,10 +413,10 @@ serve(async (req) => {
         .filter((j: any) => {
           if (j.user_id) return false; // Must be guest jump
           const jumpDate = new Date(j.created_at);
-          // Match jumps within a reasonable time window around this guest's activity
-          const timeDiff = Math.abs(jumpDate.getTime() - trackingDate.getTime());
-          return timeDiff < 3600000; // Within 1 hour of tracked activity
+          // Match jumps from the same calendar day
+          return jumpDate >= startOfDay && jumpDate <= endOfDay;
         })
+        .sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
         .map((j: any) => ({
           id: j.id,
           title: j.title,
