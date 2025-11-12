@@ -858,7 +858,7 @@ export default function AdminDashboard() {
                     <CardTitle className="text-sm font-medium text-muted-foreground">Today</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">${stats.dailyRevenue.toFixed(2)}</div>
+                    <div className="text-2xl font-bold">${(stats.dailyRevenue || 0).toFixed(2)}</div>
                   </CardContent>
                 </Card>
                 
@@ -867,7 +867,7 @@ export default function AdminDashboard() {
                     <CardTitle className="text-sm font-medium text-muted-foreground">Last 7 Days</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">${stats.last7DaysRevenue.toFixed(2)}</div>
+                    <div className="text-2xl font-bold">${(stats.last7DaysRevenue || 0).toFixed(2)}</div>
                   </CardContent>
                 </Card>
                 
@@ -876,7 +876,7 @@ export default function AdminDashboard() {
                     <CardTitle className="text-sm font-medium text-muted-foreground">This Month</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">${stats.monthlyRevenue.toFixed(2)}</div>
+                    <div className="text-2xl font-bold">${(stats.monthlyRevenue || 0).toFixed(2)}</div>
                   </CardContent>
                 </Card>
                 
@@ -885,7 +885,7 @@ export default function AdminDashboard() {
                     <CardTitle className="text-sm font-medium text-muted-foreground">Year-to-Date</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">${stats.ytdRevenue.toFixed(2)}</div>
+                    <div className="text-2xl font-bold">${(stats.ytdRevenue || 0).toFixed(2)}</div>
                   </CardContent>
                 </Card>
                 
@@ -894,7 +894,7 @@ export default function AdminDashboard() {
                     <CardTitle className="text-sm font-medium text-muted-foreground">Lifetime</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold text-primary">${stats.totalRevenue.toFixed(2)}</div>
+                    <div className="text-2xl font-bold text-primary">${(stats.totalRevenue || 0).toFixed(2)}</div>
                   </CardContent>
                 </Card>
               </div>
