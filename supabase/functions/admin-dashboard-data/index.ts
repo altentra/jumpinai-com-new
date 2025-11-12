@@ -61,7 +61,7 @@ serve(async (req) => {
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
     // Fetch data in parallel
-    const [profilesRes, ordersRes, subscribersRes, contactsRes, productsRes, jumpsRes, creditsRes, transactionsRes, auditLogsRes] = await Promise.all([
+    const [profilesRes, ordersRes, subscribersRes, contactsRes, productsRes, jumpsRes, creditsRes, transactionsRes, auditLogsRes, guestTrackingRes] = await Promise.all([
       supabase.from("profiles").select("id, display_name, avatar_url, created_at, email_verified"),
       supabase.from("orders").select("id, product_id, amount, status, created_at, user_email, download_count"),
       supabase.from("subscribers").select("id, user_id, email, subscribed, subscription_end, subscription_tier, created_at, stripe_customer_id"),
@@ -71,6 +71,7 @@ serve(async (req) => {
       supabase.from("user_credits").select("id, user_id, credits_balance, total_credits_purchased"),
       supabase.from("credit_transactions").select("id, user_id, transaction_type, credits_amount, description, created_at").order('created_at', { ascending: false }),
       supabase.from("subscription_audit_log").select("id, user_id, email, action, old_data, new_data, created_at, changed_by, change_source").order('created_at', { ascending: false }),
+      supabase.from("guest_usage_tracking").select("*").order('last_used_at', { ascending: false }),
     ]);
 
     if (profilesRes.error) throw profilesRes.error;
@@ -82,6 +83,7 @@ serve(async (req) => {
     if (creditsRes.error) throw creditsRes.error;
     if (transactionsRes.error) throw transactionsRes.error;
     if (auditLogsRes.error) throw auditLogsRes.error;
+    if (guestTrackingRes.error) throw guestTrackingRes.error;
 
     const profiles = profilesRes.data ?? [];
     const orders = ordersRes.data ?? [];
@@ -92,6 +94,7 @@ serve(async (req) => {
     const userCredits = creditsRes.data ?? [];
     const creditTransactions = transactionsRes.data ?? [];
     const auditLogs = auditLogsRes.data ?? [];
+    const guestTracking = guestTrackingRes.data ?? [];
 
     // Create product map for lookups
     const productById = new Map(products.map((p: any) => [p.id, p]));
@@ -379,6 +382,36 @@ serve(async (req) => {
       };
     });
 
+    // Build guest user activity data
+    const guestUsers = guestTracking.map((gt: any) => {
+      // Get all guest jumps for this IP
+      const guestJumpsForIP = jumps
+        .filter((j: any) => !j.user_id) // Guest jumps have no user_id
+        .slice(0, 50); // Limit for performance
+
+      // We can't perfectly match jumps to IPs without storing IP in jumps table
+      // But we can show the tracking data and recent guest jumps separately
+      return {
+        ip_address: gt.ip_address,
+        user_agent: gt.user_agent,
+        usage_count: gt.usage_count,
+        remaining_uses: Math.max(0, 3 - gt.usage_count),
+        last_used_at: gt.last_used_at,
+        created_at: gt.created_at,
+      };
+    });
+
+    // All guest jumps (no user_id)
+    const allGuestJumps = jumps
+      .filter((j: any) => !j.user_id)
+      .map((j: any) => ({
+        id: j.id,
+        title: j.title,
+        full_content: j.full_content,
+        status: j.status,
+        created_at: j.created_at,
+      }));
+
     const payload = {
       stats,
       recentOrders,
@@ -388,6 +421,8 @@ serve(async (req) => {
       authLogs,
       jumpGenerations,
       creditOverviews,
+      guestUsers,
+      allGuestJumps,
     };
 
     return new Response(JSON.stringify(payload), {

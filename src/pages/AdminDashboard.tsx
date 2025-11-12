@@ -78,6 +78,23 @@ interface CreditTransaction {
   created_at: string;
 }
 
+interface GuestUser {
+  ip_address: string;
+  user_agent: string | null;
+  usage_count: number;
+  remaining_uses: number;
+  last_used_at: string;
+  created_at: string;
+}
+
+interface GuestJump {
+  id: string;
+  title: string;
+  full_content: string;
+  status: string;
+  created_at: string;
+}
+
 interface RecentOrder {
   id: string;
   user_email: string;
@@ -208,6 +225,8 @@ export default function AdminDashboard() {
   const [users, setUsers] = useState<User[]>([]);
   const [jumpGenerations, setJumpGenerations] = useState<JumpGeneration[]>([]);
   const [creditOverviews, setCreditOverviews] = useState<CreditOverview[]>([]);
+  const [guestUsers, setGuestUsers] = useState<GuestUser[]>([]);
+  const [allGuestJumps, setAllGuestJumps] = useState<GuestJump[]>([]);
   const [loading, setLoading] = useState(true);
   const [syncing, setSyncing] = useState(false);
   
@@ -412,6 +431,8 @@ export default function AdminDashboard() {
       setAuthLogs(data.authLogs);
       setJumpGenerations(data.jumpGenerations || []);
       setCreditOverviews(data.creditOverviews || []);
+      setGuestUsers(data.guestUsers || []);
+      setAllGuestJumps(data.allGuestJumps || []);
     } catch (error) {
       console.error('Error fetching admin data:', error);
       toast.error('Failed to load admin data');
@@ -594,6 +615,7 @@ export default function AdminDashboard() {
       <Tabs defaultValue="jumps" className="space-y-4">
         <TabsList>
           <TabsTrigger value="jumps">Jump Generations</TabsTrigger>
+          <TabsTrigger value="guests">Guest Users</TabsTrigger>
           <TabsTrigger value="credits">Credits Overview</TabsTrigger>
           <TabsTrigger value="orders">Orders</TabsTrigger>
           <TabsTrigger value="subscribers">Subscribers</TabsTrigger>
@@ -677,6 +699,139 @@ export default function AdminDashboard() {
                   </TableBody>
                 </Table>
               )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="guests">
+          <Card>
+            <CardHeader>
+              <CardTitle>Guest Users Activity</CardTitle>
+              <p className="text-sm text-muted-foreground">
+                Track all guest user activity, jump attempts, usage limits, and detailed logs
+              </p>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {/* Guest Usage Tracking */}
+              <div>
+                <h3 className="text-lg font-semibold mb-4">Guest User Tracking ({guestUsers.length} unique IPs)</h3>
+                {guestUsers.length === 0 ? (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <Users className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                    <p className="text-lg font-medium mb-2">No guest users yet</p>
+                    <p className="text-sm">Guest user activity will appear here</p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {guestUsers.map((guest) => (
+                      <Card key={guest.ip_address} className="p-4 border-l-4 border-l-muted">
+                        <div className="space-y-3">
+                          <div className="flex items-center justify-between">
+                            <div className="space-y-1">
+                              <div className="flex items-center gap-2">
+                                <Badge variant="outline" className="font-mono text-xs">
+                                  {guest.ip_address}
+                                </Badge>
+                                <Badge variant={guest.usage_count >= 3 ? 'destructive' : 'default'}>
+                                  {guest.usage_count}/3 uses
+                                </Badge>
+                                {guest.remaining_uses > 0 ? (
+                                  <Badge variant="secondary">{guest.remaining_uses} remaining</Badge>
+                                ) : (
+                                  <Badge variant="destructive">Limit reached</Badge>
+                                )}
+                              </div>
+                              {guest.user_agent && (
+                                <p className="text-xs text-muted-foreground truncate max-w-md">
+                                  {guest.user_agent}
+                                </p>
+                              )}
+                            </div>
+                            <div className="text-right text-sm">
+                              <div className="text-muted-foreground">Last Activity</div>
+                              <div className="font-medium">
+                                {new Date(guest.last_used_at).toLocaleDateString('en-US', {
+                                  timeZone: 'America/Los_Angeles',
+                                  month: 'short',
+                                  day: 'numeric',
+                                  year: 'numeric',
+                                  hour: '2-digit',
+                                  minute: '2-digit'
+                                })} PST
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div className="flex items-center justify-between pt-2 border-t text-sm">
+                            <div className="text-muted-foreground">
+                              First Seen: {new Date(guest.created_at).toLocaleDateString('en-US', {
+                                timeZone: 'America/Los_Angeles',
+                                month: 'short',
+                                day: 'numeric',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              })} PST
+                            </div>
+                          </div>
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* All Guest Jump Attempts */}
+              <div>
+                <h3 className="text-lg font-semibold mb-4">All Guest Jump Attempts ({allGuestJumps.length})</h3>
+                {allGuestJumps.length === 0 ? (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <TrendingUp className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                    <p className="text-lg font-medium mb-2">No guest jumps yet</p>
+                    <p className="text-sm">Guest jump generation attempts will appear here</p>
+                  </div>
+                ) : (
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Title</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Content Preview</TableHead>
+                        <TableHead>Date/Time (PST)</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {allGuestJumps.map((jump) => (
+                        <TableRow key={jump.id}>
+                          <TableCell className="font-medium max-w-xs truncate">
+                            {jump.title}
+                          </TableCell>
+                          <TableCell>
+                            <Badge variant={jump.status === 'active' ? 'default' : 'destructive'}>
+                              {jump.status === 'active' ? 'Success' : 'Failed'}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="max-w-md">
+                            <p className="text-xs text-muted-foreground truncate">
+                              {jump.full_content.substring(0, 100)}...
+                            </p>
+                          </TableCell>
+                          <TableCell className="text-sm">
+                            {new Date(jump.created_at).toLocaleString('en-US', {
+                              timeZone: 'America/Los_Angeles',
+                              month: 'short',
+                              day: 'numeric',
+                              year: 'numeric',
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            })} PST
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                )}
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
