@@ -46,6 +46,8 @@ interface AdminStats {
   completedOrders: number;
   monthlyRevenue: number;
   dailyRevenue: number;
+  last7DaysRevenue: number;
+  ytdRevenue: number;
   averageOrderValue: number;
 }
 
@@ -103,6 +105,7 @@ interface RecentOrder {
   created_at: string;
   product_name: string;
   is_completed: boolean;
+  is_subscription: boolean;
 }
 
 interface RecentSubscriber {
@@ -215,6 +218,8 @@ export default function AdminDashboard() {
     completedOrders: 0,
     monthlyRevenue: 0,
     dailyRevenue: 0,
+    last7DaysRevenue: 0,
+    ytdRevenue: 0,
     averageOrderValue: 0
   });
   
@@ -616,6 +621,7 @@ export default function AdminDashboard() {
         <TabsList>
           <TabsTrigger value="jumps">Jump Generations</TabsTrigger>
           <TabsTrigger value="guests">Guest Users</TabsTrigger>
+          <TabsTrigger value="revenue">Revenue</TabsTrigger>
           <TabsTrigger value="credits">Credits Overview</TabsTrigger>
           <TabsTrigger value="orders">Orders</TabsTrigger>
           <TabsTrigger value="subscribers">Subscribers</TabsTrigger>
@@ -828,6 +834,127 @@ export default function AdminDashboard() {
                           </TableCell>
                         </TableRow>
                       ))}
+                    </TableBody>
+                  </Table>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="revenue">
+          <Card>
+            <CardHeader>
+              <CardTitle>Revenue Overview</CardTitle>
+              <p className="text-sm text-muted-foreground">
+                Track all successful transactions and revenue breakdowns
+              </p>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {/* Revenue Breakdown Stats */}
+              <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm font-medium text-muted-foreground">Today</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">${stats.dailyRevenue.toFixed(2)}</div>
+                  </CardContent>
+                </Card>
+                
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm font-medium text-muted-foreground">Last 7 Days</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">${stats.last7DaysRevenue.toFixed(2)}</div>
+                  </CardContent>
+                </Card>
+                
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm font-medium text-muted-foreground">This Month</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">${stats.monthlyRevenue.toFixed(2)}</div>
+                  </CardContent>
+                </Card>
+                
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm font-medium text-muted-foreground">Year-to-Date</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">${stats.ytdRevenue.toFixed(2)}</div>
+                  </CardContent>
+                </Card>
+                
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm font-medium text-muted-foreground">Lifetime</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold text-primary">${stats.totalRevenue.toFixed(2)}</div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* All Successful Transactions */}
+              <div>
+                <h3 className="text-lg font-semibold mb-4">All Successful Transactions ({recentOrders.filter(o => o.is_completed).length})</h3>
+                {recentOrders.filter(o => o.is_completed).length === 0 ? (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <DollarSign className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                    <p className="text-lg font-medium mb-2">No transactions yet</p>
+                    <p className="text-sm">Successful transactions will appear here</p>
+                  </div>
+                ) : (
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Email</TableHead>
+                        <TableHead>Product/Description</TableHead>
+                        <TableHead>Type</TableHead>
+                        <TableHead>Amount</TableHead>
+                        <TableHead>Date/Time (PST)</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {recentOrders
+                        .filter(o => o.is_completed)
+                        .map((order) => (
+                          <TableRow key={order.id}>
+                            <TableCell className="font-medium">{order.user_email}</TableCell>
+                            <TableCell>
+                              <div>
+                                <div className="font-medium">{order.product_name}</div>
+                                {order.is_subscription && (
+                                  <Badge variant="secondary" className="mt-1">Subscription</Badge>
+                                )}
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              {order.is_subscription ? (
+                                <Badge variant="default">Subscription</Badge>
+                              ) : (
+                                <Badge variant="outline">One-time</Badge>
+                              )}
+                            </TableCell>
+                            <TableCell className="font-bold text-green-600">
+                              ${(order.amount / 100).toFixed(2)}
+                            </TableCell>
+                            <TableCell className="text-sm">
+                              {new Date(order.created_at).toLocaleString('en-US', {
+                                timeZone: 'America/Los_Angeles',
+                                month: 'short',
+                                day: 'numeric',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              })} PST
+                            </TableCell>
+                          </TableRow>
+                        ))}
                     </TableBody>
                   </Table>
                 )}

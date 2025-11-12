@@ -146,6 +146,21 @@ serve(async (req) => {
       return d.getTime() === today.getTime() ? sum + (o.amount || 0) : sum;
     }, 0);
 
+    // Calculate last 7 days revenue
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    const last7DaysRevenueCents = paidOrders.reduce((sum, o) => {
+      const d = new Date(o.created_at);
+      return d >= sevenDaysAgo ? sum + (o.amount || 0) : sum;
+    }, 0);
+
+    // Calculate year-to-date revenue
+    const yearStart = new Date(currentYear, 0, 1);
+    const ytdRevenueCents = paidOrders.reduce((sum, o) => {
+      const d = new Date(o.created_at);
+      return d >= yearStart ? sum + (o.amount || 0) : sum;
+    }, 0);
+
     const stats = {
       totalUsers: profiles.length,
       totalSubscribers: paidSubscribers.length, // Only count actual paid subscribers
@@ -169,6 +184,8 @@ serve(async (req) => {
       productOrders: paidOrders.filter(o => !(productById.get(o.product_id)?.name === "JumpinAI Pro Subscription")).length,
       monthlyRevenue: monthlyRevenueCents / 100,
       dailyRevenue: dailyRevenueCents / 100,
+      last7DaysRevenue: last7DaysRevenueCents / 100,
+      ytdRevenue: ytdRevenueCents / 100,
       averageOrderValue: paidOrders.length ? totalRevenueCents / paidOrders.length / 100 : 0,
     };
 
