@@ -126,9 +126,11 @@ export const jumpinAIStudioService = {
                   onProgress(step, type, data);
                 }
                 
-                if (userId) {
-                  (async () => {
-                    try {
+                // Save jump for BOTH logged-in users AND guests
+                (async () => {
+                  try {
+                    if (userId) {
+                      // Logged-in user: Save with Jump # format
                       const jumpNumber = await jumpNamingService.getNextJumpNumber(userId);
                       const fullTitle = `Jump #${jumpNumber}: ${result.jumpName}`;
                       result.jumpNumber = jumpNumber;
@@ -148,31 +150,37 @@ export const jumpinAIStudioService = {
                         })
                         .select()
                         .single();
+                      
+                      if (error) throw error;
+                      jumpId = savedJump.id;
+                      result.jumpId = jumpId;
+                      console.log('✅ Jump created with ID:', jumpId);
+                    } else {
+                      // Guest user: Save with simple title format
+                      const { data: savedJump, error } = await supabase
+                        .from('user_jumps')
+                        .insert({
+                          user_id: null,
+                          title: result.jumpName,
+                          summary: `AI Transformation: ${result.jumpName}`,
+                          full_content: JSON.stringify({ jumpName: result.jumpName }),
+                          completion_percentage: 5,
+                          status: 'generating',
+                          ip_address: ipAddress,
+                          location: location
+                        })
+                        .select()
+                        .single();
 
-                      if (!error && savedJump) {
-                        jumpId = savedJump.id;
-                        result.jumpId = jumpId;
-                         console.log('✅ Jump created with ID:', jumpId, 'from', location);
-                        
-                        if (onProgress) {
-                          onProgress(step, 'jump_created', { jumpId, jumpNumber, fullTitle });
-                        }
-                      }
-                    } catch (error) {
-                      console.error('❌ Error creating jump:', error);
+                      if (error) throw error;
+                      jumpId = savedJump.id;
+                      result.jumpId = jumpId;
+                      console.log('✅ Guest jump created with ID:', jumpId);
                     }
-                  })();
-                } else {
-                  // For guest users, send jump_created event with temp ID
-                  console.log('✅ Guest jump using temp ID:', jumpId, 'from', location);
-                  if (onProgress) {
-                    onProgress(step, 'jump_created', { 
-                      jumpId, 
-                      jumpNumber: null, 
-                      fullTitle: result.jumpName 
-                    });
+                  } catch (error) {
+                    console.error('❌ Error creating jump:', error);
                   }
-                }
+                })();
               } else if (type === 'overview') {
                 console.log('📋 Processing overview data:', data);
                 result.comprehensivePlan = {
@@ -225,7 +233,7 @@ export const jumpinAIStudioService = {
                   onProgress(step, type, data);
                 }
                 
-                if (userId && jumpId) {
+                if (jumpId) {
                   (async () => {
                     try {
                       await supabase
@@ -281,7 +289,7 @@ export const jumpinAIStudioService = {
                   onProgress(step, type, data);
                 }
                 
-                if (userId && jumpId) {
+                if (jumpId) {
                   (async () => {
                     try {
                       await supabase
@@ -337,7 +345,7 @@ export const jumpinAIStudioService = {
                 }
                 
                 if (userId && jumpId && toolPromptsArray.length > 0) {
-                  console.log(`💾 Attempting to save ${toolPromptsArray.length} tool prompts...`);
+                  console.log(`💾 Attempting to save ${toolPromptsArray.length} tool prompts for logged-in user...`);
                   console.log('💾 Save context:', { userId, jumpId, arrayLength: toolPromptsArray.length });
                   (async () => {
                     try {
@@ -418,8 +426,8 @@ export const jumpinAIStudioService = {
                   onProgress(step, type, data);
                 }
               }
-
-              if (userId && jumpId) {
+                
+              if (jumpId) {
                 (async () => {
                   const progress = Math.min(100, step * 15);
                   await this.updateJumpProgress(jumpId, progress);
