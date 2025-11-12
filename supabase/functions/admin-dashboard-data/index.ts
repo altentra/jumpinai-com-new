@@ -67,7 +67,7 @@ serve(async (req) => {
       supabase.from("subscribers").select("id, user_id, email, subscribed, subscription_end, subscription_tier, created_at, stripe_customer_id"),
       supabase.from("contacts").select("id, email, first_name, last_name, source, status, newsletter_subscribed, lead_magnet_downloaded, tags, created_at"),
       supabase.from("products").select("id, name, file_name"),
-      supabase.from("user_jumps").select("id, user_id, title, full_content, status, created_at").order('created_at', { ascending: false }).limit(200),
+      supabase.from("user_jumps").select("id, user_id, title, full_content, status, created_at, ip_address, location").order('created_at', { ascending: false }).limit(200),
       supabase.from("user_credits").select("id, user_id, credits_balance, total_credits_purchased"),
       supabase.from("credit_transactions").select("id, user_id, transaction_type, credits_amount, description, created_at").order('created_at', { ascending: false }),
       supabase.from("subscription_audit_log").select("id, user_id, email, action, old_data, new_data, created_at, changed_by, change_source").order('created_at', { ascending: false }),
@@ -301,6 +301,10 @@ serve(async (req) => {
       }
 
       const contact = email ? contacts.find((c) => c.email === email) : undefined;
+      
+      // Get latest jump for this user to get IP and location
+      const userJumps = jumps.filter((j: any) => j.user_id === p.id);
+      const latestJump = userJumps.sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())[0];
 
       return {
         id: p.id,
@@ -322,6 +326,8 @@ serve(async (req) => {
         newsletter_subscribed: !!contact?.newsletter_subscribed,
         lead_magnet_downloaded: !!contact?.lead_magnet_downloaded,
         last_login: auth?.last_sign_in_at || null,
+        latestIpAddress: latestJump?.ip_address || null,
+        latestLocation: latestJump?.location || null,
       };
     });
 
@@ -376,9 +382,8 @@ serve(async (req) => {
         status: j.status,
         created_at: j.created_at,
         is_guest: !j.user_id,
-        // We don't have IP/location data stored, but structure is here for future
-        ip_address: null,
-        location: null,
+        ip_address: j.ip_address || null,
+        location: j.location || null,
       };
     });
 

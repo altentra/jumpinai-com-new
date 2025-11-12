@@ -194,6 +194,8 @@ interface User {
   newsletter_subscribed?: boolean;
   lead_magnet_downloaded?: boolean;
   last_login?: string;
+  latestIpAddress?: string | null;
+  latestLocation?: string | null;
   completed_orders?: Array<{
     id: string;
     amount: number;
@@ -1551,6 +1553,24 @@ export default function AdminDashboard() {
                               <span className="text-sm text-muted-foreground">Last Login:</span>
                               <span className="text-sm">
                                 {new Date(user.last_login).toLocaleDateString()}
+                              </span>
+                            </div>
+                          )}
+                          
+                          {user.latestLocation && (
+                            <div className="flex items-center justify-between">
+                              <span className="text-sm text-muted-foreground">Location:</span>
+                              <span className="text-sm">
+                                {user.latestLocation}
+                              </span>
+                            </div>
+                          )}
+                          
+                          {user.latestIpAddress && (
+                            <div className="flex items-center justify-between">
+                              <span className="text-sm text-muted-foreground">IP Address:</span>
+                              <span className="text-sm font-mono text-xs">
+                                {user.latestIpAddress}
                               </span>
                             </div>
                           )}
