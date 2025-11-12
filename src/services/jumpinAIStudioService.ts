@@ -39,6 +39,19 @@ export const jumpinAIStudioService = {
     onProgress?: (step: number, type: string, data: any) => void
   ): Promise<GenerationResult> {
     return new Promise(async (resolve, reject) => {
+      // Get IP and location data first
+      let ipAddress = 'unknown';
+      let location = 'Unknown';
+      try {
+        const ipResponse = await supabase.functions.invoke('get-client-ip');
+        if (ipResponse.data) {
+          ipAddress = ipResponse.data.ip || 'unknown';
+          location = ipResponse.data.location || 'Unknown';
+        }
+      } catch (error) {
+        console.error('Failed to get IP/location:', error);
+      }
+      
       // For guest users, generate a temporary jump ID so features like clarify/reroute work
       const tempJumpId = crypto.randomUUID();
       
@@ -111,12 +124,7 @@ export const jumpinAIStudioService = {
               if (type === 'naming') {
                 result.jumpName = data.jumpName;
                 console.log('✅ Jump name received:', data.jumpName);
-                
-                // Extract metadata from response
-                const metadata = data._metadata || {};
-                const jumpIpAddress = metadata.ipAddress;
-                const jumpLocation = metadata.location;
-                console.log('📍 Jump metadata:', { jumpIpAddress, jumpLocation });
+                console.log('📍 Jump metadata:', { ipAddress, location });
                 
                 if (onProgress) {
                   onProgress(step, type, data);
@@ -139,8 +147,8 @@ export const jumpinAIStudioService = {
                           full_content: JSON.stringify({ jumpName: result.jumpName }),
                           completion_percentage: 5,
                           status: 'generating',
-                          ip_address: jumpIpAddress,
-                          location: jumpLocation
+                          ip_address: ipAddress,
+                          location: location
                         })
                         .select()
                         .single();
@@ -148,7 +156,7 @@ export const jumpinAIStudioService = {
                       if (!error && savedJump) {
                         jumpId = savedJump.id;
                         result.jumpId = jumpId;
-                        console.log('✅ Jump created with ID:', jumpId, 'from', jumpLocation);
+                         console.log('✅ Jump created with ID:', jumpId, 'from', location);
                         
                         if (onProgress) {
                           onProgress(step, 'jump_created', { jumpId, jumpNumber, fullTitle });
@@ -160,7 +168,7 @@ export const jumpinAIStudioService = {
                   })();
                 } else {
                   // For guest users, send jump_created event with temp ID
-                  console.log('✅ Guest jump using temp ID:', jumpId, 'from', jumpLocation);
+                  console.log('✅ Guest jump using temp ID:', jumpId, 'from', location);
                   if (onProgress) {
                     onProgress(step, 'jump_created', { 
                       jumpId, 

@@ -401,7 +401,7 @@ serve(async (req) => {
 
     // Build guest user activity data
     const guestUsers = guestTracking.map((gt: any) => {
-      // Get all guest jumps from this IP address (perfect match now that we store IP)
+      // Get all guest jumps from this IP address
       const guestJumpsForIP = jumps
         .filter((j: any) => !j.user_id && j.ip_address === gt.ip_address)
         .sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
