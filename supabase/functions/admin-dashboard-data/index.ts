@@ -61,15 +61,16 @@ serve(async (req) => {
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
     // Fetch data in parallel
-    const [profilesRes, ordersRes, subscribersRes, contactsRes, productsRes, jumpsRes, creditsRes, transactionsRes] = await Promise.all([
+    const [profilesRes, ordersRes, subscribersRes, contactsRes, productsRes, jumpsRes, creditsRes, transactionsRes, auditLogsRes] = await Promise.all([
       supabase.from("profiles").select("id, display_name, avatar_url, created_at, email_verified"),
       supabase.from("orders").select("id, product_id, amount, status, created_at, user_email, download_count"),
-      supabase.from("subscribers").select("id, user_id, email, subscribed, subscription_end, subscription_tier, created_at"),
+      supabase.from("subscribers").select("id, user_id, email, subscribed, subscription_end, subscription_tier, created_at, stripe_customer_id"),
       supabase.from("contacts").select("id, email, first_name, last_name, source, status, newsletter_subscribed, lead_magnet_downloaded, tags, created_at"),
       supabase.from("products").select("id, name, file_name"),
       supabase.from("user_jumps").select("id, user_id, title, full_content, status, created_at").order('created_at', { ascending: false }).limit(200),
       supabase.from("user_credits").select("id, user_id, credits_balance, total_credits_purchased"),
       supabase.from("credit_transactions").select("id, user_id, transaction_type, credits_amount, description, created_at").order('created_at', { ascending: false }),
+      supabase.from("subscription_audit_log").select("id, user_id, email, action, old_data, new_data, created_at, changed_by, change_source").order('created_at', { ascending: false }),
     ]);
 
     if (profilesRes.error) throw profilesRes.error;
@@ -80,6 +81,7 @@ serve(async (req) => {
     if (jumpsRes.error) throw jumpsRes.error;
     if (creditsRes.error) throw creditsRes.error;
     if (transactionsRes.error) throw transactionsRes.error;
+    if (auditLogsRes.error) throw auditLogsRes.error;
 
     const profiles = profilesRes.data ?? [];
     const orders = ordersRes.data ?? [];
@@ -89,6 +91,7 @@ serve(async (req) => {
     const jumps = jumpsRes.data ?? [];
     const userCredits = creditsRes.data ?? [];
     const creditTransactions = transactionsRes.data ?? [];
+    const auditLogs = auditLogsRes.data ?? [];
 
     // Create product map for lookups
     const productById = new Map(products.map((p: any) => [p.id, p]));
@@ -192,14 +195,40 @@ serve(async (req) => {
         const totalPaid = userOrders.reduce((sum, o) => sum + (o.amount || 0), 0) / 100;
         const totalDownloads = userOrders.reduce((sum, o) => sum + (o.download_count || 0), 0);
         
+        // Get subscription audit logs for this user
+        const userAuditLogs = auditLogs
+          .filter(log => log.email === s.email || log.user_id === s.user_id)
+          .map(log => ({
+            id: log.id,
+            action: log.action,
+            old_data: log.old_data,
+            new_data: log.new_data,
+            created_at: log.created_at,
+            changed_by: log.changed_by,
+            change_source: log.change_source,
+          }));
+        
+        // Calculate subscription-specific billing
+        const subscriptionPayments = subscriptionOrders.map(o => ({
+          id: o.id,
+          amount: o.amount / 100,
+          created_at: o.created_at,
+          product_name: productById.get(o.product_id)?.name || "Subscription",
+        }));
+        
+        const totalSubscriptionPaid = subscriptionOrders.reduce((sum, o) => sum + (o.amount || 0), 0) / 100;
+        
         return {
           ...s,
           last_login: auth?.last_sign_in_at || null,
           total_paid: totalPaid,
+          total_subscription_paid: totalSubscriptionPaid,
           total_downloads: totalDownloads,
           completed_orders: userOrders.length,
           subscription_payments: subscriptionOrders.length,
           product_purchases: productPurchases.length,
+          subscription_payment_history: subscriptionPayments,
+          audit_logs: userAuditLogs,
         };
       });
 

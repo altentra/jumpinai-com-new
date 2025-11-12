@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
+import { format } from "date-fns";
 import { 
   Users, 
   CreditCard, 
@@ -89,15 +90,35 @@ interface RecentOrder {
 
 interface RecentSubscriber {
   id: string;
+  user_id: string | null;
   email: string;
-  subscription_tier: string;
   subscribed: boolean;
+  subscription_end: string | null;
+  subscription_tier: string | null;
   created_at: string;
+  stripe_customer_id: string | null;
   last_login: string | null;
   total_paid: number;
+  total_subscription_paid: number;
   total_downloads: number;
   completed_orders: number;
-  subscription_end?: string | null;
+  subscription_payments: number;
+  product_purchases: number;
+  subscription_payment_history: Array<{
+    id: string;
+    amount: number;
+    created_at: string;
+    product_name: string;
+  }>;
+  audit_logs: Array<{
+    id: string;
+    action: string;
+    old_data: any;
+    new_data: any;
+    created_at: string;
+    changed_by: string | null;
+    change_source: string;
+  }>;
 }
 
 interface Contact {
@@ -771,9 +792,9 @@ export default function AdminDashboard() {
         <TabsContent value="subscribers">
           <Card>
             <CardHeader>
-              <CardTitle>Paid Subscribers ($10/month Plan)</CardTitle>
+              <CardTitle>Active Subscribers</CardTitle>
               <p className="text-sm text-muted-foreground">
-                Comprehensive details for all users with active paid subscriptions
+                Comprehensive subscription details including billing history and activity logs
               </p>
             </CardHeader>
             <CardContent>
@@ -784,56 +805,163 @@ export default function AdminDashboard() {
                   <p className="text-sm">Users with active subscriptions will appear here</p>
                 </div>
               ) : (
-                <div className="space-y-4">
-                  {recentSubscribers.map((subscriber) => (
-                    <Card key={subscriber.id} className="p-4">
-                      <div className="space-y-3">
+                <div className="space-y-6">
+                  {recentSubscribers.map((sub) => (
+                    <Card key={sub.id} className="border-l-4" style={{
+                      borderLeftColor: 
+                        sub.subscription_tier === 'JumpinAI Growth' ? 'hsl(var(--primary))' :
+                        sub.subscription_tier === 'JumpinAI Pro' ? 'hsl(var(--secondary))' : 
+                        'hsl(var(--muted))'
+                    }}>
+                      <CardHeader>
                         <div className="flex items-center justify-between">
-                          <div>
-                            <p className="font-medium text-lg">{subscriber.email}</p>
-                            <div className="flex gap-2 mt-1">
-                              <Badge variant="secondary" className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100">
-                                {subscriber.subscription_tier || 'Pro'}
+                          <div className="space-y-1">
+                            <CardTitle className="text-lg">{sub.email}</CardTitle>
+                            <div className="flex items-center gap-2">
+                              <Badge variant={
+                                sub.subscription_tier === 'JumpinAI Growth' ? 'default' :
+                                sub.subscription_tier === 'JumpinAI Pro' ? 'secondary' : 
+                                'outline'
+                              }>
+                                {sub.subscription_tier || 'N/A'}
                               </Badge>
-                              <Badge variant={subscriber.subscribed ? "default" : "secondary"}>
-                                {subscriber.subscribed ? 'Active' : 'Inactive'}
+                              <Badge variant={sub.subscribed ? "default" : "secondary"}>
+                                {sub.subscribed ? "Active" : "Inactive"}
                               </Badge>
                             </div>
                           </div>
-                          <div className="text-right text-sm text-muted-foreground">
-                            Subscribed: {new Date(subscriber.created_at).toLocaleDateString()}
+                          <div className="text-right space-y-1">
+                            <div className="text-2xl font-bold">${sub.total_subscription_paid.toFixed(2)}</div>
+                            <div className="text-sm text-muted-foreground">Total Subscription Revenue</div>
                           </div>
                         </div>
-                        
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-2 border-t">
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        {/* Subscription Details */}
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-muted/50 rounded-lg">
                           <div>
-                            <p className="text-sm text-muted-foreground">Total Paid</p>
-                            <p className="font-medium text-lg">${subscriber.total_paid.toFixed(2)}</p>
+                            <div className="text-sm text-muted-foreground">Subscribed On</div>
+                            <div className="font-medium">{new Date(sub.created_at).toLocaleDateString('en-US', {
+                              month: 'short',
+                              day: 'numeric',
+                              year: 'numeric',
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            })}</div>
                           </div>
                           <div>
-                            <p className="text-sm text-muted-foreground">Orders</p>
-                            <p className="font-medium text-lg">{subscriber.completed_orders}</p>
+                            <div className="text-sm text-muted-foreground">Expires On</div>
+                            <div className="font-medium">
+                              {sub.subscription_end 
+                                ? new Date(sub.subscription_end).toLocaleDateString('en-US', {
+                                    month: 'short',
+                                    day: 'numeric',
+                                    year: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                  })
+                                : "N/A"}
+                            </div>
                           </div>
                           <div>
-                            <p className="text-sm text-muted-foreground">Downloads</p>
-                            <p className="font-medium text-lg">{subscriber.total_downloads}</p>
+                            <div className="text-sm text-muted-foreground">Last Login</div>
+                            <div className="font-medium">
+                              {sub.last_login 
+                                ? new Date(sub.last_login).toLocaleDateString('en-US', {
+                                    month: 'short',
+                                    day: 'numeric',
+                                    year: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                  })
+                                : "Never"}
+                            </div>
                           </div>
                           <div>
-                            <p className="text-sm text-muted-foreground">Last Login</p>
-                            <p className="font-medium">
-                              {subscriber.last_login ? new Date(subscriber.last_login).toLocaleDateString() : 'Never'}
-                            </p>
+                            <div className="text-sm text-muted-foreground">Stripe Customer</div>
+                            <div className="font-medium text-xs truncate">{sub.stripe_customer_id || "N/A"}</div>
                           </div>
                         </div>
-                        
-                        {subscriber.subscription_end && (
-                          <div className="pt-2 border-t">
-                            <p className="text-sm text-muted-foreground">
-                              Subscription ends: <span className="font-medium">{new Date(subscriber.subscription_end).toLocaleDateString()}</span>
-                            </p>
+
+                        {/* Payment History */}
+                        {sub.subscription_payment_history.length > 0 && (
+                          <div>
+                            <h4 className="font-semibold mb-2">Payment History ({sub.subscription_payments} payments)</h4>
+                            <div className="space-y-2">
+                              {sub.subscription_payment_history.map((payment) => (
+                                <div key={payment.id} className="flex items-center justify-between p-2 bg-muted/30 rounded">
+                                  <div>
+                                    <div className="font-medium">{payment.product_name}</div>
+                                    <div className="text-sm text-muted-foreground">
+                                      {new Date(payment.created_at).toLocaleDateString('en-US', {
+                                        month: 'short',
+                                        day: 'numeric',
+                                        year: 'numeric',
+                                        hour: '2-digit',
+                                        minute: '2-digit'
+                                      })}
+                                    </div>
+                                  </div>
+                                  <div className="font-bold text-green-600">${payment.amount.toFixed(2)}</div>
+                                </div>
+                              ))}
+                            </div>
                           </div>
                         )}
-                      </div>
+
+                        {/* Audit Logs */}
+                        {sub.audit_logs.length > 0 && (
+                          <div>
+                            <h4 className="font-semibold mb-2">Subscription Activity Log ({sub.audit_logs.length} events)</h4>
+                            <div className="space-y-2 max-h-60 overflow-y-auto">
+                              {sub.audit_logs.map((log) => (
+                                <div key={log.id} className="p-2 bg-muted/30 rounded text-sm">
+                                  <div className="flex items-center justify-between mb-1">
+                                    <Badge variant="outline">{log.action}</Badge>
+                                    <span className="text-xs text-muted-foreground">
+                                      {new Date(log.created_at).toLocaleDateString('en-US', {
+                                        month: 'short',
+                                        day: 'numeric',
+                                        year: 'numeric',
+                                        hour: '2-digit',
+                                        minute: '2-digit',
+                                        second: '2-digit'
+                                      })}
+                                    </span>
+                                  </div>
+                                  <div className="text-xs space-y-1">
+                                    {log.old_data && (
+                                      <div>
+                                        <span className="text-muted-foreground">From:</span> Tier: {log.old_data.subscription_tier || 'N/A'}, 
+                                        Active: {log.old_data.subscribed ? 'Yes' : 'No'}
+                                      </div>
+                                    )}
+                                    {log.new_data && (
+                                      <div>
+                                        <span className="text-muted-foreground">To:</span> Tier: {log.new_data.subscription_tier || 'N/A'}, 
+                                        Active: {log.new_data.subscribed ? 'Yes' : 'No'}
+                                      </div>
+                                    )}
+                                    <div className="text-muted-foreground">
+                                      Source: {log.change_source} {log.changed_by && `| Changed by: ${log.changed_by}`}
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Additional Stats */}
+                        <div className="flex items-center justify-between pt-2 border-t">
+                          <div className="text-sm text-muted-foreground">
+                            Total Orders: {sub.completed_orders} | Product Purchases: {sub.product_purchases} | Downloads: {sub.total_downloads}
+                          </div>
+                          <div className="text-sm font-medium">
+                            All-Time Revenue: ${sub.total_paid.toFixed(2)}
+                          </div>
+                        </div>
+                      </CardContent>
                     </Card>
                   ))}
                 </div>
