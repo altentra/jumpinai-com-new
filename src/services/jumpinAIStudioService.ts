@@ -180,9 +180,18 @@ export const jumpinAIStudioService = {
                   console.error('❌ Error creating jump:', error);
                 }
                 
-                // Now call onProgress AFTER jumpId is set
+                // Call onProgress for naming event
                 if (onProgress) {
                   onProgress(step, type, data);
+                }
+                
+                // Call onProgress again with jump_created event including jumpId, jumpNumber, and fullTitle
+                if (onProgress && jumpId) {
+                  onProgress(step, 'jump_created', {
+                    jumpId: jumpId,
+                    jumpNumber: result.jumpNumber,
+                    fullTitle: result.fullTitle
+                  });
                 }
               } else if (type === 'overview') {
                 console.log('📋 Processing overview data:', data);
