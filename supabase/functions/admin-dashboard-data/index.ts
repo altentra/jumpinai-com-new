@@ -401,13 +401,30 @@ serve(async (req) => {
 
     // Build guest user activity data
     const guestUsers = guestTracking.map((gt: any) => {
-      // Get all guest jumps for this IP
-      const guestJumpsForIP = jumps
-        .filter((j: any) => !j.user_id) // Guest jumps have no user_id
-        .slice(0, 50); // Limit for performance
+      // Get all guest jumps that might be from this IP (within reasonable time window)
+      // Since we don't store IP with jumps, we'll match by time proximity (same day)
+      const trackingDate = new Date(gt.last_used_at);
+      const startOfDay = new Date(trackingDate);
+      startOfDay.setHours(0, 0, 0, 0);
+      const endOfDay = new Date(trackingDate);
+      endOfDay.setHours(23, 59, 59, 999);
+      
+      const potentialGuestJumps = jumps
+        .filter((j: any) => {
+          if (j.user_id) return false; // Must be guest jump
+          const jumpDate = new Date(j.created_at);
+          // Match jumps within a reasonable time window around this guest's activity
+          const timeDiff = Math.abs(jumpDate.getTime() - trackingDate.getTime());
+          return timeDiff < 3600000; // Within 1 hour of tracked activity
+        })
+        .map((j: any) => ({
+          id: j.id,
+          title: j.title,
+          full_content: j.full_content,
+          status: j.status,
+          created_at: j.created_at,
+        }));
 
-      // We can't perfectly match jumps to IPs without storing IP in jumps table
-      // But we can show the tracking data and recent guest jumps separately
       return {
         ip_address: gt.ip_address,
         user_agent: gt.user_agent,
@@ -415,6 +432,7 @@ serve(async (req) => {
         remaining_uses: Math.max(0, 3 - gt.usage_count),
         last_used_at: gt.last_used_at,
         created_at: gt.created_at,
+        jump_attempts: potentialGuestJumps,
       };
     });
 
