@@ -419,7 +419,12 @@ serve(async (req) => {
           status: j.status,
           created_at: j.created_at,
           location: j.location,
+          form_goals: j.form_goals,
+          form_challenges: j.form_challenges,
         }));
+
+      // Get location from the most recent jump
+      const mostRecentLocation = guestJumpsForIP.length > 0 ? guestJumpsForIP[0].location : null;
 
       return {
         ip_address: gt.ip_address,
@@ -428,6 +433,7 @@ serve(async (req) => {
         remaining_uses: Math.max(0, 3 - gt.usage_count),
         last_used_at: gt.last_used_at,
         created_at: gt.created_at,
+        location: mostRecentLocation,
         jump_attempts: guestJumpsForIP,
       };
     });

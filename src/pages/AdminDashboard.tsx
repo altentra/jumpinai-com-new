@@ -89,6 +89,7 @@ interface GuestUser {
   remaining_uses: number;
   last_used_at: string;
   created_at: string;
+  location?: string;
   jump_attempts: Array<{
     id: string;
     title: string;
@@ -96,6 +97,8 @@ interface GuestUser {
     status: string;
     created_at: string;
     location?: string;
+    form_goals?: string;
+    form_challenges?: string;
   }>;
 }
 
@@ -757,12 +760,12 @@ export default function AdminDashboard() {
                   <div className="space-y-3">
                     {guestUsers.map((guest) => (
                       <Card key={guest.ip_address} className="p-4 border-l-4 border-l-muted">
-                        <div className="space-y-3">
+                          <div className="space-y-3">
                           <div className="flex items-center justify-between">
                             <div className="space-y-1">
                               <div className="flex items-center gap-2">
-                                <Badge variant="outline" className="font-mono text-xs">
-                                  {guest.ip_address}
+                                <Badge variant="outline" className="text-xs">
+                                  📍 {guest.location || 'Unknown Location'}
                                 </Badge>
                                 <Badge variant={guest.usage_count >= 3 ? 'destructive' : 'default'}>
                                   {guest.usage_count}/3 uses
@@ -800,34 +803,44 @@ export default function AdminDashboard() {
                               <h4 className="text-sm font-semibold mb-2">Jump Generation Attempts ({guest.jump_attempts.length})</h4>
                               <div className="space-y-2">
                                 {guest.jump_attempts.map((attempt) => (
-                                  <div key={attempt.id} className="p-3 bg-muted/30 rounded-lg space-y-2">
-                                    <div className="flex items-center justify-between">
-                                      <div className="flex items-center gap-2">
-                                        <Badge variant={attempt.status === 'active' ? 'default' : 'destructive'}>
-                                          {attempt.status === 'active' ? 'Success' : 'Failed'}
+                                <div key={attempt.id} className="p-3 bg-muted/30 rounded-lg space-y-2">
+                                  <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-2">
+                                      <Badge variant={attempt.status === 'active' ? 'default' : 'destructive'}>
+                                        {attempt.status === 'active' ? 'Success' : 'Failed'}
+                                      </Badge>
+                                      <span className="text-sm font-medium">{attempt.title}</span>
+                                      {attempt.location && (
+                                        <Badge variant="outline" className="text-xs">
+                                          {attempt.location}
                                         </Badge>
-                                        <span className="text-sm font-medium">{attempt.title}</span>
-                                        {attempt.location && (
-                                          <Badge variant="outline" className="text-xs">
-                                            {attempt.location}
-                                          </Badge>
-                                        )}
-                                      </div>
-                                      <span className="text-xs text-muted-foreground">
-                                        {new Date(attempt.created_at).toLocaleTimeString('en-US', {
-                                          timeZone: 'America/Los_Angeles',
-                                          hour: '2-digit',
-                                          minute: '2-digit'
-                                        })} PST
-                                      </span>
+                                      )}
                                     </div>
-                                    <div className="text-xs text-muted-foreground">
-                                      <div className="font-medium mb-1">Input Content:</div>
+                                    <span className="text-xs text-muted-foreground">
+                                      {new Date(attempt.created_at).toLocaleTimeString('en-US', {
+                                        timeZone: 'America/Los_Angeles',
+                                        hour: '2-digit',
+                                        minute: '2-digit'
+                                      })} PST
+                                    </span>
+                                  </div>
+                                  
+                                  {/* Form Inputs */}
+                                  <div className="space-y-2 text-xs">
+                                    <div>
+                                      <div className="font-medium text-muted-foreground mb-1">Goals:</div>
                                       <div className="bg-background/50 p-2 rounded border">
-                                        {attempt.full_content.substring(0, 200)}...
+                                        {attempt.form_goals || 'N/A'}
+                                      </div>
+                                    </div>
+                                    <div>
+                                      <div className="font-medium text-muted-foreground mb-1">Challenges:</div>
+                                      <div className="bg-background/50 p-2 rounded border">
+                                        {attempt.form_challenges || 'N/A'}
                                       </div>
                                     </div>
                                   </div>
+                                </div>
                                 ))}
                               </div>
                             </div>
