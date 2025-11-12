@@ -401,21 +401,9 @@ serve(async (req) => {
 
     // Build guest user activity data
     const guestUsers = guestTracking.map((gt: any) => {
-      // Get all guest jumps that might be from this IP
-      // Match jumps from the same day as the guest's last activity
-      const trackingDate = new Date(gt.last_used_at);
-      const startOfDay = new Date(trackingDate);
-      startOfDay.setHours(0, 0, 0, 0);
-      const endOfDay = new Date(trackingDate);
-      endOfDay.setHours(23, 59, 59, 999);
-      
-      const potentialGuestJumps = jumps
-        .filter((j: any) => {
-          if (j.user_id) return false; // Must be guest jump
-          const jumpDate = new Date(j.created_at);
-          // Match jumps from the same calendar day
-          return jumpDate >= startOfDay && jumpDate <= endOfDay;
-        })
+      // Get all guest jumps from this IP address (perfect match now that we store IP)
+      const guestJumpsForIP = jumps
+        .filter((j: any) => !j.user_id && j.ip_address === gt.ip_address)
         .sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
         .map((j: any) => ({
           id: j.id,
@@ -423,6 +411,7 @@ serve(async (req) => {
           full_content: j.full_content,
           status: j.status,
           created_at: j.created_at,
+          location: j.location,
         }));
 
       return {
@@ -432,7 +421,7 @@ serve(async (req) => {
         remaining_uses: Math.max(0, 3 - gt.usage_count),
         last_used_at: gt.last_used_at,
         created_at: gt.created_at,
-        jump_attempts: potentialGuestJumps,
+        jump_attempts: guestJumpsForIP,
       };
     });
 
@@ -445,6 +434,8 @@ serve(async (req) => {
         full_content: j.full_content,
         status: j.status,
         created_at: j.created_at,
+        ip_address: j.ip_address,
+        location: j.location,
       }));
 
     const payload = {

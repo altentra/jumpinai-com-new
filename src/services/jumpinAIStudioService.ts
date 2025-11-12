@@ -112,6 +112,12 @@ export const jumpinAIStudioService = {
                 result.jumpName = data.jumpName;
                 console.log('✅ Jump name received:', data.jumpName);
                 
+                // Extract metadata from response
+                const metadata = data._metadata || {};
+                const jumpIpAddress = metadata.ipAddress;
+                const jumpLocation = metadata.location;
+                console.log('📍 Jump metadata:', { jumpIpAddress, jumpLocation });
+                
                 if (onProgress) {
                   onProgress(step, type, data);
                 }
@@ -132,7 +138,9 @@ export const jumpinAIStudioService = {
                           summary: `AI Transformation: ${result.jumpName}`,
                           full_content: JSON.stringify({ jumpName: result.jumpName }),
                           completion_percentage: 5,
-                          status: 'generating'
+                          status: 'generating',
+                          ip_address: jumpIpAddress,
+                          location: jumpLocation
                         })
                         .select()
                         .single();
@@ -140,7 +148,7 @@ export const jumpinAIStudioService = {
                       if (!error && savedJump) {
                         jumpId = savedJump.id;
                         result.jumpId = jumpId;
-                        console.log('✅ Jump created with ID:', jumpId);
+                        console.log('✅ Jump created with ID:', jumpId, 'from', jumpLocation);
                         
                         if (onProgress) {
                           onProgress(step, 'jump_created', { jumpId, jumpNumber, fullTitle });
@@ -152,7 +160,7 @@ export const jumpinAIStudioService = {
                   })();
                 } else {
                   // For guest users, send jump_created event with temp ID
-                  console.log('✅ Guest jump using temp ID:', jumpId);
+                  console.log('✅ Guest jump using temp ID:', jumpId, 'from', jumpLocation);
                   if (onProgress) {
                     onProgress(step, 'jump_created', { 
                       jumpId, 

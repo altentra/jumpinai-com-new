@@ -618,7 +618,9 @@ export type Database = {
           full_content: string
           id: string
           implemented: boolean | null
+          ip_address: string | null
           jump_type: string | null
+          location: string | null
           max_clarification_level: number | null
           profile_id: string | null
           prompts_copied_count: number | null
@@ -641,7 +643,9 @@ export type Database = {
           full_content: string
           id?: string
           implemented?: boolean | null
+          ip_address?: string | null
           jump_type?: string | null
+          location?: string | null
           max_clarification_level?: number | null
           profile_id?: string | null
           prompts_copied_count?: number | null
@@ -664,7 +668,9 @@ export type Database = {
           full_content?: string
           id?: string
           implemented?: boolean | null
+          ip_address?: string | null
           jump_type?: string | null
+          location?: string | null
           max_clarification_level?: number | null
           profile_id?: string | null
           prompts_copied_count?: number | null

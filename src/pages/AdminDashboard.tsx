@@ -93,6 +93,7 @@ interface GuestUser {
     full_content: string;
     status: string;
     created_at: string;
+    location?: string;
   }>;
 }
 
@@ -102,6 +103,8 @@ interface GuestJump {
   full_content: string;
   status: string;
   created_at: string;
+  ip_address?: string;
+  location?: string;
 }
 
 interface RecentOrder {
@@ -788,6 +791,11 @@ export default function AdminDashboard() {
                                           {attempt.status === 'active' ? 'Success' : 'Failed'}
                                         </Badge>
                                         <span className="text-sm font-medium">{attempt.title}</span>
+                                        {attempt.location && (
+                                          <Badge variant="outline" className="text-xs">
+                                            {attempt.location}
+                                          </Badge>
+                                        )}
                                       </div>
                                       <span className="text-xs text-muted-foreground">
                                         {new Date(attempt.created_at).toLocaleTimeString('en-US', {
@@ -844,7 +852,7 @@ export default function AdminDashboard() {
                         <TableHead>Title</TableHead>
                         <TableHead>Status</TableHead>
                         <TableHead>Content Preview</TableHead>
-                        <TableHead>Date/Time (PST)</TableHead>
+                        <TableHead>Location & Time (PST)</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -864,14 +872,18 @@ export default function AdminDashboard() {
                             </p>
                           </TableCell>
                           <TableCell className="text-sm">
-                            {new Date(jump.created_at).toLocaleString('en-US', {
-                              timeZone: 'America/Los_Angeles',
-                              month: 'short',
-                              day: 'numeric',
-                              year: 'numeric',
-                              hour: '2-digit',
-                              minute: '2-digit'
-                            })} PST
+                            <div>{jump.location || 'Unknown'}</div>
+                            <div className="text-xs text-muted-foreground font-mono">{jump.ip_address}</div>
+                            <div className="text-xs text-muted-foreground">
+                              {new Date(jump.created_at).toLocaleString('en-US', {
+                                timeZone: 'America/Los_Angeles',
+                                month: 'short',
+                                day: 'numeric',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              })} PST
+                            </div>
                           </TableCell>
                         </TableRow>
                       ))}

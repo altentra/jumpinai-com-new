@@ -47,8 +47,20 @@ async function logApiUsage(
 
 serve(async (req) => {
   const startTime = Date.now();
-  const ipAddress = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+  const ipAddress = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() 
+    || req.headers.get('x-real-ip') 
+    || req.headers.get('cf-connecting-ip')
+    || 'unknown';
   const userAgent = req.headers.get('user-agent') || 'unknown';
+  
+  // Try to get location from Cloudflare headers if available
+  const cfCountry = req.headers.get('cf-ipcountry') || '';
+  const cfCity = req.headers.get('cf-ipcity') || '';
+  const location = cfCity && cfCountry 
+    ? `${cfCity}, ${cfCountry}` 
+    : cfCountry || 'Unknown';
+  
+  console.log('📍 Request info:', { ipAddress, location, userAgent: userAgent.substring(0, 50) });
   
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -211,7 +223,18 @@ serve(async (req) => {
           console.log('Step 1: Generating jump name...');
           const namingResponse = await callXAI(XAI_API_KEY, 1, formData, '');
           console.log('Naming response:', namingResponse);
-          sendEvent(1, 'naming', namingResponse);
+          
+          // Include IP and location metadata in the naming response
+          const namingWithMeta = {
+            ...namingResponse,
+            _metadata: {
+              ipAddress,
+              location,
+              userAgent: userAgent.substring(0, 200) // Truncate for storage
+            }
+          };
+          
+          sendEvent(1, 'naming', namingWithMeta);
           
           // Step 2: Generate Overview & Plan
           console.log('Step 2: Generating overview...');
