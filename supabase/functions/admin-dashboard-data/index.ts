@@ -61,28 +61,34 @@ serve(async (req) => {
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
     // Fetch data in parallel
-    const [profilesRes, ordersRes, subscribersRes, contactsRes, leadRes, productsRes] = await Promise.all([
+    const [profilesRes, ordersRes, subscribersRes, contactsRes, productsRes, jumpsRes, creditsRes, transactionsRes] = await Promise.all([
       supabase.from("profiles").select("id, display_name, avatar_url, created_at, email_verified"),
       supabase.from("orders").select("id, product_id, amount, status, created_at, user_email, download_count"),
       supabase.from("subscribers").select("id, user_id, email, subscribed, subscription_end, subscription_tier, created_at"),
       supabase.from("contacts").select("id, email, first_name, last_name, source, status, newsletter_subscribed, lead_magnet_downloaded, tags, created_at"),
-      supabase.from("lead_magnet_downloads").select("id, email, downloaded_at, pdf_name, ip_address, user_agent"),
       supabase.from("products").select("id, name, file_name"),
+      supabase.from("user_jumps").select("id, user_id, title, full_content, status, created_at").order('created_at', { ascending: false }).limit(200),
+      supabase.from("user_credits").select("id, user_id, credits_balance, total_credits_purchased"),
+      supabase.from("credit_transactions").select("id, user_id, transaction_type, credits_amount, description, created_at").order('created_at', { ascending: false }),
     ]);
 
     if (profilesRes.error) throw profilesRes.error;
     if (ordersRes.error) throw ordersRes.error;
     if (subscribersRes.error) throw subscribersRes.error;
     if (contactsRes.error) throw contactsRes.error;
-    if (leadRes.error) throw leadRes.error;
     if (productsRes.error) throw productsRes.error;
+    if (jumpsRes.error) throw jumpsRes.error;
+    if (creditsRes.error) throw creditsRes.error;
+    if (transactionsRes.error) throw transactionsRes.error;
 
     const profiles = profilesRes.data ?? [];
     const orders = ordersRes.data ?? [];
     const subscribers = subscribersRes.data ?? [];
     const contacts = contactsRes.data ?? [];
-    const leadDownloads = leadRes.data ?? [];
     const products = productsRes.data ?? [];
+    const jumps = jumpsRes.data ?? [];
+    const userCredits = creditsRes.data ?? [];
+    const creditTransactions = transactionsRes.data ?? [];
 
     // Create product map for lookups
     const productById = new Map(products.map((p: any) => [p.id, p]));
@@ -108,6 +114,14 @@ serve(async (req) => {
 
     // Filter paid subscribers early for stats calculation - only real active Stripe subscribers
     const paidSubscribers = subscribers.filter(s => s.subscribed);
+    const starterSubscribers = paidSubscribers.filter(s => s.subscription_tier === 'JumpinAI Starter');
+    const proSubscribers = paidSubscribers.filter(s => s.subscription_tier === 'JumpinAI Pro');
+    const growthSubscribers = paidSubscribers.filter(s => s.subscription_tier === 'JumpinAI Growth');
+
+    // Jump stats
+    const successfulJumps = jumps.filter(j => j.status === 'active');
+    const failedJumps = jumps.filter(j => j.status !== 'active');
+    const guestJumps = jumps.filter(j => !j.user_id);
 
     const now = new Date();
     const currentMonth = now.getMonth();
@@ -129,11 +143,17 @@ serve(async (req) => {
     const stats = {
       totalUsers: profiles.length,
       totalSubscribers: paidSubscribers.length, // Only count actual paid subscribers
+      starterSubscribers: starterSubscribers.length,
+      proSubscribers: proSubscribers.length,
+      growthSubscribers: growthSubscribers.length,
       totalOrders: paidOrders.length, // Only count actually paid orders
       totalRevenue: totalRevenueCents / 100,
       totalContacts: contacts.length,
       totalNewsletterSubscribers: contacts.filter((c) => c.newsletter_subscribed).length,
-      totalLeadMagnetDownloads: leadDownloads.length,
+      totalJumps: jumps.length,
+      successfulJumps: successfulJumps.length,
+      failedJumps: failedJumps.length,
+      guestJumps: guestJumps.length,
       abandonedCarts: orders.filter((o) => o.status === "pending").length,
       completedOrders: paidOrders.length,
       // Add breakdown of revenue and orders
@@ -292,6 +312,44 @@ serve(async (req) => {
       return events;
     }).sort((a, b) => b.timestamp - a.timestamp).slice(0, 100);
 
+    // Format jump generations with user info
+    const jumpGenerations = jumps.map((j: any) => {
+      const userProfile = profiles.find((p: any) => p.id === j.user_id);
+      const userAuth = authById.get(j.user_id);
+      const userSub = subscribers.find((s: any) => s.user_id === j.user_id);
+      
+      return {
+        id: j.id,
+        user_id: j.user_id,
+        user_email: userAuth?.email || userSub?.email || null,
+        title: j.title,
+        full_content: j.full_content,
+        status: j.status,
+        created_at: j.created_at,
+        is_guest: !j.user_id,
+        // We don't have IP/location data stored, but structure is here for future
+        ip_address: null,
+        location: null,
+      };
+    });
+
+    // Build credit overviews
+    const creditOverviews = userCredits.map((uc: any) => {
+      const userAuth = authById.get(uc.user_id);
+      const userSub = subscribers.find((s: any) => s.user_id === uc.user_id);
+      const userTransactions = creditTransactions
+        .filter((t: any) => t.user_id === uc.user_id)
+        .slice(0, 10); // Get recent 10 transactions per user
+      
+      return {
+        user_id: uc.user_id,
+        user_email: userAuth?.email || userSub?.email || 'Unknown',
+        credits_balance: uc.credits_balance,
+        total_credits_purchased: uc.total_credits_purchased,
+        recent_transactions: userTransactions,
+      };
+    });
+
     const payload = {
       stats,
       recentOrders,
@@ -299,6 +357,8 @@ serve(async (req) => {
       contacts: contactsSorted,
       users,
       authLogs,
+      jumpGenerations,
+      creditOverviews,
     };
 
     return new Response(JSON.stringify(payload), {

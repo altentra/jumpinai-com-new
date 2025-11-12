@@ -30,16 +30,51 @@ import ThemeToggle from "@/components/ThemeToggle";
 interface AdminStats {
   totalUsers: number;
   totalSubscribers: number;
+  starterSubscribers: number;
+  proSubscribers: number;
+  growthSubscribers: number;
   totalOrders: number;
   totalRevenue: number;
   totalContacts: number;
   totalNewsletterSubscribers: number;
-  totalLeadMagnetDownloads: number;
+  totalJumps: number;
+  successfulJumps: number;
+  failedJumps: number;
+  guestJumps: number;
   abandonedCarts: number;
   completedOrders: number;
   monthlyRevenue: number;
   dailyRevenue: number;
   averageOrderValue: number;
+}
+
+interface JumpGeneration {
+  id: string;
+  user_id: string | null;
+  user_email: string | null;
+  title: string;
+  full_content: string;
+  status: string;
+  created_at: string;
+  ip_address?: string;
+  location?: string;
+  is_guest: boolean;
+}
+
+interface CreditOverview {
+  user_id: string;
+  user_email: string;
+  credits_balance: number;
+  total_credits_purchased: number;
+  recent_transactions: CreditTransaction[];
+}
+
+interface CreditTransaction {
+  id: string;
+  transaction_type: string;
+  credits_amount: number;
+  description: string;
+  created_at: string;
 }
 
 interface RecentOrder {
@@ -127,11 +162,17 @@ export default function AdminDashboard() {
   const [stats, setStats] = useState<AdminStats>({
     totalUsers: 0,
     totalSubscribers: 0,
+    starterSubscribers: 0,
+    proSubscribers: 0,
+    growthSubscribers: 0,
     totalOrders: 0,
     totalRevenue: 0,
     totalContacts: 0,
     totalNewsletterSubscribers: 0,
-    totalLeadMagnetDownloads: 0,
+    totalJumps: 0,
+    successfulJumps: 0,
+    failedJumps: 0,
+    guestJumps: 0,
     abandonedCarts: 0,
     completedOrders: 0,
     monthlyRevenue: 0,
@@ -144,6 +185,8 @@ export default function AdminDashboard() {
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [authLogs, setAuthLogs] = useState<AuthLog[]>([]);
   const [users, setUsers] = useState<User[]>([]);
+  const [jumpGenerations, setJumpGenerations] = useState<JumpGeneration[]>([]);
+  const [creditOverviews, setCreditOverviews] = useState<CreditOverview[]>([]);
   const [loading, setLoading] = useState(true);
   const [syncing, setSyncing] = useState(false);
   
@@ -346,6 +389,8 @@ export default function AdminDashboard() {
       setContacts(data.contacts);
       setUsers(data.users);
       setAuthLogs(data.authLogs);
+      setJumpGenerations(data.jumpGenerations || []);
+      setCreditOverviews(data.creditOverviews || []);
     } catch (error) {
       console.error('Error fetching admin data:', error);
       toast.error('Failed to load admin data');
@@ -440,12 +485,14 @@ export default function AdminDashboard() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Pro Subscribers</CardTitle>
+            <CardTitle className="text-sm font-medium">Paid Subscribers</CardTitle>
             <Crown className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-primary">{stats.totalSubscribers}</div>
-            <p className="text-xs text-muted-foreground">Active subscriptions</p>
+            <p className="text-xs text-muted-foreground">
+              Starter: {stats.starterSubscribers} | Pro: {stats.proSubscribers} | Growth: {stats.growthSubscribers}
+            </p>
           </CardContent>
         </Card>
 
@@ -488,12 +535,14 @@ export default function AdminDashboard() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Lead Downloads</CardTitle>
-            <Download className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Jump Generations</CardTitle>
+            <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.totalLeadMagnetDownloads}</div>
-            <p className="text-xs text-muted-foreground">Lead magnet downloads</p>
+            <div className="text-2xl font-bold">{stats.totalJumps}</div>
+            <p className="text-xs text-muted-foreground">
+              Success: {stats.successfulJumps} | Failed: {stats.failedJumps} | Guest: {stats.guestJumps}
+            </p>
           </CardContent>
         </Card>
 
@@ -521,14 +570,165 @@ export default function AdminDashboard() {
       </div>
 
       {/* Detailed Tables */}
-      <Tabs defaultValue="orders" className="space-y-4">
+      <Tabs defaultValue="jumps" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="orders">Recent Orders</TabsTrigger>
+          <TabsTrigger value="jumps">Jump Generations</TabsTrigger>
+          <TabsTrigger value="credits">Credits Overview</TabsTrigger>
+          <TabsTrigger value="orders">Orders</TabsTrigger>
           <TabsTrigger value="subscribers">Subscribers</TabsTrigger>
           <TabsTrigger value="contacts">Contacts</TabsTrigger>
           <TabsTrigger value="users">All Users</TabsTrigger>
           <TabsTrigger value="auth-logs">Login Logs</TabsTrigger>
         </TabsList>
+
+        <TabsContent value="jumps">
+          <Card>
+            <CardHeader>
+              <CardTitle>Jump Generation Logs ({stats.totalJumps})</CardTitle>
+              <p className="text-sm text-muted-foreground">
+                Track all jump generation attempts including successes, failures, and guest usage
+              </p>
+            </CardHeader>
+            <CardContent>
+              {jumpGenerations.length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  <TrendingUp className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                  <p className="text-lg font-medium mb-2">No jump generations yet</p>
+                  <p className="text-sm">Jump generation logs will appear here</p>
+                </div>
+              ) : (
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>User</TableHead>
+                      <TableHead>Title</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Type</TableHead>
+                      <TableHead>Location</TableHead>
+                      <TableHead>Date/Time (PST)</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {jumpGenerations.map((jump) => (
+                      <TableRow key={jump.id}>
+                        <TableCell>
+                          {jump.is_guest ? (
+                            <div>
+                              <Badge variant="outline">Guest</Badge>
+                              {jump.ip_address && (
+                                <p className="text-xs text-muted-foreground mt-1">
+                                  IP: {jump.ip_address}
+                                </p>
+                              )}
+                            </div>
+                          ) : (
+                            <div className="font-medium">{jump.user_email || 'Unknown'}</div>
+                          )}
+                        </TableCell>
+                        <TableCell className="max-w-xs truncate">
+                          {jump.title}
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant={jump.status === 'active' ? 'default' : 'destructive'}>
+                            {jump.status === 'active' ? 'Success' : 'Failed'}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant={jump.is_guest ? 'secondary' : 'default'}>
+                            {jump.is_guest ? 'Guest' : 'User'}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-sm">
+                          {jump.location || '-'}
+                        </TableCell>
+                        <TableCell className="text-sm">
+                          {new Date(jump.created_at).toLocaleString('en-US', {
+                            timeZone: 'America/Los_Angeles',
+                            month: 'short',
+                            day: 'numeric',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                          })}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="credits">
+          <Card>
+            <CardHeader>
+              <CardTitle>Credits Overview</CardTitle>
+              <p className="text-sm text-muted-foreground">
+                Monitor user credit balances and transaction history
+              </p>
+            </CardHeader>
+            <CardContent>
+              {creditOverviews.length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  <CreditCard className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                  <p className="text-lg font-medium mb-2">No credit data yet</p>
+                  <p className="text-sm">User credit information will appear here</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {creditOverviews.map((overview) => (
+                    <Card key={overview.user_id} className="p-4">
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="font-medium text-lg">{overview.user_email}</p>
+                            <div className="flex gap-2 mt-1">
+                              <Badge variant="default" className="bg-primary">
+                                Balance: {overview.credits_balance} credits
+                              </Badge>
+                              <Badge variant="secondary">
+                                Purchased: {overview.total_credits_purchased} credits
+                              </Badge>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {overview.recent_transactions.length > 0 && (
+                          <div className="pt-2 border-t">
+                            <p className="text-sm font-medium mb-2">Recent Transactions</p>
+                            <div className="space-y-1">
+                              {overview.recent_transactions.slice(0, 5).map((transaction) => (
+                                <div key={transaction.id} className="flex items-center justify-between text-sm">
+                                  <div className="flex items-center gap-2">
+                                    <Badge variant="outline" className="text-xs">
+                                      {transaction.transaction_type}
+                                    </Badge>
+                                    <span className="text-muted-foreground">
+                                      {transaction.description}
+                                    </span>
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    <span className={transaction.credits_amount > 0 ? 'text-green-600 font-medium' : 'text-red-600 font-medium'}>
+                                      {transaction.credits_amount > 0 ? '+' : ''}{transaction.credits_amount}
+                                    </span>
+                                    <span className="text-xs text-muted-foreground">
+                                      {new Date(transaction.created_at).toLocaleDateString()}
+                                    </span>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </Card>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
 
         <TabsContent value="orders">
           <Card>
@@ -648,14 +848,10 @@ export default function AdminDashboard() {
               <CardTitle>All Contacts ({stats.totalContacts})</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="mb-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="text-center p-4 bg-muted rounded-lg">
                   <div className="text-2xl font-bold">{stats.totalNewsletterSubscribers}</div>
                   <p className="text-sm text-muted-foreground">Newsletter Subscribers</p>
-                </div>
-                <div className="text-center p-4 bg-muted rounded-lg">
-                  <div className="text-2xl font-bold">{stats.totalLeadMagnetDownloads}</div>
-                  <p className="text-sm text-muted-foreground">Lead Magnet Downloads</p>
                 </div>
                 <div className="text-center p-4 bg-muted rounded-lg">
                   <div className="text-2xl font-bold">{stats.totalContacts}</div>
@@ -671,7 +867,6 @@ export default function AdminDashboard() {
                     <TableHead>Source</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead>Newsletter</TableHead>
-                    <TableHead>Lead Magnet</TableHead>
                     <TableHead>Created</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -695,9 +890,6 @@ export default function AdminDashboard() {
                       </TableCell>
                       <TableCell>
                         {contact.newsletter_subscribed ? '✅' : '❌'}
-                      </TableCell>
-                      <TableCell>
-                        {contact.lead_magnet_downloaded ? '✅' : '❌'}
                       </TableCell>
                       <TableCell>
                         {new Date(contact.created_at).toLocaleDateString()}
@@ -747,11 +939,11 @@ export default function AdminDashboard() {
                   <p className="text-sm text-muted-foreground">Newsletter Subscribers</p>
                 </div>
                 <div className="text-center p-4 bg-muted rounded-lg">
-                  <Download className="h-6 w-6 mx-auto mb-2 text-purple-600" />
+                  <TrendingUp className="h-6 w-6 mx-auto mb-2 text-purple-600" />
                   <div className="text-2xl font-bold">
-                    {users.filter(user => user.lead_magnet_downloaded).length}
+                    {stats.totalJumps}
                   </div>
-                  <p className="text-sm text-muted-foreground">Lead Downloads</p>
+                  <p className="text-sm text-muted-foreground">Total Jumps</p>
                 </div>
               </div>
               
