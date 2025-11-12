@@ -62,6 +62,8 @@ interface JumpGeneration {
   ip_address?: string;
   location?: string;
   is_guest: boolean;
+  form_goals?: string;
+  form_challenges?: string;
 }
 
 interface CreditOverview {
@@ -665,6 +667,8 @@ export default function AdminDashboard() {
                       <TableHead>Title</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead>Type</TableHead>
+                      <TableHead>Goals Input</TableHead>
+                      <TableHead>Challenges Input</TableHead>
                       <TableHead>Location</TableHead>
                       <TableHead>Date/Time (PST)</TableHead>
                     </TableRow>
@@ -698,6 +702,16 @@ export default function AdminDashboard() {
                           <Badge variant={jump.is_guest ? 'secondary' : 'default'}>
                             {jump.is_guest ? 'Guest' : 'User'}
                           </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <div className="max-w-xs text-sm" title={jump.form_goals || 'N/A'}>
+                            <p className="truncate">{jump.form_goals || 'N/A'}</p>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="max-w-xs text-sm" title={jump.form_challenges || 'N/A'}>
+                            <p className="truncate">{jump.form_challenges || 'N/A'}</p>
+                          </div>
                         </TableCell>
                         <TableCell className="text-sm">
                           {jump.location || '-'}

@@ -146,7 +146,9 @@ export const jumpinAIStudioService = {
                           completion_percentage: 5,
                           status: 'generating',
                           ip_address: ipAddress,
-                          location: location
+                          location: location,
+                          form_goals: formData.goals,
+                          form_challenges: formData.challenges
                         })
                         .select()
                         .single();
@@ -167,7 +169,9 @@ export const jumpinAIStudioService = {
                           completion_percentage: 5,
                           status: 'generating',
                           ip_address: ipAddress,
-                          location: location
+                          location: location,
+                          form_goals: formData.goals,
+                          form_challenges: formData.challenges
                         })
                         .select()
                         .single();

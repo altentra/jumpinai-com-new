@@ -615,6 +615,8 @@ export type Database = {
           completion_percentage: number | null
           comprehensive_plan: Json | null
           created_at: string
+          form_challenges: string | null
+          form_goals: string | null
           full_content: string
           id: string
           implemented: boolean | null
@@ -640,6 +642,8 @@ export type Database = {
           completion_percentage?: number | null
           comprehensive_plan?: Json | null
           created_at?: string
+          form_challenges?: string | null
+          form_goals?: string | null
           full_content: string
           id?: string
           implemented?: boolean | null
@@ -665,6 +669,8 @@ export type Database = {
           completion_percentage?: number | null
           comprehensive_plan?: Json | null
           created_at?: string
+          form_challenges?: string | null
+          form_goals?: string | null
           full_content?: string
           id?: string
           implemented?: boolean | null

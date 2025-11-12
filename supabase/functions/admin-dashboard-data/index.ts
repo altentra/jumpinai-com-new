@@ -67,7 +67,7 @@ serve(async (req) => {
       supabase.from("subscribers").select("id, user_id, email, subscribed, subscription_end, subscription_tier, created_at, stripe_customer_id"),
       supabase.from("contacts").select("id, email, first_name, last_name, source, status, newsletter_subscribed, lead_magnet_downloaded, tags, created_at"),
       supabase.from("products").select("id, name, file_name"),
-      supabase.from("user_jumps").select("id, user_id, title, full_content, status, created_at, ip_address, location").order('created_at', { ascending: false }).limit(200),
+      supabase.from("user_jumps").select("id, user_id, title, full_content, status, created_at, ip_address, location, form_goals, form_challenges").order('created_at', { ascending: false }).limit(200),
       supabase.from("user_credits").select("id, user_id, credits_balance, total_credits_purchased"),
       supabase.from("credit_transactions").select("id, user_id, transaction_type, credits_amount, description, created_at").order('created_at', { ascending: false }),
       supabase.from("subscription_audit_log").select("id, user_id, email, action, old_data, new_data, created_at, changed_by, change_source").order('created_at', { ascending: false }),
@@ -384,6 +384,8 @@ serve(async (req) => {
         is_guest: !j.user_id,
         ip_address: j.ip_address || null,
         location: j.location || null,
+        form_goals: j.form_goals || null,
+        form_challenges: j.form_challenges || null,
       };
     });
 
