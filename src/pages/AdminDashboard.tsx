@@ -831,7 +831,7 @@ export default function AdminDashboard() {
                             </div>
                           </div>
                           <div className="text-right space-y-1">
-                            <div className="text-2xl font-bold">${sub.total_subscription_paid.toFixed(2)}</div>
+                            <div className="text-2xl font-bold">${(sub.total_subscription_paid || 0).toFixed(2)}</div>
                             <div className="text-sm text-muted-foreground">Total Subscription Revenue</div>
                           </div>
                         </div>
@@ -884,9 +884,9 @@ export default function AdminDashboard() {
                         </div>
 
                         {/* Payment History */}
-                        {sub.subscription_payment_history.length > 0 && (
+                        {sub.subscription_payment_history && sub.subscription_payment_history.length > 0 && (
                           <div>
-                            <h4 className="font-semibold mb-2">Payment History ({sub.subscription_payments} payments)</h4>
+                            <h4 className="font-semibold mb-2">Payment History ({sub.subscription_payments || 0} payments)</h4>
                             <div className="space-y-2">
                               {sub.subscription_payment_history.map((payment) => (
                                 <div key={payment.id} className="flex items-center justify-between p-2 bg-muted/30 rounded">
@@ -902,7 +902,7 @@ export default function AdminDashboard() {
                                       })}
                                     </div>
                                   </div>
-                                  <div className="font-bold text-green-600">${payment.amount.toFixed(2)}</div>
+                                  <div className="font-bold text-green-600">${(payment.amount || 0).toFixed(2)}</div>
                                 </div>
                               ))}
                             </div>
@@ -910,7 +910,7 @@ export default function AdminDashboard() {
                         )}
 
                         {/* Audit Logs */}
-                        {sub.audit_logs.length > 0 && (
+                        {sub.audit_logs && sub.audit_logs.length > 0 && (
                           <div>
                             <h4 className="font-semibold mb-2">Subscription Activity Log ({sub.audit_logs.length} events)</h4>
                             <div className="space-y-2 max-h-60 overflow-y-auto">
@@ -955,10 +955,10 @@ export default function AdminDashboard() {
                         {/* Additional Stats */}
                         <div className="flex items-center justify-between pt-2 border-t">
                           <div className="text-sm text-muted-foreground">
-                            Total Orders: {sub.completed_orders} | Product Purchases: {sub.product_purchases} | Downloads: {sub.total_downloads}
+                            Total Orders: {sub.completed_orders || 0} | Product Purchases: {sub.product_purchases || 0} | Downloads: {sub.total_downloads || 0}
                           </div>
                           <div className="text-sm font-medium">
-                            All-Time Revenue: ${sub.total_paid.toFixed(2)}
+                            All-Time Revenue: ${(sub.total_paid || 0).toFixed(2)}
                           </div>
                         </div>
                       </CardContent>
