@@ -39,19 +39,6 @@ export const jumpinAIStudioService = {
     onProgress?: (step: number, type: string, data: any) => void
   ): Promise<GenerationResult> {
     return new Promise(async (resolve, reject) => {
-      // Get IP and location data first
-      let ipAddress = 'unknown';
-      let location = 'Unknown';
-      try {
-        const ipResponse = await supabase.functions.invoke('get-client-ip');
-        if (ipResponse.data) {
-          ipAddress = ipResponse.data.ip || 'unknown';
-          location = ipResponse.data.location || 'Unknown';
-        }
-      } catch (error) {
-        console.error('Failed to get IP/location:', error);
-      }
-      
       // For guest users, generate a temporary jump ID so features like clarify/reroute work
       const tempJumpId = crypto.randomUUID();
       
@@ -69,6 +56,8 @@ export const jumpinAIStudioService = {
       };
 
       let jumpId: string | undefined = userId ? undefined : tempJumpId;
+      let ipAddress = 'unknown';
+      let location = 'Unknown';
 
       // Get the session for auth token (optional for guests)
       const { data: { session } } = await supabase.auth.getSession();
@@ -123,8 +112,15 @@ export const jumpinAIStudioService = {
 
               if (type === 'naming') {
                 result.jumpName = data.jumpName;
+                
+                // Extract IP and location from metadata if available
+                if (data._metadata) {
+                  ipAddress = data._metadata.ipAddress || 'unknown';
+                  location = data._metadata.location || 'Unknown';
+                  console.log('📍 Extracted location from backend:', { ipAddress, location });
+                }
+                
                 console.log('✅ Jump name received:', data.jumpName);
-                console.log('📍 Jump metadata:', { ipAddress, location });
                 
                 if (onProgress) {
                   onProgress(step, type, data);

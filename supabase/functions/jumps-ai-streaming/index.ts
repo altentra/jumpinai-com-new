@@ -53,12 +53,25 @@ serve(async (req) => {
     || 'unknown';
   const userAgent = req.headers.get('user-agent') || 'unknown';
   
-  // Try to get location from Cloudflare headers if available
-  const cfCountry = req.headers.get('cf-ipcountry') || '';
-  const cfCity = req.headers.get('cf-ipcity') || '';
-  const location = cfCity && cfCountry 
-    ? `${cfCity}, ${cfCountry}` 
-    : cfCountry || 'Unknown';
+  // Get location from IP using ip-api.com
+  let location = 'Unknown';
+  if (ipAddress !== 'unknown' && ipAddress !== '127.0.0.1' && !ipAddress.startsWith('192.168.') && !ipAddress.startsWith('10.')) {
+    try {
+      const geoResponse = await fetch(`http://ip-api.com/json/${ipAddress}?fields=status,country,regionName,city`);
+      if (geoResponse.ok) {
+        const geoData = await geoResponse.json();
+        if (geoData.status === 'success') {
+          const parts = [];
+          if (geoData.city) parts.push(geoData.city);
+          if (geoData.regionName) parts.push(geoData.regionName);
+          if (geoData.country) parts.push(geoData.country);
+          location = parts.join(', ') || 'Unknown';
+        }
+      }
+    } catch (geoError) {
+      console.error('Geolocation error:', geoError);
+    }
+  }
   
   console.log('📍 Request info:', { ipAddress, location, userAgent: userAgent.substring(0, 50) });
   
