@@ -131,8 +131,30 @@ export const guestLimitService = {
         const newCount = currentSessionCount ? parseInt(currentSessionCount, 10) + 1 : 1;
         sessionStorage.setItem('jumpinai_session_count', newCount.toString());
       } catch (fallbackError) {
-        console.error('Error in fallback usage recording:', fallbackError);
+      console.error('Error in fallback usage recording:', fallbackError);
       }
+    }
+  },
+
+  // ADMIN FUNCTION: Clear all guest limit tracking (localStorage + sessionStorage)
+  clearAllGuestLimits(): void {
+    try {
+      // Clear all localStorage keys related to guest usage
+      const keysToRemove: string[] = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith('jumpinai_guest_usage_')) {
+          keysToRemove.push(key);
+        }
+      }
+      keysToRemove.forEach(key => localStorage.removeItem(key));
+      
+      // Clear session storage
+      sessionStorage.removeItem('jumpinai_session_count');
+      
+      console.log('All guest limit tracking cleared from browser storage');
+    } catch (error) {
+      console.error('Error clearing guest limits:', error);
     }
   }
 };

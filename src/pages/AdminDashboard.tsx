@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
+import { guestLimitService } from "@/services/guestLimitService";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -251,6 +252,7 @@ export default function AdminDashboard() {
   const [allGuestJumps, setAllGuestJumps] = useState<GuestJump[]>([]);
   const [loading, setLoading] = useState(true);
   const [syncing, setSyncing] = useState(false);
+  const [resettingGuests, setResettingGuests] = useState(false);
   
   const { user, isAuthenticated, isLoading } = useAuth();
   const navigate = useNavigate();
@@ -537,6 +539,29 @@ export default function AdminDashboard() {
       toast.error('Failed to sync to Google Sheets');
     } finally {
       setSyncing(false);
+    }
+  };
+
+  const resetGuestUsers = async () => {
+    setResettingGuests(true);
+    try {
+      // Call the edge function to clear database records
+      const { data, error } = await supabase.functions.invoke('reset-guest-users');
+      
+      if (error) throw error;
+      
+      // Clear all client-side guest limit tracking
+      guestLimitService.clearAllGuestLimits();
+      
+      toast.success(`Successfully reset guest users. ${data.resetCount || 0} records cleared from database and browser storage.`);
+      
+      // Refresh the admin data to reflect changes
+      await fetchAdminData();
+    } catch (error) {
+      console.error('Reset error:', error);
+      toast.error('Failed to reset guest users');
+    } finally {
+      setResettingGuests(false);
     }
   };
 
@@ -901,10 +926,32 @@ export default function AdminDashboard() {
         <TabsContent value="guests">
           <Card>
             <CardHeader>
-              <CardTitle>Guest Users Activity</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Track all guest user activity, jump attempts, usage limits, and detailed logs
-              </p>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle>Guest Users Activity</CardTitle>
+                  <p className="text-sm text-muted-foreground">
+                    Track all guest user activity, jump attempts, usage limits, and detailed logs
+                  </p>
+                </div>
+                <Button 
+                  onClick={resetGuestUsers} 
+                  disabled={resettingGuests}
+                  variant="destructive"
+                  size="sm"
+                >
+                  {resettingGuests ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Resetting...
+                    </>
+                  ) : (
+                    <>
+                      <RefreshCcw className="h-4 w-4 mr-2" />
+                      Reset All Guest Limits
+                    </>
+                  )}
+                </Button>
+              </div>
             </CardHeader>
             <CardContent className="space-y-6">
               {/* Guest Usage Tracking */}
