@@ -20,6 +20,7 @@ export interface GenerationResult {
   jumpName?: string;
   jumpNumber?: number;
   fullTitle?: string;
+  title?: string;
   fullContent: string;
   structuredPlan?: any;
   comprehensivePlan?: any;
@@ -153,7 +154,7 @@ export const jumpinAIStudioService = {
                     result.jumpId = jumpId;
                     console.log('✅ Jump created with ID:', jumpId);
                   } else {
-                    // Guest user: Save with simple title format
+                    // Guest user: Save with simple title format (no Jump #)
                     const { data: savedJump, error } = await supabase
                       .from('user_jumps')
                       .insert({
@@ -174,6 +175,8 @@ export const jumpinAIStudioService = {
                     if (error) throw error;
                     jumpId = savedJump.id;
                     result.jumpId = jumpId;
+                    result.title = result.jumpName; // Set title for display
+                    result.fullTitle = result.jumpName; // Set fullTitle (without Jump # for guests)
                     console.log('✅ Guest jump created with ID:', jumpId);
                   }
                 } catch (error) {
@@ -185,12 +188,13 @@ export const jumpinAIStudioService = {
                   onProgress(step, type, data);
                 }
                 
-                // Call onProgress again with jump_created event including jumpId, jumpNumber, and fullTitle
+                // Call onProgress again with jump_created event including jumpId and title info
                 if (onProgress && jumpId) {
                   onProgress(step, 'jump_created', {
                     jumpId: jumpId,
-                    jumpNumber: result.jumpNumber,
-                    fullTitle: result.fullTitle
+                    jumpNumber: result.jumpNumber, // undefined for guests, that's OK
+                    fullTitle: result.fullTitle, // For guests: just the name, for logged-in: "Jump #X: Name"
+                    title: result.title // Fallback title
                   });
                 }
               } else if (type === 'overview') {

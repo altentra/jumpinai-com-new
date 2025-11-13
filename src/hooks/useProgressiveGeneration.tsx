@@ -240,12 +240,12 @@ export const useProgressiveGeneration = () => {
             setResult({ ...progressiveResult });
             
           } else if (type === 'jump_created') {
-            // IMMEDIATE UPDATE: Jump created with Jump# formatting right after naming
+            // IMMEDIATE UPDATE: Jump created - update with proper title
             console.log('Jump created callback:', stepData);
             progressiveResult.jumpId = stepData.jumpId;
-            progressiveResult.jumpNumber = stepData.jumpNumber;
-            progressiveResult.fullTitle = stepData.fullTitle;
-            progressiveResult.title = stepData.fullTitle; // Update with full "Jump #X: Name"
+            progressiveResult.jumpNumber = stepData.jumpNumber; // Will be undefined for guests
+            progressiveResult.fullTitle = stepData.fullTitle || stepData.title; // Use fullTitle or fallback to title
+            progressiveResult.title = stepData.fullTitle || stepData.title; // Update display title
             
             // Update UI immediately
             setResult({ ...progressiveResult });
