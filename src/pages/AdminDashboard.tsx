@@ -723,13 +723,13 @@ export default function AdminDashboard() {
                           </Badge>
                         </TableCell>
                         <TableCell>
-                          <div className="max-w-xs text-sm" title={jump.form_goals || 'N/A'}>
-                            <p className="truncate">{jump.form_goals || 'N/A'}</p>
+                          <div className="max-w-xs text-sm">
+                            <p className="whitespace-normal break-words">{jump.form_goals || 'N/A'}</p>
                           </div>
                         </TableCell>
                         <TableCell>
-                          <div className="max-w-xs text-sm" title={jump.form_challenges || 'N/A'}>
-                            <p className="truncate">{jump.form_challenges || 'N/A'}</p>
+                          <div className="max-w-xs text-sm">
+                            <p className="whitespace-normal break-words">{jump.form_challenges || 'N/A'}</p>
                           </div>
                         </TableCell>
                         <TableCell className="text-sm">
@@ -841,21 +841,21 @@ export default function AdminDashboard() {
                                     </span>
                                   </div>
                                   
-                                  {/* Form Inputs */}
-                                  <div className="space-y-2 text-xs">
-                                    <div>
-                                      <div className="font-medium text-muted-foreground mb-1">Goals:</div>
-                                      <div className="bg-background/50 p-2 rounded border">
-                                        {attempt.form_goals || 'N/A'}
-                                      </div>
-                                    </div>
-                                    <div>
-                                      <div className="font-medium text-muted-foreground mb-1">Challenges:</div>
-                                      <div className="bg-background/50 p-2 rounded border">
-                                        {attempt.form_challenges || 'N/A'}
-                                      </div>
-                                    </div>
-                                  </div>
+                                   {/* Form Inputs */}
+                                   <div className="space-y-2 text-xs">
+                                     <div>
+                                       <div className="font-medium text-muted-foreground mb-1">Goals:</div>
+                                       <div className="bg-background/50 p-2 rounded border whitespace-normal break-words">
+                                         {attempt.form_goals || 'N/A'}
+                                       </div>
+                                     </div>
+                                     <div>
+                                       <div className="font-medium text-muted-foreground mb-1">Challenges:</div>
+                                       <div className="bg-background/50 p-2 rounded border whitespace-normal break-words">
+                                         {attempt.form_challenges || 'N/A'}
+                                       </div>
+                                     </div>
+                                   </div>
                                 </div>
                                 ))}
                               </div>
