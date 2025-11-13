@@ -732,7 +732,7 @@ export default function AdminDashboard() {
                         >
                           User
                           <div 
-                            className="absolute right-0 top-0 h-full w-2 cursor-col-resize bg-border/50 hover:bg-primary transition-colors"
+                            className="absolute right-0 top-0 h-full w-2 cursor-col-resize bg-border/50 hover:bg-primary transition-colors z-10"
                             onMouseDown={handleMouseDown('user')}
                           />
                         </th>
@@ -742,7 +742,7 @@ export default function AdminDashboard() {
                         >
                           Title
                           <div 
-                            className="absolute right-0 top-0 h-full w-2 cursor-col-resize bg-border/50 hover:bg-primary transition-colors"
+                            className="absolute right-0 top-0 h-full w-2 cursor-col-resize bg-border/50 hover:bg-primary transition-colors z-10"
                             onMouseDown={handleMouseDown('title')}
                           />
                         </th>
@@ -752,7 +752,7 @@ export default function AdminDashboard() {
                         >
                           Status
                           <div 
-                            className="absolute right-0 top-0 h-full w-2 cursor-col-resize bg-border/50 hover:bg-primary transition-colors"
+                            className="absolute right-0 top-0 h-full w-2 cursor-col-resize bg-border/50 hover:bg-primary transition-colors z-10"
                             onMouseDown={handleMouseDown('status')}
                           />
                         </th>
@@ -762,7 +762,7 @@ export default function AdminDashboard() {
                         >
                           Type
                           <div 
-                            className="absolute right-0 top-0 h-full w-2 cursor-col-resize bg-border/50 hover:bg-primary transition-colors"
+                            className="absolute right-0 top-0 h-full w-2 cursor-col-resize bg-border/50 hover:bg-primary transition-colors z-10"
                             onMouseDown={handleMouseDown('type')}
                           />
                         </th>
@@ -772,7 +772,7 @@ export default function AdminDashboard() {
                         >
                           Goals Input
                           <div 
-                            className="absolute right-0 top-0 h-full w-2 cursor-col-resize bg-border/50 hover:bg-primary transition-colors"
+                            className="absolute right-0 top-0 h-full w-2 cursor-col-resize bg-border/50 hover:bg-primary transition-colors z-10"
                             onMouseDown={handleMouseDown('goals')}
                           />
                         </th>
@@ -782,7 +782,7 @@ export default function AdminDashboard() {
                         >
                           Challenges Input
                           <div 
-                            className="absolute right-0 top-0 h-full w-2 cursor-col-resize bg-border/50 hover:bg-primary transition-colors"
+                            className="absolute right-0 top-0 h-full w-2 cursor-col-resize bg-border/50 hover:bg-primary transition-colors z-10"
                             onMouseDown={handleMouseDown('challenges')}
                           />
                         </th>
@@ -792,7 +792,7 @@ export default function AdminDashboard() {
                         >
                           Location
                           <div 
-                            className="absolute right-0 top-0 h-full w-2 cursor-col-resize bg-border/50 hover:bg-primary transition-colors"
+                            className="absolute right-0 top-0 h-full w-2 cursor-col-resize bg-border/50 hover:bg-primary transition-colors z-10"
                             onMouseDown={handleMouseDown('location')}
                           />
                         </th>
@@ -802,7 +802,7 @@ export default function AdminDashboard() {
                         >
                           Date/Time (PST)
                           <div 
-                            className="absolute right-0 top-0 h-full w-2 cursor-col-resize bg-border/50 hover:bg-primary transition-colors"
+                            className="absolute right-0 top-0 h-full w-2 cursor-col-resize bg-border/50 hover:bg-primary transition-colors z-10"
                             onMouseDown={handleMouseDown('date')}
                           />
                         </th>
