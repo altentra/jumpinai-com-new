@@ -259,7 +259,7 @@ export default function AdminDashboard() {
   // Column widths state for Jump Generations table
   const defaultColumnWidths = {
     user: 120,
-    title: 120,
+    title: 60,
     status: 100,
     type: 100,
     goals: 250,
