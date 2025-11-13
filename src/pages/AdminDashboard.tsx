@@ -256,6 +256,49 @@ export default function AdminDashboard() {
   const navigate = useNavigate();
   const [isCheckingAdmin, setIsCheckingAdmin] = useState(true);
   
+  // Column widths state for Jump Generations table
+  const defaultColumnWidths = {
+    user: 150,
+    title: 200,
+    status: 100,
+    type: 100,
+    goals: 250,
+    challenges: 250,
+    location: 150,
+    date: 180
+  };
+  
+  const [columnWidths, setColumnWidths] = useState(() => {
+    const saved = localStorage.getItem('admin-jump-columns-width');
+    return saved ? JSON.parse(saved) : defaultColumnWidths;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('admin-jump-columns-width', JSON.stringify(columnWidths));
+  }, [columnWidths]);
+
+  const handleMouseDown = (columnKey: string) => (e: React.MouseEvent) => {
+    e.preventDefault();
+    const startX = e.pageX;
+    const startWidth = columnWidths[columnKey as keyof typeof columnWidths];
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const diff = e.pageX - startX;
+      setColumnWidths(prev => ({
+        ...prev,
+        [columnKey]: Math.max(50, startWidth + diff)
+      }));
+    };
+
+    const handleMouseUp = () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+  };
+  
   useEffect(() => {
     const meta = document.createElement('meta');
     meta.name = 'robots';
@@ -679,76 +722,170 @@ export default function AdminDashboard() {
                   <p className="text-sm">Jump generation logs will appear here</p>
                 </div>
               ) : (
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>User</TableHead>
-                      <TableHead>Title</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Type</TableHead>
-                      <TableHead>Goals Input</TableHead>
-                      <TableHead>Challenges Input</TableHead>
-                      <TableHead>Location</TableHead>
-                      <TableHead>Date/Time (PST)</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {jumpGenerations.map((jump) => (
-                      <TableRow key={jump.id}>
-                        <TableCell>
-                          {jump.is_guest ? (
-                            <div>
-                              <Badge variant="outline">Guest</Badge>
-                              {jump.ip_address && (
-                                <p className="text-xs text-muted-foreground mt-1">
-                                  IP: {jump.ip_address}
-                                </p>
-                              )}
+                <div className="overflow-x-auto">
+                  <table className="w-full caption-bottom text-sm">
+                    <thead className="[&_tr]:border-b">
+                      <tr className="border-b transition-colors hover:bg-muted/50">
+                        <th 
+                          className="h-12 px-4 text-left align-middle font-medium text-muted-foreground relative group"
+                          style={{ width: `${columnWidths.user}px`, minWidth: `${columnWidths.user}px` }}
+                        >
+                          User
+                          <div 
+                            className="absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-primary/50 group-hover:bg-primary/30"
+                            onMouseDown={handleMouseDown('user')}
+                          />
+                        </th>
+                        <th 
+                          className="h-12 px-4 text-left align-middle font-medium text-muted-foreground relative group"
+                          style={{ width: `${columnWidths.title}px`, minWidth: `${columnWidths.title}px` }}
+                        >
+                          Title
+                          <div 
+                            className="absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-primary/50 group-hover:bg-primary/30"
+                            onMouseDown={handleMouseDown('title')}
+                          />
+                        </th>
+                        <th 
+                          className="h-12 px-4 text-left align-middle font-medium text-muted-foreground relative group"
+                          style={{ width: `${columnWidths.status}px`, minWidth: `${columnWidths.status}px` }}
+                        >
+                          Status
+                          <div 
+                            className="absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-primary/50 group-hover:bg-primary/30"
+                            onMouseDown={handleMouseDown('status')}
+                          />
+                        </th>
+                        <th 
+                          className="h-12 px-4 text-left align-middle font-medium text-muted-foreground relative group"
+                          style={{ width: `${columnWidths.type}px`, minWidth: `${columnWidths.type}px` }}
+                        >
+                          Type
+                          <div 
+                            className="absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-primary/50 group-hover:bg-primary/30"
+                            onMouseDown={handleMouseDown('type')}
+                          />
+                        </th>
+                        <th 
+                          className="h-12 px-4 text-left align-middle font-medium text-muted-foreground relative group"
+                          style={{ width: `${columnWidths.goals}px`, minWidth: `${columnWidths.goals}px` }}
+                        >
+                          Goals Input
+                          <div 
+                            className="absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-primary/50 group-hover:bg-primary/30"
+                            onMouseDown={handleMouseDown('goals')}
+                          />
+                        </th>
+                        <th 
+                          className="h-12 px-4 text-left align-middle font-medium text-muted-foreground relative group"
+                          style={{ width: `${columnWidths.challenges}px`, minWidth: `${columnWidths.challenges}px` }}
+                        >
+                          Challenges Input
+                          <div 
+                            className="absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-primary/50 group-hover:bg-primary/30"
+                            onMouseDown={handleMouseDown('challenges')}
+                          />
+                        </th>
+                        <th 
+                          className="h-12 px-4 text-left align-middle font-medium text-muted-foreground relative group"
+                          style={{ width: `${columnWidths.location}px`, minWidth: `${columnWidths.location}px` }}
+                        >
+                          Location
+                          <div 
+                            className="absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-primary/50 group-hover:bg-primary/30"
+                            onMouseDown={handleMouseDown('location')}
+                          />
+                        </th>
+                        <th 
+                          className="h-12 px-4 text-left align-middle font-medium text-muted-foreground"
+                          style={{ width: `${columnWidths.date}px`, minWidth: `${columnWidths.date}px` }}
+                        >
+                          Date/Time (PST)
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="[&_tr:last-child]:border-0">
+                      {jumpGenerations.map((jump) => (
+                        <tr key={jump.id} className="border-b transition-colors hover:bg-muted/50">
+                          <td 
+                            className="p-4 align-middle"
+                            style={{ width: `${columnWidths.user}px`, minWidth: `${columnWidths.user}px` }}
+                          >
+                            {jump.is_guest ? (
+                              <div>
+                                <Badge variant="outline">Guest</Badge>
+                                {jump.ip_address && (
+                                  <p className="text-xs text-muted-foreground mt-1">
+                                    IP: {jump.ip_address}
+                                  </p>
+                                )}
+                              </div>
+                            ) : (
+                              <div className="font-medium">{jump.user_email || 'Unknown'}</div>
+                            )}
+                          </td>
+                          <td 
+                            className="p-4 align-middle truncate"
+                            style={{ width: `${columnWidths.title}px`, minWidth: `${columnWidths.title}px` }}
+                          >
+                            {jump.title}
+                          </td>
+                          <td 
+                            className="p-4 align-middle"
+                            style={{ width: `${columnWidths.status}px`, minWidth: `${columnWidths.status}px` }}
+                          >
+                            <Badge variant={jump.status === 'active' ? 'default' : 'destructive'}>
+                              {jump.status === 'active' ? 'Success' : 'Failed'}
+                            </Badge>
+                          </td>
+                          <td 
+                            className="p-4 align-middle"
+                            style={{ width: `${columnWidths.type}px`, minWidth: `${columnWidths.type}px` }}
+                          >
+                            <Badge variant={jump.is_guest ? 'secondary' : 'default'}>
+                              {jump.is_guest ? 'Guest' : 'User'}
+                            </Badge>
+                          </td>
+                          <td 
+                            className="p-4 align-middle"
+                            style={{ width: `${columnWidths.goals}px`, minWidth: `${columnWidths.goals}px` }}
+                          >
+                            <div className="text-sm">
+                              <p className="whitespace-normal break-words">{jump.form_goals || 'N/A'}</p>
                             </div>
-                          ) : (
-                            <div className="font-medium">{jump.user_email || 'Unknown'}</div>
-                          )}
-                        </TableCell>
-                        <TableCell className="max-w-xs truncate">
-                          {jump.title}
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant={jump.status === 'active' ? 'default' : 'destructive'}>
-                            {jump.status === 'active' ? 'Success' : 'Failed'}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant={jump.is_guest ? 'secondary' : 'default'}>
-                            {jump.is_guest ? 'Guest' : 'User'}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          <div className="max-w-xs text-sm">
-                            <p className="whitespace-normal break-words">{jump.form_goals || 'N/A'}</p>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="max-w-xs text-sm">
-                            <p className="whitespace-normal break-words">{jump.form_challenges || 'N/A'}</p>
-                          </div>
-                        </TableCell>
-                        <TableCell className="text-sm">
-                          {jump.location || '-'}
-                        </TableCell>
-                        <TableCell className="text-sm">
-                          {new Date(jump.created_at).toLocaleString('en-US', {
-                            timeZone: 'America/Los_Angeles',
-                            month: 'short',
-                            day: 'numeric',
-                            year: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit'
-                          })}
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                          </td>
+                          <td 
+                            className="p-4 align-middle"
+                            style={{ width: `${columnWidths.challenges}px`, minWidth: `${columnWidths.challenges}px` }}
+                          >
+                            <div className="text-sm">
+                              <p className="whitespace-normal break-words">{jump.form_challenges || 'N/A'}</p>
+                            </div>
+                          </td>
+                          <td 
+                            className="p-4 align-middle text-sm"
+                            style={{ width: `${columnWidths.location}px`, minWidth: `${columnWidths.location}px` }}
+                          >
+                            {jump.location || '-'}
+                          </td>
+                          <td 
+                            className="p-4 align-middle text-sm"
+                            style={{ width: `${columnWidths.date}px`, minWidth: `${columnWidths.date}px` }}
+                          >
+                            {new Date(jump.created_at).toLocaleString('en-US', {
+                              timeZone: 'America/Los_Angeles',
+                              month: 'short',
+                              day: 'numeric',
+                              year: 'numeric',
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            })}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               )}
             </CardContent>
           </Card>
