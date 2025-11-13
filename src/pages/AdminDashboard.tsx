@@ -259,7 +259,7 @@ export default function AdminDashboard() {
   // Column widths state for Jump Generations table
   const defaultColumnWidths = {
     user: 120,
-    title: 60,
+    title: 80,
     status: 100,
     type: 100,
     goals: 250,
@@ -269,12 +269,12 @@ export default function AdminDashboard() {
   };
   
   const [columnWidths, setColumnWidths] = useState(() => {
-    const saved = localStorage.getItem('admin-jump-columns-width');
+    const saved = localStorage.getItem('admin-jump-columns-width-v2');
     return saved ? JSON.parse(saved) : defaultColumnWidths;
   });
-
+  
   useEffect(() => {
-    localStorage.setItem('admin-jump-columns-width', JSON.stringify(columnWidths));
+    localStorage.setItem('admin-jump-columns-width-v2', JSON.stringify(columnWidths));
   }, [columnWidths]);
 
   const handleMouseDown = (columnKey: string) => (e: React.MouseEvent) => {
