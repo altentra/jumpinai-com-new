@@ -441,7 +441,23 @@ export default function AdminDashboard() {
   const fetchAdminData = async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke('admin-dashboard-data');
+      // Get fresh session to ensure valid JWT token
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      
+      if (sessionError || !session) {
+        console.error('Session error:', sessionError);
+        toast.error('Authentication session expired. Please refresh the page.');
+        navigate('/auth?next=/admin');
+        return;
+      }
+
+      // Call edge function with explicit authorization header
+      const { data, error } = await supabase.functions.invoke('admin-dashboard-data', {
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
+      });
+      
       if (error) throw error;
 
       // Set state from edge function payload

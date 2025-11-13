@@ -122,69 +122,77 @@ export const jumpinAIStudioService = {
                 
                 console.log('✅ Jump name received:', data.jumpName);
                 
+                // Save jump for BOTH logged-in users AND guests - MUST AWAIT THIS
+                try {
+                  if (userId) {
+                    // Logged-in user: Save with Jump # format
+                    const jumpNumber = await jumpNamingService.getNextJumpNumber(userId);
+                    const fullTitle = `Jump #${jumpNumber}: ${result.jumpName}`;
+                    result.jumpNumber = jumpNumber;
+                    result.fullTitle = fullTitle;
+                    
+                    const { data: savedJump, error } = await supabase
+                      .from('user_jumps')
+                      .insert({
+                        user_id: userId,
+                        title: fullTitle,
+                        summary: `AI Transformation: ${result.jumpName}`,
+                        full_content: JSON.stringify({ jumpName: result.jumpName }),
+                        completion_percentage: 5,
+                        status: 'generating',
+                        ip_address: ipAddress,
+                        location: location,
+                        form_goals: formData.goals,
+                        form_challenges: formData.challenges
+                      })
+                      .select()
+                      .single();
+                    
+                    if (error) throw error;
+                    jumpId = savedJump.id;
+                    result.jumpId = jumpId;
+                    console.log('✅ Jump created with ID:', jumpId);
+                  } else {
+                    // Guest user: Save with simple title format
+                    const { data: savedJump, error } = await supabase
+                      .from('user_jumps')
+                      .insert({
+                        user_id: null,
+                        title: result.jumpName,
+                        summary: `AI Transformation: ${result.jumpName}`,
+                        full_content: JSON.stringify({ jumpName: result.jumpName }),
+                        completion_percentage: 5,
+                        status: 'generating',
+                        ip_address: ipAddress,
+                        location: location,
+                        form_goals: formData.goals,
+                        form_challenges: formData.challenges
+                      })
+                      .select()
+                      .single();
+
+                    if (error) throw error;
+                    jumpId = savedJump.id;
+                    result.jumpId = jumpId;
+                    console.log('✅ Guest jump created with ID:', jumpId);
+                  }
+                } catch (error) {
+                  console.error('❌ Error creating jump:', error);
+                }
+                
+                // Call onProgress for naming event
                 if (onProgress) {
                   onProgress(step, type, data);
                 }
                 
-                // Save jump for BOTH logged-in users AND guests
-                (async () => {
-                  try {
-                    if (userId) {
-                      // Logged-in user: Save with Jump # format
-                      const jumpNumber = await jumpNamingService.getNextJumpNumber(userId);
-                      const fullTitle = `Jump #${jumpNumber}: ${result.jumpName}`;
-                      result.jumpNumber = jumpNumber;
-                      result.fullTitle = fullTitle;
-                      
-                      const { data: savedJump, error } = await supabase
-                        .from('user_jumps')
-                        .insert({
-                          user_id: userId,
-                          title: fullTitle,
-                          summary: `AI Transformation: ${result.jumpName}`,
-                          full_content: JSON.stringify({ jumpName: result.jumpName }),
-                          completion_percentage: 5,
-                          status: 'generating',
-                          ip_address: ipAddress,
-                          location: location,
-                          form_goals: formData.goals,
-                          form_challenges: formData.challenges
-                        })
-                        .select()
-                        .single();
-                      
-                      if (error) throw error;
-                      jumpId = savedJump.id;
-                      result.jumpId = jumpId;
-                      console.log('✅ Jump created with ID:', jumpId);
-                    } else {
-                      // Guest user: Save with simple title format
-                      const { data: savedJump, error } = await supabase
-                        .from('user_jumps')
-                        .insert({
-                          user_id: null,
-                          title: result.jumpName,
-                          summary: `AI Transformation: ${result.jumpName}`,
-                          full_content: JSON.stringify({ jumpName: result.jumpName }),
-                          completion_percentage: 5,
-                          status: 'generating',
-                          ip_address: ipAddress,
-                          location: location,
-                          form_goals: formData.goals,
-                          form_challenges: formData.challenges
-                        })
-                        .select()
-                        .single();
-
-                      if (error) throw error;
-                      jumpId = savedJump.id;
-                      result.jumpId = jumpId;
-                      console.log('✅ Guest jump created with ID:', jumpId);
-                    }
-                  } catch (error) {
-                    console.error('❌ Error creating jump:', error);
-                  }
-                })();
+                // Call onProgress again with jump_created event including jumpId, jumpNumber, and fullTitle
+                if (onProgress && jumpId) {
+                  onProgress(step, 'jump_created', {
+                    jumpId: jumpId,
+                    jumpNumber: result.jumpNumber,
+                    fullTitle: result.fullTitle
+                  });
+                }
               } else if (type === 'overview') {
                 console.log('📋 Processing overview data:', data);
                 result.comprehensivePlan = {
