@@ -259,7 +259,7 @@ export default function AdminDashboard() {
   // Column widths state for Jump Generations table
   const defaultColumnWidths = {
     user: 120,
-    title: 150,
+    title: 120,
     status: 100,
     type: 100,
     goals: 250,
@@ -727,32 +727,35 @@ export default function AdminDashboard() {
                     <thead className="[&_tr]:border-b">
                       <tr className="border-b transition-colors hover:bg-muted/50">
                         <th 
-                          className="h-12 px-4 text-left align-middle font-medium text-muted-foreground relative group"
-                          style={{ width: `${columnWidths.user}px`, minWidth: `${columnWidths.user}px` }}
+                          className="h-12 px-4 text-left align-middle font-medium text-muted-foreground"
+                          style={{ width: `${columnWidths.user}px`, minWidth: `${columnWidths.user}px`, position: 'relative' }}
                         >
                           User
                           <div 
-                            className="absolute right-0 top-0 h-full w-2 cursor-col-resize bg-border/50 hover:bg-primary transition-colors z-10"
+                            className="absolute top-0 h-full w-4 cursor-col-resize bg-border hover:bg-primary transition-colors"
+                            style={{ right: '-8px', zIndex: 999 }}
                             onMouseDown={handleMouseDown('user')}
                           />
                         </th>
                         <th 
-                          className="h-12 px-4 text-left align-middle font-medium text-muted-foreground relative group"
-                          style={{ width: `${columnWidths.title}px`, minWidth: `${columnWidths.title}px` }}
+                          className="h-12 px-4 text-left align-middle font-medium text-muted-foreground"
+                          style={{ width: `${columnWidths.title}px`, minWidth: `${columnWidths.title}px`, position: 'relative' }}
                         >
                           Title
                           <div 
-                            className="absolute right-0 top-0 h-full w-2 cursor-col-resize bg-border/50 hover:bg-primary transition-colors z-10"
+                            className="absolute top-0 h-full w-4 cursor-col-resize bg-border hover:bg-primary transition-colors"
+                            style={{ right: '-8px', zIndex: 999 }}
                             onMouseDown={handleMouseDown('title')}
                           />
                         </th>
                         <th 
-                          className="h-12 px-4 text-left align-middle font-medium text-muted-foreground relative group"
-                          style={{ width: `${columnWidths.status}px`, minWidth: `${columnWidths.status}px` }}
+                          className="h-12 px-4 text-left align-middle font-medium text-muted-foreground"
+                          style={{ width: `${columnWidths.status}px`, minWidth: `${columnWidths.status}px`, position: 'relative' }}
                         >
                           Status
                           <div 
-                            className="absolute right-0 top-0 h-full w-2 cursor-col-resize bg-border/50 hover:bg-primary transition-colors z-10"
+                            className="absolute top-0 h-full w-4 cursor-col-resize bg-border hover:bg-primary transition-colors"
+                            style={{ right: '-8px', zIndex: 999 }}
                             onMouseDown={handleMouseDown('status')}
                           />
                         </th>
