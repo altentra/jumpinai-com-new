@@ -258,8 +258,8 @@ export default function AdminDashboard() {
   
   // Column widths state for Jump Generations table
   const defaultColumnWidths = {
-    user: 150,
-    title: 200,
+    user: 120,
+    title: 150,
     status: 100,
     type: 100,
     goals: 250,
@@ -732,7 +732,7 @@ export default function AdminDashboard() {
                         >
                           User
                           <div 
-                            className="absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-primary/50 group-hover:bg-primary/30"
+                            className="absolute right-0 top-0 h-full w-2 cursor-col-resize bg-border/50 hover:bg-primary transition-colors"
                             onMouseDown={handleMouseDown('user')}
                           />
                         </th>
@@ -742,7 +742,7 @@ export default function AdminDashboard() {
                         >
                           Title
                           <div 
-                            className="absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-primary/50 group-hover:bg-primary/30"
+                            className="absolute right-0 top-0 h-full w-2 cursor-col-resize bg-border/50 hover:bg-primary transition-colors"
                             onMouseDown={handleMouseDown('title')}
                           />
                         </th>
@@ -752,7 +752,7 @@ export default function AdminDashboard() {
                         >
                           Status
                           <div 
-                            className="absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-primary/50 group-hover:bg-primary/30"
+                            className="absolute right-0 top-0 h-full w-2 cursor-col-resize bg-border/50 hover:bg-primary transition-colors"
                             onMouseDown={handleMouseDown('status')}
                           />
                         </th>
@@ -762,7 +762,7 @@ export default function AdminDashboard() {
                         >
                           Type
                           <div 
-                            className="absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-primary/50 group-hover:bg-primary/30"
+                            className="absolute right-0 top-0 h-full w-2 cursor-col-resize bg-border/50 hover:bg-primary transition-colors"
                             onMouseDown={handleMouseDown('type')}
                           />
                         </th>
@@ -772,7 +772,7 @@ export default function AdminDashboard() {
                         >
                           Goals Input
                           <div 
-                            className="absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-primary/50 group-hover:bg-primary/30"
+                            className="absolute right-0 top-0 h-full w-2 cursor-col-resize bg-border/50 hover:bg-primary transition-colors"
                             onMouseDown={handleMouseDown('goals')}
                           />
                         </th>
@@ -782,7 +782,7 @@ export default function AdminDashboard() {
                         >
                           Challenges Input
                           <div 
-                            className="absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-primary/50 group-hover:bg-primary/30"
+                            className="absolute right-0 top-0 h-full w-2 cursor-col-resize bg-border/50 hover:bg-primary transition-colors"
                             onMouseDown={handleMouseDown('challenges')}
                           />
                         </th>
@@ -792,15 +792,19 @@ export default function AdminDashboard() {
                         >
                           Location
                           <div 
-                            className="absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-primary/50 group-hover:bg-primary/30"
+                            className="absolute right-0 top-0 h-full w-2 cursor-col-resize bg-border/50 hover:bg-primary transition-colors"
                             onMouseDown={handleMouseDown('location')}
                           />
                         </th>
                         <th 
-                          className="h-12 px-4 text-left align-middle font-medium text-muted-foreground"
+                          className="h-12 px-4 text-left align-middle font-medium text-muted-foreground relative group"
                           style={{ width: `${columnWidths.date}px`, minWidth: `${columnWidths.date}px` }}
                         >
                           Date/Time (PST)
+                          <div 
+                            className="absolute right-0 top-0 h-full w-2 cursor-col-resize bg-border/50 hover:bg-primary transition-colors"
+                            onMouseDown={handleMouseDown('date')}
+                          />
                         </th>
                       </tr>
                     </thead>
