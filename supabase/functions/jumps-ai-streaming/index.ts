@@ -232,9 +232,9 @@ Deno.serve(async (req) => {
 
         try {
           // Step 1: Generate JUST the name (quick, 3-5 seconds)
-          console.log('Step 1: Generating jump name...');
-          const namingResponse = await callXAI(XAI_API_KEY, 1, formData, '');
-          console.log('Naming response:', namingResponse);
+          console.log('📝 Step 1: Generating jump name...');
+          const namingResponse = await callXAIWithRetry(XAI_API_KEY, 1, formData, '');
+          console.log('✅ Naming response:', namingResponse);
           
           // Include IP and location metadata in the naming response
           const namingWithMeta = {
@@ -249,9 +249,9 @@ Deno.serve(async (req) => {
           sendEvent(1, 'naming', namingWithMeta);
           
           // Step 2: Generate Overview & Plan
-          console.log('Step 2: Generating overview...');
-          const overviewResponse = await callXAI(XAI_API_KEY, 2, formData, '');
-          console.log('Overview response:', overviewResponse);
+          console.log('📊 Step 2: Generating overview...');
+          const overviewResponse = await callXAIWithRetry(XAI_API_KEY, 2, formData, '');
+          console.log('✅ Overview response:', overviewResponse);
           sendEvent(2, 'overview', overviewResponse);
           
           const overviewContent = typeof overviewResponse === 'string' 
@@ -266,9 +266,9 @@ Deno.serve(async (req) => {
 
           for (const { step, type, name } of remainingSteps) {
             try {
-              console.log(`Step ${step}: Generating ${name}...`);
-              const response = await callXAI(XAI_API_KEY, step, formData, overviewContent);
-              console.log(`Step ${step} response:`, response);
+              console.log(`🔧 Step ${step}: Generating ${name}...`);
+              const response = await callXAIWithRetry(XAI_API_KEY, step, formData, overviewContent);
+              console.log(`✅ Step ${step} response:`, response);
               
               // Try to send the event
               const sent = sendEvent(step, type, response);
@@ -277,26 +277,34 @@ Deno.serve(async (req) => {
                 // Wait a bit and try to continue anyway
                 await new Promise(resolve => setTimeout(resolve, 100));
               }
-            } catch (stepError) {
-              console.error(`Error in step ${step}:`, stepError);
+            } catch (stepError: any) {
+              console.error(`❌ Error in step ${step}:`, stepError.message);
+              console.error(`Error details:`, stepError);
               // Try to send error event, then continue
-              sendEvent(step, 'error', { message: `Step ${step} failed: ${stepError.message}` });
+              sendEvent(step, 'error', { 
+                message: `Step ${step} (${name}) failed after retries: ${stepError.message}`,
+                retryable: false
+              });
             }
           }
 
           // Send completion event
           if (!isClosed) {
-            console.log('Sending completion event...');
+            console.log('🎉 Sending completion event...');
             sendEvent(9, 'complete', { message: 'Generation complete' });
           }
 
           // Log successful API usage
           await logApiUsage(supabase, 'jumps-ai-streaming', user?.id || null, ipAddress, userAgent, 200, Date.now() - startTime);
 
-        } catch (error) {
-          console.error('Generation error:', error);
+        } catch (error: any) {
+          console.error('💥 Critical generation error:', error.message);
+          console.error('Full error:', error);
           if (!isClosed) {
-            sendEvent(-1, 'error', { message: error.message });
+            sendEvent(-1, 'error', { 
+              message: error.message,
+              critical: true
+            });
           }
           // Log failed API usage
           await logApiUsage(supabase, 'jumps-ai-streaming', user?.id || null, ipAddress, userAgent, 500, Date.now() - startTime, error.message);
@@ -346,6 +354,52 @@ Deno.serve(async (req) => {
   }
 });
 
+// Retry wrapper with exponential backoff for xAI API calls
+async function callXAIWithRetry(
+  apiKey: string,
+  step: number,
+  context: StudioFormData,
+  overviewContent: string,
+  maxRetries: number = 3
+): Promise<any> {
+  let lastError: Error | null = null;
+  
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      console.log(`🔄 Step ${step}: Attempt ${attempt}/${maxRetries}`);
+      const startTime = Date.now();
+      
+      const result = await callXAI(apiKey, step, context, overviewContent);
+      
+      const duration = Date.now() - startTime;
+      console.log(`✅ Step ${step}: Success on attempt ${attempt} (${duration}ms)`);
+      
+      return result;
+    } catch (error: any) {
+      lastError = error;
+      
+      // Check if it's a retryable error (5xx server errors)
+      const isRetryable = error.message?.includes('502') || 
+                          error.message?.includes('503') || 
+                          error.message?.includes('504') ||
+                          error.message?.includes('500');
+      
+      if (!isRetryable || attempt === maxRetries) {
+        console.error(`❌ Step ${step}: Failed after ${attempt} attempt(s) - ${error.message}`);
+        throw error;
+      }
+      
+      // Exponential backoff: 2s, 4s, 8s
+      const backoffMs = Math.pow(2, attempt) * 1000;
+      console.warn(`⚠️ Step ${step}: Attempt ${attempt} failed (${error.message}), retrying in ${backoffMs}ms...`);
+      
+      await new Promise(resolve => setTimeout(resolve, backoffMs));
+    }
+  }
+  
+  throw lastError || new Error(`Failed after ${maxRetries} retries`);
+}
+
 async function callXAI(
   apiKey: string,
   step: number,
@@ -353,6 +407,8 @@ async function callXAI(
   overviewContent: string
 ): Promise<any> {
   const { systemPrompt, userPrompt, expectedTokens } = getStepPrompts(step, context, overviewContent);
+  
+  console.log(`🚀 Step ${step}: Calling xAI API (model: grok-4-fast-reasoning, max_tokens: ${expectedTokens})`);
   
   const response = await fetch('https://api.x.ai/v1/chat/completions', {
     method: 'POST',
@@ -374,16 +430,24 @@ async function callXAI(
 
   if (!response.ok) {
     const errorText = await response.text();
-    console.error(`xAI API error (step ${step}):`, response.status, errorText);
+    const truncatedError = errorText.length > 500 ? errorText.substring(0, 500) + '...' : errorText;
+    console.error(`❌ xAI API error (step ${step}): ${response.status}`);
+    console.error(`Error details: ${truncatedError}`);
     throw new Error(`xAI API error: ${response.status}`);
   }
 
+  console.log(`✓ Step ${step}: Received response from xAI API`);
+  
   const data = await response.json();
   let content = data.choices?.[0]?.message?.content;
 
   if (!content) {
+    console.error(`❌ Step ${step}: No content in API response`);
     throw new Error('No content in API response');
   }
+  
+  console.log(`✓ Step ${step}: Content received (${content.length} characters)`);
+
 
   // Clean and parse JSON more aggressively
   content = content
