@@ -1,5 +1,4 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
-import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.4';
 import { z } from 'https://deno.land/x/zod@v3.22.4/mod.ts';
 
@@ -22,7 +21,7 @@ const CoachFormSchema = z.object({
   overview_content: z.string().max(10000, 'Overview content must be less than 10000 characters').optional()
 });
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
