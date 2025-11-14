@@ -34,27 +34,60 @@ Deno.serve(async (req) => {
     const supabaseUser = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
       global: { headers: { Authorization: authHeader } },
     });
+    
+    console.log('Authenticating user...');
     const { data: userData, error: userErr } = await supabaseUser.auth.getUser();
-    if (userErr || !userData?.user) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+    
+    if (userErr) {
+      console.error('Auth error:', userErr);
+      return new Response(JSON.stringify({ 
+        error: "Authentication failed", 
+        details: userErr.message 
+      }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    
+    if (!userData?.user) {
+      console.error('No user data returned');
+      return new Response(JSON.stringify({ error: "Unauthorized - no user data" }), {
         status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    // Check if user has admin role using RPC
-    const { data: isAdmin, error: roleError } = await supabaseUser.rpc('has_role', {
+    console.log('User authenticated:', userData.user.id);
+
+    // Use service role client to check admin role (bypasses RLS)
+    const supabaseAdmin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+    const { data: isAdmin, error: roleError } = await supabaseAdmin.rpc('has_role', {
       _user_id: userData.user.id,
       _role: 'admin'
     });
 
-    if (roleError || !isAdmin) {
-      console.error('Admin role check failed:', roleError);
-      return new Response(JSON.stringify({ error: "Forbidden" }), {
+    console.log('Admin check result:', { isAdmin, roleError });
+
+    if (roleError) {
+      console.error('Admin role check error:', roleError);
+      return new Response(JSON.stringify({ 
+        error: "Role verification failed", 
+        details: roleError.message 
+      }), {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    if (!isAdmin) {
+      console.log('User is not admin:', userData.user.email);
+      return new Response(JSON.stringify({ error: "Forbidden - admin access required" }), {
         status: 403,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+
+    console.log('Admin access granted to:', userData.user.email);
 
     // Service role client for unrestricted reads
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
