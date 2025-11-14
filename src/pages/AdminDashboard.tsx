@@ -486,24 +486,16 @@ export default function AdminDashboard() {
   const fetchAdminData = async (retryCount = 0) => {
     setLoading(true);
     try {
-      console.log(`Fetching admin data (attempt ${retryCount + 1})...`);
+      // Use getSession() which doesn't trigger auth state changes
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
       
-      // CRITICAL: Always refresh session to validate with server
-      // getSession() only checks localStorage, doesn't validate with Supabase
-      console.log('Refreshing session to validate with server...');
-      const { data: { session }, error: refreshError } = await supabase.auth.refreshSession();
-      
-      if (refreshError || !session) {
-        console.error('Session refresh failed:', refreshError);
-        
-        // Session is invalid, clear it and redirect to login
+      if (sessionError || !session) {
+        console.error('Session error:', sessionError);
         toast.error('Your session has expired. Please log in again.');
         await supabase.auth.signOut();
         navigate('/auth?next=/admin');
         return;
       }
-
-      console.log('Session validated successfully for:', session.user.email);
       
       // Call edge function with validated session token
       const { data, error } = await supabase.functions.invoke('admin-dashboard-data', {
