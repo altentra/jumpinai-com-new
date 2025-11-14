@@ -486,39 +486,26 @@ export default function AdminDashboard() {
   const fetchAdminData = async (retryCount = 0) => {
     setLoading(true);
     try {
-      // Get fresh session to ensure valid JWT token
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      console.log(`Fetching admin data (attempt ${retryCount + 1})...`);
       
-      if (sessionError || !session) {
-        console.error('Session error:', sessionError);
+      // CRITICAL: Always refresh session to validate with server
+      // getSession() only checks localStorage, doesn't validate with Supabase
+      console.log('Refreshing session to validate with server...');
+      const { data: { session }, error: refreshError } = await supabase.auth.refreshSession();
+      
+      if (refreshError || !session) {
+        console.error('Session refresh failed:', refreshError);
         
-        // Try to refresh the session once
-        if (retryCount === 0) {
-          console.log('Attempting to refresh session...');
-          const { data: { session: refreshedSession }, error: refreshError } = await supabase.auth.refreshSession();
-          
-          if (refreshError || !refreshedSession) {
-            console.error('Session refresh failed:', refreshError);
-            toast.error('Your session has expired. Please log in again.');
-            await supabase.auth.signOut();
-            navigate('/auth?next=/admin');
-            return;
-          }
-          
-          // Retry with refreshed session
-          console.log('Session refreshed successfully, retrying...');
-          return fetchAdminData(retryCount + 1);
-        }
-        
-        toast.error('Authentication session expired. Please log in again.');
+        // Session is invalid, clear it and redirect to login
+        toast.error('Your session has expired. Please log in again.');
         await supabase.auth.signOut();
         navigate('/auth?next=/admin');
         return;
       }
 
-      console.log('Calling admin-dashboard-data with session:', session.user.email);
+      console.log('Session validated successfully for:', session.user.email);
       
-      // Call edge function with explicit authorization header
+      // Call edge function with validated session token
       const { data, error } = await supabase.functions.invoke('admin-dashboard-data', {
         headers: {
           Authorization: `Bearer ${session.access_token}`,
@@ -528,22 +515,18 @@ export default function AdminDashboard() {
       if (error) {
         console.error('Edge function error:', error);
         
-        // If we get a 401 and haven't retried yet, try refreshing session
+        // If we get a 401 and haven't retried yet, try one more time
         if (error.message?.includes('401') && retryCount === 0) {
-          console.log('Got 401 error, attempting to refresh session...');
-          const { data: { session: refreshedSession }, error: refreshError } = await supabase.auth.refreshSession();
-          
-          if (refreshError || !refreshedSession) {
-            console.error('Session refresh failed:', refreshError);
-            toast.error('Your session has expired. Please log in again.');
-            await supabase.auth.signOut();
-            navigate('/auth?next=/admin');
-            return;
-          }
-          
-          // Retry with refreshed session
-          console.log('Session refreshed successfully, retrying...');
+          console.log('Got 401 error, retrying once...');
           return fetchAdminData(retryCount + 1);
+        }
+        
+        // After retry or different error, check if it's an auth issue
+        if (error.message?.includes('401') || error.message?.includes('Authentication failed')) {
+          toast.error('Authentication failed. Please log in again.');
+          await supabase.auth.signOut();
+          navigate('/auth?next=/admin');
+          return;
         }
         
         throw error;
@@ -561,10 +544,16 @@ export default function AdminDashboard() {
       setGuestUsers(data.guestUsers || []);
       setAllGuestJumps(data.allGuestJumps || []);
       
-      console.log('Admin data loaded successfully');
+      console.log('✅ Admin data loaded successfully');
     } catch (error: any) {
-      console.error('Error fetching admin data:', error);
-      toast.error(error.message || 'Failed to load admin data. Please try logging out and back in.');
+      console.error('❌ Error fetching admin data:', error);
+      
+      // Provide helpful error message
+      const errorMessage = error.message?.includes('Authentication') || error.message?.includes('401')
+        ? 'Authentication failed. Please log out and log back in.'
+        : 'Failed to load admin data. Please try again.';
+      
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
