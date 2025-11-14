@@ -438,8 +438,33 @@ Deno.serve(async (req) => {
       };
     });
 
+    // Helper function to get location from IP address
+    async function getLocationFromIP(ipAddress: string): Promise<string> {
+      if (ipAddress === 'unknown' || ipAddress === '127.0.0.1' || ipAddress.startsWith('192.168.') || ipAddress.startsWith('10.')) {
+        return 'Unknown';
+      }
+
+      try {
+        const geoResponse = await fetch(`http://ip-api.com/json/${ipAddress}?fields=status,country,regionName,city`);
+        if (geoResponse.ok) {
+          const geoData = await geoResponse.json();
+          if (geoData.status === 'success') {
+            const parts = [];
+            if (geoData.city) parts.push(geoData.city);
+            if (geoData.regionName) parts.push(geoData.regionName);
+            if (geoData.country) parts.push(geoData.country);
+            return parts.join(', ') || 'Unknown';
+          }
+        }
+      } catch (error) {
+        console.error('Geolocation error:', error);
+      }
+      
+      return 'Unknown';
+    }
+
     // Build guest user activity data
-    const guestUsers = guestTracking.map((gt: any) => {
+    const guestUsers = await Promise.all(guestTracking.map(async (gt: any) => {
       // Get all guest jumps from this IP address
       const guestJumpsForIP = jumps
         .filter((j: any) => !j.user_id && j.ip_address === gt.ip_address)
@@ -455,8 +480,13 @@ Deno.serve(async (req) => {
           form_challenges: j.form_challenges,
         }));
 
-      // Get location from the most recent jump
-      const mostRecentLocation = guestJumpsForIP.length > 0 ? guestJumpsForIP[0].location : null;
+      // Get location from the most recent jump, or geolocate the IP if no jumps found
+      let locationValue = guestJumpsForIP.length > 0 ? guestJumpsForIP[0].location : null;
+      
+      // If no location from jumps, try to geolocate the IP address
+      if (!locationValue || locationValue === 'Unknown') {
+        locationValue = await getLocationFromIP(gt.ip_address);
+      }
 
       return {
         ip_address: gt.ip_address,
@@ -465,10 +495,10 @@ Deno.serve(async (req) => {
         remaining_uses: Math.max(0, 3 - gt.usage_count),
         last_used_at: gt.last_used_at,
         created_at: gt.created_at,
-        location: mostRecentLocation,
+        location: locationValue,
         jump_attempts: guestJumpsForIP,
       };
-    });
+    }));
 
     // All guest jumps (no user_id)
     const allGuestJumps = jumps

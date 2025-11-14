@@ -577,10 +577,13 @@ export default function AdminDashboard() {
       
       if (error) throw error;
       
-      // Clear all client-side guest limit tracking
+      // Clear all client-side guest limit tracking on THIS BROWSER ONLY
       guestLimitService.clearAllGuestLimits();
       
-      toast.success(`Successfully reset guest users. ${data.resetCount || 0} records cleared from database and browser storage.`);
+      toast.success(
+        '✅ Guest database records cleared\n\n⚠️ Note: This only clears server records and your browser. Other users must clear their browser cache/storage to reset their limits.',
+        { duration: 8000 }
+      );
       
       // Refresh the admin data to reflect changes
       await fetchAdminData();
@@ -960,24 +963,29 @@ export default function AdminDashboard() {
                     Track all guest user activity, jump attempts, usage limits, and detailed logs
                   </p>
                 </div>
-                <Button 
-                  onClick={resetGuestUsers} 
-                  disabled={resettingGuests}
-                  variant="destructive"
-                  size="sm"
-                >
-                  {resettingGuests ? (
-                    <>
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      Resetting...
-                    </>
-                  ) : (
-                    <>
-                      <RefreshCcw className="h-4 w-4 mr-2" />
-                      Reset All Guest Limits
-                    </>
-                  )}
-                </Button>
+                <div className="flex flex-col gap-2">
+                  <Button 
+                    onClick={resetGuestUsers} 
+                    disabled={resettingGuests}
+                    variant="destructive"
+                    size="sm"
+                  >
+                    {resettingGuests ? (
+                      <>
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        Resetting...
+                      </>
+                    ) : (
+                      <>
+                        <RefreshCcw className="h-4 w-4 mr-2" />
+                        Reset Guest Database
+                      </>
+                    )}
+                  </Button>
+                  <p className="text-xs text-muted-foreground max-w-xs">
+                    Clears server records & your browser. Guests must clear their own cache to reset limits.
+                  </p>
+                </div>
               </div>
             </CardHeader>
             <CardContent className="space-y-6">
