@@ -1,48 +1,13 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.4';
-import { z } from 'https://deno.land/x/zod@v3.22.4/mod.ts';
+import { callXAIWithRetry } from './xai-client.ts';
+import { StudioFormData, StudioFormSchema, verifyTurnstile } from './validators.ts';
+import { logApiUsage, getLocation } from './logging.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
-
-interface StudioFormData {
-  goals: string;
-  challenges: string;
-  turnstileToken?: string;
-}
-
-// Validation schema
-const StudioFormSchema = z.object({
-  goals: z.string().trim().min(10, 'Goals must be at least 10 characters').max(2000, 'Goals must be less than 2000 characters'),
-  challenges: z.string().trim().min(10, 'Challenges must be at least 10 characters').max(2000, 'Challenges must be less than 2000 characters')
-});
-
-async function logApiUsage(
-  supabase: any,
-  endpoint: string,
-  userId: string | null,
-  ipAddress: string | null,
-  userAgent: string | null,
-  statusCode: number,
-  durationMs: number,
-  errorMessage?: string
-) {
-  try {
-    await supabase.from('api_usage_logs').insert({
-      endpoint,
-      user_id: userId,
-      ip_address: ipAddress,
-      user_agent: userAgent,
-      status_code: statusCode,
-      request_duration_ms: durationMs,
-      error_message: errorMessage
-    });
-  } catch (error) {
-    console.error('Failed to log API usage:', error);
-  }
-}
 
 Deno.serve(async (req) => {
   const startTime = Date.now();
@@ -52,26 +17,7 @@ Deno.serve(async (req) => {
     || 'unknown';
   const userAgent = req.headers.get('user-agent') || 'unknown';
   
-  // Get location from IP using ip-api.com
-  let location = 'Unknown';
-  if (ipAddress !== 'unknown' && ipAddress !== '127.0.0.1' && !ipAddress.startsWith('192.168.') && !ipAddress.startsWith('10.')) {
-    try {
-      const geoResponse = await fetch(`http://ip-api.com/json/${ipAddress}?fields=status,country,regionName,city`);
-      if (geoResponse.ok) {
-        const geoData = await geoResponse.json();
-        if (geoData.status === 'success') {
-          const parts = [];
-          if (geoData.city) parts.push(geoData.city);
-          if (geoData.regionName) parts.push(geoData.regionName);
-          if (geoData.country) parts.push(geoData.country);
-          location = parts.join(', ') || 'Unknown';
-        }
-      }
-    } catch (geoError) {
-      console.error('Geolocation error:', geoError);
-    }
-  }
-  
+  const location = await getLocation(ipAddress);
   console.log('📍 Request info:', { ipAddress, location, userAgent: userAgent.substring(0, 50) });
   
   if (req.method === 'OPTIONS') {
