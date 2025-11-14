@@ -483,7 +483,7 @@ export default function AdminDashboard() {
     }
   };
 
-  const fetchAdminData = async () => {
+  const fetchAdminData = async (retryCount = 0) => {
     setLoading(true);
     try {
       // Get fresh session to ensure valid JWT token
@@ -491,11 +491,33 @@ export default function AdminDashboard() {
       
       if (sessionError || !session) {
         console.error('Session error:', sessionError);
-        toast.error('Authentication session expired. Please refresh the page.');
+        
+        // Try to refresh the session once
+        if (retryCount === 0) {
+          console.log('Attempting to refresh session...');
+          const { data: { session: refreshedSession }, error: refreshError } = await supabase.auth.refreshSession();
+          
+          if (refreshError || !refreshedSession) {
+            console.error('Session refresh failed:', refreshError);
+            toast.error('Your session has expired. Please log in again.');
+            await supabase.auth.signOut();
+            navigate('/auth?next=/admin');
+            return;
+          }
+          
+          // Retry with refreshed session
+          console.log('Session refreshed successfully, retrying...');
+          return fetchAdminData(retryCount + 1);
+        }
+        
+        toast.error('Authentication session expired. Please log in again.');
+        await supabase.auth.signOut();
         navigate('/auth?next=/admin');
         return;
       }
 
+      console.log('Calling admin-dashboard-data with session:', session.user.email);
+      
       // Call edge function with explicit authorization header
       const { data, error } = await supabase.functions.invoke('admin-dashboard-data', {
         headers: {
@@ -503,7 +525,29 @@ export default function AdminDashboard() {
         },
       });
       
-      if (error) throw error;
+      if (error) {
+        console.error('Edge function error:', error);
+        
+        // If we get a 401 and haven't retried yet, try refreshing session
+        if (error.message?.includes('401') && retryCount === 0) {
+          console.log('Got 401 error, attempting to refresh session...');
+          const { data: { session: refreshedSession }, error: refreshError } = await supabase.auth.refreshSession();
+          
+          if (refreshError || !refreshedSession) {
+            console.error('Session refresh failed:', refreshError);
+            toast.error('Your session has expired. Please log in again.');
+            await supabase.auth.signOut();
+            navigate('/auth?next=/admin');
+            return;
+          }
+          
+          // Retry with refreshed session
+          console.log('Session refreshed successfully, retrying...');
+          return fetchAdminData(retryCount + 1);
+        }
+        
+        throw error;
+      }
 
       // Set state from edge function payload
       setStats(data.stats);
@@ -516,9 +560,11 @@ export default function AdminDashboard() {
       setCreditOverviews(data.creditOverviews || []);
       setGuestUsers(data.guestUsers || []);
       setAllGuestJumps(data.allGuestJumps || []);
-    } catch (error) {
+      
+      console.log('Admin data loaded successfully');
+    } catch (error: any) {
       console.error('Error fetching admin data:', error);
-      toast.error('Failed to load admin data');
+      toast.error(error.message || 'Failed to load admin data. Please try logging out and back in.');
     } finally {
       setLoading(false);
     }
@@ -607,7 +653,7 @@ export default function AdminDashboard() {
         </div>
         <div className="flex gap-2">
           <ThemeToggle />
-          <Button onClick={fetchAdminData} variant="outline">
+          <Button onClick={() => fetchAdminData()} variant="outline">
             <RefreshCcw className="h-4 w-4 mr-2" />
             Refresh
           </Button>
