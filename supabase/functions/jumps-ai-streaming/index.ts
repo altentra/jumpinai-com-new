@@ -133,22 +133,42 @@ Deno.serve(async (req) => {
 
     // Server-side rate limiting check using database
     if (isGuest) {
-      const { data: usageData } = await supabase.rpc('check_and_record_guest_usage', {
+      const { data: usageData, error: usageError } = await supabase.rpc('check_and_record_guest_usage', {
         p_ip_address: ipAddress,
         p_user_agent: userAgent
       });
 
+      console.log('🔍 Guest usage check result:', { usageData, usageError });
+
+      if (usageError) {
+        console.error('❌ Error checking guest usage:', usageError);
+        await logApiUsage(supabase, 'jumps-ai-streaming', null, ipAddress, userAgent, 500, Date.now() - startTime, 'Guest usage check error');
+        return new Response(JSON.stringify({ 
+          error: 'Error checking usage limits. Please try again.'
+        }), {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      }
+
       if (usageData && !usageData.can_use) {
-        console.log('Guest rate limit exceeded:', ipAddress);
+        console.log('🚫 Guest rate limit exceeded:', ipAddress, 'Usage:', usageData);
         await logApiUsage(supabase, 'jumps-ai-streaming', null, ipAddress, userAgent, 429, Date.now() - startTime, 'Rate limit exceeded');
         return new Response(JSON.stringify({ 
           error: 'Rate limit exceeded. Please sign up to continue using JumpinAI Studio.',
+          usageCount: usageData.usage_count || 3,
+          remaining: 0,
           resetAt: usageData.reset_at
         }), {
           status: 429,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' }
         });
       }
+
+      console.log('✅ Guest usage OK:', { 
+        usageCount: usageData?.usage_count || 1, 
+        remaining: usageData?.remaining || 2 
+      });
     }
     
     console.log('Starting streaming generation for:', { formData });
@@ -181,16 +201,29 @@ Deno.serve(async (req) => {
           console.log('📝 Step 1: Generating jump name...');
           const namingResponse = await callXAIWithRetry(XAI_API_KEY, 1, formData, '');
           console.log('✅ Naming response:', namingResponse);
+          console.log('✅ Naming response jumpName field:', namingResponse?.jumpName);
+          
+          // Ensure jumpName exists (fallback if needed)
+          if (!namingResponse || !namingResponse.jumpName) {
+            console.warn('⚠️ No jumpName in response, using fallback');
+            namingResponse.jumpName = 'AI Transformation Journey';
+          }
           
           // Include IP and location metadata in the naming response
           const namingWithMeta = {
-            ...namingResponse,
+            jumpName: namingResponse.jumpName, // Explicitly set jumpName first
+            ...namingResponse, // Then spread rest of response
             _metadata: {
               ipAddress,
               location,
               userAgent: userAgent.substring(0, 200) // Truncate for storage
             }
           };
+          
+          console.log('📤 Sending naming event with data:', { 
+            jumpName: namingWithMeta.jumpName,
+            hasMetadata: !!namingWithMeta._metadata 
+          });
           
           sendEvent(1, 'naming', namingWithMeta);
           

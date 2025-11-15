@@ -112,7 +112,11 @@ export const jumpinAIStudioService = {
               console.log(`📨 Received SSE event: step=${step}, type=${type}`);
 
               if (type === 'naming') {
-                result.jumpName = data.jumpName;
+                console.log('📨 Received naming event, raw data:', data);
+                console.log('📨 data.jumpName:', data.jumpName);
+                
+                result.jumpName = data.jumpName || 'AI Transformation Journey';
+                console.log('✅ Set result.jumpName to:', result.jumpName);
                 
                 // Extract IP and location from metadata if available
                 if (data._metadata) {
