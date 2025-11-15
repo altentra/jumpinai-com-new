@@ -17,8 +17,6 @@ const JumpinAIStudio = () => {
   const { user, isAuthenticated, login } = useAuth();
   const { hasCredits, deductCredit, creditsBalance, updateTransactionReference } = useCredits();
   const { isGenerating, result, processingStatus, generateWithProgression } = useProgressiveGeneration();
-  const [guestCanUse, setGuestCanUse] = useState(true);
-  const [guestUsageCount, setGuestUsageCount] = useState(0);
   const [generationTimer, setGenerationTimer] = useState(0);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const progressDisplayRef = useRef<HTMLDivElement>(null);
@@ -55,11 +53,10 @@ const JumpinAIStudio = () => {
     budget: ''
   });
 
-  // Check guest limits on component mount and load saved form data
+  // Server-side guest limit checking - removed client-side checks
+  // The edge function now handles all guest limit enforcement via check_and_record_guest_usage RPC
   useEffect(() => {
-    if (!isAuthenticated) {
-      checkGuestLimits();
-    } else {
+    if (isAuthenticated) {
       loadSavedFormData();
     }
   }, [isAuthenticated]);
@@ -169,15 +166,8 @@ const JumpinAIStudio = () => {
     }
   };
 
-  const checkGuestLimits = async () => {
-    try {
-      const { canUse, usageCount } = await guestLimitService.checkGuestLimit();
-      setGuestCanUse(canUse);
-      setGuestUsageCount(usageCount);
-    } catch (error) {
-      console.error('Error checking guest limits:', error);
-    }
-  };
+  // REMOVED: Client-side guest limit checking
+  // All guest limit enforcement now handled server-side in the edge function
 
   const handleCancel = () => {
     // Show confirmation toast
@@ -193,7 +183,6 @@ const JumpinAIStudio = () => {
     console.log('=== GENERATE BUTTON CLICKED ===');
     console.log('Form data:', formData);
     console.log('isAuthenticated:', isAuthenticated);
-    console.log('guestUsageCount:', guestUsageCount);
     
     // Validate required fields
     if (!formData.goals.trim() || !formData.challenges.trim()) {
@@ -202,21 +191,14 @@ const JumpinAIStudio = () => {
       return;
     }
 
-    // Check limits based on user authentication status
+    // Check credits for authenticated users
     if (isAuthenticated) {
-      // Authenticated users: Check credits
       if (!hasCredits()) {
         toast.error('You don\'t have enough credits. Please purchase more credits to continue.');
         return;
       }
     } else {
-      // Guest users: Check usage limit
-      if (guestUsageCount >= 3) {
-        toast.error('You\'ve used all 3 free tries. Please sign up and get 5 welcome credits to continue!');
-        return;
-      }
-      
-      // Verify Turnstile token for guests
+      // Guest users: Verify Turnstile token (server will enforce limit)
       if (!turnstileToken) {
         toast.error('Please complete the security verification');
         return;
@@ -238,14 +220,11 @@ const JumpinAIStudio = () => {
           return;
         }
         
-        // Save form data
+        // Save form data for authenticated users
         await saveFormData(formData);
       }
 
-      // Record guest usage if not authenticated (BEFORE generation)
-      if (!isAuthenticated) {
-        await guestLimitService.recordGuestUsage();
-      }
+      // REMOVED: Client-side guest usage recording - server handles it automatically
 
       // Generate with progressive display
       const result = await generateWithProgression(
@@ -265,18 +244,15 @@ const JumpinAIStudio = () => {
         toast.success('Your Jump in AI is ready! Sign up to get 5 welcome credits and save your jumps.');
       }
 
-      // Update guest limits - increment count and check if limit reached
-      if (!isAuthenticated) {
-        const newCount = guestUsageCount + 1;
-        setGuestUsageCount(newCount);
-        if (newCount >= 3) {
-          setGuestCanUse(false);
-        }
-      }
-
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error generating Jump:', error);
-      toast.error('Failed to generate your Jump. Please try again.');
+      
+      // Handle server-side rate limit errors
+      if (error.message?.includes('Rate limit exceeded') || error.message?.includes('429')) {
+        toast.error('You\'ve used all 3 free tries. Please sign up to get 5 welcome credits and continue!');
+      } else {
+        toast.error('Failed to generate your Jump. Please try again.');
+      }
     }
   };
 
@@ -340,7 +316,7 @@ const JumpinAIStudio = () => {
                           <div className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-amber-500 rounded-full"></div>
                         </div>
                         <span className="font-medium text-xs sm:text-sm">
-                          Guest: {guestUsageCount >= 3 ? 'limit reached' : `${3 - guestUsageCount} free tries remaining`}
+                          Guest: 3 free tries available
                         </span>
                       </div>
                     )}

@@ -221,12 +221,16 @@ export const useProgressiveGeneration = () => {
           // Update progressive result with new data
           if (type === 'naming') {
             // STEP 1: Name complete - show it and start overview
-            console.log('Processing naming step data:', stepData);
+            console.log('🏷️ Processing naming step data:', stepData);
+            console.log('🏷️ stepData.jumpName:', stepData.jumpName);
+            console.log('🏷️ Full stepData:', JSON.stringify(stepData));
+            
             jumpName = stepData.jumpName || 'AI Transformation Journey';
             
-            // Display name immediately WITHOUT Jump# prefix
+            // CRITICAL: Set both title and fullTitle immediately for guest display
             progressiveResult.jumpName = jumpName;
-            progressiveResult.title = jumpName; // Show name only, wait for jump_created event for full title
+            progressiveResult.title = jumpName;
+            progressiveResult.fullTitle = jumpName; // Set fullTitle immediately for guests (will be overwritten for auth users)
             
             progressiveResult.processing_status = {
               stage: 'Generating',
@@ -236,6 +240,10 @@ export const useProgressiveGeneration = () => {
               currentStep: 'overview'
             };
             progressiveResult.stepTimes = { naming: stepDuration };
+            
+            console.log('🏷️ Updated progressiveResult.title:', progressiveResult.title);
+            console.log('🏷️ Updated progressiveResult.fullTitle:', progressiveResult.fullTitle);
+            
             setProcessingStatus(progressiveResult.processing_status);
             setResult({ ...progressiveResult });
             
