@@ -19,6 +19,7 @@ const JumpinAIStudio = () => {
   const { isGenerating, result, processingStatus, generateWithProgression } = useProgressiveGeneration();
   const [generationTimer, setGenerationTimer] = useState(0);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [guestUsageInfo, setGuestUsageInfo] = useState<{ usageCount: number; remaining: number } | null>(null);
   const progressDisplayRef = useRef<HTMLDivElement>(null);
   const generateButtonRef = useRef<HTMLDivElement>(null);
   const goalsTextareaRef = useRef<HTMLTextAreaElement>(null);
@@ -53,8 +54,17 @@ const JumpinAIStudio = () => {
     budget: ''
   });
 
-  // Server-side guest limit checking - removed client-side checks
-  // The edge function now handles all guest limit enforcement via check_and_record_guest_usage RPC
+  // Initialize guest usage display (start with default 3 remaining)
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setGuestUsageInfo({
+        usageCount: 0,
+        remaining: 3
+      });
+    }
+  }, [isAuthenticated]);
+
+  // Load saved form data for authenticated users
   useEffect(() => {
     if (isAuthenticated) {
       loadSavedFormData();
@@ -244,6 +254,14 @@ const JumpinAIStudio = () => {
         toast.success('Your Jump in AI is ready! Sign up to get 5 welcome credits and save your jumps.');
       }
 
+      // Update guest usage info after successful generation
+      if (!isAuthenticated && guestUsageInfo) {
+        setGuestUsageInfo({
+          usageCount: guestUsageInfo.usageCount + 1,
+          remaining: Math.max(0, guestUsageInfo.remaining - 1)
+        });
+      }
+
     } catch (error: any) {
       console.error('Error generating Jump:', error);
       
@@ -316,7 +334,9 @@ const JumpinAIStudio = () => {
                           <div className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-amber-500 rounded-full"></div>
                         </div>
                         <span className="font-medium text-xs sm:text-sm">
-                          Guest: 3 free tries available
+                          {guestUsageInfo 
+                            ? `Guest: ${guestUsageInfo.remaining} of 3 free tries left` 
+                            : 'Guest: 3 free tries available'}
                         </span>
                       </div>
                     )}
