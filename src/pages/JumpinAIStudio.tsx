@@ -59,18 +59,31 @@ const JumpinAIStudio = () => {
     const fetchGuestUsage = async () => {
       if (!isAuthenticated) {
         try {
-          // Call RPC to check (but not increment) current usage for this IP
-          const { data, error } = await supabase.rpc('check_and_record_guest_usage', {
-            p_ip_address: 'check-only' // Special flag to only check, not record
+          // First, get the client's IP address from the edge function
+          const { data: ipData, error: ipError } = await supabase.functions.invoke('get-client-ip');
+          
+          if (ipError || !ipData?.ip) {
+            console.error('Error getting IP:', ipError);
+            // Fallback to default
+            setGuestUsageInfo({ usageCount: 0, remaining: 3 });
+            return;
+          }
+          
+          const clientIp = ipData.ip;
+          console.log('📍 Client IP for usage check:', clientIp);
+          
+          // Now check guest usage with this IP (read-only, doesn't increment)
+          const { data, error } = await supabase.rpc('get_guest_usage', {
+            p_ip_address: clientIp
           });
           
           if (error) throw error;
           
-          const usageData = data as { canUse: boolean; usageCount: number; remaining: number };
+          const usageData = data as { usage_count: number; remaining: number; reset_at?: string };
           console.log('📊 Guest usage on mount:', usageData);
           
           setGuestUsageInfo({
-            usageCount: usageData.usageCount || 0,
+            usageCount: usageData.usage_count || 0,
             remaining: usageData.remaining ?? 3
           });
         } catch (error) {

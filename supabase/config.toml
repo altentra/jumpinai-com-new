@@ -85,6 +85,9 @@ verify_jwt = true
 [functions.jumps-ai-streaming]
 verify_jwt = false
 
+[functions.get-client-ip]
+verify_jwt = false
+
 [functions.stripe-webhook]
 verify_jwt = false
 

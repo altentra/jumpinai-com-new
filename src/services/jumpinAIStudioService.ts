@@ -190,9 +190,10 @@ export const jumpinAIStudioService = {
                   console.error('❌ Error creating jump:', error);
                 }
                 
-                // Call onProgress for naming event
+                // Call onProgress for naming event - CRITICAL: Include jumpName in callback data
                 if (onProgress) {
-                  onProgress(step, type, data);
+                  const callbackData = { ...data, jumpName: result.jumpName };
+                  onProgress(step, type, callbackData);
                 }
                 
                 // Call onProgress again with jump_created event including jumpId and title info
