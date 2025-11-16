@@ -20,6 +20,7 @@ const JumpinAIStudio = () => {
   const [generationTimer, setGenerationTimer] = useState(0);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [guestUsageInfo, setGuestUsageInfo] = useState<{ usageCount: number; remaining: number } | null>(null);
+  const [isLoadingGuestInfo, setIsLoadingGuestInfo] = useState(true);
   const progressDisplayRef = useRef<HTMLDivElement>(null);
   const generateButtonRef = useRef<HTMLDivElement>(null);
   const goalsTextareaRef = useRef<HTMLTextAreaElement>(null);
@@ -58,6 +59,7 @@ const JumpinAIStudio = () => {
   useEffect(() => {
     const fetchGuestUsage = async () => {
       if (!isAuthenticated) {
+        setIsLoadingGuestInfo(true);
         try {
           // First, get the client's IP address from the edge function
           const { data: ipData, error: ipError } = await supabase.functions.invoke('get-client-ip');
@@ -66,6 +68,7 @@ const JumpinAIStudio = () => {
             console.error('Error getting IP:', ipError);
             // Fallback to default
             setGuestUsageInfo({ usageCount: 0, remaining: 3 });
+            setIsLoadingGuestInfo(false);
             return;
           }
           
@@ -90,7 +93,11 @@ const JumpinAIStudio = () => {
           console.error('Error fetching guest usage:', error);
           // Fallback to default on error
           setGuestUsageInfo({ usageCount: 0, remaining: 3 });
+        } finally {
+          setIsLoadingGuestInfo(false);
         }
+      } else {
+        setIsLoadingGuestInfo(false);
       }
     };
     
@@ -362,15 +369,26 @@ const JumpinAIStudio = () => {
                       </div>
                     ) : (
                       <div className="flex items-center justify-center sm:justify-start gap-2 text-amber-600">
-                        <div className="relative">
-                          <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4" />
-                          <div className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-amber-500 rounded-full"></div>
-                        </div>
-                        <span className="font-medium text-xs sm:text-sm">
-                          {guestUsageInfo 
-                            ? `Guest: ${guestUsageInfo.remaining} jumps remaining` 
-                            : 'Guest: 3 free tries available'}
-                        </span>
+                        {isLoadingGuestInfo ? (
+                          <>
+                            <Loader2 className="w-3 h-3 sm:w-4 sm:h-4 animate-spin" />
+                            <span className="font-medium text-xs sm:text-sm">
+                              Checking availability...
+                            </span>
+                          </>
+                        ) : (
+                          <>
+                            <div className="relative">
+                              <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4" />
+                              <div className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-amber-500 rounded-full"></div>
+                            </div>
+                            <span className="font-medium text-xs sm:text-sm">
+                              {guestUsageInfo 
+                                ? `Guest: ${guestUsageInfo.remaining} jumps remaining` 
+                                : 'Guest: 3 free tries available'}
+                            </span>
+                          </>
+                        )}
                       </div>
                     )}
                   </div>

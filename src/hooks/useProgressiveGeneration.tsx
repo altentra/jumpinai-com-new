@@ -401,7 +401,7 @@ export const useProgressiveGeneration = () => {
         jumpName: rawResponse.jumpName,
         jumpNumber: rawResponse.jumpNumber,
         fullTitle: rawResponse.fullTitle,
-        title: rawResponse.fullTitle || 'AI Transformation Jump',
+        title: rawResponse.fullTitle || rawResponse.jumpName || 'AI Transformation Jump',
         full_content: rawResponse.fullContent,
         structured_plan: rawResponse.structuredPlan,
         comprehensive_plan: rawResponse.comprehensivePlan,
