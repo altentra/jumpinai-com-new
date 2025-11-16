@@ -54,14 +54,34 @@ const JumpinAIStudio = () => {
     budget: ''
   });
 
-  // Initialize guest usage display (start with default 3 remaining)
+  // Fetch current guest usage from server on mount
   useEffect(() => {
-    if (!isAuthenticated) {
-      setGuestUsageInfo({
-        usageCount: 0,
-        remaining: 3
-      });
-    }
+    const fetchGuestUsage = async () => {
+      if (!isAuthenticated) {
+        try {
+          // Call RPC to check (but not increment) current usage for this IP
+          const { data, error } = await supabase.rpc('check_and_record_guest_usage', {
+            p_ip_address: 'check-only' // Special flag to only check, not record
+          });
+          
+          if (error) throw error;
+          
+          const usageData = data as { canUse: boolean; usageCount: number; remaining: number };
+          console.log('📊 Guest usage on mount:', usageData);
+          
+          setGuestUsageInfo({
+            usageCount: usageData.usageCount || 0,
+            remaining: usageData.remaining ?? 3
+          });
+        } catch (error) {
+          console.error('Error fetching guest usage:', error);
+          // Fallback to default on error
+          setGuestUsageInfo({ usageCount: 0, remaining: 3 });
+        }
+      }
+    };
+    
+    fetchGuestUsage();
   }, [isAuthenticated]);
 
   // Load saved form data for authenticated users
@@ -335,7 +355,7 @@ const JumpinAIStudio = () => {
                         </div>
                         <span className="font-medium text-xs sm:text-sm">
                           {guestUsageInfo 
-                            ? `Guest: ${guestUsageInfo.remaining} of 3 free tries left` 
+                            ? `Guest: ${guestUsageInfo.remaining} jumps remaining` 
                             : 'Guest: 3 free tries available'}
                         </span>
                       </div>
