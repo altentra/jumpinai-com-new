@@ -892,6 +892,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      get_guest_usage: { Args: { p_ip_address: string }; Returns: Json }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
