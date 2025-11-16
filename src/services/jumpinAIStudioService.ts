@@ -116,7 +116,9 @@ export const jumpinAIStudioService = {
                 console.log('📨 data.jumpName:', data.jumpName);
                 
                 result.jumpName = data.jumpName || 'AI Transformation Journey';
-                console.log('✅ Set result.jumpName to:', result.jumpName);
+                // CRITICAL FOR GUESTS: Also set title immediately so it displays during generation
+                result.title = result.jumpName;
+                console.log('✅ Set result.jumpName and result.title to:', result.jumpName);
                 
                 // Extract IP and location from metadata if available
                 if (data._metadata) {
@@ -135,6 +137,7 @@ export const jumpinAIStudioService = {
                     const fullTitle = `Jump #${jumpNumber}: ${result.jumpName}`;
                     result.jumpNumber = jumpNumber;
                     result.fullTitle = fullTitle;
+                    result.title = fullTitle; // Also set title for consistency
                     
                     const { data: savedJump, error } = await supabase
                       .from('user_jumps')
@@ -249,8 +252,10 @@ export const jumpinAIStudioService = {
                 result.fullContent = overviewText.trim();
                 console.log('✅ Overview built with', result.fullContent.length, 'chars');
                 
+                // CRITICAL: Pass jumpName explicitly in callback data for guest display
                 if (onProgress) {
-                  onProgress(step, type, data);
+                  const callbackData = { ...data, jumpName: result.jumpName };
+                  onProgress(step, type, callbackData);
                 }
                 
                 if (jumpId) {
