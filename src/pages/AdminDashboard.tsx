@@ -626,126 +626,168 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold flex items-center gap-2">
-            <BarChart3 className="h-7 w-7 text-primary" />
-            Admin Dashboard
-          </h1>
-          <p className="text-muted-foreground">JumpinAI Business Analytics & Management</p>
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+      <div className="container mx-auto p-3 sm:p-6 space-y-6">
+        {/* Header with Liquid Glass Effect */}
+        <div className="glass rounded-xl p-6 border border-border/50 backdrop-blur-xl">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <h1 className="text-3xl sm:text-4xl font-bold flex items-center gap-3 mb-2">
+                <div className="p-2 rounded-lg bg-primary/10 backdrop-blur-sm">
+                  <BarChart3 className="h-7 w-7 text-primary" />
+                </div>
+                <span className="gradient-text">Admin Dashboard</span>
+              </h1>
+              <p className="text-sm text-muted-foreground ml-14">JumpinAI Business Analytics & Management</p>
+            </div>
+            <div className="flex gap-2 items-center">
+              <ThemeToggle />
+              <Button 
+                onClick={() => fetchAdminData()} 
+                variant="outline" 
+                className="glass border-border/50 hover:bg-primary/5"
+              >
+                <RefreshCcw className="h-4 w-4 mr-2" />
+                Refresh
+              </Button>
+              <Button 
+                onClick={syncToGoogleSheets} 
+                disabled={syncing}
+                className="bg-primary/90 hover:bg-primary"
+              >
+                <FileSpreadsheet className="h-4 w-4 mr-2" />
+                {syncing ? 'Syncing...' : 'Sync to Sheets'}
+              </Button>
+            </div>
+          </div>
         </div>
-        <div className="flex gap-2">
-          <ThemeToggle />
-          <Button onClick={() => fetchAdminData()} variant="outline">
-            <RefreshCcw className="h-4 w-4 mr-2" />
-            Refresh
-          </Button>
-          <Button onClick={syncToGoogleSheets} disabled={syncing}>
-            <FileSpreadsheet className="h-4 w-4 mr-2" />
-            {syncing ? 'Syncing...' : 'Sync to Sheets'}
-          </Button>
+
+        {/* Stats Cards with Enhanced Design */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <Card className="glass border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-lg group">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Total Users</CardTitle>
+              <div className="p-2 rounded-lg bg-blue-500/10 group-hover:bg-blue-500/20 transition-colors">
+                <Users className="h-5 w-5 text-blue-500" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold mb-1">{stats.totalUsers}</div>
+              <p className="text-xs text-muted-foreground">Registered accounts</p>
+            </CardContent>
+          </Card>
+
+          <Card className="glass border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-lg group">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Paid Subscribers</CardTitle>
+              <div className="p-2 rounded-lg bg-amber-500/10 group-hover:bg-amber-500/20 transition-colors">
+                <Crown className="h-5 w-5 text-amber-500" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-primary mb-1">{stats.totalSubscribers}</div>
+              <div className="flex gap-2 text-xs text-muted-foreground">
+                <span>S:{stats.starterSubscribers}</span>
+                <span>•</span>
+                <span>P:{stats.proSubscribers}</span>
+                <span>•</span>
+                <span>G:{stats.growthSubscribers}</span>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="glass border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-lg group">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Total Orders</CardTitle>
+              <div className="p-2 rounded-lg bg-purple-500/10 group-hover:bg-purple-500/20 transition-colors">
+                <ShoppingBag className="h-5 w-5 text-purple-500" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold mb-1">{stats.totalOrders}</div>
+              <p className="text-xs text-muted-foreground">
+                {stats.completedOrders} paid • {stats.abandonedCarts} abandoned
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="glass border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-lg group">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Total Revenue</CardTitle>
+              <div className="p-2 rounded-lg bg-green-500/10 group-hover:bg-green-500/20 transition-colors">
+                <DollarSign className="h-5 w-5 text-green-500" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-green-600 dark:text-green-400 mb-1">
+                ${stats.totalRevenue.toFixed(2)}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                ${stats.monthlyRevenue.toFixed(2)} this month
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="glass border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-lg group">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Newsletter</CardTitle>
+              <div className="p-2 rounded-lg bg-pink-500/10 group-hover:bg-pink-500/20 transition-colors">
+                <Mail className="h-5 w-5 text-pink-500" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold mb-1">{stats.totalNewsletterSubscribers}</div>
+              <p className="text-xs text-muted-foreground">Active subscribers</p>
+            </CardContent>
+          </Card>
+
+          <Card className="glass border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-lg group">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Jump Generations</CardTitle>
+              <div className="p-2 rounded-lg bg-cyan-500/10 group-hover:bg-cyan-500/20 transition-colors">
+                <TrendingUp className="h-5 w-5 text-cyan-500" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold mb-1">{stats.totalJumps}</div>
+              <div className="flex gap-2 text-xs text-muted-foreground">
+                <span className="text-green-600 dark:text-green-400">✓{stats.successfulJumps}</span>
+                <span>•</span>
+                <span className="text-red-600 dark:text-red-400">✗{stats.failedJumps}</span>
+                <span>•</span>
+                <span>Guest:{stats.guestJumps}</span>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="glass border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-lg group">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Daily Revenue</CardTitle>
+              <div className="p-2 rounded-lg bg-emerald-500/10 group-hover:bg-emerald-500/20 transition-colors">
+                <TrendingUp className="h-5 w-5 text-emerald-500" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-emerald-600 dark:text-emerald-400 mb-1">
+                ${stats.dailyRevenue.toFixed(2)}
+              </div>
+              <p className="text-xs text-muted-foreground">Today's earnings</p>
+            </CardContent>
+          </Card>
+
+          <Card className="glass border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-lg group">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Avg Order Value</CardTitle>
+              <div className="p-2 rounded-lg bg-orange-500/10 group-hover:bg-orange-500/20 transition-colors">
+                <DollarSign className="h-5 w-5 text-orange-500" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold mb-1">${stats.averageOrderValue.toFixed(2)}</div>
+              <p className="text-xs text-muted-foreground">Per completed order</p>
+            </CardContent>
+          </Card>
         </div>
-      </div>
-
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Users</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.totalUsers}</div>
-            <p className="text-xs text-muted-foreground">Registered accounts</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Paid Subscribers</CardTitle>
-            <Crown className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-primary">{stats.totalSubscribers}</div>
-            <p className="text-xs text-muted-foreground">
-              Starter: {stats.starterSubscribers} | Pro: {stats.proSubscribers} | Growth: {stats.growthSubscribers}
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Orders</CardTitle>
-            <ShoppingBag className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.totalOrders}</div>
-            <p className="text-xs text-muted-foreground">
-              {stats.completedOrders} paid, {stats.abandonedCarts} abandoned
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">${stats.totalRevenue.toFixed(2)}</div>
-            <p className="text-xs text-muted-foreground">
-              ${stats.monthlyRevenue.toFixed(2)} this month
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Newsletter Subscribers</CardTitle>
-            <Mail className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.totalNewsletterSubscribers}</div>
-            <p className="text-xs text-muted-foreground">Active newsletter subs</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Jump Generations</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.totalJumps}</div>
-            <p className="text-xs text-muted-foreground">
-              Success: {stats.successfulJumps} | Failed: {stats.failedJumps} | Guest: {stats.guestJumps}
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Daily Revenue</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">${stats.dailyRevenue.toFixed(2)}</div>
-            <p className="text-xs text-muted-foreground">Today's earnings</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Avg Order Value</CardTitle>
-            <CreditCard className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">${stats.averageOrderValue.toFixed(2)}</div>
-            <p className="text-xs text-muted-foreground">Per completed order</p>
-          </CardContent>
-        </Card>
-      </div>
 
       {/* Detailed Tables */}
       <Tabs defaultValue="jumps" className="space-y-4">
@@ -870,20 +912,20 @@ export default function AdminDashboard() {
                       {jumpGenerations.map((jump) => (
                         <tr key={jump.id} className="border-b transition-colors hover:bg-muted/50">
                           <td 
-                            className="p-4 align-middle"
+                            className="p-2 sm:p-4 align-middle"
                             style={{ width: `${columnWidths.user}px`, minWidth: `${columnWidths.user}px` }}
                           >
                             {jump.is_guest ? (
                               <div>
-                                <Badge variant="outline">Guest</Badge>
+                                <Badge variant="outline" className="text-[10px] sm:text-xs">Guest</Badge>
                                 {jump.ip_address && (
-                                  <p className="text-xs text-muted-foreground mt-1">
+                                  <p className="text-[10px] sm:text-xs text-muted-foreground mt-1 break-all">
                                     IP: {jump.ip_address}
                                   </p>
                                 )}
                               </div>
                             ) : (
-                              <div className="font-medium">{jump.user_email || 'Unknown'}</div>
+                              <div className="font-medium text-xs sm:text-sm break-all">{jump.user_email || 'Unknown'}</div>
                             )}
                           </td>
                           <td 
@@ -1225,62 +1267,64 @@ export default function AdminDashboard() {
 
               {/* All Successful Transactions */}
               <div>
-                <h3 className="text-lg font-semibold mb-4">All Successful Transactions ({recentOrders.filter(o => o.is_completed).length})</h3>
+                <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 px-4 sm:px-0">All Successful Transactions ({recentOrders.filter(o => o.is_completed).length})</h3>
                 {recentOrders.filter(o => o.is_completed).length === 0 ? (
-                  <div className="text-center py-8 text-muted-foreground">
-                    <DollarSign className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                    <p className="text-lg font-medium mb-2">No transactions yet</p>
-                    <p className="text-sm">Successful transactions will appear here</p>
+                  <div className="text-center py-8 text-muted-foreground px-4">
+                    <DollarSign className="h-10 w-10 sm:h-12 sm:w-12 mx-auto mb-4 opacity-50" />
+                    <p className="text-base sm:text-lg font-medium mb-2">No transactions yet</p>
+                    <p className="text-xs sm:text-sm">Successful transactions will appear here</p>
                   </div>
                 ) : (
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Email</TableHead>
-                        <TableHead>Product/Description</TableHead>
-                        <TableHead>Type</TableHead>
-                        <TableHead>Amount</TableHead>
-                        <TableHead>Date/Time (PST)</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {recentOrders
-                        .filter(o => o.is_completed)
-                        .map((order) => (
-                          <TableRow key={order.id}>
-                            <TableCell className="font-medium">{order.user_email}</TableCell>
-                            <TableCell>
-                              <div>
-                                <div className="font-medium">{order.product_name}</div>
-                                {order.is_subscription && (
-                                  <Badge variant="secondary" className="mt-1">Subscription</Badge>
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead className="text-xs sm:text-sm">Email</TableHead>
+                          <TableHead className="text-xs sm:text-sm">Product/Description</TableHead>
+                          <TableHead className="text-xs sm:text-sm">Type</TableHead>
+                          <TableHead className="text-xs sm:text-sm">Amount</TableHead>
+                          <TableHead className="text-xs sm:text-sm whitespace-nowrap">Date/Time (PST)</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {recentOrders
+                          .filter(o => o.is_completed)
+                          .map((order) => (
+                            <TableRow key={order.id}>
+                              <TableCell className="font-medium text-xs sm:text-sm break-all">{order.user_email}</TableCell>
+                              <TableCell>
+                                <div>
+                                  <div className="font-medium text-xs sm:text-sm">{order.product_name}</div>
+                                  {order.is_subscription && (
+                                    <Badge variant="secondary" className="mt-1 text-[10px] sm:text-xs">Subscription</Badge>
+                                  )}
+                                </div>
+                              </TableCell>
+                              <TableCell>
+                                {order.is_subscription ? (
+                                  <Badge variant="default" className="text-[10px] sm:text-xs">Subscription</Badge>
+                                ) : (
+                                  <Badge variant="outline" className="text-[10px] sm:text-xs">One-time</Badge>
                                 )}
-                              </div>
-                            </TableCell>
-                            <TableCell>
-                              {order.is_subscription ? (
-                                <Badge variant="default">Subscription</Badge>
-                              ) : (
-                                <Badge variant="outline">One-time</Badge>
-                              )}
-                            </TableCell>
-                            <TableCell className="font-bold text-green-600">
-                              ${(order.amount / 100).toFixed(2)}
-                            </TableCell>
-                            <TableCell className="text-sm">
-                              {new Date(order.created_at).toLocaleString('en-US', {
-                                timeZone: 'America/Los_Angeles',
-                                month: 'short',
-                                day: 'numeric',
-                                year: 'numeric',
-                                hour: '2-digit',
-                                minute: '2-digit'
-                              })} PST
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                    </TableBody>
-                  </Table>
+                              </TableCell>
+                              <TableCell className="font-bold text-green-600 text-xs sm:text-sm whitespace-nowrap">
+                                ${(order.amount / 100).toFixed(2)}
+                              </TableCell>
+                              <TableCell className="text-xs sm:text-sm whitespace-nowrap">
+                                {new Date(order.created_at).toLocaleString('en-US', {
+                                  timeZone: 'America/Los_Angeles',
+                                  month: 'short',
+                                  day: 'numeric',
+                                  year: 'numeric',
+                                  hour: '2-digit',
+                                  minute: '2-digit'
+                                })} PST
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                      </TableBody>
+                    </Table>
+                  </div>
                 )}
               </div>
             </CardContent>
@@ -2004,6 +2048,7 @@ export default function AdminDashboard() {
           </Card>
         </TabsContent>
       </Tabs>
+      </div>
     </div>
   );
 }
