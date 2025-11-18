@@ -626,38 +626,38 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="container mx-auto p-3 sm:p-6 space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold flex items-center gap-2">
-            <BarChart3 className="h-7 w-7 text-primary" />
+          <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2">
+            <BarChart3 className="h-6 w-6 sm:h-7 sm:w-7 text-primary" />
             Admin Dashboard
           </h1>
-          <p className="text-muted-foreground">JumpinAI Business Analytics & Management</p>
+          <p className="text-sm sm:text-base text-muted-foreground">JumpinAI Business Analytics & Management</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
           <ThemeToggle />
-          <Button onClick={() => fetchAdminData()} variant="outline">
-            <RefreshCcw className="h-4 w-4 mr-2" />
-            Refresh
+          <Button onClick={() => fetchAdminData()} variant="outline" size="sm" className="flex-1 sm:flex-none">
+            <RefreshCcw className="h-4 w-4 sm:mr-2" />
+            <span className="hidden sm:inline">Refresh</span>
           </Button>
-          <Button onClick={syncToGoogleSheets} disabled={syncing}>
-            <FileSpreadsheet className="h-4 w-4 mr-2" />
-            {syncing ? 'Syncing...' : 'Sync to Sheets'}
+          <Button onClick={syncToGoogleSheets} disabled={syncing} size="sm" className="flex-1 sm:flex-none">
+            <FileSpreadsheet className="h-4 w-4 sm:mr-2" />
+            <span className="hidden sm:inline">{syncing ? 'Syncing...' : 'Sync to Sheets'}</span>
           </Button>
         </div>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Users</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-3 sm:p-6">
+            <CardTitle className="text-xs sm:text-sm font-medium">Total Users</CardTitle>
+            <Users className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.totalUsers}</div>
-            <p className="text-xs text-muted-foreground">Registered accounts</p>
+          <CardContent className="p-3 sm:p-6 pt-0">
+            <div className="text-xl sm:text-2xl font-bold">{stats.totalUsers}</div>
+            <p className="text-[10px] sm:text-xs text-muted-foreground">Registered accounts</p>
           </CardContent>
         </Card>
 
@@ -870,20 +870,20 @@ export default function AdminDashboard() {
                       {jumpGenerations.map((jump) => (
                         <tr key={jump.id} className="border-b transition-colors hover:bg-muted/50">
                           <td 
-                            className="p-4 align-middle"
+                            className="p-2 sm:p-4 align-middle"
                             style={{ width: `${columnWidths.user}px`, minWidth: `${columnWidths.user}px` }}
                           >
                             {jump.is_guest ? (
                               <div>
-                                <Badge variant="outline">Guest</Badge>
+                                <Badge variant="outline" className="text-[10px] sm:text-xs">Guest</Badge>
                                 {jump.ip_address && (
-                                  <p className="text-xs text-muted-foreground mt-1">
+                                  <p className="text-[10px] sm:text-xs text-muted-foreground mt-1 break-all">
                                     IP: {jump.ip_address}
                                   </p>
                                 )}
                               </div>
                             ) : (
-                              <div className="font-medium">{jump.user_email || 'Unknown'}</div>
+                              <div className="font-medium text-xs sm:text-sm break-all">{jump.user_email || 'Unknown'}</div>
                             )}
                           </td>
                           <td 
@@ -1225,62 +1225,64 @@ export default function AdminDashboard() {
 
               {/* All Successful Transactions */}
               <div>
-                <h3 className="text-lg font-semibold mb-4">All Successful Transactions ({recentOrders.filter(o => o.is_completed).length})</h3>
+                <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 px-4 sm:px-0">All Successful Transactions ({recentOrders.filter(o => o.is_completed).length})</h3>
                 {recentOrders.filter(o => o.is_completed).length === 0 ? (
-                  <div className="text-center py-8 text-muted-foreground">
-                    <DollarSign className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                    <p className="text-lg font-medium mb-2">No transactions yet</p>
-                    <p className="text-sm">Successful transactions will appear here</p>
+                  <div className="text-center py-8 text-muted-foreground px-4">
+                    <DollarSign className="h-10 w-10 sm:h-12 sm:w-12 mx-auto mb-4 opacity-50" />
+                    <p className="text-base sm:text-lg font-medium mb-2">No transactions yet</p>
+                    <p className="text-xs sm:text-sm">Successful transactions will appear here</p>
                   </div>
                 ) : (
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Email</TableHead>
-                        <TableHead>Product/Description</TableHead>
-                        <TableHead>Type</TableHead>
-                        <TableHead>Amount</TableHead>
-                        <TableHead>Date/Time (PST)</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {recentOrders
-                        .filter(o => o.is_completed)
-                        .map((order) => (
-                          <TableRow key={order.id}>
-                            <TableCell className="font-medium">{order.user_email}</TableCell>
-                            <TableCell>
-                              <div>
-                                <div className="font-medium">{order.product_name}</div>
-                                {order.is_subscription && (
-                                  <Badge variant="secondary" className="mt-1">Subscription</Badge>
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead className="text-xs sm:text-sm">Email</TableHead>
+                          <TableHead className="text-xs sm:text-sm">Product/Description</TableHead>
+                          <TableHead className="text-xs sm:text-sm">Type</TableHead>
+                          <TableHead className="text-xs sm:text-sm">Amount</TableHead>
+                          <TableHead className="text-xs sm:text-sm whitespace-nowrap">Date/Time (PST)</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {recentOrders
+                          .filter(o => o.is_completed)
+                          .map((order) => (
+                            <TableRow key={order.id}>
+                              <TableCell className="font-medium text-xs sm:text-sm break-all">{order.user_email}</TableCell>
+                              <TableCell>
+                                <div>
+                                  <div className="font-medium text-xs sm:text-sm">{order.product_name}</div>
+                                  {order.is_subscription && (
+                                    <Badge variant="secondary" className="mt-1 text-[10px] sm:text-xs">Subscription</Badge>
+                                  )}
+                                </div>
+                              </TableCell>
+                              <TableCell>
+                                {order.is_subscription ? (
+                                  <Badge variant="default" className="text-[10px] sm:text-xs">Subscription</Badge>
+                                ) : (
+                                  <Badge variant="outline" className="text-[10px] sm:text-xs">One-time</Badge>
                                 )}
-                              </div>
-                            </TableCell>
-                            <TableCell>
-                              {order.is_subscription ? (
-                                <Badge variant="default">Subscription</Badge>
-                              ) : (
-                                <Badge variant="outline">One-time</Badge>
-                              )}
-                            </TableCell>
-                            <TableCell className="font-bold text-green-600">
-                              ${(order.amount / 100).toFixed(2)}
-                            </TableCell>
-                            <TableCell className="text-sm">
-                              {new Date(order.created_at).toLocaleString('en-US', {
-                                timeZone: 'America/Los_Angeles',
-                                month: 'short',
-                                day: 'numeric',
-                                year: 'numeric',
-                                hour: '2-digit',
-                                minute: '2-digit'
-                              })} PST
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                    </TableBody>
-                  </Table>
+                              </TableCell>
+                              <TableCell className="font-bold text-green-600 text-xs sm:text-sm whitespace-nowrap">
+                                ${(order.amount / 100).toFixed(2)}
+                              </TableCell>
+                              <TableCell className="text-xs sm:text-sm whitespace-nowrap">
+                                {new Date(order.created_at).toLocaleString('en-US', {
+                                  timeZone: 'America/Los_Angeles',
+                                  month: 'short',
+                                  day: 'numeric',
+                                  year: 'numeric',
+                                  hour: '2-digit',
+                                  minute: '2-digit'
+                                })} PST
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                      </TableBody>
+                    </Table>
+                  </div>
                 )}
               </div>
             </CardContent>
