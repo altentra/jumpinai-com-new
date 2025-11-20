@@ -1033,42 +1033,42 @@ export default function AdminDashboard() {
             <CardContent className="space-y-6">
               {/* Guest Usage Tracking */}
               <div>
-                <h3 className="text-lg font-semibold mb-4">Guest User Tracking ({guestUsers.length} unique IPs)</h3>
+                <h3 className="text-sm sm:text-lg font-semibold mb-3 sm:mb-4">Guest User Tracking ({guestUsers.length} unique IPs)</h3>
                 {guestUsers.length === 0 ? (
                   <div className="text-center py-8 text-muted-foreground">
-                    <Users className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                    <p className="text-lg font-medium mb-2">No guest users yet</p>
-                    <p className="text-sm">Guest user activity will appear here</p>
+                    <Users className="h-10 w-10 sm:h-12 sm:w-12 mx-auto mb-4 opacity-50" />
+                    <p className="text-base sm:text-lg font-medium mb-2">No guest users yet</p>
+                    <p className="text-xs sm:text-sm">Guest user activity will appear here</p>
                   </div>
                 ) : (
                   <div className="space-y-3">
                     {guestUsers.map((guest) => (
-                      <Card key={guest.ip_address} className="p-4 border-l-4 border-l-muted">
+                      <Card key={guest.ip_address} className="p-3 sm:p-4 border-l-4 border-l-muted">
                           <div className="space-y-3">
-                          <div className="flex items-center justify-between">
-                            <div className="space-y-1">
-                              <div className="flex items-center gap-2">
-                                <Badge variant="outline" className="text-xs">
+                          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                            <div className="space-y-1.5 sm:space-y-1 flex-1">
+                              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                                <Badge variant="outline" className="text-[10px] sm:text-xs">
                                   📍 {guest.location || 'Unknown Location'}
                                 </Badge>
-                                <Badge variant={guest.usage_count >= 3 ? 'destructive' : 'default'}>
+                                <Badge variant={guest.usage_count >= 3 ? 'destructive' : 'default'} className="text-[10px] sm:text-xs">
                                   {guest.usage_count}/3 uses
                                 </Badge>
                                 {guest.remaining_uses > 0 ? (
-                                  <Badge variant="secondary">{guest.remaining_uses} remaining</Badge>
+                                  <Badge variant="secondary" className="text-[10px] sm:text-xs">{guest.remaining_uses} remaining</Badge>
                                 ) : (
-                                  <Badge variant="destructive">Limit reached</Badge>
+                                  <Badge variant="destructive" className="text-[10px] sm:text-xs">Limit reached</Badge>
                                 )}
                               </div>
                               {guest.user_agent && (
-                                <p className="text-xs text-muted-foreground truncate max-w-md">
+                                <p className="text-[10px] sm:text-xs text-muted-foreground break-all sm:truncate sm:max-w-md">
                                   {guest.user_agent}
                                 </p>
                               )}
                             </div>
-                            <div className="text-right text-sm">
-                              <div className="text-muted-foreground">Last Activity</div>
-                              <div className="font-medium">
+                            <div className="text-left sm:text-right text-xs sm:text-sm">
+                              <div className="text-muted-foreground text-[10px] sm:text-xs">Last Activity</div>
+                              <div className="font-medium text-xs sm:text-sm">
                                 {new Date(guest.last_used_at).toLocaleDateString('en-US', {
                                   timeZone: 'America/Los_Angeles',
                                   month: 'short',
