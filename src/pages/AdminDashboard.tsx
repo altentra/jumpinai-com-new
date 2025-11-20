@@ -597,12 +597,12 @@ export default function AdminDashboard() {
 
   if (isCheckingAdmin) {
     return (
-      <div className="container mx-auto p-6">
+      <div className="container mx-auto p-3 sm:p-6">
         <Card>
-          <CardContent className="flex items-center justify-center p-12">
+          <CardContent className="flex items-center justify-center p-8 sm:p-12">
             <div className="text-center space-y-3">
-              <Loader2 className="h-8 w-8 animate-spin mx-auto text-primary" />
-              <p className="text-muted-foreground">Verifying admin access...</p>
+              <Loader2 className="h-6 w-6 sm:h-8 sm:w-8 animate-spin mx-auto text-primary" />
+              <p className="text-sm sm:text-base text-muted-foreground">Verifying admin access...</p>
             </div>
           </CardContent>
         </Card>
@@ -610,14 +610,14 @@ export default function AdminDashboard() {
     );
   }
 
-  if (loading) {
+      if (loading) {
     return (
-      <div className="container mx-auto p-6">
+      <div className="container mx-auto p-3 sm:p-6">
         <Card>
-          <CardContent className="flex items-center justify-center p-12">
-            <Loader2 className="h-8 w-8 animate-spin mx-auto text-primary" />
+          <CardContent className="flex items-center justify-center p-8 sm:p-12">
             <div className="text-center space-y-3">
-              <p className="text-muted-foreground">Loading admin dashboard...</p>
+              <Loader2 className="h-6 w-6 sm:h-8 sm:w-8 animate-spin mx-auto text-primary" />
+              <p className="text-sm sm:text-base text-muted-foreground">Loading admin dashboard...</p>
             </div>
           </CardContent>
         </Card>
@@ -627,66 +627,69 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
-      <div className="container mx-auto p-3 sm:p-6 space-y-6">
-        {/* Header with Liquid Glass Effect */}
-        <div className="glass rounded-xl p-6 border border-border/50 backdrop-blur-xl">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-              <h1 className="text-3xl sm:text-4xl font-bold flex items-center gap-3 mb-2">
-                <div className="p-2 rounded-lg bg-primary/10 backdrop-blur-sm">
-                  <BarChart3 className="h-7 w-7 text-primary" />
+      <div className="container mx-auto p-2 sm:p-6 space-y-3 sm:space-y-6">
+        {/* Header with Liquid Glass Effect - Mobile Optimized */}
+        <div className="glass rounded-lg sm:rounded-xl p-3 sm:p-6 border border-border/50 backdrop-blur-xl">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+            <div className="flex-1">
+              <h1 className="text-xl sm:text-3xl lg:text-4xl font-bold flex items-center gap-2 sm:gap-3 mb-1 sm:mb-2">
+                <div className="p-1.5 sm:p-2 rounded-lg bg-primary/10 backdrop-blur-sm">
+                  <BarChart3 className="h-5 w-5 sm:h-7 sm:w-7 text-primary" />
                 </div>
                 <span className="gradient-text">Admin Dashboard</span>
               </h1>
-              <p className="text-sm text-muted-foreground ml-14">JumpinAI Business Analytics & Management</p>
+              <p className="text-xs sm:text-sm text-muted-foreground ml-8 sm:ml-14">JumpinAI Business Analytics & Management</p>
             </div>
-            <div className="flex gap-2 items-center">
+            <div className="flex gap-2 items-center flex-wrap">
               <ThemeToggle />
               <Button 
                 onClick={() => fetchAdminData()} 
                 variant="outline" 
-                className="glass border-border/50 hover:bg-primary/5"
+                size="sm"
+                className="glass border-border/50 hover:bg-primary/5 flex-1 sm:flex-none"
               >
-                <RefreshCcw className="h-4 w-4 mr-2" />
-                Refresh
+                <RefreshCcw className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
+                <span className="hidden sm:inline">Refresh</span>
               </Button>
               <Button 
                 onClick={syncToGoogleSheets} 
                 disabled={syncing}
-                className="bg-primary/90 hover:bg-primary"
+                size="sm"
+                className="bg-primary/90 hover:bg-primary flex-1 sm:flex-none"
               >
-                <FileSpreadsheet className="h-4 w-4 mr-2" />
-                {syncing ? 'Syncing...' : 'Sync to Sheets'}
+                <FileSpreadsheet className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
+                <span className="hidden sm:inline">{syncing ? 'Syncing...' : 'Sync to Sheets'}</span>
+                <span className="sm:hidden">{syncing ? 'Sync...' : 'Sync'}</span>
               </Button>
             </div>
           </div>
         </div>
 
-        {/* Stats Cards with Enhanced Design */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Stats Cards with Enhanced Design - Mobile Optimized */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4">
           <Card className="glass border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-lg group">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Total Users</CardTitle>
-              <div className="p-2 rounded-lg bg-blue-500/10 group-hover:bg-blue-500/20 transition-colors">
-                <Users className="h-5 w-5 text-blue-500" />
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 sm:pb-3 p-3 sm:p-6">
+              <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground">Total Users</CardTitle>
+              <div className="p-1.5 sm:p-2 rounded-lg bg-blue-500/10 group-hover:bg-blue-500/20 transition-colors">
+                <Users className="h-4 w-4 sm:h-5 sm:w-5 text-blue-500" />
               </div>
             </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold mb-1">{stats.totalUsers}</div>
-              <p className="text-xs text-muted-foreground">Registered accounts</p>
+            <CardContent className="p-3 sm:p-6 pt-0">
+              <div className="text-2xl sm:text-3xl font-bold mb-0.5 sm:mb-1">{stats.totalUsers}</div>
+              <p className="text-[10px] sm:text-xs text-muted-foreground">Registered accounts</p>
             </CardContent>
           </Card>
 
           <Card className="glass border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-lg group">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Paid Subscribers</CardTitle>
-              <div className="p-2 rounded-lg bg-amber-500/10 group-hover:bg-amber-500/20 transition-colors">
-                <Crown className="h-5 w-5 text-amber-500" />
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 sm:pb-3 p-3 sm:p-6">
+              <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground">Paid Subscribers</CardTitle>
+              <div className="p-1.5 sm:p-2 rounded-lg bg-amber-500/10 group-hover:bg-amber-500/20 transition-colors">
+                <Crown className="h-4 w-4 sm:h-5 sm:w-5 text-amber-500" />
               </div>
             </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-primary mb-1">{stats.totalSubscribers}</div>
-              <div className="flex gap-2 text-xs text-muted-foreground">
+            <CardContent className="p-3 sm:p-6 pt-0">
+              <div className="text-2xl sm:text-3xl font-bold text-primary mb-0.5 sm:mb-1">{stats.totalSubscribers}</div>
+              <div className="flex gap-1 sm:gap-2 text-[10px] sm:text-xs text-muted-foreground flex-wrap">
                 <span>S:{stats.starterSubscribers}</span>
                 <span>•</span>
                 <span>P:{stats.proSubscribers}</span>
@@ -697,60 +700,60 @@ export default function AdminDashboard() {
           </Card>
 
           <Card className="glass border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-lg group">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Total Orders</CardTitle>
-              <div className="p-2 rounded-lg bg-purple-500/10 group-hover:bg-purple-500/20 transition-colors">
-                <ShoppingBag className="h-5 w-5 text-purple-500" />
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 sm:pb-3 p-3 sm:p-6">
+              <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground">Total Orders</CardTitle>
+              <div className="p-1.5 sm:p-2 rounded-lg bg-purple-500/10 group-hover:bg-purple-500/20 transition-colors">
+                <ShoppingBag className="h-4 w-4 sm:h-5 sm:w-5 text-purple-500" />
               </div>
             </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold mb-1">{stats.totalOrders}</div>
-              <p className="text-xs text-muted-foreground">
+            <CardContent className="p-3 sm:p-6 pt-0">
+              <div className="text-2xl sm:text-3xl font-bold mb-0.5 sm:mb-1">{stats.totalOrders}</div>
+              <p className="text-[10px] sm:text-xs text-muted-foreground">
                 {stats.completedOrders} paid • {stats.abandonedCarts} abandoned
               </p>
             </CardContent>
           </Card>
 
           <Card className="glass border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-lg group">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Total Revenue</CardTitle>
-              <div className="p-2 rounded-lg bg-green-500/10 group-hover:bg-green-500/20 transition-colors">
-                <DollarSign className="h-5 w-5 text-green-500" />
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 sm:pb-3 p-3 sm:p-6">
+              <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground">Total Revenue</CardTitle>
+              <div className="p-1.5 sm:p-2 rounded-lg bg-green-500/10 group-hover:bg-green-500/20 transition-colors">
+                <DollarSign className="h-4 w-4 sm:h-5 sm:w-5 text-green-500" />
               </div>
             </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-green-600 dark:text-green-400 mb-1">
+            <CardContent className="p-3 sm:p-6 pt-0">
+              <div className="text-2xl sm:text-3xl font-bold text-green-600 dark:text-green-400 mb-0.5 sm:mb-1">
                 ${stats.totalRevenue.toFixed(2)}
               </div>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-[10px] sm:text-xs text-muted-foreground">
                 ${stats.monthlyRevenue.toFixed(2)} this month
               </p>
             </CardContent>
           </Card>
 
           <Card className="glass border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-lg group">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Newsletter</CardTitle>
-              <div className="p-2 rounded-lg bg-pink-500/10 group-hover:bg-pink-500/20 transition-colors">
-                <Mail className="h-5 w-5 text-pink-500" />
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 sm:pb-3 p-3 sm:p-6">
+              <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground">Newsletter</CardTitle>
+              <div className="p-1.5 sm:p-2 rounded-lg bg-pink-500/10 group-hover:bg-pink-500/20 transition-colors">
+                <Mail className="h-4 w-4 sm:h-5 sm:w-5 text-pink-500" />
               </div>
             </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold mb-1">{stats.totalNewsletterSubscribers}</div>
-              <p className="text-xs text-muted-foreground">Active subscribers</p>
+            <CardContent className="p-3 sm:p-6 pt-0">
+              <div className="text-2xl sm:text-3xl font-bold mb-0.5 sm:mb-1">{stats.totalNewsletterSubscribers}</div>
+              <p className="text-[10px] sm:text-xs text-muted-foreground">Active subscribers</p>
             </CardContent>
           </Card>
 
           <Card className="glass border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-lg group">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Jump Generations</CardTitle>
-              <div className="p-2 rounded-lg bg-cyan-500/10 group-hover:bg-cyan-500/20 transition-colors">
-                <TrendingUp className="h-5 w-5 text-cyan-500" />
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 sm:pb-3 p-3 sm:p-6">
+              <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground">Jump Generations</CardTitle>
+              <div className="p-1.5 sm:p-2 rounded-lg bg-cyan-500/10 group-hover:bg-cyan-500/20 transition-colors">
+                <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-cyan-500" />
               </div>
             </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold mb-1">{stats.totalJumps}</div>
-              <div className="flex gap-2 text-xs text-muted-foreground">
+            <CardContent className="p-3 sm:p-6 pt-0">
+              <div className="text-2xl sm:text-3xl font-bold mb-0.5 sm:mb-1">{stats.totalJumps}</div>
+              <div className="flex gap-1 sm:gap-2 text-[10px] sm:text-xs text-muted-foreground flex-wrap">
                 <span className="text-green-600 dark:text-green-400">✓{stats.successfulJumps}</span>
                 <span>•</span>
                 <span className="text-red-600 dark:text-red-400">✗{stats.failedJumps}</span>
@@ -761,69 +764,105 @@ export default function AdminDashboard() {
           </Card>
 
           <Card className="glass border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-lg group">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Daily Revenue</CardTitle>
-              <div className="p-2 rounded-lg bg-emerald-500/10 group-hover:bg-emerald-500/20 transition-colors">
-                <TrendingUp className="h-5 w-5 text-emerald-500" />
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 sm:pb-3 p-3 sm:p-6">
+              <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground">Daily Revenue</CardTitle>
+              <div className="p-1.5 sm:p-2 rounded-lg bg-emerald-500/10 group-hover:bg-emerald-500/20 transition-colors">
+                <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-500" />
               </div>
             </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-emerald-600 dark:text-emerald-400 mb-1">
+            <CardContent className="p-3 sm:p-6 pt-0">
+              <div className="text-2xl sm:text-3xl font-bold text-emerald-600 dark:text-emerald-400 mb-0.5 sm:mb-1">
                 ${stats.dailyRevenue.toFixed(2)}
               </div>
-              <p className="text-xs text-muted-foreground">Today's earnings</p>
+              <p className="text-[10px] sm:text-xs text-muted-foreground">Today's earnings</p>
             </CardContent>
           </Card>
 
           <Card className="glass border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-lg group">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Avg Order Value</CardTitle>
-              <div className="p-2 rounded-lg bg-orange-500/10 group-hover:bg-orange-500/20 transition-colors">
-                <DollarSign className="h-5 w-5 text-orange-500" />
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 sm:pb-3 p-3 sm:p-6">
+              <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground">Avg Order Value</CardTitle>
+              <div className="p-1.5 sm:p-2 rounded-lg bg-orange-500/10 group-hover:bg-orange-500/20 transition-colors">
+                <DollarSign className="h-4 w-4 sm:h-5 sm:w-5 text-orange-500" />
               </div>
             </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold mb-1">${stats.averageOrderValue.toFixed(2)}</div>
-              <p className="text-xs text-muted-foreground">Per completed order</p>
+            <CardContent className="p-3 sm:p-6 pt-0">
+              <div className="text-2xl sm:text-3xl font-bold mb-0.5 sm:mb-1">${stats.averageOrderValue.toFixed(2)}</div>
+              <p className="text-[10px] sm:text-xs text-muted-foreground">Per completed order</p>
             </CardContent>
           </Card>
         </div>
 
-      {/* Detailed Tables */}
-      <Tabs defaultValue="jumps" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="jumps">Jump Generations</TabsTrigger>
-          <TabsTrigger value="guests">Guest Users</TabsTrigger>
-          <TabsTrigger value="revenue">Revenue</TabsTrigger>
-          <TabsTrigger value="credits">Credits Overview</TabsTrigger>
-          <TabsTrigger value="orders">Orders</TabsTrigger>
-          <TabsTrigger value="subscribers">Subscribers</TabsTrigger>
-          <TabsTrigger value="contacts">Contacts</TabsTrigger>
-          <TabsTrigger value="users">All Users</TabsTrigger>
-          <TabsTrigger value="auth-logs">Login Logs</TabsTrigger>
-        </TabsList>
+      {/* Detailed Tables - Mobile Optimized Tabs */}
+      <Tabs defaultValue="jumps" className="space-y-3 sm:space-y-4">
+        {/* Horizontal scrollable tabs on mobile */}
+        <div className="overflow-x-auto -mx-2 px-2 sm:mx-0 sm:px-0 pb-2 scrollbar-thin scrollbar-thumb-muted scrollbar-track-transparent">
+          <TabsList className="inline-flex w-auto min-w-full sm:w-full sm:grid sm:grid-cols-9 h-auto sm:h-10 p-0.5 sm:p-1 gap-0.5 sm:gap-1">
+            <TabsTrigger value="jumps" className="whitespace-nowrap px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm data-[state=active]:bg-primary/20">
+              <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">Jump Generations</span>
+              <span className="sm:hidden">Jumps</span>
+            </TabsTrigger>
+            <TabsTrigger value="guests" className="whitespace-nowrap px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm data-[state=active]:bg-primary/20">
+              <UserCheck className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">Guest Users</span>
+              <span className="sm:hidden">Guests</span>
+            </TabsTrigger>
+            <TabsTrigger value="revenue" className="whitespace-nowrap px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm data-[state=active]:bg-primary/20">
+              <DollarSign className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+              Revenue
+            </TabsTrigger>
+            <TabsTrigger value="credits" className="whitespace-nowrap px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm data-[state=active]:bg-primary/20">
+              <CreditCard className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">Credits Overview</span>
+              <span className="sm:hidden">Credits</span>
+            </TabsTrigger>
+            <TabsTrigger value="orders" className="whitespace-nowrap px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm data-[state=active]:bg-primary/20">
+              <ShoppingBag className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+              Orders
+            </TabsTrigger>
+            <TabsTrigger value="subscribers" className="whitespace-nowrap px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm data-[state=active]:bg-primary/20">
+              <Crown className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">Subscribers</span>
+              <span className="sm:hidden">Subs</span>
+            </TabsTrigger>
+            <TabsTrigger value="contacts" className="whitespace-nowrap px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm data-[state=active]:bg-primary/20">
+              <Mail className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+              Contacts
+            </TabsTrigger>
+            <TabsTrigger value="users" className="whitespace-nowrap px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm data-[state=active]:bg-primary/20">
+              <Users className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">All Users</span>
+              <span className="sm:hidden">Users</span>
+            </TabsTrigger>
+            <TabsTrigger value="auth-logs" className="whitespace-nowrap px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm data-[state=active]:bg-primary/20">
+              <Shield className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">Login Logs</span>
+              <span className="sm:hidden">Logs</span>
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
         <TabsContent value="jumps">
-          <Card>
-            <CardHeader>
-              <CardTitle>Jump Generation Logs ({stats.totalJumps})</CardTitle>
-              <p className="text-sm text-muted-foreground">
+          <Card className="glass border-border/50">
+            <CardHeader className="p-3 sm:p-6">
+              <CardTitle className="text-base sm:text-lg">Jump Generation Logs ({stats.totalJumps})</CardTitle>
+              <p className="text-xs sm:text-sm text-muted-foreground mt-1">
                 Track all jump generation attempts including successes, failures, and guest usage
               </p>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-0 sm:p-6 sm:pt-0">
               {jumpGenerations.length === 0 ? (
-                <div className="text-center py-8 text-muted-foreground">
-                  <TrendingUp className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p className="text-lg font-medium mb-2">No jump generations yet</p>
-                  <p className="text-sm">Jump generation logs will appear here</p>
+                <div className="text-center py-8 text-muted-foreground px-4">
+                  <TrendingUp className="h-10 w-10 sm:h-12 sm:w-12 mx-auto mb-4 opacity-50" />
+                  <p className="text-base sm:text-lg font-medium mb-2">No jump generations yet</p>
+                  <p className="text-xs sm:text-sm">Jump generation logs will appear here</p>
                 </div>
               ) : (
                 <div className="overflow-x-auto">
-                  <table className="w-full caption-bottom text-sm">
+                  <table className="w-full caption-bottom text-xs sm:text-sm">
                     <thead className="[&_tr]:border-b">
                       <tr className="border-b transition-colors hover:bg-muted/50">
-                        <th 
+                        <th
                           className="h-12 px-4 text-left align-middle font-medium text-muted-foreground"
                           style={{ width: `${columnWidths.user}px`, minWidth: `${columnWidths.user}px`, position: 'relative' }}
                         >

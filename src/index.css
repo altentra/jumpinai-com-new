@@ -539,3 +539,36 @@ iframe[src*="cloudflare"] {
   display: none !important;
 }
 
+@layer utilities {
+  /* Custom scrollbar for horizontal scrolling - Mobile Optimized */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+  }
+  
+  .scrollbar-thumb-muted {
+    scrollbar-color: hsl(var(--muted-foreground) / 0.3) transparent;
+  }
+  
+  .scrollbar-track-transparent {
+    scrollbar-width: thin;
+  }
+  
+  /* Webkit scrollbar styling for better mobile UX */
+  .scrollbar-thin::-webkit-scrollbar {
+    height: 4px;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted-foreground) / 0.3);
+    border-radius: 2px;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground) / 0.5);
+  }
+}
+
