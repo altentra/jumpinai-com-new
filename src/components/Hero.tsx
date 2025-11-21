@@ -109,9 +109,23 @@ const Hero = () => {
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div className="animate-fade-in-up">
           {/* Mini-Tagline */}
-          <p className="text-sm sm:text-base md:text-lg text-muted-foreground/80 mb-8 sm:mb-10 font-light max-w-2xl mx-auto px-2 tracking-wide uppercase mt-20 sm:mt-24 md:mt-28">
-            Jump into AI with <span className="font-semibold text-foreground">clarity and direction</span>
-          </p>
+          <div className="flex justify-center mb-8 sm:mb-10 mt-20 sm:mt-24 md:mt-28">
+            <div className="relative group inline-block">
+              {/* Liquid glass glow effect */}
+              <div className="absolute -inset-1 bg-gradient-to-r from-white/20 via-white/30 to-white/20 rounded-full blur-lg opacity-50 group-hover:opacity-75 transition duration-500"></div>
+              
+              {/* Glass casing */}
+              <div className="relative px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-br from-white/10 via-white/5 to-white/10 backdrop-blur-xl rounded-full border border-white/20 shadow-2xl">
+                {/* Shine effect */}
+                <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent rounded-full opacity-40"></div>
+                
+                {/* Text */}
+                <p className="relative text-sm sm:text-base md:text-lg text-white font-light tracking-wide">
+                  Jump into AI with clarity and direction
+                </p>
+              </div>
+            </div>
+          </div>
           
           {/* Main H1 Title */}
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-6 sm:mb-8 tracking-tight font-display leading-tight pb-2">
