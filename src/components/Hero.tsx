@@ -34,46 +34,33 @@ const Hero = () => {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-8">
-      {/* Premium Clean Gradient Base */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-gray-50 to-blue-50/30 dark:from-gray-950 dark:via-slate-950 dark:to-blue-950/20"></div>
+      {/* Main Premium Gradient Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-slate-950 dark:via-indigo-950 dark:to-blue-950"></div>
       
-      {/* Layered Modern Gradients */}
-      <div className="absolute inset-0 bg-gradient-to-tr from-indigo-50/40 via-transparent to-purple-50/20 dark:from-indigo-950/30 dark:via-transparent dark:to-purple-950/15"></div>
-      <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-slate-100/40 to-blue-100/30 dark:from-transparent dark:via-slate-900/50 dark:to-blue-950/25"></div>
+      {/* Secondary Gradient Layer */}
+      <div className="absolute inset-0 bg-gradient-to-tr from-purple-100/60 via-blue-50/40 to-indigo-100/50 dark:from-purple-950/60 dark:via-blue-950/40 dark:to-indigo-950/50"></div>
       
-      {/* Radial Depth */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-white/30 to-slate-100/50 dark:from-transparent dark:via-black/40 dark:to-slate-950/60"></div>
+      {/* Radial Gradient Overlay */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-100/40 via-transparent to-transparent dark:from-blue-900/30 dark:via-transparent dark:to-transparent"></div>
       
-      {/* Tech Grid Pattern - Static */}
-      <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.08]">
+      {/* Bottom Gradient Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-slate-100/60 dark:from-transparent dark:via-transparent dark:to-slate-950/70"></div>
+      
+      {/* Subtle Tech Grid - Static */}
+      <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.06]">
         <div className="absolute inset-0" style={{ 
-          backgroundImage: `linear-gradient(rgba(99, 102, 241, 0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(99, 102, 241, 0.08) 1px, transparent 1px)`,
-          backgroundSize: '64px 64px'
+          backgroundImage: `linear-gradient(rgba(99, 102, 241, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(99, 102, 241, 0.1) 1px, transparent 1px)`,
+          backgroundSize: '80px 80px'
         }}></div>
       </div>
 
-      {/* Subtle Noise Texture - Static */}
-      <div className="absolute inset-0 opacity-[0.015] dark:opacity-[0.05] mix-blend-overlay">
+      {/* Minimal Noise Texture */}
+      <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.04] mix-blend-overlay">
         <div className="absolute inset-0" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-          backgroundSize: '128px 128px'
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+          backgroundSize: '200px 200px'
         }}></div>
       </div>
-
-      {/* Premium Accent Orbs - Static */}
-      <div className="absolute -top-40 -right-40 w-[30rem] h-[30rem] bg-gradient-to-br from-blue-500/15 via-indigo-500/8 to-transparent rounded-full blur-3xl opacity-50"></div>
-      <div className="absolute -bottom-40 -left-40 w-[35rem] h-[35rem] bg-gradient-to-tr from-purple-500/12 via-blue-500/8 to-transparent rounded-full blur-3xl opacity-40"></div>
-      <div className="absolute top-1/3 right-1/4 w-[20rem] h-[20rem] bg-gradient-to-br from-indigo-500/12 via-blue-400/6 to-transparent rounded-full blur-2xl opacity-35"></div>
-
-      {/* Premium Mesh Overlay - Static */}
-      <div className="absolute inset-0 opacity-20 dark:opacity-30">
-        <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-transparent to-slate-100/30 dark:from-black/50 dark:via-gray-950/70 dark:to-slate-950/60"></div>
-        <div className="absolute top-0 right-0 w-2/3 h-2/3 bg-gradient-to-bl from-blue-50/30 via-transparent to-transparent dark:from-blue-950/30 dark:via-transparent dark:to-transparent rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-3/4 h-3/4 bg-gradient-to-tr from-indigo-50/25 via-transparent to-transparent dark:from-purple-950/25 dark:via-transparent dark:to-transparent rounded-full blur-2xl"></div>
-      </div>
-
-      {/* Bottom Fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-white/60 via-white/20 to-transparent dark:from-black/70 dark:via-black/30 dark:to-transparent"></div>
       
       {/* Enhanced Curved Bottom Arc Feature */}
       <div className="absolute bottom-0 left-0 right-0 h-40 opacity-70 dark:opacity-80">
@@ -152,7 +139,7 @@ const Hero = () => {
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                 
                 {/* Content */}
-                <Sparkles className="relative h-4 w-4 sm:h-5 sm:w-5 text-black group-hover:animate-spin" />
+                <Sparkles className="relative h-4 w-4 sm:h-5 sm:w-5 text-black" />
                 <span className="relative text-base sm:text-lg font-bold text-black whitespace-nowrap">
                   Get Started
                 </span>
@@ -161,14 +148,6 @@ const Hero = () => {
             </Link>
           </div>
         </div>
-        
-        {/* Floating Elements - Positioned away from center text on mobile */}
-        <div className="absolute top-[15%] left-4 sm:left-8 w-2 h-2 bg-gray-400 rounded-full animate-pulse dark:bg-gray-600"></div>
-        <div className="absolute top-[20%] right-8 sm:right-12 w-3 h-3 bg-gray-500 rounded-full animate-pulse animation-delay-1000 dark:bg-gray-500"></div>
-        <div className="absolute top-[70%] left-2 sm:left-4 w-1 h-1 bg-gray-600 rounded-full animate-pulse animation-delay-2000 dark:bg-gray-400"></div>
-        <div className="absolute bottom-[15%] right-6 sm:right-8 w-2 h-2 bg-gray-700 rounded-full animate-pulse animation-delay-3000 dark:bg-gray-300"></div>
-        <div className="absolute top-[80%] left-8 sm:left-12 w-1.5 h-1.5 bg-gray-500 rounded-full animate-pulse animation-delay-4000 dark:bg-gray-500"></div>
-        <div className="absolute bottom-[25%] right-2 sm:right-4 w-1 h-1 bg-gray-600 rounded-full animate-pulse animation-delay-1500 dark:bg-gray-400"></div>
       </div>
       
       {/* Bottom Gradient Fade */}
