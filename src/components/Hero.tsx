@@ -109,18 +109,18 @@ const Hero = () => {
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div className="animate-fade-in-up">
           {/* Mini-Tagline */}
-          <p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-6 sm:mb-8 font-light max-w-2xl mx-auto px-2">
+          <p className="text-sm sm:text-base md:text-lg text-muted-foreground/80 mb-8 sm:mb-10 font-light max-w-2xl mx-auto px-2 tracking-wide uppercase mt-20 sm:mt-24 md:mt-28">
             Jump into AI with <span className="font-semibold text-foreground">clarity and direction</span>
           </p>
           
           {/* Main H1 Title */}
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-6 sm:mb-8 tracking-tight font-display leading-tight">
             <span className="block gradient-text-primary">AI Adaptation Studio</span>
-            <span className="block text-3xl sm:text-4xl md:text-5xl lg:text-6xl mt-2 gradient-text-primary">for the AI Era</span>
+            <span className="block gradient-text-primary mt-2">for the AI Era</span>
           </h1>
           
           {/* Body Text */}
-          <p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-8 sm:mb-10 max-w-4xl mx-auto leading-relaxed font-light px-4">
+          <p className="text-sm sm:text-base md:text-lg text-muted-foreground mb-8 sm:mb-10 max-w-4xl mx-auto leading-relaxed font-light px-4">
             AI is advancing fast, and effective adaptation has to be personal. JumpinAI provides precision-built adaptation plans shaped around your goals, with clear, adjustable steps and tailored prompts paired with the tools that fit your needs. It gives you a confident, structured way to begin implementing AI successfully.
           </p>
           
