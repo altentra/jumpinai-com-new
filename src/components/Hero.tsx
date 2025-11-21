@@ -120,7 +120,7 @@ const Hero = () => {
                 <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-full opacity-30"></div>
                 
                 {/* Text */}
-                <p className="relative text-xs sm:text-sm text-white/90 font-semibold tracking-widest uppercase">
+                <p className="relative text-xs sm:text-sm text-white/80 font-semibold tracking-widest uppercase">
                   Jump into AI with clarity and direction
                 </p>
               </div>
