@@ -116,7 +116,7 @@ const Hero = () => {
           {/* Main H1 Title */}
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-6 sm:mb-8 tracking-tight font-display leading-tight">
             <span className="block gradient-text-primary">AI Adaptation Studio</span>
-            <span className="block gradient-text-primary mt-2">for the AI Era</span>
+            <span className="block gradient-text-primary mt-2">for the Age of Intelligence</span>
           </h1>
           
           {/* Body Text */}
