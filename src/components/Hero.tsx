@@ -37,11 +37,11 @@ const Hero = () => {
       {/* Main Dark Background - Original Colors */}
       <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-slate-100 to-stone-200 dark:from-black dark:via-gray-950 dark:to-slate-950"></div>
       
-      {/* Yellow Accent Gradient - Top Left Corner at 45 degrees */}
-      <div className="absolute top-0 left-0 w-[70%] h-[70%] bg-[linear-gradient(135deg,rgba(250,204,21,0.35)_0%,rgba(250,204,21,0.18)_30%,rgba(250,204,21,0.08)_50%,transparent_80%)] dark:bg-[linear-gradient(135deg,rgba(250,204,21,0.25)_0%,rgba(250,204,21,0.12)_30%,rgba(250,204,21,0.05)_50%,transparent_80%)]"></div>
+      {/* Sophisticated Multi-Color Gradient - 45 degree from Top Left */}
+      <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(250,204,21,0.30)_0%,rgba(251,146,60,0.20)_20%,rgba(167,139,250,0.18)_40%,rgba(59,130,246,0.12)_60%,rgba(16,185,129,0.08)_80%,transparent_100%)] dark:bg-[linear-gradient(135deg,rgba(250,204,21,0.20)_0%,rgba(251,146,60,0.14)_20%,rgba(139,92,246,0.12)_40%,rgba(59,130,246,0.08)_60%,rgba(16,185,129,0.05)_80%,transparent_100%)]"></div>
       
-      {/* Subtle Enhancement Gradients - Reduced opacity to not interfere */}
-      <div className="absolute inset-0 bg-gradient-to-b from-blue-50/10 via-transparent to-slate-100/20 dark:from-blue-950/10 dark:via-transparent dark:to-slate-900/20"></div>
+      {/* Subtle Enhancement Layer */}
+      <div className="absolute inset-0 bg-gradient-to-b from-blue-50/8 via-transparent to-slate-100/15 dark:from-blue-950/8 dark:via-transparent dark:to-slate-900/15"></div>
       
       {/* Subtle Tech Grid - Static */}
       <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.06]">
