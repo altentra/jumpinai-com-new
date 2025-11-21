@@ -63,7 +63,7 @@ Deno.serve(async (req) => {
     // Now use service role client for admin operations
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    const { email, action, planName, subscriptionEnd } = await req.json();
+    const { email, action, planName, subscriptionEnd, creditsToAdd } = await req.json();
 
     if (!email || !action) {
       throw new Error('Missing email or action');
@@ -73,9 +73,9 @@ Deno.serve(async (req) => {
 
     // Get user ID
     const { data: users } = await supabase.auth.admin.listUsers();
-    const user = users?.users?.find(u => u.email === email);
+    const targetUser = users?.users?.find(u => u.email === email);
 
-    if (!user) {
+    if (!targetUser) {
       throw new Error('User not found');
     }
 
@@ -97,7 +97,7 @@ Deno.serve(async (req) => {
         .from('subscribers')
         .upsert({
           email: email,
-          user_id: user.id,
+          user_id: targetUser.id,
           subscribed: true,
           subscription_tier: planName || 'Starter Plan',
           subscription_end: subscriptionEnd || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
@@ -109,11 +109,31 @@ Deno.serve(async (req) => {
 
       console.log(`✅ Restored subscription to ${planName} for ${email} (PROTECTED)`);
 
+      // Add credits if specified
+      let creditsAdded = 0;
+      if (creditsToAdd && creditsToAdd > 0) {
+        const { error: creditsError } = await supabase.rpc('add_user_credits', {
+          p_user_id: targetUser.id,
+          p_credits: creditsToAdd,
+          p_description: `Admin granted ${creditsToAdd} credits with ${planName} subscription`,
+          p_reference_id: `admin_grant_${Date.now()}`
+        });
+
+        if (creditsError) {
+          console.error('Failed to add credits:', creditsError);
+          throw new Error(`Subscription restored but failed to add credits: ${creditsError.message}`);
+        }
+        
+        creditsAdded = creditsToAdd;
+        console.log(`✅ Added ${creditsToAdd} credits for ${email}`);
+      }
+
       return new Response(
         JSON.stringify({
           success: true,
-          message: `Subscription restored to ${planName}`,
-          userId: user.id,
+          message: `Subscription restored to ${planName}${creditsAdded > 0 ? ` and ${creditsAdded} credits added` : ''}`,
+          userId: targetUser.id,
+          creditsAdded,
         }),
         {
           headers: { 'Content-Type': 'application/json', ...corsHeaders },
@@ -157,7 +177,7 @@ Deno.serve(async (req) => {
           total_credits_purchased: supabase.sql`total_credits_purchased - ${transaction.credits_amount}`,
           updated_at: new Date().toISOString(),
         })
-        .eq('user_id', user.id);
+        .eq('user_id', targetUser.id);
 
       if (creditsError) throw creditsError;
 
