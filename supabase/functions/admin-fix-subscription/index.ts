@@ -5,38 +5,65 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-const ADMIN_SECRET = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
-
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
+    // Get the authorization header
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      console.error('❌ Missing authorization header');
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized' }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 401 }
+      );
+    }
+
     const supabaseUrl = Deno.env.get('SUPABASE_URL');
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY');
 
-    if (!supabaseUrl || !supabaseServiceKey) {
+    if (!supabaseUrl || !supabaseServiceKey || !supabaseAnonKey) {
       throw new Error('Missing environment variables');
     }
 
-    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+    // Create client with user's JWT for role checking
+    const supabaseClient = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: authHeader } }
+    });
 
-    const { email, action, planName, subscriptionEnd, adminKey, adminUserId } = await req.json();
-    
-    // STRENGTHENED AUTHENTICATION: Require full admin secret
-    if (!adminKey || adminKey !== ADMIN_SECRET) {
-      console.error('❌ Unauthorized admin access attempt');
+    // Get the authenticated user
+    const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
+    if (userError || !user) {
+      console.error('❌ Failed to get authenticated user:', userError);
       return new Response(
-        JSON.stringify({ error: 'Unauthorized. Invalid admin credentials.' }),
-        {
-          headers: { 'Content-Type': 'application/json', ...corsHeaders },
-          status: 403,
-        }
+        JSON.stringify({ error: 'Unauthorized' }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 401 }
       );
     }
-    
-    console.log(`✅ Admin authenticated: ${adminUserId || 'system'}`);
+
+    // Check if user has admin role using the has_role RPC
+    const { data: isAdmin, error: roleError } = await supabaseClient.rpc('has_role', {
+      _user_id: user.id,
+      _role: 'admin'
+    });
+
+    if (roleError || !isAdmin) {
+      console.error('❌ Admin role check failed:', roleError);
+      return new Response(
+        JSON.stringify({ error: 'Forbidden: Admin access required' }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 403 }
+      );
+    }
+
+    console.log(`✅ Admin authenticated: ${user.email}`);
+
+    // Now use service role client for admin operations
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+    const { email, action, planName, subscriptionEnd } = await req.json();
 
     if (!email || !action) {
       throw new Error('Missing email or action');
@@ -62,7 +89,7 @@ Deno.serve(async (req) => {
       // Set change source for audit log
       await supabase.rpc('set_config', {
         setting_name: 'app.change_source',
-        setting_value: `admin_restore_by_${adminUserId || 'system'}`
+        setting_value: `admin_restore_by_${user.email}`
       });
       
       // Restore subscription with manual flag
