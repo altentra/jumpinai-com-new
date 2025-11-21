@@ -112,15 +112,15 @@ const Hero = () => {
           <div className="flex justify-center mb-8 sm:mb-10 mt-20 sm:mt-24 md:mt-28">
             <div className="relative group inline-block">
               {/* Liquid glass glow effect */}
-              <div className="absolute -inset-1 bg-gradient-to-r from-white/20 via-white/30 to-white/20 rounded-full blur-lg opacity-50 group-hover:opacity-75 transition duration-500"></div>
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-white/15 via-white/20 to-white/15 rounded-full blur-md opacity-40 group-hover:opacity-60 transition duration-500"></div>
               
               {/* Glass casing */}
-              <div className="relative px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-br from-white/10 via-white/5 to-white/10 backdrop-blur-xl rounded-full border border-white/20 shadow-2xl">
+              <div className="relative px-5 sm:px-6 py-2 sm:py-2.5 bg-gradient-to-br from-white/[0.03] via-white/[0.02] to-white/[0.03] backdrop-blur-md rounded-full border border-white/10 shadow-lg">
                 {/* Shine effect */}
-                <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent rounded-full opacity-40"></div>
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-full opacity-30"></div>
                 
                 {/* Text */}
-                <p className="relative text-sm sm:text-base md:text-lg text-white font-light tracking-wide">
+                <p className="relative text-xs sm:text-sm text-white/90 font-light tracking-widest uppercase">
                   Jump into AI with clarity and direction
                 </p>
               </div>
