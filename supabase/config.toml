@@ -101,10 +101,10 @@ verify_jwt = true
 verify_jwt = true
 
 [functions.admin-fix-subscription]
-verify_jwt = false
+verify_jwt = true
 
 [functions.reset-guest-users]
-verify_jwt = false
+verify_jwt = true
 
 [realtime]
 enabled = true
