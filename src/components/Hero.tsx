@@ -37,8 +37,8 @@ const Hero = () => {
       {/* Main Dark Background - Original Colors */}
       <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-slate-100 to-stone-200 dark:from-black dark:via-gray-950 dark:to-slate-950"></div>
       
-      {/* Yellow Accent Gradient - Top Left Corner */}
-      <div className="absolute inset-0 bg-gradient-to-br from-yellow-100/8 via-transparent to-transparent dark:from-yellow-500/8 dark:via-transparent dark:to-transparent"></div>
+      {/* Yellow Accent Gradient - Top Left Corner at 45 degrees */}
+      <div className="absolute top-0 left-0 w-[40%] h-[40%] bg-[linear-gradient(135deg,rgba(250,204,21,0.15)_0%,rgba(250,204,21,0.08)_30%,transparent_60%)] dark:bg-[linear-gradient(135deg,rgba(250,204,21,0.15)_0%,rgba(250,204,21,0.08)_30%,transparent_60%)]"></div>
       
       {/* Subtle Enhancement Gradients */}
       <div className="absolute inset-0 bg-gradient-to-b from-blue-50/20 via-transparent to-slate-100/30 dark:from-blue-950/20 dark:via-transparent dark:to-slate-900/30"></div>
