@@ -34,17 +34,14 @@ const Hero = () => {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-8">
-      {/* Main Premium Gradient Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-slate-950 dark:via-indigo-950 dark:to-blue-950"></div>
+      {/* Main Dark Background - Original Colors */}
+      <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-slate-100 to-stone-200 dark:from-black dark:via-gray-950 dark:to-slate-950"></div>
       
-      {/* Secondary Gradient Layer */}
-      <div className="absolute inset-0 bg-gradient-to-tr from-purple-100/60 via-blue-50/40 to-indigo-100/50 dark:from-purple-950/60 dark:via-blue-950/40 dark:to-indigo-950/50"></div>
+      {/* Yellow Accent Gradient - Top Left Corner */}
+      <div className="absolute inset-0 bg-gradient-to-br from-yellow-100/8 via-transparent to-transparent dark:from-yellow-500/8 dark:via-transparent dark:to-transparent"></div>
       
-      {/* Radial Gradient Overlay */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-100/40 via-transparent to-transparent dark:from-blue-900/30 dark:via-transparent dark:to-transparent"></div>
-      
-      {/* Bottom Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-slate-100/60 dark:from-transparent dark:via-transparent dark:to-slate-950/70"></div>
+      {/* Subtle Enhancement Gradients */}
+      <div className="absolute inset-0 bg-gradient-to-b from-blue-50/20 via-transparent to-slate-100/30 dark:from-blue-950/20 dark:via-transparent dark:to-slate-900/30"></div>
       
       {/* Subtle Tech Grid - Static */}
       <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.06]">
@@ -55,10 +52,10 @@ const Hero = () => {
       </div>
 
       {/* Minimal Noise Texture */}
-      <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.04] mix-blend-overlay">
+      <div className="absolute inset-0 opacity-[0.015] dark:opacity-[0.05] mix-blend-overlay">
         <div className="absolute inset-0" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-          backgroundSize: '200px 200px'
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+          backgroundSize: '128px 128px'
         }}></div>
       </div>
       
