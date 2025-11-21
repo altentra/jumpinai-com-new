@@ -34,105 +34,93 @@ const Hero = () => {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-8">
-      {/* Premium Dark Modern Gradient Base */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-100 via-gray-100 to-slate-200 dark:from-gray-950 dark:via-black dark:to-slate-950"></div>
+      {/* Premium Clean Gradient Base */}
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-gray-50 to-blue-50/30 dark:from-gray-950 dark:via-slate-950 dark:to-blue-950/20"></div>
       
-      {/* Tech-Inspired Layered Gradients */}
-      <div className="absolute inset-0 bg-gradient-to-tr from-blue-50/40 via-transparent to-indigo-50/30 dark:from-blue-950/30 dark:via-transparent dark:to-purple-950/20"></div>
-      <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-slate-100/50 to-gray-200/40 dark:from-transparent dark:via-gray-950/80 dark:to-black/90"></div>
+      {/* Layered Modern Gradients */}
+      <div className="absolute inset-0 bg-gradient-to-tr from-indigo-50/40 via-transparent to-purple-50/20 dark:from-indigo-950/30 dark:via-transparent dark:to-purple-950/15"></div>
+      <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-slate-100/40 to-blue-100/30 dark:from-transparent dark:via-slate-900/50 dark:to-blue-950/25"></div>
       
-      {/* Radial Depth Effect */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-transparent to-slate-300/50 dark:to-black/80"></div>
+      {/* Radial Depth */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-white/30 to-slate-100/50 dark:from-transparent dark:via-black/40 dark:to-slate-950/60"></div>
       
-      {/* Tech Circuit Pattern */}
-      <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.12]">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,50 L25,50 M75,50 L100,50 M50,0 L50,25 M50,75 L50,100 M25,25 L25,35 L35,35 L35,25 L25,25 M65,25 L65,35 L75,35 L75,25 L65,25 M25,65 L25,75 L35,75 L35,65 L25,65 M65,65 L65,75 L75,75 L75,65 L65,65' stroke='%236366f1' stroke-width='0.5' fill='none' opacity='0.15'/%3E%3C/svg%3E")`,
-          backgroundSize: '100px 100px'
-        }}></div>
-      </div>
-
-      {/* Advanced Grid Pattern */}
-      <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.08]">
+      {/* Tech Grid Pattern - Static */}
+      <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.08]">
         <div className="absolute inset-0" style={{ 
-          backgroundImage: `linear-gradient(rgba(99, 102, 241, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(99, 102, 241, 0.1) 1px, transparent 1px)`,
-          backgroundSize: '60px 60px'
+          backgroundImage: `linear-gradient(rgba(99, 102, 241, 0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(99, 102, 241, 0.08) 1px, transparent 1px)`,
+          backgroundSize: '64px 64px'
         }}></div>
       </div>
 
-      {/* Sophisticated Noise Texture */}
-      <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.08] mix-blend-overlay">
+      {/* Subtle Noise Texture - Static */}
+      <div className="absolute inset-0 opacity-[0.015] dark:opacity-[0.05] mix-blend-overlay">
         <div className="absolute inset-0" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-          backgroundSize: '150px 150px'
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+          backgroundSize: '128px 128px'
         }}></div>
       </div>
 
-      {/* Floating Orbs - Premium Accent */}
-      <div className="absolute -top-40 -right-40 w-[30rem] h-[30rem] bg-gradient-to-br from-blue-500/20 via-indigo-500/10 to-transparent rounded-full blur-3xl animate-pulse opacity-60"></div>
-      <div className="absolute -bottom-40 -left-40 w-[35rem] h-[35rem] bg-gradient-to-tr from-purple-500/15 via-blue-500/10 to-transparent rounded-full blur-3xl animate-pulse opacity-50" style={{animationDelay: '2s'}}></div>
-      <div className="absolute top-1/3 right-1/4 w-[20rem] h-[20rem] bg-gradient-to-br from-indigo-500/15 via-blue-400/8 to-transparent rounded-full blur-2xl animate-pulse opacity-40" style={{animationDelay: '1s'}}></div>
+      {/* Premium Accent Orbs - Static */}
+      <div className="absolute -top-40 -right-40 w-[30rem] h-[30rem] bg-gradient-to-br from-blue-500/15 via-indigo-500/8 to-transparent rounded-full blur-3xl opacity-50"></div>
+      <div className="absolute -bottom-40 -left-40 w-[35rem] h-[35rem] bg-gradient-to-tr from-purple-500/12 via-blue-500/8 to-transparent rounded-full blur-3xl opacity-40"></div>
+      <div className="absolute top-1/3 right-1/4 w-[20rem] h-[20rem] bg-gradient-to-br from-indigo-500/12 via-blue-400/6 to-transparent rounded-full blur-2xl opacity-35"></div>
 
-      {/* Animated Ripple Effects */}
-      <div className="absolute inset-0 opacity-15 dark:opacity-20">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 border border-primary/20 rounded-full animate-ping" style={{ animationDuration: '8s' }}></div>
-        <div className="absolute top-1/2 right-1/3 w-64 h-64 border border-blue-500/15 rounded-full animate-ping" style={{ animationDuration: '10s', animationDelay: '2s' }}></div>
-        <div className="absolute bottom-1/3 left-1/2 w-80 h-80 border border-indigo-500/15 rounded-full animate-ping" style={{ animationDuration: '12s', animationDelay: '4s' }}></div>
-      </div>
-
-      {/* Neural Network Lines */}
-      <div className="absolute inset-0 opacity-8 dark:opacity-15">
-        <svg className="w-full h-full" viewBox="0 0 1200 800">
-          <defs>
-            <linearGradient id="techGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="rgb(99 102 241)" stopOpacity="0.4" />
-              <stop offset="100%" stopColor="rgb(59 130 246)" stopOpacity="0.1" />
-            </linearGradient>
-          </defs>
-          <path
-            d="M100 150 Q400 100 600 200 T1000 150"
-            stroke="url(#techGradient)"
-            strokeWidth="1.5"
-            fill="none"
-            className="animate-pulse"
-            style={{ animationDuration: '6s' }}
-          />
-          <path
-            d="M150 400 Q500 300 750 450 T1100 380"
-            stroke="url(#techGradient)"
-            strokeWidth="1"
-            fill="none"
-            className="animate-pulse"
-            style={{ animationDuration: '8s', animationDelay: '2s' }}
-          />
-          <path
-            d="M50 650 Q350 550 650 680 T950 600"
-            stroke="url(#techGradient)"
-            strokeWidth="0.8"
-            fill="none"
-            className="animate-pulse"
-            style={{ animationDuration: '7s', animationDelay: '1s' }}
-          />
-        </svg>
-      </div>
-
-      {/* Floating Tech Particles */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 left-1/5 w-2 h-2 bg-blue-500/60 rounded-full animate-bounce shadow-lg shadow-blue-500/30" style={{ animationDuration: '3s' }}></div>
-        <div className="absolute bottom-1/3 right-1/4 w-2.5 h-2.5 bg-indigo-500/70 rounded-full animate-bounce shadow-lg shadow-indigo-500/30" style={{ animationDuration: '4s', animationDelay: '1s' }}></div>
-        <div className="absolute top-1/2 left-1/3 w-1.5 h-1.5 bg-purple-500/80 rounded-full animate-pulse shadow-md shadow-purple-500/40" style={{ animationDuration: '2.5s', animationDelay: '0.5s' }}></div>
-        <div className="absolute bottom-1/4 right-1/5 w-2 h-2 bg-blue-400/70 rounded-full animate-bounce shadow-lg shadow-blue-400/30" style={{ animationDuration: '3.5s', animationDelay: '2s' }}></div>
-      </div>
-
-      {/* Premium Mesh Overlay */}
-      <div className="absolute inset-0 opacity-20 dark:opacity-40">
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-200/30 via-transparent to-blue-100/20 dark:from-black/60 dark:via-gray-950/80 dark:to-slate-950/70"></div>
-        <div className="absolute top-0 right-0 w-2/3 h-2/3 bg-gradient-to-bl from-blue-100/20 via-transparent to-transparent dark:from-blue-950/40 dark:via-transparent dark:to-transparent rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-3/4 h-3/4 bg-gradient-to-tr from-indigo-100/25 via-transparent to-transparent dark:from-purple-950/30 dark:via-transparent dark:to-transparent rounded-full blur-2xl"></div>
+      {/* Premium Mesh Overlay - Static */}
+      <div className="absolute inset-0 opacity-20 dark:opacity-30">
+        <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-transparent to-slate-100/30 dark:from-black/50 dark:via-gray-950/70 dark:to-slate-950/60"></div>
+        <div className="absolute top-0 right-0 w-2/3 h-2/3 bg-gradient-to-bl from-blue-50/30 via-transparent to-transparent dark:from-blue-950/30 dark:via-transparent dark:to-transparent rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-3/4 h-3/4 bg-gradient-to-tr from-indigo-50/25 via-transparent to-transparent dark:from-purple-950/25 dark:via-transparent dark:to-transparent rounded-full blur-2xl"></div>
       </div>
 
       {/* Bottom Fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-white/50 via-transparent to-transparent dark:from-black/60 dark:via-transparent dark:to-transparent"></div>
+      <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-white/60 via-white/20 to-transparent dark:from-black/70 dark:via-black/30 dark:to-transparent"></div>
+      
+      {/* Enhanced Curved Bottom Arc Feature */}
+      <div className="absolute bottom-0 left-0 right-0 h-40 opacity-70 dark:opacity-80">
+        <svg
+          className="absolute bottom-0 w-full h-full"
+          viewBox="0 0 1200 150"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          {/* Main jump curve */}
+          <path
+            d="M0 150L80 135C160 120 320 90 480 75C640 60 800 60 960 75C1120 90 1280 120 1360 135L1440 150V150H1360C1280 150 1120 150 960 150C800 150 640 150 480 150C320 150 160 150 80 150H0Z"
+            fill={`url(#${isDark ? 'jumpGradientDark' : 'jumpGradient'})`}
+            className="drop-shadow-lg"
+          />
+          {/* Secondary curve for depth */}
+          <path
+            d="M0 150L100 140C200 130 400 110 600 100C800 90 1000 90 1100 95L1200 100V150H1100C1000 150 800 150 600 150C400 150 200 150 100 150H0Z"
+            fill={`url(#${isDark ? 'jumpGradient2Dark' : 'jumpGradient2'})`}
+            opacity="0.7"
+          />
+          <defs>
+            <linearGradient id="jumpGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="rgb(71 85 105)" stopOpacity="0.65" />
+              <stop offset="30%" stopColor="rgb(100 116 139)" stopOpacity="0.85" />
+              <stop offset="70%" stopColor="rgb(100 116 139)" stopOpacity="0.8" />
+              <stop offset="100%" stopColor="rgb(71 85 105)" stopOpacity="0.6" />
+            </linearGradient>
+            <linearGradient id="jumpGradientDark" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="rgb(15 23 42)" stopOpacity="0.8" />
+              <stop offset="30%" stopColor="rgb(30 41 59)" stopOpacity="0.9" />
+              <stop offset="70%" stopColor="rgb(51 65 85)" stopOpacity="0.8" />
+              <stop offset="100%" stopColor="rgb(30 41 59)" stopOpacity="0.6" />
+            </linearGradient>
+            <linearGradient id="jumpGradient2" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="rgb(100 116 139)" stopOpacity="0.5" />
+              <stop offset="50%" stopColor="rgb(148 163 184)" stopOpacity="0.7" />
+              <stop offset="100%" stopColor="rgb(100 116 139)" stopOpacity="0.45" />
+            </linearGradient>
+            <linearGradient id="jumpGradient2Dark" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="rgb(51 65 85)" stopOpacity="0.6" />
+              <stop offset="50%" stopColor="rgb(71 85 105)" stopOpacity="0.8" />
+              <stop offset="100%" stopColor="rgb(55 65 81)" stopOpacity="0.5" />
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
       
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div className="animate-fade-in-up">
