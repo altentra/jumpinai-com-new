@@ -128,7 +128,7 @@ const Hero = () => {
                   
                   {/* Text */}
                   <p className="relative text-xs sm:text-sm text-white/80 font-semibold tracking-widest uppercase">
-                    Jump into AI with clarity and direction
+                    Jump into AI with clarity and precision
                   </p>
                 </div>
               </div>
@@ -137,7 +137,7 @@ const Hero = () => {
             {/* Main H1 Title */}
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-6 sm:mb-8 tracking-tight font-display leading-tight pb-2">
               <span className="block gradient-text-primary">AI Adaptation Studio</span>
-              <span className="block gradient-text-primary mt-2 pb-1">for the Age of Intelligence</span>
+              <span className="block gradient-text-primary mt-2 pb-1">that clarifies Your Path Forward</span>
             </h1>
             
             {/* Body Text */}
