@@ -169,9 +169,9 @@ const Hero = () => {
 
           {/* Right Mockups - Dynamic Professional Composition */}
           <div className="relative animate-fade-in-up animation-delay-200">
-            <div className="flex flex-col items-center gap-6 lg:gap-8">
+            <div className="flex flex-col items-center gap-4 sm:gap-6 lg:gap-8">
               {/* Desktop - Main focal point */}
-              <div className="w-full max-w-[88%] sm:max-w-[82%] lg:max-w-[75%] group">
+              <div className="w-full max-w-[92%] sm:max-w-[88%] lg:max-w-[85%] group">
                 <div className="relative rounded-xl overflow-hidden border border-white/10 shadow-2xl bg-gradient-to-br from-white/[0.03] via-white/[0.02] to-white/[0.03] backdrop-blur-sm p-1 hover:scale-[1.02] transition-transform duration-300">
                   <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent rounded-xl opacity-30"></div>
                   <img 
@@ -183,9 +183,9 @@ const Hero = () => {
               </div>
 
               {/* Mobile Screenshots - Dynamic staggered layout */}
-              <div className="relative w-full flex justify-center items-center px-4 h-48 sm:h-52 lg:h-56">
+              <div className="relative w-full flex justify-center items-center px-4 h-36 sm:h-48 lg:h-60">
                 {/* Jump Generation - Left, slightly raised */}
-                <div className="absolute left-[5%] sm:left-[8%] lg:left-[12%] top-0 w-24 sm:w-28 lg:w-32 group">
+                <div className="absolute left-[5%] sm:left-[8%] lg:left-[10%] top-0 w-20 sm:w-28 lg:w-36 group">
                   <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 transform rotate-[-4deg] hover:rotate-[-2deg] hover:scale-105 transition-all duration-300">
                     <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-2xl opacity-40"></div>
                     <img 
@@ -197,7 +197,7 @@ const Hero = () => {
                 </div>
 
                 {/* Dashboard Analytics - Center left, lower */}
-                <div className="absolute left-[28%] sm:left-[30%] lg:left-[32%] top-8 w-24 sm:w-28 lg:w-32 group">
+                <div className="absolute left-[27%] sm:left-[29%] lg:left-[30%] top-5 sm:top-8 lg:top-10 w-20 sm:w-28 lg:w-36 group">
                   <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 transform rotate-[2deg] hover:rotate-[1deg] hover:scale-105 transition-all duration-300">
                     <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-2xl opacity-40"></div>
                     <img 
@@ -209,7 +209,7 @@ const Hero = () => {
                 </div>
 
                 {/* Colorful Combos - Center right, higher */}
-                <div className="absolute right-[28%] sm:right-[30%] lg:right-[32%] top-2 w-24 sm:w-28 lg:w-32 group">
+                <div className="absolute right-[27%] sm:right-[29%] lg:right-[30%] top-1 sm:top-2 lg:top-3 w-20 sm:w-28 lg:w-36 group">
                   <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 transform rotate-[-3deg] hover:rotate-[-1deg] hover:scale-105 transition-all duration-300">
                     <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-2xl opacity-40"></div>
                     <img 
@@ -221,7 +221,7 @@ const Hero = () => {
                 </div>
 
                 {/* Clarify Features - Right, slightly raised */}
-                <div className="absolute right-[5%] sm:right-[8%] lg:right-[12%] top-4 w-24 sm:w-28 lg:w-32 group">
+                <div className="absolute right-[5%] sm:right-[8%] lg:right-[10%] top-3 sm:top-4 lg:top-6 w-20 sm:w-28 lg:w-36 group">
                   <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 transform rotate-[5deg] hover:rotate-[3deg] hover:scale-105 transition-all duration-300">
                     <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-2xl opacity-40"></div>
                     <img 
