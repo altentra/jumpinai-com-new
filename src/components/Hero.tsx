@@ -176,8 +176,8 @@ const Hero = () => {
               <div 
                 className="w-full max-w-[92%] sm:max-w-[88%] lg:max-w-[90%] group transition-all duration-1000 ease-out"
                 style={{
-                  opacity: mockupsProgress,
-                  transform: `scale(${0.95 + mockupsProgress * 0.05}) translateY(${(1 - mockupsProgress) * 40}px)`
+                  opacity: Math.min(1, mockupsProgress * 1.5),
+                  transform: `scale(${0.95 + Math.min(1, mockupsProgress * 1.5) * 0.05}) translateY(${(1 - Math.min(1, mockupsProgress * 1.5)) * 40}px)`
                 }}
               >
                 <div className="relative rounded-xl overflow-hidden border border-white/10 shadow-2xl bg-gradient-to-br from-white/[0.03] via-white/[0.02] to-white/[0.03] backdrop-blur-sm p-1 hover:scale-[1.02] transition-transform duration-300">
@@ -199,8 +199,8 @@ const Hero = () => {
                 <div 
                   className="absolute left-[5%] sm:left-[8%] lg:left-[10%] top-0 w-20 sm:w-28 lg:w-36 group transition-all duration-1000 ease-out"
                   style={{
-                    opacity: Math.max(0, (mockupsProgress - 0.1) * 1.2),
-                    transform: `translateY(${(1 - Math.max(0, (mockupsProgress - 0.1) * 1.2)) * 40}px)`
+                    opacity: Math.max(0, Math.min(1, (mockupsProgress - 0.15) * 2)),
+                    transform: `translateY(${(1 - Math.max(0, Math.min(1, (mockupsProgress - 0.15) * 2))) * 40}px)`
                   }}
                 >
                   <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 transform rotate-[-4deg] hover:rotate-[-2deg] hover:scale-105 transition-all duration-300">
@@ -219,8 +219,8 @@ const Hero = () => {
                 <div 
                   className="absolute left-[27%] sm:left-[29%] lg:left-[30%] top-5 sm:top-8 lg:top-10 w-20 sm:w-28 lg:w-36 group transition-all duration-1000 ease-out"
                   style={{
-                    opacity: Math.max(0, (mockupsProgress - 0.2) * 1.2),
-                    transform: `translateY(${(1 - Math.max(0, (mockupsProgress - 0.2) * 1.2)) * 40}px)`
+                    opacity: Math.max(0, Math.min(1, (mockupsProgress - 0.3) * 2)),
+                    transform: `translateY(${(1 - Math.max(0, Math.min(1, (mockupsProgress - 0.3) * 2))) * 40}px)`
                   }}
                 >
                   <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 transform rotate-[2deg] hover:rotate-[1deg] hover:scale-105 transition-all duration-300">
@@ -239,8 +239,8 @@ const Hero = () => {
                 <div 
                   className="absolute right-[27%] sm:right-[29%] lg:right-[30%] top-1 sm:top-2 lg:top-3 w-20 sm:w-28 lg:w-36 group transition-all duration-1000 ease-out"
                   style={{
-                    opacity: Math.max(0, (mockupsProgress - 0.3) * 1.2),
-                    transform: `translateY(${(1 - Math.max(0, (mockupsProgress - 0.3) * 1.2)) * 40}px)`
+                    opacity: Math.max(0, Math.min(1, (mockupsProgress - 0.45) * 2)),
+                    transform: `translateY(${(1 - Math.max(0, Math.min(1, (mockupsProgress - 0.45) * 2))) * 40}px)`
                   }}
                 >
                   <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 transform rotate-[-3deg] hover:rotate-[-1deg] hover:scale-105 transition-all duration-300">
@@ -259,8 +259,8 @@ const Hero = () => {
                 <div 
                   className="absolute right-[5%] sm:right-[8%] lg:right-[10%] top-3 sm:top-4 lg:top-6 w-20 sm:w-28 lg:w-36 group transition-all duration-1000 ease-out"
                   style={{
-                    opacity: Math.max(0, (mockupsProgress - 0.4) * 1.2),
-                    transform: `translateY(${(1 - Math.max(0, (mockupsProgress - 0.4) * 1.2)) * 40}px)`
+                    opacity: Math.max(0, Math.min(1, (mockupsProgress - 0.6) * 2)),
+                    transform: `translateY(${(1 - Math.max(0, Math.min(1, (mockupsProgress - 0.6) * 2))) * 40}px)`
                   }}
                 >
                   <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 transform rotate-[5deg] hover:rotate-[3deg] hover:scale-105 transition-all duration-300">

@@ -223,8 +223,8 @@ const Index = () => {
             <div 
               className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-700 ease-out border border-primary/10 hover:border-primary/20 shadow-sm hover:shadow-md"
               style={{
-                opacity: tabsProgress,
-                transform: `translateY(${(1 - tabsProgress) * 40}px)`
+                opacity: Math.min(1, tabsProgress * 1.5),
+                transform: `translateY(${(1 - Math.min(1, tabsProgress * 1.5)) * 40}px)`
               }}
             >
               <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -263,8 +263,8 @@ const Index = () => {
             <div 
               className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-700 ease-out border border-primary/10 hover:border-primary/20 shadow-sm hover:shadow-md"
               style={{
-                opacity: Math.max(0, (tabsProgress - 0.1) * 1.2),
-                transform: `translateY(${(1 - Math.max(0, (tabsProgress - 0.1) * 1.2)) * 40}px)`
+                opacity: Math.max(0, Math.min(1, (tabsProgress - 0.2) * 2)),
+                transform: `translateY(${(1 - Math.max(0, Math.min(1, (tabsProgress - 0.2) * 2))) * 40}px)`
               }}
             >
               <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -303,8 +303,8 @@ const Index = () => {
             <div 
               className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-700 ease-out border border-primary/10 hover:border-primary/20 shadow-sm hover:shadow-md"
               style={{
-                opacity: Math.max(0, (tabsProgress - 0.2) * 1.2),
-                transform: `translateY(${(1 - Math.max(0, (tabsProgress - 0.2) * 1.2)) * 40}px)`
+                opacity: Math.max(0, Math.min(1, (tabsProgress - 0.4) * 2)),
+                transform: `translateY(${(1 - Math.max(0, Math.min(1, (tabsProgress - 0.4) * 2))) * 40}px)`
               }}
             >
               <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -394,8 +394,8 @@ const Index = () => {
               <div 
                 className="text-center p-6 rounded-xl glass h-full flex flex-col transition-all duration-700 ease-out"
                 style={{
-                  opacity: stepsProgress,
-                  transform: `translateY(${(1 - stepsProgress) * 40}px)`
+                  opacity: Math.min(1, stepsProgress * 1.5),
+                  transform: `translateY(${(1 - Math.min(1, stepsProgress * 1.5)) * 40}px)`
                 }}
               >
                 <div className="w-10 h-10 mx-auto mb-4 backdrop-blur-xl bg-primary/5 ring-1 ring-primary/30 rounded-xl flex items-center justify-center text-primary text-sm font-bold shadow-lg">
@@ -408,8 +408,8 @@ const Index = () => {
               <div 
                 className="text-center p-6 rounded-xl glass h-full flex flex-col transition-all duration-700 ease-out"
                 style={{
-                  opacity: Math.max(0, (stepsProgress - 0.1) * 1.2),
-                  transform: `translateY(${(1 - Math.max(0, (stepsProgress - 0.1) * 1.2)) * 40}px)`
+                  opacity: Math.max(0, Math.min(1, (stepsProgress - 0.2) * 2)),
+                  transform: `translateY(${(1 - Math.max(0, Math.min(1, (stepsProgress - 0.2) * 2))) * 40}px)`
                 }}
               >
                 <div className="w-10 h-10 mx-auto mb-4 backdrop-blur-xl bg-primary/5 ring-1 ring-primary/30 rounded-xl flex items-center justify-center text-primary text-sm font-bold shadow-lg">
@@ -422,8 +422,8 @@ const Index = () => {
               <div 
                 className="text-center p-6 rounded-xl glass h-full flex flex-col transition-all duration-700 ease-out"
                 style={{
-                  opacity: Math.max(0, (stepsProgress - 0.2) * 1.2),
-                  transform: `translateY(${(1 - Math.max(0, (stepsProgress - 0.2) * 1.2)) * 40}px)`
+                  opacity: Math.max(0, Math.min(1, (stepsProgress - 0.4) * 2)),
+                  transform: `translateY(${(1 - Math.max(0, Math.min(1, (stepsProgress - 0.4) * 2))) * 40}px)`
                 }}
               >
                 <div className="w-10 h-10 mx-auto mb-4 backdrop-blur-xl bg-primary/5 ring-1 ring-primary/30 rounded-xl flex items-center justify-center text-primary text-sm font-bold shadow-lg">
@@ -466,8 +466,8 @@ const Index = () => {
             <div 
               className="glass rounded-2xl p-6 lg:p-8 border border-primary/20 shadow-lg backdrop-blur-xl transition-all duration-700 ease-out"
               style={{
-                opacity: clarificationProgress,
-                transform: `translateY(${(1 - clarificationProgress) * 40}px)`
+                opacity: Math.min(1, clarificationProgress * 1.3),
+                transform: `translateY(${(1 - Math.min(1, clarificationProgress * 1.3)) * 40}px)`
               }}
             >
               <h3 className="text-lg lg:text-xl font-bold mb-6 text-center font-display">
@@ -528,8 +528,8 @@ const Index = () => {
                 <div 
                   className="relative pl-4 sm:pl-6 border-l-2 border-primary/40 transition-all duration-700 ease-out"
                   style={{
-                    opacity: Math.max(0, (clarificationProgress - 0.05) * 1.1),
-                    transform: `translateX(${(1 - Math.max(0, (clarificationProgress - 0.05) * 1.1)) * -30}px)`
+                    opacity: Math.max(0, Math.min(1, (clarificationProgress - 0.15) * 2)),
+                    transform: `translateX(${(1 - Math.max(0, Math.min(1, (clarificationProgress - 0.15) * 2))) * -30}px)`
                   }}
                 >
                   <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full backdrop-blur-xl bg-primary/90 ring-2 ring-primary/30 flex items-center justify-center text-xs font-bold text-primary-foreground">
@@ -553,8 +553,8 @@ const Index = () => {
                 <div 
                   className="relative pl-4 sm:pl-6 border-l-2 border-primary/30 ml-2 sm:ml-4 transition-all duration-700 ease-out"
                   style={{
-                    opacity: Math.max(0, (clarificationProgress - 0.15) * 1.1),
-                    transform: `translateX(${(1 - Math.max(0, (clarificationProgress - 0.15) * 1.1)) * -30}px)`
+                    opacity: Math.max(0, Math.min(1, (clarificationProgress - 0.28) * 2)),
+                    transform: `translateX(${(1 - Math.max(0, Math.min(1, (clarificationProgress - 0.28) * 2))) * -30}px)`
                   }}
                 >
                   <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full backdrop-blur-xl bg-primary/80 ring-2 ring-primary/20 flex items-center justify-center text-xs font-bold text-primary-foreground">
@@ -592,8 +592,8 @@ const Index = () => {
                 <div 
                   className="relative pl-4 sm:pl-6 border-l-2 border-primary/20 ml-4 sm:ml-8 transition-all duration-700 ease-out"
                   style={{
-                    opacity: Math.max(0, (clarificationProgress - 0.25) * 1.1),
-                    transform: `translateX(${(1 - Math.max(0, (clarificationProgress - 0.25) * 1.1)) * -30}px)`
+                    opacity: Math.max(0, Math.min(1, (clarificationProgress - 0.41) * 2)),
+                    transform: `translateX(${(1 - Math.max(0, Math.min(1, (clarificationProgress - 0.41) * 2))) * -30}px)`
                   }}
                 >
                   <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full backdrop-blur-xl bg-primary/70 ring-2 ring-primary/15 flex items-center justify-center text-xs font-bold text-primary-foreground">
@@ -631,8 +631,8 @@ const Index = () => {
                 <div 
                   className="relative pl-4 sm:pl-6 border-l-2 border-primary/15 ml-6 sm:ml-12 transition-all duration-700 ease-out"
                   style={{
-                    opacity: Math.max(0, (clarificationProgress - 0.35) * 1.1),
-                    transform: `translateX(${(1 - Math.max(0, (clarificationProgress - 0.35) * 1.1)) * -30}px)`
+                    opacity: Math.max(0, Math.min(1, (clarificationProgress - 0.54) * 2)),
+                    transform: `translateX(${(1 - Math.max(0, Math.min(1, (clarificationProgress - 0.54) * 2))) * -30}px)`
                   }}
                 >
                   <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full backdrop-blur-xl bg-primary/60 ring-2 ring-primary/10 flex items-center justify-center text-xs font-bold text-primary-foreground">
@@ -670,8 +670,8 @@ const Index = () => {
                 <div 
                   className="relative pl-4 sm:pl-6 border-l-2 border-primary/10 ml-8 sm:ml-16 transition-all duration-700 ease-out"
                   style={{
-                    opacity: Math.max(0, (clarificationProgress - 0.45) * 1.1),
-                    transform: `translateX(${(1 - Math.max(0, (clarificationProgress - 0.45) * 1.1)) * -30}px)`
+                    opacity: Math.max(0, Math.min(1, (clarificationProgress - 0.67) * 2)),
+                    transform: `translateX(${(1 - Math.max(0, Math.min(1, (clarificationProgress - 0.67) * 2))) * -30}px)`
                   }}
                 >
                   <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full backdrop-blur-xl bg-primary/50 ring-2 ring-primary/5 flex items-center justify-center text-xs font-bold text-primary-foreground">
