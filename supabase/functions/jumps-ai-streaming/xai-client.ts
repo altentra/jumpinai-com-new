@@ -2,7 +2,7 @@
 export async function callXAIWithRetry(
   prompt: string,
   apiKey: string,
-  model: string = 'grok-2-latest',
+  model: string = 'grok-4-1-fast-reasoning',
   maxRetries: number = 3
 ): Promise<string> {
   let lastError: Error | null = null;
