@@ -116,7 +116,7 @@ const Hero = () => {
           {/* Left Content */}
           <div className="animate-fade-in-up text-center lg:text-left">
             {/* Mini-Tagline */}
-            <div className="flex justify-center lg:justify-start mb-6 sm:mb-8 mt-20 sm:mt-24 md:mt-28 lg:mt-12">
+            <div className="flex justify-center lg:justify-start mb-6 sm:mb-8 mt-20 sm:mt-24 md:mt-28 lg:mt-20">
               <div className="relative group inline-block z-10">
                 {/* Liquid glass glow effect */}
                 <div className="absolute -inset-0.5 bg-gradient-to-r from-white/15 via-white/20 to-white/15 rounded-full blur-md opacity-40 group-hover:opacity-60 transition duration-500"></div>
@@ -135,7 +135,7 @@ const Hero = () => {
             </div>
             
             {/* Main H1 Title */}
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-6xl xl:text-7xl font-black mb-6 sm:mb-8 tracking-tight font-display leading-tight pb-2">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-5xl xl:text-6xl font-black mb-6 sm:mb-8 tracking-tight font-display leading-tight pb-2">
               <span className="block gradient-text-primary">AI Adaptation Studio</span>
               <span className="block gradient-text-primary mt-2 pb-1">that clarifies Your Path Forward</span>
             </h1>
@@ -171,7 +171,7 @@ const Hero = () => {
           <div className="relative animate-fade-in-up animation-delay-200">
             <div className="flex flex-col items-center gap-4 sm:gap-6 lg:gap-8">
               {/* Desktop - Main focal point */}
-              <div className="w-full max-w-[92%] sm:max-w-[88%] lg:max-w-[85%] group">
+              <div className="w-full max-w-[92%] sm:max-w-[88%] lg:max-w-[90%] group">
                 <div className="relative rounded-xl overflow-hidden border border-white/10 shadow-2xl bg-gradient-to-br from-white/[0.03] via-white/[0.02] to-white/[0.03] backdrop-blur-sm p-1 hover:scale-[1.02] transition-transform duration-300">
                   <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent rounded-xl opacity-30"></div>
                   <img 
