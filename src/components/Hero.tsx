@@ -167,12 +167,24 @@ const Hero = () => {
             </div>
           </div>
 
-          {/* Right Mockups */}
+          {/* Right Mockups - Improved Layout */}
           <div className="relative animate-fade-in-up animation-delay-200">
             <div className="relative h-[400px] lg:h-[600px]">
-              {/* Desktop Dashboard - Main focal point */}
+              {/* Desktop Studio - Primary focal point (top) */}
               <div className="absolute top-0 left-0 right-0 z-20 group">
-                <div className="relative rounded-xl overflow-hidden border border-white/10 shadow-2xl bg-gradient-to-br from-white/[0.03] via-white/[0.02] to-white/[0.03] backdrop-blur-sm p-1">
+                <div className="relative rounded-xl overflow-hidden border border-white/10 shadow-2xl bg-gradient-to-br from-white/[0.03] via-white/[0.02] to-white/[0.03] backdrop-blur-sm p-1 hover:scale-[1.02] transition-transform duration-300">
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent rounded-xl opacity-30"></div>
+                  <img 
+                    src={heroDesktopStudio} 
+                    alt="JumpinAI Studio" 
+                    className="relative w-full rounded-lg shadow-lg"
+                  />
+                </div>
+              </div>
+
+              {/* Desktop Dashboard - Secondary (bottom, slightly offset) */}
+              <div className="absolute bottom-8 left-4 right-4 z-15 group opacity-90">
+                <div className="relative rounded-xl overflow-hidden border border-white/10 shadow-2xl bg-gradient-to-br from-white/[0.03] via-white/[0.02] to-white/[0.03] backdrop-blur-sm p-1 hover:scale-[1.02] transition-transform duration-300">
                   <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent rounded-xl opacity-30"></div>
                   <img 
                     src={heroDesktopDashboard} 
@@ -182,20 +194,22 @@ const Hero = () => {
                 </div>
               </div>
 
-              {/* Mobile Screenshots - Floating around */}
-              <div className="absolute bottom-12 -left-8 z-30 w-48 group">
-                <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 transform rotate-[-8deg] hover:rotate-[-4deg] transition-transform duration-300">
+              {/* Mobile Screenshots - Better positioned floating elements */}
+              {/* Left mobile - Jumps */}
+              <div className="absolute bottom-2 -left-6 lg:-left-10 z-30 w-40 lg:w-44 group">
+                <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 transform rotate-[-6deg] hover:rotate-[-3deg] hover:scale-105 transition-all duration-300">
                   <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-2xl opacity-40"></div>
                   <img 
-                    src={heroMobileDashboard} 
-                    alt="Mobile Dashboard" 
+                    src={heroMobileJumps} 
+                    alt="Mobile My Jumps" 
                     className="relative w-full rounded-xl shadow-lg"
                   />
                 </div>
               </div>
 
-              <div className="absolute bottom-0 -right-4 z-30 w-48 group">
-                <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 transform rotate-[8deg] hover:rotate-[4deg] transition-transform duration-300">
+              {/* Right mobile - Prompts */}
+              <div className="absolute bottom-12 -right-4 lg:-right-8 z-30 w-40 lg:w-44 group">
+                <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 transform rotate-[6deg] hover:rotate-[3deg] hover:scale-105 transition-all duration-300">
                   <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-2xl opacity-40"></div>
                   <img 
                     src={heroMobilePrompts} 
@@ -205,12 +219,13 @@ const Hero = () => {
                 </div>
               </div>
 
-              <div className="absolute top-20 -right-12 z-10 w-48 group">
-                <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 transform rotate-[12deg] hover:rotate-[6deg] transition-transform duration-300">
+              {/* Top right mobile - Dashboard */}
+              <div className="absolute top-16 lg:top-12 -right-6 lg:-right-10 z-25 w-40 lg:w-44 group">
+                <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 transform rotate-[10deg] hover:rotate-[5deg] hover:scale-105 transition-all duration-300">
                   <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-2xl opacity-40"></div>
                   <img 
-                    src={heroMobileJumps} 
-                    alt="Mobile My Jumps" 
+                    src={heroMobileDashboard} 
+                    alt="Mobile Dashboard" 
                     className="relative w-full rounded-xl shadow-lg"
                   />
                 </div>
