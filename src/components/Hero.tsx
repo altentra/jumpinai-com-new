@@ -168,7 +168,7 @@ const Hero = () => {
           </div>
 
           {/* Right Mockups - Dynamic Professional Composition */}
-          <div className="relative animate-fade-in-up animation-delay-200">
+          <div className="relative animate-fade-in-up animation-delay-200 mt-20 sm:mt-24 md:mt-28 lg:mt-20">
             <div className="flex flex-col items-center gap-4 sm:gap-6 lg:gap-8">
               {/* Desktop - Main focal point */}
               <div className="w-full max-w-[92%] sm:max-w-[88%] lg:max-w-[90%] group">
