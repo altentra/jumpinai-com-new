@@ -387,7 +387,7 @@ async function callXAI(
 ): Promise<any> {
   const { systemPrompt, userPrompt, expectedTokens } = getStepPrompts(step, context, overviewContent);
   
-  console.log(`🚀 Step ${step}: Calling xAI API (model: grok-4-1-fast-reasoning, max_tokens: ${expectedTokens})`);
+  console.log(`🚀 Step ${step}: Calling xAI API (model: grok-4-1-fast-non-reasoning, max_tokens: ${expectedTokens})`);
   
   const response = await fetch('https://api.x.ai/v1/chat/completions', {
     method: 'POST',
@@ -396,7 +396,7 @@ async function callXAI(
       'Content-Type': 'application/json',
     },
       body: JSON.stringify({
-        model: 'grok-4-1-fast-reasoning',
+        model: 'grok-4-1-fast-non-reasoning',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt }
