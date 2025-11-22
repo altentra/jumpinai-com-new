@@ -4,8 +4,7 @@ import { ArrowRight, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import logoTransparent from "@/assets/logo-transparent.png";
-import heroDesktopDashboard from "@/assets/hero-desktop-dashboard.jpg";
-import heroDesktopStudio from "@/assets/hero-desktop-studio.jpg";
+import heroDesktopNew from "@/assets/hero-desktop-new.jpg";
 import heroMobileDashboard from "@/assets/hero-mobile-dashboard.png";
 import heroMobilePrompts from "@/assets/hero-mobile-prompts.png";
 import heroMobileJumps from "@/assets/hero-mobile-jumps.png";
@@ -170,12 +169,12 @@ const Hero = () => {
           {/* Right Mockups - Improved Layout */}
           <div className="relative animate-fade-in-up animation-delay-200">
             <div className="relative h-[400px] lg:h-[600px]">
-              {/* Desktop Studio - Primary focal point */}
+              {/* Desktop - Primary focal point */}
               <div className="absolute top-0 left-0 right-0 z-20 group">
                 <div className="relative rounded-xl overflow-hidden border border-white/10 shadow-2xl bg-gradient-to-br from-white/[0.03] via-white/[0.02] to-white/[0.03] backdrop-blur-sm p-1 hover:scale-[1.02] transition-transform duration-300">
                   <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent rounded-xl opacity-30"></div>
                   <img 
-                    src={heroDesktopStudio} 
+                    src={heroDesktopNew} 
                     alt="JumpinAI Studio" 
                     className="relative w-full rounded-lg shadow-lg"
                   />
