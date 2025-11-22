@@ -445,38 +445,80 @@ async function callXAI(
     console.error(`JSON parse error for step ${step}:`, parseError);
     console.log('Failed content preview:', content.substring(0, 500));
     
-    // Try additional cleanup for common issues
-    try {
-      // Fix common XAI JSON issues
-      let fixed = content
-        .replace(/,(\s*[}\]])/g, '$1') // Remove trailing commas
-        .replace(/\n/g, ' ')           // Remove newlines within strings
-        .replace(/\r/g, '')            // Remove carriage returns
-        .replace(/\t/g, ' ')           // Replace tabs with spaces
-        .replace(/\s+/g, ' ')          // Normalize whitespace
-        .replace(/"\s*:\s*"/g, '":"')  // Normalize key-value spacing
-        .replace(/}\s*{/g, '},{');     // Fix adjacent objects
+    // AGGRESSIVE JSON REPAIR - Try multiple repair strategies
+    const repairStrategies = [
+      // Strategy 1: Basic cleanup
+      (json: string) => json
+        .replace(/,(\s*[}\]])/g, '$1')
+        .replace(/\n/g, ' ')
+        .replace(/\r/g, '')
+        .replace(/\t/g, ' ')
+        .replace(/\s+/g, ' ')
+        .replace(/}\s*{/g, '},{'),
       
-      const parsed = JSON.parse(fixed);
-      console.log(`Step ${step} fixed and parsed successfully`);
-      return parsed;
-    } catch (fixError) {
-      console.error('Fixed parsing also failed:', fixError);
-    }
+      // Strategy 2: Fix array syntax issues
+      (json: string) => json
+        .replace(/,(\s*[}\]])/g, '$1')
+        .replace(/\](\s*)"(\w+)":/g, '],$1"$2":')  // Add missing comma after array before key
+        .replace(/\}(\s*)"(\w+)":/g, '},$1"$2":')  // Add missing comma after object before key
+        .replace(/\](\s*)\{/g, '],{')              // Add missing comma between ] and {
+        .replace(/\}(\s*)\{/g, '},{')              // Add missing comma between } and {
+        .replace(/"\s*\n\s*"/g, '","')             // Fix broken strings across lines
+        .replace(/,+/g, ',')                       // Remove duplicate commas
+        .replace(/\[\s*,/g, '[')                   // Remove leading comma in array
+        .replace(/,\s*\]/g, ']')                   // Remove trailing comma in array
+        .replace(/,\s*\}/g, '}'),                  // Remove trailing comma in object
+      
+      // Strategy 3: Fix truncated JSON (add closing brackets)
+      (json: string) => {
+        let fixed = json.replace(/,(\s*[}\]])/g, '$1');
+        const openBraces = (fixed.match(/\{/g) || []).length;
+        const closeBraces = (fixed.match(/\}/g) || []).length;
+        const openBrackets = (fixed.match(/\[/g) || []).length;
+        const closeBrackets = (fixed.match(/\]/g) || []).length;
+        
+        // Add missing closing brackets
+        for (let i = 0; i < openBrackets - closeBrackets; i++) fixed += ']';
+        for (let i = 0; i < openBraces - closeBraces; i++) fixed += '}';
+        
+        return fixed;
+      }
+    ];
     
-    // Try to extract JSON object from text
-    const jsonMatch = content.match(/\{[\s\S]*\}|\[[\s\S]*\]/);
-    if (jsonMatch) {
+    // Try each repair strategy
+    for (let i = 0; i < repairStrategies.length; i++) {
       try {
-        let extracted = jsonMatch[0].replace(/,(\s*[}\]])/g, '$1');
-        const parsed = JSON.parse(extracted);
-        console.log(`Step ${step} extracted and parsed successfully`);
+        let repaired = content;
+        // Apply all strategies up to current one
+        for (let j = 0; j <= i; j++) {
+          repaired = repairStrategies[j](repaired);
+        }
+        const parsed = JSON.parse(repaired);
+        console.log(`✅ Step ${step} repaired using strategy ${i + 1}`);
         return parsed;
       } catch (e) {
-        console.error('Extraction also failed:', e);
+        console.log(`❌ Repair strategy ${i + 1} failed`);
       }
     }
     
+    // Last resort: Try to extract valid JSON from the content
+    const jsonMatch = content.match(/\{[\s\S]*\}|\[[\s\S]*\]/);
+    if (jsonMatch) {
+      try {
+        let extracted = jsonMatch[0];
+        // Apply all repair strategies to extracted content
+        for (const strategy of repairStrategies) {
+          extracted = strategy(extracted);
+        }
+        const parsed = JSON.parse(extracted);
+        console.log(`✅ Step ${step} extracted and repaired successfully`);
+        return parsed;
+      } catch (e) {
+        console.error('❌ All repair attempts failed:', e);
+      }
+    }
+    
+    console.error('⚠️ Using fallback response for step', step);
     return validateStepResponse(content, step, content);
   }
 }
