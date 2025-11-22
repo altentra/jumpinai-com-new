@@ -526,10 +526,10 @@ const Index = () => {
               <div className="space-y-3 sm:space-y-4">
                 {/* Level 0 */}
                 <div 
-                  className="relative pl-4 sm:pl-6 border-l-2 border-primary/40 transition-all duration-700 ease-out"
+                  className="relative pl-4 sm:pl-6 border-l-2 border-primary/40 transition-all duration-900 ease-out"
                   style={{
-                    opacity: Math.max(0, Math.min(1, (clarificationProgress - 0.15) * 2)),
-                    transform: `translateX(${(1 - Math.max(0, Math.min(1, (clarificationProgress - 0.15) * 2))) * -30}px)`
+                    opacity: Math.max(0, Math.min(1, (clarificationProgress - 0.12) * 2.5)),
+                    transform: `translateX(${(1 - Math.max(0, Math.min(1, (clarificationProgress - 0.12) * 2.5))) * -50}px) scale(${0.95 + Math.max(0, Math.min(1, (clarificationProgress - 0.12) * 2.5)) * 0.05})`
                   }}
                 >
                   <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full backdrop-blur-xl bg-primary/90 ring-2 ring-primary/30 flex items-center justify-center text-xs font-bold text-primary-foreground">
@@ -551,10 +551,10 @@ const Index = () => {
 
                 {/* Level 1 */}
                 <div 
-                  className="relative pl-4 sm:pl-6 border-l-2 border-primary/30 ml-2 sm:ml-4 transition-all duration-700 ease-out"
+                  className="relative pl-4 sm:pl-6 border-l-2 border-primary/30 ml-2 sm:ml-4 transition-all duration-900 ease-out"
                   style={{
-                    opacity: Math.max(0, Math.min(1, (clarificationProgress - 0.28) * 2)),
-                    transform: `translateX(${(1 - Math.max(0, Math.min(1, (clarificationProgress - 0.28) * 2))) * -30}px)`
+                    opacity: Math.max(0, Math.min(1, (clarificationProgress - 0.30) * 2.5)),
+                    transform: `translateX(${(1 - Math.max(0, Math.min(1, (clarificationProgress - 0.30) * 2.5))) * -50}px) scale(${0.95 + Math.max(0, Math.min(1, (clarificationProgress - 0.30) * 2.5)) * 0.05})`
                   }}
                 >
                   <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full backdrop-blur-xl bg-primary/80 ring-2 ring-primary/20 flex items-center justify-center text-xs font-bold text-primary-foreground">
@@ -590,10 +590,10 @@ const Index = () => {
 
                 {/* Level 2 */}
                 <div 
-                  className="relative pl-4 sm:pl-6 border-l-2 border-primary/20 ml-4 sm:ml-8 transition-all duration-700 ease-out"
+                  className="relative pl-4 sm:pl-6 border-l-2 border-primary/20 ml-4 sm:ml-8 transition-all duration-900 ease-out"
                   style={{
-                    opacity: Math.max(0, Math.min(1, (clarificationProgress - 0.41) * 2)),
-                    transform: `translateX(${(1 - Math.max(0, Math.min(1, (clarificationProgress - 0.41) * 2))) * -30}px)`
+                    opacity: Math.max(0, Math.min(1, (clarificationProgress - 0.48) * 2.5)),
+                    transform: `translateX(${(1 - Math.max(0, Math.min(1, (clarificationProgress - 0.48) * 2.5))) * -50}px) scale(${0.95 + Math.max(0, Math.min(1, (clarificationProgress - 0.48) * 2.5)) * 0.05})`
                   }}
                 >
                   <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full backdrop-blur-xl bg-primary/70 ring-2 ring-primary/15 flex items-center justify-center text-xs font-bold text-primary-foreground">
@@ -629,10 +629,10 @@ const Index = () => {
 
                 {/* Level 3 */}
                 <div 
-                  className="relative pl-4 sm:pl-6 border-l-2 border-primary/15 ml-6 sm:ml-12 transition-all duration-700 ease-out"
+                  className="relative pl-4 sm:pl-6 border-l-2 border-primary/15 ml-6 sm:ml-12 transition-all duration-900 ease-out"
                   style={{
-                    opacity: Math.max(0, Math.min(1, (clarificationProgress - 0.54) * 2)),
-                    transform: `translateX(${(1 - Math.max(0, Math.min(1, (clarificationProgress - 0.54) * 2))) * -30}px)`
+                    opacity: Math.max(0, Math.min(1, (clarificationProgress - 0.66) * 2.5)),
+                    transform: `translateX(${(1 - Math.max(0, Math.min(1, (clarificationProgress - 0.66) * 2.5))) * -50}px) scale(${0.95 + Math.max(0, Math.min(1, (clarificationProgress - 0.66) * 2.5)) * 0.05})`
                   }}
                 >
                   <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full backdrop-blur-xl bg-primary/60 ring-2 ring-primary/10 flex items-center justify-center text-xs font-bold text-primary-foreground">
@@ -668,10 +668,10 @@ const Index = () => {
 
                 {/* Level 4 */}
                 <div 
-                  className="relative pl-4 sm:pl-6 border-l-2 border-primary/10 ml-8 sm:ml-16 transition-all duration-700 ease-out"
+                  className="relative pl-4 sm:pl-6 border-l-2 border-primary/10 ml-8 sm:ml-16 transition-all duration-900 ease-out"
                   style={{
-                    opacity: Math.max(0, Math.min(1, (clarificationProgress - 0.67) * 2)),
-                    transform: `translateX(${(1 - Math.max(0, Math.min(1, (clarificationProgress - 0.67) * 2))) * -30}px)`
+                    opacity: Math.max(0, Math.min(1, (clarificationProgress - 0.84) * 2.5)),
+                    transform: `translateX(${(1 - Math.max(0, Math.min(1, (clarificationProgress - 0.84) * 2.5))) * -50}px) scale(${0.95 + Math.max(0, Math.min(1, (clarificationProgress - 0.84) * 2.5)) * 0.05})`
                   }}
                 >
                   <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full backdrop-blur-xl bg-primary/50 ring-2 ring-primary/5 flex items-center justify-center text-xs font-bold text-primary-foreground">
