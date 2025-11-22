@@ -4,6 +4,11 @@ import { ArrowRight, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import logoTransparent from "@/assets/logo-transparent.png";
+import heroDesktopDashboard from "@/assets/hero-desktop-dashboard.jpg";
+import heroDesktopStudio from "@/assets/hero-desktop-studio.jpg";
+import heroMobileDashboard from "@/assets/hero-mobile-dashboard.png";
+import heroMobilePrompts from "@/assets/hero-mobile-prompts.png";
+import heroMobileJumps from "@/assets/hero-mobile-jumps.png";
 
 const Hero = () => {
   const [isDark, setIsDark] = useState(false);
@@ -106,57 +111,111 @@ const Hero = () => {
         </svg>
       </div>
       
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <div className="animate-fade-in-up">
-          {/* Mini-Tagline */}
-          <div className="flex justify-center mb-8 sm:mb-10 mt-20 sm:mt-24 md:mt-28">
-            <div className="relative group inline-block">
-              {/* Liquid glass glow effect */}
-              <div className="absolute -inset-0.5 bg-gradient-to-r from-white/15 via-white/20 to-white/15 rounded-full blur-md opacity-40 group-hover:opacity-60 transition duration-500"></div>
-              
-              {/* Glass casing */}
-              <div className="relative px-5 sm:px-6 py-2 sm:py-2.5 bg-gradient-to-br from-white/[0.03] via-white/[0.02] to-white/[0.03] backdrop-blur-md rounded-full border border-white/10 shadow-lg">
-                {/* Shine effect */}
-                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-full opacity-30"></div>
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center min-h-[calc(100vh-12rem)]">
+          {/* Left Content */}
+          <div className="animate-fade-in-up text-center lg:text-left">
+            {/* Mini-Tagline */}
+            <div className="flex justify-center lg:justify-start mb-8 sm:mb-10 mt-20 sm:mt-24 md:mt-28 lg:mt-0">
+              <div className="relative group inline-block">
+                {/* Liquid glass glow effect */}
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-white/15 via-white/20 to-white/15 rounded-full blur-md opacity-40 group-hover:opacity-60 transition duration-500"></div>
                 
-                {/* Text */}
-                <p className="relative text-xs sm:text-sm text-white/80 font-semibold tracking-widest uppercase">
-                  Jump into AI with clarity and direction
-                </p>
+                {/* Glass casing */}
+                <div className="relative px-5 sm:px-6 py-2 sm:py-2.5 bg-gradient-to-br from-white/[0.03] via-white/[0.02] to-white/[0.03] backdrop-blur-md rounded-full border border-white/10 shadow-lg">
+                  {/* Shine effect */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-full opacity-30"></div>
+                  
+                  {/* Text */}
+                  <p className="relative text-xs sm:text-sm text-white/80 font-semibold tracking-widest uppercase">
+                    Jump into AI with clarity and direction
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
-          
-          {/* Main H1 Title */}
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-6 sm:mb-8 tracking-tight font-display leading-tight pb-2">
-            <span className="block gradient-text-primary">AI Adaptation Studio</span>
-            <span className="block gradient-text-primary mt-2 pb-1">for the Age of Intelligence</span>
-          </h1>
-          
-          {/* Body Text */}
-          <p className="text-sm sm:text-base md:text-lg text-muted-foreground mb-8 sm:mb-10 max-w-4xl mx-auto leading-relaxed font-light px-4">
-            AI is advancing fast, and effective adaptation has to be personal. JumpinAI provides precision-built adaptation plans shaped around your goals, with clear, adjustable steps and tailored prompts paired with the tools that fit your needs. It gives you a confident, structured way to begin implementing AI successfully.
-          </p>
-          
-          {/* Call to Action Button */}
-          <div className="flex justify-center px-4 mb-16">
-            <Link to="/jumpinai-studio" className="relative group inline-block w-full sm:w-auto">
-              {/* Liquid glass glow effect */}
-              <div className="absolute -inset-0.5 bg-gradient-to-r from-white/50 via-white/40 to-white/50 rounded-[2rem] blur-md opacity-50 group-hover:opacity-80 transition duration-500"></div>
-              
-              {/* Button */}
-              <div className="relative flex items-center justify-center gap-2 px-6 sm:px-8 py-2.5 sm:py-3 bg-gradient-to-br from-white/60 via-white/70 to-white/60 backdrop-blur-xl rounded-[2rem] border border-white/60 group-hover:border-white/80 transition-all duration-300 overflow-hidden shadow-lg">
-                {/* Shimmer effect */}
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+            
+            {/* Main H1 Title */}
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-6 sm:mb-8 tracking-tight font-display leading-tight pb-2">
+              <span className="block gradient-text-primary">AI Adaptation Studio</span>
+              <span className="block gradient-text-primary mt-2 pb-1">for the Age of Intelligence</span>
+            </h1>
+            
+            {/* Body Text */}
+            <p className="text-sm sm:text-base md:text-lg text-muted-foreground mb-8 sm:mb-10 max-w-4xl mx-auto lg:mx-0 leading-relaxed font-light px-4 lg:px-0">
+              AI is advancing fast, and effective adaptation has to be personal. JumpinAI provides precision-built adaptation plans shaped around your goals, with clear, adjustable steps and tailored prompts paired with the tools that fit your needs. It gives you a confident, structured way to begin implementing AI successfully.
+            </p>
+            
+            {/* Call to Action Button */}
+            <div className="flex justify-center lg:justify-start px-4 lg:px-0 mb-16 lg:mb-0">
+              <Link to="/jumpinai-studio" className="relative group inline-block w-full sm:w-auto">
+                {/* Liquid glass glow effect */}
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-white/50 via-white/40 to-white/50 rounded-[2rem] blur-md opacity-50 group-hover:opacity-80 transition duration-500"></div>
                 
-                {/* Content */}
-                <Sparkles className="relative h-4 w-4 sm:h-5 sm:w-5 text-black" />
-                <span className="relative text-base sm:text-lg font-bold text-black whitespace-nowrap">
-                  Get Started
-                </span>
-                <ArrowRight className="relative h-4 w-4 sm:h-5 sm:w-5 text-black group-hover:translate-x-1 transition-transform" />
+                {/* Button */}
+                <div className="relative flex items-center justify-center gap-2 px-6 sm:px-8 py-2.5 sm:py-3 bg-gradient-to-br from-white/60 via-white/70 to-white/60 backdrop-blur-xl rounded-[2rem] border border-white/60 group-hover:border-white/80 transition-all duration-300 overflow-hidden shadow-lg">
+                  {/* Shimmer effect */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                  
+                  {/* Content */}
+                  <Sparkles className="relative h-4 w-4 sm:h-5 sm:w-5 text-black" />
+                  <span className="relative text-base sm:text-lg font-bold text-black whitespace-nowrap">
+                    Get Started
+                  </span>
+                  <ArrowRight className="relative h-4 w-4 sm:h-5 sm:w-5 text-black group-hover:translate-x-1 transition-transform" />
+                </div>
+              </Link>
+            </div>
+          </div>
+
+          {/* Right Mockups */}
+          <div className="hidden lg:block relative animate-fade-in-up animation-delay-200">
+            <div className="relative h-[600px]">
+              {/* Desktop Dashboard - Main focal point */}
+              <div className="absolute top-0 left-0 right-0 z-20 group">
+                <div className="relative rounded-xl overflow-hidden border border-white/10 shadow-2xl bg-gradient-to-br from-white/[0.03] via-white/[0.02] to-white/[0.03] backdrop-blur-sm p-1">
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent rounded-xl opacity-30"></div>
+                  <img 
+                    src={heroDesktopDashboard} 
+                    alt="JumpinAI Dashboard" 
+                    className="relative w-full rounded-lg shadow-lg"
+                  />
+                </div>
               </div>
-            </Link>
+
+              {/* Mobile Screenshots - Floating around */}
+              <div className="absolute bottom-12 -left-8 z-30 w-48 group">
+                <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 transform rotate-[-8deg] hover:rotate-[-4deg] transition-transform duration-300">
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-2xl opacity-40"></div>
+                  <img 
+                    src={heroMobileDashboard} 
+                    alt="Mobile Dashboard" 
+                    className="relative w-full rounded-xl shadow-lg"
+                  />
+                </div>
+              </div>
+
+              <div className="absolute bottom-0 -right-4 z-30 w-48 group">
+                <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 transform rotate-[8deg] hover:rotate-[4deg] transition-transform duration-300">
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-2xl opacity-40"></div>
+                  <img 
+                    src={heroMobilePrompts} 
+                    alt="Mobile Tools & Prompts" 
+                    className="relative w-full rounded-xl shadow-lg"
+                  />
+                </div>
+              </div>
+
+              <div className="absolute top-20 -right-12 z-10 w-48 group">
+                <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 transform rotate-[12deg] hover:rotate-[6deg] transition-transform duration-300">
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-2xl opacity-40"></div>
+                  <img 
+                    src={heroMobileJumps} 
+                    alt="Mobile My Jumps" 
+                    className="relative w-full rounded-xl shadow-lg"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
