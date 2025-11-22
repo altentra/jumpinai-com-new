@@ -178,6 +178,9 @@ const Hero = () => {
                     src={heroDesktopNew} 
                     alt="JumpinAI Studio Dashboard" 
                     className="relative w-full rounded-lg shadow-lg"
+                    loading="eager"
+                    fetchPriority="high"
+                    decoding="async"
                   />
                 </div>
               </div>
@@ -192,6 +195,8 @@ const Hero = () => {
                       src={heroMobileGeneration} 
                       alt="AI Jump Generation" 
                       className="relative w-full rounded-xl shadow-lg"
+                      loading="eager"
+                      decoding="async"
                     />
                   </div>
                 </div>
@@ -204,6 +209,8 @@ const Hero = () => {
                       src={heroMobileDashboardGraph} 
                       alt="Dashboard Analytics" 
                       className="relative w-full rounded-xl shadow-lg"
+                      loading="eager"
+                      decoding="async"
                     />
                   </div>
                 </div>
@@ -216,6 +223,8 @@ const Hero = () => {
                       src={heroMobileComboDetail} 
                       alt="Colorful Tool & Prompt Combos" 
                       className="relative w-full rounded-xl shadow-lg"
+                      loading="eager"
+                      decoding="async"
                     />
                   </div>
                 </div>
@@ -228,6 +237,8 @@ const Hero = () => {
                       src={heroMobileClarify} 
                       alt="Clarify & Reroute" 
                       className="relative w-full rounded-xl shadow-lg"
+                      loading="eager"
+                      decoding="async"
                     />
                   </div>
                 </div>
