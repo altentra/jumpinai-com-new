@@ -5,9 +5,10 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import logoTransparent from "@/assets/logo-transparent.png";
 import heroDesktopNew from "@/assets/hero-desktop-new.jpg";
-import heroMobileDashboard from "@/assets/hero-mobile-dashboard.png";
-import heroMobilePrompts from "@/assets/hero-mobile-prompts.png";
-import heroMobileJumps from "@/assets/hero-mobile-jumps.png";
+import heroMobileCompletion from "@/assets/hero-mobile-completion.png";
+import heroMobilePlan from "@/assets/hero-mobile-plan.png";
+import heroMobileToolPrompt from "@/assets/hero-mobile-tool-prompt.jpg";
+import heroMobileDashboard from "@/assets/hero-mobile-dashboard.jpg";
 
 const Hero = () => {
   const [isDark, setIsDark] = useState(false);
@@ -181,38 +182,50 @@ const Hero = () => {
                 </div>
               </div>
 
-              {/* Mobile Screenshots - Better positioned floating elements */}
-              {/* Left mobile - Jumps */}
-              <div className="absolute bottom-2 -left-6 lg:-left-10 z-30 w-40 lg:w-44 group">
+              {/* Mobile Screenshots - 4 floating mockups */}
+              {/* Bottom left - Jump Completion */}
+              <div className="absolute bottom-0 -left-6 lg:-left-10 z-30 w-40 lg:w-44 group">
                 <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 transform rotate-[-6deg] hover:rotate-[-3deg] hover:scale-105 transition-all duration-300">
                   <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-2xl opacity-40"></div>
                   <img 
-                    src={heroMobileJumps} 
-                    alt="Mobile My Jumps" 
+                    src={heroMobileCompletion} 
+                    alt="Jump Generation Complete" 
                     className="relative w-full rounded-xl shadow-lg"
                   />
                 </div>
               </div>
 
-              {/* Right mobile - Prompts */}
-              <div className="absolute bottom-12 -right-4 lg:-right-8 z-30 w-40 lg:w-44 group">
+              {/* Bottom right - Plan Details */}
+              <div className="absolute bottom-8 -right-4 lg:-right-8 z-30 w-40 lg:w-44 group">
                 <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 transform rotate-[6deg] hover:rotate-[3deg] hover:scale-105 transition-all duration-300">
                   <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-2xl opacity-40"></div>
                   <img 
-                    src={heroMobilePrompts} 
-                    alt="Mobile Tools & Prompts" 
+                    src={heroMobilePlan} 
+                    alt="Implementation Plan Details" 
                     className="relative w-full rounded-xl shadow-lg"
                   />
                 </div>
               </div>
 
-              {/* Top right mobile - Dashboard */}
+              {/* Top left - Tool & Prompt Detail */}
+              <div className="absolute top-20 lg:top-16 -left-4 lg:-left-8 z-25 w-40 lg:w-44 group">
+                <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 transform rotate-[-8deg] hover:rotate-[-4deg] hover:scale-105 transition-all duration-300">
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-2xl opacity-40"></div>
+                  <img 
+                    src={heroMobileToolPrompt} 
+                    alt="Tool & Prompt Combo" 
+                    className="relative w-full rounded-xl shadow-lg"
+                  />
+                </div>
+              </div>
+
+              {/* Top right - Dashboard Home */}
               <div className="absolute top-16 lg:top-12 -right-6 lg:-right-10 z-25 w-40 lg:w-44 group">
                 <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 transform rotate-[10deg] hover:rotate-[5deg] hover:scale-105 transition-all duration-300">
                   <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-2xl opacity-40"></div>
                   <img 
                     src={heroMobileDashboard} 
-                    alt="Mobile Dashboard" 
+                    alt="User Dashboard" 
                     className="relative w-full rounded-xl shadow-lg"
                   />
                 </div>
