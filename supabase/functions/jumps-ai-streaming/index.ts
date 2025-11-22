@@ -237,34 +237,48 @@ Deno.serve(async (req) => {
             ? overviewResponse 
             : JSON.stringify(overviewResponse);
 
-          // Remaining steps (3 and 4 only - naming and overview already done)
-          const remainingSteps = [
-            { step: 3, type: 'comprehensive', name: 'Comprehensive Plan' },
-            { step: 4, type: 'tool_prompts', name: 'Tools & Prompts' }
-          ];
-
-          for (const { step, type, name } of remainingSteps) {
-            try {
-              console.log(`🔧 Step ${step}: Generating ${name}...`);
-              const response = await callXAIWithRetry(XAI_API_KEY, step, formData, overviewContent);
-              console.log(`✅ Step ${step} response:`, response);
-              
-              // Try to send the event
-              const sent = sendEvent(step, type, response);
-              if (!sent) {
-                console.error(`Failed to send step ${step}, attempting to continue...`);
-                // Wait a bit and try to continue anyway
-                await new Promise(resolve => setTimeout(resolve, 100));
-              }
-            } catch (stepError: any) {
-              console.error(`❌ Error in step ${step}:`, stepError.message);
-              console.error(`Error details:`, stepError);
-              // Try to send error event, then continue
-              sendEvent(step, 'error', { 
-                message: `Step ${step} (${name}) failed after retries: ${stepError.message}`,
-                retryable: false
-              });
+          // Step 3: Generate comprehensive plan
+          console.log('🔧 Step 3: Generating Comprehensive Plan...');
+          let comprehensivePlan = '';
+          try {
+            const planResponse = await callXAIWithRetry(XAI_API_KEY, 3, formData, overviewContent);
+            console.log('✅ Step 3 response:', planResponse);
+            comprehensivePlan = typeof planResponse === 'string' 
+              ? planResponse 
+              : JSON.stringify(planResponse);
+            
+            const sent = sendEvent(3, 'comprehensive', planResponse);
+            if (!sent) {
+              console.error('Failed to send step 3, attempting to continue...');
+              await new Promise(resolve => setTimeout(resolve, 100));
             }
+          } catch (stepError: any) {
+            console.error('❌ Error in step 3:', stepError.message);
+            sendEvent(3, 'error', { 
+              message: `Step 3 (Comprehensive Plan) failed after retries: ${stepError.message}`,
+              retryable: false
+            });
+          }
+
+          // Step 4: Generate tools & prompts (needs BOTH overview and comprehensive plan)
+          console.log('🔧 Step 4: Generating Tools & Prompts...');
+          try {
+            // Combine overview and comprehensive plan for Step 4 context
+            const fullContext = `${overviewContent}\n\nCOMPREHENSIVE PLAN:\n${comprehensivePlan}`;
+            const toolsResponse = await callXAIWithRetry(XAI_API_KEY, 4, formData, fullContext);
+            console.log('✅ Step 4 response:', toolsResponse);
+            
+            const sent = sendEvent(4, 'tool_prompts', toolsResponse);
+            if (!sent) {
+              console.error('Failed to send step 4, attempting to continue...');
+              await new Promise(resolve => setTimeout(resolve, 100));
+            }
+          } catch (stepError: any) {
+            console.error('❌ Error in step 4:', stepError.message);
+            sendEvent(4, 'error', { 
+              message: `Step 4 (Tools & Prompts) failed after retries: ${stepError.message}`,
+              retryable: false
+            });
           }
 
           // Send completion event
@@ -598,7 +612,7 @@ REMEMBER: Every field must be deeply personalized to THEIR specific goals and ch
     case 3:
       // STEP 3: Action Plan - 3 phases with 5 steps each
       return {
-        systemPrompt: `You are a world-class strategic execution expert. Create clear, actionable implementation plans organized into 3 phases with 5 steps each. Use **bold** markdown strategically for emphasis. Every step must be concrete, measurable, and directly tied to the user's specific goals and challenges. Return ONLY valid JSON.`,
+        systemPrompt: `You are a world-class strategic execution expert with deep knowledge of the latest AI tools and technologies as of November 2025. Create clear, actionable implementation plans organized into 3 phases with 5 steps each. Use **bold** markdown strategically for emphasis. Every step must be concrete, measurable, and directly tied to the user's specific goals and challenges. Return ONLY valid JSON.`,
         userPrompt: `Create a world-class strategic action plan for this transformation:
 
 ${baseContext}
@@ -614,6 +628,23 @@ CRITICAL REQUIREMENTS:
 5. Reference Tool #1-9 where appropriate (Tools 1-3 in Phase 1, Tools 4-6 in Phase 2, Tools 7-9 in Phase 3)
 6. Each step title should be action-oriented and inspiring
 7. Each step description should be 3-4 sentences with specific guidance
+
+🚨 CRITICAL AI TOOL REQUIREMENTS (THIS IS ABSOLUTELY MANDATORY):
+- ONLY recommend AI tools that exist and are available in November 2025
+- Recommend ONLY the LATEST and GREATEST AI tools available right now
+- Prioritize cutting-edge AI tools: ChatGPT, Claude, Gemini, Grok, Midjourney, Runway, Cursor, Replit, Make.com, Zapier, etc.
+- DO NOT recommend outdated tools, non-AI tools, or tools from past decades
+- DO NOT recommend tools like "Teachable", "Carrd", "Heroku", "Mailchimp" unless they're genuinely the BEST option
+- EMPHASIZE AI-first solutions: AI writing tools, AI video generators, AI code assistants, AI automation platforms
+- Check that every tool you mention is a real, existing, current AI tool as of November 2025
+- When referencing tools in steps, be specific but flexible enough for the tool combo to match (e.g., "an AI video generation tool like Runway or Veo" rather than naming a specific one that might not align)
+
+🎯 TOOL ALIGNMENT GUIDANCE:
+- Steps 1-3 in Phase 1 will be connected to Tool Combos #1-3 (foundation AI tools)
+- Steps 1-3 in Phase 2 will be connected to Tool Combos #4-6 (growth/scaling AI tools)
+- Steps 1-3 in Phase 3 will be connected to Tool Combos #7-9 (advanced/mastery AI tools)
+- When writing these steps, think about what AI tool category would fit (e.g., "AI writing assistant", "AI video creator", "AI automation platform")
+- The specific tools will be detailed in the Tool Combos that follow
 
 PHASE STRUCTURE:
 - Phase 1 (Foundation): Setup, research, initial implementation, quick wins
@@ -745,20 +776,42 @@ Create world-class, executive-level content that inspires action and provides cr
       };
 
     case 4:
-      // STEP 4: Tools & Prompts - infer all context from goals & challenges
+      // STEP 4: Tools & Prompts - MUST align with comprehensive plan from Step 3
       return {
-        systemPrompt: `You are an AI tool recommendation and prompt engineering expert with real-time knowledge of the latest AI tools and technologies as of October 24, 2025. You will analyze the user's goals and challenges to intelligently infer their industry, experience level, budget constraints, and urgency to recommend perfectly tailored tool+prompt combinations.
+        systemPrompt: `You are an AI tool recommendation and prompt engineering expert with real-time knowledge of the latest AI tools and technologies as of November 2025. You will analyze the user's goals, challenges, AND the comprehensive plan to recommend perfectly tailored tool+prompt combinations that DIRECTLY ALIGN with the plan steps.
+
+🚨 CRITICAL: PLAN ALIGNMENT IS MANDATORY:
+- You MUST read and analyze the comprehensive plan provided in the context
+- Your tool recommendations MUST align with the specific steps in the plan
+- Combo #1 should match Phase 1, Step 1 from the plan
+- Combo #2 should match Phase 1, Step 2 from the plan
+- Combo #3 should match Phase 1, Step 3 from the plan
+- Combo #4 should match Phase 2, Step 1 from the plan
+- Combo #5 should match Phase 2, Step 2 from the plan
+- Combo #6 should match Phase 2, Step 3 from the plan
+- Combo #7 should match Phase 3, Step 1 from the plan
+- Combo #8 should match Phase 3, Step 2 from the plan
+- Combo #9 should match Phase 3, Step 3 from the plan
+- The tool and prompt in each combo should directly support executing that specific plan step
+
+CRITICAL: AI TOOLS ONLY - NOVEMBER 2025 FOCUS:
+1. Recommend ONLY AI tools - no outdated or non-AI tools
+2. Recommend ONLY the LATEST and GREATEST AI tools available as of November 2025
+3. Check current date and ensure all tools are real, existing, and current
+4. DO NOT recommend tools from past decades or outdated solutions
+5. PRIORITIZE cutting-edge AI: ChatGPT, Claude, Gemini, Grok, Midjourney, Runway, Cursor, Replit, Make.com, Zapier, Perplexity, etc.
+6. For each tool category, recommend the BEST option available right now in November 2025
 
 CRITICAL: TOOL SELECTION & DIVERSITY REQUIREMENTS:
 1. Generate exactly 9 tool + prompt combinations
-2. MUST use at least 6 DIFFERENT tools across the 9 combos
-3. Only repeat a tool if it's genuinely optimal for distinct use cases
-4. Strategic mix required:
-   - 2-3 AI writing/reasoning tools (ChatGPT, Claude, Gemini, etc.)
-   - 3-4 specialized tools (video: Veo3/InVideo, image: Midjourney/DALL-E, code: Cursor/Replit, etc.)
-   - 2-3 productivity/workflow tools (Notion, Make.com, Zapier, etc.)
-5. PRIORITIZE latest and greatest tools as of October 2025
-6. Consider cutting-edge releases and trending tools in the market RIGHT NOW
+2. MUST use at least 6 DIFFERENT AI tools across the 9 combos
+3. Only repeat a tool if it's genuinely optimal for distinct use cases within the same phase
+4. Strategic mix required (ALL MUST BE AI TOOLS):
+   - 2-3 AI writing/reasoning tools (ChatGPT, Claude, Gemini, Grok, etc.)
+   - 3-4 specialized AI tools (video: Runway/Veo, image: Midjourney/DALL-E, code: Cursor/Replit/Lovable, design: Figma AI/Canva AI, etc.)
+   - 2-3 AI productivity/automation tools (Make.com, Zapier, n8n, Notion AI, etc.)
+5. ABSOLUTELY NO outdated or non-existent tools
+6. Consider what AI tools are trending and most powerful RIGHT NOW in November 2025
 
 CRITICAL: TOOL-SPECIFIC PROMPT FORMATS:
 - Add "prompt_format" field: "json" | "detailed_descriptive" | "structured_requirements" | "conversational"
@@ -781,35 +834,58 @@ CRITICAL: CONTEXT INFERENCE & DEFAULTS:
   * Budget: Lean approach - prioritize free/affordable tools, only premium when truly optimal
   * Urgency: As soon as realistically achievable given transformation scope
   * Industry: Determine from terminology, language patterns, and context clues`,
-        userPrompt: `Create 9 deeply personalized tool+prompt combinations with diversity and phase alignment:
+        userPrompt: `Create 9 deeply personalized tool+prompt combinations that DIRECTLY ALIGN with the comprehensive plan:
 
 ${baseContext}
 
 Overview Context (already analyzed):
 ${overviewContent}
 
+🚨 CRITICAL: YOU MUST READ AND ANALYZE THIS COMPREHENSIVE PLAN:
+The comprehensive plan has been generated with 3 phases, each with 5 steps. Your tool combos MUST align with the plan steps:
+- Read Phase 1, Steps 1-3 carefully - your Combos #1-3 must support executing these exact steps
+- Read Phase 2, Steps 1-3 carefully - your Combos #4-6 must support executing these exact steps  
+- Read Phase 3, Steps 1-3 carefully - your Combos #7-9 must support executing these exact steps
+- If a plan step mentions a tool type or category, your combo should recommend the BEST AI tool in that category
+- If a plan step describes an action, your combo should provide the PERFECT AI tool + prompt to accomplish that action
+- The meaning and purpose must be interconnected - not random separate content
+
 CRITICAL ANALYSIS & INFERENCE:
 1. From GOALS, understand: What industry are they in (from context/language)? What tools would best serve their objectives? What complexity level is appropriate?
 2. From CHALLENGES, deduce: What's their AI experience level? What budget constraints exist? How urgent is their timeline?
-3. Apply sensible defaults when not explicitly stated:
-   - Budget: LEAN APPROACH - default to free and cost-effective tools; only recommend premium when clearly optimal for their goals
-   - Experience: Standard AI learning curve - assume tech-savvy but new to AI implementation (beginner-to-intermediate friendly)
+3. From the COMPREHENSIVE PLAN, understand: What tools are needed for each specific step? What AI capabilities are required?
+4. Apply sensible defaults when not explicitly stated:
+   - Budget: LEAN APPROACH - default to free and cost-effective AI tools; only recommend premium when clearly optimal
+   - Experience: Standard AI learning curve - assume tech-savvy but new to AI (beginner-to-intermediate friendly)
    - Urgency: As soon as realistically achievable - balance speed with quality
    - Industry: Infer from terminology, language patterns, and goals/challenges context
-4. Tailor EVERYTHING: tool complexity, budget appropriateness, time-to-value, learning curve
+5. Tailor EVERYTHING: tool complexity, budget appropriateness, time-to-value, learning curve
 
-REQUIREMENTS:
-1. Each combo must directly address their goals and overcome their challenges
-2. DEFAULT to free/affordable tools unless goals clearly indicate premium resources available
-3. Match complexity to standard learning curve - beginner-friendly with growth path, unless clear sophistication indicators
-4. Assume reasonable urgency - quick wins balanced with sustainable progress
-5. MUST use at least 6 DIFFERENT tools across the 9 combos
-6. Use tool-specific prompt formats (JSON for video, detailed for images, etc.)
-7. Align 3 combos per phase (foundation/growth/mastery)
-8. Recommend latest October 2025 tools when appropriate
+🚨 MANDATORY REQUIREMENTS:
+1. Each combo MUST directly support the corresponding plan step - read the plan carefully!
+2. Recommend ONLY AI tools that exist and are available in November 2025
+3. Recommend ONLY the LATEST and GREATEST AI tools - check current date and market
+4. DO NOT recommend outdated tools, non-AI tools, or tools from past decades
+5. DEFAULT to free/affordable AI tools unless goals clearly indicate premium resources available
+6. MUST use at least 6 DIFFERENT AI tools across the 9 combos
+7. Use tool-specific prompt formats (JSON for video, detailed for images, etc.)
+8. Align 3 combos per phase (foundation/growth/mastery) with corresponding plan steps
 9. CRITICAL: Use tool names WITHOUT version numbers (e.g., "ChatGPT" not "ChatGPT-5", "Grok" not "Grok 4", "Gemini" not "Gemini 3", "Midjourney" not "Midjourney v7")
+10. Each tool must be a real, current, powerful AI tool available NOW in November 2025
 
-DO NOT use generic content. Every word should reflect THEIR specific situation inferred from their input.
+ALIGNMENT VERIFICATION:
+Before finalizing, verify:
+✓ Does Combo #1 help execute Phase 1, Step 1 from the plan?
+✓ Does Combo #2 help execute Phase 1, Step 2 from the plan?
+✓ Does Combo #3 help execute Phase 1, Step 3 from the plan?
+✓ Does Combo #4 help execute Phase 2, Step 1 from the plan?
+✓ Does Combo #5 help execute Phase 2, Step 2 from the plan?
+✓ Does Combo #6 help execute Phase 2, Step 3 from the plan?
+✓ Does Combo #7 help execute Phase 3, Step 1 from the plan?
+✓ Does Combo #8 help execute Phase 3, Step 2 from the plan?
+✓ Does Combo #9 help execute Phase 3, Step 3 from the plan?
+
+DO NOT use generic content. Every word should reflect THEIR specific situation AND align with the comprehensive plan steps.
 
 EXAMPLE of proper format-specific prompts:
 - JSON (for video tools): {"scene": "sunset over mountains", "duration": 5, "style": "cinematic", "mood": "peaceful"}
