@@ -765,6 +765,7 @@ REQUIREMENTS:
 6. Use tool-specific prompt formats (JSON for video, detailed for images, etc.)
 7. Align 3 combos per phase (foundation/growth/mastery)
 8. Recommend latest October 2025 tools when appropriate
+9. CRITICAL: Use tool names WITHOUT version numbers (e.g., "ChatGPT" not "ChatGPT-5", "Grok" not "Grok 4", "Gemini" not "Gemini 3", "Midjourney" not "Midjourney v7")
 
 DO NOT use generic content. Every word should reflect THEIR specific situation inferred from their input.
 
@@ -781,7 +782,7 @@ Return ONLY valid JSON:
       "title": "Specific use case directly from their stated goals",
       "description": "How this helps them achieve their specific goals and overcome their stated obstacles",
       "category": "Category relevant to their inferred industry/field",
-      "tool_name": "Specific tool appropriate to their inferred budget and experience",
+      "tool_name": "Tool name WITHOUT version numbers (e.g., ChatGPT, Grok, Gemini, Midjourney)",
       "tool_url": "https://url.com",
       "tool_type": "Tool type",
       "prompt_text": "200-300 word ready-to-copy prompt in the appropriate format for this tool. Deeply tailored to their stated goals. Directly addresses their challenges. References their specific situation inferred from input.",
