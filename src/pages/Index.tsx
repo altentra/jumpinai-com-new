@@ -526,10 +526,10 @@ const Index = () => {
               <div className="space-y-3 sm:space-y-4">
                 {/* Level 0 */}
                 <div 
-                  className="relative pl-4 sm:pl-6 border-l-2 border-primary/40 transition-all duration-900 ease-out"
+                  className="relative pl-4 sm:pl-6 border-l-2 border-primary/40 transition-all duration-700 ease-out"
                   style={{
-                    opacity: Math.max(0, Math.min(1, (clarificationProgress - 0.05) * 3)),
-                    transform: `translateX(${(1 - Math.max(0, Math.min(1, (clarificationProgress - 0.05) * 3))) * -50}px) scale(${0.95 + Math.max(0, Math.min(1, (clarificationProgress - 0.05) * 3)) * 0.05})`
+                    opacity: Math.max(0, Math.min(1, (clarificationProgress - 0.0) * 5)),
+                    transform: `translateX(${(1 - Math.max(0, Math.min(1, (clarificationProgress - 0.0) * 5))) * -60}px) scale(${0.92 + Math.max(0, Math.min(1, (clarificationProgress - 0.0) * 5)) * 0.08})`
                   }}
                 >
                   <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full backdrop-blur-xl bg-primary/90 ring-2 ring-primary/30 flex items-center justify-center text-xs font-bold text-primary-foreground">
@@ -551,10 +551,10 @@ const Index = () => {
 
                 {/* Level 1 */}
                 <div 
-                  className="relative pl-4 sm:pl-6 border-l-2 border-primary/30 ml-2 sm:ml-4 transition-all duration-900 ease-out"
+                  className="relative pl-4 sm:pl-6 border-l-2 border-primary/30 ml-2 sm:ml-4 transition-all duration-700 ease-out"
                   style={{
-                    opacity: Math.max(0, Math.min(1, (clarificationProgress - 0.15) * 3)),
-                    transform: `translateX(${(1 - Math.max(0, Math.min(1, (clarificationProgress - 0.15) * 3))) * -50}px) scale(${0.95 + Math.max(0, Math.min(1, (clarificationProgress - 0.15) * 3)) * 0.05})`
+                    opacity: Math.max(0, Math.min(1, (clarificationProgress - 0.15) * 5)),
+                    transform: `translateX(${(1 - Math.max(0, Math.min(1, (clarificationProgress - 0.15) * 5))) * -60}px) scale(${0.92 + Math.max(0, Math.min(1, (clarificationProgress - 0.15) * 5)) * 0.08})`
                   }}
                 >
                   <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full backdrop-blur-xl bg-primary/80 ring-2 ring-primary/20 flex items-center justify-center text-xs font-bold text-primary-foreground">
@@ -590,10 +590,10 @@ const Index = () => {
 
                 {/* Level 2 */}
                 <div 
-                  className="relative pl-4 sm:pl-6 border-l-2 border-primary/20 ml-4 sm:ml-8 transition-all duration-900 ease-out"
+                  className="relative pl-4 sm:pl-6 border-l-2 border-primary/20 ml-4 sm:ml-8 transition-all duration-700 ease-out"
                   style={{
-                    opacity: Math.max(0, Math.min(1, (clarificationProgress - 0.25) * 3)),
-                    transform: `translateX(${(1 - Math.max(0, Math.min(1, (clarificationProgress - 0.25) * 3))) * -50}px) scale(${0.95 + Math.max(0, Math.min(1, (clarificationProgress - 0.25) * 3)) * 0.05})`
+                    opacity: Math.max(0, Math.min(1, (clarificationProgress - 0.30) * 5)),
+                    transform: `translateX(${(1 - Math.max(0, Math.min(1, (clarificationProgress - 0.30) * 5))) * -60}px) scale(${0.92 + Math.max(0, Math.min(1, (clarificationProgress - 0.30) * 5)) * 0.08})`
                   }}
                 >
                   <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full backdrop-blur-xl bg-primary/70 ring-2 ring-primary/15 flex items-center justify-center text-xs font-bold text-primary-foreground">
@@ -629,10 +629,10 @@ const Index = () => {
 
                 {/* Level 3 */}
                 <div 
-                  className="relative pl-4 sm:pl-6 border-l-2 border-primary/15 ml-6 sm:ml-12 transition-all duration-900 ease-out"
+                  className="relative pl-4 sm:pl-6 border-l-2 border-primary/15 ml-6 sm:ml-12 transition-all duration-700 ease-out"
                   style={{
-                    opacity: Math.max(0, Math.min(1, (clarificationProgress - 0.35) * 3)),
-                    transform: `translateX(${(1 - Math.max(0, Math.min(1, (clarificationProgress - 0.35) * 3))) * -50}px) scale(${0.95 + Math.max(0, Math.min(1, (clarificationProgress - 0.35) * 3)) * 0.05})`
+                    opacity: Math.max(0, Math.min(1, (clarificationProgress - 0.45) * 5)),
+                    transform: `translateX(${(1 - Math.max(0, Math.min(1, (clarificationProgress - 0.45) * 5))) * -60}px) scale(${0.92 + Math.max(0, Math.min(1, (clarificationProgress - 0.45) * 5)) * 0.08})`
                   }}
                 >
                   <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full backdrop-blur-xl bg-primary/60 ring-2 ring-primary/10 flex items-center justify-center text-xs font-bold text-primary-foreground">
@@ -668,10 +668,10 @@ const Index = () => {
 
                 {/* Level 4 */}
                 <div 
-                  className="relative pl-4 sm:pl-6 border-l-2 border-primary/10 ml-8 sm:ml-16 transition-all duration-900 ease-out"
+                  className="relative pl-4 sm:pl-6 border-l-2 border-primary/10 ml-8 sm:ml-16 transition-all duration-700 ease-out"
                   style={{
-                    opacity: Math.max(0, Math.min(1, (clarificationProgress - 0.45) * 3)),
-                    transform: `translateX(${(1 - Math.max(0, Math.min(1, (clarificationProgress - 0.45) * 3))) * -50}px) scale(${0.95 + Math.max(0, Math.min(1, (clarificationProgress - 0.45) * 3)) * 0.05})`
+                    opacity: Math.max(0, Math.min(1, (clarificationProgress - 0.60) * 5)),
+                    transform: `translateX(${(1 - Math.max(0, Math.min(1, (clarificationProgress - 0.60) * 5))) * -60}px) scale(${0.92 + Math.max(0, Math.min(1, (clarificationProgress - 0.60) * 5)) * 0.08})`
                   }}
                 >
                   <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full backdrop-blur-xl bg-primary/90 ring-2 ring-primary/30 flex items-center justify-center text-xs font-bold text-primary-foreground">
