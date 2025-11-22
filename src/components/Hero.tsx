@@ -168,8 +168,8 @@ const Hero = () => {
           </div>
 
           {/* Right Mockups */}
-          <div className="hidden lg:block relative animate-fade-in-up animation-delay-200">
-            <div className="relative h-[600px]">
+          <div className="relative animate-fade-in-up animation-delay-200">
+            <div className="relative h-[400px] lg:h-[600px]">
               {/* Desktop Dashboard - Main focal point */}
               <div className="absolute top-0 left-0 right-0 z-20 group">
                 <div className="relative rounded-xl overflow-hidden border border-white/10 shadow-2xl bg-gradient-to-br from-white/[0.03] via-white/[0.02] to-white/[0.03] backdrop-blur-sm p-1">
