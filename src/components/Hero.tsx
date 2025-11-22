@@ -142,7 +142,7 @@ const Hero = () => {
             
             {/* Body Text */}
             <p className="text-sm sm:text-base md:text-lg text-muted-foreground mb-8 sm:mb-10 max-w-4xl mx-auto lg:mx-0 leading-relaxed font-light px-4 lg:px-0">
-              AI is advancing fast, and effective adaptation has to be personal. JumpinAI provides precision-built adaptation plans shaped around your goals, with clear, adjustable steps and tailored prompts paired with the tools that fit your needs. It gives you a confident, structured way to begin implementing AI successfully.
+              AI is advancing fast, and effective adaptation demands clarity. JumpinAI delivers implementation plans designed around your goals, with clear steps, tailored prompts, and the right tools—giving you a structured way to begin implementing AI with confidence.
             </p>
             
             {/* Call to Action Button */}
