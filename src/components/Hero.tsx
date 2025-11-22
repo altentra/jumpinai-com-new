@@ -7,7 +7,7 @@ import logoTransparent from "@/assets/logo-transparent.png";
 import heroDesktopNew from "@/assets/hero-desktop-new.jpg";
 import heroMobileGeneration from "@/assets/hero-mobile-generation.jpg";
 import heroMobileDashboardGraph from "@/assets/hero-mobile-dashboard-graph.jpg";
-import heroMobileCompletion from "@/assets/hero-mobile-completion.png";
+import heroMobileComboDetail from "@/assets/hero-mobile-combo-detail.png";
 import heroMobileClarify from "@/assets/hero-mobile-clarify.jpg";
 
 const Hero = () => {
@@ -167,67 +167,69 @@ const Hero = () => {
             </div>
           </div>
 
-          {/* Right Mockups - Centered Composition */}
+          {/* Right Mockups - Professional Composition */}
           <div className="relative animate-fade-in-up animation-delay-200">
-            <div className="relative h-[650px] sm:h-[700px] lg:h-[750px] flex items-center justify-center">
-              {/* Desktop - Center focal point */}
-              <div className="relative z-20 group w-[70%] sm:w-[65%] lg:w-[60%]">
+            <div className="flex flex-col items-center gap-8 lg:gap-10">
+              {/* Desktop - Main focal point */}
+              <div className="w-full max-w-[90%] sm:max-w-[85%] lg:max-w-[80%] group">
                 <div className="relative rounded-xl overflow-hidden border border-white/10 shadow-2xl bg-gradient-to-br from-white/[0.03] via-white/[0.02] to-white/[0.03] backdrop-blur-sm p-1 hover:scale-[1.02] transition-transform duration-300">
                   <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent rounded-xl opacity-30"></div>
                   <img 
                     src={heroDesktopNew} 
-                    alt="JumpinAI Studio" 
+                    alt="JumpinAI Studio Dashboard" 
                     className="relative w-full rounded-lg shadow-lg"
                   />
                 </div>
               </div>
 
-              {/* Mobile Screenshots - Surrounding the desktop */}
-              {/* Top Left - Jump Generation */}
-              <div className="absolute top-8 left-2 sm:left-4 lg:left-8 z-15 w-24 sm:w-32 lg:w-36 group">
-                <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 transform rotate-[-8deg] hover:rotate-[-4deg] hover:scale-105 transition-all duration-300">
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-2xl opacity-40"></div>
-                  <img 
-                    src={heroMobileGeneration} 
-                    alt="AI Jump Generation in Progress" 
-                    className="relative w-full rounded-xl shadow-lg"
-                  />
+              {/* Mobile Screenshots - Horizontal row below */}
+              <div className="flex flex-wrap justify-center items-center gap-4 sm:gap-6 lg:gap-8 w-full px-4">
+                {/* Jump Generation */}
+                <div className="w-28 sm:w-32 lg:w-36 group">
+                  <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 hover:scale-105 transition-all duration-300">
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-2xl opacity-40"></div>
+                    <img 
+                      src={heroMobileGeneration} 
+                      alt="AI Jump Generation" 
+                      className="relative w-full rounded-xl shadow-lg"
+                    />
+                  </div>
                 </div>
-              </div>
 
-              {/* Top Right - Dashboard Graph */}
-              <div className="absolute top-8 right-2 sm:right-4 lg:right-8 z-15 w-24 sm:w-32 lg:w-36 group">
-                <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 transform rotate-[8deg] hover:rotate-[4deg] hover:scale-105 transition-all duration-300">
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-2xl opacity-40"></div>
-                  <img 
-                    src={heroMobileDashboardGraph} 
-                    alt="Dashboard Activity Analytics" 
-                    className="relative w-full rounded-xl shadow-lg"
-                  />
+                {/* Dashboard Analytics */}
+                <div className="w-28 sm:w-32 lg:w-36 group">
+                  <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 hover:scale-105 transition-all duration-300">
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-2xl opacity-40"></div>
+                    <img 
+                      src={heroMobileDashboardGraph} 
+                      alt="Dashboard Analytics" 
+                      className="relative w-full rounded-xl shadow-lg"
+                    />
+                  </div>
                 </div>
-              </div>
 
-              {/* Bottom Left - Colorful Completion */}
-              <div className="absolute bottom-8 left-2 sm:left-4 lg:left-8 z-15 w-24 sm:w-32 lg:w-36 group">
-                <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 transform rotate-[-6deg] hover:rotate-[-3deg] hover:scale-105 transition-all duration-300">
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-2xl opacity-40"></div>
-                  <img 
-                    src={heroMobileCompletion} 
-                    alt="Colorful Jump Completion View" 
-                    className="relative w-full rounded-xl shadow-lg"
-                  />
+                {/* Colorful Tool & Prompt Cards */}
+                <div className="w-28 sm:w-32 lg:w-36 group">
+                  <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 hover:scale-105 transition-all duration-300">
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-2xl opacity-40"></div>
+                    <img 
+                      src={heroMobileComboDetail} 
+                      alt="Colorful Tool & Prompt Combos" 
+                      className="relative w-full rounded-xl shadow-lg"
+                    />
+                  </div>
                 </div>
-              </div>
 
-              {/* Bottom Right - Clarify Features */}
-              <div className="absolute bottom-8 right-2 sm:right-4 lg:right-8 z-15 w-24 sm:w-32 lg:w-36 group">
-                <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 transform rotate-[6deg] hover:rotate-[3deg] hover:scale-105 transition-all duration-300">
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-2xl opacity-40"></div>
-                  <img 
-                    src={heroMobileClarify} 
-                    alt="Clarify & Reroute Features" 
-                    className="relative w-full rounded-xl shadow-lg"
-                  />
+                {/* Clarify Features */}
+                <div className="w-28 sm:w-32 lg:w-36 group">
+                  <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 hover:scale-105 transition-all duration-300">
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-2xl opacity-40"></div>
+                    <img 
+                      src={heroMobileClarify} 
+                      alt="Clarify & Reroute" 
+                      className="relative w-full rounded-xl shadow-lg"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
