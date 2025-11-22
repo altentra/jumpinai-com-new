@@ -5,10 +5,10 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import logoTransparent from "@/assets/logo-transparent.png";
 import heroDesktopNew from "@/assets/hero-desktop-new.jpg";
-import heroMobileCompletion from "@/assets/hero-mobile-completion.png";
-import heroMobilePlan from "@/assets/hero-mobile-plan.png";
-import heroMobileToolPrompt from "@/assets/hero-mobile-tool-prompt.jpg";
-import heroMobileDashboard from "@/assets/hero-mobile-dashboard.jpg";
+import heroMobileGeneration from "@/assets/hero-mobile-generation.jpg";
+import heroMobilePhases from "@/assets/hero-mobile-phases.jpg";
+import heroMobileToolsList from "@/assets/hero-mobile-tools-list.jpg";
+import heroMobileSteps from "@/assets/hero-mobile-steps.jpg";
 
 const Hero = () => {
   const [isDark, setIsDark] = useState(false);
@@ -183,49 +183,49 @@ const Hero = () => {
               </div>
 
               {/* Mobile Screenshots - 4 floating mockups */}
-              {/* Bottom left - Jump Completion */}
+              {/* Bottom left - Jump Generation */}
               <div className="absolute bottom-0 -left-6 lg:-left-10 z-30 w-40 lg:w-44 group">
                 <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 transform rotate-[-6deg] hover:rotate-[-3deg] hover:scale-105 transition-all duration-300">
                   <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-2xl opacity-40"></div>
                   <img 
-                    src={heroMobileCompletion} 
-                    alt="Jump Generation Complete" 
+                    src={heroMobileGeneration} 
+                    alt="AI Jump Generation in Progress" 
                     className="relative w-full rounded-xl shadow-lg"
                   />
                 </div>
               </div>
 
-              {/* Bottom right - Plan Details */}
+              {/* Bottom right - Implementation Phases */}
               <div className="absolute bottom-8 -right-4 lg:-right-8 z-30 w-40 lg:w-44 group">
                 <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 transform rotate-[6deg] hover:rotate-[3deg] hover:scale-105 transition-all duration-300">
                   <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-2xl opacity-40"></div>
                   <img 
-                    src={heroMobilePlan} 
-                    alt="Implementation Plan Details" 
+                    src={heroMobilePhases} 
+                    alt="Structured Implementation Phases" 
                     className="relative w-full rounded-xl shadow-lg"
                   />
                 </div>
               </div>
 
-              {/* Top left - Tool & Prompt Detail */}
+              {/* Top left - Tools & Prompts Library */}
               <div className="absolute top-20 lg:top-16 -left-4 lg:-left-8 z-25 w-40 lg:w-44 group">
                 <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 transform rotate-[-8deg] hover:rotate-[-4deg] hover:scale-105 transition-all duration-300">
                   <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-2xl opacity-40"></div>
                   <img 
-                    src={heroMobileToolPrompt} 
-                    alt="Tool & Prompt Combo" 
+                    src={heroMobileToolsList} 
+                    alt="AI Tools & Prompts Library" 
                     className="relative w-full rounded-xl shadow-lg"
                   />
                 </div>
               </div>
 
-              {/* Top right - Dashboard Home */}
+              {/* Top right - Detailed Steps */}
               <div className="absolute top-16 lg:top-12 -right-6 lg:-right-10 z-25 w-40 lg:w-44 group">
                 <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 transform rotate-[10deg] hover:rotate-[5deg] hover:scale-105 transition-all duration-300">
                   <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-2xl opacity-40"></div>
                   <img 
-                    src={heroMobileDashboard} 
-                    alt="User Dashboard" 
+                    src={heroMobileSteps} 
+                    alt="Step-by-Step Implementation Guide" 
                     className="relative w-full rounded-xl shadow-lg"
                   />
                 </div>
