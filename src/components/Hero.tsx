@@ -170,26 +170,26 @@ const Hero = () => {
           {/* Right Mockups - Improved Layout */}
           <div className="relative animate-fade-in-up animation-delay-200">
             <div className="relative h-[400px] lg:h-[600px]">
-              {/* Desktop Dashboard - Primary focal point */}
+              {/* Desktop Studio - Primary focal point */}
               <div className="absolute top-0 left-0 right-0 z-20 group">
                 <div className="relative rounded-xl overflow-hidden border border-white/10 shadow-2xl bg-gradient-to-br from-white/[0.03] via-white/[0.02] to-white/[0.03] backdrop-blur-sm p-1 hover:scale-[1.02] transition-transform duration-300">
                   <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent rounded-xl opacity-30"></div>
                   <img 
-                    src={heroDesktopDashboard} 
-                    alt="JumpinAI Dashboard" 
+                    src={heroDesktopStudio} 
+                    alt="JumpinAI Studio" 
                     className="relative w-full rounded-lg shadow-lg"
                   />
                 </div>
               </div>
 
               {/* Mobile Screenshots - Better positioned floating elements */}
-              {/* Left mobile - Studio/Generation (placeholder - needs mobile studio image) */}
+              {/* Left mobile - Jumps */}
               <div className="absolute bottom-2 -left-6 lg:-left-10 z-30 w-40 lg:w-44 group">
                 <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 transform rotate-[-6deg] hover:rotate-[-3deg] hover:scale-105 transition-all duration-300">
                   <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-2xl opacity-40"></div>
                   <img 
-                    src={heroMobileDashboard} 
-                    alt="Mobile Studio" 
+                    src={heroMobileJumps} 
+                    alt="Mobile My Jumps" 
                     className="relative w-full rounded-xl shadow-lg"
                   />
                 </div>
@@ -207,13 +207,13 @@ const Hero = () => {
                 </div>
               </div>
 
-              {/* Top right mobile - My Jumps */}
+              {/* Top right mobile - Dashboard */}
               <div className="absolute top-16 lg:top-12 -right-6 lg:-right-10 z-25 w-40 lg:w-44 group">
                 <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 transform rotate-[10deg] hover:rotate-[5deg] hover:scale-105 transition-all duration-300">
                   <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-2xl opacity-40"></div>
                   <img 
-                    src={heroMobileJumps} 
-                    alt="Mobile My Jumps" 
+                    src={heroMobileDashboard} 
+                    alt="Mobile Dashboard" 
                     className="relative w-full rounded-xl shadow-lg"
                   />
                 </div>
