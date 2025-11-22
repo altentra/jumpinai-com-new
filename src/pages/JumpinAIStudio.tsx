@@ -409,19 +409,19 @@ const JumpinAIStudio = () => {
               <div className="relative px-4">
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent/5 to-transparent blur-2xl"></div>
                 <p className="relative text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground/90 mb-6 sm:mb-8 lg:mb-12 max-w-4xl mx-auto leading-relaxed font-light">
-                  Generate your personalized <span className="font-semibold text-primary bg-gradient-to-r from-primary via-primary/80 to-primary bg-clip-text text-transparent whitespace-nowrap">Jump in AI</span> in 2 minutes: a complete adaptive transformation blueprint with strategic insights, flexible execution paths, and ready-to-implement tools.
+                  Generate your personalized <span className="font-semibold text-primary bg-gradient-to-r from-primary via-primary/80 to-primary bg-clip-text text-transparent whitespace-nowrap">Jump in AI</span> in 2 minutes—a clear, structured implementation plan with strategic insights, actionable steps, tailored prompts, and the tools that fit your goals.
                 </p>
               </div>
               
               {/* Simple feature indicators - Mobile optimized */}
               <div className="flex flex-wrap justify-center gap-2 text-xs sm:text-sm text-muted-foreground/70 px-2">
-                <span className="bg-background/60 backdrop-blur-sm px-2 sm:px-3 py-1 rounded-md border border-border/30">Strategic Foundation</span>
+                <span className="bg-background/60 backdrop-blur-sm px-2 sm:px-3 py-1 rounded-md border border-border/30">Strategic Clarity</span>
                 <span className="hidden sm:inline text-muted-foreground/50">•</span>
-                <span className="bg-background/60 backdrop-blur-sm px-2 sm:px-3 py-1 rounded-md border border-border/30">Adaptive Execution</span>
+                <span className="bg-background/60 backdrop-blur-sm px-2 sm:px-3 py-1 rounded-md border border-border/30">Actionable Steps</span>
                 <span className="hidden sm:inline text-muted-foreground/50">•</span>
-                <span className="bg-background/60 backdrop-blur-sm px-2 sm:px-3 py-1 rounded-md border border-border/30">Instant Implementation</span> 
+                <span className="bg-background/60 backdrop-blur-sm px-2 sm:px-3 py-1 rounded-md border border-border/30">Aligned Tools & Prompts</span> 
                 <span className="hidden sm:inline text-muted-foreground/50">•</span>
-                <span className="bg-background/60 backdrop-blur-sm px-2 sm:px-3 py-1 rounded-md border border-border/30">Continuous Support</span>
+                <span className="bg-background/60 backdrop-blur-sm px-2 sm:px-3 py-1 rounded-md border border-border/30">Guided Implementation</span>
               </div>
             </div>
 
