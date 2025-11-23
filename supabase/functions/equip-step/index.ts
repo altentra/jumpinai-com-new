@@ -259,13 +259,31 @@ Generate ONE combo deeply tailored to executing this specific step. The combo mu
 
     console.log('📥 XAI Response received');
 
+    // Extract JSON from markdown code blocks if present
+    let cleanedResponse = response.trim();
+    
+    // Check if response is wrapped in markdown code blocks
+    const jsonBlockMatch = cleanedResponse.match(/```(?:json)?\s*\n?([\s\S]*?)\n?```/);
+    if (jsonBlockMatch) {
+      cleanedResponse = jsonBlockMatch[1].trim();
+      console.log('📋 Extracted JSON from markdown code block');
+    }
+    
+    // Remove any leading/trailing text before/after JSON
+    const jsonMatch = cleanedResponse.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      cleanedResponse = jsonMatch[0];
+    }
+
     // Parse the response
     let comboData: any;
     try {
-      comboData = JSON.parse(response);
+      comboData = JSON.parse(cleanedResponse);
+      console.log('✅ Successfully parsed combo data');
     } catch (parseError) {
       console.error('❌ Failed to parse JSON response:', parseError);
       console.log('Raw response:', response);
+      console.log('Cleaned response:', cleanedResponse);
       throw new Error('Invalid JSON response from AI');
     }
 
