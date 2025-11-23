@@ -727,7 +727,7 @@ const Index = () => {
 
               {/* Branching Lines Animation - Trident Pattern */}
               <div className="relative mb-8 h-32 sm:h-36">
-                <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1000 150" preserveAspectRatio="xMidYMid meet">
+                <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1000 160" preserveAspectRatio="xMidYMid meet">
                   <defs>
                     <linearGradient id="tridentGradient" x1="0%" y1="0%" x2="0%" y2="100%">
                       <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.9" />
@@ -740,58 +740,58 @@ const Index = () => {
                     x1="500"
                     y1="0"
                     x2="500"
-                    y2="50"
+                    y2="45"
                     stroke="url(#tridentGradient)"
                     strokeWidth="2.5"
                     strokeLinecap="round"
                     style={{
-                      strokeDasharray: 50,
-                      strokeDashoffset: 50,
+                      strokeDasharray: 45,
+                      strokeDashoffset: 45,
                       animation: 'drawLine 0.5s ease-out forwards'
                     }}
                   />
                   
-                  {/* Left prong - curves out then down */}
+                  {/* Left prong - curves left horizontally then straight down */}
                   <path
-                    d="M 500 50 C 480 60, 420 75, 350 85 L 350 145"
+                    d="M 500 45 C 500 50, 450 55, 300 55 L 300 150"
                     stroke="url(#tridentGradient)"
                     strokeWidth="2.5"
                     fill="none"
                     strokeLinecap="round"
                     style={{
-                      strokeDasharray: 130,
-                      strokeDashoffset: 130,
-                      animation: 'drawLine 0.8s ease-out 0.5s forwards'
+                      strokeDasharray: 295,
+                      strokeDashoffset: 295,
+                      animation: 'drawLine 0.9s ease-out 0.5s forwards'
                     }}
                   />
                   
                   {/* Center prong - straight down */}
                   <line
                     x1="500"
-                    y1="50"
+                    y1="45"
                     x2="500"
-                    y2="145"
+                    y2="150"
                     stroke="url(#tridentGradient)"
                     strokeWidth="2.5"
                     strokeLinecap="round"
                     style={{
-                      strokeDasharray: 95,
-                      strokeDashoffset: 95,
-                      animation: 'drawLine 0.8s ease-out 0.5s forwards'
+                      strokeDasharray: 105,
+                      strokeDashoffset: 105,
+                      animation: 'drawLine 0.9s ease-out 0.5s forwards'
                     }}
                   />
                   
-                  {/* Right prong - curves out then down */}
+                  {/* Right prong - curves right horizontally then straight down */}
                   <path
-                    d="M 500 50 C 520 60, 580 75, 650 85 L 650 145"
+                    d="M 500 45 C 500 50, 550 55, 700 55 L 700 150"
                     stroke="url(#tridentGradient)"
                     strokeWidth="2.5"
                     fill="none"
                     strokeLinecap="round"
                     style={{
-                      strokeDasharray: 130,
-                      strokeDashoffset: 130,
-                      animation: 'drawLine 0.8s ease-out 0.5s forwards'
+                      strokeDasharray: 295,
+                      strokeDashoffset: 295,
+                      animation: 'drawLine 0.9s ease-out 0.5s forwards'
                     }}
                   />
                 </svg>
