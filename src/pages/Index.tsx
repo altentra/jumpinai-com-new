@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Sparkles, GitBranch, Wrench } from 'lucide-react';
+import { Sparkles, GitBranch, Wrench, ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import Navigation from "@/components/Navigation";
 import Hero from "@/components/Hero";
 import Features from "@/components/Features";
@@ -14,9 +15,11 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { creditsService, type SubscriptionPlan } from '@/services/creditsService';
 import { SubscriptionUpgradeModal } from '@/components/SubscriptionUpgradeModal';
+import { Button } from '@/components/ui/button';
 
 const Index = () => {
   const { user, isAuthenticated, subscription } = useAuth();
+  const navigate = useNavigate();
   const [subscriptionPlans, setSubscriptionPlans] = useState<SubscriptionPlan[]>([]);
   const [loadingSubscription, setLoadingSubscription] = useState<Record<string, boolean>>({});
   const [planLoading, setPlanLoading] = useState<Record<string, boolean>>({});
@@ -851,8 +854,69 @@ const Index = () => {
         </div>
       </section>
 
+      {/* The Concept of a Jump Section */}
+      <section className="py-16 sm:py-20 lg:py-24 relative overflow-hidden">
+        {/* Premium Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(var(--primary-rgb),0.08),transparent_50%)]"></div>
+        
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="max-w-4xl mx-auto text-center">
+            {/* Premium Title */}
+            <div className="mb-6 sm:mb-8">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold gradient-text-primary mb-4 sm:mb-5 font-display leading-tight">
+                The Concept of a Jump
+              </h2>
+              <div className="w-24 h-1 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto rounded-full"></div>
+            </div>
 
-      {/* Why Choose JumpinAI Section */}
+            {/* Epic Content */}
+            <div className="space-y-6 sm:space-y-8">
+              <p className="text-lg sm:text-xl lg:text-2xl font-semibold text-foreground leading-relaxed">
+                A jump is <span className="gradient-text-primary font-bold">commitment in motion</span>.
+              </p>
+
+              <p className="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-3xl mx-auto">
+                When you jump, you leave hesitation behind. You cross the threshold from thinking to doing, from planning to acting. There's no pause button mid-air—only the certainty that you <strong className="text-foreground">will land somewhere</strong>.
+              </p>
+
+              <p className="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-3xl mx-auto">
+                That's the energy we channel. <strong className="text-foreground">Jump into AI</strong> isn't about casual exploration—it's about decisive action with a clear landing point. Your personalized plan ensures you don't leap blindly. You jump with <strong className="text-foreground">direction, precision, and purpose</strong>.
+              </p>
+
+              <div className="glass bg-muted/20 border border-primary/30 rounded-2xl p-6 sm:p-8 backdrop-blur-xl shadow-xl max-w-2xl mx-auto">
+                <p className="text-base sm:text-lg font-semibold text-foreground leading-relaxed italic">
+                  "The moment you jump, momentum takes over. Gravity pulls you forward. There's no going back—only the landing ahead. Make it count."
+                </p>
+              </div>
+
+              <p className="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-3xl mx-auto">
+                Every Jump you create is your commitment to transformation. You're not testing the waters—you're <strong className="text-foreground">diving in with a plan</strong>. And we make sure you land exactly where you intended.
+              </p>
+            </div>
+
+            {/* Premium CTA */}
+            <div className="mt-10 sm:mt-12">
+              <Button
+                onClick={() => navigate("/jumpinai-studio")}
+                size="lg"
+                className="group relative px-8 sm:px-10 py-6 sm:py-7 text-base sm:text-lg font-bold rounded-2xl overflow-hidden shadow-2xl shadow-primary/30 hover:shadow-primary/50 transition-all duration-500 bg-gradient-to-br from-primary via-primary to-accent hover:scale-105"
+              >
+                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></span>
+                <span className="relative flex items-center gap-3">
+                  Make Your Jump Now
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </span>
+              </Button>
+              <p className="text-xs sm:text-sm text-muted-foreground mt-4">
+                Your personalized plan in 2 minutes • No credit card required
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
       <section className="py-10 sm:py-12 lg:py-16">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8 sm:mb-10">
