@@ -55,6 +55,9 @@ verify_jwt = false
 [functions.check-email-exists]
 verify_jwt = false
 
+[functions.equip-step]
+verify_jwt = false
+
 [functions.create-checkout]
 verify_jwt = false
 
