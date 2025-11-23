@@ -727,7 +727,7 @@ const Index = () => {
 
               {/* Branching Lines Animation - Trident Pattern */}
               <div className="relative mb-8 h-40">
-                <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1200 160" preserveAspectRatio="xMidYMid meet">
+                <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
                   <defs>
                     <linearGradient id="tridentGradient" x1="0%" y1="0%" x2="0%" y2="100%">
                       <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.9" />
@@ -735,62 +735,62 @@ const Index = () => {
                     </linearGradient>
                   </defs>
                   
-                  {/* Main vertical trunk - from top to split point */}
+                  {/* Main vertical trunk from top */}
                   <line
-                    x1="600"
+                    x1="50"
                     y1="0"
-                    x2="600"
-                    y2="40"
+                    x2="50"
+                    y2="25"
                     stroke="url(#tridentGradient)"
-                    strokeWidth="2.5"
+                    strokeWidth="0.3"
                     strokeLinecap="round"
                     style={{
-                      strokeDasharray: 40,
-                      strokeDashoffset: 40,
+                      strokeDasharray: 25,
+                      strokeDashoffset: 25,
                       animation: 'drawLine 0.5s ease-out forwards'
                     }}
                   />
                   
-                  {/* Left branch - smooth curve left then straight down */}
+                  {/* Left branch - curves left and down */}
                   <path
-                    d="M 600 40 Q 550 50, 250 60 L 250 160"
+                    d="M 50 25 C 45 30, 35 35, 20 40 L 20 100"
                     stroke="url(#tridentGradient)"
-                    strokeWidth="2.5"
+                    strokeWidth="0.3"
                     fill="none"
                     strokeLinecap="round"
                     style={{
-                      strokeDasharray: 460,
-                      strokeDashoffset: 460,
+                      strokeDasharray: 85,
+                      strokeDashoffset: 85,
                       animation: 'drawLine 1s ease-out 0.5s forwards'
                     }}
                   />
                   
                   {/* Center branch - straight down */}
                   <line
-                    x1="600"
-                    y1="40"
-                    x2="600"
-                    y2="160"
+                    x1="50"
+                    y1="25"
+                    x2="50"
+                    y2="100"
                     stroke="url(#tridentGradient)"
-                    strokeWidth="2.5"
+                    strokeWidth="0.3"
                     strokeLinecap="round"
                     style={{
-                      strokeDasharray: 120,
-                      strokeDashoffset: 120,
+                      strokeDasharray: 75,
+                      strokeDashoffset: 75,
                       animation: 'drawLine 1s ease-out 0.5s forwards'
                     }}
                   />
                   
-                  {/* Right branch - smooth curve right then straight down */}
+                  {/* Right branch - curves right and down */}
                   <path
-                    d="M 600 40 Q 650 50, 950 60 L 950 160"
+                    d="M 50 25 C 55 30, 65 35, 80 40 L 80 100"
                     stroke="url(#tridentGradient)"
-                    strokeWidth="2.5"
+                    strokeWidth="0.3"
                     fill="none"
                     strokeLinecap="round"
                     style={{
-                      strokeDasharray: 460,
-                      strokeDashoffset: 460,
+                      strokeDasharray: 85,
+                      strokeDashoffset: 85,
                       animation: 'drawLine 1s ease-out 0.5s forwards'
                     }}
                   />
