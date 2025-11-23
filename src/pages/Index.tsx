@@ -726,8 +726,8 @@ const Index = () => {
               </div>
 
               {/* Branching Lines Animation - Trident Pattern */}
-              <div className="relative mb-8 h-32 sm:h-36">
-                <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1000 160" preserveAspectRatio="xMidYMid meet">
+              <div className="relative mb-8 h-40">
+                <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1200 160" preserveAspectRatio="xMidYMid meet">
                   <defs>
                     <linearGradient id="tridentGradient" x1="0%" y1="0%" x2="0%" y2="100%">
                       <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.9" />
@@ -735,63 +735,63 @@ const Index = () => {
                     </linearGradient>
                   </defs>
                   
-                  {/* Main vertical trunk */}
+                  {/* Main vertical trunk - from top to split point */}
                   <line
-                    x1="500"
+                    x1="600"
                     y1="0"
-                    x2="500"
-                    y2="45"
+                    x2="600"
+                    y2="40"
                     stroke="url(#tridentGradient)"
                     strokeWidth="2.5"
                     strokeLinecap="round"
                     style={{
-                      strokeDasharray: 45,
-                      strokeDashoffset: 45,
+                      strokeDasharray: 40,
+                      strokeDashoffset: 40,
                       animation: 'drawLine 0.5s ease-out forwards'
                     }}
                   />
                   
-                  {/* Left prong - curves left horizontally then straight down */}
+                  {/* Left branch - smooth curve left then straight down */}
                   <path
-                    d="M 500 45 C 500 50, 450 55, 300 55 L 300 150"
+                    d="M 600 40 Q 550 50, 250 60 L 250 160"
                     stroke="url(#tridentGradient)"
                     strokeWidth="2.5"
                     fill="none"
                     strokeLinecap="round"
                     style={{
-                      strokeDasharray: 295,
-                      strokeDashoffset: 295,
-                      animation: 'drawLine 0.9s ease-out 0.5s forwards'
+                      strokeDasharray: 460,
+                      strokeDashoffset: 460,
+                      animation: 'drawLine 1s ease-out 0.5s forwards'
                     }}
                   />
                   
-                  {/* Center prong - straight down */}
+                  {/* Center branch - straight down */}
                   <line
-                    x1="500"
-                    y1="45"
-                    x2="500"
-                    y2="150"
+                    x1="600"
+                    y1="40"
+                    x2="600"
+                    y2="160"
                     stroke="url(#tridentGradient)"
                     strokeWidth="2.5"
                     strokeLinecap="round"
                     style={{
-                      strokeDasharray: 105,
-                      strokeDashoffset: 105,
-                      animation: 'drawLine 0.9s ease-out 0.5s forwards'
+                      strokeDasharray: 120,
+                      strokeDashoffset: 120,
+                      animation: 'drawLine 1s ease-out 0.5s forwards'
                     }}
                   />
                   
-                  {/* Right prong - curves right horizontally then straight down */}
+                  {/* Right branch - smooth curve right then straight down */}
                   <path
-                    d="M 500 45 C 500 50, 550 55, 700 55 L 700 150"
+                    d="M 600 40 Q 650 50, 950 60 L 950 160"
                     stroke="url(#tridentGradient)"
                     strokeWidth="2.5"
                     fill="none"
                     strokeLinecap="round"
                     style={{
-                      strokeDasharray: 295,
-                      strokeDashoffset: 295,
-                      animation: 'drawLine 0.9s ease-out 0.5s forwards'
+                      strokeDasharray: 460,
+                      strokeDashoffset: 460,
+                      animation: 'drawLine 1s ease-out 0.5s forwards'
                     }}
                   />
                 </svg>
