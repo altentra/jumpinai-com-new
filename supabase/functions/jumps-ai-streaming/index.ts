@@ -237,34 +237,48 @@ Deno.serve(async (req) => {
             ? overviewResponse 
             : JSON.stringify(overviewResponse);
 
-          // Remaining steps (3 and 4 only - naming and overview already done)
-          const remainingSteps = [
-            { step: 3, type: 'comprehensive', name: 'Comprehensive Plan' },
-            { step: 4, type: 'tool_prompts', name: 'Tools & Prompts' }
-          ];
-
-          for (const { step, type, name } of remainingSteps) {
-            try {
-              console.log(`🔧 Step ${step}: Generating ${name}...`);
-              const response = await callXAIWithRetry(XAI_API_KEY, step, formData, overviewContent);
-              console.log(`✅ Step ${step} response:`, response);
-              
-              // Try to send the event
-              const sent = sendEvent(step, type, response);
-              if (!sent) {
-                console.error(`Failed to send step ${step}, attempting to continue...`);
-                // Wait a bit and try to continue anyway
-                await new Promise(resolve => setTimeout(resolve, 100));
-              }
-            } catch (stepError: any) {
-              console.error(`❌ Error in step ${step}:`, stepError.message);
-              console.error(`Error details:`, stepError);
-              // Try to send error event, then continue
-              sendEvent(step, 'error', { 
-                message: `Step ${step} (${name}) failed after retries: ${stepError.message}`,
-                retryable: false
-              });
+          // Step 3: Generate comprehensive plan
+          console.log('🔧 Step 3: Generating Comprehensive Plan...');
+          let comprehensivePlan = '';
+          try {
+            const planResponse = await callXAIWithRetry(XAI_API_KEY, 3, formData, overviewContent);
+            console.log('✅ Step 3 response:', planResponse);
+            comprehensivePlan = typeof planResponse === 'string' 
+              ? planResponse 
+              : JSON.stringify(planResponse);
+            
+            const sent = sendEvent(3, 'comprehensive', planResponse);
+            if (!sent) {
+              console.error('Failed to send step 3, attempting to continue...');
+              await new Promise(resolve => setTimeout(resolve, 100));
             }
+          } catch (stepError: any) {
+            console.error('❌ Error in step 3:', stepError.message);
+            sendEvent(3, 'error', { 
+              message: `Step 3 (Comprehensive Plan) failed after retries: ${stepError.message}`,
+              retryable: false
+            });
+          }
+
+          // Step 4: Generate tools & prompts (needs BOTH overview and comprehensive plan)
+          console.log('🔧 Step 4: Generating Tools & Prompts...');
+          try {
+            // Combine overview and comprehensive plan for Step 4 context
+            const fullContext = `${overviewContent}\n\nCOMPREHENSIVE PLAN:\n${comprehensivePlan}`;
+            const toolsResponse = await callXAIWithRetry(XAI_API_KEY, 4, formData, fullContext);
+            console.log('✅ Step 4 response:', toolsResponse);
+            
+            const sent = sendEvent(4, 'tool_prompts', toolsResponse);
+            if (!sent) {
+              console.error('Failed to send step 4, attempting to continue...');
+              await new Promise(resolve => setTimeout(resolve, 100));
+            }
+          } catch (stepError: any) {
+            console.error('❌ Error in step 4:', stepError.message);
+            sendEvent(4, 'error', { 
+              message: `Step 4 (Tools & Prompts) failed after retries: ${stepError.message}`,
+              retryable: false
+            });
           }
 
           // Send completion event
@@ -387,7 +401,7 @@ async function callXAI(
 ): Promise<any> {
   const { systemPrompt, userPrompt, expectedTokens } = getStepPrompts(step, context, overviewContent);
   
-  console.log(`🚀 Step ${step}: Calling xAI API (model: grok-4-fast-reasoning, max_tokens: ${expectedTokens})`);
+  console.log(`🚀 Step ${step}: Calling xAI API (model: grok-4-fast-non-reasoning, max_tokens: ${expectedTokens})`);
   
   const response = await fetch('https://api.x.ai/v1/chat/completions', {
     method: 'POST',
@@ -396,7 +410,7 @@ async function callXAI(
       'Content-Type': 'application/json',
     },
       body: JSON.stringify({
-        model: 'grok-4-fast-reasoning',
+        model: 'grok-4-fast-non-reasoning',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt }
@@ -445,38 +459,80 @@ async function callXAI(
     console.error(`JSON parse error for step ${step}:`, parseError);
     console.log('Failed content preview:', content.substring(0, 500));
     
-    // Try additional cleanup for common issues
-    try {
-      // Fix common XAI JSON issues
-      let fixed = content
-        .replace(/,(\s*[}\]])/g, '$1') // Remove trailing commas
-        .replace(/\n/g, ' ')           // Remove newlines within strings
-        .replace(/\r/g, '')            // Remove carriage returns
-        .replace(/\t/g, ' ')           // Replace tabs with spaces
-        .replace(/\s+/g, ' ')          // Normalize whitespace
-        .replace(/"\s*:\s*"/g, '":"')  // Normalize key-value spacing
-        .replace(/}\s*{/g, '},{');     // Fix adjacent objects
+    // AGGRESSIVE JSON REPAIR - Try multiple repair strategies
+    const repairStrategies = [
+      // Strategy 1: Basic cleanup
+      (json: string) => json
+        .replace(/,(\s*[}\]])/g, '$1')
+        .replace(/\n/g, ' ')
+        .replace(/\r/g, '')
+        .replace(/\t/g, ' ')
+        .replace(/\s+/g, ' ')
+        .replace(/}\s*{/g, '},{'),
       
-      const parsed = JSON.parse(fixed);
-      console.log(`Step ${step} fixed and parsed successfully`);
-      return parsed;
-    } catch (fixError) {
-      console.error('Fixed parsing also failed:', fixError);
-    }
+      // Strategy 2: Fix array syntax issues
+      (json: string) => json
+        .replace(/,(\s*[}\]])/g, '$1')
+        .replace(/\](\s*)"(\w+)":/g, '],$1"$2":')  // Add missing comma after array before key
+        .replace(/\}(\s*)"(\w+)":/g, '},$1"$2":')  // Add missing comma after object before key
+        .replace(/\](\s*)\{/g, '],{')              // Add missing comma between ] and {
+        .replace(/\}(\s*)\{/g, '},{')              // Add missing comma between } and {
+        .replace(/"\s*\n\s*"/g, '","')             // Fix broken strings across lines
+        .replace(/,+/g, ',')                       // Remove duplicate commas
+        .replace(/\[\s*,/g, '[')                   // Remove leading comma in array
+        .replace(/,\s*\]/g, ']')                   // Remove trailing comma in array
+        .replace(/,\s*\}/g, '}'),                  // Remove trailing comma in object
+      
+      // Strategy 3: Fix truncated JSON (add closing brackets)
+      (json: string) => {
+        let fixed = json.replace(/,(\s*[}\]])/g, '$1');
+        const openBraces = (fixed.match(/\{/g) || []).length;
+        const closeBraces = (fixed.match(/\}/g) || []).length;
+        const openBrackets = (fixed.match(/\[/g) || []).length;
+        const closeBrackets = (fixed.match(/\]/g) || []).length;
+        
+        // Add missing closing brackets
+        for (let i = 0; i < openBrackets - closeBrackets; i++) fixed += ']';
+        for (let i = 0; i < openBraces - closeBraces; i++) fixed += '}';
+        
+        return fixed;
+      }
+    ];
     
-    // Try to extract JSON object from text
-    const jsonMatch = content.match(/\{[\s\S]*\}|\[[\s\S]*\]/);
-    if (jsonMatch) {
+    // Try each repair strategy
+    for (let i = 0; i < repairStrategies.length; i++) {
       try {
-        let extracted = jsonMatch[0].replace(/,(\s*[}\]])/g, '$1');
-        const parsed = JSON.parse(extracted);
-        console.log(`Step ${step} extracted and parsed successfully`);
+        let repaired = content;
+        // Apply all strategies up to current one
+        for (let j = 0; j <= i; j++) {
+          repaired = repairStrategies[j](repaired);
+        }
+        const parsed = JSON.parse(repaired);
+        console.log(`✅ Step ${step} repaired using strategy ${i + 1}`);
         return parsed;
       } catch (e) {
-        console.error('Extraction also failed:', e);
+        console.log(`❌ Repair strategy ${i + 1} failed`);
       }
     }
     
+    // Last resort: Try to extract valid JSON from the content
+    const jsonMatch = content.match(/\{[\s\S]*\}|\[[\s\S]*\]/);
+    if (jsonMatch) {
+      try {
+        let extracted = jsonMatch[0];
+        // Apply all repair strategies to extracted content
+        for (const strategy of repairStrategies) {
+          extracted = strategy(extracted);
+        }
+        const parsed = JSON.parse(extracted);
+        console.log(`✅ Step ${step} extracted and repaired successfully`);
+        return parsed;
+      } catch (e) {
+        console.error('❌ All repair attempts failed:', e);
+      }
+    }
+    
+    console.error('⚠️ Using fallback response for step', step);
     return validateStepResponse(content, step, content);
   }
 }
@@ -518,179 +574,250 @@ Examples of good names:
       };
     
     case 2:
-      // STEP 2: Strategic Overview - ORIGINAL working format
+      // STEP 2: Strategic Overview - AI ADAPTATION FOCUS
       return {
-        systemPrompt: `You are a strategic consultant creating comprehensive transformation plans. Analyze the user's goals and challenges deeply, then provide a detailed strategic overview. Return ONLY valid JSON with NO markdown formatting, NO code blocks, NO extra text.`,
-        userPrompt: `Create a comprehensive strategic overview for this transformation:
+        systemPrompt: `You are a world-class AI adaptation strategist at JumpinAI - the premier AI Adaptation Studio.
+You specialize in helping people achieve their goals by strategically implementing AI into their workflow.
+Your expertise: Understanding challenges and creating compelling visions for AI-powered transformation.
+
+CORE MISSION: Show people how to achieve their goals using the latest AI tools available in November 2025.
+This is about AI IMPLEMENTATION and ADAPTATION - not generic business advice.
+
+Return ONLY valid JSON with NO markdown formatting, NO code blocks, NO extra text.`,
+        userPrompt: `Create a comprehensive strategic overview for this AI ADAPTATION journey:
 
 ${baseContext}
 
-CRITICAL REQUIREMENTS:
+🎯 ABSOLUTE CRITICAL REQUIREMENTS - THIS IS JUMPINAI'S CORE MISSION:
+1. This is an AI IMPLEMENTATION PLAN - focus on how they'll use AI to achieve their goals
+2. ONLY mention AI tools from November 2025: Claude, ChatGPT, Gemini, Grok, Cursor, Lovable, Midjourney, Runway, Veo, Make.com, Zapier AI, Perplexity, NotebookLM, etc.
+3. NO VERSION NUMBERS: Use only base tool names (e.g., "ChatGPT" not "GPT-5", "Gemini" not "Gemini 2.0", "Midjourney" not "Midjourney v7"). However, DO mention specialized variants when relevant (e.g., "Claude Code" for coding, "Grok Imagine" for image generation, "Lovable" for website creation).
+4. NO old-school recommendations (NO Khan Academy, NO Coursera, NO generic courses)
+5. NO non-AI tools unless absolutely necessary
+6. Every recommendation must be AI-first: How will AI help them achieve this goal?
+7. This is about LEARNING AI BY USING IT to solve their actual problems
+8. Make them feel that AI adaptation is the key to their success
+
+DETAILED CONTENT REQUIREMENTS:
 1. Provide DETAILED, SPECIFIC content - NO generic placeholders
-2. The roadmap MUST contain concrete, actionable plans for each timeframe
+2. The roadmap MUST mention specific AI tools they'll implement in each timeframe
 3. All arrays must have at least 3-4 substantive items
-4. Every field must be filled with meaningful, personalized content
+4. Every field must emphasize AI implementation and adaptation
+5. Success factors should focus on mastering AI tools
 
 Return ONLY this JSON structure (NO markdown, NO code blocks):
 {
-  "executiveSummary": "Write 3-4 detailed paragraphs that: 1) Describe their current situation based on their goals and challenges, 2) Outline the transformation journey ahead, 3) Highlight key milestones and expected outcomes, 4) Paint a compelling vision of success. Make it specific to THEIR situation.",
+  "executiveSummary": "Write 3-4 detailed paragraphs that: 1) Describe their current situation and why AI adaptation is critical NOW, 2) Outline their AI implementation journey - specific AI tools they'll master and use, 3) Highlight key AI-powered milestones (e.g., 'mastering Claude for content strategy', 'implementing Runway for video creation'), 4) Paint a compelling vision of success through AI mastery. Make it specific about AI IMPLEMENTATION.",
   "situationAnalysis": {
-    "currentState": "Provide a detailed 4-5 sentence analysis of where they are now based on their stated challenges. Be specific about their pain points, current limitations, and why transformation is needed NOW.",
-    "challenges": ["Identify the PRIMARY obstacle blocking their progress", "Another critical challenge inferred from their input", "A third significant barrier they must overcome", "An additional challenge that could impact success"],
-    "opportunities": ["The BIGGEST opportunity unlocked by this transformation", "A second major opportunity aligned with their goals", "A third significant opportunity for growth", "An additional opportunity they can leverage"]
+    "currentState": "Provide a detailed 4-5 sentence analysis emphasizing their need for AI implementation. Explain how AI tools can address their challenges. Why is AI adaptation needed NOW to achieve their goals? Be specific about which AI capabilities would help.",
+    "challenges": ["PRIMARY obstacle that AI implementation can overcome", "Another critical challenge AI tools can solve", "A third barrier that AI adaptation addresses", "Additional challenge where AI provides a solution"],
+    "opportunities": ["The BIGGEST AI-powered opportunity (mention specific AI tool category)", "A second major AI implementation opportunity", "A third AI-driven growth opportunity", "Additional opportunity through AI tool mastery"]
   },
-  "strategicVision": "Write a compelling 4-5 sentence vision of their success state. What does life look like after this transformation? Be specific about outcomes, capabilities gained, and impact achieved. Make it inspirational yet grounded in their stated goals.",
+  "strategicVision": "Write a compelling 4-5 sentence vision of their AI-powered success state. What does life look like when they've successfully implemented AI tools? Which AI tools are they using daily? What outcomes have they achieved through AI? Make it inspirational yet grounded in AI IMPLEMENTATION.",
   "roadmap": {
-    "immediate": "Detailed 3-4 sentence plan for the FIRST 30 days. Include: specific actions to take, quick wins to achieve, foundations to establish. Example: 'Complete initial tool research and setup by week 1. Create first 3 test workflows in weeks 2-3. Achieve first measurable result by day 30.'",
-    "shortTerm": "Comprehensive 3-4 sentence plan for days 31-90. Include: major milestones to hit, systems to implement, skills to develop. Be specific about what gets built and accomplished in this phase.",
-    "longTerm": "Strategic 3-4 sentence plan for 90+ days. Include: advanced capabilities, scale targets, transformation completion markers. Paint the picture of full implementation and sustained success."
+    "immediate": "Detailed 3-4 sentence AI implementation plan for the FIRST 30 days. Include: specific AI tools to start with (e.g., 'Set up Claude for content strategy', 'Master ChatGPT prompting'), quick AI-powered wins, AI foundations to establish. NO old-school courses - only AI tool experimentation and implementation.",
+    "shortTerm": "Comprehensive 3-4 sentence AI scaling plan for days 31-90. Include: additional AI tools to master, AI-powered systems to build, AI workflow integration. Mention specific AI tools (e.g., 'Implement Runway for video', 'Use Make.com for automation').",
+    "longTerm": "Strategic 3-4 sentence advanced AI implementation plan for 90+ days. Include: advanced AI capabilities, AI tool stack optimization, sustained AI-powered success. Focus on becoming an AI power user in their field."
   },
-  "successFactors": ["The #1 most critical factor for their success", "A second essential success factor", "A third key element needed", "An additional important factor"],
-  "riskMitigation": ["Biggest risk they'll face and how to mitigate it", "Second major risk and prevention strategy", "Third risk and mitigation approach"]
+  "successFactors": ["The #1 AI-focused success factor (e.g., 'Consistent AI tool experimentation and implementation')", "A second AI mastery factor", "A third AI adaptation element", "Additional AI implementation factor"],
+  "riskMitigation": ["Biggest risk and how AI tools mitigate it (mention specific AI capability)", "Second risk and AI-powered prevention strategy", "Third risk and AI-driven mitigation approach"]
 }
 
-REMEMBER: Every field must be deeply personalized to THEIR specific goals and challenges. NO generic content allowed.`,
+REMEMBER: Every field must emphasize AI IMPLEMENTATION and ADAPTATION. This is JumpinAI - we help people achieve goals through strategic AI tool usage. Make them feel that AI is the KEY to their transformation.`,
         expectedTokens: 8000
       };
 
     case 3:
-      // STEP 3: Action Plan - 3 phases with 5 steps each
+      // STEP 3: AI IMPLEMENTATION Action Plan - 3 phases with 5 steps each
       return {
-        systemPrompt: `You are a world-class strategic execution expert. Create clear, actionable implementation plans organized into 3 phases with 5 steps each. Use **bold** markdown strategically for emphasis. Every step must be concrete, measurable, and directly tied to the user's specific goals and challenges. Return ONLY valid JSON.`,
-        userPrompt: `Create a world-class strategic action plan for this transformation:
+        systemPrompt: `You are an elite AI adaptation strategist at JumpinAI - the world's premier AI Adaptation Studio.
+Your mission: Help people achieve their goals by strategically implementing AI tools into their workflow.
+You create world-class, professional strategic action plans where EVERY step centers around implementing specific AI tools.
+
+CORE PHILOSOPHY:
+- This is an AI IMPLEMENTATION plan, not a generic business plan
+- Each step = One strategic AI-powered action using the latest AI tools
+- We teach AI by helping people USE IT to achieve their actual goals
+- No old-school methods, no non-AI recommendations, ONLY cutting-edge AI tools
+
+You are the world's leading expert on the latest AI tools available in November 2025. Return ONLY valid JSON.`,
+        userPrompt: `Based on the following user profile and goals, create a comprehensive AI IMPLEMENTATION plan:
 
 ${baseContext}
 
 Strategic Overview Context:
 ${overviewContent}
 
-CRITICAL REQUIREMENTS:
-1. EXACTLY 3 phases with EXACTLY 5 steps per phase (total 15 steps)
-2. Each step must be SPECIFIC and ACTIONABLE - no vague advice
-3. Steps must build logically from foundation to mastery
-4. Use **bold** markdown for key terms, deliverables, and tool references
-5. Reference Tool #1-9 where appropriate (Tools 1-3 in Phase 1, Tools 4-6 in Phase 2, Tools 7-9 in Phase 3)
-6. Each step title should be action-oriented and inspiring
-7. Each step description should be 3-4 sentences with specific guidance
+🎯 ABSOLUTE CRITICAL REQUIREMENTS - READ CAREFULLY:
+
+1. **AI-FIRST MANDATE**: Every single step MUST center around implementing specific AI tools
+   - NO old-school recommendations (no Coursera, no Khan Academy, no generic courses)
+   - NO generic business advice without specific AI tool implementation
+   - Each step = ONE strategic idea using ONE or more specific AI tools
+   - Focus on HOW to use AI tools to achieve their goals
+
+2. **LATEST AI TOOLS ONLY** (November 2025):
+   - AI Writing/Reasoning: Claude, ChatGPT, Gemini, Grok, Perplexity
+   - AI Code: Cursor, Lovable, Replit, GitHub Copilot, Bolt, V0
+   - AI Image: Midjourney, DALL-E, Flux, Stable Diffusion
+   - AI Video: Runway, Veo, Invideo AI, Sora, Kling AI
+   - AI Audio: ElevenLabs, Suno, Udio
+   - AI Automation: Make.com, Zapier AI, n8n
+   - AI Research: Perplexity, NotebookLM, Claude
+   - AI Design: Figma AI, Uizard, Galileo AI, Canva AI
+   - Specialized: Harvey AI, Jasper, Copy.ai, Descript, Synthesia
+   
+3. **NO VERSION NUMBERS**: Use only base tool names (e.g., "ChatGPT" not "GPT-5", "Gemini" not "Gemini 2.0", "Grok" not "Grok 2", "Midjourney" not "Midjourney v7", "Runway" not "Runway Gen-4"). However, DO mention specialized variants when relevant (e.g., "Claude Code" for coding, "Grok Imagine" for image generation, "GitHub Copilot" for development, "Lovable" for website creation).
+
+4. **STEP STRUCTURE - EACH STEP MUST**:
+   - Have ONE clear strategic action/idea centered around AI tool usage
+   - Explain WHICH specific AI tool(s) to use for this goal
+   - Explain HOW to use the AI tool for this specific purpose
+   - Be practical and immediately actionable with AI
+   - NO mixing of old-school methods with AI - pure AI implementation only
+
+5. **WHAT THIS IS**:
+   - An AI IMPLEMENTATION plan for achieving their goals through AI
+   - A hands-on guide to learning AI by USING it on their real problems
+   - A strategic roadmap for AI adaptation and mastery
+
+6. **WHAT THIS IS NOT**:
+   - Generic business advice or traditional methods
+   - Old-school course recommendations (NO Coursera, NO Khan Academy)
+   - Non-AI tool suggestions (NO WordPress without AI, NO generic email marketing)
+   - Abstract theory without AI tool usage
+
+7. **TOOL ALIGNMENT**:
+   - Steps 1-3 in Phase 1 connect to Tool Combos #1-3 (foundation AI tools)
+   - Steps 1-3 in Phase 2 connect to Tool Combos #4-6 (growth AI tools)
+   - Steps 1-3 in Phase 3 connect to Tool Combos #7-9 (mastery AI tools)
+   - Write steps thinking about AI tool categories they'll use
 
 PHASE STRUCTURE:
-- Phase 1 (Foundation): Setup, research, initial implementation, quick wins
-- Phase 2 (Growth): Scaling, optimization, system building, expansion  
-- Phase 3 (Mastery): Advanced features, automation, sustained excellence, future-proofing
+- Phase 1 (Foundation): Initial AI tool implementation, AI experimentation, quick AI-powered wins
+- Phase 2 (Growth): Scaling AI usage, AI workflow optimization, advanced AI implementation
+- Phase 3 (Mastery): AI automation mastery, AI-first operations, sustained AI excellence
+
+EXACT REQUIREMENTS:
+- EXACTLY 3 phases with EXACTLY 5 steps per phase (total 15 steps)
+- Each step title must mention AI or AI tool usage
+- Each step description must explain specific AI tool implementation (3-4 sentences)
+- Use **bold** for AI tool names and key deliverables
+- Reference Tool #1-9 where appropriate
 
 Return ONLY this exact JSON structure (NO markdown blocks, NO extra text):
 {
   "phases": [
     {
       "phase_number": 1,
-      "title": "Foundation Phase: [Compelling title]",
-      "description": "Clear 2-3 sentence overview explaining what will be achieved in this phase and why it's important. Use **bold** for key deliverables.",
+      "title": "Foundation Phase: [AI-focused title]",
+      "description": "Clear 2-3 sentence overview explaining AI tools they'll implement in this phase and why it matters for their goals. Use **bold** for key AI deliverables.",
       "duration": "**Weeks 1-4**",
       "steps": [
         {
           "step_number": 1,
-          "title": "**[Clear action-oriented title]**",
-          "description": "Detailed 3-4 sentence description of this step. Explain WHAT to do, HOW to do it, and WHY it matters. Include specific actions, tools, and expected outcomes. Use **bold** for key terms. Can mention → Use **Tool #1** if relevant.",
+          "title": "**[AI-focused action title mentioning the AI tool or AI capability]**",
+          "description": "Detailed 3-4 sentences explaining: WHICH AI tool to use, HOW to use it for their goal, WHAT specific AI-powered actions to take, and WHY this AI implementation matters. Example: 'Use **Claude** to analyze your market positioning by feeding it competitor data and asking for strategic insights. Spend 2 hours crafting detailed prompts to extract actionable recommendations.' → Use **Tool #1**",
           "estimated_time": "5-8 hours"
         },
         {
           "step_number": 2,
-          "title": "**[Next action-oriented title]**",
-          "description": "Detailed description with specific actions and outcomes. → Use **Tool #2** if relevant.",
+          "title": "**[AI-powered action title]**",
+          "description": "Specific AI tool implementation guidance with HOW-TO details. Focus entirely on AI usage. → Use **Tool #2**",
           "estimated_time": "6-10 hours"
         },
         {
           "step_number": 3,
-          "title": "**[Action-oriented title]**",
-          "description": "Detailed description. → Use **Tool #3** if relevant.",
+          "title": "**[AI implementation title]**",
+          "description": "Detailed AI tool usage instructions, no generic advice. → Use **Tool #3**",
           "estimated_time": "8-12 hours"
         },
         {
           "step_number": 4,
-          "title": "**[Action-oriented title]**",
-          "description": "Detailed description.",
+          "title": "**[AI-centered action title]**",
+          "description": "Another AI-powered strategic action with specific tool guidance.",
           "estimated_time": "4-6 hours"
         },
         {
           "step_number": 5,
-          "title": "**[Action-oriented title]**",
-          "description": "Detailed description.",
+          "title": "**[AI workflow title]**",
+          "description": "AI implementation step completing the foundation phase.",
           "estimated_time": "5-8 hours"
         }
       ]
     },
     {
       "phase_number": 2,
-      "title": "Growth Phase: [Dynamic title]",
-      "description": "Clear overview building on Phase 1. Use **bold** for achievements.",
+      "title": "Growth Phase: [AI scaling title]",
+      "description": "Overview of scaling AI implementation. Use **bold** for AI achievements.",
       "duration": "**Weeks 5-8**",
       "steps": [
         {
           "step_number": 1,
-          "title": "**[Action-oriented title]**",
-          "description": "Detailed description. → Use **Tool #4** if relevant.",
+          "title": "**[Advanced AI implementation title]**",
+          "description": "Detailed AI tool usage for scaling. → Use **Tool #4**",
           "estimated_time": "10-15 hours"
         },
         {
           "step_number": 2,
-          "title": "**[Action-oriented title]**",
-          "description": "Detailed description. → Use **Tool #5** if relevant.",
+          "title": "**[AI automation title]**",
+          "description": "AI workflow optimization guidance. → Use **Tool #5**",
           "estimated_time": "8-12 hours"
         },
         {
           "step_number": 3,
-          "title": "**[Action-oriented title]**",
-          "description": "Detailed description. → Use **Tool #6** if relevant.",
+          "title": "**[AI integration title]**",
+          "description": "Advanced AI tool implementation. → Use **Tool #6**",
           "estimated_time": "6-10 hours"
         },
         {
           "step_number": 4,
-          "title": "**[Action-oriented title]**",
-          "description": "Detailed description.",
+          "title": "**[AI-powered growth title]**",
+          "description": "AI scaling strategy with specific tools.",
           "estimated_time": "5-8 hours"
         },
         {
           "step_number": 5,
-          "title": "**[Action-oriented title]**",
-          "description": "Detailed description.",
+          "title": "**[AI optimization title]**",
+          "description": "AI workflow refinement step.",
           "estimated_time": "8-12 hours"
         }
       ]
     },
     {
       "phase_number": 3,
-      "title": "Mastery Phase: [Aspirational title]",
-      "description": "Clear overview of final transformation. Use **bold** for outcomes.",
+      "title": "Mastery Phase: [AI excellence title]",
+      "description": "Overview of AI mastery and automation. Use **bold** for AI outcomes.",
       "duration": "**Weeks 9-12**",
       "steps": [
         {
           "step_number": 1,
-          "title": "**[Action-oriented title]**",
-          "description": "Detailed description. → Use **Tool #7** if relevant.",
+          "title": "**[AI mastery title]**",
+          "description": "Expert-level AI implementation. → Use **Tool #7**",
           "estimated_time": "12-16 hours"
         },
         {
           "step_number": 2,
-          "title": "**[Action-oriented title]**",
-          "description": "Detailed description. → Use **Tool #8** if relevant.",
+          "title": "**[AI automation mastery title]**",
+          "description": "Advanced AI automation guidance. → Use **Tool #8**",
           "estimated_time": "10-15 hours"
         },
         {
           "step_number": 3,
-          "title": "**[Action-oriented title]**",
-          "description": "Detailed description. → Use **Tool #9** if relevant.",
+          "title": "**[AI-first operations title]**",
+          "description": "Complete AI integration strategy. → Use **Tool #9**",
           "estimated_time": "8-12 hours"
         },
         {
           "step_number": 4,
-          "title": "**[Action-oriented title]**",
-          "description": "Detailed description.",
+          "title": "**[Sustained AI excellence title]**",
+          "description": "Maintaining AI-powered success.",
           "estimated_time": "6-10 hours"
         },
         {
           "step_number": 5,
-          "title": "**[Action-oriented title]**",
-          "description": "Detailed description.",
+          "title": "**[Future-proofing title]**",
+          "description": "Ongoing AI adaptation and innovation.",
           "estimated_time": "10-15 hours"
          }
        ]
@@ -698,25 +825,47 @@ Return ONLY this exact JSON structure (NO markdown blocks, NO extra text):
    ]
 }
 
-Create world-class, executive-level content that inspires action and provides crystal-clear guidance. Every element must be specific, measurable, and actionable.`,
+Create world-class, professional content that positions AI tools as THE solution to their goals. Every step must be unified around AI implementation.`,
         expectedTokens: 16000
       };
 
     case 4:
-      // STEP 4: Tools & Prompts - infer all context from goals & challenges
+      // STEP 4: Tools & Prompts - MUST align with comprehensive plan from Step 3
       return {
-        systemPrompt: `You are an AI tool recommendation and prompt engineering expert with real-time knowledge of the latest AI tools and technologies as of October 24, 2025. You will analyze the user's goals and challenges to intelligently infer their industry, experience level, budget constraints, and urgency to recommend perfectly tailored tool+prompt combinations.
+        systemPrompt: `You are an AI tool recommendation and prompt engineering expert with real-time knowledge of the latest AI tools and technologies as of November 2025. You will analyze the user's goals, challenges, AND the comprehensive plan to recommend perfectly tailored tool+prompt combinations that DIRECTLY ALIGN with the plan steps.
+
+🚨 CRITICAL: PLAN ALIGNMENT IS MANDATORY:
+- You MUST read and analyze the comprehensive plan provided in the context
+- Your tool recommendations MUST align with the specific steps in the plan
+- Combo #1 should match Phase 1, Step 1 from the plan
+- Combo #2 should match Phase 1, Step 2 from the plan
+- Combo #3 should match Phase 1, Step 3 from the plan
+- Combo #4 should match Phase 2, Step 1 from the plan
+- Combo #5 should match Phase 2, Step 2 from the plan
+- Combo #6 should match Phase 2, Step 3 from the plan
+- Combo #7 should match Phase 3, Step 1 from the plan
+- Combo #8 should match Phase 3, Step 2 from the plan
+- Combo #9 should match Phase 3, Step 3 from the plan
+- The tool and prompt in each combo should directly support executing that specific plan step
+
+CRITICAL: AI TOOLS ONLY - NOVEMBER 2025 FOCUS:
+1. Recommend ONLY AI tools - no outdated or non-AI tools
+2. Recommend ONLY the LATEST and GREATEST AI tools available as of November 2025
+3. Check current date and ensure all tools are real, existing, and current
+4. DO NOT recommend tools from past decades or outdated solutions
+5. PRIORITIZE cutting-edge AI: ChatGPT, Claude, Gemini, Grok, Midjourney, Runway, Cursor, Replit, Make.com, Zapier, Perplexity, etc.
+6. For each tool category, recommend the BEST option available right now in November 2025
 
 CRITICAL: TOOL SELECTION & DIVERSITY REQUIREMENTS:
 1. Generate exactly 9 tool + prompt combinations
-2. MUST use at least 6 DIFFERENT tools across the 9 combos
-3. Only repeat a tool if it's genuinely optimal for distinct use cases
-4. Strategic mix required:
-   - 2-3 AI writing/reasoning tools (ChatGPT, Claude, Gemini, etc.)
-   - 3-4 specialized tools (video: Veo3/InVideo, image: Midjourney/DALL-E, code: Cursor/Replit, etc.)
-   - 2-3 productivity/workflow tools (Notion, Make.com, Zapier, etc.)
-5. PRIORITIZE latest and greatest tools as of October 2025
-6. Consider cutting-edge releases and trending tools in the market RIGHT NOW
+2. MUST use at least 6 DIFFERENT AI tools across the 9 combos
+3. Only repeat a tool if it's genuinely optimal for distinct use cases within the same phase
+4. Strategic mix required (ALL MUST BE AI TOOLS):
+   - 2-3 AI writing/reasoning tools (ChatGPT, Claude, Gemini, Grok, etc.)
+   - 3-4 specialized AI tools (video: Runway/Veo, image: Midjourney/DALL-E, code: Cursor/Replit/Lovable, design: Figma AI/Canva AI, etc.)
+   - 2-3 AI productivity/automation tools (Make.com, Zapier, n8n, Notion AI, etc.)
+5. ABSOLUTELY NO outdated or non-existent tools
+6. Consider what AI tools are trending and most powerful RIGHT NOW in November 2025
 
 CRITICAL: TOOL-SPECIFIC PROMPT FORMATS:
 - Add "prompt_format" field: "json" | "detailed_descriptive" | "structured_requirements" | "conversational"
@@ -739,35 +888,58 @@ CRITICAL: CONTEXT INFERENCE & DEFAULTS:
   * Budget: Lean approach - prioritize free/affordable tools, only premium when truly optimal
   * Urgency: As soon as realistically achievable given transformation scope
   * Industry: Determine from terminology, language patterns, and context clues`,
-        userPrompt: `Create 9 deeply personalized tool+prompt combinations with diversity and phase alignment:
+        userPrompt: `Create 9 deeply personalized tool+prompt combinations that DIRECTLY ALIGN with the comprehensive plan:
 
 ${baseContext}
 
 Overview Context (already analyzed):
 ${overviewContent}
 
+🚨 CRITICAL: YOU MUST READ AND ANALYZE THIS COMPREHENSIVE PLAN:
+The comprehensive plan has been generated with 3 phases, each with 5 steps. Your tool combos MUST align with the plan steps:
+- Read Phase 1, Steps 1-3 carefully - your Combos #1-3 must support executing these exact steps
+- Read Phase 2, Steps 1-3 carefully - your Combos #4-6 must support executing these exact steps  
+- Read Phase 3, Steps 1-3 carefully - your Combos #7-9 must support executing these exact steps
+- If a plan step mentions a tool type or category, your combo should recommend the BEST AI tool in that category
+- If a plan step describes an action, your combo should provide the PERFECT AI tool + prompt to accomplish that action
+- The meaning and purpose must be interconnected - not random separate content
+
 CRITICAL ANALYSIS & INFERENCE:
 1. From GOALS, understand: What industry are they in (from context/language)? What tools would best serve their objectives? What complexity level is appropriate?
 2. From CHALLENGES, deduce: What's their AI experience level? What budget constraints exist? How urgent is their timeline?
-3. Apply sensible defaults when not explicitly stated:
-   - Budget: LEAN APPROACH - default to free and cost-effective tools; only recommend premium when clearly optimal for their goals
-   - Experience: Standard AI learning curve - assume tech-savvy but new to AI implementation (beginner-to-intermediate friendly)
+3. From the COMPREHENSIVE PLAN, understand: What tools are needed for each specific step? What AI capabilities are required?
+4. Apply sensible defaults when not explicitly stated:
+   - Budget: LEAN APPROACH - default to free and cost-effective AI tools; only recommend premium when clearly optimal
+   - Experience: Standard AI learning curve - assume tech-savvy but new to AI (beginner-to-intermediate friendly)
    - Urgency: As soon as realistically achievable - balance speed with quality
    - Industry: Infer from terminology, language patterns, and goals/challenges context
-4. Tailor EVERYTHING: tool complexity, budget appropriateness, time-to-value, learning curve
+5. Tailor EVERYTHING: tool complexity, budget appropriateness, time-to-value, learning curve
 
-REQUIREMENTS:
-1. Each combo must directly address their goals and overcome their challenges
-2. DEFAULT to free/affordable tools unless goals clearly indicate premium resources available
-3. Match complexity to standard learning curve - beginner-friendly with growth path, unless clear sophistication indicators
-4. Assume reasonable urgency - quick wins balanced with sustainable progress
-5. MUST use at least 6 DIFFERENT tools across the 9 combos
-6. Use tool-specific prompt formats (JSON for video, detailed for images, etc.)
-7. Align 3 combos per phase (foundation/growth/mastery)
-8. Recommend latest October 2025 tools when appropriate
-9. CRITICAL: Use tool names WITHOUT version numbers (e.g., "ChatGPT" not "ChatGPT-5", "Grok" not "Grok 4", "Gemini" not "Gemini 3", "Midjourney" not "Midjourney v7")
+🚨 MANDATORY REQUIREMENTS:
+1. Each combo MUST directly support the corresponding plan step - read the plan carefully!
+2. Recommend ONLY AI tools that exist and are available in November 2025
+3. Recommend ONLY the LATEST and GREATEST AI tools - check current date and market
+4. DO NOT recommend outdated tools, non-AI tools, or tools from past decades
+5. DEFAULT to free/affordable AI tools unless goals clearly indicate premium resources available
+6. MUST use at least 6 DIFFERENT AI tools across the 9 combos
+7. Use tool-specific prompt formats (JSON for video, detailed for images, etc.)
+8. Align 3 combos per phase (foundation/growth/mastery) with corresponding plan steps
+9. CRITICAL: Use tool names WITHOUT version numbers (e.g., "ChatGPT" not "ChatGPT-5", "Grok" not "Grok 2", "Gemini" not "Gemini 2.0" or "Gemini 3", "Midjourney" not "Midjourney v7", "Runway" not "Runway Gen-4"). However, DO mention specialized variants when relevant (e.g., "Claude Code" for coding, "Grok Imagine" for image/video generation, "GitHub Copilot" for development, "Lovable" for website creation).
+10. Each tool must be a real, current, powerful AI tool available NOW in November 2025
 
-DO NOT use generic content. Every word should reflect THEIR specific situation inferred from their input.
+ALIGNMENT VERIFICATION:
+Before finalizing, verify:
+✓ Does Combo #1 help execute Phase 1, Step 1 from the plan?
+✓ Does Combo #2 help execute Phase 1, Step 2 from the plan?
+✓ Does Combo #3 help execute Phase 1, Step 3 from the plan?
+✓ Does Combo #4 help execute Phase 2, Step 1 from the plan?
+✓ Does Combo #5 help execute Phase 2, Step 2 from the plan?
+✓ Does Combo #6 help execute Phase 2, Step 3 from the plan?
+✓ Does Combo #7 help execute Phase 3, Step 1 from the plan?
+✓ Does Combo #8 help execute Phase 3, Step 2 from the plan?
+✓ Does Combo #9 help execute Phase 3, Step 3 from the plan?
+
+DO NOT use generic content. Every word should reflect THEIR specific situation AND align with the comprehensive plan steps.
 
 EXAMPLE of proper format-specific prompts:
 - JSON (for video tools): {"scene": "sunset over mountains", "duration": 5, "style": "cinematic", "mood": "peaceful"}

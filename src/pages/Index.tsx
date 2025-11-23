@@ -9,6 +9,7 @@ import Newsletter from "@/components/Newsletter";
 import Footer from "@/components/Footer";
 import { GoogleSheetsTest } from "@/components/GoogleSheetsTest";
 import { useAuth } from '@/hooks/useAuth';
+import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { creditsService, type SubscriptionPlan } from '@/services/creditsService';
@@ -21,6 +22,16 @@ const Index = () => {
   const [planLoading, setPlanLoading] = useState<Record<string, boolean>>({});
   const [selectedUpgradePlan, setSelectedUpgradePlan] = useState<SubscriptionPlan | null>(null);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  
+  // Scroll animations for different sections
+  const { elementRef: tabsRef, scrollProgress: tabsProgress } = useScrollAnimation({ threshold: 0.2 });
+  const { elementRef: stepsRef, scrollProgress: stepsProgress } = useScrollAnimation({ threshold: 0.2 });
+  const { elementRef: clarificationRef, scrollProgress: clarificationProgress } = useScrollAnimation({ threshold: 0.15 });
+  const { elementRef: level0Ref, scrollProgress: level0Progress } = useScrollAnimation({ threshold: 0.2 });
+  const { elementRef: level1Ref, scrollProgress: level1Progress } = useScrollAnimation({ threshold: 0.2 });
+  const { elementRef: level2Ref, scrollProgress: level2Progress } = useScrollAnimation({ threshold: 0.2 });
+  const { elementRef: level3Ref, scrollProgress: level3Progress } = useScrollAnimation({ threshold: 0.2 });
+  const { elementRef: level4Ref, scrollProgress: level4Progress } = useScrollAnimation({ threshold: 0.2 });
 
   // Show test component only in development or when URL contains 'test'
   const showTest = window.location.hostname === 'localhost' || 
@@ -212,9 +223,15 @@ const Index = () => {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          <div ref={tabsRef} className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {/* Overview Tab */}
-            <div className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-300 border border-primary/10 hover:border-primary/20 shadow-sm hover:shadow-md">
+            <div 
+              className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-700 ease-out border border-primary/10 hover:border-primary/20 shadow-sm hover:shadow-md"
+              style={{
+                opacity: Math.min(1, tabsProgress * 1.5),
+                transform: `translateY(${(1 - Math.min(1, tabsProgress * 1.5)) * 40}px)`
+              }}
+            >
               <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               <div className="flex items-center gap-3 mb-4 relative">
                 <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
@@ -248,7 +265,13 @@ const Index = () => {
             </div>
 
             {/* Plan Tab */}
-            <div className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-300 border border-primary/10 hover:border-primary/20 shadow-sm hover:shadow-md">
+            <div 
+              className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-700 ease-out border border-primary/10 hover:border-primary/20 shadow-sm hover:shadow-md"
+              style={{
+                opacity: Math.max(0, Math.min(1, (tabsProgress - 0.2) * 2)),
+                transform: `translateY(${(1 - Math.max(0, Math.min(1, (tabsProgress - 0.2) * 2))) * 40}px)`
+              }}
+            >
               <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               <div className="flex items-center gap-3 mb-4 relative">
                 <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
@@ -282,7 +305,13 @@ const Index = () => {
             </div>
 
             {/* Tools & Prompts Tab */}
-            <div className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-300 border border-primary/10 hover:border-primary/20 shadow-sm hover:shadow-md">
+            <div 
+              className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-700 ease-out border border-primary/10 hover:border-primary/20 shadow-sm hover:shadow-md"
+              style={{
+                opacity: Math.max(0, Math.min(1, (tabsProgress - 0.4) * 2)),
+                transform: `translateY(${(1 - Math.max(0, Math.min(1, (tabsProgress - 0.4) * 2))) * 40}px)`
+              }}
+            >
               <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               <div className="flex items-center gap-3 mb-4 relative">
                 <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
@@ -365,9 +394,15 @@ const Index = () => {
             </p>
           </div>
 
-          <div className="max-w-6xl mx-auto">
+          <div ref={stepsRef} className="max-w-6xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
-              <div className="text-center p-6 rounded-xl glass h-full flex flex-col">
+              <div 
+                className="text-center p-6 rounded-xl glass h-full flex flex-col transition-all duration-700 ease-out"
+                style={{
+                  opacity: Math.min(1, stepsProgress * 1.5),
+                  transform: `translateY(${(1 - Math.min(1, stepsProgress * 1.5)) * 40}px)`
+                }}
+              >
                 <div className="w-10 h-10 mx-auto mb-4 backdrop-blur-xl bg-primary/5 ring-1 ring-primary/30 rounded-xl flex items-center justify-center text-primary text-sm font-bold shadow-lg">
                   1
                 </div>
@@ -375,7 +410,13 @@ const Index = () => {
                 <p className="text-sm text-muted-foreground flex-1">Answer 2 focused questions: your objectives and the challenges you're facing. Our AI analyzes your input to create your personalized transformation plan.</p>
               </div>
               
-              <div className="text-center p-6 rounded-xl glass h-full flex flex-col">
+              <div 
+                className="text-center p-6 rounded-xl glass h-full flex flex-col transition-all duration-700 ease-out"
+                style={{
+                  opacity: Math.max(0, Math.min(1, (stepsProgress - 0.2) * 2)),
+                  transform: `translateY(${(1 - Math.max(0, Math.min(1, (stepsProgress - 0.2) * 2))) * 40}px)`
+                }}
+              >
                 <div className="w-10 h-10 mx-auto mb-4 backdrop-blur-xl bg-primary/5 ring-1 ring-primary/30 rounded-xl flex items-center justify-center text-primary text-sm font-bold shadow-lg">
                   2
                 </div>
@@ -383,7 +424,13 @@ const Index = () => {
                 <p className="text-sm text-muted-foreground flex-1">Get your complete 3-tab transformation package: Overview, Plan, and 9 Tools & Prompts combos—all personalized.</p>
               </div>
               
-              <div className="text-center p-6 rounded-xl glass h-full flex flex-col">
+              <div 
+                className="text-center p-6 rounded-xl glass h-full flex flex-col transition-all duration-700 ease-out"
+                style={{
+                  opacity: Math.max(0, Math.min(1, (stepsProgress - 0.4) * 2)),
+                  transform: `translateY(${(1 - Math.max(0, Math.min(1, (stepsProgress - 0.4) * 2))) * 40}px)`
+                }}
+              >
                 <div className="w-10 h-10 mx-auto mb-4 backdrop-blur-xl bg-primary/5 ring-1 ring-primary/30 rounded-xl flex items-center justify-center text-primary text-sm font-bold shadow-lg">
                   3
                 </div>
@@ -420,8 +467,14 @@ const Index = () => {
           </div>
 
           {/* Visual Demonstration */}
-          <div className="max-w-5xl mx-auto mb-8">
-            <div className="glass rounded-2xl p-6 lg:p-8 border border-primary/20 shadow-lg backdrop-blur-xl">
+          <div ref={clarificationRef} className="max-w-5xl mx-auto mb-8">
+            <div 
+              className="glass rounded-2xl p-6 lg:p-8 border border-primary/20 shadow-lg backdrop-blur-xl transition-all duration-700 ease-out"
+              style={{
+                opacity: Math.min(1, clarificationProgress * 1.3),
+                transform: `translateY(${(1 - Math.min(1, clarificationProgress * 1.3)) * 40}px)`
+              }}
+            >
               <h3 className="text-lg lg:text-xl font-bold mb-6 text-center font-display">
                 How It Works: Interactive Step Controls
               </h3>
@@ -477,8 +530,15 @@ const Index = () => {
               {/* Multi-Level Breakdown */}
               <div className="space-y-3 sm:space-y-4">
                 {/* Level 0 */}
-                <div className="relative pl-4 sm:pl-6 border-l-2 border-primary/40">
-                  <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full backdrop-blur-xl bg-primary/90 ring-2 ring-primary/30 flex items-center justify-center text-xs font-bold text-primary-foreground">
+                <div 
+                  ref={level0Ref}
+                  className="relative pl-4 sm:pl-6 border-l-2 border-primary/40 transition-all duration-700 ease-out"
+                  style={{
+                    opacity: level0Progress,
+                    transform: `translateX(${(1 - level0Progress) * 80}px) scale(${0.9 + level0Progress * 0.1})`
+                  }}
+                >
+                  <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full backdrop-blur-xl bg-primary ring-2 ring-primary/30 flex items-center justify-center text-xs font-bold text-primary-foreground">
                     0
                   </div>
                   <div className="glass bg-muted/30 p-3 sm:p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
@@ -496,8 +556,15 @@ const Index = () => {
                 </div>
 
                 {/* Level 1 */}
-                <div className="relative pl-4 sm:pl-6 border-l-2 border-primary/30 ml-2 sm:ml-4">
-                  <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full backdrop-blur-xl bg-primary/80 ring-2 ring-primary/20 flex items-center justify-center text-xs font-bold text-primary-foreground">
+                <div 
+                  ref={level1Ref}
+                  className="relative pl-4 sm:pl-6 border-l-2 border-primary/30 ml-2 sm:ml-4 transition-all duration-700 ease-out"
+                  style={{
+                    opacity: level1Progress,
+                    transform: `translateX(${(1 - level1Progress) * 80}px) scale(${0.9 + level1Progress * 0.1})`
+                  }}
+                >
+                  <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full backdrop-blur-xl bg-primary ring-2 ring-primary/20 flex items-center justify-center text-xs font-bold text-primary-foreground">
                     1
                   </div>
                   <div className="glass bg-muted/30 p-3 sm:p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
@@ -529,8 +596,15 @@ const Index = () => {
                 </div>
 
                 {/* Level 2 */}
-                <div className="relative pl-4 sm:pl-6 border-l-2 border-primary/20 ml-4 sm:ml-8">
-                  <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full backdrop-blur-xl bg-primary/70 ring-2 ring-primary/15 flex items-center justify-center text-xs font-bold text-primary-foreground">
+                <div 
+                  ref={level2Ref}
+                  className="relative pl-4 sm:pl-6 border-l-2 border-primary/20 ml-4 sm:ml-8 transition-all duration-700 ease-out"
+                  style={{
+                    opacity: level2Progress,
+                    transform: `translateX(${(1 - level2Progress) * 80}px) scale(${0.9 + level2Progress * 0.1})`
+                  }}
+                >
+                  <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full backdrop-blur-xl bg-primary ring-2 ring-primary/15 flex items-center justify-center text-xs font-bold text-primary-foreground">
                     2
                   </div>
                   <div className="glass bg-muted/30 p-3 sm:p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
@@ -562,8 +636,15 @@ const Index = () => {
                 </div>
 
                 {/* Level 3 */}
-                <div className="relative pl-4 sm:pl-6 border-l-2 border-primary/15 ml-6 sm:ml-12">
-                  <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full backdrop-blur-xl bg-primary/60 ring-2 ring-primary/10 flex items-center justify-center text-xs font-bold text-primary-foreground">
+                <div 
+                  ref={level3Ref}
+                  className="relative pl-4 sm:pl-6 border-l-2 border-primary/15 ml-6 sm:ml-12 transition-all duration-700 ease-out"
+                  style={{
+                    opacity: level3Progress,
+                    transform: `translateX(${(1 - level3Progress) * 80}px) scale(${0.9 + level3Progress * 0.1})`
+                  }}
+                >
+                  <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full backdrop-blur-xl bg-primary ring-2 ring-primary/10 flex items-center justify-center text-xs font-bold text-primary-foreground">
                     3
                   </div>
                   <div className="glass bg-muted/30 p-3 sm:p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
@@ -595,8 +676,15 @@ const Index = () => {
                 </div>
 
                 {/* Level 4 */}
-                <div className="relative pl-4 sm:pl-6 border-l-2 border-primary/10 ml-8 sm:ml-16">
-                  <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full backdrop-blur-xl bg-primary/50 ring-2 ring-primary/5 flex items-center justify-center text-xs font-bold text-primary-foreground">
+                <div 
+                  ref={level4Ref}
+                  className="relative pl-4 sm:pl-6 border-l-2 border-primary/10 ml-8 sm:ml-16 transition-all duration-700 ease-out"
+                  style={{
+                    opacity: level4Progress,
+                    transform: `translateX(${(1 - level4Progress) * 80}px) scale(${0.9 + level4Progress * 0.1})`
+                  }}
+                >
+                  <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full backdrop-blur-xl bg-primary ring-2 ring-primary/30 flex items-center justify-center text-xs font-bold text-primary-foreground">
                     4
                   </div>
                   <div className="glass bg-muted/30 p-3 sm:p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
