@@ -615,9 +615,9 @@ Return ONLY this JSON structure (NO markdown, NO code blocks):
   },
   "strategicVision": "Write a compelling 4-5 sentence vision of their AI-powered success state. What does life look like when they've successfully implemented AI tools? Which AI tools are they using daily? What outcomes have they achieved through AI? Make it inspirational yet grounded in AI IMPLEMENTATION.",
   "roadmap": {
-    "immediate": "Detailed 3-4 sentence AI implementation plan for the FIRST 30 days. Include: specific AI tools to start with (e.g., 'Set up Claude for content strategy', 'Master ChatGPT prompting'), quick AI-powered wins, AI foundations to establish. NO old-school courses - only AI tool experimentation and implementation.",
-    "shortTerm": "Comprehensive 3-4 sentence AI scaling plan for days 31-90. Include: additional AI tools to master, AI-powered systems to build, AI workflow integration. Mention specific AI tools (e.g., 'Implement Runway for video', 'Use Make.com for automation').",
-    "longTerm": "Strategic 3-4 sentence advanced AI implementation plan for 90+ days. Include: advanced AI capabilities, AI tool stack optimization, sustained AI-powered success. Focus on becoming an AI power user in their field."
+    "immediate": "Detailed 3-4 sentence AI implementation plan for GETTING STARTED (initial phase). Include: specific AI tools to start with (e.g., 'Set up Claude for content strategy', 'Master ChatGPT prompting'), quick AI-powered wins, AI foundations to establish. NO old-school courses - only AI tool experimentation and implementation. Be optimistic about pace while acknowledging individual learning curves.",
+    "shortTerm": "Comprehensive 3-4 sentence AI scaling plan for BUILDING MOMENTUM (next phase). Include: additional AI tools to master, AI-powered systems to build, AI workflow integration. Mention specific AI tools (e.g., 'Implement Runway for video', 'Use Make.com for automation'). Frame timing as 'as you build confidence' rather than rigid timelines.",
+    "longTerm": "Strategic 3-4 sentence advanced AI implementation plan for MASTERY & SUSTAINED SUCCESS (advanced phase). Include: advanced AI capabilities, AI tool stack optimization, sustained AI-powered success. Focus on becoming an AI power user in their field. Acknowledge that timeline depends on individual pace and the rapidly evolving AI landscape."
   },
   "successFactors": ["The #1 AI-focused success factor (e.g., 'Consistent AI tool experimentation and implementation')", "A second AI mastery factor", "A third AI adaptation element", "Additional AI implementation factor"],
   "riskMitigation": ["Biggest risk and how AI tools mitigate it (mention specific AI capability)", "Second risk and AI-powered prevention strategy", "Third risk and AI-driven mitigation approach"]
@@ -698,6 +698,16 @@ PHASE STRUCTURE:
 - Phase 2 (Growth): Scaling AI usage, AI workflow optimization, advanced AI implementation
 - Phase 3 (Mastery): AI automation mastery, AI-first operations, sustained AI excellence
 
+⏱️ CRITICAL: TIMEFRAME PHILOSOPHY:
+- Be OPTIMISTIC yet REALISTIC about implementation pace
+- Acknowledge that people have different learning curves, time availability, and implementation speeds
+- Use FLEXIBLE timeframe language: "Early stage", "Building momentum", "Advanced implementation" rather than rigid week numbers
+- For time estimates: Use ranges (e.g., "3-10 hours depending on your pace") that acknowledge variance
+- Remember: AI is accelerating rapidly - what seemed to take months now takes days/weeks
+- Avoid overly long timeframes (12+ weeks) - we're in fast-moving times
+- Frame timing as "when ready to advance" not "in week X"
+- No one knows their exact pace until they start - be encouraging and flexible
+
 EXACT REQUIREMENTS:
 - EXACTLY 3 phases with EXACTLY 5 steps per phase (total 15 steps)
 - Each step title must mention AI or AI tool usage
@@ -712,37 +722,37 @@ Return ONLY this exact JSON structure (NO markdown blocks, NO extra text):
       "phase_number": 1,
       "title": "Foundation Phase: [AI-focused title]",
       "description": "Clear 2-3 sentence overview explaining AI tools they'll implement in this phase and why it matters for their goals. Use **bold** for key AI deliverables.",
-      "duration": "**Weeks 1-4**",
+      "duration": "**Early Stage** — Begin when ready",
       "steps": [
         {
           "step_number": 1,
           "title": "**[AI-focused action title mentioning the AI tool or AI capability]**",
-          "description": "Detailed 3-4 sentences explaining: WHICH AI tool to use, HOW to use it for their goal, WHAT specific AI-powered actions to take, and WHY this AI implementation matters. Example: 'Use **Claude** to analyze your market positioning by feeding it competitor data and asking for strategic insights. Spend 2 hours crafting detailed prompts to extract actionable recommendations.' → Use **Tool #1**",
-          "estimated_time": "5-8 hours"
+          "description": "Detailed 3-4 sentences explaining: WHICH AI tool to use, HOW to use it for their goal, WHAT specific AI-powered actions to take, and WHY this AI implementation matters. Example: 'Use **Claude** to analyze your market positioning by feeding it competitor data and asking for strategic insights. Experiment with detailed prompts to extract actionable recommendations.' → Use **Tool #1**",
+          "estimated_time": "3-8 hours (varies by pace)"
         },
         {
           "step_number": 2,
           "title": "**[AI-powered action title]**",
           "description": "Specific AI tool implementation guidance with HOW-TO details. Focus entirely on AI usage. → Use **Tool #2**",
-          "estimated_time": "6-10 hours"
+          "estimated_time": "4-10 hours (adjust to your schedule)"
         },
         {
           "step_number": 3,
           "title": "**[AI implementation title]**",
           "description": "Detailed AI tool usage instructions, no generic advice. → Use **Tool #3**",
-          "estimated_time": "8-12 hours"
+          "estimated_time": "5-12 hours (depending on complexity)"
         },
         {
           "step_number": 4,
           "title": "**[AI-centered action title]**",
           "description": "Another AI-powered strategic action with specific tool guidance.",
-          "estimated_time": "4-6 hours"
+          "estimated_time": "3-6 hours (flexible timeline)"
         },
         {
           "step_number": 5,
           "title": "**[AI workflow title]**",
           "description": "AI implementation step completing the foundation phase.",
-          "estimated_time": "5-8 hours"
+          "estimated_time": "4-8 hours (progress at your pace)"
         }
       ]
     },
@@ -750,37 +760,37 @@ Return ONLY this exact JSON structure (NO markdown blocks, NO extra text):
       "phase_number": 2,
       "title": "Growth Phase: [AI scaling title]",
       "description": "Overview of scaling AI implementation. Use **bold** for AI achievements.",
-      "duration": "**Weeks 5-8**",
+      "duration": "**Building Momentum** — Advance when ready",
       "steps": [
         {
           "step_number": 1,
           "title": "**[Advanced AI implementation title]**",
           "description": "Detailed AI tool usage for scaling. → Use **Tool #4**",
-          "estimated_time": "10-15 hours"
+          "estimated_time": "6-15 hours (scales with experience)"
         },
         {
           "step_number": 2,
           "title": "**[AI automation title]**",
           "description": "AI workflow optimization guidance. → Use **Tool #5**",
-          "estimated_time": "8-12 hours"
+          "estimated_time": "5-12 hours (adapt as needed)"
         },
         {
           "step_number": 3,
           "title": "**[AI integration title]**",
           "description": "Advanced AI tool implementation. → Use **Tool #6**",
-          "estimated_time": "6-10 hours"
+          "estimated_time": "4-10 hours (your timeline)"
         },
         {
           "step_number": 4,
           "title": "**[AI-powered growth title]**",
           "description": "AI scaling strategy with specific tools.",
-          "estimated_time": "5-8 hours"
+          "estimated_time": "4-8 hours (flexible approach)"
         },
         {
           "step_number": 5,
           "title": "**[AI optimization title]**",
           "description": "AI workflow refinement step.",
-          "estimated_time": "8-12 hours"
+          "estimated_time": "5-12 hours (individual pace)"
         }
       ]
     },
@@ -788,37 +798,37 @@ Return ONLY this exact JSON structure (NO markdown blocks, NO extra text):
       "phase_number": 3,
       "title": "Mastery Phase: [AI excellence title]",
       "description": "Overview of AI mastery and automation. Use **bold** for AI outcomes.",
-      "duration": "**Weeks 9-12**",
+      "duration": "**Advanced Implementation** — Progress as you grow",
       "steps": [
         {
           "step_number": 1,
           "title": "**[AI mastery title]**",
           "description": "Expert-level AI implementation. → Use **Tool #7**",
-          "estimated_time": "12-16 hours"
+          "estimated_time": "8-16 hours (mastery takes time)"
         },
         {
           "step_number": 2,
           "title": "**[AI automation mastery title]**",
           "description": "Advanced AI automation guidance. → Use **Tool #8**",
-          "estimated_time": "10-15 hours"
+          "estimated_time": "6-15 hours (your learning curve)"
         },
         {
           "step_number": 3,
           "title": "**[AI-first operations title]**",
           "description": "Complete AI integration strategy. → Use **Tool #9**",
-          "estimated_time": "8-12 hours"
+          "estimated_time": "5-12 hours (sustainable pace)"
         },
         {
           "step_number": 4,
           "title": "**[Sustained AI excellence title]**",
           "description": "Maintaining AI-powered success.",
-          "estimated_time": "6-10 hours"
+          "estimated_time": "4-10 hours (ongoing optimization)"
         },
         {
           "step_number": 5,
           "title": "**[Future-proofing title]**",
           "description": "Ongoing AI adaptation and innovation.",
-          "estimated_time": "10-15 hours"
+          "estimated_time": "6-15 hours (evolve continuously)"
          }
        ]
      }
