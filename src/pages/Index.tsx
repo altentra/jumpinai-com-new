@@ -242,8 +242,8 @@ const Index = () => {
             <div 
               className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-700 ease-out border border-primary/10 hover:border-primary/20 shadow-sm hover:shadow-md scroll-animate"
               style={{
-                opacity: Math.min(1, tabsProgress * 2.5),
-                transform: `translateY(${(1 - Math.min(1, tabsProgress * 2.5)) * 40}px)`
+                opacity: Math.min(1, tabsProgress * 3),
+                transform: `translateY(${(1 - Math.min(1, tabsProgress * 3)) * 40}px)`
               }}
             >
               <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -282,8 +282,8 @@ const Index = () => {
             <div 
               className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-700 ease-out border border-primary/10 hover:border-primary/20 shadow-sm hover:shadow-md scroll-animate"
               style={{
-                opacity: Math.max(0, Math.min(1, (tabsProgress - 0.15) * 2.5)),
-                transform: `translateY(${(1 - Math.max(0, Math.min(1, (tabsProgress - 0.15) * 2.5))) * 40}px)`
+                opacity: Math.max(0, Math.min(1, (tabsProgress - 0.35) * 3)),
+                transform: `translateY(${(1 - Math.max(0, Math.min(1, (tabsProgress - 0.35) * 3))) * 40}px)`
               }}
             >
               <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -322,8 +322,8 @@ const Index = () => {
             <div 
               className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-700 ease-out border border-primary/10 hover:border-primary/20 shadow-sm hover:shadow-md scroll-animate"
               style={{
-                opacity: Math.max(0, Math.min(1, (tabsProgress - 0.3) * 2.5)),
-                transform: `translateY(${(1 - Math.max(0, Math.min(1, (tabsProgress - 0.3) * 2.5))) * 40}px)`
+                opacity: Math.max(0, Math.min(1, (tabsProgress - 0.7) * 3)),
+                transform: `translateY(${(1 - Math.max(0, Math.min(1, (tabsProgress - 0.7) * 3))) * 40}px)`
               }}
             >
               <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -413,8 +413,8 @@ const Index = () => {
               <div 
                 className="text-center p-6 rounded-xl glass h-full flex flex-col transition-all duration-700 ease-out scroll-animate"
                 style={{
-                  opacity: Math.min(1, stepsProgress * 2.5),
-                  transform: `translateY(${(1 - Math.min(1, stepsProgress * 2.5)) * 40}px)`
+                  opacity: Math.min(1, stepsProgress * 3),
+                  transform: `translateY(${(1 - Math.min(1, stepsProgress * 3)) * 40}px)`
                 }}
               >
                 <div className="w-10 h-10 mx-auto mb-4 backdrop-blur-xl bg-primary/5 ring-1 ring-primary/30 rounded-xl flex items-center justify-center text-primary text-sm font-bold shadow-lg">
@@ -427,8 +427,8 @@ const Index = () => {
               <div 
                 className="text-center p-6 rounded-xl glass h-full flex flex-col transition-all duration-700 ease-out scroll-animate"
                 style={{
-                  opacity: Math.max(0, Math.min(1, (stepsProgress - 0.15) * 2.5)),
-                  transform: `translateY(${(1 - Math.max(0, Math.min(1, (stepsProgress - 0.15) * 2.5))) * 40}px)`
+                  opacity: Math.max(0, Math.min(1, (stepsProgress - 0.35) * 3)),
+                  transform: `translateY(${(1 - Math.max(0, Math.min(1, (stepsProgress - 0.35) * 3))) * 40}px)`
                 }}
               >
                 <div className="w-10 h-10 mx-auto mb-4 backdrop-blur-xl bg-primary/5 ring-1 ring-primary/30 rounded-xl flex items-center justify-center text-primary text-sm font-bold shadow-lg">
@@ -441,8 +441,8 @@ const Index = () => {
               <div 
                 className="text-center p-6 rounded-xl glass h-full flex flex-col transition-all duration-700 ease-out scroll-animate"
                 style={{
-                  opacity: Math.max(0, Math.min(1, (stepsProgress - 0.3) * 2.5)),
-                  transform: `translateY(${(1 - Math.max(0, Math.min(1, (stepsProgress - 0.3) * 2.5))) * 40}px)`
+                  opacity: Math.max(0, Math.min(1, (stepsProgress - 0.7) * 3)),
+                  transform: `translateY(${(1 - Math.max(0, Math.min(1, (stepsProgress - 0.7) * 3))) * 40}px)`
                 }}
               >
                 <div className="w-10 h-10 mx-auto mb-4 backdrop-blur-xl bg-primary/5 ring-1 ring-primary/30 rounded-xl flex items-center justify-center text-primary text-sm font-bold shadow-lg">
@@ -739,8 +739,8 @@ const Index = () => {
                 <div 
                   className="glass bg-muted/30 p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm transition-all duration-700 ease-out scroll-animate"
                   style={{
-                    opacity: Math.max(0, Math.min(1, rerouteCardsProgress * 2.5)),
-                    transform: `translateY(${(1 - Math.max(0, Math.min(1, rerouteCardsProgress * 2.5))) * 40}px)`
+                    opacity: Math.max(0, Math.min(1, rerouteCardsProgress * 3)),
+                    transform: `translateY(${(1 - Math.max(0, Math.min(1, rerouteCardsProgress * 3))) * 40}px)`
                   }}
                 >
                   <p className="text-sm font-bold text-primary mb-2">Route A: Premium</p>
@@ -753,8 +753,8 @@ const Index = () => {
                 <div 
                   className="glass bg-muted/30 p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm transition-all duration-700 ease-out scroll-animate"
                   style={{
-                    opacity: Math.max(0, Math.min(1, (rerouteCardsProgress - 0.12) * 2.5)),
-                    transform: `translateY(${(1 - Math.max(0, Math.min(1, (rerouteCardsProgress - 0.12) * 2.5))) * 40}px)`
+                    opacity: Math.max(0, Math.min(1, (rerouteCardsProgress - 0.3) * 3)),
+                    transform: `translateY(${(1 - Math.max(0, Math.min(1, (rerouteCardsProgress - 0.3) * 3))) * 40}px)`
                   }}
                 >
                   <p className="text-sm font-bold text-primary mb-2">Route B: Budget-Friendly</p>
@@ -767,8 +767,8 @@ const Index = () => {
                 <div 
                   className="glass bg-muted/30 p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm transition-all duration-700 ease-out scroll-animate"
                   style={{
-                    opacity: Math.max(0, Math.min(1, (rerouteCardsProgress - 0.24) * 2.5)),
-                    transform: `translateY(${(1 - Math.max(0, Math.min(1, (rerouteCardsProgress - 0.24) * 2.5))) * 40}px)`
+                    opacity: Math.max(0, Math.min(1, (rerouteCardsProgress - 0.6) * 3)),
+                    transform: `translateY(${(1 - Math.max(0, Math.min(1, (rerouteCardsProgress - 0.6) * 3))) * 40}px)`
                   }}
                 >
                   <p className="text-sm font-bold text-primary mb-2">Route C: Hybrid</p>
@@ -822,8 +822,8 @@ const Index = () => {
                 <div 
                   className="glass bg-muted/30 p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm transition-all duration-700 ease-out scroll-animate"
                   style={{
-                    opacity: Math.max(0, Math.min(1, equipCardsProgress * 2.5)),
-                    transform: `translateY(${(1 - Math.max(0, Math.min(1, equipCardsProgress * 2.5))) * 40}px)`
+                    opacity: Math.max(0, Math.min(1, equipCardsProgress * 3)),
+                    transform: `translateY(${(1 - Math.max(0, Math.min(1, equipCardsProgress * 3))) * 40}px)`
                   }}
                 >
                   <p className="text-sm font-bold text-primary mb-2">Curated Tool Selection</p>
@@ -834,8 +834,8 @@ const Index = () => {
                 <div 
                   className="glass bg-muted/30 p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm transition-all duration-700 ease-out scroll-animate"
                   style={{
-                    opacity: Math.max(0, Math.min(1, (equipCardsProgress - 0.15) * 2.5)),
-                    transform: `translateY(${(1 - Math.max(0, Math.min(1, (equipCardsProgress - 0.15) * 2.5))) * 40}px)`
+                    opacity: Math.max(0, Math.min(1, (equipCardsProgress - 0.4) * 3)),
+                    transform: `translateY(${(1 - Math.max(0, Math.min(1, (equipCardsProgress - 0.4) * 3))) * 40}px)`
                   }}
                 >
                   <p className="text-sm font-bold text-primary mb-2">Ready-to-Use Prompts</p>
@@ -885,8 +885,8 @@ const Index = () => {
               <div 
                 className="p-6 rounded-xl glass border border-primary/10 h-full flex flex-col shadow-sm transition-all duration-700 ease-out scroll-animate"
                 style={{
-                  opacity: Math.min(1, conceptCardsProgress * 2.5),
-                  transform: `translateY(${(1 - Math.min(1, conceptCardsProgress * 2.5)) * 40}px)`
+                  opacity: Math.min(1, conceptCardsProgress * 3),
+                  transform: `translateY(${(1 - Math.min(1, conceptCardsProgress * 3)) * 40}px)`
                 }}
               >
                 <div className="flex justify-center mb-4">
@@ -903,8 +903,8 @@ const Index = () => {
               <div 
                 className="p-6 rounded-xl glass border border-primary/10 h-full flex flex-col shadow-sm transition-all duration-700 ease-out scroll-animate"
                 style={{
-                  opacity: Math.max(0, Math.min(1, (conceptCardsProgress - 0.15) * 2.5)),
-                  transform: `translateY(${(1 - Math.max(0, Math.min(1, (conceptCardsProgress - 0.15) * 2.5))) * 40}px)`
+                  opacity: Math.max(0, Math.min(1, (conceptCardsProgress - 0.35) * 3)),
+                  transform: `translateY(${(1 - Math.max(0, Math.min(1, (conceptCardsProgress - 0.35) * 3))) * 40}px)`
                 }}
               >
                 <div className="flex justify-center mb-4">
@@ -923,8 +923,8 @@ const Index = () => {
               <div 
                 className="p-6 rounded-xl glass border border-primary/10 h-full flex flex-col shadow-sm transition-all duration-700 ease-out scroll-animate"
                 style={{
-                  opacity: Math.max(0, Math.min(1, (conceptCardsProgress - 0.3) * 2.5)),
-                  transform: `translateY(${(1 - Math.max(0, Math.min(1, (conceptCardsProgress - 0.3) * 2.5))) * 40}px)`
+                  opacity: Math.max(0, Math.min(1, (conceptCardsProgress - 0.7) * 3)),
+                  transform: `translateY(${(1 - Math.max(0, Math.min(1, (conceptCardsProgress - 0.7) * 3))) * 40}px)`
                 }}
               >
                 <div className="flex justify-center mb-4">
