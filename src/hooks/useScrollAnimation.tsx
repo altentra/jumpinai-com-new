@@ -1,5 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 
+// Premium easing function for smooth, distinctive end
+const easeOutCubic = (t: number): number => {
+  return 1 - Math.pow(1 - t, 3);
+};
+
 export const useScrollAnimation = (options: { threshold?: number; delay?: number } = {}) => {
   const elementRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -12,42 +17,44 @@ export const useScrollAnimation = (options: { threshold?: number; delay?: number
       const rect = element.getBoundingClientRect();
       const windowHeight = window.innerHeight;
       
-      // Calculate how far the element is from entering the viewport
-      // When element is below viewport: positive value
-      // When element is in viewport: 0 to 1
-      // When element is above viewport: > 1
+      // Optimized viewport calculation
       const elementTop = rect.top;
-      const elementHeight = rect.height;
       
-      // Start animation when element is 20% into viewport
-      const startPoint = windowHeight * 0.8;
-      const endPoint = windowHeight * 0.2;
+      // Animation completes earlier and more distinctly
+      // Start when element is 75% into viewport
+      // End when element is 50% into viewport (much earlier than before)
+      const startPoint = windowHeight * 0.75;
+      const endPoint = windowHeight * 0.5;
       
       if (elementTop > startPoint) {
-        // Element hasn't entered animation zone yet
         setScrollProgress(0);
       } else if (elementTop < endPoint) {
-        // Element has fully animated
         setScrollProgress(1);
       } else {
-        // Element is animating
-        const progress = 1 - (elementTop - endPoint) / (startPoint - endPoint);
-        setScrollProgress(Math.max(0, Math.min(1, progress)));
+        // Calculate linear progress
+        const linearProgress = 1 - (elementTop - endPoint) / (startPoint - endPoint);
+        // Apply premium easing for distinctive end movement
+        const easedProgress = easeOutCubic(linearProgress);
+        setScrollProgress(Math.max(0, Math.min(1, easedProgress)));
       }
     };
 
     // Initial check
     handleScroll();
 
-    // Add scroll listener with throttling for performance
+    // Optimized scroll listener with better performance
     let ticking = false;
+    let lastScrollTime = 0;
     const scrollListener = () => {
-      if (!ticking) {
+      const now = Date.now();
+      // Throttle to max 60fps for smoother performance on all devices
+      if (!ticking && now - lastScrollTime > 16) {
+        lastScrollTime = now;
+        ticking = true;
         window.requestAnimationFrame(() => {
           handleScroll();
           ticking = false;
         });
-        ticking = true;
       }
     };
 
