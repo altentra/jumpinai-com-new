@@ -240,13 +240,18 @@ const Index = () => {
           <div ref={tabsRef} className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {/* Overview Tab */}
             <div 
-              className="group relative rounded-xl overflow-hidden border border-white/30 shadow-2xl bg-gradient-to-br from-white/[0.01] via-black/[0.4] to-white/[0.01] backdrop-blur-sm p-1 transition-all duration-700 ease-out scroll-animate"
+              className="group relative rounded-xl overflow-hidden border border-white/30 shadow-[0_8px_24px_-6px_rgba(0,0,0,0.3),0_20px_50px_-12px_rgba(0,0,0,0.25)] hover:shadow-[0_12px_32px_-6px_rgba(0,0,0,0.4),0_24px_60px_-12px_rgba(0,0,0,0.3)] bg-gradient-to-br from-white/[0.01] via-black/[0.4] to-white/[0.01] backdrop-blur-sm p-1 transition-all duration-700 ease-out hover:scale-[1.02] scroll-animate"
               style={{
                 opacity: Math.min(1, tabsProgress * 3),
                 transform: `translateY(${(1 - Math.min(1, tabsProgress * 3)) * 40}px)`
               }}
             >
+              {/* Outer glow */}
+              <div className="absolute -inset-[1px] rounded-xl bg-gradient-to-r from-primary/20 via-primary/10 to-primary/20 opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-500"></div>
+              {/* Inner gradient overlay */}
               <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-white/8 rounded-xl opacity-30 group-hover:opacity-45 transition-opacity duration-300"></div>
+              {/* Inner border glow */}
+              <div className="absolute inset-[1px] rounded-[11px] bg-gradient-to-b from-white/5 to-transparent pointer-events-none"></div>
               <div className="relative glass p-6 rounded-lg h-full">
               {/* Liquid glass glow effect */}
               <div className="absolute -inset-0.5 rounded-lg bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 blur-sm opacity-0 group-hover:opacity-60 transition-opacity duration-500"></div>
@@ -284,13 +289,18 @@ const Index = () => {
 
             {/* Plan Tab */}
             <div 
-              className="group relative rounded-xl overflow-hidden border border-white/30 shadow-2xl bg-gradient-to-br from-white/[0.01] via-black/[0.4] to-white/[0.01] backdrop-blur-sm p-1 transition-all duration-700 ease-out scroll-animate"
+              className="group relative rounded-xl overflow-hidden border border-white/30 shadow-[0_8px_24px_-6px_rgba(0,0,0,0.3),0_20px_50px_-12px_rgba(0,0,0,0.25)] hover:shadow-[0_12px_32px_-6px_rgba(0,0,0,0.4),0_24px_60px_-12px_rgba(0,0,0,0.3)] bg-gradient-to-br from-white/[0.01] via-black/[0.4] to-white/[0.01] backdrop-blur-sm p-1 transition-all duration-700 ease-out hover:scale-[1.02] scroll-animate"
               style={{
                 opacity: Math.max(0, Math.min(1, (tabsProgress - 0.35) * 3)),
                 transform: `translateY(${(1 - Math.max(0, Math.min(1, (tabsProgress - 0.35) * 3))) * 40}px)`
               }}
             >
+              {/* Outer glow */}
+              <div className="absolute -inset-[1px] rounded-xl bg-gradient-to-r from-primary/20 via-primary/10 to-primary/20 opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-500"></div>
+              {/* Inner gradient overlay */}
               <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-white/8 rounded-xl opacity-30 group-hover:opacity-45 transition-opacity duration-300"></div>
+              {/* Inner border glow */}
+              <div className="absolute inset-[1px] rounded-[11px] bg-gradient-to-b from-white/5 to-transparent pointer-events-none"></div>
               <div className="relative glass p-6 rounded-lg h-full">
               {/* Liquid glass glow effect */}
               <div className="absolute -inset-0.5 rounded-lg bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 blur-sm opacity-0 group-hover:opacity-60 transition-opacity duration-500"></div>
@@ -328,13 +338,18 @@ const Index = () => {
 
             {/* Tools & Prompts Tab */}
             <div 
-              className="group relative rounded-xl overflow-hidden border border-white/30 shadow-2xl bg-gradient-to-br from-white/[0.01] via-black/[0.4] to-white/[0.01] backdrop-blur-sm p-1 transition-all duration-700 ease-out scroll-animate"
+              className="group relative rounded-xl overflow-hidden border border-white/30 shadow-[0_8px_24px_-6px_rgba(0,0,0,0.3),0_20px_50px_-12px_rgba(0,0,0,0.25)] hover:shadow-[0_12px_32px_-6px_rgba(0,0,0,0.4),0_24px_60px_-12px_rgba(0,0,0,0.3)] bg-gradient-to-br from-white/[0.01] via-black/[0.4] to-white/[0.01] backdrop-blur-sm p-1 transition-all duration-700 ease-out hover:scale-[1.02] scroll-animate"
               style={{
                 opacity: Math.max(0, Math.min(1, (tabsProgress - 0.7) * 3)),
                 transform: `translateY(${(1 - Math.max(0, Math.min(1, (tabsProgress - 0.7) * 3))) * 40}px)`
               }}
             >
+              {/* Outer glow */}
+              <div className="absolute -inset-[1px] rounded-xl bg-gradient-to-r from-primary/20 via-primary/10 to-primary/20 opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-500"></div>
+              {/* Inner gradient overlay */}
               <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-white/8 rounded-xl opacity-30 group-hover:opacity-45 transition-opacity duration-300"></div>
+              {/* Inner border glow */}
+              <div className="absolute inset-[1px] rounded-[11px] bg-gradient-to-b from-white/5 to-transparent pointer-events-none"></div>
               <div className="relative glass p-6 rounded-lg h-full">
               {/* Liquid glass glow effect */}
               <div className="absolute -inset-0.5 rounded-lg bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 blur-sm opacity-0 group-hover:opacity-60 transition-opacity duration-500"></div>
