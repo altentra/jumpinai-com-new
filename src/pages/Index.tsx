@@ -843,7 +843,7 @@ const Index = () => {
           <div className="max-w-6xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch mb-8">
               {/* Card 1 */}
-              <div className="p-6 rounded-xl bg-background/95 border border-border/50 h-full flex flex-col shadow-sm">
+              <div className="p-6 rounded-xl glass border border-primary/10 h-full flex flex-col shadow-sm">
                 <div className="flex justify-center mb-4">
                   <div className="w-8 h-8 backdrop-blur-xl bg-primary/10 ring-1 ring-primary/30 rounded-lg flex items-center justify-center">
                     <ArrowRight className="w-4 h-4 text-primary" />
@@ -855,7 +855,7 @@ const Index = () => {
               </div>
 
               {/* Card 2 */}
-              <div className="p-6 rounded-xl bg-background/95 border border-border/50 h-full flex flex-col shadow-sm">
+              <div className="p-6 rounded-xl glass border border-primary/10 h-full flex flex-col shadow-sm">
                 <div className="flex justify-center mb-4">
                   <div className="w-8 h-8 backdrop-blur-xl bg-primary/10 ring-1 ring-primary/30 rounded-lg flex items-center justify-center">
                     <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -869,7 +869,7 @@ const Index = () => {
               </div>
 
               {/* Card 3 */}
-              <div className="p-6 rounded-xl bg-background/95 border border-border/50 h-full flex flex-col shadow-sm">
+              <div className="p-6 rounded-xl glass border border-primary/10 h-full flex flex-col shadow-sm">
                 <div className="flex justify-center mb-4">
                   <div className="w-8 h-8 backdrop-blur-xl bg-primary/10 ring-1 ring-primary/30 rounded-lg flex items-center justify-center">
                     <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
