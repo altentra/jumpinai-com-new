@@ -1,12 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 
-// Premium easing function for smooth, distinctive end with subtle bounce
-const easeOutBack = (t: number): number => {
-  const c1 = 1.70158;
-  const c3 = c1 + 1;
-  const result = 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
-  // Clamp to prevent overshooting beyond 1
-  return Math.min(1, Math.max(0, result));
+// Premium easing function for smooth, distinctive end
+const easeOutCubic = (t: number): number => {
+  return 1 - Math.pow(1 - t, 3);
 };
 
 export const useScrollAnimation = (options: { threshold?: number; delay?: number } = {}) => {
@@ -37,8 +33,8 @@ export const useScrollAnimation = (options: { threshold?: number; delay?: number
       } else {
         // Calculate linear progress
         const linearProgress = 1 - (elementTop - endPoint) / (startPoint - endPoint);
-        // Apply premium easing with subtle bounce for distinctive end movement
-        const easedProgress = easeOutBack(linearProgress);
+        // Apply premium easing for distinctive end movement
+        const easedProgress = easeOutCubic(linearProgress);
         setScrollProgress(Math.max(0, Math.min(1, easedProgress)));
       }
     };
