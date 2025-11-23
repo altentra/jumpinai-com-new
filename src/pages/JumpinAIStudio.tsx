@@ -21,6 +21,7 @@ const JumpinAIStudio = () => {
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [guestUsageInfo, setGuestUsageInfo] = useState<{ usageCount: number; remaining: number } | null>(null);
   const [isLoadingGuestInfo, setIsLoadingGuestInfo] = useState(true);
+  const [turnstileErrorShown, setTurnstileErrorShown] = useState(false);
   const progressDisplayRef = useRef<HTMLDivElement>(null);
   const generateButtonRef = useRef<HTMLDivElement>(null);
   const goalsTextareaRef = useRef<HTMLTextAreaElement>(null);
@@ -597,11 +598,16 @@ const JumpinAIStudio = () => {
                   siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY || "1x00000000000000000000AA"}
                   onSuccess={(token) => {
                     setTurnstileToken(token);
+                    setTurnstileErrorShown(false); // Reset error flag on success
                     console.log('✅ Turnstile verified');
                   }}
                   onError={() => {
                     console.error('❌ Turnstile verification failed');
-                    toast.error('Security verification failed. Please refresh the page.');
+                    // Only show toast once to prevent spam
+                    if (!turnstileErrorShown) {
+                      setTurnstileErrorShown(true);
+                      // Don't show error toast - Turnstile will auto-retry and verification isn't required to view the page
+                    }
                   }}
                   options={{
                     theme: 'light',
