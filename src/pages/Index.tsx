@@ -1261,10 +1261,10 @@ const Index = () => {
               Ready to Jump into AI Success?
             </h2>
             <p className="text-base sm:text-lg mb-4 sm:mb-6 text-muted-foreground">
-              Join 15,000+ professionals who've transformed their AI journey with personalized Jump plans
+              Your AI transformation starts with a single decisive step
             </p>
             <p className="text-sm sm:text-base mb-8 sm:mb-10 text-muted-foreground max-w-3xl mx-auto px-4">
-              Stop struggling with AI implementation. Get your complete transformation blueprint in 2 minutes, not months. Your competitive advantage starts today.
+              Stop second-guessing your AI strategy. Get a clear, actionable plan tailored to your specific goals—complete with tools, prompts, and adaptive intelligence to guide you every step of the way.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mb-8 sm:mb-10 px-4">
@@ -1319,19 +1319,19 @@ const Index = () => {
                 <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                 </svg>
-                Free trial available
+                3 free Jumps to start
               </div>
               <div className="flex items-center gap-2">
                 <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                 </svg>
-                Cancel anytime
+                Flexible plans
               </div>
               <div className="flex items-center gap-2">
                 <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                 </svg>
-                94% implementation success rate
+                Adaptive to your progress
               </div>
             </div>
           </div>
