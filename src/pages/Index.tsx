@@ -240,15 +240,16 @@ const Index = () => {
           <div ref={tabsRef} className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {/* Overview Tab */}
             <div 
-              className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-700 ease-out border border-primary/85 hover:border-primary/95 shadow-[0_8px_24px_-4px_rgba(0,0,0,0.2)] hover:shadow-[0_12px_32px_-4px_rgba(0,0,0,0.25)] dark:shadow-[0_8px_24px_-4px_rgba(0,0,0,0.5)] dark:hover:shadow-[0_12px_32px_-4px_rgba(0,0,0,0.6)] scroll-animate"
+              className="group relative rounded-xl overflow-hidden border border-white/10 shadow-2xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 transition-all duration-700 ease-out scroll-animate"
               style={{
                 opacity: Math.min(1, tabsProgress * 3),
                 transform: `translateY(${(1 - Math.min(1, tabsProgress * 3)) * 40}px)`
               }}
             >
-              <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-xl opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
+              <div className="relative glass p-6 rounded-lg h-full">
               {/* Liquid glass glow effect */}
-              <div className="absolute -inset-0.5 rounded-xl bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 blur-sm opacity-0 group-hover:opacity-60 transition-opacity duration-500"></div>
+              <div className="absolute -inset-0.5 rounded-lg bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 blur-sm opacity-0 group-hover:opacity-60 transition-opacity duration-500"></div>
               <div className="flex items-center gap-3 mb-4 relative">
                 <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
                   <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -279,18 +280,20 @@ const Index = () => {
                 </div>
               </div>
             </div>
+            </div>
 
             {/* Plan Tab */}
             <div 
-              className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-700 ease-out border border-primary/85 hover:border-primary/95 shadow-[0_8px_24px_-4px_rgba(0,0,0,0.2)] hover:shadow-[0_12px_32px_-4px_rgba(0,0,0,0.25)] dark:shadow-[0_8px_24px_-4px_rgba(0,0,0,0.5)] dark:hover:shadow-[0_12px_32px_-4px_rgba(0,0,0,0.6)] scroll-animate"
+              className="group relative rounded-xl overflow-hidden border border-white/10 shadow-2xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 transition-all duration-700 ease-out scroll-animate"
               style={{
                 opacity: Math.max(0, Math.min(1, (tabsProgress - 0.35) * 3)),
                 transform: `translateY(${(1 - Math.max(0, Math.min(1, (tabsProgress - 0.35) * 3))) * 40}px)`
               }}
             >
-              <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-xl opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
+              <div className="relative glass p-6 rounded-lg h-full">
               {/* Liquid glass glow effect */}
-              <div className="absolute -inset-0.5 rounded-xl bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 blur-sm opacity-0 group-hover:opacity-60 transition-opacity duration-500"></div>
+              <div className="absolute -inset-0.5 rounded-lg bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 blur-sm opacity-0 group-hover:opacity-60 transition-opacity duration-500"></div>
               <div className="flex items-center gap-3 mb-4 relative">
                 <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
                   <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -321,18 +324,20 @@ const Index = () => {
                 </div>
               </div>
             </div>
+            </div>
 
             {/* Tools & Prompts Tab */}
             <div 
-              className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-700 ease-out border border-primary/85 hover:border-primary/95 shadow-[0_8px_24px_-4px_rgba(0,0,0,0.2)] hover:shadow-[0_12px_32px_-4px_rgba(0,0,0,0.25)] dark:shadow-[0_8px_24px_-4px_rgba(0,0,0,0.5)] dark:hover:shadow-[0_12px_32px_-4px_rgba(0,0,0,0.6)] scroll-animate"
+              className="group relative rounded-xl overflow-hidden border border-white/10 shadow-2xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 transition-all duration-700 ease-out scroll-animate"
               style={{
                 opacity: Math.max(0, Math.min(1, (tabsProgress - 0.7) * 3)),
                 transform: `translateY(${(1 - Math.max(0, Math.min(1, (tabsProgress - 0.7) * 3))) * 40}px)`
               }}
             >
-              <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-xl opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
+              <div className="relative glass p-6 rounded-lg h-full">
               {/* Liquid glass glow effect */}
-              <div className="absolute -inset-0.5 rounded-xl bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 blur-sm opacity-0 group-hover:opacity-60 transition-opacity duration-500"></div>
+              <div className="absolute -inset-0.5 rounded-lg bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 blur-sm opacity-0 group-hover:opacity-60 transition-opacity duration-500"></div>
               <div className="flex items-center gap-3 mb-4 relative">
                 <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
                   <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -363,6 +368,7 @@ const Index = () => {
                 </div>
               </div>
             </div>
+          </div>
           </div>
 
           <div className="text-center mt-10">
