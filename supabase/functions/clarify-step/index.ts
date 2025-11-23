@@ -138,7 +138,7 @@ CRITICAL: Return ONLY the JSON object. No markdown code blocks, no explanations.
       throw new Error('No content in API response');
     }
 
-    // Clean and parse JSON
+    // Clean and parse JSON with enhanced error handling
     content = content
       .replace(/```json\n?/g, '')
       .replace(/```\n?/g, '')
@@ -154,7 +154,20 @@ CRITICAL: Return ONLY the JSON object. No markdown code blocks, no explanations.
     } catch (parseError) {
       console.error('JSON parse error:', parseError);
       console.log('Failed content:', content.substring(0, 500));
-      throw new Error('Failed to parse AI response');
+      
+      // Try to fix common JSON issues before giving up
+      try {
+        // Fix unclosed quotes in estimated_time fields
+        let fixedContent = content
+          .replace(/"estimated_time":\s*"([^"]*?)(?=\s*[,}])/g, '"estimated_time": "$1"')
+          .replace(/"\s*:\s*"([^"]*?)\s*\n/g, '": "$1",\n');
+        
+        parsed = JSON.parse(fixedContent);
+        console.log('Successfully parsed after fixing JSON');
+      } catch (secondError) {
+        console.error('Second parse attempt failed:', secondError);
+        throw new Error('Failed to parse AI response');
+      }
     }
 
     return new Response(

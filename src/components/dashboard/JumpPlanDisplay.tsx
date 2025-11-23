@@ -1694,16 +1694,96 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                                                          {level3SubStep.description}
                                                                        </ReactMarkdown>
                                                                      </div>
-                                                                     {level3SubStep.estimated_time && (
-                                                                       <div className="mt-1">
-                                                                         <Badge variant="outline" className="text-[9px]">
-                                                                           {level3SubStep.estimated_time}
-                                                                         </Badge>
-                                                                       </div>
-                                                                     )}
+                                                                      {level3SubStep.estimated_time && (
+                                                                        <div className="mt-1">
+                                                                          <Badge variant="outline" className="text-[9px]">
+                                                                            {level3SubStep.estimated_time}
+                                                                          </Badge>
+                                                                        </div>
+                                                                      )}
 
-                                                                     {/* Level 4 Sub-steps display */}
-                                                                     {hasLevel4SubSteps && (
+                                                                      {/* Level 4 Reroute options display */}
+                                                                      {hasLevel3SubStepRerouteOptions && (
+                                                                        <div className="mt-2 space-y-2">
+                                                                          <div className="flex items-center gap-1">
+                                                                            <GitBranch className="w-2.5 h-2.5 text-primary" />
+                                                                            <h4 className="text-[9px] font-semibold text-foreground">Choose Your Route:</h4>
+                                                                          </div>
+                                                                          <div className="grid grid-cols-1 gap-2">
+                                                                            {rerouteOptions[level3SubStepKey].map((direction: any, dirIndex: number) => (
+                                                                              <div key={dirIndex} className="bg-background/40 border border-primary/30 rounded-lg p-2">
+                                                                                <h4 className="text-[9px] font-semibold text-foreground mb-1">Direction {dirIndex + 1}</h4>
+                                                                                <div className="text-[9px] text-muted-foreground/90 leading-relaxed mb-2">
+                                                                                  <ReactMarkdown className="prose prose-sm max-w-none [&>p]:mb-1 [&>p:last-child]:mb-0">
+                                                                                    {direction.overview}
+                                                                                  </ReactMarkdown>
+                                                                                </div>
+                                                                                <Button
+                                                                                  size="sm"
+                                                                                  className="w-full gap-1 bg-gradient-to-r from-gray-900 to-gray-800 hover:from-gray-800 hover:to-gray-700 text-white font-semibold shadow-lg transition-all duration-300 border border-gray-700/50 text-[9px] py-0.5 h-5"
+                                                                                  onClick={() => handleChooseLevel3SubStepRoute(phaseIndex, stepIndex, subStepIndex, level2SubStepIndex, level3SubStepIndex, dirIndex)}
+                                                                                >
+                                                                                  <Check className="h-2 w-2" />
+                                                                                  Choose this route
+                                                                                </Button>
+                                                                              </div>
+                                                                            ))}
+                                                                          </div>
+                                                                        </div>
+                                                                      )}
+
+                                                                      {/* Level 4 Chosen reroute display */}
+                                                                      {hasLevel3SubStepChosenRoute && (
+                                                                        <div className="mt-2">
+                                                                          <div className="bg-background/40 border border-primary/30 rounded-lg p-2">
+                                                                            <div className="flex items-center gap-1 mb-1">
+                                                                              <GitBranch className="h-2.5 w-2.5 text-primary" />
+                                                                              <h4 className="text-[9px] font-semibold text-foreground">Alternative Route Selected</h4>
+                                                                            </div>
+                                                                            <div className="text-[9px] text-muted-foreground/90 leading-relaxed mb-2">
+                                                                              <ReactMarkdown className="prose prose-sm max-w-none [&>p]:mb-1 [&>p:last-child]:mb-0">
+                                                                                {level3SubStep.reroute.overview}
+                                                                              </ReactMarkdown>
+                                                                            </div>
+                                                                            <div className="space-y-1">
+                                                                              {level3SubStep.reroute.sub_steps?.map((level4SubStep: any, level4SubStepIndex: number) => (
+                                                                                <div
+                                                                                  key={level4SubStepIndex}
+                                                                                  className="bg-background/30 border border-primary/20 rounded-lg p-1.5"
+                                                                                >
+                                                                                  <div className="flex items-start gap-1 mb-0.5">
+                                                                                    <div className="flex-shrink-0 px-1 py-0.5 rounded-lg bg-gradient-to-br from-primary/40 to-primary/30 flex items-center justify-center border border-primary/60 shadow-sm">
+                                                                                       <span className="text-[8px] font-bold text-primary/90 whitespace-nowrap">
+                                                                                         Level 4. Sub-Step {level4SubStepIndex + 1}.
+                                                                                       </span>
+                                                                                    </div>
+                                                                                    <h5 className="text-[9px] font-semibold text-foreground pt-0.5">
+                                                                                      <ReactMarkdown className="prose prose-sm max-w-none [&>p]:m-0 [&_strong]:font-bold">
+                                                                                        {level4SubStep.title}
+                                                                                      </ReactMarkdown>
+                                                                                    </h5>
+                                                                                  </div>
+                                                                                  <div className="text-[8px] text-muted-foreground/90 leading-relaxed">
+                                                                                    <ReactMarkdown className="prose prose-sm max-w-none [&>p]:mb-0.5 [&>p:last-child]:mb-0 [&_strong]:font-bold">
+                                                                                      {level4SubStep.description}
+                                                                                    </ReactMarkdown>
+                                                                                  </div>
+                                                                                  {level4SubStep.estimated_time && (
+                                                                                    <div className="mt-0.5">
+                                                                                      <Badge variant="outline" className="text-[8px]">
+                                                                                        {level4SubStep.estimated_time}
+                                                                                      </Badge>
+                                                                                    </div>
+                                                                                  )}
+                                                                                </div>
+                                                                              ))}
+                                                                            </div>
+                                                                          </div>
+                                                                        </div>
+                                                                      )}
+
+                                                                      {/* Level 4 Sub-steps display */}
+                                                                      {hasLevel4SubSteps && (
                                                                        <div className="mt-2 pt-2 border-t border-primary/20">
                                                                          <button
                                                                            onClick={() => toggleLevel4SubSteps(phaseIndex, stepIndex, subStepIndex, level2SubStepIndex, level3SubStepIndex)}
