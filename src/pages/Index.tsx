@@ -900,131 +900,103 @@ const Index = () => {
       <section className="py-10 sm:py-14 lg:py-20">
         <div className="container mx-auto px-4">
           {/* Header */}
-          <div className="text-center mb-10 sm:mb-12">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold gradient-text-primary mb-3 font-display">
-              The JumpinAI Advantage
+          <div className="text-center mb-10 sm:mb-12 max-w-4xl mx-auto">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold gradient-text-primary mb-4 font-display">
+              Why JumpinAI? Why Now?
             </h2>
-            <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto">
-              Complete 3-tab system designed for clarity, adaptability, and action
+            <p className="text-base sm:text-lg text-muted-foreground">
+              The AI revolution created infinite possibilities—and overwhelming confusion. We built the bridge between ambition and execution.
             </p>
           </div>
 
-          {/* Main Grid */}
-          <div className="max-w-7xl mx-auto">
-            {/* Top Row - Three Core Features */}
-            <div className="grid md:grid-cols-3 gap-4 mb-6">
-              {/* Strategic Overview */}
-              <div className="group relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/10 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <div className="relative glass rounded-2xl p-5 border border-primary/20 hover:border-primary/40 transition-all duration-300 h-full">
-                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-3">
-                    <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
-                  </div>
-                  <h3 className="text-base font-bold mb-2 font-display">Strategic Overview</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    Executive summary, analysis, vision, and complete roadmap—your entire transformation at a glance
-                  </p>
+          {/* Content Cards */}
+          <div className="max-w-6xl mx-auto space-y-5">
+            {/* The Market Gap */}
+            <div className="glass rounded-2xl p-6 sm:p-8 border border-primary/20 hover:border-primary/30 transition-all duration-300">
+              <div className="flex items-start gap-4 mb-4">
+                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                  </svg>
                 </div>
-              </div>
-
-              {/* Adaptive Plan */}
-              <div className="group relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/10 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <div className="relative glass rounded-2xl p-5 border border-primary/20 hover:border-primary/40 transition-all duration-300 h-full">
-                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-3">
-                    <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
-                    </svg>
-                  </div>
-                  <h3 className="text-base font-bold mb-2 font-display">Adaptive Plan</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    4 levels of clarification + 3 alternative routes per step—never stuck, always moving forward
+                <div>
+                  <h3 className="text-xl font-bold mb-2 font-display">The Market Gap We're Filling</h3>
+                  <p className="text-muted-foreground leading-relaxed mb-3">
+                    AI tools are everywhere. Strategic clarity is nowhere. Entrepreneurs, creators, and founders are drowning in ChatGPT conversations, scattered advice, and half-finished plans. They don't need another AI chatbot—they need a system that turns chaos into structured, executable strategy.
                   </p>
-                </div>
-              </div>
-
-              {/* Tools & Prompts */}
-              <div className="group relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/10 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <div className="relative glass rounded-2xl p-5 border border-primary/20 hover:border-primary/40 transition-all duration-300 h-full">
-                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-3">
-                    <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                    </svg>
-                  </div>
-                  <h3 className="text-base font-bold mb-2 font-display">Tools & Prompts</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    9 curated combos with main tool + 2 alternatives, ready prompts, and complete guidance
+                  <p className="text-sm text-muted-foreground/80 leading-relaxed">
+                    JumpinAI is the first platform that delivers complete transformation blueprints, not just conversations. We're solving the "now what?" moment that follows every AI interaction.
                   </p>
                 </div>
               </div>
             </div>
 
-            {/* Bottom Row - Comparison + Speed */}
-            <div className="grid md:grid-cols-5 gap-4">
-              {/* Comparison Card - Takes 3 columns */}
-              <div className="md:col-span-3 relative group">
-                <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-accent/20 to-secondary/20 rounded-2xl blur-2xl opacity-40"></div>
-                <div className="relative glass rounded-2xl p-5 border border-primary/20 h-full">
-                  <h3 className="text-lg font-bold mb-4 text-center font-display">JumpinAI vs DIY Research</h3>
-                  
-                  <div className="grid grid-cols-2 gap-3">
-                    {/* JumpinAI Column */}
-                    <div className="space-y-2">
-                      <div className="text-xs font-semibold text-primary mb-2 text-center">JumpinAI</div>
-                      {[
-                        "Complete Overview",
-                        "4 Levels + 3 Routes",
-                        "9 Ready Combos",
-                        "2 Minutes"
-                      ].map((item, i) => (
-                        <div key={i} className="flex items-center gap-2 text-xs glass bg-primary/5 rounded-lg p-2 border border-primary/20">
-                          <svg className="w-4 h-4 flex-shrink-0 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                          </svg>
-                          <span className="font-medium">{item}</span>
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* DIY Column */}
-                    <div className="space-y-2">
-                      <div className="text-xs font-semibold text-muted-foreground mb-2 text-center">DIY Research</div>
-                      {[
-                        "Scattered Info",
-                        "Static Steps",
-                        "Find Your Own",
-                        "Weeks/Months"
-                      ].map((item, i) => (
-                        <div key={i} className="flex items-center gap-2 text-xs glass bg-muted/10 rounded-lg p-2 border border-border/50">
-                          <svg className="w-4 h-4 flex-shrink-0 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
-                          </svg>
-                          <span className="text-muted-foreground">{item}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Instant Personalization Card - Takes 2 columns */}
-              <div className="md:col-span-2 relative group">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-accent/20 rounded-2xl blur-xl opacity-50"></div>
-                <div className="relative glass rounded-2xl p-5 border border-primary/30 hover:border-primary/50 transition-all duration-300 h-full flex flex-col justify-center">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-accent/10 flex items-center justify-center mb-4 mx-auto">
-                    <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            {/* Two-Column: Why Now + Our Approach */}
+            <div className="grid md:grid-cols-2 gap-5">
+              {/* Why This Moment */}
+              <div className="glass rounded-2xl p-6 border border-primary/20 hover:border-primary/30 transition-all duration-300">
+                <div className="flex items-start gap-3 mb-3">
+                  <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                   </div>
-                  <h3 className="text-lg font-bold mb-2 text-center font-display gradient-text-primary">Instant Personalization</h3>
-                  <p className="text-sm text-muted-foreground text-center leading-relaxed">
-                    Your complete 3-tab Jump generated in <span className="font-semibold text-primary">2 minutes</span>—fully customized to your goals, industry, and experience
-                  </p>
+                  <h3 className="text-lg font-bold font-display">Why This Moment Matters</h3>
+                </div>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  We're at the peak of AI adoption—but the gap between access and adoption is widening. Everyone has tools. Few know how to use them strategically. The businesses that bridge this gap in 2025 will dominate their industries. The ones that don't will be left behind.
+                </p>
+              </div>
+
+              {/* Our Approach */}
+              <div className="glass rounded-2xl p-6 border border-primary/20 hover:border-primary/30 transition-all duration-300">
+                <div className="flex items-start gap-3 mb-3">
+                  <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-bold font-display">Built Different</h3>
+                </div>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  We're not building another AI wrapper. JumpinAI is a complete transformation architecture—combining strategic analysis, adaptive planning, and execution resources into one cohesive system. This isn't software. It's a methodology.
+                </p>
+              </div>
+            </div>
+
+            {/* What Makes Us Different */}
+            <div className="glass rounded-2xl p-6 sm:p-8 border border-primary/20 hover:border-primary/30 transition-all duration-300">
+              <div className="flex items-start gap-4 mb-4">
+                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold mb-3 font-display">What Sets Us Apart</h3>
+                  <div className="grid sm:grid-cols-3 gap-4">
+                    <div className="space-y-1">
+                      <div className="text-sm font-semibold text-foreground">Structure Over Chaos</div>
+                      <p className="text-xs text-muted-foreground">Organized 3-tab system vs endless chat threads</p>
+                    </div>
+                    <div className="space-y-1">
+                      <div className="text-sm font-semibold text-foreground">Adaptive Intelligence</div>
+                      <p className="text-xs text-muted-foreground">Plans that evolve with you, not static documents</p>
+                    </div>
+                    <div className="space-y-1">
+                      <div className="text-sm font-semibold text-foreground">Execution Focus</div>
+                      <p className="text-xs text-muted-foreground">Tools and prompts included, not just strategy</p>
+                    </div>
+                  </div>
                 </div>
               </div>
+            </div>
+
+            {/* Bottom CTA Message */}
+            <div className="text-center mt-6">
+              <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
+                <span className="font-semibold text-foreground">JumpinAI exists because the gap between knowing AI exists and successfully integrating it is massive.</span> We're not here to add to the noise. We're here to cut through it—and give you a clear path forward in 2 minutes.
+              </p>
             </div>
           </div>
         </div>
