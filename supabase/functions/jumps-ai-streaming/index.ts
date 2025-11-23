@@ -1028,32 +1028,32 @@ DO NOT use generic content. Every word should reflect THEIR specific situation A
 🎯 MANDATORY MINIMUM PROMPT LENGTH & SOPHISTICATION REQUIREMENTS:
 
 **TEXT/WRITING/STRATEGY PROMPTS** (ChatGPT, Claude, Gemini, Grok):
-- MINIMUM: 400-700 words of comprehensive, sophisticated instructions
+- MINIMUM: 320-560 words of comprehensive, sophisticated instructions
 - Include: Detailed context, specific tone/voice requirements, audience analysis, format specifications, success criteria, examples
 - Must be thorough enough to produce executive-level, client-ready content
 
 **IMAGE GENERATION PROMPTS** (Midjourney, DALL-E, Stable Diffusion, Flux):
-- MINIMUM: 350-600 words of exhaustive visual specifications
+- MINIMUM: 280-480 words of exhaustive visual specifications
 - Include: Detailed composition, precise color palette, lighting setup (type, direction, mood), artistic style references, technical specs (resolution, aspect ratio), atmosphere and emotion, subject details, background elements
 - Must be comprehensive enough to produce portfolio-quality, publication-ready images
 
 **VIDEO GENERATION PROMPTS** (Runway, Veo, Luma AI, Pika, Invideo):
-- MINIMUM: 1000-2000+ words in comprehensive JSON format
+- MINIMUM: 900-1800+ words in comprehensive JSON format
 - Include: Multiple scenes with shot-by-shot breakdowns, professional technical specs (4K/1080p, aspect ratios, frame rates, duration), detailed camera movements and angles, complete lighting setups, rich creative direction, voiceover scripts with emotional notes, music specifications, text overlay details with timing, color grading notes, transitions
 - Must be sophisticated enough to produce commercial-grade, client-presentation-ready videos
 
 **AUTOMATION/WORKFLOW PROMPTS** (Zapier, Make, n8n):
-- MINIMUM: 500-900 words of detailed step-by-step implementation
+- MINIMUM: 400-720 words of detailed step-by-step implementation
 - Include: Trigger conditions with examples, complete action sequences, data mapping with field specifications, error handling scenarios, testing procedures, optimization tips
 - Must be thorough enough to build production-ready, business-critical automations
 
 **CODE GENERATION PROMPTS** (Cursor, Replit, Lovable, GitHub Copilot):
-- MINIMUM: 400-700 words of detailed technical requirements
+- MINIMUM: 320-560 words of detailed technical requirements
 - Include: Complete architecture overview, specific technology stack, feature requirements, code structure, best practices, security considerations, performance requirements, testing approach
 - Must be comprehensive enough to generate enterprise-ready, maintainable code
 
 **RESEARCH/ANALYSIS PROMPTS** (Perplexity, Claude, ChatGPT):
-- MINIMUM: 400-700 words of detailed research parameters
+- MINIMUM: 320-560 words of detailed research parameters
 - Include: Specific research questions, data sources, methodologies, analysis frameworks, output format requirements, quality criteria
 - Must be thorough enough to produce board-presentation-ready insights
 
@@ -1069,7 +1069,7 @@ Return ONLY valid JSON:
       "tool_name": "Tool name WITHOUT version numbers (e.g., ChatGPT, Grok, Gemini, Midjourney, Runway, Lovable)",
       "tool_url": "https://url.com",
       "tool_type": "Tool type",
-      "prompt_text": "WORLD-CLASS, PRODUCTION-READY, ENTERPRISE-GRADE prompt in the appropriate format for this tool. MANDATORY LENGTH: Text/Writing (400-700 words), Image Generation (350-600 words), Video Generation (1000-2000+ words comprehensive JSON), Automation (500-900 words), Code (400-700 words), Research (400-700 words). Must be exhaustively detailed, deeply tailored to their stated goals, directly address their challenges, reference their specific situation, and be sophisticated enough to produce professional, polished, client-ready results that satisfy the most demanding enterprise users. ZERO EDITING REQUIRED.",
+      "prompt_text": "WORLD-CLASS, PRODUCTION-READY, ENTERPRISE-GRADE prompt in the appropriate format for this tool. MANDATORY LENGTH: Text/Writing (320-560 words), Image Generation (280-480 words), Video Generation (900-1800+ words comprehensive JSON), Automation (400-720 words), Code (320-560 words), Research (320-560 words). Must be exhaustively detailed, deeply tailored to their stated goals, directly address their challenges, reference their specific situation, and be sophisticated enough to produce professional, polished, client-ready results that satisfy the most demanding enterprise users. ZERO EDITING REQUIRED.",
       "prompt_format": "json|detailed_descriptive|structured_requirements|conversational",
       "prompt_instructions": "Step-by-step guidance for THEIR specific use case, considering their inferred experience level, including format-specific guidance and how to customize the prompt for different scenarios",
       "when_to_use": "When in their specific transformation journey based on their goals",
@@ -1089,7 +1089,7 @@ Return ONLY valid JSON:
 }
 
 Generate EXACTLY 9 combos deeply tailored to THEIR specific situation inferred from goals & challenges, with diversity and phase alignment. Remember: Prompts must be WORLD-CLASS PROFESSIONAL GRADE, especially video generation prompts with comprehensive JSON structures.`,
-        expectedTokens: 60000
+        expectedTokens: 50000
       };
 
     default:
