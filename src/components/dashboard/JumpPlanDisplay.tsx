@@ -21,6 +21,7 @@ interface JumpPlanDisplayProps {
   jumpId?: string; // Jump ID for linking to tool/prompt combos
   toolPromptIds?: string[]; // Array of 9 tool/prompt IDs in order
   onToolPromptClick?: (comboIndex: number, comboId: string) => void; // Callback to switch tabs and scroll to combo
+  onToolPromptGenerated?: () => void; // Callback when a new tool prompt is generated
 }
 
 // Helper function to check if structured plan matches comprehensive format
@@ -186,7 +187,7 @@ function normalizeToComprehensive(input: any): any {
   return base;
 }
 
-export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, onDownload, jumpId, toolPromptIds, onToolPromptClick }: JumpPlanDisplayProps) {
+export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, onDownload, jumpId, toolPromptIds, onToolPromptClick, onToolPromptGenerated }: JumpPlanDisplayProps) {
   const { subscription } = useAuth();
   const [hoveredStep, setHoveredStep] = React.useState<{ phaseIndex: number; stepIndex: number } | null>(null);
   const [hoveredSubStep, setHoveredSubStep] = React.useState<{ phaseIndex: number; stepIndex: number; subStepIndex: number } | null>(null);
@@ -202,7 +203,7 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
   const [loadingEquip, setLoadingEquip] = React.useState<Set<string>>(new Set());
   const [rerouteOptions, setRerouteOptions] = React.useState<Record<string, any>>({});
   const [localPlan, setLocalPlan] = React.useState<any>(null);
-  const [equippedSteps, setEquippedSteps] = React.useState<Set<string>>(new Set());
+  const [equippedSteps, setEquippedSteps] = React.useState<Record<string, string>>({});  // stepKey -> comboId
   
   // Check subscription tiers
   const hasStarterPlan = subscription?.subscribed && subscription?.subscription_tier !== null;
@@ -286,7 +287,7 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
       return true;
     }
     const stepKey = `${phaseIndex}-${stepIndex}`;
-    return equippedSteps.has(stepKey);
+    return stepKey in equippedSteps;
   };
 
   const handleToolPromptClick = (comboIndex: number) => {
@@ -575,7 +576,7 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
       `.trim();
 
       // Count existing combos from toolPromptIds plus any equipped steps
-      const existingComboCount = (toolPromptIds?.filter(id => id && id !== 'null').length || 0) + equippedSteps.size;
+      const existingComboCount = (toolPromptIds?.filter(id => id && id !== 'null').length || 0) + Object.keys(equippedSteps).length;
 
       const requestBody = {
         jumpId,
@@ -604,13 +605,15 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
         throw new Error('Invalid response from equip-step function');
       }
 
-      // Mark this step as equipped
-      setEquippedSteps(prev => new Set(prev).add(stepKey));
+      // Mark this step as equipped with its combo ID
+      setEquippedSteps(prev => ({ ...prev, [stepKey]: data.combo.id }));
 
       toast.success(`Combo #${data.combo.combo_number} generated and added to Tools & Prompts!`);
 
-      // Optional: Reload the jump to get the updated combo
-      // You might want to trigger a refresh of the parent component here
+      // Refresh tool prompts in parent component
+      if (onToolPromptGenerated) {
+        onToolPromptGenerated();
+      }
 
     } catch (error) {
       console.error('Error equipping step:', error);
@@ -1255,14 +1258,18 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                             </div>
                           )}
                       
-                          {/* Tools & Prompts Combo Section - Only for first 3 steps of each phase */}
+                          {/* Tools & Prompts Combo Section - For first 3 steps or equipped steps */}
                           {(() => {
                             const comboIndex = getToolPromptComboIndex(phaseIndex, stepIndex);
-                            if (comboIndex === null) return null;
+                            const stepKey = `${phaseIndex}-${stepIndex}`;
+                            const isEquipped = stepKey in equippedSteps;
+                            
+                            // Show blue box for first 3 steps OR if step is equipped
+                            if (comboIndex === null && !isEquipped) return null;
                             
                             // Get the actual tool prompt ID (check if it exists and is not null/undefined)
-                            const toolPromptId = toolPromptIds?.[comboIndex];
-                            const hasValidToolPromptId = toolPromptId && toolPromptId !== 'null' && toolPromptId !== null && toolPromptId !== undefined && toolPromptId.trim() !== '';
+                            const toolPromptId = isEquipped ? equippedSteps[stepKey] : toolPromptIds?.[comboIndex!];
+                            const hasValidToolPromptId = toolPromptId && toolPromptId !== 'null' && toolPromptId !== null && toolPromptId !== undefined && String(toolPromptId).trim() !== '';
                             
                             return (
                               <div className={`p-3 rounded-2xl border ${hasValidToolPromptId ? 'bg-blue-500/5 border-blue-500/30' : 'bg-muted/30 border-border/50'}`}>
@@ -1281,14 +1288,19 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                       </p>
                                     </div>
                                   </div>
-                                   {hasValidToolPromptId ? (
-                                     <button
-                                       onClick={(e) => {
-                                         e.stopPropagation();
-                                         handleToolPromptClick(comboIndex);
-                                       }}
-                                       className="relative group/view shrink-0"
-                                     >
+                                    {hasValidToolPromptId ? (
+                                      <button
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          // For equipped steps, use the combo ID directly; for original steps, use comboIndex
+                                          if (isEquipped && onToolPromptClick) {
+                                            onToolPromptClick(999, toolPromptId); // Use 999 as a placeholder index for equipped steps
+                                          } else if (comboIndex !== null && onToolPromptClick) {
+                                            onToolPromptClick(comboIndex, toolPromptId);
+                                          }
+                                        }}
+                                        className="relative group/view shrink-0"
+                                      >
                                        {/* Liquid glass glow effect */}
                                        <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/40 via-accent/30 to-primary/40 rounded-[2rem] blur-md opacity-40 group-hover/view:opacity-70 transition duration-500"></div>
                                        
@@ -2332,10 +2344,10 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                      </TooltipContent>
                                    </Tooltip>
 
-                                   {/* Equip Button - Only for steps without existing combos */}
-                                   {!hasCombo(phaseIndex, stepIndex) && (() => {
-                                     const isEquipLoading = loadingEquip.has(stepKey);
-                                     const isEquipped = equippedSteps.has(stepKey);
+                                    {/* Equip Button - Only for steps without existing combos */}
+                                    {!hasCombo(phaseIndex, stepIndex) && (() => {
+                                      const isEquipLoading = loadingEquip.has(stepKey);
+                                      const isEquipped = stepKey in equippedSteps;
                                      
                                      return (
                                        <Tooltip>

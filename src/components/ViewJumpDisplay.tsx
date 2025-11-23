@@ -16,11 +16,13 @@ import { toast } from 'sonner';
 interface ViewJumpDisplayProps {
   result: ProgressiveResult;
   generationTimer: number;
+  onToolPromptGenerated?: () => void;
 }
 
 const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
   result, 
-  generationTimer 
+  generationTimer,
+  onToolPromptGenerated
 }) => {
   const navigate = useNavigate();
   const [copiedPrompts, setCopiedPrompts] = React.useState<Set<number>>(new Set());
@@ -518,6 +520,7 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
               jumpId={result.jumpId || undefined}
               toolPromptIds={result.components?.toolPrompts?.map((tp: any) => tp?.id || null) || []}
               onToolPromptClick={handleToolPromptClick}
+              onToolPromptGenerated={onToolPromptGenerated}
             />
           ) : (
             <div className="flex items-center justify-center h-32">
