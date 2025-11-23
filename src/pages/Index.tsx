@@ -930,19 +930,19 @@ const Index = () => {
           {/* Content Cards */}
           <div className="max-w-6xl mx-auto space-y-5">
             {/* The Missing Piece */}
-            <div className="glass rounded-2xl p-6 sm:p-8 border border-primary/20 hover:border-primary/30 transition-all duration-300">
-              <div className="flex items-start gap-4 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                  <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="glass rounded-2xl p-5 sm:p-6 border border-primary/20 hover:border-primary/30 transition-all duration-300">
+              <div className="flex items-start gap-3 mb-3">
+                <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
                   </svg>
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold mb-2 font-display">The Missing Piece</h3>
-                  <p className="text-muted-foreground leading-relaxed mb-3">
+                  <h3 className="text-lg font-bold mb-2 font-display">The Missing Piece</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed mb-2">
                     AI tools are everywhere. Tutorials are endless. But a clear path forward? That's rare. Everyone talks about what AI can do—but few show you how to actually use it for your specific goals.
                   </p>
-                  <p className="text-sm text-muted-foreground/80 leading-relaxed">
+                  <p className="text-xs text-muted-foreground/80 leading-relaxed">
                     We give you a complete, structured plan—not generic advice, but a real roadmap built around what you're trying to achieve.
                   </p>
                 </div>
