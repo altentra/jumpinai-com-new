@@ -726,8 +726,8 @@ const Index = () => {
               </div>
 
               {/* Branching Lines Animation - Trident Pattern */}
-              <div className="relative mb-8 h-40">
-                <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+              <div className="relative mb-8 h-40 flex items-start justify-center">
+                <svg className="w-full max-w-5xl h-full" viewBox="0 0 300 100" preserveAspectRatio="xMidYMin meet">
                   <defs>
                     <linearGradient id="tridentGradient" x1="0%" y1="0%" x2="0%" y2="100%">
                       <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.9" />
@@ -737,60 +737,60 @@ const Index = () => {
                   
                   {/* Main vertical trunk from top */}
                   <line
-                    x1="50"
+                    x1="150"
                     y1="0"
-                    x2="50"
-                    y2="25"
+                    x2="150"
+                    y2="20"
                     stroke="url(#tridentGradient)"
-                    strokeWidth="0.3"
+                    strokeWidth="2"
                     strokeLinecap="round"
                     style={{
-                      strokeDasharray: 25,
-                      strokeDashoffset: 25,
+                      strokeDasharray: 20,
+                      strokeDashoffset: 20,
                       animation: 'drawLine 0.5s ease-out forwards'
                     }}
                   />
                   
-                  {/* Left branch - curves left and down */}
+                  {/* Left branch - curves elegantly left then down */}
                   <path
-                    d="M 50 25 C 45 30, 35 35, 20 40 L 20 100"
+                    d="M 150 20 C 140 25, 100 30, 50 35 L 50 100"
                     stroke="url(#tridentGradient)"
-                    strokeWidth="0.3"
+                    strokeWidth="2"
                     fill="none"
                     strokeLinecap="round"
                     style={{
-                      strokeDasharray: 85,
-                      strokeDashoffset: 85,
+                      strokeDasharray: 180,
+                      strokeDashoffset: 180,
                       animation: 'drawLine 1s ease-out 0.5s forwards'
                     }}
                   />
                   
                   {/* Center branch - straight down */}
                   <line
-                    x1="50"
-                    y1="25"
-                    x2="50"
+                    x1="150"
+                    y1="20"
+                    x2="150"
                     y2="100"
                     stroke="url(#tridentGradient)"
-                    strokeWidth="0.3"
+                    strokeWidth="2"
                     strokeLinecap="round"
                     style={{
-                      strokeDasharray: 75,
-                      strokeDashoffset: 75,
+                      strokeDasharray: 80,
+                      strokeDashoffset: 80,
                       animation: 'drawLine 1s ease-out 0.5s forwards'
                     }}
                   />
                   
-                  {/* Right branch - curves right and down */}
+                  {/* Right branch - curves elegantly right then down */}
                   <path
-                    d="M 50 25 C 55 30, 65 35, 80 40 L 80 100"
+                    d="M 150 20 C 160 25, 200 30, 250 35 L 250 100"
                     stroke="url(#tridentGradient)"
-                    strokeWidth="0.3"
+                    strokeWidth="2"
                     fill="none"
                     strokeLinecap="round"
                     style={{
-                      strokeDasharray: 85,
-                      strokeDashoffset: 85,
+                      strokeDasharray: 180,
+                      strokeDashoffset: 180,
                       animation: 'drawLine 1s ease-out 0.5s forwards'
                     }}
                   />
