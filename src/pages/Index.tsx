@@ -855,48 +855,78 @@ const Index = () => {
       </section>
 
       {/* The Concept of a Jump Section */}
-      <section className="py-16 sm:py-20 lg:py-24 relative overflow-hidden">
-        {/* Premium Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(var(--primary-rgb),0.08),transparent_50%)]"></div>
-        
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            {/* Premium Title */}
-            <div className="mb-6 sm:mb-8">
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold gradient-text-primary mb-4 sm:mb-5 font-display leading-tight">
-                The Concept of a Jump
-              </h2>
-              <div className="w-24 h-1 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto rounded-full"></div>
-            </div>
+      <section className="py-10 sm:py-12 lg:py-16">
+        <div className="container mx-auto px-4">
+          {/* Section Header */}
+          <div className="text-center mb-8 sm:mb-10">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold gradient-text-primary mb-3 sm:mb-4 font-display">
+              The Concept of a Jump
+            </h2>
+            <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto">
+              A jump is <span className="gradient-text-primary font-bold">commitment in motion</span>.
+            </p>
+          </div>
 
-            {/* Epic Content */}
-            <div className="space-y-6 sm:space-y-8">
-              <p className="text-lg sm:text-xl lg:text-2xl font-semibold text-foreground leading-relaxed">
-                A jump is <span className="gradient-text-primary font-bold">commitment in motion</span>.
-              </p>
-
-              <p className="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-3xl mx-auto">
-                When you jump, you leave hesitation behind. You cross the threshold from thinking to doing, from planning to acting. There's no pause button mid-air—only the certainty that you <strong className="text-foreground">will land somewhere</strong>.
-              </p>
-
-              <p className="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-3xl mx-auto">
-                That's the energy we channel. <strong className="text-foreground">Jump into AI</strong> isn't about casual exploration—it's about decisive action with a clear landing point. Your personalized plan ensures you don't leap blindly. You jump with <strong className="text-foreground">direction, precision, and purpose</strong>.
-              </p>
-
-              <div className="glass bg-muted/20 border border-primary/30 rounded-2xl p-6 sm:p-8 backdrop-blur-xl shadow-xl max-w-2xl mx-auto">
-                <p className="text-base sm:text-lg font-semibold text-foreground leading-relaxed italic">
-                  "The moment you jump, momentum takes over. Gravity pulls you forward. There's no going back—only the landing ahead. Make it count."
+          {/* Main Content Grid */}
+          <div className="max-w-6xl mx-auto">
+            {/* Three Content Cards */}
+            <div className="grid lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
+              {/* Card 1 */}
+              <div className="glass rounded-xl p-5 sm:p-6 border border-primary/20 backdrop-blur-xl shadow-md">
+                <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                  <ArrowRight className="w-5 h-5 text-primary" />
+                </div>
+                <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+                  When you jump, you leave hesitation behind. You cross the threshold from thinking to doing, from planning to acting. There's no pause button mid-air—only the certainty that you <strong className="text-foreground">will land somewhere</strong>.
                 </p>
               </div>
 
-              <p className="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-3xl mx-auto">
-                Every Jump you create is your commitment to transformation. You're not testing the waters—you're <strong className="text-foreground">diving in with a plan</strong>. And we make sure you land exactly where you intended.
-              </p>
+              {/* Card 2 */}
+              <div className="glass rounded-xl p-5 sm:p-6 border border-primary/20 backdrop-blur-xl shadow-md">
+                <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                  <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                  </svg>
+                </div>
+                <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+                  That's the energy we channel. <strong className="text-foreground">Jump into AI</strong> isn't about casual exploration—it's about decisive action with a clear landing point. Your personalized plan ensures you don't leap blindly. You jump with <strong className="text-foreground">direction, precision, and purpose</strong>.
+                </p>
+              </div>
+
+              {/* Card 3 */}
+              <div className="glass rounded-xl p-5 sm:p-6 border border-primary/20 backdrop-blur-xl shadow-md">
+                <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                  <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                </div>
+                <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+                  Every Jump you create is your commitment to transformation. You're not testing the waters—you're <strong className="text-foreground">diving in with a plan</strong>. And we make sure you land exactly where you intended.
+                </p>
+              </div>
             </div>
 
-            {/* Premium CTA */}
-            <div className="mt-10 sm:mt-12">
+            {/* Featured Quote Card */}
+            <div className="relative mb-6 sm:mb-8">
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-accent/20 to-secondary/20 rounded-2xl blur-2xl opacity-40"></div>
+              <div className="relative glass rounded-2xl p-6 sm:p-8 lg:p-10 border border-primary/30 backdrop-blur-xl shadow-xl">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center">
+                    <svg className="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+                    </svg>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-base sm:text-lg lg:text-xl font-semibold text-foreground leading-relaxed italic">
+                      The moment you jump, momentum takes over. Gravity pulls you forward. There's no going back—only the landing ahead. Make it count.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* CTA Section */}
+            <div className="text-center glass rounded-2xl p-6 sm:p-8 border border-primary/20 backdrop-blur-xl shadow-lg">
               <Button
                 onClick={() => navigate("/jumpinai-studio")}
                 size="lg"
@@ -915,6 +945,7 @@ const Index = () => {
           </div>
         </div>
       </section>
+
 
 
       <section className="py-10 sm:py-12 lg:py-16">
