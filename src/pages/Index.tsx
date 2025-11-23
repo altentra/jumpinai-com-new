@@ -735,7 +735,7 @@ const Index = () => {
                     </linearGradient>
                   </defs>
                   
-                  {/* Main vertical trunk - top to split point */}
+                  {/* Main vertical trunk - short line from top */}
                   <line
                     x1="500"
                     y1="0"
@@ -751,22 +751,21 @@ const Index = () => {
                     }}
                   />
                   
-                  {/* Left branch - diagonal then vertical */}
+                  {/* Left branch - smooth curve to left card */}
                   <path
-                    d="M 500 40 L 200 60 L 200 140"
+                    d="M 500 40 Q 400 70, 200 140"
                     stroke="url(#tridentGradient)"
                     strokeWidth="3"
                     fill="none"
                     strokeLinecap="round"
-                    strokeLinejoin="round"
                     style={{
-                      strokeDasharray: 330,
-                      strokeDashoffset: 330,
-                      animation: 'drawLine 0.7s ease-out 0.4s forwards'
+                      strokeDasharray: 350,
+                      strokeDashoffset: 350,
+                      animation: 'drawLine 0.8s ease-out 0.5s forwards'
                     }}
                   />
                   
-                  {/* Center branch - straight down */}
+                  {/* Center branch - straight down to center card */}
                   <line
                     x1="500"
                     y1="40"
@@ -778,42 +777,23 @@ const Index = () => {
                     style={{
                       strokeDasharray: 100,
                       strokeDashoffset: 100,
-                      animation: 'drawLine 0.7s ease-out 0.4s forwards'
+                      animation: 'drawLine 0.8s ease-out 0.5s forwards'
                     }}
                   />
                   
-                  {/* Right branch - diagonal then vertical */}
+                  {/* Right branch - smooth curve to right card */}
                   <path
-                    d="M 500 40 L 800 60 L 800 140"
+                    d="M 500 40 Q 600 70, 800 140"
                     stroke="url(#tridentGradient)"
                     strokeWidth="3"
                     fill="none"
                     strokeLinecap="round"
-                    strokeLinejoin="round"
                     style={{
-                      strokeDasharray: 330,
-                      strokeDashoffset: 330,
-                      animation: 'drawLine 0.7s ease-out 0.4s forwards'
+                      strokeDasharray: 350,
+                      strokeDashoffset: 350,
+                      animation: 'drawLine 0.8s ease-out 0.5s forwards'
                     }}
                   />
-                  
-                  {/* Junction point at split */}
-                  <circle 
-                    cx="500" 
-                    cy="40" 
-                    r="5" 
-                    fill="hsl(var(--primary))"
-                    style={{ 
-                      opacity: 0, 
-                      animation: 'fadeIn 0.3s ease-out 0.5s forwards',
-                      filter: 'drop-shadow(0 0 4px hsl(var(--primary)))'
-                    }} 
-                  />
-                  
-                  {/* End points */}
-                  <circle cx="200" cy="140" r="4" fill="hsl(var(--primary))" style={{ opacity: 0, animation: 'fadeIn 0.3s ease-out 1.1s forwards' }} />
-                  <circle cx="500" cy="140" r="4" fill="hsl(var(--primary))" style={{ opacity: 0, animation: 'fadeIn 0.3s ease-out 1.1s forwards' }} />
-                  <circle cx="800" cy="140" r="4" fill="hsl(var(--primary))" style={{ opacity: 0, animation: 'fadeIn 0.3s ease-out 1.1s forwards' }} />
                 </svg>
               </div>
 
