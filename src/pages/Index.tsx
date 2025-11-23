@@ -464,10 +464,10 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="text-center mb-8 sm:mb-10 lg:mb-12">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold gradient-text-primary mb-3 sm:mb-4 font-display">
-              Three Powerful Features That Adapt to Your Needs
+              Intelligent Features That Evolve With Your Progress
             </h2>
             <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto">
-              Never feel stuck with a vague step again. Clarify steps up to 4 levels deep, discover alternative routes, or equip any step with custom tools & prompts—all at your fingertips.
+              JumpinAI empowers you to refine every step with precision. Go deeper, pivot strategically, or arm yourself with the exact resources you need—all seamlessly integrated into your workflow.
             </p>
           </div>
 
@@ -482,13 +482,17 @@ const Index = () => {
             >
               {/* Feature Header */}
               <div className="text-center mb-8">
-                <div className="inline-flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 rounded-xl backdrop-blur-xl bg-primary/10 ring-1 ring-primary/30 flex items-center justify-center">
-                    <Sparkles className="w-6 h-6 text-primary" />
+                <div className="flex justify-center mb-6">
+                  <div className="relative group/clarify">
+                    <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/40 via-accent/30 to-primary/40 rounded-[2.5rem] blur-md opacity-40 transition duration-500"></div>
+                    <div className="relative flex items-center gap-3 px-8 py-4 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2.5rem] border border-primary/40 transition-all duration-300 overflow-hidden shadow-lg shadow-primary/10">
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full transition-transform duration-1000"></div>
+                      <Sparkles className="relative w-6 h-6 text-primary" />
+                      <span className="relative text-2xl font-bold text-foreground whitespace-nowrap">Clarify</span>
+                    </div>
                   </div>
-                  <h3 className="text-xl lg:text-2xl font-bold font-display">Feature 1: Clarify</h3>
                 </div>
-                <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto">
+                <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
                   Break down any step into 5 detailed sub-steps. Go up to 4 levels deep—from broad strategy to crystal-clear, actionable instructions you can execute today.
                 </p>
               </div>
@@ -718,14 +722,18 @@ const Index = () => {
             <div className="glass rounded-2xl p-6 lg:p-8 border border-primary/20 shadow-lg backdrop-blur-xl">
               {/* Feature Header */}
               <div className="text-center mb-8">
-                <div className="inline-flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 rounded-xl backdrop-blur-xl bg-primary/10 ring-1 ring-primary/30 flex items-center justify-center">
-                    <GitBranch className="w-6 h-6 text-primary" />
+                <div className="flex justify-center mb-6">
+                  <div className="relative group/reroute">
+                    <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/40 via-accent/30 to-primary/40 rounded-[2.5rem] blur-md opacity-40 transition duration-500"></div>
+                    <div className="relative flex items-center gap-3 px-8 py-4 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2.5rem] border border-primary/40 transition-all duration-300 overflow-hidden shadow-lg shadow-primary/10">
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full transition-transform duration-1000"></div>
+                      <GitBranch className="relative w-6 h-6 text-primary" />
+                      <span className="relative text-2xl font-bold text-foreground whitespace-nowrap">Reroute</span>
+                    </div>
                   </div>
-                  <h3 className="text-xl lg:text-2xl font-bold font-display">Feature 2: Reroute</h3>
                 </div>
-                <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto">
-                  Not confident about a specific approach? Discover 3 completely different paths to achieve the same goal—each with its own strategy, timeline, and resource requirements.
+                <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+                  Discover 3 completely different paths to achieve the same goal—each with its own strategy, timeline, and resource requirements. Choose the route that aligns perfectly with your priorities.
                 </p>
               </div>
 
@@ -793,14 +801,18 @@ const Index = () => {
             <div className="glass rounded-2xl p-6 lg:p-8 border border-primary/20 shadow-lg backdrop-blur-xl">
               {/* Feature Header */}
               <div className="text-center mb-8">
-                <div className="inline-flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 rounded-xl backdrop-blur-xl bg-primary/10 ring-1 ring-primary/30 flex items-center justify-center">
-                    <Wrench className="w-6 h-6 text-primary" />
+                <div className="flex justify-center mb-6">
+                  <div className="relative group/equip">
+                    <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/40 via-accent/30 to-primary/40 rounded-[2.5rem] blur-md opacity-40 transition duration-500"></div>
+                    <div className="relative flex items-center gap-3 px-8 py-4 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2.5rem] border border-primary/40 transition-all duration-300 overflow-hidden shadow-lg shadow-primary/10">
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full transition-transform duration-1000"></div>
+                      <Wrench className="relative w-6 h-6 text-primary" />
+                      <span className="relative text-2xl font-bold text-foreground whitespace-nowrap">Equip</span>
+                    </div>
                   </div>
-                  <h3 className="text-xl lg:text-2xl font-bold font-display">Feature 3: Equip</h3>
                 </div>
-                <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto">
-                  Need implementation tools for a specific step? Generate a custom tool-prompt combination on-demand—perfectly aligned with your step's requirements, budget, and technical level.
+                <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+                  Generate a custom tool-prompt combination on-demand—perfectly aligned with your step's requirements, budget, and technical level. Implementation resources delivered exactly when you need them.
                 </p>
               </div>
 
