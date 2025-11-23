@@ -727,7 +727,7 @@ const Index = () => {
 
               {/* Branching Lines Animation - Trident Pattern */}
               <div className="relative mb-8 h-32 sm:h-36">
-                <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1000 140" preserveAspectRatio="xMidYMid meet">
+                <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1000 150" preserveAspectRatio="xMidYMid meet">
                   <defs>
                     <linearGradient id="tridentGradient" x1="0%" y1="0%" x2="0%" y2="100%">
                       <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.9" />
@@ -735,62 +735,62 @@ const Index = () => {
                     </linearGradient>
                   </defs>
                   
-                  {/* Main vertical trunk - short line from top */}
+                  {/* Main vertical trunk */}
                   <line
                     x1="500"
                     y1="0"
                     x2="500"
-                    y2="40"
+                    y2="50"
                     stroke="url(#tridentGradient)"
-                    strokeWidth="3"
+                    strokeWidth="2.5"
                     strokeLinecap="round"
                     style={{
-                      strokeDasharray: 40,
-                      strokeDashoffset: 40,
+                      strokeDasharray: 50,
+                      strokeDashoffset: 50,
                       animation: 'drawLine 0.5s ease-out forwards'
                     }}
                   />
                   
-                  {/* Left branch - smooth curve to left card */}
+                  {/* Left prong - curves out then down */}
                   <path
-                    d="M 500 40 Q 400 70, 200 140"
+                    d="M 500 50 C 480 60, 420 75, 350 85 L 350 145"
                     stroke="url(#tridentGradient)"
-                    strokeWidth="3"
+                    strokeWidth="2.5"
                     fill="none"
                     strokeLinecap="round"
                     style={{
-                      strokeDasharray: 350,
-                      strokeDashoffset: 350,
+                      strokeDasharray: 130,
+                      strokeDashoffset: 130,
                       animation: 'drawLine 0.8s ease-out 0.5s forwards'
                     }}
                   />
                   
-                  {/* Center branch - straight down to center card */}
+                  {/* Center prong - straight down */}
                   <line
                     x1="500"
-                    y1="40"
+                    y1="50"
                     x2="500"
-                    y2="140"
+                    y2="145"
                     stroke="url(#tridentGradient)"
-                    strokeWidth="3"
+                    strokeWidth="2.5"
                     strokeLinecap="round"
                     style={{
-                      strokeDasharray: 100,
-                      strokeDashoffset: 100,
+                      strokeDasharray: 95,
+                      strokeDashoffset: 95,
                       animation: 'drawLine 0.8s ease-out 0.5s forwards'
                     }}
                   />
                   
-                  {/* Right branch - smooth curve to right card */}
+                  {/* Right prong - curves out then down */}
                   <path
-                    d="M 500 40 Q 600 70, 800 140"
+                    d="M 500 50 C 520 60, 580 75, 650 85 L 650 145"
                     stroke="url(#tridentGradient)"
-                    strokeWidth="3"
+                    strokeWidth="2.5"
                     fill="none"
                     strokeLinecap="round"
                     style={{
-                      strokeDasharray: 350,
-                      strokeDashoffset: 350,
+                      strokeDasharray: 130,
+                      strokeDashoffset: 130,
                       animation: 'drawLine 0.8s ease-out 0.5s forwards'
                     }}
                   />
