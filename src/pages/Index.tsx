@@ -905,13 +905,13 @@ const Index = () => {
               Why JumpinAI? Why Now?
             </h2>
             <p className="text-base sm:text-lg text-muted-foreground">
-              The AI revolution created infinite possibilities—and overwhelming confusion. We built the bridge between ambition and execution.
+              The clarity you need in a world full of AI noise
             </p>
           </div>
 
           {/* Content Cards */}
           <div className="max-w-6xl mx-auto space-y-5">
-            {/* The Market Gap */}
+            {/* The Missing Piece */}
             <div className="glass rounded-2xl p-6 sm:p-8 border border-primary/20 hover:border-primary/30 transition-all duration-300">
               <div className="flex items-start gap-4 mb-4">
                 <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
@@ -920,18 +920,18 @@ const Index = () => {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold mb-2 font-display">The Market Gap We're Filling</h3>
+                  <h3 className="text-xl font-bold mb-2 font-display">The Missing Piece</h3>
                   <p className="text-muted-foreground leading-relaxed mb-3">
-                    AI tools are everywhere. Strategic clarity is nowhere. Entrepreneurs, creators, and founders are drowning in ChatGPT conversations, scattered advice, and half-finished plans. They don't need another AI chatbot—they need a system that turns chaos into structured, executable strategy.
+                    AI tools are everywhere. Tutorials are endless. But a clear path forward? That's rare. Everyone talks about what AI can do—but few show you how to actually use it for your specific goals.
                   </p>
                   <p className="text-sm text-muted-foreground/80 leading-relaxed">
-                    JumpinAI is the first platform that delivers complete transformation blueprints, not just conversations. We're solving the "now what?" moment that follows every AI interaction.
+                    We give you a complete, structured plan—not generic advice, but a real roadmap built around what you're trying to achieve.
                   </p>
                 </div>
               </div>
             </div>
 
-            {/* Two-Column: Why Now + Our Approach */}
+            {/* Two-Column: Why Now + What Makes Us Different */}
             <div className="grid md:grid-cols-2 gap-5">
               {/* Why This Moment */}
               <div className="glass rounded-2xl p-6 border border-primary/20 hover:border-primary/30 transition-all duration-300">
@@ -941,14 +941,14 @@ const Index = () => {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                   </div>
-                  <h3 className="text-lg font-bold font-display">Why This Moment Matters</h3>
+                  <h3 className="text-lg font-bold font-display">This Is Your Moment</h3>
                 </div>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  We're at the peak of AI adoption—but the gap between access and adoption is widening. Everyone has tools. Few know how to use them strategically. The businesses that bridge this gap in 2025 will dominate their industries. The ones that don't will be left behind.
+                  AI is everywhere, but knowing how to use it strategically? That's the real advantage. Success isn't about having the most tools—it's about having clear direction and a solid plan. Right now, most people are still figuring things out. We help you move from exploring to actually implementing—with confidence.
                 </p>
               </div>
 
-              {/* Our Approach */}
+              {/* What Makes Us Different */}
               <div className="glass rounded-2xl p-6 border border-primary/20 hover:border-primary/30 transition-all duration-300">
                 <div className="flex items-start gap-3 mb-3">
                   <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
@@ -956,38 +956,45 @@ const Index = () => {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
                     </svg>
                   </div>
-                  <h3 className="text-lg font-bold font-display">Built Different</h3>
+                  <h3 className="text-lg font-bold font-display">What Makes Us Different</h3>
                 </div>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  We're not building another AI wrapper. JumpinAI is a complete transformation architecture—combining strategic analysis, adaptive planning, and execution resources into one cohesive system. This isn't software. It's a methodology.
+                  We're not just another AI tool. We're a complete system for turning AI potential into real, measurable progress. Every Jump gives you strategic insights, clear steps, and the right tools—all in one structured 3-tab plan that adapts as you grow.
                 </p>
               </div>
             </div>
 
-            {/* What Makes Us Different */}
+            {/* Three Key Points */}
             <div className="glass rounded-2xl p-6 sm:p-8 border border-primary/20 hover:border-primary/30 transition-all duration-300">
-              <div className="flex items-start gap-4 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                  <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold mb-3 font-display">What Sets Us Apart</h3>
-                  <div className="grid sm:grid-cols-3 gap-4">
-                    <div className="space-y-1">
-                      <div className="text-sm font-semibold text-foreground">Structure Over Chaos</div>
-                      <p className="text-xs text-muted-foreground">Organized 3-tab system vs endless chat threads</p>
-                    </div>
-                    <div className="space-y-1">
-                      <div className="text-sm font-semibold text-foreground">Adaptive Intelligence</div>
-                      <p className="text-xs text-muted-foreground">Plans that evolve with you, not static documents</p>
-                    </div>
-                    <div className="space-y-1">
-                      <div className="text-sm font-semibold text-foreground">Execution Focus</div>
-                      <p className="text-xs text-muted-foreground">Tools and prompts included, not just strategy</p>
-                    </div>
+              <div className="grid sm:grid-cols-3 gap-6">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-primary font-semibold text-sm">
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0"></div>
+                    <span>Clear Structure</span>
                   </div>
+                  <p className="text-xs text-muted-foreground pl-4">
+                    No scattered tips. Every Jump is a fully structured plan with strategic insights, clear steps, and the right tools.
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-primary font-semibold text-sm">
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0"></div>
+                    <span>Adapts With You</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground pl-4">
+                    Your plan isn't fixed. Clarify deeper, reroute when needed, equip steps with new resources—it grows as you do.
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-primary font-semibold text-sm">
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0"></div>
+                    <span>Built for Action</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground pl-4">
+                    This isn't just ideas. It's actionable strategy designed to help you make real progress on your goals.
+                  </p>
                 </div>
               </div>
             </div>
@@ -995,7 +1002,7 @@ const Index = () => {
             {/* Bottom CTA Message */}
             <div className="text-center mt-6">
               <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
-                <span className="font-semibold text-foreground">JumpinAI exists because the gap between knowing AI exists and successfully integrating it is massive.</span> We're not here to add to the noise. We're here to cut through it—and give you a clear path forward in 2 minutes.
+                While others talk about what's possible, <span className="font-semibold text-foreground">we show you exactly how to get there.</span>
               </p>
             </div>
           </div>
