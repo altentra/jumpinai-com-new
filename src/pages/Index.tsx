@@ -1264,7 +1264,7 @@ const Index = () => {
               Your AI transformation starts with a single decisive step
             </p>
             <p className="text-sm sm:text-base mb-8 sm:mb-10 text-muted-foreground max-w-3xl mx-auto px-4">
-              Stop second-guessing your AI strategy. Get a clear, actionable plan tailored to your specific goals—complete with tools, prompts, and adaptive intelligence to guide you every step of the way.
+              Stop second-guessing your AI strategy. Get a clear, actionable plan tailored to your specific goals—complete with tools, prompts, and adaptive intelligence to guide you every step of the&nbsp;way.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mb-8 sm:mb-10 px-4">
