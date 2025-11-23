@@ -991,7 +991,7 @@ const Index = () => {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                   </div>
-                  <h3 className="text-lg font-bold font-display">Why Timing Matters</h3>
+                  <h3 className="text-lg font-bold font-display">From Exploration to Implementation</h3>
                 </div>
                 <p className="text-sm text-muted-foreground leading-relaxed">
                   AI is everywhere, but knowing how to use it strategically? That's the real advantage. Success isn't about having the most tools—it's about having clear direction and a solid plan. Right now, most people are still figuring things out. We help you move from exploring to actually implementing—with confidence.
