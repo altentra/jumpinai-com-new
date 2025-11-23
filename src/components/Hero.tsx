@@ -14,6 +14,7 @@ import heroMobileClarify from "@/assets/hero-mobile-clarify.jpg";
 const Hero = () => {
   const [isDark, setIsDark] = useState(false);
   const { elementRef: mockupsRef, scrollProgress: mockupsProgress } = useScrollAnimation({ threshold: 0.2 });
+  const { elementRef: mobilesMockupsRef, scrollProgress: mobilesProgress } = useScrollAnimation({ threshold: 0.2 });
 
   useEffect(() => {
     const checkTheme = () => {
@@ -195,14 +196,14 @@ const Hero = () => {
               </div>
 
               {/* Mobile Screenshots - Dynamic staggered layout */}
-              <div className="relative w-full flex justify-center items-center px-4 h-36 sm:h-48 lg:h-60">
+              <div ref={mobilesMockupsRef} className="relative w-full flex justify-center items-center px-4 h-36 sm:h-48 lg:h-60">
                 {/* Jump Generation - Left, slightly raised */}
                 <div 
-                  className="absolute left-[5%] sm:left-[8%] lg:left-[10%] top-0 w-20 sm:w-28 lg:w-36 group transition-all ease-out"
+                  className="absolute left-[5%] sm:left-[8%] lg:left-[10%] top-0 w-20 sm:w-28 lg:w-36 group transition-all ease-out scroll-animate"
                   style={{
-                    transitionDuration: window.innerWidth < 1024 ? '1000ms' : '600ms',
-                    opacity: Math.max(0, Math.min(1, (mockupsProgress - (window.innerWidth < 1024 ? 0.20 : 0.08)) * (window.innerWidth < 1024 ? 2.5 : 3))),
-                    transform: `translateY(${(1 - Math.max(0, Math.min(1, (mockupsProgress - (window.innerWidth < 1024 ? 0.20 : 0.08)) * (window.innerWidth < 1024 ? 2.5 : 3)))) * 40}px)`
+                    transitionDuration: '600ms',
+                    opacity: Math.max(0, Math.min(1, (mobilesProgress - 0) * 2.5)),
+                    transform: `translateY(${(1 - Math.max(0, Math.min(1, mobilesProgress * 2.5))) * 40}px)`
                   }}
                 >
                   <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 transform rotate-[-4deg] hover:rotate-[-2deg] hover:scale-105 transition-all duration-300">
@@ -219,11 +220,11 @@ const Hero = () => {
 
                 {/* Dashboard Analytics - Center left, lower */}
                 <div 
-                  className="absolute left-[27%] sm:left-[29%] lg:left-[30%] top-5 sm:top-8 lg:top-10 w-20 sm:w-28 lg:w-36 group transition-all ease-out"
+                  className="absolute left-[27%] sm:left-[29%] lg:left-[30%] top-5 sm:top-8 lg:top-10 w-20 sm:w-28 lg:w-36 group transition-all ease-out scroll-animate"
                   style={{
-                    transitionDuration: window.innerWidth < 1024 ? '1000ms' : '600ms',
-                    opacity: Math.max(0, Math.min(1, (mockupsProgress - (window.innerWidth < 1024 ? 0.35 : 0.12)) * (window.innerWidth < 1024 ? 2.5 : 3))),
-                    transform: `translateY(${(1 - Math.max(0, Math.min(1, (mockupsProgress - (window.innerWidth < 1024 ? 0.35 : 0.12)) * (window.innerWidth < 1024 ? 2.5 : 3)))) * 40}px)`
+                    transitionDuration: '600ms',
+                    opacity: Math.max(0, Math.min(1, (mobilesProgress - 0.15) * 2.5)),
+                    transform: `translateY(${(1 - Math.max(0, Math.min(1, (mobilesProgress - 0.15) * 2.5))) * 40}px)`
                   }}
                 >
                   <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 transform rotate-[2deg] hover:rotate-[1deg] hover:scale-105 transition-all duration-300">
@@ -240,11 +241,11 @@ const Hero = () => {
 
                 {/* Colorful Combos - Center right, higher */}
                 <div 
-                  className="absolute right-[27%] sm:right-[29%] lg:right-[30%] top-1 sm:top-2 lg:top-3 w-20 sm:w-28 lg:w-36 group transition-all ease-out"
+                  className="absolute right-[27%] sm:right-[29%] lg:right-[30%] top-1 sm:top-2 lg:top-3 w-20 sm:w-28 lg:w-36 group transition-all ease-out scroll-animate"
                   style={{
-                    transitionDuration: window.innerWidth < 1024 ? '1000ms' : '600ms',
-                    opacity: Math.max(0, Math.min(1, (mockupsProgress - (window.innerWidth < 1024 ? 0.50 : 0.16)) * (window.innerWidth < 1024 ? 2.5 : 3))),
-                    transform: `translateY(${(1 - Math.max(0, Math.min(1, (mockupsProgress - (window.innerWidth < 1024 ? 0.50 : 0.16)) * (window.innerWidth < 1024 ? 2.5 : 3)))) * 40}px)`
+                    transitionDuration: '600ms',
+                    opacity: Math.max(0, Math.min(1, (mobilesProgress - 0.30) * 2.5)),
+                    transform: `translateY(${(1 - Math.max(0, Math.min(1, (mobilesProgress - 0.30) * 2.5))) * 40}px)`
                   }}
                 >
                   <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 transform rotate-[-3deg] hover:rotate-[-1deg] hover:scale-105 transition-all duration-300">
@@ -261,11 +262,11 @@ const Hero = () => {
 
                 {/* Clarify Features - Right, slightly raised */}
                 <div 
-                  className="absolute right-[5%] sm:right-[8%] lg:right-[10%] top-3 sm:top-4 lg:top-6 w-20 sm:w-28 lg:w-36 group transition-all ease-out"
+                  className="absolute right-[5%] sm:right-[8%] lg:right-[10%] top-3 sm:top-4 lg:top-6 w-20 sm:w-28 lg:w-36 group transition-all ease-out scroll-animate"
                   style={{
-                    transitionDuration: window.innerWidth < 1024 ? '1000ms' : '600ms',
-                    opacity: Math.max(0, Math.min(1, (mockupsProgress - (window.innerWidth < 1024 ? 0.65 : 0.20)) * (window.innerWidth < 1024 ? 2.5 : 3))),
-                    transform: `translateY(${(1 - Math.max(0, Math.min(1, (mockupsProgress - (window.innerWidth < 1024 ? 0.65 : 0.20)) * (window.innerWidth < 1024 ? 2.5 : 3)))) * 40}px)`
+                    transitionDuration: '600ms',
+                    opacity: Math.max(0, Math.min(1, (mobilesProgress - 0.45) * 2.5)),
+                    transform: `translateY(${(1 - Math.max(0, Math.min(1, (mobilesProgress - 0.45) * 2.5))) * 40}px)`
                   }}
                 >
                   <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 transform rotate-[5deg] hover:rotate-[3deg] hover:scale-105 transition-all duration-300">
