@@ -423,45 +423,54 @@ const Index = () => {
           <div ref={stepsRef} className="max-w-6xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
               <div 
-                className="text-center p-6 rounded-xl glass h-full flex flex-col transition-all duration-700 ease-out scroll-animate"
+                className="group relative overflow-hidden text-center p-6 rounded-xl border border-white/25 bg-gradient-to-br from-white/[0.01] via-black/[0.4] to-white/[0.01] glass h-full flex flex-col shadow-[0_8px_24px_-4px_rgba(0,0,0,0.2)] dark:shadow-[0_8px_24px_-4px_rgba(0,0,0,0.5)] hover:border-white/95 transition-all duration-700 ease-out scroll-animate"
                 style={{
                   opacity: Math.min(1, stepsProgress * 3),
                   transform: `translateY(${(1 - Math.min(1, stepsProgress * 3)) * 40}px)`
                 }}
               >
-                <div className="w-10 h-10 mx-auto mb-4 backdrop-blur-xl bg-primary/5 ring-1 ring-primary/30 rounded-xl flex items-center justify-center text-primary text-sm font-bold shadow-lg">
-                  1
+                <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-white/15 opacity-40 group-hover:opacity-60 transition-opacity duration-300" />
+                <div className="relative z-10">
+                  <div className="w-10 h-10 mx-auto mb-4 backdrop-blur-xl bg-primary/5 ring-1 ring-primary/30 rounded-xl flex items-center justify-center text-primary text-sm font-bold shadow-lg">
+                    1
+                  </div>
+                  <h3 className="text-lg font-bold mb-2 font-display">Describe Your Goal</h3>
+                  <p className="text-sm text-muted-foreground flex-1">Answer 2 focused questions: your objectives and the challenges you're facing. Our AI analyzes your input to create your personalized transformation plan.</p>
                 </div>
-                <h3 className="text-lg font-bold mb-2 font-display">Describe Your Goal</h3>
-                <p className="text-sm text-muted-foreground flex-1">Answer 2 focused questions: your objectives and the challenges you're facing. Our AI analyzes your input to create your personalized transformation plan.</p>
               </div>
               
               <div 
-                className="text-center p-6 rounded-xl glass h-full flex flex-col transition-all duration-700 ease-out scroll-animate"
+                className="group relative overflow-hidden text-center p-6 rounded-xl border border-white/25 bg-gradient-to-br from-white/[0.01] via-black/[0.4] to-white/[0.01] glass h-full flex flex-col shadow-[0_8px_24px_-4px_rgba(0,0,0,0.2)] dark:shadow-[0_8px_24px_-4px_rgba(0,0,0,0.5)] hover:border-white/95 transition-all duration-700 ease-out scroll-animate"
                 style={{
                   opacity: Math.max(0, Math.min(1, (stepsProgress - 0.35) * 3)),
                   transform: `translateY(${(1 - Math.max(0, Math.min(1, (stepsProgress - 0.35) * 3))) * 40}px)`
                 }}
               >
-                <div className="w-10 h-10 mx-auto mb-4 backdrop-blur-xl bg-primary/5 ring-1 ring-primary/30 rounded-xl flex items-center justify-center text-primary text-sm font-bold shadow-lg">
-                  2
+                <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-white/15 opacity-40 group-hover:opacity-60 transition-opacity duration-300" />
+                <div className="relative z-10">
+                  <div className="w-10 h-10 mx-auto mb-4 backdrop-blur-xl bg-primary/5 ring-1 ring-primary/30 rounded-xl flex items-center justify-center text-primary text-sm font-bold shadow-lg">
+                    2
+                  </div>
+                  <h3 className="text-lg font-bold mb-2 font-display">Receive Your Jump</h3>
+                  <p className="text-sm text-muted-foreground flex-1">Get your complete 3-tab transformation package: Overview, Plan, and 9 Tools & Prompts combos—all personalized.</p>
                 </div>
-                <h3 className="text-lg font-bold mb-2 font-display">Receive Your Jump</h3>
-                <p className="text-sm text-muted-foreground flex-1">Get your complete 3-tab transformation package: Overview, Plan, and 9 Tools & Prompts combos—all personalized.</p>
               </div>
               
               <div 
-                className="text-center p-6 rounded-xl glass h-full flex flex-col transition-all duration-700 ease-out scroll-animate"
+                className="group relative overflow-hidden text-center p-6 rounded-xl border border-white/25 bg-gradient-to-br from-white/[0.01] via-black/[0.4] to-white/[0.01] glass h-full flex flex-col shadow-[0_8px_24px_-4px_rgba(0,0,0,0.2)] dark:shadow-[0_8px_24px_-4px_rgba(0,0,0,0.5)] hover:border-white/95 transition-all duration-700 ease-out scroll-animate"
                 style={{
                   opacity: Math.max(0, Math.min(1, (stepsProgress - 0.7) * 3)),
                   transform: `translateY(${(1 - Math.max(0, Math.min(1, (stepsProgress - 0.7) * 3))) * 40}px)`
                 }}
               >
-                <div className="w-10 h-10 mx-auto mb-4 backdrop-blur-xl bg-primary/5 ring-1 ring-primary/30 rounded-xl flex items-center justify-center text-primary text-sm font-bold shadow-lg">
-                  3
+                <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-white/15 opacity-40 group-hover:opacity-60 transition-opacity duration-300" />
+                <div className="relative z-10">
+                  <div className="w-10 h-10 mx-auto mb-4 backdrop-blur-xl bg-primary/5 ring-1 ring-primary/30 rounded-xl flex items-center justify-center text-primary text-sm font-bold shadow-lg">
+                    3
+                  </div>
+                  <h3 className="text-lg font-bold mb-2 font-display">Execute & Adapt</h3>
+                  <p className="text-sm text-muted-foreground flex-1">Follow your roadmap, clarify steps as needed, explore alternative routes, and use ready prompts to implement immediately.</p>
                 </div>
-                <h3 className="text-lg font-bold mb-2 font-display">Execute & Adapt</h3>
-                <p className="text-sm text-muted-foreground flex-1">Follow your roadmap, clarify steps as needed, explore alternative routes, and use ready prompts to implement immediately.</p>
               </div>
             </div>
 
