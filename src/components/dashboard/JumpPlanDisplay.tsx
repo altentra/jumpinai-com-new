@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { safeParseJSON } from '@/utils/safeJson';
 import ReactMarkdown from 'react-markdown';
-import { ArrowRight, Sparkles, Lightbulb, GitBranch, ChevronDown, ChevronUp, Loader2, CheckCircle2, Check } from 'lucide-react';
+import { ArrowRight, Sparkles, Lightbulb, GitBranch, ChevronDown, ChevronUp, Loader2, CheckCircle2, Check, Wrench } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { updateJump } from '@/services/jumpService';
@@ -199,8 +199,10 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
   const [expandedLevel4SubSteps, setExpandedLevel4SubSteps] = React.useState<Set<string>>(new Set());
   const [loadingClarify, setLoadingClarify] = React.useState<Set<string>>(new Set());
   const [loadingReroute, setLoadingReroute] = React.useState<Set<string>>(new Set());
+  const [loadingEquip, setLoadingEquip] = React.useState<Set<string>>(new Set());
   const [rerouteOptions, setRerouteOptions] = React.useState<Record<string, any>>({});
   const [localPlan, setLocalPlan] = React.useState<any>(null);
+  const [equippedSteps, setEquippedSteps] = React.useState<Set<string>>(new Set());
   
   // Check subscription tiers
   const hasStarterPlan = subscription?.subscribed && subscription?.subscription_tier !== null;
@@ -275,6 +277,16 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
     // Calculate the combo index (0-8) based on phase and step
     const comboIndex = phaseIndex * 3 + stepIndex;
     return comboIndex < 9 ? comboIndex : null; // We only have 9 combos
+  };
+
+  // Check if a step has an existing combo (either original 9 or equipped)
+  const hasCombo = (phaseIndex: number, stepIndex: number): boolean => {
+    const comboIndex = getToolPromptComboIndex(phaseIndex, stepIndex);
+    if (comboIndex !== null && toolPromptIds && toolPromptIds[comboIndex]) {
+      return true;
+    }
+    const stepKey = `${phaseIndex}-${stepIndex}`;
+    return equippedSteps.has(stepKey);
   };
 
   const handleToolPromptClick = (comboIndex: number) => {
@@ -540,6 +552,76 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
       }
       return newSet;
     });
+  };
+
+  // Handler for Equip functionality - generate tool/prompt combo for any step
+  const handleEquipStep = async (phaseIndex: number, stepIndex: number) => {
+    if (!jumpId) {
+      toast.error('Jump ID is required');
+      return;
+    }
+
+    const stepKey = `${phaseIndex}-${stepIndex}`;
+    setLoadingEquip(prev => new Set(prev).add(stepKey));
+
+    try {
+      const phase = finalPlan.action_plan.phases[phaseIndex];
+      const step = phase.steps[stepIndex];
+
+      const jumpOverview = `
+Executive Summary: ${finalPlan.executiveSummary || ''}
+Strategic Vision: ${finalPlan.strategicVision || ''}
+Current State: ${finalPlan.situationAnalysis?.currentState || ''}
+      `.trim();
+
+      // Count existing combos from toolPromptIds plus any equipped steps
+      const existingComboCount = (toolPromptIds?.filter(id => id && id !== 'null').length || 0) + equippedSteps.size;
+
+      const requestBody = {
+        jumpId,
+        jumpOverview,
+        phaseTitle: phase.title,
+        phaseNumber: phase.phase_number,
+        stepTitle: step.title,
+        stepDescription: step.description,
+        stepNumber: step.step_number,
+        existingComboCount
+      };
+
+      console.log('Calling equip-step function:', requestBody);
+
+      const { data, error } = await supabase.functions.invoke('equip-step', {
+        body: requestBody,
+      });
+
+      if (error) {
+        throw new Error('Failed to generate combo');
+      }
+
+      console.log('Equip-step response:', data);
+
+      if (!data || !data.success || !data.combo) {
+        throw new Error('Invalid response from equip-step function');
+      }
+
+      // Mark this step as equipped
+      setEquippedSteps(prev => new Set(prev).add(stepKey));
+
+      toast.success(`Combo #${data.combo.combo_number} generated and added to Tools & Prompts!`);
+
+      // Optional: Reload the jump to get the updated combo
+      // You might want to trigger a refresh of the parent component here
+
+    } catch (error) {
+      console.error('Error equipping step:', error);
+      toast.error('Failed to generate combo. Please try again.');
+    } finally {
+      setLoadingEquip(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(stepKey);
+        return newSet;
+      });
+    }
   };
 
   // Handler for Level 2 clarification (clarifying a sub-step)
@@ -2201,7 +2283,7 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                       </p>
                                     </TooltipContent>
                                   </Tooltip>
-                                  
+                                   
                                    <Tooltip>
                                      <TooltipTrigger asChild>
                                        <button
@@ -2249,6 +2331,62 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                        </p>
                                      </TooltipContent>
                                    </Tooltip>
+
+                                   {/* Equip Button - Only for steps without existing combos */}
+                                   {!hasCombo(phaseIndex, stepIndex) && (() => {
+                                     const isEquipLoading = loadingEquip.has(stepKey);
+                                     const isEquipped = equippedSteps.has(stepKey);
+                                     
+                                     return (
+                                       <Tooltip>
+                                         <TooltipTrigger asChild>
+                                           <button
+                                             onClick={(e) => {
+                                               e.stopPropagation();
+                                               handleEquipStep(phaseIndex, stepIndex);
+                                             }}
+                                             disabled={isEquipLoading || isEquipped}
+                                             className="relative group/equip disabled:opacity-50 disabled:cursor-not-allowed"
+                                           >
+                                             {/* Liquid glass glow effect */}
+                                             <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/40 via-accent/30 to-primary/40 rounded-[2rem] blur-md opacity-40 group-hover/equip:opacity-70 transition duration-500"></div>
+                                             
+                                             {/* Button */}
+                                             <div className="relative flex items-center gap-2 px-5 py-2.5 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2rem] border border-primary/40 group-hover/equip:border-primary/60 transition-all duration-300 overflow-hidden shadow-lg shadow-primary/10">
+                                               {/* Shimmer effect */}
+                                               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/equip:translate-x-full transition-transform duration-1000"></div>
+                                               
+                                               {/* Content */}
+                                               {isEquipLoading ? (
+                                                 <>
+                                                   <Loader2 className="relative w-3.5 h-3.5 animate-spin text-primary" />
+                                                   <span className="relative text-sm font-bold text-foreground whitespace-nowrap">Generating...</span>
+                                                 </>
+                                               ) : isEquipped ? (
+                                                 <>
+                                                   <CheckCircle2 className="relative w-3.5 h-3.5 text-primary" />
+                                                   <span className="relative text-sm font-bold text-foreground whitespace-nowrap">Equipped</span>
+                                                 </>
+                                               ) : (
+                                                 <>
+                                                   <Wrench className="relative w-3.5 h-3.5 text-primary" />
+                                                   <span className="relative text-sm font-bold text-foreground group-hover/equip:text-primary transition-colors duration-300 whitespace-nowrap">Equip</span>
+                                                 </>
+                                               )}
+                                             </div>
+                                           </button>
+                                         </TooltipTrigger>
+                                         <TooltipContent className="max-w-xs">
+                                           <p className="text-sm">
+                                             {isEquipped
+                                               ? 'A custom tool & prompt combo has been generated and added to Tools & Prompts tab'
+                                               : 'Generate a custom AI tool & prompt combo specifically aligned to this step'
+                                             }
+                                           </p>
+                                         </TooltipContent>
+                                       </Tooltip>
+                                     );
+                                   })()}
                                 </div>
                               </TooltipProvider>
                             </div>
