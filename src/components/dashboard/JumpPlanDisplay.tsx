@@ -192,6 +192,7 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
   const [hoveredSubStep, setHoveredSubStep] = React.useState<{ phaseIndex: number; stepIndex: number; subStepIndex: number } | null>(null);
   const [hoveredLevel2SubStep, setHoveredLevel2SubStep] = React.useState<{ phaseIndex: number; stepIndex: number; subStepIndex: number; level2SubStepIndex: number } | null>(null);
   const [hoveredLevel3SubStep, setHoveredLevel3SubStep] = React.useState<{ phaseIndex: number; stepIndex: number; subStepIndex: number; level2SubStepIndex: number; level3SubStepIndex: number } | null>(null);
+  const [hoveredLevel4SubStep, setHoveredLevel4SubStep] = React.useState<{ phaseIndex: number; stepIndex: number; subStepIndex: number; level2SubStepIndex: number; level3SubStepIndex: number; level4SubStepIndex: number } | null>(null);
   const [expandedSubSteps, setExpandedSubSteps] = React.useState<Set<string>>(new Set());
   const [expandedLevel2SubSteps, setExpandedLevel2SubSteps] = React.useState<Set<string>>(new Set());
   const [expandedLevel3SubSteps, setExpandedLevel3SubSteps] = React.useState<Set<string>>(new Set());
@@ -205,6 +206,39 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
   const hasStarterPlan = subscription?.subscribed && subscription?.subscription_tier !== null;
   const hasProPlan = subscription?.subscribed && (subscription?.subscription_tier === 'Pro' || subscription?.subscription_tier === 'Growth');
   const hasGrowthPlan = subscription?.subscribed && subscription?.subscription_tier === 'Growth';
+  
+  // Subscription validation helper
+  const canClarifyAtLevel = (currentLevel: number): boolean => {
+    // Level 0: clarifying a step to get level 1 sub-steps
+    // Level 1: clarifying a sub-step to get level 2 sub-steps
+    // Level 2: clarifying a level 2 sub-step to get level 3 sub-steps
+    // Level 3: clarifying a level 3 sub-step to get level 4 sub-steps
+    
+    // Free/guest users: unlimited clarification
+    if (!subscription || !subscription.subscribed) {
+      return true;
+    }
+    
+    const tier = subscription.subscription_tier;
+    
+    // Starter plan: can clarify up to level 1 (2 levels deep total)
+    if (tier === 'Starter') {
+      return currentLevel <= 1;
+    }
+    
+    // Pro plan: can clarify up to level 2 (3 levels deep total)
+    if (tier === 'JumpinAI Pro' || tier === 'Pro') {
+      return currentLevel <= 2;
+    }
+    
+    // Growth plan: can clarify up to level 3 (4 levels deep total)
+    if (tier === 'Growth Plan' || tier === 'Growth') {
+      return currentLevel <= 3;
+    }
+    
+    // Default: allow (shouldn't reach here but just in case)
+    return true;
+  };
   
   if (!planContent.trim() && !structuredPlan) {
     return null;
@@ -283,6 +317,12 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
   };
 
   const handleClarifyStep = async (phaseIndex: number, stepIndex: number) => {
+    // Check subscription level (level 0: generating first sub-steps)
+    if (!canClarifyAtLevel(0)) {
+      toast.error('Your current plan does not support this level of clarification. Please upgrade to access deeper clarifications.');
+      return;
+    }
+    
     if (!jumpId) {
       toast.error('Jump ID is required');
       return;
@@ -504,6 +544,11 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
 
   // Handler for Level 2 clarification (clarifying a sub-step)
   const handleClarifySubStep = async (phaseIndex: number, stepIndex: number, subStepIndex: number) => {
+    // Check subscription level (level 1: generating level 2 sub-steps)
+    if (!canClarifyAtLevel(1)) {
+      toast.error('Your current plan does not support this level of clarification. Please upgrade to Pro or Growth plan to access deeper clarifications.');
+      return;
+    }
     if (!jumpId) {
       toast.error('Jump ID is required');
       return;
@@ -681,6 +726,11 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
 
   // Handler for Level 3 clarification (clarifying a Level 2 sub-step)
   const handleClarifyLevel2SubStep = async (phaseIndex: number, stepIndex: number, subStepIndex: number, level2SubStepIndex: number) => {
+    // Check subscription level (level 2: generating level 3 sub-steps)
+    if (!canClarifyAtLevel(2)) {
+      toast.error('Your current plan does not support this level of clarification. Please upgrade to Growth plan to access the deepest clarifications.');
+      return;
+    }
     if (!jumpId) {
       toast.error('Jump ID is required');
       return;
@@ -848,6 +898,11 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
 
   // Handler for Level 4 clarification (clarifying a Level 3 sub-step)
   const handleClarifyLevel3SubStep = async (phaseIndex: number, stepIndex: number, subStepIndex: number, level2SubStepIndex: number, level3SubStepIndex: number) => {
+    // Check subscription level (level 3: generating level 4 sub-steps)
+    if (!canClarifyAtLevel(3)) {
+      toast.error('Your current plan does not support this level of clarification. Please upgrade to Growth plan to access the deepest clarifications.');
+      return;
+    }
     if (!jumpId) {
       toast.error('Jump ID is required');
       return;
@@ -1326,7 +1381,7 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                               {isExpanded && (
                                 <div className="mt-3 space-y-2 animate-fade-in">
                                   {step.sub_steps.map((subStep: any, subStepIndex: number) => {
-                                    const isSubStepHovered = hasStarterPlan && hoveredSubStep?.phaseIndex === phaseIndex && hoveredSubStep?.stepIndex === stepIndex && hoveredSubStep?.subStepIndex === subStepIndex;
+                                    const isSubStepHovered = hoveredSubStep?.phaseIndex === phaseIndex && hoveredSubStep?.stepIndex === stepIndex && hoveredSubStep?.subStepIndex === subStepIndex;
                                     const subStepKey = `${phaseIndex}-${stepIndex}-${subStepIndex}`;
                                     const hasLevel2SubSteps = subStep.level_2_sub_steps && Array.isArray(subStep.level_2_sub_steps) && subStep.level_2_sub_steps.length > 0;
                                     const isLevel2Expanded = expandedLevel2SubSteps.has(subStepKey);
@@ -1339,8 +1394,8 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                       <div
                                         key={subStepIndex}
                                         className="bg-background/30 border border-primary/20 rounded-xl p-3 ml-4"
-                                        onMouseEnter={() => hasStarterPlan && setHoveredSubStep({ phaseIndex, stepIndex, subStepIndex })}
-                                        onMouseLeave={() => hasStarterPlan && setHoveredSubStep(null)}
+                                        onMouseEnter={() => setHoveredSubStep({ phaseIndex, stepIndex, subStepIndex })}
+                                        onMouseLeave={() => setHoveredSubStep(null)}
                                       >
                                         <div className="flex items-start gap-2 mb-2">
                                           <div className="flex-shrink-0 px-2.5 py-1.5 rounded-lg bg-gradient-to-br from-primary/40 to-primary/30 flex items-center justify-center border border-primary/60 shadow-sm">
@@ -1512,7 +1567,7 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                              {isLevel2Expanded && (
                                                <div className="mt-2 space-y-2 animate-fade-in">
                                                  {subStep.level_2_sub_steps.map((level2SubStep: any, level2SubStepIndex: number) => {
-                                                   const isLevel2SubStepHovered = hasProPlan && hoveredLevel2SubStep?.phaseIndex === phaseIndex && hoveredLevel2SubStep?.stepIndex === stepIndex && hoveredLevel2SubStep?.subStepIndex === subStepIndex && hoveredLevel2SubStep?.level2SubStepIndex === level2SubStepIndex;
+                                                   const isLevel2SubStepHovered = hoveredLevel2SubStep?.phaseIndex === phaseIndex && hoveredLevel2SubStep?.stepIndex === stepIndex && hoveredLevel2SubStep?.subStepIndex === subStepIndex && hoveredLevel2SubStep?.level2SubStepIndex === level2SubStepIndex;
                                                    const level2SubStepKey = `${phaseIndex}-${stepIndex}-${subStepIndex}-${level2SubStepIndex}`;
                                                    const hasLevel3SubSteps = level2SubStep.level_3_sub_steps && Array.isArray(level2SubStep.level_3_sub_steps) && level2SubStep.level_3_sub_steps.length > 0;
                                                    const isLevel3Expanded = expandedLevel3SubSteps.has(level2SubStepKey);
@@ -1525,8 +1580,8 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                                      <div
                                                        key={level2SubStepIndex}
                                                        className="bg-background/30 border border-primary/20 rounded-lg p-2 ml-2"
-                                                       onMouseEnter={() => hasProPlan && setHoveredLevel2SubStep({ phaseIndex, stepIndex, subStepIndex, level2SubStepIndex })}
-                                                       onMouseLeave={() => hasProPlan && setHoveredLevel2SubStep(null)}
+                                                        onMouseEnter={() => setHoveredLevel2SubStep({ phaseIndex, stepIndex, subStepIndex, level2SubStepIndex })}
+                                                        onMouseLeave={() => setHoveredLevel2SubStep(null)}
                                                      >
                                                        <div className="flex items-start gap-2 mb-1">
                                                          <div className="flex-shrink-0 px-2 py-1 rounded-lg bg-gradient-to-br from-primary/40 to-primary/30 flex items-center justify-center border border-primary/60 shadow-sm">
@@ -1606,7 +1661,7 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                                            {isLevel3Expanded && (
                                                              <div className="mt-2 space-y-2 animate-fade-in">
                                                                {level2SubStep.level_3_sub_steps.map((level3SubStep: any, level3SubStepIndex: number) => {
-                                                                 const isLevel3SubStepHovered = hasGrowthPlan && hoveredLevel3SubStep?.phaseIndex === phaseIndex && hoveredLevel3SubStep?.stepIndex === stepIndex && hoveredLevel3SubStep?.subStepIndex === subStepIndex && hoveredLevel3SubStep?.level2SubStepIndex === level2SubStepIndex && hoveredLevel3SubStep?.level3SubStepIndex === level3SubStepIndex;
+                                                                 const isLevel3SubStepHovered = hoveredLevel3SubStep?.phaseIndex === phaseIndex && hoveredLevel3SubStep?.stepIndex === stepIndex && hoveredLevel3SubStep?.subStepIndex === subStepIndex && hoveredLevel3SubStep?.level2SubStepIndex === level2SubStepIndex && hoveredLevel3SubStep?.level3SubStepIndex === level3SubStepIndex;
                                                                  const level3SubStepKey = `${phaseIndex}-${stepIndex}-${subStepIndex}-${level2SubStepIndex}-${level3SubStepIndex}`;
                                                                  const hasLevel4SubSteps = level3SubStep.level_4_sub_steps && Array.isArray(level3SubStep.level_4_sub_steps) && level3SubStep.level_4_sub_steps.length > 0;
                                                                  const isLevel4Expanded = expandedLevel4SubSteps.has(level3SubStepKey);
@@ -1619,8 +1674,8 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                                                    <div
                                                                      key={level3SubStepIndex}
                                                                      className="bg-background/30 border border-primary/20 rounded-lg p-2 ml-2"
-                                                                     onMouseEnter={() => hasGrowthPlan && setHoveredLevel3SubStep({ phaseIndex, stepIndex, subStepIndex, level2SubStepIndex, level3SubStepIndex })}
-                                                                     onMouseLeave={() => hasGrowthPlan && setHoveredLevel3SubStep(null)}
+                                                                      onMouseEnter={() => setHoveredLevel3SubStep({ phaseIndex, stepIndex, subStepIndex, level2SubStepIndex, level3SubStepIndex })}
+                                                                      onMouseLeave={() => setHoveredLevel3SubStep(null)}
                                                                    >
                                                                      <div className="flex items-start gap-1 mb-1">
                                                                        <div className="flex-shrink-0 px-1.5 py-0.5 rounded-lg bg-gradient-to-br from-primary/40 to-primary/30 flex items-center justify-center border border-primary/60 shadow-sm">
@@ -1702,8 +1757,8 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                                                        </div>
                                                                      )}
 
-                                                                     {/* Level 4 Action Buttons - Only for Growth plan */}
-                                                                     {hasGrowthPlan && isLevel3SubStepHovered && (
+                                                                      {/* Level 4 Action Buttons - Always show on hover */}
+                                                                      {isLevel3SubStepHovered && (
                                                                        <div className="mt-2 pt-2 border-t border-primary/20 animate-fade-in">
                                                                          <TooltipProvider>
                                                                            <div className="flex items-center justify-center gap-1">
@@ -1802,8 +1857,8 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                                          </div>
                                                        )}
 
-                                                       {/* Level 3 Action Buttons - Only for Pro plan and higher */}
-                                                       {hasProPlan && isLevel2SubStepHovered && (
+                                                        {/* Level 3 Action Buttons - Always show on hover */}
+                                                        {isLevel2SubStepHovered && (
                                                          <div className="mt-2 pt-2 border-t border-primary/20 animate-fade-in">
                                                            <TooltipProvider>
                                                              <div className="flex items-center justify-center gap-1">
@@ -1902,8 +1957,8 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                           </div>
                                         )}
 
-                                        {/* Level 2 Action Buttons - Only visible on hover for Starter plan */}
-                                        {hasStarterPlan && isSubStepHovered && (
+                                         {/* Level 2 Action Buttons - Always show on hover */}
+                                         {isSubStepHovered && (
                                           <div className="mt-3 pt-3 border-t border-primary/20 animate-fade-in">
                                             <TooltipProvider>
                                               <div className="flex items-center justify-center gap-2">
