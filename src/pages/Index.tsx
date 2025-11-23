@@ -43,6 +43,8 @@ const Index = () => {
   const { elementRef: level4Ref, scrollProgress: level4Progress } = useScrollAnimation({ threshold: 0.2 });
   const { elementRef: rerouteRef, scrollProgress: rerouteProgress } = useScrollAnimation({ threshold: 0.2 });
   const { elementRef: equipRef, scrollProgress: equipProgress } = useScrollAnimation({ threshold: 0.2 });
+  const { elementRef: rerouteCardsRef, scrollProgress: rerouteCardsProgress } = useScrollAnimation({ threshold: 0.2 });
+  const { elementRef: equipCardsRef, scrollProgress: equipCardsProgress } = useScrollAnimation({ threshold: 0.2 });
 
   // Show test component only in development or when URL contains 'test'
   const showTest = window.location.hostname === 'localhost' || 
@@ -732,8 +734,14 @@ const Index = () => {
               </div>
 
               {/* Route Examples */}
-              <div className="grid sm:grid-cols-3 gap-4 mb-6">
-                <div className="glass bg-muted/30 p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
+              <div ref={rerouteCardsRef} className="grid sm:grid-cols-3 gap-4 mb-6">
+                <div 
+                  className="glass bg-muted/30 p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm transition-all duration-700 ease-out"
+                  style={{
+                    opacity: Math.max(0, Math.min(1, rerouteCardsProgress * 1.8)),
+                    transform: `translateY(${(1 - Math.max(0, Math.min(1, rerouteCardsProgress * 1.8))) * 40}px)`
+                  }}
+                >
                   <p className="text-sm font-bold text-primary mb-2">Route A: Premium</p>
                   <div className="space-y-1 text-xs text-muted-foreground">
                     <p>• High-end tools</p>
@@ -741,7 +749,13 @@ const Index = () => {
                     <p>• Higher investment</p>
                   </div>
                 </div>
-                <div className="glass bg-muted/30 p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
+                <div 
+                  className="glass bg-muted/30 p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm transition-all duration-700 ease-out"
+                  style={{
+                    opacity: Math.max(0, Math.min(1, (rerouteCardsProgress - 0.15) * 1.8)),
+                    transform: `translateY(${(1 - Math.max(0, Math.min(1, (rerouteCardsProgress - 0.15) * 1.8))) * 40}px)`
+                  }}
+                >
                   <p className="text-sm font-bold text-primary mb-2">Route B: Budget-Friendly</p>
                   <div className="space-y-1 text-xs text-muted-foreground">
                     <p>• Free/low-cost tools</p>
@@ -749,7 +763,13 @@ const Index = () => {
                     <p>• Lower risk</p>
                   </div>
                 </div>
-                <div className="glass bg-muted/30 p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
+                <div 
+                  className="glass bg-muted/30 p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm transition-all duration-700 ease-out"
+                  style={{
+                    opacity: Math.max(0, Math.min(1, (rerouteCardsProgress - 0.3) * 1.8)),
+                    transform: `translateY(${(1 - Math.max(0, Math.min(1, (rerouteCardsProgress - 0.3) * 1.8))) * 40}px)`
+                  }}
+                >
                   <p className="text-sm font-bold text-primary mb-2">Route C: Hybrid</p>
                   <div className="space-y-1 text-xs text-muted-foreground">
                     <p>• Mix of approaches</p>
@@ -797,14 +817,26 @@ const Index = () => {
               </div>
 
               {/* Feature Highlights */}
-              <div className="grid sm:grid-cols-2 gap-4 mb-6">
-                <div className="glass bg-muted/30 p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
+              <div ref={equipCardsRef} className="grid sm:grid-cols-2 gap-4 mb-6">
+                <div 
+                  className="glass bg-muted/30 p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm transition-all duration-700 ease-out"
+                  style={{
+                    opacity: Math.max(0, Math.min(1, equipCardsProgress * 1.8)),
+                    transform: `translateY(${(1 - Math.max(0, Math.min(1, equipCardsProgress * 1.8))) * 40}px)`
+                  }}
+                >
                   <p className="text-sm font-bold text-primary mb-2">Curated Tool Selection</p>
                   <p className="text-xs text-muted-foreground leading-relaxed">
                     Get a main tool recommendation plus 2 alternatives perfectly aligned to your step's requirements, budget, and technical level.
                   </p>
                 </div>
-                <div className="glass bg-muted/30 p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
+                <div 
+                  className="glass bg-muted/30 p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm transition-all duration-700 ease-out"
+                  style={{
+                    opacity: Math.max(0, Math.min(1, (equipCardsProgress - 0.2) * 1.8)),
+                    transform: `translateY(${(1 - Math.max(0, Math.min(1, (equipCardsProgress - 0.2) * 1.8))) * 40}px)`
+                  }}
+                >
                   <p className="text-sm font-bold text-primary mb-2">Ready-to-Use Prompts</p>
                   <p className="text-xs text-muted-foreground leading-relaxed">
                     Receive expertly crafted prompts designed specifically for your step—copy, paste, and execute immediately with any AI tool.
