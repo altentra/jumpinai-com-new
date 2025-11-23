@@ -240,7 +240,7 @@ const Index = () => {
           <div ref={tabsRef} className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {/* Overview Tab */}
             <div 
-              className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-700 ease-out border border-primary/20 hover:border-primary/30 shadow-[0_4px_12px_rgba(0,0,0,0.08)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.12)] dark:shadow-[0_4px_12px_rgba(0,0,0,0.3)] dark:hover:shadow-[0_8px_24px_rgba(0,0,0,0.4)] scroll-animate"
+              className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-700 ease-out border-2 border-primary/30 hover:border-primary/50 shadow-[0_8px_32px_-4px_rgba(99,102,241,0.15)] hover:shadow-[0_12px_48px_-4px_rgba(99,102,241,0.25)] dark:shadow-[0_8px_32px_-4px_rgba(139,92,246,0.25)] dark:hover:shadow-[0_12px_48px_-4px_rgba(139,92,246,0.4)] scroll-animate"
               style={{
                 opacity: Math.min(1, tabsProgress * 3),
                 transform: `translateY(${(1 - Math.min(1, tabsProgress * 3)) * 40}px)`
@@ -280,7 +280,7 @@ const Index = () => {
 
             {/* Plan Tab */}
             <div 
-              className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-700 ease-out border border-primary/20 hover:border-primary/30 shadow-[0_4px_12px_rgba(0,0,0,0.08)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.12)] dark:shadow-[0_4px_12px_rgba(0,0,0,0.3)] dark:hover:shadow-[0_8px_24px_rgba(0,0,0,0.4)] scroll-animate"
+              className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-700 ease-out border-2 border-primary/30 hover:border-primary/50 shadow-[0_8px_32px_-4px_rgba(99,102,241,0.15)] hover:shadow-[0_12px_48px_-4px_rgba(99,102,241,0.25)] dark:shadow-[0_8px_32px_-4px_rgba(139,92,246,0.25)] dark:hover:shadow-[0_12px_48px_-4px_rgba(139,92,246,0.4)] scroll-animate"
               style={{
                 opacity: Math.max(0, Math.min(1, (tabsProgress - 0.35) * 3)),
                 transform: `translateY(${(1 - Math.max(0, Math.min(1, (tabsProgress - 0.35) * 3))) * 40}px)`
@@ -320,7 +320,7 @@ const Index = () => {
 
             {/* Tools & Prompts Tab */}
             <div 
-              className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-700 ease-out border border-primary/20 hover:border-primary/30 shadow-[0_4px_12px_rgba(0,0,0,0.08)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.12)] dark:shadow-[0_4px_12px_rgba(0,0,0,0.3)] dark:hover:shadow-[0_8px_24px_rgba(0,0,0,0.4)] scroll-animate"
+              className="group relative p-6 rounded-xl glass hover:glass-dark transition-all duration-700 ease-out border-2 border-primary/30 hover:border-primary/50 shadow-[0_8px_32px_-4px_rgba(99,102,241,0.15)] hover:shadow-[0_12px_48px_-4px_rgba(99,102,241,0.25)] dark:shadow-[0_8px_32px_-4px_rgba(139,92,246,0.25)] dark:hover:shadow-[0_12px_48px_-4px_rgba(139,92,246,0.4)] scroll-animate"
               style={{
                 opacity: Math.max(0, Math.min(1, (tabsProgress - 0.7) * 3)),
                 transform: `translateY(${(1 - Math.max(0, Math.min(1, (tabsProgress - 0.7) * 3))) * 40}px)`
