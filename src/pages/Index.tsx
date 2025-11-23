@@ -243,7 +243,7 @@ const Index = () => {
               className="group relative rounded-xl overflow-hidden border border-white/25 shadow-2xl bg-gradient-to-br from-white/[0.01] via-black/[0.4] to-white/[0.01] backdrop-blur-sm p-1 transition-all duration-700 ease-out scroll-animate"
               style={{
                 opacity: Math.min(1, tabsProgress * 3),
-                transform: `translateY(${(1 - Math.min(1, tabsProgress * 3)) * 40}px)`
+                transform: `translateY(${Math.min(1, tabsProgress * 3) >= 0.99 ? 0 : (1 - Math.min(1, tabsProgress * 3)) * 40}px)`
               }}
             >
               <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-white/15 rounded-xl opacity-40 group-hover:opacity-60 transition-opacity duration-300"></div>
@@ -287,7 +287,7 @@ const Index = () => {
               className="group relative rounded-xl overflow-hidden border border-white/25 shadow-2xl bg-gradient-to-br from-white/[0.01] via-black/[0.4] to-white/[0.01] backdrop-blur-sm p-1 transition-all duration-700 ease-out scroll-animate"
               style={{
                 opacity: Math.max(0, Math.min(1, (tabsProgress - 0.35) * 3)),
-                transform: `translateY(${(1 - Math.max(0, Math.min(1, (tabsProgress - 0.35) * 3))) * 40}px)`
+                transform: `translateY(${Math.max(0, Math.min(1, (tabsProgress - 0.35) * 3)) >= 0.99 ? 0 : (1 - Math.max(0, Math.min(1, (tabsProgress - 0.35) * 3))) * 40}px)`
               }}
             >
               <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-white/15 rounded-xl opacity-40 group-hover:opacity-60 transition-opacity duration-300"></div>
@@ -331,7 +331,7 @@ const Index = () => {
               className="group relative rounded-xl overflow-hidden border border-white/25 shadow-2xl bg-gradient-to-br from-white/[0.01] via-black/[0.4] to-white/[0.01] backdrop-blur-sm p-1 transition-all duration-700 ease-out scroll-animate"
               style={{
                 opacity: Math.max(0, Math.min(1, (tabsProgress - 0.7) * 3)),
-                transform: `translateY(${(1 - Math.max(0, Math.min(1, (tabsProgress - 0.7) * 3))) * 40}px)`
+                transform: `translateY(${Math.max(0, Math.min(1, (tabsProgress - 0.7) * 3)) >= 0.99 ? 0 : (1 - Math.max(0, Math.min(1, (tabsProgress - 0.7) * 3))) * 40}px)`
               }}
             >
               <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-white/15 rounded-xl opacity-40 group-hover:opacity-60 transition-opacity duration-300"></div>
@@ -426,7 +426,7 @@ const Index = () => {
                 className="group relative rounded-xl overflow-hidden border border-white/25 shadow-2xl bg-gradient-to-br from-white/[0.01] via-black/[0.4] to-white/[0.01] backdrop-blur-sm p-1 transition-all duration-700 ease-out scroll-animate"
                 style={{
                   opacity: Math.min(1, stepsProgress * 3),
-                  transform: `translateY(${(1 - Math.min(1, stepsProgress * 3)) * 40}px)`
+                  transform: `translateY(${Math.min(1, stepsProgress * 3) >= 0.99 ? 0 : (1 - Math.min(1, stepsProgress * 3)) * 40}px)`
                 }}
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-white/15 rounded-xl opacity-40 group-hover:opacity-60 transition-opacity duration-300"></div>
@@ -446,7 +446,7 @@ const Index = () => {
                 className="group relative rounded-xl overflow-hidden border border-white/25 shadow-2xl bg-gradient-to-br from-white/[0.01] via-black/[0.4] to-white/[0.01] backdrop-blur-sm p-1 transition-all duration-700 ease-out scroll-animate"
                 style={{
                   opacity: Math.max(0, Math.min(1, (stepsProgress - 0.35) * 3)),
-                  transform: `translateY(${(1 - Math.max(0, Math.min(1, (stepsProgress - 0.35) * 3))) * 40}px)`
+                  transform: `translateY(${Math.max(0, Math.min(1, (stepsProgress - 0.35) * 3)) >= 0.99 ? 0 : (1 - Math.max(0, Math.min(1, (stepsProgress - 0.35) * 3))) * 40}px)`
                 }}
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-white/15 rounded-xl opacity-40 group-hover:opacity-60 transition-opacity duration-300"></div>
@@ -466,7 +466,7 @@ const Index = () => {
                 className="group relative rounded-xl overflow-hidden border border-white/25 shadow-2xl bg-gradient-to-br from-white/[0.01] via-black/[0.4] to-white/[0.01] backdrop-blur-sm p-1 transition-all duration-700 ease-out scroll-animate"
                 style={{
                   opacity: Math.max(0, Math.min(1, (stepsProgress - 0.7) * 3)),
-                  transform: `translateY(${(1 - Math.max(0, Math.min(1, (stepsProgress - 0.7) * 3))) * 40}px)`
+                  transform: `translateY(${Math.max(0, Math.min(1, (stepsProgress - 0.7) * 3)) >= 0.99 ? 0 : (1 - Math.max(0, Math.min(1, (stepsProgress - 0.7) * 3))) * 40}px)`
                 }}
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-white/15 rounded-xl opacity-40 group-hover:opacity-60 transition-opacity duration-300"></div>
@@ -916,7 +916,7 @@ const Index = () => {
                 className="group relative rounded-xl overflow-hidden border border-white/25 shadow-2xl bg-gradient-to-br from-white/[0.01] via-black/[0.4] to-white/[0.01] backdrop-blur-sm p-1 transition-all duration-700 ease-out scroll-animate"
                 style={{
                   opacity: Math.min(1, conceptCardsProgress * 3),
-                  transform: `translateY(${(1 - Math.min(1, conceptCardsProgress * 3)) * 40}px)`
+                  transform: `translateY(${Math.min(1, conceptCardsProgress * 3) >= 0.99 ? 0 : (1 - Math.min(1, conceptCardsProgress * 3)) * 40}px)`
                 }}
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-white/15 rounded-xl opacity-40 group-hover:opacity-60 transition-opacity duration-300"></div>
@@ -940,7 +940,7 @@ const Index = () => {
                 className="group relative rounded-xl overflow-hidden border border-white/25 shadow-2xl bg-gradient-to-br from-white/[0.01] via-black/[0.4] to-white/[0.01] backdrop-blur-sm p-1 transition-all duration-700 ease-out scroll-animate"
                 style={{
                   opacity: Math.max(0, Math.min(1, (conceptCardsProgress - 0.35) * 3)),
-                  transform: `translateY(${(1 - Math.max(0, Math.min(1, (conceptCardsProgress - 0.35) * 3))) * 40}px)`
+                  transform: `translateY(${Math.max(0, Math.min(1, (conceptCardsProgress - 0.35) * 3)) >= 0.99 ? 0 : (1 - Math.max(0, Math.min(1, (conceptCardsProgress - 0.35) * 3))) * 40}px)`
                 }}
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-white/15 rounded-xl opacity-40 group-hover:opacity-60 transition-opacity duration-300"></div>
@@ -966,7 +966,7 @@ const Index = () => {
                 className="group relative rounded-xl overflow-hidden border border-white/25 shadow-2xl bg-gradient-to-br from-white/[0.01] via-black/[0.4] to-white/[0.01] backdrop-blur-sm p-1 transition-all duration-700 ease-out scroll-animate"
                 style={{
                   opacity: Math.max(0, Math.min(1, (conceptCardsProgress - 0.7) * 3)),
-                  transform: `translateY(${(1 - Math.max(0, Math.min(1, (conceptCardsProgress - 0.7) * 3))) * 40}px)`
+                  transform: `translateY(${Math.max(0, Math.min(1, (conceptCardsProgress - 0.7) * 3)) >= 0.99 ? 0 : (1 - Math.max(0, Math.min(1, (conceptCardsProgress - 0.7) * 3))) * 40}px)`
                 }}
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-white/15 rounded-xl opacity-40 group-hover:opacity-60 transition-opacity duration-300"></div>
