@@ -590,12 +590,13 @@ ${baseContext}
 
 🎯 ABSOLUTE CRITICAL REQUIREMENTS - THIS IS JUMPINAI'S CORE MISSION:
 1. This is an AI IMPLEMENTATION PLAN - focus on how they'll use AI to achieve their goals
-2. ONLY mention AI tools from November 2025: Claude (Sonnet 4), ChatGPT (GPT-5), Gemini (2.0 Flash), Grok, Cursor, Lovable, Midjourney (v7), Runway (Gen-4), Veo, Make.com, Zapier AI, Perplexity, NotebookLM, etc.
-3. NO old-school recommendations (NO Khan Academy, NO Coursera, NO generic courses)
-4. NO non-AI tools unless absolutely necessary
-5. Every recommendation must be AI-first: How will AI help them achieve this goal?
-6. This is about LEARNING AI BY USING IT to solve their actual problems
-7. Make them feel that AI adaptation is the key to their success
+2. ONLY mention AI tools from November 2025: Claude, ChatGPT, Gemini, Grok, Cursor, Lovable, Midjourney, Runway, Veo, Make.com, Zapier AI, Perplexity, NotebookLM, etc.
+3. NO VERSION NUMBERS: Use only base tool names (e.g., "ChatGPT" not "GPT-5", "Gemini" not "Gemini 2.0", "Midjourney" not "Midjourney v7"). However, DO mention specialized variants when relevant (e.g., "Claude Code" for coding, "Grok Imagine" for image generation, "Lovable" for website creation).
+4. NO old-school recommendations (NO Khan Academy, NO Coursera, NO generic courses)
+5. NO non-AI tools unless absolutely necessary
+6. Every recommendation must be AI-first: How will AI help them achieve this goal?
+7. This is about LEARNING AI BY USING IT to solve their actual problems
+8. Make them feel that AI adaptation is the key to their success
 
 DETAILED CONTENT REQUIREMENTS:
 1. Provide DETAILED, SPECIFIC content - NO generic placeholders
@@ -656,35 +657,37 @@ ${overviewContent}
    - Focus on HOW to use AI tools to achieve their goals
 
 2. **LATEST AI TOOLS ONLY** (November 2025):
-   - AI Writing/Reasoning: Claude (Sonnet 4), ChatGPT (GPT-5), Gemini (2.0 Flash), Grok
+   - AI Writing/Reasoning: Claude, ChatGPT, Gemini, Grok, Perplexity
    - AI Code: Cursor, Lovable, Replit, GitHub Copilot, Bolt, V0
-   - AI Image: Midjourney (v7), DALL-E 3, Flux, Stable Diffusion 3
-   - AI Video: Runway (Gen-4), Veo, Invideo AI, Sora, Kling AI
+   - AI Image: Midjourney, DALL-E, Flux, Stable Diffusion
+   - AI Video: Runway, Veo, Invideo AI, Sora, Kling AI
    - AI Audio: ElevenLabs, Suno, Udio
-   - AI Automation: Make.com, Zapier (with AI), n8n
-   - AI Research: Perplexity, NotebookLM, Claude (with search)
+   - AI Automation: Make.com, Zapier AI, n8n
+   - AI Research: Perplexity, NotebookLM, Claude
    - AI Design: Figma AI, Uizard, Galileo AI, Canva AI
    - Specialized: Harvey AI, Jasper, Copy.ai, Descript, Synthesia
+   
+3. **NO VERSION NUMBERS**: Use only base tool names (e.g., "ChatGPT" not "GPT-5", "Gemini" not "Gemini 2.0", "Grok" not "Grok 2", "Midjourney" not "Midjourney v7", "Runway" not "Runway Gen-4"). However, DO mention specialized variants when relevant (e.g., "Claude Code" for coding, "Grok Imagine" for image generation, "GitHub Copilot" for development, "Lovable" for website creation).
 
-3. **STEP STRUCTURE - EACH STEP MUST**:
+4. **STEP STRUCTURE - EACH STEP MUST**:
    - Have ONE clear strategic action/idea centered around AI tool usage
    - Explain WHICH specific AI tool(s) to use for this goal
    - Explain HOW to use the AI tool for this specific purpose
    - Be practical and immediately actionable with AI
    - NO mixing of old-school methods with AI - pure AI implementation only
 
-4. **WHAT THIS IS**:
+5. **WHAT THIS IS**:
    - An AI IMPLEMENTATION plan for achieving their goals through AI
    - A hands-on guide to learning AI by USING it on their real problems
    - A strategic roadmap for AI adaptation and mastery
 
-5. **WHAT THIS IS NOT**:
+6. **WHAT THIS IS NOT**:
    - Generic business advice or traditional methods
    - Old-school course recommendations (NO Coursera, NO Khan Academy)
    - Non-AI tool suggestions (NO WordPress without AI, NO generic email marketing)
    - Abstract theory without AI tool usage
 
-6. **TOOL ALIGNMENT**:
+7. **TOOL ALIGNMENT**:
    - Steps 1-3 in Phase 1 connect to Tool Combos #1-3 (foundation AI tools)
    - Steps 1-3 in Phase 2 connect to Tool Combos #4-6 (growth AI tools)
    - Steps 1-3 in Phase 3 connect to Tool Combos #7-9 (mastery AI tools)
@@ -921,7 +924,7 @@ CRITICAL ANALYSIS & INFERENCE:
 6. MUST use at least 6 DIFFERENT AI tools across the 9 combos
 7. Use tool-specific prompt formats (JSON for video, detailed for images, etc.)
 8. Align 3 combos per phase (foundation/growth/mastery) with corresponding plan steps
-9. CRITICAL: Use tool names WITHOUT version numbers (e.g., "ChatGPT" not "ChatGPT-5", "Grok" not "Grok 4", "Gemini" not "Gemini 3", "Midjourney" not "Midjourney v7")
+9. CRITICAL: Use tool names WITHOUT version numbers (e.g., "ChatGPT" not "ChatGPT-5", "Grok" not "Grok 2", "Gemini" not "Gemini 2.0" or "Gemini 3", "Midjourney" not "Midjourney v7", "Runway" not "Runway Gen-4"). However, DO mention specialized variants when relevant (e.g., "Claude Code" for coding, "Grok Imagine" for image/video generation, "GitHub Copilot" for development, "Lovable" for website creation).
 10. Each tool must be a real, current, powerful AI tool available NOW in November 2025
 
 ALIGNMENT VERIFICATION:
