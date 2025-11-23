@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Sparkles, GitBranch } from 'lucide-react';
+import { Sparkles, GitBranch, Zap } from 'lucide-react';
 import Navigation from "@/components/Navigation";
 import Hero from "@/components/Hero";
 import Features from "@/components/Features";
@@ -771,30 +771,50 @@ const Index = () => {
               <div className="mt-4 sm:mt-6 p-4 sm:p-5 rounded-xl glass bg-muted/30 border border-primary/20 backdrop-blur-sm shadow-sm">
                 <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4">
                   <div className="flex-shrink-0 w-10 h-10 rounded-lg backdrop-blur-xl bg-primary/10 ring-1 ring-primary/30 flex items-center justify-center">
-                    <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                    </svg>
+                    <Zap className="w-5 h-5 text-primary" />
                   </div>
                   <div className="flex-1 w-full">
                     <h4 className="font-bold mb-2">
                       <span className="text-sm sm:text-base">On-Demand Tools & Prompts</span>
                     </h4>
                     <p className="text-xs sm:text-sm text-muted-foreground mb-3">
-                      Need implementation tools for a specific step? Click <strong className="font-semibold text-foreground">Equip</strong> on any step at any clarification level to instantly generate a tailored tool-prompt combination:
+                      Need implementation tools for a specific step? Hover over any step at any clarification level and click the <strong className="font-semibold text-foreground">Equip</strong> button to instantly generate a tailored tool-prompt combination:
                     </p>
-                    <div className="grid sm:grid-cols-2 gap-3">
+                    
+                    {/* Equip Button Demo */}
+                    <div className="glass bg-muted/30 p-3 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm mb-3">
+                      <div className="flex items-center gap-2 mb-2">
+                        {/* Equip Button - Exact replica matching Clarify and Reroute style */}
+                        <div className="relative group/equip">
+                          <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/40 via-accent/30 to-primary/40 rounded-[2rem] blur-md opacity-40 transition duration-500"></div>
+                          <div className="relative flex items-center gap-2 px-5 py-2.5 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2rem] border border-primary/40 transition-all duration-300 overflow-hidden shadow-lg shadow-primary/10 cursor-default">
+                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full transition-transform duration-1000"></div>
+                            <Zap className="relative w-3.5 h-3.5 text-primary" />
+                            <span className="relative text-sm font-bold text-foreground whitespace-nowrap">Equip</span>
+                          </div>
+                        </div>
+                      </div>
+                      <p className="text-xs sm:text-sm text-muted-foreground">
+                        Generates a <strong className="font-semibold text-foreground">custom tool-prompt combination</strong> designed specifically for this step's context and requirements
+                      </p>
+                    </div>
+
+                    <div className="grid sm:grid-cols-2 gap-3 mb-3">
                       <div className="glass bg-muted/30 p-3 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
                         <p className="text-xs font-bold text-primary mb-1.5">Curated Tool Selection</p>
-                        <p className="text-xs text-muted-foreground">Get a main tool recommendation plus 2 alternatives perfectly aligned to your step's requirements and context.</p>
+                        <p className="text-xs text-muted-foreground">Get a main tool recommendation plus 2 alternatives perfectly aligned to your step's requirements, budget, and technical level.</p>
                       </div>
                       <div className="glass bg-muted/30 p-3 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
                         <p className="text-xs font-bold text-primary mb-1.5">Ready-to-Use Prompts</p>
-                        <p className="text-xs text-muted-foreground">Receive expertly crafted prompts designed specifically for your step—copy, paste, and execute immediately.</p>
+                        <p className="text-xs text-muted-foreground">Receive expertly crafted prompts designed specifically for your step—copy, paste, and execute immediately with any AI tool.</p>
                       </div>
                     </div>
-                    <p className="text-xs text-muted-foreground mt-3 italic">
-                      Each equipped combo is automatically saved in your Tools & Prompts tab and linked directly to its originating step. Build your custom implementation toolkit as you progress.
-                    </p>
+
+                    <div className="glass bg-muted/30 p-3 rounded-lg border border-primary/15 backdrop-blur-sm">
+                      <p className="text-xs text-muted-foreground">
+                        <strong className="font-semibold text-foreground">Smart Organization:</strong> Each equipped combo is automatically saved in your Tools & Prompts tab with a unique number (e.g., "Combo #10") and linked directly to its originating step. Build your custom implementation toolkit as you progress through your plan, with every tool and prompt exactly where you need it.
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
