@@ -726,89 +726,104 @@ const Index = () => {
               </div>
 
               {/* Branching Lines Animation */}
-              <div className="relative mb-8 h-24 sm:h-32">
-                <svg className="absolute inset-0 w-full h-full" viewBox="0 0 800 120" preserveAspectRatio="xMidYMid meet">
+              <div className="relative mb-8 h-28 sm:h-32">
+                <svg className="absolute inset-0 w-full h-full" viewBox="0 0 900 120" preserveAspectRatio="xMidYMid meet">
                   <defs>
                     <linearGradient id="lineGradient" x1="0%" y1="0%" x2="0%" y2="100%">
                       <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.8" />
-                      <stop offset="100%" stopColor="hsl(var(--accent))" stopOpacity="0.6" />
+                      <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0.4" />
                     </linearGradient>
                   </defs>
                   
-                  {/* Main trunk line */}
-                  <path
-                    d="M 400 0 L 400 40"
+                  {/* Main vertical trunk line */}
+                  <line
+                    x1="450"
+                    y1="0"
+                    x2="450"
+                    y2="50"
                     stroke="url(#lineGradient)"
-                    strokeWidth="2"
-                    fill="none"
-                    strokeLinecap="round"
-                    className="animate-[drawLine_1s_ease-out_forwards]"
-                    style={{
-                      strokeDasharray: 40,
-                      strokeDashoffset: 40,
-                      animation: 'drawLine 0.8s ease-out forwards'
-                    }}
-                  />
-                  
-                  {/* Left branch to Route A */}
-                  <path
-                    d="M 400 40 Q 400 60, 133 100"
-                    stroke="url(#lineGradient)"
-                    strokeWidth="2"
-                    fill="none"
+                    strokeWidth="2.5"
                     strokeLinecap="round"
                     style={{
-                      strokeDasharray: 280,
-                      strokeDashoffset: 280,
-                      animation: 'drawLine 0.8s ease-out 0.4s forwards'
+                      strokeDasharray: 50,
+                      strokeDashoffset: 50,
+                      animation: 'drawLine 0.6s ease-out forwards'
                     }}
                   />
                   
-                  {/* Center branch to Route B */}
-                  <path
-                    d="M 400 40 L 400 100"
+                  {/* Horizontal connector */}
+                  <line
+                    x1="150"
+                    y1="50"
+                    x2="750"
+                    y2="50"
                     stroke="url(#lineGradient)"
-                    strokeWidth="2"
-                    fill="none"
+                    strokeWidth="2.5"
                     strokeLinecap="round"
                     style={{
-                      strokeDasharray: 60,
-                      strokeDashoffset: 60,
-                      animation: 'drawLine 0.8s ease-out 0.4s forwards'
+                      strokeDasharray: 600,
+                      strokeDashoffset: 600,
+                      animation: 'drawLine 0.8s ease-out 0.5s forwards'
                     }}
                   />
                   
-                  {/* Right branch to Route C */}
-                  <path
-                    d="M 400 40 Q 400 60, 667 100"
+                  {/* Left vertical line to Route A */}
+                  <line
+                    x1="150"
+                    y1="50"
+                    x2="150"
+                    y2="120"
                     stroke="url(#lineGradient)"
-                    strokeWidth="2"
-                    fill="none"
+                    strokeWidth="2.5"
                     strokeLinecap="round"
                     style={{
-                      strokeDasharray: 280,
-                      strokeDashoffset: 280,
-                      animation: 'drawLine 0.8s ease-out 0.4s forwards'
+                      strokeDasharray: 70,
+                      strokeDashoffset: 70,
+                      animation: 'drawLine 0.6s ease-out 1.1s forwards'
                     }}
                   />
                   
-                  {/* Branch point glow */}
-                  <circle
-                    cx="400"
-                    cy="40"
-                    r="4"
-                    fill="hsl(var(--primary))"
-                    className="animate-pulse"
+                  {/* Center vertical line to Route B */}
+                  <line
+                    x1="450"
+                    y1="50"
+                    x2="450"
+                    y2="120"
+                    stroke="url(#lineGradient)"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
                     style={{
-                      opacity: 0,
-                      animation: 'fadeIn 0.4s ease-out 0.8s forwards, pulse 2s ease-in-out 1.2s infinite'
+                      strokeDasharray: 70,
+                      strokeDashoffset: 70,
+                      animation: 'drawLine 0.6s ease-out 1.1s forwards'
                     }}
                   />
                   
-                  {/* End point circles */}
-                  <circle cx="133" cy="100" r="3" fill="hsl(var(--primary))" style={{ opacity: 0, animation: 'fadeIn 0.4s ease-out 1.2s forwards' }} />
-                  <circle cx="400" cy="100" r="3" fill="hsl(var(--primary))" style={{ opacity: 0, animation: 'fadeIn 0.4s ease-out 1.2s forwards' }} />
-                  <circle cx="667" cy="100" r="3" fill="hsl(var(--primary))" style={{ opacity: 0, animation: 'fadeIn 0.4s ease-out 1.2s forwards' }} />
+                  {/* Right vertical line to Route C */}
+                  <line
+                    x1="750"
+                    y1="50"
+                    x2="750"
+                    y2="120"
+                    stroke="url(#lineGradient)"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    style={{
+                      strokeDasharray: 70,
+                      strokeDashoffset: 70,
+                      animation: 'drawLine 0.6s ease-out 1.1s forwards'
+                    }}
+                  />
+                  
+                  {/* Junction points with glow */}
+                  <circle cx="450" cy="50" r="4" fill="hsl(var(--primary))" className="drop-shadow-lg" style={{ opacity: 0, animation: 'fadeIn 0.3s ease-out 1.2s forwards' }} />
+                  <circle cx="150" cy="50" r="3.5" fill="hsl(var(--primary))" style={{ opacity: 0, animation: 'fadeIn 0.3s ease-out 1.2s forwards' }} />
+                  <circle cx="750" cy="50" r="3.5" fill="hsl(var(--primary))" style={{ opacity: 0, animation: 'fadeIn 0.3s ease-out 1.2s forwards' }} />
+                  
+                  {/* End point indicators */}
+                  <circle cx="150" cy="120" r="3" fill="hsl(var(--primary))" style={{ opacity: 0, animation: 'fadeIn 0.3s ease-out 1.6s forwards' }} />
+                  <circle cx="450" cy="120" r="3" fill="hsl(var(--primary))" style={{ opacity: 0, animation: 'fadeIn 0.3s ease-out 1.6s forwards' }} />
+                  <circle cx="750" cy="120" r="3" fill="hsl(var(--primary))" style={{ opacity: 0, animation: 'fadeIn 0.3s ease-out 1.6s forwards' }} />
                 </svg>
               </div>
 
