@@ -63,6 +63,49 @@ export default function ViewJump() {
       setJump(jumpData);
 
       // Fetch tool prompts for this jump
+      await refreshToolPrompts(jumpData);
+    } catch (error) {
+      console.error('ViewJump: Error loading jump data:', error);
+      toast.error('Failed to load jump');
+      // Set a minimal result on error to prevent crashes
+      if (jump) {
+        setProgressiveResult({
+          title: jump?.title || 'Error Loading Jump',
+          fullTitle: jump?.title || 'Error Loading Jump',
+          jumpNumber: null,
+          jumpName: jump?.title || 'Error Loading Jump',
+          full_content: jump?.full_content || 'Failed to load jump content.',
+          structured_plan: null,
+          comprehensive_plan: null,
+          components: {
+            toolPrompts: [],
+            workflows: [],
+            blueprints: [],
+            strategies: []
+          },
+          processing_status: {
+            isComplete: true,
+            stage: 'Error',
+            currentTask: 'Failed to load',
+            progress: 0
+          },
+          jumpId: jump?.id || null
+        });
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const refreshToolPrompts = async (jumpData?: UserJump) => {
+    if (!jumpId) return;
+    
+    const currentJump = jumpData || jump;
+    if (!currentJump) return;
+
+    try {
+      console.log('🔄 Refreshing tool prompts for jump:', jumpId);
+      
       const toolPromptsResult = await supabase.from('user_tool_prompts').select('*').eq('jump_id', jumpId);
 
       console.log('ViewJump: Components fetched:', {
@@ -116,21 +159,21 @@ export default function ViewJump() {
       console.log('✅ Transformed', transformedDbToolPrompts.length, 'tool prompts');
 
       // For backward compatibility, also extract tools from comprehensive_plan if no tools in database
-      const fallbackToolPrompts = transformedDbToolPrompts.length ? [] : extractToolsFromJump(jumpData);
+      const fallbackToolPrompts = transformedDbToolPrompts.length ? [] : extractToolsFromJump(currentJump);
       const allToolPrompts = [...transformedDbToolPrompts, ...fallbackToolPrompts];
 
       // Create structured_plan from comprehensive_plan if it exists
-      const structuredPlan = createStructuredPlan(jumpData);
+      const structuredPlan = createStructuredPlan(currentJump);
 
       // Transform the saved jump data into ProgressiveResult format
       const result: ProgressiveResult = {
-        title: jumpData.title,
-        fullTitle: jumpData.title,
-        jumpNumber: extractJumpNumber(jumpData.title),
-        jumpName: jumpData.title,
-        full_content: jumpData.full_content,
+        title: currentJump.title,
+        fullTitle: currentJump.title,
+        jumpNumber: extractJumpNumber(currentJump.title),
+        jumpName: currentJump.title,
+        full_content: currentJump.full_content,
         structured_plan: structuredPlan,
-        comprehensive_plan: jumpData.comprehensive_plan,
+        comprehensive_plan: currentJump.comprehensive_plan,
         components: {
           toolPrompts: allToolPrompts,
           workflows: [],
@@ -143,41 +186,13 @@ export default function ViewJump() {
           currentTask: 'Generated',
           progress: 100
         },
-        jumpId: jumpData.id
+        jumpId: currentJump.id
       };
 
       console.log('ViewJump: Transformed result:', result);
       setProgressiveResult(result);
     } catch (error) {
-      console.error('ViewJump: Error loading jump data:', error);
-      toast.error('Failed to load jump');
-      // Set a minimal result on error to prevent crashes
-      if (jump) {
-        setProgressiveResult({
-          title: jump?.title || 'Error Loading Jump',
-          fullTitle: jump?.title || 'Error Loading Jump',
-          jumpNumber: null,
-          jumpName: jump?.title || 'Error Loading Jump',
-          full_content: jump?.full_content || 'Failed to load jump content.',
-          structured_plan: null,
-          comprehensive_plan: null,
-          components: {
-            toolPrompts: [],
-            workflows: [],
-            blueprints: [],
-            strategies: []
-          },
-          processing_status: {
-            isComplete: true,
-            stage: 'Error',
-            currentTask: 'Failed to load',
-            progress: 0
-          },
-          jumpId: jump?.id || null
-        });
-      }
-    } finally {
-      setLoading(false);
+      console.error('❌ Error refreshing tool prompts:', error);
     }
   };
 
@@ -418,6 +433,7 @@ export default function ViewJump() {
           <ViewJumpDisplay 
             result={progressiveResult} 
             generationTimer={0}
+            onToolPromptGenerated={refreshToolPrompts}
           />
         ) : (
           <div className="flex items-center justify-center py-12 text-muted-foreground">
