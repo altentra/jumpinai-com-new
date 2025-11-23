@@ -212,35 +212,35 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
   
   // Subscription validation helper
   const canClarifyAtLevel = (currentLevel: number): boolean => {
-    // Level 0: clarifying a step to get level 1 sub-steps
+    // Level 0: clarifying a step to get level 1 sub-steps (main steps only)
     // Level 1: clarifying a sub-step to get level 2 sub-steps
     // Level 2: clarifying a level 2 sub-step to get level 3 sub-steps
     // Level 3: clarifying a level 3 sub-step to get level 4 sub-steps
     
-    // Free/guest users: unlimited clarification
+    // Guest/Free users: can only clarify main steps (level 0)
     if (!subscription || !subscription.subscribed) {
-      return true;
+      return currentLevel === 0;
     }
     
     const tier = subscription.subscription_tier;
     
-    // Starter plan: can clarify up to level 1 (2 levels deep total)
+    // Starter plan ($9/month): can clarify up to level 1 (clarify main steps to get sub-steps)
     if (tier === 'Starter') {
       return currentLevel <= 1;
     }
     
-    // Pro plan: can clarify up to level 2 (3 levels deep total)
+    // Pro plan ($25/month): can clarify up to level 2 (3 levels deep total)
     if (tier === 'JumpinAI Pro' || tier === 'Pro') {
       return currentLevel <= 2;
     }
     
-    // Growth plan: can clarify up to level 3 (4 levels deep total)
+    // Growth plan ($49/month): can clarify up to level 3 (4 levels deep total)
     if (tier === 'Growth Plan' || tier === 'Growth') {
       return currentLevel <= 3;
     }
     
-    // Default: allow (shouldn't reach here but just in case)
-    return true;
+    // Default: no access
+    return false;
   };
   
   if (!planContent.trim() && !structuredPlan) {
@@ -332,7 +332,8 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
   const handleClarifyStep = async (phaseIndex: number, stepIndex: number) => {
     // Check subscription level (level 0: generating first sub-steps)
     if (!canClarifyAtLevel(0)) {
-      toast.error('Your current plan does not support this level of clarification. Please upgrade to access deeper clarifications.');
+      // This shouldn't normally happen as level 0 is allowed for all users
+      toast.error('Unable to clarify. Please try again.');
       return;
     }
     
@@ -631,7 +632,11 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
   const handleClarifySubStep = async (phaseIndex: number, stepIndex: number, subStepIndex: number) => {
     // Check subscription level (level 1: generating level 2 sub-steps)
     if (!canClarifyAtLevel(1)) {
-      toast.error('Your current plan does not support this level of clarification. Please upgrade to Pro or Growth plan to access deeper clarifications.');
+      if (!subscription || !subscription.subscribed) {
+        toast.error('To clarify to Level 2, subscribe to Starter Plan ($9/month) or higher.');
+      } else {
+        toast.error('To clarify to Level 2, upgrade to Starter Plan ($9/month) or higher.');
+      }
       return;
     }
     if (!jumpId) {
@@ -813,7 +818,13 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
   const handleClarifyLevel2SubStep = async (phaseIndex: number, stepIndex: number, subStepIndex: number, level2SubStepIndex: number) => {
     // Check subscription level (level 2: generating level 3 sub-steps)
     if (!canClarifyAtLevel(2)) {
-      toast.error('Your current plan does not support this level of clarification. Please upgrade to Growth plan to access the deepest clarifications.');
+      if (!subscription || !subscription.subscribed) {
+        toast.error('To clarify to Level 3, subscribe to Pro Plan ($25/month) or higher.');
+      } else if (subscription.subscription_tier === 'Starter') {
+        toast.error('To clarify to Level 3, upgrade to Pro Plan ($25/month) or higher.');
+      } else {
+        toast.error('To clarify to Level 3, upgrade to Pro Plan ($25/month) or higher.');
+      }
       return;
     }
     if (!jumpId) {
@@ -985,7 +996,15 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
   const handleClarifyLevel3SubStep = async (phaseIndex: number, stepIndex: number, subStepIndex: number, level2SubStepIndex: number, level3SubStepIndex: number) => {
     // Check subscription level (level 3: generating level 4 sub-steps)
     if (!canClarifyAtLevel(3)) {
-      toast.error('Your current plan does not support this level of clarification. Please upgrade to Growth plan to access the deepest clarifications.');
+      if (!subscription || !subscription.subscribed) {
+        toast.error('To clarify to Level 4, subscribe to Growth Plan ($49/month).');
+      } else if (subscription.subscription_tier === 'Starter') {
+        toast.error('To clarify to Level 4, upgrade to Growth Plan ($49/month).');
+      } else if (subscription.subscription_tier === 'JumpinAI Pro' || subscription.subscription_tier === 'Pro') {
+        toast.error('To clarify to Level 4, upgrade to Growth Plan ($49/month).');
+      } else {
+        toast.error('To clarify to Level 4, upgrade to Growth Plan ($49/month).');
+      }
       return;
     }
     if (!jumpId) {
