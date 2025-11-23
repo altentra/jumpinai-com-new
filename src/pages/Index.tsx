@@ -872,40 +872,40 @@ const Index = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch mb-8">
               {/* Card 1 */}
               <div className="p-6 rounded-xl bg-background/95 border border-border/50 h-full flex flex-col shadow-sm">
-                <div className="flex items-start gap-4 mb-4">
-                  <div className="w-8 h-8 backdrop-blur-xl bg-primary/10 ring-1 ring-primary/30 rounded-lg flex items-center justify-center flex-shrink-0">
+                <div className="flex justify-center mb-4">
+                  <div className="w-8 h-8 backdrop-blur-xl bg-primary/10 ring-1 ring-primary/30 rounded-lg flex items-center justify-center">
                     <ArrowRight className="w-4 h-4 text-primary" />
                   </div>
                 </div>
-                <p className="text-sm text-muted-foreground flex-1 leading-relaxed">
+                <p className="text-sm text-muted-foreground flex-1 leading-relaxed text-justify">
                   When you jump, you leave hesitation behind. You cross the threshold from thinking to doing, from planning to acting. There's no pause button mid-air—only the certainty that you <strong className="text-foreground">will land somewhere</strong>.
                 </p>
               </div>
 
               {/* Card 2 */}
               <div className="p-6 rounded-xl bg-background/95 border border-border/50 h-full flex flex-col shadow-sm">
-                <div className="flex items-start gap-4 mb-4">
-                  <div className="w-8 h-8 backdrop-blur-xl bg-primary/10 ring-1 ring-primary/30 rounded-lg flex items-center justify-center flex-shrink-0">
+                <div className="flex justify-center mb-4">
+                  <div className="w-8 h-8 backdrop-blur-xl bg-primary/10 ring-1 ring-primary/30 rounded-lg flex items-center justify-center">
                     <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                     </svg>
                   </div>
                 </div>
-                <p className="text-sm text-muted-foreground flex-1 leading-relaxed">
+                <p className="text-sm text-muted-foreground flex-1 leading-relaxed text-justify">
                   That's the energy we channel. <strong className="text-foreground">Jump into AI</strong> isn't about casual exploration—it's about decisive action with a clear landing point. Your personalized plan ensures you don't leap blindly. You jump with <strong className="text-foreground">direction, precision, and purpose</strong>.
                 </p>
               </div>
 
               {/* Card 3 */}
               <div className="p-6 rounded-xl bg-background/95 border border-border/50 h-full flex flex-col shadow-sm">
-                <div className="flex items-start gap-4 mb-4">
-                  <div className="w-8 h-8 backdrop-blur-xl bg-primary/10 ring-1 ring-primary/30 rounded-lg flex items-center justify-center flex-shrink-0">
+                <div className="flex justify-center mb-4">
+                  <div className="w-8 h-8 backdrop-blur-xl bg-primary/10 ring-1 ring-primary/30 rounded-lg flex items-center justify-center">
                     <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                   </div>
                 </div>
-                <p className="text-sm text-muted-foreground flex-1 leading-relaxed">
+                <p className="text-sm text-muted-foreground flex-1 leading-relaxed text-justify">
                   Every Jump you create is your commitment to transformation. You're not testing the waters—you're <strong className="text-foreground">diving in with a plan</strong>. And we make sure you land exactly where you intended.
                 </p>
               </div>
