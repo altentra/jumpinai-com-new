@@ -766,6 +766,38 @@ const Index = () => {
                   </div>
                 </div>
               </div>
+
+              {/* Equip Feature */}
+              <div className="mt-4 sm:mt-6 p-4 sm:p-5 rounded-xl glass bg-muted/30 border border-primary/20 backdrop-blur-sm shadow-sm">
+                <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4">
+                  <div className="flex-shrink-0 w-10 h-10 rounded-lg backdrop-blur-xl bg-primary/10 ring-1 ring-primary/30 flex items-center justify-center">
+                    <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                  </div>
+                  <div className="flex-1 w-full">
+                    <h4 className="font-bold mb-2">
+                      <span className="text-sm sm:text-base">On-Demand Tools & Prompts</span>
+                    </h4>
+                    <p className="text-xs sm:text-sm text-muted-foreground mb-3">
+                      Need implementation tools for a specific step? Click <strong className="font-semibold text-foreground">Equip</strong> on any step at any clarification level to instantly generate a tailored tool-prompt combination:
+                    </p>
+                    <div className="grid sm:grid-cols-2 gap-3">
+                      <div className="glass bg-muted/30 p-3 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
+                        <p className="text-xs font-bold text-primary mb-1.5">Curated Tool Selection</p>
+                        <p className="text-xs text-muted-foreground">Get a main tool recommendation plus 2 alternatives perfectly aligned to your step's requirements and context.</p>
+                      </div>
+                      <div className="glass bg-muted/30 p-3 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
+                        <p className="text-xs font-bold text-primary mb-1.5">Ready-to-Use Prompts</p>
+                        <p className="text-xs text-muted-foreground">Receive expertly crafted prompts designed specifically for your step—copy, paste, and execute immediately.</p>
+                      </div>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-3 italic">
+                      Each equipped combo is automatically saved in your Tools & Prompts tab and linked directly to its originating step. Build your custom implementation toolkit as you progress.
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -777,7 +809,7 @@ const Index = () => {
                 <span className="text-xs sm:text-sm font-semibold">Available on Pro & Growth Plans</span>
               </div>
               <span className="text-xs text-muted-foreground hidden sm:inline">|</span>
-              <span className="text-xs sm:text-sm text-muted-foreground hidden sm:inline">Clarify & Reroute at any level</span>
+              <span className="text-xs sm:text-sm text-muted-foreground hidden sm:inline">Clarify, Reroute & Equip at any level</span>
             </div>
           </div>
         </div>
