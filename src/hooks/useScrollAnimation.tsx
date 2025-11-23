@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 
-// Premium easing function with subtle bounce finish
+// Premium easing function for smooth, distinctive end with subtle bounce
 const easeOutBack = (t: number): number => {
   const c1 = 1.70158;
   const c3 = c1 + 1;
-  return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
+  const result = 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
+  // Clamp to prevent overshooting beyond 1
+  return Math.min(1, Math.max(0, result));
 };
 
 export const useScrollAnimation = (options: { threshold?: number; delay?: number } = {}) => {

@@ -201,8 +201,8 @@ const Hero = () => {
                   className="absolute left-[5%] sm:left-[8%] lg:left-[10%] top-0 w-20 sm:w-28 lg:w-36 group transition-all ease-out"
                   style={{
                     transitionDuration: window.innerWidth < 1024 ? '1000ms' : '600ms',
-                    opacity: Math.max(0, Math.min(1, (mockupsProgress - (window.innerWidth < 1024 ? 0.75 : 0.08)) * (window.innerWidth < 1024 ? 2.5 : 3))),
-                    transform: `translateY(${(1 - Math.max(0, Math.min(1, (mockupsProgress - (window.innerWidth < 1024 ? 0.75 : 0.08)) * (window.innerWidth < 1024 ? 2.5 : 3)))) * 40}px)`
+                    opacity: Math.max(0, Math.min(1, (mockupsProgress - (window.innerWidth < 1024 ? 0.35 : 0.08)) * (window.innerWidth < 1024 ? 3 : 3))),
+                    transform: `translateY(${(1 - Math.max(0, Math.min(1, (mockupsProgress - (window.innerWidth < 1024 ? 0.35 : 0.08)) * (window.innerWidth < 1024 ? 3 : 3)))) * 40}px)`
                   }}
                 >
                   <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 transform rotate-[-4deg] hover:rotate-[-2deg] hover:scale-105 transition-all duration-300">
@@ -222,8 +222,8 @@ const Hero = () => {
                   className="absolute left-[27%] sm:left-[29%] lg:left-[30%] top-5 sm:top-8 lg:top-10 w-20 sm:w-28 lg:w-36 group transition-all ease-out"
                   style={{
                     transitionDuration: window.innerWidth < 1024 ? '1000ms' : '600ms',
-                    opacity: Math.max(0, Math.min(1, (mockupsProgress - (window.innerWidth < 1024 ? 1.05 : 0.12)) * (window.innerWidth < 1024 ? 2.5 : 3))),
-                    transform: `translateY(${(1 - Math.max(0, Math.min(1, (mockupsProgress - (window.innerWidth < 1024 ? 1.05 : 0.12)) * (window.innerWidth < 1024 ? 2.5 : 3)))) * 40}px)`
+                    opacity: Math.max(0, Math.min(1, (mockupsProgress - (window.innerWidth < 1024 ? 0.50 : 0.12)) * (window.innerWidth < 1024 ? 3 : 3))),
+                    transform: `translateY(${(1 - Math.max(0, Math.min(1, (mockupsProgress - (window.innerWidth < 1024 ? 0.50 : 0.12)) * (window.innerWidth < 1024 ? 3 : 3)))) * 40}px)`
                   }}
                 >
                   <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 transform rotate-[2deg] hover:rotate-[1deg] hover:scale-105 transition-all duration-300">
@@ -243,8 +243,8 @@ const Hero = () => {
                   className="absolute right-[27%] sm:right-[29%] lg:right-[30%] top-1 sm:top-2 lg:top-3 w-20 sm:w-28 lg:w-36 group transition-all ease-out"
                   style={{
                     transitionDuration: window.innerWidth < 1024 ? '1000ms' : '600ms',
-                    opacity: Math.max(0, Math.min(1, (mockupsProgress - (window.innerWidth < 1024 ? 1.35 : 0.16)) * (window.innerWidth < 1024 ? 2.5 : 3))),
-                    transform: `translateY(${(1 - Math.max(0, Math.min(1, (mockupsProgress - (window.innerWidth < 1024 ? 1.35 : 0.16)) * (window.innerWidth < 1024 ? 2.5 : 3)))) * 40}px)`
+                    opacity: Math.max(0, Math.min(1, (mockupsProgress - (window.innerWidth < 1024 ? 0.65 : 0.16)) * (window.innerWidth < 1024 ? 3 : 3))),
+                    transform: `translateY(${(1 - Math.max(0, Math.min(1, (mockupsProgress - (window.innerWidth < 1024 ? 0.65 : 0.16)) * (window.innerWidth < 1024 ? 3 : 3)))) * 40}px)`
                   }}
                 >
                   <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 transform rotate-[-3deg] hover:rotate-[-1deg] hover:scale-105 transition-all duration-300">
@@ -264,8 +264,8 @@ const Hero = () => {
                   className="absolute right-[5%] sm:right-[8%] lg:right-[10%] top-3 sm:top-4 lg:top-6 w-20 sm:w-28 lg:w-36 group transition-all ease-out"
                   style={{
                     transitionDuration: window.innerWidth < 1024 ? '1000ms' : '600ms',
-                    opacity: Math.max(0, Math.min(1, (mockupsProgress - (window.innerWidth < 1024 ? 1.65 : 0.20)) * (window.innerWidth < 1024 ? 2.5 : 3))),
-                    transform: `translateY(${(1 - Math.max(0, Math.min(1, (mockupsProgress - (window.innerWidth < 1024 ? 1.65 : 0.20)) * (window.innerWidth < 1024 ? 2.5 : 3)))) * 40}px)`
+                    opacity: Math.max(0, Math.min(1, (mockupsProgress - (window.innerWidth < 1024 ? 0.80 : 0.20)) * (window.innerWidth < 1024 ? 3 : 3))),
+                    transform: `translateY(${(1 - Math.max(0, Math.min(1, (mockupsProgress - (window.innerWidth < 1024 ? 0.80 : 0.20)) * (window.innerWidth < 1024 ? 3 : 3)))) * 40}px)`
                   }}
                 >
                   <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 transform rotate-[5deg] hover:rotate-[3deg] hover:scale-105 transition-all duration-300">
