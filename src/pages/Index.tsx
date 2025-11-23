@@ -1169,86 +1169,90 @@ const Index = () => {
             </p>
           </div>
 
-          <div className="max-w-4xl mx-auto">
-            <Accordion type="single" collapsible className="space-y-4">
-              <AccordionItem value="item-1" className="rounded-2xl glass border border-primary/10 hover:border-primary/20 transition-all duration-300 shadow-lg overflow-hidden">
-                <AccordionTrigger className="px-5 sm:px-6 py-4 hover:no-underline group">
-                  <h3 className="text-base font-bold font-display text-left group-hover:text-primary transition-colors">
-                    What exactly is a "Jump" and what do I receive?
-                  </h3>
-                </AccordionTrigger>
-                <AccordionContent className="px-5 sm:px-6 pb-4 pt-0">
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    A Jump is your complete AI transformation blueprint delivered in 3 comprehensive tabs: Overview (executive summary, situation analysis, strategic vision & roadmap), Plan (detailed action steps with multi-level clarification up to 4 levels deep and 3 alternative routes per step), and Tools & Prompts (9 tool-prompt combinations, each with a main tool plus 2 alternatives and ready-to-use prompts with guidance).
-                  </p>
-                </AccordionContent>
-              </AccordionItem>
+          <div className="max-w-6xl mx-auto">
+            <div className="grid md:grid-cols-2 gap-4">
+              <Accordion type="single" collapsible className="space-y-4">
+                <AccordionItem value="item-1" className="rounded-2xl glass border border-primary/10 hover:border-primary/20 transition-all duration-300 shadow-lg overflow-hidden">
+                  <AccordionTrigger className="px-5 sm:px-6 py-4 hover:no-underline group">
+                    <h3 className="text-base font-bold font-display text-left group-hover:text-primary transition-colors">
+                      What exactly is a "Jump" and what do I receive?
+                    </h3>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-5 sm:px-6 pb-4 pt-0">
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      A Jump is your complete AI transformation blueprint delivered in 3 comprehensive tabs: Overview (executive summary, situation analysis, strategic vision & roadmap), Plan (detailed action steps with multi-level clarification up to 4 levels deep and 3 alternative routes per step), and Tools & Prompts (9 tool-prompt combinations, each with a main tool plus 2 alternatives and ready-to-use prompts with guidance).
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
 
-              <AccordionItem value="item-2" className="rounded-2xl glass border border-primary/10 hover:border-primary/20 transition-all duration-300 shadow-lg overflow-hidden">
-                <AccordionTrigger className="px-5 sm:px-6 py-4 hover:no-underline group">
-                  <h3 className="text-base font-bold font-display text-left group-hover:text-primary transition-colors">
-                    How does the multi-level clarification work in the Plan tab?
-                  </h3>
-                </AccordionTrigger>
-                <AccordionContent className="px-5 sm:px-6 pb-4 pt-0">
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    Each step in your action plan can be clarified up to 4 levels deep, breaking down complex tasks into granular, actionable sub-steps. You simply click on any step to reveal deeper layers of detail, ensuring you understand exactly what to do at every stage.
-                  </p>
-                </AccordionContent>
-              </AccordionItem>
+                <AccordionItem value="item-2" className="rounded-2xl glass border border-primary/10 hover:border-primary/20 transition-all duration-300 shadow-lg overflow-hidden">
+                  <AccordionTrigger className="px-5 sm:px-6 py-4 hover:no-underline group">
+                    <h3 className="text-base font-bold font-display text-left group-hover:text-primary transition-colors">
+                      How does the multi-level clarification work in the Plan tab?
+                    </h3>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-5 sm:px-6 pb-4 pt-0">
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      Each step in your action plan can be clarified up to 4 levels deep, breaking down complex tasks into granular, actionable sub-steps. You simply click on any step to reveal deeper layers of detail, ensuring you understand exactly what to do at every stage.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
 
-              <AccordionItem value="item-3" className="rounded-2xl glass border border-primary/10 hover:border-primary/20 transition-all duration-300 shadow-lg overflow-hidden">
-                <AccordionTrigger className="px-5 sm:px-6 py-4 hover:no-underline group">
-                  <h3 className="text-base font-bold font-display text-left group-hover:text-primary transition-colors">
-                    What are alternative routes and why do I need them?
-                  </h3>
-                </AccordionTrigger>
-                <AccordionContent className="px-5 sm:px-6 pb-4 pt-0">
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    Every step in your Plan offers 3 different implementation routes - giving you flexibility to choose the approach that best fits your resources, timeline, and constraints. If one path doesn't work, you have two more proven alternatives ready to go.
-                  </p>
-                </AccordionContent>
-              </AccordionItem>
+                <AccordionItem value="item-3" className="rounded-2xl glass border border-primary/10 hover:border-primary/20 transition-all duration-300 shadow-lg overflow-hidden">
+                  <AccordionTrigger className="px-5 sm:px-6 py-4 hover:no-underline group">
+                    <h3 className="text-base font-bold font-display text-left group-hover:text-primary transition-colors">
+                      What are alternative routes and why do I need them?
+                    </h3>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-5 sm:px-6 pb-4 pt-0">
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      Every step in your Plan offers 3 different implementation routes - giving you flexibility to choose the approach that best fits your resources, timeline, and constraints. If one path doesn't work, you have two more proven alternatives ready to go.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
 
-              <AccordionItem value="item-4" className="rounded-2xl glass border border-primary/10 hover:border-primary/20 transition-all duration-300 shadow-lg overflow-hidden">
-                <AccordionTrigger className="px-5 sm:px-6 py-4 hover:no-underline group">
-                  <h3 className="text-base font-bold font-display text-left group-hover:text-primary transition-colors">
-                    How do the 9 tool-prompt combinations work?
-                  </h3>
-                </AccordionTrigger>
-                <AccordionContent className="px-5 sm:px-6 pb-4 pt-0">
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    Each of the 9 combos in the Tools & Prompts tab is directly correlated to steps in your Plan. You get a main AI tool recommendation plus 2 alternatives, along with a ready-to-use, customized prompt with complete guidance on how to use it effectively for that specific step.
-                  </p>
-                </AccordionContent>
-              </AccordionItem>
+              <Accordion type="single" collapsible className="space-y-4">
+                <AccordionItem value="item-4" className="rounded-2xl glass border border-primary/10 hover:border-primary/20 transition-all duration-300 shadow-lg overflow-hidden">
+                  <AccordionTrigger className="px-5 sm:px-6 py-4 hover:no-underline group">
+                    <h3 className="text-base font-bold font-display text-left group-hover:text-primary transition-colors">
+                      How do the 9 tool-prompt combinations work?
+                    </h3>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-5 sm:px-6 pb-4 pt-0">
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      Each of the 9 combos in the Tools & Prompts tab is directly correlated to steps in your Plan. You get a main AI tool recommendation plus 2 alternatives, along with a ready-to-use, customized prompt with complete guidance on how to use it effectively for that specific step.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
 
-              <AccordionItem value="item-5" className="rounded-2xl glass border border-primary/10 hover:border-primary/20 transition-all duration-300 shadow-lg overflow-hidden">
-                <AccordionTrigger className="px-5 sm:px-6 py-4 hover:no-underline group">
-                  <h3 className="text-base font-bold font-display text-left group-hover:text-primary transition-colors">
-                    Is my Jump personalized to my specific situation?
-                  </h3>
-                </AccordionTrigger>
-                <AccordionContent className="px-5 sm:px-6 pb-4 pt-0">
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    Absolutely. Every Jump is fully customized based on your specific business context, industry, role, current AI experience level, resources, and goals. No generic templates - each Jump is uniquely crafted for your situation.
-                  </p>
-                </AccordionContent>
-              </AccordionItem>
+                <AccordionItem value="item-5" className="rounded-2xl glass border border-primary/10 hover:border-primary/20 transition-all duration-300 shadow-lg overflow-hidden">
+                  <AccordionTrigger className="px-5 sm:px-6 py-4 hover:no-underline group">
+                    <h3 className="text-base font-bold font-display text-left group-hover:text-primary transition-colors">
+                      Is my Jump personalized to my specific situation?
+                    </h3>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-5 sm:px-6 pb-4 pt-0">
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      Absolutely. Every Jump is fully customized based on your specific business context, industry, role, current AI experience level, resources, and goals. No generic templates - each Jump is uniquely crafted for your situation.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
 
-              <AccordionItem value="item-6" className="rounded-2xl glass border border-primary/10 hover:border-primary/20 transition-all duration-300 shadow-lg overflow-hidden">
-                <AccordionTrigger className="px-5 sm:px-6 py-4 hover:no-underline group">
-                  <h3 className="text-base font-bold font-display text-left group-hover:text-primary transition-colors">
-                    Do I need technical expertise to implement my Jump?
-                  </h3>
-                </AccordionTrigger>
-                <AccordionContent className="px-5 sm:px-6 pb-4 pt-0">
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    Not at all. Every component of your Jump - from the strategic roadmap to the tool-prompt combinations - is designed for business professionals without technical backgrounds. We provide clear, step-by-step guidance that anyone can follow.
-                  </p>
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
+                <AccordionItem value="item-6" className="rounded-2xl glass border border-primary/10 hover:border-primary/20 transition-all duration-300 shadow-lg overflow-hidden">
+                  <AccordionTrigger className="px-5 sm:px-6 py-4 hover:no-underline group">
+                    <h3 className="text-base font-bold font-display text-left group-hover:text-primary transition-colors">
+                      Do I need technical expertise to implement my Jump?
+                    </h3>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-5 sm:px-6 pb-4 pt-0">
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      Not at all. Every component of your Jump - from the strategic roadmap to the tool-prompt combinations - is designed for business professionals without technical backgrounds. We provide clear, step-by-step guidance that anyone can follow.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </div>
           </div>
         </div>
       </section>
