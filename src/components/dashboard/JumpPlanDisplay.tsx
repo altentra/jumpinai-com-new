@@ -386,12 +386,16 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
       updatedPlan.action_plan.phases[phaseIndex].steps[stepIndex].sub_steps = data.subSteps;
       setLocalPlan(updatedPlan);
 
+      // Auto-expand the generated sub-steps
+      setExpandedSubSteps(prev => new Set(prev).add(stepKey));
+
       // Track clarification (Level 1)
       await trackClarification(jumpId, 1);
       await trackAction('clarify');
 
-      // Save to database
-      if (jumpId) {
+      // Save to database (only for authenticated users)
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user && jumpId) {
         await updateJump(jumpId, { structured_plan: updatedPlan });
       }
 
@@ -487,9 +491,13 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
       };
       setLocalPlan(updatedPlan);
 
-      await updateJump(jumpId, {
-        comprehensive_plan: updatedPlan,
-      });
+      // Save to database (only for authenticated users)
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        await updateJump(jumpId, {
+          comprehensive_plan: updatedPlan,
+        });
+      }
 
       setRerouteOptions(prev => {
         const newOptions = { ...prev };
@@ -632,10 +640,13 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
   const handleClarifySubStep = async (phaseIndex: number, stepIndex: number, subStepIndex: number) => {
     // Check subscription level (level 1: generating level 2 sub-steps)
     if (!canClarifyAtLevel(1)) {
-      if (!subscription || !subscription.subscribed) {
-        toast.error('To clarify to Level 2, subscribe to Starter Plan ($9/month) or higher.');
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast.error('Sign up and subscribe to Starter Plan ($9/month) or higher to clarify to Level 2.');
+      } else if (!subscription || !subscription.subscribed) {
+        toast.error('Subscribe to Starter Plan ($9/month) or higher to clarify to Level 2.');
       } else {
-        toast.error('To clarify to Level 2, upgrade to Starter Plan ($9/month) or higher.');
+        toast.error('Upgrade to Starter Plan ($9/month) or higher to clarify to Level 2.');
       }
       return;
     }
@@ -797,9 +808,13 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
       };
       setLocalPlan(updatedPlan);
 
-      await updateJump(jumpId, {
-        comprehensive_plan: updatedPlan,
-      });
+      // Save to database (only for authenticated users)
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        await updateJump(jumpId, {
+          comprehensive_plan: updatedPlan,
+        });
+      }
 
       setRerouteOptions(prev => {
         const newOptions = { ...prev };
@@ -818,12 +833,15 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
   const handleClarifyLevel2SubStep = async (phaseIndex: number, stepIndex: number, subStepIndex: number, level2SubStepIndex: number) => {
     // Check subscription level (level 2: generating level 3 sub-steps)
     if (!canClarifyAtLevel(2)) {
-      if (!subscription || !subscription.subscribed) {
-        toast.error('To clarify to Level 3, subscribe to Pro Plan ($25/month) or higher.');
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast.error('Sign up and subscribe to Pro Plan ($25/month) or higher to clarify to Level 3.');
+      } else if (!subscription || !subscription.subscribed) {
+        toast.error('Subscribe to Pro Plan ($25/month) or higher to clarify to Level 3.');
       } else if (subscription.subscription_tier === 'Starter') {
-        toast.error('To clarify to Level 3, upgrade to Pro Plan ($25/month) or higher.');
+        toast.error('Upgrade to Pro Plan ($25/month) or higher to clarify to Level 3.');
       } else {
-        toast.error('To clarify to Level 3, upgrade to Pro Plan ($25/month) or higher.');
+        toast.error('Upgrade to Pro Plan ($25/month) or higher to clarify to Level 3.');
       }
       return;
     }
@@ -975,9 +993,13 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
       };
       setLocalPlan(updatedPlan);
 
-      await updateJump(jumpId, {
-        comprehensive_plan: updatedPlan,
-      });
+      // Save to database (only for authenticated users)
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        await updateJump(jumpId, {
+          comprehensive_plan: updatedPlan,
+        });
+      }
 
       setRerouteOptions(prev => {
         const newOptions = { ...prev };
@@ -996,14 +1018,17 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
   const handleClarifyLevel3SubStep = async (phaseIndex: number, stepIndex: number, subStepIndex: number, level2SubStepIndex: number, level3SubStepIndex: number) => {
     // Check subscription level (level 3: generating level 4 sub-steps)
     if (!canClarifyAtLevel(3)) {
-      if (!subscription || !subscription.subscribed) {
-        toast.error('To clarify to Level 4, subscribe to Growth Plan ($49/month).');
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast.error('Sign up and subscribe to Growth Plan ($49/month) to clarify to Level 4.');
+      } else if (!subscription || !subscription.subscribed) {
+        toast.error('Subscribe to Growth Plan ($49/month) to clarify to Level 4.');
       } else if (subscription.subscription_tier === 'Starter') {
-        toast.error('To clarify to Level 4, upgrade to Growth Plan ($49/month).');
+        toast.error('Upgrade to Growth Plan ($49/month) to clarify to Level 4.');
       } else if (subscription.subscription_tier === 'JumpinAI Pro' || subscription.subscription_tier === 'Pro') {
-        toast.error('To clarify to Level 4, upgrade to Growth Plan ($49/month).');
+        toast.error('Upgrade to Growth Plan ($49/month) to clarify to Level 4.');
       } else {
-        toast.error('To clarify to Level 4, upgrade to Growth Plan ($49/month).');
+        toast.error('Upgrade to Growth Plan ($49/month) to clarify to Level 4.');
       }
       return;
     }
@@ -1157,9 +1182,13 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
       };
       setLocalPlan(updatedPlan);
 
-      await updateJump(jumpId, {
-        comprehensive_plan: updatedPlan,
-      });
+      // Save to database (only for authenticated users)
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        await updateJump(jumpId, {
+          comprehensive_plan: updatedPlan,
+        });
+      }
 
       setRerouteOptions(prev => {
         const newOptions = { ...prev };
