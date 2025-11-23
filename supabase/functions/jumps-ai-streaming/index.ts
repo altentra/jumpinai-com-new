@@ -1025,37 +1025,37 @@ Before finalizing, verify:
 
 DO NOT use generic content. Every word should reflect THEIR specific situation AND align with the comprehensive plan steps.
 
-🎯 MANDATORY MINIMUM PROMPT LENGTH & SOPHISTICATION REQUIREMENTS:
+🎯 MANDATORY PROMPT LENGTH & SOPHISTICATION REQUIREMENTS:
 
 **TEXT/WRITING/STRATEGY PROMPTS** (ChatGPT, Claude, Gemini, Grok):
-- MINIMUM: 320-560 words of comprehensive, sophisticated instructions
-- Include: Detailed context, specific tone/voice requirements, audience analysis, format specifications, success criteria, examples
-- Must be thorough enough to produce executive-level, client-ready content
+- TARGET: 200-350 words of comprehensive, professional instructions
+- Include: Clear context, tone requirements, audience focus, format specs, key success criteria
+- Must be thorough enough to produce professional, client-ready content
 
 **IMAGE GENERATION PROMPTS** (Midjourney, DALL-E, Stable Diffusion, Flux):
-- MINIMUM: 280-480 words of exhaustive visual specifications
-- Include: Detailed composition, precise color palette, lighting setup (type, direction, mood), artistic style references, technical specs (resolution, aspect ratio), atmosphere and emotion, subject details, background elements
-- Must be comprehensive enough to produce portfolio-quality, publication-ready images
+- TARGET: 180-300 words of detailed visual specifications
+- Include: Composition, color palette, lighting (type, mood), style references, technical specs (resolution, aspect ratio), atmosphere, key visual elements
+- Must be comprehensive enough to produce high-quality, professional images
 
 **VIDEO GENERATION PROMPTS** (Runway, Veo, Luma AI, Pika, Invideo):
-- MINIMUM: 900-1800+ words in comprehensive JSON format
-- Include: Multiple scenes with shot-by-shot breakdowns, professional technical specs (4K/1080p, aspect ratios, frame rates, duration), detailed camera movements and angles, complete lighting setups, rich creative direction, voiceover scripts with emotional notes, music specifications, text overlay details with timing, color grading notes, transitions
-- Must be sophisticated enough to produce commercial-grade, client-presentation-ready videos
+- TARGET: 500-900 words in comprehensive JSON format
+- Include: 2-3 key scenes with descriptions, professional specs (resolution, aspect ratio, duration), camera movements, lighting, creative direction, transitions
+- Must be sophisticated enough to produce professional, polished videos
 
 **AUTOMATION/WORKFLOW PROMPTS** (Zapier, Make, n8n):
-- MINIMUM: 400-720 words of detailed step-by-step implementation
-- Include: Trigger conditions with examples, complete action sequences, data mapping with field specifications, error handling scenarios, testing procedures, optimization tips
-- Must be thorough enough to build production-ready, business-critical automations
+- TARGET: 250-450 words of step-by-step implementation
+- Include: Trigger conditions, action sequences, data mapping, error handling basics, testing steps
+- Must be thorough enough to build functional, reliable automations
 
 **CODE GENERATION PROMPTS** (Cursor, Replit, Lovable, GitHub Copilot):
-- MINIMUM: 320-560 words of detailed technical requirements
-- Include: Complete architecture overview, specific technology stack, feature requirements, code structure, best practices, security considerations, performance requirements, testing approach
-- Must be comprehensive enough to generate enterprise-ready, maintainable code
+- TARGET: 200-350 words of technical requirements
+- Include: Architecture overview, technology stack, key features, code structure, best practices, security basics
+- Must be comprehensive enough to generate production-ready, maintainable code
 
 **RESEARCH/ANALYSIS PROMPTS** (Perplexity, Claude, ChatGPT):
-- MINIMUM: 320-560 words of detailed research parameters
-- Include: Specific research questions, data sources, methodologies, analysis frameworks, output format requirements, quality criteria
-- Must be thorough enough to produce board-presentation-ready insights
+- TARGET: 200-350 words of research parameters
+- Include: Research questions, key data sources, analysis approach, output format, quality criteria
+- Must be thorough enough to produce actionable, professional insights
 
 ⚠️ ABSOLUTE RULE: NEVER provide trivial, oversimplified, or generic prompts. Every prompt must be sophisticated enough to satisfy demanding enterprise clients and produce REAL professional business value.
 
@@ -1069,7 +1069,7 @@ Return ONLY valid JSON:
       "tool_name": "Tool name WITHOUT version numbers (e.g., ChatGPT, Grok, Gemini, Midjourney, Runway, Lovable)",
       "tool_url": "https://url.com",
       "tool_type": "Tool type",
-      "prompt_text": "WORLD-CLASS, PRODUCTION-READY, ENTERPRISE-GRADE prompt in the appropriate format for this tool. MANDATORY LENGTH: Text/Writing (320-560 words), Image Generation (280-480 words), Video Generation (900-1800+ words comprehensive JSON), Automation (400-720 words), Code (320-560 words), Research (320-560 words). Must be exhaustively detailed, deeply tailored to their stated goals, directly address their challenges, reference their specific situation, and be sophisticated enough to produce professional, polished, client-ready results that satisfy the most demanding enterprise users. ZERO EDITING REQUIRED.",
+      "prompt_text": "PROFESSIONAL, PRODUCTION-READY prompt in the appropriate format for this tool. TARGET LENGTH: Text/Writing (200-350 words), Image Generation (180-300 words), Video Generation (500-900 words comprehensive JSON), Automation (250-450 words), Code (200-350 words), Research (200-350 words). Must be detailed, deeply tailored to their stated goals, directly address their challenges, and be sophisticated enough to produce professional, client-ready results. Keep it concise yet comprehensive.",
       "prompt_format": "json|detailed_descriptive|structured_requirements|conversational",
       "prompt_instructions": "Step-by-step guidance for THEIR specific use case, considering their inferred experience level, including format-specific guidance and how to customize the prompt for different scenarios",
       "when_to_use": "When in their specific transformation journey based on their goals",
@@ -1088,8 +1088,8 @@ Return ONLY valid JSON:
   ]
 }
 
-Generate EXACTLY 9 combos deeply tailored to THEIR specific situation inferred from goals & challenges, with diversity and phase alignment. Remember: Prompts must be WORLD-CLASS PROFESSIONAL GRADE, especially video generation prompts with comprehensive JSON structures.`,
-        expectedTokens: 50000
+Generate EXACTLY 9 combos deeply tailored to THEIR specific situation inferred from goals & challenges, with diversity and phase alignment. Remember: Prompts must be PROFESSIONAL GRADE yet CONCISE - quality over quantity. Keep prompts focused and actionable.`,
+        expectedTokens: 35000
       };
 
     default:
