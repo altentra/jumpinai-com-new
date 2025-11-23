@@ -877,7 +877,7 @@ const Index = () => {
                     <ArrowRight className="w-4 h-4 text-primary" />
                   </div>
                 </div>
-                <p className="text-sm text-muted-foreground flex-1 leading-relaxed text-justify">
+                <p className="text-sm text-muted-foreground flex-1 leading-relaxed">
                   When you jump, you leave hesitation behind. You cross the threshold from thinking to doing, from planning to acting. There's no pause button mid-air—only the certainty that you <strong className="text-foreground">will land somewhere</strong>.
                 </p>
               </div>
@@ -891,7 +891,7 @@ const Index = () => {
                     </svg>
                   </div>
                 </div>
-                <p className="text-sm text-muted-foreground flex-1 leading-relaxed text-justify">
+                <p className="text-sm text-muted-foreground flex-1 leading-relaxed">
                   That's the energy we channel. <strong className="text-foreground">Jump into AI</strong> isn't about casual exploration—it's about decisive action with a clear landing point. Your personalized plan ensures you don't leap blindly. You jump with <strong className="text-foreground">direction, precision, and purpose</strong>.
                 </p>
               </div>
@@ -905,7 +905,7 @@ const Index = () => {
                     </svg>
                   </div>
                 </div>
-                <p className="text-sm text-muted-foreground flex-1 leading-relaxed text-justify">
+                <p className="text-sm text-muted-foreground flex-1 leading-relaxed">
                   Every Jump you create is your commitment to transformation. You're not testing the waters—you're <strong className="text-foreground">diving in with a plan</strong>. And we make sure you land exactly where you intended.
                 </p>
               </div>
