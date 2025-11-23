@@ -897,151 +897,132 @@ const Index = () => {
 
 
 
-      <section className="py-10 sm:py-12 lg:py-16">
+      <section className="py-10 sm:py-14 lg:py-20">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-8 sm:mb-10">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold gradient-text-primary mb-3 sm:mb-4 font-display">
+          {/* Header */}
+          <div className="text-center mb-10 sm:mb-12">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold gradient-text-primary mb-3 font-display">
               The JumpinAI Advantage
             </h2>
-            <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto">
-              Complete 3-tab system designed for clarity, adaptability, and immediate action
+            <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto">
+              Complete 3-tab system designed for clarity, adaptability, and action
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-8 items-center max-w-6xl mx-auto">
-            {/* Benefits List */}
-            <div className="space-y-4 order-2 lg:order-1">
-              <div className="flex gap-3">
-                <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="text-base font-bold mb-1 font-display">Strategic Overview Tab</h3>
-                  <p className="text-sm text-muted-foreground">Executive summary, situation analysis with challenges & opportunities, strategic vision, and complete roadmap—understand your entire transformation at a glance.</p>
-                </div>
-              </div>
-
-              <div className="flex gap-3">
-                <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="text-base font-bold mb-1 font-display">Adaptive Plan Tab</h3>
-                  <p className="text-sm text-muted-foreground">Phased steps with multi-level clarification (4 levels deep) and alternative routes (3 per step)—never feel stuck, always have options to move forward.</p>
+          {/* Main Grid */}
+          <div className="max-w-7xl mx-auto">
+            {/* Top Row - Three Core Features */}
+            <div className="grid md:grid-cols-3 gap-4 mb-6">
+              {/* Strategic Overview */}
+              <div className="group relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/10 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div className="relative glass rounded-2xl p-5 border border-primary/20 hover:border-primary/40 transition-all duration-300 h-full">
+                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-3">
+                    <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                  </div>
+                  <h3 className="text-base font-bold mb-2 font-display">Strategic Overview</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    Executive summary, analysis, vision, and complete roadmap—your entire transformation at a glance
+                  </p>
                 </div>
               </div>
 
-              <div className="flex gap-3">
-                <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="text-base font-bold mb-1 font-display">Tools & Prompts Tab</h3>
-                  <p className="text-sm text-muted-foreground">9 curated tool-prompt combos correlated to your plan—each with main tool + 2 alternatives, ready-to-use prompts, and complete guidance for immediate execution.</p>
+              {/* Adaptive Plan */}
+              <div className="group relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/10 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div className="relative glass rounded-2xl p-5 border border-primary/20 hover:border-primary/40 transition-all duration-300 h-full">
+                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-3">
+                    <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                    </svg>
+                  </div>
+                  <h3 className="text-base font-bold mb-2 font-display">Adaptive Plan</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    4 levels of clarification + 3 alternative routes per step—never stuck, always moving forward
+                  </p>
                 </div>
               </div>
 
-              <div className="flex gap-3">
-                <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="text-base font-bold mb-1 font-display">Instant Personalization</h3>
-                  <p className="text-sm text-muted-foreground">Your complete 3-tab Jump generated in 2 minutes—fully customized to your goals, industry, experience level, and specific situation.</p>
+              {/* Tools & Prompts */}
+              <div className="group relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/10 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div className="relative glass rounded-2xl p-5 border border-primary/20 hover:border-primary/40 transition-all duration-300 h-full">
+                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-3">
+                    <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                  </div>
+                  <h3 className="text-base font-bold mb-2 font-display">Tools & Prompts</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    9 curated combos with main tool + 2 alternatives, ready prompts, and complete guidance
+                  </p>
                 </div>
               </div>
             </div>
 
-            {/* Comparison Table */}
-            <div className="relative order-1 lg:order-2">
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-accent/20 to-secondary/20 rounded-xl blur-2xl opacity-40"></div>
-              <div className="relative glass rounded-xl p-4 sm:p-6 border border-primary/10 shadow-md">
-                <h3 className="text-lg sm:text-xl font-bold mb-4 text-center font-display">JumpinAI vs DIY Research</h3>
-                
-                <div className="space-y-2.5">
-                  {/* Row 1 */}
-                  <div className="glass bg-muted/20 rounded-lg p-3 border border-primary/10">
-                    <div className="font-medium text-sm mb-2">Strategic Foundation</div>
-                    <div className="grid grid-cols-2 gap-2 text-xs">
-                      <div className="flex items-center gap-1.5 text-primary font-semibold">
-                        <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                        <span>Complete Overview</span>
-                      </div>
-                      <div className="flex items-center gap-1.5 text-muted-foreground">
-                        <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
-                        <span>Scattered Info</span>
-                      </div>
+            {/* Bottom Row - Comparison + Speed */}
+            <div className="grid md:grid-cols-5 gap-4">
+              {/* Comparison Card - Takes 3 columns */}
+              <div className="md:col-span-3 relative group">
+                <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-accent/20 to-secondary/20 rounded-2xl blur-2xl opacity-40"></div>
+                <div className="relative glass rounded-2xl p-5 border border-primary/20 h-full">
+                  <h3 className="text-lg font-bold mb-4 text-center font-display">JumpinAI vs DIY Research</h3>
+                  
+                  <div className="grid grid-cols-2 gap-3">
+                    {/* JumpinAI Column */}
+                    <div className="space-y-2">
+                      <div className="text-xs font-semibold text-primary mb-2 text-center">JumpinAI</div>
+                      {[
+                        "Complete Overview",
+                        "4 Levels + 3 Routes",
+                        "9 Ready Combos",
+                        "2 Minutes"
+                      ].map((item, i) => (
+                        <div key={i} className="flex items-center gap-2 text-xs glass bg-primary/5 rounded-lg p-2 border border-primary/20">
+                          <svg className="w-4 h-4 flex-shrink-0 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                          </svg>
+                          <span className="font-medium">{item}</span>
+                        </div>
+                      ))}
                     </div>
-                  </div>
 
-                  {/* Row 2 */}
-                  <div className="glass bg-muted/20 rounded-lg p-3 border border-primary/10">
-                    <div className="font-medium text-sm mb-2">Plan Adaptability</div>
-                    <div className="grid grid-cols-2 gap-2 text-xs">
-                      <div className="flex items-center gap-1.5 text-primary font-semibold">
-                        <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                        <span>4 Levels + 3 Routes</span>
-                      </div>
-                      <div className="flex items-center gap-1.5 text-muted-foreground">
-                        <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
-                        <span>Static Steps</span>
-                      </div>
+                    {/* DIY Column */}
+                    <div className="space-y-2">
+                      <div className="text-xs font-semibold text-muted-foreground mb-2 text-center">DIY Research</div>
+                      {[
+                        "Scattered Info",
+                        "Static Steps",
+                        "Find Your Own",
+                        "Weeks/Months"
+                      ].map((item, i) => (
+                        <div key={i} className="flex items-center gap-2 text-xs glass bg-muted/10 rounded-lg p-2 border border-border/50">
+                          <svg className="w-4 h-4 flex-shrink-0 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+                          </svg>
+                          <span className="text-muted-foreground">{item}</span>
+                        </div>
+                      ))}
                     </div>
                   </div>
+                </div>
+              </div>
 
-                  {/* Row 3 */}
-                  <div className="glass bg-muted/20 rounded-lg p-3 border border-primary/10">
-                    <div className="font-medium text-sm mb-2">Execution Tools</div>
-                    <div className="grid grid-cols-2 gap-2 text-xs">
-                      <div className="flex items-center gap-1.5 text-primary font-semibold">
-                        <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                        <span>9 Ready Combos</span>
-                      </div>
-                      <div className="flex items-center gap-1.5 text-muted-foreground">
-                        <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
-                        <span>Find Your Own</span>
-                      </div>
-                    </div>
+              {/* Instant Personalization Card - Takes 2 columns */}
+              <div className="md:col-span-2 relative group">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-accent/20 rounded-2xl blur-xl opacity-50"></div>
+                <div className="relative glass rounded-2xl p-5 border border-primary/30 hover:border-primary/50 transition-all duration-300 h-full flex flex-col justify-center">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-accent/10 flex items-center justify-center mb-4 mx-auto">
+                    <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
                   </div>
-
-                  {/* Row 4 */}
-                  <div className="glass bg-muted/20 rounded-lg p-3 border border-primary/10">
-                    <div className="font-medium text-sm mb-2">Time to Start</div>
-                    <div className="grid grid-cols-2 gap-2 text-xs">
-                      <div className="flex items-center gap-1.5 text-primary font-semibold">
-                        <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                        <span>2 Minutes</span>
-                      </div>
-                      <div className="flex items-center gap-1.5 text-muted-foreground">
-                        <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
-                        <span>Weeks/Months</span>
-                      </div>
-                    </div>
-                  </div>
+                  <h3 className="text-lg font-bold mb-2 text-center font-display gradient-text-primary">Instant Personalization</h3>
+                  <p className="text-sm text-muted-foreground text-center leading-relaxed">
+                    Your complete 3-tab Jump generated in <span className="font-semibold text-primary">2 minutes</span>—fully customized to your goals, industry, and experience
+                  </p>
                 </div>
               </div>
             </div>
