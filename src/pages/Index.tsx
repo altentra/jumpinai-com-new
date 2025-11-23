@@ -884,10 +884,22 @@ const Index = () => {
             </div>
 
             {/* Featured Quote */}
-            <div className="text-center max-w-3xl mx-auto">
-              <p className="text-base sm:text-lg text-muted-foreground italic leading-relaxed">
-                <span className="text-foreground font-semibold">"The moment you jump, momentum takes over. Gravity pulls you forward. There's no going back—only the landing ahead. Make it count."</span>
-              </p>
+            <div className="relative max-w-4xl mx-auto">
+              <div className="relative p-8 sm:p-10 rounded-2xl glass border border-primary/10 shadow-lg">
+                {/* Decorative Quote Mark */}
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-12 h-12 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 backdrop-blur-xl border border-primary/20 flex items-center justify-center">
+                  <svg className="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+                  </svg>
+                </div>
+                
+                <blockquote className="text-center">
+                  <p className="text-lg sm:text-xl lg:text-2xl text-foreground font-display leading-relaxed italic font-medium">
+                    The moment you jump, momentum takes over. Gravity pulls you forward. There's no going back—only the landing ahead.{' '}
+                    <span className="gradient-text-primary font-bold not-italic">Make it count.</span>
+                  </p>
+                </blockquote>
+              </div>
             </div>
           </div>
         </div>
