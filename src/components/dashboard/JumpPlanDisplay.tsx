@@ -190,7 +190,7 @@ function normalizeToComprehensive(input: any): any {
 export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, onDownload, jumpId, toolPromptIds, onToolPromptClick, onToolPromptGenerated }: JumpPlanDisplayProps) {
   const { subscription } = useAuth();
   const [hoveredStep, setHoveredStep] = React.useState<{ phaseIndex: number; stepIndex: number } | null>(null);
-  const [hoveredSubStep, setHoveredSubStep] = React.useState<{ phaseIndex: number; stepIndex: number; subStepIndex: number } | null>(null);
+  const [hoveredSubStep, setHoveredSubStep] = React.useState<{ phaseIndex: number; stepIndex: number; subStepIndex: number; isAlternative?: boolean } | null>(null);
   const [hoveredLevel2SubStep, setHoveredLevel2SubStep] = React.useState<{ phaseIndex: number; stepIndex: number; subStepIndex: number; level2SubStepIndex: number } | null>(null);
   const [hoveredLevel3SubStep, setHoveredLevel3SubStep] = React.useState<{ phaseIndex: number; stepIndex: number; subStepIndex: number; level2SubStepIndex: number; level3SubStepIndex: number } | null>(null);
   const [hoveredLevel4SubStep, setHoveredLevel4SubStep] = React.useState<{ phaseIndex: number; stepIndex: number; subStepIndex: number; level2SubStepIndex: number; level3SubStepIndex: number; level4SubStepIndex: number } | null>(null);
@@ -566,6 +566,13 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
 
   // Handler for Equip functionality - generate tool/prompt combo for any step
   const handleEquipStep = async (phaseIndex: number, stepIndex: number) => {
+    // Check if user is authenticated - Equip is only for registered users
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      toast.error('Sign up to access this feature.');
+      return;
+    }
+    
     if (!jumpId) {
       toast.error('Jump ID is required');
       return;
@@ -1463,39 +1470,122 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                      {step.reroute.overview}
                                    </ReactMarkdown>
                                  </div>
-                                 <div className="space-y-2">
-                                   {step.reroute.sub_steps?.map((subStep: any, subStepIndex: number) => (
-                                     <div
-                                       key={subStepIndex}
-                                       className="bg-background/30 border border-primary/20 rounded-xl p-3"
-                                     >
-                                       <div className="flex items-start gap-2 mb-2">
-                                         <div className="flex-shrink-0 px-2.5 py-1.5 rounded-lg bg-gradient-to-br from-primary/40 to-primary/30 flex items-center justify-center border border-primary/60 shadow-sm">
-                                            <span className="text-xs font-bold text-primary/90 whitespace-nowrap">
-                                              Sub-Step {subStepIndex + 1}.
-                                            </span>
-                                         </div>
-                                         <h5 className="text-sm font-semibold text-foreground pt-0.5">
-                                           <ReactMarkdown className="prose prose-sm max-w-none [&>p]:m-0 [&_strong]:font-bold">
-                                             {subStep.title}
-                                           </ReactMarkdown>
-                                         </h5>
-                                       </div>
-                                       <div className="text-xs text-muted-foreground/90 leading-relaxed">
-                                         <ReactMarkdown className="prose prose-sm max-w-none [&>p]:mb-1 [&>p:last-child]:mb-0 [&_strong]:font-bold">
-                                           {subStep.description}
-                                         </ReactMarkdown>
-                                       </div>
-                                       {subStep.estimated_time && (
-                                         <div className="mt-2">
-                                           <Badge variant="outline" className="text-xs">
-                                             {subStep.estimated_time}
-                                           </Badge>
-                                         </div>
-                                       )}
-                                     </div>
-                                   ))}
-                                 </div>
+                                  <div className="space-y-2">
+                                    {step.reroute.sub_steps?.map((subStep: any, altSubStepIndex: number) => {
+                                      const isAltSubStepHovered = hoveredSubStep?.phaseIndex === phaseIndex && hoveredSubStep?.stepIndex === stepIndex && hoveredSubStep?.subStepIndex === altSubStepIndex && hoveredSubStep?.isAlternative === true;
+                                      
+                                      return (
+                                        <div
+                                          key={altSubStepIndex}
+                                          className="bg-background/30 border border-primary/20 rounded-xl p-3"
+                                          onMouseEnter={() => setHoveredSubStep({ phaseIndex, stepIndex, subStepIndex: altSubStepIndex, isAlternative: true })}
+                                          onMouseLeave={() => setHoveredSubStep(null)}
+                                        >
+                                          <div className="flex items-start gap-2 mb-2">
+                                            <div className="flex-shrink-0 px-2.5 py-1.5 rounded-lg bg-gradient-to-br from-primary/40 to-primary/30 flex items-center justify-center border border-primary/60 shadow-sm">
+                                               <span className="text-xs font-bold text-primary/90 whitespace-nowrap">
+                                                 Sub-Step {altSubStepIndex + 1}.
+                                               </span>
+                                            </div>
+                                            <h5 className="text-sm font-semibold text-foreground pt-0.5">
+                                              <ReactMarkdown className="prose prose-sm max-w-none [&>p]:m-0 [&_strong]:font-bold">
+                                                {subStep.title}
+                                              </ReactMarkdown>
+                                            </h5>
+                                          </div>
+                                          <div className="text-xs text-muted-foreground/90 leading-relaxed">
+                                            <ReactMarkdown className="prose prose-sm max-w-none [&>p]:mb-1 [&>p:last-child]:mb-0 [&_strong]:font-bold">
+                                              {subStep.description}
+                                            </ReactMarkdown>
+                                          </div>
+                                          {subStep.estimated_time && (
+                                            <div className="mt-2">
+                                              <Badge variant="outline" className="text-xs">
+                                                {subStep.estimated_time}
+                                              </Badge>
+                                            </div>
+                                          )}
+                                          
+                                          {/* Action buttons for alternative route sub-steps */}
+                                          {isAltSubStepHovered && (
+                                            <div className="mt-3 pt-3 border-t border-primary/20 animate-fade-in">
+                                              <TooltipProvider>
+                                                <div className="flex items-center justify-center gap-2">
+                                                  <Tooltip>
+                                                    <TooltipTrigger asChild>
+                                                      <button
+                                                        onClick={(e) => {
+                                                          e.stopPropagation();
+                                                          // Note: This would be a sub-step in the alternative route - treat as level 1
+                                                          // Since this is an alternative route sub-step, it functions similarly to a sub-step
+                                                          toast.info('Clarify functionality for alternative route sub-steps coming soon.');
+                                                        }}
+                                                        className="relative group/clarify"
+                                                      >
+                                                        <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/40 via-accent/30 to-primary/40 rounded-[2rem] blur-md opacity-40 group-hover/clarify:opacity-70 transition duration-500"></div>
+                                                        <div className="relative flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2rem] border border-primary/40 group-hover/clarify:border-primary/60 transition-all duration-300 overflow-hidden shadow-lg shadow-primary/10">
+                                                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/clarify:translate-x-full transition-transform duration-1000"></div>
+                                                          <Sparkles className="relative w-3 h-3 text-primary" />
+                                                          <span className="relative text-xs font-bold text-foreground group-hover/clarify:text-primary transition-colors duration-300 whitespace-nowrap">Clarify</span>
+                                                        </div>
+                                                      </button>
+                                                    </TooltipTrigger>
+                                                    <TooltipContent className="max-w-xs">
+                                                      <p className="text-xs">Generate detailed sub-steps for this alternative route step</p>
+                                                    </TooltipContent>
+                                                  </Tooltip>
+                                                  
+                                                  <Tooltip>
+                                                    <TooltipTrigger asChild>
+                                                      <button
+                                                        onClick={(e) => {
+                                                          e.stopPropagation();
+                                                          toast.info('Reroute functionality for alternative route sub-steps coming soon.');
+                                                        }}
+                                                        className="relative group/reroute"
+                                                      >
+                                                        <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/40 via-accent/30 to-primary/40 rounded-[2rem] blur-md opacity-40 group-hover/reroute:opacity-70 transition duration-500"></div>
+                                                        <div className="relative flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2rem] border border-primary/40 group-hover/reroute:border-primary/60 transition-all duration-300 overflow-hidden shadow-lg shadow-primary/10">
+                                                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/reroute:translate-x-full transition-transform duration-1000"></div>
+                                                          <GitBranch className="relative w-3 h-3 text-primary" />
+                                                          <span className="relative text-xs font-bold text-foreground group-hover/reroute:text-primary transition-colors duration-300 whitespace-nowrap">Reroute</span>
+                                                        </div>
+                                                      </button>
+                                                    </TooltipTrigger>
+                                                    <TooltipContent className="max-w-xs">
+                                                      <p className="text-xs">Explore alternative approaches for this step</p>
+                                                    </TooltipContent>
+                                                  </Tooltip>
+                                                  
+                                                  <Tooltip>
+                                                    <TooltipTrigger asChild>
+                                                      <button
+                                                        onClick={(e) => {
+                                                          e.stopPropagation();
+                                                          toast.info('Equip functionality for alternative route sub-steps coming soon.');
+                                                        }}
+                                                        className="relative group/equip"
+                                                      >
+                                                        <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/40 via-accent/30 to-primary/40 rounded-[2rem] blur-md opacity-40 group-hover/equip:opacity-70 transition duration-500"></div>
+                                                        <div className="relative flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2rem] border border-primary/40 group-hover/equip:border-primary/60 transition-all duration-300 overflow-hidden shadow-lg shadow-primary/10">
+                                                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/equip:translate-x-full transition-transform duration-1000"></div>
+                                                          <Wrench className="relative w-3 h-3 text-primary" />
+                                                          <span className="relative text-xs font-bold text-foreground group-hover/equip:text-primary transition-colors duration-300 whitespace-nowrap">Equip</span>
+                                                        </div>
+                                                      </button>
+                                                    </TooltipTrigger>
+                                                    <TooltipContent className="max-w-xs">
+                                                      <p className="text-xs">Generate custom AI tool & prompt for this step</p>
+                                                    </TooltipContent>
+                                                  </Tooltip>
+                                                </div>
+                                              </TooltipProvider>
+                                            </div>
+                                          )}
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
                                </div>
                              </div>
                            )}
