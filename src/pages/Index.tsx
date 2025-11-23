@@ -725,105 +725,95 @@ const Index = () => {
                 </p>
               </div>
 
-              {/* Branching Lines Animation */}
-              <div className="relative mb-8 h-28 sm:h-32">
-                <svg className="absolute inset-0 w-full h-full" viewBox="0 0 900 120" preserveAspectRatio="xMidYMid meet">
+              {/* Branching Lines Animation - Trident Pattern */}
+              <div className="relative mb-8 h-32 sm:h-36">
+                <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1000 140" preserveAspectRatio="xMidYMid meet">
                   <defs>
-                    <linearGradient id="lineGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                      <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.8" />
-                      <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0.4" />
+                    <linearGradient id="tridentGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.9" />
+                      <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0.5" />
                     </linearGradient>
                   </defs>
                   
-                  {/* Main vertical trunk line */}
+                  {/* Main vertical trunk - top to split point */}
                   <line
-                    x1="450"
+                    x1="500"
                     y1="0"
-                    x2="450"
-                    y2="50"
-                    stroke="url(#lineGradient)"
-                    strokeWidth="2.5"
+                    x2="500"
+                    y2="40"
+                    stroke="url(#tridentGradient)"
+                    strokeWidth="3"
                     strokeLinecap="round"
                     style={{
-                      strokeDasharray: 50,
-                      strokeDashoffset: 50,
-                      animation: 'drawLine 0.6s ease-out forwards'
+                      strokeDasharray: 40,
+                      strokeDashoffset: 40,
+                      animation: 'drawLine 0.5s ease-out forwards'
                     }}
                   />
                   
-                  {/* Horizontal connector */}
+                  {/* Left branch - diagonal then vertical */}
+                  <path
+                    d="M 500 40 L 200 60 L 200 140"
+                    stroke="url(#tridentGradient)"
+                    strokeWidth="3"
+                    fill="none"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    style={{
+                      strokeDasharray: 330,
+                      strokeDashoffset: 330,
+                      animation: 'drawLine 0.7s ease-out 0.4s forwards'
+                    }}
+                  />
+                  
+                  {/* Center branch - straight down */}
                   <line
-                    x1="150"
-                    y1="50"
-                    x2="750"
-                    y2="50"
-                    stroke="url(#lineGradient)"
-                    strokeWidth="2.5"
+                    x1="500"
+                    y1="40"
+                    x2="500"
+                    y2="140"
+                    stroke="url(#tridentGradient)"
+                    strokeWidth="3"
                     strokeLinecap="round"
                     style={{
-                      strokeDasharray: 600,
-                      strokeDashoffset: 600,
-                      animation: 'drawLine 0.8s ease-out 0.5s forwards'
+                      strokeDasharray: 100,
+                      strokeDashoffset: 100,
+                      animation: 'drawLine 0.7s ease-out 0.4s forwards'
                     }}
                   />
                   
-                  {/* Left vertical line to Route A */}
-                  <line
-                    x1="150"
-                    y1="50"
-                    x2="150"
-                    y2="120"
-                    stroke="url(#lineGradient)"
-                    strokeWidth="2.5"
+                  {/* Right branch - diagonal then vertical */}
+                  <path
+                    d="M 500 40 L 800 60 L 800 140"
+                    stroke="url(#tridentGradient)"
+                    strokeWidth="3"
+                    fill="none"
                     strokeLinecap="round"
+                    strokeLinejoin="round"
                     style={{
-                      strokeDasharray: 70,
-                      strokeDashoffset: 70,
-                      animation: 'drawLine 0.6s ease-out 1.1s forwards'
+                      strokeDasharray: 330,
+                      strokeDashoffset: 330,
+                      animation: 'drawLine 0.7s ease-out 0.4s forwards'
                     }}
                   />
                   
-                  {/* Center vertical line to Route B */}
-                  <line
-                    x1="450"
-                    y1="50"
-                    x2="450"
-                    y2="120"
-                    stroke="url(#lineGradient)"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    style={{
-                      strokeDasharray: 70,
-                      strokeDashoffset: 70,
-                      animation: 'drawLine 0.6s ease-out 1.1s forwards'
-                    }}
+                  {/* Junction point at split */}
+                  <circle 
+                    cx="500" 
+                    cy="40" 
+                    r="5" 
+                    fill="hsl(var(--primary))"
+                    style={{ 
+                      opacity: 0, 
+                      animation: 'fadeIn 0.3s ease-out 0.5s forwards',
+                      filter: 'drop-shadow(0 0 4px hsl(var(--primary)))'
+                    }} 
                   />
                   
-                  {/* Right vertical line to Route C */}
-                  <line
-                    x1="750"
-                    y1="50"
-                    x2="750"
-                    y2="120"
-                    stroke="url(#lineGradient)"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    style={{
-                      strokeDasharray: 70,
-                      strokeDashoffset: 70,
-                      animation: 'drawLine 0.6s ease-out 1.1s forwards'
-                    }}
-                  />
-                  
-                  {/* Junction points with glow */}
-                  <circle cx="450" cy="50" r="4" fill="hsl(var(--primary))" className="drop-shadow-lg" style={{ opacity: 0, animation: 'fadeIn 0.3s ease-out 1.2s forwards' }} />
-                  <circle cx="150" cy="50" r="3.5" fill="hsl(var(--primary))" style={{ opacity: 0, animation: 'fadeIn 0.3s ease-out 1.2s forwards' }} />
-                  <circle cx="750" cy="50" r="3.5" fill="hsl(var(--primary))" style={{ opacity: 0, animation: 'fadeIn 0.3s ease-out 1.2s forwards' }} />
-                  
-                  {/* End point indicators */}
-                  <circle cx="150" cy="120" r="3" fill="hsl(var(--primary))" style={{ opacity: 0, animation: 'fadeIn 0.3s ease-out 1.6s forwards' }} />
-                  <circle cx="450" cy="120" r="3" fill="hsl(var(--primary))" style={{ opacity: 0, animation: 'fadeIn 0.3s ease-out 1.6s forwards' }} />
-                  <circle cx="750" cy="120" r="3" fill="hsl(var(--primary))" style={{ opacity: 0, animation: 'fadeIn 0.3s ease-out 1.6s forwards' }} />
+                  {/* End points */}
+                  <circle cx="200" cy="140" r="4" fill="hsl(var(--primary))" style={{ opacity: 0, animation: 'fadeIn 0.3s ease-out 1.1s forwards' }} />
+                  <circle cx="500" cy="140" r="4" fill="hsl(var(--primary))" style={{ opacity: 0, animation: 'fadeIn 0.3s ease-out 1.1s forwards' }} />
+                  <circle cx="800" cy="140" r="4" fill="hsl(var(--primary))" style={{ opacity: 0, animation: 'fadeIn 0.3s ease-out 1.1s forwards' }} />
                 </svg>
               </div>
 
