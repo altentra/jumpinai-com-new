@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Sparkles, GitBranch, Zap } from 'lucide-react';
+import { Sparkles, GitBranch, Wrench } from 'lucide-react';
 import Navigation from "@/components/Navigation";
 import Hero from "@/components/Hero";
 import Features from "@/components/Features";
@@ -771,7 +771,7 @@ const Index = () => {
               <div className="mt-4 sm:mt-6 p-4 sm:p-5 rounded-xl glass bg-muted/30 border border-primary/20 backdrop-blur-sm shadow-sm">
                 <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4">
                   <div className="flex-shrink-0 w-10 h-10 rounded-lg backdrop-blur-xl bg-primary/10 ring-1 ring-primary/30 flex items-center justify-center">
-                    <Zap className="w-5 h-5 text-primary" />
+                    <Wrench className="w-5 h-5 text-primary" />
                   </div>
                   <div className="flex-1 w-full">
                     <h4 className="font-bold mb-2">
@@ -789,7 +789,7 @@ const Index = () => {
                           <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/40 via-accent/30 to-primary/40 rounded-[2rem] blur-md opacity-40 transition duration-500"></div>
                           <div className="relative flex items-center gap-2 px-5 py-2.5 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2rem] border border-primary/40 transition-all duration-300 overflow-hidden shadow-lg shadow-primary/10 cursor-default">
                             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full transition-transform duration-1000"></div>
-                            <Zap className="relative w-3.5 h-3.5 text-primary" />
+                            <Wrench className="relative w-3.5 h-3.5 text-primary" />
                             <span className="relative text-sm font-bold text-foreground whitespace-nowrap">Equip</span>
                           </div>
                         </div>
@@ -812,7 +812,7 @@ const Index = () => {
 
                     <div className="glass bg-muted/30 p-3 rounded-lg border border-primary/15 backdrop-blur-sm">
                       <p className="text-xs text-muted-foreground">
-                        <strong className="font-semibold text-foreground">Smart Organization:</strong> Each equipped combo is automatically saved in your Tools & Prompts tab with a unique number (e.g., "Combo #10") and linked directly to its originating step. Build your custom implementation toolkit as you progress through your plan, with every tool and prompt exactly where you need it.
+                        Each equipped combo is automatically saved in your Tools & Prompts tab with a unique identifier (e.g., Combo #10) and linked directly to its originating step. Build your custom implementation toolkit as you progress through your plan, with every tool and prompt exactly where you need it.
                       </p>
                     </div>
                   </div>
