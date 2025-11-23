@@ -32,6 +32,8 @@ const Index = () => {
   const { elementRef: level2Ref, scrollProgress: level2Progress } = useScrollAnimation({ threshold: 0.2 });
   const { elementRef: level3Ref, scrollProgress: level3Progress } = useScrollAnimation({ threshold: 0.2 });
   const { elementRef: level4Ref, scrollProgress: level4Progress } = useScrollAnimation({ threshold: 0.2 });
+  const { elementRef: rerouteRef, scrollProgress: rerouteProgress } = useScrollAnimation({ threshold: 0.2 });
+  const { elementRef: equipRef, scrollProgress: equipProgress } = useScrollAnimation({ threshold: 0.2 });
 
   // Show test component only in development or when URL contains 'test'
   const showTest = window.location.hostname === 'localhost' || 
@@ -720,7 +722,14 @@ const Index = () => {
               </div>
 
               {/* Reroute Feature */}
-              <div className="mt-4 sm:mt-6 p-4 sm:p-5 rounded-xl glass bg-muted/30 border border-primary/20 backdrop-blur-sm shadow-sm">
+              <div 
+                ref={rerouteRef}
+                className="mt-4 sm:mt-6 p-4 sm:p-5 rounded-xl glass bg-muted/30 border border-primary/20 backdrop-blur-sm shadow-sm transition-all duration-700 ease-out"
+                style={{
+                  opacity: Math.min(1, rerouteProgress * 1.3),
+                  transform: `translateY(${(1 - Math.min(1, rerouteProgress * 1.3)) * 50}px)`
+                }}
+              >
                 <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4">
                   <div className="flex-shrink-0 w-10 h-10 rounded-lg backdrop-blur-xl bg-primary/10 ring-1 ring-primary/30 flex items-center justify-center">
                     <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -768,7 +777,14 @@ const Index = () => {
               </div>
 
               {/* Equip Feature */}
-              <div className="mt-4 sm:mt-6 p-4 sm:p-5 rounded-xl glass bg-muted/30 border border-primary/20 backdrop-blur-sm shadow-sm">
+              <div 
+                ref={equipRef}
+                className="mt-4 sm:mt-6 p-4 sm:p-5 rounded-xl glass bg-muted/30 border border-primary/20 backdrop-blur-sm shadow-sm transition-all duration-700 ease-out"
+                style={{
+                  opacity: Math.min(1, equipProgress * 1.3),
+                  transform: `translateY(${(1 - Math.min(1, equipProgress * 1.3)) * 50}px)`
+                }}
+              >
                 <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4">
                   <div className="flex-shrink-0 w-10 h-10 rounded-lg backdrop-blur-xl bg-primary/10 ring-1 ring-primary/30 flex items-center justify-center">
                     <Wrench className="w-5 h-5 text-primary" />
