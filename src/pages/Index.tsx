@@ -720,9 +720,96 @@ const Index = () => {
                 <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed mb-2">
                   Discover 3 completely different paths to achieve the same goal—each with its own strategy, timeline, and resource requirements.
                 </p>
-                <p className="text-sm text-muted-foreground/70 max-w-2xl mx-auto mb-8">
+                <p className="text-sm text-muted-foreground/70 max-w-2xl mx-auto mb-12">
                   Choose the route that aligns perfectly with your priorities and constraints
                 </p>
+              </div>
+
+              {/* Branching Lines Animation */}
+              <div className="relative mb-8 h-24 sm:h-32">
+                <svg className="absolute inset-0 w-full h-full" viewBox="0 0 800 120" preserveAspectRatio="xMidYMid meet">
+                  <defs>
+                    <linearGradient id="lineGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.8" />
+                      <stop offset="100%" stopColor="hsl(var(--accent))" stopOpacity="0.6" />
+                    </linearGradient>
+                  </defs>
+                  
+                  {/* Main trunk line */}
+                  <path
+                    d="M 400 0 L 400 40"
+                    stroke="url(#lineGradient)"
+                    strokeWidth="2"
+                    fill="none"
+                    strokeLinecap="round"
+                    className="animate-[drawLine_1s_ease-out_forwards]"
+                    style={{
+                      strokeDasharray: 40,
+                      strokeDashoffset: 40,
+                      animation: 'drawLine 0.8s ease-out forwards'
+                    }}
+                  />
+                  
+                  {/* Left branch to Route A */}
+                  <path
+                    d="M 400 40 Q 400 60, 133 100"
+                    stroke="url(#lineGradient)"
+                    strokeWidth="2"
+                    fill="none"
+                    strokeLinecap="round"
+                    style={{
+                      strokeDasharray: 280,
+                      strokeDashoffset: 280,
+                      animation: 'drawLine 0.8s ease-out 0.4s forwards'
+                    }}
+                  />
+                  
+                  {/* Center branch to Route B */}
+                  <path
+                    d="M 400 40 L 400 100"
+                    stroke="url(#lineGradient)"
+                    strokeWidth="2"
+                    fill="none"
+                    strokeLinecap="round"
+                    style={{
+                      strokeDasharray: 60,
+                      strokeDashoffset: 60,
+                      animation: 'drawLine 0.8s ease-out 0.4s forwards'
+                    }}
+                  />
+                  
+                  {/* Right branch to Route C */}
+                  <path
+                    d="M 400 40 Q 400 60, 667 100"
+                    stroke="url(#lineGradient)"
+                    strokeWidth="2"
+                    fill="none"
+                    strokeLinecap="round"
+                    style={{
+                      strokeDasharray: 280,
+                      strokeDashoffset: 280,
+                      animation: 'drawLine 0.8s ease-out 0.4s forwards'
+                    }}
+                  />
+                  
+                  {/* Branch point glow */}
+                  <circle
+                    cx="400"
+                    cy="40"
+                    r="4"
+                    fill="hsl(var(--primary))"
+                    className="animate-pulse"
+                    style={{
+                      opacity: 0,
+                      animation: 'fadeIn 0.4s ease-out 0.8s forwards, pulse 2s ease-in-out 1.2s infinite'
+                    }}
+                  />
+                  
+                  {/* End point circles */}
+                  <circle cx="133" cy="100" r="3" fill="hsl(var(--primary))" style={{ opacity: 0, animation: 'fadeIn 0.4s ease-out 1.2s forwards' }} />
+                  <circle cx="400" cy="100" r="3" fill="hsl(var(--primary))" style={{ opacity: 0, animation: 'fadeIn 0.4s ease-out 1.2s forwards' }} />
+                  <circle cx="667" cy="100" r="3" fill="hsl(var(--primary))" style={{ opacity: 0, animation: 'fadeIn 0.4s ease-out 1.2s forwards' }} />
+                </svg>
               </div>
 
               {/* Route Examples */}
