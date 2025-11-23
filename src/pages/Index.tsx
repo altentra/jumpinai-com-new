@@ -459,20 +459,20 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Multi-Level Clarification & Route Discovery Section */}
+      {/* Three Core Features Section */}
       <section className="py-10 sm:py-12 lg:py-16 relative">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8 sm:mb-10 lg:mb-12">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold gradient-text-primary mb-3 sm:mb-4 font-display">
-              Adaptive Intelligence: Multi-Level Clarification
+              Three Powerful Features That Adapt to Your Needs
             </h2>
             <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto">
-              Never feel stuck with a vague step again. Our revolutionary system lets you drill down up to 4 levels deep into any step, or discover completely alternative routes to achieve your goals.
+              Never feel stuck with a vague step again. Clarify steps up to 4 levels deep, discover alternative routes, or equip any step with custom tools & prompts—all at your fingertips.
             </p>
           </div>
 
-          {/* Visual Demonstration */}
-          <div ref={clarificationRef} className="max-w-5xl mx-auto mb-8">
+          {/* Feature 1: CLARIFY - Multi-Level Breakdown */}
+          <div ref={clarificationRef} className="max-w-5xl mx-auto mb-12">
             <div 
               className="glass rounded-2xl p-6 lg:p-8 border border-primary/20 shadow-lg backdrop-blur-xl transition-all duration-700 ease-out"
               style={{
@@ -480,56 +480,35 @@ const Index = () => {
                 transform: `translateY(${(1 - Math.min(1, clarificationProgress * 1.3)) * 40}px)`
               }}
             >
-              <h3 className="text-lg lg:text-xl font-bold mb-6 text-center font-display">
-                How It Works: Interactive Step Controls
-              </h3>
-              
-              {/* The Core Mechanic */}
-              <div className="mb-6 p-4 sm:p-5 rounded-xl glass bg-muted/30 border border-primary/30 backdrop-blur-sm shadow-sm">
-                <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 rounded-lg backdrop-blur-xl bg-primary/10 ring-1 ring-primary/30 flex items-center justify-center">
-                    <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"></path>
-                    </svg>
+              {/* Feature Header */}
+              <div className="text-center mb-8">
+                <div className="inline-flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 rounded-xl backdrop-blur-xl bg-primary/10 ring-1 ring-primary/30 flex items-center justify-center">
+                    <Sparkles className="w-6 h-6 text-primary" />
                   </div>
-                  <div className="flex-1 w-full">
-                    <h4 className="font-bold text-sm sm:text-base lg:text-lg mb-3">Hover Over Any Step = Two Powerful Buttons Appear</h4>
-                    <div className="grid sm:grid-cols-2 gap-3">
-                      <div className="glass bg-muted/30 p-3 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
-                        <div className="flex items-center gap-2 mb-2">
-                          {/* Clarify Button - Exact replica from JumpPlanDisplay */}
-                          <div className="relative group/clarify">
-                            <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/40 via-accent/30 to-primary/40 rounded-[2rem] blur-md opacity-40 transition duration-500"></div>
-                            <div className="relative flex items-center gap-2 px-5 py-2.5 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2rem] border border-primary/40 transition-all duration-300 overflow-hidden shadow-lg shadow-primary/10 cursor-default">
-                              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full transition-transform duration-1000"></div>
-                              <Sparkles className="relative w-3.5 h-3.5 text-primary" />
-                              <span className="relative text-sm font-bold text-foreground whitespace-nowrap">Clarify</span>
-                            </div>
-                          </div>
-                        </div>
-                        <p className="text-xs sm:text-sm text-muted-foreground">
-                          Generates <strong className="font-semibold text-foreground">5 detailed sub-steps</strong> that break down this step into actionable components
-                        </p>
-                      </div>
-                      <div className="glass bg-muted/30 p-3 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
-                        <div className="flex items-center gap-2 mb-2">
-                          {/* Reroute Button - Exact replica from JumpPlanDisplay */}
-                          <div className="relative group/reroute">
-                            <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/40 via-accent/30 to-primary/40 rounded-[2rem] blur-md opacity-40 transition duration-500"></div>
-                            <div className="relative flex items-center gap-2 px-5 py-2.5 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2rem] border border-primary/40 transition-all duration-300 overflow-hidden shadow-lg shadow-primary/10 cursor-default">
-                              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full transition-transform duration-1000"></div>
-                              <GitBranch className="relative w-3.5 h-3.5 text-primary" />
-                              <span className="relative text-sm font-bold text-foreground whitespace-nowrap">Reroute</span>
-                            </div>
-                          </div>
-                        </div>
-                        <p className="text-xs sm:text-sm text-muted-foreground">
-                          Suggests <strong className="font-semibold text-foreground">3 alternative routes</strong> (each with 3 sub-steps) to achieve the same goal
-                        </p>
-                      </div>
+                  <h3 className="text-xl lg:text-2xl font-bold font-display">Feature 1: Clarify</h3>
+                </div>
+                <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto">
+                  Break down any step into 5 detailed sub-steps. Go up to 4 levels deep—from broad strategy to crystal-clear, actionable instructions you can execute today.
+                </p>
+              </div>
+              
+              {/* How Clarify Works */}
+              <div className="mb-6 p-4 sm:p-5 rounded-xl glass bg-muted/30 border border-primary/30 backdrop-blur-sm shadow-sm">
+                <div className="flex items-center gap-2 mb-4 justify-center">
+                  {/* Clarify Button Demo */}
+                  <div className="relative group/clarify">
+                    <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/40 via-accent/30 to-primary/40 rounded-[2rem] blur-md opacity-40 transition duration-500"></div>
+                    <div className="relative flex items-center gap-2 px-5 py-2.5 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2rem] border border-primary/40 transition-all duration-300 overflow-hidden shadow-lg shadow-primary/10 cursor-default">
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full transition-transform duration-1000"></div>
+                      <Sparkles className="relative w-3.5 h-3.5 text-primary" />
+                      <span className="relative text-sm font-bold text-foreground whitespace-nowrap">Clarify</span>
                     </div>
                   </div>
                 </div>
+                <p className="text-xs sm:text-sm text-muted-foreground text-center">
+                  Hover over any step at any level and click <strong className="font-semibold text-foreground">Clarify</strong> to generate <strong className="font-semibold text-foreground">5 detailed sub-steps</strong> that break it down into actionable components
+                </p>
               </div>
 
               {/* Multi-Level Breakdown */}
@@ -724,118 +703,140 @@ const Index = () => {
                 </div>
               </div>
 
-              {/* Reroute Feature */}
-              <div 
-                ref={rerouteRef}
-                className="mt-4 sm:mt-6 p-4 sm:p-5 rounded-xl glass bg-muted/30 border border-primary/20 backdrop-blur-sm shadow-sm transition-all duration-700 ease-out"
-                style={{
-                  opacity: Math.min(1, rerouteProgress * 1.3),
-                  transform: `translateY(${(1 - Math.min(1, rerouteProgress * 1.3)) * 50}px)`
-                }}
-              >
-                <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 rounded-lg backdrop-blur-xl bg-primary/10 ring-1 ring-primary/30 flex items-center justify-center">
-                    <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
-                    </svg>
+            </div>
+          </div>
+
+          {/* Feature 2: REROUTE - Alternative Routes */}
+          <div 
+            ref={rerouteRef}
+            className="max-w-5xl mx-auto mb-12 transition-all duration-700 ease-out"
+            style={{
+              opacity: Math.min(1, rerouteProgress * 1.3),
+              transform: `translateY(${(1 - Math.min(1, rerouteProgress * 1.3)) * 50}px)`
+            }}
+          >
+            <div className="glass rounded-2xl p-6 lg:p-8 border border-primary/20 shadow-lg backdrop-blur-xl">
+              {/* Feature Header */}
+              <div className="text-center mb-8">
+                <div className="inline-flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 rounded-xl backdrop-blur-xl bg-primary/10 ring-1 ring-primary/30 flex items-center justify-center">
+                    <GitBranch className="w-6 h-6 text-primary" />
                   </div>
-                  <div className="flex-1 w-full">
-                    <h4 className="font-bold mb-2">
-                      <span className="text-sm sm:text-base">Alternative Routes Discovery</span>
-                    </h4>
-                    <p className="text-xs sm:text-sm text-muted-foreground mb-3">
-                      Not confident about a specific approach? Click <strong className="font-semibold text-foreground">Reroute</strong> on any step at any level to discover 3 completely different paths:
-                    </p>
-                    <div className="grid sm:grid-cols-3 gap-3">
-                      <div className="glass bg-muted/30 p-3 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
-                        <p className="text-xs font-bold text-primary mb-1.5">Route A: Premium</p>
-                        <div className="space-y-0.5 text-xs text-muted-foreground">
-                          <p>• High-end tools</p>
-                          <p>• Faster timeline</p>
-                          <p>• Higher cost</p>
-                        </div>
-                      </div>
-                      <div className="glass bg-muted/30 p-3 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
-                        <p className="text-xs font-bold text-primary mb-1.5">Route B: Budget-Friendly</p>
-                        <div className="space-y-0.5 text-xs text-muted-foreground">
-                          <p>• Free/low-cost tools</p>
-                          <p>• Gradual rollout</p>
-                          <p>• Lower risk</p>
-                        </div>
-                      </div>
-                      <div className="glass bg-muted/30 p-3 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
-                        <p className="text-xs font-bold text-primary mb-1.5">Route C: Hybrid</p>
-                        <div className="space-y-0.5 text-xs text-muted-foreground">
-                          <p>• Mix of approaches</p>
-                          <p>• Balanced timeline</p>
-                          <p>• Medium investment</p>
-                        </div>
-                      </div>
+                  <h3 className="text-xl lg:text-2xl font-bold font-display">Feature 2: Reroute</h3>
+                </div>
+                <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto">
+                  Not confident about a specific approach? Discover 3 completely different paths to achieve the same goal—each with its own strategy, timeline, and resource requirements.
+                </p>
+              </div>
+
+              {/* How Reroute Works */}
+              <div className="mb-6 p-4 sm:p-5 rounded-xl glass bg-muted/30 border border-primary/30 backdrop-blur-sm shadow-sm">
+                <div className="flex items-center gap-2 mb-4 justify-center">
+                  {/* Reroute Button Demo */}
+                  <div className="relative group/reroute">
+                    <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/40 via-accent/30 to-primary/40 rounded-[2rem] blur-md opacity-40 transition duration-500"></div>
+                    <div className="relative flex items-center gap-2 px-5 py-2.5 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2rem] border border-primary/40 transition-all duration-300 overflow-hidden shadow-lg shadow-primary/10 cursor-default">
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full transition-transform duration-1000"></div>
+                      <GitBranch className="relative w-3.5 h-3.5 text-primary" />
+                      <span className="relative text-sm font-bold text-foreground whitespace-nowrap">Reroute</span>
                     </div>
-                    <p className="text-xs text-muted-foreground mt-2 italic">
-                      Each route comes with 3 sub-steps. Choose the one that fits your resources, risk tolerance, and timeline.
-                    </p>
+                  </div>
+                </div>
+                <p className="text-xs sm:text-sm text-muted-foreground text-center mb-4">
+                  Click <strong className="font-semibold text-foreground">Reroute</strong> on any step at any level to discover <strong className="font-semibold text-foreground">3 alternative routes</strong>, each with 3 sub-steps
+                </p>
+                
+                <div className="grid sm:grid-cols-3 gap-3">
+                  <div className="glass bg-muted/30 p-3 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
+                    <p className="text-xs font-bold text-primary mb-1.5">Route A: Premium</p>
+                    <div className="space-y-0.5 text-xs text-muted-foreground">
+                      <p>• High-end tools</p>
+                      <p>• Faster timeline</p>
+                      <p>• Higher cost</p>
+                    </div>
+                  </div>
+                  <div className="glass bg-muted/30 p-3 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
+                    <p className="text-xs font-bold text-primary mb-1.5">Route B: Budget-Friendly</p>
+                    <div className="space-y-0.5 text-xs text-muted-foreground">
+                      <p>• Free/low-cost tools</p>
+                      <p>• Gradual rollout</p>
+                      <p>• Lower risk</p>
+                    </div>
+                  </div>
+                  <div className="glass bg-muted/30 p-3 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
+                    <p className="text-xs font-bold text-primary mb-1.5">Route C: Hybrid</p>
+                    <div className="space-y-0.5 text-xs text-muted-foreground">
+                      <p>• Mix of approaches</p>
+                      <p>• Balanced timeline</p>
+                      <p>• Medium investment</p>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              {/* Equip Feature */}
-              <div 
-                ref={equipRef}
-                className="mt-4 sm:mt-6 p-4 sm:p-5 rounded-xl glass bg-muted/30 border border-primary/20 backdrop-blur-sm shadow-sm transition-all duration-700 ease-out"
-                style={{
-                  opacity: Math.min(1, equipProgress * 1.3),
-                  transform: `translateY(${(1 - Math.min(1, equipProgress * 1.3)) * 50}px)`
-                }}
-              >
-                <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 rounded-lg backdrop-blur-xl bg-primary/10 ring-1 ring-primary/30 flex items-center justify-center">
-                    <Wrench className="w-5 h-5 text-primary" />
+              <p className="text-xs sm:text-sm text-muted-foreground text-center italic">
+                Each route comes with 3 sub-steps. Choose the one that fits your resources, risk tolerance, and timeline.
+              </p>
+
+            </div>
+          </div>
+
+          {/* Feature 3: EQUIP - On-Demand Tools & Prompts */}
+          <div 
+            ref={equipRef}
+            className="max-w-5xl mx-auto mb-8 transition-all duration-700 ease-out"
+            style={{
+              opacity: Math.min(1, equipProgress * 1.3),
+              transform: `translateY(${(1 - Math.min(1, equipProgress * 1.3)) * 50}px)`
+            }}
+          >
+            <div className="glass rounded-2xl p-6 lg:p-8 border border-primary/20 shadow-lg backdrop-blur-xl">
+              {/* Feature Header */}
+              <div className="text-center mb-8">
+                <div className="inline-flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 rounded-xl backdrop-blur-xl bg-primary/10 ring-1 ring-primary/30 flex items-center justify-center">
+                    <Wrench className="w-6 h-6 text-primary" />
                   </div>
-                  <div className="flex-1 w-full">
-                    <h4 className="font-bold mb-2">
-                      <span className="text-sm sm:text-base">On-Demand Tools & Prompts</span>
-                    </h4>
-                    <p className="text-xs sm:text-sm text-muted-foreground mb-3">
-                      Need implementation tools for a specific step? Hover over any step at any clarification level and click the <strong className="font-semibold text-foreground">Equip</strong> button to instantly generate a tailored tool-prompt combination:
-                    </p>
-                    
-                    {/* Equip Button Demo */}
-                    <div className="glass bg-muted/30 p-3 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm mb-3">
-                      <div className="flex items-center gap-2 mb-2">
-                        {/* Equip Button - Exact replica matching Clarify and Reroute style */}
-                        <div className="relative group/equip">
-                          <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/40 via-accent/30 to-primary/40 rounded-[2rem] blur-md opacity-40 transition duration-500"></div>
-                          <div className="relative flex items-center gap-2 px-5 py-2.5 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2rem] border border-primary/40 transition-all duration-300 overflow-hidden shadow-lg shadow-primary/10 cursor-default">
-                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full transition-transform duration-1000"></div>
-                            <Wrench className="relative w-3.5 h-3.5 text-primary" />
-                            <span className="relative text-sm font-bold text-foreground whitespace-nowrap">Equip</span>
-                          </div>
-                        </div>
-                      </div>
-                      <p className="text-xs sm:text-sm text-muted-foreground">
-                        Generates a <strong className="font-semibold text-foreground">custom tool-prompt combination</strong> designed specifically for this step's context and requirements
-                      </p>
-                    </div>
+                  <h3 className="text-xl lg:text-2xl font-bold font-display">Feature 3: Equip</h3>
+                </div>
+                <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto">
+                  Need implementation tools for a specific step? Generate a custom tool-prompt combination on-demand—perfectly aligned with your step's requirements, budget, and technical level.
+                </p>
+              </div>
 
-                    <div className="grid sm:grid-cols-2 gap-3 mb-3">
-                      <div className="glass bg-muted/30 p-3 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
-                        <p className="text-xs font-bold text-primary mb-1.5">Curated Tool Selection</p>
-                        <p className="text-xs text-muted-foreground">Get a main tool recommendation plus 2 alternatives perfectly aligned to your step's requirements, budget, and technical level.</p>
-                      </div>
-                      <div className="glass bg-muted/30 p-3 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
-                        <p className="text-xs font-bold text-primary mb-1.5">Ready-to-Use Prompts</p>
-                        <p className="text-xs text-muted-foreground">Receive expertly crafted prompts designed specifically for your step—copy, paste, and execute immediately with any AI tool.</p>
-                      </div>
-                    </div>
-
-                    <div className="glass bg-muted/30 p-3 rounded-lg border border-primary/15 backdrop-blur-sm">
-                      <p className="text-xs text-muted-foreground">
-                        Each equipped combo is automatically saved in your Tools & Prompts tab with a unique identifier (e.g., Combo #10) and linked directly to its originating step. Build your custom implementation toolkit as you progress through your plan, with every tool and prompt exactly where you need it.
-                      </p>
+              {/* How Equip Works */}
+              <div className="mb-6 p-4 sm:p-5 rounded-xl glass bg-muted/30 border border-primary/30 backdrop-blur-sm shadow-sm">
+                <div className="flex items-center gap-2 mb-4 justify-center">
+                  {/* Equip Button Demo */}
+                  <div className="relative group/equip">
+                    <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/40 via-accent/30 to-primary/40 rounded-[2rem] blur-md opacity-40 transition duration-500"></div>
+                    <div className="relative flex items-center gap-2 px-5 py-2.5 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2rem] border border-primary/40 transition-all duration-300 overflow-hidden shadow-lg shadow-primary/10 cursor-default">
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full transition-transform duration-1000"></div>
+                      <Wrench className="relative w-3.5 h-3.5 text-primary" />
+                      <span className="relative text-sm font-bold text-foreground whitespace-nowrap">Equip</span>
                     </div>
                   </div>
                 </div>
+                <p className="text-xs sm:text-sm text-muted-foreground text-center mb-4">
+                  Hover over any step at any clarification level and click <strong className="font-semibold text-foreground">Equip</strong> to instantly generate a <strong className="font-semibold text-foreground">tailored tool-prompt combination</strong>
+                </p>
+                
+                <div className="grid sm:grid-cols-2 gap-3">
+                  <div className="glass bg-muted/30 p-3 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
+                    <p className="text-xs font-bold text-primary mb-1.5">Curated Tool Selection</p>
+                    <p className="text-xs text-muted-foreground">Get a main tool recommendation plus 2 alternatives perfectly aligned to your step's requirements, budget, and technical level.</p>
+                  </div>
+                  <div className="glass bg-muted/30 p-3 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
+                    <p className="text-xs font-bold text-primary mb-1.5">Ready-to-Use Prompts</p>
+                    <p className="text-xs text-muted-foreground">Receive expertly crafted prompts designed specifically for your step—copy, paste, and execute immediately with any AI tool.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="glass bg-muted/30 p-3 rounded-lg border border-primary/15 backdrop-blur-sm">
+                <p className="text-xs sm:text-sm text-muted-foreground text-center">
+                  Each equipped combo is automatically saved in your <strong className="font-semibold text-foreground">Tools & Prompts</strong> tab with a unique identifier (e.g., Combo #10) and linked directly to its originating step. Build your custom implementation toolkit as you progress through your plan, with every tool and prompt exactly where you need it.
+                </p>
               </div>
             </div>
           </div>
