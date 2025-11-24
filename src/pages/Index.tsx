@@ -47,6 +47,7 @@ const Index = () => {
   const { elementRef: equipCardsRef, scrollProgress: equipCardsProgress } = useScrollAnimation({ threshold: 0.2 });
   const { elementRef: conceptCardsRef, scrollProgress: conceptCardsProgress } = useScrollAnimation({ threshold: 0.2 });
   const { elementRef: quoteCardRef, scrollProgress: quoteCardProgress } = useScrollAnimation({ threshold: 0.2 });
+  const { elementRef: clarityMiniFrameRef, scrollProgress: clarityMiniFrameProgress } = useScrollAnimation({ threshold: 0.2 });
 
   // Show test component only in development or when URL contains 'test'
   const showTest = window.location.hostname === 'localhost' || 
@@ -542,14 +543,38 @@ const Index = () => {
             </div>
 
             <div className="text-center mt-8">
-              <div className="inline-flex flex-col items-center gap-2 p-4 bg-gradient-to-r from-primary/10 to-primary/10 rounded-3xl border border-primary/20">
-                <div className="flex items-center gap-3">
-                  <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                  </svg>
-                  <span className="font-semibold">Complete 3-tab Jump generated in 2 minutes</span>
+              <div 
+                ref={clarityMiniFrameRef}
+                className="inline-block transition-all duration-700 ease-out"
+                style={{
+                  opacity: Math.max(0, Math.min(1, clarityMiniFrameProgress * 2)),
+                  transform: `translateX(${(1 - Math.max(0, Math.min(1, clarityMiniFrameProgress * 2))) * -60}px)`
+                }}
+              >
+                <div className="group relative rounded-3xl">
+                  {/* Liquid glass border wrapper */}
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/[0.03] via-white/[0.01] to-white/[0.03] p-[1px]">
+                    <div className="absolute inset-0 rounded-3xl bg-card"></div>
+                  </div>
+                  
+                  <div className="relative bg-card rounded-3xl p-6 shadow-modern hover:shadow-modern-lg transition-all duration-500 border border-white/10 hover:border-white/20">
+                    {/* Subtle glass overlay */}
+                    <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/[0.02] via-transparent to-white/[0.01] pointer-events-none"></div>
+                    
+                    <div className="relative z-10 flex flex-col items-center gap-2">
+                      <div className="flex items-center gap-3">
+                        <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span className="font-semibold">Complete 3-tab Jump generated in 2 minutes</span>
+                      </div>
+                      <p className="text-xs text-muted-foreground">Strategic overview + adaptive plan + 9 tool-prompt combos</p>
+                    </div>
+                  </div>
+                  
+                  {/* Subtle white back shadow */}
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-gray-800 to-black dark:from-white dark:to-gray-300 opacity-20 group-hover:opacity-40 transition-opacity duration-500 -z-10 blur-lg"></div>
                 </div>
-                <p className="text-xs text-muted-foreground">Strategic overview + adaptive plan + 9 tool-prompt combos</p>
               </div>
             </div>
           </div>
