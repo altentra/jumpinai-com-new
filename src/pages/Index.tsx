@@ -1248,7 +1248,7 @@ const Index = () => {
                       <h3 className="text-lg font-bold font-display">What Makes Us Different</h3>
                     </div>
                     <p className="text-sm text-muted-foreground leading-relaxed">
-                      Others give you tools and leave you to figure out the rest. We give you direction. Every Jump is a complete strategic framework—overview, adaptive plan, and curated resources—designed to eliminate guesswork and accelerate execution. It's not about having more options; it's about making the right moves. We turn AI potential into actionable progress, so you're not just experimenting—you're building with purpose, precision, and a clear path forward.
+                      Others give you tools and leave you to figure out the rest. We give you direction. Every Jump is a complete strategic framework—overview, adaptive plan, and curated resources—designed to eliminate guesswork and accelerate execution. It's not about having more options; it's about making the right moves. We turn AI potential into actionable progress, so you're not experimenting—you're building with purpose and a clear path forward.
                     </p>
                   </div>
                 </div>
