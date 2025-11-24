@@ -905,9 +905,9 @@ const Index = () => {
               </div>
 
               {/* Feature Highlights */}
-              <div ref={equipCardsRef} className="grid sm:grid-cols-2 gap-4 mb-6">
+              <div ref={equipCardsRef} className="grid grid-cols-2 gap-2 sm:gap-4 mb-6">
                 <div 
-                  className="glass bg-muted/30 p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm transition-all duration-700 ease-out scroll-animate"
+                  className="glass bg-muted/30 p-3 sm:p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm transition-all duration-700 ease-out scroll-animate"
                   style={{
                     opacity: Math.max(0, Math.min(1, equipCardsProgress * 3)),
                     transform: `translateY(${(1 - Math.max(0, Math.min(1, equipCardsProgress * 3))) * 40}px)`
@@ -919,7 +919,7 @@ const Index = () => {
                   </p>
                 </div>
                 <div 
-                  className="glass bg-muted/30 p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm transition-all duration-700 ease-out scroll-animate"
+                  className="glass bg-muted/30 p-3 sm:p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm transition-all duration-700 ease-out scroll-animate"
                   style={{
                     opacity: Math.max(0, Math.min(1, (equipCardsProgress - 0.4) * 3)),
                     transform: `translateY(${(1 - Math.max(0, Math.min(1, (equipCardsProgress - 0.4) * 3))) * 40}px)`
