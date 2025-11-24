@@ -120,89 +120,44 @@ export const jumpinAIStudioService = {
                 result.title = result.jumpName;
                 console.log('✅ Set result.jumpName and result.title to:', result.jumpName);
                 
-                // Extract IP and location from metadata if available
+                // Extract IP, location, and JUMP ID from backend metadata
+                // The backend now creates the jump record for both guests and logged-in users
                 if (data._metadata) {
                   ipAddress = data._metadata.ipAddress || 'unknown';
                   location = data._metadata.location || 'Unknown';
-                  console.log('📍 Extracted location from backend:', { ipAddress, location });
+                  
+                  // Backend provides the jumpId after creating the record
+                  if (data._metadata.jumpId) {
+                    jumpId = data._metadata.jumpId;
+                    result.jumpId = jumpId;
+                    console.log('✅ Jump ID received from backend:', jumpId);
+                  }
+                  
+                  // Backend also provides the formatted title (with Jump # for logged-in users)
+                  if (data._metadata.jumpTitle) {
+                    result.title = data._metadata.jumpTitle;
+                    result.fullTitle = data._metadata.jumpTitle;
+                    console.log('✅ Jump title received from backend:', result.title);
+                  }
+                  
+                  console.log('📍 Extracted from backend:', { ipAddress, location, jumpId });
                 }
                 
                 console.log('✅ Jump name received:', data.jumpName);
                 
-                // Save jump for BOTH logged-in users AND guests - MUST AWAIT THIS
-                try {
-                  if (userId) {
-                    // Logged-in user: Save with Jump # format
-                    const jumpNumber = await jumpNamingService.getNextJumpNumber(userId);
-                    const fullTitle = `Jump #${jumpNumber}: ${result.jumpName}`;
-                    result.jumpNumber = jumpNumber;
-                    result.fullTitle = fullTitle;
-                    result.title = fullTitle; // Also set title for consistency
-                    
-                    const { data: savedJump, error } = await supabase
-                      .from('user_jumps')
-                      .insert({
-                        user_id: userId,
-                        title: fullTitle,
-                        summary: `AI Transformation: ${result.jumpName}`,
-                        full_content: JSON.stringify({ jumpName: result.jumpName }),
-                        completion_percentage: 5,
-                        status: 'generating',
-                        ip_address: ipAddress,
-                        location: location,
-                        form_goals: formData.goals,
-                        form_challenges: formData.challenges
-                      })
-                      .select()
-                      .single();
-                    
-                    if (error) throw error;
-                    jumpId = savedJump.id;
-                    result.jumpId = jumpId;
-                    console.log('✅ Jump created with ID:', jumpId);
-                  } else {
-                    // Guest user: Save with simple title format (no Jump #)
-                    const { data: savedJump, error } = await supabase
-                      .from('user_jumps')
-                      .insert({
-                        user_id: null,
-                        title: result.jumpName,
-                        summary: `AI Transformation: ${result.jumpName}`,
-                        full_content: JSON.stringify({ jumpName: result.jumpName }),
-                        completion_percentage: 5,
-                        status: 'generating',
-                        ip_address: ipAddress,
-                        location: location,
-                        form_goals: formData.goals,
-                        form_challenges: formData.challenges
-                      })
-                      .select()
-                      .single();
-
-                    if (error) throw error;
-                    jumpId = savedJump.id;
-                    result.jumpId = jumpId;
-                    result.title = result.jumpName; // Set title for display
-                    result.fullTitle = result.jumpName; // Set fullTitle (without Jump # for guests)
-                    console.log('✅ Guest jump created with ID:', jumpId);
-                  }
-                } catch (error) {
-                  console.error('❌ Error creating jump:', error);
-                }
-                
-                // Call onProgress for naming event - CRITICAL: Include jumpName in callback data
+                // Call onProgress for naming event
                 if (onProgress) {
-                  const callbackData = { ...data, jumpName: result.jumpName };
+                  const callbackData = { ...data, jumpName: result.jumpName, jumpId };
                   onProgress(step, type, callbackData);
                 }
                 
-                // Call onProgress again with jump_created event including jumpId and title info
+                // Call onProgress with jump_created event
                 if (onProgress && jumpId) {
                   onProgress(step, 'jump_created', {
                     jumpId: jumpId,
-                    jumpNumber: result.jumpNumber, // undefined for guests, that's OK
-                    fullTitle: result.fullTitle, // For guests: just the name, for logged-in: "Jump #X: Name"
-                    title: result.title // Fallback title
+                    jumpNumber: result.jumpNumber,
+                    fullTitle: result.fullTitle || result.title,
+                    title: result.title
                   });
                 }
               } else if (type === 'overview') {
