@@ -246,8 +246,17 @@ const Index = () => {
                 transform: `translateY(${Math.min(1, tabsProgress * 3) >= 0.99 ? 0 : (1 - Math.min(1, tabsProgress * 3)) * 40}px)`
               }}
             >
+              {/* Liquid glass border wrapper */}
+              <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/[0.03] via-white/[0.01] to-white/[0.03] p-[1px]">
+                <div className="absolute inset-0 rounded-3xl bg-card"></div>
+              </div>
+              
               <div className="relative bg-card rounded-3xl p-8 h-full shadow-modern hover:shadow-modern-lg transition-all duration-500 border border-white/10 hover:border-white/20">
-              <div className="flex items-center gap-3 mb-4 relative">
+                {/* Subtle glass overlay */}
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/[0.02] via-transparent to-white/[0.01] pointer-events-none"></div>
+                
+                <div className="relative z-10">
+                  <div className="flex items-center gap-3 mb-4">
                 <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
                   <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
@@ -274,9 +283,10 @@ const Index = () => {
                 <div className="flex items-start gap-2">
                   <span className="text-primary mt-0.5">•</span>
                   <span>Strategic Vision & Roadmap</span>
+                  </div>
                 </div>
               </div>
-            </div>
+              </div>
               
               {/* Subtle white back shadow */}
               <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-gray-800 to-black dark:from-white dark:to-gray-300 opacity-20 group-hover:opacity-40 transition-opacity duration-500 -z-10 blur-lg"></div>
@@ -290,8 +300,17 @@ const Index = () => {
                 transform: `translateY(${Math.max(0, Math.min(1, (tabsProgress - 0.35) * 3)) >= 0.99 ? 0 : (1 - Math.max(0, Math.min(1, (tabsProgress - 0.35) * 3))) * 40}px)`
               }}
             >
+              {/* Liquid glass border wrapper */}
+              <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/[0.03] via-white/[0.01] to-white/[0.03] p-[1px]">
+                <div className="absolute inset-0 rounded-3xl bg-card"></div>
+              </div>
+              
               <div className="relative bg-card rounded-3xl p-8 h-full shadow-modern hover:shadow-modern-lg transition-all duration-500 border border-white/10 hover:border-white/20">
-              <div className="flex items-center gap-3 mb-4 relative">
+                {/* Subtle glass overlay */}
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/[0.02] via-transparent to-white/[0.01] pointer-events-none"></div>
+                
+                <div className="relative z-10">
+                  <div className="flex items-center gap-3 mb-4">
                 <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
                   <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
@@ -318,9 +337,10 @@ const Index = () => {
                 <div className="flex items-start gap-2">
                   <span className="text-primary mt-0.5">•</span>
                   <span>Never feel stuck again</span>
+                  </div>
                 </div>
               </div>
-            </div>
+              </div>
               
               {/* Subtle white back shadow */}
               <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-gray-800 to-black dark:from-white dark:to-gray-300 opacity-20 group-hover:opacity-40 transition-opacity duration-500 -z-10 blur-lg"></div>
@@ -334,8 +354,17 @@ const Index = () => {
                 transform: `translateY(${Math.max(0, Math.min(1, (tabsProgress - 0.65) * 3.5)) >= 0.9 ? 0 : (1 - Math.max(0, Math.min(1, (tabsProgress - 0.65) * 3.5))) * 40}px)`
               }}
             >
+              {/* Liquid glass border wrapper */}
+              <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/[0.03] via-white/[0.01] to-white/[0.03] p-[1px]">
+                <div className="absolute inset-0 rounded-3xl bg-card"></div>
+              </div>
+              
               <div className="relative bg-card rounded-3xl p-8 h-full shadow-modern hover:shadow-modern-lg transition-all duration-500 border border-white/10 hover:border-white/20">
-              <div className="flex items-center gap-3 mb-4 relative">
+                {/* Subtle glass overlay */}
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/[0.02] via-transparent to-white/[0.01] pointer-events-none"></div>
+                
+                <div className="relative z-10">
+                  <div className="flex items-center gap-3 mb-4">
                 <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
                   <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
@@ -362,9 +391,10 @@ const Index = () => {
                 <div className="flex items-start gap-2">
                   <span className="text-primary mt-0.5">•</span>
                   <span>Complete Implementation Guidance</span>
+                  </div>
                 </div>
               </div>
-            </div>
+              </div>
               
               {/* Subtle white back shadow */}
               <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-gray-800 to-black dark:from-white dark:to-gray-300 opacity-20 group-hover:opacity-40 transition-opacity duration-500 -z-10 blur-lg"></div>
