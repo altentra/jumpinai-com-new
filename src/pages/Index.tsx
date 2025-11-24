@@ -48,6 +48,10 @@ const Index = () => {
   const { elementRef: conceptCardsRef, scrollProgress: conceptCardsProgress } = useScrollAnimation({ threshold: 0.2 });
   const { elementRef: quoteCardRef, scrollProgress: quoteCardProgress } = useScrollAnimation({ threshold: 0.2 });
   const { elementRef: clarityMiniFrameRef, scrollProgress: clarityMiniFrameProgress } = useScrollAnimation({ threshold: 0.2 });
+  const { elementRef: whyMissingRef, scrollProgress: whyMissingProgress } = useScrollAnimation({ threshold: 0.2 });
+  const { elementRef: whyCriticalRef, scrollProgress: whyCriticalProgress } = useScrollAnimation({ threshold: 0.2 });
+  const { elementRef: whyDifferentRef, scrollProgress: whyDifferentProgress } = useScrollAnimation({ threshold: 0.2 });
+  const { elementRef: whyKeyPointsRef, scrollProgress: whyKeyPointsProgress } = useScrollAnimation({ threshold: 0.2 });
 
   // Show test component only in development or when URL contains 'test'
   const showTest = window.location.hostname === 'localhost' || 
@@ -1161,7 +1165,14 @@ const Index = () => {
           {/* Content Cards */}
           <div className="max-w-6xl mx-auto space-y-5">
             {/* The Missing Piece */}
-            <div className="group relative rounded-2xl">
+            <div 
+              ref={whyMissingRef}
+              className="group relative rounded-2xl transition-all duration-700 ease-out"
+              style={{
+                opacity: Math.min(1, whyMissingProgress * 1.3),
+                transform: `translateY(${(1 - Math.min(1, whyMissingProgress * 1.3)) * 40}px)`
+              }}
+            >
               {/* Liquid glass border wrapper */}
               <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/[0.03] via-white/[0.01] to-white/[0.03] p-[1px]">
                 <div className="absolute inset-0 rounded-2xl bg-card"></div>
@@ -1198,7 +1209,14 @@ const Index = () => {
             {/* Two-Column: Why Now + What Makes Us Different */}
             <div className="grid md:grid-cols-2 gap-5">
               {/* The Critical Window */}
-              <div className="group relative rounded-2xl">
+              <div 
+                ref={whyCriticalRef}
+                className="group relative rounded-2xl transition-all duration-700 ease-out"
+                style={{
+                  opacity: Math.min(1, whyCriticalProgress * 1.5),
+                  transform: `translateY(${(1 - Math.min(1, whyCriticalProgress * 1.5)) * 40}px)`
+                }}
+              >
                 {/* Liquid glass border wrapper */}
                 <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/[0.03] via-white/[0.01] to-white/[0.03] p-[1px]">
                   <div className="absolute inset-0 rounded-2xl bg-card"></div>
@@ -1228,7 +1246,14 @@ const Index = () => {
               </div>
 
               {/* What Makes Us Different */}
-              <div className="group relative rounded-2xl">
+              <div 
+                ref={whyDifferentRef}
+                className="group relative rounded-2xl transition-all duration-700 ease-out"
+                style={{
+                  opacity: Math.max(0, Math.min(1, (whyDifferentProgress - 0.2) * 2)),
+                  transform: `translateY(${Math.max(0, Math.min(1, (whyDifferentProgress - 0.2) * 2)) >= 0.99 ? 0 : (1 - Math.max(0, Math.min(1, (whyDifferentProgress - 0.2) * 2))) * 40}px)`
+                }}
+              >
                 {/* Liquid glass border wrapper */}
                 <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/[0.03] via-white/[0.01] to-white/[0.03] p-[1px]">
                   <div className="absolute inset-0 rounded-2xl bg-card"></div>
@@ -1259,7 +1284,14 @@ const Index = () => {
             </div>
 
             {/* Three Key Points */}
-            <div className="group relative rounded-2xl">
+            <div 
+              ref={whyKeyPointsRef}
+              className="group relative rounded-2xl transition-all duration-700 ease-out"
+              style={{
+                opacity: Math.min(1, whyKeyPointsProgress * 1.3),
+                transform: `translateY(${(1 - Math.min(1, whyKeyPointsProgress * 1.3)) * 40}px)`
+              }}
+            >
               {/* Liquid glass border wrapper */}
               <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/[0.03] via-white/[0.01] to-white/[0.03] p-[1px]">
                 <div className="absolute inset-0 rounded-2xl bg-card"></div>
