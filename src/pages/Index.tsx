@@ -1074,20 +1074,35 @@ const Index = () => {
 
             {/* Featured Quote */}
             <div className="relative max-w-4xl mx-auto">
-              <div className="relative p-8 sm:p-10 rounded-2xl glass border border-primary/10 shadow-lg">
-                {/* Decorative Quote Mark */}
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-12 h-12 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 backdrop-blur-xl border border-primary/20 flex items-center justify-center">
-                  <svg className="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
-                  </svg>
+              <div className="group relative rounded-2xl">
+                {/* Liquid glass border wrapper */}
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/[0.03] via-white/[0.01] to-white/[0.03] p-[1px]">
+                  <div className="absolute inset-0 rounded-2xl bg-card"></div>
                 </div>
                 
-                <blockquote className="text-center">
-                  <p className="text-lg sm:text-xl lg:text-2xl text-foreground font-display leading-relaxed italic font-medium">
-                    The moment you jump, momentum takes over. Gravity pulls you forward. There's no going back—only the landing ahead.{' '}
-                    <span className="gradient-text-primary font-bold not-italic">Make it count.</span>
-                  </p>
-                </blockquote>
+                <div className="relative bg-card rounded-2xl p-8 sm:p-10 shadow-modern hover:shadow-modern-lg transition-all duration-500 border border-white/10 hover:border-white/20">
+                  {/* Subtle glass overlay */}
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/[0.02] via-transparent to-white/[0.01] pointer-events-none"></div>
+                  
+                  <div className="relative z-10">
+                    {/* Decorative Quote Mark */}
+                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-12 h-12 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 backdrop-blur-xl border border-primary/20 flex items-center justify-center">
+                      <svg className="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+                      </svg>
+                    </div>
+                    
+                    <blockquote className="text-center">
+                      <p className="text-lg sm:text-xl lg:text-2xl text-foreground font-display leading-relaxed italic font-medium">
+                        The moment you jump, momentum takes over. Gravity pulls you forward. There's no going back—only the landing ahead.{' '}
+                        <span className="gradient-text-primary font-bold not-italic">Make it count.</span>
+                      </p>
+                    </blockquote>
+                  </div>
+                </div>
+                
+                {/* Subtle white back shadow */}
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-gray-800 to-black dark:from-white dark:to-gray-300 opacity-20 group-hover:opacity-40 transition-opacity duration-500 -z-10 blur-lg"></div>
               </div>
             </div>
           </div>
@@ -1113,91 +1128,151 @@ const Index = () => {
           {/* Content Cards */}
           <div className="max-w-6xl mx-auto space-y-5">
             {/* The Missing Piece */}
-            <div className="glass rounded-2xl p-5 sm:p-6 border border-primary/20 hover:border-primary/30 transition-all duration-300">
-              <div className="flex items-start gap-3 mb-3">
-                <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                  <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold mb-2 font-display">The Missing Piece</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed mb-2">
-                    AI tools are everywhere. Tutorials are endless. But a clear path forward? That's rare. Everyone talks about what AI can do—but few show you how to actually use it for your specific goals.
-                  </p>
-                  <p className="text-xs text-muted-foreground/80 leading-relaxed">
-                    We give you a complete, structured plan—not generic advice, but a real roadmap built around what you're trying to achieve.
-                  </p>
+            <div className="group relative rounded-2xl">
+              {/* Liquid glass border wrapper */}
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/[0.03] via-white/[0.01] to-white/[0.03] p-[1px]">
+                <div className="absolute inset-0 rounded-2xl bg-card"></div>
+              </div>
+              
+              <div className="relative bg-card rounded-2xl p-5 sm:p-6 shadow-modern hover:shadow-modern-lg transition-all duration-500 border border-white/10 hover:border-white/20">
+                {/* Subtle glass overlay */}
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/[0.02] via-transparent to-white/[0.01] pointer-events-none"></div>
+                
+                <div className="relative z-10">
+                  <div className="flex items-start gap-3 mb-3">
+                    <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                      <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                      </svg>
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold mb-2 font-display">The Missing Piece</h3>
+                      <p className="text-sm text-muted-foreground leading-relaxed mb-2">
+                        AI tools are everywhere. Tutorials are endless. But a clear path forward? That's rare. Everyone talks about what AI can do—but few show you how to actually use it for your specific goals.
+                      </p>
+                      <p className="text-xs text-muted-foreground/80 leading-relaxed">
+                        We give you a complete, structured plan—not generic advice, but a real roadmap built around what you're trying to achieve.
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
+              
+              {/* Subtle white back shadow */}
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-gray-800 to-black dark:from-white dark:to-gray-300 opacity-20 group-hover:opacity-40 transition-opacity duration-500 -z-10 blur-lg"></div>
             </div>
 
             {/* Two-Column: Why Now + What Makes Us Different */}
             <div className="grid md:grid-cols-2 gap-5">
               {/* Why This Moment */}
-              <div className="glass rounded-2xl p-6 border border-primary/20 hover:border-primary/30 transition-all duration-300">
-                <div className="flex items-start gap-3 mb-3">
-                  <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                  </div>
-                  <h3 className="text-lg font-bold font-display">From Exploration to Implementation</h3>
+              <div className="group relative rounded-2xl">
+                {/* Liquid glass border wrapper */}
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/[0.03] via-white/[0.01] to-white/[0.03] p-[1px]">
+                  <div className="absolute inset-0 rounded-2xl bg-card"></div>
                 </div>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  AI is everywhere, but knowing how to use it strategically? That's the real advantage. Success isn't about having the most tools—it's about having clear direction and a solid plan. Right now, most people are still figuring things out. We help you move from exploring to actually implementing—with confidence.
-                </p>
+                
+                <div className="relative bg-card rounded-2xl p-6 shadow-modern hover:shadow-modern-lg transition-all duration-500 border border-white/10 hover:border-white/20">
+                  {/* Subtle glass overlay */}
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/[0.02] via-transparent to-white/[0.01] pointer-events-none"></div>
+                  
+                  <div className="relative z-10">
+                    <div className="flex items-start gap-3 mb-3">
+                      <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                      </div>
+                      <h3 className="text-lg font-bold font-display">From Exploration to Implementation</h3>
+                    </div>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      AI is everywhere, but knowing how to use it strategically? That's the real advantage. Success isn't about having the most tools—it's about having clear direction and a solid plan. Right now, most people are still figuring things out. We help you move from exploring to actually implementing—with confidence.
+                    </p>
+                  </div>
+                </div>
+                
+                {/* Subtle white back shadow */}
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-gray-800 to-black dark:from-white dark:to-gray-300 opacity-20 group-hover:opacity-40 transition-opacity duration-500 -z-10 blur-lg"></div>
               </div>
 
               {/* What Makes Us Different */}
-              <div className="glass rounded-2xl p-6 border border-primary/20 hover:border-primary/30 transition-all duration-300">
-                <div className="flex items-start gap-3 mb-3">
-                  <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
-                    </svg>
-                  </div>
-                  <h3 className="text-lg font-bold font-display">What Makes Us Different</h3>
+              <div className="group relative rounded-2xl">
+                {/* Liquid glass border wrapper */}
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/[0.03] via-white/[0.01] to-white/[0.03] p-[1px]">
+                  <div className="absolute inset-0 rounded-2xl bg-card"></div>
                 </div>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  We're not just another AI tool. We're a complete system for turning AI potential into real, measurable progress. Every Jump gives you strategic insights, clear steps, and the right tools—all in one structured 3-tab plan that adapts as you grow.
-                </p>
+                
+                <div className="relative bg-card rounded-2xl p-6 shadow-modern hover:shadow-modern-lg transition-all duration-500 border border-white/10 hover:border-white/20">
+                  {/* Subtle glass overlay */}
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/[0.02] via-transparent to-white/[0.01] pointer-events-none"></div>
+                  
+                  <div className="relative z-10">
+                    <div className="flex items-start gap-3 mb-3">
+                      <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                        </svg>
+                      </div>
+                      <h3 className="text-lg font-bold font-display">What Makes Us Different</h3>
+                    </div>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      We're not just another AI tool. We're a complete system for turning AI potential into real, measurable progress. Every Jump gives you strategic insights, clear steps, and the right tools—all in one structured 3-tab plan that adapts as you grow.
+                    </p>
+                  </div>
+                </div>
+                
+                {/* Subtle white back shadow */}
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-gray-800 to-black dark:from-white dark:to-gray-300 opacity-20 group-hover:opacity-40 transition-opacity duration-500 -z-10 blur-lg"></div>
               </div>
             </div>
 
             {/* Three Key Points */}
-            <div className="glass rounded-2xl p-6 sm:p-8 border border-primary/20 hover:border-primary/30 transition-all duration-300">
-              <div className="grid sm:grid-cols-3 gap-6">
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-primary font-semibold text-sm">
-                    <div className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0"></div>
-                    <span>Clear Structure</span>
-                  </div>
-                  <p className="text-xs text-muted-foreground pl-4">
-                    No scattered tips. Every Jump is a fully structured plan with strategic insights, clear steps, and the right tools.
-                  </p>
-                </div>
+            <div className="group relative rounded-2xl">
+              {/* Liquid glass border wrapper */}
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/[0.03] via-white/[0.01] to-white/[0.03] p-[1px]">
+                <div className="absolute inset-0 rounded-2xl bg-card"></div>
+              </div>
+              
+              <div className="relative bg-card rounded-2xl p-6 sm:p-8 shadow-modern hover:shadow-modern-lg transition-all duration-500 border border-white/10 hover:border-white/20">
+                {/* Subtle glass overlay */}
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/[0.02] via-transparent to-white/[0.01] pointer-events-none"></div>
+                
+                <div className="relative z-10">
+                  <div className="grid sm:grid-cols-3 gap-6">
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2 text-primary font-semibold text-sm">
+                        <div className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0"></div>
+                        <span>Clear Structure</span>
+                      </div>
+                      <p className="text-xs text-muted-foreground pl-4">
+                        No scattered tips. Every Jump is a fully structured plan with strategic insights, clear steps, and the right tools.
+                      </p>
+                    </div>
 
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-primary font-semibold text-sm">
-                    <div className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0"></div>
-                    <span>Adapts With You</span>
-                  </div>
-                  <p className="text-xs text-muted-foreground pl-4">
-                    Your plan isn't fixed. Clarify deeper, reroute when needed, equip steps with new resources—it grows as you do.
-                  </p>
-                </div>
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2 text-primary font-semibold text-sm">
+                        <div className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0"></div>
+                        <span>Adapts With You</span>
+                      </div>
+                      <p className="text-xs text-muted-foreground pl-4">
+                        Your plan isn't fixed. Clarify deeper, reroute when needed, equip steps with new resources—it grows as you do.
+                      </p>
+                    </div>
 
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-primary font-semibold text-sm">
-                    <div className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0"></div>
-                    <span>Built for Action</span>
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2 text-primary font-semibold text-sm">
+                        <div className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0"></div>
+                        <span>Built for Action</span>
+                      </div>
+                      <p className="text-xs text-muted-foreground pl-4">
+                        This isn't just ideas. It's actionable strategy designed to help you make real progress on your goals.
+                      </p>
+                    </div>
                   </div>
-                  <p className="text-xs text-muted-foreground pl-4">
-                    This isn't just ideas. It's actionable strategy designed to help you make real progress on your goals.
-                  </p>
                 </div>
               </div>
+              
+              {/* Subtle white back shadow */}
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-gray-800 to-black dark:from-white dark:to-gray-300 opacity-20 group-hover:opacity-40 transition-opacity duration-500 -z-10 blur-lg"></div>
             </div>
 
             {/* Bottom CTA Message */}
