@@ -453,16 +453,22 @@ const Index = () => {
           <div ref={stepsRef} className="max-w-6xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
               <div 
-                className="group relative rounded-xl overflow-hidden border border-white/25 shadow-2xl bg-gradient-to-br from-white/[0.01] via-black/[0.4] to-white/[0.01] backdrop-blur-sm p-1 transition-all duration-700 ease-out scroll-animate"
+                className="group relative rounded-3xl transition-all duration-700 ease-out scroll-animate"
                 style={{
                   opacity: Math.min(1, stepsProgress * 3),
                   transform: `translateY(${Math.min(1, stepsProgress * 3) >= 0.99 ? 0 : (1 - Math.min(1, stepsProgress * 3)) * 40}px)`
                 }}
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-white/15 rounded-xl opacity-40 group-hover:opacity-60 transition-opacity duration-300"></div>
-                <div className="relative glass p-6 rounded-lg h-full flex flex-col">
-                  <div className="absolute -inset-0.5 rounded-lg bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 blur-sm opacity-0 group-hover:opacity-60 transition-opacity duration-500"></div>
-                  <div className="relative text-center">
+                {/* Liquid glass border wrapper */}
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/[0.03] via-white/[0.01] to-white/[0.03] p-[1px]">
+                  <div className="absolute inset-0 rounded-3xl bg-card"></div>
+                </div>
+                
+                <div className="relative bg-card rounded-3xl p-6 h-full shadow-modern hover:shadow-modern-lg transition-all duration-500 border border-white/10 hover:border-white/20">
+                  {/* Subtle glass overlay */}
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/[0.02] via-transparent to-white/[0.01] pointer-events-none"></div>
+                  
+                  <div className="relative z-10 text-center">
                     <div className="w-10 h-10 mx-auto mb-4 backdrop-blur-xl bg-primary/5 ring-1 ring-primary/30 rounded-xl flex items-center justify-center text-primary text-sm font-bold shadow-lg">
                       1
                     </div>
@@ -471,18 +477,28 @@ const Index = () => {
                   </div>
                 </div>
               </div>
+                
+                {/* Subtle white back shadow */}
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-gray-800 to-black dark:from-white dark:to-gray-300 opacity-20 group-hover:opacity-40 transition-opacity duration-500 -z-10 blur-lg"></div>
+              </div>
               
               <div 
-                className="group relative rounded-xl overflow-hidden border border-white/25 shadow-2xl bg-gradient-to-br from-white/[0.01] via-black/[0.4] to-white/[0.01] backdrop-blur-sm p-1 transition-all duration-700 ease-out scroll-animate"
+                className="group relative rounded-3xl transition-all duration-700 ease-out scroll-animate"
                 style={{
                   opacity: Math.max(0, Math.min(1, (stepsProgress - 0.35) * 3)),
                   transform: `translateY(${Math.max(0, Math.min(1, (stepsProgress - 0.35) * 3)) >= 0.99 ? 0 : (1 - Math.max(0, Math.min(1, (stepsProgress - 0.35) * 3))) * 40}px)`
                 }}
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-white/15 rounded-xl opacity-40 group-hover:opacity-60 transition-opacity duration-300"></div>
-                <div className="relative glass p-6 rounded-lg h-full flex flex-col">
-                  <div className="absolute -inset-0.5 rounded-lg bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 blur-sm opacity-0 group-hover:opacity-60 transition-opacity duration-500"></div>
-                  <div className="relative text-center">
+                {/* Liquid glass border wrapper */}
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/[0.03] via-white/[0.01] to-white/[0.03] p-[1px]">
+                  <div className="absolute inset-0 rounded-3xl bg-card"></div>
+                </div>
+                
+                <div className="relative bg-card rounded-3xl p-6 h-full shadow-modern hover:shadow-modern-lg transition-all duration-500 border border-white/10 hover:border-white/20">
+                  {/* Subtle glass overlay */}
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/[0.02] via-transparent to-white/[0.01] pointer-events-none"></div>
+                  
+                  <div className="relative z-10 text-center">
                     <div className="w-10 h-10 mx-auto mb-4 backdrop-blur-xl bg-primary/5 ring-1 ring-primary/30 rounded-xl flex items-center justify-center text-primary text-sm font-bold shadow-lg">
                       2
                     </div>
@@ -491,18 +507,28 @@ const Index = () => {
                   </div>
                 </div>
               </div>
+                
+                {/* Subtle white back shadow */}
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-gray-800 to-black dark:from-white dark:to-gray-300 opacity-20 group-hover:opacity-40 transition-opacity duration-500 -z-10 blur-lg"></div>
+              </div>
               
               <div 
-                className="group relative rounded-xl overflow-hidden border border-white/25 shadow-2xl bg-gradient-to-br from-white/[0.01] via-black/[0.4] to-white/[0.01] backdrop-blur-sm p-1 transition-all duration-700 ease-out scroll-animate"
+                className="group relative rounded-3xl transition-all duration-700 ease-out scroll-animate"
                 style={{
                   opacity: Math.max(0, Math.min(1, (stepsProgress - 0.65) * 3.5)),
                   transform: `translateY(${Math.max(0, Math.min(1, (stepsProgress - 0.65) * 3.5)) >= 0.9 ? 0 : (1 - Math.max(0, Math.min(1, (stepsProgress - 0.65) * 3.5))) * 40}px)`
                 }}
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-white/15 rounded-xl opacity-40 group-hover:opacity-60 transition-opacity duration-300"></div>
-                <div className="relative glass p-6 rounded-lg h-full flex flex-col">
-                  <div className="absolute -inset-0.5 rounded-lg bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 blur-sm opacity-0 group-hover:opacity-60 transition-opacity duration-500"></div>
-                  <div className="relative text-center">
+                {/* Liquid glass border wrapper */}
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/[0.03] via-white/[0.01] to-white/[0.03] p-[1px]">
+                  <div className="absolute inset-0 rounded-3xl bg-card"></div>
+                </div>
+                
+                <div className="relative bg-card rounded-3xl p-6 h-full shadow-modern hover:shadow-modern-lg transition-all duration-500 border border-white/10 hover:border-white/20">
+                  {/* Subtle glass overlay */}
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/[0.02] via-transparent to-white/[0.01] pointer-events-none"></div>
+                  
+                  <div className="relative z-10 text-center">
                     <div className="w-10 h-10 mx-auto mb-4 backdrop-blur-xl bg-primary/5 ring-1 ring-primary/30 rounded-xl flex items-center justify-center text-primary text-sm font-bold shadow-lg">
                       3
                     </div>
@@ -510,6 +536,10 @@ const Index = () => {
                     <p className="text-sm text-muted-foreground flex-1">Follow your roadmap, clarify steps as needed, explore alternative routes, and use ready prompts to implement immediately.</p>
                   </div>
                 </div>
+              </div>
+                
+                {/* Subtle white back shadow */}
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-gray-800 to-black dark:from-white dark:to-gray-300 opacity-20 group-hover:opacity-40 transition-opacity duration-500 -z-10 blur-lg"></div>
               </div>
             </div>
 
@@ -943,16 +973,22 @@ const Index = () => {
             <div ref={conceptCardsRef} className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch mb-8">
               {/* Card 1 */}
               <div 
-                className="group relative rounded-xl overflow-hidden border border-white/25 shadow-2xl bg-gradient-to-br from-white/[0.01] via-black/[0.4] to-white/[0.01] backdrop-blur-sm p-1 transition-all duration-700 ease-out scroll-animate"
+                className="group relative rounded-3xl transition-all duration-700 ease-out scroll-animate"
                 style={{
                   opacity: Math.min(1, conceptCardsProgress * 3),
                   transform: `translateY(${Math.min(1, conceptCardsProgress * 3) >= 0.99 ? 0 : (1 - Math.min(1, conceptCardsProgress * 3)) * 40}px)`
                 }}
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-white/15 rounded-xl opacity-40 group-hover:opacity-60 transition-opacity duration-300"></div>
-                <div className="relative glass p-6 rounded-lg h-full flex flex-col">
-                  <div className="absolute -inset-0.5 rounded-lg bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 blur-sm opacity-0 group-hover:opacity-60 transition-opacity duration-500"></div>
-                  <div className="relative">
+                {/* Liquid glass border wrapper */}
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/[0.03] via-white/[0.01] to-white/[0.03] p-[1px]">
+                  <div className="absolute inset-0 rounded-3xl bg-card"></div>
+                </div>
+                
+                <div className="relative bg-card rounded-3xl p-6 h-full shadow-modern hover:shadow-modern-lg transition-all duration-500 border border-white/10 hover:border-white/20">
+                  {/* Subtle glass overlay */}
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/[0.02] via-transparent to-white/[0.01] pointer-events-none"></div>
+                  
+                  <div className="relative z-10">
                     <div className="flex justify-center mb-4">
                       <div className="w-8 h-8 backdrop-blur-xl bg-primary/10 ring-1 ring-primary/30 rounded-lg flex items-center justify-center">
                         <ArrowRight className="w-4 h-4 text-primary" />
@@ -964,19 +1000,29 @@ const Index = () => {
                   </div>
                 </div>
               </div>
+                
+                {/* Subtle white back shadow */}
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-gray-800 to-black dark:from-white dark:to-gray-300 opacity-20 group-hover:opacity-40 transition-opacity duration-500 -z-10 blur-lg"></div>
+              </div>
 
               {/* Card 2 */}
               <div 
-                className="group relative rounded-xl overflow-hidden border border-white/25 shadow-2xl bg-gradient-to-br from-white/[0.01] via-black/[0.4] to-white/[0.01] backdrop-blur-sm p-1 transition-all duration-700 ease-out scroll-animate"
+                className="group relative rounded-3xl transition-all duration-700 ease-out scroll-animate"
                 style={{
                   opacity: Math.max(0, Math.min(1, (conceptCardsProgress - 0.35) * 3)),
                   transform: `translateY(${Math.max(0, Math.min(1, (conceptCardsProgress - 0.35) * 3)) >= 0.99 ? 0 : (1 - Math.max(0, Math.min(1, (conceptCardsProgress - 0.35) * 3))) * 40}px)`
                 }}
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-white/15 rounded-xl opacity-40 group-hover:opacity-60 transition-opacity duration-300"></div>
-                <div className="relative glass p-6 rounded-lg h-full flex flex-col">
-                  <div className="absolute -inset-0.5 rounded-lg bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 blur-sm opacity-0 group-hover:opacity-60 transition-opacity duration-500"></div>
-                  <div className="relative">
+                {/* Liquid glass border wrapper */}
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/[0.03] via-white/[0.01] to-white/[0.03] p-[1px]">
+                  <div className="absolute inset-0 rounded-3xl bg-card"></div>
+                </div>
+                
+                <div className="relative bg-card rounded-3xl p-6 h-full shadow-modern hover:shadow-modern-lg transition-all duration-500 border border-white/10 hover:border-white/20">
+                  {/* Subtle glass overlay */}
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/[0.02] via-transparent to-white/[0.01] pointer-events-none"></div>
+                  
+                  <div className="relative z-10">
                     <div className="flex justify-center mb-4">
                       <div className="w-8 h-8 backdrop-blur-xl bg-primary/10 ring-1 ring-primary/30 rounded-lg flex items-center justify-center">
                         <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -990,19 +1036,29 @@ const Index = () => {
                   </div>
                 </div>
               </div>
+                
+                {/* Subtle white back shadow */}
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-gray-800 to-black dark:from-white dark:to-gray-300 opacity-20 group-hover:opacity-40 transition-opacity duration-500 -z-10 blur-lg"></div>
+              </div>
 
               {/* Card 3 */}
               <div 
-                className="group relative rounded-xl overflow-hidden border border-white/25 shadow-2xl bg-gradient-to-br from-white/[0.01] via-black/[0.4] to-white/[0.01] backdrop-blur-sm p-1 transition-all duration-700 ease-out scroll-animate"
+                className="group relative rounded-3xl transition-all duration-700 ease-out scroll-animate"
                 style={{
                   opacity: Math.max(0, Math.min(1, (conceptCardsProgress - 0.65) * 3.5)),
                   transform: `translateY(${Math.max(0, Math.min(1, (conceptCardsProgress - 0.65) * 3.5)) >= 0.9 ? 0 : (1 - Math.max(0, Math.min(1, (conceptCardsProgress - 0.65) * 3.5))) * 40}px)`
                 }}
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-white/15 rounded-xl opacity-40 group-hover:opacity-60 transition-opacity duration-300"></div>
-                <div className="relative glass p-6 rounded-lg h-full flex flex-col">
-                  <div className="absolute -inset-0.5 rounded-lg bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 blur-sm opacity-0 group-hover:opacity-60 transition-opacity duration-500"></div>
-                  <div className="relative">
+                {/* Liquid glass border wrapper */}
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/[0.03] via-white/[0.01] to-white/[0.03] p-[1px]">
+                  <div className="absolute inset-0 rounded-3xl bg-card"></div>
+                </div>
+                
+                <div className="relative bg-card rounded-3xl p-6 h-full shadow-modern hover:shadow-modern-lg transition-all duration-500 border border-white/10 hover:border-white/20">
+                  {/* Subtle glass overlay */}
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/[0.02] via-transparent to-white/[0.01] pointer-events-none"></div>
+                  
+                  <div className="relative z-10">
                     <div className="flex justify-center mb-4">
                       <div className="w-8 h-8 backdrop-blur-xl bg-primary/10 ring-1 ring-primary/30 rounded-lg flex items-center justify-center">
                         <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1015,6 +1071,9 @@ const Index = () => {
                     </p>
                   </div>
                 </div>
+                
+                {/* Subtle white back shadow */}
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-gray-800 to-black dark:from-white dark:to-gray-300 opacity-20 group-hover:opacity-40 transition-opacity duration-500 -z-10 blur-lg"></div>
               </div>
             </div>
 
