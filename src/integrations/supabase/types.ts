@@ -633,7 +633,7 @@ export type Database = {
           title: string
           tools_clicked_count: number | null
           updated_at: string
-          user_id: string
+          user_id: string | null
           views_count: number | null
         }
         Insert: {
@@ -660,7 +660,7 @@ export type Database = {
           title: string
           tools_clicked_count?: number | null
           updated_at?: string
-          user_id: string
+          user_id?: string | null
           views_count?: number | null
         }
         Update: {
@@ -687,7 +687,7 @@ export type Database = {
           title?: string
           tools_clicked_count?: number | null
           updated_at?: string
-          user_id?: string
+          user_id?: string | null
           views_count?: number | null
         }
         Relationships: [
