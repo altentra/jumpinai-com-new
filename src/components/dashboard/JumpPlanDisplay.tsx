@@ -1985,6 +1985,202 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                                       </button>
                                                     </div>
                                                   </div>
+                                                 )}
+                                              </div>
+                                            );
+                                          })()}
+                                          
+                                          {/* Reroute options display for alternative route sub-steps */}
+                                          {(() => {
+                                            const altSubStepKey = `${phaseIndex}-${stepIndex}-alt-${altSubStepIndex}`;
+                                            const hasAltRerouteOptions = rerouteOptions[altSubStepKey];
+                                            
+                                            if (!hasAltRerouteOptions) return null;
+                                            
+                                            return (
+                                              <div className="mt-4 space-y-3">
+                                                <div className="flex items-center gap-2">
+                                                  <GitBranch className="w-3.5 h-3.5 text-primary" />
+                                                  <h4 className="text-xs font-semibold text-foreground">Choose Your Route:</h4>
+                                                </div>
+                                                <div className="grid grid-cols-1 gap-3">
+                                                  {rerouteOptions[altSubStepKey].map((direction: any, dirIndex: number) => (
+                                                    <div
+                                                      key={dirIndex}
+                                                      className="bg-background/40 border border-primary/30 rounded-xl p-3 flex flex-col"
+                                                    >
+                                                      <div className="mb-2">
+                                                        <h4 className="text-sm font-semibold text-foreground mb-2">
+                                                          Direction {dirIndex + 1}
+                                                        </h4>
+                                                        <div className="text-xs text-muted-foreground/90 leading-relaxed">
+                                                          <ReactMarkdown className="prose prose-sm max-w-none [&>p]:mb-2 [&>p:last-child]:mb-0">
+                                                            {direction.overview}
+                                                          </ReactMarkdown>
+                                                        </div>
+                                                      </div>
+
+                                                      <div className="space-y-2 mb-3 flex-grow">
+                                                        {direction.sub_steps?.map((nestedSubStep: any, nestedSubStepIndex: number) => (
+                                                          <div
+                                                            key={nestedSubStepIndex}
+                                                            className="bg-background/30 border border-primary/20 rounded-lg p-2"
+                                                          >
+                                                            <div className="flex flex-col gap-1 mb-1">
+                                                              <div className="flex-shrink-0 px-2 py-1 rounded-lg bg-gradient-to-br from-primary/40 to-primary/30 flex items-center justify-center border border-primary/60 shadow-sm w-fit">
+                                                                 <span className="text-[10px] font-bold text-primary/90 whitespace-nowrap">
+                                                                   Sub-Step {nestedSubStepIndex + 1}.
+                                                                 </span>
+                                                              </div>
+                                                              <h5 className="text-xs font-semibold text-foreground leading-tight">
+                                                                <ReactMarkdown className="prose prose-sm max-w-none [&>p]:mb-0">
+                                                                  {nestedSubStep.title}
+                                                                </ReactMarkdown>
+                                                              </h5>
+                                                            </div>
+                                                            <div className="text-[11px] text-muted-foreground/90 leading-relaxed">
+                                                              <ReactMarkdown className="prose prose-sm max-w-none [&>p]:mb-1 [&>p:last-child]:mb-0 [&_strong]:font-bold">
+                                                                {nestedSubStep.description}
+                                                              </ReactMarkdown>
+                                                            </div>
+                                                            {nestedSubStep.estimated_time && (
+                                                              <div className="mt-1">
+                                                                <Badge variant="outline" className="text-[10px]">
+                                                                  {nestedSubStep.estimated_time}
+                                                                </Badge>
+                                                              </div>
+                                                            )}
+                                                          </div>
+                                                        ))}
+                                                      </div>
+
+                                                      <Button
+                                                        size="sm"
+                                                        className="w-full gap-2 bg-gradient-to-r from-gray-900 to-gray-800 hover:from-gray-800 hover:to-gray-700 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-700/50 text-xs py-1"
+                                                        onClick={() => handleChooseAlternativeSubStepRoute(phaseIndex, stepIndex, altSubStepIndex, dirIndex)}
+                                                      >
+                                                        <Check className="h-3 w-3" />
+                                                        Choose this route
+                                                      </Button>
+                                                    </div>
+                                                  ))}
+                                                </div>
+                                              </div>
+                                            );
+                                          })()}
+                                          
+                                          {/* Chosen reroute display for alternative route sub-steps */}
+                                          {subStep.reroute && (
+                                            <div className="mt-3">
+                                              <div className="bg-background/40 border border-primary/30 rounded-xl p-3">
+                                                <div className="flex items-center gap-2 mb-2">
+                                                  <GitBranch className="h-3.5 w-3.5 text-primary" />
+                                                  <h4 className="text-xs font-semibold text-foreground">Alternative Route Selected</h4>
+                                                </div>
+                                                <div className="text-xs text-muted-foreground/90 leading-relaxed mb-3">
+                                                  <ReactMarkdown className="prose prose-sm max-w-none [&>p]:mb-2 [&>p:last-child]:mb-0">
+                                                    {subStep.reroute.overview}
+                                                  </ReactMarkdown>
+                                                </div>
+                                                <div className="space-y-2">
+                                                  {subStep.reroute.sub_steps?.map((nestedSubStep: any, nestedSubStepIndex: number) => (
+                                                    <div
+                                                      key={nestedSubStepIndex}
+                                                      className="bg-background/30 border border-primary/20 rounded-lg p-2"
+                                                    >
+                                                      <div className="flex items-start gap-2 mb-1">
+                                                        <div className="flex-shrink-0 px-2 py-1 rounded-lg bg-gradient-to-br from-primary/40 to-primary/30 flex items-center justify-center border border-primary/60 shadow-sm">
+                                                           <span className="text-[10px] font-bold text-primary/90 whitespace-nowrap">
+                                                             Sub-Step {nestedSubStepIndex + 1}.
+                                                           </span>
+                                                        </div>
+                                                        <h5 className="text-xs font-semibold text-foreground pt-0.5">
+                                                          <ReactMarkdown className="prose prose-sm max-w-none [&>p]:m-0 [&_strong]:font-bold">
+                                                            {nestedSubStep.title}
+                                                          </ReactMarkdown>
+                                                        </h5>
+                                                      </div>
+                                                      <div className="text-[11px] text-muted-foreground/90 leading-relaxed">
+                                                        <ReactMarkdown className="prose prose-sm max-w-none [&>p]:mb-1 [&>p:last-child]:mb-0 [&_strong]:font-bold">
+                                                          {nestedSubStep.description}
+                                                        </ReactMarkdown>
+                                                      </div>
+                                                      {nestedSubStep.estimated_time && (
+                                                        <div className="mt-1">
+                                                          <Badge variant="outline" className="text-[10px]">
+                                                            {nestedSubStep.estimated_time}
+                                                          </Badge>
+                                                        </div>
+                                                      )}
+                                                    </div>
+                                                  ))}
+                                                </div>
+                                              </div>
+                                            </div>
+                                          )}
+                                          
+                                          {/* Level 2 Sub-steps display for alternative route sub-steps (from Clarify) */}
+                                          {(() => {
+                                            const hasAltLevel2SubSteps = subStep.level_2_sub_steps && Array.isArray(subStep.level_2_sub_steps) && subStep.level_2_sub_steps.length > 0;
+                                            
+                                            if (!hasAltLevel2SubSteps) return null;
+                                            
+                                            const altSubStepKey = `${phaseIndex}-${stepIndex}-alt-${altSubStepIndex}`;
+                                            const isAltLevel2Expanded = expandedLevel2SubSteps.has(altSubStepKey);
+                                            
+                                            return (
+                                              <div className="mt-3 pt-3 border-t border-primary/20">
+                                                <button
+                                                  onClick={() => toggleLevel2SubSteps(phaseIndex, stepIndex, altSubStepIndex)}
+                                                  className="flex items-center gap-2 text-xs font-medium text-primary hover:text-primary/80 transition-colors"
+                                                >
+                                                  {isAltLevel2Expanded ? (
+                                                    <>
+                                                      <ChevronUp className="w-3.5 h-3.5" />
+                                                      Hide Level 2 Sub-Steps
+                                                    </>
+                                                  ) : (
+                                                    <>
+                                                      <ChevronDown className="w-3.5 h-3.5" />
+                                                      Show {subStep.level_2_sub_steps.length} Level 2 Sub-Steps
+                                                    </>
+                                                  )}
+                                                </button>
+
+                                                {isAltLevel2Expanded && (
+                                                  <div className="mt-2 space-y-2 animate-fade-in">
+                                                    {subStep.level_2_sub_steps.map((level2SubStep: any, level2SubStepIndex: number) => (
+                                                      <div
+                                                        key={level2SubStepIndex}
+                                                        className="bg-background/25 border border-primary/15 rounded-lg p-2.5 ml-2"
+                                                      >
+                                                        <div className="flex items-start gap-2 mb-1.5">
+                                                          <div className="flex-shrink-0 px-2 py-1 rounded-lg bg-gradient-to-br from-primary/35 to-primary/25 flex items-center justify-center border border-primary/50 shadow-sm">
+                                                             <span className="text-[10px] font-bold text-primary/90 whitespace-nowrap">
+                                                               Level 2. Sub-Step {level2SubStepIndex + 1}.
+                                                             </span>
+                                                          </div>
+                                                          <h5 className="text-xs font-semibold text-foreground pt-0.5">
+                                                            <ReactMarkdown className="prose prose-sm max-w-none [&>p]:m-0 [&_strong]:font-bold">
+                                                              {level2SubStep.title}
+                                                            </ReactMarkdown>
+                                                          </h5>
+                                                        </div>
+                                                        <div className="text-[11px] text-muted-foreground/90 leading-relaxed">
+                                                          <ReactMarkdown className="prose prose-sm max-w-none [&>p]:mb-1 [&>p:last-child]:mb-0 [&_strong]:font-bold">
+                                                            {level2SubStep.description}
+                                                          </ReactMarkdown>
+                                                        </div>
+                                                        {level2SubStep.estimated_time && (
+                                                          <div className="mt-1.5">
+                                                            <Badge variant="outline" className="text-[10px]">
+                                                              {level2SubStep.estimated_time}
+                                                            </Badge>
+                                                          </div>
+                                                        )}
+                                                      </div>
+                                                    ))}
+                                                  </div>
                                                 )}
                                               </div>
                                             );
