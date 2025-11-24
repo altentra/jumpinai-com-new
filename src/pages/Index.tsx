@@ -822,9 +822,9 @@ const Index = () => {
               </div>
 
               {/* Route Examples */}
-              <div ref={rerouteCardsRef} className="grid sm:grid-cols-3 gap-4 mb-6">
+              <div ref={rerouteCardsRef} className="grid grid-cols-3 gap-2 sm:gap-4 mb-6">
                 <div 
-                  className="glass bg-muted/30 p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm transition-all duration-700 ease-out scroll-animate"
+                  className="glass bg-muted/30 p-3 sm:p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm transition-all duration-700 ease-out scroll-animate"
                   style={{
                     opacity: Math.max(0, Math.min(1, rerouteCardsProgress * 3)),
                     transform: `translateY(${(1 - Math.max(0, Math.min(1, rerouteCardsProgress * 3))) * 40}px)`
@@ -838,7 +838,7 @@ const Index = () => {
                   </div>
                 </div>
                 <div 
-                  className="glass bg-muted/30 p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm transition-all duration-700 ease-out scroll-animate"
+                  className="glass bg-muted/30 p-3 sm:p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm transition-all duration-700 ease-out scroll-animate"
                   style={{
                     opacity: Math.max(0, Math.min(1, (rerouteCardsProgress - 0.3) * 3)),
                     transform: `translateY(${(1 - Math.max(0, Math.min(1, (rerouteCardsProgress - 0.3) * 3))) * 40}px)`
@@ -852,7 +852,7 @@ const Index = () => {
                   </div>
                 </div>
                 <div 
-                  className="glass bg-muted/30 p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm transition-all duration-700 ease-out scroll-animate"
+                  className="glass bg-muted/30 p-3 sm:p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm transition-all duration-700 ease-out scroll-animate"
                   style={{
                     opacity: Math.max(0, Math.min(1, (rerouteCardsProgress - 0.6) * 3)),
                     transform: `translateY(${(1 - Math.max(0, Math.min(1, (rerouteCardsProgress - 0.6) * 3))) * 40}px)`
