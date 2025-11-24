@@ -18,16 +18,49 @@ interface ProgressiveJumpDisplayProps {
   result: ProgressiveResult;
   generationTimer: number;
   isAuthenticated?: boolean;
+  onToolPromptsRefresh?: () => Promise<any[]>;
 }
 
 const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({ 
   result, 
   generationTimer,
-  isAuthenticated = false
+  isAuthenticated = false,
+  onToolPromptsRefresh
 }) => {
   const navigate = useNavigate();
   const [copiedPrompts, setCopiedPrompts] = React.useState<Set<number>>(new Set());
   const [activeTab, setActiveTab] = React.useState('overview');
+  const [isRefreshing, setIsRefreshing] = React.useState(false);
+  const [toolPrompts, setToolPrompts] = React.useState<any[]>(result.components?.toolPrompts || []);
+
+  // Update tool prompts when result changes
+  React.useEffect(() => {
+    if (result.components?.toolPrompts) {
+      setToolPrompts(result.components.toolPrompts);
+    }
+  }, [result.components?.toolPrompts]);
+
+  const handleToolPromptGenerated = async () => {
+    if (!result.jumpId || !onToolPromptsRefresh) return;
+    
+    setIsRefreshing(true);
+    try {
+      // Fetch updated tool prompts from database
+      const updatedToolPrompts = await onToolPromptsRefresh();
+      if (updatedToolPrompts) {
+        setToolPrompts(updatedToolPrompts);
+        toast.success('Tools & Prompts refreshed!');
+        
+        // Switch to Tools & Prompts tab to show the new combo
+        setActiveTab('toolPrompts');
+      }
+    } catch (error) {
+      console.error('Error refreshing tool prompts:', error);
+      toast.error('Failed to refresh Tools & Prompts');
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
 
   const handleCopyPrompt = async (promptText: string, index: number) => {
     try {
@@ -659,8 +692,10 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
               }}
               onDownload={() => handleDownload()}
               jumpId={result.jumpId}
-              toolPromptIds={result.components?.toolPrompts?.map((tp: any) => tp?.id || null) || []}
+              toolPromptIds={toolPrompts?.map((tp: any) => tp?.id || null) || []}
               onToolPromptClick={handleToolPromptClick}
+              onToolPromptGenerated={handleToolPromptGenerated}
+              isGenerationComplete={result.processing_status?.isComplete || false}
             />
           ) : (
             <div className="flex items-center justify-center h-32">
@@ -674,12 +709,12 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
           {(() => {
             console.log('🔍 Tools & Prompts Tab - Checking data:', {
               hasComponents: !!result.components,
-              hasToolPrompts: !!result.components?.toolPrompts,
-              toolPromptsLength: result.components?.toolPrompts?.length,
-              toolPromptsData: result.components?.toolPrompts
+              hasToolPrompts: !!toolPrompts,
+              toolPromptsLength: toolPrompts.length,
+              toolPromptsData: toolPrompts
             });
 
-            if (!result.components?.toolPrompts || result.components.toolPrompts.length === 0) {
+            if (!toolPrompts || toolPrompts.length === 0) {
               return (
                 <div className="glass backdrop-blur-lg bg-card/80 border border-border rounded-xl flex items-center justify-center h-32 text-muted-foreground">
                   <Loader2 className="w-6 h-6 animate-spin mr-2" />
@@ -689,7 +724,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
             }
 
             // Validate and map combos with original indices preserved
-            const validCombosWithIndices = result.components.toolPrompts
+            const validCombosWithIndices = toolPrompts
               .map((combo: any, originalIndex: number) => ({ combo, originalIndex }))
               .filter(({ combo, originalIndex }) => {
                 const promptText = combo.prompt_text || combo.custom_prompt || combo.prompt;
@@ -713,11 +748,11 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                 return isValid;
               });
 
-            console.log(`✅ Validated: ${validCombosWithIndices.length} of ${result.components.toolPrompts.length} combos have complete data`);
+            console.log(`✅ Validated: ${validCombosWithIndices.length} of ${toolPrompts.length} combos have complete data`);
 
             // Show loading if we're expecting more combos (target is 9)
             const expectedCount = 9;
-            const isGenerating = validCombosWithIndices.length < expectedCount && result.components.toolPrompts.length < expectedCount;
+            const isGenerating = validCombosWithIndices.length < expectedCount && toolPrompts.length < expectedCount;
 
             return (
               <div className="grid gap-4">

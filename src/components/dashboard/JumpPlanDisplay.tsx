@@ -22,6 +22,7 @@ interface JumpPlanDisplayProps {
   toolPromptIds?: string[]; // Array of 9 tool/prompt IDs in order
   onToolPromptClick?: (comboIndex: number, comboId: string) => void; // Callback to switch tabs and scroll to combo
   onToolPromptGenerated?: () => void; // Callback when a new tool prompt is generated
+  isGenerationComplete?: boolean; // Whether the jump generation is 100% complete
 }
 
 // Helper function to check if structured plan matches comprehensive format
@@ -187,7 +188,7 @@ function normalizeToComprehensive(input: any): any {
   return base;
 }
 
-export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, onDownload, jumpId, toolPromptIds, onToolPromptClick, onToolPromptGenerated }: JumpPlanDisplayProps) {
+export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, onDownload, jumpId, toolPromptIds, onToolPromptClick, onToolPromptGenerated, isGenerationComplete = true }: JumpPlanDisplayProps) {
   const { subscription } = useAuth();
   const [hoveredStep, setHoveredStep] = React.useState<{ phaseIndex: number; stepIndex: number } | null>(null);
   const [hoveredSubStep, setHoveredSubStep] = React.useState<{ phaseIndex: number; stepIndex: number; subStepIndex: number; isAlternative?: boolean } | null>(null);
@@ -1210,7 +1211,199 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
     }
   };
 
-  return (
+  // Handler for alternative route sub-step clarification (after route is chosen)
+  const handleClarifyAlternativeSubStep = async (phaseIndex: number, stepIndex: number, altSubStepIndex: number) => {
+    // Check subscription level (level 1: generating level 2 sub-steps)
+    if (!canClarifyAtLevel(1)) {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast.error('Sign up and subscribe to Starter Plan ($9/month) or higher to clarify to Level 2.');
+      } else if (!subscription || !subscription.subscribed) {
+        toast.error('Subscribe to Starter Plan ($9/month) or higher to clarify to Level 2.');
+      } else {
+        toast.error('Upgrade to Starter Plan ($9/month) or higher to clarify to Level 2.');
+      }
+      return;
+    }
+    if (!jumpId) {
+      toast.error('Jump ID is required');
+      return;
+    }
+
+    const altSubStepKey = `${phaseIndex}-${stepIndex}-alt-${altSubStepIndex}`;
+    setLoadingClarify(prev => new Set(prev).add(altSubStepKey));
+
+    try {
+      const phase = finalPlan.action_plan.phases[phaseIndex];
+      const step = phase.steps[stepIndex];
+      const altSubStep = step.reroute?.sub_steps?.[altSubStepIndex];
+
+      if (!altSubStep) {
+        throw new Error('Alternative route sub-step not found');
+      }
+
+      const jumpOverview = `
+Executive Summary: ${finalPlan.executiveSummary || ''}
+Strategic Vision: ${finalPlan.strategicVision || ''}
+Current State: ${finalPlan.situationAnalysis?.currentState || ''}
+      `.trim();
+
+      const requestBody = {
+        jumpOverview,
+        phaseTitle: phase.title,
+        phaseNumber: phase.phase_number,
+        stepTitle: altSubStep.title,
+        stepDescription: altSubStep.description,
+        stepNumber: altSubStep.sub_step_number || altSubStepIndex + 1,
+        level: 2,
+      };
+
+      console.log('Calling clarify-step function for alternative route sub-step:', requestBody);
+
+      const { data, error } = await supabase.functions.invoke('clarify-step', {
+        body: requestBody,
+      });
+
+      if (error) throw error;
+
+      if (!data || !data.subSteps) {
+        throw new Error('Invalid response from clarify-step function');
+      }
+
+      console.log('Received Level 2 sub-steps for alternative route:', data.subSteps);
+
+      const updatedPlan = { ...finalPlan };
+      if (!updatedPlan.action_plan.phases[phaseIndex].steps[stepIndex].reroute.sub_steps[altSubStepIndex].level_2_sub_steps) {
+        updatedPlan.action_plan.phases[phaseIndex].steps[stepIndex].reroute.sub_steps[altSubStepIndex].level_2_sub_steps = [];
+      }
+      updatedPlan.action_plan.phases[phaseIndex].steps[stepIndex].reroute.sub_steps[altSubStepIndex].level_2_sub_steps = data.subSteps;
+      
+      setLocalPlan(updatedPlan);
+
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        await updateJump(jumpId, {
+          comprehensive_plan: updatedPlan,
+        });
+      }
+
+      setExpandedLevel2SubSteps(prev => new Set(prev).add(altSubStepKey));
+      await trackClarification(jumpId, 2);
+      await trackAction('clarify');
+
+      toast.success('Level 2 sub-steps generated successfully!');
+    } catch (error) {
+      console.error('Error clarifying alternative route sub-step:', error);
+      toast.error('Failed to generate Level 2 sub-steps. Please try again.');
+    } finally {
+      setLoadingClarify(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(altSubStepKey);
+        return newSet;
+      });
+    }
+  };
+
+  // Handler for alternative route sub-step reroute (after route is chosen)
+  const handleRerouteAlternativeSubStep = async (phaseIndex: number, stepIndex: number, altSubStepIndex: number) => {
+    if (!jumpId) {
+      toast.error('Jump ID is required');
+      return;
+    }
+
+    const altSubStepKey = `${phaseIndex}-${stepIndex}-alt-${altSubStepIndex}`;
+    setLoadingReroute(prev => new Set(prev).add(altSubStepKey));
+
+    try {
+      const phase = finalPlan.action_plan.phases[phaseIndex];
+      const step = phase.steps[stepIndex];
+      const altSubStep = step.reroute?.sub_steps?.[altSubStepIndex];
+
+      if (!altSubStep) {
+        throw new Error('Alternative route sub-step not found');
+      }
+
+      const jumpOverview = `
+Executive Summary: ${finalPlan.executiveSummary || ''}
+Strategic Vision: ${finalPlan.strategicVision || ''}
+Current State: ${finalPlan.situationAnalysis?.currentState || ''}
+      `.trim();
+
+      const requestBody = {
+        jumpOverview,
+        phaseTitle: phase.title,
+        phaseNumber: phase.phase_number,
+        stepTitle: altSubStep.title,
+        stepDescription: altSubStep.description,
+        stepNumber: altSubStep.sub_step_number || altSubStepIndex + 1,
+      };
+
+      const { data, error } = await supabase.functions.invoke('reroute-step', {
+        body: requestBody,
+      });
+
+      if (error) throw error;
+      if (!data || !data.directions) {
+        throw new Error('Invalid response from reroute-step function');
+      }
+
+      setRerouteOptions(prev => ({ ...prev, [altSubStepKey]: data.directions }));
+      await trackAction('reroute');
+      
+      toast.success('Alternative routes generated successfully!');
+    } catch (error) {
+      console.error('Error generating reroute options for alternative route sub-step:', error);
+      toast.error('Failed to generate alternative routes. Please try again.');
+    } finally {
+      setLoadingReroute(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(altSubStepKey);
+        return newSet;
+      });
+    }
+  };
+
+  // Handler for choosing alternative route sub-step route
+  const handleChooseAlternativeSubStepRoute = async (phaseIndex: number, stepIndex: number, altSubStepIndex: number, directionIndex: number) => {
+    if (!jumpId) {
+      toast.error('Jump ID is required');
+      return;
+    }
+
+    const altSubStepKey = `${phaseIndex}-${stepIndex}-alt-${altSubStepIndex}`;
+    const directions = rerouteOptions[altSubStepKey];
+    const chosenDirection = directions[directionIndex];
+
+    try {
+      const updatedPlan = { ...finalPlan };
+      if (!updatedPlan.action_plan.phases[phaseIndex].steps[stepIndex].reroute.sub_steps[altSubStepIndex].reroute) {
+        updatedPlan.action_plan.phases[phaseIndex].steps[stepIndex].reroute.sub_steps[altSubStepIndex].reroute = {};
+      }
+      updatedPlan.action_plan.phases[phaseIndex].steps[stepIndex].reroute.sub_steps[altSubStepIndex].reroute = {
+        overview: chosenDirection.overview,
+        sub_steps: chosenDirection.sub_steps,
+      };
+      setLocalPlan(updatedPlan);
+
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        await updateJump(jumpId, {
+          comprehensive_plan: updatedPlan,
+        });
+      }
+
+      setRerouteOptions(prev => {
+        const newOptions = { ...prev };
+        delete newOptions[altSubStepKey];
+        return newOptions;
+      });
+
+      toast.success('Route selected successfully!');
+    } catch (error) {
+      console.error('Error choosing alternative route sub-step route:', error);
+      toast.error('Failed to save chosen route. Please try again.');
+    }
+  };
     <div className="w-full max-w-full space-y-6 sm:space-y-8" style={{ overflow: 'visible' }}>
       {phases.map((phase: any, phaseIndex: number) => (
         <div key={phaseIndex} className="relative group">
@@ -1506,17 +1699,17 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                             </div>
                                           )}
                                           
-                                          {/* Action buttons for alternative route sub-steps */}
-                                          {isAltSubStepHovered && (
+                                          {/* Action buttons for alternative route sub-steps - Only show on hover and when generation complete */}
+                                          {isAltSubStepHovered && isGenerationComplete && (
                                             <div className="mt-3 pt-3 border-t border-primary/20 animate-fade-in">
                                               <TooltipProvider>
                                                 <div className="flex items-center justify-center gap-2">
                                                   <Tooltip>
-                                                    <TooltipTrigger asChild>
+                                                     <TooltipTrigger asChild>
                                                       <button
                                                         onClick={(e) => {
                                                           e.stopPropagation();
-                                                          handleClarifySubStep(phaseIndex, stepIndex, altSubStepIndex);
+                                                          handleClarifyAlternativeSubStep(phaseIndex, stepIndex, altSubStepIndex);
                                                         }}
                                                         className="relative group/clarify"
                                                       >
@@ -1533,12 +1726,11 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                                     </TooltipContent>
                                                   </Tooltip>
                                                   
-                                                  <Tooltip>
-                                                    <TooltipTrigger asChild>
+                                                     <TooltipTrigger asChild>
                                                       <button
                                                         onClick={(e) => {
                                                           e.stopPropagation();
-                                                          handleRerouteSubStep(phaseIndex, stepIndex, altSubStepIndex);
+                                                          handleRerouteAlternativeSubStep(phaseIndex, stepIndex, altSubStepIndex);
                                                         }}
                                                         className="relative group/reroute"
                                                       >
@@ -2311,8 +2503,8 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                           </div>
                                         )}
 
-                                         {/* Level 2 Action Buttons - Always show on hover */}
-                                         {isSubStepHovered && (
+                                         {/* Level 2 Action Buttons - Only show on hover and when generation complete */}
+                                         {isSubStepHovered && isGenerationComplete && (
                                           <div className="mt-3 pt-3 border-t border-primary/20 animate-fade-in">
                                             <TooltipProvider>
                                               <div className="flex items-center justify-center gap-2">
@@ -2445,8 +2637,8 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                             </div>
                           )}
                           
-                          {/* Expandable Action Buttons Row - Only visible on hover */}
-                          {isHovered && (
+                          {/* Expandable Action Buttons Row - Only visible on hover and when generation complete */}
+                          {isHovered && isGenerationComplete && (
                             <div className="mt-3 pt-3 border-t border-primary/20 animate-fade-in">
                               <TooltipProvider>
                                 <div className="flex items-center justify-center gap-3">
