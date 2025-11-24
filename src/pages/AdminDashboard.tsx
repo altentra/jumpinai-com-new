@@ -801,11 +801,11 @@ export default function AdminDashboard() {
           </Card>
         </div>
 
-      {/* Detailed Tables - Mobile Optimized Tabs */}
+      {/* Detailed Tables - Responsive Tabs with Horizontal Scroll */}
       <Tabs defaultValue="jumps" className="space-y-3 sm:space-y-4">
-        {/* Horizontal scrollable tabs on mobile */}
-        <div className="w-full overflow-x-auto pb-2">
-          <TabsList className="inline-flex w-max min-w-full sm:w-full sm:grid sm:grid-cols-9 h-auto sm:h-10 p-1 gap-1">
+        {/* Horizontal scrollable tabs for all screen sizes */}
+        <div className="w-full overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0">
+          <TabsList className="inline-flex w-max h-auto p-1 gap-1">
             <TabsTrigger value="jumps" className="whitespace-nowrap px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm data-[state=active]:bg-primary/20">
               <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
               <span className="hidden sm:inline">Jump Generations</span>
