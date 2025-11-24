@@ -27,6 +27,31 @@ const JumpinAIStudio = () => {
   const goalsTextareaRef = useRef<HTMLTextAreaElement>(null);
   const challengesTextareaRef = useRef<HTMLTextAreaElement>(null);
 
+  // Refresh function to fetch latest tool prompts
+  const refreshToolPrompts = React.useCallback(async () => {
+    if (!result?.jumpId) return;
+    
+    try {
+      console.log('🔄 Refreshing tool prompts for jump:', result.jumpId);
+      
+      const { data: toolPromptsData, error } = await supabase
+        .from('user_tool_prompts')
+        .select('*')
+        .eq('jump_id', result.jumpId);
+      
+      if (error) throw error;
+      
+      console.log('✅ Fetched updated tool prompts:', toolPromptsData?.length);
+      
+      // The result is managed by useProgressiveGeneration hook, which we can't update directly
+      // Instead, we return the data and let ProgressiveJumpDisplay handle it
+      return toolPromptsData;
+    } catch (error) {
+      console.error('❌ Error refreshing tool prompts:', error);
+      throw error;
+    }
+  }, [result?.jumpId]);
+
   useEffect(() => {
     const meta = document.createElement('meta');
     meta.name = 'robots';
@@ -624,6 +649,7 @@ const JumpinAIStudio = () => {
                   result={result}
                   generationTimer={generationTimer}
                   isAuthenticated={isAuthenticated}
+                  onToolPromptsRefresh={refreshToolPrompts}
                 />
               </div>
             )}
