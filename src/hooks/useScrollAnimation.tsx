@@ -47,8 +47,9 @@ export const useScrollAnimation = (options: { threshold?: number; delay?: number
     let lastScrollTime = 0;
     const scrollListener = () => {
       const now = Date.now();
-      // Throttle to max 60fps for smoother performance on all devices
-      if (!ticking && now - lastScrollTime > 16) {
+      // Smoother throttling on mobile - reduced from 16ms to 8ms for 120fps support
+      const throttleTime = 8;
+      if (!ticking && now - lastScrollTime > throttleTime) {
         lastScrollTime = now;
         ticking = true;
         window.requestAnimationFrame(() => {
