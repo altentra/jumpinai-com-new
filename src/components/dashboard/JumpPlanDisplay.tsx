@@ -1516,9 +1516,7 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                                       <button
                                                         onClick={(e) => {
                                                           e.stopPropagation();
-                                                          // Note: This would be a sub-step in the alternative route - treat as level 1
-                                                          // Since this is an alternative route sub-step, it functions similarly to a sub-step
-                                                          toast.info('Clarify functionality for alternative route sub-steps coming soon.');
+                                                          handleClarifySubStep(phaseIndex, stepIndex, altSubStepIndex);
                                                         }}
                                                         className="relative group/clarify"
                                                       >
@@ -1540,7 +1538,7 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                                       <button
                                                         onClick={(e) => {
                                                           e.stopPropagation();
-                                                          toast.info('Reroute functionality for alternative route sub-steps coming soon.');
+                                                          handleRerouteSubStep(phaseIndex, stepIndex, altSubStepIndex);
                                                         }}
                                                         className="relative group/reroute"
                                                       >
@@ -1562,7 +1560,7 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                                       <button
                                                         onClick={(e) => {
                                                           e.stopPropagation();
-                                                          toast.info('Equip functionality for alternative route sub-steps coming soon.');
+                                                          handleEquipStep(phaseIndex, stepIndex);
                                                         }}
                                                         className="relative group/equip"
                                                       >
@@ -2156,13 +2154,35 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                                                                    }
                                                                                  </p>
                                                                                </TooltipContent>
-                                                                             </Tooltip>
-                                                                           </div>
-                                                                         </TooltipProvider>
-                                                                       </div>
-                                                                     )}
-                                                                   </div>
-                                                                 );
+                                                                              </Tooltip>
+                                                                              
+                                                                              <Tooltip>
+                                                                                <TooltipTrigger asChild>
+                                                                                  <button
+                                                                                    onClick={(e) => {
+                                                                                      e.stopPropagation();
+                                                                                      handleEquipStep(phaseIndex, stepIndex);
+                                                                                    }}
+                                                                                    className="relative group/equip"
+                                                                                  >
+                                                                                    <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/40 via-accent/30 to-primary/40 rounded-[2rem] blur-md opacity-40 group-hover/equip:opacity-70 transition duration-500"></div>
+                                                                                    <div className="relative flex items-center gap-1 px-2 py-1 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2rem] border border-primary/40 group-hover/equip:border-primary/60 transition-all duration-300 overflow-hidden shadow-lg shadow-primary/10">
+                                                                                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/equip:translate-x-full transition-transform duration-1000"></div>
+                                                                                      <Wrench className="relative w-2.5 h-2.5 text-primary" />
+                                                                                      <span className="relative text-[9px] font-bold text-foreground group-hover/equip:text-primary transition-colors duration-300 whitespace-nowrap">Equip</span>
+                                                                                    </div>
+                                                                                  </button>
+                                                                                </TooltipTrigger>
+                                                                                <TooltipContent className="max-w-xs">
+                                                                                  <p className="text-[9px]">Generate custom AI tool & prompt for this step</p>
+                                                                                </TooltipContent>
+                                                                              </Tooltip>
+                                                                            </div>
+                                                                          </TooltipProvider>
+                                                                        </div>
+                                                                      )}
+                                                                    </div>
+                                                                  );
                                                                })}
                                                              </div>
                                                            )}
@@ -2256,13 +2276,35 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                                                      }
                                                                    </p>
                                                                  </TooltipContent>
-                                                               </Tooltip>
-                                                             </div>
-                                                           </TooltipProvider>
-                                                         </div>
-                                                       )}
-                                                     </div>
-                                                   );
+                                                                </Tooltip>
+                                                                
+                                                                <Tooltip>
+                                                                  <TooltipTrigger asChild>
+                                                                    <button
+                                                                      onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        handleEquipStep(phaseIndex, stepIndex);
+                                                                      }}
+                                                                      className="relative group/equip"
+                                                                    >
+                                                                      <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/40 via-accent/30 to-primary/40 rounded-[2rem] blur-md opacity-40 group-hover/equip:opacity-70 transition duration-500"></div>
+                                                                      <div className="relative flex items-center gap-1 px-2 py-1 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2rem] border border-primary/40 group-hover/equip:border-primary/60 transition-all duration-300 overflow-hidden shadow-lg shadow-primary/10">
+                                                                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/equip:translate-x-full transition-transform duration-1000"></div>
+                                                                        <Wrench className="relative w-2.5 h-2.5 text-primary" />
+                                                                        <span className="relative text-[10px] font-bold text-foreground group-hover/equip:text-primary transition-colors duration-300 whitespace-nowrap">Equip</span>
+                                                                      </div>
+                                                                    </button>
+                                                                  </TooltipTrigger>
+                                                                  <TooltipContent className="max-w-xs">
+                                                                    <p className="text-[10px]">Generate custom AI tool & prompt for this step</p>
+                                                                  </TooltipContent>
+                                                                </Tooltip>
+                                                              </div>
+                                                            </TooltipProvider>
+                                                          </div>
+                                                        )}
+                                                      </div>
+                                                    );
                                                  })}
                                                </div>
                                              )}
@@ -2367,6 +2409,28 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                                          : 'Explore 3 alternative approaches for this sub-step'
                                                        }
                                                      </p>
+                                                   </TooltipContent>
+                                                 </Tooltip>
+                                                 
+                                                 <Tooltip>
+                                                   <TooltipTrigger asChild>
+                                                     <button
+                                                       onClick={(e) => {
+                                                         e.stopPropagation();
+                                                         handleEquipStep(phaseIndex, stepIndex);
+                                                       }}
+                                                       className="relative group/equip"
+                                                     >
+                                                       <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/40 via-accent/30 to-primary/40 rounded-[2rem] blur-md opacity-40 group-hover/equip:opacity-70 transition duration-500"></div>
+                                                       <div className="relative flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2rem] border border-primary/40 group-hover/equip:border-primary/60 transition-all duration-300 overflow-hidden shadow-lg shadow-primary/10">
+                                                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/equip:translate-x-full transition-transform duration-1000"></div>
+                                                         <Wrench className="relative w-3 h-3 text-primary" />
+                                                         <span className="relative text-xs font-bold text-foreground group-hover/equip:text-primary transition-colors duration-300 whitespace-nowrap">Equip</span>
+                                                       </div>
+                                                     </button>
+                                                   </TooltipTrigger>
+                                                   <TooltipContent className="max-w-xs">
+                                                     <p className="text-xs">Generate custom AI tool & prompt for this step</p>
                                                    </TooltipContent>
                                                  </Tooltip>
                                               </div>
