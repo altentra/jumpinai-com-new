@@ -1404,6 +1404,8 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
       toast.error('Failed to save chosen route. Please try again.');
     }
   };
+
+  return (
     <div className="w-full max-w-full space-y-6 sm:space-y-8" style={{ overflow: 'visible' }}>
       {phases.map((phase: any, phaseIndex: number) => (
         <div key={phaseIndex} className="relative group">
@@ -1724,28 +1726,29 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                                     <TooltipContent className="max-w-xs">
                                                       <p className="text-xs">Generate detailed sub-steps for this alternative route step</p>
                                                     </TooltipContent>
-                                                  </Tooltip>
-                                                  
-                                                     <TooltipTrigger asChild>
-                                                      <button
-                                                        onClick={(e) => {
-                                                          e.stopPropagation();
-                                                          handleRerouteAlternativeSubStep(phaseIndex, stepIndex, altSubStepIndex);
-                                                        }}
-                                                        className="relative group/reroute"
-                                                      >
-                                                        <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/40 via-accent/30 to-primary/40 rounded-[2rem] blur-md opacity-40 group-hover/reroute:opacity-70 transition duration-500"></div>
-                                                        <div className="relative flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2rem] border border-primary/40 group-hover/reroute:border-primary/60 transition-all duration-300 overflow-hidden shadow-lg shadow-primary/10">
-                                                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/reroute:translate-x-full transition-transform duration-1000"></div>
-                                                          <GitBranch className="relative w-3 h-3 text-primary" />
-                                                          <span className="relative text-xs font-bold text-foreground group-hover/reroute:text-primary transition-colors duration-300 whitespace-nowrap">Reroute</span>
-                                                        </div>
-                                                      </button>
-                                                    </TooltipTrigger>
-                                                    <TooltipContent className="max-w-xs">
-                                                      <p className="text-xs">Explore alternative approaches for this step</p>
-                                                    </TooltipContent>
-                                                  </Tooltip>
+                                  </Tooltip>
+                                  
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <button
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          handleRerouteAlternativeSubStep(phaseIndex, stepIndex, altSubStepIndex);
+                                        }}
+                                        className="relative group/reroute"
+                                      >
+                                        <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/40 via-accent/30 to-primary/40 rounded-[2rem] blur-md opacity-40 group-hover/reroute:opacity-70 transition duration-500"></div>
+                                        <div className="relative flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2rem] border border-primary/40 group-hover/reroute:border-primary/60 transition-all duration-300 overflow-hidden shadow-lg shadow-primary/10">
+                                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/reroute:translate-x-full transition-transform duration-1000"></div>
+                                          <GitBranch className="relative w-3 h-3 text-primary" />
+                                          <span className="relative text-xs font-bold text-foreground group-hover/reroute:text-primary transition-colors duration-300 whitespace-nowrap">Reroute</span>
+                                        </div>
+                                      </button>
+                                    </TooltipTrigger>
+                                    <TooltipContent className="max-w-xs">
+                                      <p className="text-xs">Explore alternative approaches for this step</p>
+                                    </TooltipContent>
+                                  </Tooltip>
                                                   
                                                   <Tooltip>
                                                     <TooltipTrigger asChild>
