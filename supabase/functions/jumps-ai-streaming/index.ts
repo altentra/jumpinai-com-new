@@ -209,19 +209,94 @@ Deno.serve(async (req) => {
             namingResponse.jumpName = 'AI Transformation Journey';
           }
           
-          // Include IP and location metadata in the naming response
+          // Create the jump record in database immediately after naming
+          let jumpId: string | undefined;
+          let jumpTitle: string;
+          
+          try {
+            if (user?.id) {
+              // Logged-in user: Create with Jump # format
+              // Get next jump number (simple count + 1)
+              const { count } = await supabase
+                .from('user_jumps')
+                .select('*', { count: 'exact', head: true })
+                .eq('user_id', user.id);
+              
+              const jumpNumber = (count || 0) + 1;
+              jumpTitle = `Jump #${jumpNumber}: ${namingResponse.jumpName}`;
+              
+              const { data: savedJump, error: insertError } = await supabase
+                .from('user_jumps')
+                .insert({
+                  user_id: user.id,
+                  title: jumpTitle,
+                  summary: `AI Transformation: ${namingResponse.jumpName}`,
+                  full_content: JSON.stringify({ jumpName: namingResponse.jumpName }),
+                  completion_percentage: 5,
+                  status: 'generating',
+                  ip_address: ipAddress,
+                  location: location,
+                  form_goals: formData.goals,
+                  form_challenges: formData.challenges
+                })
+                .select()
+                .single();
+              
+              if (insertError) {
+                console.error('❌ Error creating user jump:', insertError);
+              } else {
+                jumpId = savedJump.id;
+                console.log('✅ User jump created with ID:', jumpId);
+              }
+            } else {
+              // Guest user: Create with simple title (no Jump #)
+              jumpTitle = namingResponse.jumpName;
+              
+              const { data: savedJump, error: insertError } = await supabase
+                .from('user_jumps')
+                .insert({
+                  user_id: null,
+                  title: jumpTitle,
+                  summary: `AI Transformation: ${namingResponse.jumpName}`,
+                  full_content: JSON.stringify({ jumpName: namingResponse.jumpName }),
+                  completion_percentage: 5,
+                  status: 'generating',
+                  ip_address: ipAddress,
+                  location: location,
+                  form_goals: formData.goals,
+                  form_challenges: formData.challenges
+                })
+                .select()
+                .single();
+              
+              if (insertError) {
+                console.error('❌ Error creating guest jump:', insertError);
+                console.error('Insert error details:', JSON.stringify(insertError));
+              } else {
+                jumpId = savedJump.id;
+                console.log('✅ Guest jump created with ID:', jumpId, 'Title:', jumpTitle);
+              }
+            }
+          } catch (dbError) {
+            console.error('❌ Database error during jump creation:', dbError);
+          }
+          
+          // Include IP, location, and jumpId metadata in the naming response
           const namingWithMeta = {
-            jumpName: namingResponse.jumpName, // Explicitly set jumpName first
-            ...namingResponse, // Then spread rest of response
+            jumpName: namingResponse.jumpName,
+            ...namingResponse,
             _metadata: {
               ipAddress,
               location,
-              userAgent: userAgent.substring(0, 200) // Truncate for storage
+              userAgent: userAgent.substring(0, 200),
+              jumpId, // Include the jumpId so frontend knows it
+              jumpTitle
             }
           };
           
           console.log('📤 Sending naming event with data:', { 
             jumpName: namingWithMeta.jumpName,
+            jumpId,
             hasMetadata: !!namingWithMeta._metadata 
           });
           
@@ -281,6 +356,22 @@ Deno.serve(async (req) => {
             });
           }
 
+          // Update jump record to completed status
+          if (jumpId) {
+            try {
+              await supabase
+                .from('user_jumps')
+                .update({
+                  completion_percentage: 100,
+                  status: 'completed'
+                })
+                .eq('id', jumpId);
+              console.log('✅ Jump marked as completed:', jumpId);
+            } catch (updateError) {
+              console.error('❌ Error updating jump status:', updateError);
+            }
+          }
+          
           // Send completion event
           if (!isClosed) {
             console.log('🎉 Sending completion event...');
