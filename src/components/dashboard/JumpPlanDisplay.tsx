@@ -218,30 +218,36 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
     // Level 2: clarifying a level 2 sub-step to get level 3 sub-steps
     // Level 3: clarifying a level 3 sub-step to get level 4 sub-steps
     
-    // Guest/Free users: can only clarify main steps (level 0)
+    // Level 0 (main steps) can ALWAYS be clarified by all users (guest or authenticated)
+    if (currentLevel === 0) {
+      return true;
+    }
+    
+    // For sub-steps (level 1+), check subscription
     if (!subscription || !subscription.subscribed) {
-      return currentLevel === 0;
+      return false; // Must be subscribed for sub-step clarification
     }
     
     const tier = subscription.subscription_tier;
+    if (!tier) return false;
     
     // Starter plan ($9/month): can clarify up to level 1 (clarify main steps to get sub-steps)
-    if (tier === 'Starter') {
+    if (tier.toLowerCase().includes('starter')) {
       return currentLevel <= 1;
     }
     
     // Pro plan ($25/month): can clarify up to level 2 (3 levels deep total)
-    if (tier === 'JumpinAI Pro' || tier === 'Pro') {
+    if (tier.toLowerCase().includes('pro')) {
       return currentLevel <= 2;
     }
     
     // Growth plan ($49/month): can clarify up to level 3 (4 levels deep total)
-    if (tier === 'Growth Plan' || tier === 'Growth') {
+    if (tier.toLowerCase().includes('growth')) {
       return currentLevel <= 3;
     }
     
-    // Default: no access
-    return false;
+    // Default for any subscribed user: allow level 1 at minimum
+    return currentLevel <= 1;
   };
   
   if (!planContent.trim() && !structuredPlan) {
