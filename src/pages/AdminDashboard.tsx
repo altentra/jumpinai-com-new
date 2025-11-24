@@ -111,6 +111,15 @@ interface GuestJump {
   created_at: string;
   ip_address?: string;
   location?: string;
+  form_goals?: string;
+  form_challenges?: string;
+  views_count?: number;
+  clarifications_count?: number;
+  max_clarification_level?: number;
+  reroutes_count?: number;
+  tools_clicked_count?: number;
+  prompts_copied_count?: number;
+  combos_used_count?: number;
 }
 
 interface RecentOrder {
@@ -795,8 +804,8 @@ export default function AdminDashboard() {
       {/* Detailed Tables - Mobile Optimized Tabs */}
       <Tabs defaultValue="jumps" className="space-y-3 sm:space-y-4">
         {/* Horizontal scrollable tabs on mobile */}
-        <div className="overflow-x-auto -mx-2 px-2 sm:mx-0 sm:px-0 pb-2 scrollbar-thin scrollbar-thumb-muted scrollbar-track-transparent">
-          <TabsList className="inline-flex w-auto min-w-full sm:w-full sm:grid sm:grid-cols-9 h-auto sm:h-10 p-0.5 sm:p-1 gap-0.5 sm:gap-1">
+        <div className="w-full overflow-x-auto pb-2">
+          <TabsList className="inline-flex w-max min-w-full sm:w-full sm:grid sm:grid-cols-9 h-auto sm:h-10 p-1 gap-1">
             <TabsTrigger value="jumps" className="whitespace-nowrap px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm data-[state=active]:bg-primary/20">
               <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
               <span className="hidden sm:inline">Jump Generations</span>
@@ -1190,57 +1199,115 @@ export default function AdminDashboard() {
 
               {/* All Guest Jump Attempts */}
               <div>
-                <h3 className="text-lg font-semibold mb-4">All Guest Jump Attempts ({allGuestJumps.length})</h3>
+                <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 px-4 sm:px-0">All Guest Jump Attempts ({allGuestJumps.length})</h3>
                 {allGuestJumps.length === 0 ? (
-                  <div className="text-center py-8 text-muted-foreground">
-                    <TrendingUp className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                    <p className="text-lg font-medium mb-2">No guest jumps yet</p>
-                    <p className="text-sm">Guest jump generation attempts will appear here</p>
+                  <div className="text-center py-8 text-muted-foreground px-4">
+                    <TrendingUp className="h-10 w-10 sm:h-12 sm:w-12 mx-auto mb-4 opacity-50" />
+                    <p className="text-base sm:text-lg font-medium mb-2">No guest jumps yet</p>
+                    <p className="text-xs sm:text-sm">Guest jump generation attempts will appear here</p>
                   </div>
                 ) : (
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Title</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead>Content Preview</TableHead>
-                        <TableHead>Location & Time (PST)</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {allGuestJumps.map((jump) => (
-                        <TableRow key={jump.id}>
-                          <TableCell className="font-medium max-w-xs truncate">
-                            {jump.title}
-                          </TableCell>
-                          <TableCell>
-                            <Badge variant={jump.status === 'active' ? 'default' : 'destructive'}>
-                              {jump.status === 'active' ? 'Success' : 'Failed'}
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="max-w-md">
-                            <p className="text-xs text-muted-foreground truncate">
-                              {jump.full_content.substring(0, 100)}...
-                            </p>
-                          </TableCell>
-                          <TableCell className="text-sm">
-                            <div>{jump.location || 'Unknown'}</div>
-                            <div className="text-xs text-muted-foreground font-mono">{jump.ip_address}</div>
-                            <div className="text-xs text-muted-foreground">
-                              {new Date(jump.created_at).toLocaleString('en-US', {
-                                timeZone: 'America/Los_Angeles',
-                                month: 'short',
-                                day: 'numeric',
-                                year: 'numeric',
-                                hour: '2-digit',
-                                minute: '2-digit'
-                              })} PST
+                  <div className="space-y-3 sm:space-y-4">
+                    {allGuestJumps.map((jump) => (
+                      <Card key={jump.id} className="p-3 sm:p-4 border-l-4 border-l-primary/30">
+                        <div className="space-y-3">
+                          {/* Header: Title, Status, Time */}
+                          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 sm:gap-4">
+                            <div className="flex-1 min-w-0">
+                              <h4 className="font-semibold text-sm sm:text-base truncate mb-1">
+                                {jump.title}
+                              </h4>
+                              <div className="flex flex-wrap items-center gap-2">
+                                <Badge variant={jump.status === 'active' ? 'default' : 'destructive'} className="text-[10px] sm:text-xs">
+                                  {jump.status === 'active' ? 'Success' : 'Failed'}
+                                </Badge>
+                                <Badge variant="outline" className="text-[10px] sm:text-xs">
+                                  📍 {jump.location || 'Unknown'}
+                                </Badge>
+                                {jump.ip_address && (
+                                  <span className="text-[10px] sm:text-xs text-muted-foreground font-mono">
+                                    {jump.ip_address}
+                                  </span>
+                                )}
+                              </div>
                             </div>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
+                            <div className="text-left sm:text-right text-xs sm:text-sm">
+                              <div className="text-muted-foreground text-[10px] sm:text-xs mb-0.5">Generated</div>
+                              <div className="font-medium">
+                                {new Date(jump.created_at).toLocaleString('en-US', {
+                                  timeZone: 'America/Los_Angeles',
+                                  month: 'short',
+                                  day: 'numeric',
+                                  year: 'numeric',
+                                  hour: '2-digit',
+                                  minute: '2-digit'
+                                })} PST
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* User Input Section */}
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t">
+                            <div>
+                              <div className="text-xs font-semibold text-muted-foreground mb-1">Goals:</div>
+                              <div className="text-xs bg-muted/30 p-2 rounded border whitespace-normal break-words">
+                                {jump.form_goals || 'N/A'}
+                              </div>
+                            </div>
+                            <div>
+                              <div className="text-xs font-semibold text-muted-foreground mb-1">Challenges:</div>
+                              <div className="text-xs bg-muted/30 p-2 rounded border whitespace-normal break-words">
+                                {jump.form_challenges || 'N/A'}
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Stats Row - Using JumpStatsRow component pattern */}
+                          {(jump.views_count || jump.clarifications_count || jump.reroutes_count || 
+                            jump.tools_clicked_count || jump.prompts_copied_count || jump.combos_used_count) && (
+                            <div className="pt-2 border-t">
+                              <div className="text-xs font-semibold text-muted-foreground mb-2">Activity Stats</div>
+                              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                                {/* Views */}
+                                <div className="p-2 rounded-lg bg-muted/20 border border-border/30">
+                                  <div className="flex items-center gap-1.5 mb-1">
+                                    <div className="text-[10px] sm:text-xs text-muted-foreground">Views</div>
+                                  </div>
+                                  <div className="text-sm sm:text-base font-bold">{jump.views_count || 0}</div>
+                                </div>
+
+                                {/* Clarification */}
+                                <div className="p-2 rounded-lg bg-muted/20 border border-border/30">
+                                  <div className="text-[10px] sm:text-xs text-muted-foreground mb-1">Clarification</div>
+                                  <div className="flex flex-wrap gap-1 text-[10px] sm:text-xs">
+                                    <span className="font-bold">{jump.clarifications_count || 0}</span>
+                                    <span className="text-muted-foreground">clarify</span>
+                                    <span className="font-bold">{jump.max_clarification_level || 0}</span>
+                                    <span className="text-muted-foreground">max</span>
+                                    <span className="font-bold">{jump.reroutes_count || 0}</span>
+                                    <span className="text-muted-foreground">reroute</span>
+                                  </div>
+                                </div>
+
+                                {/* Implementation */}
+                                <div className="p-2 rounded-lg bg-muted/20 border border-border/30">
+                                  <div className="text-[10px] sm:text-xs text-muted-foreground mb-1">Implementation</div>
+                                  <div className="flex flex-wrap gap-1 text-[10px] sm:text-xs">
+                                    <span className="font-bold">{jump.tools_clicked_count || 0}</span>
+                                    <span className="text-muted-foreground">tools</span>
+                                    <span className="font-bold">{jump.prompts_copied_count || 0}</span>
+                                    <span className="text-muted-foreground">prompts</span>
+                                    <span className="font-bold">{jump.combos_used_count || 0}</span>
+                                    <span className="text-muted-foreground">combos</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
                 )}
               </div>
             </CardContent>
