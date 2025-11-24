@@ -279,7 +279,7 @@ const Index = () => {
             </div>
               
               {/* Subtle white back shadow */}
-              <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-gray-800 to-black dark:from-white dark:to-gray-300 opacity-20 group-hover:opacity-40 transition-opacity duration-500 -z-10 blur-xl"></div>
+              <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-gray-800 to-black dark:from-white dark:to-gray-300 opacity-20 group-hover:opacity-40 transition-opacity duration-500 -z-10 blur-lg"></div>
             </div>
 
             {/* Plan Tab */}
@@ -323,7 +323,7 @@ const Index = () => {
             </div>
               
               {/* Subtle white back shadow */}
-              <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-gray-800 to-black dark:from-white dark:to-gray-300 opacity-20 group-hover:opacity-40 transition-opacity duration-500 -z-10 blur-xl"></div>
+              <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-gray-800 to-black dark:from-white dark:to-gray-300 opacity-20 group-hover:opacity-40 transition-opacity duration-500 -z-10 blur-lg"></div>
             </div>
 
             {/* Tools & Prompts Tab */}
@@ -367,7 +367,7 @@ const Index = () => {
             </div>
               
               {/* Subtle white back shadow */}
-              <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-gray-800 to-black dark:from-white dark:to-gray-300 opacity-20 group-hover:opacity-40 transition-opacity duration-500 -z-10 blur-xl"></div>
+              <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-gray-800 to-black dark:from-white dark:to-gray-300 opacity-20 group-hover:opacity-40 transition-opacity duration-500 -z-10 blur-lg"></div>
             </div>
           </div>
 
