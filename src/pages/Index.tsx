@@ -1204,7 +1204,7 @@ const Index = () => {
                   <div className="absolute inset-0 rounded-2xl bg-card"></div>
                 </div>
                 
-                <div className="relative bg-card rounded-2xl p-6 shadow-modern hover:shadow-modern-lg transition-all duration-500 border border-white/10 hover:border-white/20">
+                <div className="relative bg-card rounded-2xl p-6 shadow-modern hover:shadow-modern-lg transition-all duration-500 border border-white/10 hover:border-white/20 h-full">
                   {/* Subtle glass overlay */}
                   <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/[0.02] via-transparent to-white/[0.01] pointer-events-none"></div>
                   
@@ -1234,7 +1234,7 @@ const Index = () => {
                   <div className="absolute inset-0 rounded-2xl bg-card"></div>
                 </div>
                 
-                <div className="relative bg-card rounded-2xl p-6 shadow-modern hover:shadow-modern-lg transition-all duration-500 border border-white/10 hover:border-white/20">
+                <div className="relative bg-card rounded-2xl p-6 shadow-modern hover:shadow-modern-lg transition-all duration-500 border border-white/10 hover:border-white/20 h-full">
                   {/* Subtle glass overlay */}
                   <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/[0.02] via-transparent to-white/[0.01] pointer-events-none"></div>
                   
