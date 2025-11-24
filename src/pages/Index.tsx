@@ -296,8 +296,8 @@ const Index = () => {
             <div 
               className="group relative rounded-3xl transition-all duration-700 ease-out scroll-animate"
               style={{
-                opacity: Math.max(0, Math.min(1, (tabsProgress - 0.35) * 3)),
-                transform: `translateY(${Math.max(0, Math.min(1, (tabsProgress - 0.35) * 3)) >= 0.99 ? 0 : (1 - Math.max(0, Math.min(1, (tabsProgress - 0.35) * 3))) * 40}px)`
+                opacity: Math.max(0, Math.min(1, (tabsProgress - 0.2) * 3)),
+                transform: `translateY(${Math.max(0, Math.min(1, (tabsProgress - 0.2) * 3)) >= 0.99 ? 0 : (1 - Math.max(0, Math.min(1, (tabsProgress - 0.2) * 3))) * 40}px)`
               }}
             >
               {/* Liquid glass border wrapper */}
@@ -350,8 +350,8 @@ const Index = () => {
             <div 
               className="group relative rounded-3xl transition-all duration-700 ease-out scroll-animate"
               style={{
-                opacity: Math.max(0, Math.min(1, (tabsProgress - 0.65) * 3.5)),
-                transform: `translateY(${Math.max(0, Math.min(1, (tabsProgress - 0.65) * 3.5)) >= 0.9 ? 0 : (1 - Math.max(0, Math.min(1, (tabsProgress - 0.65) * 3.5))) * 40}px)`
+                opacity: Math.max(0, Math.min(1, (tabsProgress - 0.4) * 3)),
+                transform: `translateY(${Math.max(0, Math.min(1, (tabsProgress - 0.4) * 3)) >= 0.99 ? 0 : (1 - Math.max(0, Math.min(1, (tabsProgress - 0.4) * 3))) * 40}px)`
               }}
             >
               {/* Liquid glass border wrapper */}
@@ -484,8 +484,8 @@ const Index = () => {
               <div 
                 className="group relative rounded-3xl transition-all duration-700 ease-out scroll-animate"
                 style={{
-                  opacity: Math.max(0, Math.min(1, (stepsProgress - 0.35) * 3)),
-                  transform: `translateY(${Math.max(0, Math.min(1, (stepsProgress - 0.35) * 3)) >= 0.99 ? 0 : (1 - Math.max(0, Math.min(1, (stepsProgress - 0.35) * 3))) * 40}px)`
+                  opacity: Math.max(0, Math.min(1, (stepsProgress - 0.2) * 3)),
+                  transform: `translateY(${Math.max(0, Math.min(1, (stepsProgress - 0.2) * 3)) >= 0.99 ? 0 : (1 - Math.max(0, Math.min(1, (stepsProgress - 0.2) * 3))) * 40}px)`
                 }}
               >
                 {/* Liquid glass border wrapper */}
@@ -513,8 +513,8 @@ const Index = () => {
               <div 
                 className="group relative rounded-3xl transition-all duration-700 ease-out scroll-animate"
                 style={{
-                  opacity: Math.max(0, Math.min(1, (stepsProgress - 0.65) * 3.5)),
-                  transform: `translateY(${Math.max(0, Math.min(1, (stepsProgress - 0.65) * 3.5)) >= 0.9 ? 0 : (1 - Math.max(0, Math.min(1, (stepsProgress - 0.65) * 3.5))) * 40}px)`
+                  opacity: Math.max(0, Math.min(1, (stepsProgress - 0.4) * 3)),
+                  transform: `translateY(${Math.max(0, Math.min(1, (stepsProgress - 0.4) * 3)) >= 0.99 ? 0 : (1 - Math.max(0, Math.min(1, (stepsProgress - 0.4) * 3))) * 40}px)`
                 }}
               >
                 {/* Liquid glass border wrapper */}
@@ -1005,8 +1005,8 @@ const Index = () => {
               <div 
                 className="group relative rounded-3xl transition-all duration-700 ease-out scroll-animate"
                 style={{
-                  opacity: Math.max(0, Math.min(1, (conceptCardsProgress - 0.35) * 3)),
-                  transform: `translateY(${Math.max(0, Math.min(1, (conceptCardsProgress - 0.35) * 3)) >= 0.99 ? 0 : (1 - Math.max(0, Math.min(1, (conceptCardsProgress - 0.35) * 3))) * 40}px)`
+                  opacity: Math.max(0, Math.min(1, (conceptCardsProgress - 0.2) * 3)),
+                  transform: `translateY(${Math.max(0, Math.min(1, (conceptCardsProgress - 0.2) * 3)) >= 0.99 ? 0 : (1 - Math.max(0, Math.min(1, (conceptCardsProgress - 0.2) * 3))) * 40}px)`
                 }}
               >
                 {/* Liquid glass border wrapper */}
@@ -1040,8 +1040,8 @@ const Index = () => {
               <div 
                 className="group relative rounded-3xl transition-all duration-700 ease-out scroll-animate"
                 style={{
-                  opacity: Math.max(0, Math.min(1, (conceptCardsProgress - 0.65) * 3.5)),
-                  transform: `translateY(${Math.max(0, Math.min(1, (conceptCardsProgress - 0.65) * 3.5)) >= 0.9 ? 0 : (1 - Math.max(0, Math.min(1, (conceptCardsProgress - 0.65) * 3.5))) * 40}px)`
+                  opacity: Math.max(0, Math.min(1, (conceptCardsProgress - 0.4) * 3)),
+                  transform: `translateY(${Math.max(0, Math.min(1, (conceptCardsProgress - 0.4) * 3)) >= 0.99 ? 0 : (1 - Math.max(0, Math.min(1, (conceptCardsProgress - 0.4) * 3))) * 40}px)`
                 }}
               >
                 {/* Liquid glass border wrapper */}

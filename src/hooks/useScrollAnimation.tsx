@@ -22,9 +22,9 @@ export const useScrollAnimation = (options: { threshold?: number; delay?: number
       
       // Animation completes earlier and more distinctly
       // Start when element is 75% into viewport
-      // End when element is 50% into viewport (much earlier than before)
+      // End when element is 35-40% into viewport (extended for more visible animation)
       const startPoint = windowHeight * 0.75;
-      const endPoint = windowHeight * 0.5;
+      const endPoint = windowHeight * 0.37;
       
       if (elementTop > startPoint) {
         setScrollProgress(0);
