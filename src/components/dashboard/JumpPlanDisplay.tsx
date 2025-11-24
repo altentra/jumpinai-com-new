@@ -571,7 +571,6 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
 
   // Handler for Equip functionality - generate tool/prompt combo for any step
   const handleEquipStep = async (phaseIndex: number, stepIndex: number) => {
-    // Check if user is authenticated - Equip is only for registered users
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
       toast.error('Sign up to access this feature.');
@@ -596,7 +595,6 @@ Strategic Vision: ${finalPlan.strategicVision || ''}
 Current State: ${finalPlan.situationAnalysis?.currentState || ''}
       `.trim();
 
-      // Count existing combos from toolPromptIds plus any equipped steps
       const existingComboCount = (toolPromptIds?.filter(id => id && id !== 'null').length || 0) + Object.keys(equippedSteps).length;
 
       const requestBody = {
@@ -610,32 +608,19 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
         existingComboCount
       };
 
-      console.log('Calling equip-step function:', requestBody);
-
       const { data, error } = await supabase.functions.invoke('equip-step', {
         body: requestBody,
       });
 
-      if (error) {
-        throw new Error('Failed to generate combo');
-      }
+      if (error) throw new Error('Failed to generate combo');
+      if (!data || !data.success || !data.combo) throw new Error('Invalid response');
 
-      console.log('Equip-step response:', data);
-
-      if (!data || !data.success || !data.combo) {
-        throw new Error('Invalid response from equip-step function');
-      }
-
-      // Mark this step as equipped with its combo ID
       setEquippedSteps(prev => ({ ...prev, [stepKey]: data.combo.id }));
-
       toast.success(`Combo #${data.combo.combo_number} generated and added to Tools & Prompts!`);
-
-      // Refresh tool prompts in parent component
+      
       if (onToolPromptGenerated) {
         onToolPromptGenerated();
       }
-
     } catch (error) {
       console.error('Error equipping step:', error);
       toast.error('Failed to generate combo. Please try again.');
@@ -643,6 +628,138 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
       setLoadingEquip(prev => {
         const newSet = new Set(prev);
         newSet.delete(stepKey);
+        return newSet;
+      });
+    }
+  };
+
+  // Handler for equipping sub-steps
+  const handleEquipSubStep = async (phaseIndex: number, stepIndex: number, subStepIndex: number) => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      toast.error('Sign up to access this feature.');
+      return;
+    }
+    
+    if (!jumpId) {
+      toast.error('Jump ID is required');
+      return;
+    }
+
+    const subStepKey = `${phaseIndex}-${stepIndex}-${subStepIndex}`;
+    setLoadingEquip(prev => new Set(prev).add(subStepKey));
+
+    try {
+      const phase = finalPlan.action_plan.phases[phaseIndex];
+      const step = phase.steps[stepIndex];
+      const subStep = step.sub_steps[subStepIndex];
+
+      const jumpOverview = `
+Executive Summary: ${finalPlan.executiveSummary || ''}
+Strategic Vision: ${finalPlan.strategicVision || ''}
+Current State: ${finalPlan.situationAnalysis?.currentState || ''}
+      `.trim();
+
+      const existingComboCount = (toolPromptIds?.filter(id => id && id !== 'null').length || 0) + Object.keys(equippedSteps).length;
+
+      const requestBody = {
+        jumpId,
+        jumpOverview,
+        phaseTitle: phase.title,
+        phaseNumber: phase.phase_number,
+        stepTitle: subStep.title,
+        stepDescription: subStep.description,
+        stepNumber: subStep.sub_step_number || subStepIndex + 1,
+        existingComboCount
+      };
+
+      const { data, error } = await supabase.functions.invoke('equip-step', {
+        body: requestBody,
+      });
+
+      if (error) throw new Error('Failed to generate combo');
+      if (!data || !data.success || !data.combo) throw new Error('Invalid response');
+
+      setEquippedSteps(prev => ({ ...prev, [subStepKey]: data.combo.id }));
+      toast.success(`Combo #${data.combo.combo_number} generated and added to Tools & Prompts!`);
+      
+      if (onToolPromptGenerated) {
+        onToolPromptGenerated();
+      }
+    } catch (error) {
+      console.error('Error equipping sub-step:', error);
+      toast.error('Failed to generate combo. Please try again.');
+    } finally {
+      setLoadingEquip(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(subStepKey);
+        return newSet;
+      });
+    }
+  };
+
+  // Handler for equipping alternative route sub-steps
+  const handleEquipAlternativeSubStep = async (phaseIndex: number, stepIndex: number, altSubStepIndex: number) => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      toast.error('Sign up to access this feature.');
+      return;
+    }
+    
+    if (!jumpId) {
+      toast.error('Jump ID is required');
+      return;
+    }
+
+    const altSubStepKey = `${phaseIndex}-${stepIndex}-alt-${altSubStepIndex}`;
+    setLoadingEquip(prev => new Set(prev).add(altSubStepKey));
+
+    try {
+      const phase = finalPlan.action_plan.phases[phaseIndex];
+      const step = phase.steps[stepIndex];
+      const altSubStep = step.reroute?.sub_steps?.[altSubStepIndex];
+
+      if (!altSubStep) throw new Error('Alternative route sub-step not found');
+
+      const jumpOverview = `
+Executive Summary: ${finalPlan.executiveSummary || ''}
+Strategic Vision: ${finalPlan.strategicVision || ''}
+Current State: ${finalPlan.situationAnalysis?.currentState || ''}
+      `.trim();
+
+      const existingComboCount = (toolPromptIds?.filter(id => id && id !== 'null').length || 0) + Object.keys(equippedSteps).length;
+
+      const requestBody = {
+        jumpId,
+        jumpOverview,
+        phaseTitle: phase.title,
+        phaseNumber: phase.phase_number,
+        stepTitle: altSubStep.title,
+        stepDescription: altSubStep.description,
+        stepNumber: altSubStep.sub_step_number || altSubStepIndex + 1,
+        existingComboCount
+      };
+
+      const { data, error } = await supabase.functions.invoke('equip-step', {
+        body: requestBody,
+      });
+
+      if (error) throw new Error('Failed to generate combo');
+      if (!data || !data.success || !data.combo) throw new Error('Invalid response');
+
+      setEquippedSteps(prev => ({ ...prev, [altSubStepKey]: data.combo.id }));
+      toast.success(`Combo #${data.combo.combo_number} generated and added to Tools & Prompts!`);
+      
+      if (onToolPromptGenerated) {
+        onToolPromptGenerated();
+      }
+    } catch (error) {
+      console.error('Error equipping alternative sub-step:', error);
+      toast.error('Failed to generate combo. Please try again.');
+    } finally {
+      setLoadingEquip(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(altSubStepKey);
         return newSet;
       });
     }
@@ -1706,79 +1823,329 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                           )}
                                           
                                           {/* Action buttons for alternative route sub-steps - Only show on hover and when generation complete */}
-                                          {isAltSubStepHovered && isGenerationComplete && (
-                                            <div className="mt-3 pt-3 border-t border-primary/20 animate-fade-in">
-                                              <TooltipProvider>
-                                                <div className="flex items-center justify-center gap-2">
-                                                  <Tooltip>
-                                                     <TooltipTrigger asChild>
+                                          {isAltSubStepHovered && isGenerationComplete && (() => {
+                                            const altSubStepKey = `${phaseIndex}-${stepIndex}-alt-${altSubStepIndex}`;
+                                            const isAltLoading = loadingClarify.has(altSubStepKey);
+                                            const isAltRerouteLoading = loadingReroute.has(altSubStepKey);
+                                            const isAltEquipLoading = loadingEquip.has(altSubStepKey);
+                                            const hasAltLevel2SubSteps = subStep.level_2_sub_steps && Array.isArray(subStep.level_2_sub_steps) && subStep.level_2_sub_steps.length > 0;
+                                            const hasAltRerouteOptions = rerouteOptions[altSubStepKey];
+                                            const hasAltChosenRoute = subStep.reroute;
+                                            const isAltEquipped = altSubStepKey in equippedSteps;
+
+                                            return (
+                                              <div className="mt-3 pt-3 border-t border-primary/20 animate-fade-in">
+                                                <TooltipProvider>
+                                                  <div className="flex items-center justify-center gap-2">
+                                                    <Tooltip>
+                                                      <TooltipTrigger asChild>
+                                                        <button
+                                                          onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleClarifyAlternativeSubStep(phaseIndex, stepIndex, altSubStepIndex);
+                                                          }}
+                                                          disabled={isAltLoading || hasAltLevel2SubSteps}
+                                                          className="relative group/clarify disabled:opacity-50 disabled:cursor-not-allowed"
+                                                        >
+                                                          <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/40 via-accent/30 to-primary/40 rounded-[2rem] blur-md opacity-40 group-hover/clarify:opacity-70 transition duration-500"></div>
+                                                          <div className="relative flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2rem] border border-primary/40 group-hover/clarify:border-primary/60 transition-all duration-300 overflow-hidden shadow-lg shadow-primary/10">
+                                                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/clarify:translate-x-full transition-transform duration-1000"></div>
+                                                            {isAltLoading ? (
+                                                              <>
+                                                                <Loader2 className="relative w-3 h-3 animate-spin text-primary" />
+                                                                <span className="relative text-xs font-bold text-foreground whitespace-nowrap">Generating...</span>
+                                                              </>
+                                                            ) : hasAltLevel2SubSteps ? (
+                                                              <>
+                                                                <CheckCircle2 className="relative w-3 h-3 text-primary" />
+                                                                <span className="relative text-xs font-bold text-foreground whitespace-nowrap">Clarified</span>
+                                                              </>
+                                                            ) : (
+                                                              <>
+                                                                <Sparkles className="relative w-3 h-3 text-primary" />
+                                                                <span className="relative text-xs font-bold text-foreground group-hover/clarify:text-primary transition-colors duration-300 whitespace-nowrap">Clarify</span>
+                                                              </>
+                                                            )}
+                                                          </div>
+                                                        </button>
+                                                      </TooltipTrigger>
+                                                      <TooltipContent className="max-w-xs">
+                                                        <p className="text-xs">{hasAltLevel2SubSteps ? 'Already clarified' : 'Generate detailed sub-steps'}</p>
+                                                      </TooltipContent>
+                                                    </Tooltip>
+                                                    
+                                                    <Tooltip>
+                                                      <TooltipTrigger asChild>
+                                                        <button
+                                                          onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleRerouteAlternativeSubStep(phaseIndex, stepIndex, altSubStepIndex);
+                                                          }}
+                                                          disabled={isAltRerouteLoading || hasAltRerouteOptions || hasAltChosenRoute}
+                                                          className="relative group/reroute disabled:opacity-50 disabled:cursor-not-allowed"
+                                                        >
+                                                          <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/40 via-accent/30 to-primary/40 rounded-[2rem] blur-md opacity-40 group-hover/reroute:opacity-70 transition duration-500"></div>
+                                                          <div className="relative flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2rem] border border-primary/40 group-hover/reroute:border-primary/60 transition-all duration-300 overflow-hidden shadow-lg shadow-primary/10">
+                                                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/reroute:translate-x-full transition-transform duration-1000"></div>
+                                                            {isAltRerouteLoading ? (
+                                                              <>
+                                                                <Loader2 className="relative w-3 h-3 animate-spin text-primary" />
+                                                                <span className="relative text-xs font-bold text-foreground whitespace-nowrap">Generating...</span>
+                                                              </>
+                                                            ) : hasAltChosenRoute ? (
+                                                              <>
+                                                                <CheckCircle2 className="relative w-3 h-3 text-primary" />
+                                                                <span className="relative text-xs font-bold text-foreground whitespace-nowrap">Rerouted</span>
+                                                              </>
+                                                            ) : (
+                                                              <>
+                                                                <GitBranch className="relative w-3 h-3 text-primary" />
+                                                                <span className="relative text-xs font-bold text-foreground group-hover/reroute:text-primary transition-colors duration-300 whitespace-nowrap">Reroute</span>
+                                                              </>
+                                                            )}
+                                                          </div>
+                                                        </button>
+                                                      </TooltipTrigger>
+                                                      <TooltipContent className="max-w-xs">
+                                                        <p className="text-xs">{hasAltChosenRoute ? 'Already rerouted' : 'Explore alternative approaches'}</p>
+                                                      </TooltipContent>
+                                                    </Tooltip>
+                                                    
+                                                    <Tooltip>
+                                                      <TooltipTrigger asChild>
+                                                        <button
+                                                          onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleEquipAlternativeSubStep(phaseIndex, stepIndex, altSubStepIndex);
+                                                          }}
+                                                          disabled={isAltEquipLoading || isAltEquipped}
+                                                          className="relative group/equip disabled:opacity-50 disabled:cursor-not-allowed"
+                                                        >
+                                                          <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/40 via-accent/30 to-primary/40 rounded-[2rem] blur-md opacity-40 group-hover/equip:opacity-70 transition duration-500"></div>
+                                                          <div className="relative flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2rem] border border-primary/40 group-hover/equip:border-primary/60 transition-all duration-300 overflow-hidden shadow-lg shadow-primary/10">
+                                                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/equip:translate-x-full transition-transform duration-1000"></div>
+                                                            {isAltEquipLoading ? (
+                                                              <>
+                                                                <Loader2 className="relative w-3 h-3 animate-spin text-primary" />
+                                                                <span className="relative text-xs font-bold text-foreground whitespace-nowrap">Generating...</span>
+                                                              </>
+                                                            ) : isAltEquipped ? (
+                                                              <>
+                                                                <CheckCircle2 className="relative w-3 h-3 text-primary" />
+                                                                <span className="relative text-xs font-bold text-foreground whitespace-nowrap">Equipped</span>
+                                                              </>
+                                                            ) : (
+                                                              <>
+                                                                <Wrench className="relative w-3 h-3 text-primary" />
+                                                                <span className="relative text-xs font-bold text-foreground group-hover/equip:text-primary transition-colors duration-300 whitespace-nowrap">Equip</span>
+                                                              </>
+                                                            )}
+                                                          </div>
+                                                        </button>
+                                                      </TooltipTrigger>
+                                                      <TooltipContent className="max-w-xs">
+                                                        <p className="text-xs">{isAltEquipped ? 'Already equipped' : 'Generate custom AI tool & prompt'}</p>
+                                                      </TooltipContent>
+                                                    </Tooltip>
+                                                  </div>
+                                                </TooltipProvider>
+                                                
+                                                {/* Blue box for equipped alternative route sub-steps */}
+                                                {isAltEquipped && (
+                                                  <div className="mt-3 p-3 rounded-2xl border bg-blue-500/5 border-blue-500/30">
+                                                    <div className="flex items-center justify-between gap-3">
+                                                      <div className="flex items-start gap-2 flex-1">
+                                                        <Sparkles className="w-3.5 h-3.5 mt-0.5 shrink-0 text-blue-600 dark:text-blue-400" />
+                                                        <div>
+                                                          <p className="text-xs font-medium mb-0.5 text-blue-600 dark:text-blue-400">
+                                                            Tools & Prompts for this Step
+                                                          </p>
+                                                          <p className="text-xs text-muted-foreground/80 leading-snug">
+                                                            Custom AI tool & prompt ready for this step
+                                                          </p>
+                                                        </div>
+                                                      </div>
                                                       <button
                                                         onClick={(e) => {
                                                           e.stopPropagation();
-                                                          handleClarifyAlternativeSubStep(phaseIndex, stepIndex, altSubStepIndex);
+                                                          if (onToolPromptClick) {
+                                                            onToolPromptClick(999, equippedSteps[altSubStepKey]);
+                                                          }
                                                         }}
-                                                        className="relative group/clarify"
+                                                        className="relative group/view shrink-0"
                                                       >
-                                                        <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/40 via-accent/30 to-primary/40 rounded-[2rem] blur-md opacity-40 group-hover/clarify:opacity-70 transition duration-500"></div>
-                                                        <div className="relative flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2rem] border border-primary/40 group-hover/clarify:border-primary/60 transition-all duration-300 overflow-hidden shadow-lg shadow-primary/10">
-                                                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/clarify:translate-x-full transition-transform duration-1000"></div>
-                                                          <Sparkles className="relative w-3 h-3 text-primary" />
-                                                          <span className="relative text-xs font-bold text-foreground group-hover/clarify:text-primary transition-colors duration-300 whitespace-nowrap">Clarify</span>
+                                                        <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/40 via-accent/30 to-primary/40 rounded-[2rem] blur-md opacity-40 group-hover/view:opacity-70 transition duration-500"></div>
+                                                        <div className="relative flex items-center gap-2 px-5 py-2.5 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2rem] border border-primary/40 group-hover/view:border-primary/60 transition-all duration-300 overflow-hidden shadow-lg shadow-primary/10">
+                                                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/view:translate-x-full transition-transform duration-1000"></div>
+                                                          <span className="relative text-sm font-bold text-foreground group-hover/view:text-primary transition-colors duration-300 whitespace-nowrap">View</span>
+                                                          <div className="relative flex items-center justify-center w-5 h-5 rounded-xl bg-primary/30 group-hover/view:bg-primary/40 transition-all duration-300">
+                                                            <ArrowRight className="w-3.5 h-3.5 text-primary group-hover/view:translate-x-0.5 transition-transform duration-300" />
+                                                          </div>
                                                         </div>
                                                       </button>
-                                                    </TooltipTrigger>
-                                                    <TooltipContent className="max-w-xs">
-                                                      <p className="text-xs">Generate detailed sub-steps for this alternative route step</p>
-                                                    </TooltipContent>
-                                  </Tooltip>
-                                  
-                                  <Tooltip>
-                                    <TooltipTrigger asChild>
-                                      <button
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          handleRerouteAlternativeSubStep(phaseIndex, stepIndex, altSubStepIndex);
-                                        }}
-                                        className="relative group/reroute"
-                                      >
-                                        <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/40 via-accent/30 to-primary/40 rounded-[2rem] blur-md opacity-40 group-hover/reroute:opacity-70 transition duration-500"></div>
-                                        <div className="relative flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2rem] border border-primary/40 group-hover/reroute:border-primary/60 transition-all duration-300 overflow-hidden shadow-lg shadow-primary/10">
-                                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/reroute:translate-x-full transition-transform duration-1000"></div>
-                                          <GitBranch className="relative w-3 h-3 text-primary" />
-                                          <span className="relative text-xs font-bold text-foreground group-hover/reroute:text-primary transition-colors duration-300 whitespace-nowrap">Reroute</span>
-                                        </div>
-                                      </button>
-                                    </TooltipTrigger>
-                                    <TooltipContent className="max-w-xs">
-                                      <p className="text-xs">Explore alternative approaches for this step</p>
-                                    </TooltipContent>
-                                  </Tooltip>
-                                                  
-                                                  <Tooltip>
-                                                    <TooltipTrigger asChild>
+                                                    </div>
+                                                  </div>
+                                                )}
+                                              </div>
+                                            );
+                                          })()}
+
+                                            return (
+                                              <div className="mt-3 pt-3 border-t border-primary/20 animate-fade-in">
+                                                <TooltipProvider>
+                                                  <div className="flex items-center justify-center gap-2">
+                                                    <Tooltip>
+                                                      <TooltipTrigger asChild>
+                                                        <button
+                                                          onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleClarifyAlternativeSubStep(phaseIndex, stepIndex, altSubStepIndex);
+                                                          }}
+                                                          disabled={isAltLoading || hasAltLevel2SubSteps}
+                                                          className="relative group/clarify disabled:opacity-50 disabled:cursor-not-allowed"
+                                                        >
+                                                          <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/40 via-accent/30 to-primary/40 rounded-[2rem] blur-md opacity-40 group-hover/clarify:opacity-70 transition duration-500"></div>
+                                                          <div className="relative flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2rem] border border-primary/40 group-hover/clarify:border-primary/60 transition-all duration-300 overflow-hidden shadow-lg shadow-primary/10">
+                                                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/clarify:translate-x-full transition-transform duration-1000"></div>
+                                                            {isAltLoading ? (
+                                                              <>
+                                                                <Loader2 className="relative w-3 h-3 animate-spin text-primary" />
+                                                                <span className="relative text-xs font-bold text-foreground whitespace-nowrap">Generating...</span>
+                                                              </>
+                                                            ) : hasAltLevel2SubSteps ? (
+                                                              <>
+                                                                <CheckCircle2 className="relative w-3 h-3 text-primary" />
+                                                                <span className="relative text-xs font-bold text-foreground whitespace-nowrap">Clarified</span>
+                                                              </>
+                                                            ) : (
+                                                              <>
+                                                                <Sparkles className="relative w-3 h-3 text-primary" />
+                                                                <span className="relative text-xs font-bold text-foreground group-hover/clarify:text-primary transition-colors duration-300 whitespace-nowrap">Clarify</span>
+                                                              </>
+                                                            )}
+                                                          </div>
+                                                        </button>
+                                                      </TooltipTrigger>
+                                                      <TooltipContent className="max-w-xs">
+                                                        <p className="text-xs">{hasAltLevel2SubSteps ? 'Already clarified' : 'Generate detailed sub-steps'}</p>
+                                                      </TooltipContent>
+                                                    </Tooltip>
+                                                    
+                                                    <Tooltip>
+                                                      <TooltipTrigger asChild>
+                                                        <button
+                                                          onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleRerouteAlternativeSubStep(phaseIndex, stepIndex, altSubStepIndex);
+                                                          }}
+                                                          disabled={isAltRerouteLoading || hasAltRerouteOptions || hasAltChosenRoute}
+                                                          className="relative group/reroute disabled:opacity-50 disabled:cursor-not-allowed"
+                                                        >
+                                                          <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/40 via-accent/30 to-primary/40 rounded-[2rem] blur-md opacity-40 group-hover/reroute:opacity-70 transition duration-500"></div>
+                                                          <div className="relative flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2rem] border border-primary/40 group-hover/reroute:border-primary/60 transition-all duration-300 overflow-hidden shadow-lg shadow-primary/10">
+                                                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/reroute:translate-x-full transition-transform duration-1000"></div>
+                                                            {isAltRerouteLoading ? (
+                                                              <>
+                                                                <Loader2 className="relative w-3 h-3 animate-spin text-primary" />
+                                                                <span className="relative text-xs font-bold text-foreground whitespace-nowrap">Generating...</span>
+                                                              </>
+                                                            ) : hasAltChosenRoute ? (
+                                                              <>
+                                                                <CheckCircle2 className="relative w-3 h-3 text-primary" />
+                                                                <span className="relative text-xs font-bold text-foreground whitespace-nowrap">Rerouted</span>
+                                                              </>
+                                                            ) : (
+                                                              <>
+                                                                <GitBranch className="relative w-3 h-3 text-primary" />
+                                                                <span className="relative text-xs font-bold text-foreground group-hover/reroute:text-primary transition-colors duration-300 whitespace-nowrap">Reroute</span>
+                                                              </>
+                                                            )}
+                                                          </div>
+                                                        </button>
+                                                      </TooltipTrigger>
+                                                      <TooltipContent className="max-w-xs">
+                                                        <p className="text-xs">{hasAltChosenRoute ? 'Already rerouted' : 'Explore alternative approaches'}</p>
+                                                      </TooltipContent>
+                                                    </Tooltip>
+                                                    
+                                                    <Tooltip>
+                                                      <TooltipTrigger asChild>
+                                                        <button
+                                                          onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleEquipAlternativeSubStep(phaseIndex, stepIndex, altSubStepIndex);
+                                                          }}
+                                                          disabled={isAltEquipLoading || isAltEquipped}
+                                                          className="relative group/equip disabled:opacity-50 disabled:cursor-not-allowed"
+                                                        >
+                                                          <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/40 via-accent/30 to-primary/40 rounded-[2rem] blur-md opacity-40 group-hover/equip:opacity-70 transition duration-500"></div>
+                                                          <div className="relative flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2rem] border border-primary/40 group-hover/equip:border-primary/60 transition-all duration-300 overflow-hidden shadow-lg shadow-primary/10">
+                                                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/equip:translate-x-full transition-transform duration-1000"></div>
+                                                            {isAltEquipLoading ? (
+                                                              <>
+                                                                <Loader2 className="relative w-3 h-3 animate-spin text-primary" />
+                                                                <span className="relative text-xs font-bold text-foreground whitespace-nowrap">Generating...</span>
+                                                              </>
+                                                            ) : isAltEquipped ? (
+                                                              <>
+                                                                <CheckCircle2 className="relative w-3 h-3 text-primary" />
+                                                                <span className="relative text-xs font-bold text-foreground whitespace-nowrap">Equipped</span>
+                                                              </>
+                                                            ) : (
+                                                              <>
+                                                                <Wrench className="relative w-3 h-3 text-primary" />
+                                                                <span className="relative text-xs font-bold text-foreground group-hover/equip:text-primary transition-colors duration-300 whitespace-nowrap">Equip</span>
+                                                              </>
+                                                            )}
+                                                          </div>
+                                                        </button>
+                                                      </TooltipTrigger>
+                                                      <TooltipContent className="max-w-xs">
+                                                        <p className="text-xs">{isAltEquipped ? 'Already equipped' : 'Generate custom AI tool & prompt'}</p>
+                                                      </TooltipContent>
+                                                    </Tooltip>
+                                                  </div>
+                                                </TooltipProvider>
+                                                
+                                                {/* Blue box for equipped alternative route sub-steps */}
+                                                {isAltEquipped && (
+                                                  <div className="mt-3 p-3 rounded-2xl border bg-blue-500/5 border-blue-500/30">
+                                                    <div className="flex items-center justify-between gap-3">
+                                                      <div className="flex items-start gap-2 flex-1">
+                                                        <Sparkles className="w-3.5 h-3.5 mt-0.5 shrink-0 text-blue-600 dark:text-blue-400" />
+                                                        <div>
+                                                          <p className="text-xs font-medium mb-0.5 text-blue-600 dark:text-blue-400">
+                                                            Tools & Prompts for this Step
+                                                          </p>
+                                                          <p className="text-xs text-muted-foreground/80 leading-snug">
+                                                            Custom AI tool & prompt ready for this step
+                                                          </p>
+                                                        </div>
+                                                      </div>
                                                       <button
                                                         onClick={(e) => {
                                                           e.stopPropagation();
-                                                          handleEquipStep(phaseIndex, stepIndex);
+                                                          if (onToolPromptClick) {
+                                                            onToolPromptClick(999, equippedSteps[altSubStepKey]);
+                                                          }
                                                         }}
-                                                        className="relative group/equip"
+                                                        className="relative group/view shrink-0"
                                                       >
-                                                        <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/40 via-accent/30 to-primary/40 rounded-[2rem] blur-md opacity-40 group-hover/equip:opacity-70 transition duration-500"></div>
-                                                        <div className="relative flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2rem] border border-primary/40 group-hover/equip:border-primary/60 transition-all duration-300 overflow-hidden shadow-lg shadow-primary/10">
-                                                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/equip:translate-x-full transition-transform duration-1000"></div>
-                                                          <Wrench className="relative w-3 h-3 text-primary" />
-                                                          <span className="relative text-xs font-bold text-foreground group-hover/equip:text-primary transition-colors duration-300 whitespace-nowrap">Equip</span>
+                                                        <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/40 via-accent/30 to-primary/40 rounded-[2rem] blur-md opacity-40 group-hover/view:opacity-70 transition duration-500"></div>
+                                                        <div className="relative flex items-center gap-2 px-5 py-2.5 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2rem] border border-primary/40 group-hover/view:border-primary/60 transition-all duration-300 overflow-hidden shadow-lg shadow-primary/10">
+                                                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/view:translate-x-full transition-transform duration-1000"></div>
+                                                          <span className="relative text-sm font-bold text-foreground group-hover/view:text-primary transition-colors duration-300 whitespace-nowrap">View</span>
+                                                          <div className="relative flex items-center justify-center w-5 h-5 rounded-xl bg-primary/30 group-hover/view:bg-primary/40 transition-all duration-300">
+                                                            <ArrowRight className="w-3.5 h-3.5 text-primary group-hover/view:translate-x-0.5 transition-transform duration-300" />
+                                                          </div>
                                                         </div>
                                                       </button>
-                                                    </TooltipTrigger>
-                                                    <TooltipContent className="max-w-xs">
-                                                      <p className="text-xs">Generate custom AI tool & prompt for this step</p>
-                                                    </TooltipContent>
-                                                  </Tooltip>
-                                                </div>
-                                              </TooltipProvider>
-                                            </div>
-                                          )}
+                                                    </div>
+                                                  </div>
+                                                )}
+                                              </div>
+                                            );
+                                          })()}
                                         </div>
                                       );
                                     })}
