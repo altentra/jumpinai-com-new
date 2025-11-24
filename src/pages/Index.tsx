@@ -1197,7 +1197,7 @@ const Index = () => {
 
             {/* Two-Column: Why Now + What Makes Us Different */}
             <div className="grid md:grid-cols-2 gap-5">
-              {/* Why This Moment */}
+              {/* The Critical Window */}
               <div className="group relative rounded-2xl">
                 {/* Liquid glass border wrapper */}
                 <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/[0.03] via-white/[0.01] to-white/[0.03] p-[1px]">
@@ -1212,13 +1212,13 @@ const Index = () => {
                     <div className="flex items-start gap-3 mb-3">
                       <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
                         <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                         </svg>
                       </div>
-                      <h3 className="text-lg font-bold font-display">From Exploration to Implementation</h3>
+                      <h3 className="text-lg font-bold font-display">The Critical Window</h3>
                     </div>
                     <p className="text-sm text-muted-foreground leading-relaxed">
-                      AI is everywhere, but knowing how to use it strategically? That's the real advantage. Success isn't about having the most tools—it's about having clear direction and a solid plan. Right now, most people are still figuring things out. We help you move from exploring to actually implementing—with confidence.
+                      We're at an inflection point. AI is shifting from experimentation to essential infrastructure—but most people are still paralyzed by choice overload. The ones who act now, with clarity and strategy, will define the next decade. JumpinAI gives you that clarity when it matters most—before the window closes and strategic advantage becomes competitive necessity.
                     </p>
                   </div>
                 </div>
