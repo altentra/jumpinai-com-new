@@ -507,28 +507,6 @@ Deno.serve(async (req) => {
       };
     }));
 
-    // All guest jumps (no user_id)
-    const allGuestJumps = jumps
-      .filter((j: any) => !j.user_id)
-      .map((j: any) => ({
-        id: j.id,
-        title: j.title,
-        full_content: j.full_content,
-        status: j.status,
-        created_at: j.created_at,
-        ip_address: j.ip_address,
-        location: j.location,
-        form_goals: j.form_goals,
-        form_challenges: j.form_challenges,
-        views_count: j.views_count || 0,
-        clarifications_count: j.clarifications_count || 0,
-        max_clarification_level: j.max_clarification_level || 0,
-        reroutes_count: j.reroutes_count || 0,
-        tools_clicked_count: j.tools_clicked_count || 0,
-        prompts_copied_count: j.prompts_copied_count || 0,
-        combos_used_count: j.combos_used_count || 0,
-      }));
-
     const payload = {
       stats,
       recentOrders,
@@ -539,7 +517,6 @@ Deno.serve(async (req) => {
       jumpGenerations,
       creditOverviews,
       guestUsers,
-      allGuestJumps,
     };
 
     return new Response(JSON.stringify(payload), {
