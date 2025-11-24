@@ -96,7 +96,7 @@ Return ONLY valid JSON, no markdown formatting.`;
     console.log('First 500 chars:', content.substring(0, 500));
     console.log('Last 500 chars:', content.substring(content.length - 500));
     
-    // Parse the JSON response
+    // Parse the JSON response with intelligent repair
     let parsedContent;
     try {
       // Remove markdown code blocks if present
@@ -108,7 +108,23 @@ Return ONLY valid JSON, no markdown formatting.`;
       // Fix trailing commas before closing brackets/braces
       cleanContent = cleanContent.replace(/,(\s*[}\]])/g, '$1');
       
-      // Ensure the content ends with closing braces if truncated
+      // Remove incomplete content at the end if it's not properly closed
+      // This handles cases where text is cut off mid-sentence
+      if (!cleanContent.endsWith('}') && !cleanContent.endsWith(']')) {
+        // Find the last complete property by looking for the last quote before any incomplete text
+        const lastCompleteQuote = cleanContent.lastIndexOf('"');
+        if (lastCompleteQuote > 0) {
+          // Check if there's an unclosed string or incomplete property
+          const afterLastQuote = cleanContent.substring(lastCompleteQuote + 1);
+          // If there's text after the last quote that doesn't properly close, truncate
+          if (afterLastQuote && !afterLastQuote.match(/^\s*[,}\]]/)) {
+            cleanContent = cleanContent.substring(0, lastCompleteQuote + 1);
+            console.log('🔧 Truncated incomplete content at the end');
+          }
+        }
+      }
+      
+      // Count brackets and braces to understand nesting
       const openBraces = (cleanContent.match(/{/g) || []).length;
       const closeBraces = (cleanContent.match(/}/g) || []).length;
       const openBrackets = (cleanContent.match(/\[/g) || []).length;
@@ -116,14 +132,42 @@ Return ONLY valid JSON, no markdown formatting.`;
       
       console.log('Bracket counts:', { openBraces, closeBraces, openBrackets, closeBrackets });
       
-      // Add missing closing characters if needed
-      if (openBraces > closeBraces) {
-        console.warn('⚠️ Missing closing braces, adding', openBraces - closeBraces);
-        cleanContent += '}'.repeat(openBraces - closeBraces);
-      }
-      if (openBrackets > closeBrackets) {
-        console.warn('⚠️ Missing closing brackets, adding', openBrackets - closeBrackets);
-        cleanContent += ']'.repeat(openBrackets - closeBrackets);
+      // Intelligently close the JSON structure
+      // We need to close in the right order: innermost objects first, then arrays
+      if (openBraces > closeBraces || openBrackets > closeBrackets) {
+        console.warn('⚠️ Repairing truncated JSON...');
+        
+        // Analyze the structure to understand what needs closing
+        // We'll track the stack of open structures
+        const stack: string[] = [];
+        for (let i = 0; i < cleanContent.length; i++) {
+          const char = cleanContent[i];
+          // Skip content inside strings
+          if (char === '"') {
+            let j = i + 1;
+            while (j < cleanContent.length && cleanContent[j] !== '"') {
+              if (cleanContent[j] === '\\') j++; // Skip escaped quotes
+              j++;
+            }
+            i = j;
+            continue;
+          }
+          if (char === '{') stack.push('}');
+          else if (char === '[') stack.push(']');
+          else if (char === '}' || char === ']') {
+            if (stack.length > 0 && stack[stack.length - 1] === char) {
+              stack.pop();
+            }
+          }
+        }
+        
+        // Add the missing closing characters in reverse order
+        console.log('🔧 Stack of unclosed structures:', stack);
+        while (stack.length > 0) {
+          cleanContent += stack.pop();
+        }
+        
+        console.log('✅ Repaired JSON by adding', (openBraces - closeBraces) + (openBrackets - closeBrackets), 'closing characters');
       }
       
       parsedContent = JSON.parse(cleanContent);
