@@ -90,7 +90,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
     setTimeout(() => {
       const element = document.getElementById(comboId);
       if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
         element.classList.add('highlight-pulse');
         setTimeout(() => element.classList.remove('highlight-pulse'), 3000);
       }
