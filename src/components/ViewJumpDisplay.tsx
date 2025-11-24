@@ -114,42 +114,42 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
     <div className="w-full max-w-full space-y-4" style={{ overflow: 'visible' }}>
       {/* Content Tabs - Ultra Premium Design with Sticky Behavior */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full" style={{ overflow: 'visible', display: 'block' }}>
-        <div className="sticky top-0 z-50 mb-8 bg-background/80 backdrop-blur-xl pb-4 -mt-2 pt-2">
+        <div className="sticky top-0 z-50 mb-6 bg-background/80 backdrop-blur-xl pb-2 -mt-2 pt-1">
           {/* Mobile: Equal width tabs */}
           <div className="sm:hidden">
-            <TabsList className="grid h-auto w-full grid-cols-3 gap-1.5 p-2 bg-gradient-to-r from-background/95 via-background/90 to-background/95 backdrop-blur-xl rounded-2xl border border-border/50 shadow-lg shadow-primary/10">
+            <TabsList className="grid h-auto w-full grid-cols-3 gap-1 p-1.5 bg-gradient-to-r from-background/95 via-background/90 to-background/95 backdrop-blur-xl rounded-xl border border-border/50 shadow-lg shadow-primary/10">
               <TabsTrigger 
                 value="overview" 
-                className="relative flex flex-col items-center justify-center gap-0.5 text-[0.7rem] font-semibold px-1.5 py-2.5 
+                className="relative flex flex-col items-center justify-center gap-0.5 text-[0.7rem] font-semibold px-1.5 py-1.5 
                   data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary/20 data-[state=active]:to-primary/10 
                   data-[state=active]:text-primary data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20
                   data-[state=active]:border data-[state=active]:border-primary/30
                   text-muted-foreground hover:text-foreground hover:bg-accent/50
-                  transition-all duration-300 rounded-xl hover:scale-[1.02]"
+                  transition-all duration-300 rounded-lg hover:scale-[1.02]"
               >
                 {getStatusIcon('overview', !!result.full_content)}
                 <span className="tracking-wide text-center">Overview</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="plan" 
-                className="relative flex flex-col items-center justify-center gap-0.5 text-[0.7rem] font-semibold px-1.5 py-2.5 
+                className="relative flex flex-col items-center justify-center gap-0.5 text-[0.7rem] font-semibold px-1.5 py-1.5 
                   data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary/20 data-[state=active]:to-primary/10 
                   data-[state=active]:text-primary data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20
                   data-[state=active]:border data-[state=active]:border-primary/30
                   text-muted-foreground hover:text-foreground hover:bg-accent/50
-                  transition-all duration-300 rounded-xl hover:scale-[1.02]"
+                  transition-all duration-300 rounded-lg hover:scale-[1.02]"
               >
                 {getStatusIcon('plan', !!result.structured_plan)}
                 <span className="tracking-wide text-center">Plan</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="toolPrompts" 
-                className="relative flex flex-col items-center justify-center gap-0.5 text-[0.7rem] font-semibold px-1.5 py-2.5 
+                className="relative flex flex-col items-center justify-center gap-0.5 text-[0.7rem] font-semibold px-1.5 py-1.5 
                   data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary/20 data-[state=active]:to-primary/10 
                   data-[state=active]:text-primary data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20
                   data-[state=active]:border data-[state=active]:border-primary/30
                   text-muted-foreground hover:text-foreground hover:bg-accent/50
-                  transition-all duration-300 rounded-xl hover:scale-[1.02]"
+                  transition-all duration-300 rounded-lg hover:scale-[1.02]"
               >
                 {getStatusIcon('tool_prompts', (result.components?.toolPrompts?.length || 0) > 0)}
                 <span className="tracking-wide text-center">Tools & Prompts</span>
@@ -158,15 +158,15 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
           </div>
           
           {/* Desktop: Grid layout with premium effects */}
-          <TabsList className="hidden sm:grid h-auto w-full grid-cols-3 gap-2 p-3 bg-gradient-to-r from-background/95 via-background/90 to-background/95 backdrop-blur-xl rounded-2xl border border-border/50 shadow-lg shadow-primary/10">
+          <TabsList className="hidden sm:grid h-auto w-full grid-cols-3 gap-1.5 p-2 bg-gradient-to-r from-background/95 via-background/90 to-background/95 backdrop-blur-xl rounded-xl border border-border/50 shadow-lg shadow-primary/10">
             <TabsTrigger 
               value="overview" 
-              className="relative flex items-center justify-center gap-2.5 text-base font-semibold px-6 py-4
+              className="relative flex items-center justify-center gap-2 text-sm font-semibold px-4 py-2.5
                 data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary/20 data-[state=active]:to-primary/10 
                 data-[state=active]:text-primary data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20
                 data-[state=active]:border data-[state=active]:border-primary/30
                 text-muted-foreground hover:text-foreground hover:bg-accent/50
-                transition-all duration-300 rounded-xl hover:scale-[1.02] group"
+                transition-all duration-300 rounded-lg hover:scale-[1.02] group"
             >
               <span className="transition-transform duration-300 group-hover:scale-110">
                 {getStatusIcon('overview', !!result.full_content)}
@@ -175,12 +175,12 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
             </TabsTrigger>
             <TabsTrigger 
               value="plan" 
-              className="relative flex items-center justify-center gap-2.5 text-base font-semibold px-6 py-4
+              className="relative flex items-center justify-center gap-2 text-sm font-semibold px-4 py-2.5
                 data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary/20 data-[state=active]:to-primary/10 
                 data-[state=active]:text-primary data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20
                 data-[state=active]:border data-[state=active]:border-primary/30
                 text-muted-foreground hover:text-foreground hover:bg-accent/50
-                transition-all duration-300 rounded-xl hover:scale-[1.02] group"
+                transition-all duration-300 rounded-lg hover:scale-[1.02] group"
             >
               <span className="transition-transform duration-300 group-hover:scale-110">
                 {getStatusIcon('plan', !!result.structured_plan)}
@@ -189,12 +189,12 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
             </TabsTrigger>
             <TabsTrigger 
               value="toolPrompts" 
-              className="relative flex items-center justify-center gap-2.5 text-base font-semibold px-6 py-4
+              className="relative flex items-center justify-center gap-2 text-sm font-semibold px-4 py-2.5
                 data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary/20 data-[state=active]:to-primary/10 
                 data-[state=active]:text-primary data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20
                 data-[state=active]:border data-[state=active]:border-primary/30
                 text-muted-foreground hover:text-foreground hover:bg-accent/50
-                transition-all duration-300 rounded-xl hover:scale-[1.02] group"
+                transition-all duration-300 rounded-lg hover:scale-[1.02] group"
             >
               <span className="transition-transform duration-300 group-hover:scale-110">
                 {getStatusIcon('tool_prompts', (result.components?.toolPrompts?.length || 0) > 0)}
