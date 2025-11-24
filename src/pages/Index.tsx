@@ -46,6 +46,7 @@ const Index = () => {
   const { elementRef: rerouteCardsRef, scrollProgress: rerouteCardsProgress } = useScrollAnimation({ threshold: 0.2 });
   const { elementRef: equipCardsRef, scrollProgress: equipCardsProgress } = useScrollAnimation({ threshold: 0.2 });
   const { elementRef: conceptCardsRef, scrollProgress: conceptCardsProgress } = useScrollAnimation({ threshold: 0.2 });
+  const { elementRef: quoteCardRef, scrollProgress: quoteCardProgress } = useScrollAnimation({ threshold: 0.2 });
 
   // Show test component only in development or when URL contains 'test'
   const showTest = window.location.hostname === 'localhost' || 
@@ -1074,7 +1075,14 @@ const Index = () => {
 
             {/* Featured Quote */}
             <div className="relative max-w-4xl mx-auto">
-              <div className="group relative rounded-2xl">
+              <div 
+                ref={quoteCardRef}
+                className="group relative rounded-2xl transition-all duration-700 ease-out"
+                style={{
+                  opacity: Math.max(0, Math.min(1, quoteCardProgress * 2)),
+                  transform: `translateX(${(1 - Math.max(0, Math.min(1, quoteCardProgress * 2))) * -60}px)`
+                }}
+              >
                 {/* Liquid glass border wrapper */}
                 <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/[0.03] via-white/[0.01] to-white/[0.03] p-[1px]">
                   <div className="absolute inset-0 rounded-2xl bg-card"></div>
