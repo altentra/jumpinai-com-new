@@ -1248,7 +1248,7 @@ const Index = () => {
                       <h3 className="text-lg font-bold font-display">What Makes Us Different</h3>
                     </div>
                     <p className="text-sm text-muted-foreground leading-relaxed">
-                      Others give you tools. We give you strategy. Every Jump is a complete system—strategic overview, adaptive implementation plan, and 9 curated tool-prompt combinations—designed to evolve with your progress. It's not about more resources; it's about the right direction. We turn AI potential into structured action, ensuring every step you take is deliberate, informed, and aligned with your actual goals.
+                      We're not just another AI tool. We're a complete system for turning AI potential into real, measurable progress. Every Jump gives you strategic insights, clear steps, and the right tools—all in one structured 3-tab plan that adapts as you grow.
                     </p>
                   </div>
                 </div>
