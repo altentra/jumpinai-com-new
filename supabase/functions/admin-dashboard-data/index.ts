@@ -478,6 +478,13 @@ Deno.serve(async (req) => {
           location: j.location,
           form_goals: j.form_goals,
           form_challenges: j.form_challenges,
+          views_count: j.views_count || 0,
+          clarifications_count: j.clarifications_count || 0,
+          max_clarification_level: j.max_clarification_level || 0,
+          reroutes_count: j.reroutes_count || 0,
+          tools_clicked_count: j.tools_clicked_count || 0,
+          prompts_copied_count: j.prompts_copied_count || 0,
+          combos_used_count: j.combos_used_count || 0,
         }));
 
       // Get location from the most recent jump, or geolocate the IP if no jumps found
@@ -511,6 +518,15 @@ Deno.serve(async (req) => {
         created_at: j.created_at,
         ip_address: j.ip_address,
         location: j.location,
+        form_goals: j.form_goals,
+        form_challenges: j.form_challenges,
+        views_count: j.views_count || 0,
+        clarifications_count: j.clarifications_count || 0,
+        max_clarification_level: j.max_clarification_level || 0,
+        reroutes_count: j.reroutes_count || 0,
+        tools_clicked_count: j.tools_clicked_count || 0,
+        prompts_copied_count: j.prompts_copied_count || 0,
+        combos_used_count: j.combos_used_count || 0,
       }));
 
     const payload = {
