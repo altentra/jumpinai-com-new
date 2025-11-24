@@ -476,7 +476,6 @@ const Index = () => {
                     <p className="text-sm text-muted-foreground flex-1">Answer 2 focused questions: your objectives and the challenges you're facing. Our AI analyzes your input to create your personalized transformation plan.</p>
                   </div>
                 </div>
-              </div>
                 
                 {/* Subtle white back shadow */}
                 <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-gray-800 to-black dark:from-white dark:to-gray-300 opacity-20 group-hover:opacity-40 transition-opacity duration-500 -z-10 blur-lg"></div>
@@ -506,7 +505,6 @@ const Index = () => {
                     <p className="text-sm text-muted-foreground flex-1">Get your complete 3-tab transformation package: Overview, Plan, and 9 Tools & Prompts combos—all personalized.</p>
                   </div>
                 </div>
-              </div>
                 
                 {/* Subtle white back shadow */}
                 <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-gray-800 to-black dark:from-white dark:to-gray-300 opacity-20 group-hover:opacity-40 transition-opacity duration-500 -z-10 blur-lg"></div>
@@ -536,7 +534,6 @@ const Index = () => {
                     <p className="text-sm text-muted-foreground flex-1">Follow your roadmap, clarify steps as needed, explore alternative routes, and use ready prompts to implement immediately.</p>
                   </div>
                 </div>
-              </div>
                 
                 {/* Subtle white back shadow */}
                 <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-gray-800 to-black dark:from-white dark:to-gray-300 opacity-20 group-hover:opacity-40 transition-opacity duration-500 -z-10 blur-lg"></div>
@@ -999,7 +996,6 @@ const Index = () => {
                     </p>
                   </div>
                 </div>
-              </div>
                 
                 {/* Subtle white back shadow */}
                 <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-gray-800 to-black dark:from-white dark:to-gray-300 opacity-20 group-hover:opacity-40 transition-opacity duration-500 -z-10 blur-lg"></div>
@@ -1035,7 +1031,6 @@ const Index = () => {
                     </p>
                   </div>
                 </div>
-              </div>
                 
                 {/* Subtle white back shadow */}
                 <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-gray-800 to-black dark:from-white dark:to-gray-300 opacity-20 group-hover:opacity-40 transition-opacity duration-500 -z-10 blur-lg"></div>
