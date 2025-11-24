@@ -57,11 +57,18 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
     // Switch to the Tools & Prompts tab
     setActiveTab('toolPrompts');
     
-    // Wait for tab to switch, then scroll to the combo
+    // Wait for tab to switch, then scroll to the combo with offset for sticky tabs
     setTimeout(() => {
       const element = document.getElementById(comboId);
       if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+        const offsetPosition = elementPosition - 100; // Offset for sticky tabs + some padding
+        
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+        
         element.classList.add('highlight-pulse');
         setTimeout(() => element.classList.remove('highlight-pulse'), 3000);
       }
