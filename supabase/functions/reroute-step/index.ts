@@ -77,7 +77,7 @@ Return ONLY valid JSON, no markdown formatting.`;
           { role: 'user', content: userPrompt }
         ],
         temperature: 0.8,
-        max_tokens: 4000,
+        max_tokens: 8000,
       }),
     });
 
@@ -90,16 +90,40 @@ Return ONLY valid JSON, no markdown formatting.`;
     const data = await response.json();
     const content = data.choices[0].message.content;
     
-    console.log('Raw xAI response:', content);
+    console.log('Raw xAI response length:', content.length);
+    console.log('First 500 chars:', content.substring(0, 500));
+    console.log('Last 500 chars:', content.substring(content.length - 500));
     
     // Parse the JSON response
     let parsedContent;
     try {
       // Remove markdown code blocks if present
-      const cleanContent = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+      let cleanContent = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+      
+      // Try to fix common JSON issues
+      // Fix trailing commas before closing brackets/braces
+      cleanContent = cleanContent.replace(/,(\s*[}\]])/g, '$1');
+      
+      // Ensure the content ends with closing braces if truncated
+      const openBraces = (cleanContent.match(/{/g) || []).length;
+      const closeBraces = (cleanContent.match(/}/g) || []).length;
+      const openBrackets = (cleanContent.match(/\[/g) || []).length;
+      const closeBrackets = (cleanContent.match(/]/g) || []).length;
+      
+      // Add missing closing characters if needed
+      if (openBraces > closeBraces) {
+        cleanContent += '}'.repeat(openBraces - closeBraces);
+      }
+      if (openBrackets > closeBrackets) {
+        cleanContent += ']'.repeat(openBrackets - closeBrackets);
+      }
+      
+      console.log('Cleaned content length:', cleanContent.length);
       parsedContent = JSON.parse(cleanContent);
     } catch (parseError) {
       console.error('JSON parse error:', parseError);
+      console.error('Failed content (first 1000 chars):', content.substring(0, 1000));
+      console.error('Failed content (last 1000 chars):', content.substring(content.length - 1000));
       throw new Error('Failed to parse AI response as JSON');
     }
 
