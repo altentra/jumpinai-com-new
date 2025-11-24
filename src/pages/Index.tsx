@@ -240,16 +240,20 @@ const Index = () => {
           <div ref={tabsRef} className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {/* Overview Tab */}
             <div 
-              className="group relative rounded-xl overflow-hidden border border-white/85 hover:border-white/95 shadow-[0_8px_24px_-4px_rgba(255,255,255,0.15)] hover:shadow-[0_12px_32px_-4px_rgba(255,255,255,0.25)] bg-gradient-to-br from-white/[0.01] via-black/[0.4] to-white/[0.01] backdrop-blur-sm p-1 transition-all duration-700 ease-out scroll-animate"
+              className="group relative rounded-3xl overflow-hidden transition-all duration-700 ease-out scroll-animate"
               style={{
                 opacity: Math.min(1, tabsProgress * 3),
                 transform: `translateY(${Math.min(1, tabsProgress * 3) >= 0.99 ? 0 : (1 - Math.min(1, tabsProgress * 3)) * 40}px)`
               }}
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-white/15 rounded-xl opacity-40 group-hover:opacity-60 transition-opacity duration-300"></div>
-              <div className="relative bg-card p-6 rounded-lg h-full">
-              {/* Liquid glass glow effect */}
-              <div className="absolute -inset-0.5 rounded-lg bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 blur-sm opacity-0 group-hover:opacity-60 transition-opacity duration-500"></div>
+              {/* Liquid glass border frame */}
+              <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/[0.01] via-black/[0.4] to-white/[0.01] backdrop-blur-sm p-[1px]">
+                <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-white/15 rounded-3xl opacity-40 group-hover:opacity-60 transition-opacity duration-300"></div>
+              </div>
+              {/* White shadow glow */}
+              <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-gray-800 to-black dark:from-white dark:to-gray-300 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 blur-xl"></div>
+              {/* Solid card content */}
+              <div className="relative bg-card p-8 rounded-3xl h-full shadow-modern hover:shadow-modern-lg transition-all duration-500 border border-border">
               <div className="flex items-center gap-3 mb-4 relative">
                 <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
                   <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -284,16 +288,20 @@ const Index = () => {
 
             {/* Plan Tab */}
             <div 
-              className="group relative rounded-xl overflow-hidden border border-white/85 hover:border-white/95 shadow-[0_8px_24px_-4px_rgba(255,255,255,0.15)] hover:shadow-[0_12px_32px_-4px_rgba(255,255,255,0.25)] bg-gradient-to-br from-white/[0.01] via-black/[0.4] to-white/[0.01] backdrop-blur-sm p-1 transition-all duration-700 ease-out scroll-animate"
+              className="group relative rounded-3xl overflow-hidden transition-all duration-700 ease-out scroll-animate"
               style={{
                 opacity: Math.max(0, Math.min(1, (tabsProgress - 0.35) * 3)),
                 transform: `translateY(${Math.max(0, Math.min(1, (tabsProgress - 0.35) * 3)) >= 0.99 ? 0 : (1 - Math.max(0, Math.min(1, (tabsProgress - 0.35) * 3))) * 40}px)`
               }}
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-white/15 rounded-xl opacity-40 group-hover:opacity-60 transition-opacity duration-300"></div>
-              <div className="relative bg-card p-6 rounded-lg h-full">
-              {/* Liquid glass glow effect */}
-              <div className="absolute -inset-0.5 rounded-lg bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 blur-sm opacity-0 group-hover:opacity-60 transition-opacity duration-500"></div>
+              {/* Liquid glass border frame */}
+              <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/[0.01] via-black/[0.4] to-white/[0.01] backdrop-blur-sm p-[1px]">
+                <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-white/15 rounded-3xl opacity-40 group-hover:opacity-60 transition-opacity duration-300"></div>
+              </div>
+              {/* White shadow glow */}
+              <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-gray-800 to-black dark:from-white dark:to-gray-300 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 blur-xl"></div>
+              {/* Solid card content */}
+              <div className="relative bg-card p-8 rounded-3xl h-full shadow-modern hover:shadow-modern-lg transition-all duration-500 border border-border">
               <div className="flex items-center gap-3 mb-4 relative">
                 <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
                   <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -328,16 +336,20 @@ const Index = () => {
 
             {/* Tools & Prompts Tab */}
             <div 
-              className="group relative rounded-xl overflow-hidden border border-white/85 hover:border-white/95 shadow-[0_8px_24px_-4px_rgba(255,255,255,0.15)] hover:shadow-[0_12px_32px_-4px_rgba(255,255,255,0.25)] bg-gradient-to-br from-white/[0.01] via-black/[0.4] to-white/[0.01] backdrop-blur-sm p-1 transition-all duration-700 ease-out scroll-animate"
+              className="group relative rounded-3xl overflow-hidden transition-all duration-700 ease-out scroll-animate"
               style={{
                 opacity: Math.max(0, Math.min(1, (tabsProgress - 0.65) * 3.5)),
                 transform: `translateY(${Math.max(0, Math.min(1, (tabsProgress - 0.65) * 3.5)) >= 0.9 ? 0 : (1 - Math.max(0, Math.min(1, (tabsProgress - 0.65) * 3.5))) * 40}px)`
               }}
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-white/15 rounded-xl opacity-40 group-hover:opacity-60 transition-opacity duration-300"></div>
-              <div className="relative bg-card p-6 rounded-lg h-full">
-              {/* Liquid glass glow effect */}
-              <div className="absolute -inset-0.5 rounded-lg bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 blur-sm opacity-0 group-hover:opacity-60 transition-opacity duration-500"></div>
+              {/* Liquid glass border frame */}
+              <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/[0.01] via-black/[0.4] to-white/[0.01] backdrop-blur-sm p-[1px]">
+                <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-white/15 rounded-3xl opacity-40 group-hover:opacity-60 transition-opacity duration-300"></div>
+              </div>
+              {/* White shadow glow */}
+              <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-gray-800 to-black dark:from-white dark:to-gray-300 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 blur-xl"></div>
+              {/* Solid card content */}
+              <div className="relative bg-card p-8 rounded-3xl h-full shadow-modern hover:shadow-modern-lg transition-all duration-500 border border-border">
               <div className="flex items-center gap-3 mb-4 relative">
                 <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
                   <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
