@@ -1248,7 +1248,7 @@ const Index = () => {
                       <h3 className="text-lg font-bold font-display">What Makes Us Different</h3>
                     </div>
                     <p className="text-sm text-muted-foreground leading-relaxed">
-                      We're not just another AI tool. We're a complete system for turning AI potential into real, measurable progress. Every Jump gives you strategic insights, clear steps, and the right tools—all in one structured 3-tab plan that adapts as you grow.
+                      We're not just another AI tool. We're a complete system for turning AI potential into real, measurable progress. Every Jump gives you strategic insights, clear steps, and the right tools—all in one structured 3-tab plan that adapts as you grow. It's the difference between exploring possibilities and implementing strategy.
                     </p>
                   </div>
                 </div>
