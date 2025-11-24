@@ -372,9 +372,7 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
         body: requestBody,
       });
 
-      if (error) {
-        throw new Error('Invalid response from clarify-step function');
-      }
+      if (error) throw error;
 
       console.log('Clarify-step response:', data);
 
@@ -397,7 +395,7 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
       // Save to database (only for authenticated users)
       const { data: { user } } = await supabase.auth.getUser();
       if (user && jumpId) {
-        await updateJump(jumpId, { structured_plan: updatedPlan });
+        await updateJump(jumpId, { comprehensive_plan: updatedPlan });
       }
 
       toast.success('Sub-steps generated successfully');

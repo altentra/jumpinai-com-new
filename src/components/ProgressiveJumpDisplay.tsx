@@ -50,9 +50,6 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
       if (updatedToolPrompts) {
         setToolPrompts(updatedToolPrompts);
         toast.success('Tools & Prompts refreshed!');
-        
-        // Switch to Tools & Prompts tab to show the new combo
-        setActiveTab('toolPrompts');
       }
     } catch (error) {
       console.error('Error refreshing tool prompts:', error);
