@@ -1,7 +1,3 @@
-import "https://deno.land/x/xhr@0.1.0/mod.ts";
-
-const xaiApiKey = Deno.env.get('XAI_API_KEY');
-
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
@@ -17,6 +13,11 @@ Deno.serve(async (req) => {
 
     console.log('Reroute Step - Generating alternative routes for:', { phaseTitle, stepTitle });
 
+    const lovableApiKey = Deno.env.get('LOVABLE_API_KEY');
+    if (!lovableApiKey) {
+      throw new Error('LOVABLE_API_KEY not configured');
+    }
+
     const systemPrompt = `You are an expert AI assistant helping users find alternative approaches to achieve their goals. 
 Your task is to generate 3 completely different but viable alternative directions for a specific step in their plan.
 
@@ -26,25 +27,7 @@ Each direction should:
 3. Include 3 detailed sub-steps with comprehensive descriptions
 4. Maintain similar scope and effort as the original step
 
-IMPORTANT: Each sub-step description should be substantial and detailed - approximately half to two-thirds the length of the original step's description. Provide clear, actionable guidance with specific examples and context.
-
-Format your response as valid JSON with this exact structure:
-{
-  "directions": [
-    {
-      "direction_number": 1,
-      "overview": "Brief overview of this direction and why it's valuable (2-3 sentences)",
-      "sub_steps": [
-        {
-          "sub_step_number": 1,
-          "title": "Clear, actionable title",
-          "description": "Detailed, comprehensive description with specific guidance, examples, and actionable steps. This should be substantial - aim for half to two-thirds the length of the original step description.",
-          "estimated_time": "Time estimate (e.g., '30 minutes', '2 hours')"
-        }
-      ]
-    }
-  ]
-}`;
+IMPORTANT: Each sub-step description should be substantial and detailed - approximately half to two-thirds the length of the original step's description. Provide clear, actionable guidance with specific examples and context.`;
 
     const userPrompt = `Context:
 Jump Overview: ${jumpOverview}
@@ -60,78 +43,128 @@ Make each direction:
 - Distinctly different from the others
 - Practical and actionable
 - Similar in scope to the original step
-- Include specific, clear sub-steps with substantial descriptions (each sub-step description should be approximately half to two-thirds the length of the original step description)
+- Include specific, clear sub-steps with substantial descriptions (each sub-step description should be approximately half to two-thirds the length of the original step description)`;
 
-Return ONLY valid JSON, no markdown formatting.`;
-
-    const response = await fetch('https://api.x.ai/v1/chat/completions', {
+    const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${xaiApiKey}`,
+        'Authorization': `Bearer ${lovableApiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'grok-4-fast-non-reasoning',
+        model: 'google/gemini-2.5-flash',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt }
         ],
-        temperature: 0.8,
-        max_tokens: 8000,
+        tools: [
+          {
+            type: 'function',
+            function: {
+              name: 'generate_alternative_routes',
+              description: 'Generate 3 alternative approaches with sub-steps',
+              parameters: {
+                type: 'object',
+                properties: {
+                  directions: {
+                    type: 'array',
+                    items: {
+                      type: 'object',
+                      properties: {
+                        direction_number: {
+                          type: 'integer',
+                          description: 'The direction number (1, 2, or 3)'
+                        },
+                        overview: {
+                          type: 'string',
+                          description: 'Brief overview of this direction and why it is valuable (2-3 sentences)'
+                        },
+                        sub_steps: {
+                          type: 'array',
+                          items: {
+                            type: 'object',
+                            properties: {
+                              sub_step_number: {
+                                type: 'integer',
+                                description: 'The sub-step number'
+                              },
+                              title: {
+                                type: 'string',
+                                description: 'Clear, actionable title'
+                              },
+                              description: {
+                                type: 'string',
+                                description: 'Detailed, comprehensive description with specific guidance, examples, and actionable steps. Should be substantial - aim for half to two-thirds the length of the original step description.'
+                              },
+                              estimated_time: {
+                                type: 'string',
+                                description: 'Time estimate (e.g., "30 minutes", "2 hours")'
+                              }
+                            },
+                            required: ['sub_step_number', 'title', 'description', 'estimated_time'],
+                            additionalProperties: false
+                          },
+                          minItems: 3,
+                          maxItems: 3
+                        }
+                      },
+                      required: ['direction_number', 'overview', 'sub_steps'],
+                      additionalProperties: false
+                    },
+                    minItems: 3,
+                    maxItems: 3
+                  }
+                },
+                required: ['directions'],
+                additionalProperties: false
+              }
+            }
+          }
+        ],
+        tool_choice: { type: 'function', function: { name: 'generate_alternative_routes' } }
       }),
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('xAI API error:', response.status, errorText);
-      throw new Error(`xAI API error: ${response.status}`);
+      console.error('Lovable AI API error:', response.status, errorText);
+      
+      if (response.status === 429) {
+        return new Response(JSON.stringify({ error: 'Rate limit exceeded. Please try again in a moment.' }), {
+          status: 429,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+      
+      if (response.status === 402) {
+        return new Response(JSON.stringify({ error: 'Payment required. Please add credits to your workspace.' }), {
+          status: 402,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+      
+      throw new Error(`Lovable AI API error: ${response.status}`);
     }
 
     const data = await response.json();
-    const content = data.choices[0].message.content;
+    console.log('Lovable AI response received');
     
-    console.log('Raw xAI response length:', content.length);
-    console.log('First 500 chars:', content.substring(0, 500));
-    console.log('Last 500 chars:', content.substring(content.length - 500));
-    
-    // Parse the JSON response
-    let parsedContent;
-    try {
-      // Remove markdown code blocks if present
-      let cleanContent = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-      
-      // Try to fix common JSON issues
-      // Fix trailing commas before closing brackets/braces
-      cleanContent = cleanContent.replace(/,(\s*[}\]])/g, '$1');
-      
-      // Ensure the content ends with closing braces if truncated
-      const openBraces = (cleanContent.match(/{/g) || []).length;
-      const closeBraces = (cleanContent.match(/}/g) || []).length;
-      const openBrackets = (cleanContent.match(/\[/g) || []).length;
-      const closeBrackets = (cleanContent.match(/]/g) || []).length;
-      
-      // Add missing closing characters if needed
-      if (openBraces > closeBraces) {
-        cleanContent += '}'.repeat(openBraces - closeBraces);
-      }
-      if (openBrackets > closeBrackets) {
-        cleanContent += ']'.repeat(openBrackets - closeBrackets);
-      }
-      
-      console.log('Cleaned content length:', cleanContent.length);
-      parsedContent = JSON.parse(cleanContent);
-    } catch (parseError) {
-      console.error('JSON parse error:', parseError);
-      console.error('Failed content (first 1000 chars):', content.substring(0, 1000));
-      console.error('Failed content (last 1000 chars):', content.substring(content.length - 1000));
-      throw new Error('Failed to parse AI response as JSON');
-    }
-
-    // Validate structure
-    if (!parsedContent.directions || !Array.isArray(parsedContent.directions) || parsedContent.directions.length !== 3) {
-      console.error('Invalid response structure:', parsedContent);
+    // Extract structured output from tool call
+    const toolCall = data.choices?.[0]?.message?.tool_calls?.[0];
+    if (!toolCall || toolCall.function.name !== 'generate_alternative_routes') {
+      console.error('Invalid response structure:', JSON.stringify(data));
       throw new Error('Invalid response structure from AI');
     }
+
+    const parsedContent = JSON.parse(toolCall.function.arguments);
+    
+    // Validate structure
+    if (!parsedContent.directions || !Array.isArray(parsedContent.directions) || parsedContent.directions.length !== 3) {
+      console.error('Invalid directions structure:', parsedContent);
+      throw new Error('Invalid response structure from AI');
+    }
+
+    console.log('Successfully generated', parsedContent.directions.length, 'alternative routes');
 
     return new Response(JSON.stringify(parsedContent), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
