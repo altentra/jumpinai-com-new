@@ -568,9 +568,9 @@ const JumpinAIStudio = () => {
                                   <LogIn className="w-4 h-4 text-amber-600 dark:text-amber-400" />
                                 </div>
                                 <div className="flex-1">
-                                  <h3 className="font-medium text-amber-800 dark:text-amber-200 mb-1">Want to save your Jump?</h3>
+                                  <h3 className="font-medium text-amber-800 dark:text-amber-200 mb-1">Want to be able to save your Jump?</h3>
                                   <p className="text-sm text-amber-700/80 dark:text-amber-300/80 mb-3">
-                                    Sign up to save your Jump and access unlimited generations.
+                                    Sign up to save your Jumps and unlock all premium features.
                                   </p>
                                   <button
                                     onClick={() => login()}
