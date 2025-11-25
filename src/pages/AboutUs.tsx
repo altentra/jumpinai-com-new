@@ -1,4 +1,4 @@
-import { ArrowRight, Zap, Target, Users, Rocket, Download } from "lucide-react";
+import { ArrowRight, Zap, Target, Users, Rocket, Download, Sparkles, Layers, Lightbulb } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -267,21 +267,39 @@ const AboutUs = () => {
     }
   ];
 
-  const offerings = [
+  const jumpPackage = [
     {
-      icon: Zap,
-      title: "Adaptive Transformation Plans",
-      description: "Your unique AI transformation roadmap created in 2 minutes—comprehensive situation analysis, strategic vision with success metrics, and detailed action plan with phases and milestones. Adapt any step with Clarify for deeper breakdowns or explore Reroute for alternative approaches tailored to your evolving needs."
+      icon: Sparkles,
+      title: "Overview Tab",
+      description: "Comprehensive situation analysis, strategic vision with measurable success metrics, and clear understanding of your AI transformation path."
     },
     {
-      icon: Target,
-      title: "Custom AI Tool-Prompt Combinations",
-      description: "Each Jump includes personalized batches of AI tools and prompts specifically designed for your situation. Use Equip on any step to generate additional custom combinations aligned to your exact implementation needs."
+      icon: Layers,
+      title: "Plan Tab",
+      description: "Detailed action roadmap organized into phases and milestones, with step-by-step implementation guidance tailored to your context."
     },
     {
       icon: Rocket,
-      title: "AI Coach & Support",
-      description: "Ongoing personalized guidance through AI coach conversations, implementation support, and progress tracking throughout your transformation journey."
+      title: "Tools & Prompts Tab",
+      description: "Personalized AI tool recommendations and ready-to-use prompts, specifically selected and crafted for your unique situation and goals."
+    }
+  ];
+
+  const adaptiveFeatures = [
+    {
+      icon: Lightbulb,
+      title: "Clarify",
+      description: "Break down any step into detailed sub-steps for deeper understanding and granular action items at multiple levels of detail."
+    },
+    {
+      icon: Zap,
+      title: "Reroute",
+      description: "Explore alternative approaches for any step, generating three different strategic paths to choose the one that fits best."
+    },
+    {
+      icon: Target,
+      title: "Equip",
+      description: "Generate custom tool-prompt combinations on demand for any step, expanding beyond the initial set to match your evolving needs."
     }
   ];
 
@@ -428,34 +446,65 @@ const AboutUs = () => {
 
       {/* What We Do - Glass Morphism */}
       <section className="px-4 py-8 sm:py-12 relative z-10">
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 shadow-2xl shadow-primary/10">
-            <div className="text-center mb-8 sm:mb-10">
+            <div className="text-center mb-8 sm:mb-12">
               <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-4 bg-gradient-to-br from-foreground via-foreground to-primary/70 bg-clip-text text-transparent">
                 How JumpinAI Studio Works
               </h2>
-              <p className="text-sm sm:text-base text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-                We don't offer generic AI education. Instead, we create your personalized Jump plan in just 2 minutes—a comprehensive AI transformation roadmap with situation analysis, strategic vision, action plan, and custom AI tool-prompt combinations designed uniquely for your goals, industry, and experience level. Adapt your plan in real-time with Clarify for deeper insights, Reroute for alternative paths, and Equip to generate tailored tools for any step.
+              <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+                Generate your personalized AI transformation roadmap in 2 minutes, then adapt it in real-time as your needs evolve.
               </p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-10">
-              {offerings.map((offering, index) => (
-                <div 
-                  key={index}
-                  className="text-center group glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/40 transition-all duration-300 hover:scale-105 hover:-translate-y-2"
-                >
-                  <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:from-primary/30 group-hover:to-primary/20 group-hover:border-primary/40 group-hover:shadow-lg group-hover:shadow-primary/20 transition-all duration-300">
-                    <offering.icon className="w-6 h-6 sm:w-7 sm:h-7 text-primary group-hover:scale-110 transition-transform duration-300" />
+            {/* Your Complete Jump Package */}
+            <div className="mb-10 sm:mb-12">
+              <h3 className="text-lg sm:text-xl font-bold text-center mb-6 sm:mb-8 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">
+                Your Complete Jump Package
+              </h3>
+              <div className="grid md:grid-cols-3 gap-4 sm:gap-6">
+                {jumpPackage.map((item, index) => (
+                  <div 
+                    key={index}
+                    className="text-center group glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/40 transition-all duration-300 hover:scale-105 hover:-translate-y-2"
+                  >
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:from-primary/30 group-hover:to-primary/20 group-hover:border-primary/40 group-hover:shadow-lg group-hover:shadow-primary/20 transition-all duration-300">
+                      <item.icon className="w-6 h-6 sm:w-7 sm:h-7 text-primary group-hover:scale-110 transition-transform duration-300" />
+                    </div>
+                    <h4 className="text-base sm:text-lg font-bold mb-2 sm:mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent group-hover:from-primary group-hover:to-primary/60">
+                      {item.title}
+                    </h4>
+                    <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                      {item.description}
+                    </p>
                   </div>
-                  <h3 className="text-base sm:text-lg font-bold mb-2 sm:mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent group-hover:from-primary group-hover:to-primary/60">
-                    {offering.title}
-                  </h3>
-                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                    {offering.description}
-                  </p>
-                </div>
-              ))}
+                ))}
+              </div>
+            </div>
+
+            {/* Intelligent Adaptation Features */}
+            <div>
+              <h3 className="text-lg sm:text-xl font-bold text-center mb-6 sm:mb-8 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">
+                Intelligent Adaptation Features
+              </h3>
+              <div className="grid md:grid-cols-3 gap-4 sm:gap-6">
+                {adaptiveFeatures.map((feature, index) => (
+                  <div 
+                    key={index}
+                    className="text-center group glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/40 transition-all duration-300 hover:scale-105 hover:-translate-y-2"
+                  >
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-accent/20 to-accent/10 border border-accent/30 rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:from-accent/30 group-hover:to-accent/20 group-hover:border-accent/40 group-hover:shadow-lg group-hover:shadow-accent/20 transition-all duration-300">
+                      <feature.icon className="w-6 h-6 sm:w-7 sm:h-7 text-accent group-hover:scale-110 transition-transform duration-300" />
+                    </div>
+                    <h4 className="text-base sm:text-lg font-bold mb-2 sm:mb-3 bg-gradient-to-br from-foreground to-accent/80 bg-clip-text text-transparent group-hover:from-accent group-hover:to-accent/60">
+                      {feature.title}
+                    </h4>
+                    <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                      {feature.description}
+                    </p>
+                  </div>
+                ))}
+              </div>
             </div>
 
           </div>
@@ -471,7 +520,7 @@ const AboutUs = () => {
             </h2>
             <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6 max-w-3xl mx-auto leading-relaxed">
               While others are still offering generic AI courses, you could have your comprehensive personalized Jump plan in 2 minutes.
-              <span className="text-primary font-semibold"> Your transformation starts now</span> — with a complete adaptive transformation package including situation analysis, strategic roadmap, and personalized AI tool-prompt combinations. Refine any step with Clarify, explore alternatives with Reroute, or generate custom tools with Equip—all designed specifically for your success.
+              <span className="text-primary font-semibold"> Your transformation starts now</span> — with a complete system that adapts to your evolving needs.
             </p>
             
             <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/30 rounded-xl sm:rounded-2xl p-4 sm:p-6 mb-4 sm:mb-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/20 transition-all duration-300">
@@ -480,16 +529,16 @@ const AboutUs = () => {
               </h3>
               <div className="grid md:grid-cols-3 gap-3 sm:gap-4 text-left">
                 <div className="glass backdrop-blur-sm bg-background/20 dark:bg-background/10 border border-primary/20 rounded-lg sm:rounded-xl p-3 sm:p-4 hover:border-primary/30 transition-all duration-300">
-                  <h4 className="text-sm sm:text-base font-bold text-primary mb-1 sm:mb-2">Speed</h4>
-                  <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">Get your comprehensive transformation plan in 2 minutes with immediate actionable steps.</p>
+                  <h4 className="text-sm sm:text-base font-bold text-primary mb-1 sm:mb-2">Lightning Fast</h4>
+                  <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">Complete transformation roadmap generated in 2 minutes with immediate actionable steps.</p>
                 </div>
                 <div className="glass backdrop-blur-sm bg-background/20 dark:bg-background/10 border border-primary/20 rounded-lg sm:rounded-xl p-3 sm:p-4 hover:border-primary/30 transition-all duration-300">
-                  <h4 className="text-sm sm:text-base font-bold text-primary mb-1 sm:mb-2">Personalization</h4>
-                  <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">Every Jump is uniquely tailored to your specific goals, industry, and experience level.</p>
+                  <h4 className="text-sm sm:text-base font-bold text-primary mb-1 sm:mb-2">Truly Personalized</h4>
+                  <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">Every element tailored to your specific goals, industry, experience level, and context.</p>
                 </div>
                 <div className="glass backdrop-blur-sm bg-background/20 dark:bg-background/10 border border-primary/20 rounded-lg sm:rounded-xl p-3 sm:p-4 hover:border-primary/30 transition-all duration-300">
-                  <h4 className="text-sm sm:text-base font-bold text-primary mb-1 sm:mb-2">Complete Package</h4>
-                  <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">Situation analysis, strategic roadmap, personalized AI tool-prompt batches, plus Clarify, Reroute, and Equip features for complete adaptability.</p>
+                  <h4 className="text-sm sm:text-base font-bold text-primary mb-1 sm:mb-2">Infinitely Adaptable</h4>
+                  <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">Clarify, Reroute, and Equip features ensure your plan evolves with your journey.</p>
                 </div>
               </div>
             </div>
