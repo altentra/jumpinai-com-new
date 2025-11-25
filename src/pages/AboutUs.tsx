@@ -543,28 +543,10 @@ const AboutUs = () => {
             <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-4 bg-gradient-to-br from-foreground via-primary to-primary/70 bg-clip-text text-transparent">
               Ready for Your Personal Jump?
             </h2>
-            <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed">
               While others are still offering generic AI courses, you could have your comprehensive personalized Jump plan in 2 minutes.
               <span className="text-primary font-semibold"> Your transformation starts now</span> — with a complete system that adapts to your evolving needs.
             </p>
-            
-            <h3 className="text-base sm:text-lg font-bold mb-4 sm:mb-6 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">
-              Why Choose JumpinAI?
-            </h3>
-            <div className="grid md:grid-cols-3 gap-3 sm:gap-4 text-left mb-6 sm:mb-8">
-              <div className="glass backdrop-blur-sm bg-background/20 dark:bg-background/10 border border-primary/20 rounded-lg sm:rounded-xl p-3 sm:p-4 hover:border-primary/30 transition-all duration-300">
-                <h4 className="text-sm sm:text-base font-bold text-primary mb-1 sm:mb-2">Lightning Fast</h4>
-                <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">Complete transformation roadmap generated in 2 minutes with immediate actionable steps.</p>
-              </div>
-              <div className="glass backdrop-blur-sm bg-background/20 dark:bg-background/10 border border-primary/20 rounded-lg sm:rounded-xl p-3 sm:p-4 hover:border-primary/30 transition-all duration-300">
-                <h4 className="text-sm sm:text-base font-bold text-primary mb-1 sm:mb-2">Truly Personalized</h4>
-                <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">Every element tailored to your specific goals, industry, experience level, and context.</p>
-              </div>
-              <div className="glass backdrop-blur-sm bg-background/20 dark:bg-background/10 border border-primary/20 rounded-lg sm:rounded-xl p-3 sm:p-4 hover:border-primary/30 transition-all duration-300">
-                <h4 className="text-sm sm:text-base font-bold text-primary mb-1 sm:mb-2">Infinitely Adaptable</h4>
-                <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">Clarify, Reroute, and Equip features ensure your plan evolves with your journey.</p>
-              </div>
-            </div>
             
             <div className="flex justify-center">
               <button 
