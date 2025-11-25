@@ -462,19 +462,19 @@ const AboutUs = () => {
               <h3 className="text-lg sm:text-xl font-bold text-center mb-6 sm:mb-8 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">
                 Your Complete Jump Package
               </h3>
-              <div className="grid md:grid-cols-3 gap-4 sm:gap-6">
+              <div className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-6">
                 {jumpPackage.map((item, index) => (
                   <div 
                     key={index}
-                    className="text-center group glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/40 transition-all duration-300 hover:scale-105 hover:-translate-y-2"
+                    className="text-center group glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-lg sm:rounded-xl md:rounded-2xl p-2 sm:p-4 md:p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/40 transition-all duration-300 hover:scale-105 hover:-translate-y-2"
                   >
-                    <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:from-primary/30 group-hover:to-primary/20 group-hover:border-primary/40 group-hover:shadow-lg group-hover:shadow-primary/20 transition-all duration-300">
-                      <item.icon className="w-6 h-6 sm:w-7 sm:h-7 text-primary group-hover:scale-110 transition-transform duration-300" />
+                    <div className="w-8 h-8 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-lg sm:rounded-xl md:rounded-2xl flex items-center justify-center mx-auto mb-2 sm:mb-3 md:mb-4 group-hover:from-primary/30 group-hover:to-primary/20 group-hover:border-primary/40 group-hover:shadow-lg group-hover:shadow-primary/20 transition-all duration-300">
+                      <item.icon className="w-4 h-4 sm:w-6 sm:h-6 md:w-7 md:h-7 text-primary group-hover:scale-110 transition-transform duration-300" />
                     </div>
-                    <h4 className="text-base sm:text-lg font-bold mb-2 sm:mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent group-hover:from-primary group-hover:to-primary/60">
+                    <h4 className="text-[10px] sm:text-base md:text-lg font-bold mb-1 sm:mb-2 md:mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent group-hover:from-primary group-hover:to-primary/60 leading-tight">
                       {item.title}
                     </h4>
-                    <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                    <p className="text-[8px] sm:text-xs md:text-sm text-muted-foreground leading-tight sm:leading-relaxed">
                       {item.description}
                     </p>
                   </div>
@@ -487,19 +487,19 @@ const AboutUs = () => {
               <h3 className="text-lg sm:text-xl font-bold text-center mb-6 sm:mb-8 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">
                 Intelligent Adaptation Features
               </h3>
-              <div className="grid md:grid-cols-3 gap-4 sm:gap-6">
+              <div className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-6">
                 {adaptiveFeatures.map((feature, index) => (
                   <div 
                     key={index}
-                    className="text-center group glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/40 transition-all duration-300 hover:scale-105 hover:-translate-y-2"
+                    className="text-center group glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-lg sm:rounded-xl md:rounded-2xl p-2 sm:p-4 md:p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/40 transition-all duration-300 hover:scale-105 hover:-translate-y-2"
                   >
-                    <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:from-primary/30 group-hover:to-primary/20 group-hover:border-primary/40 group-hover:shadow-lg group-hover:shadow-primary/20 transition-all duration-300">
-                      <feature.icon className="w-6 h-6 sm:w-7 sm:h-7 text-primary group-hover:scale-110 transition-transform duration-300" />
+                    <div className="w-8 h-8 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-lg sm:rounded-xl md:rounded-2xl flex items-center justify-center mx-auto mb-2 sm:mb-3 md:mb-4 group-hover:from-primary/30 group-hover:to-primary/20 group-hover:border-primary/40 group-hover:shadow-lg group-hover:shadow-primary/20 transition-all duration-300">
+                      <feature.icon className="w-4 h-4 sm:w-6 sm:h-6 md:w-7 md:h-7 text-primary group-hover:scale-110 transition-transform duration-300" />
                     </div>
-                    <h4 className="text-base sm:text-lg font-bold mb-2 sm:mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent group-hover:from-primary group-hover:to-primary/60">
+                    <h4 className="text-[10px] sm:text-base md:text-lg font-bold mb-1 sm:mb-2 md:mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent group-hover:from-primary group-hover:to-primary/60 leading-tight">
                       {feature.title}
                     </h4>
-                    <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                    <p className="text-[8px] sm:text-xs md:text-sm text-muted-foreground leading-tight sm:leading-relaxed">
                       {feature.description}
                     </p>
                   </div>
