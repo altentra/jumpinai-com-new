@@ -345,7 +345,7 @@ const AboutUs = () => {
                   <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent leading-tight tracking-tight">About JumpinAI</h1>
                   <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-20 sm:w-24 h-0.5 sm:h-1 bg-gradient-to-r from-transparent via-primary/60 to-transparent rounded-full"></div>
                 </div>
-                <p className="text-sm sm:text-base md:text-lg text-muted-foreground/90 mb-4 sm:mb-6 max-w-3xl mx-auto leading-relaxed">We are an AI Adaptation Studio built on a single conviction: clarity is the catalyst for transformation. We exist to guide individuals, entrepreneurs, and builders toward strategic AI implementation—turning vision into reality through personalized direction and executable plans.</p>
+                <p className="text-sm sm:text-base md:text-lg text-muted-foreground/90 mb-4 sm:mb-6 max-w-3xl mx-auto leading-relaxed">The AI Adaptation Studio delivering what the world needs most: clarity. In an era overwhelmed with AI information, we provide strategic direction—personalized implementation plans designed around your goals, transforming ambition into achievement through clear, actionable pathways.</p>
               </div>
               <div className="flex justify-center mt-4 sm:mt-6">
                 <button 
