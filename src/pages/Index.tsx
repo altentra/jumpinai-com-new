@@ -396,7 +396,7 @@ const Index = () => {
                 </div>
                 <div className="flex items-start gap-2">
                   <span className="text-primary mt-0.5">•</span>
-                  <span>Complete Implementation Guidance</span>
+                  <span>Implementation Guidance</span>
                   </div>
                 </div>
               </div>
