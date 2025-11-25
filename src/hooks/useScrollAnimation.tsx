@@ -5,9 +5,30 @@ const easeOutCubic = (t: number): number => {
   return 1 - Math.pow(1 - t, 3);
 };
 
+// Staged progress for smoother mobile performance
+// Reduces continuous updates by using discrete animation stages
+const getStagedProgress = (linearProgress: number): number => {
+  // Define smooth stages: 0%, 25%, 50%, 75%, 100%
+  // This reduces jerkiness by having fewer, smoother transitions
+  if (linearProgress <= 0) return 0;
+  if (linearProgress >= 1) return 1;
+  
+  // Use 10 smooth stages for fluid yet performant animation
+  const stages = 10;
+  const stage = Math.floor(linearProgress * stages);
+  const stageProgress = (linearProgress * stages) - stage;
+  
+  // Smooth interpolation between stages using easing
+  const stageValue = stage / stages;
+  const nextStageValue = (stage + 1) / stages;
+  
+  return stageValue + (nextStageValue - stageValue) * easeOutCubic(stageProgress);
+};
+
 export const useScrollAnimation = (options: { threshold?: number; delay?: number } = {}) => {
   const elementRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const lastProgressRef = useRef(0);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,16 +47,24 @@ export const useScrollAnimation = (options: { threshold?: number; delay?: number
       const startPoint = windowHeight * 0.75;
       const endPoint = windowHeight * 0.32;
       
+      let newProgress = 0;
+      
       if (elementTop > startPoint) {
-        setScrollProgress(0);
+        newProgress = 0;
       } else if (elementTop < endPoint) {
-        setScrollProgress(1);
+        newProgress = 1;
       } else {
         // Calculate linear progress
         const linearProgress = 1 - (elementTop - endPoint) / (startPoint - endPoint);
-        // Apply premium easing for distinctive end movement
-        const easedProgress = easeOutCubic(linearProgress);
-        setScrollProgress(Math.max(0, Math.min(1, easedProgress)));
+        // Use staged progress for smoother mobile performance
+        newProgress = getStagedProgress(linearProgress);
+      }
+      
+      // Only update if progress changed significantly (reduces unnecessary renders)
+      const progressDiff = Math.abs(newProgress - lastProgressRef.current);
+      if (progressDiff > 0.01) {
+        lastProgressRef.current = newProgress;
+        setScrollProgress(newProgress);
       }
     };
 
@@ -47,8 +76,8 @@ export const useScrollAnimation = (options: { threshold?: number; delay?: number
     let lastScrollTime = 0;
     const scrollListener = () => {
       const now = Date.now();
-      // Smoother throttling on mobile - reduced from 16ms to 8ms for 120fps support
-      const throttleTime = 8;
+      // Mobile-optimized throttling - 16ms for stable 60fps
+      const throttleTime = 16;
       if (!ticking && now - lastScrollTime > throttleTime) {
         lastScrollTime = now;
         ticking = true;
