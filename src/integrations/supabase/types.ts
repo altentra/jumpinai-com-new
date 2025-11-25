@@ -223,6 +223,39 @@ export type Database = {
         }
         Relationships: []
       }
+      feature_requests: {
+        Row: {
+          created_at: string
+          credits_rewarded: boolean
+          feature_description: string
+          id: string
+          updated_at: string
+          user_email: string
+          user_id: string | null
+          user_name: string
+        }
+        Insert: {
+          created_at?: string
+          credits_rewarded?: boolean
+          feature_description: string
+          id?: string
+          updated_at?: string
+          user_email: string
+          user_id?: string | null
+          user_name: string
+        }
+        Update: {
+          created_at?: string
+          credits_rewarded?: boolean
+          feature_description?: string
+          id?: string
+          updated_at?: string
+          user_email?: string
+          user_id?: string | null
+          user_name?: string
+        }
+        Relationships: []
+      }
       guest_usage_tracking: {
         Row: {
           created_at: string
