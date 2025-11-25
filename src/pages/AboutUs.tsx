@@ -375,16 +375,16 @@ const AboutUs = () => {
                 <h2 className="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-br from-foreground via-foreground to-primary/70 bg-clip-text text-transparent">Who We Are</h2>
                 <div className="space-y-3 sm:space-y-4">
                   <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-                    We stand at the crossroads of human potential and artificial intelligence. <strong className="text-foreground">JumpinAI</strong> was born from a profound realization: successful AI adaptation isn't about information—it's about clarity. The clarity to see your path forward, the direction to harness AI's power, and the confidence to transform your ambitions into reality.
+                    We stand at the crossroads of human potential and AI. <strong className="text-foreground">JumpinAI</strong> was born from a profound realization: successful AI adaptation isn't about information—it's about clarity. The clarity to see your path forward, the strategic insight to harness AI's power effectively, and the confidence to transform your ambitions into reality.
                   </p>
                   <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-                    In a world overflowing with AI tools and generic solutions, what's missing isn't more options—it's strategic direction. We believe true adaptation happens when technology meets the individual, when clarity cuts through complexity, and when artificial intelligence becomes deeply personal, immediately actionable, and perfectly aligned with your unique context and aspirations.
+                    In a world overflowing with AI tools and generic solutions, what's missing isn't more options—it's clarity and actionable guidance. We believe true adaptation happens when technology meets the individual, when clear pathways cut through complexity, and when AI becomes deeply personal, immediately actionable, and perfectly aligned with your unique context and aspirations.
                   </p>
                   <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-                    We are <strong className="text-foreground">architects of clarity-driven AI adaptation</strong>. We don't just explain artificial intelligence; we craft personalized roadmaps that bridge who you are today with who you can become when you harness AI strategically. Every plan, every insight, every moment of guidance is designed around one fundamental truth: your path to AI success should be as unique as your fingerprint—clear, actionable, and unmistakably yours.
+                    We are <strong className="text-foreground">architects of personalized AI adaptation</strong>. We craft clear, actionable roadmaps that bridge who you are today with who you can become when you harness AI strategically. Every plan, every insight, every moment of guidance is designed around one fundamental truth: your path to AI success should be as unique as your fingerprint—clear, actionable, and unmistakably yours.
                   </p>
                   <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-                    As pioneers in the era of AI adaptation, we're not just navigating the revolution—we're shaping it with humanity at its core. Because the future belongs not to those who simply adopt AI, but to those who adapt with clarity, implement with confidence, and make artificial intelligence truly their own.
+                    As pioneers in the era of AI adaptation, we're not just navigating the revolution—we're shaping it with humanity at its core. Because the future is shaped by those who harness AI with clarity, implement with confidence, and make it truly their own.
                   </p>
                 </div>
               </article>
