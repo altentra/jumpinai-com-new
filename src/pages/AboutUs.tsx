@@ -544,7 +544,7 @@ const AboutUs = () => {
               Ready for Your Personal Jump?
             </h2>
             <p className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed">
-              The era of AI is not coming—it's here. Those who thrive won't be the ones who simply learn about it, but those who adapt to it with clarity and precision. Who integrate AI into their vision with strategic intent. Who turn complexity into momentum and use artificial intelligence to accelerate what truly matters. You now understand our purpose. The real question is: are you ready to adapt? <span className="text-primary font-semibold">Your personalized path forward starts here.</span>
+              The AI era demands adaptation. Not someday—today. Those who succeed won't be the ones who wait, watch, or wonder. They'll be the ones who act with clarity, adapt with precision, and harness AI to accelerate everything that matters. You know our purpose. You understand our approach. Now the question isn't what AI can do—it's what you'll do with it. <span className="text-primary font-semibold">Your clarity starts now.</span>
             </p>
             
             <div className="flex justify-center">
