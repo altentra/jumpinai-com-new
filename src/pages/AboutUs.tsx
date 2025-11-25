@@ -1,4 +1,4 @@
-import { ArrowRight, Zap, Target, Users, Rocket, Download, Sparkles, Layers, Lightbulb } from "lucide-react";
+import { ArrowRight, Zap, Target, Users, Rocket, Download, Sparkles, Layers, Lightbulb, GitBranch, Wrench } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -287,17 +287,17 @@ const AboutUs = () => {
 
   const adaptiveFeatures = [
     {
-      icon: Lightbulb,
+      icon: Sparkles,
       title: "Clarify",
       description: "Break down any step into detailed sub-steps for deeper understanding and granular action items at multiple levels of detail."
     },
     {
-      icon: Zap,
+      icon: GitBranch,
       title: "Reroute",
       description: "Explore alternative approaches for any step, generating three different strategic paths to choose the one that fits best."
     },
     {
-      icon: Target,
+      icon: Wrench,
       title: "Equip",
       description: "Generate custom tool-prompt combinations on demand for any step, expanding beyond the initial set to match your evolving needs."
     }
@@ -493,10 +493,10 @@ const AboutUs = () => {
                     key={index}
                     className="text-center group glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/40 transition-all duration-300 hover:scale-105 hover:-translate-y-2"
                   >
-                    <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-accent/20 to-accent/10 border border-accent/30 rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:from-accent/30 group-hover:to-accent/20 group-hover:border-accent/40 group-hover:shadow-lg group-hover:shadow-accent/20 transition-all duration-300">
-                      <feature.icon className="w-6 h-6 sm:w-7 sm:h-7 text-accent group-hover:scale-110 transition-transform duration-300" />
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:from-primary/30 group-hover:to-primary/20 group-hover:border-primary/40 group-hover:shadow-lg group-hover:shadow-primary/20 transition-all duration-300">
+                      <feature.icon className="w-6 h-6 sm:w-7 sm:h-7 text-primary group-hover:scale-110 transition-transform duration-300" />
                     </div>
-                    <h4 className="text-base sm:text-lg font-bold mb-2 sm:mb-3 bg-gradient-to-br from-foreground to-accent/80 bg-clip-text text-transparent group-hover:from-accent group-hover:to-accent/60">
+                    <h4 className="text-base sm:text-lg font-bold mb-2 sm:mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent group-hover:from-primary group-hover:to-primary/60">
                       {feature.title}
                     </h4>
                     <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
