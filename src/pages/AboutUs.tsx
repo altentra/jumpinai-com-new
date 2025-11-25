@@ -431,7 +431,7 @@ const AboutUs = () => {
               Our Vision
             </h2>
             <p className="text-sm sm:text-base text-muted-foreground leading-relaxed max-w-4xl">
-              To become the global standard for AI transformation—a world where every individual and organization can seamlessly harness artificial intelligence in ways perfectly aligned with their context, capabilities, and ambitions. Where AI adoption is no longer a challenge, but a personalized journey of empowerment.
+              To become the global standard for AI adaptation—a world where every individual and organization can seamlessly harness artificial intelligence in ways perfectly aligned with their context, capabilities, and ambitions. Where AI adoption is no longer a challenge, but a personalized journey of empowerment.
             </p>
           </div>
         </div>
@@ -544,7 +544,7 @@ const AboutUs = () => {
               Ready for Your Personal Jump?
             </h2>
             <p className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed">
-              The AI revolution is here—but it will only succeed for those who make it deeply personal. This is the moment where intention meets action, where uncertainty transforms into clarity, where your unique potential meets the future you're ready to build. You now understand our vision. The question is: are you ready to make it yours? <span className="text-primary font-semibold">Step into your transformation.</span>
+              The AI revolution is here—but it will only succeed for those who are willing to adapt. This is the moment where intention meets action, where uncertainty transforms into clarity, where your unique potential meets the future you're ready to build. You now understand our vision. The question is: are you ready to make it yours? <span className="text-primary font-semibold">Step into your transformation.</span>
             </p>
             
             <div className="flex justify-center">
