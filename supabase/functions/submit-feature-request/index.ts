@@ -128,7 +128,7 @@ const handler = async (req: Request): Promise<Response> => {
           
           <div style="margin-bottom: 12px;">
             <strong style="color: #4b5563;">First Request:</strong>
-            <p style="color: #1a1a1a; margin: 4px 0 0 0;">${isFirstRequest ? 'Yes (10 credits ${userId ? 'awarded' : 'will be awarded when user signs up'})' : 'No (no credits awarded)'}</p>
+            <p style="color: #1a1a1a; margin: 4px 0 0 0;">${isFirstRequest ? `Yes (10 credits ${userId ? 'awarded' : 'will be awarded when user signs up'})` : 'No (no credits awarded)'}</p>
           </div>
           
           <div>
