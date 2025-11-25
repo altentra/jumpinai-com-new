@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Download, Mail } from 'lucide-react';
+import { ArrowRight, Download, Mail, ExternalLink } from 'lucide-react';
 import { Helmet } from "react-helmet-async";
 import { generatePitchDeckPDF } from "@/utils/pdfGenerator";
 import { toast } from "sonner";
@@ -964,18 +964,34 @@ const PitchDeck = () => {
                   Join us in democratizing personalized AI transformation and building the category-defining platform for the AI-powered workforce
                 </p>
                 
-                <button 
-                  onClick={() => window.location.href = '/for-investors'}
-                  className="relative group overflow-hidden w-full sm:w-auto"
-                >
-                  <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover:opacity-60 transition duration-500"></div>
-                  <div className="relative flex items-center justify-center gap-2 px-8 py-3 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover:border-primary/50 transition-all duration-300 overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-                    <Mail className="relative h-4 w-4 text-foreground group-hover:text-primary transition-colors duration-300" />
-                    <span className="relative text-sm font-bold text-foreground group-hover:text-primary transition-colors duration-300">Contact Our Team</span>
-                    <ArrowRight className="relative h-4 w-4 text-foreground group-hover:text-primary transition-colors duration-300" />
-                  </div>
-                </button>
+                <div className="flex flex-col gap-4 items-center">
+                  <button 
+                    onClick={() => window.location.href = '/for-investors'}
+                    className="relative group overflow-hidden w-full sm:w-auto"
+                  >
+                    <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover:opacity-60 transition duration-500"></div>
+                    <div className="relative flex items-center justify-center gap-2 px-8 py-3 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover:border-primary/50 transition-all duration-300 overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                      <Mail className="relative h-4 w-4 text-foreground group-hover:text-primary transition-colors duration-300" />
+                      <span className="relative text-sm font-bold text-foreground group-hover:text-primary transition-colors duration-300">Contact Our Team</span>
+                      <ArrowRight className="relative h-4 w-4 text-foreground group-hover:text-primary transition-colors duration-300" />
+                    </div>
+                  </button>
+
+                  <a 
+                    href="https://wefunder.com/jumpinai"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="relative group overflow-hidden w-full sm:w-auto"
+                  >
+                    <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover:opacity-60 transition duration-500"></div>
+                    <div className="relative flex items-center justify-center gap-2 px-8 py-3 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover:border-primary/50 transition-all duration-300 overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                      <ExternalLink className="relative h-4 w-4 text-foreground group-hover:text-primary transition-colors duration-300" />
+                      <span className="relative text-sm font-bold text-foreground group-hover:text-primary transition-colors duration-300">Invest in Us on WeFunder</span>
+                    </div>
+                  </a>
+                </div>
               </div>
             </div>
           </div>
