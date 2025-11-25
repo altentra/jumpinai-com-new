@@ -128,7 +128,7 @@ const ForInvestors = () => {
                   </span>
                 </h2>
                 <p className="text-xs sm:text-sm md:text-base text-muted-foreground max-w-3xl mx-auto leading-relaxed px-2">
-                  JumpinAI Studio empowers professionals and entrepreneurs to confidently navigate AI transformation—generating complete 3-tab transformation blueprints in 2 minutes. Each Jump includes: strategic Overview (executive summary, situation analysis, vision & roadmap), adaptive Plan (multi-level clarification up to 4 levels deep + 3 alternative routes per step), and Tools & Prompts (9 tool-prompt combinations with ready-to-use prompts). All from answering just 2 questions.
+                  JumpinAI Studio empowers professionals and entrepreneurs to confidently navigate AI transformation—generating complete 3-tab transformation blueprints in 2 minutes. Each Jump includes: strategic Overview (executive summary, situation analysis, vision & roadmap), adaptive Plan (multi-level clarification up to 4 levels deep + 3 alternative routes per step), and Tools & Prompts (initially 9 tool-prompt combinations with ready-to-use prompts, plus ability to generate more on demand using Equip feature). All from answering just 2 questions.
                 </p>
               </div>
               <div className="flex flex-col sm:flex-row justify-center gap-4">
@@ -197,7 +197,7 @@ const ForInvestors = () => {
                 <Target className="h-8 w-8 md:h-10 md:w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
                 <h3 className="text-base md:text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Breakthrough Innovation</h3>
                 <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
-                  Revolutionary 3-tab transformation system: Strategic Overview for understanding, Adaptive Plan with multi-level clarification (4 levels deep) and alternative routes (3 per step), plus 9 tool-prompt combinations for execution. No competitor offers this depth of adaptive personalization at scale.
+                  Revolutionary 3-tab transformation system: Strategic Overview for understanding, Adaptive Plan with multi-level clarification (4 levels deep) and alternative routes (3 per step), plus initially 9 tool-prompt combinations for execution with ability to generate additional combos on demand via Equip feature. No competitor offers this depth of adaptive personalization at scale.
                 </p>
               </div>
               
@@ -247,7 +247,7 @@ const ForInvestors = () => {
                 <Globe className="h-8 w-8 md:h-10 md:w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
                 <h3 className="text-base md:text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Adaptive Intelligence System</h3>
                 <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
-                  Revolutionary Plan tab never leaves users stuck: clarify any step up to 4 levels deep for granular detail, or discover 3 alternative routes if a path doesn't fit. Plus Overview tab for strategic context and Tools & Prompts tab with 9 ready-to-execute tool-prompt combinations. Complete ecosystem for transformation.
+                  Revolutionary Plan tab never leaves users stuck: clarify any step up to 4 levels deep for granular detail, or discover 3 alternative routes if a path doesn't fit. Plus Overview tab for strategic context and Tools & Prompts tab with initially 9 ready-to-execute tool-prompt combinations, expandable on demand using Clarify, Reroute, and Equip features. Complete ecosystem for transformation.
                 </p>
               </div>
               
