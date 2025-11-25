@@ -544,7 +544,7 @@ const AboutUs = () => {
               Ready for Your Personal Jump?
             </h2>
             <p className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed">
-              The choice is clear: spend months navigating generic AI advice, or get your complete personalized transformation roadmap—tailored to your exact context and goals—in 2 minutes. <span className="text-primary font-semibold">Your unique AI journey begins with one click.</span>
+              The defining moment is here. While others spend months drowning in generic AI courses and one-size-fits-all strategies, you can have your complete personalized transformation roadmap—strategically designed for your exact context, goals, and challenges—in just 2 minutes. No guesswork. No wasted time. No generic advice. Just a crystal-clear path from where you are today to where AI can take you tomorrow. <span className="text-primary font-semibold">This is your moment. Your unique AI journey starts now.</span>
             </p>
             
             <div className="flex justify-center">
