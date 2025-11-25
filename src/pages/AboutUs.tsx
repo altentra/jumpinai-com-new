@@ -270,13 +270,13 @@ const AboutUs = () => {
   const offerings = [
     {
       icon: Zap,
-      title: "Personalized Transformation Plans",
-      description: "Your unique AI transformation roadmap created in 2 minutes—comprehensive situation analysis, strategic vision with success metrics, and detailed action plan with phases and milestones. Includes built-in step clarification and alternative route exploration for complete adaptability."
+      title: "Adaptive Transformation Plans",
+      description: "Your unique AI transformation roadmap created in 2 minutes—comprehensive situation analysis, strategic vision with success metrics, and detailed action plan with phases and milestones. Adapt any step with Clarify for deeper breakdowns or explore Reroute for alternative approaches tailored to your evolving needs."
     },
     {
       icon: Target,
-      title: "9 AI Tool-Prompt Combinations",
-      description: "Each Jump includes 9 personalized batches of AI tools and prompts specifically designed for your situation and ready to implement immediately."
+      title: "Custom AI Tool-Prompt Combinations",
+      description: "Each Jump includes personalized batches of AI tools and prompts specifically designed for your situation. Use Equip on any step to generate additional custom combinations aligned to your exact implementation needs."
     },
     {
       icon: Rocket,
@@ -435,7 +435,7 @@ const AboutUs = () => {
                 How JumpinAI Studio Works
               </h2>
               <p className="text-sm sm:text-base text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-                We don't offer generic AI education. Instead, we create your personalized Jump plan in just 2 minutes—a comprehensive AI transformation roadmap with situation analysis, strategic vision, action plan, and 9 AI tool-prompt combinations designed uniquely for your goals, industry, and experience level.
+                We don't offer generic AI education. Instead, we create your personalized Jump plan in just 2 minutes—a comprehensive AI transformation roadmap with situation analysis, strategic vision, action plan, and custom AI tool-prompt combinations designed uniquely for your goals, industry, and experience level. Adapt your plan in real-time with Clarify for deeper insights, Reroute for alternative paths, and Equip to generate tailored tools for any step.
               </p>
             </div>
 
@@ -471,7 +471,7 @@ const AboutUs = () => {
             </h2>
             <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6 max-w-3xl mx-auto leading-relaxed">
               While others are still offering generic AI courses, you could have your comprehensive personalized Jump plan in 2 minutes.
-              <span className="text-primary font-semibold"> Your transformation starts now</span> — with a complete transformation package including situation analysis, strategic roadmap, and 9 personalized AI tool-prompt combinations designed specifically for your success.
+              <span className="text-primary font-semibold"> Your transformation starts now</span> — with a complete adaptive transformation package including situation analysis, strategic roadmap, and personalized AI tool-prompt combinations. Refine any step with Clarify, explore alternatives with Reroute, or generate custom tools with Equip—all designed specifically for your success.
             </p>
             
             <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/30 rounded-xl sm:rounded-2xl p-4 sm:p-6 mb-4 sm:mb-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/20 transition-all duration-300">
@@ -489,7 +489,7 @@ const AboutUs = () => {
                 </div>
                 <div className="glass backdrop-blur-sm bg-background/20 dark:bg-background/10 border border-primary/20 rounded-lg sm:rounded-xl p-3 sm:p-4 hover:border-primary/30 transition-all duration-300">
                   <h4 className="text-sm sm:text-base font-bold text-primary mb-1 sm:mb-2">Complete Package</h4>
-                  <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">Situation analysis, strategic roadmap, and 9 personalized AI tool-prompt batches ready to use.</p>
+                  <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">Situation analysis, strategic roadmap, personalized AI tool-prompt batches, plus Clarify, Reroute, and Equip features for complete adaptability.</p>
                 </div>
               </div>
             </div>
