@@ -375,9 +375,7 @@ const AboutUs = () => {
                 <h2 className="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-br from-foreground via-foreground to-primary/70 bg-clip-text text-transparent">Who We Are</h2>
                 <div className="space-y-3 sm:space-y-4">
                   <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-                    We stand at the crossroads of human potential and AI.
-                  </p>
-                  <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+                    We stand at the crossroads of human potential and AI.<br />
                     <strong className="text-foreground">JumpinAI</strong> was born from a profound realization: successful AI adaptation isn't about information—it's about clarity. The clarity to see your path forward, the strategic insight to harness AI's power effectively, and the confidence to transform your ambitions into reality.
                   </p>
                   <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
