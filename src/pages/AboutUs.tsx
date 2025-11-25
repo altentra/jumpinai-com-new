@@ -375,16 +375,16 @@ const AboutUs = () => {
                 <h2 className="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-br from-foreground via-foreground to-primary/70 bg-clip-text text-transparent">Who We Are</h2>
                 <div className="space-y-3 sm:space-y-4">
                   <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-                    We stand at the crossroads of human potential and artificial intelligence. <strong className="text-foreground">JumpinAI</strong> was born from a profound realization: the AI revolution isn't about replacing human intelligence—it's about amplifying it in ways uniquely meaningful to each individual.
+                    We stand at the crossroads of human potential and artificial intelligence. <strong className="text-foreground">JumpinAI</strong> was born from a profound realization: successful AI adaptation isn't about information—it's about clarity. The clarity to see your path forward, the direction to harness AI's power, and the confidence to transform your ambitions into reality.
                   </p>
                   <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-                    In a world drowning in generic AI solutions and one-size-fits-all approaches, we chose a different path. We believe that true transformation happens when technology meets the individual—when artificial intelligence becomes deeply personal, intimately relevant, and immediately actionable in your specific context.
+                    In a world overflowing with AI tools and generic solutions, what's missing isn't more options—it's strategic direction. We believe true adaptation happens when technology meets the individual, when clarity cuts through complexity, and when artificial intelligence becomes deeply personal, immediately actionable, and perfectly aligned with your unique context and aspirations.
                   </p>
                   <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-                    We are <strong className="text-foreground">architects of individual AI journeys</strong>. We don't just teach about artificial intelligence; we craft personalized bridges between who you are today and who you can become with AI as your ally. Every interaction, every solution, every moment of transformation is designed around one fundamental truth: your AI journey should be as unique as your fingerprint.
+                    We are <strong className="text-foreground">architects of clarity-driven AI adaptation</strong>. We don't just explain artificial intelligence; we craft personalized roadmaps that bridge who you are today with who you can become when you harness AI strategically. Every plan, every insight, every moment of guidance is designed around one fundamental truth: your path to AI success should be as unique as your fingerprint—clear, actionable, and unmistakably yours.
                   </p>
                   <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-                    As pioneers in this new era, we're not just riding the wave of the AI revolution—we're helping to shape it with humanity at its core. Because the future belongs not to those who simply adopt AI, but to those who make it truly their own.
+                    As pioneers in the era of AI adaptation, we're not just navigating the revolution—we're shaping it with humanity at its core. Because the future belongs not to those who simply adopt AI, but to those who adapt with clarity, implement with confidence, and make artificial intelligence truly their own.
                   </p>
                 </div>
               </article>
