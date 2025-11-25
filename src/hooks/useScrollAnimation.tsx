@@ -13,16 +13,19 @@ const getStagedProgress = (linearProgress: number): number => {
   if (linearProgress <= 0) return 0;
   if (linearProgress >= 1) return 1;
   
-  // Use 10 smooth stages for fluid yet performant animation
-  const stages = 10;
+  // Use 5 smooth stages for more fluid mobile performance
+  const stages = 5;
   const stage = Math.floor(linearProgress * stages);
   const stageProgress = (linearProgress * stages) - stage;
   
-  // Smooth interpolation between stages using easing
+  // Extra smooth interpolation between stages using double easing
   const stageValue = stage / stages;
   const nextStageValue = (stage + 1) / stages;
   
-  return stageValue + (nextStageValue - stageValue) * easeOutCubic(stageProgress);
+  // Apply easing twice for ultra-smooth transitions
+  const smoothProgress = easeOutCubic(easeOutCubic(stageProgress));
+  
+  return stageValue + (nextStageValue - stageValue) * smoothProgress;
 };
 
 export const useScrollAnimation = (options: { threshold?: number; delay?: number } = {}) => {
@@ -62,7 +65,7 @@ export const useScrollAnimation = (options: { threshold?: number; delay?: number
       
       // Only update if progress changed significantly (reduces unnecessary renders)
       const progressDiff = Math.abs(newProgress - lastProgressRef.current);
-      if (progressDiff > 0.01) {
+      if (progressDiff > 0.02) {
         lastProgressRef.current = newProgress;
         setScrollProgress(newProgress);
       }
