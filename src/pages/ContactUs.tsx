@@ -185,32 +185,8 @@ const ContactUs = () => {
                 <h2 className="text-xl md:text-2xl font-bold mb-4 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">
                   Get in Touch
                 </h2>
-                <p className="text-base text-muted-foreground leading-relaxed mb-4">
+                <p className="text-base text-muted-foreground leading-relaxed mb-6">
                   We're here to help you navigate the world of AI and turn your vision into reality.
-                </p>
-
-                <p className="text-sm text-muted-foreground/80 leading-relaxed mb-6">
-                  You can also reach out via DM on{" "}
-                  <a href="https://x.com/jump_in_ai" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-foreground/90 hover:text-primary transition-colors font-medium">
-                    <FaXTwitter className="w-3.5 h-3.5" />
-                    X
-                  </a>
-                  ,{" "}
-                  <a href="https://www.instagram.com/jumpinai" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-foreground/90 hover:text-primary transition-colors font-medium">
-                    <FaInstagram className="w-3.5 h-3.5" />
-                    Instagram
-                  </a>
-                  ,{" "}
-                  <a href="https://facebook.com/jumpinai/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-foreground/90 hover:text-primary transition-colors font-medium">
-                    <FaFacebookF className="w-3.5 h-3.5" />
-                    Facebook
-                  </a>
-                  , or{" "}
-                  <a href="https://www.linkedin.com/company/jumpinai/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-foreground/90 hover:text-primary transition-colors font-medium">
-                    <FaLinkedinIn className="w-3.5 h-3.5" />
-                    LinkedIn
-                  </a>
-                  .
                 </p>
 
                 <div className="space-y-3">
@@ -240,9 +216,43 @@ const ContactUs = () => {
                     </div>
 
                     <div className="glass backdrop-blur-sm bg-background/20 dark:bg-background/10 border border-primary/20 rounded-2xl p-3 shadow-lg shadow-primary/10 hover:shadow-xl hover:shadow-primary/15 hover:border-primary/30 transition-all duration-300 group">
-                      <div>
-                        <h4 className="font-bold text-xs text-foreground mb-1">Our Reach</h4>
-                        <p className="text-xs text-muted-foreground">Global - Remote Team</p>
+                      <div className="flex gap-4 justify-center">
+                        <a
+                          href="https://x.com/JumpinAI"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-muted-foreground hover:text-primary transition-colors"
+                        >
+                          <FaXTwitter className="h-6 w-6" />
+                          <span className="sr-only">X (Twitter)</span>
+                        </a>
+                        <a
+                          href="https://www.instagram.com/jumpinai/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-muted-foreground hover:text-primary transition-colors"
+                        >
+                          <FaInstagram className="h-6 w-6" />
+                          <span className="sr-only">Instagram</span>
+                        </a>
+                        <a
+                          href="https://www.facebook.com/profile.php?id=61568770473634"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-muted-foreground hover:text-primary transition-colors"
+                        >
+                          <FaFacebookF className="h-6 w-6" />
+                          <span className="sr-only">Facebook</span>
+                        </a>
+                        <a
+                          href="https://www.linkedin.com/company/jumpinai"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-muted-foreground hover:text-primary transition-colors"
+                        >
+                          <FaLinkedinIn className="h-6 w-6" />
+                          <span className="sr-only">LinkedIn</span>
+                        </a>
                       </div>
                     </div>
                   </div>
@@ -380,9 +390,6 @@ const ContactUs = () => {
           <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-3xl p-6 md:p-8 shadow-2xl shadow-primary/10 hover:shadow-3xl hover:shadow-primary/15 transition-all duration-500">
             {/* Header */}
             <div className="text-center mb-6">
-              <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/20 to-accent/20 mb-4">
-                <Lightbulb className="w-7 h-7 text-primary" />
-              </div>
               <h2 className="text-2xl md:text-3xl font-bold mb-3 bg-gradient-to-br from-foreground via-foreground to-primary/70 bg-clip-text text-transparent">
                 Request a Feature
               </h2>

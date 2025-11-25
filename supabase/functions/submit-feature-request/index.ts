@@ -96,7 +96,7 @@ const handler = async (req: Request): Promise<Response> => {
       const { error: creditsError } = await supabase.rpc('add_user_credits', {
         p_user_id: userId,
         p_credits: 10,
-        p_description: 'Feature request reward',
+        p_description: 'Bonus Credits',
         p_reference_id: `feature_request_${email}`
       });
 
