@@ -206,56 +206,47 @@ const ContactUs = () => {
                     </div>
                   </div>
 
-                  {/* Response Time & Location - Enhanced Cards */}
-                  <div className="grid grid-cols-1 gap-3">
-                    <div className="glass backdrop-blur-sm bg-background/20 dark:bg-background/10 border border-primary/20 rounded-2xl p-3 shadow-lg shadow-primary/10 hover:shadow-xl hover:shadow-primary/15 hover:border-primary/30 transition-all duration-300 group">
-                      <div>
-                        <h4 className="font-bold text-xs text-foreground mb-1">Response Time</h4>
-                        <p className="text-xs text-muted-foreground">Within 24 hours</p>
-                      </div>
-                    </div>
-
-                    <div className="glass backdrop-blur-sm bg-background/20 dark:bg-background/10 border border-primary/20 rounded-2xl p-3 shadow-lg shadow-primary/10 hover:shadow-xl hover:shadow-primary/15 hover:border-primary/30 transition-all duration-300 group">
-                      <div>
-                        <h4 className="font-bold text-xs text-foreground mb-2">DM Us at:</h4>
-                        <div className="flex gap-4">
-                          <a
-                            href="https://x.com/JumpinAI"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-muted-foreground hover:text-primary transition-colors"
-                          >
-                            <FaXTwitter className="h-6 w-6" />
-                            <span className="sr-only">X (Twitter)</span>
-                          </a>
-                          <a
-                            href="https://www.instagram.com/jumpinai/"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-muted-foreground hover:text-primary transition-colors"
-                          >
-                            <FaInstagram className="h-6 w-6" />
-                            <span className="sr-only">Instagram</span>
-                          </a>
-                          <a
-                            href="https://www.facebook.com/profile.php?id=61568770473634"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-muted-foreground hover:text-primary transition-colors"
-                          >
-                            <FaFacebookF className="h-6 w-6" />
-                            <span className="sr-only">Facebook</span>
-                          </a>
-                          <a
-                            href="https://www.linkedin.com/company/jumpinai"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-muted-foreground hover:text-primary transition-colors"
-                          >
-                            <FaLinkedinIn className="h-6 w-6" />
-                            <span className="sr-only">LinkedIn</span>
-                          </a>
-                        </div>
+                  {/* Social Media - Enhanced Card */}
+                  <div className="glass backdrop-blur-sm bg-background/20 dark:bg-background/10 border border-primary/20 rounded-2xl p-3 shadow-lg shadow-primary/10 hover:shadow-xl hover:shadow-primary/15 hover:border-primary/30 transition-all duration-300 group">
+                    <div>
+                      <h4 className="font-bold text-xs text-foreground mb-2">DM Us at:</h4>
+                      <div className="flex gap-4 pl-1">
+                        <a
+                          href="https://x.com/JumpinAI"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-muted-foreground hover:text-primary transition-colors"
+                        >
+                          <FaXTwitter className="h-6 w-6" />
+                          <span className="sr-only">X (Twitter)</span>
+                        </a>
+                        <a
+                          href="https://www.instagram.com/jumpinai/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-muted-foreground hover:text-primary transition-colors"
+                        >
+                          <FaInstagram className="h-6 w-6" />
+                          <span className="sr-only">Instagram</span>
+                        </a>
+                        <a
+                          href="https://www.facebook.com/profile.php?id=61568770473634"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-muted-foreground hover:text-primary transition-colors"
+                        >
+                          <FaFacebookF className="h-6 w-6" />
+                          <span className="sr-only">Facebook</span>
+                        </a>
+                        <a
+                          href="https://www.linkedin.com/company/jumpinai"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-muted-foreground hover:text-primary transition-colors"
+                        >
+                          <FaLinkedinIn className="h-6 w-6" />
+                          <span className="sr-only">LinkedIn</span>
+                        </a>
                       </div>
                     </div>
                   </div>
