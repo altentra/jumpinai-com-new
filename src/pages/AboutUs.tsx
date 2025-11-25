@@ -250,20 +250,20 @@ const AboutUs = () => {
 
   const beliefs = [
     {
-      title: "Human-Centered AI Revolution",
-      description: "We believe the AI revolution succeeds only when it amplifies human potential, not replaces it. Every breakthrough should make us more human, not less."
+      title: "AI Should Amplify Humanity",
+      description: "We believe artificial intelligence exists to elevate human potential—not replace it. The measure of AI's success isn't in what it can do alone, but in how powerfully it enables people to achieve what matters most to them."
     },
     {
-      title: "Individuality Over Uniformity",
-      description: "In a world pushing toward standardization, we champion the unique. Your AI journey should be as distinctive as your dreams, challenges, and aspirations."
+      title: "One Size Fits None",
+      description: "Generic solutions produce generic results. Your context, goals, and challenges are unique—your AI transformation strategy should be too. We reject standardization in favor of personalization that actually works."
     },
     {
-      title: "Transformation Through Connection",
-      description: "True AI transformation happens at the intersection of cutting-edge technology and deep human understanding. We build bridges, not barriers."
+      title: "Clarity Drives Action",
+      description: "Complexity is the enemy of progress. We transform AI's overwhelming possibilities into clear, actionable pathways. When you understand exactly what to do next, transformation becomes inevitable."
     },
     {
-      title: "Purpose-Driven Innovation",
-      description: "We don't innovate for innovation's sake. Every solution we create serves a higher purpose: unlocking human potential and making AI accessible to all who seek growth."
+      title: "Adaptation is Everything",
+      description: "Static plans fail in dynamic environments. Your AI journey will evolve—your roadmap should too. We build systems that grow with you, ensuring relevance at every stage of your transformation."
     }
   ];
 
@@ -440,26 +440,26 @@ const AboutUs = () => {
       {/* What We Believe - Glass Morphism */}
       <section className="px-4 py-8 sm:py-12 relative z-10">
         <div className="max-w-5xl mx-auto">
-          <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 shadow-2xl shadow-primary/10">
+          <div className="glass backdrop-blur-md bg-background/40 dark:bg-background/20 border border-primary/20 rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 shadow-2xl shadow-primary/10">
             <div className="text-center mb-8 sm:mb-10">
               <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-4 bg-gradient-to-br from-foreground via-foreground to-primary/70 bg-clip-text text-transparent">
                 Our Core Beliefs
               </h2>
               <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                These principles shape every personalized Jump plan we create and every individual transformation we guide.
+                The principles that guide everything we build and every transformation we enable.
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-4 sm:gap-6">
+            <div className="space-y-6">
               {beliefs.map((belief, index) => (
                 <div 
                   key={index}
-                  className="glass backdrop-blur-sm bg-background/40 dark:bg-background/25 border border-primary/30 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/50 transition-all duration-300 group hover:scale-105 hover:-translate-y-2"
+                  className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-xl sm:rounded-2xl p-5 sm:p-6 md:p-8 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/20 hover:border-primary/35 transition-all duration-300"
                 >
-                  <h3 className="text-base sm:text-lg font-bold mb-2 sm:mb-3 group-hover:text-primary transition-colors bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent group-hover:from-primary group-hover:to-primary/60">
+                  <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">
                     {belief.title}
                   </h3>
-                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                  <p className="text-sm sm:text-base text-muted-foreground leading-relaxed max-w-3xl">
                     {belief.description}
                   </p>
                 </div>
