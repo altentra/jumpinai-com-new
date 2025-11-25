@@ -212,7 +212,7 @@ const ContactUs = () => {
                       <h4 className="font-bold text-xs text-foreground mb-2">DM Us at:</h4>
                       <div className="flex gap-4 pl-1">
                         <a
-                          href="https://x.com/JumpinAI"
+                          href="https://x.com/Jump_in_AI"
                           target="_blank"
                           rel="noopener noreferrer"
                           className="text-muted-foreground hover:text-primary transition-colors"
