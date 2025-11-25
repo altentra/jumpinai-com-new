@@ -250,7 +250,7 @@ const AboutUs = () => {
 
   const beliefs = [
     {
-      title: "AI Should Amplify Humanity",
+      title: "AI Empowers, Not Replaces",
       description: "We believe artificial intelligence exists to elevate human potential—not replace it. The measure of AI's success isn't in what it can do alone, but in how powerfully it enables people to achieve what matters most to them."
     },
     {
