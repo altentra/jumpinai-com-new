@@ -230,7 +230,7 @@ const ContactUs = () => {
                           <span className="sr-only">Instagram</span>
                         </a>
                         <a
-                          href="https://www.facebook.com/profile.php?id=61568770473634"
+                          href="https://facebook.com/jumpinai/"
                           target="_blank"
                           rel="noopener noreferrer"
                           className="text-muted-foreground hover:text-primary transition-colors"
