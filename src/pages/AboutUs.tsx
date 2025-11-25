@@ -336,35 +336,16 @@ const AboutUs = () => {
         </Helmet>
         <Navigation />
       {/* Hero Section - Glass Morphism */}
-      <section className="relative px-0 pt-24 sm:pt-28 pb-8 sm:pb-10">
+      <section className="relative px-0 pt-24 sm:pt-32 pb-4 sm:pb-6">
         <div className="relative flex items-center justify-center overflow-hidden">
           <div className="relative z-10 px-4 text-center max-w-6xl mx-auto">
-            <div className="text-center mb-8 animate-fade-in-up">
+            <div className="text-center animate-fade-in-up">
               <div className="space-y-3 sm:space-y-4">
-                <div className="relative mb-4">
+                <div className="relative mb-6">
                   <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent leading-tight tracking-tight">About JumpinAI</h1>
                   <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-20 sm:w-24 h-0.5 sm:h-1 bg-gradient-to-r from-transparent via-primary/60 to-transparent rounded-full"></div>
                 </div>
-                <p className="text-sm sm:text-base md:text-lg text-muted-foreground/90 mb-4 sm:mb-6 max-w-3xl mx-auto leading-relaxed">The AI Adaptation Studio delivering what the world needs most: clarity. In an era overwhelmed with AI information, we provide strategic direction—personalized implementation plans designed around your goals, transforming ambition into achievement through clear, actionable pathways.</p>
-              </div>
-              <div className="flex justify-center mt-4 sm:mt-6">
-                <button 
-                  onClick={handleStartBuilding}
-                  className="relative group overflow-hidden w-full sm:w-auto"
-                >
-                  {/* Liquid glass glow effect */}
-                  <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover:opacity-60 transition duration-500"></div>
-                  
-                  {/* Button */}
-                  <div className="relative flex items-center justify-center gap-2 px-6 sm:px-8 py-2.5 sm:py-3 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover:border-primary/50 transition-all duration-300 overflow-hidden">
-                    {/* Shimmer effect */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-                    
-                    {/* Content */}
-                    <span className="relative text-sm sm:text-base font-bold text-foreground group-hover:text-primary transition-colors duration-300">Get Your Personal Jump</span>
-                    <ArrowRight className="relative w-4 h-4 text-foreground group-hover:text-primary transition-colors duration-300 group-hover:translate-x-1" />
-                  </div>
-                </button>
+                <p className="text-sm sm:text-base md:text-lg text-muted-foreground/90 max-w-3xl mx-auto leading-relaxed">AI Adaptation Studio delivering what the world needs most: clarity. In an era overwhelmed with AI information, we provide strategic direction—personalized implementation plans designed around your goals, transforming ambition into achievement through clear, actionable pathways.</p>
               </div>
             </div>
           </div>
