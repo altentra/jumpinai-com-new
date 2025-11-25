@@ -345,7 +345,7 @@ const AboutUs = () => {
                   <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent leading-tight tracking-tight">About JumpinAI</h1>
                   <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-20 sm:w-24 h-0.5 sm:h-1 bg-gradient-to-r from-transparent via-primary/60 to-transparent rounded-full"></div>
                 </div>
-                <p className="text-sm sm:text-base md:text-lg text-muted-foreground/90 max-w-3xl mx-auto leading-relaxed">We are AI Adaptation Studio delivering what the world needs most: clarity. As AI reshapes every industry, we provide the strategic direction to harness its power—personalized implementation plans designed around your goals, transforming ambition into achievement through clear, actionable pathways.</p>
+                <p className="text-sm sm:text-base md:text-lg text-muted-foreground/90 max-w-3xl mx-auto leading-relaxed">We are AI Adaptation Studio delivering what the world needs most: clarity. As AI reshapes every industry, we provide the strategic "jumps" to harness its power—personalized implementation plans designed around your goals, transforming ambition into achievement through clear, actionable pathways.</p>
               </div>
             </div>
           </div>
@@ -375,7 +375,10 @@ const AboutUs = () => {
                 <h2 className="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-br from-foreground via-foreground to-primary/70 bg-clip-text text-transparent">Who We Are</h2>
                 <div className="space-y-3 sm:space-y-4">
                   <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-                    We stand at the crossroads of human potential and AI. <strong className="text-foreground">JumpinAI</strong> was born from a profound realization: successful AI adaptation isn't about information—it's about clarity. The clarity to see your path forward, the strategic insight to harness AI's power effectively, and the confidence to transform your ambitions into reality.
+                    We stand at the crossroads of human potential and AI.
+                  </p>
+                  <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+                    <strong className="text-foreground">JumpinAI</strong> was born from a profound realization: successful AI adaptation isn't about information—it's about clarity. The clarity to see your path forward, the strategic insight to harness AI's power effectively, and the confidence to transform your ambitions into reality.
                   </p>
                   <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
                     In a world overflowing with AI tools and generic solutions, what's missing isn't more options—it's clarity and actionable guidance. We believe true adaptation happens when technology meets the individual, when clear pathways cut through complexity, and when AI becomes deeply personal, immediately actionable, and perfectly aligned with your unique context and aspirations.
@@ -384,7 +387,7 @@ const AboutUs = () => {
                     We are <strong className="text-foreground">architects of personalized AI adaptation</strong>. We craft clear, actionable roadmaps that bridge who you are today with who you can become when you harness AI strategically. Every plan, every insight, every moment of guidance is designed around one fundamental truth: your path to AI success should be as unique as your fingerprint—clear, actionable, and unmistakably yours.
                   </p>
                   <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-                    As pioneers in the era of AI adaptation, we're not just navigating the revolution—we're shaping it with humanity at its core. Because the future is shaped by those who harness AI with clarity, implement with confidence, and make it truly their own.
+                    As pioneers in the era of AI adaptation, we're not just navigating the revolution—we're shaping it with humanity at its core. Because the future is shaped by those who harness AI with clarity, implement it with confidence, and make it truly their own.
                   </p>
                 </div>
               </article>
