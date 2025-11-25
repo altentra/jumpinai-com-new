@@ -537,7 +537,7 @@ const Index = () => {
                       3
                     </div>
                     <h3 className="text-lg font-bold mb-2 font-display">Execute & Adapt</h3>
-                    <p className="text-sm text-muted-foreground flex-1">Follow your roadmap, clarify steps as needed, explore alternative routes, and use ready prompts to implement immediately.</p>
+                    <p className="text-sm text-muted-foreground flex-1">Follow your roadmap, clarify steps as needed, explore alternative routes, generate custom tool-prompt combos on demand, and implement immediately.</p>
                   </div>
                 </div>
                 
