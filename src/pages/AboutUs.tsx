@@ -544,7 +544,7 @@ const AboutUs = () => {
               Ready for Your Personal Jump?
             </h2>
             <p className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed">
-              You've just read about our philosophy, our mission, and what makes us different. Now comes the defining moment: will you spend months navigating generic AI advice, or will you have your complete personalized transformation roadmap—tailored to your exact context, goals, and challenges—in the next 2 minutes? The bridge between who you are today and who you can become with AI starts with a single click. <span className="text-primary font-semibold">Your unique AI journey begins now.</span>
+              The choice is clear: spend months navigating generic AI advice, or get your complete personalized transformation roadmap—tailored to your exact context and goals—in 2 minutes. <span className="text-primary font-semibold">Your unique AI journey begins with one click.</span>
             </p>
             
             <div className="flex justify-center">
