@@ -971,7 +971,7 @@ const Index = () => {
           {/* Availability Info */}
           <div className="text-center">
             <div className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl glass border border-primary/20 backdrop-blur-xl shadow-sm">
-              <span className="text-xs sm:text-sm text-muted-foreground">Level 1 free for all • Level 2 with Starter Plan • Level 3 with Pro Plan • Level 4 with Growth Plan</span>
+              <span className="text-xs sm:text-sm text-muted-foreground">Clarify depth: Level 1 (free) • Level 2 (Starter) • Level 3 (Pro) • Level 4 (Growth) | Reroute & Equip available on any existing step</span>
             </div>
           </div>
         </div>
