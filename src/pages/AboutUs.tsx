@@ -375,7 +375,7 @@ const AboutUs = () => {
       <section className="px-4 py-8 sm:py-12 relative z-10">
         <div className="max-w-5xl mx-auto">
           <div className="glass backdrop-blur-md bg-background/40 dark:bg-background/20 border border-primary/20 rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 shadow-2xl shadow-primary/10 hover:shadow-3xl hover:shadow-primary/15 transition-all duration-500">
-            <div className="grid md:grid-cols-5 gap-6 items-center">
+            <div className="grid md:grid-cols-5 gap-6 items-start">
               <div className="md:col-span-2 flex justify-center">
                 <div className="relative glass backdrop-blur-sm bg-background/30 dark:bg-background/20 border border-primary/30 rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/25 transition-all duration-300 hover:scale-105">
                   <img
