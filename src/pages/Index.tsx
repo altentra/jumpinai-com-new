@@ -379,7 +379,7 @@ const Index = () => {
                 <h3 className="text-lg font-bold font-display">Tools & Prompts</h3>
               </div>
               <p className="text-sm text-muted-foreground mb-4 leading-relaxed relative">
-                Your execution toolkit—curated tool-prompt combinations perfectly correlated to your plan, with the ability to generate more for any step.
+                Your execution toolkit—tool-prompt combinations aligned to your plan, expandable with custom combos for any step.
               </p>
               <div className="text-xs text-muted-foreground space-y-2 font-medium relative">
                 <div className="flex items-start gap-2">
