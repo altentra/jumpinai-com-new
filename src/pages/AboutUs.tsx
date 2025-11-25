@@ -1,4 +1,4 @@
-import { ArrowRight, Zap, Target, Users, Rocket, Download, Sparkles, Layers, Lightbulb, GitBranch, Wrench, Eye } from "lucide-react";
+import { ArrowRight, Zap, Target, Users, Rocket, Download, Sparkles, Layers, Lightbulb, GitBranch, Wrench } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -414,41 +414,25 @@ const AboutUs = () => {
 
       {/* Mission and Vision - Glass Morphism */}
       <section className="px-4 py-8 sm:py-12 relative z-10">
-        <div className="max-w-5xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-6">
-            {/* Mission */}
-            <div className="glass backdrop-blur-md bg-background/40 dark:bg-background/20 border border-primary/20 rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-2xl shadow-primary/10 hover:shadow-3xl hover:shadow-primary/20 transition-all duration-500 group">
-              <div className="flex flex-col h-full">
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-14 h-14 bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-2xl flex items-center justify-center group-hover:from-primary/30 group-hover:to-primary/20 group-hover:border-primary/40 group-hover:shadow-lg group-hover:shadow-primary/20 transition-all duration-300">
-                    <Target className="w-7 h-7 text-primary group-hover:scale-110 transition-transform duration-300" />
-                  </div>
-                  <h3 className="text-2xl sm:text-3xl font-bold bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">
-                    Our Mission
-                  </h3>
-                </div>
-                <p className="text-sm sm:text-base text-muted-foreground leading-relaxed flex-grow">
-                  To democratize successful AI adoption by delivering personalized, adaptive transformation plans that turn complexity into clarity. We empower individuals and organizations to confidently navigate their unique AI journey—from strategic vision to tactical execution—in minutes, not months.
-                </p>
-              </div>
-            </div>
+        <div className="max-w-5xl mx-auto space-y-6">
+          {/* Mission */}
+          <div className="glass backdrop-blur-md bg-background/40 dark:bg-background/20 border border-primary/20 rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 shadow-2xl shadow-primary/10 hover:shadow-3xl hover:shadow-primary/15 transition-all duration-500">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6 bg-gradient-to-br from-foreground via-foreground to-primary/70 bg-clip-text text-transparent">
+              Our Mission
+            </h2>
+            <p className="text-sm sm:text-base text-muted-foreground leading-relaxed max-w-4xl">
+              To democratize successful AI adoption by delivering personalized, adaptive transformation plans that turn complexity into clarity. We empower individuals and organizations to confidently navigate their unique AI journey—from strategic vision to tactical execution—in minutes, not months.
+            </p>
+          </div>
 
-            {/* Vision */}
-            <div className="glass backdrop-blur-md bg-background/40 dark:bg-background/20 border border-primary/20 rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-2xl shadow-primary/10 hover:shadow-3xl hover:shadow-primary/20 transition-all duration-500 group">
-              <div className="flex flex-col h-full">
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-14 h-14 bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-2xl flex items-center justify-center group-hover:from-primary/30 group-hover:to-primary/20 group-hover:border-primary/40 group-hover:shadow-lg group-hover:shadow-primary/20 transition-all duration-300">
-                    <Eye className="w-7 h-7 text-primary group-hover:scale-110 transition-transform duration-300" />
-                  </div>
-                  <h3 className="text-2xl sm:text-3xl font-bold bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">
-                    Our Vision
-                  </h3>
-                </div>
-                <p className="text-sm sm:text-base text-muted-foreground leading-relaxed flex-grow">
-                  To become the global standard for AI transformation—a world where every individual and organization can seamlessly harness artificial intelligence in ways perfectly aligned with their context, capabilities, and ambitions. Where AI adoption is no longer a challenge, but a personalized journey of empowerment.
-                </p>
-              </div>
-            </div>
+          {/* Vision */}
+          <div className="glass backdrop-blur-md bg-background/40 dark:bg-background/20 border border-primary/20 rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 shadow-2xl shadow-primary/10 hover:shadow-3xl hover:shadow-primary/15 transition-all duration-500">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6 bg-gradient-to-br from-foreground via-foreground to-primary/70 bg-clip-text text-transparent">
+              Our Vision
+            </h2>
+            <p className="text-sm sm:text-base text-muted-foreground leading-relaxed max-w-4xl">
+              To become the global standard for AI transformation—a world where every individual and organization can seamlessly harness artificial intelligence in ways perfectly aligned with their context, capabilities, and ambitions. Where AI adoption is no longer a challenge, but a personalized journey of empowerment.
+            </p>
           </div>
         </div>
       </section>
