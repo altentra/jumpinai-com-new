@@ -250,20 +250,20 @@ const AboutUs = () => {
 
   const beliefs = [
     {
-      title: "Human-Centered AI Revolution",
-      description: "We believe the AI revolution succeeds only when it amplifies human potential, not replaces it. Every breakthrough should make us more human, not less."
+      title: "AI Empowers, Not Replaces",
+      description: "We believe artificial intelligence exists to elevate human potential—not replace it. The measure of AI's success isn't in what it can do alone, but in how powerfully it enables people to achieve what matters most to them."
     },
     {
-      title: "Individuality Over Uniformity",
-      description: "In a world pushing toward standardization, we champion the unique. Your AI journey should be as distinctive as your dreams, challenges, and aspirations."
+      title: "One Size Fits None",
+      description: "Generic solutions produce generic results. Your context, goals, and challenges are unique—your AI transformation strategy should be too. We reject standardization in favor of personalization that actually works."
     },
     {
-      title: "Transformation Through Connection",
-      description: "True AI transformation happens at the intersection of cutting-edge technology and deep human understanding. We build bridges, not barriers."
+      title: "Clarity Drives Action",
+      description: "Complexity is the enemy of progress. We transform AI's overwhelming possibilities into clear, actionable pathways. When you understand exactly what to do next, transformation becomes inevitable."
     },
     {
-      title: "Purpose-Driven Innovation",
-      description: "We don't innovate for innovation's sake. Every solution we create serves a higher purpose: unlocking human potential and making AI accessible to all who seek growth."
+      title: "Adaptation is Everything",
+      description: "Static plans fail in dynamic environments. Your AI journey will evolve—your roadmap should too. We build systems that grow with you, ensuring relevance at every stage of your transformation."
     }
   ];
 
@@ -375,8 +375,8 @@ const AboutUs = () => {
       <section className="px-4 py-8 sm:py-12 relative z-10">
         <div className="max-w-5xl mx-auto">
           <div className="glass backdrop-blur-md bg-background/40 dark:bg-background/20 border border-primary/20 rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 shadow-2xl shadow-primary/10 hover:shadow-3xl hover:shadow-primary/15 transition-all duration-500">
-            <div className="grid md:grid-cols-5 gap-6 items-center">
-              <div className="md:col-span-2 flex justify-center">
+            <div className="grid md:grid-cols-5 gap-6 items-start">
+              <div className="md:col-span-2 flex justify-center md:pt-12">
                 <div className="relative glass backdrop-blur-sm bg-background/30 dark:bg-background/20 border border-primary/30 rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/25 transition-all duration-300 hover:scale-105">
                   <img
                     src={logo}
@@ -412,26 +412,51 @@ const AboutUs = () => {
         </div>
       </section>
 
+      {/* Mission and Vision - Glass Morphism */}
+      <section className="px-4 py-8 sm:py-12 relative z-10">
+        <div className="max-w-5xl mx-auto space-y-6">
+          {/* Mission */}
+          <div className="glass backdrop-blur-md bg-background/40 dark:bg-background/20 border border-primary/20 rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 shadow-2xl shadow-primary/10 hover:shadow-3xl hover:shadow-primary/15 transition-all duration-500">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6 bg-gradient-to-br from-foreground via-foreground to-primary/70 bg-clip-text text-transparent">
+              Our Mission
+            </h2>
+            <p className="text-sm sm:text-base text-muted-foreground leading-relaxed max-w-4xl">
+              To democratize successful AI adoption by delivering personalized, adaptive transformation plans that turn complexity into clarity. We empower individuals and organizations to confidently navigate their unique AI journey—from strategic vision to tactical execution—in minutes, not months.
+            </p>
+          </div>
+
+          {/* Vision */}
+          <div className="glass backdrop-blur-md bg-background/40 dark:bg-background/20 border border-primary/20 rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 shadow-2xl shadow-primary/10 hover:shadow-3xl hover:shadow-primary/15 transition-all duration-500">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6 bg-gradient-to-br from-foreground via-foreground to-primary/70 bg-clip-text text-transparent">
+              Our Vision
+            </h2>
+            <p className="text-sm sm:text-base text-muted-foreground leading-relaxed max-w-4xl">
+              To become the global standard for AI adaptation—a world where every individual and organization can seamlessly harness artificial intelligence in ways perfectly aligned with their context, capabilities, and ambitions. Where AI adoption is no longer a challenge, but a personalized journey of empowerment.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* What We Believe - Glass Morphism */}
       <section className="px-4 py-8 sm:py-12 relative z-10">
         <div className="max-w-5xl mx-auto">
-          <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 shadow-2xl shadow-primary/10">
-            <div className="text-center mb-8 sm:mb-10">
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-4 bg-gradient-to-br from-foreground via-foreground to-primary/70 bg-clip-text text-transparent">
+          <div className="glass backdrop-blur-md bg-background/40 dark:bg-background/20 border border-primary/20 rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 shadow-2xl shadow-primary/10">
+            <div className="text-center mb-6 sm:mb-8">
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2 sm:mb-3 bg-gradient-to-br from-foreground via-foreground to-primary/70 bg-clip-text text-transparent">
                 Our Core Beliefs
               </h2>
-              <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                These principles shape every personalized Jump plan we create and every individual transformation we guide.
+              <p className="text-xs sm:text-sm text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+                The principles that guide everything we build and every transformation we enable.
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-4 sm:gap-6">
+            <div className="space-y-4 sm:space-y-5">
               {beliefs.map((belief, index) => (
                 <div 
                   key={index}
-                  className="glass backdrop-blur-sm bg-background/40 dark:bg-background/25 border border-primary/30 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/50 transition-all duration-300 group hover:scale-105 hover:-translate-y-2"
+                  className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/20 hover:border-primary/35 transition-all duration-300"
                 >
-                  <h3 className="text-base sm:text-lg font-bold mb-2 sm:mb-3 group-hover:text-primary transition-colors bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent group-hover:from-primary group-hover:to-primary/60">
+                  <h3 className="text-base sm:text-lg font-bold mb-2 sm:mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">
                     {belief.title}
                   </h3>
                   <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
@@ -462,19 +487,19 @@ const AboutUs = () => {
               <h3 className="text-lg sm:text-xl font-bold text-center mb-6 sm:mb-8 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">
                 Your Complete Jump Package
               </h3>
-              <div className="grid md:grid-cols-3 gap-4 sm:gap-6">
+              <div className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-6">
                 {jumpPackage.map((item, index) => (
                   <div 
                     key={index}
-                    className="text-center group glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/40 transition-all duration-300 hover:scale-105 hover:-translate-y-2"
+                    className="text-center group glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-lg sm:rounded-xl md:rounded-2xl p-2 sm:p-4 md:p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/40 transition-all duration-300 hover:scale-105 hover:-translate-y-2"
                   >
-                    <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:from-primary/30 group-hover:to-primary/20 group-hover:border-primary/40 group-hover:shadow-lg group-hover:shadow-primary/20 transition-all duration-300">
-                      <item.icon className="w-6 h-6 sm:w-7 sm:h-7 text-primary group-hover:scale-110 transition-transform duration-300" />
+                    <div className="w-8 h-8 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-lg sm:rounded-xl md:rounded-2xl flex items-center justify-center mx-auto mb-2 sm:mb-3 md:mb-4 group-hover:from-primary/30 group-hover:to-primary/20 group-hover:border-primary/40 group-hover:shadow-lg group-hover:shadow-primary/20 transition-all duration-300">
+                      <item.icon className="w-4 h-4 sm:w-6 sm:h-6 md:w-7 md:h-7 text-primary group-hover:scale-110 transition-transform duration-300" />
                     </div>
-                    <h4 className="text-base sm:text-lg font-bold mb-2 sm:mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent group-hover:from-primary group-hover:to-primary/60">
+                    <h4 className="text-[10px] sm:text-base md:text-lg font-bold mb-1 sm:mb-2 md:mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent group-hover:from-primary group-hover:to-primary/60 leading-tight">
                       {item.title}
                     </h4>
-                    <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                    <p className="text-[8px] sm:text-xs md:text-sm text-muted-foreground leading-tight sm:leading-relaxed">
                       {item.description}
                     </p>
                   </div>
@@ -487,19 +512,19 @@ const AboutUs = () => {
               <h3 className="text-lg sm:text-xl font-bold text-center mb-6 sm:mb-8 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">
                 Intelligent Adaptation Features
               </h3>
-              <div className="grid md:grid-cols-3 gap-4 sm:gap-6">
+              <div className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-6">
                 {adaptiveFeatures.map((feature, index) => (
                   <div 
                     key={index}
-                    className="text-center group glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/40 transition-all duration-300 hover:scale-105 hover:-translate-y-2"
+                    className="text-center group glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-lg sm:rounded-xl md:rounded-2xl p-2 sm:p-4 md:p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/40 transition-all duration-300 hover:scale-105 hover:-translate-y-2"
                   >
-                    <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:from-primary/30 group-hover:to-primary/20 group-hover:border-primary/40 group-hover:shadow-lg group-hover:shadow-primary/20 transition-all duration-300">
-                      <feature.icon className="w-6 h-6 sm:w-7 sm:h-7 text-primary group-hover:scale-110 transition-transform duration-300" />
+                    <div className="w-8 h-8 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-lg sm:rounded-xl md:rounded-2xl flex items-center justify-center mx-auto mb-2 sm:mb-3 md:mb-4 group-hover:from-primary/30 group-hover:to-primary/20 group-hover:border-primary/40 group-hover:shadow-lg group-hover:shadow-primary/20 transition-all duration-300">
+                      <feature.icon className="w-4 h-4 sm:w-6 sm:h-6 md:w-7 md:h-7 text-primary group-hover:scale-110 transition-transform duration-300" />
                     </div>
-                    <h4 className="text-base sm:text-lg font-bold mb-2 sm:mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent group-hover:from-primary group-hover:to-primary/60">
+                    <h4 className="text-[10px] sm:text-base md:text-lg font-bold mb-1 sm:mb-2 md:mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent group-hover:from-primary group-hover:to-primary/60 leading-tight">
                       {feature.title}
                     </h4>
-                    <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                    <p className="text-[8px] sm:text-xs md:text-sm text-muted-foreground leading-tight sm:leading-relaxed">
                       {feature.description}
                     </p>
                   </div>
@@ -518,30 +543,9 @@ const AboutUs = () => {
             <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-4 bg-gradient-to-br from-foreground via-primary to-primary/70 bg-clip-text text-transparent">
               Ready for Your Personal Jump?
             </h2>
-            <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6 max-w-3xl mx-auto leading-relaxed">
-              While others are still offering generic AI courses, you could have your comprehensive personalized Jump plan in 2 minutes.
-              <span className="text-primary font-semibold"> Your transformation starts now</span> — with a complete system that adapts to your evolving needs.
+            <p className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed">
+              The AI era demands adaptation. Not someday—today. Those who succeed won't be the ones who wait, watch, or wonder. They'll be the ones who act with clarity, adapt with precision, and harness AI to accelerate everything that matters. You know our purpose. You understand our approach. Now the question isn't what AI can do—it's what you'll do with it. <span className="text-primary font-semibold">Your clarity starts now.</span>
             </p>
-            
-            <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/30 rounded-xl sm:rounded-2xl p-4 sm:p-6 mb-4 sm:mb-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/20 transition-all duration-300">
-              <h3 className="text-base sm:text-lg font-bold mb-4 sm:mb-6 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">
-                Why Choose JumpinAI?
-              </h3>
-              <div className="grid md:grid-cols-3 gap-3 sm:gap-4 text-left">
-                <div className="glass backdrop-blur-sm bg-background/20 dark:bg-background/10 border border-primary/20 rounded-lg sm:rounded-xl p-3 sm:p-4 hover:border-primary/30 transition-all duration-300">
-                  <h4 className="text-sm sm:text-base font-bold text-primary mb-1 sm:mb-2">Lightning Fast</h4>
-                  <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">Complete transformation roadmap generated in 2 minutes with immediate actionable steps.</p>
-                </div>
-                <div className="glass backdrop-blur-sm bg-background/20 dark:bg-background/10 border border-primary/20 rounded-lg sm:rounded-xl p-3 sm:p-4 hover:border-primary/30 transition-all duration-300">
-                  <h4 className="text-sm sm:text-base font-bold text-primary mb-1 sm:mb-2">Truly Personalized</h4>
-                  <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">Every element tailored to your specific goals, industry, experience level, and context.</p>
-                </div>
-                <div className="glass backdrop-blur-sm bg-background/20 dark:bg-background/10 border border-primary/20 rounded-lg sm:rounded-xl p-3 sm:p-4 hover:border-primary/30 transition-all duration-300">
-                  <h4 className="text-sm sm:text-base font-bold text-primary mb-1 sm:mb-2">Infinitely Adaptable</h4>
-                  <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">Clarify, Reroute, and Equip features ensure your plan evolves with your journey.</p>
-                </div>
-              </div>
-            </div>
             
             <div className="flex justify-center">
               <button 
