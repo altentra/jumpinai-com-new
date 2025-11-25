@@ -441,25 +441,25 @@ const AboutUs = () => {
       <section className="px-4 py-8 sm:py-12 relative z-10">
         <div className="max-w-5xl mx-auto">
           <div className="glass backdrop-blur-md bg-background/40 dark:bg-background/20 border border-primary/20 rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 shadow-2xl shadow-primary/10">
-            <div className="text-center mb-8 sm:mb-10">
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-4 bg-gradient-to-br from-foreground via-foreground to-primary/70 bg-clip-text text-transparent">
+            <div className="text-center mb-6 sm:mb-8">
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2 sm:mb-3 bg-gradient-to-br from-foreground via-foreground to-primary/70 bg-clip-text text-transparent">
                 Our Core Beliefs
               </h2>
-              <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+              <p className="text-xs sm:text-sm text-muted-foreground max-w-2xl mx-auto leading-relaxed">
                 The principles that guide everything we build and every transformation we enable.
               </p>
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-5">
               {beliefs.map((belief, index) => (
                 <div 
                   key={index}
-                  className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-xl sm:rounded-2xl p-5 sm:p-6 md:p-8 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/20 hover:border-primary/35 transition-all duration-300"
+                  className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/20 hover:border-primary/35 transition-all duration-300"
                 >
-                  <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">
+                  <h3 className="text-base sm:text-lg font-bold mb-2 sm:mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">
                     {belief.title}
                   </h3>
-                  <p className="text-sm sm:text-base text-muted-foreground leading-relaxed max-w-3xl">
+                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
                     {belief.description}
                   </p>
                 </div>
