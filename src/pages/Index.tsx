@@ -972,7 +972,7 @@ const Index = () => {
           <div className="text-center">
             <div className="inline-flex flex-col items-center gap-1.5 px-6 py-3 rounded-2xl glass border border-primary/30 backdrop-blur-xl shadow-lg">
               <div className="text-xs sm:text-sm text-foreground/90">
-                <span className="font-bold text-primary">Clarify</span> feature availability varies by subscription plan and clarification depth level
+                <span className="font-bold text-primary">Clarify</span> feature availability varies by clarification depth level and subscription plan
               </div>
               <div className="text-xs sm:text-sm text-foreground/80">
                 <span className="font-bold text-primary">Reroute</span> & <span className="font-bold text-primary">Equip</span> available on any existing step
