@@ -254,8 +254,8 @@ const AboutUs = () => {
       description: "We believe artificial intelligence exists to elevate human potential—not replace it. The measure of AI's success isn't in what it can do alone, but in how powerfully it enables people to achieve what matters most to them."
     },
     {
-      title: "One Size Fits None",
-      description: "Generic solutions produce generic results. Your context, goals, and challenges are unique—your AI transformation strategy should be too. We reject standardization in favor of personalization that actually works."
+      title: "Direction Over Information",
+      description: "In the AI era, information is abundant—strategic direction is rare. Anyone can learn what AI does; few know exactly what to do next. We believe true value lies not in explaining technology, but in providing the clarity that transforms understanding into confident, strategic action."
     },
     {
       title: "Clarity Drives Action",
