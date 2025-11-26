@@ -6,7 +6,31 @@ import { CheckCircle, ArrowRight, Sparkles, Clock, DollarSign, Target, AlertCirc
 import { useScrollDrivenDemo } from '@/hooks/useScrollDrivenDemo';
 
 export const InteractiveJumpDemo: React.FC = () => {
-  const { containerRef, demoState, overviewRef, planRef, toolsRef } = useScrollDrivenDemo();
+  const { containerRef, demoState } = useScrollDrivenDemo();
+  const overviewRef = useRef<HTMLDivElement>(null);
+  const planRef = useRef<HTMLDivElement>(null);
+  const toolsRef = useRef<HTMLDivElement>(null);
+
+  // Sync tab content scroll based on demo state
+  useEffect(() => {
+    if (!demoState.isLocked) return;
+    
+    const refs = {
+      overview: overviewRef,
+      plan: planRef,
+      tools: toolsRef,
+    };
+    
+    const currentRef = refs[demoState.activeTab as keyof typeof refs]?.current;
+    if (currentRef) {
+      const maxScroll = Math.max(0, currentRef.scrollHeight - currentRef.clientHeight);
+      const targetScroll = maxScroll * demoState.scrollProgress;
+      
+      console.log(`🎯 Scrolling ${demoState.activeTab} to ${targetScroll.toFixed(0)}px of ${maxScroll.toFixed(0)}px`);
+      
+      currentRef.scrollTop = targetScroll;
+    }
+  }, [demoState.activeTab, demoState.scrollProgress, demoState.isLocked]);
 
   // Real Jump #9 data - Phase 1 with first 2 steps
   const phase1Data = {
