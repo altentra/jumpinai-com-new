@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface ScrollDrivenDemoState {
   activeTab: string;
@@ -8,9 +8,6 @@ interface ScrollDrivenDemoState {
 
 export const useScrollDrivenDemo = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const overviewRef = useRef<HTMLDivElement>(null);
-  const planRef = useRef<HTMLDivElement>(null);
-  const toolsRef = useRef<HTMLDivElement>(null);
   
   const [demoState, setDemoState] = useState<ScrollDrivenDemoState>({
     activeTab: 'overview',
@@ -23,8 +20,6 @@ export const useScrollDrivenDemo = () => {
   const savedScrollPositionRef = useRef(0);
 
   useEffect(() => {
-    let animationFrameId: number;
-    
     const handleWheel = (e: WheelEvent) => {
       if (!containerRef.current) return;
 
@@ -41,7 +36,7 @@ export const useScrollDrivenDemo = () => {
       
       // Start lock sequence
       if (shouldStartLocking && !isLockedRef.current) {
-        console.log('🔒 LOCKING SCROLL - Starting demo sequence');
+        console.log('🔒 LOCKING SCROLL');
         isLockedRef.current = true;
         totalProgressRef.current = 0;
         savedScrollPositionRef.current = window.scrollY;
@@ -65,7 +60,7 @@ export const useScrollDrivenDemo = () => {
         e.stopPropagation();
         
         const delta = e.deltaY;
-        const scrollSpeed = 0.003; // Adjust for smooth experience
+        const scrollSpeed = 0.004; // Adjusted for better feel
         
         // Update total progress (0-3 range for 3 tabs)
         totalProgressRef.current += delta * scrollSpeed;
@@ -73,22 +68,19 @@ export const useScrollDrivenDemo = () => {
         
         const progress = totalProgressRef.current;
         
-        console.log('📊 Progress:', progress.toFixed(2));
+        console.log('📊 Tab Progress:', progress.toFixed(2));
         
         // Determine which tab and scroll position
         let activeTab = 'overview';
         let scrollProgress = 0;
         
         if (progress < 1) {
-          // Overview tab (0-1)
           activeTab = 'overview';
           scrollProgress = Math.max(0, Math.min(1, progress));
         } else if (progress < 2) {
-          // Plan tab (1-2)
           activeTab = 'plan';
           scrollProgress = Math.max(0, Math.min(1, progress - 1));
         } else if (progress < 3) {
-          // Tools tab (2-3)
           activeTab = 'tools';
           scrollProgress = Math.max(0, Math.min(1, progress - 2));
         } else {
@@ -96,33 +88,18 @@ export const useScrollDrivenDemo = () => {
           scrollProgress = 1;
         }
         
-        // Update state
+        console.log(`📜 Tab: ${activeTab}, Scroll: ${(scrollProgress * 100).toFixed(0)}%`);
+        
+        // Update state (this will trigger useEffect in component to scroll)
         setDemoState({
           activeTab,
           scrollProgress,
           isLocked: true,
         });
         
-        // Scroll the active tab content
-        const refs = { overview: overviewRef, plan: planRef, tools: toolsRef };
-        const currentRef = refs[activeTab as keyof typeof refs]?.current;
-        
-        if (currentRef) {
-          const maxScroll = Math.max(0, currentRef.scrollHeight - currentRef.clientHeight);
-          const targetScroll = maxScroll * scrollProgress;
-          
-          // Smooth scroll animation
-          if (animationFrameId) cancelAnimationFrame(animationFrameId);
-          animationFrameId = requestAnimationFrame(() => {
-            if (currentRef) {
-              currentRef.scrollTop = targetScroll;
-            }
-          });
-        }
-        
         // Check if completed (scrolling forward past end)
         if (progress >= 3 && delta > 0) {
-          console.log('🔓 UNLOCKING SCROLL - Demo complete');
+          console.log('🔓 UNLOCKING - Demo complete');
           isLockedRef.current = false;
           totalProgressRef.current = 0;
           
@@ -143,13 +120,13 @@ export const useScrollDrivenDemo = () => {
           // Continue scroll momentum
           setTimeout(() => {
             window.scrollBy({ top: 100, behavior: 'smooth' });
-          }, 50);
+          }, 100);
           return;
         }
         
         // Check if scrolling back past start
         if (progress <= 0 && delta < 0) {
-          console.log('🔓 UNLOCKING SCROLL - Scrolling back');
+          console.log('🔓 UNLOCKING - Scrolling back');
           isLockedRef.current = false;
           totalProgressRef.current = 0;
           
@@ -170,18 +147,17 @@ export const useScrollDrivenDemo = () => {
           // Continue scroll momentum
           setTimeout(() => {
             window.scrollBy({ top: -100, behavior: 'smooth' });
-          }, 50);
+          }, 100);
           return;
         }
       }
     };
 
-    console.log('✅ Scroll listeners attached');
+    console.log('✅ Listeners attached');
     window.addEventListener('wheel', handleWheel, { passive: false });
 
     return () => {
       console.log('🧹 Cleanup');
-      if (animationFrameId) cancelAnimationFrame(animationFrameId);
       window.removeEventListener('wheel', handleWheel);
       
       // Ensure unlock on cleanup
@@ -199,9 +175,6 @@ export const useScrollDrivenDemo = () => {
 
   return { 
     containerRef, 
-    demoState,
-    overviewRef,
-    planRef,
-    toolsRef
+    demoState
   };
 };
