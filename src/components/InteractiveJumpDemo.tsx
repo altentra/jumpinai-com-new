@@ -22,21 +22,22 @@ export const InteractiveJumpDemo: React.FC = () => {
     };
     
     const currentRef = refs[demoState.activeTab as keyof typeof refs]?.current;
-    if (currentRef) {
-      // Force reflow to ensure proper height calculations
-      currentRef.getBoundingClientRect();
-      
+    if (!currentRef) return;
+    
+    // Wait for next frame to ensure DOM is properly rendered
+    requestAnimationFrame(() => {
       const scrollHeight = currentRef.scrollHeight;
       const clientHeight = currentRef.clientHeight;
-      const maxScroll = Math.max(0, scrollHeight - clientHeight);
-      const targetScroll = maxScroll * demoState.scrollProgress;
-      
-      console.log(`🎯 Scrolling ${demoState.activeTab} to ${Math.round(targetScroll)}px of ${maxScroll}px (scrollHeight: ${scrollHeight}, clientHeight: ${clientHeight})`);
+      const maxScroll = scrollHeight - clientHeight;
       
       if (maxScroll > 0) {
+        const targetScroll = maxScroll * demoState.scrollProgress;
+        console.log(`🎯 Scrolling ${demoState.activeTab} to ${Math.round(targetScroll)}px of ${maxScroll}px (scrollHeight: ${scrollHeight}, clientHeight: ${clientHeight})`);
         currentRef.scrollTop = targetScroll;
+      } else {
+        console.log(`⚠️ No scroll needed for ${demoState.activeTab} (maxScroll: ${maxScroll}, scrollHeight: ${scrollHeight}, clientHeight: ${clientHeight})`);
       }
-    }
+    });
   }, [demoState.activeTab, demoState.scrollProgress, demoState.isLocked]);
 
   // Real Jump #9 data - Phase 1 with first 2 steps
@@ -172,8 +173,8 @@ Output the template with placeholders [like this] where I can insert my personal
             </TabsList>
           </div>
 
-          {/* Tab Content - Limited height with scroll and fade at bottom */}
-            <div className="relative h-[360px] overflow-hidden">
+          {/* Tab Content - Reduced height to force overflow */}
+            <div className="relative h-[280px] overflow-hidden">
               {/* Overview Tab */}
               <TabsContent value="overview" className="mt-0 h-full overflow-hidden">
                 <div 
