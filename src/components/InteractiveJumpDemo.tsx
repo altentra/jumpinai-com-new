@@ -159,7 +159,7 @@ Output the template with placeholders [like this] where I can insert my personal
                 <span className="tracking-wide">Plan</span>
               </TabsTrigger>
               <TabsTrigger 
-                value="toolPrompts" 
+                value="tools" 
                 className="relative flex items-center justify-center gap-2 text-sm font-semibold px-4 py-2.5
                   data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary/20 data-[state=active]:to-primary/10 
                   data-[state=active]:text-primary data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20
@@ -173,13 +173,13 @@ Output the template with placeholders [like this] where I can insert my personal
             </TabsList>
           </div>
 
-          {/* Tab Content - Reduced height to force overflow */}
-            <div className="relative h-[280px] overflow-hidden">
+          {/* Tab Content - Responsive height with overflow */}
+            <div className="relative h-[360px] sm:h-[380px] md:h-[400px] overflow-hidden">
               {/* Overview Tab */}
-              <TabsContent value="overview" className="mt-0 h-full overflow-hidden">
+              <TabsContent value="overview" className="mt-0 h-full">
                 <div 
                   ref={overviewRef} 
-                  className="h-full overflow-y-auto space-y-6 p-6" 
+                  className="h-full max-h-full overflow-y-scroll space-y-6 p-6" 
                   style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                 >
                 {/* Executive Summary */}
@@ -358,10 +358,10 @@ Output the template with placeholders [like this] where I can insert my personal
             </TabsContent>
 
               {/* Plan Tab */}
-              <TabsContent value="plan" className="mt-0 h-full overflow-hidden">
+              <TabsContent value="plan" className="mt-0 h-full">
                 <div 
                   ref={planRef} 
-                  className="h-full overflow-y-auto space-y-8 p-8" 
+                  className="h-full max-h-full overflow-y-scroll space-y-8 p-8" 
                   style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                 >
                 <div className="relative group">
@@ -462,10 +462,10 @@ Output the template with placeholders [like this] where I can insert my personal
             </TabsContent>
 
               {/* Tools & Prompts Tab */}
-              <TabsContent value="tools" className="mt-0 h-full overflow-hidden">
+              <TabsContent value="tools" className="mt-0 h-full">
                 <div 
                   ref={toolsRef} 
-                  className="h-full overflow-y-auto space-y-6 p-6" 
+                  className="h-full max-h-full overflow-y-scroll space-y-6 p-6" 
                   style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                 >
                 {combosData.map((combo, index) => (
