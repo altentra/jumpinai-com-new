@@ -421,7 +421,7 @@ const Index = () => {
                 See It In Action
               </h3>
               <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
-                Explore a real Jump example below—click through the tabs to experience how each section works together
+                Experience a live demo below. Click through the tabs to explore how a real Jump unfolds—from strategic overview to actionable plan to custom tools and prompts
               </p>
             </div>
             <InteractiveJumpDemo />
