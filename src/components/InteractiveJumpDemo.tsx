@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { CheckCircle, Wrench, ArrowRight, Sparkles } from 'lucide-react';
 
 export const InteractiveJumpDemo: React.FC = () => {
@@ -169,84 +170,99 @@ Output the template with placeholders [like this] where I can insert my personal
 
               {/* Plan Tab */}
               <TabsContent value="plan" className="p-8 space-y-8 mt-0">
-                {/* Phase Header */}
-                <div className="space-y-4">
-                  <div className="flex items-start gap-4">
-                    <div className="flex-shrink-0">
-                      <div className="flex items-center justify-center w-16 h-16 rounded-xl bg-gradient-to-br from-white/10 to-white/5 border border-white/20 backdrop-blur-sm">
-                        <div className="text-center">
-                          <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Phase</div>
-                          <div className="text-2xl font-bold text-foreground">{phase1Data.phase_number}</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex-1 space-y-3">
-                      <h2 className="text-2xl font-bold text-foreground leading-tight">
-                        {phase1Data.title}
-                      </h2>
-                      <p className="text-foreground/80 leading-relaxed">
-                        {phase1Data.description}
-                      </p>
-                      <div className="flex items-center gap-2 text-sm">
-                        <span className="font-medium text-foreground">Duration:</span>
-                        <span className="text-muted-foreground">{phase1Data.duration}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Steps */}
-                <div className="space-y-6">
-                  {phase1Data.steps.map((step, stepIndex) => (
-                    <div
-                      key={stepIndex}
-                      className="group relative rounded-xl bg-gradient-to-br from-white/[0.03] via-white/[0.01] to-white/[0.03] border border-white/10 backdrop-blur-sm p-6 hover:border-white/20 transition-all duration-200"
-                    >
-                      <div className="space-y-4">
-                        <div className="flex items-start gap-4">
-                          <div className="flex-shrink-0">
-                            <div className="px-3 py-1.5 rounded-lg bg-primary/20 border border-primary/30">
-                              <span className="text-sm font-semibold text-primary">Step {step.step_number}.</span>
-                            </div>
-                          </div>
-                          <div className="flex-1">
-                            <h3 className="text-lg font-semibold text-foreground mb-3 leading-tight">
-                              {step.title}
-                            </h3>
-                            <p className="text-foreground/80 leading-relaxed">
-                              {step.description}
-                            </p>
+                <div className="relative group">
+                  <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
+                  <Card className="relative glass backdrop-blur-lg bg-card/80 border border-border hover:border-primary/40 transition-all duration-300">
+                    <CardHeader className="pb-4">
+                      <div className="flex items-start gap-3 sm:gap-4">
+                        <div className="flex-shrink-0">
+                          <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl bg-primary/10 flex flex-col items-center justify-center border border-primary/30">
+                            <span className="text-[9px] sm:text-[10px] font-semibold text-primary uppercase tracking-wider">Phase</span>
+                            <span className="text-xl sm:text-2xl font-bold text-primary leading-none mt-0.5">
+                              {phase1Data.phase_number}
+                            </span>
                           </div>
                         </div>
-
-                        {/* Tools & Prompts Box */}
-                        {step.hasCombo && (
-                          <div className="mt-4 rounded-lg bg-primary/10 border border-primary/20 p-4">
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center gap-3">
-                                <Wrench className="w-4 h-4 text-primary" />
-                                <div>
-                                  <div className="text-sm font-medium text-foreground">
-                                    Tools & Prompts for this Step
+                        <div className="flex-1 min-w-0">
+                          <CardTitle className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold mb-2">
+                            {phase1Data.title}
+                          </CardTitle>
+                          <div className="text-muted-foreground leading-relaxed text-xs sm:text-sm">
+                            {phase1Data.description}
+                          </div>
+                          <div className="flex items-center gap-2 mt-3">
+                            <Badge variant="outline" className="text-[10px] sm:text-xs">
+                              Duration: {phase1Data.duration}
+                            </Badge>
+                          </div>
+                        </div>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="p-3 sm:p-4 md:p-6">
+                      <div className="space-y-3 sm:space-y-4">
+                        {phase1Data.steps.map((step, stepIndex) => (
+                          <div key={stepIndex} className="group">
+                            <div className="bg-background/40 backdrop-blur-[2px] border border-primary/40 border-l-2 border-l-primary/50 hover:border-primary/70 hover:border-l-primary/80 rounded-3xl p-3 sm:p-4 md:p-5 hover:bg-background/60 transition-all duration-300 shadow-[0_2px_8px_rgba(var(--primary),0.15)] hover:shadow-[0_4px_16px_rgba(var(--primary),0.25)]">
+                              <div className="flex items-start gap-3 sm:gap-4 mb-3">
+                                <div className="flex-shrink-0 pt-0.5">
+                                  <div className="px-3 py-2 rounded-2xl bg-gradient-to-br from-primary/25 to-primary/15 flex items-center justify-center border border-primary/40 shadow-sm">
+                                    <span className="text-sm sm:text-base font-bold text-primary whitespace-nowrap">
+                                      Step {step.step_number}.
+                                    </span>
                                   </div>
-                                  <div className="text-xs text-muted-foreground mt-0.5">
-                                    Custom AI tool & prompt ready for this step
+                                </div>
+                                <div className="flex-1 min-w-0 pt-0.5">
+                                  <h4 className="text-base sm:text-lg font-bold mb-1.5 text-foreground leading-snug">
+                                    {step.title}
+                                  </h4>
+                                  <div className="text-sm text-muted-foreground/90 leading-relaxed">
+                                    {step.description}
                                   </div>
                                 </div>
                               </div>
-                              <button
-                                onClick={() => setActiveTab('tools')}
-                                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
-                              >
-                                View
-                                <ArrowRight className="w-4 h-4" />
-                              </button>
+
+                              {/* Tools & Prompts for this Step - Blue Box */}
+                              {step.hasCombo && (
+                                <div className="p-3 rounded-2xl border bg-blue-500/5 border-blue-500/30">
+                                  <div className="flex items-center justify-between gap-3">
+                                    <div className="flex items-start gap-2 flex-1">
+                                      <Sparkles className="w-3.5 h-3.5 mt-0.5 shrink-0 text-blue-600 dark:text-blue-400" />
+                                      <div>
+                                        <p className="text-xs font-medium mb-0.5 text-blue-600 dark:text-blue-400">
+                                          Tools & Prompts for this Step
+                                        </p>
+                                        <p className="text-xs text-muted-foreground/80 leading-snug">
+                                          Custom AI tool & prompt ready for this step
+                                        </p>
+                                      </div>
+                                    </div>
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setActiveTab('toolPrompts');
+                                      }}
+                                      className="relative group/view shrink-0"
+                                    >
+                                      <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/40 via-accent/30 to-primary/40 rounded-[2rem] blur-md opacity-40 group-hover/view:opacity-70 transition duration-500"></div>
+                                      <div className="relative flex items-center gap-2 px-5 py-2.5 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2rem] border border-primary/40 group-hover/view:border-primary/60 transition-all duration-300 overflow-hidden shadow-lg shadow-primary/10">
+                                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/view:translate-x-full transition-transform duration-1000"></div>
+                                        <span className="relative text-sm font-bold text-foreground group-hover/view:text-primary transition-colors duration-300 whitespace-nowrap">
+                                          View
+                                        </span>
+                                        <div className="relative flex items-center justify-center w-5 h-5 rounded-xl bg-primary/30 group-hover/view:bg-primary/40 transition-all duration-300">
+                                          <ArrowRight className="w-3.5 h-3.5 text-primary group-hover/view:translate-x-0.5 transition-transform duration-300" />
+                                        </div>
+                                      </div>
+                                    </button>
+                                  </div>
+                                </div>
+                              )}
                             </div>
                           </div>
-                        )}
+                        ))}
                       </div>
-                    </div>
-                  ))}
+                    </CardContent>
+                  </Card>
                 </div>
               </TabsContent>
 
@@ -304,7 +320,7 @@ Output the template with placeholders [like this] where I can insert my personal
                           <Sparkles className="w-4 h-4 text-accent" />
                           <h4 className="text-sm font-semibold text-foreground">Ready-to-Use Prompt</h4>
                         </div>
-                        <div className="rounded-lg bg-black/20 border border-white/10 p-4">
+                        <div className="rounded-lg bg-black/20 border border-white/10 p-4 max-h-80 overflow-y-auto">
                           <p className="text-sm text-foreground/90 leading-relaxed whitespace-pre-wrap font-mono">
                             {combo.prompt_text}
                           </p>
