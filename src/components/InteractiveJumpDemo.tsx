@@ -6,26 +6,7 @@ import { CheckCircle, ArrowRight, Sparkles, Clock, DollarSign, Target, AlertCirc
 import { useScrollDrivenDemo } from '@/hooks/useScrollDrivenDemo';
 
 export const InteractiveJumpDemo: React.FC = () => {
-  const { containerRef, demoState } = useScrollDrivenDemo();
-  const overviewRef = useRef<HTMLDivElement>(null);
-  const planRef = useRef<HTMLDivElement>(null);
-  const toolsRef = useRef<HTMLDivElement>(null);
-
-  // Sync scroll position based on demo state
-  useEffect(() => {
-    const refs = {
-      overview: overviewRef,
-      plan: planRef,
-      tools: toolsRef,
-    };
-    
-    const currentRef = refs[demoState.activeTab as keyof typeof refs]?.current;
-    if (currentRef && demoState.isLocked) {
-      const maxScroll = currentRef.scrollHeight - currentRef.clientHeight;
-      const targetScroll = maxScroll * demoState.scrollProgress;
-      currentRef.scrollTop = targetScroll;
-    }
-  }, [demoState.activeTab, demoState.scrollProgress, demoState.isLocked]);
+  const { containerRef, demoState, overviewRef, planRef, toolsRef } = useScrollDrivenDemo();
 
   // Real Jump #9 data - Phase 1 with first 2 steps
   const phase1Data = {

@@ -4,45 +4,27 @@ interface ScrollDrivenDemoState {
   activeTab: string;
   scrollProgress: number;
   isLocked: boolean;
-  totalProgress: number; // 0-1 across all tabs
 }
 
 export const useScrollDrivenDemo = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const overviewRef = useRef<HTMLDivElement>(null);
+  const planRef = useRef<HTMLDivElement>(null);
+  const toolsRef = useRef<HTMLDivElement>(null);
+  
   const [demoState, setDemoState] = useState<ScrollDrivenDemoState>({
     activeTab: 'overview',
     scrollProgress: 0,
     isLocked: false,
-    totalProgress: 0,
   });
   
-  const scrollAccumulatorRef = useRef(0);
   const isLockedRef = useRef(false);
-  const lastWheelTimeRef = useRef(0);
-
-  // Calculate which tab and progress based on total progress (0-1)
-  const calculateTabState = useCallback((totalProgress: number) => {
-    const clampedProgress = Math.max(0, Math.min(1, totalProgress));
-    const sectionSize = 1 / 3;
-    
-    let activeTab = 'overview';
-    let scrollProgress = 0;
-
-    if (clampedProgress < sectionSize) {
-      activeTab = 'overview';
-      scrollProgress = clampedProgress / sectionSize;
-    } else if (clampedProgress < sectionSize * 2) {
-      activeTab = 'plan';
-      scrollProgress = (clampedProgress - sectionSize) / sectionSize;
-    } else {
-      activeTab = 'tools';
-      scrollProgress = (clampedProgress - sectionSize * 2) / sectionSize;
-    }
-
-    return { activeTab, scrollProgress, totalProgress: clampedProgress };
-  }, []);
+  const totalProgressRef = useRef(0); // 0 to 3 (one unit per tab)
+  const savedScrollPositionRef = useRef(0);
 
   useEffect(() => {
+    let animationFrameId: number;
+    
     const handleWheel = (e: WheelEvent) => {
       if (!containerRef.current) return;
 
@@ -50,107 +32,176 @@ export const useScrollDrivenDemo = () => {
       const rect = container.getBoundingClientRect();
       const windowHeight = window.innerHeight;
       
-      // Check if demo section is in a position to start locking
+      // Check if demo is in viewport and ready to lock
       const sectionTop = rect.top;
       const sectionBottom = rect.bottom;
-      const headerOffset = 100;
       
-      // Demo should lock when it's near top of viewport
-      const shouldLock = sectionTop <= headerOffset && sectionBottom > windowHeight * 0.5;
+      // Lock when section top is near viewport top
+      const shouldStartLocking = sectionTop <= 120 && sectionBottom > windowHeight / 2;
       
-      if (shouldLock && !isLockedRef.current) {
-        // Lock scroll when demo enters viewport
-        console.log('🔒 LOCKING SCROLL');
+      // Start lock sequence
+      if (shouldStartLocking && !isLockedRef.current) {
+        console.log('🔒 LOCKING SCROLL - Starting demo sequence');
         isLockedRef.current = true;
-        scrollAccumulatorRef.current = 0;
+        totalProgressRef.current = 0;
+        savedScrollPositionRef.current = window.scrollY;
+        
+        // Lock body scroll
         document.body.style.overflow = 'hidden';
-        document.body.style.height = '100vh';
         document.body.style.position = 'fixed';
+        document.body.style.top = `-${savedScrollPositionRef.current}px`;
         document.body.style.width = '100%';
-        setDemoState(prev => ({ ...prev, isLocked: true, totalProgress: 0 }));
+        
+        setDemoState({
+          activeTab: 'overview',
+          scrollProgress: 0,
+          isLocked: true,
+        });
       }
 
+      // Handle locked scroll
       if (isLockedRef.current) {
         e.preventDefault();
         e.stopPropagation();
         
-        // Accumulate scroll delta
         const delta = e.deltaY;
-        const scrollSpeed = 0.0012; // Slower for more control
-        scrollAccumulatorRef.current += delta * scrollSpeed;
+        const scrollSpeed = 0.003; // Adjust for smooth experience
         
-        // Clamp between -0.1 and 1.1 to allow some buffer for unlocking
-        scrollAccumulatorRef.current = Math.max(-0.05, Math.min(1.05, scrollAccumulatorRef.current));
+        // Update total progress (0-3 range for 3 tabs)
+        totalProgressRef.current += delta * scrollSpeed;
+        totalProgressRef.current = Math.max(-0.1, Math.min(3.1, totalProgressRef.current));
         
-        console.log('📜 Progress:', scrollAccumulatorRef.current.toFixed(3));
+        const progress = totalProgressRef.current;
         
-        const newState = calculateTabState(scrollAccumulatorRef.current);
+        console.log('📊 Progress:', progress.toFixed(2));
         
-        // Check if we've completed the entire demo and scrolling forward
-        if (scrollAccumulatorRef.current >= 1.0 && delta > 0) {
-          // Unlock and allow normal scroll to continue
-          console.log('🔓 UNLOCKING SCROLL - Demo complete, continuing down');
+        // Determine which tab and scroll position
+        let activeTab = 'overview';
+        let scrollProgress = 0;
+        
+        if (progress < 1) {
+          // Overview tab (0-1)
+          activeTab = 'overview';
+          scrollProgress = Math.max(0, Math.min(1, progress));
+        } else if (progress < 2) {
+          // Plan tab (1-2)
+          activeTab = 'plan';
+          scrollProgress = Math.max(0, Math.min(1, progress - 1));
+        } else if (progress < 3) {
+          // Tools tab (2-3)
+          activeTab = 'tools';
+          scrollProgress = Math.max(0, Math.min(1, progress - 2));
+        } else {
+          activeTab = 'tools';
+          scrollProgress = 1;
+        }
+        
+        // Update state
+        setDemoState({
+          activeTab,
+          scrollProgress,
+          isLocked: true,
+        });
+        
+        // Scroll the active tab content
+        const refs = { overview: overviewRef, plan: planRef, tools: toolsRef };
+        const currentRef = refs[activeTab as keyof typeof refs]?.current;
+        
+        if (currentRef) {
+          const maxScroll = Math.max(0, currentRef.scrollHeight - currentRef.clientHeight);
+          const targetScroll = maxScroll * scrollProgress;
+          
+          // Smooth scroll animation
+          if (animationFrameId) cancelAnimationFrame(animationFrameId);
+          animationFrameId = requestAnimationFrame(() => {
+            if (currentRef) {
+              currentRef.scrollTop = targetScroll;
+            }
+          });
+        }
+        
+        // Check if completed (scrolling forward past end)
+        if (progress >= 3 && delta > 0) {
+          console.log('🔓 UNLOCKING SCROLL - Demo complete');
           isLockedRef.current = false;
+          totalProgressRef.current = 0;
+          
+          // Unlock body scroll
+          const scrollY = savedScrollPositionRef.current;
           document.body.style.overflow = '';
-          document.body.style.height = '';
           document.body.style.position = '';
+          document.body.style.top = '';
           document.body.style.width = '';
-          scrollAccumulatorRef.current = 0;
-          setDemoState({ ...newState, isLocked: false });
-          // Small delay to allow normal scroll to take over
+          window.scrollTo(0, scrollY);
+          
+          setDemoState({
+            activeTab: 'tools',
+            scrollProgress: 1,
+            isLocked: false,
+          });
+          
+          // Continue scroll momentum
           setTimeout(() => {
-            window.scrollBy({ top: 50, behavior: 'smooth' });
+            window.scrollBy({ top: 100, behavior: 'smooth' });
           }, 50);
           return;
         }
         
-        // Check if scrolling back before demo start
-        if (scrollAccumulatorRef.current <= 0 && delta < 0) {
-          // Unlock and allow scroll up
-          console.log('🔓 UNLOCKING SCROLL - Scrolling back up');
+        // Check if scrolling back past start
+        if (progress <= 0 && delta < 0) {
+          console.log('🔓 UNLOCKING SCROLL - Scrolling back');
           isLockedRef.current = false;
+          totalProgressRef.current = 0;
+          
+          // Unlock body scroll
+          const scrollY = savedScrollPositionRef.current;
           document.body.style.overflow = '';
-          document.body.style.height = '';
           document.body.style.position = '';
+          document.body.style.top = '';
           document.body.style.width = '';
-          scrollAccumulatorRef.current = 0;
-          setDemoState({ ...newState, isLocked: false });
-          // Small delay to allow normal scroll to take over
+          window.scrollTo(0, scrollY);
+          
+          setDemoState({
+            activeTab: 'overview',
+            scrollProgress: 0,
+            isLocked: false,
+          });
+          
+          // Continue scroll momentum
           setTimeout(() => {
-            window.scrollBy({ top: -50, behavior: 'smooth' });
+            window.scrollBy({ top: -100, behavior: 'smooth' });
           }, 50);
           return;
         }
-        
-        setDemoState({ ...newState, isLocked: true });
-        lastWheelTimeRef.current = Date.now();
-      }
-    };
-
-    const handleTouchMove = (e: TouchEvent) => {
-      if (isLockedRef.current) {
-        e.preventDefault();
       }
     };
 
     console.log('✅ Scroll listeners attached');
-
-    // Add wheel listener (non-passive to allow preventDefault)
     window.addEventListener('wheel', handleWheel, { passive: false });
-    window.addEventListener('touchmove', handleTouchMove, { passive: false });
 
     return () => {
-      console.log('🧹 Cleanup: removing listeners');
+      console.log('🧹 Cleanup');
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
       window.removeEventListener('wheel', handleWheel);
-      window.removeEventListener('touchmove', handleTouchMove);
-      // Cleanup: ensure scroll is unlocked
-      document.body.style.overflow = '';
-      document.body.style.height = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
-      isLockedRef.current = false;
+      
+      // Ensure unlock on cleanup
+      if (isLockedRef.current) {
+        const scrollY = savedScrollPositionRef.current;
+        document.body.style.overflow = '';
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
+        if (scrollY) window.scrollTo(0, scrollY);
+        isLockedRef.current = false;
+      }
     };
-  }, [calculateTabState]);
+  }, []);
 
-  return { containerRef, demoState };
+  return { 
+    containerRef, 
+    demoState,
+    overviewRef,
+    planRef,
+    toolsRef
+  };
 };
