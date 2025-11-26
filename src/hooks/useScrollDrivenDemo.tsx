@@ -41,11 +41,9 @@ export const useScrollDrivenDemo = () => {
         totalProgressRef.current = 0;
         savedScrollPositionRef.current = window.scrollY;
         
-        // Lock body scroll
+        // Lock body scroll - using simpler approach that doesn't break layout
         document.body.style.overflow = 'hidden';
-        document.body.style.position = 'fixed';
-        document.body.style.top = `-${savedScrollPositionRef.current}px`;
-        document.body.style.width = '100%';
+        document.body.style.height = '100vh';
         
         setDemoState({
           activeTab: 'overview',
@@ -103,24 +101,21 @@ export const useScrollDrivenDemo = () => {
           isLockedRef.current = false;
           totalProgressRef.current = 0;
           
-          // Unlock body scroll
-          const scrollY = savedScrollPositionRef.current;
+          // Unlock body scroll - don't restore old position, just unlock where we are
           document.body.style.overflow = '';
-          document.body.style.position = '';
-          document.body.style.top = '';
-          document.body.style.width = '';
-          window.scrollTo(0, scrollY);
+          document.body.style.height = '';
+          
+          // Calculate where the demo section is and scroll just past it
+          if (containerRef.current) {
+            const demoBottom = containerRef.current.getBoundingClientRect().bottom + window.scrollY;
+            window.scrollTo({ top: demoBottom + 50, behavior: 'auto' });
+          }
           
           setDemoState({
             activeTab: 'tools',
             scrollProgress: 1,
             isLocked: false,
           });
-          
-          // Continue scroll momentum
-          setTimeout(() => {
-            window.scrollBy({ top: 100, behavior: 'smooth' });
-          }, 100);
           return;
         }
         
@@ -130,24 +125,20 @@ export const useScrollDrivenDemo = () => {
           isLockedRef.current = false;
           totalProgressRef.current = 0;
           
-          // Unlock body scroll
-          const scrollY = savedScrollPositionRef.current;
+          // Unlock body scroll - restore to position before demo
           document.body.style.overflow = '';
-          document.body.style.position = '';
-          document.body.style.top = '';
-          document.body.style.width = '';
-          window.scrollTo(0, scrollY);
+          document.body.style.height = '';
+          
+          if (containerRef.current) {
+            const demoTop = containerRef.current.getBoundingClientRect().top + window.scrollY - 100;
+            window.scrollTo({ top: demoTop, behavior: 'auto' });
+          }
           
           setDemoState({
             activeTab: 'overview',
             scrollProgress: 0,
             isLocked: false,
           });
-          
-          // Continue scroll momentum
-          setTimeout(() => {
-            window.scrollBy({ top: -100, behavior: 'smooth' });
-          }, 100);
           return;
         }
       }
@@ -162,12 +153,8 @@ export const useScrollDrivenDemo = () => {
       
       // Ensure unlock on cleanup
       if (isLockedRef.current) {
-        const scrollY = savedScrollPositionRef.current;
         document.body.style.overflow = '';
-        document.body.style.position = '';
-        document.body.style.top = '';
-        document.body.style.width = '';
-        if (scrollY) window.scrollTo(0, scrollY);
+        document.body.style.height = '';
         isLockedRef.current = false;
       }
     };
