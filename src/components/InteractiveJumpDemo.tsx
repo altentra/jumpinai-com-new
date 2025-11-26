@@ -6,57 +6,51 @@ import { CheckCircle, Lightbulb, Compass, Target, MapPin, Clock, TrendingUp, Spa
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
-// Sample data from actual Jump #9 for demonstration purposes
+// Real Jump #9 data from database
 const demoJumpData = {
   overview: {
-    executiveSummary: "You're paralyzed by overthinking when brainstorming content for videos or posts, stuck in endless 'what-ifs' without clear starting points or structured plans. AI steps in to **simulate instant creative brainstorming**, **generate structured frameworks**, and **reduce decision fatigue**, turning vague ideas into actionable content blueprints. By implementing 9 specific AI tools over a clear, two-phase roadmap, you'll break through your mental blocks and produce publishable content faster than you ever could alone. **This isn't just about automation—it's about AI as your creative thinking partner, designed to unlock your potential.**",
+    executiveSummary: "This Jump is designed to transform you from a hesitant beginner overwhelmed by overthinking into a confident, AI-empowered online content creator. By systematically implementing AI tools like Claude, ChatGPT, Perplexity, Midjourney, NotebookLM, Runway, Gemini, Make.com, Synthesia, Descript, and Zapier across three progressive phases, you will break through creative paralysis, establish sustainable content workflows, and build a validated portfolio. The plan directly addresses your core challenges—uncertainty about where to start, tool overwhelm, and fear of commitment—by providing structured, beginner-friendly steps with clear outputs: AI-generated content blueprints (Phase 1), prototyped videos and automated drafts (Phase 2), and a scalable, optimized content system (Phase 3). Success hinges on embracing experimentation over perfection, maintaining small daily actions, and treating AI as a collaborative co-creator. With an investment of 100-150 hours and $50-$200 over 6-12 months, following this roadmap will equip you to consistently create engaging content, grow an audience, and turn your creative interests into tangible online presence.",
     situationAnalysis: {
-      currentState: "You're facing a classic creator's paradox: endless tools and inspiration sources, yet you're stuck in the brainstorming phase, unable to commit to a single direction. Your overthinking manifests as endless research, hesitation over 'perfect' ideas, and difficulty structuring concepts into executable steps.",
+      currentState: "You are at the starting line of your online content creation journey with a genuine interest in creative storytelling and daily life tips, but currently stalled by overthinking and uncertainty about how to begin. Your creative ideas remain abstract, lacking concrete form, and you face decision paralysis when confronted with tool choices, content formats, and initial steps. While you possess creative interests and motivation, you lack a structured system to translate ideas into published content. Your beginner status means minimal experience with AI tools, video editing, or content strategy, creating both a blank slate for learning and a need for highly accessible, step-by-step guidance. The gap between your desire to create and actual output is primarily mental and tactical rather than resource-based.",
       challenges: [
-        "**Analysis Paralysis**: Endless 'what if' loops prevent starting",
-        "**Lack of Structure**: No clear framework to organize scattered ideas",
-        "**Comparison Trap**: Constantly comparing your ideas to others' polished work"
+        "**Overthinking and Decision Paralysis:** Tendency to overanalyze choices about tools, formats, and ideas, leading to inaction and prolonged planning without execution.",
+        "**Tool Overwhelm:** Vast landscape of AI and content creation tools creates confusion about which to adopt and how to learn them efficiently.",
+        "**Fear of Starting:** Uncertainty about 'the right first step' and perfectionism causing hesitation to publish initial content, delaying valuable feedback loops.",
+        "**Lack of Structured System:** Absence of a repeatable workflow for ideation, creation, and publishing, making each content piece feel like starting from scratch.",
+        "**Beginner Knowledge Gap:** Limited familiarity with content strategy, audience engagement principles, and AI prompting techniques necessary for effective tool use."
       ],
       opportunities: [
-        "**AI as Brainstorming Partner**: Tools like Claude and ChatGPT can instantly generate structured starting points",
-        "**Trend Validation**: Perplexity provides real-time insights to validate ideas",
-        "**Rapid Prototyping**: Runway allows visual testing without full production"
+        "**AI as Brainstorming Partner:** Tools like Claude and ChatGPT can externalize and structure your creative ideas, breaking overthinking cycles by providing instant feedback.",
+        "**Low-Barrier Entry Points:** Many AI tools offer free tiers and beginner-friendly interfaces, reducing financial and technical barriers to experimentation.",
+        "**Growing Creator Economy:** High demand for authentic, relatable content in storytelling and daily life niches, with platforms favoring consistent creators.",
+        "**Automation for Consistency:** AI-powered workflows (via Make.com, Zapier) can automate repetitive tasks, freeing mental energy for creative decisions.",
+        "**Rapid Iteration Capability:** AI enables fast testing of content ideas and formats, accelerating learning through iteration rather than prolonged planning."
       ]
     },
-    strategicVision: "Transform from an idea-paralyzed creator to a confident content producer by systematically integrating AI tools that replace overthinking with structured, actionable outputs. You'll begin with foundational tools (Claude, ChatGPT, Perplexity) to generate ideas and templates, then scale to production-ready prototypes with advanced tools (Runway, Gemini, Make.com).",
+    strategicVision: "Transform from a hesitant beginner into a confident, AI-powered content creator who consistently produces engaging videos and posts that resonate with an audience interested in creative storytelling and daily life tips. By mastering strategic AI implementation, you will establish a sustainable, scalable content system that turns overthinking into decisive action, uncertainty into structured workflows, and creative ideas into published content with measurable audience growth. Your end state is a validated portfolio of 20+ pieces, a repeatable creation process requiring 5-10 hours weekly, and clear metrics showing engagement trends, positioning you to expand content types, monetize, or pursue collaborative opportunities—all grounded in the unique voice and perspective you bring to the creator economy.",
     roadmap: {
-      immediate: "Start with **Claude** for brainstorming 5-10 content ideas, then use **ChatGPT** to transform your best idea into a structured template. Set up accounts and complete your first AI-generated draft outline within the first week."
-    },
-    keyObjectives: [
-      "Replace overthinking with AI-generated starting points and structured brainstorming frameworks",
-      "Build a personal AI content toolkit spanning ideation, scripting, visualization, and automation",
-      "Achieve a repeatable workflow that produces publishable drafts within hours, not days"
-    ],
-    successMetrics: [
-      "First AI-generated content idea published within 1 week",
-      "3+ polished video or post drafts created using AI tools within 2 weeks",
-      "Daily content creation time reduced by 50% through AI automation"
-    ]
+      immediate: "**0-30 Days (Foundation Phase):** Sign up for Claude, ChatGPT, Perplexity (free tiers), and use them to generate 5-10 structured content ideas using provided prompts. Create 2-3 script templates with ChatGPT and research 3 trending topics with Perplexity. Register for Midjourney (basic $10/month) and generate 5 thumbnail concepts. Set up NotebookLM to organize all AI outputs into a searchable content library. Expected outputs: AI-generated content blueprints ready for prototyping, eliminating 'where to start' uncertainty."
+    }
   },
   plan: {
     phases: [
       {
         phase_number: 1,
         title: "Foundation Phase: Building AI Ideation Foundations",
-        duration: "Early Stage — Begin when ready",
-        description: "In this initial phase, you'll implement core AI tools like Claude, ChatGPT, and Perplexity to break through overthinking and generate your first content ideas.",
+        duration: "**Early Stage** — Begin when ready",
+        description: "In this initial phase, you'll implement core AI tools like **Claude**, **ChatGPT**, and **Perplexity** to break through overthinking and generate your first content ideas, providing structured starting points for videos and posts. This matters because AI instantly simulates creative brainstorming, turning paralysis into actionable outlines and trend insights, allowing quick experimentation without endless deliberation. By the end, you'll have **AI-generated content blueprints** ready to prototype.",
         steps: [
           {
             step_number: 1,
-            title: "Use Claude for Overthinking-Busting Brainstorming Sessions",
-            description: "Leverage Claude to overcome overthinking by inputting your interests and prompting it to generate 5-10 specific video or post ideas with structured outlines.",
-            estimated_time: "3-8 hours"
+            title: "**Use Claude for Overthinking-Busting Brainstorming Sessions**",
+            description: "Leverage **Claude** to overcome overthinking by inputting your interests, such as 'creative storytelling' or 'daily life tips,' and prompting it to generate 5-10 specific video or post ideas with structured outlines, including key hooks and calls-to-action. Experiment with follow-up prompts like 'Refine this idea for a 60-second video format' to iterate rapidly and build decision confidence. This AI implementation matters because **Claude** provides instant, focused creativity frameworks, replacing vague ideation with clear starting points in minutes. → Use **Tool #1**",
+            estimated_time: "3-8 hours (varies by pace)"
           },
           {
             step_number: 2,
-            title: "Implement ChatGPT for Step-by-Step Content Templates",
-            description: "Use ChatGPT to create starter templates by prompting it with a brainstormed idea from Claude, generating script templates with intro, body, and outro sections.",
-            estimated_time: "4-10 hours"
+            title: "**Implement ChatGPT for Step-by-Step Content Templates**",
+            description: "Use **ChatGPT** to create starter templates by prompting it with a brainstormed idea from Claude, such as 'Generate a script template for a beginner's guide video on [topic], including intro, body, and outro sections.' Customize by asking for variations like 'Make it engaging for social media' to practice iterative refinement. This step centers AI to deliver ready-to-fill blueprints, eliminating uncertainty about structure and enabling your first draft within an hour. → Use **Tool #2**",
+            estimated_time: "4-10 hours (adjust to your schedule)"
           }
         ]
       }
@@ -64,30 +58,30 @@ const demoJumpData = {
   },
   toolPrompts: [
     {
-      id: "demo-1",
+      id: "1",
       title: "Overcoming Overthinking with AI Brainstorming for Content Ideas",
-      description: "Break through creative paralysis by using Claude to generate structured content ideas instantly",
-      tool_name: "Claude (by Anthropic)",
+      description: "This combo uses Claude to generate structured content ideas based on your interests, directly busting overthinking by providing instant, focused outlines for videos or posts, turning uncertainty into actionable starting points.",
+      tool_name: "Claude",
       tool_url: "https://claude.ai",
-      category: "Ideation & Brainstorming",
+      category: "AI Ideation and Brainstorming",
       difficulty_level: "Beginner",
-      setup_time: "5-10 minutes",
-      cost_estimate: "Free tier available; $20/month for Pro",
-      prompt_text: "I want to create content for [videos/posts] in the [specific niche/topic area] space. I'm interested in [list 2-3 core interests or themes]. Generate 5-10 specific content ideas with: 1) A catchy title/hook, 2) A 3-sentence outline (intro, body, conclusion), 3) Suggested call-to-action. Focus on beginner-friendly, engaging topics that can be executed in under 60 seconds.",
-      prompt_instructions: "1. Log into Claude at claude.ai\n2. Copy the prompt above and replace bracketed placeholders with your specifics\n3. Paste into Claude and press Enter\n4. Review the generated ideas and pick 2-3 that resonate\n5. Ask Claude to refine your chosen ideas with follow-up prompts"
+      setup_time: "5 minutes (sign up and start chatting)",
+      cost_estimate: "Free tier sufficient; Pro at $20/month for advanced features if needed",
+      prompt_text: "You are an expert content strategist specializing in helping beginners overcome creative paralysis through structured ideation. My goal is to create engaging online videos and posts, but I struggle with overthinking and not knowing where to start. My interests include creative storytelling and daily life tips.\n\nGenerate 5-10 specific, beginner-friendly content ideas tailored to short-form videos (under 60 seconds) or social media posts. For each idea, provide a structured outline including:\n\n1) A compelling hook to grab attention in the first 5 seconds;\n2) Main body with 3-4 key points or steps, keeping it simple and relatable;\n3) A strong call-to-action to encourage engagement like comments or shares;\n4) Estimated format (e.g., TikTok-style video or Instagram carousel).\n\nEnsure ideas are original, aligned with 2025 trends like authentic personal narratives and quick value delivery, and varied across my interests to spark inspiration without overwhelming choices. Prioritize ideas that build confidence for rapid prototyping. After the list, suggest 2 follow-up refinement prompts I can use, such as adapting one idea for a specific platform.\n\nOutput in a clear, numbered format with bold headings for easy scanning. Success criteria: Ideas must be immediately actionable, reducing decision fatigue, and feel personally tailored to foster my unique voice.",
+      prompt_instructions: "Copy-paste this prompt directly into Claude's interface. Start with your interests (e.g., replace 'creative storytelling and daily life tips' with yours if different). After generating, use Claude's chat to refine by asking follow-ups like 'Refine idea #3 for a 60-second video format with more humor.' Experiment with 2-3 sessions to build prompting intuition, spending 30-60 minutes per session to avoid overthinking."
     },
     {
-      id: "demo-2",
-      title: "Creating Step-by-Step Content Templates to Eliminate Starting Uncertainty",
-      description: "Transform brainstormed ideas into ready-to-fill content templates using ChatGPT",
-      tool_name: "ChatGPT (by OpenAI)",
-      tool_url: "https://chat.openai.com",
-      category: "Content Structuring",
+      id: "2",
+      title: "Building Reusable Content Structures with AI Templates",
+      description: "This combo uses ChatGPT to transform raw ideas into fillable script templates, eliminating the 'blank page' fear by providing structured frameworks for intros, bodies, and outros that you customize, speeding up content creation and building repeatable workflows.",
+      tool_name: "ChatGPT",
+      tool_url: "https://chatgpt.com",
+      category: "Content Structuring and Scripting",
       difficulty_level: "Beginner",
-      setup_time: "5 minutes",
-      cost_estimate: "Free tier available; $20/month for Plus",
-      prompt_text: "Based on this content idea: [paste idea from Claude], generate a detailed script template for a [video/post] that includes: 1) Opening hook (first 3 seconds), 2) Main body with 3 key points, 3) Transition phrases between sections, 4) Closing call-to-action. Format it as a fill-in-the-blank template I can customize. Make it engaging for social media and optimized for [platform: TikTok/Instagram/YouTube Shorts].",
-      prompt_instructions: "1. Sign in to ChatGPT at chat.openai.com\n2. Paste your Claude-generated idea into the prompt\n3. Specify your target platform (TikTok, Instagram, etc.)\n4. Copy the generated template and customize it\n5. Save your template for future use"
+      setup_time: "5 minutes (sign up and start prompting)",
+      cost_estimate: "Free tier works; ChatGPT Plus at $20/month for faster responses and GPT-4 access",
+      prompt_text: "You are a professional scriptwriter and content strategist helping beginners create structured, engaging content. I have a content idea: [Insert your specific idea from Claude here, e.g., 'A 60-second video on 3 daily habits that boost creativity for busy people'].\n\nGenerate a detailed script template tailored to this idea for a short-form video (under 90 seconds) or social media post. Structure the template with clear sections:\n\n1) **Hook (First 5-7 seconds):** Write 2 attention-grabbing opening lines that create curiosity or relatability, optimized for stopping scrollers.\n\n2) **Introduction (7-15 seconds):** Provide a brief context-setting statement that positions the value (e.g., 'If you're stuck in a creativity rut, these 3 simple habits changed everything for me').\n\n3) **Main Body (40-60 seconds):** Break the core content into 3-4 digestible points or steps, each with:\n   - A subheading (bold)\n   - 2-3 sentences of explanation\n   - A relatable example or quick tip\n   - Visual cue suggestion (e.g., 'Show a timer counting down' or 'Display text overlay: Habit #1')\n\n4) **Conclusion/Call-to-Action (10-15 seconds):** Write a closing statement that reinforces the takeaway and prompts engagement (e.g., 'Try habit #2 today and let me know how it goes in the comments!').\n\n5) **Platform Adaptations:** Suggest 2 variations of this script—one for TikTok (ultra-concise, trend-driven) and one for Instagram Reels (slightly more polished narrative).\n\nOutput the template with placeholders [like this] where I can insert my personal examples or details. Ensure the tone is conversational, authentic, and beginner-friendly, avoiding jargon. Success criteria: The template should feel like a guided framework I can fill in within 20-30 minutes, reducing decision fatigue while maintaining my voice.",
+      prompt_instructions: "Copy this prompt template and replace the bracketed [content idea] section with your actual idea from Claude. Paste into ChatGPT. After receiving the template, save it to a document. Customize the placeholders with your own examples. For subsequent content, reuse this template structure to speed up creation."
     }
   ]
 };
@@ -273,52 +267,6 @@ export const InteractiveJumpDemo: React.FC = () => {
                   </Card>
                 </div>
 
-                {/* Key Objectives & Success Metrics */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-                  <Card className="glass backdrop-blur-xl border border-border/40 rounded-2xl">
-                    <CardHeader>
-                      <CardTitle className="text-base sm:text-lg flex items-center gap-2">
-                        <Target className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
-                        Key Objectives
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <ul className="space-y-3">
-                        {demoJumpData.overview.keyObjectives.map((obj, idx) => (
-                          <li key={idx} className="text-xs sm:text-sm flex items-center gap-2">
-                            <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                              <span className="text-[10px] sm:text-xs font-semibold text-primary">{idx + 1}</span>
-                            </div>
-                            <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-none flex-1 text-xs sm:text-sm">
-                              <ReactMarkdown remarkPlugins={[remarkGfm]}>{obj}</ReactMarkdown>
-                            </div>
-                          </li>
-                        ))}
-                      </ul>
-                    </CardContent>
-                  </Card>
-
-                  <Card className="glass backdrop-blur-xl border border-border/40 rounded-2xl">
-                    <CardHeader>
-                      <CardTitle className="text-base sm:text-lg flex items-center gap-2">
-                        <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
-                        Success Metrics
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <ul className="space-y-3">
-                        {demoJumpData.overview.successMetrics.map((metric, idx) => (
-                          <li key={idx} className="text-xs sm:text-sm flex items-center gap-2">
-                            <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 text-primary flex-shrink-0" />
-                            <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-none flex-1 text-xs sm:text-sm">
-                              <ReactMarkdown remarkPlugins={[remarkGfm]}>{metric}</ReactMarkdown>
-                            </div>
-                          </li>
-                        ))}
-                      </ul>
-                    </CardContent>
-                  </Card>
-                </div>
               </TabsContent>
 
               {/* Plan Tab */}
