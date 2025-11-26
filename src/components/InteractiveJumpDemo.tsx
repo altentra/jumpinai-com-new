@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle, Wrench, ArrowRight, Sparkles } from 'lucide-react';
+import { CheckCircle, ArrowRight, Sparkles } from 'lucide-react';
 
 export const InteractiveJumpDemo: React.FC = () => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -142,29 +142,46 @@ Output the template with placeholders [like this] where I can insert my personal
           <div className="relative h-[380px] overflow-hidden">
             <div className="h-full overflow-y-auto custom-scrollbar">
               {/* Overview Tab */}
-              <TabsContent value="overview" className="p-8 space-y-8 mt-0">
-                <div className="prose prose-invert max-w-none">
-                  <div className="text-foreground/90 leading-relaxed space-y-4">
-                    <p>You're ready to jump into AI-powered content creation for your YouTube channel. This personalized strategy roadmap delivers a comprehensive, step-by-step plan tailored to help you eliminate creative blocks, generate consistent video ideas, craft engaging scripts, and maintain momentum in your content production.</p>
-                    
-                    <p>This roadmap is built specifically around your current situation—struggling with overthinking during ideation—and your goals of producing regular, high-quality content without burning out. You'll discover exactly which AI tools to use, when to use them, and how to integrate them seamlessly into your workflow to transform from hesitant creator to confident content producer.</p>
-                  </div>
+              <TabsContent value="overview" className="mt-0 space-y-6">
+                {/* Executive Summary */}
+                <div className="relative group">
+                  <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
+                  <Card className="relative glass backdrop-blur-lg bg-card/80 border border-border hover:border-primary/40 transition-all duration-300 rounded-2xl">
+                    <CardHeader>
+                      <CardTitle className="text-base sm:text-lg flex items-center gap-2">
+                        <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+                        Executive Summary
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-none break-words overflow-wrap-anywhere text-xs sm:text-sm">
+                        <p>You're ready to jump into AI-powered content creation for your YouTube channel. This personalized strategy roadmap delivers a comprehensive, step-by-step plan tailored to help you eliminate creative blocks, generate consistent video ideas, craft engaging scripts, and maintain momentum in your content production.</p>
+                        <p>This roadmap is built specifically around your current situation—struggling with overthinking during ideation—and your goals of producing regular, high-quality content without burning out. You'll discover exactly which AI tools to use, when to use them, and how to integrate them seamlessly into your workflow to transform from hesitant creator to confident content producer.</p>
+                      </div>
+                    </CardContent>
+                  </Card>
                 </div>
 
-                <div className="space-y-6">
-                  <h3 className="text-lg font-semibold text-foreground">Strategic Roadmap</h3>
-                  
-                  <div className="space-y-4">
-                    <div className="space-y-3">
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm font-medium text-primary">Immediate Actions</span>
+                {/* Strategic Roadmap */}
+                <div className="relative group">
+                  <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
+                  <Card className="relative glass backdrop-blur-lg bg-card/80 border border-border hover:border-primary/40 transition-all duration-300 rounded-2xl">
+                    <CardHeader>
+                      <CardTitle className="text-base sm:text-lg flex items-center gap-2">
+                        <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+                        Strategic Roadmap
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div>
+                        <h4 className="font-semibold text-xs sm:text-sm mb-2">Immediate Actions</h4>
+                        <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-none text-xs sm:text-sm space-y-2">
+                          <p><strong>Set up your AI toolkit:</strong> Create accounts for Claude, ChatGPT, and Perplexity—three free or low-cost AI platforms that complement each other for ideation, scripting, and research.</p>
+                          <p><strong>Run your first brainstorming session:</strong> Spend 20 minutes with Claude generating 10 video ideas based on your interests and niche.</p>
+                        </div>
                       </div>
-                      <div className="text-sm text-foreground/80 leading-relaxed space-y-2">
-                        <p><strong>Set up your AI toolkit:</strong> Create accounts for Claude, ChatGPT, and Perplexity—three free or low-cost AI platforms that complement each other for ideation, scripting, and research.</p>
-                        <p><strong>Run your first brainstorming session:</strong> Spend 20 minutes with Claude generating 10 video ideas based on your interests and niche.</p>
-                      </div>
-                    </div>
-                  </div>
+                    </CardContent>
+                  </Card>
                 </div>
               </TabsContent>
 
@@ -267,74 +284,90 @@ Output the template with placeholders [like this] where I can insert my personal
               </TabsContent>
 
               {/* Tools & Prompts Tab */}
-              <TabsContent value="toolPrompts" className="p-8 space-y-6 mt-0">
+              <TabsContent value="toolPrompts" className="mt-0 space-y-6">
                 {combosData.map((combo, index) => (
-                  <div
-                    key={index}
-                    className="rounded-xl bg-gradient-to-br from-white/[0.03] via-white/[0.01] to-white/[0.03] border border-white/10 backdrop-blur-sm p-6 space-y-6"
-                  >
-                    {/* Header */}
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-3">
-                          <div className="px-2.5 py-1 rounded-md bg-primary/20 border border-primary/30">
-                            <span className="text-xs font-bold text-primary">#{combo.number}</span>
-                          </div>
-                          <h3 className="text-lg font-semibold text-foreground leading-tight">
-                            {combo.title}
-                          </h3>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Tool Info */}
-                    <div className="space-y-4">
-                      <div className="flex items-start gap-3">
-                        <Wrench className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-2">
-                            <h4 className="text-sm font-semibold text-foreground">{combo.tool_name}</h4>
-                            <span className="px-2 py-0.5 rounded text-xs bg-primary/20 text-primary border border-primary/30">
-                              {combo.tool_type}
-                            </span>
-                          </div>
-                          <p className="text-sm text-foreground/70 leading-relaxed mb-3">
-                            {combo.description}
-                          </p>
-                          <div className="flex flex-wrap gap-4 text-xs text-muted-foreground mb-3">
-                            <span>⏱️ Setup: {combo.setup_time}</span>
-                            <span>💰 {combo.cost_estimate}</span>
-                            <span>📊 {combo.difficulty_level}</span>
-                          </div>
-                          <div className="flex items-center gap-2 text-xs">
-                            <span className="px-2 py-1 rounded bg-secondary/50 text-secondary-foreground">
+                  <div key={index} className="relative group">
+                    <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
+                    <Card className="relative glass backdrop-blur-lg bg-card/80 border border-border hover:border-primary/40 transition-all duration-300">
+                      <CardHeader className="pb-3">
+                        <div className="flex flex-col gap-2 mb-2">
+                          <CardTitle className="flex items-center gap-2 text-lg">
+                            <Sparkles className="w-5 h-5 text-primary flex-shrink-0" />
+                            <span className="font-semibold break-words">{combo.number}. {combo.title}</span>
+                          </CardTitle>
+                          {combo.category && (
+                            <Badge variant="outline" className="w-fit text-xs self-end">
                               {combo.category}
-                            </span>
+                            </Badge>
+                          )}
+                        </div>
+                        <p className="text-xs sm:text-sm text-foreground leading-relaxed">
+                          {combo.description}
+                        </p>
+                      </CardHeader>
+
+                      <CardContent className="space-y-4">
+                        {/* Tool Information */}
+                        <div className="flex items-center gap-3">
+                          <span className="text-sm font-semibold text-foreground/90 whitespace-nowrap">Tool:</span>
+                          <a
+                            href={combo.tool_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="relative group/tool"
+                          >
+                            <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover/tool:opacity-60 transition duration-500"></div>
+                            <div className="relative flex items-center gap-3 px-5 py-3 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover/tool:border-primary/50 transition-all duration-300 overflow-hidden">
+                              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover/tool:translate-x-full transition-transform duration-1000"></div>
+                              <span className="relative text-sm sm:text-base font-bold text-foreground group-hover/tool:text-primary transition-colors duration-300 whitespace-nowrap">
+                                {combo.tool_name}
+                              </span>
+                              <div className="relative flex items-center justify-center w-6 h-6 rounded-xl bg-primary/20 group-hover/tool:bg-primary/30 transition-all duration-300">
+                                <ArrowRight className="w-4 h-4 text-primary group-hover/tool:translate-x-0.5 group-hover/tool:-translate-y-0.5 transition-transform duration-300" />
+                              </div>
+                            </div>
+                          </a>
+                        </div>
+
+                        {/* Prompt Display */}
+                        <div className="space-y-3">
+                          <span className="text-sm font-medium flex items-center gap-2">
+                            <Sparkles className="w-4 h-4 text-primary" />
+                            Ready-to-Use Prompt
+                          </span>
+                          <div className="bg-muted/30 border border-border rounded-lg p-3">
+                            <pre className="text-xs text-muted-foreground whitespace-pre-wrap font-mono leading-relaxed break-words overflow-wrap-anywhere">
+                              {combo.prompt_text}
+                            </pre>
                           </div>
                         </div>
-                      </div>
 
-                      {/* Prompt */}
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-2">
-                          <Sparkles className="w-4 h-4 text-accent" />
-                          <h4 className="text-sm font-semibold text-foreground">Ready-to-Use Prompt</h4>
+                        {/* How to Use */}
+                        <div className="relative group/section">
+                          <div className="absolute -inset-0.5 bg-gradient-to-r from-yellow-500/20 to-amber-500/20 rounded-2xl blur opacity-30 group-hover/section:opacity-50 transition duration-300"></div>
+                          <div className="relative p-3 bg-gradient-to-br from-yellow-500/10 via-yellow-500/5 to-amber-500/10 backdrop-blur-sm border border-yellow-500/20 rounded-2xl hover:border-yellow-500/30 transition-all duration-300">
+                            <div className="flex items-start gap-2">
+                              <Sparkles className="w-4 h-4 text-yellow-700 dark:text-yellow-400 mt-0.5 shrink-0" />
+                              <div className="flex-1">
+                                <p className="text-xs font-medium text-yellow-700 dark:text-yellow-400 mb-1">How to Use</p>
+                                <p className="text-xs sm:text-sm text-foreground leading-relaxed">
+                                  {combo.prompt_instructions}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
                         </div>
-                        <div className="rounded-lg bg-black/20 border border-white/10 p-4 max-h-80 overflow-y-auto">
-                          <p className="text-sm text-foreground/90 leading-relaxed whitespace-pre-wrap font-mono">
-                            {combo.prompt_text}
-                          </p>
-                        </div>
-                      </div>
 
-                      {/* Instructions */}
-                      <div className="space-y-2">
-                        <h4 className="text-sm font-semibold text-foreground">How to Use</h4>
-                        <p className="text-sm text-foreground/70 leading-relaxed">
-                          {combo.prompt_instructions}
-                        </p>
-                      </div>
-                    </div>
+                        {/* Additional Info */}
+                        <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
+                          <span>⏱️ {combo.setup_time}</span>
+                          <span>•</span>
+                          <span>💰 {combo.cost_estimate}</span>
+                          <span>•</span>
+                          <span>📊 {combo.difficulty_level}</span>
+                        </div>
+                      </CardContent>
+                    </Card>
                   </div>
                 ))}
               </TabsContent>
