@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card } from '@/components/ui/card';
-import { CheckCircle2, Wrench, ArrowRight, Sparkles } from 'lucide-react';
+import { CheckCircle, Wrench, ArrowRight, Sparkles } from 'lucide-react';
 
 export const InteractiveJumpDemo: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'overview' | 'plan' | 'tools'>('overview');
+  const [activeTab, setActiveTab] = useState('overview');
 
   // Real Jump #9 data - Phase 1 with first 2 steps
   const phase1Data = {
@@ -91,38 +92,56 @@ Output the template with placeholders [like this] where I can insert my personal
   ];
 
   return (
-    <div className="w-full max-w-7xl mx-auto">
-      <Card className="relative overflow-hidden bg-gradient-to-br from-card/50 via-card to-card/50 backdrop-blur-sm border-white/10">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 pointer-events-none" />
-        
-        {/* Tabs */}
-        <div className="relative border-b border-white/10">
-          <div className="flex gap-2 p-4">
-            {(['overview', 'plan', 'tools'] as const).map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`
-                  flex items-center gap-2 px-6 py-3 rounded-lg transition-all duration-200 font-medium
-                  ${activeTab === tab 
-                    ? 'bg-primary text-primary-foreground shadow-lg' 
-                    : 'text-muted-foreground hover:text-foreground hover:bg-white/5'
-                  }
-                `}
+    <div className="w-full max-w-5xl mx-auto">
+      <div className="glass rounded-2xl border border-primary/20 overflow-hidden backdrop-blur-xl shadow-xl">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          {/* Tab Navigation - Original styling */}
+          <div className="border-b border-border/50 bg-gradient-to-r from-background/95 via-background/90 to-background/95 backdrop-blur-xl">
+            <TabsList className="w-full grid grid-cols-3 gap-1.5 p-2 bg-transparent h-auto">
+              <TabsTrigger 
+                value="overview" 
+                className="relative flex items-center justify-center gap-2 text-sm font-semibold px-4 py-2.5
+                  data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary/20 data-[state=active]:to-primary/10 
+                  data-[state=active]:text-primary data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20
+                  data-[state=active]:border data-[state=active]:border-primary/30
+                  text-muted-foreground hover:text-foreground hover:bg-accent/50
+                  transition-all duration-300 rounded-lg hover:scale-[1.02] group"
               >
-                <CheckCircle2 className="w-4 h-4" />
-                {tab === 'overview' ? 'Overview' : tab === 'plan' ? 'Plan' : 'Tools & Prompts'}
-              </button>
-            ))}
+                <CheckCircle className="w-4 h-4 text-green-600 dark:text-green-500" />
+                <span className="tracking-wide">Overview</span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="plan" 
+                className="relative flex items-center justify-center gap-2 text-sm font-semibold px-4 py-2.5
+                  data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary/20 data-[state=active]:to-primary/10 
+                  data-[state=active]:text-primary data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20
+                  data-[state=active]:border data-[state=active]:border-primary/30
+                  text-muted-foreground hover:text-foreground hover:bg-accent/50
+                  transition-all duration-300 rounded-lg hover:scale-[1.02] group"
+              >
+                <CheckCircle className="w-4 h-4 text-green-600 dark:text-green-500" />
+                <span className="tracking-wide">Plan</span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="toolPrompts" 
+                className="relative flex items-center justify-center gap-2 text-sm font-semibold px-4 py-2.5
+                  data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary/20 data-[state=active]:to-primary/10 
+                  data-[state=active]:text-primary data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20
+                  data-[state=active]:border data-[state=active]:border-primary/30
+                  text-muted-foreground hover:text-foreground hover:bg-accent/50
+                  transition-all duration-300 rounded-lg hover:scale-[1.02] group"
+              >
+                <CheckCircle className="w-4 h-4 text-green-600 dark:text-green-500" />
+                <span className="tracking-wide">Tools & Prompts</span>
+              </TabsTrigger>
+            </TabsList>
           </div>
-        </div>
 
-        {/* Tab Content */}
-        <div className="relative">
-          <div className="max-h-[380px] overflow-y-auto">
-            {/* Overview Tab */}
-            {activeTab === 'overview' && (
-              <div className="p-8 space-y-8">
+          {/* Tab Content - Limited height with scroll and fade at bottom */}
+          <div className="relative h-[380px] overflow-hidden">
+            <div className="h-full overflow-y-auto custom-scrollbar">
+              {/* Overview Tab */}
+              <TabsContent value="overview" className="p-8 space-y-8 mt-0">
                 <div className="prose prose-invert max-w-none">
                   <div className="text-foreground/90 leading-relaxed space-y-4">
                     <p>You're ready to jump into AI-powered content creation for your YouTube channel. This personalized strategy roadmap delivers a comprehensive, step-by-step plan tailored to help you eliminate creative blocks, generate consistent video ideas, craft engaging scripts, and maintain momentum in your content production.</p>
@@ -146,12 +165,10 @@ Output the template with placeholders [like this] where I can insert my personal
                     </div>
                   </div>
                 </div>
-              </div>
-            )}
+              </TabsContent>
 
-            {/* Plan Tab */}
-            {activeTab === 'plan' && (
-              <div className="p-8 space-y-8">
+              {/* Plan Tab */}
+              <TabsContent value="plan" className="p-8 space-y-8 mt-0">
                 {/* Phase Header */}
                 <div className="space-y-4">
                   <div className="flex items-start gap-4">
@@ -231,12 +248,10 @@ Output the template with placeholders [like this] where I can insert my personal
                     </div>
                   ))}
                 </div>
-              </div>
-            )}
+              </TabsContent>
 
-            {/* Tools & Prompts Tab */}
-            {activeTab === 'tools' && (
-              <div className="p-8 space-y-6">
+              {/* Tools & Prompts Tab */}
+              <TabsContent value="toolPrompts" className="p-8 space-y-6 mt-0">
                 {combosData.map((combo, index) => (
                   <div
                     key={index}
@@ -306,14 +321,14 @@ Output the template with placeholders [like this] where I can insert my personal
                     </div>
                   </div>
                 ))}
-              </div>
-            )}
-          </div>
+              </TabsContent>
+            </div>
 
-          {/* Bottom Fade */}
-          <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-card via-card/80 to-transparent pointer-events-none" />
-        </div>
-      </Card>
+            {/* Bottom Fade */}
+            <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-card via-card/80 to-transparent pointer-events-none" />
+          </div>
+        </Tabs>
+      </div>
     </div>
   );
 };
