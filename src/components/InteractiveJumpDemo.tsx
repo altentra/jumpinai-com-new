@@ -93,12 +93,14 @@ Output the template with placeholders [like this] where I can insert my personal
   ];
 
   return (
-    <div className="w-full max-w-5xl mx-auto">
-      <div className="glass rounded-2xl border border-primary/20 overflow-hidden backdrop-blur-xl shadow-xl">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          {/* Tab Navigation - Original styling */}
-          <div className="border-b border-border/50 bg-gradient-to-r from-background/95 via-background/90 to-background/95 backdrop-blur-xl">
-            <TabsList className="w-full grid grid-cols-3 gap-1.5 p-2 bg-transparent h-auto">
+    <div className="w-full max-w-5xl mx-auto px-6 sm:px-8 lg:px-12">
+      <div className="relative rounded-xl overflow-hidden border border-white/10 shadow-2xl bg-gradient-to-br from-white/[0.03] via-white/[0.02] to-white/[0.03] backdrop-blur-sm p-1">
+        <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent rounded-xl opacity-30"></div>
+        <div className="relative glass rounded-2xl overflow-hidden backdrop-blur-xl shadow-xl">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            {/* Tab Navigation - Original styling */}
+            <div className="border-b border-border/50 bg-gradient-to-r from-background/95 via-background/90 to-background/95 backdrop-blur-xl">
+              <TabsList className="w-full grid grid-cols-3 gap-1.5 p-2 bg-transparent h-auto">
               <TabsTrigger 
                 value="overview" 
                 className="relative flex items-center justify-center gap-2 text-sm font-semibold px-4 py-2.5
@@ -139,7 +141,7 @@ Output the template with placeholders [like this] where I can insert my personal
           </div>
 
           {/* Tab Content - Limited height with scroll and fade at bottom */}
-          <div className="relative h-[380px] overflow-hidden">
+          <div className="relative h-[360px] overflow-hidden">
             <div className="h-full overflow-y-auto custom-scrollbar">
               {/* Overview Tab */}
               <TabsContent value="overview" className="mt-0 space-y-6 p-6">
@@ -588,5 +590,6 @@ Output the template with placeholders [like this] where I can insert my personal
         </Tabs>
       </div>
     </div>
-  );
+  </div>
+);
 };
