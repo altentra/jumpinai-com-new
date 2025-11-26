@@ -1,11 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { CheckCircle, ArrowRight, Sparkles, Clock, DollarSign, Target, AlertCircle, TrendingUp, Eye, Route, Lightbulb, Compass, MapPin } from 'lucide-react';
+import { useScrollDrivenDemo } from '@/hooks/useScrollDrivenDemo';
 
 export const InteractiveJumpDemo: React.FC = () => {
-  const [activeTab, setActiveTab] = useState('overview');
+  const { containerRef, demoState } = useScrollDrivenDemo();
+  const overviewRef = useRef<HTMLDivElement>(null);
+  const planRef = useRef<HTMLDivElement>(null);
+  const toolsRef = useRef<HTMLDivElement>(null);
+
+  // Sync scroll position based on demo state
+  useEffect(() => {
+    const refs = {
+      overview: overviewRef,
+      plan: planRef,
+      tools: toolsRef,
+    };
+    
+    const currentRef = refs[demoState.activeTab as keyof typeof refs]?.current;
+    if (currentRef && demoState.isActive) {
+      const maxScroll = currentRef.scrollHeight - currentRef.clientHeight;
+      const targetScroll = maxScroll * demoState.scrollProgress;
+      currentRef.scrollTop = targetScroll;
+    }
+  }, [demoState.activeTab, demoState.scrollProgress, demoState.isActive]);
 
   // Real Jump #9 data - Phase 1 with first 2 steps
   const phase1Data = {
@@ -93,11 +113,11 @@ Output the template with placeholders [like this] where I can insert my personal
   ];
 
   return (
-    <div className="w-full max-w-5xl mx-auto px-6 sm:px-8 lg:px-12">
+    <div ref={containerRef} className="w-full max-w-5xl mx-auto px-6 sm:px-8 lg:px-12">
       <div className="relative rounded-xl overflow-hidden border border-white/10 shadow-2xl bg-gradient-to-br from-white/[0.03] via-white/[0.02] to-white/[0.03] backdrop-blur-sm p-1">
         <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent rounded-xl opacity-30"></div>
         <div className="relative glass rounded-2xl overflow-hidden backdrop-blur-xl shadow-xl">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <Tabs value={demoState.activeTab} className="w-full pointer-events-none">
             {/* Tab Navigation - Original styling */}
             <div className="border-b border-border/50 bg-gradient-to-r from-background/95 via-background/90 to-background/95 backdrop-blur-xl">
               <TabsList className="w-full grid grid-cols-3 gap-1.5 p-2 bg-transparent h-auto">
@@ -141,10 +161,14 @@ Output the template with placeholders [like this] where I can insert my personal
           </div>
 
           {/* Tab Content - Limited height with scroll and fade at bottom */}
-          <div className="relative h-[360px] overflow-hidden">
-            <div className="h-full overflow-y-auto custom-scrollbar">
+            <div className="relative h-[360px] overflow-hidden">
               {/* Overview Tab */}
-              <TabsContent value="overview" className="mt-0 space-y-6 p-6">
+              <TabsContent value="overview" className="mt-0 h-full overflow-hidden">
+                <div 
+                  ref={overviewRef} 
+                  className="h-full overflow-y-auto space-y-6 p-6" 
+                  style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                >
                 {/* Executive Summary */}
                 <div className="relative group">
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
@@ -317,10 +341,16 @@ Output the template with placeholders [like this] where I can insert my personal
                     </CardContent>
                   </Card>
                 </div>
-              </TabsContent>
+              </div>
+            </TabsContent>
 
               {/* Plan Tab */}
-              <TabsContent value="plan" className="p-8 space-y-8 mt-0">
+              <TabsContent value="plan" className="mt-0 h-full overflow-hidden">
+                <div 
+                  ref={planRef} 
+                  className="h-full overflow-y-auto space-y-8 p-8" 
+                  style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                >
                 <div className="relative group">
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
                   <Card className="relative glass backdrop-blur-lg bg-card/80 border border-border hover:border-primary/40 transition-all duration-300">
@@ -390,7 +420,7 @@ Output the template with placeholders [like this] where I can insert my personal
                                     <button
                                       onClick={(e) => {
                                         e.stopPropagation();
-                                        setActiveTab('toolPrompts');
+                                        // Note: Tab switching handled by scroll animation
                                       }}
                                       className="relative group/view shrink-0"
                                     >
@@ -415,10 +445,16 @@ Output the template with placeholders [like this] where I can insert my personal
                     </CardContent>
                   </Card>
                 </div>
-              </TabsContent>
+              </div>
+            </TabsContent>
 
               {/* Tools & Prompts Tab */}
-              <TabsContent value="toolPrompts" className="mt-0 space-y-6 p-6">
+              <TabsContent value="tools" className="mt-0 h-full overflow-hidden">
+                <div 
+                  ref={toolsRef} 
+                  className="h-full overflow-y-auto space-y-6 p-6" 
+                  style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                >
                 {combosData.map((combo, index) => (
                   <div key={index} className="relative group">
                     <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
@@ -581,12 +617,12 @@ Output the template with placeholders [like this] where I can insert my personal
                     </Card>
                   </div>
                 ))}
-              </TabsContent>
-            </div>
-
-            {/* Bottom Fade */}
-            <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-card via-card/80 to-transparent pointer-events-none" />
+              </div>
+            </TabsContent>
           </div>
+
+          {/* Bottom Fade */}
+          <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-card via-card/80 to-transparent pointer-events-none" />
         </Tabs>
       </div>
     </div>
