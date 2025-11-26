@@ -51,22 +51,12 @@ export const useScrollDrivenDemo = () => {
       const windowHeight = window.innerHeight;
       
       // Check if demo section is in a position to start locking
-      // Lock when top of section reaches top of viewport (with small offset for header)
       const sectionTop = rect.top;
       const sectionBottom = rect.bottom;
-      const headerOffset = 100; // Account for any header
+      const headerOffset = 100;
       
-      // Demo should lock when it's centered in viewport
+      // Demo should lock when it's near top of viewport
       const shouldLock = sectionTop <= headerOffset && sectionBottom > windowHeight * 0.5;
-      
-      console.log('Scroll Debug:', {
-        isLocked: isLockedRef.current,
-        sectionTop,
-        sectionBottom,
-        windowHeight,
-        shouldLock,
-        accumulator: scrollAccumulatorRef.current
-      });
       
       if (shouldLock && !isLockedRef.current) {
         // Lock scroll when demo enters viewport
@@ -75,44 +65,60 @@ export const useScrollDrivenDemo = () => {
         scrollAccumulatorRef.current = 0;
         document.body.style.overflow = 'hidden';
         document.body.style.height = '100vh';
-        setDemoState(prev => ({ ...prev, isLocked: true }));
+        document.body.style.position = 'fixed';
+        document.body.style.width = '100%';
+        setDemoState(prev => ({ ...prev, isLocked: true, totalProgress: 0 }));
       }
 
       if (isLockedRef.current) {
         e.preventDefault();
         e.stopPropagation();
         
-        // Accumulate scroll delta (normalized for different devices)
+        // Accumulate scroll delta
         const delta = e.deltaY;
-        const scrollSpeed = 0.0015; // Adjusted sensitivity
+        const scrollSpeed = 0.0012; // Slower for more control
         scrollAccumulatorRef.current += delta * scrollSpeed;
         
-        console.log('📜 Scrolling locked, accumulator:', scrollAccumulatorRef.current);
+        // Clamp between -0.1 and 1.1 to allow some buffer for unlocking
+        scrollAccumulatorRef.current = Math.max(-0.05, Math.min(1.05, scrollAccumulatorRef.current));
         
-        // Clamp between 0 and 1
-        scrollAccumulatorRef.current = Math.max(0, Math.min(1, scrollAccumulatorRef.current));
+        console.log('📜 Progress:', scrollAccumulatorRef.current.toFixed(3));
         
         const newState = calculateTabState(scrollAccumulatorRef.current);
         
-        // Check if we've completed the entire demo
-        if (scrollAccumulatorRef.current >= 1 && delta > 0) {
+        // Check if we've completed the entire demo and scrolling forward
+        if (scrollAccumulatorRef.current >= 1.0 && delta > 0) {
           // Unlock and allow normal scroll to continue
-          console.log('🔓 UNLOCKING SCROLL - Demo complete');
+          console.log('🔓 UNLOCKING SCROLL - Demo complete, continuing down');
           isLockedRef.current = false;
           document.body.style.overflow = '';
           document.body.style.height = '';
+          document.body.style.position = '';
+          document.body.style.width = '';
+          scrollAccumulatorRef.current = 0;
           setDemoState({ ...newState, isLocked: false });
+          // Small delay to allow normal scroll to take over
+          setTimeout(() => {
+            window.scrollBy({ top: 50, behavior: 'smooth' });
+          }, 50);
           return;
         }
         
         // Check if scrolling back before demo start
         if (scrollAccumulatorRef.current <= 0 && delta < 0) {
           // Unlock and allow scroll up
-          console.log('🔓 UNLOCKING SCROLL - Scrolling back');
+          console.log('🔓 UNLOCKING SCROLL - Scrolling back up');
           isLockedRef.current = false;
           document.body.style.overflow = '';
           document.body.style.height = '';
+          document.body.style.position = '';
+          document.body.style.width = '';
+          scrollAccumulatorRef.current = 0;
           setDemoState({ ...newState, isLocked: false });
+          // Small delay to allow normal scroll to take over
+          setTimeout(() => {
+            window.scrollBy({ top: -50, behavior: 'smooth' });
+          }, 50);
           return;
         }
         
@@ -140,6 +146,8 @@ export const useScrollDrivenDemo = () => {
       // Cleanup: ensure scroll is unlocked
       document.body.style.overflow = '';
       document.body.style.height = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
       isLockedRef.current = false;
     };
   }, [calculateTabState]);
