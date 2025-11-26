@@ -20,12 +20,12 @@ export const InteractiveJumpDemo: React.FC = () => {
     };
     
     const currentRef = refs[demoState.activeTab as keyof typeof refs]?.current;
-    if (currentRef && demoState.isActive) {
+    if (currentRef && demoState.isLocked) {
       const maxScroll = currentRef.scrollHeight - currentRef.clientHeight;
       const targetScroll = maxScroll * demoState.scrollProgress;
       currentRef.scrollTop = targetScroll;
     }
-  }, [demoState.activeTab, demoState.scrollProgress, demoState.isActive]);
+  }, [demoState.activeTab, demoState.scrollProgress, demoState.isLocked]);
 
   // Real Jump #9 data - Phase 1 with first 2 steps
   const phase1Data = {
