@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle, ArrowRight, Sparkles } from 'lucide-react';
+import { CheckCircle, ArrowRight, Sparkles, Clock, DollarSign } from 'lucide-react';
 
 export const InteractiveJumpDemo: React.FC = () => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -142,7 +142,7 @@ Output the template with placeholders [like this] where I can insert my personal
           <div className="relative h-[380px] overflow-hidden">
             <div className="h-full overflow-y-auto custom-scrollbar">
               {/* Overview Tab */}
-              <TabsContent value="overview" className="mt-0 space-y-6">
+              <TabsContent value="overview" className="mt-0 space-y-6 p-6">
                 {/* Executive Summary */}
                 <div className="relative group">
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
@@ -173,8 +173,12 @@ Output the template with placeholders [like this] where I can insert my personal
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                      <div>
-                        <h4 className="font-semibold text-xs sm:text-sm mb-2">Immediate Actions</h4>
+                      {/* Immediate Actions */}
+                      <div className="p-3 sm:p-4 rounded-xl border border-primary/30 bg-primary/5">
+                        <div className="flex items-start justify-between mb-3">
+                          <h4 className="font-semibold text-xs sm:text-sm text-primary">Immediate Actions</h4>
+                          <Badge variant="outline" className="text-[10px] sm:text-xs bg-primary/10 text-primary border-primary/30">0-30 days</Badge>
+                        </div>
                         <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-none text-xs sm:text-sm space-y-2">
                           <p><strong>Set up your AI toolkit:</strong> Create accounts for Claude, ChatGPT, and Perplexity—three free or low-cost AI platforms that complement each other for ideation, scripting, and research.</p>
                           <p><strong>Run your first brainstorming session:</strong> Spend 20 minutes with Claude generating 10 video ideas based on your interests and niche.</p>
@@ -284,7 +288,7 @@ Output the template with placeholders [like this] where I can insert my personal
               </TabsContent>
 
               {/* Tools & Prompts Tab */}
-              <TabsContent value="toolPrompts" className="mt-0 space-y-6">
+              <TabsContent value="toolPrompts" className="mt-0 space-y-6 p-6">
                 {combosData.map((combo, index) => (
                   <div key={index} className="relative group">
                     <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
@@ -358,13 +362,90 @@ Output the template with placeholders [like this] where I can insert my personal
                           </div>
                         </div>
 
-                        {/* Additional Info */}
-                        <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
-                          <span>⏱️ {combo.setup_time}</span>
-                          <span>•</span>
-                          <span>💰 {combo.cost_estimate}</span>
-                          <span>•</span>
-                          <span>📊 {combo.difficulty_level}</span>
+                        {/* When to Use */}
+                        <div className="relative group/section">
+                          <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 rounded-2xl blur opacity-30 group-hover/section:opacity-50 transition duration-300"></div>
+                          <div className="relative p-3 bg-gradient-to-br from-blue-500/10 via-blue-500/5 to-cyan-500/10 backdrop-blur-sm border border-blue-500/20 rounded-2xl hover:border-blue-500/30 transition-all duration-300">
+                            <div className="flex items-start gap-2">
+                              <Clock className="w-4 h-4 text-blue-600 dark:text-blue-400 mt-0.5 shrink-0" />
+                              <div>
+                                <p className="text-xs font-medium text-blue-600 dark:text-blue-400 mb-1">When to Use</p>
+                                <p className="text-xs sm:text-sm text-foreground leading-relaxed">At the very start of your content creation journey, when paralysis from overthinking blocks ideation.</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Why This Combo */}
+                        <div className="relative group/section">
+                          <div className="absolute -inset-0.5 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-2xl blur opacity-30 group-hover/section:opacity-50 transition duration-300"></div>
+                          <div className="relative p-3 bg-gradient-to-br from-green-500/10 via-green-500/5 to-emerald-500/10 backdrop-blur-sm border border-green-500/20 rounded-2xl hover:border-green-500/30 transition-all duration-300">
+                            <div className="flex items-start gap-2">
+                              <CheckCircle className="w-4 h-4 text-green-600 dark:text-green-400 mt-0.5 shrink-0" />
+                              <div>
+                                <p className="text-xs font-medium text-green-600 dark:text-green-400 mb-1">Why This Combo</p>
+                                <p className="text-xs sm:text-sm text-foreground leading-relaxed">Recommended for your project</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Alternative Tools */}
+                        <div className="relative group/section">
+                          <div className="absolute -inset-0.5 bg-gradient-to-r from-orange-500/20 to-red-500/20 rounded-2xl blur opacity-30 group-hover/section:opacity-50 transition duration-300"></div>
+                          <div className="relative p-3 bg-gradient-to-br from-orange-500/10 via-orange-500/5 to-red-500/10 backdrop-blur-sm border border-orange-500/20 rounded-2xl hover:border-orange-500/30 transition-all duration-300">
+                            <div className="flex items-start gap-2 mb-3">
+                              <ArrowRight className="w-4 h-4 text-orange-600 dark:text-orange-400 mt-0.5 shrink-0" />
+                              <p className="text-xs font-medium text-orange-600 dark:text-orange-400">Alternative Tools:</p>
+                            </div>
+                            <div className="space-y-3">
+                              {index === 0 && (
+                                <>
+                                  <div className="space-y-2">
+                                    <button className="relative group/alt inline-block">
+                                      <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover/alt:opacity-60 transition duration-500"></div>
+                                      <div className="relative flex items-center gap-3 px-5 py-3 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover/alt:border-primary/50 transition-all duration-300 overflow-hidden">
+                                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover/alt:translate-x-full transition-transform duration-1000"></div>
+                                        <span className="relative text-sm font-bold text-foreground group-hover/alt:text-primary transition-colors duration-300 whitespace-nowrap">ChatGPT</span>
+                                        <div className="relative flex items-center justify-center w-6 h-6 rounded-xl bg-primary/20 group-hover/alt:bg-primary/30 transition-all duration-300">
+                                          <ArrowRight className="w-4 h-4 text-primary group-hover/alt:translate-x-0.5 group-hover/alt:-translate-y-0.5 transition-transform duration-300" />
+                                        </div>
+                                      </div>
+                                    </button>
+                                    <p className="text-xs sm:text-sm text-foreground leading-relaxed">Great free alternative for similar ideation if you prefer OpenAI's ecosystem, but Claude's focus on clarity better combats overthinking.</p>
+                                  </div>
+                                  <div className="space-y-2">
+                                    <button className="relative group/alt inline-block">
+                                      <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover/alt:opacity-60 transition duration-500"></div>
+                                      <div className="relative flex items-center gap-3 px-5 py-3 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover/alt:border-primary/50 transition-all duration-300 overflow-hidden">
+                                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover/alt:translate-x-full transition-transform duration-1000"></div>
+                                        <span className="relative text-sm font-bold text-foreground group-hover/alt:text-primary transition-colors duration-300 whitespace-nowrap">Gemini</span>
+                                        <div className="relative flex items-center justify-center w-6 h-6 rounded-xl bg-primary/20 group-hover/alt:bg-primary/30 transition-all duration-300">
+                                          <ArrowRight className="w-4 h-4 text-primary group-hover/alt:translate-x-0.5 group-hover/alt:-translate-y-0.5 transition-transform duration-300" />
+                                        </div>
+                                      </div>
+                                    </button>
+                                    <p className="text-xs sm:text-sm text-foreground leading-relaxed">Fits budget-conscious users with free access, offering quick iterations for those new to AI prompting.</p>
+                                  </div>
+                                </>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Meta Information */}
+                        <div className="flex gap-2 flex-wrap pt-2 border-t border-border">
+                          <Badge className="bg-green-500/10 text-green-500 border-green-500/20" variant="outline">
+                            {combo.difficulty_level}
+                          </Badge>
+                          <Badge variant="secondary" className="text-xs gap-1">
+                            <Clock className="w-3 h-3" />
+                            {combo.setup_time}
+                          </Badge>
+                          <Badge variant="secondary" className="text-xs gap-1">
+                            <DollarSign className="w-3 h-3" />
+                            {combo.cost_estimate}
+                          </Badge>
                         </div>
                       </CardContent>
                     </Card>
