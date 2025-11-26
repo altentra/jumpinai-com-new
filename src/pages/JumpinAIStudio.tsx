@@ -438,17 +438,6 @@ const JumpinAIStudio = () => {
                   Generate your personalized <span className="font-semibold text-primary bg-gradient-to-r from-primary via-primary/80 to-primary bg-clip-text text-transparent whitespace-nowrap">Jump in AI</span> in 2 minutes—a clear, structured implementation plan with strategic insights, actionable steps, tailored prompts, and the tools that fit your goals.
                 </p>
               </div>
-              
-              {/* Simple feature indicators - Mobile optimized */}
-              <div className="flex flex-wrap justify-center gap-2 text-xs sm:text-sm text-muted-foreground/70 px-2">
-                <span className="bg-background/60 backdrop-blur-sm px-2 sm:px-3 py-1 rounded-md border border-border/30">Strategic Clarity</span>
-                <span className="hidden sm:inline text-muted-foreground/50">•</span>
-                <span className="bg-background/60 backdrop-blur-sm px-2 sm:px-3 py-1 rounded-md border border-border/30">Actionable Steps</span>
-                <span className="hidden sm:inline text-muted-foreground/50">•</span>
-                <span className="bg-background/60 backdrop-blur-sm px-2 sm:px-3 py-1 rounded-md border border-border/30">Aligned Tools & Prompts</span> 
-                <span className="hidden sm:inline text-muted-foreground/50">•</span>
-                <span className="bg-background/60 backdrop-blur-sm px-2 sm:px-3 py-1 rounded-md border border-border/30">Guided Implementation</span>
-              </div>
             </div>
 
             {/* Compact Glass Form - Mobile Optimized */}
