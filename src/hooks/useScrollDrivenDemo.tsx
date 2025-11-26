@@ -50,24 +50,44 @@ export const useScrollDrivenDemo = () => {
       const rect = container.getBoundingClientRect();
       const windowHeight = window.innerHeight;
       
-      // Check if demo is fully in viewport (with some margin)
-      const isFullyVisible = rect.top <= 80 && rect.bottom >= windowHeight - 80;
+      // Check if demo section is in a position to start locking
+      // Lock when top of section reaches top of viewport (with small offset for header)
+      const sectionTop = rect.top;
+      const sectionBottom = rect.bottom;
+      const headerOffset = 100; // Account for any header
       
-      if (isFullyVisible && !isLockedRef.current) {
+      // Demo should lock when it's centered in viewport
+      const shouldLock = sectionTop <= headerOffset && sectionBottom > windowHeight * 0.5;
+      
+      console.log('Scroll Debug:', {
+        isLocked: isLockedRef.current,
+        sectionTop,
+        sectionBottom,
+        windowHeight,
+        shouldLock,
+        accumulator: scrollAccumulatorRef.current
+      });
+      
+      if (shouldLock && !isLockedRef.current) {
         // Lock scroll when demo enters viewport
+        console.log('🔒 LOCKING SCROLL');
         isLockedRef.current = true;
         scrollAccumulatorRef.current = 0;
         document.body.style.overflow = 'hidden';
+        document.body.style.height = '100vh';
         setDemoState(prev => ({ ...prev, isLocked: true }));
       }
 
       if (isLockedRef.current) {
         e.preventDefault();
+        e.stopPropagation();
         
         // Accumulate scroll delta (normalized for different devices)
         const delta = e.deltaY;
-        const scrollSpeed = 0.0008; // Adjust for sensitivity
+        const scrollSpeed = 0.0015; // Adjusted sensitivity
         scrollAccumulatorRef.current += delta * scrollSpeed;
+        
+        console.log('📜 Scrolling locked, accumulator:', scrollAccumulatorRef.current);
         
         // Clamp between 0 and 1
         scrollAccumulatorRef.current = Math.max(0, Math.min(1, scrollAccumulatorRef.current));
@@ -77,8 +97,10 @@ export const useScrollDrivenDemo = () => {
         // Check if we've completed the entire demo
         if (scrollAccumulatorRef.current >= 1 && delta > 0) {
           // Unlock and allow normal scroll to continue
+          console.log('🔓 UNLOCKING SCROLL - Demo complete');
           isLockedRef.current = false;
           document.body.style.overflow = '';
+          document.body.style.height = '';
           setDemoState({ ...newState, isLocked: false });
           return;
         }
@@ -86,8 +108,10 @@ export const useScrollDrivenDemo = () => {
         // Check if scrolling back before demo start
         if (scrollAccumulatorRef.current <= 0 && delta < 0) {
           // Unlock and allow scroll up
+          console.log('🔓 UNLOCKING SCROLL - Scrolling back');
           isLockedRef.current = false;
           document.body.style.overflow = '';
+          document.body.style.height = '';
           setDemoState({ ...newState, isLocked: false });
           return;
         }
@@ -103,15 +127,19 @@ export const useScrollDrivenDemo = () => {
       }
     };
 
+    console.log('✅ Scroll listeners attached');
+
     // Add wheel listener (non-passive to allow preventDefault)
     window.addEventListener('wheel', handleWheel, { passive: false });
     window.addEventListener('touchmove', handleTouchMove, { passive: false });
 
     return () => {
+      console.log('🧹 Cleanup: removing listeners');
       window.removeEventListener('wheel', handleWheel);
       window.removeEventListener('touchmove', handleTouchMove);
       // Cleanup: ensure scroll is unlocked
       document.body.style.overflow = '';
+      document.body.style.height = '';
       isLockedRef.current = false;
     };
   }, [calculateTabState]);
