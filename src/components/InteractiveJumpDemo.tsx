@@ -23,12 +23,19 @@ export const InteractiveJumpDemo: React.FC = () => {
     
     const currentRef = refs[demoState.activeTab as keyof typeof refs]?.current;
     if (currentRef) {
-      const maxScroll = Math.max(0, currentRef.scrollHeight - currentRef.clientHeight);
+      // Force reflow to ensure proper height calculations
+      currentRef.getBoundingClientRect();
+      
+      const scrollHeight = currentRef.scrollHeight;
+      const clientHeight = currentRef.clientHeight;
+      const maxScroll = Math.max(0, scrollHeight - clientHeight);
       const targetScroll = maxScroll * demoState.scrollProgress;
       
-      console.log(`🎯 Scrolling ${demoState.activeTab} to ${targetScroll.toFixed(0)}px of ${maxScroll.toFixed(0)}px`);
+      console.log(`🎯 Scrolling ${demoState.activeTab} to ${Math.round(targetScroll)}px of ${maxScroll}px (scrollHeight: ${scrollHeight}, clientHeight: ${clientHeight})`);
       
-      currentRef.scrollTop = targetScroll;
+      if (maxScroll > 0) {
+        currentRef.scrollTop = targetScroll;
+      }
     }
   }, [demoState.activeTab, demoState.scrollProgress, demoState.isLocked]);
 
