@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle, ArrowRight, Sparkles, Clock, DollarSign } from 'lucide-react';
+import { CheckCircle, ArrowRight, Sparkles, Clock, DollarSign, Target, AlertCircle, TrendingUp, Eye, Route } from 'lucide-react';
 
 export const InteractiveJumpDemo: React.FC = () => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -144,49 +144,156 @@ Output the template with placeholders [like this] where I can insert my personal
               {/* Overview Tab */}
               <TabsContent value="overview" className="mt-0 space-y-6 p-6">
                 {/* Executive Summary */}
-                <div className="relative group">
-                  <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
-                  <Card className="relative glass backdrop-blur-lg bg-card/80 border border-border hover:border-primary/40 transition-all duration-300 rounded-2xl">
-                    <CardHeader>
-                      <CardTitle className="text-base sm:text-lg flex items-center gap-2">
-                        <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
-                        Executive Summary
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-none break-words overflow-wrap-anywhere text-xs sm:text-sm">
-                        <p>You're ready to jump into AI-powered content creation for your YouTube channel. This personalized strategy roadmap delivers a comprehensive, step-by-step plan tailored to help you eliminate creative blocks, generate consistent video ideas, craft engaging scripts, and maintain momentum in your content production.</p>
-                        <p>This roadmap is built specifically around your current situation—struggling with overthinking during ideation—and your goals of producing regular, high-quality content without burning out. You'll discover exactly which AI tools to use, when to use them, and how to integrate them seamlessly into your workflow to transform from hesitant creator to confident content producer.</p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
+                <Card className="bg-gradient-to-br from-white/[0.01] via-black/[0.4] to-white/[0.01] backdrop-blur-sm border border-white/25 shadow-lg">
+                  <CardHeader>
+                    <CardTitle className="text-2xl font-bold text-primary flex items-center gap-3">
+                      <Sparkles className="h-6 w-6" />
+                      Executive Summary
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="text-foreground/90 space-y-4">
+                    <p className="leading-relaxed">
+                      You're at a pivotal moment where your passion for creating online content—videos, posts, or creative pieces—is held back by overthinking and uncertainty about where to begin, but AI adaptation is critical now because the content landscape in November 2025 demands rapid iteration and personalization that only AI can provide at scale. By strategically implementing AI tools like Claude for brainstorming and structuring ideas, ChatGPT for generating drafts, and Midjourney for visual assets, you'll transform paralysis into productive output, leveraging AI's ability to simulate creative processes and refine concepts instantly. Your journey will involve mastering key milestones such as using Perplexity to research trending topics without endless scrolling, implementing Runway to prototype videos from text prompts, and integrating Zapier AI to automate your publishing workflow, ensuring every step builds your AI fluency. Imagine a future where you're confidently releasing engaging content weekly, with AI as your co-creator, driving audience growth and turning your aspirations into a thriving online presence through seamless AI implementation.
+                    </p>
+                  </CardContent>
+                </Card>
+
+                {/* Current State */}
+                <Card className="bg-gradient-to-br from-white/[0.01] via-black/[0.4] to-white/[0.01] backdrop-blur-sm border border-white/25 shadow-lg">
+                  <CardHeader>
+                    <CardTitle className="text-2xl font-bold text-primary flex items-center gap-3">
+                      <Target className="h-6 w-6" />
+                      Current State
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="text-foreground/90">
+                    <p className="leading-relaxed">
+                      Your desire to create online content is stalled by overthinking and a lack of starting points, leading to inaction despite your creative potential. AI implementation is essential now because tools like Claude and ChatGPT can generate tailored content ideas in seconds, breaking the overthinking cycle by providing structured outlines and prompts that guide your decisions. In the fast-evolving digital space of November 2025, AI adaptation allows you to experiment without high stakes, using Gemini to analyze audience trends or NotebookLM to organize research notes into actionable insights. Without AI, you'd remain stuck in ideation loops, but with it, you can prototype posts or videos rapidly, building momentum through iterative AI-assisted creation. This positions AI as the accelerator for turning vague aspirations into consistent, high-quality output.
+                    </p>
+                  </CardContent>
+                </Card>
+
+                {/* Challenges */}
+                <Card className="bg-gradient-to-br from-white/[0.01] via-black/[0.4] to-white/[0.01] backdrop-blur-sm border border-white/25 shadow-lg">
+                  <CardHeader>
+                    <CardTitle className="text-2xl font-bold text-primary flex items-center gap-3">
+                      <AlertCircle className="h-6 w-6" />
+                      Challenges
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-3 text-foreground/90">
+                      <li className="flex items-start gap-3">
+                        <span className="text-primary mt-1">•</span>
+                        <span className="leading-relaxed">Overthinking content ideas, which AI tools like Claude overcome by generating focused brainstorming sessions and decision frameworks</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <span className="text-primary mt-1">•</span>
+                        <span className="leading-relaxed">Uncertainty about where to start, solved by ChatGPT's prompting techniques that create step-by-step content blueprints</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <span className="text-primary mt-1">•</span>
+                        <span className="leading-relaxed">Lack of creative direction, addressed by Midjourney's image generation for visualizing concepts and sparking inspiration</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <span className="text-primary mt-1">•</span>
+                        <span className="leading-relaxed">Difficulty in maintaining consistency, mitigated by Zapier AI's automation for scheduling and refining content workflows</span>
+                      </li>
+                    </ul>
+                  </CardContent>
+                </Card>
+
+                {/* Opportunities */}
+                <Card className="bg-gradient-to-br from-white/[0.01] via-black/[0.4] to-white/[0.01] backdrop-blur-sm border border-white/25 shadow-lg">
+                  <CardHeader>
+                    <CardTitle className="text-2xl font-bold text-primary flex items-center gap-3">
+                      <TrendingUp className="h-6 w-6" />
+                      Opportunities
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-3 text-foreground/90">
+                      <li className="flex items-start gap-3">
+                        <span className="text-primary mt-1">•</span>
+                        <span className="leading-relaxed">Leveraging generative AI like Runway for quick video prototyping, turning raw ideas into polished clips without expensive equipment</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <span className="text-primary mt-1">•</span>
+                        <span className="leading-relaxed">Using Perplexity for real-time trend research to align content with audience interests and boost engagement</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <span className="text-primary mt-1">•</span>
+                        <span className="leading-relaxed">Implementing NotebookLM to synthesize notes and outlines into cohesive posts, streamlining the creation process</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <span className="text-primary mt-1">•</span>
+                        <span className="leading-relaxed">Mastering Make.com for AI-driven automations that connect tools, enabling scalable content production</span>
+                      </li>
+                    </ul>
+                  </CardContent>
+                </Card>
+
+                {/* Strategic Vision */}
+                <Card className="bg-gradient-to-br from-white/[0.01] via-black/[0.4] to-white/[0.01] backdrop-blur-sm border border-white/25 shadow-lg">
+                  <CardHeader>
+                    <CardTitle className="text-2xl font-bold text-primary flex items-center gap-3">
+                      <Eye className="h-6 w-6" />
+                      Strategic Vision
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="text-foreground/90">
+                    <p className="leading-relaxed">
+                      In your AI-powered success state, you'll wake up to a streamlined workflow where Claude handles initial content strategy, ChatGPT refines your scripts, and Runway generates video drafts, allowing you to focus on your unique voice and creativity. Daily, you'll integrate Gemini for audience insights and Midjourney for eye-catching visuals, producing videos and posts that resonate deeply and grow your online following organically. Through consistent AI implementation, you'll achieve milestones like a dedicated content calendar automated via Zapier AI and viral pieces born from Perplexity-researched trends, leading to collaborations and monetization opportunities. This vision isn't distant—it's the natural outcome of adapting AI tools as your creative partner, empowering you to create freely and build a sustainable online presence that inspires others.
+                    </p>
+                  </CardContent>
+                </Card>
 
                 {/* Strategic Roadmap */}
-                <div className="relative group">
-                  <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
-                  <Card className="relative glass backdrop-blur-lg bg-card/80 border border-border hover:border-primary/40 transition-all duration-300 rounded-2xl">
-                    <CardHeader>
-                      <CardTitle className="text-base sm:text-lg flex items-center gap-2">
-                        <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
-                        Strategic Roadmap
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      {/* Immediate Actions */}
-                      <div className="p-3 sm:p-4 rounded-xl border border-primary/30 bg-primary/5">
-                        <div className="flex items-start justify-between mb-3">
-                          <h4 className="font-semibold text-xs sm:text-sm text-primary">Immediate Actions</h4>
-                          <Badge variant="outline" className="text-[10px] sm:text-xs bg-primary/10 text-primary border-primary/30">0-30 days</Badge>
-                        </div>
-                        <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-none text-xs sm:text-sm space-y-2">
-                          <p><strong>Set up your AI toolkit:</strong> Create accounts for Claude, ChatGPT, and Perplexity—three free or low-cost AI platforms that complement each other for ideation, scripting, and research.</p>
-                          <p><strong>Run your first brainstorming session:</strong> Spend 20 minutes with Claude generating 10 video ideas based on your interests and niche.</p>
+                <Card className="bg-gradient-to-br from-white/[0.01] via-black/[0.4] to-white/[0.01] backdrop-blur-sm border border-white/25 shadow-lg">
+                  <CardHeader>
+                    <CardTitle className="text-2xl font-bold text-primary flex items-center gap-3">
+                      <Route className="h-6 w-6" />
+                      Strategic Roadmap
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <div className="space-y-3">
+                      <div className="flex items-start gap-3">
+                        <Badge variant="secondary" className="shrink-0 mt-1">Immediate</Badge>
+                        <div className="space-y-2">
+                          <div className="font-semibold text-foreground">0-30 days</div>
+                          <p className="text-sm text-foreground/80 leading-relaxed">
+                            Begin by setting up Claude to brainstorm your first content theme—input your interests, and let it generate 5-10 specific post or video ideas to overcome overthinking, experimenting with prompts to refine outputs. Next, use ChatGPT to create a simple starter template for a video script or social post, practicing iterative prompting to build confidence in quick ideation. Establish AI foundations by integrating Perplexity for a 30-minute session on current content trends, noting how it provides starting points without overwhelm. This phase moves fast with AI's instant feedback, though your learning curve will shape the pace—expect your first AI-assisted piece ready within days.
+                          </p>
                         </div>
                       </div>
-                    </CardContent>
-                  </Card>
-                </div>
+                    </div>
+
+                    <div className="space-y-3">
+                      <div className="flex items-start gap-3">
+                        <Badge variant="secondary" className="shrink-0 mt-1">Short-term</Badge>
+                        <div className="space-y-2">
+                          <div className="font-semibold text-foreground">30-90 days</div>
+                          <p className="text-sm text-foreground/80 leading-relaxed">
+                            As you build confidence, master Runway by inputting ChatGPT-generated scripts to produce short video prototypes, iterating on AI feedback to enhance visuals and pacing. Implement Midjourney for generating thumbnails and graphics, using it alongside NotebookLM to organize your content ideas into a reusable library. Scale by building an AI workflow with Make.com to automate idea-to-draft processes, connecting Claude outputs directly to ChatGPT for refinement. This phase focuses on momentum through tool integration, adapting as you discover what resonates in your creations.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-3">
+                      <div className="flex items-start gap-3">
+                        <Badge variant="secondary" className="shrink-0 mt-1">Long-term</Badge>
+                        <div className="space-y-2">
+                          <div className="font-semibold text-foreground">90+ days</div>
+                          <p className="text-sm text-foreground/80 leading-relaxed">
+                            Advance to optimizing your AI stack by customizing Gemini for personalized audience analysis, predicting content performance and refining strategies based on data. Become a power user with Veo for advanced video generation, combining it with Zapier AI to automate full publishing pipelines from ideation to social media. Sustain success by regularly experimenting with Grok for unconventional creative twists, evolving your toolkit as AI advances in November 2025. Your mastery timeline depends on consistent implementation and the field's rapid changes, positioning you as an AI-driven content creator with scalable impact.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               </TabsContent>
 
               {/* Plan Tab */}
