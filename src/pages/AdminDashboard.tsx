@@ -42,6 +42,7 @@ interface AdminStats {
   totalJumps: number;
   successfulJumps: number;
   failedJumps: number;
+  generatingJumps: number;
   guestJumps: number;
   abandonedCarts: number;
   completedOrders: number;
@@ -59,6 +60,8 @@ interface JumpGeneration {
   title: string;
   full_content: string;
   status: string;
+  completion_percentage: number;
+  status_description: string;
   created_at: string;
   ip_address?: string;
   location?: string;
@@ -221,6 +224,7 @@ export default function AdminDashboard() {
     totalJumps: 0,
     successfulJumps: 0,
     failedJumps: 0,
+    generatingJumps: 0,
     guestJumps: 0,
     abandonedCarts: 0,
     completedOrders: 0,
@@ -744,6 +748,8 @@ export default function AdminDashboard() {
               <div className="flex gap-1 sm:gap-2 text-[10px] sm:text-xs text-muted-foreground flex-wrap">
                 <span className="text-green-600 dark:text-green-400">✓{stats.successfulJumps}</span>
                 <span>•</span>
+                <span className="text-yellow-600 dark:text-yellow-400">🔄{stats.generatingJumps}</span>
+                <span>•</span>
                 <span className="text-red-600 dark:text-red-400">✗{stats.failedJumps}</span>
                 <span>•</span>
                 <span>Guest:{stats.guestJumps}</span>
@@ -965,9 +971,29 @@ export default function AdminDashboard() {
                             className="p-4 align-middle"
                             style={{ width: `${columnWidths.status}px`, minWidth: `${columnWidths.status}px` }}
                           >
-                            <Badge variant={jump.status === 'active' ? 'default' : 'destructive'}>
-                              {jump.status === 'active' ? 'Success' : 'Failed'}
-                            </Badge>
+                            {(jump.status === 'completed' || jump.status === 'active') && (
+                              <Badge variant="default" className="whitespace-normal">
+                                ✓ Success
+                              </Badge>
+                            )}
+                            {jump.status === 'generating' && (
+                              <Badge variant="secondary" className="whitespace-normal">
+                                🔄 {jump.completion_percentage}%
+                              </Badge>
+                            )}
+                            {(jump.status === 'failed' || jump.status === 'error') && (
+                              <Badge variant="destructive" className="whitespace-normal">
+                                ✗ Failed
+                              </Badge>
+                            )}
+                            {jump.status !== 'completed' && jump.status !== 'active' && jump.status !== 'generating' && jump.status !== 'failed' && jump.status !== 'error' && (
+                              <Badge variant="outline" className="whitespace-normal">
+                                {jump.status}
+                              </Badge>
+                            )}
+                            <p className="text-xs text-muted-foreground mt-1">
+                              {jump.status_description}
+                            </p>
                           </td>
                           <td 
                             className="p-4 align-middle"

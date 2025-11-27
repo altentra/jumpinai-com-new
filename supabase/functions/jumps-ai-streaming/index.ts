@@ -384,6 +384,22 @@ Deno.serve(async (req) => {
         } catch (error: any) {
           console.error('💥 Critical generation error:', error.message);
           console.error('Full error:', error);
+          
+          // Update jump status to failed if we created one
+          if (jumpId) {
+            try {
+              await supabase
+                .from('user_jumps')
+                .update({
+                  status: 'failed'
+                })
+                .eq('id', jumpId);
+              console.log('❌ Jump marked as failed:', jumpId);
+            } catch (updateError) {
+              console.error('❌ Error updating jump status to failed:', updateError);
+            }
+          }
+          
           if (!isClosed) {
             sendEvent(-1, 'error', { 
               message: error.message,
