@@ -8,7 +8,6 @@ interface ScrollDrivenDemoState {
 
 export const useScrollDrivenDemo = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  
   const [demoState, setDemoState] = useState<ScrollDrivenDemoState>({
     activeTab: 'overview',
     scrollProgress: 0,
@@ -16,7 +15,7 @@ export const useScrollDrivenDemo = () => {
   });
   
   const isLockedRef = useRef(false);
-  const totalProgressRef = useRef(0); // 0 to 3 (one unit per tab)
+  const accumulatedDeltaRef = useRef(0);
 
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
@@ -26,23 +25,21 @@ export const useScrollDrivenDemo = () => {
       const rect = container.getBoundingClientRect();
       const windowHeight = window.innerHeight;
       
-      // Check if demo is in viewport
-      const sectionTop = rect.top;
-      const sectionBottom = rect.bottom;
+      // Check if demo section is in the "lock zone" 
+      const isInLockZone = rect.top <= 50 && rect.bottom > windowHeight * 0.3;
       
-      // Lock when section reaches top of viewport
-      const shouldStartLocking = sectionTop <= 100 && sectionBottom > windowHeight / 2;
-      
-      // Start lock sequence
-      if (shouldStartLocking && !isLockedRef.current) {
-        console.log('🔒 LOCKING SCROLL');
+      // LOCK: When demo enters lock zone and not already locked
+      if (isInLockZone && !isLockedRef.current) {
         e.preventDefault();
         isLockedRef.current = true;
-        totalProgressRef.current = 0;
+        accumulatedDeltaRef.current = 0;
         
-        // Lock body scroll
         document.body.style.overflow = 'hidden';
-        document.body.style.height = '100vh';
+        document.body.style.position = 'fixed';
+        document.body.style.top = `-${window.scrollY}px`;
+        document.body.style.width = '100%';
+        
+        console.log('🔒 LOCKED');
         
         setDemoState({
           activeTab: 'overview',
@@ -52,54 +49,52 @@ export const useScrollDrivenDemo = () => {
         return;
       }
 
-      // Handle locked scroll
+      // HANDLE LOCKED SCROLLING
       if (isLockedRef.current) {
         e.preventDefault();
         
-        const delta = e.deltaY;
-        const scrollSpeed = 0.003;
+        // Accumulate scroll delta (each tab needs ~800px of scroll)
+        accumulatedDeltaRef.current += e.deltaY;
+        accumulatedDeltaRef.current = Math.max(0, Math.min(2400, accumulatedDeltaRef.current));
         
-        // Update total progress (0-3 range for 3 tabs)
-        totalProgressRef.current += delta * scrollSpeed;
-        totalProgressRef.current = Math.max(0, Math.min(3, totalProgressRef.current));
+        const totalProgress = accumulatedDeltaRef.current / 800; // 0-3 range
         
-        const progress = totalProgressRef.current;
-        
-        console.log('📊 Tab Progress:', progress.toFixed(2));
-        
-        // Determine which tab and scroll position
+        // Determine active tab and its scroll progress
         let activeTab: 'overview' | 'plan' | 'tools' = 'overview';
         let scrollProgress = 0;
         
-        if (progress < 1) {
+        if (totalProgress < 1) {
           activeTab = 'overview';
-          scrollProgress = progress;
-        } else if (progress < 2) {
+          scrollProgress = totalProgress;
+        } else if (totalProgress < 2) {
           activeTab = 'plan';
-          scrollProgress = progress - 1;
+          scrollProgress = totalProgress - 1;
         } else {
           activeTab = 'tools';
-          scrollProgress = progress - 2;
+          scrollProgress = totalProgress - 2;
         }
         
-        console.log(`📜 Tab: ${activeTab}, Scroll: ${(scrollProgress * 100).toFixed(0)}%`);
+        console.log(`📊 Progress: ${totalProgress.toFixed(2)} | Tab: ${activeTab} | Scroll: ${(scrollProgress * 100).toFixed(0)}%`);
         
-        // Update state
         setDemoState({
           activeTab,
           scrollProgress,
           isLocked: true,
         });
         
-        // Check if completed (scrolling forward past end)
-        if (progress >= 3 && delta > 0) {
+        // UNLOCK: Completed demo (scrolling forward past end)
+        if (accumulatedDeltaRef.current >= 2400 && e.deltaY > 0) {
           console.log('🔓 UNLOCKING - Demo complete');
-          isLockedRef.current = false;
-          totalProgressRef.current = 0;
           
-          // Unlock and continue scrolling
+          const scrollY = document.body.style.top;
           document.body.style.overflow = '';
-          document.body.style.height = '';
+          document.body.style.position = '';
+          document.body.style.top = '';
+          document.body.style.width = '';
+          window.scrollTo(0, parseInt(scrollY || '0') * -1);
+          
+          isLockedRef.current = false;
+          accumulatedDeltaRef.current = 0;
           
           setDemoState({
             activeTab: 'tools',
@@ -107,22 +102,25 @@ export const useScrollDrivenDemo = () => {
             isLocked: false,
           });
           
-          // Smooth continue scroll
-          requestAnimationFrame(() => {
-            window.scrollBy({ top: 200, behavior: 'smooth' });
-          });
+          setTimeout(() => {
+            window.scrollBy({ top: 100, behavior: 'smooth' });
+          }, 100);
           return;
         }
         
-        // Check if scrolling back past start
-        if (progress <= 0 && delta < 0) {
-          console.log('🔓 UNLOCKING - Scrolling back');
-          isLockedRef.current = false;
-          totalProgressRef.current = 0;
+        // UNLOCK: Scrolling back to start
+        if (accumulatedDeltaRef.current <= 0 && e.deltaY < 0) {
+          console.log('🔓 UNLOCKING - Scrolled back');
           
-          // Unlock and allow backward scroll
+          const scrollY = document.body.style.top;
           document.body.style.overflow = '';
-          document.body.style.height = '';
+          document.body.style.position = '';
+          document.body.style.top = '';
+          document.body.style.width = '';
+          window.scrollTo(0, parseInt(scrollY || '0') * -1);
+          
+          isLockedRef.current = false;
+          accumulatedDeltaRef.current = 0;
           
           setDemoState({
             activeTab: 'overview',
@@ -130,26 +128,24 @@ export const useScrollDrivenDemo = () => {
             isLocked: false,
           });
           
-          // Smooth continue scroll backward
-          requestAnimationFrame(() => {
-            window.scrollBy({ top: -200, behavior: 'smooth' });
-          });
+          setTimeout(() => {
+            window.scrollBy({ top: -100, behavior: 'smooth' });
+          }, 100);
           return;
         }
       }
     };
 
-    console.log('✅ Scroll listeners attached');
     window.addEventListener('wheel', handleWheel, { passive: false });
 
     return () => {
-      console.log('🧹 Cleanup listeners');
       window.removeEventListener('wheel', handleWheel);
       
-      // Ensure unlock on cleanup
       if (isLockedRef.current) {
         document.body.style.overflow = '';
-        document.body.style.height = '';
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
         isLockedRef.current = false;
       }
     };
