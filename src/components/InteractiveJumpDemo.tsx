@@ -13,8 +13,6 @@ export const InteractiveJumpDemo: React.FC = () => {
 
   // Sync tab content scroll based on demo state
   useEffect(() => {
-    if (!demoState.isLocked) return;
-    
     const refs = {
       overview: overviewRef,
       plan: planRef,
@@ -24,21 +22,15 @@ export const InteractiveJumpDemo: React.FC = () => {
     const currentRef = refs[demoState.activeTab as keyof typeof refs]?.current;
     if (!currentRef) return;
     
-    // Wait for next frame to ensure DOM is properly rendered
-    requestAnimationFrame(() => {
-      const scrollHeight = currentRef.scrollHeight;
-      const clientHeight = currentRef.clientHeight;
-      const maxScroll = scrollHeight - clientHeight;
-      
-      if (maxScroll > 0) {
-        const targetScroll = maxScroll * demoState.scrollProgress;
-        console.log(`🎯 Scrolling ${demoState.activeTab} to ${Math.round(targetScroll)}px of ${maxScroll}px (scrollHeight: ${scrollHeight}, clientHeight: ${clientHeight})`);
-        currentRef.scrollTop = targetScroll;
-      } else {
-        console.log(`⚠️ No scroll needed for ${demoState.activeTab} (maxScroll: ${maxScroll}, scrollHeight: ${scrollHeight}, clientHeight: ${clientHeight})`);
-      }
-    });
-  }, [demoState.activeTab, demoState.scrollProgress, demoState.isLocked]);
+    const scrollHeight = currentRef.scrollHeight;
+    const clientHeight = currentRef.clientHeight;
+    const maxScroll = Math.max(0, scrollHeight - clientHeight);
+    
+    const targetScroll = maxScroll * demoState.scrollProgress;
+    currentRef.scrollTop = targetScroll;
+    
+    console.log(`🎯 ${demoState.activeTab}: scrolling to ${Math.round(targetScroll)}px / ${maxScroll}px (${(demoState.scrollProgress * 100).toFixed(0)}%)`);
+  }, [demoState.activeTab, demoState.scrollProgress]);
 
   // Real Jump #9 data - Phase 1 with first 2 steps
   const phase1Data = {
