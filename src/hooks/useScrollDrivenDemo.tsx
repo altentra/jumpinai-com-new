@@ -35,9 +35,6 @@ export const useScrollDrivenDemo = () => {
         accumulatedDeltaRef.current = 0;
         
         document.body.style.overflow = 'hidden';
-        document.body.style.position = 'fixed';
-        document.body.style.top = `-${window.scrollY}px`;
-        document.body.style.width = '100%';
         
         console.log('🔒 LOCKED');
         
@@ -86,12 +83,7 @@ export const useScrollDrivenDemo = () => {
         if (accumulatedDeltaRef.current >= 2400 && e.deltaY > 0) {
           console.log('🔓 UNLOCKING - Demo complete');
           
-          const scrollY = document.body.style.top;
           document.body.style.overflow = '';
-          document.body.style.position = '';
-          document.body.style.top = '';
-          document.body.style.width = '';
-          window.scrollTo(0, parseInt(scrollY || '0') * -1);
           
           isLockedRef.current = false;
           accumulatedDeltaRef.current = 0;
@@ -104,7 +96,7 @@ export const useScrollDrivenDemo = () => {
           
           setTimeout(() => {
             window.scrollBy({ top: 100, behavior: 'smooth' });
-          }, 100);
+          }, 50);
           return;
         }
         
@@ -112,12 +104,7 @@ export const useScrollDrivenDemo = () => {
         if (accumulatedDeltaRef.current <= 0 && e.deltaY < 0) {
           console.log('🔓 UNLOCKING - Scrolled back');
           
-          const scrollY = document.body.style.top;
           document.body.style.overflow = '';
-          document.body.style.position = '';
-          document.body.style.top = '';
-          document.body.style.width = '';
-          window.scrollTo(0, parseInt(scrollY || '0') * -1);
           
           isLockedRef.current = false;
           accumulatedDeltaRef.current = 0;
@@ -130,7 +117,7 @@ export const useScrollDrivenDemo = () => {
           
           setTimeout(() => {
             window.scrollBy({ top: -100, behavior: 'smooth' });
-          }, 100);
+          }, 50);
           return;
         }
       }
@@ -143,9 +130,6 @@ export const useScrollDrivenDemo = () => {
       
       if (isLockedRef.current) {
         document.body.style.overflow = '';
-        document.body.style.position = '';
-        document.body.style.top = '';
-        document.body.style.width = '';
         isLockedRef.current = false;
       }
     };
