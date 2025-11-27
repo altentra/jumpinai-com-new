@@ -9,7 +9,6 @@ import BookPromotion from "@/components/BookPromotion";
 import Newsletter from "@/components/Newsletter";
 import Footer from "@/components/Footer";
 import { GoogleSheetsTest } from "@/components/GoogleSheetsTest";
-import { InteractiveJumpDemo } from "@/components/InteractiveJumpDemo";
 import { useAuth } from '@/hooks/useAuth';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { supabase } from '@/integrations/supabase/client';
@@ -408,23 +407,10 @@ const Index = () => {
             </div>
           </div>
 
-          <div className="text-center mt-10 mb-12">
+          <div className="text-center mt-10">
             <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
               <span className="font-semibold text-foreground">All three tabs work together seamlessly</span>—from strategic understanding (Overview), to adaptive execution (Plan), to practical implementation (Tools & Prompts). Everything you need in one complete Jump.
             </p>
-          </div>
-
-          {/* Interactive Jump Demo */}
-          <div className="mt-16">
-            <div className="text-center mb-8">
-              <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-2">
-                See It In Action
-              </h3>
-              <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
-                Experience a live demo below. Click through the tabs to explore how a real Jump unfolds—from strategic overview to actionable plan to custom tools and prompts
-              </p>
-            </div>
-            <InteractiveJumpDemo />
           </div>
         </div>
       </section>
