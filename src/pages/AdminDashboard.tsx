@@ -99,6 +99,8 @@ interface GuestUser {
     title: string;
     full_content: string;
     status: string;
+    completion_percentage: number;
+    status_description: string;
     created_at: string;
     location?: string;
     form_goals?: string;
@@ -1084,124 +1086,161 @@ export default function AdminDashboard() {
               </div>
             </CardHeader>
             <CardContent className="space-y-6">
-              {/* Guest Usage Tracking */}
+              {/* Guest Usage Summary */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="text-center p-4 bg-muted/50 rounded-lg">
+                  <Users className="h-6 w-6 mx-auto mb-2 text-primary" />
+                  <div className="text-2xl font-bold">{guestUsers.length}</div>
+                  <p className="text-sm text-muted-foreground">Unique Guests</p>
+                </div>
+                <div className="text-center p-4 bg-muted/50 rounded-lg">
+                  <TrendingUp className="h-6 w-6 mx-auto mb-2 text-green-600" />
+                  <div className="text-2xl font-bold">
+                    {guestUsers.reduce((sum, g) => sum + (g.jump_attempts?.length || 0), 0)}
+                  </div>
+                  <p className="text-sm text-muted-foreground">Total Jump Attempts</p>
+                </div>
+                <div className="text-center p-4 bg-muted/50 rounded-lg">
+                  <Clock className="h-6 w-6 mx-auto mb-2 text-orange-600" />
+                  <div className="text-2xl font-bold">
+                    {guestUsers.filter(g => g.remaining_uses === 0).length}
+                  </div>
+                  <p className="text-sm text-muted-foreground">Limit Reached</p>
+                </div>
+              </div>
+
+              {/* Guest User Tracking */}
               <div>
-                <h3 className="text-sm sm:text-lg font-semibold mb-3 sm:mb-4">Guest User Tracking ({guestUsers.length} unique IPs)</h3>
+                <h3 className="text-lg font-semibold mb-4">Guest Activity Logs</h3>
                 {guestUsers.length === 0 ? (
                   <div className="text-center py-8 text-muted-foreground">
-                    <Users className="h-10 w-10 sm:h-12 sm:w-12 mx-auto mb-4 opacity-50" />
-                    <p className="text-base sm:text-lg font-medium mb-2">No guest users yet</p>
-                    <p className="text-xs sm:text-sm">Guest user activity will appear here</p>
+                    <Users className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                    <p className="text-lg font-medium mb-2">No guest users yet</p>
+                    <p className="text-sm">Guest user activity will appear here</p>
                   </div>
                 ) : (
-                  <div className="space-y-3">
+                  <div className="space-y-4">
                     {guestUsers.map((guest) => (
-                      <Card key={guest.ip_address} className="p-3 sm:p-4 border-l-4 border-l-muted">
-                          <div className="space-y-3">
-                          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                            <div className="space-y-1.5 sm:space-y-1 flex-1">
-                              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-                                <Badge variant="outline" className="text-[10px] sm:text-xs">
-                                  📍 {guest.location || 'Unknown Location'}
+                      <Card key={guest.ip_address} className="border-l-4 border-l-primary/30">
+                        <CardHeader className="pb-3">
+                          <div className="flex items-start justify-between gap-4">
+                            <div className="flex-1 space-y-2">
+                              <div className="flex flex-wrap items-center gap-2">
+                                <Badge variant="outline" className="font-mono text-xs">
+                                  {guest.ip_address}
                                 </Badge>
-                                <Badge variant={guest.usage_count >= 3 ? 'destructive' : 'default'} className="text-[10px] sm:text-xs">
+                                <Badge variant="outline">
+                                  📍 {guest.location || 'Unknown'}
+                                </Badge>
+                                <Badge variant={guest.remaining_uses > 0 ? 'secondary' : 'destructive'}>
                                   {guest.usage_count}/3 uses
                                 </Badge>
-                                {guest.remaining_uses > 0 ? (
-                                  <Badge variant="secondary" className="text-[10px] sm:text-xs">{guest.remaining_uses} remaining</Badge>
-                                ) : (
-                                  <Badge variant="destructive" className="text-[10px] sm:text-xs">Limit reached</Badge>
+                                {guest.remaining_uses === 0 && (
+                                  <Badge variant="destructive">Limit Reached</Badge>
                                 )}
                               </div>
                               {guest.user_agent && (
-                                <p className="text-[10px] sm:text-xs text-muted-foreground break-all sm:truncate sm:max-w-md">
+                                <p className="text-xs text-muted-foreground truncate max-w-2xl">
                                   {guest.user_agent}
                                 </p>
                               )}
                             </div>
-                            <div className="text-left sm:text-right text-xs sm:text-sm">
-                              <div className="text-muted-foreground text-[10px] sm:text-xs">Last Activity</div>
-                              <div className="font-medium text-xs sm:text-sm">
-                                {new Date(guest.last_used_at).toLocaleDateString('en-US', {
+                            <div className="text-right">
+                              <div className="text-xs text-muted-foreground">Last Activity</div>
+                              <div className="text-sm font-medium">
+                                {new Date(guest.last_used_at).toLocaleString('en-US', {
                                   timeZone: 'America/Los_Angeles',
                                   month: 'short',
                                   day: 'numeric',
-                                  year: 'numeric',
                                   hour: '2-digit',
                                   minute: '2-digit'
                                 })} PST
                               </div>
                             </div>
                           </div>
-                          
-                          {/* Jump Generation Attempts */}
-                          {guest.jump_attempts && guest.jump_attempts.length > 0 && (
-                            <div className="pt-3 border-t">
-                              <h4 className="text-sm font-semibold mb-2">Jump Generation Attempts ({guest.jump_attempts.length})</h4>
-                              <div className="space-y-2">
+                        </CardHeader>
+                        
+                        {/* Jump Generation Attempts */}
+                        {guest.jump_attempts && guest.jump_attempts.length > 0 && (
+                          <CardContent className="pt-0">
+                            <div className="space-y-2">
+                              <h4 className="text-sm font-semibold mb-3">
+                                Jump Generation Attempts ({guest.jump_attempts.length})
+                              </h4>
+                              <div className="space-y-3">
                                 {guest.jump_attempts.map((attempt) => (
-                                <div key={attempt.id} className="p-3 bg-muted/30 rounded-lg space-y-2">
-                                  <div className="flex items-center justify-between">
-                                    <div className="flex items-center gap-2">
-                                      <Badge variant={attempt.status === 'active' ? 'default' : 'destructive'}>
-                                        {attempt.status === 'active' ? 'Success' : 'Failed'}
-                                      </Badge>
-                                      <span className="text-sm font-medium">{attempt.title}</span>
-                                      {attempt.location && (
-                                        <Badge variant="outline" className="text-xs">
-                                          {attempt.location}
-                                        </Badge>
-                                      )}
+                                  <div key={attempt.id} className="p-3 bg-muted/30 rounded-lg space-y-2 border">
+                                    <div className="flex items-start justify-between gap-3">
+                                      <div className="flex-1 space-y-2">
+                                        <div className="flex items-center gap-2 flex-wrap">
+                                          {/* Status Badge with improved logic */}
+                                          {(attempt.status === 'completed' || attempt.status === 'active') && (
+                                            <Badge variant="default">✓ Success</Badge>
+                                          )}
+                                          {attempt.status === 'generating' && (
+                                            <Badge variant="secondary">🔄 {attempt.completion_percentage}%</Badge>
+                                          )}
+                                          {(attempt.status === 'failed' || attempt.status === 'error') && (
+                                            <Badge variant="destructive">✗ Failed</Badge>
+                                          )}
+                                          {attempt.status !== 'completed' && attempt.status !== 'active' && 
+                                           attempt.status !== 'generating' && attempt.status !== 'failed' && 
+                                           attempt.status !== 'error' && (
+                                            <Badge variant="outline">{attempt.status}</Badge>
+                                          )}
+                                          <span className="text-sm font-medium">{attempt.title}</span>
+                                          {attempt.location && (
+                                            <Badge variant="outline" className="text-xs">
+                                              {attempt.location}
+                                            </Badge>
+                                          )}
+                                        </div>
+                                        {attempt.status_description && (
+                                          <p className="text-xs text-muted-foreground">{attempt.status_description}</p>
+                                        )}
+                                      </div>
+                                      <span className="text-xs text-muted-foreground whitespace-nowrap">
+                                        {new Date(attempt.created_at).toLocaleTimeString('en-US', {
+                                          timeZone: 'America/Los_Angeles',
+                                          hour: '2-digit',
+                                          minute: '2-digit'
+                                        })} PST
+                                      </span>
                                     </div>
-                                    <span className="text-xs text-muted-foreground">
-                                      {new Date(attempt.created_at).toLocaleTimeString('en-US', {
-                                        timeZone: 'America/Los_Angeles',
-                                        hour: '2-digit',
-                                        minute: '2-digit'
-                                      })} PST
-                                    </span>
+                                    
+                                    {/* Form Inputs - Compact Display */}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs pt-2 border-t">
+                                      <div>
+                                        <span className="font-medium text-muted-foreground">Goals: </span>
+                                        <span className="text-foreground">{attempt.form_goals || 'N/A'}</span>
+                                      </div>
+                                      <div>
+                                        <span className="font-medium text-muted-foreground">Challenges: </span>
+                                        <span className="text-foreground">{attempt.form_challenges || 'N/A'}</span>
+                                      </div>
+                                    </div>
                                   </div>
-                                  
-                                   {/* Form Inputs */}
-                                   <div className="space-y-2 text-xs">
-                                     <div>
-                                       <div className="font-medium text-muted-foreground mb-1">Goals:</div>
-                                       <div className="bg-background/50 p-2 rounded border whitespace-normal break-words">
-                                         {attempt.form_goals || 'N/A'}
-                                       </div>
-                                     </div>
-                                     <div>
-                                       <div className="font-medium text-muted-foreground mb-1">Challenges:</div>
-                                       <div className="bg-background/50 p-2 rounded border whitespace-normal break-words">
-                                         {attempt.form_challenges || 'N/A'}
-                                       </div>
-                                     </div>
-                                   </div>
-                                </div>
                                 ))}
                               </div>
                             </div>
-                          )}
-                          
-                          <div className="flex items-center justify-between pt-2 border-t text-sm">
-                            <div className="text-muted-foreground">
-                              First Seen: {new Date(guest.created_at).toLocaleDateString('en-US', {
+                            
+                            <div className="flex items-center justify-between pt-3 mt-3 border-t text-xs text-muted-foreground">
+                              <span>First Seen: {new Date(guest.created_at).toLocaleString('en-US', {
                                 timeZone: 'America/Los_Angeles',
                                 month: 'short',
                                 day: 'numeric',
                                 year: 'numeric',
                                 hour: '2-digit',
                                 minute: '2-digit'
-                              })} PST
+                              })} PST</span>
                             </div>
-                          </div>
-                        </div>
+                          </CardContent>
+                        )}
                       </Card>
                     ))}
                   </div>
                 )}
               </div>
-
             </CardContent>
           </Card>
         </TabsContent>
