@@ -99,7 +99,7 @@ Deno.serve(async (req) => {
       supabase.from("subscribers").select("id, user_id, email, subscribed, subscription_end, subscription_tier, created_at, stripe_customer_id"),
       supabase.from("contacts").select("id, email, first_name, last_name, source, status, newsletter_subscribed, lead_magnet_downloaded, tags, created_at"),
       supabase.from("products").select("id, name, file_name"),
-      supabase.from("user_jumps").select("id, user_id, title, full_content, status, created_at, ip_address, location, form_goals, form_challenges").order('created_at', { ascending: false }).limit(200),
+      supabase.from("user_jumps").select("id, user_id, title, full_content, status, created_at, ip_address, location, form_goals, form_challenges, completion_percentage").order('created_at', { ascending: false }).limit(200),
       supabase.from("user_credits").select("id, user_id, credits_balance, total_credits_purchased"),
       supabase.from("credit_transactions").select("id, user_id, transaction_type, credits_amount, description, created_at").order('created_at', { ascending: false }),
       supabase.from("subscription_audit_log").select("id, user_id, email, action, old_data, new_data, created_at, changed_by, change_source").order('created_at', { ascending: false }),
@@ -156,9 +156,10 @@ Deno.serve(async (req) => {
     const proSubscribers = paidSubscribers.filter(s => s.subscription_tier === 'JumpinAI Pro');
     const growthSubscribers = paidSubscribers.filter(s => s.subscription_tier === 'JumpinAI Growth');
 
-    // Jump stats
-    const successfulJumps = jumps.filter(j => j.status === 'active');
-    const failedJumps = jumps.filter(j => j.status !== 'active');
+    // Jump stats - properly categorize by status
+    const successfulJumps = jumps.filter(j => j.status === 'completed' || j.status === 'active');
+    const failedJumps = jumps.filter(j => j.status === 'failed' || j.status === 'error');
+    const generatingJumps = jumps.filter(j => j.status === 'generating');
     const guestJumps = jumps.filter(j => !j.user_id);
 
     const now = new Date();
@@ -206,6 +207,7 @@ Deno.serve(async (req) => {
       totalJumps: jumps.length,
       successfulJumps: successfulJumps.length,
       failedJumps: failedJumps.length,
+      generatingJumps: generatingJumps.length,
       guestJumps: guestJumps.length,
       abandonedCarts: orders.filter((o) => o.status === "pending").length,
       completedOrders: paidOrders.length,
@@ -399,11 +401,23 @@ Deno.serve(async (req) => {
       return events;
     }).sort((a, b) => b.timestamp - a.timestamp).slice(0, 100);
 
-    // Format jump generations with user info
+    // Format jump generations with user info and enhanced status tracking
     const jumpGenerations = jumps.map((j: any) => {
       const userProfile = profiles.find((p: any) => p.id === j.user_id);
       const userAuth = authById.get(j.user_id);
       const userSub = subscribers.find((s: any) => s.user_id === j.user_id);
+      
+      // Determine status description based on status and completion percentage
+      let statusDescription = '';
+      if (j.status === 'completed' || j.status === 'active') {
+        statusDescription = 'Successfully completed';
+      } else if (j.status === 'generating') {
+        statusDescription = `In progress: ${j.completion_percentage || 0}% complete`;
+      } else if (j.status === 'failed' || j.status === 'error') {
+        statusDescription = 'Generation failed - check logs for details';
+      } else {
+        statusDescription = `Unknown status: ${j.status}`;
+      }
       
       return {
         id: j.id,
@@ -412,6 +426,8 @@ Deno.serve(async (req) => {
         title: j.title,
         full_content: j.full_content,
         status: j.status,
+        completion_percentage: j.completion_percentage || 0,
+        status_description: statusDescription,
         created_at: j.created_at,
         is_guest: !j.user_id,
         ip_address: j.ip_address || null,
