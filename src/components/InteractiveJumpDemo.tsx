@@ -165,13 +165,13 @@ Output the template with placeholders [like this] where I can insert my personal
             </TabsList>
           </div>
 
-          {/* Tab Content - Responsive height with overflow */}
-            <div className="relative h-[360px] sm:h-[380px] md:h-[400px] overflow-hidden">
+          {/* Tab Content - Fixed height with internal scroll */}
+            <div className="relative h-[360px] sm:h-[380px] md:h-[400px]">
               {/* Overview Tab */}
-              <TabsContent value="overview" className="mt-0 h-full">
+              <TabsContent value="overview" className="mt-0 h-full overflow-hidden">
                 <div 
                   ref={overviewRef} 
-                  className="h-full max-h-full overflow-y-scroll space-y-6 p-6" 
+                  className="h-full overflow-y-auto space-y-6 p-6" 
                   style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                 >
                 {/* Executive Summary */}
@@ -350,10 +350,10 @@ Output the template with placeholders [like this] where I can insert my personal
             </TabsContent>
 
               {/* Plan Tab */}
-              <TabsContent value="plan" className="mt-0 h-full">
+              <TabsContent value="plan" className="mt-0 h-full overflow-hidden">
                 <div 
                   ref={planRef} 
-                  className="h-full max-h-full overflow-y-scroll space-y-8 p-8" 
+                  className="h-full overflow-y-auto space-y-8 p-8" 
                   style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                 >
                 <div className="relative group">
@@ -454,10 +454,10 @@ Output the template with placeholders [like this] where I can insert my personal
             </TabsContent>
 
               {/* Tools & Prompts Tab */}
-              <TabsContent value="tools" className="mt-0 h-full">
+              <TabsContent value="tools" className="mt-0 h-full overflow-hidden">
                 <div 
                   ref={toolsRef} 
-                  className="h-full max-h-full overflow-y-scroll space-y-6 p-6" 
+                  className="h-full overflow-y-auto space-y-6 p-6" 
                   style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                 >
                 {combosData.map((combo, index) => (
