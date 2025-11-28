@@ -83,7 +83,7 @@ export const toolPromptsService = {
     return data;
   },
 
-  async saveToolPrompts(toolPrompts: any[], userId: string, jumpId: string): Promise<string[]> {
+  async saveToolPrompts(toolPrompts: any[], userId: string | null, jumpId: string): Promise<string[]> {
     console.log('💾 STARTING saveToolPrompts with', toolPrompts.length, 'items');
     console.log('📋 Raw tool prompts data:', JSON.stringify(toolPrompts, null, 2));
     

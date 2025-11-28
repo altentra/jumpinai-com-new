@@ -830,7 +830,7 @@ export type Database = {
           tool_url: string | null
           updated_at: string
           use_cases: string[] | null
-          user_id: string
+          user_id: string | null
         }
         Insert: {
           ai_tools?: string[] | null
@@ -856,7 +856,7 @@ export type Database = {
           tool_url?: string | null
           updated_at?: string
           use_cases?: string[] | null
-          user_id: string
+          user_id?: string | null
         }
         Update: {
           ai_tools?: string[] | null
@@ -882,7 +882,7 @@ export type Database = {
           tool_url?: string | null
           updated_at?: string
           use_cases?: string[] | null
-          user_id?: string
+          user_id?: string | null
         }
         Relationships: []
       }
