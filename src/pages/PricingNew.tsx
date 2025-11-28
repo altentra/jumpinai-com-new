@@ -11,6 +11,12 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { creditsService, type CreditPackage, type SubscriptionPlan } from '@/services/creditsService';
 import { SubscriptionUpgradeModal } from '@/components/SubscriptionUpgradeModal';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 const PricingNew = () => {
   const { user, isAuthenticated, subscription } = useAuth();
@@ -231,8 +237,6 @@ const PricingNew = () => {
   };
 
   const getValueBadge = (credits: number) => {
-    if (credits === 250) return "Best Value";
-    if (credits === 100) return "Popular";
     return null;
   };
 
@@ -313,7 +317,7 @@ const PricingNew = () => {
                   </div>
                 </div>
                 <p className="text-sm sm:text-base md:text-lg text-muted-foreground/90 max-w-3xl mx-auto mb-4 leading-relaxed px-4">
-                  <span className="font-semibold text-foreground">1 credit = 1 jump generation</span> - each jump delivers a comprehensive transformation plan including situation analysis, strategic vision with success metrics, detailed action plan with phases and milestones, plus 9 AI tool-prompt combinations to execute your strategy.
+                  <span className="font-semibold text-foreground">1 credit = 1 Jump generation.</span> Each Jump includes a complete AI adaptation plan with tools and prompts, plus intelligent features to <span className="text-foreground">Clarify</span> steps into actionable details, <span className="text-foreground">Reroute</span> to explore alternative approaches, and <span className="text-foreground">Equip</span> any step with custom tool-prompt combinations on demand.
                 </p>
             </div>
           </section>
@@ -446,8 +450,7 @@ const PricingNew = () => {
                   <Card key={pkg.id} className="relative h-full flex flex-col glass hover:glass-dark transition-all duration-300 shadow-modern hover:shadow-modern-lg rounded-2xl border-0">
                     {valueBadge && (
                       <div className="absolute -top-2 -right-2 z-10">
-                        <Badge variant="secondary" className="text-xs shadow-modern rounded-full px-2 py-1">
-                          <Sparkles className="w-3 h-3 mr-1" />
+                        <Badge className={`text-xs shadow-modern rounded-full px-2 py-1 ${valueBadge === 'Most Popular' ? 'bg-primary text-primary-foreground' : 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'}`}>
                           {valueBadge}
                         </Badge>
                       </div>
@@ -509,8 +512,7 @@ const PricingNew = () => {
                   <Card key={pkg.id} className="relative h-full flex flex-col glass hover:glass-dark transition-all duration-300 shadow-modern hover:shadow-modern-lg rounded-2xl border-0">
                     {valueBadge && (
                       <div className="absolute -top-2 -right-2 z-10">
-                        <Badge variant="secondary" className="text-xs shadow-modern rounded-full px-2 py-1">
-                          <Sparkles className="w-3 h-3 mr-1" />
+                        <Badge className={`text-xs shadow-modern rounded-full px-2 py-1 ${valueBadge === 'Most Popular' ? 'bg-primary text-primary-foreground' : 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'}`}>
                           {valueBadge}
                         </Badge>
                       </div>
@@ -573,8 +575,7 @@ const PricingNew = () => {
                     <Card key={pkg.id} className="relative h-full flex flex-col glass hover:glass-dark transition-all duration-300 shadow-modern hover:shadow-modern-lg rounded-2xl border-0">
                       {valueBadge && (
                         <div className="absolute -top-2 -right-2 z-10">
-                          <Badge variant="secondary" className="text-xs shadow-modern rounded-full px-2 py-1">
-                            <Sparkles className="w-3 h-3 mr-1" />
+                          <Badge className={`text-xs shadow-modern rounded-full px-2 py-1 ${valueBadge === 'Most Popular' ? 'bg-primary text-primary-foreground' : 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'}`}>
                             {valueBadge}
                           </Badge>
                         </div>
@@ -637,27 +638,27 @@ const PricingNew = () => {
                   <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                     <Zap className="w-6 h-6 text-primary" />
                   </div>
-                  <h3 className="font-semibold mb-2">One Credit Per Generation</h3>
+                  <h3 className="font-semibold mb-2">Simple & Transparent</h3>
                   <p className="text-sm text-muted-foreground">
-                    Each AI transformation plan, strategy, or workflow costs 1 credit to generate
+                    One credit equals one complete Jump generation. No hidden fees, usage caps, or confusing tier restrictions
                   </p>
                 </div>
                 <div className="text-center">
                   <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                     <Star className="w-6 h-6 text-primary" />
                   </div>
-                  <h3 className="font-semibold mb-2">Credits Roll Over</h3>
+                  <h3 className="font-semibold mb-2">Pay Your Way</h3>
                   <p className="text-sm text-muted-foreground">
-                    Unused monthly credits carry forward to the next month. No credits go to waste
+                    Choose subscriptions for ongoing needs or buy credit packages for flexibility. Mix and match as your needs evolve
                   </p>
                 </div>
                 <div className="text-center">
                   <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                     <Crown className="w-6 h-6 text-primary" />
                   </div>
-                  <h3 className="font-semibold mb-2">Access Everything</h3>
+                  <h3 className="font-semibold mb-2">Never Lose Credits</h3>
                   <p className="text-sm text-muted-foreground">
-                    All plans include access to our complete library of guides, resources, and tools
+                    Monthly credits roll over. Purchased packages never expire. Your investment stays yours, ready when you need it
                   </p>
                 </div>
               </div>
@@ -668,32 +669,85 @@ const PricingNew = () => {
           <section className="container mx-auto px-4 py-12 sm:py-16">
             <div className="max-w-3xl mx-auto">
               <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8 sm:mb-12">Frequently Asked Questions</h2>
-              <div className="space-y-8">
-                <div>
-                  <h3 className="font-semibold mb-2">What can I do with credits?</h3>
-                  <p className="text-muted-foreground">
-                    Credits are used to generate AI transformation plans, strategies, workflows, and other AI-powered content through our JumpinAI Studio.
-                  </p>
-                </div>
-                <div>
-                  <h3 className="font-semibold mb-2">Do credits expire?</h3>
-                  <p className="text-muted-foreground">
-                    Monthly subscription credits roll over to the next month, so you never lose them. Purchased credit packages also never expire.
-                  </p>
-                </div>
-                <div>
-                  <h3 className="font-semibold mb-2">Can I change my plan anytime?</h3>
-                  <p className="text-muted-foreground">
-                    Yes! You can upgrade, downgrade, or cancel your subscription at any time. Changes take effect at your next billing cycle.
-                  </p>
-                </div>
-                <div>
-                  <h3 className="font-semibold mb-2">What's included with all plans?</h3>
-                  <p className="text-muted-foreground">
-                    All paid plans include access to our complete resource library, guides, templates, and priority support. Higher tier plans include additional features like phone support and custom workflows.
-                  </p>
-                </div>
-              </div>
+              <Accordion type="single" collapsible className="space-y-4">
+                <AccordionItem value="item-1" className="rounded-2xl glass border border-primary/10 hover:border-primary/20 transition-all duration-300 shadow-lg overflow-hidden">
+                  <AccordionTrigger className="px-5 sm:px-6 py-4 hover:no-underline group">
+                    <h3 className="text-base font-bold text-left group-hover:text-primary transition-colors">
+                      What exactly does 1 credit get me?
+                    </h3>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-5 sm:px-6 pb-4 pt-0">
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      1 credit generates one complete Jump with three tabs: Overview (executive summary), Plan (structured action steps), and Tools & Prompts (AI tool recommendations with ready-to-use prompts). Plus unlimited use of Clarify, Reroute, and Equip features to adapt your plan.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="item-2" className="rounded-2xl glass border border-primary/10 hover:border-primary/20 transition-all duration-300 shadow-lg overflow-hidden">
+                  <AccordionTrigger className="px-5 sm:px-6 py-4 hover:no-underline group">
+                    <h3 className="text-base font-bold text-left group-hover:text-primary transition-colors">
+                      How do the adaptive features work?
+                    </h3>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-5 sm:px-6 pb-4 pt-0">
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      Clarify breaks down steps into granular details. Reroute generates alternative approaches. Equip creates custom tool-prompt combinations for any step. These features require a subscription tier based on depth level—Free users and guests can use them on main steps only.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="item-3" className="rounded-2xl glass border border-primary/10 hover:border-primary/20 transition-all duration-300 shadow-lg overflow-hidden">
+                  <AccordionTrigger className="px-5 sm:px-6 py-4 hover:no-underline group">
+                    <h3 className="text-base font-bold text-left group-hover:text-primary transition-colors">
+                      Do credits expire?
+                    </h3>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-5 sm:px-6 pb-4 pt-0">
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      No. Monthly subscription credits roll over if unused. Purchased credit packages never expire—use them whenever you need them.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="item-4" className="rounded-2xl glass border border-primary/10 hover:border-primary/20 transition-all duration-300 shadow-lg overflow-hidden">
+                  <AccordionTrigger className="px-5 sm:px-6 py-4 hover:no-underline group">
+                    <h3 className="text-base font-bold text-left group-hover:text-primary transition-colors">
+                      Can I upgrade or downgrade my plan?
+                    </h3>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-5 sm:px-6 pb-4 pt-0">
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      Yes. Upgrades take effect immediately with prorated charges. Downgrades are scheduled for your next billing cycle to protect your current benefits.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="item-5" className="rounded-2xl glass border border-primary/10 hover:border-primary/20 transition-all duration-300 shadow-lg overflow-hidden">
+                  <AccordionTrigger className="px-5 sm:px-6 py-4 hover:no-underline group">
+                    <h3 className="text-base font-bold text-left group-hover:text-primary transition-colors">
+                      What can I do on the Free plan?
+                    </h3>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-5 sm:px-6 pb-4 pt-0">
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      Free plan includes 3 welcome credits to generate Jumps. You can use Clarify, Reroute, and Equip on main steps (level 1 only). Deeper clarification levels require a paid subscription.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="item-6" className="rounded-2xl glass border border-primary/10 hover:border-primary/20 transition-all duration-300 shadow-lg overflow-hidden">
+                  <AccordionTrigger className="px-5 sm:px-6 py-4 hover:no-underline group">
+                    <h3 className="text-base font-bold text-left group-hover:text-primary transition-colors">
+                      Can I try JumpinAI without signing up?
+                    </h3>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-5 sm:px-6 pb-4 pt-0">
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      Yes. Guest users can generate up to 3 Jumps without an account. However, guest Jumps cannot be saved for later access—sign up to save your Jumps and unlock all features.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
             </div>
           </section>
         </main>

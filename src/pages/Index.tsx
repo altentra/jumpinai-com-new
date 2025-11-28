@@ -1358,10 +1358,10 @@ const Index = () => {
               Choose Your AI Transformation Plan
             </h2>
             <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto mb-4">
-              Flexible plans designed to accelerate your business growth
+              Flexible plans designed to accelerate your personal and business growth
             </p>
             <p className="text-base text-muted-foreground max-w-3xl mx-auto">
-              <span className="font-semibold text-foreground">1 credit = 1 Jump generation</span> - each Jump delivers a comprehensive transformation plan including situation analysis, strategic vision with success metrics, detailed action plan with phases and milestones, plus 9 AI tool-prompt combinations to execute your strategy.
+              <span className="font-semibold text-foreground">1 credit = 1 Jump generation.</span> Each Jump is a complete AI adaptation plan with tools and prompts to execute your strategy.
             </p>
           </div>
 
