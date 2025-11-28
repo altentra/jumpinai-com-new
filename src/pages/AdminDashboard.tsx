@@ -1053,10 +1053,10 @@ export default function AdminDashboard() {
         <TabsContent value="guests">
           <Card>
             <CardHeader>
-              <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle>Guest Users Activity</CardTitle>
-                  <p className="text-sm text-muted-foreground">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                <div className="flex-1">
+                  <CardTitle className="text-lg sm:text-xl">Guest Users Activity</CardTitle>
+                  <p className="text-xs sm:text-sm text-muted-foreground mt-1">
                     Track all guest user activity, jump attempts, usage limits, and detailed logs
                   </p>
                 </div>
@@ -1066,20 +1066,21 @@ export default function AdminDashboard() {
                     disabled={resettingGuests}
                     variant="destructive"
                     size="sm"
+                    className="w-full sm:w-auto"
                   >
                     {resettingGuests ? (
                       <>
                         <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                        Resetting...
+                        <span className="text-xs sm:text-sm">Resetting...</span>
                       </>
                     ) : (
                       <>
                         <RefreshCcw className="h-4 w-4 mr-2" />
-                        Reset Guest Database
+                        <span className="text-xs sm:text-sm">Reset Guest Database</span>
                       </>
                     )}
                   </Button>
-                  <p className="text-xs text-muted-foreground max-w-xs">
+                  <p className="text-[10px] sm:text-xs text-muted-foreground">
                     Clears server records & your browser. Guests must clear their own cache to reset limits.
                   </p>
                 </div>
@@ -1087,67 +1088,67 @@ export default function AdminDashboard() {
             </CardHeader>
             <CardContent className="space-y-6">
               {/* Guest Usage Summary */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="text-center p-4 bg-muted/50 rounded-lg">
-                  <Users className="h-6 w-6 mx-auto mb-2 text-primary" />
-                  <div className="text-2xl font-bold">{guestUsers.length}</div>
-                  <p className="text-sm text-muted-foreground">Unique Guests</p>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+                <div className="text-center p-3 sm:p-4 bg-muted/50 rounded-lg">
+                  <Users className="h-5 w-5 sm:h-6 sm:w-6 mx-auto mb-2 text-primary" />
+                  <div className="text-xl sm:text-2xl font-bold">{guestUsers.length}</div>
+                  <p className="text-xs sm:text-sm text-muted-foreground">Unique Guests</p>
                 </div>
-                <div className="text-center p-4 bg-muted/50 rounded-lg">
-                  <TrendingUp className="h-6 w-6 mx-auto mb-2 text-green-600" />
-                  <div className="text-2xl font-bold">
+                <div className="text-center p-3 sm:p-4 bg-muted/50 rounded-lg">
+                  <TrendingUp className="h-5 w-5 sm:h-6 sm:w-6 mx-auto mb-2 text-green-600" />
+                  <div className="text-xl sm:text-2xl font-bold">
                     {guestUsers.reduce((sum, g) => sum + (g.jump_attempts?.length || 0), 0)}
                   </div>
-                  <p className="text-sm text-muted-foreground">Total Jump Attempts</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground">Total Jump Attempts</p>
                 </div>
-                <div className="text-center p-4 bg-muted/50 rounded-lg">
-                  <Clock className="h-6 w-6 mx-auto mb-2 text-orange-600" />
-                  <div className="text-2xl font-bold">
+                <div className="text-center p-3 sm:p-4 bg-muted/50 rounded-lg">
+                  <Clock className="h-5 w-5 sm:h-6 sm:w-6 mx-auto mb-2 text-orange-600" />
+                  <div className="text-xl sm:text-2xl font-bold">
                     {guestUsers.filter(g => g.remaining_uses === 0).length}
                   </div>
-                  <p className="text-sm text-muted-foreground">Limit Reached</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground">Limit Reached</p>
                 </div>
               </div>
 
               {/* Guest User Tracking */}
               <div>
-                <h3 className="text-lg font-semibold mb-4">Guest Activity Logs</h3>
+                <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">Guest Activity Logs</h3>
                 {guestUsers.length === 0 ? (
                   <div className="text-center py-8 text-muted-foreground">
-                    <Users className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                    <p className="text-lg font-medium mb-2">No guest users yet</p>
-                    <p className="text-sm">Guest user activity will appear here</p>
+                    <Users className="h-10 w-10 sm:h-12 sm:w-12 mx-auto mb-4 opacity-50" />
+                    <p className="text-base sm:text-lg font-medium mb-2">No guest users yet</p>
+                    <p className="text-xs sm:text-sm">Guest user activity will appear here</p>
                   </div>
                 ) : (
-                  <div className="space-y-4">
+                  <div className="space-y-3 sm:space-y-4">
                     {guestUsers.map((guest) => (
                       <Card key={guest.ip_address} className="border-l-4 border-l-primary/30">
-                        <CardHeader className="pb-3">
-                          <div className="flex items-start justify-between gap-4">
+                        <CardHeader className="pb-3 px-3 sm:px-6 pt-3 sm:pt-6">
+                          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                             <div className="flex-1 space-y-2">
-                              <div className="flex flex-wrap items-center gap-2">
-                                <Badge variant="outline" className="font-mono text-xs">
+                              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                                <Badge variant="outline" className="font-mono text-[10px] sm:text-xs break-all">
                                   {guest.ip_address}
                                 </Badge>
-                                <Badge variant="outline">
+                                <Badge variant="outline" className="text-[10px] sm:text-xs">
                                   📍 {guest.location || 'Unknown'}
                                 </Badge>
-                                <Badge variant={guest.remaining_uses > 0 ? 'secondary' : 'destructive'}>
+                                <Badge variant={guest.remaining_uses > 0 ? 'secondary' : 'destructive'} className="text-[10px] sm:text-xs">
                                   {guest.usage_count}/3 uses
                                 </Badge>
                                 {guest.remaining_uses === 0 && (
-                                  <Badge variant="destructive">Limit Reached</Badge>
+                                  <Badge variant="destructive" className="text-[10px] sm:text-xs">Limit Reached</Badge>
                                 )}
                               </div>
                               {guest.user_agent && (
-                                <p className="text-xs text-muted-foreground truncate max-w-2xl">
+                                <p className="text-[10px] sm:text-xs text-muted-foreground break-words line-clamp-2">
                                   {guest.user_agent}
                                 </p>
                               )}
                             </div>
-                            <div className="text-right">
-                              <div className="text-xs text-muted-foreground">Last Activity</div>
-                              <div className="text-sm font-medium">
+                            <div className="text-left sm:text-right">
+                              <div className="text-[10px] sm:text-xs text-muted-foreground">Last Activity</div>
+                              <div className="text-xs sm:text-sm font-medium whitespace-nowrap">
                                 {new Date(guest.last_used_at).toLocaleString('en-US', {
                                   timeZone: 'America/Los_Angeles',
                                   month: 'short',
@@ -1162,44 +1163,44 @@ export default function AdminDashboard() {
                         
                         {/* Jump Generation Attempts */}
                         {guest.jump_attempts && guest.jump_attempts.length > 0 && (
-                          <CardContent className="pt-0">
+                          <CardContent className="pt-0 px-3 sm:px-6 pb-3 sm:pb-6">
                             <div className="space-y-2">
-                              <h4 className="text-sm font-semibold mb-3">
+                              <h4 className="text-xs sm:text-sm font-semibold mb-2 sm:mb-3">
                                 Jump Generation Attempts ({guest.jump_attempts.length})
                               </h4>
-                              <div className="space-y-3">
+                              <div className="space-y-2 sm:space-y-3">
                                 {guest.jump_attempts.map((attempt) => (
-                                  <div key={attempt.id} className="p-3 bg-muted/30 rounded-lg space-y-2 border">
-                                    <div className="flex items-start justify-between gap-3">
-                                      <div className="flex-1 space-y-2">
-                                        <div className="flex items-center gap-2 flex-wrap">
+                                  <div key={attempt.id} className="p-2 sm:p-3 bg-muted/30 rounded-lg space-y-2 border">
+                                    <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-3">
+                                      <div className="flex-1 space-y-1.5 sm:space-y-2">
+                                        <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
                                           {/* Status Badge with improved logic */}
                                           {(attempt.status === 'completed' || attempt.status === 'active') && (
-                                            <Badge variant="default">✓ Success</Badge>
+                                            <Badge variant="default" className="text-[10px] sm:text-xs">✓ Success</Badge>
                                           )}
                                           {attempt.status === 'generating' && (
-                                            <Badge variant="secondary">🔄 {attempt.completion_percentage}%</Badge>
+                                            <Badge variant="secondary" className="text-[10px] sm:text-xs">🔄 {attempt.completion_percentage}%</Badge>
                                           )}
                                           {(attempt.status === 'failed' || attempt.status === 'error') && (
-                                            <Badge variant="destructive">✗ Failed</Badge>
+                                            <Badge variant="destructive" className="text-[10px] sm:text-xs">✗ Failed</Badge>
                                           )}
                                           {attempt.status !== 'completed' && attempt.status !== 'active' && 
                                            attempt.status !== 'generating' && attempt.status !== 'failed' && 
                                            attempt.status !== 'error' && (
-                                            <Badge variant="outline">{attempt.status}</Badge>
+                                            <Badge variant="outline" className="text-[10px] sm:text-xs">{attempt.status}</Badge>
                                           )}
-                                          <span className="text-sm font-medium">{attempt.title}</span>
+                                          <span className="text-xs sm:text-sm font-medium break-words">{attempt.title}</span>
                                           {attempt.location && (
-                                            <Badge variant="outline" className="text-xs">
+                                            <Badge variant="outline" className="text-[10px] sm:text-xs">
                                               {attempt.location}
                                             </Badge>
                                           )}
                                         </div>
                                         {attempt.status_description && (
-                                          <p className="text-xs text-muted-foreground">{attempt.status_description}</p>
+                                          <p className="text-[10px] sm:text-xs text-muted-foreground break-words">{attempt.status_description}</p>
                                         )}
                                       </div>
-                                      <span className="text-xs text-muted-foreground whitespace-nowrap">
+                                      <span className="text-[10px] sm:text-xs text-muted-foreground whitespace-nowrap">
                                         {new Date(attempt.created_at).toLocaleTimeString('en-US', {
                                           timeZone: 'America/Los_Angeles',
                                           hour: '2-digit',
@@ -1209,12 +1210,12 @@ export default function AdminDashboard() {
                                     </div>
                                     
                                     {/* Form Inputs - Compact Display */}
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs pt-2 border-t">
-                                      <div>
+                                    <div className="grid grid-cols-1 gap-1.5 sm:gap-2 text-[10px] sm:text-xs pt-2 border-t">
+                                      <div className="break-words">
                                         <span className="font-medium text-muted-foreground">Goals: </span>
                                         <span className="text-foreground">{attempt.form_goals || 'N/A'}</span>
                                       </div>
-                                      <div>
+                                      <div className="break-words">
                                         <span className="font-medium text-muted-foreground">Challenges: </span>
                                         <span className="text-foreground">{attempt.form_challenges || 'N/A'}</span>
                                       </div>
@@ -1224,8 +1225,8 @@ export default function AdminDashboard() {
                               </div>
                             </div>
                             
-                            <div className="flex items-center justify-between pt-3 mt-3 border-t text-xs text-muted-foreground">
-                              <span>First Seen: {new Date(guest.created_at).toLocaleString('en-US', {
+                            <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between pt-2 sm:pt-3 mt-2 sm:mt-3 border-t text-[10px] sm:text-xs text-muted-foreground">
+                              <span className="break-words">First Seen: {new Date(guest.created_at).toLocaleString('en-US', {
                                 timeZone: 'America/Los_Angeles',
                                 month: 'short',
                                 day: 'numeric',
