@@ -332,7 +332,7 @@ export const jumpinAIStudioService = {
                     try {
                       const { toolPromptsService } = await import('@/services/toolPromptsService');
                       console.log('💾 toolPromptsService loaded, calling saveToolPrompts...');
-                      const savedIds = await toolPromptsService.saveToolPrompts(toolPromptsArray, userId || 'guest', jumpId);
+                      const savedIds = await toolPromptsService.saveToolPrompts(toolPromptsArray, userId || null, jumpId);
                       console.log('✅ Tool prompts saved successfully with IDs:', savedIds);
                       
                       // Update the result with saved IDs
