@@ -28,6 +28,7 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
   const [copiedPrompts, setCopiedPrompts] = React.useState<Set<number>>(new Set());
   const [activeTab, setActiveTab] = React.useState('overview');
   const skipScrollToTopRef = React.useRef(false);
+  const tabsContainerRef = React.useRef<HTMLDivElement>(null);
   const overviewContentRef = React.useRef<HTMLDivElement>(null);
   const planContentRef = React.useRef<HTMLDivElement>(null);
   const toolPromptsContentRef = React.useRef<HTMLDivElement>(null);
@@ -62,28 +63,37 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
     
     // Scroll to top of tab content unless it's a programmatic change from View button
     if (!skipScrollToTopRef.current) {
-      // Wait for tab content to render, then scroll
-      requestAnimationFrame(() => {
-        setTimeout(() => {
-          // Get the appropriate content ref based on the new tab
-          let contentRef: React.RefObject<HTMLDivElement> | null = null;
-          if (newTab === 'overview') contentRef = overviewContentRef;
-          else if (newTab === 'plan') contentRef = planContentRef;
-          else if (newTab === 'toolPrompts') contentRef = toolPromptsContentRef;
-          
-          // Scroll to the position of the content with offset for sticky tabs
-          if (contentRef?.current) {
-            const elementPosition = contentRef.current.getBoundingClientRect().top + window.pageYOffset;
-            // Use larger offset and ensure we don't scroll past the top of the page
-            const offsetPosition = Math.max(0, elementPosition - 130);
-            
-            window.scrollTo({
-              top: offsetPosition,
-              behavior: 'smooth'
-            });
-          }
-        }, 50);
-      });
+      // Check if tabs are sticky (scrolled past their original position)
+      if (tabsContainerRef.current) {
+        const tabsRect = tabsContainerRef.current.getBoundingClientRect();
+        const isTabsSticky = tabsRect.top <= 0; // Tabs are sticky when they reach top of viewport
+        
+        // Only scroll if tabs are sticky
+        if (isTabsSticky) {
+          // Wait for tab content to render, then scroll
+          requestAnimationFrame(() => {
+            setTimeout(() => {
+              // Get the appropriate content ref based on the new tab
+              let contentRef: React.RefObject<HTMLDivElement> | null = null;
+              if (newTab === 'overview') contentRef = overviewContentRef;
+              else if (newTab === 'plan') contentRef = planContentRef;
+              else if (newTab === 'toolPrompts') contentRef = toolPromptsContentRef;
+              
+              // Scroll to the position of the content with offset for sticky tabs
+              if (contentRef?.current) {
+                const elementPosition = contentRef.current.getBoundingClientRect().top + window.pageYOffset;
+                // Use larger offset and ensure we don't scroll past the top of the page
+                const offsetPosition = Math.max(0, elementPosition - 130);
+                
+                window.scrollTo({
+                  top: offsetPosition,
+                  behavior: 'smooth'
+                });
+              }
+            }, 50);
+          });
+        }
+      }
     }
     skipScrollToTopRef.current = false;
   };
@@ -159,7 +169,7 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
     <div className="w-full max-w-full space-y-4" style={{ overflow: 'visible' }}>
       {/* Content Tabs - Ultra Premium Design with Sticky Behavior */}
       <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full" style={{ overflow: 'visible', display: 'block' }}>
-        <div className="sticky top-0 z-50 mb-6 bg-background/80 backdrop-blur-xl pb-2 -mt-2 pt-1">
+        <div ref={tabsContainerRef} className="sticky top-0 z-50 mb-6 bg-background/80 backdrop-blur-xl pb-2 -mt-2 pt-1">
           {/* Mobile: Equal width tabs */}
           <div className="sm:hidden">
             <TabsList className="grid h-auto w-full grid-cols-3 gap-1 p-1.5 bg-gradient-to-r from-background/95 via-background/90 to-background/95 backdrop-blur-xl rounded-xl border border-border/50 shadow-lg shadow-primary/10">
