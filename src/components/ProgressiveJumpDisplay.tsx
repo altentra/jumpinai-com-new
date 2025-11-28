@@ -33,6 +33,9 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
   const [isRefreshing, setIsRefreshing] = React.useState(false);
   const [toolPrompts, setToolPrompts] = React.useState<any[]>(result.components?.toolPrompts || []);
   const skipScrollToTopRef = React.useRef(false);
+  const overviewContentRef = React.useRef<HTMLDivElement>(null);
+  const planContentRef = React.useRef<HTMLDivElement>(null);
+  const toolPromptsContentRef = React.useRef<HTMLDivElement>(null);
 
   // Update tool prompts when result changes
   React.useEffect(() => {
@@ -84,9 +87,18 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
   };
 
   const handleTabChange = (newTab: string) => {
-    // Scroll to top unless it's a programmatic change from View button
+    // Scroll to top of tab content unless it's a programmatic change from View button
     if (!skipScrollToTopRef.current) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      // Get the appropriate content ref based on the new tab
+      let contentRef: React.RefObject<HTMLDivElement> | null = null;
+      if (newTab === 'overview') contentRef = overviewContentRef;
+      else if (newTab === 'plan') contentRef = planContentRef;
+      else if (newTab === 'toolPrompts') contentRef = toolPromptsContentRef;
+      
+      // Scroll the tab content into view at the top
+      if (contentRef?.current) {
+        contentRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     }
     skipScrollToTopRef.current = false;
     setActiveTab(newTab);
@@ -395,7 +407,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
 
         <TabsContent value="overview" className="mt-0" style={{ overflow: 'visible', maxHeight: 'none', height: 'auto', display: 'block' }}>
           {result.comprehensive_plan ? (
-            <div className="space-y-6">
+            <div ref={overviewContentRef} className="space-y-6">
               {/* Executive Summary */}
               {result.comprehensive_plan.executiveSummary && (
                 <div className="relative group">
@@ -696,8 +708,9 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
         </TabsContent>
 
         <TabsContent value="plan" className="mt-0" style={{ overflow: 'visible', maxHeight: 'none', height: 'auto', display: 'block' }}>
-          {result.structured_plan && result.structured_plan.phases ? (
-            <JumpPlanDisplay
+          <div ref={planContentRef}>
+            {result.structured_plan && result.structured_plan.phases ? (
+              <JumpPlanDisplay
               planContent={result.full_content || ''}
               structuredPlan={result.comprehensive_plan}
               onEdit={() => {
@@ -720,6 +733,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
               Creating implementation plan...
             </div>
           )}
+          </div>
         </TabsContent>
 
         <TabsContent value="toolPrompts" className="mt-0" style={{ overflow: 'visible', maxHeight: 'none', height: 'auto', display: 'block' }}>
@@ -772,7 +786,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
             const isGenerating = validCombosWithIndices.length < expectedCount && toolPrompts.length < expectedCount;
 
             return (
-              <div className="grid gap-4">
+              <div ref={toolPromptsContentRef} className="grid gap-4">
                 {validCombosWithIndices.map(({ combo, originalIndex }) => {
                   const displayNumber = originalIndex + 1;
                   console.log(`🔧 Rendering valid combo ${displayNumber}:`, {
