@@ -1659,7 +1659,7 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                       </p>
                                     </div>
                                   </div>
-                                    {hasValidToolPromptId ? (
+                                    {hasValidToolPromptId && isGenerationComplete ? (
                                       <button
                                         onClick={(e) => {
                                           e.stopPropagation();
@@ -1961,28 +1961,34 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                                             Tools & Prompts for this Step
                                                           </p>
                                                           <p className="text-xs text-muted-foreground/80 leading-snug">
-                                                            Custom AI tool & prompt ready for this step
+                                                            {isGenerationComplete ? "Custom AI tool & prompt ready for this step" : "Tool & prompt combo generating..."}
                                                           </p>
                                                         </div>
                                                       </div>
-                                                      <button
-                                                        onClick={(e) => {
-                                                          e.stopPropagation();
-                                                          if (onToolPromptClick) {
-                                                            onToolPromptClick(999, equippedSteps[altSubStepKey]);
-                                                          }
-                                                        }}
-                                                        className="relative group/view shrink-0"
-                                                      >
-                                                        <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/40 via-accent/30 to-primary/40 rounded-[2rem] blur-md opacity-40 group-hover/view:opacity-70 transition duration-500"></div>
-                                                        <div className="relative flex items-center gap-2 px-5 py-2.5 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2rem] border border-primary/40 group-hover/view:border-primary/60 transition-all duration-300 overflow-hidden shadow-lg shadow-primary/10">
-                                                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/view:translate-x-full transition-transform duration-1000"></div>
-                                                          <span className="relative text-sm font-bold text-foreground group-hover/view:text-primary transition-colors duration-300 whitespace-nowrap">View</span>
-                                                          <div className="relative flex items-center justify-center w-5 h-5 rounded-xl bg-primary/30 group-hover/view:bg-primary/40 transition-all duration-300">
-                                                            <ArrowRight className="w-3.5 h-3.5 text-primary group-hover/view:translate-x-0.5 transition-transform duration-300" />
+                                                      {isGenerationComplete ? (
+                                                        <button
+                                                          onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            if (onToolPromptClick) {
+                                                              onToolPromptClick(999, equippedSteps[altSubStepKey]);
+                                                            }
+                                                          }}
+                                                          className="relative group/view shrink-0"
+                                                        >
+                                                          <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/40 via-accent/30 to-primary/40 rounded-[2rem] blur-md opacity-40 group-hover/view:opacity-70 transition duration-500"></div>
+                                                          <div className="relative flex items-center gap-2 px-5 py-2.5 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2rem] border border-primary/40 group-hover/view:border-primary/60 transition-all duration-300 overflow-hidden shadow-lg shadow-primary/10">
+                                                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/view:translate-x-full transition-transform duration-1000"></div>
+                                                            <span className="relative text-sm font-bold text-foreground group-hover/view:text-primary transition-colors duration-300 whitespace-nowrap">View</span>
+                                                            <div className="relative flex items-center justify-center w-5 h-5 rounded-xl bg-primary/30 group-hover/view:bg-primary/40 transition-all duration-300">
+                                                              <ArrowRight className="w-3.5 h-3.5 text-primary group-hover/view:translate-x-0.5 transition-transform duration-300" />
+                                                            </div>
                                                           </div>
-                                                        </div>
-                                                      </button>
+                                                        </button>
+                                                      ) : (
+                                                        <Badge variant="secondary" className="text-[10px] shrink-0 h-6">
+                                                          Generating
+                                                        </Badge>
+                                                      )}
                                                     </div>
                                                   </div>
                                                  )}
