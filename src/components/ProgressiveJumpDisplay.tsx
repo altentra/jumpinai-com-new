@@ -99,9 +99,12 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
         
         // Only scroll if tabs are sticky
         if (isTabsSticky) {
-          // Wait for tab content to render, then scroll
+          // Detect mobile for instant scroll (prevents touch event interference)
+          const isMobile = window.innerWidth < 768;
+          
+          // Wait for tab content to render, then scroll - simplified for mobile
           requestAnimationFrame(() => {
-            setTimeout(() => {
+            try {
               // Get the appropriate content ref based on the new tab
               let contentRef: React.RefObject<HTMLDivElement> | null = null;
               if (newTab === 'overview') contentRef = overviewContentRef;
@@ -114,12 +117,16 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                 // Use larger offset and ensure we don't scroll past the top of the page
                 const offsetPosition = Math.max(0, elementPosition - 130);
                 
+                // Use instant scroll on mobile to prevent touch event issues
                 window.scrollTo({
                   top: offsetPosition,
-                  behavior: 'smooth'
+                  behavior: isMobile ? 'auto' : 'smooth'
                 });
               }
-            }, 50);
+            } catch (error) {
+              console.error('Tab scroll error:', error);
+              // Fail silently to prevent page crashes
+            }
           });
         }
       }
