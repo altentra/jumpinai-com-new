@@ -326,26 +326,45 @@ export const jumpinAIStudioService = {
                 }
                 
                 if (jumpId && toolPromptsArray.length > 0) {
-                  console.log(`💾 Attempting to save ${toolPromptsArray.length} tool prompts...`);
+                  console.log(`💾 Attempting to save ${toolPromptsArray.length} tool prompts to database...`);
                   console.log('💾 Save context:', { userId: userId || 'guest', jumpId, arrayLength: toolPromptsArray.length });
+                  
+                  // IMPORTANT: Generate temporary IDs immediately so UI can render
+                  // These will be replaced with real database IDs when save completes
+                  const tempIds = toolPromptsArray.map(() => crypto.randomUUID());
+                  result.components!.toolPrompts = toolPromptsArray.map((tp, idx) => ({
+                    ...tp,
+                    id: tempIds[idx]
+                  }));
+                  
+                  // Notify UI immediately with temp IDs so View buttons work
+                  if (onProgress) {
+                    console.log('⚡ Notifying UI with temporary IDs for immediate display');
+                    onProgress(step, 'tool_prompts_ids_updated', { 
+                      tool_prompts: result.components!.toolPrompts,
+                      ids: tempIds
+                    });
+                  }
+                  
+                  // Then save to database in background and update with real IDs when done
                   (async () => {
                     try {
                       const { toolPromptsService } = await import('@/services/toolPromptsService');
                       console.log('💾 toolPromptsService loaded, calling saveToolPrompts...');
                       const savedIds = await toolPromptsService.saveToolPrompts(toolPromptsArray, userId || null, jumpId);
-                      console.log('✅ Tool prompts saved successfully with IDs:', savedIds);
+                      console.log('✅ Tool prompts saved successfully with real database IDs:', savedIds);
                       
-                      // Update the result with saved IDs
+                      // Update the result with real database IDs
                       if (savedIds && savedIds.length === toolPromptsArray.length) {
                         result.components!.toolPrompts = toolPromptsArray.map((tp, idx) => ({
                           ...tp,
                           id: savedIds[idx]
                         }));
-                        console.log('✅ Updated tool prompts with database IDs:', savedIds);
+                        console.log('✅ Replaced temp IDs with real database IDs');
                         
-                        // Trigger progress update to notify components about the ID update
+                        // Notify UI again with real database IDs
                         if (onProgress) {
-                          console.log('🔄 Notifying components of tool prompt ID updates');
+                          console.log('🔄 Notifying UI with real database IDs');
                           onProgress(step, 'tool_prompts_ids_updated', { 
                             tool_prompts: result.components!.toolPrompts,
                             ids: savedIds
@@ -353,30 +372,14 @@ export const jumpinAIStudioService = {
                         }
                       }
                     } catch (error) {
-                      console.error('❌ Error saving tool prompts:', error);
+                      console.error('❌ Error saving tool prompts to database:', error);
                       console.error('❌ Error details:', error instanceof Error ? error.message : String(error));
+                      console.warn('⚠️ Continuing with temporary IDs since database save failed');
+                      // UI still works with temp IDs, just won't persist
                     }
                   })();
-                } else if (jumpId && toolPromptsArray.length > 0) {
-                  // For guest users, generate temporary IDs so UI can display properly
-                  console.log('🎯 Guest mode: Generating temp IDs for tool prompts');
-                  const tempIds = toolPromptsArray.map(() => crypto.randomUUID());
-                  result.components!.toolPrompts = toolPromptsArray.map((tp, idx) => ({
-                    ...tp,
-                    id: tempIds[idx]
-                  }));
-                  
-                  // Notify components about the temp IDs
-                  if (onProgress) {
-                    console.log('🔄 Notifying components of temp tool prompt IDs');
-                    onProgress(step, 'tool_prompts_ids_updated', { 
-                      tool_prompts: result.components!.toolPrompts,
-                      ids: tempIds
-                    });
-                  }
                 } else {
                   console.warn('⚠️ NOT saving tool prompts. Conditions:', {
-                    hasUserId: !!userId,
                     hasJumpId: !!jumpId,
                     arrayLength: toolPromptsArray.length,
                     arrayIsEmpty: toolPromptsArray.length === 0
