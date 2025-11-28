@@ -103,7 +103,8 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
           // Scroll to the position of the content with offset for sticky tabs
           if (contentRef?.current) {
             const elementPosition = contentRef.current.getBoundingClientRect().top + window.pageYOffset;
-            const offsetPosition = elementPosition - 120; // Offset for sticky tabs + header
+            // Use larger offset and ensure we don't scroll past the top of the page
+            const offsetPosition = Math.max(0, elementPosition - 150);
             
             window.scrollTo({
               top: offsetPosition,
