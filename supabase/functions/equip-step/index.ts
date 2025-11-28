@@ -274,6 +274,17 @@ Generate ONE combo deeply tailored to executing this specific step. The combo mu
     if (jsonMatch) {
       cleanedResponse = jsonMatch[0];
     }
+    
+    // CRITICAL: Escape control characters inside string values
+    // This prevents JSON parse errors from literal newlines/tabs in descriptions
+    cleanedResponse = cleanedResponse.replace(/"([^"\\]*(\\.[^"\\]*)*)"/g, (match) => {
+      return match
+        .replace(/\n/g, '\\n')
+        .replace(/\r/g, '\\r')
+        .replace(/\t/g, '\\t')
+        .replace(/\f/g, '\\f')
+        .replace(/\b/g, '\\b');
+    });
 
     // Parse the response
     let comboData: any;

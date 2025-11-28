@@ -104,6 +104,17 @@ Return ONLY valid JSON, no markdown formatting.`;
       
       console.log('Cleaned content length:', cleanContent.length);
       
+      // CRITICAL: Escape control characters inside string values
+      // This prevents JSON parse errors from literal newlines/tabs in descriptions
+      cleanContent = cleanContent.replace(/"([^"\\]*(\\.[^"\\]*)*)"/g, (match) => {
+        return match
+          .replace(/\n/g, '\\n')
+          .replace(/\r/g, '\\r')
+          .replace(/\t/g, '\\t')
+          .replace(/\f/g, '\\f')
+          .replace(/\b/g, '\\b');
+      });
+      
       // Try to fix common JSON issues
       // Fix trailing commas before closing brackets/braces
       cleanContent = cleanContent.replace(/,(\s*[}\]])/g, '$1');
