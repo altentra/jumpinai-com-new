@@ -101,10 +101,16 @@ export function ToolPromptComboCard({ combo, onClick, index, jumpId }: ToolPromp
   };
 
   // Helper to safely extract string from potentially nested data
+  // Checks both top-level fields AND inside the content JSONB field
   const safeExtract = (obj: any, ...keys: string[]): string => {
     for (const key of keys) {
+      // First check top level
       const val = obj?.[key];
       if (val) return safeString(val);
+      
+      // Then check inside content object (where Equip stores nested data)
+      const contentVal = obj?.content?.[key];
+      if (contentVal) return safeString(contentVal);
     }
     return '';
   };
@@ -122,8 +128,10 @@ export function ToolPromptComboCard({ combo, onClick, index, jumpId }: ToolPromp
   const setupTime = safeExtract(combo, 'setup_time');
   const costEstimate = safeExtract(combo, 'cost_estimate');
   
-  // Safely handle arrays
-  const alternatives = Array.isArray(combo.alternatives) ? combo.alternatives : [];
+  // Safely handle arrays - check both top level and content field
+  const alternatives = Array.isArray(combo.alternatives) 
+    ? combo.alternatives 
+    : (Array.isArray(combo.content?.alternatives) ? combo.content.alternatives : []);
 
   // Validate essential data - this should never happen with upstream filtering, but just in case
   if (!promptText) {
