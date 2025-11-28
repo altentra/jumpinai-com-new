@@ -146,6 +146,17 @@ CRITICAL: Return ONLY the JSON object. No markdown code blocks, no explanations.
       .replace(/[^}\]]*$/, '')
       .replace(/,(\s*[}\]])/g, '$1')
       .trim();
+    
+    // CRITICAL: Escape control characters inside string values
+    // This prevents JSON parse errors from literal newlines/tabs in descriptions
+    content = content.replace(/"([^"\\]*(\\.[^"\\]*)*)"/g, (match) => {
+      return match
+        .replace(/\n/g, '\\n')
+        .replace(/\r/g, '\\r')
+        .replace(/\t/g, '\\t')
+        .replace(/\f/g, '\\f')
+        .replace(/\b/g, '\\b');
+    });
 
     let parsed;
     try {
