@@ -1057,7 +1057,7 @@ const Index = () => {
                       </div>
                     </div>
                     <p className="text-sm text-muted-foreground flex-1 leading-relaxed">
-                      That's the energy we channel. <strong className="text-foreground">Jump into AI</strong> isn't about casual exploration—it's about decisive action with a clear landing point. Your personalized plan ensures you don't leap blindly. You jump with <strong className="text-foreground">direction, precision, and purpose</strong>.
+                      That's the energy we channel. <strong className="text-foreground">Jump in AI</strong> isn't about casual exploration—it's about decisive action with a clear landing point. Your personalized plan ensures you don't leap blindly. You jump with <strong className="text-foreground">direction, precision, and purpose</strong>.
                     </p>
                   </div>
                 </div>
