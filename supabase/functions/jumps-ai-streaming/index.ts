@@ -644,7 +644,21 @@ async function callXAI(
   }
 }
 
+// Helper function to get current date dynamically
+function getCurrentDate(): { month: string; year: number } {
+  const now = new Date();
+  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  return {
+    month: months[now.getMonth()],
+    year: now.getFullYear()
+  };
+}
+
 function getStepPrompts(step: number, context: StudioFormData, overviewContent: string) {
+  // Get current date dynamically
+  const currentDate = getCurrentDate();
+  const dateReference = `${currentDate.month} ${currentDate.year}`;
+  
   // Build context from user input - extract ALL insights from the 2 main fields
   const baseContext = `
 USER'S GOALS AND ASPIRATIONS:
@@ -687,7 +701,7 @@ Examples of good names:
 You specialize in helping people achieve their goals by strategically implementing AI into their workflow.
 Your expertise: Understanding challenges and creating compelling visions for AI-powered transformation.
 
-CORE MISSION: Show people how to achieve their goals using the latest AI tools available in November 2025.
+CORE MISSION: Show people how to achieve their goals using the latest, most powerful AI tools currently available as of ${dateReference}.
 This is about AI IMPLEMENTATION and ADAPTATION - not generic business advice.
 
 Return ONLY valid JSON with NO markdown formatting, NO code blocks, NO extra text.`,
@@ -697,17 +711,27 @@ ${baseContext}
 
 🎯 ABSOLUTE CRITICAL REQUIREMENTS - THIS IS JUMPINAI'S CORE MISSION:
 1. This is an AI IMPLEMENTATION PLAN - focus on how they'll use AI to achieve their goals
-2. ONLY mention AI tools from November 2025: Claude, ChatGPT, Gemini, Grok, Cursor, Lovable, Midjourney, Runway, Veo, Make.com, Zapier AI, Perplexity, NotebookLM, etc.
-3. NO VERSION NUMBERS: Use only base tool names (e.g., "ChatGPT" not "GPT-5", "Gemini" not "Gemini 2.0", "Midjourney" not "Midjourney v7"). However, DO mention specialized variants when relevant (e.g., "Claude Code" for coding, "Grok Imagine" for image generation, "Lovable" for website creation).
-4. NO old-school recommendations (NO Khan Academy, NO Coursera, NO generic courses)
-5. NO non-AI tools unless absolutely necessary
-6. Every recommendation must be AI-first: How will AI help them achieve this goal?
-7. This is about LEARNING AI BY USING IT to solve their actual problems
-8. Make them feel that AI adaptation is the key to their success
+2. Recommend ONLY the BEST and MOST CURRENT AI tools available as of ${dateReference} - verify tools are still market leaders
+3. Focus on CATEGORIES of AI tools rather than specific versions:
+   - AI Writing/Reasoning: Tools like Claude, ChatGPT, Gemini, Grok, Perplexity (recommend best for their use case)
+   - AI Code: Tools like Cursor, Lovable, Replit, GitHub Copilot, Bolt, V0 (select most appropriate)
+   - AI Image: Tools like Midjourney, DALL-E, Flux, Stable Diffusion (choose best fit)
+   - AI Video: Tools like Runway, Veo, Invideo AI, Sora, Kling AI (pick optimal option)
+   - AI Audio: Tools like ElevenLabs, Suno, Udio (recommend best match)
+   - AI Automation: Tools like Make.com, Zapier AI, n8n (select most suitable)
+   - AI Research: Tools like Perplexity, NotebookLM, Claude (choose appropriate)
+   - AI Design: Tools like Figma AI, Uizard, Galileo AI, Canva AI (pick best option)
+4. DO NOT use version numbers - use base tool names only (e.g., "ChatGPT" not "GPT-5", "Midjourney" not "v7")
+5. Mention specialized variants when truly relevant (e.g., "Claude Code" for coding, "Grok Imagine" for generation)
+6. NO old-school recommendations (NO Khan Academy, NO Coursera, NO generic courses)
+7. NO non-AI tools unless absolutely necessary for their specific context
+8. Every recommendation must be AI-first: How will AI help them achieve this goal?
+9. This is about LEARNING AI BY USING IT to solve their actual problems
+10. Make them feel that AI adaptation is the key to their success
 
 DETAILED CONTENT REQUIREMENTS:
 1. Provide DETAILED, SPECIFIC content - NO generic placeholders
-2. The roadmap MUST mention specific AI tools they'll implement in each timeframe
+2. The roadmap MUST mention appropriate AI tool categories they'll implement in each timeframe
 3. All arrays must have at least 3-4 substantive items
 4. Every field must emphasize AI implementation and adaptation
 5. Success factors should focus on mastering AI tools
@@ -743,11 +767,11 @@ You create world-class, professional strategic action plans where EVERY step cen
 
 CORE PHILOSOPHY:
 - This is an AI IMPLEMENTATION plan, not a generic business plan
-- Each step = One strategic AI-powered action using the latest AI tools
+- Each step = One strategic AI-powered action using the latest, most powerful AI tools
 - We teach AI by helping people USE IT to achieve their actual goals
 - No old-school methods, no non-AI recommendations, ONLY cutting-edge AI tools
 
-You are the world's leading expert on the latest AI tools available in November 2025. Return ONLY valid JSON.`,
+You have deep expertise in the latest AI tools available as of ${dateReference}. Return ONLY valid JSON.`,
         userPrompt: `Based on the following user profile and goals, create a comprehensive AI IMPLEMENTATION plan:
 
 ${baseContext}
@@ -763,7 +787,8 @@ ${overviewContent}
    - Each step = ONE strategic idea using ONE or more specific AI tools
    - Focus on HOW to use AI tools to achieve their goals
 
-2. **LATEST AI TOOLS ONLY** (November 2025):
+2. **LATEST AI TOOLS ONLY** (as of ${dateReference}):
+   Recommend from these CATEGORIES (choose the BEST current tools in each):
    - AI Writing/Reasoning: Claude, ChatGPT, Gemini, Grok, Perplexity
    - AI Code: Cursor, Lovable, Replit, GitHub Copilot, Bolt, V0
    - AI Image: Midjourney, DALL-E, Flux, Stable Diffusion
@@ -774,7 +799,10 @@ ${overviewContent}
    - AI Design: Figma AI, Uizard, Galileo AI, Canva AI
    - Specialized: Harvey AI, Jasper, Copy.ai, Descript, Synthesia
    
-3. **NO VERSION NUMBERS**: Use only base tool names (e.g., "ChatGPT" not "GPT-5", "Gemini" not "Gemini 2.0", "Grok" not "Grok 2", "Midjourney" not "Midjourney v7", "Runway" not "Runway Gen-4"). However, DO mention specialized variants when relevant (e.g., "Claude Code" for coding, "Grok Imagine" for image generation, "GitHub Copilot" for development, "Lovable" for website creation).
+   IMPORTANT: These are EXAMPLES of tool categories. Select the BEST and MOST APPROPRIATE tools for the user's specific needs.
+   Verify tools are still market leaders and most powerful options available.
+   
+3. **NO VERSION NUMBERS**: Use base tool names only (e.g., "ChatGPT" not "GPT-5", "Gemini" not "Gemini 2.0", "Grok" not "Grok 2", "Midjourney" not "Midjourney v7", "Runway" not "Runway Gen-4"). However, DO mention specialized variants when relevant (e.g., "Claude Code" for coding, "Grok Imagine" for image generation, "GitHub Copilot" for development, "Lovable" for website creation).
 
 4. **STEP STRUCTURE - EACH STEP MUST**:
    - Have ONE clear strategic action/idea centered around AI tool usage
@@ -949,7 +977,7 @@ Create world-class, professional content that positions AI tools as THE solution
     case 4:
       // STEP 4: Tools & Prompts - MUST align with comprehensive plan from Step 3
       return {
-        systemPrompt: `You are an ELITE AI tool recommendation and prompt engineering expert with real-time knowledge of the latest AI tools and technologies as of November 2025. You are world-class at crafting production-ready, sophisticated, professional-grade prompts that deliver exceptional results. You will analyze the user's goals, challenges, AND the comprehensive plan to recommend perfectly tailored tool+prompt combinations that DIRECTLY ALIGN with the plan steps.
+        systemPrompt: `You are an ELITE AI tool recommendation and prompt engineering expert with real-time knowledge of the latest AI tools and technologies as of ${dateReference}. You are world-class at crafting production-ready, sophisticated, professional-grade prompts that deliver exceptional results. You will analyze the user's goals, challenges, AND the comprehensive plan to recommend perfectly tailored tool+prompt combinations that DIRECTLY ALIGN with the plan steps.
 
 🚨 CRITICAL: PLAN ALIGNMENT IS MANDATORY:
 - You MUST read and analyze the comprehensive plan provided in the context
@@ -965,24 +993,32 @@ Create world-class, professional content that positions AI tools as THE solution
 - Combo #9 should match Phase 3, Step 3 from the plan
 - The tool and prompt in each combo should directly support executing that specific plan step
 
-CRITICAL: AI TOOLS ONLY - NOVEMBER 2025 FOCUS:
+CRITICAL: AI TOOLS ONLY - CURRENT BEST OPTIONS (${dateReference}):
 1. Recommend ONLY AI tools - no outdated or non-AI tools
-2. Recommend ONLY the LATEST and GREATEST AI tools available as of November 2025
-3. Check current date and ensure all tools are real, existing, and current
+2. Recommend ONLY the LATEST and GREATEST AI tools currently available
+3. Verify all recommended tools are real, existing, and still market leaders
 4. DO NOT recommend tools from past decades or outdated solutions
-5. PRIORITIZE cutting-edge AI: ChatGPT, Claude, Gemini, Grok, Midjourney, Runway, Cursor, Replit, Lovable, Make.com, Zapier, Perplexity, etc.
-6. For each tool category, recommend the BEST option available right now in November 2025
+5. SELECT from these tool CATEGORIES based on what's BEST for the specific use case:
+   - AI Writing/Reasoning: ChatGPT, Claude, Gemini, Grok, Perplexity, etc.
+   - AI Code: Cursor, Lovable, Replit, GitHub Copilot, Bolt, V0, etc.
+   - AI Image: Midjourney, DALL-E, Flux, Stable Diffusion, etc.
+   - AI Video: Runway, Veo, Invideo AI, Sora, Kling AI, etc.
+   - AI Audio: ElevenLabs, Suno, Udio, etc.
+   - AI Automation: Make.com, Zapier AI, n8n, etc.
+   - AI Research: Perplexity, NotebookLM, Claude, etc.
+   - AI Design: Figma AI, Uizard, Galileo AI, Canva AI, etc.
+6. For each tool category, recommend the BEST option available right now for the user's specific needs
 
 CRITICAL: TOOL SELECTION & DIVERSITY REQUIREMENTS:
 1. Generate exactly 9 tool + prompt combinations
 2. MUST use at least 6 DIFFERENT AI tools across the 9 combos
 3. Only repeat a tool if it's genuinely optimal for distinct use cases within the same phase
 4. Strategic mix required (ALL MUST BE AI TOOLS):
-   - 2-3 AI writing/reasoning tools (ChatGPT, Claude, Gemini, Grok, etc.)
-   - 3-4 specialized AI tools (video: Runway/Invideo, image: Midjourney/DALL-E, code: Cursor/Replit/Lovable, design: Figma AI/Canva AI, etc.)
-   - 2-3 AI productivity/automation tools (Make.com, Zapier, n8n, Notion AI, etc.)
+   - 2-3 AI writing/reasoning tools (select best from: ChatGPT, Claude, Gemini, Grok, etc.)
+   - 3-4 specialized AI tools (video/image/code/design - choose most appropriate)
+   - 2-3 AI productivity/automation tools (select best fit: Make.com, Zapier, n8n, Notion AI, etc.)
 5. ABSOLUTELY NO outdated or non-existent tools
-6. Consider what AI tools are trending and most powerful RIGHT NOW in November 2025
+6. Consider what AI tools are most powerful and appropriate RIGHT NOW for this specific use case
 
 🎯 ABSOLUTE NON-NEGOTIABLE: PRODUCTION-READY PROMPT QUALITY:
 Every single prompt you generate MUST meet these MANDATORY standards:
@@ -1118,15 +1154,15 @@ CRITICAL ANALYSIS & INFERENCE:
 
 🚨 MANDATORY REQUIREMENTS:
 1. Each combo MUST directly support the corresponding plan step - read the plan carefully!
-2. Recommend ONLY AI tools that exist and are available in November 2025
-3. Recommend ONLY the LATEST and GREATEST AI tools - check current date and market
-4. DO NOT recommend outdated tools, non-AI tools, or tools from past decades
+2. Recommend ONLY AI tools that exist and are currently available as of ${dateReference}
+3. Recommend ONLY the LATEST and BEST AI tools - verify tools are still market leaders
+4. DO NOT recommend outdated tools, non-AI tools, or tools from past eras
 5. DEFAULT to free/affordable AI tools unless goals clearly indicate premium resources available
 6. MUST use at least 6 DIFFERENT AI tools across the 9 combos
 7. Use tool-specific prompt formats (JSON for video, detailed for images, etc.)
 8. Align 3 combos per phase (foundation/growth/mastery) with corresponding plan steps
 9. CRITICAL: Use tool names WITHOUT version numbers (e.g., "ChatGPT" not "ChatGPT-5", "Grok" not "Grok 2", "Gemini" not "Gemini 2.0" or "Gemini 3", "Midjourney" not "Midjourney v7", "Runway" not "Runway Gen-4"). However, DO mention specialized variants when relevant (e.g., "Claude Code" for coding, "Grok Imagine" for image/video generation, "GitHub Copilot" for development, "Lovable" for website creation).
-10. Each tool must be a real, current, powerful AI tool available NOW in November 2025
+10. Each tool must be a real, current, powerful AI tool available NOW as of ${dateReference}
 
 ALIGNMENT VERIFICATION:
 Before finalizing, verify:
