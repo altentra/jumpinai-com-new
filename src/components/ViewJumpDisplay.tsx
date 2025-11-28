@@ -83,7 +83,7 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
               if (contentRef?.current) {
                 const elementPosition = contentRef.current.getBoundingClientRect().top + window.pageYOffset;
                 // Use larger offset and ensure we don't scroll past the top of the page
-                const offsetPosition = Math.max(0, elementPosition - 130);
+                const offsetPosition = Math.max(0, elementPosition - 110);
                 
                 window.scrollTo({
                   top: offsetPosition,

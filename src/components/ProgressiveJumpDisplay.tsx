@@ -112,7 +112,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
               if (contentRef?.current) {
                 const elementPosition = contentRef.current.getBoundingClientRect().top + window.pageYOffset;
                 // Use larger offset and ensure we don't scroll past the top of the page
-                const offsetPosition = Math.max(0, elementPosition - 150);
+                const offsetPosition = Math.max(0, elementPosition - 130);
                 
                 window.scrollTo({
                   top: offsetPosition,
