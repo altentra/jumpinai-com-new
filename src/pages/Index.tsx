@@ -220,7 +220,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen scroll-snap-container bg-gradient-to-br from-background via-background/90 to-primary/5 dark:bg-gradient-to-br dark:from-black dark:via-gray-950/90 dark:to-gray-900/60">
+    <div className="min-h-screen scroll-snap-container overflow-x-hidden bg-gradient-to-br from-background via-background/90 to-primary/5 dark:bg-gradient-to-br dark:from-black dark:via-gray-950/90 dark:to-gray-900/60">
       {/* Enhanced floating background elements - positioned to not interfere with hero */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none opacity-30 dark:opacity-100">
         <div className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-primary/20 to-primary/5 dark:bg-gradient-to-br dark:from-gray-800/30 dark:to-gray-700/15 rounded-full blur-3xl"></div>
