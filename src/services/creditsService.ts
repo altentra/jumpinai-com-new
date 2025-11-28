@@ -200,12 +200,12 @@ export const creditsService = {
         return; // Already initialized
       }
 
-      // Create credits record with 5 welcome credits
+      // Create credits record with 3 welcome credits
       const { error: creditsError } = await supabase
         .from('user_credits')
         .insert({
           user_id: userId,
-          credits_balance: 5,
+          credits_balance: 3,
           total_credits_purchased: 0
         });
 
@@ -219,7 +219,7 @@ export const creditsService = {
         .insert({
           user_id: userId,
           transaction_type: 'welcome_bonus',
-          credits_amount: 5,
+          credits_amount: 3,
           description: 'Welcome bonus credits'
         });
 
@@ -227,7 +227,7 @@ export const creditsService = {
         throw transactionError;
       }
 
-      console.log('Initialized 5 welcome credits for user:', userId);
+      console.log('Initialized 3 welcome credits for user:', userId);
     } catch (error) {
       console.error('Error initializing user credits:', error);
       throw error;
