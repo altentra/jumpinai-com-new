@@ -74,7 +74,8 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
           // Scroll to the position of the content with offset for sticky tabs
           if (contentRef?.current) {
             const elementPosition = contentRef.current.getBoundingClientRect().top + window.pageYOffset;
-            const offsetPosition = elementPosition - 100; // Offset for sticky tabs
+            // Use larger offset and ensure we don't scroll past the top of the page
+            const offsetPosition = Math.max(0, elementPosition - 130);
             
             window.scrollTo({
               top: offsetPosition,
