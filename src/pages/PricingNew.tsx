@@ -446,8 +446,7 @@ const PricingNew = () => {
                   <Card key={pkg.id} className="relative h-full flex flex-col glass hover:glass-dark transition-all duration-300 shadow-modern hover:shadow-modern-lg rounded-2xl border-0">
                     {valueBadge && (
                       <div className="absolute -top-2 -right-2 z-10">
-                        <Badge variant="secondary" className="text-xs shadow-modern rounded-full px-2 py-1">
-                          <Sparkles className="w-3 h-3 mr-1" />
+                        <Badge className={`text-xs shadow-modern rounded-full px-2 py-1 ${valueBadge === 'Popular' ? 'bg-primary text-primary-foreground' : 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'}`}>
                           {valueBadge}
                         </Badge>
                       </div>
@@ -509,8 +508,7 @@ const PricingNew = () => {
                   <Card key={pkg.id} className="relative h-full flex flex-col glass hover:glass-dark transition-all duration-300 shadow-modern hover:shadow-modern-lg rounded-2xl border-0">
                     {valueBadge && (
                       <div className="absolute -top-2 -right-2 z-10">
-                        <Badge variant="secondary" className="text-xs shadow-modern rounded-full px-2 py-1">
-                          <Sparkles className="w-3 h-3 mr-1" />
+                        <Badge className={`text-xs shadow-modern rounded-full px-2 py-1 ${valueBadge === 'Popular' ? 'bg-primary text-primary-foreground' : 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'}`}>
                           {valueBadge}
                         </Badge>
                       </div>
