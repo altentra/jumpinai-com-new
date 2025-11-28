@@ -632,27 +632,27 @@ const PricingNew = () => {
                   <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                     <Zap className="w-6 h-6 text-primary" />
                   </div>
-                  <h3 className="font-semibold mb-2">One Credit Per Generation</h3>
+                  <h3 className="font-semibold mb-2">1 Credit = 1 Complete Jump</h3>
                   <p className="text-sm text-muted-foreground">
-                    Each AI transformation plan, strategy, or workflow costs 1 credit to generate
+                    Each Jump includes a full AI adaptation plan with Overview, Plan, and Tools & Prompts tabs—everything you need to move forward
                   </p>
                 </div>
                 <div className="text-center">
                   <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                     <Star className="w-6 h-6 text-primary" />
                   </div>
-                  <h3 className="font-semibold mb-2">Credits Roll Over</h3>
+                  <h3 className="font-semibold mb-2">Adaptive Features Included</h3>
                   <p className="text-sm text-muted-foreground">
-                    Unused monthly credits carry forward to the next month. No credits go to waste
+                    Clarify, Reroute, and Equip features are built-in—no extra credits required to adapt your plan as you progress
                   </p>
                 </div>
                 <div className="text-center">
                   <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                     <Crown className="w-6 h-6 text-primary" />
                   </div>
-                  <h3 className="font-semibold mb-2">Access Everything</h3>
+                  <h3 className="font-semibold mb-2">Credits Never Expire</h3>
                   <p className="text-sm text-muted-foreground">
-                    All plans include access to our complete library of guides, resources, and tools
+                    Monthly subscription credits roll over to the next month. Purchased credit packages never expire
                   </p>
                 </div>
               </div>
@@ -665,27 +665,39 @@ const PricingNew = () => {
               <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8 sm:mb-12">Frequently Asked Questions</h2>
               <div className="space-y-8">
                 <div>
-                  <h3 className="font-semibold mb-2">What can I do with credits?</h3>
+                  <h3 className="font-semibold mb-2">What exactly does 1 credit get me?</h3>
                   <p className="text-muted-foreground">
-                    Credits are used to generate AI transformation plans, strategies, workflows, and other AI-powered content through our JumpinAI Studio.
+                    1 credit generates one complete Jump with three tabs: Overview (executive summary), Plan (structured action steps), and Tools & Prompts (AI tool recommendations with ready-to-use prompts). Plus unlimited use of Clarify, Reroute, and Equip features to adapt your plan.
+                  </p>
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-2">How do the adaptive features work?</h3>
+                  <p className="text-muted-foreground">
+                    Clarify breaks down steps into granular details. Reroute generates alternative approaches. Equip creates custom tool-prompt combinations for any step. These features require a subscription tier based on depth level—Free users and guests can use them on main steps only.
                   </p>
                 </div>
                 <div>
                   <h3 className="font-semibold mb-2">Do credits expire?</h3>
                   <p className="text-muted-foreground">
-                    Monthly subscription credits roll over to the next month, so you never lose them. Purchased credit packages also never expire.
+                    No. Monthly subscription credits roll over if unused. Purchased credit packages never expire—use them whenever you need them.
                   </p>
                 </div>
                 <div>
-                  <h3 className="font-semibold mb-2">Can I change my plan anytime?</h3>
+                  <h3 className="font-semibold mb-2">Can I upgrade or downgrade my plan?</h3>
                   <p className="text-muted-foreground">
-                    Yes! You can upgrade, downgrade, or cancel your subscription at any time. Changes take effect at your next billing cycle.
+                    Yes. Upgrades take effect immediately with prorated charges. Downgrades are scheduled for your next billing cycle to protect your current benefits.
                   </p>
                 </div>
                 <div>
-                  <h3 className="font-semibold mb-2">What's included with all plans?</h3>
+                  <h3 className="font-semibold mb-2">What can I do on the Free plan?</h3>
                   <p className="text-muted-foreground">
-                    All paid plans include access to our complete resource library, guides, templates, and priority support. Higher tier plans include additional features like phone support and custom workflows.
+                    Free plan includes 3 welcome credits to generate Jumps. You can use Clarify, Reroute, and Equip on main steps (level 1 only). Deeper clarification levels require a paid subscription.
+                  </p>
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-2">Can I try JumpinAI without signing up?</h3>
+                  <p className="text-muted-foreground">
+                    Yes. Guest users can generate up to 3 Jumps without an account. However, guest Jumps cannot be saved for later access—sign up to save your Jumps and unlock all features.
                   </p>
                 </div>
               </div>
