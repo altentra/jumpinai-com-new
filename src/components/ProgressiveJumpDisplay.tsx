@@ -32,6 +32,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
   const [activeTab, setActiveTab] = React.useState('overview');
   const [isRefreshing, setIsRefreshing] = React.useState(false);
   const [toolPrompts, setToolPrompts] = React.useState<any[]>(result.components?.toolPrompts || []);
+  const skipScrollToTopRef = React.useRef(false);
 
   // Update tool prompts when result changes
   React.useEffect(() => {
@@ -81,8 +82,20 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
   const handleDownload = () => {
     toast.info('Download feature coming soon!');
   };
+
+  const handleTabChange = (newTab: string) => {
+    // Scroll to top unless it's a programmatic change from View button
+    if (!skipScrollToTopRef.current) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    skipScrollToTopRef.current = false;
+    setActiveTab(newTab);
+  };
   
   const handleToolPromptClick = (comboIndex: number, comboId: string) => {
+    // Mark this as a programmatic change to skip scroll-to-top
+    skipScrollToTopRef.current = true;
+    
     // Switch to the Tools & Prompts tab
     setActiveTab('toolPrompts');
     
@@ -289,7 +302,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
       )}
 
       {/* Content Tabs - Ultra Premium Design with Sticky Behavior */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full" style={{ overflow: 'visible', display: 'block' }}>
+      <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full" style={{ overflow: 'visible', display: 'block' }}>
         <div className="sticky top-20 z-40 mb-6 bg-background/80 backdrop-blur-xl pb-2 -mt-2 pt-1">
           {/* Mobile: Equal width tabs */}
           <div className="sm:hidden">

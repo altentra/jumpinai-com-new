@@ -27,6 +27,7 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
   const navigate = useNavigate();
   const [copiedPrompts, setCopiedPrompts] = React.useState<Set<number>>(new Set());
   const [activeTab, setActiveTab] = React.useState('overview');
+  const skipScrollToTopRef = React.useRef(false);
 
   const handleCopyPrompt = async (promptText: string, index: number) => {
     try {
@@ -53,7 +54,19 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
   
+  const handleTabChange = (newTab: string) => {
+    // Scroll to top unless it's a programmatic change from View button
+    if (!skipScrollToTopRef.current) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    skipScrollToTopRef.current = false;
+    setActiveTab(newTab);
+  };
+
   const handleToolPromptClick = (comboIndex: number, comboId: string) => {
+    // Mark this as a programmatic change to skip scroll-to-top
+    skipScrollToTopRef.current = true;
+    
     // Switch to the Tools & Prompts tab
     setActiveTab('toolPrompts');
     
@@ -120,7 +133,7 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
   return (
     <div className="w-full max-w-full space-y-4" style={{ overflow: 'visible' }}>
       {/* Content Tabs - Ultra Premium Design with Sticky Behavior */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full" style={{ overflow: 'visible', display: 'block' }}>
+      <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full" style={{ overflow: 'visible', display: 'block' }}>
         <div className="sticky top-0 z-50 mb-6 bg-background/80 backdrop-blur-xl pb-2 -mt-2 pt-1">
           {/* Mobile: Equal width tabs */}
           <div className="sm:hidden">
