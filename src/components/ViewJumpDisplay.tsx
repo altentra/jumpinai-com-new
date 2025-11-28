@@ -58,21 +58,33 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
   };
   
   const handleTabChange = (newTab: string) => {
+    setActiveTab(newTab);
+    
     // Scroll to top of tab content unless it's a programmatic change from View button
     if (!skipScrollToTopRef.current) {
-      // Get the appropriate content ref based on the new tab
-      let contentRef: React.RefObject<HTMLDivElement> | null = null;
-      if (newTab === 'overview') contentRef = overviewContentRef;
-      else if (newTab === 'plan') contentRef = planContentRef;
-      else if (newTab === 'toolPrompts') contentRef = toolPromptsContentRef;
-      
-      // Scroll the tab content into view at the top
-      if (contentRef?.current) {
-        contentRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
+      // Wait for tab content to render, then scroll
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          // Get the appropriate content ref based on the new tab
+          let contentRef: React.RefObject<HTMLDivElement> | null = null;
+          if (newTab === 'overview') contentRef = overviewContentRef;
+          else if (newTab === 'plan') contentRef = planContentRef;
+          else if (newTab === 'toolPrompts') contentRef = toolPromptsContentRef;
+          
+          // Scroll to the position of the content with offset for sticky tabs
+          if (contentRef?.current) {
+            const elementPosition = contentRef.current.getBoundingClientRect().top + window.pageYOffset;
+            const offsetPosition = elementPosition - 100; // Offset for sticky tabs
+            
+            window.scrollTo({
+              top: offsetPosition,
+              behavior: 'smooth'
+            });
+          }
+        }, 50);
+      });
     }
     skipScrollToTopRef.current = false;
-    setActiveTab(newTab);
   };
 
   const handleToolPromptClick = (comboIndex: number, comboId: string) => {
