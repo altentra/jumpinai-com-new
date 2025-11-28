@@ -111,8 +111,7 @@ Return ONLY valid JSON, no markdown formatting.`;
           .replace(/\n/g, '\\n')
           .replace(/\r/g, '\\r')
           .replace(/\t/g, '\\t')
-          .replace(/\f/g, '\\f')
-          .replace(/\b/g, '\\b');
+          .replace(/\f/g, '\\f');
       });
       
       // Try to fix common JSON issues

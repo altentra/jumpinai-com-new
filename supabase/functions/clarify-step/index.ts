@@ -154,8 +154,7 @@ CRITICAL: Return ONLY the JSON object. No markdown code blocks, no explanations.
         .replace(/\n/g, '\\n')
         .replace(/\r/g, '\\r')
         .replace(/\t/g, '\\t')
-        .replace(/\f/g, '\\f')
-        .replace(/\b/g, '\\b');
+        .replace(/\f/g, '\\f');
     });
 
     let parsed;

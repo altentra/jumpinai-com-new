@@ -282,8 +282,7 @@ Generate ONE combo deeply tailored to executing this specific step. The combo mu
         .replace(/\n/g, '\\n')
         .replace(/\r/g, '\\r')
         .replace(/\t/g, '\\t')
-        .replace(/\f/g, '\\f')
-        .replace(/\b/g, '\\b');
+        .replace(/\f/g, '\\f');
     });
 
     // Parse the response
