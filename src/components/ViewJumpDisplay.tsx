@@ -28,6 +28,9 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
   const [copiedPrompts, setCopiedPrompts] = React.useState<Set<number>>(new Set());
   const [activeTab, setActiveTab] = React.useState('overview');
   const skipScrollToTopRef = React.useRef(false);
+  const overviewContentRef = React.useRef<HTMLDivElement>(null);
+  const planContentRef = React.useRef<HTMLDivElement>(null);
+  const toolPromptsContentRef = React.useRef<HTMLDivElement>(null);
 
   const handleCopyPrompt = async (promptText: string, index: number) => {
     try {
@@ -55,9 +58,18 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
   };
   
   const handleTabChange = (newTab: string) => {
-    // Scroll to top unless it's a programmatic change from View button
+    // Scroll to top of tab content unless it's a programmatic change from View button
     if (!skipScrollToTopRef.current) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      // Get the appropriate content ref based on the new tab
+      let contentRef: React.RefObject<HTMLDivElement> | null = null;
+      if (newTab === 'overview') contentRef = overviewContentRef;
+      else if (newTab === 'plan') contentRef = planContentRef;
+      else if (newTab === 'toolPrompts') contentRef = toolPromptsContentRef;
+      
+      // Scroll the tab content into view at the top
+      if (contentRef?.current) {
+        contentRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     }
     skipScrollToTopRef.current = false;
     setActiveTab(newTab);
@@ -226,7 +238,7 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
 
         <TabsContent value="overview" className="mt-0" style={{ overflow: 'visible', maxHeight: 'none', height: 'auto', display: 'block' }}>
           {result.comprehensive_plan ? (
-            <div className="space-y-6">
+            <div ref={overviewContentRef} className="space-y-6">
               {/* Executive Summary */}
               {result.comprehensive_plan.executiveSummary && (
                 <div className="relative group">
@@ -527,8 +539,9 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
         </TabsContent>
 
         <TabsContent value="plan" className="mt-0" style={{ overflow: 'visible', maxHeight: 'none', height: 'auto', display: 'block' }}>
-          {result.structured_plan && result.structured_plan.phases ? (
-            <JumpPlanDisplay
+          <div ref={planContentRef}>
+            {result.structured_plan && result.structured_plan.phases ? (
+              <JumpPlanDisplay
               planContent={result.full_content || ''}
               structuredPlan={result.comprehensive_plan}
               onEdit={() => {
@@ -548,10 +561,11 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
               Creating implementation plan...
             </div>
           )}
+          </div>
         </TabsContent>
 
         <TabsContent value="toolPrompts" className="mt-0" style={{ overflow: 'visible', maxHeight: 'none', height: 'auto', display: 'block' }}>
-          <div className="grid gap-4">
+          <div ref={toolPromptsContentRef} className="grid gap-4">
             {result.components?.toolPrompts && result.components.toolPrompts.length > 0 ? (
               result.components.toolPrompts.map((combo: any, index: number) => (
                 <div key={index} data-tool-combo={index + 1} className="animate-fade-in">
