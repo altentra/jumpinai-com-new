@@ -325,14 +325,14 @@ export const jumpinAIStudioService = {
                   onProgress(step, type, data);
                 }
                 
-                if (userId && jumpId && toolPromptsArray.length > 0) {
-                  console.log(`💾 Attempting to save ${toolPromptsArray.length} tool prompts for logged-in user...`);
-                  console.log('💾 Save context:', { userId, jumpId, arrayLength: toolPromptsArray.length });
+                if (jumpId && toolPromptsArray.length > 0) {
+                  console.log(`💾 Attempting to save ${toolPromptsArray.length} tool prompts...`);
+                  console.log('💾 Save context:', { userId: userId || 'guest', jumpId, arrayLength: toolPromptsArray.length });
                   (async () => {
                     try {
                       const { toolPromptsService } = await import('@/services/toolPromptsService');
                       console.log('💾 toolPromptsService loaded, calling saveToolPrompts...');
-                      const savedIds = await toolPromptsService.saveToolPrompts(toolPromptsArray, userId, jumpId);
+                      const savedIds = await toolPromptsService.saveToolPrompts(toolPromptsArray, userId || 'guest', jumpId);
                       console.log('✅ Tool prompts saved successfully with IDs:', savedIds);
                       
                       // Update the result with saved IDs
