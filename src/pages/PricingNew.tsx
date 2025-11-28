@@ -231,8 +231,6 @@ const PricingNew = () => {
   };
 
   const getValueBadge = (credits: number) => {
-    if (credits === 250) return "Best Value";
-    if (credits === 100) return "Most Popular";
     return null;
   };
 
