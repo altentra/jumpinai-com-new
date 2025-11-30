@@ -33,7 +33,6 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
   const [isRefreshing, setIsRefreshing] = React.useState(false);
   const [toolPrompts, setToolPrompts] = React.useState<any[]>(result.components?.toolPrompts || []);
   const [isHeaderHidden, setIsHeaderHidden] = React.useState(false);
-  const lastScrollYRef = React.useRef(0);
   const skipScrollToTopRef = React.useRef(false);
   const tabsContainerRef = React.useRef<HTMLDivElement>(null);
   const overviewContentRef = React.useRef<HTMLDivElement>(null);
@@ -47,35 +46,30 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
     }
   }, [result.components?.toolPrompts]);
 
-  // Track scroll direction to sync with header visibility on mobile
+  // Listen to header visibility changes for perfect sync
   React.useEffect(() => {
-    const handleScroll = () => {
+    const handleHeaderVisibilityChange = (event: CustomEvent) => {
       if (window.innerWidth < 768) {
-        const currentScrollY = window.scrollY;
-        
-        if (currentScrollY > lastScrollYRef.current && currentScrollY > 80) {
-          // Scrolling down and past threshold - hide header, tabs go to top
-          setIsHeaderHidden(true);
-        } else if (currentScrollY < lastScrollYRef.current) {
-          // Scrolling up - show header, tabs go back down
-          setIsHeaderHidden(false);
-        }
-        
-        lastScrollYRef.current = currentScrollY;
+        setIsHeaderHidden(!event.detail.visible);
       } else {
         setIsHeaderHidden(false);
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
-    window.addEventListener('resize', handleScroll);
+    window.addEventListener('headerVisibilityChange', handleHeaderVisibilityChange as EventListener);
     
-    // Initial check
-    handleScroll();
-
+    // Also handle resize to reset state on desktop
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setIsHeaderHidden(false);
+      }
+    };
+    
+    window.addEventListener('resize', handleResize);
+    
     return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleScroll);
+      window.removeEventListener('headerVisibilityChange', handleHeaderVisibilityChange as EventListener);
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
 
