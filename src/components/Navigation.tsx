@@ -159,7 +159,7 @@ const Navigation = React.memo(() => {
                   key={item.name}
                   onClick={() => handleNavClick(item.href)}
                   onMouseEnter={() => handleMouseEnter(item.href)}
-                  className="relative text-muted-foreground hover:text-foreground px-4 py-2 text-sm font-medium transition-all duration-300 group"
+                  className="relative text-muted-foreground hover:text-foreground px-4 py-2 text-sm font-medium transition-all duration-300 group whitespace-nowrap"
                 >
                   {item.name}
                   <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
