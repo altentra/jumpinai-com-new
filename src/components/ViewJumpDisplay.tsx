@@ -17,12 +17,14 @@ interface ViewJumpDisplayProps {
   result: ProgressiveResult;
   generationTimer: number;
   onToolPromptGenerated?: () => void;
+  isPublicView?: boolean;
 }
 
 const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
   result, 
   generationTimer,
-  onToolPromptGenerated
+  onToolPromptGenerated,
+  isPublicView = false
 }) => {
   const navigate = useNavigate();
   const [copiedPrompts, setCopiedPrompts] = React.useState<Set<number>>(new Set());
@@ -582,6 +584,7 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
               toolPromptIds={result.components?.toolPrompts?.map((tp: any) => tp?.id || null) || []}
               onToolPromptClick={handleToolPromptClick}
               onToolPromptGenerated={onToolPromptGenerated}
+              isPublicView={isPublicView}
             />
           ) : (
             <div className="flex items-center justify-center h-32">

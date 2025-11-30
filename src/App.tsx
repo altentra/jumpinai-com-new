@@ -26,6 +26,7 @@ const PitchDeck = lazy(() => import("./pages/PitchDeck"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Resources = lazy(() => import("./pages/Resources"));
 const PublicProfile = lazy(() => import("./pages/PublicProfile"));
+const PublicJumpView = lazy(() => import("./pages/PublicJumpView"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Auth = lazy(() => import("./pages/Auth"));
 const PricingNew = lazy(() => import("./pages/PricingNew"));
@@ -94,6 +95,7 @@ const App = () => {
               <Route path="/download/:token" element={<Download />} />
               <Route path="/download-pro/:productId" element={<DownloadPro />} />
               <Route path="/u/:username" element={<PublicProfile />} />
+              <Route path="/jump/:jumpId/public/:username" element={<PublicJumpView />} />
               <Route path="/dashboard/jump/:jumpId" element={<ViewJump />} />
               <Route path="/dashboard/*" element={<Dashboard />} />
               <Route path="/auth" element={<Auth />} />
