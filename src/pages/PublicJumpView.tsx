@@ -16,6 +16,7 @@ export default function PublicJumpView() {
   const [progressiveResult, setProgressiveResult] = useState<ProgressiveResult | null>(null);
   const [loading, setLoading] = useState(true);
   const [jumpTitle, setJumpTitle] = useState('');
+  const [jumpCreatedAt, setJumpCreatedAt] = useState('');
 
   useEffect(() => {
     if (jumpId) {
@@ -43,7 +44,10 @@ export default function PublicJumpView() {
         return;
       }
 
-      setJumpTitle(jump.title);
+      // Store jump info
+      const displayTitle = jump.title.replace(/^Jump\s*#\d+\s*[:\-–]\s*/i, '');
+      setJumpTitle(displayTitle);
+      setJumpCreatedAt(jump.created_at);
 
       // Track view
       await trackJumpView(jumpId);
@@ -217,19 +221,40 @@ export default function PublicJumpView() {
         </div>
 
         <div className="relative w-full max-w-7xl mx-auto pt-24 pb-6 px-4 lg:px-6 space-y-6">
-          {/* Back Button Header */}
+          {/* Enhanced Header */}
           <div className="relative group">
             <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 rounded-3xl blur-xl opacity-40"></div>
             <div className="relative glass backdrop-blur-xl border border-border/40 hover:border-primary/30 transition-all duration-500 rounded-3xl p-6 shadow-2xl bg-gradient-to-br from-background/60 to-background/30">
-              <Button
-                onClick={handleBackClick}
-                variant="ghost"
-                size="sm"
-                className="rounded-xl border border-border/40 bg-background/60 hover:bg-background/80 backdrop-blur-sm transition-all duration-300"
-              >
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to Profile
-              </Button>
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/4 via-transparent to-secondary/4 rounded-3xl"></div>
+              <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
+              
+              <div className="relative z-10 space-y-4">
+                <Button
+                  onClick={handleBackClick}
+                  variant="ghost"
+                  size="sm"
+                  className="rounded-xl border border-border/40 bg-background/60 hover:bg-background/80 backdrop-blur-sm transition-all duration-300"
+                >
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Back to Profile
+                </Button>
+
+                <div className="space-y-2">
+                  <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-transparent">
+                    {jumpTitle}
+                  </h1>
+                  <p className="text-sm text-muted-foreground">
+                    Created on {new Date(jumpCreatedAt).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })} at {new Date(jumpCreatedAt).toLocaleTimeString('en-US', {
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
 
