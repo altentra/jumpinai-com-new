@@ -17,15 +17,36 @@ serve(async (req) => {
   
   let elevenLabsSocket: WebSocket | null = null;
 
-  socket.onopen = () => {
+  socket.onopen = async () => {
     console.log("Client connected to relay");
     
     try {
-      // URL encode the API key to handle special characters
-      const encodedApiKey = encodeURIComponent(ELEVENLABS_API_KEY);
+      // Generate a single-use token for WebSocket authentication
+      console.log("Generating single-use token from ElevenLabs...");
+      const tokenResponse = await fetch('https://api.elevenlabs.io/v1/speech-to-text/single-use-token', {
+        method: 'POST',
+        headers: {
+          'xi-api-key': ELEVENLABS_API_KEY,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!tokenResponse.ok) {
+        const errorText = await tokenResponse.text();
+        throw new Error(`Failed to generate token: ${tokenResponse.status} ${errorText}`);
+      }
+
+      const tokenData = await tokenResponse.json();
+      const token = tokenData.token;
       
-      // Connect to ElevenLabs Realtime API
-      const wsUrl = `wss://api.elevenlabs.io/v1/speech-to-text/realtime?model_id=scribe_realtime_v2&language_code=en&audio_format=pcm_16000&commit_strategy=vad&xi-api-key=${encodedApiKey}`;
+      if (!token) {
+        throw new Error('No token received from ElevenLabs');
+      }
+
+      console.log("Token generated successfully, connecting to WebSocket...");
+      
+      // Connect to ElevenLabs Realtime API using token
+      const wsUrl = `wss://api.elevenlabs.io/v1/speech-to-text/realtime?model_id=scribe_realtime_v2&language_code=en&audio_format=pcm_16000&commit_strategy=vad&token=${token}`;
       
       console.log("Connecting to ElevenLabs with model: scribe_realtime_v2");
       elevenLabsSocket = new WebSocket(wsUrl);
