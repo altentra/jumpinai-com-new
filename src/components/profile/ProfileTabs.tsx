@@ -430,20 +430,20 @@ export default function ProfileTabs() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-3 sm:px-6 pb-8">
+    <div className="max-w-6xl mx-auto px-2 sm:px-6 pb-6 sm:pb-8">
       {/* Header */}
       <header>
-        <div className="rounded-2xl border border-border glass p-4 sm:p-6 md:p-8 animate-fade-in">
+        <div className="rounded-xl sm:rounded-2xl border border-border glass p-3 sm:p-6 md:p-8 animate-fade-in">
           <div className="flex flex-col gap-4 sm:gap-6">
             {/* Account Header */}
             <div className="flex flex-col gap-4">
               <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
                 <div className="min-w-0 flex-1">
-                  <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold flex items-center gap-2 sm:gap-3">
-                    <User className="h-6 w-6 sm:h-7 sm:w-7 text-primary flex-shrink-0" />
+                  <h1 className="text-xl sm:text-3xl md:text-4xl font-bold flex items-center gap-2 sm:gap-3">
+                    <User className="h-5 w-5 sm:h-7 sm:w-7 text-primary flex-shrink-0" />
                     <span className="truncate">Account</span>
                   </h1>
-                  <p className="text-muted-foreground mt-1 sm:mt-2 text-sm sm:text-base truncate">{email}</p>
+                  <p className="text-muted-foreground mt-1 sm:mt-2 text-xs sm:text-base truncate">{email}</p>
                 </div>
                 <div className="flex items-center gap-2 sm:self-start">
                   {subInfo?.subscribed ? (
@@ -505,28 +505,28 @@ export default function ProfileTabs() {
       {/* Tabs */}
       <section className="mt-4 sm:mt-6">
         <Tabs defaultValue="profile" className="w-full">
-          <TabsList className="flex flex-col sm:flex-row w-full gap-2 rounded-2xl glass border border-border/50 p-1.5 h-auto sm:justify-center sm:max-w-4xl sm:mx-auto backdrop-blur-sm">
+          <TabsList className="flex flex-row w-full gap-1 sm:gap-2 rounded-xl sm:rounded-2xl glass border border-border/50 p-1 sm:p-1.5 h-auto justify-center max-w-full sm:max-w-4xl mx-auto backdrop-blur-sm">
             <TabsTrigger 
               value="profile" 
-              className="w-full sm:flex-1 sm:max-w-52 flex items-center justify-center gap-2 text-xs sm:text-sm py-3.5 px-4 sm:px-6 transition-all duration-300 hover:bg-background/60 data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/10 data-[state=active]:to-accent/10 data-[state=active]:border data-[state=active]:border-primary/20 data-[state=active]:shadow-sm rounded-xl font-medium"
+              className="flex-1 sm:max-w-52 flex items-center justify-center gap-1.5 sm:gap-2 text-[11px] sm:text-sm py-2.5 sm:py-3.5 px-2 sm:px-6 transition-all duration-300 hover:bg-background/60 data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/10 data-[state=active]:to-accent/10 data-[state=active]:border data-[state=active]:border-primary/20 data-[state=active]:shadow-sm rounded-lg sm:rounded-xl font-medium"
             >
-              <User className="h-4 w-4 flex-shrink-0" /> 
-              <span className="sm:hidden">Overview</span>
-              <span className="hidden sm:inline">Profile & Overview</span>
+              <User className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" /> 
+              <span className="leading-tight">Profile</span>
             </TabsTrigger>
             <TabsTrigger 
               value="security" 
-              className="w-full sm:flex-1 sm:max-w-52 flex items-center justify-center gap-2 text-xs sm:text-sm py-3.5 px-4 sm:px-6 transition-all duration-300 hover:bg-background/60 data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/10 data-[state=active]:to-accent/10 data-[state=active]:border data-[state=active]:border-primary/20 data-[state=active]:shadow-sm rounded-xl font-medium"
+              className="flex-1 sm:max-w-52 flex items-center justify-center gap-1.5 sm:gap-2 text-[11px] sm:text-sm py-2.5 sm:py-3.5 px-2 sm:px-6 transition-all duration-300 hover:bg-background/60 data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/10 data-[state=active]:to-accent/10 data-[state=active]:border data-[state=active]:border-primary/20 data-[state=active]:shadow-sm rounded-lg sm:rounded-xl font-medium"
             >
-              <Shield className="h-4 w-4 flex-shrink-0" /> 
-              <span>Security</span>
+              <Shield className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" /> 
+              <span className="leading-tight">Security</span>
             </TabsTrigger>
             <TabsTrigger 
               value="orders" 
-              className="w-full sm:flex-1 sm:max-w-52 flex items-center justify-center gap-2 text-xs sm:text-sm py-3.5 px-4 sm:px-6 transition-all duration-300 hover:bg-background/60 data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/10 data-[state=active]:to-accent/10 data-[state=active]:border data-[state=active]:border-primary/20 data-[state=active]:shadow-sm rounded-xl font-medium"
+              className="flex-1 sm:max-w-52 flex items-center justify-center gap-1.5 sm:gap-2 text-[11px] sm:text-sm py-2.5 sm:py-3.5 px-2 sm:px-6 transition-all duration-300 hover:bg-background/60 data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/10 data-[state=active]:to-accent/10 data-[state=active]:border data-[state=active]:border-primary/20 data-[state=active]:shadow-sm rounded-lg sm:rounded-xl font-medium"
             >
-              <History className="h-4 w-4 flex-shrink-0" /> 
-              <span>Order History</span>
+              <History className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" /> 
+              <span className="leading-tight hidden xs:inline">Orders</span>
+              <span className="leading-tight xs:hidden">History</span>
             </TabsTrigger>
           </TabsList>
 
@@ -534,8 +534,8 @@ export default function ProfileTabs() {
           <TabsContent value="profile" className="mt-4 sm:mt-6 animate-fade-in space-y-4 sm:space-y-6">
             {/* Email & Account Status */}
             <Card className="glass border-border/40 shadow-modern">
-              <CardHeader className="pb-3 sm:pb-6">
-                <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+              <CardHeader className="pb-2 sm:pb-6">
+                <CardTitle className="flex items-center gap-2 text-sm sm:text-lg">
                   <User className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" /> 
                   Account Information
                 </CardTitle>
@@ -654,8 +654,8 @@ export default function ProfileTabs() {
           {/* Security */}
           <TabsContent value="security" className="mt-4 sm:mt-6 animate-fade-in">
             <Card className="glass border-border/40 shadow-modern">
-              <CardHeader className="pb-3 sm:pb-6">
-                <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+              <CardHeader className="pb-2 sm:pb-6">
+                <CardTitle className="flex items-center gap-2 text-sm sm:text-lg">
                   <Shield className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" /> 
                   Security
                 </CardTitle>
@@ -708,8 +708,8 @@ export default function ProfileTabs() {
           {/* Order History */}
           <TabsContent value="orders" className="mt-4 sm:mt-6 animate-fade-in">
             <Card className="glass border-border/40 shadow-modern">
-              <CardHeader className="pb-3 sm:pb-6">
-                <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+              <CardHeader className="pb-2 sm:pb-6">
+                <CardTitle className="flex items-center gap-2 text-sm sm:text-lg">
                   <History className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" /> 
                   Order History
                 </CardTitle>
