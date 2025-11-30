@@ -155,16 +155,16 @@ export default function AppSidebar() {
 
           <Separator className="my-1.5" />
 
-          {/* Profile & Settings */}
+          {/* Settings */}
           <Link 
-            to="/dashboard/profile" 
+            to="/dashboard/settings" 
             className={cn(
               "flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-300",
-              getNavCls({ isActive: currentPath === "/dashboard/profile" })
+              getNavCls({ isActive: currentPath === "/dashboard/settings" })
             )}
           >
-            <User className="h-4 w-4" />
-            Profile
+            <Settings className="h-4 w-4" />
+            Settings
           </Link>
 
           {/* Subscription */}

@@ -58,7 +58,7 @@ export default function ProfileTabs() {
   useEffect(() => {
     if (!authLoading) {
       if (!isAuthenticated) {
-        login('/dashboard/profile');
+        login('/dashboard/settings');
       } else if (user) {
         setEmail(user.email || "");
         fetchSupabaseUser();
