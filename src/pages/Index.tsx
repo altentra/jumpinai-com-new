@@ -52,6 +52,17 @@ const Index = () => {
   const { elementRef: whyCriticalRef, scrollProgress: whyCriticalProgress } = useScrollAnimation({ threshold: 0.2 });
   const { elementRef: whyDifferentRef, scrollProgress: whyDifferentProgress } = useScrollAnimation({ threshold: 0.2 });
   const { elementRef: whyKeyPointsRef, scrollProgress: whyKeyPointsProgress } = useScrollAnimation({ threshold: 0.2 });
+  
+  // Individual refs for mobile animations
+  const { elementRef: tab1Ref, scrollProgress: tab1Progress } = useScrollAnimation({ threshold: 0.2 });
+  const { elementRef: tab2Ref, scrollProgress: tab2Progress } = useScrollAnimation({ threshold: 0.2 });
+  const { elementRef: tab3Ref, scrollProgress: tab3Progress } = useScrollAnimation({ threshold: 0.2 });
+  const { elementRef: step1Ref, scrollProgress: step1Progress } = useScrollAnimation({ threshold: 0.2 });
+  const { elementRef: step2Ref, scrollProgress: step2Progress } = useScrollAnimation({ threshold: 0.2 });
+  const { elementRef: step3Ref, scrollProgress: step3Progress } = useScrollAnimation({ threshold: 0.2 });
+  const { elementRef: concept1Ref, scrollProgress: concept1Progress } = useScrollAnimation({ threshold: 0.2 });
+  const { elementRef: concept2Ref, scrollProgress: concept2Progress } = useScrollAnimation({ threshold: 0.2 });
+  const { elementRef: concept3Ref, scrollProgress: concept3Progress } = useScrollAnimation({ threshold: 0.2 });
 
   // Show test component only in development or when URL contains 'test'
   const showTest = window.location.hostname === 'localhost' || 
@@ -246,10 +257,11 @@ const Index = () => {
           <div ref={tabsRef} className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {/* Overview Tab */}
             <div 
+              ref={tab1Ref}
               className="group relative rounded-3xl transition-all duration-700 ease-out scroll-animate"
               style={{
-                opacity: Math.min(1, tabsProgress * 3),
-                transform: `translateY(${Math.min(1, tabsProgress * 3) >= 0.99 ? 0 : (1 - Math.min(1, tabsProgress * 3)) * 40}px)`
+                opacity: window.innerWidth < 768 ? Math.min(1, tab1Progress * 1.5) : Math.min(1, tabsProgress * 3),
+                transform: `translateY(${(window.innerWidth < 768 ? (Math.min(1, tab1Progress * 1.5) >= 0.99 ? 0 : (1 - Math.min(1, tab1Progress * 1.5)) * 40) : (Math.min(1, tabsProgress * 3) >= 0.99 ? 0 : (1 - Math.min(1, tabsProgress * 3)) * 40))}px)`
               }}
             >
               {/* Liquid glass border wrapper */}
@@ -300,10 +312,11 @@ const Index = () => {
 
             {/* Plan Tab */}
             <div 
+              ref={tab2Ref}
               className="group relative rounded-3xl transition-all duration-700 ease-out scroll-animate"
               style={{
-                opacity: Math.max(0, Math.min(1, (tabsProgress - 0.25) * 3)),
-                transform: `translateY(${Math.max(0, Math.min(1, (tabsProgress - 0.25) * 3)) >= 0.99 ? 0 : (1 - Math.max(0, Math.min(1, (tabsProgress - 0.25) * 3))) * 40}px)`
+                opacity: window.innerWidth < 768 ? Math.min(1, tab2Progress * 1.5) : Math.max(0, Math.min(1, (tabsProgress - 0.25) * 3)),
+                transform: `translateY(${(window.innerWidth < 768 ? (Math.min(1, tab2Progress * 1.5) >= 0.99 ? 0 : (1 - Math.min(1, tab2Progress * 1.5)) * 40) : (Math.max(0, Math.min(1, (tabsProgress - 0.25) * 3)) >= 0.99 ? 0 : (1 - Math.max(0, Math.min(1, (tabsProgress - 0.25) * 3))) * 40))}px)`
               }}
             >
               {/* Liquid glass border wrapper */}
@@ -354,10 +367,11 @@ const Index = () => {
 
             {/* Tools & Prompts Tab */}
             <div 
+              ref={tab3Ref}
               className="group relative rounded-3xl transition-all duration-700 ease-out scroll-animate"
               style={{
-                opacity: Math.max(0, Math.min(1, (tabsProgress - 0.5) * 3)),
-                transform: `translateY(${Math.max(0, Math.min(1, (tabsProgress - 0.5) * 3)) >= 0.99 ? 0 : (1 - Math.max(0, Math.min(1, (tabsProgress - 0.5) * 3))) * 40}px)`
+                opacity: window.innerWidth < 768 ? Math.min(1, tab3Progress * 1.5) : Math.max(0, Math.min(1, (tabsProgress - 0.5) * 3)),
+                transform: `translateY(${(window.innerWidth < 768 ? (Math.min(1, tab3Progress * 1.5) >= 0.99 ? 0 : (1 - Math.min(1, tab3Progress * 1.5)) * 40) : (Math.max(0, Math.min(1, (tabsProgress - 0.5) * 3)) >= 0.99 ? 0 : (1 - Math.max(0, Math.min(1, (tabsProgress - 0.5) * 3))) * 40))}px)`
               }}
             >
               {/* Liquid glass border wrapper */}
@@ -459,10 +473,11 @@ const Index = () => {
           <div ref={stepsRef} className="max-w-6xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
               <div 
+                ref={step1Ref}
                 className="group relative rounded-3xl transition-all duration-700 ease-out scroll-animate"
                 style={{
-                  opacity: Math.min(1, stepsProgress * 3),
-                  transform: `translateY(${Math.min(1, stepsProgress * 3) >= 0.99 ? 0 : (1 - Math.min(1, stepsProgress * 3)) * 40}px)`
+                  opacity: window.innerWidth < 768 ? Math.min(1, step1Progress * 1.5) : Math.min(1, stepsProgress * 3),
+                  transform: `translateY(${(window.innerWidth < 768 ? (Math.min(1, step1Progress * 1.5) >= 0.99 ? 0 : (1 - Math.min(1, step1Progress * 1.5)) * 40) : (Math.min(1, stepsProgress * 3) >= 0.99 ? 0 : (1 - Math.min(1, stepsProgress * 3)) * 40))}px)`
                 }}
               >
                 {/* Liquid glass border wrapper */}
@@ -488,10 +503,11 @@ const Index = () => {
               </div>
               
               <div 
+                ref={step2Ref}
                 className="group relative rounded-3xl transition-all duration-700 ease-out scroll-animate"
                 style={{
-                  opacity: Math.max(0, Math.min(1, (stepsProgress - 0.25) * 3)),
-                  transform: `translateY(${Math.max(0, Math.min(1, (stepsProgress - 0.25) * 3)) >= 0.99 ? 0 : (1 - Math.max(0, Math.min(1, (stepsProgress - 0.25) * 3))) * 40}px)`
+                  opacity: window.innerWidth < 768 ? Math.min(1, step2Progress * 1.5) : Math.max(0, Math.min(1, (stepsProgress - 0.25) * 3)),
+                  transform: `translateY(${(window.innerWidth < 768 ? (Math.min(1, step2Progress * 1.5) >= 0.99 ? 0 : (1 - Math.min(1, step2Progress * 1.5)) * 40) : (Math.max(0, Math.min(1, (stepsProgress - 0.25) * 3)) >= 0.99 ? 0 : (1 - Math.max(0, Math.min(1, (stepsProgress - 0.25) * 3))) * 40))}px)`
                 }}
               >
                 {/* Liquid glass border wrapper */}
@@ -517,10 +533,11 @@ const Index = () => {
               </div>
               
               <div 
+                ref={step3Ref}
                 className="group relative rounded-3xl transition-all duration-700 ease-out scroll-animate"
                 style={{
-                  opacity: Math.max(0, Math.min(1, (stepsProgress - 0.5) * 3)),
-                  transform: `translateY(${Math.max(0, Math.min(1, (stepsProgress - 0.5) * 3)) >= 0.99 ? 0 : (1 - Math.max(0, Math.min(1, (stepsProgress - 0.5) * 3))) * 40}px)`
+                  opacity: window.innerWidth < 768 ? Math.min(1, step3Progress * 1.5) : Math.max(0, Math.min(1, (stepsProgress - 0.5) * 3)),
+                  transform: `translateY(${(window.innerWidth < 768 ? (Math.min(1, step3Progress * 1.5) >= 0.99 ? 0 : (1 - Math.min(1, step3Progress * 1.5)) * 40) : (Math.max(0, Math.min(1, (stepsProgress - 0.5) * 3)) >= 0.99 ? 0 : (1 - Math.max(0, Math.min(1, (stepsProgress - 0.5) * 3))) * 40))}px)`
                 }}
               >
                 {/* Liquid glass border wrapper */}
@@ -1000,10 +1017,11 @@ const Index = () => {
             <div ref={conceptCardsRef} className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch mb-8">
               {/* Card 1 */}
               <div 
+                ref={concept1Ref}
                 className="group relative rounded-3xl transition-all duration-700 ease-out scroll-animate"
                 style={{
-                  opacity: Math.min(1, conceptCardsProgress * 3),
-                  transform: `translateY(${Math.min(1, conceptCardsProgress * 3) >= 0.99 ? 0 : (1 - Math.min(1, conceptCardsProgress * 3)) * 40}px)`
+                  opacity: window.innerWidth < 768 ? Math.min(1, concept1Progress * 1.5) : Math.min(1, conceptCardsProgress * 3),
+                  transform: `translateY(${(window.innerWidth < 768 ? (Math.min(1, concept1Progress * 1.5) >= 0.99 ? 0 : (1 - Math.min(1, concept1Progress * 1.5)) * 40) : (Math.min(1, conceptCardsProgress * 3) >= 0.99 ? 0 : (1 - Math.min(1, conceptCardsProgress * 3)) * 40))}px)`
                 }}
               >
                 {/* Liquid glass border wrapper */}
@@ -1033,10 +1051,11 @@ const Index = () => {
 
               {/* Card 2 */}
               <div 
+                ref={concept2Ref}
                 className="group relative rounded-3xl transition-all duration-700 ease-out scroll-animate"
                 style={{
-                  opacity: Math.max(0, Math.min(1, (conceptCardsProgress - 0.25) * 3)),
-                  transform: `translateY(${Math.max(0, Math.min(1, (conceptCardsProgress - 0.25) * 3)) >= 0.99 ? 0 : (1 - Math.max(0, Math.min(1, (conceptCardsProgress - 0.25) * 3))) * 40}px)`
+                  opacity: window.innerWidth < 768 ? Math.min(1, concept2Progress * 1.5) : Math.max(0, Math.min(1, (conceptCardsProgress - 0.25) * 3)),
+                  transform: `translateY(${(window.innerWidth < 768 ? (Math.min(1, concept2Progress * 1.5) >= 0.99 ? 0 : (1 - Math.min(1, concept2Progress * 1.5)) * 40) : (Math.max(0, Math.min(1, (conceptCardsProgress - 0.25) * 3)) >= 0.99 ? 0 : (1 - Math.max(0, Math.min(1, (conceptCardsProgress - 0.25) * 3))) * 40))}px)`
                 }}
               >
                 {/* Liquid glass border wrapper */}
@@ -1068,10 +1087,11 @@ const Index = () => {
 
               {/* Card 3 */}
               <div 
+                ref={concept3Ref}
                 className="group relative rounded-3xl transition-all duration-700 ease-out scroll-animate"
                 style={{
-                  opacity: Math.max(0, Math.min(1, (conceptCardsProgress - 0.5) * 3)),
-                  transform: `translateY(${Math.max(0, Math.min(1, (conceptCardsProgress - 0.5) * 3)) >= 0.99 ? 0 : (1 - Math.max(0, Math.min(1, (conceptCardsProgress - 0.5) * 3))) * 40}px)`
+                  opacity: window.innerWidth < 768 ? Math.min(1, concept3Progress * 1.5) : Math.max(0, Math.min(1, (conceptCardsProgress - 0.5) * 3)),
+                  transform: `translateY(${(window.innerWidth < 768 ? (Math.min(1, concept3Progress * 1.5) >= 0.99 ? 0 : (1 - Math.min(1, concept3Progress * 1.5)) * 40) : (Math.max(0, Math.min(1, (conceptCardsProgress - 0.5) * 3)) >= 0.99 ? 0 : (1 - Math.max(0, Math.min(1, (conceptCardsProgress - 0.5) * 3))) * 40))}px)`
                 }}
               >
                 {/* Liquid glass border wrapper */}
