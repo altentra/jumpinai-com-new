@@ -67,15 +67,16 @@ serve(async (req) => {
 
     elevenLabsSocket.onmessage = (event) => {
       try {
+        console.log("Raw ElevenLabs message:", event.data);
         const data = JSON.parse(event.data);
-        console.log("ElevenLabs message:", data.type);
+        console.log("Parsed data:", JSON.stringify(data));
+        console.log("Data type:", data.type);
         
-        // Forward transcription events to client
-        if (data.type === "partial_transcript" || data.type === "committed_transcript") {
-          socket.send(JSON.stringify(data));
-        }
+        // Forward all transcription events to client
+        socket.send(JSON.stringify(data));
       } catch (error) {
         console.error("Error parsing ElevenLabs message:", error);
+        console.error("Raw data was:", event.data);
       }
     };
 
