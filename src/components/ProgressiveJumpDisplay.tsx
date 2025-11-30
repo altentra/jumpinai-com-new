@@ -92,40 +92,38 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
     
     // Scroll to top of tab content unless it's a programmatic change from View button
     if (!skipScrollToTopRef.current) {
-      // Check if tabs are sticky (scrolled past their original position)
+      const isMobile = window.innerWidth < 768;
+      
+      // On mobile, skip complex scroll logic to prevent touch interference
+      if (isMobile) {
+        skipScrollToTopRef.current = false;
+        return;
+      }
+      
+      // Desktop only: Check if tabs are sticky and scroll accordingly
       if (tabsContainerRef.current) {
         const tabsRect = tabsContainerRef.current.getBoundingClientRect();
-        const isTabsSticky = tabsRect.top <= 80; // Tabs are sticky when they reach sticky position (top-20 = 80px)
+        const isTabsSticky = tabsRect.top <= 80;
         
-        // Only scroll if tabs are sticky
         if (isTabsSticky) {
-          // Detect mobile for instant scroll (prevents touch event interference)
-          const isMobile = window.innerWidth < 768;
-          
-          // Wait for tab content to render, then scroll - simplified for mobile
           requestAnimationFrame(() => {
             try {
-              // Get the appropriate content ref based on the new tab
               let contentRef: React.RefObject<HTMLDivElement> | null = null;
               if (newTab === 'overview') contentRef = overviewContentRef;
               else if (newTab === 'plan') contentRef = planContentRef;
               else if (newTab === 'toolPrompts') contentRef = toolPromptsContentRef;
               
-              // Scroll to the position of the content with offset for sticky tabs
               if (contentRef?.current) {
                 const elementPosition = contentRef.current.getBoundingClientRect().top + window.pageYOffset;
-                // Use larger offset and ensure we don't scroll past the top of the page
                 const offsetPosition = Math.max(0, elementPosition - 130);
                 
-                // Use instant scroll on mobile to prevent touch event issues
                 window.scrollTo({
                   top: offsetPosition,
-                  behavior: isMobile ? 'auto' : 'smooth'
+                  behavior: 'smooth'
                 });
               }
             } catch (error) {
               console.error('Tab scroll error:', error);
-              // Fail silently to prevent page crashes
             }
           });
         }
