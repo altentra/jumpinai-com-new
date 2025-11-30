@@ -103,7 +103,8 @@ serve(async (req) => {
       const message = JSON.parse(event.data);
       
       // Forward audio chunks to ElevenLabs
-      if (message.type === "audio_chunk" && elevenLabsSocket?.readyState === WebSocket.OPEN) {
+      if (message.type === "input_audio_chunk" && elevenLabsSocket?.readyState === WebSocket.OPEN) {
+        console.log("Forwarding audio chunk to ElevenLabs");
         elevenLabsSocket.send(JSON.stringify({
           type: "input_audio_chunk",
           audio_chunk: message.audio_chunk,
