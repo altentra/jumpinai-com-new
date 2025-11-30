@@ -10,7 +10,7 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Copy, Check } from 'lucide-react';
+import { Loader2, Copy, Check, User, Lock, Globe } from 'lucide-react';
 import MiniJumpCard from '@/components/dashboard/MiniJumpCard';
 import logoTransparent from '@/assets/logo-transparent.png';
 
@@ -185,9 +185,29 @@ export default function Profile() {
 
         <Tabs defaultValue="edit" className="space-y-6">
           <TabsList className="flex flex-col sm:flex-row w-full gap-2 rounded-2xl glass border border-border/50 p-1.5 h-auto sm:justify-center sm:max-w-4xl sm:mx-auto backdrop-blur-sm">
-            <TabsTrigger value="edit" className="flex-1">Edit Profile</TabsTrigger>
-            <TabsTrigger value="private" onClick={() => loadJumps('private')} className="flex-1">Private Jumps</TabsTrigger>
-            <TabsTrigger value="public" onClick={() => loadJumps('public')} className="flex-1">Public Jumps</TabsTrigger>
+            <TabsTrigger 
+              value="edit" 
+              className="w-full sm:flex-1 sm:max-w-52 flex items-center justify-center gap-2 text-xs sm:text-sm py-3.5 px-4 sm:px-6 transition-all duration-300 hover:bg-background/60 data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/10 data-[state=active]:to-accent/10 data-[state=active]:border data-[state=active]:border-primary/20 data-[state=active]:shadow-sm rounded-xl font-medium"
+            >
+              <User className="h-4 w-4 flex-shrink-0" />
+              <span>Edit Profile</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="private" 
+              onClick={() => loadJumps('private')} 
+              className="w-full sm:flex-1 sm:max-w-52 flex items-center justify-center gap-2 text-xs sm:text-sm py-3.5 px-4 sm:px-6 transition-all duration-300 hover:bg-background/60 data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/10 data-[state=active]:to-accent/10 data-[state=active]:border data-[state=active]:border-primary/20 data-[state=active]:shadow-sm rounded-xl font-medium"
+            >
+              <Lock className="h-4 w-4 flex-shrink-0" />
+              <span>Private Jumps</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="public" 
+              onClick={() => loadJumps('public')} 
+              className="w-full sm:flex-1 sm:max-w-52 flex items-center justify-center gap-2 text-xs sm:text-sm py-3.5 px-4 sm:px-6 transition-all duration-300 hover:bg-background/60 data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/10 data-[state=active]:to-accent/10 data-[state=active]:border data-[state=active]:border-primary/20 data-[state=active]:shadow-sm rounded-xl font-medium"
+            >
+              <Globe className="h-4 w-4 flex-shrink-0" />
+              <span>Public Jumps</span>
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="edit">
