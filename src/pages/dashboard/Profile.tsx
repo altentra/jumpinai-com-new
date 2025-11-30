@@ -173,9 +173,9 @@ export default function Profile() {
             </div>
           </div>
           
-          {formData.is_public && (
+          {profile?.is_public && (
             <a
-              href={`/@${formData.username}`}
+              href={`/@${profile.username?.replace('@', '')}`}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-sm text-primary hover:underline"
