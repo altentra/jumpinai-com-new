@@ -465,6 +465,47 @@ export type Database = {
         }
         Relationships: []
       }
+      stt_usage_logs: {
+        Row: {
+          created_at: string | null
+          id: string
+          ip_address: string | null
+          jump_id: string | null
+          session_duration_seconds: number | null
+          transcript_length: number | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          ip_address?: string | null
+          jump_id?: string | null
+          session_duration_seconds?: number | null
+          transcript_length?: number | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          ip_address?: string | null
+          jump_id?: string | null
+          session_duration_seconds?: number | null
+          transcript_length?: number | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stt_usage_logs_jump_id_fkey"
+            columns: ["jump_id"]
+            isOneToOne: false
+            referencedRelation: "user_jumps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       subscribers: {
         Row: {
           created_at: string
@@ -662,6 +703,7 @@ export type Database = {
           reroutes_count: number | null
           status: string | null
           structured_plan: Json | null
+          stt_used: boolean | null
           summary: string | null
           title: string
           tools_clicked_count: number | null
@@ -689,6 +731,7 @@ export type Database = {
           reroutes_count?: number | null
           status?: string | null
           structured_plan?: Json | null
+          stt_used?: boolean | null
           summary?: string | null
           title: string
           tools_clicked_count?: number | null
@@ -716,6 +759,7 @@ export type Database = {
           reroutes_count?: number | null
           status?: string | null
           structured_plan?: Json | null
+          stt_used?: boolean | null
           summary?: string | null
           title?: string
           tools_clicked_count?: number | null
@@ -915,6 +959,10 @@ export type Database = {
           user_email: string
         }
         Returns: boolean
+      }
+      check_stt_rate_limit: {
+        Args: { p_ip_address: string; p_user_id: string }
+        Returns: Json
       }
       clean_old_guest_usage: { Args: never; Returns: undefined }
       deduct_user_credit: {
