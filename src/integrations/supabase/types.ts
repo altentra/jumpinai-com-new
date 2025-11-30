@@ -286,6 +286,35 @@ export type Database = {
         }
         Relationships: []
       }
+      jump_likes: {
+        Row: {
+          created_at: string
+          id: string
+          jump_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          jump_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          jump_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "jump_likes_jump_id_fkey"
+            columns: ["jump_id"]
+            isOneToOne: false
+            referencedRelation: "user_jumps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lead_magnet_downloads: {
         Row: {
           downloaded_at: string
@@ -706,6 +735,7 @@ export type Database = {
           ip_address: string | null
           is_public: boolean | null
           jump_type: string | null
+          likes_count: number
           location: string | null
           max_clarification_level: number | null
           profile_id: string | null
@@ -735,6 +765,7 @@ export type Database = {
           ip_address?: string | null
           is_public?: boolean | null
           jump_type?: string | null
+          likes_count?: number
           location?: string | null
           max_clarification_level?: number | null
           profile_id?: string | null
@@ -764,6 +795,7 @@ export type Database = {
           ip_address?: string | null
           is_public?: boolean | null
           jump_type?: string | null
+          likes_count?: number
           location?: string | null
           max_clarification_level?: number | null
           profile_id?: string | null

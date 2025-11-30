@@ -1,9 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useParams, Navigate } from 'react-router-dom';
 import { profileService, ProfileData } from '@/services/profileService';
+import { jumpLikesService } from '@/services/jumpLikesService';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Card } from '@/components/ui/card';
-import { Loader2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Loader2, Eye, Heart } from 'lucide-react';
+import { useOptimizedAuth } from '@/hooks/useOptimizedAuth';
+import { useToast } from '@/hooks/use-toast';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import logoTransparent from '@/assets/logo-transparent.png';
@@ -11,8 +15,11 @@ import { Helmet } from 'react-helmet-async';
 
 export default function PublicProfile() {
   const { username } = useParams<{ username: string }>();
+  const { user } = useOptimizedAuth();
+  const { toast } = useToast();
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [publicJumps, setPublicJumps] = useState<any[]>([]);
+  const [likedJumps, setLikedJumps] = useState<Set<string>>(new Set());
   const [isLoading, setIsLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
 
@@ -20,7 +27,49 @@ export default function PublicProfile() {
     if (username) {
       loadPublicProfile();
     }
-  }, [username]);
+  }, [username, user]);
+
+  const handleLikeToggle = async (jumpId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    
+    if (!user) {
+      toast({
+        title: "Sign in required",
+        description: "Please sign in to like jumps",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      const isLiked = likedJumps.has(jumpId);
+      
+      if (isLiked) {
+        await jumpLikesService.unlikeJump(jumpId, user.id);
+        setLikedJumps(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(jumpId);
+          return newSet;
+        });
+        setPublicJumps(prev => prev.map(jump => 
+          jump.id === jumpId ? { ...jump, likes_count: Math.max(0, (jump.likes_count || 0) - 1) } : jump
+        ));
+      } else {
+        await jumpLikesService.likeJump(jumpId, user.id);
+        setLikedJumps(prev => new Set(prev).add(jumpId));
+        setPublicJumps(prev => prev.map(jump => 
+          jump.id === jumpId ? { ...jump, likes_count: (jump.likes_count || 0) + 1 } : jump
+        ));
+      }
+    } catch (error) {
+      console.error('Error toggling like:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update like. Please try again.",
+        variant: "destructive"
+      });
+    }
+  };
 
   const loadPublicProfile = async () => {
     if (!username) return;
@@ -39,6 +88,18 @@ export default function PublicProfile() {
       // Load public jumps
       const jumps = await profileService.getPublicJumpsByUsername(username);
       setPublicJumps(jumps);
+
+      // Check which jumps the current user has liked
+      if (user) {
+        const liked = new Set<string>();
+        for (const jump of jumps) {
+          const hasLiked = await jumpLikesService.hasUserLiked(jump.id, user.id);
+          if (hasLiked) {
+            liked.add(jump.id);
+          }
+        }
+        setLikedJumps(liked);
+      }
     } catch (error) {
       console.error('Error loading public profile:', error);
       setNotFound(true);
@@ -117,37 +178,58 @@ export default function PublicProfile() {
                 <p className="text-center text-muted-foreground">No public jumps to display</p>
               </Card>
             ) : (
-              <div className="flex flex-col gap-4">
-                {publicJumps.map((jump) => (
-                  <Card 
-                    key={jump.id}
-                    className="p-6 bg-background/40 backdrop-blur-sm border-border/50 hover:border-primary/30 transition-all duration-300 cursor-pointer group"
-                    onClick={() => window.location.href = `/dashboard/jump/${jump.id}`}
-                  >
-                    <div className="space-y-3">
-                      <h3 className="text-lg font-semibold group-hover:text-primary transition-colors">
-                        {jump.title}
-                      </h3>
-                      {jump.summary && (
-                        <p className="text-sm text-muted-foreground line-clamp-2">
-                          {jump.summary}
-                        </p>
-                      )}
-                      <div className="flex items-center gap-4 text-xs text-muted-foreground pt-2">
-                        <span>
-                          {new Date(jump.created_at).toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'short',
-                            day: 'numeric'
-                          })}
-                        </span>
-                        {jump.views_count > 0 && (
-                          <span>{jump.views_count} views</span>
-                        )}
+              <div className="flex flex-col gap-6">
+                {publicJumps.map((jump) => {
+                  const isLiked = likedJumps.has(jump.id);
+                  // Remove "Jump #XX - " from the title for public view
+                  const displayTitle = jump.title.replace(/^Jump\s+#\d+\s*-\s*/i, '').trim();
+                  
+                  return (
+                    <Card 
+                      key={jump.id}
+                      className="p-8 bg-gradient-to-br from-background/60 to-background/40 backdrop-blur-md border-2 border-border/60 hover:border-primary/40 rounded-2xl transition-all duration-300 cursor-pointer group shadow-lg hover:shadow-xl relative overflow-hidden"
+                      onClick={() => window.location.href = `/dashboard/jump/${jump.id}`}
+                    >
+                      {/* Premium gradient overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.02] via-transparent to-accent/[0.02] pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      
+                      <div className="relative space-y-4">
+                        <h3 className="text-xl font-bold group-hover:text-primary transition-colors leading-tight">
+                          {displayTitle}
+                        </h3>
+                        
+                        <div className="flex items-center justify-between pt-2">
+                          <div className="flex items-center gap-6 text-sm text-muted-foreground">
+                            <span className="flex items-center gap-1.5">
+                              <Eye className="h-4 w-4" />
+                              {jump.views_count || 0}
+                            </span>
+                            
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className={`flex items-center gap-1.5 h-auto p-0 hover:bg-transparent ${
+                                isLiked ? 'text-red-500 hover:text-red-600' : 'text-muted-foreground hover:text-red-500'
+                              } transition-colors`}
+                              onClick={(e) => handleLikeToggle(jump.id, e)}
+                            >
+                              <Heart className={`h-4 w-4 ${isLiked ? 'fill-current' : ''}`} />
+                              {jump.likes_count || 0}
+                            </Button>
+                          </div>
+                          
+                          <span className="text-xs text-muted-foreground/70">
+                            {new Date(jump.created_at).toLocaleDateString('en-US', {
+                              year: 'numeric',
+                              month: 'short',
+                              day: 'numeric'
+                            })}
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                  </Card>
-                ))}
+                    </Card>
+                  );
+                })}
               </div>
             )}
           </div>
