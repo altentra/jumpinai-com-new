@@ -1,7 +1,6 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { AudioLines, Square } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
 
 interface SpeechToTextButtonProps {
   onTranscription: (text: string) => void;
@@ -13,46 +12,156 @@ export const SpeechToTextButton: React.FC<SpeechToTextButtonProps> = ({
   language = 'en'
 }) => {
   const [isRecording, setIsRecording] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [isConnecting, setIsConnecting] = useState(false);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const chunksRef = useRef<Blob[]>([]);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const processorRef = useRef<ScriptProcessorNode | null>(null);
+  const sourceRef = useRef<MediaStreamAudioSourceNode | null>(null);
+  const wsRef = useRef<WebSocket | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
   const { toast } = useToast();
+
+  const stopRecording = useCallback(() => {
+    console.log('Stopping recording...');
+    
+    // Close WebSocket
+    if (wsRef.current) {
+      wsRef.current.close();
+      wsRef.current = null;
+    }
+
+    // Clean up audio processing
+    if (processorRef.current) {
+      processorRef.current.disconnect();
+      processorRef.current = null;
+    }
+    if (sourceRef.current) {
+      sourceRef.current.disconnect();
+      sourceRef.current = null;
+    }
+    if (audioContextRef.current) {
+      audioContextRef.current.close();
+      audioContextRef.current = null;
+    }
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop());
+      streamRef.current = null;
+    }
+
+    setIsRecording(false);
+    setIsConnecting(false);
+  }, []);
 
   const startRecording = useCallback(async () => {
     try {
+      setIsConnecting(true);
+
+      // Request microphone access
       const stream = await navigator.mediaDevices.getUserMedia({ 
         audio: {
-          sampleRate: 24000,
+          sampleRate: 16000,
           channelCount: 1,
           echoCancellation: true,
           noiseSuppression: true,
           autoGainControl: true
         } 
       });
+      streamRef.current = stream;
 
-      const mediaRecorder = new MediaRecorder(stream, {
-        mimeType: 'audio/webm',
-      });
+      // Connect to WebSocket relay
+      const wsUrl = `wss://cieczaajcgkgdgenfdzi.supabase.co/functions/v1/speech-to-text-realtime`;
+      const ws = new WebSocket(wsUrl);
+      wsRef.current = ws;
 
-      chunksRef.current = [];
+      ws.onopen = () => {
+        console.log('WebSocket connected');
+        setIsConnecting(false);
+        setIsRecording(true);
+      };
 
-      mediaRecorder.ondataavailable = (event) => {
-        if (event.data.size > 0) {
-          chunksRef.current.push(event.data);
+      ws.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          console.log('Received:', data.type);
+
+          if (data.type === 'partial_transcript' && data.transcript) {
+            // Update with partial transcript in real-time
+            onTranscription(data.transcript);
+          } else if (data.type === 'committed_transcript' && data.transcript) {
+            // Final committed transcript
+            onTranscription(data.transcript);
+          } else if (data.type === 'error') {
+            toast({
+              title: "Transcription Error",
+              description: data.message || "An error occurred",
+              variant: "destructive",
+            });
+            stopRecording();
+          }
+        } catch (error) {
+          console.error('Error parsing message:', error);
         }
       };
 
-      mediaRecorder.onstop = async () => {
-        const audioBlob = new Blob(chunksRef.current, { type: 'audio/webm' });
-        await processAudio(audioBlob);
-        stream.getTracks().forEach(track => track.stop());
+      ws.onerror = (error) => {
+        console.error('WebSocket error:', error);
+        toast({
+          title: "Connection Error",
+          description: "Failed to connect to transcription service",
+          variant: "destructive",
+        });
+        stopRecording();
       };
 
-      mediaRecorder.start();
-      mediaRecorderRef.current = mediaRecorder;
-      setIsRecording(true);
+      ws.onclose = () => {
+        console.log('WebSocket closed');
+        if (isRecording) {
+          stopRecording();
+        }
+      };
 
-      console.log('Recording started');
+      // Set up audio processing
+      const audioContext = new AudioContext({ sampleRate: 16000 });
+      audioContextRef.current = audioContext;
+
+      const source = audioContext.createMediaStreamSource(stream);
+      sourceRef.current = source;
+
+      const processor = audioContext.createScriptProcessor(4096, 1, 1);
+      processorRef.current = processor;
+
+      processor.onaudioprocess = (e) => {
+        if (ws.readyState === WebSocket.OPEN) {
+          const inputData = e.inputBuffer.getChannelData(0);
+          
+          // Convert Float32Array to Int16Array
+          const int16Data = new Int16Array(inputData.length);
+          for (let i = 0; i < inputData.length; i++) {
+            const s = Math.max(-1, Math.min(1, inputData[i]));
+            int16Data[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
+          }
+
+          // Convert to base64
+          const uint8Data = new Uint8Array(int16Data.buffer);
+          let binary = '';
+          const chunkSize = 0x8000;
+          for (let i = 0; i < uint8Data.length; i += chunkSize) {
+            const chunk = uint8Data.subarray(i, Math.min(i + chunkSize, uint8Data.length));
+            binary += String.fromCharCode.apply(null, Array.from(chunk));
+          }
+          const base64Audio = btoa(binary);
+
+          // Send audio chunk
+          ws.send(JSON.stringify({
+            type: 'audio_chunk',
+            audio_chunk: base64Audio,
+          }));
+        }
+      };
+
+      source.connect(processor);
+      processor.connect(audioContext.destination);
+
     } catch (error) {
       console.error('Error starting recording:', error);
       toast({
@@ -60,69 +169,15 @@ export const SpeechToTextButton: React.FC<SpeechToTextButtonProps> = ({
         description: "Please allow microphone access to use speech-to-text.",
         variant: "destructive",
       });
+      setIsConnecting(false);
+      stopRecording();
     }
-  }, [toast]);
-
-  const stopRecording = useCallback(() => {
-    if (mediaRecorderRef.current && isRecording) {
-      mediaRecorderRef.current.stop();
-      setIsRecording(false);
-      setIsProcessing(true);
-      console.log('Recording stopped');
-    }
-  }, [isRecording]);
-
-  const processAudio = async (audioBlob: Blob) => {
-    try {
-      // Convert blob to base64
-      const reader = new FileReader();
-      reader.readAsDataURL(audioBlob);
-      
-      reader.onloadend = async () => {
-        const base64Audio = (reader.result as string).split(',')[1];
-        
-        console.log('Sending audio for transcription...');
-        
-        // Call edge function
-        const { data, error } = await supabase.functions.invoke('speech-to-text', {
-          body: { 
-            audio: base64Audio,
-            language 
-          }
-        });
-
-        setIsProcessing(false);
-
-        if (error) {
-          throw error;
-        }
-
-        if (data?.text) {
-          onTranscription(data.text);
-          console.log('Transcription received:', data.text);
-        } else {
-          toast({
-            title: "No Speech Detected",
-            description: "Please try speaking more clearly.",
-            variant: "destructive",
-          });
-        }
-      };
-    } catch (error) {
-      console.error('Error processing audio:', error);
-      setIsProcessing(false);
-      toast({
-        title: "Transcription Failed",
-        description: "Please try again.",
-        variant: "destructive",
-      });
-    }
-  };
+  }, [toast, onTranscription, stopRecording, isRecording]);
 
   const handleClick = () => {
     if (isRecording) {
       stopRecording();
-    } else if (!isProcessing) {
+    } else if (!isConnecting) {
       startRecording();
     }
   };
@@ -131,7 +186,7 @@ export const SpeechToTextButton: React.FC<SpeechToTextButtonProps> = ({
     <button
       type="button"
       onClick={handleClick}
-      disabled={isProcessing}
+      disabled={isConnecting}
       className="group relative h-9 w-9 rounded-lg transition-all duration-300 hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
       style={{
         background: isRecording 
@@ -155,7 +210,7 @@ export const SpeechToTextButton: React.FC<SpeechToTextButtonProps> = ({
       
       {/* Icon */}
       <div className="relative flex items-center justify-center h-full w-full">
-        {isProcessing ? (
+        {isConnecting ? (
           <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full" />
         ) : isRecording ? (
           <Square className="h-4 w-4 text-white" fill="white" />
