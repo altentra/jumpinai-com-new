@@ -136,12 +136,30 @@ export default function PublicProfile() {
 
       <Navigation />
 
-      <div className="min-h-screen pt-24 pb-16 relative">
-        {/* Premium animated background - matching other pages */}
-        <div className="fixed inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-40 -right-40 w-[28rem] h-[28rem] bg-gradient-to-br from-primary/25 via-primary/15 to-primary/5 rounded-full blur-3xl animate-pulse opacity-60"></div>
-          <div className="absolute -bottom-40 -left-40 w-[32rem] h-[32rem] bg-gradient-to-tr from-secondary/20 via-accent/10 to-secondary/5 rounded-full blur-3xl animate-pulse opacity-50" style={{animationDelay: '2s'}}></div>
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[24rem] h-[24rem] bg-gradient-to-br from-accent/15 via-primary/10 to-transparent rounded-full blur-3xl animate-pulse opacity-40" style={{animationDelay: '4s'}}></div>
+      <div className="min-h-screen pt-24 pb-16 relative overflow-hidden">
+        {/* Main Dark Background - Matching other pages */}
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-slate-100 to-stone-200 dark:from-black dark:via-gray-950 dark:to-slate-950"></div>
+        
+        {/* Sophisticated Multi-Color Gradient - 45 degree from Top Left */}
+        <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(250,204,21,0.65)_0%,rgba(251,146,60,0.50)_20%,rgba(167,139,250,0.38)_40%,rgba(29,78,216,0.35)_60%,rgba(16,185,129,0.22)_80%,transparent_100%)] dark:bg-[linear-gradient(135deg,rgba(250,204,21,0.20)_0%,rgba(251,146,60,0.14)_20%,rgba(139,92,246,0.12)_40%,rgba(59,130,246,0.08)_60%,rgba(16,185,129,0.05)_80%,transparent_100%)]"></div>
+        
+        {/* Subtle Enhancement Layer */}
+        <div className="absolute inset-0 bg-gradient-to-b from-blue-50/8 via-transparent to-slate-100/15 dark:from-blue-950/8 dark:via-transparent dark:to-slate-900/15"></div>
+        
+        {/* Subtle Tech Grid - Static */}
+        <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.06]">
+          <div className="absolute inset-0" style={{ 
+            backgroundImage: `linear-gradient(rgba(99, 102, 241, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(99, 102, 241, 0.1) 1px, transparent 1px)`,
+            backgroundSize: '80px 80px'
+          }}></div>
+        </div>
+
+        {/* Minimal Noise Texture */}
+        <div className="absolute inset-0 opacity-[0.015] dark:opacity-[0.05] mix-blend-overlay">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+            backgroundSize: '128px 128px'
+          }}></div>
         </div>
 
         <div className="relative container max-w-4xl mx-auto px-4">{/* Reduced from max-w-5xl to max-w-4xl */}
@@ -182,8 +200,8 @@ export default function PublicProfile() {
               <div className="flex flex-col gap-6 max-w-3xl mx-auto">{/* Added max-w-3xl mx-auto for narrower cards */}
                 {publicJumps.map((jump) => {
                   const isLiked = likedJumps.has(jump.id);
-                  // Remove "Jump #XX - " from the title for public view
-                  const displayTitle = jump.title.replace(/^Jump\s*#\d+\s*[-–]\s*/i, '');
+                  // Remove "Jump #XX:" or "Jump #XX -" from the title for public view
+                  const displayTitle = jump.title.replace(/^Jump\s*#\d+\s*[:\-–]\s*/i, '');
                   
                   return (
                     <Card 
