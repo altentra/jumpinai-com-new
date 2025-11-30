@@ -20,16 +20,11 @@ serve(async (req) => {
   socket.onopen = () => {
     console.log("Client connected to relay");
     
-    // Connect to ElevenLabs Realtime API
-    const wsUrl = new URL("wss://api.elevenlabs.io/v1/speech-to-text/realtime");
-    wsUrl.searchParams.set("model_id", "scribe_realtime_v2");
-    wsUrl.searchParams.set("language_code", "en");
-    wsUrl.searchParams.set("audio_format", "pcm_16000");
-    wsUrl.searchParams.set("commit_strategy", "vad");
+    // Connect to ElevenLabs Realtime API with all parameters in URL
+    const wsUrl = `wss://api.elevenlabs.io/v1/speech-to-text/realtime?model_id=scribe_realtime_v2&language_code=en&audio_format=pcm_16000&commit_strategy=vad&xi-api-key=${ELEVENLABS_API_KEY}`;
     
-    // Create WebSocket connection with API key in URL
-    const authenticatedUrl = `${wsUrl.toString()}&xi-api-key=${ELEVENLABS_API_KEY}`;
-    elevenLabsSocket = new WebSocket(authenticatedUrl);
+    console.log("Connecting to ElevenLabs...");
+    elevenLabsSocket = new WebSocket(wsUrl);
 
     elevenLabsSocket.onopen = () => {
       console.log("Connected to ElevenLabs Realtime API");

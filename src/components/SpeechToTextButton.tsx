@@ -13,6 +13,7 @@ export const SpeechToTextButton: React.FC<SpeechToTextButtonProps> = ({
 }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
+  const [connectionStatus, setConnectionStatus] = useState<'idle' | 'connecting' | 'listening'>('idle');
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const processorRef = useRef<ScriptProcessorNode | null>(null);
@@ -50,11 +51,13 @@ export const SpeechToTextButton: React.FC<SpeechToTextButtonProps> = ({
 
     setIsRecording(false);
     setIsConnecting(false);
+    setConnectionStatus('idle');
   }, []);
 
   const startRecording = useCallback(async () => {
     try {
       setIsConnecting(true);
+      setConnectionStatus('connecting');
 
       // Request microphone access
       const stream = await navigator.mediaDevices.getUserMedia({ 
@@ -74,7 +77,7 @@ export const SpeechToTextButton: React.FC<SpeechToTextButtonProps> = ({
       wsRef.current = ws;
 
       ws.onopen = () => {
-        console.log('WebSocket connected');
+        console.log('WebSocket connected to relay');
         setIsConnecting(false);
         setIsRecording(true);
       };
@@ -84,7 +87,10 @@ export const SpeechToTextButton: React.FC<SpeechToTextButtonProps> = ({
           const data = JSON.parse(event.data);
           console.log('Received:', data.type);
 
-          if (data.type === 'partial_transcript' && data.transcript) {
+          if (data.type === 'session_started') {
+            console.log('ElevenLabs session started');
+            setConnectionStatus('listening');
+          } else if (data.type === 'partial_transcript' && data.transcript) {
             // Update with partial transcript in real-time
             onTranscription(data.transcript);
           } else if (data.type === 'committed_transcript' && data.transcript) {
@@ -183,51 +189,71 @@ export const SpeechToTextButton: React.FC<SpeechToTextButtonProps> = ({
   };
 
   return (
-    <button
-      type="button"
-      onClick={handleClick}
-      disabled={isConnecting}
-      className="group relative h-9 w-9 rounded-lg transition-all duration-300 hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
-      style={{
-        background: isRecording 
-          ? 'linear-gradient(135deg, hsl(0 84% 60%) 0%, hsl(0 84% 50%) 100%)'
-          : 'linear-gradient(135deg, hsl(240 5% 26%) 0%, hsl(240 6% 10%) 100%)',
-        boxShadow: isRecording
-          ? '0 4px 20px hsl(0 84% 60% / 0.4), inset 0 1px 0 rgba(255,255,255,0.1)'
-          : '0 4px 20px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1)',
-        backdropFilter: 'blur(10px)',
-        border: '1px solid rgba(255,255,255,0.1)',
-      }}
-      aria-label={isRecording ? "Stop recording" : "Start recording"}
-    >
-      {/* Glass effect overlay */}
-      <div 
-        className="absolute inset-0 rounded-lg opacity-10"
-        style={{
-          background: 'linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.05) 100%)',
-        }}
-      />
-      
-      {/* Icon */}
-      <div className="relative flex items-center justify-center h-full w-full">
-        {isConnecting ? (
-          <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full" />
-        ) : isRecording ? (
-          <Square className="h-4 w-4 text-white" fill="white" />
-        ) : (
-          <AudioLines className="h-4 w-4 text-white" />
-        )}
-      </div>
+    <div className="flex items-center gap-2">
+      {/* Status indicator */}
+      {connectionStatus !== 'idle' && (
+        <div className="flex items-center gap-1.5 text-xs text-muted-foreground animate-fade-in">
+          {connectionStatus === 'connecting' && (
+            <>
+              <div className="h-1.5 w-1.5 rounded-full bg-amber-500 animate-pulse" />
+              <span>Connecting...</span>
+            </>
+          )}
+          {connectionStatus === 'listening' && (
+            <>
+              <div className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" />
+              <span>Listening...</span>
+            </>
+          )}
+        </div>
+      )}
 
-      {/* Pulse animation when recording */}
-      {isRecording && (
+      <button
+        type="button"
+        onClick={handleClick}
+        disabled={isConnecting}
+        className="group relative h-9 w-9 rounded-lg transition-all duration-300 hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+        style={{
+          background: isRecording 
+            ? 'linear-gradient(135deg, hsl(0 84% 60%) 0%, hsl(0 84% 50%) 100%)'
+            : 'linear-gradient(135deg, hsl(240 5% 26%) 0%, hsl(240 6% 10%) 100%)',
+          boxShadow: isRecording
+            ? '0 4px 20px hsl(0 84% 60% / 0.4), inset 0 1px 0 rgba(255,255,255,0.1)'
+            : '0 4px 20px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1)',
+          backdropFilter: 'blur(10px)',
+          border: '1px solid rgba(255,255,255,0.1)',
+        }}
+        aria-label={isRecording ? "Stop recording" : "Start recording"}
+      >
+        {/* Glass effect overlay */}
         <div 
-          className="absolute inset-0 rounded-lg animate-pulse"
+          className="absolute inset-0 rounded-lg opacity-10"
           style={{
-            background: 'rgba(239, 68, 68, 0.3)',
+            background: 'linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.05) 100%)',
           }}
         />
-      )}
-    </button>
+        
+        {/* Icon */}
+        <div className="relative flex items-center justify-center h-full w-full">
+          {isConnecting ? (
+            <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full" />
+          ) : isRecording ? (
+            <Square className="h-4 w-4 text-white" fill="white" />
+          ) : (
+            <AudioLines className="h-4 w-4 text-white" />
+          )}
+        </div>
+
+        {/* Pulse animation when recording */}
+        {isRecording && (
+          <div 
+            className="absolute inset-0 rounded-lg animate-pulse"
+            style={{
+              background: 'rgba(239, 68, 68, 0.3)',
+            }}
+          />
+        )}
+      </button>
+    </div>
   );
 };
