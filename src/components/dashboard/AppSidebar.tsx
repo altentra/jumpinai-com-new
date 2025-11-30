@@ -77,7 +77,7 @@ export default function AppSidebar() {
   return (
     <Sidebar className="w-52 mt-20 md:mt-16">
       <SidebarHeader className="border-b border-sidebar-border px-3 py-2 pt-4">
-        <div className="flex items-center gap-2 mb-2">
+        <div className="flex items-center justify-center gap-2 mb-2">
           <Avatar className="h-8 w-8">
             {user?.avatar_url ? (
               <AvatarImage src={user.avatar_url} alt={userName} />
