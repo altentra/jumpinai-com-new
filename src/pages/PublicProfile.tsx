@@ -225,7 +225,7 @@ export default function PublicProfile() {
                     <Card 
                       key={jump.id}
                       className="p-6 bg-gradient-to-br from-background/70 to-background/50 backdrop-blur-xl border-2 border-border/70 hover:border-primary/50 rounded-3xl transition-all duration-300 cursor-pointer group shadow-xl hover:shadow-2xl relative overflow-hidden"
-                      onClick={() => window.location.href = `/dashboard/jump/${jump.id}`}
+                      onClick={() => window.location.href = `/jump/${jump.id}/public/${profile.username}`}
                     >
                       {/* Premium gradient overlay */}
                       <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.03] via-transparent to-accent/[0.03] pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300" />

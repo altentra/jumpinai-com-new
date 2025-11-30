@@ -23,6 +23,7 @@ interface JumpPlanDisplayProps {
   onToolPromptClick?: (comboIndex: number, comboId: string) => void; // Callback to switch tabs and scroll to combo
   onToolPromptGenerated?: () => void; // Callback when a new tool prompt is generated
   isGenerationComplete?: boolean; // Whether the jump generation is 100% complete
+  isPublicView?: boolean; // Whether this is a public view (disables interactive features)
 }
 
 // Helper function to check if structured plan matches comprehensive format
@@ -188,7 +189,7 @@ function normalizeToComprehensive(input: any): any {
   return base;
 }
 
-export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, onDownload, jumpId, toolPromptIds, onToolPromptClick, onToolPromptGenerated, isGenerationComplete = true }: JumpPlanDisplayProps) {
+export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, onDownload, jumpId, toolPromptIds, onToolPromptClick, onToolPromptGenerated, isGenerationComplete = true, isPublicView = false }: JumpPlanDisplayProps) {
   const { subscription } = useAuth();
   const [hoveredStep, setHoveredStep] = React.useState<{ phaseIndex: number; stepIndex: number } | null>(null);
   const [hoveredSubStep, setHoveredSubStep] = React.useState<{ phaseIndex: number; stepIndex: number; subStepIndex: number; isAlternative?: boolean } | null>(null);
@@ -1822,8 +1823,8 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                             </div>
                                           )}
                                           
-                                          {/* Action buttons for alternative route sub-steps - Only show on hover and when generation complete */}
-                                          {isAltSubStepHovered && isGenerationComplete && (() => {
+                          {/* Action buttons for alternative route sub-steps - Only show on hover and when generation complete */}
+                          {isAltSubStepHovered && isGenerationComplete && !isPublicView && (() => {
                                             const altSubStepKey = `${phaseIndex}-${stepIndex}-alt-${altSubStepIndex}`;
                                             const isAltLoading = loadingClarify.has(altSubStepKey);
                                             const isAltRerouteLoading = loadingReroute.has(altSubStepKey);
@@ -2923,7 +2924,7 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                                         )}
 
                                          {/* Level 2 Action Buttons - Only show on hover and when generation complete */}
-                                         {isSubStepHovered && isGenerationComplete && (
+                                         {isSubStepHovered && isGenerationComplete && !isPublicView && (
                                           <div className="mt-3 pt-3 border-t border-primary/20 animate-fade-in">
                                             <TooltipProvider>
                                               <div className="flex items-center justify-center gap-2">
@@ -3057,7 +3058,7 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
                           )}
                           
                           {/* Expandable Action Buttons Row - Only visible on hover and when generation complete */}
-                          {isHovered && isGenerationComplete && (
+                          {isHovered && isGenerationComplete && !isPublicView && (
                             <div className="mt-3 pt-3 border-t border-primary/20 animate-fade-in">
                               <TooltipProvider>
                                 <div className="flex items-center justify-center gap-3">
