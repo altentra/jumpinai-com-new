@@ -45,7 +45,16 @@ export function ToolPromptComboCard({ combo, onClick, index, jumpId }: ToolPromp
       if (!promptToCopy) {
         throw new Error('No prompt text available');
       }
-      await navigator.clipboard.writeText(promptToCopy);
+      
+      // Handle JSON objects by stringifying them
+      let textToCopy: string;
+      if (typeof promptToCopy === 'object') {
+        textToCopy = JSON.stringify(promptToCopy, null, 2);
+      } else {
+        textToCopy = String(promptToCopy);
+      }
+      
+      await navigator.clipboard.writeText(textToCopy);
       setCopied(true);
       setPromptCopied(true);
       
