@@ -73,7 +73,7 @@ export default function AppSidebar() {
       : "hover:bg-gradient-to-br hover:from-primary/10 hover:via-accent/5 hover:to-primary/10 hover:backdrop-blur-xl hover:border hover:border-primary/20";
 
   return (
-    <Sidebar className="w-52 mt-20">
+    <Sidebar className="w-52 mt-20 md:mt-16">
       <SidebarHeader className="border-b border-sidebar-border px-3 py-2">
         <div className="text-center text-sm text-muted-foreground mb-1">
           Welcome{userName ? (

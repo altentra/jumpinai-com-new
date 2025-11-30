@@ -130,36 +130,38 @@ const Navigation = React.memo(() => {
       }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20 md:h-16 gap-2">
-          {/* Logo */}
-          <Link to="/" className="flex items-center group cursor-pointer flex-shrink-0">
-            <div className="relative">
-              <div className="pointer-events-none absolute -inset-1 rounded-2xl bg-primary/20 blur-md opacity-0 group-hover:opacity-60 transition-opacity duration-300"></div>
-              <div className="relative w-10 h-10 rounded-xl overflow-hidden group-hover:scale-105 transition-transform duration-300 ring-1 ring-border shadow-lg">
-                <img 
-                  src={logo}
-                  alt="JumpinAI Logo" 
-                  width="40"
-                  height="40"
-                  loading="eager"
-                  className="w-full h-full object-cover"
-                />
+        <div className="flex items-center h-20 md:h-16">
+          {/* Left: Logo - Fixed */}
+          <div className="flex-shrink-0">
+            <Link to="/" className="flex items-center group cursor-pointer">
+              <div className="relative">
+                <div className="pointer-events-none absolute -inset-1 rounded-2xl bg-primary/20 blur-md opacity-0 group-hover:opacity-60 transition-opacity duration-300"></div>
+                <div className="relative w-10 h-10 rounded-xl overflow-hidden group-hover:scale-105 transition-transform duration-300 ring-1 ring-border shadow-lg">
+                  <img 
+                    src={logo}
+                    alt="JumpinAI Logo" 
+                    width="40"
+                    height="40"
+                    loading="eager"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
               </div>
-            </div>
-            <span className="ml-3 text-2xl font-black font-display text-foreground">
-              JumpinAI
-            </span>
-          </Link>
+              <span className="ml-3 text-2xl font-black font-display text-foreground whitespace-nowrap">
+                JumpinAI
+              </span>
+            </Link>
+          </div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:block ml-4 flex-1 min-w-0">
-            <div className="flex items-center space-x-4 lg:space-x-8">
+          {/* Center: Desktop Navigation - Centered */}
+          <div className="hidden md:flex flex-1 justify-center px-4">
+            <div className="flex items-center space-x-2 lg:space-x-6">
               {navItems.map((item) => (
                 <button
                   key={item.name}
                   onClick={() => handleNavClick(item.href)}
                   onMouseEnter={() => handleMouseEnter(item.href)}
-                  className="relative text-muted-foreground hover:text-foreground px-2 lg:px-4 py-2 text-sm font-medium transition-all duration-300 group whitespace-nowrap"
+                  className="relative text-muted-foreground hover:text-foreground px-2 lg:px-3 py-2 text-sm font-medium transition-all duration-300 group whitespace-nowrap"
                 >
                   {item.name}
                   <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
@@ -169,7 +171,7 @@ const Navigation = React.memo(() => {
               {/* Company dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button className="relative text-muted-foreground hover:text-foreground px-2 lg:px-4 py-2 text-sm font-medium transition-all duration-300 group flex items-center whitespace-nowrap">
+                  <button className="relative text-muted-foreground hover:text-foreground px-2 lg:px-3 py-2 text-sm font-medium transition-all duration-300 group flex items-center whitespace-nowrap">
                     Company <ChevronDown className="ml-1 h-3 w-3" />
                     <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
                   </button>
@@ -185,7 +187,7 @@ const Navigation = React.memo(() => {
             </div>
           </div>
 
-          {/* Theme Toggle & CTA */}
+          {/* Right: Theme Toggle & CTA - Fixed */}
           <div className="hidden md:flex items-center space-x-4 flex-shrink-0">
             <ThemeToggle />
             {isAuthenticated ? (
