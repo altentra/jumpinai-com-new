@@ -33,25 +33,35 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
   const [isRefreshing, setIsRefreshing] = React.useState(false);
   const [toolPrompts, setToolPrompts] = React.useState<any[]>(result.components?.toolPrompts || []);
   const [isHeaderHidden, setIsHeaderHidden] = React.useState(false);
+  const lastScrollYRef = React.useRef(0);
   const skipScrollToTopRef = React.useRef(false);
   const tabsContainerRef = React.useRef<HTMLDivElement>(null);
   const overviewContentRef = React.useRef<HTMLDivElement>(null);
   const planContentRef = React.useRef<HTMLDivElement>(null);
   const toolPromptsContentRef = React.useRef<HTMLDivElement>(null);
 
-  // Update tool prompts when result changes
+  // Update tool prompts when they change
   React.useEffect(() => {
     if (result.components?.toolPrompts) {
       setToolPrompts(result.components.toolPrompts);
     }
   }, [result.components?.toolPrompts]);
 
-  // Track scroll to adjust sticky tabs position on mobile
+  // Track scroll direction to sync with header visibility on mobile
   React.useEffect(() => {
     const handleScroll = () => {
       if (window.innerWidth < 768) {
-        // On mobile, check if header is hidden (scrolled past 80px)
-        setIsHeaderHidden(window.scrollY > 80);
+        const currentScrollY = window.scrollY;
+        
+        if (currentScrollY > lastScrollYRef.current && currentScrollY > 80) {
+          // Scrolling down and past threshold - hide header, tabs go to top
+          setIsHeaderHidden(true);
+        } else if (currentScrollY < lastScrollYRef.current) {
+          // Scrolling up - show header, tabs go back down
+          setIsHeaderHidden(false);
+        }
+        
+        lastScrollYRef.current = currentScrollY;
       } else {
         setIsHeaderHidden(false);
       }
