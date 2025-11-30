@@ -247,7 +247,7 @@ export const SpeechToTextButton: React.FC<SpeechToTextButtonProps> = ({
         type="button"
         onClick={handleClick}
         disabled={isConnecting}
-        className="group relative h-9 w-9 rounded-lg transition-all duration-300 hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="group relative h-9 w-9 rounded-full transition-all duration-300 hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
         style={{
           background: isRecording 
             ? 'linear-gradient(135deg, hsl(0 84% 60%) 0%, hsl(0 84% 50%) 100%)'
@@ -262,7 +262,7 @@ export const SpeechToTextButton: React.FC<SpeechToTextButtonProps> = ({
       >
         {/* Glass effect overlay */}
         <div 
-          className="absolute inset-0 rounded-lg opacity-10"
+          className="absolute inset-0 rounded-full opacity-10"
           style={{
             background: 'linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.05) 100%)',
           }}
@@ -282,7 +282,7 @@ export const SpeechToTextButton: React.FC<SpeechToTextButtonProps> = ({
         {/* Pulse animation when recording */}
         {isRecording && (
           <div 
-            className="absolute inset-0 rounded-lg animate-pulse"
+            className="absolute inset-0 rounded-full animate-pulse"
             style={{
               background: 'rgba(239, 68, 68, 0.3)',
             }}
