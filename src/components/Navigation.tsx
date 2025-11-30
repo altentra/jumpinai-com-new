@@ -77,7 +77,7 @@ const Navigation = React.memo(() => {
   ];
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 pointer-events-none ${
       isScrolled 
         ? 'bg-background/80 backdrop-blur-2xl border-b border-border/50 shadow-2xl' 
         : 'bg-background/40 backdrop-blur-lg'
@@ -85,7 +85,7 @@ const Navigation = React.memo(() => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
-          <Link to="/" className="flex items-center group cursor-pointer">
+          <Link to="/" className="flex items-center group cursor-pointer pointer-events-auto">
             <div className="relative">
               <div className="pointer-events-none absolute -inset-1 rounded-3xl bg-primary/20 blur-md opacity-0 group-hover:opacity-60 transition-opacity duration-300"></div>
               <div className="relative w-10 h-10 rounded-2xl overflow-hidden group-hover:scale-105 transition-transform duration-300 ring-1 ring-border shadow-lg">
@@ -105,7 +105,7 @@ const Navigation = React.memo(() => {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:block">
+          <div className="hidden md:block pointer-events-auto">
             <div className="flex items-center space-x-8">
               {navItems.map((item) => (
                 <button
@@ -139,7 +139,7 @@ const Navigation = React.memo(() => {
           </div>
 
           {/* Theme Toggle & CTA */}
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden md:flex items-center space-x-4 pointer-events-auto">
             <ThemeToggle />
             {isAuthenticated ? (
               <DropdownMenu>
@@ -189,7 +189,7 @@ const Navigation = React.memo(() => {
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden flex items-center space-x-2">
+          <div className="md:hidden flex items-center space-x-2 pointer-events-auto">
             <ThemeToggle />
             <button
               onClick={() => setIsOpen(!isOpen)}
