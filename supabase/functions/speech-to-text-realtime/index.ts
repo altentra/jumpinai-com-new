@@ -32,10 +32,12 @@ serve(async (req) => {
 
       if (!tokenResponse.ok) {
         const errorText = await tokenResponse.text();
+        console.error("Token generation failed:", tokenResponse.status, errorText);
         throw new Error(`Failed to generate token: ${tokenResponse.status} ${errorText}`);
       }
 
       const tokenData = await tokenResponse.json();
+      console.log("Token response:", JSON.stringify(tokenData));
       const token = tokenData.token;
       
       if (!token) {
@@ -79,11 +81,13 @@ serve(async (req) => {
 
     elevenLabsSocket.onerror = (error) => {
       console.error("ElevenLabs WebSocket error:", error);
+      console.error("WebSocket URL:", elevenLabsSocket?.url);
+      console.error("WebSocket readyState:", elevenLabsSocket?.readyState);
       const errorMessage = error instanceof Error ? error.message : "Connection to transcription service failed";
       console.error("Error details:", errorMessage);
       socket.send(JSON.stringify({ 
         type: "error", 
-        message: `ElevenLabs connection failed: ${errorMessage}` 
+        message: `ElevenLabs connection failed: ${errorMessage}. Please check your ElevenLabs API key has Speech-to-Text Realtime access enabled.` 
       }));
     };
 
