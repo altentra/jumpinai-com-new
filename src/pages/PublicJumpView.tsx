@@ -1,15 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Loader2, Share2, Link as LinkIcon } from "lucide-react";
-import { FaTwitter, FaLinkedin, FaFacebook } from 'react-icons/fa';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
+import { ArrowLeft, Loader2, Share2 } from "lucide-react";
 import { supabase } from '@/integrations/supabase/client';
 import ViewJumpDisplay from '@/components/ViewJumpDisplay';
 import Navigation from '@/components/Navigation';
@@ -192,7 +184,7 @@ export default function PublicJumpView() {
     }
   };
 
-  const handleCopyLink = async () => {
+  const handleShareLink = async () => {
     const url = window.location.href;
     try {
       await navigator.clipboard.writeText(url);
@@ -200,22 +192,6 @@ export default function PublicJumpView() {
     } catch (error) {
       toast.error('Failed to copy link');
     }
-  };
-
-  const handleShareTwitter = () => {
-    const url = window.location.href;
-    const text = `Check out my AI adaptation plan: ${jumpTitle}`;
-    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
-  };
-
-  const handleShareLinkedIn = () => {
-    const url = window.location.href;
-    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`, '_blank');
-  };
-
-  const handleShareFacebook = () => {
-    const url = window.location.href;
-    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
   };
 
   if (loading) {
@@ -274,37 +250,14 @@ export default function PublicJumpView() {
                     Back to Profile
                   </Button>
 
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="rounded-xl border border-border/40 bg-background/60 hover:bg-background/80 backdrop-blur-sm transition-all duration-300"
-                      >
-                        <Share2 className="h-4 w-4 mr-2" />
-                        Share
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-56">
-                      <DropdownMenuItem onClick={handleCopyLink} className="cursor-pointer">
-                        <LinkIcon className="h-4 w-4 mr-2" />
-                        Copy Link
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem onClick={handleShareTwitter} className="cursor-pointer">
-                        <FaTwitter className="h-4 w-4 mr-2" />
-                        Share on Twitter
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={handleShareLinkedIn} className="cursor-pointer">
-                        <FaLinkedin className="h-4 w-4 mr-2" />
-                        Share on LinkedIn
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={handleShareFacebook} className="cursor-pointer">
-                        <FaFacebook className="h-4 w-4 mr-2" />
-                        Share on Facebook
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                  <Button
+                    onClick={handleShareLink}
+                    variant="ghost"
+                    size="sm"
+                    className="rounded-xl border border-border/40 bg-background/60 hover:bg-background/80 backdrop-blur-sm transition-all duration-300"
+                  >
+                    <Share2 className="h-4 w-4" />
+                  </Button>
                 </div>
 
                 <div className="space-y-2">
