@@ -155,6 +155,36 @@ export default function Profile() {
       <div className="relative container max-w-5xl mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-8">My Profile</h1>
 
+        {/* Profile Header - Always Visible */}
+        <Card className="p-8 mb-6 bg-background/40 backdrop-blur-sm border-border/50">
+          <div className="flex flex-col md:flex-row gap-6 items-start md:items-center mb-6">
+            <Avatar className="h-32 w-32">
+              <AvatarImage src={user?.avatar_url || undefined} />
+              <AvatarFallback>
+                <img src={logoTransparent} alt="Default" className="opacity-40 brightness-200" />
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex-1">
+              <h2 className="text-2xl font-bold mb-1">{formData.display_name || user?.display_name || user?.email}</h2>
+              <p className="text-muted-foreground mb-3">{user?.email}</p>
+              {formData.bio && (
+                <p className="text-foreground/80">{formData.bio}</p>
+              )}
+            </div>
+          </div>
+          
+          {formData.is_public && (
+            <a
+              href={`/@${formData.username}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-sm text-primary hover:underline"
+            >
+              View my public profile →
+            </a>
+          )}
+        </Card>
+
         <Tabs defaultValue="edit" className="space-y-6">
           <TabsList className="grid w-full grid-cols-3 max-w-md">
             <TabsTrigger value="edit">Edit Profile</TabsTrigger>
@@ -164,19 +194,6 @@ export default function Profile() {
 
           <TabsContent value="edit">
             <Card className="p-6 space-y-6 bg-background/40 backdrop-blur-sm border-border/50">
-              {/* Avatar Section */}
-              <div className="flex items-center gap-6">
-                <Avatar className="h-24 w-24">
-                  <AvatarImage src={user?.avatar_url || undefined} />
-                  <AvatarFallback>
-                    <img src={logoTransparent} alt="Default" className="opacity-40 brightness-200" />
-                  </AvatarFallback>
-                </Avatar>
-                <div>
-                  <h3 className="font-semibold text-lg">{user?.display_name || user?.email}</h3>
-                  <p className="text-sm text-muted-foreground">{user?.email}</p>
-                </div>
-              </div>
 
               {/* Username */}
               <div className="space-y-2">
@@ -191,17 +208,13 @@ export default function Profile() {
                       placeholder="username"
                     />
                   </div>
-                  {formData.is_public && (
-                    <Button variant="outline" size="icon" onClick={copyProfileLink}>
-                      {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                    </Button>
-                  )}
+                  <Button variant="outline" size="icon" onClick={copyProfileLink}>
+                    {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                  </Button>
                 </div>
-                {formData.is_public && (
-                  <p className="text-xs text-muted-foreground">
-                    Your profile: {window.location.origin}/@{formData.username}
-                  </p>
-                )}
+                <p className="text-xs text-muted-foreground">
+                  Your profile URL: {window.location.origin}/@{formData.username}
+                </p>
               </div>
 
               {/* Display Name */}
