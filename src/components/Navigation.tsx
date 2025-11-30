@@ -134,8 +134,8 @@ const Navigation = React.memo(() => {
           {/* Logo */}
           <Link to="/" className="flex items-center group cursor-pointer">
             <div className="relative">
-              <div className="pointer-events-none absolute -inset-1 rounded-3xl bg-primary/20 blur-md opacity-0 group-hover:opacity-60 transition-opacity duration-300"></div>
-              <div className="relative w-10 h-10 rounded-2xl overflow-hidden group-hover:scale-105 transition-transform duration-300 ring-1 ring-border shadow-lg">
+              <div className="pointer-events-none absolute -inset-1 rounded-full bg-primary/20 blur-md opacity-0 group-hover:opacity-60 transition-opacity duration-300"></div>
+              <div className="relative w-10 h-10 rounded-full overflow-hidden group-hover:scale-105 transition-transform duration-300 ring-1 ring-border shadow-lg">
                 <img 
                   src={logo}
                   alt="JumpinAI Logo" 
