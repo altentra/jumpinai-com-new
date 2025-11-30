@@ -31,7 +31,7 @@ serve(async (req) => {
     // Prepare form data for ElevenLabs API
     const formData = new FormData();
     const blob = new Blob([binaryAudio], { type: 'audio/webm' });
-    formData.append('audio', blob, 'recording.webm');
+    formData.append('file', blob, 'recording.webm');  // ElevenLabs expects 'file' not 'audio'
     formData.append('model_id', 'scribe_realtime_v2');
     if (language) {
       formData.append('language', language);
