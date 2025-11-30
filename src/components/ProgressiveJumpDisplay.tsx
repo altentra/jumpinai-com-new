@@ -379,10 +379,16 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
       <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full" style={{ overflow: 'visible', display: 'block' }}>
         <div 
           ref={tabsContainerRef} 
-          className={`sticky z-[9999] mb-6 bg-background/95 backdrop-blur-lg border-b border-border/40 shadow-lg pb-2 -mt-2 pt-1 transition-all duration-300 ${
+          className={`sticky z-[9999] mb-6 bg-background/95 backdrop-blur-lg border-b border-border/40 shadow-lg pb-2 -mt-2 pt-1 transition-all duration-300 ease-out ${
             isHeaderHidden ? 'top-0' : 'top-20'
           }`}
-          style={{ position: 'sticky', pointerEvents: 'auto' }}
+          style={{ 
+            position: 'sticky', 
+            pointerEvents: 'auto',
+            transitionProperty: 'top, background-color, border-color, box-shadow',
+            transitionDuration: '300ms',
+            transitionTimingFunction: 'ease-out',
+          }}
         >
           {/* Mobile: Equal width tabs */}
           <div className="sm:hidden">
