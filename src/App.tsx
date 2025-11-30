@@ -25,7 +25,7 @@ const ForInvestors = lazy(() => import("./pages/ForInvestors"));
 const PitchDeck = lazy(() => import("./pages/PitchDeck"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Resources = lazy(() => import("./pages/Resources"));
-const Profile = lazy(() => import("./pages/Profile"));
+const PublicProfile = lazy(() => import("./pages/PublicProfile"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Auth = lazy(() => import("./pages/Auth"));
 const PricingNew = lazy(() => import("./pages/PricingNew"));
@@ -93,7 +93,7 @@ const App = () => {
               <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/download/:token" element={<Download />} />
               <Route path="/download-pro/:productId" element={<DownloadPro />} />
-              <Route path="/profile" element={<Profile />} />
+              <Route path="/@:username" element={<PublicProfile />} />
               <Route path="/dashboard/jump/:jumpId" element={<ViewJump />} />
               <Route path="/dashboard/*" element={<Dashboard />} />
               <Route path="/auth" element={<Auth />} />

@@ -435,33 +435,42 @@ export type Database = {
       profiles: {
         Row: {
           avatar_url: string | null
+          bio: string | null
           created_at: string
           display_name: string | null
           email_verification_expires_at: string | null
           email_verification_token: string | null
           email_verified: boolean | null
           id: string
+          is_public: boolean | null
           updated_at: string
+          username: string | null
         }
         Insert: {
           avatar_url?: string | null
+          bio?: string | null
           created_at?: string
           display_name?: string | null
           email_verification_expires_at?: string | null
           email_verification_token?: string | null
           email_verified?: boolean | null
           id: string
+          is_public?: boolean | null
           updated_at?: string
+          username?: string | null
         }
         Update: {
           avatar_url?: string | null
+          bio?: string | null
           created_at?: string
           display_name?: string | null
           email_verification_expires_at?: string | null
           email_verification_token?: string | null
           email_verified?: boolean | null
           id?: string
+          is_public?: boolean | null
           updated_at?: string
+          username?: string | null
         }
         Relationships: []
       }
@@ -695,6 +704,7 @@ export type Database = {
           id: string
           implemented: boolean | null
           ip_address: string | null
+          is_public: boolean | null
           jump_type: string | null
           location: string | null
           max_clarification_level: number | null
@@ -723,6 +733,7 @@ export type Database = {
           id?: string
           implemented?: boolean | null
           ip_address?: string | null
+          is_public?: boolean | null
           jump_type?: string | null
           location?: string | null
           max_clarification_level?: number | null
@@ -751,6 +762,7 @@ export type Database = {
           id?: string
           implemented?: boolean | null
           ip_address?: string | null
+          is_public?: boolean | null
           jump_type?: string | null
           location?: string | null
           max_clarification_level?: number | null

@@ -8,6 +8,7 @@ import AppSidebar from "@/components/dashboard/AppSidebar";
 import DashboardHome from "./dashboard/DashboardHome";
 import MyJumpsNew from "./dashboard/MyJumpsNew";
 import ToolsPrompts from "./dashboard/ToolsPrompts";
+import Profile from "./dashboard/Profile";
 import AccountProfile from "./dashboard/AccountProfile";
 import Subscription from "./dashboard/Subscription";
 
@@ -83,6 +84,7 @@ export default function Dashboard() {
                 <Route index element={<DashboardHome />} />
                 <Route path="jumps" element={<MyJumpsNew />} />
                 <Route path="tools-prompts" element={<ToolsPrompts />} />
+                <Route path="profile" element={<Profile />} />
                 <Route path="settings" element={<AccountProfile />} />
                 <Route path="subscription" element={<Subscription />} />
                 <Route path="*" element={<Navigate to="." replace />} />
