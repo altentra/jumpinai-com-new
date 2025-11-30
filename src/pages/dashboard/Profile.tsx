@@ -143,7 +143,7 @@ export default function Profile() {
   };
 
   const copyProfileLink = () => {
-    const link = `${window.location.origin}/@${formData.username}`;
+    const link = `${window.location.origin}/u/${formData.username}`;
     navigator.clipboard.writeText(link);
     setCopied(true);
     toast({
@@ -204,7 +204,7 @@ export default function Profile() {
             <div className="relative">
               <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent mb-4" />
               <a
-                href={`/@${profile.username?.replace('@', '')}`}
+                href={`/u/${profile.username?.replace('@', '')}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 text-sm text-primary hover:text-primary/80 transition-colors font-medium"
@@ -263,7 +263,7 @@ export default function Profile() {
                   </Button>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  Your profile URL: {window.location.origin}/@{formData.username}
+                  Your profile URL: {window.location.origin}/u/{formData.username}
                 </p>
               </div>
 

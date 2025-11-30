@@ -93,7 +93,7 @@ const App = () => {
               <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/download/:token" element={<Download />} />
               <Route path="/download-pro/:productId" element={<DownloadPro />} />
-              <Route path="/@:username" element={<PublicProfile />} />
+              <Route path="/u/:username" element={<PublicProfile />} />
               <Route path="/dashboard/jump/:jumpId" element={<ViewJump />} />
               <Route path="/dashboard/*" element={<Dashboard />} />
               <Route path="/auth" element={<Auth />} />
