@@ -25,16 +25,31 @@ const Navigation = React.memo(() => {
       
       // On mobile, hide header when scrolling down, show when scrolling up
       if (window.innerWidth < 768) {
+        let newVisibility = isHeaderVisible;
+        
         if (currentScrollY > lastScrollY && currentScrollY > 80) {
           // Scrolling down & past header height - hide it
-          setIsHeaderVisible(false);
+          newVisibility = false;
         } else if (currentScrollY < lastScrollY) {
           // Scrolling up - show it
-          setIsHeaderVisible(true);
+          newVisibility = true;
+        }
+        
+        if (newVisibility !== isHeaderVisible) {
+          setIsHeaderVisible(newVisibility);
+          // Dispatch custom event to sync with other components
+          window.dispatchEvent(new CustomEvent('headerVisibilityChange', { 
+            detail: { visible: newVisibility } 
+          }));
         }
       } else {
         // On desktop, always show header
-        setIsHeaderVisible(true);
+        if (!isHeaderVisible) {
+          setIsHeaderVisible(true);
+          window.dispatchEvent(new CustomEvent('headerVisibilityChange', { 
+            detail: { visible: true } 
+          }));
+        }
       }
       
       setLastScrollY(currentScrollY);
@@ -42,7 +57,7 @@ const Navigation = React.memo(() => {
     
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY]);
+  }, [lastScrollY, isHeaderVisible]);
 
   // Preload page when user hovers over navigation link
   const handleMouseEnter = useCallback((href: string) => {
