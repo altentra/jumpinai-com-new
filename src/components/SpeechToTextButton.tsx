@@ -20,8 +20,6 @@ export const SpeechToTextButton: React.FC<SpeechToTextButtonProps> = ({
   const sourceRef = useRef<MediaStreamAudioSourceNode | null>(null);
   const wsRef = useRef<WebSocket | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
-  const partialTranscriptRef = useRef<string>('');
-  const committedTextRef = useRef<string>('');
   const { toast } = useToast();
 
   const stopRecording = useCallback(() => {
@@ -54,8 +52,6 @@ export const SpeechToTextButton: React.FC<SpeechToTextButtonProps> = ({
     setIsRecording(false);
     setIsConnecting(false);
     setConnectionStatus('idle');
-    partialTranscriptRef.current = '';
-    committedTextRef.current = '';
   }, []);
 
   const startRecording = useCallback(async () => {
@@ -95,22 +91,13 @@ export const SpeechToTextButton: React.FC<SpeechToTextButtonProps> = ({
             console.log('ElevenLabs session started');
             setConnectionStatus('listening');
           } else if (data.message_type === 'partial_transcript' && data.text) {
-            // Partial transcript - replace the previous partial
+            // Partial transcript - just replace with the latest full text
             console.log('Partial transcript:', data.text);
-            partialTranscriptRef.current = data.text;
-            // Combine committed text with current partial
-            const fullText = committedTextRef.current 
-              ? `${committedTextRef.current} ${data.text}`
-              : data.text;
-            onTranscription(fullText);
+            onTranscription(data.text);
           } else if (data.message_type === 'committed_transcript' && data.text) {
-            // Committed transcript - add to permanent text
+            // Committed transcript - replace with the latest full text
             console.log('Committed transcript:', data.text);
-            committedTextRef.current = committedTextRef.current
-              ? `${committedTextRef.current} ${data.text}`
-              : data.text;
-            partialTranscriptRef.current = ''; // Clear partial
-            onTranscription(committedTextRef.current);
+            onTranscription(data.text);
           } else if (data.message_type === 'input_error' || data.type === 'error') {
             console.error('Transcription error:', data);
             toast({
