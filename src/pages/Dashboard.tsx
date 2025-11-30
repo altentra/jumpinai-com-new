@@ -83,7 +83,7 @@ export default function Dashboard() {
                 <Route index element={<DashboardHome />} />
                 <Route path="jumps" element={<MyJumpsNew />} />
                 <Route path="tools-prompts" element={<ToolsPrompts />} />
-                <Route path="profile" element={<AccountProfile />} />
+                <Route path="settings" element={<AccountProfile />} />
                 <Route path="subscription" element={<Subscription />} />
                 <Route path="*" element={<Navigate to="." replace />} />
               </Routes>
