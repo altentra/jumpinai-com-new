@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Calendar, Globe, Link2, Copy } from "lucide-react";
 import { UserJump } from "@/services/jumpService";
 import { format } from "date-fns";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
 interface MiniJumpCardProps {
@@ -16,21 +16,30 @@ interface MiniJumpCardProps {
 
 export default function MiniJumpCard({ jump, onClick, isSelected, onTogglePublic }: MiniJumpCardProps) {
   const [isTogglingPublic, setIsTogglingPublic] = useState(false);
+  const [localIsPublic, setLocalIsPublic] = useState(jump.is_public || false);
   
   const formatDate = (dateString: string) => {
     return format(new Date(dateString), 'MMM dd');
   };
 
-  const handleTogglePublic = async (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent card click
-    
+  // Update local state when prop changes
+  useEffect(() => {
+    setLocalIsPublic(jump.is_public || false);
+  }, [jump.is_public]);
+
+  const handleTogglePublic = async (checked: boolean) => {
     if (!onTogglePublic) return;
     
+    // Immediately update UI
+    setLocalIsPublic(checked);
     setIsTogglingPublic(true);
+    
     try {
-      await onTogglePublic(jump.id, !jump.is_public);
-      toast.success(jump.is_public ? "Jump is now private" : "Jump is now public");
+      await onTogglePublic(jump.id, checked);
+      toast.success(checked ? "Jump is now public" : "Jump is now private");
     } catch (error) {
+      // Revert on error
+      setLocalIsPublic(!checked);
       console.error('Error toggling jump visibility:', error);
       toast.error("Failed to update jump visibility");
     } finally {
@@ -78,24 +87,20 @@ export default function MiniJumpCard({ jump, onClick, isSelected, onTogglePublic
           <div className="flex items-center gap-2">
             <Globe className="h-3.5 w-3.5 text-muted-foreground" />
             <Label htmlFor={`toggle-${jump.id}`} className="text-xs cursor-pointer">
-              {jump.is_public ? 'Public' : 'Private'}
+              {localIsPublic ? 'Public' : 'Private'}
             </Label>
           </div>
           <Switch
             id={`toggle-${jump.id}`}
-            checked={jump.is_public || false}
-            onCheckedChange={(checked) => {
-              if (onTogglePublic) {
-                onTogglePublic(jump.id, checked);
-              }
-            }}
+            checked={localIsPublic}
+            onCheckedChange={handleTogglePublic}
             disabled={isTogglingPublic}
             className="scale-75"
           />
         </div>
 
         {/* Public URL Display */}
-        {jump.is_public && (
+        {localIsPublic && (
           <div 
             className="flex items-center gap-2 p-2 rounded-lg bg-primary/5 border border-primary/20"
             onClick={(e) => e.stopPropagation()}
