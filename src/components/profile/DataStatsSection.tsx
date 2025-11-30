@@ -16,6 +16,7 @@ interface DataStats {
   creditsUsed: number;
   creditsAcquired: number;
   currentBalance: number;
+  sttUsageDurationSeconds: number;
 }
 
 const formatBytes = (bytes: number): string => {
@@ -40,7 +41,8 @@ export default function DataStatsSection() {
     storageBytes: 0,
     creditsUsed: 0,
     creditsAcquired: 0,
-    currentBalance: 0
+    currentBalance: 0,
+    sttUsageDurationSeconds: 0
   });
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(false);
@@ -120,13 +122,24 @@ export default function DataStatsSection() {
 
       if (balanceError) throw balanceError;
 
+      // Fetch STT usage duration
+      const { data: sttLogs, error: sttError } = await supabase
+        .from("stt_usage_logs")
+        .select("session_duration_seconds")
+        .eq("user_id", user.id);
+
+      if (sttError) throw sttError;
+
+      const totalSttSeconds = sttLogs?.reduce((total, log) => total + (log.session_duration_seconds || 0), 0) || 0;
+
       setStats({
         totalJumps: jumps?.length || 0,
         totalToolPrompts: toolPrompts?.length || 0,
         storageBytes: totalStorage,
         creditsUsed,
         creditsAcquired,
-        currentBalance: userCredits?.credits_balance || 0
+        currentBalance: userCredits?.credits_balance || 0,
+        sttUsageDurationSeconds: totalSttSeconds
       });
     } catch (error) {
       console.error("Error fetching data stats:", error);
@@ -222,6 +235,15 @@ export default function DataStatsSection() {
           <div className="p-3 sm:p-4 bg-muted/50 rounded-lg border space-y-1">
             <p className="text-xs text-muted-foreground">Storage Used</p>
             <p className="text-2xl font-bold">{formatBytes(stats.storageBytes)}</p>
+          </div>
+          <div className="p-3 sm:p-4 bg-muted/50 rounded-lg border space-y-1">
+            <p className="text-xs text-muted-foreground">Speech-to-Text Usage</p>
+            <p className="text-2xl font-bold">
+              {stats.sttUsageDurationSeconds >= 60 
+                ? `${Math.floor(stats.sttUsageDurationSeconds / 60)}m ${stats.sttUsageDurationSeconds % 60}s`
+                : `${stats.sttUsageDurationSeconds}s`
+              }
+            </p>
           </div>
         </div>
 

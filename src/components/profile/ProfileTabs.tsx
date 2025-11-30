@@ -441,9 +441,9 @@ export default function ProfileTabs() {
           <div className="relative flex flex-col gap-6 sm:gap-8">
             {/* Premium Account Header with Avatar */}
             <div className="flex items-start gap-4 sm:gap-6">
-              {/* Avatar - Smaller and more refined */}
+              {/* Avatar - Circular */}
               {profile.avatar_url ? (
-                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl overflow-hidden border-2 border-primary/20 flex-shrink-0 shadow-lg ring-2 ring-primary/10 hover:ring-primary/20 transition-all duration-300 hover-scale">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden border-2 border-primary/20 flex-shrink-0 shadow-lg ring-2 ring-primary/10 hover:ring-primary/20 transition-all duration-300 hover-scale">
                   <img 
                     src={profile.avatar_url} 
                     alt="Profile Avatar" 
@@ -451,7 +451,7 @@ export default function ProfileTabs() {
                   />
                 </div>
               ) : (
-                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-primary/20 via-primary/10 to-accent/20 flex items-center justify-center flex-shrink-0 shadow-lg ring-2 ring-primary/10">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-primary/20 via-primary/10 to-accent/20 flex items-center justify-center flex-shrink-0 shadow-lg ring-2 ring-primary/10">
                   <User className="h-6 w-6 sm:h-8 sm:w-8 text-primary/60" />
                 </div>
               )}
@@ -463,6 +463,11 @@ export default function ProfileTabs() {
                     <h1 className="text-xl sm:text-3xl md:text-4xl font-bold flex items-center gap-2 sm:gap-3 mb-1">
                       <span className="truncate bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-transparent">Account</span>
                     </h1>
+                    {/* Display Name First */}
+                    <div className="text-sm sm:text-base font-semibold text-foreground/90 mb-1">
+                      {profile.display_name || 'Set your display name'}
+                    </div>
+                    {/* Email Second */}
                     <p className="text-muted-foreground text-xs sm:text-sm truncate flex items-center gap-2">
                       <span className="inline-flex items-center gap-1.5">
                         <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
@@ -472,20 +477,13 @@ export default function ProfileTabs() {
                   </div>
                   <div className="flex items-center gap-2 sm:self-start">
                     {subInfo?.subscribed ? (
-                      <Badge className="bg-gradient-to-r from-primary/15 to-accent/15 text-primary border-primary/30 text-xs sm:text-sm whitespace-nowrap shadow-sm hover-scale">
+                      <Badge className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground border-primary/30 text-xs sm:text-sm whitespace-nowrap shadow-sm hover-scale">
                         <Crown className="w-3 h-3 sm:w-3.5 sm:h-3.5 mr-1" />
                         {subInfo.subscription_tier || 'Pro'}
                       </Badge>
                     ) : (
-                      <Badge variant="secondary" className="text-xs sm:text-sm whitespace-nowrap bg-muted/50">Free Plan</Badge>
+                      <Badge variant="secondary" className="text-xs sm:text-sm whitespace-nowrap bg-secondary text-secondary-foreground border-border">Free Plan</Badge>
                     )}
-                  </div>
-                </div>
-                
-                {/* Profile Display Name - Sleek inline display */}
-                <div className="mt-3 sm:mt-4 flex items-center gap-2">
-                  <div className="text-sm sm:text-base font-semibold text-foreground/90">
-                    {profile.display_name || 'Set your display name'}
                   </div>
                 </div>
               </div>
@@ -496,34 +494,20 @@ export default function ProfileTabs() {
 
             {/* Profile Management - Compact & Refined */}
             <div className="space-y-4 sm:space-y-5">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
-                {/* Display Name Input */}
-                <div className="space-y-2">
-                  <Label htmlFor="display_name" className="text-xs sm:text-sm font-medium text-muted-foreground">Display Name</Label>
-                  <Input
-                    id="display_name"
-                    value={profile.display_name}
-                    onChange={(e) => setProfile({ ...profile, display_name: e.target.value })}
-                    placeholder="Your display name"
-                    disabled={user?.isGoogleUser}
-                    className={`text-sm bg-background/50 backdrop-blur-sm border-border/50 focus:border-primary/50 transition-all ${user?.isGoogleUser ? 'opacity-60' : ''}`}
-                  />
-                  {user?.isGoogleUser && (
-                    <p className="text-xs text-muted-foreground">Display name is managed by Google</p>
-                  )}
-                </div>
-
-                {/* Avatar URL Input */}
-                <div className="space-y-2">
-                  <Label htmlFor="avatar_url" className="text-xs sm:text-sm font-medium text-muted-foreground">Avatar URL</Label>
-                  <Input
-                    id="avatar_url"
-                    value={profile.avatar_url}
-                    onChange={(e) => setProfile({ ...profile, avatar_url: e.target.value })}
-                    placeholder="https://..."
-                    className="text-sm bg-background/50 backdrop-blur-sm border-border/50 focus:border-primary/50 transition-all"
-                  />
-                </div>
+              {/* Display Name Input */}
+              <div className="space-y-2">
+                <Label htmlFor="display_name" className="text-xs sm:text-sm font-medium text-muted-foreground">Display Name</Label>
+                <Input
+                  id="display_name"
+                  value={profile.display_name}
+                  onChange={(e) => setProfile({ ...profile, display_name: e.target.value })}
+                  placeholder="Your display name"
+                  disabled={user?.isGoogleUser}
+                  className={`text-sm bg-background/50 backdrop-blur-sm border-border/50 focus:border-primary/50 transition-all ${user?.isGoogleUser ? 'opacity-60' : ''}`}
+                />
+                {user?.isGoogleUser && (
+                  <p className="text-xs text-muted-foreground">Display name is managed by Google</p>
+                )}
               </div>
 
               {/* Save Button - Premium styling */}
