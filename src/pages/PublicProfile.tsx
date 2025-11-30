@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams, Navigate } from 'react-router-dom';
 import { profileService, ProfileData } from '@/services/profileService';
 import { jumpLikesService } from '@/services/jumpLikesService';
@@ -23,11 +23,32 @@ export default function PublicProfile() {
   const [isLoading, setIsLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
 
+  // Load profile only when username changes, not on user changes
   useEffect(() => {
     if (username) {
       loadPublicProfile();
     }
-  }, [username, user]);
+  }, [username]);
+
+  // Separate effect for checking liked jumps when user changes
+  useEffect(() => {
+    if (user && publicJumps.length > 0) {
+      checkLikedJumps();
+    }
+  }, [user?.id]);
+
+  const checkLikedJumps = async () => {
+    if (!user || publicJumps.length === 0) return;
+    
+    const liked = new Set<string>();
+    for (const jump of publicJumps) {
+      const hasLiked = await jumpLikesService.hasUserLiked(jump.id, user.id);
+      if (hasLiked) {
+        liked.add(jump.id);
+      }
+    }
+    setLikedJumps(liked);
+  };
 
   const handleLikeToggle = async (jumpId: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -111,18 +132,6 @@ export default function PublicProfile() {
       // Load public jumps
       const jumps = await profileService.getPublicJumpsByUsername(username);
       setPublicJumps(jumps);
-
-      // Check which jumps the current user has liked
-      if (user) {
-        const liked = new Set<string>();
-        for (const jump of jumps) {
-          const hasLiked = await jumpLikesService.hasUserLiked(jump.id, user.id);
-          if (hasLiked) {
-            liked.add(jump.id);
-          }
-        }
-        setLikedJumps(liked);
-      }
     } catch (error) {
       console.error('Error loading public profile:', error);
       setNotFound(true);
@@ -186,9 +195,12 @@ export default function PublicProfile() {
               <Avatar className="h-20 w-20 sm:h-24 sm:w-24 border-2 border-primary/20 shadow-lg ring-2 ring-primary/10 flex-shrink-0">
                 <AvatarImage 
                   src={profile.avatar_url || undefined} 
+                  alt={profile.display_name || profile.username}
                   loading="eager"
                   fetchPriority="high"
+                  crossOrigin="anonymous"
                   className="object-cover"
+                  decoding="async"
                 />
                 <AvatarFallback className="bg-gradient-to-br from-primary/20 via-primary/10 to-accent/20">
                   <img src={logoTransparent} alt="Avatar" className="opacity-40 brightness-200" />
