@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useOptimizedAuth } from '@/hooks/useOptimizedAuth';
 import { profileService, ProfileData } from '@/services/profileService';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -67,7 +67,7 @@ export default function Profile() {
     }
   };
 
-  const loadJumps = async (type: 'private' | 'public') => {
+  const loadJumps = useCallback(async (type: 'private' | 'public') => {
     if (!user) return;
     
     try {
@@ -84,7 +84,24 @@ export default function Profile() {
     } finally {
       setJumpsLoading(false);
     }
-  };
+  }, [user]);
+
+  const handleToggleJumpPublic = useCallback(async (jumpId: string, isPublic: boolean) => {
+    if (!user) return;
+    
+    try {
+      await profileService.toggleJumpVisibility(jumpId, isPublic);
+      
+      // Refresh both lists to move jump between tabs
+      await Promise.all([
+        profileService.getPrivateJumps(user.id).then(setPrivateJumps),
+        profileService.getPublicJumps(user.id).then(setPublicJumps)
+      ]);
+    } catch (error) {
+      console.error('Error toggling jump visibility:', error);
+      throw error;
+    }
+  }, [user]);
 
   const handleSave = async () => {
     if (!user) return;
@@ -297,6 +314,7 @@ export default function Profile() {
                       key={jump.id} 
                       jump={jump} 
                       onClick={(j) => window.location.href = `/dashboard/jump/${j.id}`}
+                      onTogglePublic={handleToggleJumpPublic}
                     />
                   ))}
                 </div>
@@ -320,6 +338,7 @@ export default function Profile() {
                       key={jump.id} 
                       jump={jump} 
                       onClick={(j) => window.location.href = `/dashboard/jump/${j.id}`}
+                      onTogglePublic={handleToggleJumpPublic}
                     />
                   ))}
                 </div>
