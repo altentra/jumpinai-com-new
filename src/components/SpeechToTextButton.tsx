@@ -85,24 +85,26 @@ export const SpeechToTextButton: React.FC<SpeechToTextButtonProps> = ({
       ws.onmessage = (event) => {
         try {
           const data = JSON.parse(event.data);
-          console.log('Received:', data.type);
+          console.log('Received:', data.message_type || data.type, data);
 
-          if (data.type === 'session_started') {
+          if (data.message_type === 'session_started') {
             console.log('ElevenLabs session started');
             setConnectionStatus('listening');
-          } else if (data.type === 'partial_transcript' && data.transcript) {
+          } else if (data.message_type === 'partial_transcript' && data.text) {
             // Update with partial transcript in real-time
-            onTranscription(data.transcript);
-          } else if (data.type === 'committed_transcript' && data.transcript) {
+            console.log('Partial transcript:', data.text);
+            onTranscription(data.text);
+          } else if (data.message_type === 'final_transcript' && data.text) {
             // Final committed transcript
-            onTranscription(data.transcript);
-          } else if (data.type === 'error') {
+            console.log('Final transcript:', data.text);
+            onTranscription(data.text);
+          } else if (data.message_type === 'input_error' || data.type === 'error') {
+            console.error('Transcription error:', data);
             toast({
               title: "Transcription Error",
-              description: data.message || "An error occurred",
+              description: data.error || data.message || "An error occurred",
               variant: "destructive",
             });
-            stopRecording();
           }
         } catch (error) {
           console.error('Error parsing message:', error);
@@ -157,9 +159,9 @@ export const SpeechToTextButton: React.FC<SpeechToTextButtonProps> = ({
           }
           const base64Audio = btoa(binary);
 
-          // Send audio chunk
+          // Send audio chunk in ElevenLabs format
           ws.send(JSON.stringify({
-            type: 'audio_chunk',
+            type: 'input_audio_chunk',
             audio_chunk: base64Audio,
           }));
         }
