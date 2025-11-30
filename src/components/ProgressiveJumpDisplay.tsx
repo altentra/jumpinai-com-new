@@ -88,6 +88,9 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
   };
 
   const handleTabChange = (newTab: string) => {
+    console.log('🔷 Tab clicked:', newTab, 'Current activeTab:', activeTab);
+    console.log('🔷 Window scroll position:', window.scrollY);
+    console.log('🔷 Tabs container position:', tabsContainerRef.current?.getBoundingClientRect());
     setActiveTab(newTab);
     
     // Scroll to top of tab content unless it's a programmatic change from View button
@@ -343,10 +346,10 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
 
       {/* Content Tabs - Ultra Premium Design with Sticky Behavior */}
       <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full" style={{ overflow: 'visible', display: 'block' }}>
-        <div ref={tabsContainerRef} className="sticky top-20 z-[60] mb-6 bg-background/80 backdrop-blur-xl pb-2 -mt-2 pt-1">
+        <div ref={tabsContainerRef} className="sticky top-20 z-[60] mb-6 bg-background backdrop-blur-xl pb-2 -mt-2 pt-1 pointer-events-auto touch-action-manipulation select-none">
           {/* Mobile: Equal width tabs */}
           <div className="sm:hidden">
-            <TabsList className="grid h-auto w-full grid-cols-3 gap-1 p-1.5 bg-gradient-to-r from-background/95 via-background/90 to-background/95 backdrop-blur-xl rounded-xl border border-border/50 shadow-lg shadow-primary/10">
+            <TabsList className="grid h-auto w-full grid-cols-3 gap-1 p-1.5 bg-background backdrop-blur-xl rounded-xl border border-border/50 shadow-lg shadow-primary/10 pointer-events-auto touch-action-manipulation">
               <TabsTrigger 
                 value="overview" 
                 className="relative flex flex-col items-center justify-center gap-0.5 text-[0.7rem] font-semibold px-1.5 py-1.5 
