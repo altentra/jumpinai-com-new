@@ -100,7 +100,7 @@ const Navigation = React.memo(() => {
 
   return (
     <nav 
-      className={`fixed left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed left-0 right-0 z-50 transition-all duration-300 ease-out ${
         isScrolled 
           ? 'bg-background/80 backdrop-blur-2xl border-b border-border/50 shadow-2xl' 
           : 'bg-background/40 backdrop-blur-lg'
@@ -109,6 +109,8 @@ const Navigation = React.memo(() => {
         top: 0,
         transform: isHeaderVisible ? 'translateY(0)' : 'translateY(-100%)',
         transitionProperty: 'transform, background-color, border-color, box-shadow',
+        transitionDuration: '300ms',
+        transitionTimingFunction: 'ease-out',
       }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
