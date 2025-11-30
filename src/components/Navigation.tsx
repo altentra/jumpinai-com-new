@@ -238,7 +238,7 @@ const Navigation = React.memo(() => {
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden flex items-center space-x-2">
+          <div className="md:hidden flex items-center space-x-2 ml-auto">
             <ThemeToggle />
             <button
               onClick={() => setIsOpen(!isOpen)}
