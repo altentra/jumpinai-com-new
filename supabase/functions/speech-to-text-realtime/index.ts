@@ -23,7 +23,7 @@ serve(async (req) => {
     try {
       // Generate a single-use token for WebSocket authentication
       console.log("Generating single-use token from ElevenLabs...");
-      const tokenResponse = await fetch('https://api.elevenlabs.io/v1/single-use/realtime_scribe/create', {
+      const tokenResponse = await fetch('https://api.elevenlabs.io/v1/single-use-token/realtime_scribe', {
         method: 'POST',
         headers: {
           'xi-api-key': ELEVENLABS_API_KEY
