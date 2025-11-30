@@ -16,6 +16,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { User, Settings, Home, FileText, Workflow, Lightbulb, Boxes, ChevronDown, CreditCard, Palette, Sparkles, Zap } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { useAuth0Token } from "@/hooks/useAuth0Token";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import logoTransparent from "@/assets/logo-transparent.png";
 
 interface SubscriberInfo {
   subscribed: boolean;
@@ -74,13 +76,25 @@ export default function AppSidebar() {
 
   return (
     <Sidebar className="w-52 mt-20 md:mt-16">
-      <SidebarHeader className="border-b border-sidebar-border px-3 py-2">
-        <div className="text-center text-sm text-muted-foreground mb-1">
-          Welcome{userName ? (
-            <>
-              , <span className="font-medium text-foreground">{userName}</span>!
-            </>
-          ) : "!"}
+      <SidebarHeader className="border-b border-sidebar-border px-3 py-2 pt-4">
+        <div className="flex items-center gap-2 mb-2">
+          <Avatar className="h-8 w-8">
+            {user?.avatar_url ? (
+              <AvatarImage src={user.avatar_url} alt={userName} />
+            ) : (
+              <div className="relative h-full w-full flex items-center justify-center bg-background">
+                <img 
+                  src={logoTransparent} 
+                  alt="JumpinAI" 
+                  className="h-6 w-6 opacity-40 brightness-200"
+                />
+              </div>
+            )}
+            <AvatarFallback className="text-xs">
+              {userName?.charAt(0)?.toUpperCase() || 'U'}
+            </AvatarFallback>
+          </Avatar>
+          <span className="text-sm font-medium text-foreground">{userName || 'User'}</span>
         </div>
         {subInfo && (
           <div className="flex justify-center mb-2">
