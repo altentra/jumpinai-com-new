@@ -26,7 +26,7 @@ export default function Profile() {
     username: '',
     display_name: '',
     bio: '',
-    is_public: true
+    is_public: false
   });
 
   const [privateJumps, setPrivateJumps] = useState<any[]>([]);
