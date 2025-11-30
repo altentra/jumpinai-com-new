@@ -343,7 +343,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
 
       {/* Content Tabs - Ultra Premium Design with Sticky Behavior */}
       <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full" style={{ overflow: 'visible', display: 'block' }}>
-        <div ref={tabsContainerRef} className="sticky top-[84px] z-[999] mb-6 bg-background pb-2 -mt-2 pt-1" style={{ position: 'sticky', pointerEvents: 'auto' }}>
+        <div ref={tabsContainerRef} className="sticky top-20 z-[999] mb-6 bg-background pb-2 -mt-2 pt-1" style={{ position: 'sticky', pointerEvents: 'auto' }}>
           {/* Mobile: Equal width tabs */}
           <div className="sm:hidden">
             <TabsList className="grid h-auto w-full grid-cols-3 gap-1 p-1.5 bg-background rounded-xl border border-border/50 shadow-lg shadow-primary/10" style={{ pointerEvents: 'auto', touchAction: 'manipulation' }}>
