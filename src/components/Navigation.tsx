@@ -123,6 +123,7 @@ const Navigation = React.memo(() => {
       style={{
         top: 0,
         transform: isHeaderVisible ? 'translateY(0)' : 'translateY(-100%)',
+        pointerEvents: isHeaderVisible ? 'auto' : 'none',
         transitionProperty: 'transform, background-color, border-color, box-shadow',
         transitionDuration: '300ms',
         transitionTimingFunction: 'ease-out',
