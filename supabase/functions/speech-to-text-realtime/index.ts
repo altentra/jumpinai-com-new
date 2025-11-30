@@ -102,13 +102,16 @@ serve(async (req) => {
     try {
       const message = JSON.parse(event.data);
       
-      // Forward audio chunks to ElevenLabs
+      // Forward audio chunks to ElevenLabs as binary
       if (message.type === "input_audio_chunk" && elevenLabsSocket?.readyState === WebSocket.OPEN) {
-        console.log("Forwarding audio chunk to ElevenLabs");
-        elevenLabsSocket.send(JSON.stringify({
-          type: "input_audio_chunk",
-          audio_chunk: message.audio_chunk,
-        }));
+        console.log("Forwarding audio chunk to ElevenLabs as binary");
+        // Decode base64 to binary
+        const binaryString = atob(message.audio_chunk);
+        const bytes = new Uint8Array(binaryString.length);
+        for (let i = 0; i < binaryString.length; i++) {
+          bytes[i] = binaryString.charCodeAt(i);
+        }
+        elevenLabsSocket.send(bytes.buffer);
       }
     } catch (error) {
       console.error("Error processing client message:", error);
