@@ -152,7 +152,7 @@ const Navigation = React.memo(() => {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:block">
+          <div className="hidden md:block ml-4">
             <div className="flex items-center space-x-8">
               {navItems.map((item) => (
                 <button
