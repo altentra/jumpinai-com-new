@@ -45,9 +45,9 @@ serve(async (req) => {
       console.log("Token generated successfully, connecting to WebSocket...");
       
       // Connect to ElevenLabs Realtime API using token
-      const wsUrl = `wss://api.elevenlabs.io/v1/speech-to-text/realtime?model_id=scribe_realtime_v2&language_code=en&audio_format=pcm_16000&commit_strategy=vad&token=${token}`;
+      const wsUrl = `wss://api.elevenlabs.io/v1/speech-to-text/realtime?model_id=scribe_v2_realtime&language_code=en&audio_format=pcm_16000&commit_strategy=vad&token=${token}`;
       
-      console.log("Connecting to ElevenLabs with model: scribe_realtime_v2");
+      console.log("Connecting to ElevenLabs with model: scribe_v2_realtime");
       elevenLabsSocket = new WebSocket(wsUrl);
     } catch (error) {
       console.error("Error creating WebSocket:", error);
