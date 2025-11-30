@@ -174,10 +174,10 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
     <div className="w-full max-w-full space-y-4" style={{ overflow: 'visible' }}>
       {/* Content Tabs - Ultra Premium Design with Sticky Behavior */}
       <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full" style={{ overflow: 'visible', display: 'block' }}>
-        <div ref={tabsContainerRef} className="sticky top-0 z-[60] mb-6 bg-background backdrop-blur-xl pb-2 -mt-2 pt-1 pointer-events-auto touch-action-manipulation select-none">
+        <div ref={tabsContainerRef} className="sticky top-[84px] z-[999] mb-6 bg-background pb-2 -mt-2 pt-1" style={{ position: 'sticky', pointerEvents: 'auto' }}>
           {/* Mobile: Equal width tabs */}
           <div className="sm:hidden">
-            <TabsList className="grid h-auto w-full grid-cols-3 gap-1 p-1.5 bg-background backdrop-blur-xl rounded-xl border border-border/50 shadow-lg shadow-primary/10 pointer-events-auto touch-action-manipulation">
+            <TabsList className="grid h-auto w-full grid-cols-3 gap-1 p-1.5 bg-background rounded-xl border border-border/50 shadow-lg shadow-primary/10" style={{ pointerEvents: 'auto', touchAction: 'manipulation' }}>
               <TabsTrigger 
                 value="overview" 
                 className="relative flex flex-col items-center justify-center gap-0.5 text-[0.7rem] font-semibold px-1.5 py-1.5 
