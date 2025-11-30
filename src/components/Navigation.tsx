@@ -11,16 +11,38 @@ import logo from "@/assets/logo.png";
 const Navigation = React.memo(() => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
   const { isAuthenticated, logout, login } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      const currentScrollY = window.scrollY;
+      
+      // Update scrolled state for styling
+      setIsScrolled(currentScrollY > 50);
+      
+      // On mobile, hide header when scrolling down, show when scrolling up
+      if (window.innerWidth < 768) {
+        if (currentScrollY > lastScrollY && currentScrollY > 80) {
+          // Scrolling down & past header height - hide it
+          setIsHeaderVisible(false);
+        } else if (currentScrollY < lastScrollY) {
+          // Scrolling up - show it
+          setIsHeaderVisible(true);
+        }
+      } else {
+        // On desktop, always show header
+        setIsHeaderVisible(true);
+      }
+      
+      setLastScrollY(currentScrollY);
     };
+    
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [lastScrollY]);
 
   // Preload page when user hovers over navigation link
   const handleMouseEnter = useCallback((href: string) => {
@@ -77,11 +99,18 @@ const Navigation = React.memo(() => {
   ];
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-      isScrolled 
-        ? 'bg-background/80 backdrop-blur-2xl border-b border-border/50 shadow-2xl' 
-        : 'bg-background/40 backdrop-blur-lg'
-    }`}>
+    <nav 
+      className={`fixed left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled 
+          ? 'bg-background/80 backdrop-blur-2xl border-b border-border/50 shadow-2xl' 
+          : 'bg-background/40 backdrop-blur-lg'
+      }`}
+      style={{
+        top: 0,
+        transform: isHeaderVisible ? 'translateY(0)' : 'translateY(-100%)',
+        transitionProperty: 'transform, background-color, border-color, box-shadow',
+      }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
