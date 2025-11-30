@@ -27,11 +27,9 @@ serve(async (req) => {
     wsUrl.searchParams.set("audio_format", "pcm_16000");
     wsUrl.searchParams.set("commit_strategy", "vad");
     
-    elevenLabsSocket = new WebSocket(wsUrl.toString(), {
-      headers: {
-        "xi-api-key": ELEVENLABS_API_KEY,
-      },
-    });
+    // Create WebSocket connection with API key in URL
+    const authenticatedUrl = `${wsUrl.toString()}&xi-api-key=${ELEVENLABS_API_KEY}`;
+    elevenLabsSocket = new WebSocket(authenticatedUrl);
 
     elevenLabsSocket.onopen = () => {
       console.log("Connected to ElevenLabs Realtime API");
