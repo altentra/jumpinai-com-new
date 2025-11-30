@@ -163,67 +163,82 @@ export default function Profile() {
 
   return (
     <div className="min-h-screen relative">
-      {/* Background elements */}
+      {/* Premium background elements optimized for mobile */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-[28rem] h-[28rem] bg-gradient-to-br from-primary/25 via-primary/15 to-primary/5 rounded-full blur-3xl animate-pulse opacity-60"></div>
-        <div className="absolute -bottom-40 -left-40 w-[32rem] h-[32rem] bg-gradient-to-tr from-secondary/20 via-accent/10 to-secondary/5 rounded-full blur-3xl animate-pulse opacity-50" style={{animationDelay: '2s'}}></div>
+        <div className="absolute -top-20 sm:-top-40 -right-20 sm:-right-40 w-56 sm:w-[28rem] h-56 sm:h-[28rem] bg-gradient-to-br from-primary/20 sm:from-primary/25 via-primary/10 sm:via-primary/15 to-primary/5 rounded-full blur-2xl sm:blur-3xl animate-pulse opacity-50 sm:opacity-60"></div>
+        <div className="absolute -bottom-20 sm:-bottom-40 -left-20 sm:-left-40 w-64 sm:w-[32rem] h-64 sm:h-[32rem] bg-gradient-to-tr from-secondary/15 sm:from-secondary/20 via-accent/8 sm:via-accent/10 to-secondary/5 rounded-full blur-2xl sm:blur-3xl animate-pulse opacity-40 sm:opacity-50" style={{animationDelay: '2s'}}></div>
       </div>
 
-      <div className="relative container max-w-5xl mx-auto px-4 py-8">
-        {/* Profile Header - Always Visible */}
-        <Card className="p-8 mb-6 bg-background/40 backdrop-blur-sm border-border/50">
-          <div className="flex flex-col md:flex-row gap-6 items-start md:items-center mb-6">
-            <Avatar className="h-32 w-32">
+      <div className="relative container max-w-5xl mx-auto px-3 sm:px-4 py-4 sm:py-8">
+        {/* Profile Header - Premium Design */}
+        <Card className="p-4 sm:p-6 md:p-8 mb-6 bg-background/40 backdrop-blur-sm border-border/50 relative overflow-hidden">
+          {/* Premium gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 pointer-events-none" />
+          <div className="absolute -top-20 -right-20 w-40 h-40 bg-gradient-to-br from-primary/10 to-transparent rounded-full blur-3xl pointer-events-none" />
+          
+          <div className="relative flex flex-col sm:flex-row gap-4 sm:gap-6 items-start mb-6">
+            {/* Smaller premium avatar */}
+            <Avatar className="h-16 w-16 sm:h-20 sm:w-20 border-2 border-primary/20 shadow-lg ring-2 ring-primary/10 hover:ring-primary/20 transition-all duration-300 hover-scale flex-shrink-0">
               <AvatarImage src={user?.avatar_url || undefined} />
-              <AvatarFallback>
+              <AvatarFallback className="bg-gradient-to-br from-primary/20 via-primary/10 to-accent/20">
                 <img src={logoTransparent} alt="Default" className="opacity-40 brightness-200" />
               </AvatarFallback>
             </Avatar>
-            <div className="flex-1">
-              <h2 className="text-2xl font-bold mb-1">{formData.display_name || user?.display_name || user?.email}</h2>
-              <p className="text-muted-foreground mb-3">{user?.email}</p>
+            <div className="flex-1 min-w-0">
+              <h2 className="text-xl sm:text-2xl font-bold mb-1 bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-transparent truncate">
+                {formData.display_name || user?.display_name || user?.email}
+              </h2>
+              <p className="text-muted-foreground text-sm sm:text-base mb-2 sm:mb-3 flex items-center gap-2 truncate">
+                <span className="inline-flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                  {user?.email}
+                </span>
+              </p>
               {formData.bio && (
-                <p className="text-foreground/80">{formData.bio}</p>
+                <p className="text-foreground/80 text-sm line-clamp-2">{formData.bio}</p>
               )}
             </div>
           </div>
           
           {profile?.is_public && (
-            <a
-              href={`/@${profile.username?.replace('@', '')}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-sm text-primary hover:underline"
-            >
-              View my public profile →
-            </a>
+            <div className="relative">
+              <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent mb-4" />
+              <a
+                href={`/@${profile.username?.replace('@', '')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-sm text-primary hover:text-primary/80 transition-colors font-medium"
+              >
+                View my public profile →
+              </a>
+            </div>
           )}
         </Card>
 
         <Tabs defaultValue="edit" className="space-y-6">
-          <TabsList className="flex flex-col sm:flex-row w-full gap-2 rounded-2xl glass border border-border/50 p-1.5 h-auto sm:justify-center sm:max-w-4xl sm:mx-auto backdrop-blur-sm">
+          <TabsList className="flex flex-row w-full gap-1 sm:gap-2 rounded-xl sm:rounded-2xl glass border border-border/50 p-1 sm:p-1.5 h-auto justify-center max-w-full sm:max-w-4xl mx-auto backdrop-blur-sm">
             <TabsTrigger 
               value="edit" 
-              className="w-full sm:flex-1 sm:max-w-52 flex items-center justify-center gap-2 text-xs sm:text-sm py-3.5 px-4 sm:px-6 transition-all duration-300 hover:bg-background/60 data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/10 data-[state=active]:to-accent/10 data-[state=active]:border data-[state=active]:border-primary/20 data-[state=active]:shadow-sm rounded-xl font-medium"
+              className="flex-1 sm:max-w-52 flex items-center justify-center gap-1.5 sm:gap-2 text-[11px] sm:text-sm py-2.5 sm:py-3.5 px-2 sm:px-6 transition-all duration-300 hover:bg-background/60 data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/10 data-[state=active]:to-accent/10 data-[state=active]:border data-[state=active]:border-primary/20 data-[state=active]:shadow-sm rounded-lg sm:rounded-xl font-medium"
             >
-              <User className="h-4 w-4 flex-shrink-0" />
-              <span>Edit Profile</span>
+              <User className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" />
+              <span className="leading-tight">Edit</span>
             </TabsTrigger>
             <TabsTrigger 
               value="private" 
               onClick={() => loadJumps('private')} 
-              className="w-full sm:flex-1 sm:max-w-52 flex items-center justify-center gap-2 text-xs sm:text-sm py-3.5 px-4 sm:px-6 transition-all duration-300 hover:bg-background/60 data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/10 data-[state=active]:to-accent/10 data-[state=active]:border data-[state=active]:border-primary/20 data-[state=active]:shadow-sm rounded-xl font-medium"
+              className="flex-1 sm:max-w-52 flex items-center justify-center gap-1.5 sm:gap-2 text-[11px] sm:text-sm py-2.5 sm:py-3.5 px-2 sm:px-6 transition-all duration-300 hover:bg-background/60 data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/10 data-[state=active]:to-accent/10 data-[state=active]:border data-[state=active]:border-primary/20 data-[state=active]:shadow-sm rounded-lg sm:rounded-xl font-medium"
             >
-              <Lock className="h-4 w-4 flex-shrink-0" />
-              <span>Private Jumps</span>
+              <Lock className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" />
+              <span className="leading-tight">Private</span>
             </TabsTrigger>
             <TabsTrigger 
               value="public" 
               onClick={() => loadJumps('public')} 
-              className="w-full sm:flex-1 sm:max-w-52 flex items-center justify-center gap-2 text-xs sm:text-sm py-3.5 px-4 sm:px-6 transition-all duration-300 hover:bg-background/60 data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/10 data-[state=active]:to-accent/10 data-[state=active]:border data-[state=active]:border-primary/20 data-[state=active]:shadow-sm rounded-xl font-medium"
+              className="flex-1 sm:max-w-52 flex items-center justify-center gap-1.5 sm:gap-2 text-[11px] sm:text-sm py-2.5 sm:py-3.5 px-2 sm:px-6 transition-all duration-300 hover:bg-background/60 data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/10 data-[state=active]:to-accent/10 data-[state=active]:border data-[state=active]:border-primary/20 data-[state=active]:shadow-sm rounded-lg sm:rounded-xl font-medium"
             >
-              <Globe className="h-4 w-4 flex-shrink-0" />
-              <span>Public Jumps</span>
+              <Globe className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" />
+              <span className="leading-tight">Public</span>
             </TabsTrigger>
           </TabsList>
 
