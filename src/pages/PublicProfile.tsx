@@ -137,13 +137,14 @@ export default function PublicProfile() {
       <Navigation />
 
       <div className="min-h-screen pt-24 pb-16 relative">
-        {/* Background elements */}
+        {/* Premium animated background - matching other pages */}
         <div className="fixed inset-0 overflow-hidden pointer-events-none">
           <div className="absolute -top-40 -right-40 w-[28rem] h-[28rem] bg-gradient-to-br from-primary/25 via-primary/15 to-primary/5 rounded-full blur-3xl animate-pulse opacity-60"></div>
           <div className="absolute -bottom-40 -left-40 w-[32rem] h-[32rem] bg-gradient-to-tr from-secondary/20 via-accent/10 to-secondary/5 rounded-full blur-3xl animate-pulse opacity-50" style={{animationDelay: '2s'}}></div>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[24rem] h-[24rem] bg-gradient-to-br from-accent/15 via-primary/10 to-transparent rounded-full blur-3xl animate-pulse opacity-40" style={{animationDelay: '4s'}}></div>
         </div>
 
-        <div className="relative container max-w-5xl mx-auto px-4">
+        <div className="relative container max-w-4xl mx-auto px-4">{/* Reduced from max-w-5xl to max-w-4xl */}
           {/* Profile Header - Premium Design */}
           <Card className="p-6 sm:p-8 mb-8 bg-background/40 backdrop-blur-sm border-border/50 relative overflow-hidden">
             {/* Premium gradient overlay */}
@@ -178,53 +179,58 @@ export default function PublicProfile() {
                 <p className="text-center text-muted-foreground">No public jumps to display</p>
               </Card>
             ) : (
-              <div className="flex flex-col gap-6">
+              <div className="flex flex-col gap-6 max-w-3xl mx-auto">{/* Added max-w-3xl mx-auto for narrower cards */}
                 {publicJumps.map((jump) => {
                   const isLiked = likedJumps.has(jump.id);
                   // Remove "Jump #XX - " from the title for public view
-                  const displayTitle = jump.title.replace(/^Jump\s+#\d+\s*-\s*/i, '').trim();
+                  const displayTitle = jump.title.replace(/^Jump\s*#\d+\s*[-–]\s*/i, '');
                   
                   return (
                     <Card 
                       key={jump.id}
-                      className="p-8 bg-gradient-to-br from-background/60 to-background/40 backdrop-blur-md border-2 border-border/60 hover:border-primary/40 rounded-2xl transition-all duration-300 cursor-pointer group shadow-lg hover:shadow-xl relative overflow-hidden"
+                      className="p-6 bg-gradient-to-br from-background/70 to-background/50 backdrop-blur-xl border-2 border-border/70 hover:border-primary/50 rounded-3xl transition-all duration-300 cursor-pointer group shadow-xl hover:shadow-2xl relative overflow-hidden"
                       onClick={() => window.location.href = `/dashboard/jump/${jump.id}`}
                     >
                       {/* Premium gradient overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.02] via-transparent to-accent/[0.02] pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.03] via-transparent to-accent/[0.03] pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <div className="absolute -top-20 -right-20 w-32 h-32 bg-gradient-to-br from-primary/20 to-transparent rounded-full blur-2xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                       
                       <div className="relative space-y-4">
-                        <h3 className="text-xl font-bold group-hover:text-primary transition-colors leading-tight">
-                          {displayTitle}
-                        </h3>
-                        
-                        <div className="flex items-center justify-between pt-2">
-                          <div className="flex items-center gap-6 text-sm text-muted-foreground">
-                            <span className="flex items-center gap-1.5">
-                              <Eye className="h-4 w-4" />
-                              {jump.views_count || 0}
-                            </span>
-                            
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className={`flex items-center gap-1.5 h-auto p-0 hover:bg-transparent ${
-                                isLiked ? 'text-red-500 hover:text-red-600' : 'text-muted-foreground hover:text-red-500'
-                              } transition-colors`}
-                              onClick={(e) => handleLikeToggle(jump.id, e)}
-                            >
-                              <Heart className={`h-4 w-4 ${isLiked ? 'fill-current' : ''}`} />
-                              {jump.likes_count || 0}
-                            </Button>
-                          </div>
-                          
-                          <span className="text-xs text-muted-foreground/70">
+                        <div className="space-y-2">
+                          <h3 className="text-xl font-bold group-hover:text-primary transition-colors leading-tight">
+                            {displayTitle}
+                          </h3>
+                          <p className="text-xs text-muted-foreground/70">
                             {new Date(jump.created_at).toLocaleDateString('en-US', {
                               year: 'numeric',
                               month: 'short',
                               day: 'numeric'
+                            })} at {new Date(jump.created_at).toLocaleTimeString('en-US', {
+                              hour: '2-digit',
+                              minute: '2-digit'
                             })}
+                          </p>
+                        </div>
+                        
+                        <div className="flex items-center gap-6 pt-2 border-t border-border/50">
+                          <span className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <Eye className="h-4 w-4" />
+                            <span className="font-medium">{jump.views_count || 0}</span>
                           </span>
+                          
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className={`flex items-center gap-2 h-auto px-3 py-1.5 rounded-full ${
+                              isLiked 
+                                ? 'text-red-500 hover:text-red-600 bg-red-500/10 hover:bg-red-500/20' 
+                                : 'text-muted-foreground hover:text-red-500 hover:bg-red-500/10'
+                            } transition-all duration-200`}
+                            onClick={(e) => handleLikeToggle(jump.id, e)}
+                          >
+                            <Heart className={`h-4 w-4 ${isLiked ? 'fill-current' : ''}`} />
+                            <span className="font-medium">{jump.likes_count || 0}</span>
+                          </Button>
                         </div>
                       </div>
                     </Card>
