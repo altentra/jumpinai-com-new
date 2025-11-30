@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Loader2, Share2 } from "lucide-react";
+import { ArrowLeft, Loader2, Upload } from "lucide-react";
 import { supabase } from '@/integrations/supabase/client';
 import ViewJumpDisplay from '@/components/ViewJumpDisplay';
 import Navigation from '@/components/Navigation';
@@ -256,7 +256,7 @@ export default function PublicJumpView() {
                     size="sm"
                     className="rounded-xl border border-border/40 bg-background/60 hover:bg-background/80 backdrop-blur-sm transition-all duration-300"
                   >
-                    <Share2 className="h-4 w-4" />
+                    <Upload className="h-4 w-4" />
                   </Button>
                 </div>
 
