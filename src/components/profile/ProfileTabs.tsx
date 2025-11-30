@@ -433,70 +433,108 @@ export default function ProfileTabs() {
     <div className="max-w-6xl mx-auto px-2 sm:px-6 pb-6 sm:pb-8">
       {/* Header */}
       <header>
-        <div className="rounded-xl sm:rounded-2xl border border-border glass p-3 sm:p-6 md:p-8 animate-fade-in">
-          <div className="flex flex-col gap-4 sm:gap-6">
-            {/* Account Header */}
-            <div className="flex flex-col gap-4">
-              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
-                <div className="min-w-0 flex-1">
-                  <h1 className="text-xl sm:text-3xl md:text-4xl font-bold flex items-center gap-2 sm:gap-3">
-                    <User className="h-5 w-5 sm:h-7 sm:w-7 text-primary flex-shrink-0" />
-                    <span className="truncate">Account</span>
-                  </h1>
-                  <p className="text-muted-foreground mt-1 sm:mt-2 text-xs sm:text-base truncate">{email}</p>
+        <div className="rounded-xl sm:rounded-2xl border border-border/50 glass p-4 sm:p-6 md:p-8 animate-fade-in relative overflow-hidden">
+          {/* Premium gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 pointer-events-none" />
+          <div className="absolute -top-20 -right-20 w-40 h-40 bg-gradient-to-br from-primary/10 to-transparent rounded-full blur-3xl pointer-events-none" />
+          
+          <div className="relative flex flex-col gap-6 sm:gap-8">
+            {/* Premium Account Header with Avatar */}
+            <div className="flex items-start gap-4 sm:gap-6">
+              {/* Avatar - Smaller and more refined */}
+              {profile.avatar_url ? (
+                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl overflow-hidden border-2 border-primary/20 flex-shrink-0 shadow-lg ring-2 ring-primary/10 hover:ring-primary/20 transition-all duration-300 hover-scale">
+                  <img 
+                    src={profile.avatar_url} 
+                    alt="Profile Avatar" 
+                    className="w-full h-full object-cover"
+                  />
                 </div>
-                <div className="flex items-center gap-2 sm:self-start">
-                  {subInfo?.subscribed ? (
-                    <Badge className="bg-primary/10 text-primary text-xs sm:text-sm whitespace-nowrap">
-                      {subInfo.subscription_tier || 'Pro'} Active
-                    </Badge>
-                  ) : (
-                    <Badge variant="secondary" className="text-xs sm:text-sm whitespace-nowrap">Free plan</Badge>
-                  )}
+              ) : (
+                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-primary/20 via-primary/10 to-accent/20 flex items-center justify-center flex-shrink-0 shadow-lg ring-2 ring-primary/10">
+                  <User className="h-6 w-6 sm:h-8 sm:w-8 text-primary/60" />
+                </div>
+              )}
+              
+              {/* Account Info & Status */}
+              <div className="flex-1 min-w-0">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4">
+                  <div className="min-w-0">
+                    <h1 className="text-xl sm:text-3xl md:text-4xl font-bold flex items-center gap-2 sm:gap-3 mb-1">
+                      <span className="truncate bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-transparent">Account</span>
+                    </h1>
+                    <p className="text-muted-foreground text-xs sm:text-sm truncate flex items-center gap-2">
+                      <span className="inline-flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                        {email}
+                      </span>
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2 sm:self-start">
+                    {subInfo?.subscribed ? (
+                      <Badge className="bg-gradient-to-r from-primary/15 to-accent/15 text-primary border-primary/30 text-xs sm:text-sm whitespace-nowrap shadow-sm hover-scale">
+                        <Crown className="w-3 h-3 sm:w-3.5 sm:h-3.5 mr-1" />
+                        {subInfo.subscription_tier || 'Pro'}
+                      </Badge>
+                    ) : (
+                      <Badge variant="secondary" className="text-xs sm:text-sm whitespace-nowrap bg-muted/50">Free Plan</Badge>
+                    )}
+                  </div>
+                </div>
+                
+                {/* Profile Display Name - Sleek inline display */}
+                <div className="mt-3 sm:mt-4 flex items-center gap-2">
+                  <div className="text-sm sm:text-base font-semibold text-foreground/90">
+                    {profile.display_name || 'Set your display name'}
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Profile Management Section */}
-            <div className="space-y-4">
-              {/* Avatar Section */}
-              <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-                <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
-                  {profile.avatar_url ? (
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden border-2 border-border flex-shrink-0">
-                      <img 
-                        src={profile.avatar_url} 
-                        alt="Profile Avatar" 
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  ) : (
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-muted flex items-center justify-center border-2 border-border flex-shrink-0">
-                      <User className="h-6 w-6 sm:h-8 sm:w-8 text-muted-foreground" />
-                    </div>
+            {/* Elegant Separator */}
+            <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+
+            {/* Profile Management - Compact & Refined */}
+            <div className="space-y-4 sm:space-y-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+                {/* Display Name Input */}
+                <div className="space-y-2">
+                  <Label htmlFor="display_name" className="text-xs sm:text-sm font-medium text-muted-foreground">Display Name</Label>
+                  <Input
+                    id="display_name"
+                    value={profile.display_name}
+                    onChange={(e) => setProfile({ ...profile, display_name: e.target.value })}
+                    placeholder="Your display name"
+                    disabled={user?.isGoogleUser}
+                    className={`text-sm bg-background/50 backdrop-blur-sm border-border/50 focus:border-primary/50 transition-all ${user?.isGoogleUser ? 'opacity-60' : ''}`}
+                  />
+                  {user?.isGoogleUser && (
+                    <p className="text-xs text-muted-foreground">Display name is managed by Google</p>
                   )}
-                  <div className="flex-1 min-w-0 space-y-2">
-                    <Label htmlFor="display_name" className="text-sm">Display Name</Label>
-                    <Input 
-                      id="display_name" 
-                      value={profile.display_name} 
-                      onChange={(e) => setProfile({ ...profile, display_name: e.target.value })}
-                      disabled={user?.isGoogleUser}
-                      className={user?.isGoogleUser ? "bg-muted/50" : ""}
-                    />
-                  </div>
                 </div>
 
-                {/* Save Button */}
-                <div className="flex justify-start sm:justify-end">
-                  {!user?.isGoogleUser && (
-                    <Button onClick={saveProfile} size="sm" className="hover-scale w-full sm:w-auto">
-                      <Save className="mr-2 h-4 w-4" /> 
-                      <span className="sm:inline">Save Changes</span>
-                    </Button>
-                  )}
+                {/* Avatar URL Input */}
+                <div className="space-y-2">
+                  <Label htmlFor="avatar_url" className="text-xs sm:text-sm font-medium text-muted-foreground">Avatar URL</Label>
+                  <Input
+                    id="avatar_url"
+                    value={profile.avatar_url}
+                    onChange={(e) => setProfile({ ...profile, avatar_url: e.target.value })}
+                    placeholder="https://..."
+                    className="text-sm bg-background/50 backdrop-blur-sm border-border/50 focus:border-primary/50 transition-all"
+                  />
                 </div>
               </div>
+
+              {/* Save Button - Premium styling */}
+              {!user?.isGoogleUser && (
+                <Button 
+                  onClick={saveProfile} 
+                  className="w-full sm:w-auto bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-lg hover:shadow-xl transition-all duration-300 hover-scale"
+                >
+                  <Save className="mr-2 h-4 w-4" /> Save Profile
+                </Button>
+              )}
             </div>
           </div>
         </div>
