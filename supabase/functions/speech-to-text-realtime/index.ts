@@ -106,6 +106,7 @@ serve(async (req) => {
       if (message.type === "input_audio_chunk" && elevenLabsSocket?.readyState === WebSocket.OPEN) {
         console.log("Forwarding audio chunk to ElevenLabs");
         elevenLabsSocket.send(JSON.stringify({
+          message_type: "input_audio_chunk",
           audio_base_64: message.audio_chunk,
           sample_rate: 16000,
         }));
