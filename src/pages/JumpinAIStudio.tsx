@@ -13,6 +13,7 @@ import { useProgressiveGeneration } from '@/hooks/useProgressiveGeneration';
 import { CreditsDisplay } from '@/components/CreditsDisplay';
 import { supabase } from '@/integrations/supabase/client';
 import { SpeechToTextButton } from '@/components/SpeechToTextButton';
+import { markJumpAsUsingSTT } from '@/services/sttTrackingService';
 
 const JumpinAIStudio = () => {
   const { user, isAuthenticated, login } = useAuth();
@@ -23,6 +24,7 @@ const JumpinAIStudio = () => {
   const [guestUsageInfo, setGuestUsageInfo] = useState<{ usageCount: number; remaining: number } | null>(null);
   const [isLoadingGuestInfo, setIsLoadingGuestInfo] = useState(true);
   const [turnstileErrorShown, setTurnstileErrorShown] = useState(false);
+  const [sttUsed, setSttUsed] = useState(false); // Track if STT was used
   const progressDisplayRef = useRef<HTMLDivElement>(null);
   const generateButtonRef = useRef<HTMLDivElement>(null);
   const goalsTextareaRef = useRef<HTMLTextAreaElement>(null);
@@ -315,6 +317,12 @@ const JumpinAIStudio = () => {
         await updateTransactionReference(tempReferenceId, result.jumpId);
       }
       
+      // Mark jump as using STT if it was used
+      if (result.jumpId && sttUsed) {
+        await markJumpAsUsingSTT(result.jumpId);
+        setSttUsed(false); // Reset for next generation
+      }
+      
       if (result.jumpId) {
         toast.success('Jump has been generated. 1 credit used. It was saved to your Dashboard.');
       } else if (!isAuthenticated) {
@@ -435,7 +443,7 @@ const JumpinAIStudio = () => {
               
               <div className="relative px-4">
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent/5 to-transparent blur-2xl"></div>
-                <p className="relative text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground/90 mb-6 sm:mb-8 lg:mb-12 max-w-4xl mx-auto leading-relaxed font-light">
+                <p className="relative text-xs sm:text-sm md:text-base lg:text-lg text-muted-foreground/90 mb-6 sm:mb-8 lg:mb-12 max-w-4xl mx-auto leading-relaxed font-light">
                   Generate your personalized <span className="font-semibold text-primary bg-gradient-to-r from-primary via-primary/80 to-primary bg-clip-text text-transparent whitespace-nowrap">Jump in AI</span> in 2 minutes—a clear, structured implementation plan with strategic insights, actionable steps, tailored prompts, and the tools that fit your goals.
                 </p>
               </div>
@@ -475,12 +483,13 @@ const JumpinAIStudio = () => {
                               placeholder="Your main goals & projects..."
                             />
                             <div className="absolute bottom-3 right-3">
-                              <SpeechToTextButton 
+                            <SpeechToTextButton 
                                 onTranscription={(text) => {
                                   setFormData(prev => ({
                                     ...prev,
-                                    goals: prev.goals ? `${prev.goals} ${text}` : text
+                                    goals: text
                                   }));
+                                  setSttUsed(true); // Mark that STT was used
                                 }}
                               />
                             </div>
@@ -501,12 +510,13 @@ const JumpinAIStudio = () => {
                               placeholder="Your obstacles & challenges..."
                             />
                             <div className="absolute bottom-3 right-3">
-                              <SpeechToTextButton 
+                            <SpeechToTextButton 
                                 onTranscription={(text) => {
                                   setFormData(prev => ({
                                     ...prev,
-                                    challenges: prev.challenges ? `${prev.challenges} ${text}` : text
+                                    challenges: text
                                   }));
+                                  setSttUsed(true); // Mark that STT was used
                                 }}
                               />
                             </div>
