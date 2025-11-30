@@ -438,20 +438,48 @@ const Index = () => {
             </p>
           </div>
           <div className="flex flex-wrap justify-center items-center gap-8 lg:gap-12 opacity-70 hover:opacity-90 transition-opacity">
-            <div className="flex items-center gap-2 text-lg lg:text-xl font-bold text-foreground">
-              <img src="/images/xai-logo-official.png" alt="xAI Logo" className="w-6 h-6 lg:w-8 lg:h-8 object-contain filter dark:invert" />
+            <div className="flex items-center gap-2 text-lg lg:text-xl font-bold text-foreground select-none pointer-events-none">
+              <img 
+                src="/images/xai-logo-official.png" 
+                alt="" 
+                className="w-6 h-6 lg:w-8 lg:h-8 object-contain filter dark:invert" 
+                data-nosnippet
+                loading="lazy"
+                draggable="false"
+              />
               xAI
             </div>
-            <div className="flex items-center gap-2 text-lg lg:text-xl font-bold text-foreground">
-              <img src="/images/openai-logo.png" alt="OpenAI Logo" className="w-6 h-6 lg:w-8 lg:h-8 object-contain filter dark:invert" />
+            <div className="flex items-center gap-2 text-lg lg:text-xl font-bold text-foreground select-none pointer-events-none">
+              <img 
+                src="/images/openai-logo.png" 
+                alt="" 
+                className="w-6 h-6 lg:w-8 lg:h-8 object-contain filter dark:invert" 
+                data-nosnippet
+                loading="lazy"
+                draggable="false"
+              />
               OpenAI
             </div>
-            <div className="flex items-center gap-2 text-lg lg:text-xl font-bold text-foreground">
-              <img src="/images/anthropic-logo.png" alt="Anthropic Logo" className="w-6 h-6 lg:w-8 lg:h-8 object-contain filter dark:invert" />
+            <div className="flex items-center gap-2 text-lg lg:text-xl font-bold text-foreground select-none pointer-events-none">
+              <img 
+                src="/images/anthropic-logo.png" 
+                alt="" 
+                className="w-6 h-6 lg:w-8 lg:h-8 object-contain filter dark:invert" 
+                data-nosnippet
+                loading="lazy"
+                draggable="false"
+              />
               Anthropic
             </div>
-            <div className="flex items-center gap-2 text-lg lg:text-xl font-bold text-foreground">
-              <img src="/images/gemini-logo.png" alt="Google Gemini Logo" className="w-6 h-6 lg:w-8 lg:h-8 object-contain filter dark:invert" />
+            <div className="flex items-center gap-2 text-lg lg:text-xl font-bold text-foreground select-none pointer-events-none">
+              <img 
+                src="/images/gemini-logo.png" 
+                alt="" 
+                className="w-6 h-6 lg:w-8 lg:h-8 object-contain filter dark:invert" 
+                data-nosnippet
+                loading="lazy"
+                draggable="false"
+              />
               Google Gemini
             </div>
           </div>
