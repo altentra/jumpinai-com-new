@@ -12,6 +12,7 @@ import ProgressiveJumpDisplay from '@/components/ProgressiveJumpDisplay';
 import { useProgressiveGeneration } from '@/hooks/useProgressiveGeneration';
 import { CreditsDisplay } from '@/components/CreditsDisplay';
 import { supabase } from '@/integrations/supabase/client';
+import { SpeechToTextButton } from '@/components/SpeechToTextButton';
 
 const JumpinAIStudio = () => {
   const { user, isAuthenticated, login } = useAuth();
@@ -469,10 +470,20 @@ const JumpinAIStudio = () => {
                               ref={goalsTextareaRef}
                               value={formData.goals}
                               onChange={(e) => setFormData(prev => ({ ...prev, goals: e.target.value }))}
-                              className="w-full min-h-[120px] sm:min-h-[140px] md:min-h-[160px] p-3 sm:p-4 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-2xl sm:rounded-3xl shadow-xl hover:shadow-2xl focus:shadow-2xl focus:shadow-primary/10 resize-none placeholder:text-muted-foreground/60 text-base text-foreground bg-card/60 overflow-hidden"
+                              className="w-full min-h-[120px] sm:min-h-[140px] md:min-h-[160px] p-3 sm:p-4 pb-14 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-2xl sm:rounded-3xl shadow-xl hover:shadow-2xl focus:shadow-2xl focus:shadow-primary/10 resize-none placeholder:text-muted-foreground/60 text-base text-foreground bg-card/60 overflow-hidden"
                               style={{ fontSize: '16px' }}
                               placeholder="Your main goals & projects..."
                             />
+                            <div className="absolute bottom-3 right-3">
+                              <SpeechToTextButton 
+                                onTranscription={(text) => {
+                                  setFormData(prev => ({
+                                    ...prev,
+                                    goals: prev.goals ? `${prev.goals} ${text}` : text
+                                  }));
+                                }}
+                              />
+                            </div>
                           </div>
                         </div>
                         
@@ -485,10 +496,20 @@ const JumpinAIStudio = () => {
                               ref={challengesTextareaRef}
                               value={formData.challenges}
                               onChange={(e) => setFormData(prev => ({ ...prev, challenges: e.target.value }))}
-                              className="w-full min-h-[120px] sm:min-h-[140px] md:min-h-[160px] p-3 sm:p-4 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-2xl sm:rounded-3xl shadow-xl hover:shadow-2xl focus:shadow-2xl focus:shadow-primary/10 resize-none placeholder:text-muted-foreground/60 text-base text-foreground bg-card/60 overflow-hidden"
+                              className="w-full min-h-[120px] sm:min-h-[140px] md:min-h-[160px] p-3 sm:p-4 pb-14 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-2xl sm:rounded-3xl shadow-xl hover:shadow-2xl focus:shadow-2xl focus:shadow-primary/10 resize-none placeholder:text-muted-foreground/60 text-base text-foreground bg-card/60 overflow-hidden"
                               style={{ fontSize: '16px' }}
                               placeholder="Your obstacles & challenges..."
                             />
+                            <div className="absolute bottom-3 right-3">
+                              <SpeechToTextButton 
+                                onTranscription={(text) => {
+                                  setFormData(prev => ({
+                                    ...prev,
+                                    challenges: prev.challenges ? `${prev.challenges} ${text}` : text
+                                  }));
+                                }}
+                              />
+                            </div>
                           </div>
                         </div>
                       </div>
