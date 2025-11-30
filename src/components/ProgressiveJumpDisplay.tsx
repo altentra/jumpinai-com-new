@@ -32,6 +32,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
   const [activeTab, setActiveTab] = React.useState('overview');
   const [isRefreshing, setIsRefreshing] = React.useState(false);
   const [toolPrompts, setToolPrompts] = React.useState<any[]>(result.components?.toolPrompts || []);
+  const [isHeaderHidden, setIsHeaderHidden] = React.useState(false);
   const skipScrollToTopRef = React.useRef(false);
   const tabsContainerRef = React.useRef<HTMLDivElement>(null);
   const overviewContentRef = React.useRef<HTMLDivElement>(null);
@@ -44,6 +45,29 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
       setToolPrompts(result.components.toolPrompts);
     }
   }, [result.components?.toolPrompts]);
+
+  // Track scroll to adjust sticky tabs position on mobile
+  React.useEffect(() => {
+    const handleScroll = () => {
+      if (window.innerWidth < 768) {
+        // On mobile, check if header is hidden (scrolled past 80px)
+        setIsHeaderHidden(window.scrollY > 80);
+      } else {
+        setIsHeaderHidden(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('resize', handleScroll);
+    
+    // Initial check
+    handleScroll();
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
+  }, []);
 
   const handleToolPromptGenerated = async () => {
     if (!result.jumpId || !onToolPromptsRefresh) return;
@@ -343,7 +367,13 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
 
       {/* Content Tabs - Ultra Premium Design with Sticky Behavior */}
       <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full" style={{ overflow: 'visible', display: 'block' }}>
-        <div ref={tabsContainerRef} className="sticky top-20 z-[9999] mb-6 bg-background pb-2 -mt-2 pt-1" style={{ position: 'sticky', pointerEvents: 'auto' }}>
+        <div 
+          ref={tabsContainerRef} 
+          className={`sticky z-[9999] mb-6 bg-background/95 backdrop-blur-lg border-b border-border/40 shadow-lg pb-2 -mt-2 pt-1 transition-all duration-300 ${
+            isHeaderHidden ? 'top-0' : 'top-20'
+          }`}
+          style={{ position: 'sticky', pointerEvents: 'auto' }}
+        >
           {/* Mobile: Equal width tabs */}
           <div className="sm:hidden">
             <TabsList className="grid h-auto w-full grid-cols-3 gap-1 p-1.5 bg-background rounded-xl border border-border/50 shadow-lg shadow-primary/10" style={{ pointerEvents: 'auto', touchAction: 'manipulation' }}>
