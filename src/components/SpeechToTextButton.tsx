@@ -20,10 +20,20 @@ export const SpeechToTextButton: React.FC<SpeechToTextButtonProps> = ({
   const sourceRef = useRef<MediaStreamAudioSourceNode | null>(null);
   const wsRef = useRef<WebSocket | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
+  const recordingTimerRef = useRef<NodeJS.Timeout | null>(null);
   const { toast } = useToast();
 
-  const stopRecording = useCallback(() => {
+  // Maximum recording duration: 30 seconds
+  const MAX_RECORDING_DURATION = 30000; // milliseconds
+
+  const stopRecording = useCallback((timedOut: boolean = false) => {
     console.log('Stopping recording...');
+    
+    // Clear recording timer
+    if (recordingTimerRef.current) {
+      clearTimeout(recordingTimerRef.current);
+      recordingTimerRef.current = null;
+    }
     
     // Close WebSocket
     if (wsRef.current) {
@@ -52,7 +62,16 @@ export const SpeechToTextButton: React.FC<SpeechToTextButtonProps> = ({
     setIsRecording(false);
     setIsConnecting(false);
     setConnectionStatus('idle');
-  }, []);
+
+    // Show timeout message if stopped due to time limit
+    if (timedOut) {
+      toast({
+        title: "Recording Stopped",
+        description: "Maximum recording duration of 30 seconds reached.",
+        variant: "default",
+      });
+    }
+  }, [toast]);
 
   const startRecording = useCallback(async () => {
     try {
@@ -80,6 +99,12 @@ export const SpeechToTextButton: React.FC<SpeechToTextButtonProps> = ({
         console.log('WebSocket connected to relay');
         setIsConnecting(false);
         setIsRecording(true);
+
+        // Set up automatic timeout after 30 seconds
+        recordingTimerRef.current = setTimeout(() => {
+          console.log('Recording time limit reached (30s)');
+          stopRecording(true);
+        }, MAX_RECORDING_DURATION);
       };
 
       ws.onmessage = (event) => {
