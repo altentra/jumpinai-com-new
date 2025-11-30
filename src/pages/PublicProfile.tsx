@@ -12,6 +12,7 @@ import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import logoTransparent from '@/assets/logo-transparent.png';
 import { Helmet } from 'react-helmet-async';
+import { profileCacheService } from '@/utils/profileCache';
 
 export default function PublicProfile() {
   const { username } = useParams<{ username: string }>();
@@ -120,6 +121,22 @@ export default function PublicProfile() {
 
     try {
       setIsLoading(true);
+      
+      // Check cache first
+      const cachedProfile = profileCacheService.get(username);
+      
+      if (cachedProfile) {
+        // Use cached data immediately
+        setProfile(cachedProfile);
+        setIsLoading(false);
+        
+        // Load jumps in background
+        const jumps = await profileService.getPublicJumpsByUsername(username);
+        setPublicJumps(jumps);
+        return;
+      }
+      
+      // Fetch fresh data
       const profileData = await profileService.getProfileByUsername(username);
       
       if (!profileData) {
@@ -127,6 +144,8 @@ export default function PublicProfile() {
         return;
       }
 
+      // Cache the profile and preload avatar
+      await profileCacheService.set(username, profileData);
       setProfile(profileData);
 
       // Load public jumps
@@ -164,6 +183,9 @@ export default function PublicProfile() {
           name="description" 
           content={profile.bio || `View ${profile.display_name || profile.username}'s AI adaptation journey on JumpinAI`} 
         />
+        {profile.avatar_url && (
+          <link rel="preload" as="image" href={profile.avatar_url} crossOrigin="anonymous" />
+        )}
       </Helmet>
 
       <Navigation />
@@ -193,15 +215,17 @@ export default function PublicProfile() {
             
             <div className="relative flex flex-col sm:flex-row gap-4 sm:gap-6 items-start sm:items-center">
               <Avatar className="h-20 w-20 sm:h-24 sm:w-24 border-2 border-primary/20 shadow-lg ring-2 ring-primary/10 flex-shrink-0">
-                <AvatarImage 
-                  src={profile.avatar_url || undefined} 
-                  alt={profile.display_name || profile.username}
-                  loading="eager"
-                  fetchPriority="high"
-                  crossOrigin="anonymous"
-                  className="object-cover"
-                  decoding="async"
-                />
+                {profile.avatar_url ? (
+                  <AvatarImage 
+                    src={profile.avatar_url} 
+                    alt={profile.display_name || profile.username}
+                    loading="eager"
+                    fetchPriority="high"
+                    crossOrigin="anonymous"
+                    className="object-cover"
+                    decoding="async"
+                  />
+                ) : null}
                 <AvatarFallback className="bg-gradient-to-br from-primary/20 via-primary/10 to-accent/20">
                   <img src={logoTransparent} alt="Avatar" className="opacity-40 brightness-200" />
                 </AvatarFallback>
