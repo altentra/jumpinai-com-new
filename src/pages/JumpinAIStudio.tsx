@@ -475,11 +475,11 @@ const JumpinAIStudio = () => {
                               placeholder="Your main goals & projects..."
                             />
                             <div className="absolute bottom-3 right-3">
-                              <SpeechToTextButton 
+                            <SpeechToTextButton 
                                 onTranscription={(text) => {
                                   setFormData(prev => ({
                                     ...prev,
-                                    goals: prev.goals ? `${prev.goals} ${text}` : text
+                                    goals: text
                                   }));
                                 }}
                               />
@@ -501,11 +501,11 @@ const JumpinAIStudio = () => {
                               placeholder="Your obstacles & challenges..."
                             />
                             <div className="absolute bottom-3 right-3">
-                              <SpeechToTextButton 
+                            <SpeechToTextButton 
                                 onTranscription={(text) => {
                                   setFormData(prev => ({
                                     ...prev,
-                                    challenges: prev.challenges ? `${prev.challenges} ${text}` : text
+                                    challenges: text
                                   }));
                                 }}
                               />
