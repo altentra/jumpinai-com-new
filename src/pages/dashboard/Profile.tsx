@@ -153,8 +153,6 @@ export default function Profile() {
       </div>
 
       <div className="relative container max-w-5xl mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-8">My Profile</h1>
-
         {/* Profile Header - Always Visible */}
         <Card className="p-8 mb-6 bg-background/40 backdrop-blur-sm border-border/50">
           <div className="flex flex-col md:flex-row gap-6 items-start md:items-center mb-6">
@@ -186,10 +184,10 @@ export default function Profile() {
         </Card>
 
         <Tabs defaultValue="edit" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3 max-w-md">
-            <TabsTrigger value="edit">Edit Profile</TabsTrigger>
-            <TabsTrigger value="private" onClick={() => loadJumps('private')}>Private Jumps</TabsTrigger>
-            <TabsTrigger value="public" onClick={() => loadJumps('public')}>Public Jumps</TabsTrigger>
+          <TabsList className="flex flex-col sm:flex-row w-full gap-2 rounded-2xl glass border border-border/50 p-1.5 h-auto sm:justify-center sm:max-w-4xl sm:mx-auto backdrop-blur-sm">
+            <TabsTrigger value="edit" className="flex-1">Edit Profile</TabsTrigger>
+            <TabsTrigger value="private" onClick={() => loadJumps('private')} className="flex-1">Private Jumps</TabsTrigger>
+            <TabsTrigger value="public" onClick={() => loadJumps('public')} className="flex-1">Public Jumps</TabsTrigger>
           </TabsList>
 
           <TabsContent value="edit">
