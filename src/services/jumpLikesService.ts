@@ -2,39 +2,47 @@ import { supabase } from '@/integrations/supabase/client';
 
 export const jumpLikesService = {
   async likeJump(jumpId: string, userId: string) {
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from('jump_likes')
       .insert({
         jump_id: jumpId,
         user_id: userId
-      });
+      })
+      .select()
+      .single();
 
-    if (error) throw error;
+    if (error) {
+      console.error('Error liking jump:', error);
+      throw new Error(error.message || 'Failed to like jump');
+    }
+    return data;
   },
 
   async unlikeJump(jumpId: string, userId: string) {
     const { error } = await supabase
       .from('jump_likes')
       .delete()
-      .match({
-        jump_id: jumpId,
-        user_id: userId
-      });
+      .eq('jump_id', jumpId)
+      .eq('user_id', userId);
 
-    if (error) throw error;
+    if (error) {
+      console.error('Error unliking jump:', error);
+      throw new Error(error.message || 'Failed to unlike jump');
+    }
   },
 
   async hasUserLiked(jumpId: string, userId: string): Promise<boolean> {
     const { data, error } = await supabase
       .from('jump_likes')
       .select('id')
-      .match({
-        jump_id: jumpId,
-        user_id: userId
-      })
-      .single();
+      .eq('jump_id', jumpId)
+      .eq('user_id', userId)
+      .maybeSingle();
 
-    if (error && error.code !== 'PGRST116') throw error;
+    if (error) {
+      console.error('Error checking like status:', error);
+      return false;
+    }
     return !!data;
   },
 
