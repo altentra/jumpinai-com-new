@@ -31,10 +31,10 @@ serve(async (req) => {
     // Prepare form data for ElevenLabs API
     const formData = new FormData();
     const blob = new Blob([binaryAudio], { type: 'audio/webm' });
-    formData.append('file', blob, 'recording.webm');  // ElevenLabs expects 'file' not 'audio'
-    formData.append('model_id', 'scribe_realtime_v2');
+    formData.append('file', blob, 'recording.webm');
+    formData.append('model_id', 'scribe_v1');  // Use scribe_v1 for file-based transcription
     if (language) {
-      formData.append('language', language);
+      formData.append('language_code', language);  // Use language_code not language
     }
 
     // Send to ElevenLabs SST API
