@@ -216,7 +216,7 @@ export default function PublicJumpView() {
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[24rem] h-[24rem] bg-gradient-to-br from-accent/15 via-primary/10 to-transparent rounded-full blur-3xl animate-pulse opacity-40" style={{animationDelay: '4s'}}></div>
         </div>
 
-        <div className="relative w-full max-w-7xl mx-auto py-6 px-4 lg:px-6 space-y-6">
+        <div className="relative w-full max-w-7xl mx-auto pt-24 pb-6 px-4 lg:px-6 space-y-6">
           {/* Back Button Header */}
           <div className="relative group">
             <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 rounded-3xl blur-xl opacity-40"></div>
