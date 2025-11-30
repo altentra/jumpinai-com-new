@@ -19,6 +19,7 @@ export interface UserJump {
   tools_clicked_count?: number;
   prompts_copied_count?: number;
   combos_used_count?: number;
+  is_public?: boolean;
   created_at: string;
   updated_at: string;
 }
