@@ -13,6 +13,7 @@ import { useProgressiveGeneration } from '@/hooks/useProgressiveGeneration';
 import { CreditsDisplay } from '@/components/CreditsDisplay';
 import { supabase } from '@/integrations/supabase/client';
 import { SpeechToTextButton } from '@/components/SpeechToTextButton';
+import { markJumpAsUsingSTT } from '@/services/sttTrackingService';
 
 const JumpinAIStudio = () => {
   const { user, isAuthenticated, login } = useAuth();
@@ -23,6 +24,7 @@ const JumpinAIStudio = () => {
   const [guestUsageInfo, setGuestUsageInfo] = useState<{ usageCount: number; remaining: number } | null>(null);
   const [isLoadingGuestInfo, setIsLoadingGuestInfo] = useState(true);
   const [turnstileErrorShown, setTurnstileErrorShown] = useState(false);
+  const [sttUsed, setSttUsed] = useState(false); // Track if STT was used
   const progressDisplayRef = useRef<HTMLDivElement>(null);
   const generateButtonRef = useRef<HTMLDivElement>(null);
   const goalsTextareaRef = useRef<HTMLTextAreaElement>(null);
@@ -315,6 +317,12 @@ const JumpinAIStudio = () => {
         await updateTransactionReference(tempReferenceId, result.jumpId);
       }
       
+      // Mark jump as using STT if it was used
+      if (result.jumpId && sttUsed) {
+        await markJumpAsUsingSTT(result.jumpId);
+        setSttUsed(false); // Reset for next generation
+      }
+      
       if (result.jumpId) {
         toast.success('Jump has been generated. 1 credit used. It was saved to your Dashboard.');
       } else if (!isAuthenticated) {
@@ -481,6 +489,7 @@ const JumpinAIStudio = () => {
                                     ...prev,
                                     goals: text
                                   }));
+                                  setSttUsed(true); // Mark that STT was used
                                 }}
                               />
                             </div>
@@ -507,6 +516,7 @@ const JumpinAIStudio = () => {
                                     ...prev,
                                     challenges: text
                                   }));
+                                  setSttUsed(true); // Mark that STT was used
                                 }}
                               />
                             </div>

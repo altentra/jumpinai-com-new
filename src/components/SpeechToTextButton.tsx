@@ -1,15 +1,18 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { AudioLines, Square } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { markJumpAsUsingSTT } from '@/services/sttTrackingService';
 
 interface SpeechToTextButtonProps {
   onTranscription: (text: string) => void;
   language?: string;
+  jumpId?: string;
 }
 
 export const SpeechToTextButton: React.FC<SpeechToTextButtonProps> = ({ 
   onTranscription,
-  language = 'en'
+  language = 'en',
+  jumpId
 }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
@@ -99,6 +102,11 @@ export const SpeechToTextButton: React.FC<SpeechToTextButtonProps> = ({
         console.log('WebSocket connected to relay');
         setIsConnecting(false);
         setIsRecording(true);
+
+        // Mark jump as using STT
+        if (jumpId) {
+          markJumpAsUsingSTT(jumpId);
+        }
 
         // Set up automatic timeout after 30 seconds
         recordingTimerRef.current = setTimeout(() => {

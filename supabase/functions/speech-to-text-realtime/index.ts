@@ -1,6 +1,17 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.4';
+
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+};
 
 serve(async (req) => {
+  // Handle CORS preflight
+  if (req.method === 'OPTIONS') {
+    return new Response(null, { headers: corsHeaders });
+  }
+
   const { headers } = req;
   const upgradeHeader = headers.get("upgrade") || "";
 
@@ -13,9 +24,62 @@ serve(async (req) => {
     return new Response("ELEVENLABS_API_KEY not configured", { status: 500 });
   }
 
+  // Initialize Supabase client
+  const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+  const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+  const supabase = createClient(supabaseUrl, supabaseKey);
+
+  // Extract user info
+  const authHeader = headers.get('authorization');
+  let userId: string | null = null;
+  
+  if (authHeader) {
+    try {
+      const { data: { user } } = await supabase.auth.getUser(authHeader.replace('Bearer ', ''));
+      userId = user?.id || null;
+    } catch (error) {
+      console.error('Auth error:', error);
+    }
+  }
+
+  // Get IP address and user agent
+  const ipAddress = headers.get('x-forwarded-for')?.split(',')[0] || 
+                    headers.get('x-real-ip') || 
+                    'unknown';
+  const userAgent = headers.get('user-agent') || 'unknown';
+
+  // Check rate limit
+  const { data: rateLimitData, error: rateLimitError } = await supabase.rpc('check_stt_rate_limit', {
+    p_user_id: userId,
+    p_ip_address: ipAddress
+  });
+
+  if (rateLimitError) {
+    console.error('Rate limit check error:', rateLimitError);
+    return new Response(JSON.stringify({ error: 'Rate limit check failed' }), { 
+      status: 500,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+    });
+  }
+
+  if (!rateLimitData.allowed) {
+    return new Response(JSON.stringify({ 
+      error: 'Rate limit exceeded',
+      message: `You have reached the limit of ${rateLimitData.limit} requests per hour. Current usage: ${rateLimitData.current_usage}`,
+      limit: rateLimitData.limit,
+      current_usage: rateLimitData.current_usage,
+      remaining: rateLimitData.remaining
+    }), { 
+      status: 429,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+    });
+  }
+
   const { socket, response } = Deno.upgradeWebSocket(req);
   
   let elevenLabsSocket: WebSocket | null = null;
+  let sessionStartTime: number | null = null;
+  let totalTranscriptLength = 0;
 
   socket.onopen = async () => {
     console.log("Client connected to relay");
@@ -62,6 +126,7 @@ serve(async (req) => {
 
     elevenLabsSocket.onopen = () => {
       console.log("Connected to ElevenLabs Realtime API");
+      sessionStartTime = Date.now();
       socket.send(JSON.stringify({ type: "session_started" }));
     };
 
@@ -71,6 +136,11 @@ serve(async (req) => {
         const data = JSON.parse(event.data);
         console.log("Parsed data:", JSON.stringify(data));
         console.log("Data type:", data.type);
+        
+        // Track transcript length
+        if (data.text && (data.type === 'partial_transcript' || data.type === 'committed_transcript')) {
+          totalTranscriptLength = data.text.length;
+        }
         
         // Forward all transcription events to client
         socket.send(JSON.stringify(data));
@@ -116,8 +186,27 @@ serve(async (req) => {
     }
   };
 
-  socket.onclose = () => {
+  socket.onclose = async () => {
     console.log("Client disconnected");
+    
+    // Log usage before closing
+    if (sessionStartTime) {
+      const sessionDuration = Math.floor((Date.now() - sessionStartTime) / 1000);
+      
+      try {
+        await supabase.from('stt_usage_logs').insert({
+          user_id: userId,
+          ip_address: ipAddress,
+          user_agent: userAgent,
+          session_duration_seconds: sessionDuration,
+          transcript_length: totalTranscriptLength
+        });
+        console.log('STT usage logged successfully');
+      } catch (error) {
+        console.error('Failed to log STT usage:', error);
+      }
+    }
+    
     if (elevenLabsSocket) {
       elevenLabsSocket.close();
     }
