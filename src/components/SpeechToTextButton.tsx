@@ -2,6 +2,7 @@ import React, { useState, useRef, useCallback } from 'react';
 import { AudioLines, Square } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { markJumpAsUsingSTT } from '@/services/sttTrackingService';
+import { triggerHaptic } from '@/utils/haptic';
 
 interface SpeechToTextButtonProps {
   onTranscription: (text: string) => void;
@@ -216,6 +217,8 @@ export const SpeechToTextButton: React.FC<SpeechToTextButtonProps> = ({
   }, [toast, onTranscription, stopRecording, isRecording]);
 
   const handleClick = () => {
+    triggerHaptic('light');
+    
     if (isRecording) {
       stopRecording();
     } else if (!isConnecting) {
