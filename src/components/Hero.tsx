@@ -4,7 +4,6 @@ import { ArrowRight, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import { triggerHaptic } from "@/utils/haptic";
 import logoTransparent from "@/assets/logo-transparent.png";
 import heroDesktopNew from "@/assets/hero-desktop-new.jpg";
 import heroMobileGeneration from "@/assets/hero-mobile-generation.jpg";
@@ -151,11 +150,7 @@ const Hero = () => {
             
             {/* Call to Action Button */}
             <div className="flex justify-center lg:justify-start px-4 lg:px-0 mb-16 lg:mb-0">
-              <Link 
-                to="/jumpinai-studio" 
-                className="relative group inline-block w-full sm:w-auto"
-                onClick={() => triggerHaptic('medium')}
-              >
+              <Link to="/jumpinai-studio" className="relative group inline-block w-full sm:w-auto">
                 {/* Liquid glass glow effect */}
                 <div className="absolute -inset-0.5 bg-gradient-to-r from-white/50 via-white/40 to-white/50 rounded-[2rem] blur-md opacity-50 group-hover:opacity-80 transition duration-500"></div>
                 
