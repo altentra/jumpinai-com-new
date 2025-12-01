@@ -14,6 +14,7 @@ import { CreditsDisplay } from '@/components/CreditsDisplay';
 import { supabase } from '@/integrations/supabase/client';
 import { SpeechToTextButton } from '@/components/SpeechToTextButton';
 import { markJumpAsUsingSTT } from '@/services/sttTrackingService';
+import { triggerHaptic } from '@/utils/haptic';
 
 const JumpinAIStudio = () => {
   const { user, isAuthenticated, login } = useAuth();
@@ -259,6 +260,8 @@ const JumpinAIStudio = () => {
   };
 
   const handleGenerate = async () => {
+    triggerHaptic('medium');
+    
     console.log('=== GENERATE BUTTON CLICKED ===');
     console.log('Form data:', formData);
     console.log('isAuthenticated:', isAuthenticated);
