@@ -79,7 +79,13 @@ export default function AppSidebar() {
       <SidebarHeader className="border-b border-sidebar-border px-3 py-2 pt-4">
         <Link 
           to="/dashboard/profile" 
-          className="flex items-center justify-center gap-2 mb-2 cursor-pointer hover:opacity-80 transition-opacity"
+          className={cn(
+            "flex items-center justify-center gap-2.5 mb-2 rounded-xl px-3 py-2 transition-all duration-300",
+            "hover:bg-gradient-to-br hover:from-primary/10 hover:via-accent/5 hover:to-primary/10 hover:backdrop-blur-xl hover:border hover:border-primary/20",
+            currentPath === "/dashboard/profile" 
+              ? "bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl border border-primary/20" 
+              : "border border-transparent"
+          )}
         >
           <Avatar className="h-8 w-8">
             {user?.avatar_url ? (
