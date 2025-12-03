@@ -9,20 +9,23 @@ import Footer from '@/components/Footer';
 import type { ProgressiveResult } from '@/hooks/useProgressiveGeneration';
 import { toast } from 'sonner';
 import { Helmet } from 'react-helmet-async';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function PublicJumpView() {
   const { jumpId, username } = useParams<{ jumpId: string; username: string }>();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [progressiveResult, setProgressiveResult] = useState<ProgressiveResult | null>(null);
   const [loading, setLoading] = useState(true);
   const [jumpTitle, setJumpTitle] = useState('');
   const [jumpCreatedAt, setJumpCreatedAt] = useState('');
+  const [isOwner, setIsOwner] = useState(false);
 
   useEffect(() => {
     if (jumpId) {
       loadPublicJump();
     }
-  }, [jumpId]);
+  }, [jumpId, user?.id]);
 
   const loadPublicJump = async () => {
     if (!jumpId) return;
@@ -48,6 +51,9 @@ export default function PublicJumpView() {
       const displayTitle = jump.title.replace(/^Jump\s*#\d+\s*[:\-–]\s*/i, '');
       setJumpTitle(displayTitle);
       setJumpCreatedAt(jump.created_at);
+
+      // Check if current user is the owner
+      setIsOwner(user?.id === jump.user_id);
 
       // Track view
       await trackJumpView(jumpId);
@@ -186,11 +192,30 @@ export default function PublicJumpView() {
 
   const handleShareLink = async () => {
     const url = window.location.href;
-    try {
-      await navigator.clipboard.writeText(url);
-      toast.success('Link copied to clipboard!');
-    } catch (error) {
-      toast.error('Failed to copy link');
+    const shareData = {
+      title: jumpTitle,
+      text: `Check out this Jump: ${jumpTitle}`,
+      url: url
+    };
+
+    // Use native share API if available (mobile devices)
+    if (navigator.share && navigator.canShare?.(shareData)) {
+      try {
+        await navigator.share(shareData);
+      } catch (error: any) {
+        // User cancelled share - don't show error
+        if (error.name !== 'AbortError') {
+          console.error('Share failed:', error);
+        }
+      }
+    } else {
+      // Fallback to clipboard copy for desktop
+      try {
+        await navigator.clipboard.writeText(url);
+        toast.success('Link copied to clipboard!');
+      } catch (error) {
+        toast.error('Failed to copy link');
+      }
     }
   };
 
@@ -239,16 +264,18 @@ export default function PublicJumpView() {
               <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
               
               <div className="relative z-10 space-y-4">
-                <div className="flex items-center justify-between gap-4">
-                  <Button
-                    onClick={handleBackClick}
-                    variant="ghost"
-                    size="sm"
-                    className="rounded-xl border border-border/40 bg-background/60 hover:bg-background/80 backdrop-blur-sm transition-all duration-300"
-                  >
-                    <ArrowLeft className="h-4 w-4 mr-2" />
-                    Back to Profile
-                  </Button>
+                <div className={`flex items-center gap-4 ${isOwner ? 'justify-between' : 'justify-end'}`}>
+                  {isOwner && (
+                    <Button
+                      onClick={handleBackClick}
+                      variant="ghost"
+                      size="sm"
+                      className="rounded-xl border border-border/40 bg-background/60 hover:bg-background/80 backdrop-blur-sm transition-all duration-300"
+                    >
+                      <ArrowLeft className="h-4 w-4 mr-2" />
+                      Back to Profile
+                    </Button>
+                  )}
 
                   <Button
                     onClick={handleShareLink}
