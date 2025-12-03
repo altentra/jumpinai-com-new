@@ -5,7 +5,7 @@ import { jumpLikesService } from '@/services/jumpLikesService';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Loader2, Eye, Heart } from 'lucide-react';
+import { Loader2, Eye, Heart, Upload } from 'lucide-react';
 import { useOptimizedAuth } from '@/hooks/useOptimizedAuth';
 import { useToast } from '@/hooks/use-toast';
 import Navigation from '@/components/Navigation';
@@ -113,6 +113,34 @@ export default function PublicProfile() {
         description: error.message || "Failed to update like",
         variant: "destructive"
       });
+    }
+  };
+
+  const handleShareJump = async (jumpId: string, jumpTitle: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    
+    const url = `${window.location.origin}/jump/${jumpId}/public/${profile?.username}`;
+    const shareData = {
+      title: jumpTitle,
+      text: `Check out this Jump: ${jumpTitle}`,
+      url: url
+    };
+
+    if (navigator.share && navigator.canShare?.(shareData)) {
+      try {
+        await navigator.share(shareData);
+      } catch (error: any) {
+        if (error.name !== 'AbortError') {
+          console.error('Share failed:', error);
+        }
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(url);
+        toast({ title: 'Link copied to clipboard!' });
+      } catch (error) {
+        toast({ title: 'Failed to copy link', variant: 'destructive' });
+      }
     }
   };
 
@@ -268,7 +296,17 @@ export default function PublicProfile() {
                       <div className="absolute -top-20 -right-20 w-32 h-32 bg-gradient-to-br from-primary/20 to-transparent rounded-full blur-2xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                       
                       <div className="relative space-y-4">
-                        <div className="space-y-2">
+                        {/* Share button in top right */}
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="absolute top-0 right-0 h-8 w-8 rounded-full bg-background/60 hover:bg-background/80 border border-border/40 backdrop-blur-sm transition-all duration-200 opacity-0 group-hover:opacity-100"
+                          onClick={(e) => handleShareJump(jump.id, displayTitle, e)}
+                        >
+                          <Upload className="h-3.5 w-3.5" />
+                        </Button>
+
+                        <div className="space-y-2 pr-10">
                           <h3 className="text-xl font-bold group-hover:text-primary transition-colors leading-tight">
                             {displayTitle}
                           </h3>
