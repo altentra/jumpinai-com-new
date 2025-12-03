@@ -192,11 +192,30 @@ export default function PublicJumpView() {
 
   const handleShareLink = async () => {
     const url = window.location.href;
-    try {
-      await navigator.clipboard.writeText(url);
-      toast.success('Link copied to clipboard!');
-    } catch (error) {
-      toast.error('Failed to copy link');
+    const shareData = {
+      title: jumpTitle,
+      text: `Check out this Jump: ${jumpTitle}`,
+      url: url
+    };
+
+    // Use native share API if available (mobile devices)
+    if (navigator.share && navigator.canShare?.(shareData)) {
+      try {
+        await navigator.share(shareData);
+      } catch (error: any) {
+        // User cancelled share - don't show error
+        if (error.name !== 'AbortError') {
+          console.error('Share failed:', error);
+        }
+      }
+    } else {
+      // Fallback to clipboard copy for desktop
+      try {
+        await navigator.clipboard.writeText(url);
+        toast.success('Link copied to clipboard!');
+      } catch (error) {
+        toast.error('Failed to copy link');
+      }
     }
   };
 
