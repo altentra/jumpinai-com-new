@@ -259,11 +259,18 @@ export const useProgressiveGeneration = () => {
             setResult({ ...progressiveResult });
             
           } else if (type === 'overview') {
-            // STEP 2: Overview complete - ORIGINAL format
+            // STEP 2: Overview complete - NEW 4-FRAME FORMAT
             console.log('Processing overview step data:', stepData);
             
+            // NEW FORMAT: jumpForward, strategicEdge, flightPath, newBaseline
             progressiveResult.comprehensive_plan = {
               title: jumpName,
+              // NEW 4-FRAME STRUCTURE
+              jumpForward: stepData.jumpForward || '',
+              strategicEdge: stepData.strategicEdge || { analysis: '', keyPoints: [] },
+              flightPath: stepData.flightPath || { vision: '', roadmap: [] },
+              newBaseline: stepData.newBaseline || '',
+              // LEGACY FIELDS (for backwards compatibility with old jumps)
               executiveSummary: stepData.executiveSummary || '',
               situationAnalysis: stepData.situationAnalysis || {},
               strategicVision: stepData.strategicVision || '',
@@ -273,22 +280,23 @@ export const useProgressiveGeneration = () => {
               action_plan: { phases: [] } // Will be filled in step 3
             };
             
+            // Build overview text for full_content (used for search/context)
             let overviewText = '';
-            if (stepData.executiveSummary) {
-              overviewText += `## Executive Summary\n\n${stepData.executiveSummary}\n\n`;
+            if (stepData.jumpForward) {
+              overviewText += `## The Jump Forward\n\n${stepData.jumpForward}\n\n`;
             }
-            if (stepData.situationAnalysis) {
-              if (stepData.situationAnalysis.currentState) {
-                overviewText += `## Current State\n\n${stepData.situationAnalysis.currentState}\n\n`;
-              }
-              if (stepData.situationAnalysis.challenges?.length) {
-                overviewText += `## Challenges\n`;
-                stepData.situationAnalysis.challenges.forEach((c: string) => overviewText += `- ${c}\n`);
+            if (stepData.strategicEdge?.analysis) {
+              overviewText += `## Strategic Edge\n\n${stepData.strategicEdge.analysis}\n\n`;
+              if (stepData.strategicEdge.keyPoints?.length) {
+                stepData.strategicEdge.keyPoints.forEach((p: string) => overviewText += `- ${p}\n`);
                 overviewText += '\n';
               }
             }
-            if (stepData.strategicVision) {
-              overviewText += `## Strategic Vision\n\n${stepData.strategicVision}\n\n`;
+            if (stepData.flightPath?.vision) {
+              overviewText += `## Flight Path\n\n${stepData.flightPath.vision}\n\n`;
+            }
+            if (stepData.newBaseline) {
+              overviewText += `## New Baseline\n\n${stepData.newBaseline}\n\n`;
             }
             
             progressiveResult.full_content = overviewText.trim();
