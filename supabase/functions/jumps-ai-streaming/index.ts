@@ -695,67 +695,92 @@ Examples of good names:
       };
     
     case 2:
-      // STEP 2: Strategic Overview - AI ADAPTATION FOCUS
+      // STEP 2: Strategic Overview - NEW 4-FRAME CONCISE STRUCTURE
       return {
         systemPrompt: `You are a world-class AI adaptation strategist at JumpinAI - the premier AI Adaptation Studio.
-You specialize in helping people achieve their goals by strategically implementing AI into their workflow.
-Your expertise: Understanding challenges and creating compelling visions for AI-powered transformation.
+You create CONCISE, HIGH-IMPACT strategic overviews. No walls of text. Every sentence must earn its place.
+Your expertise: Cutting through noise to deliver clear, actionable direction using the latest AI tools.
 
-CORE MISSION: Show people how to achieve their goals using the latest, most powerful AI tools currently available as of ${dateReference}.
-This is about AI IMPLEMENTATION and ADAPTATION - not generic business advice.
+CORE MISSION: Deliver crystal-clear strategic direction using AI tools available as of ${dateReference}.
+This is about CLARITY and ACTION - not lengthy explanations.
 
 Return ONLY valid JSON with NO markdown formatting, NO code blocks, NO extra text.`,
-        userPrompt: `Create a comprehensive strategic overview for this AI ADAPTATION journey:
+        userPrompt: `Create a CONCISE strategic overview for this AI ADAPTATION journey:
 
 ${baseContext}
 
-🎯 ABSOLUTE CRITICAL REQUIREMENTS - THIS IS JUMPINAI'S CORE MISSION:
-1. This is an AI IMPLEMENTATION PLAN - focus on how they'll use AI to achieve their goals
-2. Recommend ONLY the BEST and MOST CURRENT AI tools available as of ${dateReference} - verify tools are still market leaders
-3. Focus on CATEGORIES of AI tools rather than specific versions:
-   - AI Writing/Reasoning: Tools like Claude, ChatGPT, Gemini, Grok, Perplexity (recommend best for their use case)
-   - AI Code: Tools like Cursor, Lovable, Replit, GitHub Copilot, Bolt, V0 (select most appropriate)
-   - AI Image: Tools like Midjourney, DALL-E, Flux, Stable Diffusion (choose best fit)
-   - AI Video: Tools like Runway, Veo, Invideo AI, Sora, Kling AI (pick optimal option)
-   - AI Audio: Tools like ElevenLabs, Suno, Udio (recommend best match)
-   - AI Automation: Tools like Make.com, Zapier AI, n8n (select most suitable)
-   - AI Research: Tools like Perplexity, NotebookLM, Claude (choose appropriate)
-   - AI Design: Tools like Figma AI, Uizard, Galileo AI, Canva AI (pick best option)
-4. DO NOT use version numbers - use base tool names only (e.g., "ChatGPT" not "GPT-5", "Midjourney" not "v7")
-5. Mention specialized variants when truly relevant (e.g., "Claude Code" for coding, "Grok Imagine" for generation)
-6. NO old-school recommendations (NO Khan Academy, NO Coursera, NO generic courses)
-7. NO non-AI tools unless absolutely necessary for their specific context
-8. Every recommendation must be AI-first: How will AI help them achieve this goal?
-9. This is about LEARNING AI BY USING IT to solve their actual problems
-10. Make them feel that AI adaptation is the key to their success
+🎯 CRITICAL: This must be CONCISE and HIGH-IMPACT. No walls of text!
 
-DETAILED CONTENT REQUIREMENTS:
-1. Provide DETAILED, SPECIFIC content - NO generic placeholders
-2. The roadmap MUST mention appropriate AI tool categories they'll implement in each timeframe
-3. All arrays must have at least 3-4 substantive items
-4. Every field must emphasize AI implementation and adaptation
-5. Success factors should focus on mastering AI tools
+THE NEW 4-FRAME STRUCTURE:
 
-Return ONLY this JSON structure (NO markdown, NO code blocks):
+1. **THE JUMP FORWARD** (2-3 sentences MAX)
+   - Immediately give THE answer - the proposed solution, the path forward
+   - Don't repeat what they told you - give them the STRATEGIC RESPONSE
+   - How will they achieve their goals using the best AI tools available TODAY (${dateReference})?
+   - Be specific about which AI tool categories will be most impactful
+
+2. **STRATEGIC EDGE** (Concise analytical justification)
+   - WHY this is the right move - the senior strategist logic
+   - 2-3 short sentences of deep but punchy analysis
+   - 3-4 bullet points explaining the "why's"
+   - Make it sound analytical, high-level, professional
+
+3. **FLIGHT PATH** (Victory Vision + Roadmap combined)
+   - Start with 1-2 sentences: Where they'll land after this journey (the vision)
+   - Then the roadmap with APPROPRIATE timeframes based on their goals:
+     * Some goals = days/weeks, others = months, others = 90 days+, some even a year+
+     * DEEPLY ANALYZE their situation to determine realistic timeframes
+     * Don't use rigid "0-30 days" if their goal could be achieved in a week
+   - Include specific AI tools they'll implement at each stage
+   - Be optimistic but realistic about pace
+
+4. **NEW BASELINE** (1-2 sentences MAX)
+   - Powerful, inspiring closing statement
+   - The "landing zone" - where they'll be after the jump
+   - Beginning of their new journey with AI
+   - Make it memorable and motivational
+
+AI TOOL GUIDANCE (${dateReference}):
+- AI Writing/Reasoning: Claude, ChatGPT, Gemini, Grok, Perplexity
+- AI Code: Cursor, Lovable, Replit, GitHub Copilot, Bolt, V0
+- AI Image: Midjourney, DALL-E, Flux, Stable Diffusion
+- AI Video: Runway, Veo, Invideo AI, Sora, Kling AI
+- AI Audio: ElevenLabs, Suno, Udio
+- AI Automation: Make.com, Zapier AI, n8n
+- Select the BEST and MOST APPROPRIATE tools for their specific needs
+
+Return ONLY this JSON structure:
 {
-  "executiveSummary": "Write 3-4 detailed paragraphs that: 1) Describe their current situation and why AI adaptation is critical NOW, 2) Outline their AI implementation journey - specific AI tools they'll master and use, 3) Highlight key AI-powered milestones (e.g., 'mastering Claude for content strategy', 'implementing Runway for video creation'), 4) Paint a compelling vision of success through AI mastery. Make it specific about AI IMPLEMENTATION.",
-  "situationAnalysis": {
-    "currentState": "Provide a detailed 4-5 sentence analysis emphasizing their need for AI implementation. Explain how AI tools can address their challenges. Why is AI adaptation needed NOW to achieve their goals? Be specific about which AI capabilities would help.",
-    "challenges": ["PRIMARY obstacle that AI implementation can overcome", "Another critical challenge AI tools can solve", "A third barrier that AI adaptation addresses", "Additional challenge where AI provides a solution"],
-    "opportunities": ["The BIGGEST AI-powered opportunity (mention specific AI tool category)", "A second major AI implementation opportunity", "A third AI-driven growth opportunity", "Additional opportunity through AI tool mastery"]
+  "jumpForward": "2-3 sentences MAX. The strategic response - the path forward using AI. Be specific about AI tools. Don't repeat their input - give them the ANSWER.",
+  "strategicEdge": {
+    "analysis": "2-3 sentences of deep but concise analytical justification. Why THIS is the right strategic move.",
+    "keyPoints": ["First key 'why' point", "Second strategic insight", "Third analytical point", "Fourth supporting reason"]
   },
-  "strategicVision": "Write a compelling 4-5 sentence vision of their AI-powered success state. What does life look like when they've successfully implemented AI tools? Which AI tools are they using daily? What outcomes have they achieved through AI? Make it inspirational yet grounded in AI IMPLEMENTATION.",
-  "roadmap": {
-    "immediate": "Detailed 3-4 sentence AI implementation plan for GETTING STARTED (initial phase). Include: specific AI tools to start with (e.g., 'Set up Claude for content strategy', 'Master ChatGPT prompting'), quick AI-powered wins, AI foundations to establish. NO old-school courses - only AI tool experimentation and implementation. Be optimistic about pace while acknowledging individual learning curves.",
-    "shortTerm": "Comprehensive 3-4 sentence AI scaling plan for BUILDING MOMENTUM (next phase). Include: additional AI tools to master, AI-powered systems to build, AI workflow integration. Mention specific AI tools (e.g., 'Implement Runway for video', 'Use Make.com for automation'). Frame timing as 'as you build confidence' rather than rigid timelines.",
-    "longTerm": "Strategic 3-4 sentence advanced AI implementation plan for MASTERY & SUSTAINED SUCCESS (advanced phase). Include: advanced AI capabilities, AI tool stack optimization, sustained AI-powered success. Focus on becoming an AI power user in their field. Acknowledge that timeline depends on individual pace and the rapidly evolving AI landscape."
+  "flightPath": {
+    "vision": "1-2 sentences: The destination - what success looks like when they've implemented AI",
+    "roadmap": [
+      {
+        "phase": "Phase name (e.g., 'Foundation', 'Acceleration', 'Mastery')",
+        "timeframe": "Appropriate timeframe based on THEIR specific goals (could be 'Week 1', '2-4 weeks', '1-3 months', etc.)",
+        "focus": "1-2 sentences: What they'll accomplish and which AI tools they'll use"
+      },
+      {
+        "phase": "Second phase name",
+        "timeframe": "Appropriate next timeframe",
+        "focus": "1-2 sentences: Next level achievements with specific AI tools"
+      },
+      {
+        "phase": "Third phase name", 
+        "timeframe": "Appropriate final timeframe",
+        "focus": "1-2 sentences: Advanced implementation and sustained success"
+      }
+    ]
   },
-  "successFactors": ["The #1 AI-focused success factor (e.g., 'Consistent AI tool experimentation and implementation')", "A second AI mastery factor", "A third AI adaptation element", "Additional AI implementation factor"],
-  "riskMitigation": ["Biggest risk and how AI tools mitigate it (mention specific AI capability)", "Second risk and AI-powered prevention strategy", "Third risk and AI-driven mitigation approach"]
+  "newBaseline": "1-2 sentences MAX. Powerful, inspiring closing. The new reality after the jump. Make it memorable."
 }
 
-REMEMBER: Every field must emphasize AI IMPLEMENTATION and ADAPTATION. This is JumpinAI - we help people achieve goals through strategic AI tool usage. Make them feel that AI is the KEY to their transformation.`,
-        expectedTokens: 8000
+CRITICAL: Keep it CONCISE. This overview should be visually appealing and readable - NOT a wall of text. Quality over quantity.`,
+        expectedTokens: 3000
       };
 
     case 3:
