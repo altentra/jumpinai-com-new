@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Loader2, CheckCircle, Clock, Zap, Timer, Copy, Check, Wrench, AlertTriangle, Lightbulb, Target, Compass, TrendingUp, Shield, DollarSign, Heart, MapPin, Calendar, Play, Flag, LayoutDashboard, Eye, Sparkles, ArrowRight, RotateCcw } from 'lucide-react';
+import { Loader2, CheckCircle, Clock, Zap, Timer, Copy, Check, Wrench, AlertTriangle, Lightbulb, Target, Compass, TrendingUp, Shield, DollarSign, Heart, MapPin, Calendar, Play, Flag, LayoutDashboard, Eye, Sparkles, ArrowRight, Route, ChevronDown, ChevronUp } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
@@ -15,6 +15,8 @@ import JumpPlanDisplay from '@/components/dashboard/JumpPlanDisplay';
 import { toast } from 'sonner';
 import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import { supabase } from '@/integrations/supabase/client';
+import { useCredits } from '@/hooks/useCredits';
+import { useAuth } from '@/hooks/useAuth';
 
 interface AlternativeJump {
   title: string;
@@ -37,6 +39,8 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
   onGenerateAlternativeJump
 }) => {
   const navigate = useNavigate();
+  const { hasCredits, deductCredit, creditsBalance } = useCredits();
+  const { isAuthenticated: authCheck } = useAuth();
   const [copiedPrompts, setCopiedPrompts] = React.useState<Set<number>>(new Set());
   const [activeTab, setActiveTab] = React.useState('overview');
   const [isRefreshing, setIsRefreshing] = React.useState(false);
@@ -49,11 +53,12 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
   const toolPromptsContentRef = React.useRef<HTMLDivElement>(null);
   
   // Alternative jumps state
-  const [isJumpForwardHovered, setIsJumpForwardHovered] = React.useState(false);
   const [alternativeJumps, setAlternativeJumps] = React.useState<AlternativeJump[]>([]);
   const [isGeneratingAlternatives, setIsGeneratingAlternatives] = React.useState(false);
   const [showAlternatives, setShowAlternatives] = React.useState(false);
   const [generatingJumpIndex, setGeneratingJumpIndex] = React.useState<number | null>(null);
+  const [selectedAlternative, setSelectedAlternative] = React.useState<AlternativeJump | null>(null);
+  const [alternativesCollapsed, setAlternativesCollapsed] = React.useState(false);
 
   // Update tool prompts when they change
   React.useEffect(() => {
@@ -143,13 +148,71 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
     }
   };
 
-  // Handle generating a new jump from an alternative
+  // Handle generating a new jump from an alternative with credit check
   const handleGenerateThisJump = async (alternative: AlternativeJump, index: number) => {
-    if (onGenerateAlternativeJump) {
+    if (!onGenerateAlternativeJump) {
+      toast.error('Generation not available in this context');
+      return;
+    }
+
+    // For authenticated users, check credits
+    if (authCheck) {
+      if (!hasCredits()) {
+        toast.error('Insufficient credits. Please purchase more credits to generate a new jump.', {
+          duration: 5000,
+          action: {
+            label: 'Buy Credits',
+            onClick: () => navigate('/pricing')
+          }
+        });
+        return;
+      }
+
+      // Show confirmation toast with credit warning
+      toast(
+        <div className="space-y-2">
+          <p className="font-medium">Generate New Jump?</p>
+          <p className="text-sm text-muted-foreground">
+            This will use <span className="font-semibold text-primary">1 credit</span> from your balance ({creditsBalance} credits available).
+          </p>
+          <div className="flex gap-2 mt-3">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => toast.dismiss()}
+              className="flex-1"
+            >
+              Cancel
+            </Button>
+            <Button
+              size="sm"
+              onClick={async () => {
+                toast.dismiss();
+                // Deduct credit first
+                const success = await deductCredit('Jump generation (alternative route)', `alt-jump-${Date.now()}`);
+                if (success) {
+                  setSelectedAlternative(alternative);
+                  setAlternativesCollapsed(true);
+                  setGeneratingJumpIndex(index);
+                  onGenerateAlternativeJump(alternative);
+                }
+              }}
+              className="flex-1 bg-primary hover:bg-primary/90"
+            >
+              Generate Jump
+            </Button>
+          </div>
+        </div>,
+        {
+          duration: 15000,
+        }
+      );
+    } else {
+      // Guest users - proceed without credit check
+      setSelectedAlternative(alternative);
+      setAlternativesCollapsed(true);
       setGeneratingJumpIndex(index);
       onGenerateAlternativeJump(alternative);
-    } else {
-      toast.error('Generation not available in this context');
     }
   };
 
@@ -539,11 +602,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
               {/* NEW FORMAT: THE JUMP FORWARD with Alternative Jumps Feature */}
               {result.comprehensive_plan.jumpForward && (
                 <div className="space-y-4">
-                  <div 
-                    className="relative group"
-                    onMouseEnter={() => setIsJumpForwardHovered(true)}
-                    onMouseLeave={() => setIsJumpForwardHovered(false)}
-                  >
+                  <div className="relative group">
                     <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-secondary/30 rounded-xl blur opacity-40 group-hover:opacity-60 transition duration-300"></div>
                     <Card className="relative glass backdrop-blur-lg bg-card/80 border border-primary/30 hover:border-primary/50 transition-all duration-300 rounded-2xl">
                       <CardHeader className="pb-3">
@@ -557,29 +616,54 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                           {result.comprehensive_plan.jumpForward}
                         </p>
                         
-                        {/* Generate Alternative Jumps Button - Only shows when generation is complete */}
-                        {result.processing_status?.isComplete && !showAlternatives && (
-                          <div className={`overflow-hidden transition-all duration-300 ${isJumpForwardHovered || isGeneratingAlternatives ? 'max-h-20 opacity-100 mt-4' : 'max-h-0 opacity-0'}`}>
-                            <div className="pt-3 border-t border-border/30">
-                              <Button
-                                onClick={handleGenerateAlternatives}
-                                disabled={isGeneratingAlternatives}
-                                variant="outline"
-                                size="sm"
-                                className="w-full gap-2 bg-primary/5 hover:bg-primary/10 border-primary/30 hover:border-primary/50 text-primary"
+                        {/* Generate Alternative Jumps Button - Always visible when generation is complete */}
+                        {result.processing_status?.isComplete && !showAlternatives && !selectedAlternative && (
+                          <div className="pt-4 border-t border-border/30">
+                            <button
+                              onClick={handleGenerateAlternatives}
+                              disabled={isGeneratingAlternatives}
+                              className="inline-flex items-center justify-center gap-2 px-4 py-2 text-xs font-medium rounded-lg
+                                bg-gradient-to-r from-primary/10 via-accent/5 to-primary/10 
+                                border border-primary/30 hover:border-primary/50
+                                text-primary hover:text-primary
+                                backdrop-blur-sm transition-all duration-300
+                                hover:from-primary/15 hover:via-accent/10 hover:to-primary/15
+                                hover:shadow-lg hover:shadow-primary/20
+                                disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                              {isGeneratingAlternatives ? (
+                                <>
+                                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                  Generating Alternatives...
+                                </>
+                              ) : (
+                                <>
+                                  <Route className="w-3.5 h-3.5" />
+                                  Generate Alternative Jumps
+                                </>
+                              )}
+                            </button>
+                          </div>
+                        )}
+
+                        {/* Selected Alternative Indicator (when collapsed) */}
+                        {selectedAlternative && alternativesCollapsed && (
+                          <div className="pt-4 border-t border-border/30">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2 text-sm">
+                                <Badge variant="outline" className="bg-primary/10 text-primary border-primary/30">
+                                  <Sparkles className="w-3 h-3 mr-1" />
+                                  Selected Route
+                                </Badge>
+                                <span className="text-muted-foreground truncate max-w-[200px]">{selectedAlternative.title}</span>
+                              </div>
+                              <button
+                                onClick={() => setAlternativesCollapsed(false)}
+                                className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
                               >
-                                {isGeneratingAlternatives ? (
-                                  <>
-                                    <Loader2 className="w-4 h-4 animate-spin" />
-                                    Generating Alternatives...
-                                  </>
-                                ) : (
-                                  <>
-                                    <Sparkles className="w-4 h-4" />
-                                    Generate Alternative Jumps
-                                  </>
-                                )}
-                              </Button>
+                                <ChevronDown className="w-3.5 h-3.5" />
+                                Expand
+                              </button>
                             </div>
                           </div>
                         )}
@@ -587,67 +671,102 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                     </Card>
                   </div>
 
-                  {/* Alternative Jumps Cards */}
-                  {showAlternatives && alternativeJumps.length > 0 && (
-                    <div className="space-y-3 pl-4 border-l-2 border-primary/30">
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
-                        <RotateCcw className="w-4 h-4" />
-                        <span className="font-medium">Alternative Approaches</span>
-                      </div>
-                      {alternativeJumps.map((alt, index) => (
-                        <div 
-                          key={index}
-                          className="relative group"
+                  {/* Alternative Jumps Cards - Responsive Grid */}
+                  {showAlternatives && alternativeJumps.length > 0 && !alternativesCollapsed && (
+                    <div className="space-y-4">
+                      {/* Header with Collapse Button */}
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2 text-sm">
+                          <Route className="w-4 h-4 text-primary" />
+                          <span className="font-semibold text-foreground">Explore Alternative Routes</span>
+                          <Badge variant="outline" className="text-xs bg-primary/5 border-primary/20 text-primary">
+                            3 Options
+                          </Badge>
+                        </div>
+                        <button
+                          onClick={() => {
+                            setShowAlternatives(false);
+                            setAlternativeJumps([]);
+                            setSelectedAlternative(null);
+                          }}
+                          className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
                         >
-                          <div className="absolute -inset-0.5 bg-gradient-to-r from-secondary/20 via-accent/15 to-primary/20 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
-                          <Card className="relative glass backdrop-blur-lg bg-card/60 border border-border/50 hover:border-primary/40 transition-all duration-300 rounded-xl">
-                            <CardContent className="p-4 space-y-3">
-                              <div className="flex items-start justify-between gap-3">
-                                <div className="flex-1">
-                                  <div className="flex items-center gap-2 mb-2">
-                                    <Badge variant="outline" className="text-xs bg-secondary/10 text-secondary-foreground border-secondary/30">
-                                      Option {index + 1}
+                          <ChevronUp className="w-3.5 h-3.5" />
+                          Hide
+                        </button>
+                      </div>
+
+                      {/* Responsive Grid: 3 columns on desktop, 1 on mobile */}
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        {alternativeJumps.map((alt, index) => (
+                          <div 
+                            key={index}
+                            className="relative group"
+                          >
+                            <div className="absolute -inset-0.5 bg-gradient-to-r from-secondary/20 via-accent/15 to-primary/20 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
+                            <Card className="relative h-full glass backdrop-blur-lg bg-card/60 border border-border/50 hover:border-primary/40 transition-all duration-300 rounded-xl">
+                              <CardContent className="p-4 flex flex-col h-full">
+                                <div className="flex-1 space-y-2">
+                                  <div className="flex items-center gap-2">
+                                    <Badge variant="outline" className="text-xs bg-primary/5 text-primary border-primary/20">
+                                      Route {index + 1}
                                     </Badge>
                                   </div>
-                                  <h4 className="font-semibold text-sm text-foreground mb-1.5">{alt.title}</h4>
+                                  <h4 className="font-semibold text-sm text-foreground">{alt.title}</h4>
                                   <p className="text-xs text-muted-foreground leading-relaxed">{alt.description}</p>
                                 </div>
-                              </div>
-                              <Button
-                                onClick={() => handleGenerateThisJump(alt, index)}
-                                disabled={generatingJumpIndex !== null}
-                                size="sm"
-                                className="w-full gap-2 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground"
-                              >
-                                {generatingJumpIndex === index ? (
-                                  <>
-                                    <Loader2 className="w-4 h-4 animate-spin" />
-                                    Generating Jump...
-                                  </>
-                                ) : (
-                                  <>
-                                    <ArrowRight className="w-4 h-4" />
-                                    Generate this Jump
-                                  </>
-                                )}
-                              </Button>
-                            </CardContent>
-                          </Card>
+                                
+                                {/* Button styled like clarify/reroute/equip */}
+                                <button
+                                  onClick={() => handleGenerateThisJump(alt, index)}
+                                  disabled={generatingJumpIndex !== null}
+                                  className="mt-4 w-full inline-flex items-center justify-center gap-2 px-4 py-2 text-xs font-medium rounded-lg
+                                    bg-gradient-to-r from-primary/10 via-accent/5 to-primary/10 
+                                    border border-primary/30 hover:border-primary/50
+                                    text-primary hover:text-primary
+                                    backdrop-blur-sm transition-all duration-300
+                                    hover:from-primary/15 hover:via-accent/10 hover:to-primary/15
+                                    hover:shadow-lg hover:shadow-primary/20
+                                    disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                  {generatingJumpIndex === index ? (
+                                    <>
+                                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                      Generating...
+                                    </>
+                                  ) : (
+                                    <>
+                                      <Sparkles className="w-3.5 h-3.5" />
+                                      Generate this Jump
+                                    </>
+                                  )}
+                                </button>
+                              </CardContent>
+                            </Card>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Collapsed View with Expand Option */}
+                  {showAlternatives && alternativeJumps.length > 0 && alternativesCollapsed && selectedAlternative && (
+                    <div className="p-3 rounded-lg border border-primary/20 bg-primary/5">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Sparkles className="w-4 h-4 text-primary" />
+                          <span className="text-sm font-medium text-foreground">
+                            Generating: <span className="text-primary">{selectedAlternative.title}</span>
+                          </span>
                         </div>
-                      ))}
-                      
-                      {/* Close alternatives button */}
-                      <Button
-                        onClick={() => {
-                          setShowAlternatives(false);
-                          setAlternativeJumps([]);
-                        }}
-                        variant="ghost"
-                        size="sm"
-                        className="w-full text-muted-foreground hover:text-foreground"
-                      >
-                        Hide Alternatives
-                      </Button>
+                        <button
+                          onClick={() => setAlternativesCollapsed(false)}
+                          className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
+                        >
+                          <ChevronDown className="w-3.5 h-3.5" />
+                          View All Routes
+                        </button>
+                      </div>
                     </div>
                   )}
                 </div>
