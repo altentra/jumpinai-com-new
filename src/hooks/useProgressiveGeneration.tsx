@@ -19,6 +19,8 @@ export type ProgressiveResult = {
   full_content: string;
   structured_plan?: any;
   comprehensive_plan?: any;
+  formGoals?: string;
+  formChallenges?: string;
   components: {
     toolPrompts: any[];
     plan?: any;
@@ -182,6 +184,8 @@ export const useProgressiveGeneration = () => {
       let progressiveResult: ProgressiveResult = {
         title: 'Generating Jump...',
         full_content: '',
+        formGoals: formData.goals,
+        formChallenges: formData.challenges,
         components: {
           toolPrompts: [],
           plan: null,
