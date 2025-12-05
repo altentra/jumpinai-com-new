@@ -403,17 +403,19 @@ export const useProgressiveGeneration = () => {
       // Calculate total generation time
       const totalTime = Object.values(stepTimes).reduce((sum, time) => sum + time, 0);
       
-      // Final update with complete data
+      // Final update - PRESERVE the progressiveResult data built during streaming
+      // Don't overwrite comprehensive_plan with rawResponse.comprehensivePlan as it may have old format
       const finalResult: ProgressiveResult = {
-        jumpId: rawResponse.jumpId,
-        jumpName: rawResponse.jumpName,
-        jumpNumber: rawResponse.jumpNumber,
-        fullTitle: rawResponse.fullTitle,
-        title: rawResponse.fullTitle || rawResponse.jumpName || 'AI Transformation Jump',
-        full_content: rawResponse.fullContent,
-        structured_plan: rawResponse.structuredPlan,
-        comprehensive_plan: rawResponse.comprehensivePlan,
-        components: rawResponse.components || {
+        jumpId: rawResponse.jumpId || progressiveResult.jumpId,
+        jumpName: rawResponse.jumpName || progressiveResult.jumpName,
+        jumpNumber: rawResponse.jumpNumber || progressiveResult.jumpNumber,
+        fullTitle: rawResponse.fullTitle || progressiveResult.fullTitle,
+        title: rawResponse.fullTitle || progressiveResult.title || 'AI Transformation Jump',
+        full_content: progressiveResult.full_content || rawResponse.fullContent,
+        structured_plan: progressiveResult.structured_plan || rawResponse.structuredPlan,
+        // CRITICAL: Preserve the streamed comprehensive_plan with new 4-frame structure
+        comprehensive_plan: progressiveResult.comprehensive_plan || rawResponse.comprehensivePlan,
+        components: progressiveResult.components || rawResponse.components || {
           toolPrompts: [],
           workflows: [],
           blueprints: [],
