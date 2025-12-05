@@ -86,6 +86,37 @@ function buildDefaultPlan(title: string = 'Your Jump Plan') {
   };
 }
 
+// Helper function to build jumpOverview context string - supports both NEW 4-frame and LEGACY formats
+function buildJumpOverview(plan: any): string {
+  // NEW 4-FRAME FORMAT: jumpForward, strategicEdge, flightPath, newBaseline
+  if (plan?.jumpForward || plan?.strategicEdge || plan?.flightPath || plan?.newBaseline) {
+    let overview = '';
+    if (plan.jumpForward) {
+      overview += `The Jump Forward: ${plan.jumpForward}\n`;
+    }
+    if (plan.strategicEdge?.analysis) {
+      overview += `Strategic Edge: ${plan.strategicEdge.analysis}\n`;
+      if (plan.strategicEdge.keyPoints?.length) {
+        overview += `Key Points: ${plan.strategicEdge.keyPoints.join(', ')}\n`;
+      }
+    }
+    if (plan.flightPath?.vision) {
+      overview += `Flight Path Vision: ${plan.flightPath.vision}\n`;
+    }
+    if (plan.newBaseline) {
+      overview += `New Baseline: ${plan.newBaseline}\n`;
+    }
+    return overview.trim();
+  }
+  
+  // LEGACY FORMAT: executiveSummary, situationAnalysis, strategicVision
+  return `
+Executive Summary: ${plan?.executiveSummary || ''}
+Strategic Vision: ${plan?.strategicVision || ''}
+Current State: ${plan?.situationAnalysis?.currentState || ''}
+  `.trim();
+}
+
 // Normalize any partial/legacy plan into the comprehensive structure
 function normalizeToComprehensive(input: any): any {
   const source = input && typeof input === 'string' ? safeParseJSON(input) : input;
@@ -357,11 +388,7 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
       const phase = finalPlan.action_plan.phases[phaseIndex];
       const step = phase.steps[stepIndex];
 
-      const jumpOverview = `
-Executive Summary: ${finalPlan.executiveSummary || ''}
-Strategic Vision: ${finalPlan.strategicVision || ''}
-Current State: ${finalPlan.situationAnalysis?.currentState || ''}
-      `.trim();
+      const jumpOverview = buildJumpOverview(finalPlan);
 
       const requestBody = {
         jumpOverview,
@@ -431,11 +458,7 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
       const phase = finalPlan.action_plan.phases[phaseIndex];
       const step = phase.steps[stepIndex];
 
-      const jumpOverview = `
-Executive Summary: ${finalPlan.executiveSummary || ''}
-Strategic Vision: ${finalPlan.strategicVision || ''}
-Current State: ${finalPlan.situationAnalysis?.currentState || ''}
-      `.trim();
+      const jumpOverview = buildJumpOverview(finalPlan);
 
       const requestBody = {
         jumpOverview,
@@ -590,11 +613,7 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
       const phase = finalPlan.action_plan.phases[phaseIndex];
       const step = phase.steps[stepIndex];
 
-      const jumpOverview = `
-Executive Summary: ${finalPlan.executiveSummary || ''}
-Strategic Vision: ${finalPlan.strategicVision || ''}
-Current State: ${finalPlan.situationAnalysis?.currentState || ''}
-      `.trim();
+      const jumpOverview = buildJumpOverview(finalPlan);
 
       const existingComboCount = (toolPromptIds?.filter(id => id && id !== 'null').length || 0) + Object.keys(equippedSteps).length;
 
@@ -655,11 +674,7 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
       const step = phase.steps[stepIndex];
       const subStep = step.sub_steps[subStepIndex];
 
-      const jumpOverview = `
-Executive Summary: ${finalPlan.executiveSummary || ''}
-Strategic Vision: ${finalPlan.strategicVision || ''}
-Current State: ${finalPlan.situationAnalysis?.currentState || ''}
-      `.trim();
+      const jumpOverview = buildJumpOverview(finalPlan);
 
       const existingComboCount = (toolPromptIds?.filter(id => id && id !== 'null').length || 0) + Object.keys(equippedSteps).length;
 
@@ -722,11 +737,7 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
 
       if (!altSubStep) throw new Error('Alternative route sub-step not found');
 
-      const jumpOverview = `
-Executive Summary: ${finalPlan.executiveSummary || ''}
-Strategic Vision: ${finalPlan.strategicVision || ''}
-Current State: ${finalPlan.situationAnalysis?.currentState || ''}
-      `.trim();
+      const jumpOverview = buildJumpOverview(finalPlan);
 
       const existingComboCount = (toolPromptIds?.filter(id => id && id !== 'null').length || 0) + Object.keys(equippedSteps).length;
 
@@ -793,11 +804,7 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
       const step = phase.steps[stepIndex];
       const subStep = step.sub_steps[subStepIndex];
 
-      const jumpOverview = `
-Executive Summary: ${finalPlan.executiveSummary || ''}
-Strategic Vision: ${finalPlan.strategicVision || ''}
-Current State: ${finalPlan.situationAnalysis?.currentState || ''}
-      `.trim();
+      const jumpOverview = buildJumpOverview(finalPlan);
 
       const requestBody = {
         jumpOverview,
@@ -872,11 +879,7 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
       const step = phase.steps[stepIndex];
       const subStep = step.sub_steps[subStepIndex];
 
-      const jumpOverview = `
-Executive Summary: ${finalPlan.executiveSummary || ''}
-Strategic Vision: ${finalPlan.strategicVision || ''}
-Current State: ${finalPlan.situationAnalysis?.currentState || ''}
-      `.trim();
+      const jumpOverview = buildJumpOverview(finalPlan);
 
       const requestBody = {
         jumpOverview,
@@ -989,11 +992,7 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
       const subStep = step.sub_steps[subStepIndex];
       const level2SubStep = subStep.level_2_sub_steps[level2SubStepIndex];
 
-      const jumpOverview = `
-Executive Summary: ${finalPlan.executiveSummary || ''}
-Strategic Vision: ${finalPlan.strategicVision || ''}
-Current State: ${finalPlan.situationAnalysis?.currentState || ''}
-      `.trim();
+      const jumpOverview = buildJumpOverview(finalPlan);
 
       const requestBody = {
         jumpOverview,
@@ -1064,11 +1063,7 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
       const subStep = step.sub_steps[subStepIndex];
       const level2SubStep = subStep.level_2_sub_steps[level2SubStepIndex];
 
-      const jumpOverview = `
-Executive Summary: ${finalPlan.executiveSummary || ''}
-Strategic Vision: ${finalPlan.strategicVision || ''}
-Current State: ${finalPlan.situationAnalysis?.currentState || ''}
-      `.trim();
+      const jumpOverview = buildJumpOverview(finalPlan);
 
       const requestBody = {
         jumpOverview,
@@ -1177,11 +1172,7 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
       const level2SubStep = subStep.level_2_sub_steps[level2SubStepIndex];
       const level3SubStep = level2SubStep.level_3_sub_steps[level3SubStepIndex];
 
-      const jumpOverview = `
-Executive Summary: ${finalPlan.executiveSummary || ''}
-Strategic Vision: ${finalPlan.strategicVision || ''}
-Current State: ${finalPlan.situationAnalysis?.currentState || ''}
-      `.trim();
+      const jumpOverview = buildJumpOverview(finalPlan);
 
       const requestBody = {
         jumpOverview,
@@ -1253,11 +1244,7 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
       const level2SubStep = subStep.level_2_sub_steps[level2SubStepIndex];
       const level3SubStep = level2SubStep.level_3_sub_steps[level3SubStepIndex];
 
-      const jumpOverview = `
-Executive Summary: ${finalPlan.executiveSummary || ''}
-Strategic Vision: ${finalPlan.strategicVision || ''}
-Current State: ${finalPlan.situationAnalysis?.currentState || ''}
-      `.trim();
+      const jumpOverview = buildJumpOverview(finalPlan);
 
       const requestBody = {
         jumpOverview,
@@ -1364,11 +1351,7 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
         throw new Error('Alternative route sub-step not found');
       }
 
-      const jumpOverview = `
-Executive Summary: ${finalPlan.executiveSummary || ''}
-Strategic Vision: ${finalPlan.strategicVision || ''}
-Current State: ${finalPlan.situationAnalysis?.currentState || ''}
-      `.trim();
+      const jumpOverview = buildJumpOverview(finalPlan);
 
       const requestBody = {
         jumpOverview,
@@ -1445,11 +1428,7 @@ Current State: ${finalPlan.situationAnalysis?.currentState || ''}
         throw new Error('Alternative route sub-step not found');
       }
 
-      const jumpOverview = `
-Executive Summary: ${finalPlan.executiveSummary || ''}
-Strategic Vision: ${finalPlan.strategicVision || ''}
-Current State: ${finalPlan.situationAnalysis?.currentState || ''}
-      `.trim();
+      const jumpOverview = buildJumpOverview(finalPlan);
 
       const requestBody = {
         jumpOverview,
