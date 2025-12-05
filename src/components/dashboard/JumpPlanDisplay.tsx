@@ -86,35 +86,37 @@ function buildDefaultPlan(title: string = 'Your Jump Plan') {
   };
 }
 
-// Helper function to build jumpOverview context string - supports both NEW 4-frame and LEGACY formats
+// Helper function to build jumpOverview context string - NEW 4-frame format only
 function buildJumpOverview(plan: any): string {
-  // NEW 4-FRAME FORMAT: jumpForward, strategicEdge, flightPath, newBaseline
-  if (plan?.jumpForward || plan?.strategicEdge || plan?.flightPath || plan?.newBaseline) {
-    let overview = '';
-    if (plan.jumpForward) {
-      overview += `The Jump Forward: ${plan.jumpForward}\n`;
-    }
-    if (plan.strategicEdge?.analysis) {
-      overview += `Strategic Edge: ${plan.strategicEdge.analysis}\n`;
-      if (plan.strategicEdge.keyPoints?.length) {
-        overview += `Key Points: ${plan.strategicEdge.keyPoints.join(', ')}\n`;
-      }
-    }
-    if (plan.flightPath?.vision) {
-      overview += `Flight Path Vision: ${plan.flightPath.vision}\n`;
-    }
-    if (plan.newBaseline) {
-      overview += `New Baseline: ${plan.newBaseline}\n`;
-    }
-    return overview.trim();
+  let overview = '';
+  
+  // The Jump Forward - main strategic response
+  if (plan?.jumpForward) {
+    overview += `The Jump Forward: ${plan.jumpForward}\n`;
   }
   
-  // LEGACY FORMAT: executiveSummary, situationAnalysis, strategicVision
-  return `
-Executive Summary: ${plan?.executiveSummary || ''}
-Strategic Vision: ${plan?.strategicVision || ''}
-Current State: ${plan?.situationAnalysis?.currentState || ''}
-  `.trim();
+  // Strategic Edge - analytical justification
+  if (plan?.strategicEdge?.analysis) {
+    overview += `Strategic Edge: ${plan.strategicEdge.analysis}\n`;
+    if (plan.strategicEdge.keyPoints?.length) {
+      overview += `Key Points: ${plan.strategicEdge.keyPoints.join(', ')}\n`;
+    }
+  }
+  
+  // Flight Path - vision and roadmap
+  if (plan?.flightPath?.vision) {
+    overview += `Flight Path: ${plan.flightPath.vision}\n`;
+  }
+  if (plan?.flightPath?.roadmap?.length) {
+    overview += `Roadmap: ${plan.flightPath.roadmap.join('; ')}\n`;
+  }
+  
+  // New Baseline - landing zone
+  if (plan?.newBaseline) {
+    overview += `New Baseline: ${plan.newBaseline}\n`;
+  }
+  
+  return overview.trim() || 'Jump overview context';
 }
 
 // Normalize any partial/legacy plan into the comprehensive structure
