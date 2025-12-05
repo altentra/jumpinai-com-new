@@ -258,13 +258,22 @@ const JumpinAIStudio = () => {
     window.location.reload(); // Simple approach - reload to reset state
   };
 
-  const handleGenerate = async () => {
+  const handleGenerate = async (alternativeContext?: { title: string; description: string }) => {
     console.log('=== GENERATE BUTTON CLICKED ===');
     console.log('Form data:', formData);
     console.log('isAuthenticated:', isAuthenticated);
+    console.log('Alternative context:', alternativeContext);
+    
+    // Build the form data with optional alternative context
+    const effectiveFormData = alternativeContext 
+      ? {
+          ...formData,
+          goals: `${formData.goals}\n\n[ALTERNATIVE APPROACH SELECTED: "${alternativeContext.title}"]\nUser has explicitly chosen this alternative approach: ${alternativeContext.description}\nGenerate a jump that follows THIS specific approach, NOT the original default approach.`,
+        }
+      : formData;
     
     // Validate required fields
-    if (!formData.goals.trim() || !formData.challenges.trim()) {
+    if (!effectiveFormData.goals.trim() || !effectiveFormData.challenges.trim()) {
       console.log('Validation failed: missing goals or challenges');
       toast.error('Please fill in your goals and challenges');
       return;
@@ -290,7 +299,9 @@ const JumpinAIStudio = () => {
       if (isAuthenticated && user?.id) {
         tempReferenceId = `generation_${Date.now()}`;
         const creditDeducted = await deductCredit(
-          'JumpinAI Studio generation', 
+          alternativeContext 
+            ? `JumpinAI Studio - Alternative Jump: ${alternativeContext.title.substring(0, 30)}`
+            : 'JumpinAI Studio generation', 
           tempReferenceId
         );
         
@@ -300,14 +311,19 @@ const JumpinAIStudio = () => {
         }
         
         // Save form data for authenticated users
-        await saveFormData(formData);
+        await saveFormData(effectiveFormData);
+      }
+
+      // Show toast for alternative jump
+      if (alternativeContext) {
+        toast.info(`Generating new jump: "${alternativeContext.title}"...`);
       }
 
       // REMOVED: Client-side guest usage recording - server handles it automatically
 
       // Generate with progressive display
       const result = await generateWithProgression(
-        formData, 
+        effectiveFormData, 
         user?.id, 
         isAuthenticated ? undefined : turnstileToken || undefined
       );
@@ -324,7 +340,9 @@ const JumpinAIStudio = () => {
       }
       
       if (result.jumpId) {
-        toast.success('Jump has been generated. 1 credit used. It was saved to your Dashboard.');
+        toast.success(alternativeContext 
+          ? `Alternative Jump "${alternativeContext.title.substring(0, 25)}..." generated! 1 credit used.`
+          : 'Jump has been generated. 1 credit used. It was saved to your Dashboard.');
       } else if (!isAuthenticated) {
         toast.success('Your Jump in AI is ready! Sign up to get 5 welcome credits and save your jumps.');
       }
@@ -347,6 +365,15 @@ const JumpinAIStudio = () => {
         toast.error('Failed to generate your Jump. Please try again.');
       }
     }
+  };
+
+  // Handler for generating from an alternative jump
+  const handleGenerateAlternativeJump = (alternative: { title: string; description: string }) => {
+    // Scroll to top of the form
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    // Trigger generation with alternative context
+    handleGenerate(alternative);
   };
 
   return (
@@ -525,13 +552,13 @@ const JumpinAIStudio = () => {
                       </div>
 
                       {/* Glass Morphism Generate Button - Mobile Optimized */}
-                      <div ref={generateButtonRef} className="text-center mt-4 sm:mt-6 md:mt-8">
+                        <div ref={generateButtonRef} className="text-center mt-4 sm:mt-6 md:mt-8">
                         <div className="relative inline-block group w-full sm:w-auto">
                           {/* Subtle glow backdrop */}
                           <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 dark:from-primary/15 dark:via-accent/12 dark:to-secondary/15 rounded-full blur-xl opacity-60 group-hover:opacity-80 transition-all duration-500"></div>
                           
                           <button
-                            onClick={handleGenerate}
+                            onClick={() => handleGenerate()}
                             disabled={isGenerating}
                             className="relative w-full sm:max-w-4xl px-8 sm:px-16 md:px-24 py-3 sm:py-4 md:py-5 glass backdrop-blur-xl border border-border/40 hover:border-primary/50 focus:border-primary/60 transition-all duration-500 rounded-full shadow-xl hover:shadow-2xl hover:shadow-primary/20 bg-card/70 hover:scale-[1.02] active:scale-98 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100 group overflow-hidden"
                           >
@@ -672,6 +699,7 @@ const JumpinAIStudio = () => {
                   generationTimer={generationTimer}
                   isAuthenticated={isAuthenticated}
                   onToolPromptsRefresh={refreshToolPrompts}
+                  onGenerateAlternativeJump={handleGenerateAlternativeJump}
                 />
               </div>
             )}

@@ -1,0 +1,189 @@
+import "https://deno.land/x/xhr@0.1.0/mod.ts";
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+};
+
+serve(async (req) => {
+  // Handle CORS preflight requests
+  if (req.method === 'OPTIONS') {
+    return new Response(null, { headers: corsHeaders });
+  }
+
+  try {
+    const { jumpForward, formGoals, formChallenges, jumpTitle } = await req.json();
+
+    console.log('Generating alternative jumps for:', { jumpTitle, formGoals: formGoals?.substring(0, 100) });
+
+    if (!jumpForward || !formGoals) {
+      return new Response(
+        JSON.stringify({ error: 'Missing required fields: jumpForward and formGoals' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const XAI_API_KEY = Deno.env.get('XAI_API_KEY');
+    if (!XAI_API_KEY) {
+      console.error('XAI_API_KEY not configured');
+      return new Response(
+        JSON.stringify({ error: 'AI service not configured' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const systemPrompt = `You are JumpinAI, an expert AI strategist specializing in AI adaptation and implementation planning.
+
+Your task is to generate 3 COMPLETELY DIFFERENT alternative strategic approaches to help the user achieve their goals.
+
+IMPORTANT GUIDELINES:
+- Each alternative must be DISTINCT and offer a genuinely different pathway/methodology
+- Alternatives should vary in approach, timeline, tools, or methodology
+- Be creative but practical - each alternative must be actionable
+- Consider different risk tolerances, budgets, and time commitments
+- Each alternative should be compelling and well-reasoned
+
+Output Format: Return ONLY valid JSON with this exact structure:
+{
+  "alternatives": [
+    {
+      "title": "Short compelling title (5-8 words max)",
+      "description": "2-3 sentence description explaining this alternative approach, what makes it different, and why someone might choose it"
+    },
+    {
+      "title": "...",
+      "description": "..."
+    },
+    {
+      "title": "...",
+      "description": "..."
+    }
+  ]
+}`;
+
+    const userPrompt = `The user wants to achieve the following:
+
+GOALS:
+${formGoals}
+
+${formChallenges ? `CHALLENGES/OBSTACLES:
+${formChallenges}` : ''}
+
+The AI initially proposed this approach (The Jump Forward):
+"${jumpForward}"
+
+Now, generate 3 ALTERNATIVE approaches that are DIFFERENT from the above. Each should offer a distinct pathway to achieve the same goals. Consider:
+- Alternative 1: Could focus on a different methodology or framework
+- Alternative 2: Could prioritize different aspects (speed vs thoroughness, cost vs quality, etc.)
+- Alternative 3: Could use entirely different tools or strategies
+
+Make each alternative genuinely compelling and different from the original and from each other.`;
+
+    console.log('Calling xAI API for alternative jumps...');
+
+    const response = await fetch('https://api.x.ai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${XAI_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'grok-3-fast',
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: userPrompt }
+        ],
+        temperature: 0.8,
+        max_tokens: 1500,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('xAI API error:', response.status, errorText);
+      return new Response(
+        JSON.stringify({ error: 'AI service error', details: errorText }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const data = await response.json();
+    const content = data.choices?.[0]?.message?.content;
+
+    if (!content) {
+      console.error('No content in xAI response');
+      return new Response(
+        JSON.stringify({ error: 'No response from AI' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    console.log('Raw xAI response:', content.substring(0, 500));
+
+    // Parse the JSON response
+    let alternatives;
+    try {
+      // Try to extract JSON from the response
+      let jsonStr = content;
+      
+      // Remove markdown code blocks if present
+      const jsonMatch = content.match(/```(?:json)?\s*([\s\S]*?)```/);
+      if (jsonMatch) {
+        jsonStr = jsonMatch[1].trim();
+      }
+      
+      // Clean up common issues
+      jsonStr = jsonStr
+        .replace(/[\u0000-\u001F\u007F]/g, ' ')
+        .replace(/\n\s*\n/g, '\n')
+        .trim();
+
+      const parsed = JSON.parse(jsonStr);
+      alternatives = parsed.alternatives;
+
+      if (!Array.isArray(alternatives) || alternatives.length !== 3) {
+        throw new Error('Invalid alternatives structure');
+      }
+
+      // Validate each alternative has required fields
+      for (const alt of alternatives) {
+        if (!alt.title || !alt.description) {
+          throw new Error('Alternative missing title or description');
+        }
+      }
+    } catch (parseError) {
+      console.error('JSON parse error:', parseError, 'Content:', content);
+      
+      // Fallback: generate generic alternatives if parsing fails
+      alternatives = [
+        {
+          title: "Rapid AI Integration Sprint",
+          description: "Focus on quick wins by implementing the most impactful AI tools first. This approach prioritizes speed and immediate results over comprehensive coverage."
+        },
+        {
+          title: "Strategic Foundation Building",
+          description: "Take a methodical approach by establishing solid foundations before scaling. This ensures long-term success and sustainable growth with AI integration."
+        },
+        {
+          title: "Hybrid Human-AI Workflow",
+          description: "Balance AI automation with human oversight, creating workflows that leverage the best of both. Ideal for those who want control while gaining efficiency."
+        }
+      ];
+    }
+
+    console.log('Successfully generated alternatives:', alternatives.map(a => a.title));
+
+    return new Response(
+      JSON.stringify({ alternatives }),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    );
+
+  } catch (error) {
+    console.error('Error in generate-alternative-jumps:', error);
+    return new Response(
+      JSON.stringify({ error: error.message || 'Internal server error' }),
+      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    );
+  }
+});
