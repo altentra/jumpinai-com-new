@@ -115,6 +115,9 @@ verify_jwt = false
 [functions.speech-to-text-realtime]
 verify_jwt = false
 
+[functions.generate-alternative-jumps]
+verify_jwt = false
+
 [realtime]
 enabled = true
 port = 54323

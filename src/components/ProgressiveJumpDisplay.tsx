@@ -1,9 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Loader2, CheckCircle, Clock, Zap, Timer, Copy, Check, Wrench, AlertTriangle, Lightbulb, Target, Compass, TrendingUp, Shield, DollarSign, Heart, MapPin, Calendar, Play, Flag, LayoutDashboard, Eye } from 'lucide-react';
+import { Loader2, CheckCircle, Clock, Zap, Timer, Copy, Check, Wrench, AlertTriangle, Lightbulb, Target, Compass, TrendingUp, Shield, DollarSign, Heart, MapPin, Calendar, Play, Flag, LayoutDashboard, Eye, Sparkles, ArrowRight, RotateCcw } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { formatAIText } from '@/utils/aiTextFormatter';
 import ReactMarkdown from 'react-markdown';
@@ -13,19 +14,27 @@ import { ToolPromptComboCard } from '@/components/dashboard/ToolPromptComboCard'
 import JumpPlanDisplay from '@/components/dashboard/JumpPlanDisplay';
 import { toast } from 'sonner';
 import { ErrorBoundary } from '@/components/common/ErrorBoundary';
+import { supabase } from '@/integrations/supabase/client';
+
+interface AlternativeJump {
+  title: string;
+  description: string;
+}
 
 interface ProgressiveJumpDisplayProps {
   result: ProgressiveResult;
   generationTimer: number;
   isAuthenticated?: boolean;
   onToolPromptsRefresh?: () => Promise<any[]>;
+  onGenerateAlternativeJump?: (alternative: AlternativeJump) => void;
 }
 
 const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({ 
   result, 
   generationTimer,
   isAuthenticated = false,
-  onToolPromptsRefresh
+  onToolPromptsRefresh,
+  onGenerateAlternativeJump
 }) => {
   const navigate = useNavigate();
   const [copiedPrompts, setCopiedPrompts] = React.useState<Set<number>>(new Set());
@@ -38,6 +47,13 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
   const overviewContentRef = React.useRef<HTMLDivElement>(null);
   const planContentRef = React.useRef<HTMLDivElement>(null);
   const toolPromptsContentRef = React.useRef<HTMLDivElement>(null);
+  
+  // Alternative jumps state
+  const [isJumpForwardHovered, setIsJumpForwardHovered] = React.useState(false);
+  const [alternativeJumps, setAlternativeJumps] = React.useState<AlternativeJump[]>([]);
+  const [isGeneratingAlternatives, setIsGeneratingAlternatives] = React.useState(false);
+  const [showAlternatives, setShowAlternatives] = React.useState(false);
+  const [generatingJumpIndex, setGeneratingJumpIndex] = React.useState<number | null>(null);
 
   // Update tool prompts when they change
   React.useEffect(() => {
@@ -89,6 +105,51 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
       toast.error('Failed to refresh Tools & Prompts');
     } finally {
       setIsRefreshing(false);
+    }
+  };
+
+  // Generate alternative jumps
+  const handleGenerateAlternatives = async () => {
+    if (!result.comprehensive_plan?.jumpForward || !result.formGoals) {
+      toast.error('Cannot generate alternatives: missing required data');
+      return;
+    }
+
+    setIsGeneratingAlternatives(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-alternative-jumps', {
+        body: {
+          jumpForward: result.comprehensive_plan.jumpForward,
+          formGoals: result.formGoals,
+          formChallenges: result.formChallenges || '',
+          jumpTitle: result.title
+        }
+      });
+
+      if (error) throw error;
+
+      if (data?.alternatives && Array.isArray(data.alternatives)) {
+        setAlternativeJumps(data.alternatives);
+        setShowAlternatives(true);
+        toast.success('Alternative approaches generated!');
+      } else {
+        throw new Error('Invalid response from server');
+      }
+    } catch (error) {
+      console.error('Error generating alternatives:', error);
+      toast.error('Failed to generate alternatives. Please try again.');
+    } finally {
+      setIsGeneratingAlternatives(false);
+    }
+  };
+
+  // Handle generating a new jump from an alternative
+  const handleGenerateThisJump = async (alternative: AlternativeJump, index: number) => {
+    if (onGenerateAlternativeJump) {
+      setGeneratingJumpIndex(index);
+      onGenerateAlternativeJump(alternative);
+    } else {
+      toast.error('Generation not available in this context');
     }
   };
 
@@ -475,23 +536,120 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
         <TabsContent value="overview" className="mt-0" style={{ overflow: 'visible', maxHeight: 'none', height: 'auto', display: 'block' }}>
           {result.comprehensive_plan ? (
             <div ref={overviewContentRef} className="space-y-6">
-              {/* NEW FORMAT: THE JUMP FORWARD */}
+              {/* NEW FORMAT: THE JUMP FORWARD with Alternative Jumps Feature */}
               {result.comprehensive_plan.jumpForward && (
-                <div className="relative group">
-                  <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-secondary/30 rounded-xl blur opacity-40 group-hover:opacity-60 transition duration-300"></div>
-                  <Card className="relative glass backdrop-blur-lg bg-card/80 border border-primary/30 hover:border-primary/50 transition-all duration-300 rounded-2xl">
-                    <CardHeader className="pb-3">
-                      <CardTitle className="text-lg flex items-center gap-2">
-                        <Zap className="w-5 h-5 text-primary" />
-                        The Jump Forward
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm sm:text-base leading-relaxed text-foreground/90">
-                        {result.comprehensive_plan.jumpForward}
-                      </p>
-                    </CardContent>
-                  </Card>
+                <div className="space-y-4">
+                  <div 
+                    className="relative group"
+                    onMouseEnter={() => setIsJumpForwardHovered(true)}
+                    onMouseLeave={() => setIsJumpForwardHovered(false)}
+                  >
+                    <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-secondary/30 rounded-xl blur opacity-40 group-hover:opacity-60 transition duration-300"></div>
+                    <Card className="relative glass backdrop-blur-lg bg-card/80 border border-primary/30 hover:border-primary/50 transition-all duration-300 rounded-2xl">
+                      <CardHeader className="pb-3">
+                        <CardTitle className="text-lg flex items-center gap-2">
+                          <Zap className="w-5 h-5 text-primary" />
+                          The Jump Forward
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <p className="text-sm sm:text-base leading-relaxed text-foreground/90">
+                          {result.comprehensive_plan.jumpForward}
+                        </p>
+                        
+                        {/* Generate Alternative Jumps Button - Only shows when generation is complete */}
+                        {result.processing_status?.isComplete && !showAlternatives && (
+                          <div className={`overflow-hidden transition-all duration-300 ${isJumpForwardHovered || isGeneratingAlternatives ? 'max-h-20 opacity-100 mt-4' : 'max-h-0 opacity-0'}`}>
+                            <div className="pt-3 border-t border-border/30">
+                              <Button
+                                onClick={handleGenerateAlternatives}
+                                disabled={isGeneratingAlternatives}
+                                variant="outline"
+                                size="sm"
+                                className="w-full gap-2 bg-primary/5 hover:bg-primary/10 border-primary/30 hover:border-primary/50 text-primary"
+                              >
+                                {isGeneratingAlternatives ? (
+                                  <>
+                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                    Generating Alternatives...
+                                  </>
+                                ) : (
+                                  <>
+                                    <Sparkles className="w-4 h-4" />
+                                    Generate Alternative Jumps
+                                  </>
+                                )}
+                              </Button>
+                            </div>
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  </div>
+
+                  {/* Alternative Jumps Cards */}
+                  {showAlternatives && alternativeJumps.length > 0 && (
+                    <div className="space-y-3 pl-4 border-l-2 border-primary/30">
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
+                        <RotateCcw className="w-4 h-4" />
+                        <span className="font-medium">Alternative Approaches</span>
+                      </div>
+                      {alternativeJumps.map((alt, index) => (
+                        <div 
+                          key={index}
+                          className="relative group"
+                        >
+                          <div className="absolute -inset-0.5 bg-gradient-to-r from-secondary/20 via-accent/15 to-primary/20 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
+                          <Card className="relative glass backdrop-blur-lg bg-card/60 border border-border/50 hover:border-primary/40 transition-all duration-300 rounded-xl">
+                            <CardContent className="p-4 space-y-3">
+                              <div className="flex items-start justify-between gap-3">
+                                <div className="flex-1">
+                                  <div className="flex items-center gap-2 mb-2">
+                                    <Badge variant="outline" className="text-xs bg-secondary/10 text-secondary-foreground border-secondary/30">
+                                      Option {index + 1}
+                                    </Badge>
+                                  </div>
+                                  <h4 className="font-semibold text-sm text-foreground mb-1.5">{alt.title}</h4>
+                                  <p className="text-xs text-muted-foreground leading-relaxed">{alt.description}</p>
+                                </div>
+                              </div>
+                              <Button
+                                onClick={() => handleGenerateThisJump(alt, index)}
+                                disabled={generatingJumpIndex !== null}
+                                size="sm"
+                                className="w-full gap-2 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground"
+                              >
+                                {generatingJumpIndex === index ? (
+                                  <>
+                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                    Generating Jump...
+                                  </>
+                                ) : (
+                                  <>
+                                    <ArrowRight className="w-4 h-4" />
+                                    Generate this Jump
+                                  </>
+                                )}
+                              </Button>
+                            </CardContent>
+                          </Card>
+                        </div>
+                      ))}
+                      
+                      {/* Close alternatives button */}
+                      <Button
+                        onClick={() => {
+                          setShowAlternatives(false);
+                          setAlternativeJumps([]);
+                        }}
+                        variant="ghost"
+                        size="sm"
+                        className="w-full text-muted-foreground hover:text-foreground"
+                      >
+                        Hide Alternatives
+                      </Button>
+                    </div>
+                  )}
                 </div>
               )}
 
