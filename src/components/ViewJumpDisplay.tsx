@@ -269,8 +269,128 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
         <TabsContent value="overview" className="mt-0" style={{ overflow: 'visible', maxHeight: 'none', height: 'auto', display: 'block' }}>
           {result.comprehensive_plan ? (
             <div ref={overviewContentRef} className="space-y-6">
-              {/* Executive Summary */}
-              {result.comprehensive_plan.executiveSummary && (
+              {/* NEW FORMAT: THE JUMP FORWARD */}
+              {result.comprehensive_plan.jumpForward && (
+                <div className="relative group">
+                  <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-secondary/30 rounded-xl blur opacity-40 group-hover:opacity-60 transition duration-300"></div>
+                  <Card className="relative glass backdrop-blur-lg bg-card/80 border border-primary/30 hover:border-primary/50 transition-all duration-300 rounded-2xl">
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-base sm:text-lg flex items-center gap-2">
+                        <Zap className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+                        The Jump Forward
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-xs sm:text-sm md:text-base leading-relaxed text-foreground/90">
+                        {result.comprehensive_plan.jumpForward}
+                      </p>
+                    </CardContent>
+                  </Card>
+                </div>
+              )}
+
+              {/* NEW FORMAT: STRATEGIC EDGE */}
+              {result.comprehensive_plan.strategicEdge && (
+                <div className="relative group">
+                  <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
+                  <Card className="relative glass backdrop-blur-lg bg-card/80 border border-border hover:border-primary/40 transition-all duration-300 rounded-2xl">
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-base sm:text-lg flex items-center gap-2">
+                        <Compass className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+                        Strategic Edge
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      {result.comprehensive_plan.strategicEdge.analysis && (
+                        <p className="text-xs sm:text-sm text-foreground/80 leading-relaxed">
+                          {result.comprehensive_plan.strategicEdge.analysis}
+                        </p>
+                      )}
+                      {result.comprehensive_plan.strategicEdge.keyPoints?.length > 0 && (
+                        <ul className="space-y-2">
+                          {result.comprehensive_plan.strategicEdge.keyPoints.map((point: string, idx: number) => (
+                            <li key={idx} className="flex items-start gap-2 text-xs sm:text-sm">
+                              <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary mt-0.5 flex-shrink-0" />
+                              <span className="text-foreground/80">{point}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </CardContent>
+                  </Card>
+                </div>
+              )}
+
+              {/* NEW FORMAT: FLIGHT PATH */}
+              {result.comprehensive_plan.flightPath && (
+                <div className="relative group">
+                  <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
+                  <Card className="relative glass backdrop-blur-lg bg-card/80 border border-border hover:border-primary/40 transition-all duration-300 rounded-2xl">
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-base sm:text-lg flex items-center gap-2">
+                        <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+                        Flight Path
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-5">
+                      {result.comprehensive_plan.flightPath.vision && (
+                        <div className="p-3 sm:p-4 rounded-xl bg-primary/5 border border-primary/20">
+                          <div className="flex items-center gap-2 mb-2">
+                            <Target className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />
+                            <span className="text-xs sm:text-sm font-semibold text-primary">Victory Vision</span>
+                          </div>
+                          <p className="text-xs sm:text-sm text-foreground/80 leading-relaxed">
+                            {result.comprehensive_plan.flightPath.vision}
+                          </p>
+                        </div>
+                      )}
+                      {result.comprehensive_plan.flightPath.roadmap?.length > 0 && (
+                        <div className="space-y-3">
+                          {result.comprehensive_plan.flightPath.roadmap.map((phase: any, idx: number) => (
+                            <div key={idx} className="p-3 sm:p-4 rounded-xl border border-border/50 bg-background/50 hover:border-primary/30 transition-colors">
+                              <div className="flex items-center justify-between mb-2">
+                                <h4 className="font-semibold text-xs sm:text-sm flex items-center gap-2">
+                                  {idx === 0 && <Play className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />}
+                                  {idx === 1 && <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />}
+                                  {idx === 2 && <Flag className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />}
+                                  {phase.phase}
+                                </h4>
+                                <Badge variant="outline" className="text-[10px] sm:text-xs bg-primary/10 text-primary border-primary/30">
+                                  {phase.timeframe}
+                                </Badge>
+                              </div>
+                              <p className="text-xs sm:text-sm text-foreground/70">{phase.focus}</p>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                </div>
+              )}
+
+              {/* NEW FORMAT: NEW BASELINE */}
+              {result.comprehensive_plan.newBaseline && (
+                <div className="relative group">
+                  <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/25 via-accent/20 to-secondary/25 rounded-xl blur opacity-40 group-hover:opacity-60 transition duration-300"></div>
+                  <Card className="relative glass backdrop-blur-lg bg-gradient-to-br from-primary/10 via-card/80 to-secondary/10 border border-primary/30 hover:border-primary/50 transition-all duration-300 rounded-2xl">
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-base sm:text-lg flex items-center gap-2">
+                        <Flag className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+                        New Baseline
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-xs sm:text-sm md:text-base font-medium text-foreground/90 leading-relaxed italic">
+                        "{result.comprehensive_plan.newBaseline}"
+                      </p>
+                    </CardContent>
+                  </Card>
+                </div>
+              )}
+
+              {/* LEGACY FORMAT: Executive Summary - for old jumps */}
+              {!result.comprehensive_plan.jumpForward && result.comprehensive_plan.executiveSummary && (
                 <div className="relative group">
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
                   <Card className="relative glass backdrop-blur-lg bg-card/80 border border-border hover:border-primary/40 transition-all duration-300 rounded-2xl">
@@ -291,8 +411,8 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
                 </div>
               )}
 
-              {/* Situation Analysis */}
-              {result.comprehensive_plan.situationAnalysis && (
+              {/* LEGACY FORMAT: Situation Analysis - for old jumps */}
+              {!result.comprehensive_plan.jumpForward && result.comprehensive_plan.situationAnalysis && (
                 <div className="relative group">
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
                   <Card className="relative glass backdrop-blur-lg bg-card/80 border border-border hover:border-primary/40 transition-all duration-300 rounded-2xl">
@@ -313,7 +433,6 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
                           </div>
                         </div>
                       )}
-                      
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                         {result.comprehensive_plan.situationAnalysis.challenges?.length > 0 && (
                           <div className="space-y-2">
@@ -323,18 +442,11 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
                             </h4>
                             <ul className="space-y-2">
                               {result.comprehensive_plan.situationAnalysis.challenges.map((challenge: string, idx: number) => (
-                                <li key={idx} className="text-[11px] sm:text-xs pl-4 border-l-2 border-destructive/30">
-                                  <div className="prose prose-2xs dark:prose-invert max-w-none text-[11px] sm:text-xs">
-                                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                      {formatAIText(challenge)}
-                                    </ReactMarkdown>
-                                  </div>
-                                </li>
+                                <li key={idx} className="text-[11px] sm:text-xs pl-4 border-l-2 border-destructive/30">{challenge}</li>
                               ))}
                             </ul>
                           </div>
                         )}
-                        
                         {result.comprehensive_plan.situationAnalysis.opportunities?.length > 0 && (
                           <div className="space-y-2">
                             <h4 className="font-semibold text-xs sm:text-sm flex items-center gap-2">
@@ -343,13 +455,7 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
                             </h4>
                             <ul className="space-y-2">
                               {result.comprehensive_plan.situationAnalysis.opportunities.map((opp: string, idx: number) => (
-                                <li key={idx} className="text-[11px] sm:text-xs pl-4 border-l-2 border-primary/30">
-                                  <div className="prose prose-2xs dark:prose-invert max-w-none text-[11px] sm:text-xs">
-                                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                      {formatAIText(opp)}
-                                    </ReactMarkdown>
-                                  </div>
-                                </li>
+                                <li key={idx} className="text-[11px] sm:text-xs pl-4 border-l-2 border-primary/30">{opp}</li>
                               ))}
                             </ul>
                           </div>
@@ -360,8 +466,8 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
                 </div>
               )}
 
-              {/* Strategic Vision */}
-              {result.comprehensive_plan.strategicVision && (
+              {/* LEGACY FORMAT: Strategic Vision - for old jumps */}
+              {!result.comprehensive_plan.jumpForward && result.comprehensive_plan.strategicVision && (
                 <div className="relative group">
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
                   <Card className="relative glass backdrop-blur-lg bg-card/80 border border-border hover:border-primary/40 transition-all duration-300 rounded-2xl">
@@ -382,8 +488,8 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
                 </div>
               )}
 
-              {/* Roadmap */}
-              {result.comprehensive_plan.roadmap && (
+              {/* LEGACY FORMAT: Roadmap - for old jumps */}
+              {!result.comprehensive_plan.jumpForward && result.comprehensive_plan.roadmap && (
                 <div className="relative group">
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
                   <Card className="relative glass backdrop-blur-lg bg-card/80 border border-border hover:border-primary/40 transition-all duration-300 rounded-2xl">
@@ -394,7 +500,6 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                      {/* Immediate (0-30 days) */}
                       {result.comprehensive_plan.roadmap.immediate && (
                         <div className="p-3 sm:p-4 rounded-xl border border-primary/30 bg-primary/5">
                           <div className="flex items-start justify-between mb-3">
@@ -411,8 +516,6 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
                           </div>
                         </div>
                       )}
-                      
-                      {/* Short-term (30-90 days) */}
                       {result.comprehensive_plan.roadmap.shortTerm && (
                         <div className="p-3 sm:p-4 rounded-xl border border-primary/30 bg-primary/5">
                           <div className="flex items-start justify-between mb-3">
@@ -429,8 +532,6 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
                           </div>
                         </div>
                       )}
-                      
-                      {/* Long-term (90+ days) */}
                       {result.comprehensive_plan.roadmap.longTerm && (
                         <div className="p-3 sm:p-4 rounded-xl border border-primary/30 bg-primary/5">
                           <div className="flex items-start justify-between mb-3">
@@ -450,114 +551,6 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
                     </CardContent>
                   </Card>
                 </div>
-              )}
-
-              {/* Key Objectives & Success Metrics */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-                {result.comprehensive_plan.keyObjectives?.length > 0 && (
-                  <Card className="glass backdrop-blur-xl border border-border/40 rounded-2xl">
-                    <CardHeader>
-                      <CardTitle className="text-base sm:text-lg flex items-center gap-2">
-                        <Target className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
-                        Key Objectives
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <ul className="space-y-3">
-                        {result.comprehensive_plan.keyObjectives.map((obj: string, idx: number) => (
-                          <li key={idx} className="text-xs sm:text-sm flex items-center gap-2">
-                            <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                              <span className="text-[10px] sm:text-xs font-semibold text-primary">{idx + 1}</span>
-                            </div>
-                            <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-none flex-1 text-xs sm:text-sm">
-                              <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                {formatAIText(obj)}
-                              </ReactMarkdown>
-                            </div>
-                          </li>
-                        ))}
-                      </ul>
-                    </CardContent>
-                  </Card>
-                )}
-
-                {result.comprehensive_plan.successMetrics?.length > 0 && (
-                  <Card className="glass backdrop-blur-xl border border-border/40 rounded-2xl">
-                    <CardHeader>
-                      <CardTitle className="text-base sm:text-lg flex items-center gap-2">
-                        <DollarSign className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
-                        Success Metrics
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <ul className="space-y-3">
-                        {result.comprehensive_plan.successMetrics.map((metric: string, idx: number) => (
-                          <li key={idx} className="text-xs sm:text-sm flex items-center gap-2">
-                            <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 text-primary flex-shrink-0" />
-                            <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-none flex-1 text-xs sm:text-sm">
-                              <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                {formatAIText(metric)}
-                              </ReactMarkdown>
-                            </div>
-                          </li>
-                        ))}
-                      </ul>
-                    </CardContent>
-                  </Card>
-                )}
-              </div>
-
-              {/* Risk Assessment */}
-              {result.comprehensive_plan.riskAssessment && (
-                <Card className="glass backdrop-blur-xl border border-border/40 rounded-2xl">
-                  <CardHeader>
-                    <CardTitle className="text-base sm:text-lg flex items-center gap-2">
-                      <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
-                      Risk Assessment
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {result.comprehensive_plan.riskAssessment.risks?.length > 0 && (
-                      <div className="space-y-2">
-                        <h4 className="font-semibold text-xs sm:text-sm flex items-center gap-2">
-                          <AlertTriangle className="w-3 h-3 sm:w-4 sm:h-4 text-destructive" />
-                          Potential Risks
-                        </h4>
-                        <ul className="space-y-2">
-                          {result.comprehensive_plan.riskAssessment.risks.map((risk: string, idx: number) => (
-                            <li key={idx} className="text-xs sm:text-sm pl-4 border-l-2 border-destructive/30">
-                              <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-none text-xs sm:text-sm">
-                                <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                  {formatAIText(risk)}
-                                </ReactMarkdown>
-                              </div>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                    
-                    {result.comprehensive_plan.riskAssessment.mitigations?.length > 0 && (
-                      <div className="space-y-2">
-                        <h4 className="font-semibold text-xs sm:text-sm flex items-center gap-2">
-                          <Heart className="w-3 h-3 sm:w-4 sm:h-4 text-primary" />
-                          Mitigation Strategies
-                        </h4>
-                        <ul className="space-y-2">
-                          {result.comprehensive_plan.riskAssessment.mitigations.map((mitigation: string, idx: number) => (
-                            <li key={idx} className="text-xs sm:text-sm pl-4 border-l-2 border-primary/30">
-                              <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-none text-xs sm:text-sm">
-                                <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                  {formatAIText(mitigation)}
-                                </ReactMarkdown>
-                              </div>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
               )}
             </div>
           ) : (
