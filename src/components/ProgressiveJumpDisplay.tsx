@@ -671,10 +671,10 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                     </Card>
                   </div>
 
-                  {/* Alternative Jumps Cards - Responsive Grid */}
+                  {/* Alternative Jumps Cards - Responsive Grid (Expanded View) */}
                   {showAlternatives && alternativeJumps.length > 0 && !alternativesCollapsed && (
                     <div className="space-y-4">
-                      {/* Header with Collapse Button */}
+                      {/* Header with Hide Button */}
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2 text-sm">
                           <Route className="w-4 h-4 text-primary" />
@@ -684,11 +684,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                           </Badge>
                         </div>
                         <button
-                          onClick={() => {
-                            setShowAlternatives(false);
-                            setAlternativeJumps([]);
-                            setSelectedAlternative(null);
-                          }}
+                          onClick={() => setAlternativesCollapsed(true)}
                           className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
                         >
                           <ChevronUp className="w-3.5 h-3.5" />
@@ -749,14 +745,18 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                     </div>
                   )}
 
-                  {/* Collapsed View with Expand Option */}
-                  {showAlternatives && alternativeJumps.length > 0 && alternativesCollapsed && selectedAlternative && (
-                    <div className="p-3 rounded-lg border border-primary/20 bg-primary/5">
+                  {/* Collapsed View with Expand Option - shows when alternatives exist but are hidden */}
+                  {showAlternatives && alternativeJumps.length > 0 && alternativesCollapsed && (
+                    <div className="p-3 rounded-lg border border-border/40 bg-card/40 backdrop-blur-sm">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                          <Sparkles className="w-4 h-4 text-primary" />
+                          <Route className="w-4 h-4 text-primary" />
                           <span className="text-sm font-medium text-foreground">
-                            Generating: <span className="text-primary">{selectedAlternative.title}</span>
+                            {selectedAlternative ? (
+                              <>Selected: <span className="text-primary">{selectedAlternative.title}</span></>
+                            ) : (
+                              <>Alternative Routes <span className="text-muted-foreground">({alternativeJumps.length} options)</span></>
+                            )}
                           </span>
                         </div>
                         <button
@@ -764,7 +764,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                           className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
                         >
                           <ChevronDown className="w-3.5 h-3.5" />
-                          View All Routes
+                          Expand
                         </button>
                       </div>
                     </div>
