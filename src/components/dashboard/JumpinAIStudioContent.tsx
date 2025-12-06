@@ -407,6 +407,7 @@ const JumpinAIStudioContent = () => {
                 isAuthenticated={isAuthenticated}
                 onToolPromptsRefresh={refreshToolPrompts}
                 onGenerateAlternativeJump={handleGenerateAlternativeJump}
+                embedded={true}
               />
             </div>
           )}
