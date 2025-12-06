@@ -90,7 +90,17 @@ export default function Dashboard() {
       </SidebarProvider>
 
       <div className="h-12 border-t bg-background flex items-center justify-center text-xs sm:text-sm text-muted-foreground px-4">
-        <span className="text-center">© 2025 JumpinAI, LLC. All rights reserved.</span>
+        <span className="text-center">
+          © 2025 JumpinAI, LLC. All rights reserved.{' '}
+          <a href="/terms-of-use" className="text-primary hover:text-primary/80 transition-colors duration-200 underline underline-offset-4">
+            Terms of Use
+          </a>
+          {' '}and{' '}
+          <a href="/privacy-policy" className="text-primary hover:text-primary/80 transition-colors duration-200 underline underline-offset-4">
+            Privacy Policy
+          </a>
+          .
+        </span>
       </div>
     </>
   );
