@@ -17,18 +17,20 @@ import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import { supabase } from '@/integrations/supabase/client';
 import { useCredits } from '@/hooks/useCredits';
 import { useAuth } from '@/hooks/useAuth';
-
-interface AlternativeJump {
-  title: string;
-  description: string;
-}
+import { RouteExplorationBreadcrumb } from '@/components/RouteExplorationBreadcrumb';
+import type { 
+  AlternativeRoute, 
+  RouteExplorationHistory, 
+  JumpHierarchyNode 
+} from '@/types/alternativeRoutes';
+import { createExplorationHistory, addExplorationLevel } from '@/types/alternativeRoutes';
 
 interface ProgressiveJumpDisplayProps {
   result: ProgressiveResult;
   generationTimer: number;
   isAuthenticated?: boolean;
   onToolPromptsRefresh?: () => Promise<any[]>;
-  onGenerateAlternativeJump?: (alternative: AlternativeJump) => void;
+  onGenerateAlternativeJump?: (alternative: AlternativeRoute, explorationHistory?: RouteExplorationHistory) => void;
 }
 
 const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({ 
@@ -53,45 +55,67 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
   const toolPromptsContentRef = React.useRef<HTMLDivElement>(null);
   
   // Alternative jumps state
-  const [alternativeJumps, setAlternativeJumps] = React.useState<AlternativeJump[]>([]);
+  const [alternativeJumps, setAlternativeJumps] = React.useState<AlternativeRoute[]>([]);
   const [isGeneratingAlternatives, setIsGeneratingAlternatives] = React.useState(false);
   const [showAlternatives, setShowAlternatives] = React.useState(false);
   const [generatingJumpIndex, setGeneratingJumpIndex] = React.useState<number | null>(null);
-  const [selectedAlternative, setSelectedAlternative] = React.useState<AlternativeJump | null>(null);
+  const [selectedAlternative, setSelectedAlternative] = React.useState<AlternativeRoute | null>(null);
   const [alternativesCollapsed, setAlternativesCollapsed] = React.useState(false);
-  const [generatedJumpIndex, setGeneratedJumpIndex] = React.useState<number | null>(null); // Track which jump was generated
-  const [jumpGenerationComplete, setJumpGenerationComplete] = React.useState(false); // Track if alternative jump generation finished
+  const [generatedJumpIndex, setGeneratedJumpIndex] = React.useState<number | null>(null);
+  const [jumpGenerationComplete, setJumpGenerationComplete] = React.useState(false);
+  
+  // Route exploration history - tracks the full tree of alternative explorations
+  const [explorationHistory, setExplorationHistory] = React.useState<RouteExplorationHistory | null>(null);
+  const explorationHistoryRef = React.useRef<RouteExplorationHistory | null>(null);
 
   // Track previous jumpId to detect when a NEW jump is generated
   const previousJumpIdRef = React.useRef<string | undefined>(undefined);
   
-  // Reset alternative state when a new jump is fully generated (from alternative route)
+  // Update exploration history when a new jump is fully generated (from alternative route)
   React.useEffect(() => {
     if (result.processing_status?.isComplete && generatingJumpIndex !== null) {
       // The alternative jump generation is complete
       setGeneratingJumpIndex(null);
       setJumpGenerationComplete(true);
       
-      // After a brief delay to let UI update, reset alternatives for the NEW jump
-      // so it can have its own "Explore Alternative Routes" button
+      // Update the exploration history with the new jump's ID and title
+      if (explorationHistoryRef.current && result.jumpId) {
+        const updatedPath = [...explorationHistoryRef.current.explorationPath];
+        const lastNode = updatedPath[updatedPath.length - 1];
+        if (lastNode) {
+          lastNode.jumpId = result.jumpId;
+          lastNode.jumpTitle = result.title || lastNode.jumpTitle;
+        }
+        const updatedHistory = {
+          ...explorationHistoryRef.current,
+          explorationPath: updatedPath,
+        };
+        explorationHistoryRef.current = updatedHistory;
+        setExplorationHistory(updatedHistory);
+      }
+      
+      // After a brief delay, reset ONLY the alternatives UI for the NEW jump
+      // to show its own "Explore Alternative Routes" button
+      // BUT PRESERVE the exploration history!
       setTimeout(() => {
         setShowAlternatives(false);
         setAlternativeJumps([]);
         setSelectedAlternative(null);
         setAlternativesCollapsed(false);
         // Keep generatedJumpIndex to show "Jump Generated" state briefly
+        // Keep explorationHistory - this is the key change!
       }, 100);
     }
-  }, [result.processing_status?.isComplete, generatingJumpIndex]);
+  }, [result.processing_status?.isComplete, generatingJumpIndex, result.jumpId, result.title]);
 
-  // Reset all alternative state when a completely new jump starts generating
+  // Handle when a completely new jump starts generating (not from alternative route)
   React.useEffect(() => {
-    // Detect when jumpId changes to a NEW jump (not initial load)
+    // Detect when jumpId changes to a NEW jump
     if (result.jumpId && result.jumpId !== previousJumpIdRef.current) {
-      // Store the new jumpId
+      const previousJumpId = previousJumpIdRef.current;
       previousJumpIdRef.current = result.jumpId;
       
-      // If we're starting fresh (generation in progress), reset everything
+      // If we're starting fresh (generation in progress)
       if (!result.processing_status?.isComplete) {
         setShowAlternatives(false);
         setAlternativeJumps([]);
@@ -100,6 +124,13 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
         setGeneratedJumpIndex(null);
         setGeneratingJumpIndex(null);
         setJumpGenerationComplete(false);
+        
+        // If there's no previous jump (first generation) or it's an alternative jump
+        // don't reset the exploration history - it was already updated
+        // Only reset if this is a completely fresh generation (not from alternative)
+        if (!previousJumpId && !explorationHistoryRef.current) {
+          // This is the first jump - will initialize history when exploring alternatives
+        }
       }
     }
   }, [result.jumpId, result.processing_status?.isComplete]);
@@ -198,11 +229,38 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
   };
 
   // Handle generating a new jump from an alternative with credit check
-  const handleGenerateThisJump = async (alternative: AlternativeJump, index: number) => {
+  const handleGenerateThisJump = async (alternative: AlternativeRoute, index: number) => {
     if (!onGenerateAlternativeJump) {
       toast.error('Generation not available in this context');
       return;
     }
+
+    // Prepare the updated exploration history
+    const prepareHistoryUpdate = () => {
+      // Get current history or create new one
+      let currentHistory = explorationHistoryRef.current;
+      
+      if (!currentHistory) {
+        // Create initial history from current jump
+        currentHistory = createExplorationHistory(
+          result.jumpId,
+          result.title || 'Origin Jump',
+          result.formGoals || '',
+          result.formChallenges || ''
+        );
+      }
+      
+      // Add this exploration level (the new jump will update with its own jumpId when generated)
+      const updatedHistory = addExplorationLevel(
+        currentHistory,
+        alternativeJumps,
+        index,
+        undefined, // New jumpId will be set when jump is generated
+        alternative.title
+      );
+      
+      return updatedHistory;
+    };
 
     // For authenticated users, check credits
     if (authCheck) {
@@ -240,11 +298,15 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                 // Deduct credit first
                 const success = await deductCredit('Jump generation (alternative route)', `alt-jump-${Date.now()}`);
                 if (success) {
+                  const updatedHistory = prepareHistoryUpdate();
+                  explorationHistoryRef.current = updatedHistory;
+                  setExplorationHistory(updatedHistory);
+                  
                   setSelectedAlternative(alternative);
                   setAlternativesCollapsed(true);
                   setGeneratingJumpIndex(index);
-                  setGeneratedJumpIndex(index); // Mark this as generated
-                  onGenerateAlternativeJump(alternative);
+                  setGeneratedJumpIndex(index);
+                  onGenerateAlternativeJump(alternative, updatedHistory);
                 }
               }}
               className="flex-1 bg-primary hover:bg-primary/90"
@@ -278,11 +340,15 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
               size="sm"
               onClick={() => {
                 toast.dismiss();
+                const updatedHistory = prepareHistoryUpdate();
+                explorationHistoryRef.current = updatedHistory;
+                setExplorationHistory(updatedHistory);
+                
                 setSelectedAlternative(alternative);
                 setAlternativesCollapsed(true);
                 setGeneratingJumpIndex(index);
-                setGeneratedJumpIndex(index); // Mark this as generated
-                onGenerateAlternativeJump(alternative);
+                setGeneratedJumpIndex(index);
+                onGenerateAlternativeJump(alternative, updatedHistory);
               }}
               className="flex-1 bg-primary hover:bg-primary/90"
             >
@@ -680,6 +746,11 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
         <TabsContent value="overview" className="mt-0" style={{ overflow: 'visible', maxHeight: 'none', height: 'auto', display: 'block' }}>
           {result.comprehensive_plan ? (
             <div ref={overviewContentRef} className="space-y-6">
+              {/* Route Exploration Breadcrumb - shows when we're in an alternative route */}
+              {explorationHistory && explorationHistory.explorationPath.length > 1 && (
+                <RouteExplorationBreadcrumb history={explorationHistory} />
+              )}
+              
               {/* NEW FORMAT: THE JUMP FORWARD with Alternative Jumps Feature */}
               {result.comprehensive_plan.jumpForward && (
                 <div className="space-y-4">
