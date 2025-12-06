@@ -120,9 +120,9 @@ export default function AppSidebar() {
         "hover:bg-primary/10 hover:border-primary/30",
         "transition-all duration-300 ease-out",
         "active:scale-95",
-        // When sidebar is open, move button to the right edge of sidebar
+        // When sidebar is open, position button centered on the sidebar edge
         openMobile 
-          ? "top-[5.5rem] left-[calc(18rem-2.5rem)]" 
+          ? "top-[5.5rem] left-[calc(18rem-1.25rem)]" 
           : "top-[5.5rem] left-3"
       )}
       aria-label={openMobile ? "Close sidebar" : "Open sidebar"}
