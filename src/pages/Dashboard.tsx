@@ -12,6 +12,7 @@ import Profile from "./dashboard/Profile";
 import AccountProfile from "./dashboard/AccountProfile";
 import Subscription from "./dashboard/Subscription";
 import ViewJump from "./dashboard/ViewJump";
+import JumpinAIStudioContent from "@/components/dashboard/JumpinAIStudioContent";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -83,6 +84,7 @@ export default function Dashboard() {
             <div className="p-3 sm:p-4 md:p-6 max-w-full overflow-x-hidden">
               <Routes>
                 <Route index element={<DashboardHome />} />
+                <Route path="studio" element={<JumpinAIStudioContent />} />
                 <Route path="jumps" element={<MyJumpsNew />} />
                 <Route path="jump/:jumpId" element={<ViewJump embedded />} />
                 <Route path="tools-prompts" element={<ToolsPrompts />} />

@@ -1,51 +1,39 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { AlertCircle, Loader2, LogIn, Zap } from 'lucide-react';
+import { AlertCircle, Loader2, LogIn } from 'lucide-react';
 import { Turnstile } from '@marsidev/react-turnstile';
+import { Navigate } from 'react-router-dom';
 import Navigation from '@/components/Navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { useCredits } from '@/hooks/useCredits';
-import { guestLimitService } from '@/services/guestLimitService';
 import { jumpinAIStudioService, type StudioFormData } from '@/services/jumpinAIStudioService';
 import { toast } from 'sonner';
 import ProgressiveJumpDisplay from '@/components/ProgressiveJumpDisplay';
 import { useProgressiveGeneration } from '@/hooks/useProgressiveGeneration';
-import { CreditsDisplay } from '@/components/CreditsDisplay';
 import { supabase } from '@/integrations/supabase/client';
 import { SpeechToTextButton } from '@/components/SpeechToTextButton';
 import { markJumpAsUsingSTT } from '@/services/sttTrackingService';
 import type { AlternativeRoute, RouteExplorationHistory } from '@/types/alternativeRoutes';
-import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
-import AppSidebar from '@/components/dashboard/AppSidebar';
 
 const JumpinAIStudio = () => {
-  const { user, isAuthenticated, login } = useAuth();
-  const { hasCredits, deductCredit, creditsBalance, updateTransactionReference } = useCredits();
+  const { user, isAuthenticated, isLoading, login } = useAuth();
+  const { hasCredits, deductCredit, updateTransactionReference } = useCredits();
   const { isGenerating, result, processingStatus, generateWithProgression } = useProgressiveGeneration();
   const [generationTimer, setGenerationTimer] = useState(0);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [guestUsageInfo, setGuestUsageInfo] = useState<{ usageCount: number; remaining: number } | null>(null);
   const [isLoadingGuestInfo, setIsLoadingGuestInfo] = useState(true);
   const [turnstileErrorShown, setTurnstileErrorShown] = useState(false);
-  const [sttUsed, setSttUsed] = useState(false); // Track if STT was used
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sttUsed, setSttUsed] = useState(false);
   const progressDisplayRef = useRef<HTMLDivElement>(null);
   const generateButtonRef = useRef<HTMLDivElement>(null);
   const goalsTextareaRef = useRef<HTMLTextAreaElement>(null);
   const challengesTextareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // Set sidebar state based on screen size (only for authenticated users)
-  useEffect(() => {
-    if (!isAuthenticated) return;
-    
-    const handleResize = () => {
-      setSidebarOpen(window.innerWidth >= 768);
-    };
-    
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, [isAuthenticated]);
+  // Redirect authenticated users to dashboard studio
+  if (!isLoading && isAuthenticated) {
+    return <Navigate to="/dashboard/studio" replace />;
+  }
 
   // Refresh function to fetch latest tool prompts
   const refreshToolPrompts = React.useCallback(async () => {
@@ -729,52 +717,20 @@ const JumpinAIStudio = () => {
       </>
     );
 
-  // Guest view - no sidebar, with Navigation
-  if (!isAuthenticated) {
-    return (
-      <>
-        <Helmet>
-          <title>JumpinAI Studio - AI-Powered Transformation Workspace</title>
-          <meta name="description" content="Your AI-powered workspace for creating and managing strategic transformations with intelligent guidance." />
-        </Helmet>
-        
-        <div className="min-h-screen scroll-snap-container bg-gradient-to-br from-background/95 via-background to-primary/5 dark:bg-gradient-to-br dark:from-black dark:via-gray-950/90 dark:to-gray-900/60 relative">
-          <Navigation />
-          <main className="relative">
-            <StudioContent />
-          </main>
-        </div>
-      </>
-    );
-  }
-
-  // Authenticated view - with sidebar
+  // Guest view only - authenticated users are redirected to /dashboard/studio
   return (
     <>
       <Helmet>
         <title>JumpinAI Studio - AI-Powered Transformation Workspace</title>
         <meta name="description" content="Your AI-powered workspace for creating and managing strategic transformations with intelligent guidance." />
       </Helmet>
-      <Navigation />
       
-      <SidebarProvider defaultOpen={sidebarOpen}>
-        <div className="min-h-screen flex w-full pt-20 md:pt-16 bg-gradient-to-br from-background/95 via-background to-primary/5 dark:bg-gradient-to-br dark:from-black dark:via-gray-950/90 dark:to-gray-900/60 relative overflow-x-hidden">
-          <AppSidebar />
-          
-          <main className="flex-1 relative z-10 w-full max-w-full overflow-x-hidden">
-            <header className="h-12 flex items-center justify-between border-b px-3 sm:px-4">
-              <div className="flex items-center min-w-0">
-                <SidebarTrigger className="mr-2 hover:bg-muted/50 transition-colors rounded-md p-1 shrink-0 text-base sm:text-base" />
-                <h1 className="text-base sm:text-base font-medium truncate">JumpinAI Studio</h1>
-              </div>
-            </header>
-            
-            <div className="max-w-full overflow-x-hidden">
-              <StudioContent />
-            </div>
-          </main>
-        </div>
-      </SidebarProvider>
+      <div className="min-h-screen scroll-snap-container bg-gradient-to-br from-background/95 via-background to-primary/5 dark:bg-gradient-to-br dark:from-black dark:via-gray-950/90 dark:to-gray-900/60 relative">
+        <Navigation />
+        <main className="relative">
+          <StudioContent />
+        </main>
+      </div>
     </>
   );
 };

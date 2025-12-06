@@ -146,10 +146,10 @@ export default function AppSidebar() {
         </Link>
 
         <Link 
-          to="/jumpinai-studio" 
+          to="/dashboard/studio" 
           className={cn(
             "flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-[13px] font-medium transition-all duration-300",
-            getNavCls({ isActive: currentPath === "/jumpinai-studio" })
+            getNavCls({ isActive: currentPath === "/dashboard/studio" })
           )}
         >
           <Rocket className="h-4 w-4" />
