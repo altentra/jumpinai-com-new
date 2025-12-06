@@ -517,7 +517,7 @@ const JumpinAIStudio = () => {
               </div>
 
               {/* Sign Up CTA for Guests */}
-              <div className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.7s' }}>
+              <div className="mb-8 animate-fade-in-up max-w-4xl mx-auto" style={{ animationDelay: '0.7s' }}>
                 <div className="relative glass rounded-2xl p-5 sm:p-6 border border-amber-400/20 backdrop-blur-xl bg-gradient-to-br from-amber-500/5 via-card/90 to-orange-400/5">
                   <div className="flex flex-col items-center gap-4 text-center">
                     <p className="text-sm sm:text-base text-amber-600/90 dark:text-amber-400/90 font-medium leading-relaxed">
@@ -525,7 +525,7 @@ const JumpinAIStudio = () => {
                     </p>
                     <button
                       onClick={() => login('/dashboard/studio')}
-                      className="flex items-center gap-2 px-7 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-full hover:from-amber-600 hover:to-orange-600 transition-all duration-300 shadow-md hover:shadow-lg hover:shadow-amber-500/20"
+                      className="flex items-center gap-2 px-7 py-2.5 rounded-full transition-all duration-300 backdrop-blur-md bg-amber-600/80 hover:bg-amber-600/90 text-white/95 border border-amber-500/30 shadow-lg shadow-amber-900/10 hover:shadow-xl hover:shadow-amber-900/15"
                     >
                       <LogIn className="w-4 h-4" />
                       <span className="font-medium">Sign Up Now</span>
