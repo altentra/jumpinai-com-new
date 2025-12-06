@@ -160,6 +160,17 @@ export const jumpinAIStudioService = {
                     title: result.title
                   });
                 }
+                
+                // CRITICAL: Dispatch window event to notify sidebar of new jump
+                if (jumpId) {
+                  console.log('🔔 Dispatching jumpCreated event to window for sidebar update');
+                  window.dispatchEvent(new CustomEvent('jumpCreated', { 
+                    detail: { 
+                      jumpId: jumpId, 
+                      title: result.fullTitle || result.title 
+                    } 
+                  }));
+                }
               } else if (type === 'overview') {
                 console.log('📋 Processing overview data (NEW 4-FRAME FORMAT):', data);
                 
