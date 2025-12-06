@@ -521,14 +521,14 @@ const JumpinAIStudio = () => {
                 <div className="relative glass rounded-2xl p-5 sm:p-6 border border-amber-400/20 backdrop-blur-xl bg-gradient-to-br from-amber-500/5 via-card/90 to-orange-400/5">
                   <div className="flex flex-col items-center gap-4 text-center">
                     <p className="text-sm sm:text-base text-amber-600/90 dark:text-amber-400/90 font-medium leading-relaxed">
-                      Want to save your Jump? Sign up now and get <span className="font-semibold">3 welcome credits</span>!
+                      Want to be able to save your Jump? Sign up now and get <span className="font-semibold">3 welcome credits</span>!
                     </p>
                     <button
                       onClick={() => login('/dashboard/studio')}
                       className="flex items-center gap-2 px-7 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-full hover:from-amber-600 hover:to-orange-600 transition-all duration-300 shadow-md hover:shadow-lg hover:shadow-amber-500/20"
                     >
                       <LogIn className="w-4 h-4" />
-                      <span className="font-medium">Sign Up Free</span>
+                      <span className="font-medium">Sign Up Now</span>
                     </button>
                   </div>
                 </div>
