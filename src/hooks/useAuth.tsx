@@ -205,7 +205,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = async () => {
     subscriptionCache.clear(); // Clear cache on logout
-    await supabase.auth.signOut();
+    // Clear user state immediately for responsive UI
+    setUser(null);
+    setSubscription(null);
+    
+    try {
+      await supabase.auth.signOut();
+    } catch (error) {
+      // Session may already be expired, that's fine
+      console.log('Logout completed (session may have been expired)');
+    }
+    
     window.location.href = "/";
   };
 

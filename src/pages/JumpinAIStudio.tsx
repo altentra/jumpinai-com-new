@@ -89,10 +89,16 @@ const JumpinAIStudio = () => {
     budget: ''
   });
 
-  // Fetch current guest usage from server on mount
+  // Fetch current guest usage from server on mount - with stable ref to prevent re-fetching
+  const guestUsageFetched = useRef(false);
+  
   useEffect(() => {
+    // Only fetch once when not authenticated and not already fetched
+    if (isLoading) return; // Wait for auth to settle
+    
     const fetchGuestUsage = async () => {
-      if (!isAuthenticated) {
+      if (!isAuthenticated && !guestUsageFetched.current) {
+        guestUsageFetched.current = true;
         setIsLoadingGuestInfo(true);
         try {
           // First, get the client's IP address from the edge function
@@ -130,13 +136,13 @@ const JumpinAIStudio = () => {
         } finally {
           setIsLoadingGuestInfo(false);
         }
-      } else {
+      } else if (isAuthenticated) {
         setIsLoadingGuestInfo(false);
       }
     };
     
     fetchGuestUsage();
-  }, [isAuthenticated]);
+  }, [isAuthenticated, isLoading]);
 
   // Load saved form data for authenticated users
   useEffect(() => {
@@ -411,7 +417,7 @@ const JumpinAIStudio = () => {
         <div className="max-w-6xl mx-auto">
             {/* Auth Status for Guest Users Only */}
             {!isAuthenticated && (
-              <div className="flex justify-end mb-4 sm:mb-6 animate-fade-in-right">
+              <div className="flex justify-start mb-4 sm:mb-6 animate-fade-in-left">
                 <div className="relative group w-full sm:w-auto">
                   <div className="relative glass rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm border border-border backdrop-blur-xl bg-card/80 shadow-lg transition-all duration-300 w-full sm:max-w-sm">
                     {/* Subtle glass overlay */}
