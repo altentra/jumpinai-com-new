@@ -75,7 +75,7 @@ export default function AppSidebar() {
       : "hover:bg-gradient-to-br hover:from-primary/10 hover:via-accent/5 hover:to-primary/10 hover:backdrop-blur-xl hover:border hover:border-primary/20";
 
   return (
-    <Sidebar className="w-52 mt-20 md:mt-16">
+    <Sidebar className="w-56 mt-20 md:mt-16">
       <SidebarHeader className="border-b border-sidebar-border px-3 py-2 pt-4">
         <Link 
           to="/dashboard/profile" 
@@ -128,7 +128,7 @@ export default function AppSidebar() {
         <Link 
           to="/dashboard/subscription" 
           className={cn(
-            "flex items-center justify-center gap-2 rounded-xl px-3 py-2 text-sm font-medium transition-all duration-300 mt-2",
+            "flex items-center justify-center gap-2 rounded-xl px-3 py-2 text-[13px] font-medium transition-all duration-300 mt-2",
             getNavCls({ isActive: currentPath === "/dashboard/subscription" })
           )}
         >
@@ -143,7 +143,7 @@ export default function AppSidebar() {
           <Link 
             to="/dashboard" 
             className={cn(
-              "flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-300",
+              "flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-[13px] font-medium transition-all duration-300",
               getNavCls({ isActive: currentPath === "/dashboard" })
             )}
           >
@@ -154,7 +154,7 @@ export default function AppSidebar() {
           <Link 
             to="/jumpinai-studio" 
             className={cn(
-              "flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-300",
+              "flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-[13px] font-medium transition-all duration-300",
               getNavCls({ isActive: currentPath === "/jumpinai-studio" })
             )}
           >
@@ -166,7 +166,7 @@ export default function AppSidebar() {
           <Link 
             to="/dashboard/jumps" 
             className={cn(
-              "flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-300",
+              "flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-[13px] font-medium transition-all duration-300",
               getNavCls({ isActive: currentPath === "/dashboard/jumps" })
             )}
           >
@@ -177,7 +177,7 @@ export default function AppSidebar() {
           <Link 
             to="/dashboard/tools-prompts" 
             className={cn(
-              "flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-300",
+              "flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-[13px] font-medium transition-all duration-300",
               getNavCls({ isActive: currentPath === "/dashboard/tools-prompts" })
             )}
           >
@@ -191,7 +191,7 @@ export default function AppSidebar() {
           <Link 
             to="/dashboard/settings" 
             className={cn(
-              "flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-300",
+              "flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-[13px] font-medium transition-all duration-300",
               getNavCls({ isActive: currentPath === "/dashboard/settings" })
             )}
           >
