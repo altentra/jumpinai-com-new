@@ -62,28 +62,47 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
   const [generatedJumpIndex, setGeneratedJumpIndex] = React.useState<number | null>(null); // Track which jump was generated
   const [jumpGenerationComplete, setJumpGenerationComplete] = React.useState(false); // Track if alternative jump generation finished
 
+  // Track previous jumpId to detect when a NEW jump is generated
+  const previousJumpIdRef = React.useRef<string | undefined>(undefined);
+  
   // Reset alternative state when a new jump is fully generated (from alternative route)
   React.useEffect(() => {
     if (result.processing_status?.isComplete && generatingJumpIndex !== null) {
       // The alternative jump generation is complete
       setGeneratingJumpIndex(null);
       setJumpGenerationComplete(true);
+      
+      // After a brief delay to let UI update, reset alternatives for the NEW jump
+      // so it can have its own "Explore Alternative Routes" button
+      setTimeout(() => {
+        setShowAlternatives(false);
+        setAlternativeJumps([]);
+        setSelectedAlternative(null);
+        setAlternativesCollapsed(false);
+        // Keep generatedJumpIndex to show "Jump Generated" state briefly
+      }, 100);
     }
   }, [result.processing_status?.isComplete, generatingJumpIndex]);
 
-  // Reset all alternative state when result changes (new jump started)
+  // Reset all alternative state when a completely new jump starts generating
   React.useEffect(() => {
-    // Reset when we get a new jump result (different jumpId or fresh start)
-    if (!result.processing_status?.isComplete && !result.title) {
-      setShowAlternatives(false);
-      setAlternativeJumps([]);
-      setSelectedAlternative(null);
-      setAlternativesCollapsed(false);
-      setGeneratedJumpIndex(null);
-      setGeneratingJumpIndex(null);
-      setJumpGenerationComplete(false);
+    // Detect when jumpId changes to a NEW jump (not initial load)
+    if (result.jumpId && result.jumpId !== previousJumpIdRef.current) {
+      // Store the new jumpId
+      previousJumpIdRef.current = result.jumpId;
+      
+      // If we're starting fresh (generation in progress), reset everything
+      if (!result.processing_status?.isComplete) {
+        setShowAlternatives(false);
+        setAlternativeJumps([]);
+        setSelectedAlternative(null);
+        setAlternativesCollapsed(false);
+        setGeneratedJumpIndex(null);
+        setGeneratingJumpIndex(null);
+        setJumpGenerationComplete(false);
+      }
     }
-  }, [result.jumpId]);
+  }, [result.jumpId, result.processing_status?.isComplete]);
 
   // Update tool prompts when they change
   React.useEffect(() => {
@@ -678,33 +697,54 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                           {result.comprehensive_plan.jumpForward}
                         </p>
                         
-                        {/* Explore Alternative Routes Button - Always visible when generation is complete */}
-                        {result.processing_status?.isComplete && !showAlternatives && (
+                        {/* Explore Alternative Routes Button - Always visible, disabled during generation */}
+                        {!showAlternatives && (
                           <div className="pt-4 border-t border-border/30">
-                            <button
-                              onClick={handleGenerateAlternatives}
-                              disabled={isGeneratingAlternatives}
-                              className="inline-flex items-center justify-center gap-2 px-4 py-2 text-xs font-medium rounded-lg
-                                bg-gradient-to-r from-primary/10 via-accent/5 to-primary/10 
-                                border border-primary/30 hover:border-primary/50
-                                text-primary hover:text-primary
-                                backdrop-blur-sm transition-all duration-300
-                                hover:from-primary/15 hover:via-accent/10 hover:to-primary/15
-                                hover:shadow-lg hover:shadow-primary/20
-                                disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                              {isGeneratingAlternatives ? (
-                                <>
-                                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                                  Exploring Routes...
-                                </>
-                              ) : (
-                                <>
+                            {!result.processing_status?.isComplete ? (
+                              /* Button disabled during jump generation with professional explainer */
+                              <div className="space-y-2">
+                                <button
+                                  disabled={true}
+                                  className="inline-flex items-center justify-center gap-2 px-4 py-2 text-xs font-medium rounded-lg
+                                    bg-gradient-to-r from-muted/30 via-muted/20 to-muted/30 
+                                    border border-muted/30
+                                    text-muted-foreground
+                                    backdrop-blur-sm cursor-not-allowed opacity-60"
+                                >
                                   <Route className="w-3.5 h-3.5" />
                                   Explore Alternative Routes
-                                </>
-                              )}
-                            </button>
+                                </button>
+                                <p className="text-xs text-muted-foreground/70 italic">
+                                  Available after generation completes — typically under a minute
+                                </p>
+                              </div>
+                            ) : (
+                              /* Button enabled after generation complete */
+                              <button
+                                onClick={handleGenerateAlternatives}
+                                disabled={isGeneratingAlternatives}
+                                className="inline-flex items-center justify-center gap-2 px-4 py-2 text-xs font-medium rounded-lg
+                                  bg-gradient-to-r from-primary/10 via-accent/5 to-primary/10 
+                                  border border-primary/30 hover:border-primary/50
+                                  text-primary hover:text-primary
+                                  backdrop-blur-sm transition-all duration-300
+                                  hover:from-primary/15 hover:via-accent/10 hover:to-primary/15
+                                  hover:shadow-lg hover:shadow-primary/20
+                                  disabled:opacity-50 disabled:cursor-not-allowed"
+                              >
+                                {isGeneratingAlternatives ? (
+                                  <>
+                                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                    Exploring Routes...
+                                  </>
+                                ) : (
+                                  <>
+                                    <Route className="w-3.5 h-3.5" />
+                                    Explore Alternative Routes
+                                  </>
+                                )}
+                              </button>
+                            )}
                           </div>
                         )}
 
@@ -838,19 +878,24 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                         <div className="flex items-center gap-2">
                           <Route className="w-4 h-4 text-primary" />
                           <span className="text-sm font-medium text-foreground">
-                            {generatedJumpIndex !== null ? (
+                            {generatingJumpIndex !== null ? (
+                              /* Actively generating - show spinner */
                               <>
-                                <span className={jumpGenerationComplete ? "text-green-500" : "text-primary"}>
+                                <span className="text-primary">
+                                  {alternativeJumps[generatingJumpIndex]?.title}
+                                </span>
+                                <span className="text-muted-foreground ml-1 inline-flex items-center gap-1">
+                                  <Loader2 className="w-3 h-3 animate-spin" />
+                                  generating...
+                                </span>
+                              </>
+                            ) : generatedJumpIndex !== null && jumpGenerationComplete ? (
+                              /* Generation complete - show green */
+                              <>
+                                <span className="text-green-500">
                                   {alternativeJumps[generatedJumpIndex]?.title}
                                 </span>
-                                <span className="text-muted-foreground ml-1">
-                                  {jumpGenerationComplete ? "(generated)" : (
-                                    <span className="inline-flex items-center gap-1">
-                                      <Loader2 className="w-3 h-3 animate-spin" />
-                                      generating...
-                                    </span>
-                                  )}
-                                </span>
+                                <span className="text-green-500/70 ml-1">(generated)</span>
                               </>
                             ) : (
                               <>Alternative Routes <span className="text-muted-foreground">({alternativeJumps.length} options)</span></>
