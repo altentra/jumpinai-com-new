@@ -513,6 +513,9 @@ export const jumpinAIStudioService = {
           result.jumpId = savedJump.id;
           result.jumpName = fullTitle;
           console.log('savedJump', savedJump);
+          
+          // Dispatch custom event to notify sidebar of new jump
+          window.dispatchEvent(new CustomEvent('jumpCreated', { detail: { jumpId: savedJump.id, title: fullTitle } }));
 
           // Save components
           await this.saveComponents(result.components, userId, savedJump.id);

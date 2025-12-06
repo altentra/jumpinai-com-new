@@ -76,6 +76,17 @@ export default function SidebarRecentJumps() {
     };
   }, [user?.id, fetchJumps]);
 
+  // Listen for custom jumpCreated event as fallback when realtime doesn't trigger
+  useEffect(() => {
+    const handleJumpCreated = () => {
+      console.log('[SidebarRecentJumps] jumpCreated event received, refreshing...');
+      fetchJumps();
+    };
+
+    window.addEventListener('jumpCreated', handleJumpCreated);
+    return () => window.removeEventListener('jumpCreated', handleJumpCreated);
+  }, [fetchJumps]);
+
   // Check if content overflows and update scroll indicator
   useEffect(() => {
     const container = containerRef.current;
