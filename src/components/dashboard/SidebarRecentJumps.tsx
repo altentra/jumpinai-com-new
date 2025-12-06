@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -19,9 +19,11 @@ export default function SidebarRecentJumps() {
   const { user } = useAuth();
   const { pathname } = useLocation();
 
-  // Fetch jumps
-  const fetchJumps = async () => {
+  // Memoized fetch function to avoid stale closure issues
+  const fetchJumps = useCallback(async () => {
     if (!user?.id) return;
+    
+    console.log('[SidebarRecentJumps] Fetching jumps for user:', user.id);
     
     const { data, error } = await supabase
       .from("user_jumps")
@@ -30,20 +32,26 @@ export default function SidebarRecentJumps() {
       .order("created_at", { ascending: false });
 
     if (!error && data) {
+      console.log('[SidebarRecentJumps] Fetched', data.length, 'jumps');
       setJumps(data);
+    } else if (error) {
+      console.error('[SidebarRecentJumps] Error fetching jumps:', error);
     }
-  };
+  }, [user?.id]);
 
+  // Initial fetch
   useEffect(() => {
     fetchJumps();
-  }, [user?.id]);
+  }, [fetchJumps]);
 
   // Real-time subscription for new jumps
   useEffect(() => {
     if (!user?.id) return;
 
+    console.log('[SidebarRecentJumps] Setting up realtime subscription for user:', user.id);
+
     const channel = supabase
-      .channel('sidebar-jumps')
+      .channel(`sidebar-jumps-${user.id}`)
       .on(
         'postgres_changes',
         {
@@ -52,16 +60,21 @@ export default function SidebarRecentJumps() {
           table: 'user_jumps',
           filter: `user_id=eq.${user.id}`
         },
-        () => {
+        (payload) => {
+          console.log('[SidebarRecentJumps] Realtime event received:', payload.eventType);
+          // Refetch all jumps to ensure correct order
           fetchJumps();
         }
       )
-      .subscribe();
+      .subscribe((status) => {
+        console.log('[SidebarRecentJumps] Subscription status:', status);
+      });
 
     return () => {
+      console.log('[SidebarRecentJumps] Cleaning up subscription');
       supabase.removeChannel(channel);
     };
-  }, [user?.id]);
+  }, [user?.id, fetchJumps]);
 
   // Check if content overflows and update scroll indicator
   useEffect(() => {
