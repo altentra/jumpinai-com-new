@@ -14,6 +14,7 @@ import { CreditsDisplay } from '@/components/CreditsDisplay';
 import { supabase } from '@/integrations/supabase/client';
 import { SpeechToTextButton } from '@/components/SpeechToTextButton';
 import { markJumpAsUsingSTT } from '@/services/sttTrackingService';
+import type { AlternativeRoute, RouteExplorationHistory } from '@/types/alternativeRoutes';
 
 const JumpinAIStudio = () => {
   const { user, isAuthenticated, login } = useAuth();
@@ -368,9 +369,17 @@ const JumpinAIStudio = () => {
   };
 
   // Handler for generating from an alternative jump
-  const handleGenerateAlternativeJump = (alternative: { title: string; description: string }) => {
+  const handleGenerateAlternativeJump = (alternative: AlternativeRoute, explorationHistory?: RouteExplorationHistory) => {
     // Scroll to top of the form
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    // Log exploration history for debugging
+    if (explorationHistory) {
+      console.log('🌳 Exploration History:', {
+        level: explorationHistory.currentLevel,
+        path: explorationHistory.explorationPath.map(n => n.jumpTitle)
+      });
+    }
     
     // Trigger generation with alternative context
     handleGenerate(alternative);
