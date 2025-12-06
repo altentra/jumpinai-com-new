@@ -91,7 +91,7 @@ export default function AppSidebar() {
         // Position: when expanded, at sidebar edge; when collapsed, near left edge
         isCollapsed 
           ? "top-20 left-2" 
-          : "top-20 left-[15.25rem]"
+          : "top-20 left-[13.25rem]"
       )}
       aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
     >
