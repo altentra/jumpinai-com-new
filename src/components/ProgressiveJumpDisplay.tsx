@@ -31,6 +31,7 @@ interface ProgressiveJumpDisplayProps {
   isAuthenticated?: boolean;
   onToolPromptsRefresh?: () => Promise<any[]>;
   onGenerateAlternativeJump?: (alternative: AlternativeRoute, explorationHistory?: RouteExplorationHistory) => void;
+  embedded?: boolean; // When true, adjusts sticky offset for dashboard embedding
 }
 
 const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({ 
@@ -38,7 +39,8 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
   generationTimer,
   isAuthenticated = false,
   onToolPromptsRefresh,
-  onGenerateAlternativeJump
+  onGenerateAlternativeJump,
+  embedded = false
 }) => {
   const navigate = useNavigate();
   const { hasCredits, deductCredit, creditsBalance } = useCredits();
@@ -628,7 +630,11 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
           className="sticky z-[60] mb-6 bg-background/95 backdrop-blur-lg border-b border-border/40 shadow-lg pb-2 -mt-2 pt-1"
           style={{ 
             position: 'sticky',
-            top: isHeaderHidden ? '0px' : window.innerWidth >= 768 ? '64px' : '80px',
+            // When embedded in dashboard: nav (64px desktop/80px mobile) + dashboard header (48px)
+            // When standalone: nav only (64px desktop/80px mobile)
+            top: isHeaderHidden ? '0px' : embedded 
+              ? (window.innerWidth >= 768 ? '112px' : '128px') 
+              : (window.innerWidth >= 768 ? '64px' : '80px'),
             pointerEvents: 'auto',
             transitionProperty: 'top',
             transitionDuration: '300ms',
