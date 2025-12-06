@@ -133,7 +133,16 @@ const Navigation = React.memo(() => {
         <div className="flex items-center h-20 md:h-16">
           {/* Left: Logo - Fixed */}
           <div className="flex-shrink-0">
-            <Link to="/" className="flex items-center group cursor-pointer">
+            <button 
+              onClick={() => {
+                if (window.location.pathname === '/') {
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                  navigate('/');
+                }
+              }}
+              className="flex items-center group cursor-pointer"
+            >
               <div className="relative">
                 <div className="pointer-events-none absolute -inset-1 rounded-2xl bg-primary/20 blur-md opacity-0 group-hover:opacity-60 transition-opacity duration-300"></div>
                 <div className="relative w-10 h-10 rounded-xl overflow-hidden group-hover:scale-105 transition-transform duration-300 ring-1 ring-border shadow-lg">
@@ -150,7 +159,7 @@ const Navigation = React.memo(() => {
               <span className="ml-3 text-2xl font-black font-display text-foreground whitespace-nowrap">
                 JumpinAI
               </span>
-            </Link>
+            </button>
           </div>
 
           {/* Center: Desktop Navigation - Centered */}
