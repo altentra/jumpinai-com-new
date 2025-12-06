@@ -123,9 +123,9 @@ export default function SidebarRecentJumps() {
                   ? "bg-primary/10 text-foreground font-medium" 
                   : "text-muted-foreground hover:text-foreground hover:bg-muted/30"
               )}
-              title={`Jump #${jumpNumber}: ${jump.title}`}
+              title={jump.title}
             >
-              Jump #{jumpNumber} {jump.title}
+              {jump.title}
             </Link>
           );
         })}
