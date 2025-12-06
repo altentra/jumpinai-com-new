@@ -59,6 +59,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
   const [generatingJumpIndex, setGeneratingJumpIndex] = React.useState<number | null>(null);
   const [selectedAlternative, setSelectedAlternative] = React.useState<AlternativeJump | null>(null);
   const [alternativesCollapsed, setAlternativesCollapsed] = React.useState(false);
+  const [generatedJumpIndex, setGeneratedJumpIndex] = React.useState<number | null>(null); // Track which jump was generated
 
   // Update tool prompts when they change
   React.useEffect(() => {
@@ -113,16 +114,21 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
     }
   };
 
-  // Generate alternative jumps
+  // Explore alternative routes
   const handleGenerateAlternatives = async () => {
     if (!result.comprehensive_plan?.jumpForward || !result.formGoals) {
-      toast.error('Cannot generate alternatives: missing required data');
+      toast.error('Cannot explore alternatives: missing required data');
       return;
     }
 
     setIsGeneratingAlternatives(true);
+    // Reset previous state when generating new alternatives
+    setGeneratedJumpIndex(null);
+    setSelectedAlternative(null);
+    setAlternativesCollapsed(false);
+    
     try {
-      const { data, error } = await supabase.functions.invoke('generate-alternative-jumps', {
+      const { data, error } = await supabase.functions.invoke('explore-alternative-routes', {
         body: {
           jumpForward: result.comprehensive_plan.jumpForward,
           formGoals: result.formGoals,
@@ -136,13 +142,13 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
       if (data?.alternatives && Array.isArray(data.alternatives)) {
         setAlternativeJumps(data.alternatives);
         setShowAlternatives(true);
-        toast.success('Alternative approaches generated!');
+        toast.success('Alternative routes discovered!');
       } else {
         throw new Error('Invalid response from server');
       }
     } catch (error) {
-      console.error('Error generating alternatives:', error);
-      toast.error('Failed to generate alternatives. Please try again.');
+      console.error('Error exploring alternatives:', error);
+      toast.error('Failed to explore alternatives. Please try again.');
     } finally {
       setIsGeneratingAlternatives(false);
     }
@@ -194,6 +200,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                   setSelectedAlternative(alternative);
                   setAlternativesCollapsed(true);
                   setGeneratingJumpIndex(index);
+                  setGeneratedJumpIndex(index); // Mark this as generated
                   onGenerateAlternativeJump(alternative);
                 }
               }}
@@ -208,11 +215,42 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
         }
       );
     } else {
-      // Guest users - proceed without credit check
-      setSelectedAlternative(alternative);
-      setAlternativesCollapsed(true);
-      setGeneratingJumpIndex(index);
-      onGenerateAlternativeJump(alternative);
+      // Guest users - proceed without credit check but show confirmation
+      toast(
+        <div className="space-y-2">
+          <p className="font-medium">Generate New Jump?</p>
+          <p className="text-sm text-muted-foreground">
+            This will generate a new jump following the selected alternative route.
+          </p>
+          <div className="flex gap-2 mt-3">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => toast.dismiss()}
+              className="flex-1"
+            >
+              Cancel
+            </Button>
+            <Button
+              size="sm"
+              onClick={() => {
+                toast.dismiss();
+                setSelectedAlternative(alternative);
+                setAlternativesCollapsed(true);
+                setGeneratingJumpIndex(index);
+                setGeneratedJumpIndex(index); // Mark this as generated
+                onGenerateAlternativeJump(alternative);
+              }}
+              className="flex-1 bg-primary hover:bg-primary/90"
+            >
+              Generate Jump
+            </Button>
+          </div>
+        </div>,
+        {
+          duration: 15000,
+        }
+      );
     }
   };
 
@@ -616,8 +654,8 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                           {result.comprehensive_plan.jumpForward}
                         </p>
                         
-                        {/* Generate Alternative Jumps Button - Always visible when generation is complete */}
-                        {result.processing_status?.isComplete && !showAlternatives && !selectedAlternative && (
+                        {/* Explore Alternative Routes Button - Always visible when generation is complete */}
+                        {result.processing_status?.isComplete && !showAlternatives && (
                           <div className="pt-4 border-t border-border/30">
                             <button
                               onClick={handleGenerateAlternatives}
@@ -634,39 +672,18 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                               {isGeneratingAlternatives ? (
                                 <>
                                   <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                                  Generating Alternatives...
+                                  Exploring Routes...
                                 </>
                               ) : (
                                 <>
                                   <Route className="w-3.5 h-3.5" />
-                                  Generate Alternative Jumps
+                                  Explore Alternative Routes
                                 </>
                               )}
                             </button>
                           </div>
                         )}
 
-                        {/* Selected Alternative Indicator (when collapsed) */}
-                        {selectedAlternative && alternativesCollapsed && (
-                          <div className="pt-4 border-t border-border/30">
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center gap-2 text-sm">
-                                <Badge variant="outline" className="bg-primary/10 text-primary border-primary/30">
-                                  <Sparkles className="w-3 h-3 mr-1" />
-                                  Selected Route
-                                </Badge>
-                                <span className="text-muted-foreground truncate max-w-[200px]">{selectedAlternative.title}</span>
-                              </div>
-                              <button
-                                onClick={() => setAlternativesCollapsed(false)}
-                                className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
-                              >
-                                <ChevronDown className="w-3.5 h-3.5" />
-                                Expand
-                              </button>
-                            </div>
-                          </div>
-                        )}
                       </CardContent>
                     </Card>
                   </div>
@@ -694,53 +711,86 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
 
                       {/* Responsive Grid: 3 columns on desktop, 1 on mobile */}
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        {alternativeJumps.map((alt, index) => (
-                          <div 
-                            key={index}
-                            className="relative group"
-                          >
-                            <div className="absolute -inset-0.5 bg-gradient-to-r from-secondary/20 via-accent/15 to-primary/20 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
-                            <Card className="relative h-full glass backdrop-blur-lg bg-card/60 border border-border/50 hover:border-primary/40 transition-all duration-300 rounded-xl">
-                              <CardContent className="p-4 flex flex-col h-full">
-                                <div className="flex-1 space-y-2">
-                                  <div className="flex items-center gap-2">
-                                    <Badge variant="outline" className="text-xs bg-primary/5 text-primary border-primary/20">
-                                      Route {index + 1}
-                                    </Badge>
+                        {alternativeJumps.map((alt, index) => {
+                          const isGenerated = generatedJumpIndex === index;
+                          const isCurrentlyGenerating = generatingJumpIndex === index;
+                          const isAnyGenerating = generatingJumpIndex !== null;
+                          
+                          return (
+                            <div 
+                              key={index}
+                              className="relative group"
+                            >
+                              <div className={`absolute -inset-0.5 bg-gradient-to-r rounded-xl blur transition duration-300 ${
+                                isGenerated 
+                                  ? 'from-green-500/30 via-green-400/20 to-green-500/30 opacity-50' 
+                                  : 'from-secondary/20 via-accent/15 to-primary/20 opacity-30 group-hover:opacity-50'
+                              }`}></div>
+                              <Card className={`relative h-full glass backdrop-blur-lg bg-card/60 transition-all duration-300 rounded-xl ${
+                                isGenerated 
+                                  ? 'border-green-500/50' 
+                                  : 'border border-border/50 hover:border-primary/40'
+                              }`}>
+                                <CardContent className="p-4 flex flex-col h-full">
+                                  <div className="flex-1 space-y-2">
+                                    <div className="flex items-center gap-2">
+                                      <Badge variant="outline" className={`text-xs ${
+                                        isGenerated 
+                                          ? 'bg-green-500/10 text-green-500 border-green-500/30' 
+                                          : 'bg-primary/5 text-primary border-primary/20'
+                                      }`}>
+                                        {isGenerated ? (
+                                          <>
+                                            <CheckCircle className="w-3 h-3 mr-1" />
+                                            Selected
+                                          </>
+                                        ) : (
+                                          `Route ${index + 1}`
+                                        )}
+                                      </Badge>
+                                    </div>
+                                    <h4 className="font-semibold text-sm text-foreground">{alt.title}</h4>
+                                    <p className="text-xs text-muted-foreground leading-relaxed">{alt.description}</p>
                                   </div>
-                                  <h4 className="font-semibold text-sm text-foreground">{alt.title}</h4>
-                                  <p className="text-xs text-muted-foreground leading-relaxed">{alt.description}</p>
-                                </div>
-                                
-                                {/* Button styled like clarify/reroute/equip */}
-                                <button
-                                  onClick={() => handleGenerateThisJump(alt, index)}
-                                  disabled={generatingJumpIndex !== null}
-                                  className="mt-4 w-full inline-flex items-center justify-center gap-2 px-4 py-2 text-xs font-medium rounded-lg
-                                    bg-gradient-to-r from-primary/10 via-accent/5 to-primary/10 
-                                    border border-primary/30 hover:border-primary/50
-                                    text-primary hover:text-primary
-                                    backdrop-blur-sm transition-all duration-300
-                                    hover:from-primary/15 hover:via-accent/10 hover:to-primary/15
-                                    hover:shadow-lg hover:shadow-primary/20
-                                    disabled:opacity-50 disabled:cursor-not-allowed"
-                                >
-                                  {generatingJumpIndex === index ? (
-                                    <>
-                                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                                      Generating...
-                                    </>
+                                  
+                                  {/* Button with different states */}
+                                  {isGenerated ? (
+                                    <div className="mt-4 w-full inline-flex items-center justify-center gap-2 px-4 py-2 text-xs font-medium rounded-lg
+                                      bg-green-500/10 border border-green-500/30 text-green-500">
+                                      <CheckCircle className="w-3.5 h-3.5" />
+                                      Jump Generated
+                                    </div>
                                   ) : (
-                                    <>
-                                      <Sparkles className="w-3.5 h-3.5" />
-                                      Generate this Jump
-                                    </>
+                                    <button
+                                      onClick={() => handleGenerateThisJump(alt, index)}
+                                      disabled={isAnyGenerating}
+                                      className="mt-4 w-full inline-flex items-center justify-center gap-2 px-4 py-2 text-xs font-medium rounded-lg
+                                        bg-gradient-to-r from-primary/10 via-accent/5 to-primary/10 
+                                        border border-primary/30 hover:border-primary/50
+                                        text-primary hover:text-primary
+                                        backdrop-blur-sm transition-all duration-300
+                                        hover:from-primary/15 hover:via-accent/10 hover:to-primary/15
+                                        hover:shadow-lg hover:shadow-primary/20
+                                        disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                      {isCurrentlyGenerating ? (
+                                        <>
+                                          <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                          Generating...
+                                        </>
+                                      ) : (
+                                        <>
+                                          <Sparkles className="w-3.5 h-3.5" />
+                                          Generate this Jump
+                                        </>
+                                      )}
+                                    </button>
                                   )}
-                                </button>
-                              </CardContent>
-                            </Card>
-                          </div>
-                        ))}
+                                </CardContent>
+                              </Card>
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                   )}
@@ -752,8 +802,11 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                         <div className="flex items-center gap-2">
                           <Route className="w-4 h-4 text-primary" />
                           <span className="text-sm font-medium text-foreground">
-                            {selectedAlternative ? (
-                              <>Selected: <span className="text-primary">{selectedAlternative.title}</span></>
+                            {generatedJumpIndex !== null ? (
+                              <>
+                                <span className="text-green-500">{alternativeJumps[generatedJumpIndex]?.title}</span>
+                                <span className="text-muted-foreground ml-1">(generated)</span>
+                              </>
                             ) : (
                               <>Alternative Routes <span className="text-muted-foreground">({alternativeJumps.length} options)</span></>
                             )}
@@ -764,7 +817,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                           className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
                         >
                           <ChevronDown className="w-3.5 h-3.5" />
-                          Expand
+                          View Routes
                         </button>
                       </div>
                     </div>
