@@ -75,7 +75,7 @@ export default function AppSidebar() {
       : "hover:bg-gradient-to-br hover:from-primary/10 hover:via-accent/5 hover:to-primary/10 hover:backdrop-blur-xl hover:border hover:border-primary/20";
 
   return (
-    <Sidebar className="w-56 mt-20 md:mt-16">
+    <Sidebar className="w-56 mt-20 md:mt-16 h-[calc(100vh-5rem)] md:h-[calc(100vh-4rem)] flex flex-col">
       <SidebarHeader className="border-b border-sidebar-border px-3 py-2 pt-3">
         <Link 
           to="/dashboard/profile" 
@@ -135,7 +135,7 @@ export default function AppSidebar() {
         </Link>
       </SidebarHeader>
 
-      <SidebarContent>
+      <SidebarContent className="flex-1 overflow-auto">
         {/* Navigation Links */}
         <nav className="p-3 space-y-1">
           <Link 
@@ -175,7 +175,7 @@ export default function AppSidebar() {
         </nav>
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-sidebar-border p-3">
+      <SidebarFooter className="border-t border-sidebar-border p-3 mt-auto shrink-0">
         <Link 
           to="/dashboard/settings" 
           className={cn(
