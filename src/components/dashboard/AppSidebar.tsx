@@ -118,11 +118,17 @@ export default function AppSidebar() {
             </Badge>
           </div>
         )}
-        <div className="flex items-center justify-center gap-1.5 bg-gradient-to-r from-primary/10 to-accent/10 dark:from-primary/8 dark:to-accent/8 rounded-lg px-2.5 py-1.5 border border-primary/20">
+        <Link 
+          to="/dashboard/subscription" 
+          className={cn(
+            "flex items-center justify-center gap-1.5 bg-gradient-to-r from-primary/10 to-accent/10 dark:from-primary/8 dark:to-accent/8 rounded-lg px-2.5 py-1.5 border border-primary/20 hover:border-primary/40 transition-all duration-300",
+            currentPath === "/dashboard/subscription" && "ring-1 ring-primary/30"
+          )}
+        >
           <Zap className="w-3.5 h-3.5 text-primary" />
           <span className="text-sm font-semibold text-foreground">{creditsBalance}</span>
           <span className="text-xs text-muted-foreground">{creditsBalance === 1 ? 'credit' : 'credits'}</span>
-        </div>
+        </Link>
       </SidebarHeader>
 
       <SidebarContent>
@@ -187,17 +193,6 @@ export default function AppSidebar() {
             Settings
           </Link>
 
-          {/* Subscription */}
-          <Link 
-            to="/dashboard/subscription" 
-            className={cn(
-              "flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-300",
-              getNavCls({ isActive: currentPath === "/dashboard/subscription" })
-            )}
-          >
-            <CreditCard className="h-4 w-4" />
-            Subscription
-          </Link>
         </nav>
       </SidebarContent>
     </Sidebar>
