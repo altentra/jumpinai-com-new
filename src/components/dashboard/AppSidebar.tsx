@@ -80,7 +80,7 @@ export default function AppSidebar() {
         <Link 
           to="/dashboard/profile" 
           className={cn(
-            "flex items-center gap-2 rounded-lg px-2 py-1.5 transition-all duration-300",
+            "flex items-center justify-center gap-2 rounded-lg px-2 py-1.5 transition-all duration-300",
             "hover:bg-gradient-to-br hover:from-primary/10 hover:via-accent/5 hover:to-primary/10 hover:backdrop-blur-xl hover:border hover:border-primary/20",
             currentPath === "/dashboard/profile" 
               ? "bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl border border-primary/20" 
@@ -103,9 +103,9 @@ export default function AppSidebar() {
               {userName?.charAt(0)?.toUpperCase() || 'U'}
             </AvatarFallback>
           </Avatar>
-          <span className="text-[13px] font-medium text-foreground truncate">{userName || 'User'}</span>
+          <span className="text-[13px] font-medium text-foreground">{userName || 'User'}</span>
         </Link>
-        <div className="flex items-center justify-center gap-2 mt-1 px-1">
+        <div className="flex items-center justify-center gap-2 mt-1">
           <Badge 
             variant="outline" 
             className={cn(
@@ -118,7 +118,7 @@ export default function AppSidebar() {
           <div className="flex items-center gap-1 text-[11px]">
             <Zap className="w-3 h-3 text-primary" />
             <span className="font-semibold text-foreground">{creditsBalance}</span>
-            <span className="text-muted-foreground">cr</span>
+            <span className="text-muted-foreground">credits</span>
           </div>
         </div>
         
