@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { AlertCircle, Loader2, LogIn, Zap } from 'lucide-react';
-import { Turnstile } from '@marsidev/react-turnstile';
+import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile';
 import { Navigate } from 'react-router-dom';
 import Navigation from '@/components/Navigation';
 import { useAuth } from '@/hooks/useAuth';
@@ -38,6 +38,7 @@ const JumpinAIStudio = () => {
   });
 
   // Refs - stable across renders
+  const turnstileRef = useRef<TurnstileInstance | null>(null);
   const turnstileErrorShownRef = useRef(false);
   const guestUsageFetched = useRef(false);
   const progressDisplayRef = useRef<HTMLDivElement>(null);
@@ -200,7 +201,13 @@ const JumpinAIStudio = () => {
 
     // Guest users: Verify Turnstile token
     if (!turnstileToken) {
-      toast.error('Please complete the security verification');
+      // If no token, try to get a fresh one by triggering reset
+      if (turnstileRef.current) {
+        toast.info('Security verification in progress. Please wait a moment and try again.');
+        turnstileRef.current.reset();
+      } else {
+        toast.error('Security verification required. Please refresh the page and try again.');
+      }
       return;
     }
 
@@ -216,7 +223,7 @@ const JumpinAIStudio = () => {
       );
       
       if (result.jumpId) {
-        toast.success('Your Jump in AI is ready! Sign up to get 5 welcome credits and save your jumps.');
+        toast.success('Your Jump in AI is ready! Sign up to get 3 welcome credits and save your jumps.');
       }
 
       // Update guest usage info after successful generation
@@ -226,15 +233,25 @@ const JumpinAIStudio = () => {
           remaining: Math.max(0, guestUsageInfo.remaining - 1)
         });
       }
+      
+      // Reset Turnstile to get a fresh token for next generation (e.g., alternative jumps)
+      setTimeout(() => {
+        turnstileRef.current?.reset();
+        setTurnstileToken(null);
+      }, 500);
 
     } catch (error: any) {
       console.error('Error generating Jump:', error);
       
       if (error.message?.includes('Rate limit exceeded') || error.message?.includes('429')) {
-        toast.error('You\'ve used all 3 free tries. Please sign up to get 5 welcome credits and continue!');
+        toast.error('You\'ve used all 3 free tries. Please sign up to get 3 welcome credits and continue!');
       } else {
         toast.error('Failed to generate your Jump. Please try again.');
       }
+      
+      // Reset Turnstile on error to allow retry
+      turnstileRef.current?.reset();
+      setTurnstileToken(null);
     }
   }, [formData, turnstileToken, generateWithProgression, guestUsageInfo]);
 
@@ -257,6 +274,7 @@ const JumpinAIStudio = () => {
     return (
       <div className="hidden">
         <Turnstile
+          ref={turnstileRef}
           siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY || "1x00000000000000000000AA"}
           onSuccess={(token) => {
             setTurnstileToken(token);
@@ -269,10 +287,16 @@ const JumpinAIStudio = () => {
               console.error('❌ Turnstile verification failed');
             }
           }}
+          onExpire={() => {
+            // Token expired, reset to get a fresh one
+            console.log('⏰ Turnstile token expired, resetting...');
+            setTurnstileToken(null);
+            turnstileRef.current?.reset();
+          }}
           options={{
             theme: 'light',
             size: 'invisible',
-            retry: 'never',
+            refreshExpired: 'auto', // Automatically refresh when expired
           }}
         />
       </div>
@@ -497,7 +521,7 @@ const JumpinAIStudio = () => {
                 <div className="relative glass rounded-2xl p-5 sm:p-6 border border-amber-400/20 backdrop-blur-xl bg-gradient-to-br from-amber-500/5 via-card/90 to-orange-400/5">
                   <div className="flex flex-col items-center gap-4 text-center">
                     <p className="text-sm sm:text-base text-amber-600/90 dark:text-amber-400/90 font-medium leading-relaxed">
-                      Want to save your jump? Sign up free and get <span className="font-semibold">3 welcome credits</span>!
+                      Want to save your Jump? Sign up now and get <span className="font-semibold">3 welcome credits</span>!
                     </p>
                     <button
                       onClick={() => login('/dashboard/studio')}
