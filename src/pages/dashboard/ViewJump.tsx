@@ -9,6 +9,10 @@ import { supabase } from '@/integrations/supabase/client';
 import ViewJumpDisplay from '@/components/ViewJumpDisplay';
 import type { ProgressiveResult } from '@/hooks/useProgressiveGeneration';
 import { toast } from 'sonner';
+import { useAuth } from '@/hooks/useAuth';
+import Navigation from '@/components/Navigation';
+import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import AppSidebar from '@/components/dashboard/AppSidebar';
 
 export default function ViewJump() {
   const { jumpId } = useParams<{ jumpId: string }>();
@@ -16,6 +20,11 @@ export default function ViewJump() {
   const [jump, setJump] = useState<UserJump | null>(null);
   const [progressiveResult, setProgressiveResult] = useState<ProgressiveResult | null>(null);
   const [loading, setLoading] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { user, isAuthenticated } = useAuth();
+
+  // Check if user owns this jump
+  const isOwner = isAuthenticated && user && jump?.user_id === user.id;
 
   useEffect(() => {
     if (jumpId) {
@@ -24,6 +33,17 @@ export default function ViewJump() {
       trackJumpView(jumpId);
     }
   }, [jumpId]);
+
+  // Set sidebar state based on screen size
+  useEffect(() => {
+    const handleResize = () => {
+      setSidebarOpen(window.innerWidth >= 768);
+    };
+    
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const trackJumpView = async (jumpId: string) => {
     try {
@@ -365,7 +385,7 @@ export default function ViewJump() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[80vh]">
+      <div className="flex items-center justify-center min-h-screen">
         <div className="flex flex-col items-center gap-3">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
           <p className="text-sm text-muted-foreground">Loading your jump...</p>
@@ -374,24 +394,9 @@ export default function ViewJump() {
     );
   }
 
-  return (
-    <div className="min-h-screen scroll-snap-container bg-gradient-to-br from-background/95 via-background to-primary/5 dark:bg-gradient-to-br dark:from-black dark:via-gray-950/90 dark:to-gray-900/60 relative">
-      {/* Premium floating background elements with liquid glass effects */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        {/* Main gradient orbs with enhanced blur and liquid animation */}
-        <div className="absolute -top-40 -right-40 w-[28rem] h-[28rem] bg-gradient-to-br from-primary/25 via-primary/15 to-primary/5 rounded-full blur-3xl animate-pulse opacity-60"></div>
-        <div className="absolute -bottom-40 -left-40 w-[32rem] h-[32rem] bg-gradient-to-tr from-secondary/20 via-accent/10 to-secondary/5 rounded-full blur-3xl animate-pulse opacity-50" style={{animationDelay: '2s'}}></div>
-        
-        {/* Liquid glass floating elements */}
-        <div className="absolute top-1/4 left-1/3 w-72 h-72 bg-gradient-conic from-primary/15 via-accent/10 to-secondary/15 rounded-full blur-2xl animate-pulse opacity-40" style={{animationDelay: '1s'}}></div>
-        <div className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-gradient-radial from-accent/20 via-primary/10 to-transparent rounded-full blur-xl animate-pulse opacity-30" style={{animationDelay: '3s'}}></div>
-        
-        {/* Subtle mesh gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent opacity-50"></div>
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-accent/3 to-transparent opacity-40"></div>
-      </div>
-
-      <div className="relative w-full max-w-7xl mx-auto py-4 sm:py-6 px-3 sm:px-4 lg:px-6 space-y-4 sm:space-y-6">
+  // Content component to avoid duplication
+  const JumpContent = () => (
+    <div className="relative w-full max-w-7xl mx-auto py-4 sm:py-6 px-3 sm:px-4 lg:px-6 space-y-4 sm:space-y-6">
       {/* Enhanced Header - Mobile Optimized */}
       <div className="relative group">
         <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 dark:from-primary/15 dark:via-accent/12 dark:to-secondary/15 rounded-2xl sm:rounded-3xl blur-xl opacity-40"></div>
@@ -450,8 +455,65 @@ export default function ViewJump() {
           </div>
         )}
       </ErrorBoundary>
+    </div>
+  );
+
+  // If user is authenticated and owns this jump, show with sidebar
+  if (isOwner) {
+    return (
+      <>
+        <Navigation />
+        <SidebarProvider defaultOpen={sidebarOpen}>
+          <div className="min-h-screen flex w-full pt-20 md:pt-16 bg-gradient-to-br from-background/95 via-background to-primary/5 dark:bg-gradient-to-br dark:from-black dark:via-gray-950/90 dark:to-gray-900/60 relative overflow-x-hidden">
+            {/* Premium floating background elements */}
+            <div className="fixed inset-0 overflow-hidden pointer-events-none">
+              <div className="absolute -top-40 -right-40 w-[28rem] h-[28rem] bg-gradient-to-br from-primary/25 via-primary/15 to-primary/5 rounded-full blur-3xl animate-pulse opacity-60"></div>
+              <div className="absolute -bottom-40 -left-40 w-[32rem] h-[32rem] bg-gradient-to-tr from-secondary/20 via-accent/10 to-secondary/5 rounded-full blur-3xl animate-pulse opacity-50" style={{animationDelay: '2s'}}></div>
+              <div className="absolute top-1/4 left-1/3 w-72 h-72 bg-gradient-conic from-primary/15 via-accent/10 to-secondary/15 rounded-full blur-2xl animate-pulse opacity-40" style={{animationDelay: '1s'}}></div>
+              <div className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-gradient-radial from-accent/20 via-primary/10 to-transparent rounded-full blur-xl animate-pulse opacity-30" style={{animationDelay: '3s'}}></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent opacity-50"></div>
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-accent/3 to-transparent opacity-40"></div>
+            </div>
+            
+            <AppSidebar />
+
+            <main className="flex-1 relative z-10 w-full max-w-full overflow-x-hidden">
+              <header className="h-12 flex items-center justify-between border-b px-3 sm:px-4">
+                <div className="flex items-center min-w-0">
+                  <SidebarTrigger className="mr-2 hover:bg-muted/50 transition-colors rounded-md p-1 shrink-0 text-base sm:text-base" />
+                  <h1 className="text-base sm:text-base font-medium truncate">View Jump</h1>
+                </div>
+              </header>
+
+              <div className="p-3 sm:p-4 md:p-6 max-w-full overflow-x-hidden">
+                <JumpContent />
+              </div>
+            </main>
+          </div>
+        </SidebarProvider>
+      </>
+    );
+  }
+
+  // Default: show without sidebar (for unauthenticated users or viewing others' jumps)
+  return (
+    <div className="min-h-screen scroll-snap-container bg-gradient-to-br from-background/95 via-background to-primary/5 dark:bg-gradient-to-br dark:from-black dark:via-gray-950/90 dark:to-gray-900/60 relative">
+      {/* Premium floating background elements with liquid glass effects */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        {/* Main gradient orbs with enhanced blur and liquid animation */}
+        <div className="absolute -top-40 -right-40 w-[28rem] h-[28rem] bg-gradient-to-br from-primary/25 via-primary/15 to-primary/5 rounded-full blur-3xl animate-pulse opacity-60"></div>
+        <div className="absolute -bottom-40 -left-40 w-[32rem] h-[32rem] bg-gradient-to-tr from-secondary/20 via-accent/10 to-secondary/5 rounded-full blur-3xl animate-pulse opacity-50" style={{animationDelay: '2s'}}></div>
+        
+        {/* Liquid glass floating elements */}
+        <div className="absolute top-1/4 left-1/3 w-72 h-72 bg-gradient-conic from-primary/15 via-accent/10 to-secondary/15 rounded-full blur-2xl animate-pulse opacity-40" style={{animationDelay: '1s'}}></div>
+        <div className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-gradient-radial from-accent/20 via-primary/10 to-transparent rounded-full blur-xl animate-pulse opacity-30" style={{animationDelay: '3s'}}></div>
+        
+        {/* Subtle mesh gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent opacity-50"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-accent/3 to-transparent opacity-40"></div>
       </div>
+
+      <JumpContent />
     </div>
   );
 }
-
