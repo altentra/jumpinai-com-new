@@ -29,11 +29,21 @@ const JumpinAIStudio = () => {
   const generateButtonRef = useRef<HTMLDivElement>(null);
   const goalsTextareaRef = useRef<HTMLTextAreaElement>(null);
   const challengesTextareaRef = useRef<HTMLTextAreaElement>(null);
+  
+  // Stable refs to prevent re-fetching
+  const guestUsageFetched = useRef(false);
+  const authCheckComplete = useRef(false);
 
-  // Redirect authenticated users to dashboard studio
-  if (!isLoading && isAuthenticated) {
-    return <Navigate to="/dashboard/studio" replace />;
-  }
+  const [formData, setFormData] = useState<StudioFormData>({
+    currentRole: '',
+    industry: '',
+    experienceLevel: '',
+    aiKnowledge: '',
+    goals: '',
+    challenges: '',
+    timeCommitment: '',
+    budget: ''
+  });
 
   // Refresh function to fetch latest tool prompts
   const refreshToolPrompts = React.useCallback(async () => {
@@ -51,8 +61,6 @@ const JumpinAIStudio = () => {
       
       console.log('✅ Fetched updated tool prompts:', toolPromptsData?.length);
       
-      // The result is managed by useProgressiveGeneration hook, which we can't update directly
-      // Instead, we return the data and let ProgressiveJumpDisplay handle it
       return toolPromptsData;
     } catch (error) {
       console.error('❌ Error refreshing tool prompts:', error);
@@ -60,6 +68,14 @@ const JumpinAIStudio = () => {
     }
   }, [result?.jumpId]);
 
+  // Helper function to format time
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  // Add noindex meta tag
   useEffect(() => {
     const meta = document.createElement('meta');
     meta.name = 'robots';
@@ -71,30 +87,13 @@ const JumpinAIStudio = () => {
     };
   }, []);
   
-  // Helper function to format time
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
-
-  const [formData, setFormData] = useState<StudioFormData>({
-    currentRole: '',
-    industry: '',
-    experienceLevel: '',
-    aiKnowledge: '',
-    goals: '',
-    challenges: '',
-    timeCommitment: '',
-    budget: ''
-  });
-
   // Fetch current guest usage from server on mount - with stable ref to prevent re-fetching
-  const guestUsageFetched = useRef(false);
-  
   useEffect(() => {
     // Only fetch once when not authenticated and not already fetched
     if (isLoading) return; // Wait for auth to settle
+    
+    // Mark that auth check is complete (prevents re-runs)
+    authCheckComplete.current = true;
     
     const fetchGuestUsage = async () => {
       if (!isAuthenticated && !guestUsageFetched.current) {
@@ -142,7 +141,8 @@ const JumpinAIStudio = () => {
     };
     
     fetchGuestUsage();
-  }, [isAuthenticated, isLoading]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoading]);
 
   // Load saved form data for authenticated users
   useEffect(() => {
@@ -723,6 +723,11 @@ const JumpinAIStudio = () => {
         </div>
       </>
     );
+
+  // Redirect authenticated users to dashboard studio - AFTER all hooks
+  if (!isLoading && isAuthenticated) {
+    return <Navigate to="/dashboard/studio" replace />;
+  }
 
   // Guest view only - authenticated users are redirected to /dashboard/studio
   return (
