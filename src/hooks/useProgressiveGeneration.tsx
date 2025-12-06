@@ -419,6 +419,9 @@ export const useProgressiveGeneration = () => {
         structured_plan: progressiveResult.structured_plan || rawResponse.structuredPlan,
         // CRITICAL: Preserve the streamed comprehensive_plan with new 4-frame structure
         comprehensive_plan: progressiveResult.comprehensive_plan || rawResponse.comprehensivePlan,
+        // CRITICAL: Preserve formGoals and formChallenges for Explore Alternative Routes feature
+        formGoals: progressiveResult.formGoals,
+        formChallenges: progressiveResult.formChallenges,
         components: progressiveResult.components || rawResponse.components || {
           toolPrompts: [],
           workflows: [],
