@@ -315,8 +315,9 @@ Deno.serve(async (req) => {
           // Step 3: Generate comprehensive plan
           console.log('🔧 Step 3: Generating Comprehensive Plan...');
           let comprehensivePlan = '';
+          let planResponse = null;
           try {
-            const planResponse = await callXAIWithRetry(XAI_API_KEY, 3, formData, overviewContent);
+            planResponse = await callXAIWithRetry(XAI_API_KEY, 3, formData, overviewContent);
             console.log('✅ Step 3 response:', planResponse);
             comprehensivePlan = typeof planResponse === 'string' 
               ? planResponse 
@@ -337,10 +338,11 @@ Deno.serve(async (req) => {
 
           // Step 4: Generate tools & prompts (needs BOTH overview and comprehensive plan)
           console.log('🔧 Step 4: Generating Tools & Prompts...');
+          let toolsResponse = null;
           try {
             // Combine overview and comprehensive plan for Step 4 context
             const fullContext = `${overviewContent}\n\nCOMPREHENSIVE PLAN:\n${comprehensivePlan}`;
-            const toolsResponse = await callXAIWithRetry(XAI_API_KEY, 4, formData, fullContext);
+            toolsResponse = await callXAIWithRetry(XAI_API_KEY, 4, formData, fullContext);
             console.log('✅ Step 4 response:', toolsResponse);
             
             const sent = sendEvent(4, 'tool_prompts', toolsResponse);
@@ -356,19 +358,69 @@ Deno.serve(async (req) => {
             });
           }
 
-          // Update jump record to completed status
+          // CRITICAL: Save ALL generated content to database
           if (jumpId) {
             try {
+              // Build comprehensive_plan object with NEW 4-frame structure
+              const comprehensivePlanData = {
+                // NEW 4-FRAME STRUCTURE (from Step 2 - Overview)
+                jumpForward: overviewResponse?.jumpForward || '',
+                strategicEdge: overviewResponse?.strategicEdge || { analysis: '', keyPoints: [] },
+                flightPath: overviewResponse?.flightPath || { vision: '', roadmap: [] },
+                newBaseline: overviewResponse?.newBaseline || '',
+                // Action plan from Step 3
+                action_plan: planResponse || { phases: [] },
+              };
+              
+              // Build structured_plan (the action plan phases)
+              const structuredPlanData = planResponse || { phases: [] };
+              
+              // Build full_content for search/context
+              let fullContent = '';
+              if (overviewResponse?.jumpForward) {
+                fullContent += `## The Jump Forward\n\n${overviewResponse.jumpForward}\n\n`;
+              }
+              if (overviewResponse?.strategicEdge?.analysis) {
+                fullContent += `## Strategic Edge\n\n${overviewResponse.strategicEdge.analysis}\n\n`;
+                if (overviewResponse.strategicEdge.keyPoints?.length) {
+                  overviewResponse.strategicEdge.keyPoints.forEach((p: string) => fullContent += `- ${p}\n`);
+                  fullContent += '\n';
+                }
+              }
+              if (overviewResponse?.flightPath?.vision) {
+                fullContent += `## Flight Path\n\n${overviewResponse.flightPath.vision}\n\n`;
+              }
+              if (overviewResponse?.newBaseline) {
+                fullContent += `## New Baseline\n\n${overviewResponse.newBaseline}\n\n`;
+              }
+              
+              // Add plan content
+              if (planResponse?.phases?.length) {
+                fullContent += '\n\n=== STRATEGIC ACTION PLAN ===\n';
+                planResponse.phases.forEach((phase: any, idx: number) => {
+                  fullContent += `\n### Phase ${phase.phase_number || idx + 1}: ${phase.title}\n`;
+                  fullContent += `Duration: ${phase.duration || ''}\n`;
+                  fullContent += `${phase.description || ''}\n\n`;
+                });
+              }
+              
+              console.log('💾 Saving comprehensive_plan and structured_plan to database...');
+              console.log('💾 comprehensive_plan preview:', JSON.stringify(comprehensivePlanData).substring(0, 200));
+              console.log('💾 structured_plan preview:', JSON.stringify(structuredPlanData).substring(0, 200));
+              
               await supabase
                 .from('user_jumps')
                 .update({
                   completion_percentage: 100,
-                  status: 'completed'
+                  status: 'completed',
+                  comprehensive_plan: comprehensivePlanData,
+                  structured_plan: structuredPlanData,
+                  full_content: fullContent.trim()
                 })
                 .eq('id', jumpId);
-              console.log('✅ Jump marked as completed:', jumpId);
+              console.log('✅ Jump marked as completed with all generated content saved:', jumpId);
             } catch (updateError) {
-              console.error('❌ Error updating jump status:', updateError);
+              console.error('❌ Error updating jump with generated content:', updateError);
             }
           }
           
