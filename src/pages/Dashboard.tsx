@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet-async";
 import { useNavigate, Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import Navigation from "@/components/Navigation";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import AppSidebar from "@/components/dashboard/AppSidebar";
 import DashboardHome from "./dashboard/DashboardHome";
 import MyJumpsNew from "./dashboard/MyJumpsNew";
@@ -74,14 +74,7 @@ export default function Dashboard() {
           <AppSidebar />
 
           <main className="flex-1 relative z-10 w-full max-w-full">
-            <header className="h-12 flex items-center justify-between border-b px-3 sm:px-4">
-              <div className="flex items-center min-w-0">
-                <SidebarTrigger className="mr-2 hover:bg-muted/50 transition-colors rounded-md p-1 shrink-0 text-base sm:text-base" />
-                <h1 className="text-base sm:text-base font-medium truncate">My Dashboard</h1>
-              </div>
-            </header>
-
-            <div className="p-3 sm:p-4 md:p-6 max-w-full">
+            <div className="max-w-full">
               <Routes>
                 <Route index element={<DashboardHome />} />
                 <Route path="studio" element={<JumpinAIStudioContent />} />
