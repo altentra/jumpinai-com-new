@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useCredits } from "@/hooks/useCredits";
 import { supabase } from "@/integrations/supabase/client";
-import { Settings, Home, FileText, CreditCard, Zap, Rocket } from "lucide-react";
+import { Settings, Home, FileText, CreditCard, Zap, Rocket, ChevronLeft, ChevronRight } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { useAuth0Token } from "@/hooks/useAuth0Token";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -26,7 +26,7 @@ interface SubscriberInfo {
 }
 
 export default function AppSidebar() {
-  const { isMobile, setOpenMobile } = useSidebar();
+  const { isMobile, setOpenMobile, state, toggleSidebar, openMobile } = useSidebar();
   const { pathname: currentPath } = useLocation();
   const [userName, setUserName] = useState<string>("");
   const [subInfo, setSubInfo] = useState<SubscriberInfo | null>(null);
@@ -72,8 +72,42 @@ export default function AppSidebar() {
       ? "bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl border border-primary/20 text-foreground font-medium" 
       : "hover:bg-gradient-to-br hover:from-primary/10 hover:via-accent/5 hover:to-primary/10 hover:backdrop-blur-xl hover:border hover:border-primary/20";
 
+  const isCollapsed = state === "collapsed";
+
+  // Toggle button component that appears at sidebar edge or floats when collapsed
+  const ToggleButton = () => (
+    <button
+      onClick={() => isMobile ? setOpenMobile(!openMobile) : toggleSidebar()}
+      className={cn(
+        "fixed z-50 hidden md:flex",
+        "w-6 h-6 rounded-full",
+        "bg-background/95 backdrop-blur-xl border border-border/50",
+        "shadow-lg shadow-black/10 dark:shadow-black/30",
+        "items-center justify-center",
+        "text-muted-foreground hover:text-foreground",
+        "hover:bg-primary/10 hover:border-primary/30",
+        "transition-all duration-300 ease-out",
+        "hover:scale-110 active:scale-95",
+        // Position: when expanded, at sidebar edge; when collapsed, near left edge
+        isCollapsed 
+          ? "top-20 left-2" 
+          : "top-20 left-[13rem]"
+      )}
+      aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+    >
+      <ChevronLeft 
+        className={cn(
+          "w-3.5 h-3.5 transition-transform duration-300",
+          isCollapsed && "rotate-180"
+        )} 
+      />
+    </button>
+  );
+
   return (
-    <Sidebar className="w-56 mt-20 md:mt-16 h-[calc(100vh-5rem)] md:h-[calc(100vh-4rem)] flex flex-col">
+    <>
+      <ToggleButton />
+      <Sidebar className="w-56 mt-20 md:mt-16 h-[calc(100vh-5rem)] md:h-[calc(100vh-4rem)] flex flex-col">
       <SidebarHeader className="border-b border-sidebar-border px-3 py-2 pt-3 shrink-0">
         <Link 
           to="/dashboard/profile" 
@@ -188,5 +222,6 @@ export default function AppSidebar() {
         </Link>
       </SidebarFooter>
     </Sidebar>
+    </>
   );
 }
