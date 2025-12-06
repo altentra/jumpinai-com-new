@@ -76,18 +76,18 @@ export default function AppSidebar() {
 
   return (
     <Sidebar className="w-56 mt-20 md:mt-16">
-      <SidebarHeader className="border-b border-sidebar-border px-3 py-2 pt-4">
+      <SidebarHeader className="border-b border-sidebar-border px-3 py-2 pt-3">
         <Link 
           to="/dashboard/profile" 
           className={cn(
-            "flex items-center justify-center gap-2.5 mb-2 rounded-xl px-3 py-2 transition-all duration-300",
+            "flex items-center gap-2 rounded-lg px-2 py-1.5 transition-all duration-300",
             "hover:bg-gradient-to-br hover:from-primary/10 hover:via-accent/5 hover:to-primary/10 hover:backdrop-blur-xl hover:border hover:border-primary/20",
             currentPath === "/dashboard/profile" 
               ? "bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl border border-primary/20" 
               : "border border-transparent"
           )}
         >
-          <Avatar className="h-8 w-8">
+          <Avatar className="h-7 w-7">
             {user?.avatar_url ? (
               <AvatarImage src={user.avatar_url} alt={userName} />
             ) : (
@@ -95,7 +95,7 @@ export default function AppSidebar() {
                 <img 
                   src={logoTransparent} 
                   alt="JumpinAI" 
-                  className="h-6 w-6 opacity-40 brightness-200"
+                  className="h-5 w-5 opacity-40 brightness-200"
                 />
               </div>
             )}
@@ -103,25 +103,23 @@ export default function AppSidebar() {
               {userName?.charAt(0)?.toUpperCase() || 'U'}
             </AvatarFallback>
           </Avatar>
-          <span className="text-sm font-medium text-foreground">{userName || 'User'}</span>
+          <span className="text-[13px] font-medium text-foreground truncate">{userName || 'User'}</span>
         </Link>
-        {subInfo && (
-          <div className="flex justify-center mb-2">
-            <Badge 
-              variant="outline" 
-              className={cn(
-                "text-xs w-fit px-2 py-0.5",
-                subInfo.subscribed ? "border-primary/20 text-primary" : "border-muted text-muted-foreground"
-              )}
-            >
-              {subInfo.subscribed ? subInfo.subscription_tier || 'Free Plan' : 'Free Plan'}
-            </Badge>
+        <div className="flex items-center justify-center gap-2 mt-1 px-1">
+          <Badge 
+            variant="outline" 
+            className={cn(
+              "text-[10px] px-1.5 py-0",
+              subInfo?.subscribed ? "border-primary/20 text-primary" : "border-muted text-muted-foreground"
+            )}
+          >
+            {subInfo?.subscribed ? subInfo.subscription_tier || 'Free' : 'Free'}
+          </Badge>
+          <div className="flex items-center gap-1 text-[11px]">
+            <Zap className="w-3 h-3 text-primary" />
+            <span className="font-semibold text-foreground">{creditsBalance}</span>
+            <span className="text-muted-foreground">cr</span>
           </div>
-        )}
-        <div className="flex items-center justify-center gap-1.5 bg-gradient-to-r from-primary/10 to-accent/10 dark:from-primary/8 dark:to-accent/8 rounded-lg px-2.5 py-1.5 border border-primary/20">
-          <Zap className="w-3.5 h-3.5 text-primary" />
-          <span className="text-sm font-semibold text-foreground">{creditsBalance}</span>
-          <span className="text-xs text-muted-foreground">{creditsBalance === 1 ? 'credit' : 'credits'}</span>
         </div>
         
         {/* Subscription & Credits Link */}
