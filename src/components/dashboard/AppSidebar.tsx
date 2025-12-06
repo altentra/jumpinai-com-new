@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useCredits } from "@/hooks/useCredits";
 import { supabase } from "@/integrations/supabase/client";
-import { User, Settings, Home, FileText, Workflow, Lightbulb, Boxes, ChevronDown, CreditCard, Palette, Sparkles, Zap } from "lucide-react";
+import { User, Settings, Home, FileText, Workflow, Lightbulb, Boxes, ChevronDown, CreditCard, Palette, Sparkles, Zap, Rocket } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { useAuth0Token } from "@/hooks/useAuth0Token";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -137,6 +137,17 @@ export default function AppSidebar() {
           >
             <Home className="h-4 w-4" />
             Dashboard
+          </Link>
+
+          <Link 
+            to="/jumpinai-studio" 
+            className={cn(
+              "flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-300",
+              getNavCls({ isActive: currentPath === "/jumpinai-studio" })
+            )}
+          >
+            <Rocket className="h-4 w-4" />
+            JumpinAI Studio
           </Link>
 
 

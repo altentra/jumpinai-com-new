@@ -15,6 +15,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { SpeechToTextButton } from '@/components/SpeechToTextButton';
 import { markJumpAsUsingSTT } from '@/services/sttTrackingService';
 import type { AlternativeRoute, RouteExplorationHistory } from '@/types/alternativeRoutes';
+import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import AppSidebar from '@/components/dashboard/AppSidebar';
 
 const JumpinAIStudio = () => {
   const { user, isAuthenticated, login } = useAuth();
@@ -26,10 +28,24 @@ const JumpinAIStudio = () => {
   const [isLoadingGuestInfo, setIsLoadingGuestInfo] = useState(true);
   const [turnstileErrorShown, setTurnstileErrorShown] = useState(false);
   const [sttUsed, setSttUsed] = useState(false); // Track if STT was used
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const progressDisplayRef = useRef<HTMLDivElement>(null);
   const generateButtonRef = useRef<HTMLDivElement>(null);
   const goalsTextareaRef = useRef<HTMLTextAreaElement>(null);
   const challengesTextareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Set sidebar state based on screen size (only for authenticated users)
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    
+    const handleResize = () => {
+      setSidebarOpen(window.innerWidth >= 768);
+    };
+    
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [isAuthenticated]);
 
   // Refresh function to fetch latest tool prompts
   const refreshToolPrompts = React.useCallback(async () => {
@@ -385,33 +401,26 @@ const JumpinAIStudio = () => {
     handleGenerate(alternative);
   };
 
-  return (
+  // Shared content component for both guest and authenticated views
+  const StudioContent = () => (
     <>
-      <Helmet>
-        <title>JumpinAI Studio - AI-Powered Transformation Workspace</title>
-        <meta name="description" content="Your AI-powered workspace for creating and managing strategic transformations with intelligent guidance." />
-      </Helmet>
+      {/* Premium floating background elements with liquid glass effects */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        {/* Main gradient orbs with enhanced blur and liquid animation */}
+        <div className="absolute -top-40 -right-40 w-[28rem] h-[28rem] bg-gradient-to-br from-primary/25 via-primary/15 to-primary/5 rounded-full blur-3xl animate-pulse opacity-60"></div>
+        <div className="absolute -bottom-40 -left-40 w-[32rem] h-[32rem] bg-gradient-to-tr from-secondary/20 via-accent/10 to-secondary/5 rounded-full blur-3xl animate-pulse opacity-50" style={{animationDelay: '2s'}}></div>
+        
+        {/* Liquid glass floating elements */}
+        <div className="absolute top-1/4 left-1/3 w-72 h-72 bg-gradient-conic from-primary/15 via-accent/10 to-secondary/15 rounded-full blur-2xl animate-pulse opacity-40" style={{animationDelay: '1s'}}></div>
+        <div className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-gradient-radial from-accent/20 via-primary/10 to-transparent rounded-full blur-xl animate-pulse opacity-30" style={{animationDelay: '3s'}}></div>
+        
+        {/* Subtle mesh gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent opacity-50"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-accent/3 to-transparent opacity-40"></div>
+      </div>
       
-      <div className="min-h-screen scroll-snap-container bg-gradient-to-br from-background/95 via-background to-primary/5 dark:bg-gradient-to-br dark:from-black dark:via-gray-950/90 dark:to-gray-900/60 relative">
-        {/* Premium floating background elements with liquid glass effects */}
-        <div className="fixed inset-0 overflow-hidden pointer-events-none">
-          {/* Main gradient orbs with enhanced blur and liquid animation */}
-          <div className="absolute -top-40 -right-40 w-[28rem] h-[28rem] bg-gradient-to-br from-primary/25 via-primary/15 to-primary/5 rounded-full blur-3xl animate-pulse opacity-60"></div>
-          <div className="absolute -bottom-40 -left-40 w-[32rem] h-[32rem] bg-gradient-to-tr from-secondary/20 via-accent/10 to-secondary/5 rounded-full blur-3xl animate-pulse opacity-50" style={{animationDelay: '2s'}}></div>
-          
-          {/* Liquid glass floating elements */}
-          <div className="absolute top-1/4 left-1/3 w-72 h-72 bg-gradient-conic from-primary/15 via-accent/10 to-secondary/15 rounded-full blur-2xl animate-pulse opacity-40" style={{animationDelay: '1s'}}></div>
-          <div className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-gradient-radial from-accent/20 via-primary/10 to-transparent rounded-full blur-xl animate-pulse opacity-30" style={{animationDelay: '3s'}}></div>
-          
-          {/* Subtle mesh gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent opacity-50"></div>
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-accent/3 to-transparent opacity-40"></div>
-        </div>
-        
-        <Navigation />
-        
-        <main className="relative pt-24 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-6xl mx-auto">
+      <div className={`relative ${isAuthenticated ? 'pt-4' : 'pt-24'} px-4 sm:px-6 lg:px-8`}>
+        <div className="max-w-6xl mx-auto">
             {/* Auth Status and Credits Display - Mobile Optimized */}
             <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center mb-4 sm:mb-6 animate-fade-in-right gap-3 sm:gap-4">
               {/* Credits display for authenticated users */}
@@ -734,10 +743,56 @@ const JumpinAIStudio = () => {
               </div>
             </div>
           </div>
-        </main>
+        </div>
+      </>
+    );
 
+  // Guest view - no sidebar, with Navigation
+  if (!isAuthenticated) {
+    return (
+      <>
+        <Helmet>
+          <title>JumpinAI Studio - AI-Powered Transformation Workspace</title>
+          <meta name="description" content="Your AI-powered workspace for creating and managing strategic transformations with intelligent guidance." />
+        </Helmet>
+        
+        <div className="min-h-screen scroll-snap-container bg-gradient-to-br from-background/95 via-background to-primary/5 dark:bg-gradient-to-br dark:from-black dark:via-gray-950/90 dark:to-gray-900/60 relative">
+          <Navigation />
+          <main className="relative">
+            <StudioContent />
+          </main>
+        </div>
+      </>
+    );
+  }
 
-      </div>
+  // Authenticated view - with sidebar
+  return (
+    <>
+      <Helmet>
+        <title>JumpinAI Studio - AI-Powered Transformation Workspace</title>
+        <meta name="description" content="Your AI-powered workspace for creating and managing strategic transformations with intelligent guidance." />
+      </Helmet>
+      <Navigation />
+      
+      <SidebarProvider defaultOpen={sidebarOpen}>
+        <div className="min-h-screen flex w-full pt-20 md:pt-16 bg-gradient-to-br from-background/95 via-background to-primary/5 dark:bg-gradient-to-br dark:from-black dark:via-gray-950/90 dark:to-gray-900/60 relative overflow-x-hidden">
+          <AppSidebar />
+          
+          <main className="flex-1 relative z-10 w-full max-w-full overflow-x-hidden">
+            <header className="h-12 flex items-center justify-between border-b px-3 sm:px-4">
+              <div className="flex items-center min-w-0">
+                <SidebarTrigger className="mr-2 hover:bg-muted/50 transition-colors rounded-md p-1 shrink-0 text-base sm:text-base" />
+                <h1 className="text-base sm:text-base font-medium truncate">JumpinAI Studio</h1>
+              </div>
+            </header>
+            
+            <div className="max-w-full overflow-x-hidden">
+              <StudioContent />
+            </div>
+          </main>
+        </div>
+      </SidebarProvider>
     </>
   );
 };
