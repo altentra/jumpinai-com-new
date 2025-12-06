@@ -283,24 +283,24 @@ const Index = () => {
                 <h3 className="text-lg font-bold font-display">Overview</h3>
               </div>
               <p className="text-sm text-muted-foreground mb-4 leading-relaxed relative">
-                Your strategic foundation—deep situational analysis that defines where you are and where you're going.
+                Your strategic launchpad—a focused 4-frame system that captures the essence of your AI transformation in moments.
               </p>
               <div className="text-xs text-muted-foreground space-y-2 font-medium relative">
                 <div className="flex items-start gap-2">
                   <span className="text-primary mt-0.5">•</span>
-                  <span>Executive Summary</span>
+                  <span>The Jump Forward — Your strategic path</span>
                 </div>
                 <div className="flex items-start gap-2">
                   <span className="text-primary mt-0.5">•</span>
-                  <span>Situation Analysis</span>
+                  <span>Strategic Edge — The "why" behind your approach</span>
                 </div>
                 <div className="flex items-start gap-2">
                   <span className="text-primary mt-0.5">•</span>
-                  <span>Key Challenges & Opportunities</span>
+                  <span>Flight Path — Vision meets timeline</span>
                 </div>
                 <div className="flex items-start gap-2">
                   <span className="text-primary mt-0.5">•</span>
-                  <span>Strategic Vision & Roadmap</span>
+                  <span>New Baseline — Your landing zone after the jump</span>
                   </div>
                 </div>
               </div>
