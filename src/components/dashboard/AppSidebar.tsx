@@ -135,7 +135,7 @@ export default function AppSidebar() {
         </Link>
       </SidebarHeader>
 
-      <SidebarContent>
+      <SidebarContent className="flex flex-col flex-1">
         {/* Navigation Links */}
         <nav className="p-3 space-y-1">
           <Link 
@@ -160,7 +160,6 @@ export default function AppSidebar() {
             JumpinAI Studio
           </Link>
 
-
           <Link 
             to="/dashboard/jumps" 
             className={cn(
@@ -172,20 +171,12 @@ export default function AppSidebar() {
             My Jumps
           </Link>
 
-          <Link 
-            to="/dashboard/tools-prompts" 
-            className={cn(
-              "flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-[13px] font-medium transition-all duration-300",
-              getNavCls({ isActive: currentPath === "/dashboard/tools-prompts" })
-            )}
-          >
-            <Sparkles className="h-4 w-4" />
-            Tools & Prompts
-          </Link>
-
           <Separator className="my-1" />
+        </nav>
 
-          {/* Settings */}
+        {/* Settings - Sticky to bottom */}
+        <div className="mt-auto p-3 pt-0">
+          <Separator className="mb-2" />
           <Link 
             to="/dashboard/settings" 
             className={cn(
@@ -196,8 +187,7 @@ export default function AppSidebar() {
             <Settings className="h-4 w-4" />
             Settings
           </Link>
-
-        </nav>
+        </div>
       </SidebarContent>
     </Sidebar>
   );
