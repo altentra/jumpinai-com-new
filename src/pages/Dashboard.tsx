@@ -11,6 +11,7 @@ import ToolsPrompts from "./dashboard/ToolsPrompts";
 import Profile from "./dashboard/Profile";
 import AccountProfile from "./dashboard/AccountProfile";
 import Subscription from "./dashboard/Subscription";
+import ViewJump from "./dashboard/ViewJump";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -83,6 +84,7 @@ export default function Dashboard() {
               <Routes>
                 <Route index element={<DashboardHome />} />
                 <Route path="jumps" element={<MyJumpsNew />} />
+                <Route path="jump/:jumpId" element={<ViewJump embedded />} />
                 <Route path="tools-prompts" element={<ToolsPrompts />} />
                 <Route path="profile" element={<Profile />} />
                 <Route path="settings" element={<AccountProfile />} />
