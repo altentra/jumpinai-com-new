@@ -135,7 +135,7 @@ export default function AppSidebar() {
         </Link>
       </SidebarHeader>
 
-      <SidebarContent className="flex flex-col flex-1">
+      <SidebarContent>
         {/* Navigation Links */}
         <nav className="p-3 space-y-1">
           <Link 
@@ -173,22 +173,20 @@ export default function AppSidebar() {
 
           <Separator className="my-1" />
         </nav>
-
-        {/* Settings - Sticky to bottom */}
-        <div className="mt-auto p-3 pt-0">
-          <Separator className="mb-2" />
-          <Link 
-            to="/dashboard/settings" 
-            className={cn(
-              "flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-[13px] font-medium transition-all duration-300",
-              getNavCls({ isActive: currentPath === "/dashboard/settings" })
-            )}
-          >
-            <Settings className="h-4 w-4" />
-            Settings
-          </Link>
-        </div>
       </SidebarContent>
+
+      <SidebarFooter className="border-t border-sidebar-border p-3">
+        <Link 
+          to="/dashboard/settings" 
+          className={cn(
+            "flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-[13px] font-medium transition-all duration-300",
+            getNavCls({ isActive: currentPath === "/dashboard/settings" })
+          )}
+        >
+          <Settings className="h-4 w-4" />
+          Settings
+        </Link>
+      </SidebarFooter>
     </Sidebar>
   );
 }
