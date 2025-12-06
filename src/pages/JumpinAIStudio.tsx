@@ -23,7 +23,7 @@ const JumpinAIStudio = () => {
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [guestUsageInfo, setGuestUsageInfo] = useState<{ usageCount: number; remaining: number } | null>(null);
   const [isLoadingGuestInfo, setIsLoadingGuestInfo] = useState(true);
-  const [turnstileErrorShown, setTurnstileErrorShown] = useState(false);
+  const turnstileErrorShownRef = useRef(false);
   const [sttUsed, setSttUsed] = useState(false);
   const progressDisplayRef = useRef<HTMLDivElement>(null);
   const generateButtonRef = useRef<HTMLDivElement>(null);
@@ -659,27 +659,28 @@ const JumpinAIStudio = () => {
               </div>
             </div>
 
-            {/* Invisible Turnstile - Only for guests */}
-            {!isAuthenticated && (
+            {/* Invisible Turnstile - Only for guests, rendered once */}
+            {!isAuthenticated && !isLoading && (
               <div className="hidden">
                 <Turnstile
                   siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY || "1x00000000000000000000AA"}
                   onSuccess={(token) => {
                     setTurnstileToken(token);
-                    setTurnstileErrorShown(false); // Reset error flag on success
+                    turnstileErrorShownRef.current = false;
                     console.log('✅ Turnstile verified');
                   }}
                   onError={() => {
-                    console.error('❌ Turnstile verification failed');
-                    // Only show toast once to prevent spam
-                    if (!turnstileErrorShown) {
-                      setTurnstileErrorShown(true);
-                      // Don't show error toast - Turnstile will auto-retry and verification isn't required to view the page
+                    // Use ref to prevent re-renders on error
+                    if (!turnstileErrorShownRef.current) {
+                      turnstileErrorShownRef.current = true;
+                      console.error('❌ Turnstile verification failed');
                     }
+                    // Don't set state here - it causes re-render loops
                   }}
                   options={{
                     theme: 'light',
                     size: 'invisible',
+                    retry: 'never', // Prevent auto-retry which causes re-renders
                   }}
                 />
               </div>
