@@ -119,15 +119,13 @@ export default function SidebarRecentJumps() {
               to={`/dashboard/jump/${jump.id}`}
               className={cn(
                 "block px-2 py-1 rounded text-[11px] transition-all duration-200 truncate",
-                isActive 
+                isActive
                   ? "bg-primary/10 text-foreground font-medium" 
                   : "text-muted-foreground hover:text-foreground hover:bg-muted/30"
               )}
               title={`Jump #${jumpNumber}: ${jump.title}`}
             >
-              <span className="text-primary/70 font-medium">#{jumpNumber}</span>
-              <span className="mx-1">·</span>
-              <span className="truncate">{jump.title}</span>
+              Jump #{jumpNumber} {jump.title}
             </Link>
           );
         })}
