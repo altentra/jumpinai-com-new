@@ -480,9 +480,6 @@ const JumpinAIStudio = () => {
                                     <span className="text-sm sm:text-base md:text-lg font-semibold text-foreground transition-colors duration-300 group-hover:text-primary">
                                       Generate My Jump in AI
                                     </span>
-                                    <span className="hidden sm:inline-block text-xs text-muted-foreground/70 ml-2">
-                                      ~2 min
-                                    </span>
                                   </>
                                 )}
                               </div>
@@ -497,15 +494,16 @@ const JumpinAIStudio = () => {
 
               {/* Sign Up CTA for Guests */}
               <div className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.7s' }}>
-                <div className="relative glass rounded-xl p-4 sm:p-6 border border-border backdrop-blur-xl bg-gradient-to-r from-primary/5 via-card/80 to-accent/5">
+                <div className="relative glass rounded-xl p-4 sm:p-6 border border-orange-500/30 backdrop-blur-xl bg-gradient-to-r from-orange-500/10 via-card/80 to-orange-400/10">
                   <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div className="text-center sm:text-left">
-                      <h3 className="text-lg font-semibold text-foreground mb-1">Ready for more?</h3>
-                      <p className="text-sm text-muted-foreground">Sign up to save your jumps and get 5 welcome credits!</p>
+                      <p className="text-sm sm:text-base text-orange-500 dark:text-orange-400 font-medium">
+                        Want to save your jump? Sign up free and get 3 welcome credits!
+                      </p>
                     </div>
                     <button
                       onClick={() => login('/dashboard/studio')}
-                      className="flex items-center gap-2 px-6 py-2.5 bg-primary text-primary-foreground rounded-full hover:bg-primary/90 transition-all duration-300 shadow-lg hover:shadow-xl"
+                      className="flex items-center gap-2 px-6 py-2.5 bg-orange-500 text-white rounded-full hover:bg-orange-600 transition-all duration-300 shadow-lg hover:shadow-xl"
                     >
                       <LogIn className="w-4 h-4" />
                       <span className="font-medium">Sign Up Free</span>
