@@ -73,20 +73,18 @@ export default function Dashboard() {
           </div>
           <AppSidebar />
 
-          <main className="flex-1 relative z-10 w-full max-w-full">
-            <div className="max-w-full">
-              <Routes>
-                <Route index element={<DashboardHome />} />
-                <Route path="studio" element={<JumpinAIStudioContent />} />
-                <Route path="jumps" element={<MyJumpsNew />} />
-                <Route path="jump/:jumpId" element={<ViewJump embedded />} />
-                <Route path="tools-prompts" element={<ToolsPrompts />} />
-                <Route path="profile" element={<Profile />} />
-                <Route path="settings" element={<AccountProfile />} />
-                <Route path="subscription" element={<Subscription />} />
-                <Route path="*" element={<Navigate to="." replace />} />
-              </Routes>
-            </div>
+          <main className="flex-1 relative z-10 w-full max-w-full p-3 sm:p-4 md:p-6">
+            <Routes>
+              <Route index element={<DashboardHome />} />
+              <Route path="studio" element={<JumpinAIStudioContent />} />
+              <Route path="jumps" element={<MyJumpsNew />} />
+              <Route path="jump/:jumpId" element={<ViewJump embedded />} />
+              <Route path="tools-prompts" element={<ToolsPrompts />} />
+              <Route path="profile" element={<Profile />} />
+              <Route path="settings" element={<AccountProfile />} />
+              <Route path="subscription" element={<Subscription />} />
+              <Route path="*" element={<Navigate to="." replace />} />
+            </Routes>
           </main>
         </div>
       </SidebarProvider>

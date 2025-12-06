@@ -80,7 +80,7 @@ export default function AppSidebar() {
       onClick={() => isMobile ? setOpenMobile(!openMobile) : toggleSidebar()}
       className={cn(
         "fixed z-50 hidden md:flex",
-        "w-6 h-6 rounded-full",
+        "w-8 h-8 rounded-full",
         "bg-background/95 backdrop-blur-xl border border-border/50",
         "shadow-lg shadow-black/10 dark:shadow-black/30",
         "items-center justify-center",
@@ -91,13 +91,13 @@ export default function AppSidebar() {
         // Position: when expanded, at sidebar edge; when collapsed, near left edge
         isCollapsed 
           ? "top-20 left-2" 
-          : "top-20 left-[13rem]"
+          : "top-20 left-[15.25rem]"
       )}
       aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
     >
       <ChevronLeft 
         className={cn(
-          "w-3.5 h-3.5 transition-transform duration-300",
+          "w-4 h-4 transition-transform duration-300",
           isCollapsed && "rotate-180"
         )} 
       />
@@ -107,7 +107,7 @@ export default function AppSidebar() {
   return (
     <>
       <ToggleButton />
-      <Sidebar className="w-56 mt-20 md:mt-16 h-[calc(100vh-5rem)] md:h-[calc(100vh-4rem)] flex flex-col">
+      <Sidebar className="mt-20 md:mt-16 h-[calc(100vh-5rem)] md:h-[calc(100vh-4rem)] flex flex-col">
       <SidebarHeader className="border-b border-sidebar-border px-3 py-2 pt-3 shrink-0">
         <Link 
           to="/dashboard/profile" 
