@@ -161,52 +161,47 @@ export const jumpinAIStudioService = {
                   });
                 }
               } else if (type === 'overview') {
-                console.log('📋 Processing overview data:', data);
+                console.log('📋 Processing overview data (NEW 4-FRAME FORMAT):', data);
+                
+                // NEW 4-FRAME STRUCTURE: jumpForward, strategicEdge, flightPath, newBaseline
                 result.comprehensivePlan = {
-                  executiveSummary: data.executiveSummary || '',
-                  situationAnalysis: data.situationAnalysis || {},
-                  strategicVision: data.strategicVision || '',
-                  roadmap: data.roadmap || {},
-                  successFactors: data.successFactors || [],
-                  riskMitigation: data.riskMitigation || [],
-                  action_plan: { phases: [] } // Will be filled by plan step
+                  // NEW 4-FRAME STRUCTURE
+                  jumpForward: data.jumpForward || '',
+                  strategicEdge: data.strategicEdge || { analysis: '', keyPoints: [] },
+                  flightPath: data.flightPath || { vision: '', roadmap: [] },
+                  newBaseline: data.newBaseline || '',
+                  // Action plan will be filled by plan step
+                  action_plan: { phases: [] }
                 };
                 
+                // Build overview text for full_content using NEW structure
                 let overviewText = '';
-                if (data.executiveSummary) {
-                  overviewText += `## Executive Summary\n\n${data.executiveSummary}\n\n`;
+                if (data.jumpForward) {
+                  overviewText += `## The Jump Forward\n\n${data.jumpForward}\n\n`;
                 }
-                if (data.situationAnalysis) {
-                  if (data.situationAnalysis.currentState) {
-                    overviewText += `## Current State\n\n${data.situationAnalysis.currentState}\n\n`;
-                  }
-                  if (data.situationAnalysis.challenges?.length) {
-                    overviewText += `## Challenges\n`;
-                    data.situationAnalysis.challenges.forEach((c: string) => {
-                      overviewText += `- ${c}\n`;
-                    });
-                    overviewText += '\n';
-                  }
-                  if (data.situationAnalysis.opportunities?.length) {
-                    overviewText += `## Opportunities\n`;
-                    data.situationAnalysis.opportunities.forEach((o: string) => {
-                      overviewText += `- ${o}\n`;
+                if (data.strategicEdge?.analysis) {
+                  overviewText += `## Strategic Edge\n\n${data.strategicEdge.analysis}\n\n`;
+                  if (data.strategicEdge.keyPoints?.length) {
+                    data.strategicEdge.keyPoints.forEach((p: string) => {
+                      overviewText += `- ${p}\n`;
                     });
                     overviewText += '\n';
                   }
                 }
-                if (data.strategicVision) {
-                  overviewText += `## Strategic Vision\n\n${data.strategicVision}\n\n`;
+                if (data.flightPath?.vision) {
+                  overviewText += `## Flight Path\n\n${data.flightPath.vision}\n\n`;
+                  if (data.flightPath.roadmap?.length) {
+                    data.flightPath.roadmap.forEach((phase: any) => {
+                      overviewText += `### ${phase.phase} (${phase.timeframe})\n${phase.focus}\n\n`;
+                    });
+                  }
                 }
-                if (data.roadmap) {
-                  overviewText += `## Roadmap\n\n`;
-                  if (data.roadmap.immediate) overviewText += `**Immediate (0-30 days):** ${data.roadmap.immediate}\n\n`;
-                  if (data.roadmap.shortTerm) overviewText += `**Short-term (30-90 days):** ${data.roadmap.shortTerm}\n\n`;
-                  if (data.roadmap.longTerm) overviewText += `**Long-term (90+ days):** ${data.roadmap.longTerm}\n\n`;
+                if (data.newBaseline) {
+                  overviewText += `## New Baseline\n\n${data.newBaseline}\n\n`;
                 }
                 
                 result.fullContent = overviewText.trim();
-                console.log('✅ Overview built with', result.fullContent.length, 'chars');
+                console.log('✅ Overview built with NEW 4-frame format,', result.fullContent.length, 'chars');
                 
                 // CRITICAL: Pass jumpName explicitly in callback data for guest display
                 if (onProgress) {
