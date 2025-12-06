@@ -8,16 +8,16 @@ import {
 import { useLocation, Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useCredits } from "@/hooks/useCredits";
 import { supabase } from "@/integrations/supabase/client";
-import { User, Settings, Home, FileText, Workflow, Lightbulb, Boxes, ChevronDown, CreditCard, Palette, Sparkles, Zap, Rocket } from "lucide-react";
+import { Settings, Home, FileText, CreditCard, Zap, Rocket } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { useAuth0Token } from "@/hooks/useAuth0Token";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import logoTransparent from "@/assets/logo-transparent.png";
+import SidebarRecentJumps from "./SidebarRecentJumps";
 
 interface SubscriberInfo {
   subscribed: boolean;
@@ -40,12 +40,10 @@ export default function AppSidebar() {
 
   useEffect(() => {
     if (isAuthenticated && user) {
-      // Use display_name from profiles table, fallback to email username
       setUserName(user?.display_name || user?.email?.split('@')[0] || "");
       refreshSubscription();
     }
 
-    // Listen for profile updates
     const handleProfileUpdate = () => {
       if (user) {
         setUserName(user?.display_name || user?.email?.split('@')[0] || "");
@@ -76,7 +74,7 @@ export default function AppSidebar() {
 
   return (
     <Sidebar className="w-56 mt-20 md:mt-16 h-[calc(100vh-5rem)] md:h-[calc(100vh-4rem)] flex flex-col">
-      <SidebarHeader className="border-b border-sidebar-border px-3 py-2 pt-3">
+      <SidebarHeader className="border-b border-sidebar-border px-3 py-2 pt-3 shrink-0">
         <Link 
           to="/dashboard/profile" 
           className={cn(
@@ -122,7 +120,6 @@ export default function AppSidebar() {
           </div>
         </div>
         
-        {/* Subscription & Credits Link */}
         <Link 
           to="/dashboard/subscription" 
           className={cn(
@@ -135,47 +132,50 @@ export default function AppSidebar() {
         </Link>
       </SidebarHeader>
 
-      <SidebarContent className="flex-1 overflow-auto">
-        {/* Navigation Links */}
-        <nav className="p-3 space-y-1">
-          <Link 
-            to="/dashboard" 
-            className={cn(
-              "flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-[13px] font-medium transition-all duration-300",
-              getNavCls({ isActive: currentPath === "/dashboard" })
-            )}
-          >
-            <Home className="h-4 w-4" />
-            Dashboard
-          </Link>
+      {/* Navigation Links - Fixed section */}
+      <nav className="p-3 space-y-1 shrink-0">
+        <Link 
+          to="/dashboard" 
+          className={cn(
+            "flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-[13px] font-medium transition-all duration-300",
+            getNavCls({ isActive: currentPath === "/dashboard" })
+          )}
+        >
+          <Home className="h-4 w-4" />
+          Dashboard
+        </Link>
 
-          <Link 
-            to="/jumpinai-studio" 
-            className={cn(
-              "flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-[13px] font-medium transition-all duration-300",
-              getNavCls({ isActive: currentPath === "/jumpinai-studio" })
-            )}
-          >
-            <Rocket className="h-4 w-4" />
-            JumpinAI Studio
-          </Link>
+        <Link 
+          to="/jumpinai-studio" 
+          className={cn(
+            "flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-[13px] font-medium transition-all duration-300",
+            getNavCls({ isActive: currentPath === "/jumpinai-studio" })
+          )}
+        >
+          <Rocket className="h-4 w-4" />
+          JumpinAI Studio
+        </Link>
 
-          <Link 
-            to="/dashboard/jumps" 
-            className={cn(
-              "flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-[13px] font-medium transition-all duration-300",
-              getNavCls({ isActive: currentPath === "/dashboard/jumps" })
-            )}
-          >
-            <FileText className="h-4 w-4" />
-            My Jumps
-          </Link>
+        <Link 
+          to="/dashboard/jumps" 
+          className={cn(
+            "flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-[13px] font-medium transition-all duration-300",
+            getNavCls({ isActive: currentPath === "/dashboard/jumps" })
+          )}
+        >
+          <FileText className="h-4 w-4" />
+          My Jumps
+        </Link>
 
-          <Separator className="my-1" />
-        </nav>
+        <Separator className="my-1" />
+      </nav>
+
+      {/* Recent Jumps - Flexible scrollable area */}
+      <SidebarContent className="flex-1 min-h-0 overflow-hidden">
+        <SidebarRecentJumps />
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-sidebar-border p-3 mt-auto shrink-0">
+      <SidebarFooter className="border-t border-sidebar-border p-3 shrink-0">
         <Link 
           to="/dashboard/settings" 
           className={cn(
