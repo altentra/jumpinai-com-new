@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { User, AlertCircle, Loader2, LogIn, Zap } from 'lucide-react';
+import { AlertCircle, Loader2, LogIn, Zap } from 'lucide-react';
 import { Turnstile } from '@marsidev/react-turnstile';
 import Navigation from '@/components/Navigation';
 import { useAuth } from '@/hooks/useAuth';
@@ -421,33 +421,15 @@ const JumpinAIStudio = () => {
       
       <div className={`relative ${isAuthenticated ? 'pt-4' : 'pt-24'} px-4 sm:px-6 lg:px-8`}>
         <div className="max-w-6xl mx-auto">
-            {/* Auth Status and Credits Display - Mobile Optimized */}
-            <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center mb-4 sm:mb-6 animate-fade-in-right gap-3 sm:gap-4">
-              {/* Credits display for authenticated users */}
-              {isAuthenticated && (
-                <div className="flex-1 order-2 sm:order-1">
-                  <CreditsDisplay showBuyButton={true} />
-                </div>
-              )}
-              
-              {/* Auth status notification */}
-              <div className="relative group order-1 sm:order-2 w-full sm:w-auto">
-                <div className="relative glass rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm border border-border backdrop-blur-xl bg-card/80 shadow-lg transition-all duration-300 w-full sm:max-w-sm">
-                  {/* Subtle glass overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/3 rounded-xl"></div>
-                  
-                  <div className="relative z-10">
-                    {isAuthenticated ? (
-                      <div className="flex items-center justify-center sm:justify-start gap-2 text-emerald-600">
-                        <div className="relative">
-                          <User className="w-3 h-3 sm:w-4 sm:h-4" />
-                          <div className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-emerald-500 rounded-full"></div>
-                        </div>
-                        <span className="font-medium truncate text-xs sm:text-sm">
-                          {user?.display_name || user?.email}
-                        </span>
-                      </div>
-                    ) : (
+            {/* Auth Status for Guest Users Only */}
+            {!isAuthenticated && (
+              <div className="flex justify-end mb-4 sm:mb-6 animate-fade-in-right">
+                <div className="relative group w-full sm:w-auto">
+                  <div className="relative glass rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm border border-border backdrop-blur-xl bg-card/80 shadow-lg transition-all duration-300 w-full sm:max-w-sm">
+                    {/* Subtle glass overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/3 rounded-xl"></div>
+                    
+                    <div className="relative z-10">
                       <div className="flex items-center justify-center sm:justify-start gap-2 text-amber-600">
                         {isLoadingGuestInfo ? (
                           <>
@@ -470,11 +452,11 @@ const JumpinAIStudio = () => {
                           </>
                         )}
                       </div>
-                    )}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            )}
             {/* Premium Hero Section - Mobile Optimized */}
             <div className="text-center mb-8 sm:mb-12 lg:mb-20 animate-fade-in-up px-2">
               {/* Liquid glass backdrop for title */}
