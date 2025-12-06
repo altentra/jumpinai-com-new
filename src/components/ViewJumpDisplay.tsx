@@ -389,6 +389,79 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
                 </div>
               )}
 
+              {/* LEGACY FORMAT: Action Plan Phases - for old jumps with action_plan structure */}
+              {!result.comprehensive_plan.jumpForward && !result.comprehensive_plan.executiveSummary && result.comprehensive_plan.action_plan?.phases && (
+                <div className="space-y-6">
+                  {/* Overview/Summary Card */}
+                  <div className="relative group">
+                    <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-secondary/30 rounded-xl blur opacity-40 group-hover:opacity-60 transition duration-300"></div>
+                    <Card className="relative glass backdrop-blur-lg bg-card/80 border border-primary/30 hover:border-primary/50 transition-all duration-300 rounded-2xl">
+                      <CardHeader className="pb-3">
+                        <CardTitle className="text-base sm:text-lg flex items-center gap-2">
+                          <Zap className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+                          Your Strategic Plan
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-xs sm:text-sm md:text-base leading-relaxed text-foreground/90">
+                          This jump contains {result.comprehensive_plan.action_plan.phases.length} implementation phases to help you achieve your goals. Review the Plan tab for detailed steps.
+                        </p>
+                      </CardContent>
+                    </Card>
+                  </div>
+
+                  {/* Phases Overview */}
+                  {result.comprehensive_plan.action_plan.phases.map((phase: any, idx: number) => (
+                    <div key={idx} className="relative group">
+                      <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
+                      <Card className="relative glass backdrop-blur-lg bg-card/80 border border-border hover:border-primary/40 transition-all duration-300 rounded-2xl">
+                        <CardHeader className="pb-3">
+                          <div className="flex items-center justify-between">
+                            <CardTitle className="text-base sm:text-lg flex items-center gap-2">
+                              {idx === 0 && <Play className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />}
+                              {idx === 1 && <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />}
+                              {idx === 2 && <Flag className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />}
+                              {idx > 2 && <Target className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />}
+                              Phase {phase.phase_number}: {phase.title}
+                            </CardTitle>
+                            {phase.duration && (
+                              <Badge variant="outline" className="text-[10px] sm:text-xs bg-primary/10 text-primary border-primary/30">
+                                {phase.duration}
+                              </Badge>
+                            )}
+                          </div>
+                        </CardHeader>
+                        <CardContent className="space-y-3">
+                          {phase.description && (
+                            <p className="text-xs sm:text-sm text-foreground/80 leading-relaxed">
+                              {phase.description}
+                            </p>
+                          )}
+                          {phase.steps && phase.steps.length > 0 && (
+                            <div className="space-y-2">
+                              <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Key Steps</h4>
+                              <ul className="space-y-1.5">
+                                {phase.steps.slice(0, 3).map((step: any, stepIdx: number) => (
+                                  <li key={stepIdx} className="flex items-start gap-2 text-xs sm:text-sm">
+                                    <CheckCircle className="w-3.5 h-3.5 text-primary mt-0.5 flex-shrink-0" />
+                                    <span className="text-foreground/70">{step.title}</span>
+                                  </li>
+                                ))}
+                                {phase.steps.length > 3 && (
+                                  <li className="text-xs text-muted-foreground pl-5">
+                                    + {phase.steps.length - 3} more steps in Plan tab
+                                  </li>
+                                )}
+                              </ul>
+                            </div>
+                          )}
+                        </CardContent>
+                      </Card>
+                    </div>
+                  ))}
+                </div>
+              )}
+
               {/* LEGACY FORMAT: Executive Summary - for old jumps */}
               {!result.comprehensive_plan.jumpForward && result.comprehensive_plan.executiveSummary && (
                 <div className="relative group">
