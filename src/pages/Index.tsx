@@ -288,19 +288,19 @@ const Index = () => {
               <div className="text-xs text-muted-foreground space-y-2 font-medium relative">
                 <div className="flex items-start gap-2">
                   <span className="text-primary mt-0.5">•</span>
-                  <span>The Jump Forward — Your strategic path</span>
+                  <span>The Jump Forward</span>
                 </div>
                 <div className="flex items-start gap-2">
                   <span className="text-primary mt-0.5">•</span>
-                  <span>Strategic Edge — The "why" behind your approach</span>
+                  <span>Strategic Edge</span>
                 </div>
                 <div className="flex items-start gap-2">
                   <span className="text-primary mt-0.5">•</span>
-                  <span>Flight Path — Vision meets timeline</span>
+                  <span>Flight Path</span>
                 </div>
                 <div className="flex items-start gap-2">
                   <span className="text-primary mt-0.5">•</span>
-                  <span>New Baseline — Your landing zone after the jump</span>
+                  <span>New Baseline</span>
                   </div>
                 </div>
               </div>
