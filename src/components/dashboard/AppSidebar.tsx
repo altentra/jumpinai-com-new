@@ -74,10 +74,10 @@ export default function AppSidebar() {
 
   const isCollapsed = state === "collapsed";
 
-  // Toggle button component that appears at sidebar edge or floats when collapsed
-  const ToggleButton = () => (
+  // Desktop toggle button - appears at sidebar edge or floats when collapsed
+  const DesktopToggleButton = () => (
     <button
-      onClick={() => isMobile ? setOpenMobile(!openMobile) : toggleSidebar()}
+      onClick={toggleSidebar}
       className={cn(
         "fixed z-50 hidden md:flex",
         "w-8 h-8 rounded-full",
@@ -104,9 +104,36 @@ export default function AppSidebar() {
     </button>
   );
 
+  // Mobile toggle button - always visible in top left corner on mobile
+  const MobileToggleButton = () => (
+    <button
+      onClick={() => setOpenMobile(!openMobile)}
+      className={cn(
+        "fixed z-50 flex md:hidden",
+        "w-10 h-10 rounded-full",
+        "bg-background/95 backdrop-blur-xl border border-border/50",
+        "shadow-lg shadow-black/10 dark:shadow-black/30",
+        "items-center justify-center",
+        "text-muted-foreground hover:text-foreground",
+        "hover:bg-primary/10 hover:border-primary/30",
+        "transition-all duration-300 ease-out",
+        "active:scale-95",
+        "top-[5.5rem] left-3"
+      )}
+      aria-label={openMobile ? "Close sidebar" : "Open sidebar"}
+    >
+      {openMobile ? (
+        <ChevronLeft className="w-5 h-5" />
+      ) : (
+        <ChevronRight className="w-5 h-5" />
+      )}
+    </button>
+  );
+
   return (
     <>
-      <ToggleButton />
+      <DesktopToggleButton />
+      <MobileToggleButton />
       <Sidebar className="mt-20 md:mt-16 h-[calc(100vh-5rem)] md:h-[calc(100vh-4rem)] flex flex-col">
       <SidebarHeader className="border-b border-sidebar-border px-3 py-2 pt-3 shrink-0">
         <Link 
