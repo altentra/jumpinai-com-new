@@ -412,20 +412,8 @@ const JumpinAIStudioContent = () => {
             </div>
           )}
 
-          {/* Mini Footer */}
-          <div className="mt-16 py-2 text-center border-t border-border/20">
-            <div className="text-sm text-muted-foreground/60">
-              © 2025 JumpinAI, LLC. All rights reserved.{' '}
-              <a href="/terms-of-use" className="text-primary hover:text-primary/80 transition-colors duration-200 underline underline-offset-4">
-                Terms of Use
-              </a>
-              {' '}and{' '}
-              <a href="/privacy-policy" className="text-primary hover:text-primary/80 transition-colors duration-200 underline underline-offset-4">
-                Privacy Policy
-              </a>
-              .
-            </div>
-          </div>
+          {/* Mini Footer - only show when not embedded in dashboard */}
+          <div className="mt-16" />
         </div>
       </div>
     </div>
