@@ -104,12 +104,14 @@ export default function AppSidebar() {
     </button>
   );
 
-  // Mobile toggle button - always visible in top left corner on mobile
+  // Mobile toggle button - always visible on mobile, above sheet overlay
   const MobileToggleButton = () => (
     <button
       onClick={() => setOpenMobile(!openMobile)}
       className={cn(
-        "fixed z-50 flex md:hidden",
+        "fixed flex md:hidden",
+        // z-[60] to be above Sheet overlay (z-50)
+        "z-[60]",
         "w-10 h-10 rounded-full",
         "bg-background/95 backdrop-blur-xl border border-border/50",
         "shadow-lg shadow-black/10 dark:shadow-black/30",
@@ -118,7 +120,10 @@ export default function AppSidebar() {
         "hover:bg-primary/10 hover:border-primary/30",
         "transition-all duration-300 ease-out",
         "active:scale-95",
-        "top-[5.5rem] left-3"
+        // When sidebar is open, move button to the right edge of sidebar
+        openMobile 
+          ? "top-[5.5rem] left-[calc(18rem-2.5rem)]" 
+          : "top-[5.5rem] left-3"
       )}
       aria-label={openMobile ? "Close sidebar" : "Open sidebar"}
     >
