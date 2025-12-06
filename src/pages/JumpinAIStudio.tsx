@@ -494,16 +494,14 @@ const JumpinAIStudio = () => {
 
               {/* Sign Up CTA for Guests */}
               <div className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.7s' }}>
-                <div className="relative glass rounded-xl p-4 sm:p-6 border border-orange-500/30 backdrop-blur-xl bg-gradient-to-r from-orange-500/10 via-card/80 to-orange-400/10">
-                  <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <div className="text-center sm:text-left">
-                      <p className="text-sm sm:text-base text-orange-500 dark:text-orange-400 font-medium">
-                        Want to save your jump? Sign up free and get 3 welcome credits!
-                      </p>
-                    </div>
+                <div className="relative glass rounded-2xl p-5 sm:p-6 border border-amber-400/20 backdrop-blur-xl bg-gradient-to-br from-amber-500/5 via-card/90 to-orange-400/5">
+                  <div className="flex flex-col items-center gap-4 text-center">
+                    <p className="text-sm sm:text-base text-amber-600/90 dark:text-amber-400/90 font-medium leading-relaxed">
+                      Want to save your jump? Sign up free and get <span className="font-semibold">3 welcome credits</span>!
+                    </p>
                     <button
                       onClick={() => login('/dashboard/studio')}
-                      className="flex items-center gap-2 px-6 py-2.5 bg-orange-500 text-white rounded-full hover:bg-orange-600 transition-all duration-300 shadow-lg hover:shadow-xl"
+                      className="flex items-center gap-2 px-7 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-full hover:from-amber-600 hover:to-orange-600 transition-all duration-300 shadow-md hover:shadow-lg hover:shadow-amber-500/20"
                     >
                       <LogIn className="w-4 h-4" />
                       <span className="font-medium">Sign Up Free</span>
