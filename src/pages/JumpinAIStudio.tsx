@@ -23,7 +23,7 @@ const JumpinAIStudio = () => {
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [guestUsageInfo, setGuestUsageInfo] = useState<{ usageCount: number; remaining: number } | null>(null);
   const [isLoadingGuestInfo, setIsLoadingGuestInfo] = useState(true);
-  const [turnstileErrorShown, setTurnstileErrorShown] = useState(false);
+  const turnstileErrorShownRef = useRef(false);
   const [sttUsed, setSttUsed] = useState(false);
   const progressDisplayRef = useRef<HTMLDivElement>(null);
   const generateButtonRef = useRef<HTMLDivElement>(null);
@@ -89,10 +89,16 @@ const JumpinAIStudio = () => {
     budget: ''
   });
 
-  // Fetch current guest usage from server on mount
+  // Fetch current guest usage from server on mount - with stable ref to prevent re-fetching
+  const guestUsageFetched = useRef(false);
+  
   useEffect(() => {
+    // Only fetch once when not authenticated and not already fetched
+    if (isLoading) return; // Wait for auth to settle
+    
     const fetchGuestUsage = async () => {
-      if (!isAuthenticated) {
+      if (!isAuthenticated && !guestUsageFetched.current) {
+        guestUsageFetched.current = true;
         setIsLoadingGuestInfo(true);
         try {
           // First, get the client's IP address from the edge function
@@ -130,13 +136,13 @@ const JumpinAIStudio = () => {
         } finally {
           setIsLoadingGuestInfo(false);
         }
-      } else {
+      } else if (isAuthenticated) {
         setIsLoadingGuestInfo(false);
       }
     };
     
     fetchGuestUsage();
-  }, [isAuthenticated]);
+  }, [isAuthenticated, isLoading]);
 
   // Load saved form data for authenticated users
   useEffect(() => {
@@ -411,7 +417,7 @@ const JumpinAIStudio = () => {
         <div className="max-w-6xl mx-auto">
             {/* Auth Status for Guest Users Only */}
             {!isAuthenticated && (
-              <div className="flex justify-end mb-4 sm:mb-6 animate-fade-in-right">
+              <div className="flex justify-start mb-4 sm:mb-6 animate-fade-in-left">
                 <div className="relative group w-full sm:w-auto">
                   <div className="relative glass rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm border border-border backdrop-blur-xl bg-card/80 shadow-lg transition-all duration-300 w-full sm:max-w-sm">
                     {/* Subtle glass overlay */}
@@ -653,27 +659,28 @@ const JumpinAIStudio = () => {
               </div>
             </div>
 
-            {/* Invisible Turnstile - Only for guests */}
-            {!isAuthenticated && (
+            {/* Invisible Turnstile - Only for guests, rendered once */}
+            {!isAuthenticated && !isLoading && (
               <div className="hidden">
                 <Turnstile
                   siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY || "1x00000000000000000000AA"}
                   onSuccess={(token) => {
                     setTurnstileToken(token);
-                    setTurnstileErrorShown(false); // Reset error flag on success
+                    turnstileErrorShownRef.current = false;
                     console.log('✅ Turnstile verified');
                   }}
                   onError={() => {
-                    console.error('❌ Turnstile verification failed');
-                    // Only show toast once to prevent spam
-                    if (!turnstileErrorShown) {
-                      setTurnstileErrorShown(true);
-                      // Don't show error toast - Turnstile will auto-retry and verification isn't required to view the page
+                    // Use ref to prevent re-renders on error
+                    if (!turnstileErrorShownRef.current) {
+                      turnstileErrorShownRef.current = true;
+                      console.error('❌ Turnstile verification failed');
                     }
+                    // Don't set state here - it causes re-render loops
                   }}
                   options={{
                     theme: 'light',
                     size: 'invisible',
+                    retry: 'never', // Prevent auto-retry which causes re-renders
                   }}
                 />
               </div>
