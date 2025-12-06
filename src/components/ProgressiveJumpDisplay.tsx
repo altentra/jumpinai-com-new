@@ -60,6 +60,30 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
   const [selectedAlternative, setSelectedAlternative] = React.useState<AlternativeJump | null>(null);
   const [alternativesCollapsed, setAlternativesCollapsed] = React.useState(false);
   const [generatedJumpIndex, setGeneratedJumpIndex] = React.useState<number | null>(null); // Track which jump was generated
+  const [jumpGenerationComplete, setJumpGenerationComplete] = React.useState(false); // Track if alternative jump generation finished
+
+  // Reset alternative state when a new jump is fully generated (from alternative route)
+  React.useEffect(() => {
+    if (result.processing_status?.isComplete && generatingJumpIndex !== null) {
+      // The alternative jump generation is complete
+      setGeneratingJumpIndex(null);
+      setJumpGenerationComplete(true);
+    }
+  }, [result.processing_status?.isComplete, generatingJumpIndex]);
+
+  // Reset all alternative state when result changes (new jump started)
+  React.useEffect(() => {
+    // Reset when we get a new jump result (different jumpId or fresh start)
+    if (!result.processing_status?.isComplete && !result.title) {
+      setShowAlternatives(false);
+      setAlternativeJumps([]);
+      setSelectedAlternative(null);
+      setAlternativesCollapsed(false);
+      setGeneratedJumpIndex(null);
+      setGeneratingJumpIndex(null);
+      setJumpGenerationComplete(false);
+    }
+  }, [result.jumpId]);
 
   // Update tool prompts when they change
   React.useEffect(() => {
@@ -712,9 +736,10 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                       {/* Responsive Grid: 3 columns on desktop, 1 on mobile */}
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         {alternativeJumps.map((alt, index) => {
-                          const isGenerated = generatedJumpIndex === index;
+                          const isSelected = generatedJumpIndex === index;
                           const isCurrentlyGenerating = generatingJumpIndex === index;
-                          const isAnyGenerating = generatingJumpIndex !== null;
+                          const isGenerationComplete = isSelected && jumpGenerationComplete;
+                          const shouldDisableButton = generatingJumpIndex !== null; // Only disable while actively generating
                           
                           return (
                             <div 
@@ -722,27 +747,38 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                               className="relative group"
                             >
                               <div className={`absolute -inset-0.5 bg-gradient-to-r rounded-xl blur transition duration-300 ${
-                                isGenerated 
+                                isGenerationComplete 
                                   ? 'from-green-500/30 via-green-400/20 to-green-500/30 opacity-50' 
-                                  : 'from-secondary/20 via-accent/15 to-primary/20 opacity-30 group-hover:opacity-50'
+                                  : isCurrentlyGenerating
+                                    ? 'from-primary/40 via-accent/30 to-primary/40 opacity-60'
+                                    : 'from-secondary/20 via-accent/15 to-primary/20 opacity-30 group-hover:opacity-50'
                               }`}></div>
                               <Card className={`relative h-full glass backdrop-blur-lg bg-card/60 transition-all duration-300 rounded-xl ${
-                                isGenerated 
+                                isGenerationComplete 
                                   ? 'border-green-500/50' 
-                                  : 'border border-border/50 hover:border-primary/40'
+                                  : isCurrentlyGenerating
+                                    ? 'border-primary/60'
+                                    : 'border border-border/50 hover:border-primary/40'
                               }`}>
                                 <CardContent className="p-4 flex flex-col h-full">
                                   <div className="flex-1 space-y-2">
                                     <div className="flex items-center gap-2">
                                       <Badge variant="outline" className={`text-xs ${
-                                        isGenerated 
+                                        isGenerationComplete 
                                           ? 'bg-green-500/10 text-green-500 border-green-500/30' 
-                                          : 'bg-primary/5 text-primary border-primary/20'
+                                          : isCurrentlyGenerating
+                                            ? 'bg-primary/10 text-primary border-primary/40'
+                                            : 'bg-primary/5 text-primary border-primary/20'
                                       }`}>
-                                        {isGenerated ? (
+                                        {isGenerationComplete ? (
                                           <>
                                             <CheckCircle className="w-3 h-3 mr-1" />
-                                            Selected
+                                            Generated
+                                          </>
+                                        ) : isCurrentlyGenerating ? (
+                                          <>
+                                            <Loader2 className="w-3 h-3 mr-1 animate-spin" />
+                                            Generating
                                           </>
                                         ) : (
                                           `Route ${index + 1}`
@@ -754,7 +790,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                                   </div>
                                   
                                   {/* Button with different states */}
-                                  {isGenerated ? (
+                                  {isGenerationComplete ? (
                                     <div className="mt-4 w-full inline-flex items-center justify-center gap-2 px-4 py-2 text-xs font-medium rounded-lg
                                       bg-green-500/10 border border-green-500/30 text-green-500">
                                       <CheckCircle className="w-3.5 h-3.5" />
@@ -763,7 +799,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                                   ) : (
                                     <button
                                       onClick={() => handleGenerateThisJump(alt, index)}
-                                      disabled={isAnyGenerating}
+                                      disabled={shouldDisableButton}
                                       className="mt-4 w-full inline-flex items-center justify-center gap-2 px-4 py-2 text-xs font-medium rounded-lg
                                         bg-gradient-to-r from-primary/10 via-accent/5 to-primary/10 
                                         border border-primary/30 hover:border-primary/50
@@ -804,8 +840,17 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                           <span className="text-sm font-medium text-foreground">
                             {generatedJumpIndex !== null ? (
                               <>
-                                <span className="text-green-500">{alternativeJumps[generatedJumpIndex]?.title}</span>
-                                <span className="text-muted-foreground ml-1">(generated)</span>
+                                <span className={jumpGenerationComplete ? "text-green-500" : "text-primary"}>
+                                  {alternativeJumps[generatedJumpIndex]?.title}
+                                </span>
+                                <span className="text-muted-foreground ml-1">
+                                  {jumpGenerationComplete ? "(generated)" : (
+                                    <span className="inline-flex items-center gap-1">
+                                      <Loader2 className="w-3 h-3 animate-spin" />
+                                      generating...
+                                    </span>
+                                  )}
+                                </span>
                               </>
                             ) : (
                               <>Alternative Routes <span className="text-muted-foreground">({alternativeJumps.length} options)</span></>
