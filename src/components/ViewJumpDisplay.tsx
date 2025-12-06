@@ -176,7 +176,7 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
     <div className="w-full max-w-full space-y-4" style={{ overflow: 'visible' }}>
       {/* Content Tabs - Ultra Premium Design with Sticky Behavior */}
       <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full" style={{ overflow: 'visible', display: 'block' }}>
-        <div ref={tabsContainerRef} className="sticky z-[60] mb-6 bg-background/95 backdrop-blur-lg border-b border-border/40 shadow-lg pb-2 -mt-2 pt-1" style={{ position: 'sticky', top: window.innerWidth >= 768 ? '64px' : '80px', pointerEvents: 'auto' }}>
+        <div ref={tabsContainerRef} className="sticky top-20 md:top-16 z-[60] mb-6 bg-background/95 backdrop-blur-lg border-b border-border/40 shadow-lg pb-2 -mt-2 pt-1" style={{ pointerEvents: 'auto' }}>
           {/* Mobile: Equal width tabs */}
           <div className="sm:hidden">
             <TabsList className="grid h-auto w-full grid-cols-3 gap-1 p-1.5 bg-background rounded-xl border border-border/50 shadow-lg shadow-primary/10" style={{ pointerEvents: 'auto', touchAction: 'manipulation' }}>
