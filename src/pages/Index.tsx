@@ -53,13 +53,15 @@ const Index = () => {
   const { elementRef: whyDifferentRef, scrollProgress: whyDifferentProgress } = useScrollAnimation({ threshold: 0.2 });
   const { elementRef: whyKeyPointsRef, scrollProgress: whyKeyPointsProgress } = useScrollAnimation({ threshold: 0.2 });
   
-  // Explore Alternative Routes section refs
-  const { elementRef: exploreHeaderRef, scrollProgress: exploreHeaderProgress } = useScrollAnimation({ threshold: 0.2 });
-  const { elementRef: exploreCardRef, scrollProgress: exploreCardProgress } = useScrollAnimation({ threshold: 0.15 });
-  const { elementRef: exploreFlow1Ref, scrollProgress: exploreFlow1Progress } = useScrollAnimation({ threshold: 0.2 });
-  const { elementRef: exploreFlow2Ref, scrollProgress: exploreFlow2Progress } = useScrollAnimation({ threshold: 0.2 });
-  const { elementRef: exploreFlow3Ref, scrollProgress: exploreFlow3Progress } = useScrollAnimation({ threshold: 0.2 });
-  const { elementRef: exploreBenefitRef, scrollProgress: exploreBenefitProgress } = useScrollAnimation({ threshold: 0.2 });
+  // Explore Alternative Routes section refs - sequential cascade animation
+  const { elementRef: exploreHeaderRef, scrollProgress: exploreHeaderProgress } = useScrollAnimation({ threshold: 0.15 });
+  const { elementRef: exploreCardRef, scrollProgress: exploreCardProgress } = useScrollAnimation({ threshold: 0.1 });
+  const { elementRef: exploreButtonRef, scrollProgress: exploreButtonProgress } = useScrollAnimation({ threshold: 0.15 });
+  const { elementRef: exploreDescRef, scrollProgress: exploreDescProgress } = useScrollAnimation({ threshold: 0.15 });
+  const { elementRef: exploreFlow1Ref, scrollProgress: exploreFlow1Progress } = useScrollAnimation({ threshold: 0.15 });
+  const { elementRef: exploreFlow2Ref, scrollProgress: exploreFlow2Progress } = useScrollAnimation({ threshold: 0.15 });
+  const { elementRef: exploreFlow3Ref, scrollProgress: exploreFlow3Progress } = useScrollAnimation({ threshold: 0.15 });
+  const { elementRef: exploreBenefitRef, scrollProgress: exploreBenefitProgress } = useScrollAnimation({ threshold: 0.15 });
   
   // Individual refs for mobile animations
   const { elementRef: tab1Ref, scrollProgress: tab1Progress } = useScrollAnimation({ threshold: 0.2 });
@@ -637,12 +639,13 @@ const Index = () => {
 
             {/* Explore Alternative Routes Feature */}
             <div className="mt-10">
+              {/* Section Header - appears first from right */}
               <div 
                 ref={exploreHeaderRef}
                 className="text-center mb-6 transition-all duration-700 ease-out"
                 style={{
-                  opacity: Math.min(1, exploreHeaderProgress * 1.5),
-                  transform: `translateY(${(1 - Math.min(1, exploreHeaderProgress * 1.5)) * 30}px)`
+                  opacity: Math.min(1, exploreHeaderProgress * 2),
+                  transform: `translateX(${(1 - Math.min(1, exploreHeaderProgress * 2)) * 60}px)`
                 }}
               >
                 <h3 className="text-xl sm:text-2xl font-bold gradient-text-primary mb-2 font-display">
@@ -654,12 +657,13 @@ const Index = () => {
               </div>
               
               <div className="max-w-4xl mx-auto">
+                {/* Main Card Frame - appears second */}
                 <div 
                   ref={exploreCardRef}
                   className="group relative rounded-3xl transition-all duration-700 ease-out"
                   style={{
-                    opacity: Math.min(1, exploreCardProgress * 1.3),
-                    transform: `translateY(${(1 - Math.min(1, exploreCardProgress * 1.3)) * 40}px)`
+                    opacity: Math.min(1, exploreCardProgress * 1.5),
+                    transform: `translateX(${(1 - Math.min(1, exploreCardProgress * 1.5)) * 80}px) scale(${0.95 + Math.min(1, exploreCardProgress * 1.5) * 0.05})`
                   }}
                 >
                   {/* Liquid glass border wrapper */}
@@ -667,69 +671,88 @@ const Index = () => {
                     <div className="absolute inset-0 rounded-3xl bg-card"></div>
                   </div>
                   
-                  <div className="relative bg-card rounded-3xl p-6 lg:p-8 shadow-modern hover:shadow-modern-lg transition-all duration-500 border border-white/10 hover:border-white/20">
+                  <div className="relative bg-card rounded-3xl p-6 lg:p-8 shadow-modern hover:shadow-modern-lg transition-all duration-500 border border-white/10 hover:border-white/20 overflow-hidden">
                     {/* Subtle glass overlay */}
                     <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/[0.02] via-transparent to-white/[0.01] pointer-events-none"></div>
                     
                     <div className="relative z-10">
-                      {/* Feature Button Display */}
-                      <div className="flex justify-center mb-6">
+                      {/* Feature Button Display - appears third with elegant slide + scale */}
+                      <div 
+                        ref={exploreButtonRef}
+                        className="flex justify-center mb-6 transition-all duration-700 ease-out"
+                        style={{
+                          opacity: Math.max(0, Math.min(1, (exploreButtonProgress - 0.1) * 2.5)),
+                          transform: `translateX(${(1 - Math.max(0, Math.min(1, (exploreButtonProgress - 0.1) * 2.5))) * 100}px) scale(${0.8 + Math.max(0, Math.min(1, (exploreButtonProgress - 0.1) * 2.5)) * 0.2})`
+                        }}
+                      >
                         <div className="relative group/explore">
-                          <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/40 via-accent/30 to-primary/40 rounded-[2.5rem] blur-md opacity-40 transition duration-500"></div>
-                          <div className="relative flex items-center gap-3 px-6 py-3 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2.5rem] border border-primary/40 transition-all duration-300 overflow-hidden shadow-lg shadow-primary/10">
-                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full transition-transform duration-1000"></div>
+                          <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/40 via-accent/30 to-primary/40 rounded-[2.5rem] blur-md opacity-40 group-hover/explore:opacity-60 transition duration-500"></div>
+                          <div className="relative flex items-center gap-3 px-6 py-3 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2.5rem] border border-primary/40 transition-all duration-300 overflow-hidden shadow-lg shadow-primary/10 group-hover/explore:shadow-xl group-hover/explore:shadow-primary/20 group-hover/explore:border-primary/60">
+                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/explore:translate-x-full transition-transform duration-1000"></div>
                             <Route className="relative w-5 h-5 text-primary" />
                             <span className="relative text-lg font-bold text-foreground whitespace-nowrap">Explore Alternative Routes</span>
                           </div>
                         </div>
                       </div>
                       
-                      {/* Description */}
-                      <p className="text-center text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto mb-6 leading-relaxed">
-                        AI instantly generates 3 distinct strategic approaches based on your goals. Select any alternative and generate a complete new Jump with one click—then keep exploring alternatives from the new Jump, building an unlimited exploration tree of possibilities.
-                      </p>
+                      {/* Description - appears fourth */}
+                      <div
+                        ref={exploreDescRef}
+                        className="transition-all duration-700 ease-out"
+                        style={{
+                          opacity: Math.max(0, Math.min(1, (exploreDescProgress - 0.15) * 2.5)),
+                          transform: `translateX(${(1 - Math.max(0, Math.min(1, (exploreDescProgress - 0.15) * 2.5))) * 80}px)`
+                        }}
+                      >
+                        <p className="text-center text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto mb-6 leading-relaxed">
+                          AI instantly generates 3 distinct strategic approaches based on your goals. Select any alternative and generate a complete new Jump with one click—then keep exploring alternatives from the new Jump, building an unlimited exploration tree of possibilities.
+                        </p>
+                      </div>
                       
-                      {/* Visual Flow */}
+                      {/* Visual Flow - Cards appear sequentially from right to left */}
                       <div className="grid md:grid-cols-3 gap-4 mb-6">
+                        {/* Card 1 - Generate Alternatives */}
                         <div 
                           ref={exploreFlow1Ref}
-                          className="glass bg-muted/30 p-4 rounded-xl border border-primary/15 backdrop-blur-sm text-center transition-all duration-700 ease-out"
+                          className="glass bg-muted/30 p-4 rounded-xl border border-primary/15 backdrop-blur-sm text-center transition-all duration-700 ease-out hover:border-primary/30 hover:bg-muted/40 hover:shadow-lg hover:shadow-primary/5"
                           style={{
-                            opacity: window.innerWidth < 768 ? Math.min(1, exploreFlow1Progress * 1.5) : Math.min(1, exploreCardProgress * 2),
-                            transform: `translateY(${(window.innerWidth < 768 ? (1 - Math.min(1, exploreFlow1Progress * 1.5)) * 30 : (1 - Math.min(1, exploreCardProgress * 2)) * 20)}px)`
+                            opacity: Math.max(0, Math.min(1, (exploreFlow1Progress - 0.2) * 3)),
+                            transform: `translateX(${(1 - Math.max(0, Math.min(1, (exploreFlow1Progress - 0.2) * 3))) * 120}px) scale(${0.9 + Math.max(0, Math.min(1, (exploreFlow1Progress - 0.2) * 3)) * 0.1})`
                           }}
                         >
-                          <div className="w-8 h-8 mx-auto mb-2 rounded-lg bg-primary/10 flex items-center justify-center">
+                          <div className="w-8 h-8 mx-auto mb-2 rounded-lg bg-primary/10 flex items-center justify-center transition-transform duration-300 hover:scale-110">
                             <Route className="w-4 h-4 text-primary" />
                           </div>
                           <h4 className="font-semibold text-sm mb-1">Generate Alternatives</h4>
                           <p className="text-xs text-muted-foreground">Click to get 3 distinct strategic paths</p>
                         </div>
                         
+                        {/* Card 2 - Select & Generate */}
                         <div 
                           ref={exploreFlow2Ref}
-                          className="glass bg-muted/30 p-4 rounded-xl border border-primary/15 backdrop-blur-sm text-center transition-all duration-700 ease-out"
+                          className="glass bg-muted/30 p-4 rounded-xl border border-primary/15 backdrop-blur-sm text-center transition-all duration-700 ease-out hover:border-primary/30 hover:bg-muted/40 hover:shadow-lg hover:shadow-primary/5"
                           style={{
-                            opacity: window.innerWidth < 768 ? Math.min(1, exploreFlow2Progress * 1.5) : Math.max(0, Math.min(1, (exploreCardProgress - 0.1) * 2)),
-                            transform: `translateY(${(window.innerWidth < 768 ? (1 - Math.min(1, exploreFlow2Progress * 1.5)) * 30 : (1 - Math.max(0, Math.min(1, (exploreCardProgress - 0.1) * 2))) * 20)}px)`
+                            opacity: Math.max(0, Math.min(1, (exploreFlow2Progress - 0.3) * 3)),
+                            transform: `translateX(${(1 - Math.max(0, Math.min(1, (exploreFlow2Progress - 0.3) * 3))) * 120}px) scale(${0.9 + Math.max(0, Math.min(1, (exploreFlow2Progress - 0.3) * 3)) * 0.1})`
                           }}
                         >
-                          <div className="w-8 h-8 mx-auto mb-2 rounded-lg bg-primary/10 flex items-center justify-center">
+                          <div className="w-8 h-8 mx-auto mb-2 rounded-lg bg-primary/10 flex items-center justify-center transition-transform duration-300 hover:scale-110">
                             <Sparkles className="w-4 h-4 text-primary" />
                           </div>
                           <h4 className="font-semibold text-sm mb-1">Select & Generate</h4>
                           <p className="text-xs text-muted-foreground">One click creates a complete new Jump</p>
                         </div>
                         
+                        {/* Card 3 - Infinite Exploration */}
                         <div 
                           ref={exploreFlow3Ref}
-                          className="glass bg-muted/30 p-4 rounded-xl border border-primary/15 backdrop-blur-sm text-center transition-all duration-700 ease-out"
+                          className="glass bg-muted/30 p-4 rounded-xl border border-primary/15 backdrop-blur-sm text-center transition-all duration-700 ease-out hover:border-primary/30 hover:bg-muted/40 hover:shadow-lg hover:shadow-primary/5"
                           style={{
-                            opacity: window.innerWidth < 768 ? Math.min(1, exploreFlow3Progress * 1.5) : Math.max(0, Math.min(1, (exploreCardProgress - 0.2) * 2)),
-                            transform: `translateY(${(window.innerWidth < 768 ? (1 - Math.min(1, exploreFlow3Progress * 1.5)) * 30 : (1 - Math.max(0, Math.min(1, (exploreCardProgress - 0.2) * 2))) * 20)}px)`
+                            opacity: Math.max(0, Math.min(1, (exploreFlow3Progress - 0.4) * 3)),
+                            transform: `translateX(${(1 - Math.max(0, Math.min(1, (exploreFlow3Progress - 0.4) * 3))) * 120}px) scale(${0.9 + Math.max(0, Math.min(1, (exploreFlow3Progress - 0.4) * 3)) * 0.1})`
                           }}
                         >
-                          <div className="w-8 h-8 mx-auto mb-2 rounded-lg bg-primary/10 flex items-center justify-center">
+                          <div className="w-8 h-8 mx-auto mb-2 rounded-lg bg-primary/10 flex items-center justify-center transition-transform duration-300 hover:scale-110">
                             <GitBranch className="w-4 h-4 text-primary" />
                           </div>
                           <h4 className="font-semibold text-sm mb-1">Infinite Exploration</h4>
@@ -737,13 +760,13 @@ const Index = () => {
                         </div>
                       </div>
                       
-                      {/* Key Benefit */}
+                      {/* Key Benefit - appears last with elegant fade from right */}
                       <div 
                         ref={exploreBenefitRef}
                         className="flex items-center justify-center gap-2 text-sm text-muted-foreground transition-all duration-700 ease-out"
                         style={{
-                          opacity: Math.max(0, Math.min(1, exploreBenefitProgress * 1.5)),
-                          transform: `translateY(${(1 - Math.max(0, Math.min(1, exploreBenefitProgress * 1.5))) * 20}px)`
+                          opacity: Math.max(0, Math.min(1, (exploreBenefitProgress - 0.5) * 3)),
+                          transform: `translateX(${(1 - Math.max(0, Math.min(1, (exploreBenefitProgress - 0.5) * 3))) * 60}px)`
                         }}
                       >
                         <Compass className="w-4 h-4 text-primary" />
