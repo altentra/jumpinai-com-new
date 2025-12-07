@@ -53,6 +53,14 @@ const Index = () => {
   const { elementRef: whyDifferentRef, scrollProgress: whyDifferentProgress } = useScrollAnimation({ threshold: 0.2 });
   const { elementRef: whyKeyPointsRef, scrollProgress: whyKeyPointsProgress } = useScrollAnimation({ threshold: 0.2 });
   
+  // Explore Alternative Routes section refs
+  const { elementRef: exploreHeaderRef, scrollProgress: exploreHeaderProgress } = useScrollAnimation({ threshold: 0.2 });
+  const { elementRef: exploreCardRef, scrollProgress: exploreCardProgress } = useScrollAnimation({ threshold: 0.15 });
+  const { elementRef: exploreFlow1Ref, scrollProgress: exploreFlow1Progress } = useScrollAnimation({ threshold: 0.2 });
+  const { elementRef: exploreFlow2Ref, scrollProgress: exploreFlow2Progress } = useScrollAnimation({ threshold: 0.2 });
+  const { elementRef: exploreFlow3Ref, scrollProgress: exploreFlow3Progress } = useScrollAnimation({ threshold: 0.2 });
+  const { elementRef: exploreBenefitRef, scrollProgress: exploreBenefitProgress } = useScrollAnimation({ threshold: 0.2 });
+  
   // Individual refs for mobile animations
   const { elementRef: tab1Ref, scrollProgress: tab1Progress } = useScrollAnimation({ threshold: 0.2 });
   const { elementRef: tab2Ref, scrollProgress: tab2Progress } = useScrollAnimation({ threshold: 0.2 });
@@ -629,7 +637,14 @@ const Index = () => {
 
             {/* Explore Alternative Routes Feature */}
             <div className="mt-10">
-              <div className="text-center mb-6">
+              <div 
+                ref={exploreHeaderRef}
+                className="text-center mb-6 transition-all duration-700 ease-out"
+                style={{
+                  opacity: Math.min(1, exploreHeaderProgress * 1.5),
+                  transform: `translateY(${(1 - Math.min(1, exploreHeaderProgress * 1.5)) * 30}px)`
+                }}
+              >
                 <h3 className="text-xl sm:text-2xl font-bold gradient-text-primary mb-2 font-display">
                   Not the Direction You Envisioned?
                 </h3>
@@ -639,7 +654,14 @@ const Index = () => {
               </div>
               
               <div className="max-w-4xl mx-auto">
-                <div className="group relative rounded-3xl">
+                <div 
+                  ref={exploreCardRef}
+                  className="group relative rounded-3xl transition-all duration-700 ease-out"
+                  style={{
+                    opacity: Math.min(1, exploreCardProgress * 1.3),
+                    transform: `translateY(${(1 - Math.min(1, exploreCardProgress * 1.3)) * 40}px)`
+                  }}
+                >
                   {/* Liquid glass border wrapper */}
                   <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/[0.03] via-white/[0.01] to-white/[0.03] p-[1px]">
                     <div className="absolute inset-0 rounded-3xl bg-card"></div>
@@ -669,7 +691,14 @@ const Index = () => {
                       
                       {/* Visual Flow */}
                       <div className="grid md:grid-cols-3 gap-4 mb-6">
-                        <div className="glass bg-muted/30 p-4 rounded-xl border border-primary/15 backdrop-blur-sm text-center">
+                        <div 
+                          ref={exploreFlow1Ref}
+                          className="glass bg-muted/30 p-4 rounded-xl border border-primary/15 backdrop-blur-sm text-center transition-all duration-700 ease-out"
+                          style={{
+                            opacity: window.innerWidth < 768 ? Math.min(1, exploreFlow1Progress * 1.5) : Math.min(1, exploreCardProgress * 2),
+                            transform: `translateY(${(window.innerWidth < 768 ? (1 - Math.min(1, exploreFlow1Progress * 1.5)) * 30 : (1 - Math.min(1, exploreCardProgress * 2)) * 20)}px)`
+                          }}
+                        >
                           <div className="w-8 h-8 mx-auto mb-2 rounded-lg bg-primary/10 flex items-center justify-center">
                             <Route className="w-4 h-4 text-primary" />
                           </div>
@@ -677,7 +706,14 @@ const Index = () => {
                           <p className="text-xs text-muted-foreground">Click to get 3 distinct strategic paths</p>
                         </div>
                         
-                        <div className="glass bg-muted/30 p-4 rounded-xl border border-primary/15 backdrop-blur-sm text-center">
+                        <div 
+                          ref={exploreFlow2Ref}
+                          className="glass bg-muted/30 p-4 rounded-xl border border-primary/15 backdrop-blur-sm text-center transition-all duration-700 ease-out"
+                          style={{
+                            opacity: window.innerWidth < 768 ? Math.min(1, exploreFlow2Progress * 1.5) : Math.max(0, Math.min(1, (exploreCardProgress - 0.1) * 2)),
+                            transform: `translateY(${(window.innerWidth < 768 ? (1 - Math.min(1, exploreFlow2Progress * 1.5)) * 30 : (1 - Math.max(0, Math.min(1, (exploreCardProgress - 0.1) * 2))) * 20)}px)`
+                          }}
+                        >
                           <div className="w-8 h-8 mx-auto mb-2 rounded-lg bg-primary/10 flex items-center justify-center">
                             <Sparkles className="w-4 h-4 text-primary" />
                           </div>
@@ -685,7 +721,14 @@ const Index = () => {
                           <p className="text-xs text-muted-foreground">One click creates a complete new Jump</p>
                         </div>
                         
-                        <div className="glass bg-muted/30 p-4 rounded-xl border border-primary/15 backdrop-blur-sm text-center">
+                        <div 
+                          ref={exploreFlow3Ref}
+                          className="glass bg-muted/30 p-4 rounded-xl border border-primary/15 backdrop-blur-sm text-center transition-all duration-700 ease-out"
+                          style={{
+                            opacity: window.innerWidth < 768 ? Math.min(1, exploreFlow3Progress * 1.5) : Math.max(0, Math.min(1, (exploreCardProgress - 0.2) * 2)),
+                            transform: `translateY(${(window.innerWidth < 768 ? (1 - Math.min(1, exploreFlow3Progress * 1.5)) * 30 : (1 - Math.max(0, Math.min(1, (exploreCardProgress - 0.2) * 2))) * 20)}px)`
+                          }}
+                        >
                           <div className="w-8 h-8 mx-auto mb-2 rounded-lg bg-primary/10 flex items-center justify-center">
                             <GitBranch className="w-4 h-4 text-primary" />
                           </div>
@@ -695,7 +738,14 @@ const Index = () => {
                       </div>
                       
                       {/* Key Benefit */}
-                      <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+                      <div 
+                        ref={exploreBenefitRef}
+                        className="flex items-center justify-center gap-2 text-sm text-muted-foreground transition-all duration-700 ease-out"
+                        style={{
+                          opacity: Math.max(0, Math.min(1, exploreBenefitProgress * 1.5)),
+                          transform: `translateY(${(1 - Math.max(0, Math.min(1, exploreBenefitProgress * 1.5))) * 20}px)`
+                        }}
+                      >
                         <Compass className="w-4 h-4 text-primary" />
                         <span>Your exploration trail is tracked—never lose sight of where you've been</span>
                       </div>
