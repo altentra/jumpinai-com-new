@@ -128,8 +128,8 @@ const DashboardHome = () => {
               )}
             </div>
           </div>
-          <p className="text-[11px] sm:text-xs text-muted-foreground text-center max-w-xl mx-auto leading-relaxed">
-            Your AI-powered dashboard is ready. Explore your tools, manage your projects, and accelerate your AI journey.
+          <p className="text-[11px] sm:text-xs text-muted-foreground text-center leading-relaxed">
+            Your AI-powered dashboard is ready. Explore your tools and accelerate your AI journey.
           </p>
         </div>
       </div>
