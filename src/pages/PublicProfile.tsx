@@ -16,13 +16,18 @@ import { profileCacheService } from '@/utils/profileCache';
 
 export default function PublicProfile() {
   const { username } = useParams<{ username: string }>();
-  const { user } = useOptimizedAuth();
+  const { user, isLoading: authLoading } = useOptimizedAuth();
   const { toast } = useToast();
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [publicJumps, setPublicJumps] = useState<any[]>([]);
   const [likedJumps, setLikedJumps] = useState<Set<string>>(new Set());
   const [isLoading, setIsLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+
+  // Redirect logged-in users to dashboard version for sidebar experience
+  if (!authLoading && user && username) {
+    return <Navigate to={`/dashboard/profile/${username}`} replace />;
+  }
 
   // Load profile only when username changes, not on user changes
   useEffect(() => {
