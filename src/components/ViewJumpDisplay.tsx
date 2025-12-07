@@ -105,12 +105,13 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
             const tabsHeight = tabsContainerRef.current.getBoundingClientRect().height;
             
             // Calculate the total fixed height at top (header + sticky tabs + padding)
+            // On mobile: ALWAYS account for header since scrolling up will make it appear
             let stickyOffset: number;
             if (isMobile) {
-              // On mobile: header (80px when visible) + tabs height + extra padding
-              stickyOffset = isHeaderHidden ? tabsHeight + 16 : 80 + tabsHeight + 16;
+              // On mobile: header (80px) + tabs height + padding - header WILL appear when scrolling up
+              stickyOffset = 80 + tabsHeight + 16;
             } else {
-              // On desktop: header (64px) + tabs height + extra padding
+              // On desktop: header (64px) + tabs height + padding
               stickyOffset = 64 + tabsHeight + 16;
             }
             
