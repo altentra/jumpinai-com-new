@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Sparkles, GitBranch, Wrench, ArrowRight, ChevronDown } from 'lucide-react';
+import { Sparkles, GitBranch, Wrench, ArrowRight, ChevronDown, Route, Compass } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Navigation from "@/components/Navigation";
 import Hero from "@/components/Hero";
@@ -618,6 +618,87 @@ const Index = () => {
                         <span className="font-semibold">Complete 3-tab Jump generated in 2 minutes</span>
                       </div>
                       <p className="text-xs text-muted-foreground">Strategic overview + adaptive plan + 9 tool-prompt combos</p>
+                    </div>
+                  </div>
+                  
+                  {/* Subtle white back shadow */}
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-gray-800 to-black dark:from-white dark:to-gray-300 opacity-20 group-hover:opacity-40 transition-opacity duration-500 -z-10 blur-lg"></div>
+                </div>
+              </div>
+            </div>
+
+            {/* Explore Alternative Routes Feature */}
+            <div className="mt-10">
+              <div className="text-center mb-6">
+                <h3 className="text-xl sm:text-2xl font-bold gradient-text-primary mb-2 font-display">
+                  Not the Direction You Envisioned?
+                </h3>
+                <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto">
+                  Explore Alternative Routes from your Overview tab and discover different strategic paths to achieve your goals
+                </p>
+              </div>
+              
+              <div className="max-w-4xl mx-auto">
+                <div className="group relative rounded-3xl">
+                  {/* Liquid glass border wrapper */}
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/[0.03] via-white/[0.01] to-white/[0.03] p-[1px]">
+                    <div className="absolute inset-0 rounded-3xl bg-card"></div>
+                  </div>
+                  
+                  <div className="relative bg-card rounded-3xl p-6 lg:p-8 shadow-modern hover:shadow-modern-lg transition-all duration-500 border border-white/10 hover:border-white/20">
+                    {/* Subtle glass overlay */}
+                    <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/[0.02] via-transparent to-white/[0.01] pointer-events-none"></div>
+                    
+                    <div className="relative z-10">
+                      {/* Feature Button Display */}
+                      <div className="flex justify-center mb-6">
+                        <div className="relative group/explore">
+                          <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/40 via-accent/30 to-primary/40 rounded-[2.5rem] blur-md opacity-40 transition duration-500"></div>
+                          <div className="relative flex items-center gap-3 px-6 py-3 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2.5rem] border border-primary/40 transition-all duration-300 overflow-hidden shadow-lg shadow-primary/10">
+                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full transition-transform duration-1000"></div>
+                            <Route className="relative w-5 h-5 text-primary" />
+                            <span className="relative text-lg font-bold text-foreground whitespace-nowrap">Explore Alternative Routes</span>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Description */}
+                      <p className="text-center text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto mb-6 leading-relaxed">
+                        AI instantly generates 3 distinct strategic approaches based on your goals. Select any alternative and generate a complete new Jump with one click—then keep exploring alternatives from the new Jump, building an unlimited exploration tree of possibilities.
+                      </p>
+                      
+                      {/* Visual Flow */}
+                      <div className="grid md:grid-cols-3 gap-4 mb-6">
+                        <div className="glass bg-muted/30 p-4 rounded-xl border border-primary/15 backdrop-blur-sm text-center">
+                          <div className="w-8 h-8 mx-auto mb-2 rounded-lg bg-primary/10 flex items-center justify-center">
+                            <Route className="w-4 h-4 text-primary" />
+                          </div>
+                          <h4 className="font-semibold text-sm mb-1">Generate Alternatives</h4>
+                          <p className="text-xs text-muted-foreground">Click to get 3 distinct strategic paths</p>
+                        </div>
+                        
+                        <div className="glass bg-muted/30 p-4 rounded-xl border border-primary/15 backdrop-blur-sm text-center">
+                          <div className="w-8 h-8 mx-auto mb-2 rounded-lg bg-primary/10 flex items-center justify-center">
+                            <Sparkles className="w-4 h-4 text-primary" />
+                          </div>
+                          <h4 className="font-semibold text-sm mb-1">Select & Generate</h4>
+                          <p className="text-xs text-muted-foreground">One click creates a complete new Jump</p>
+                        </div>
+                        
+                        <div className="glass bg-muted/30 p-4 rounded-xl border border-primary/15 backdrop-blur-sm text-center">
+                          <div className="w-8 h-8 mx-auto mb-2 rounded-lg bg-primary/10 flex items-center justify-center">
+                            <GitBranch className="w-4 h-4 text-primary" />
+                          </div>
+                          <h4 className="font-semibold text-sm mb-1">Infinite Exploration</h4>
+                          <p className="text-xs text-muted-foreground">Keep branching to find your optimal path</p>
+                        </div>
+                      </div>
+                      
+                      {/* Key Benefit */}
+                      <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+                        <Compass className="w-4 h-4 text-primary" />
+                        <span>Your exploration trail is tracked—never lose sight of where you've been</span>
+                      </div>
                     </div>
                   </div>
                   
