@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Loader2, Upload } from "lucide-react";
 import { supabase } from '@/integrations/supabase/client';
@@ -9,17 +9,22 @@ import Footer from '@/components/Footer';
 import type { ProgressiveResult } from '@/hooks/useProgressiveGeneration';
 import { toast } from 'sonner';
 import { Helmet } from 'react-helmet-async';
-import { useAuth } from '@/hooks/useAuth';
+import { useOptimizedAuth } from '@/hooks/useOptimizedAuth';
 
 export default function PublicJumpView() {
   const { jumpId, username } = useParams<{ jumpId: string; username: string }>();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, isLoading: authLoading } = useOptimizedAuth();
   const [progressiveResult, setProgressiveResult] = useState<ProgressiveResult | null>(null);
   const [loading, setLoading] = useState(true);
   const [jumpTitle, setJumpTitle] = useState('');
   const [jumpCreatedAt, setJumpCreatedAt] = useState('');
   const [isOwner, setIsOwner] = useState(false);
+
+  // Redirect logged-in users to dashboard version for sidebar experience
+  if (!authLoading && user && jumpId && username) {
+    return <Navigate to={`/dashboard/public-jump/${jumpId}/${username}`} replace />;
+  }
 
   useEffect(() => {
     if (jumpId) {
