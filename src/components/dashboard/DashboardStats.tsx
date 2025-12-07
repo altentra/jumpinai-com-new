@@ -79,31 +79,25 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({ stats, isLoading
 
   return (
     <div className="space-y-4 sm:space-y-6">
-      {/* Stats Grid - Centered and Beautiful */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 max-w-6xl mx-auto px-2 sm:px-0">
+      {/* Stats Grid - Compact and Elegant */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3 max-w-5xl mx-auto px-2 sm:px-0">
         {statCards.map((stat) => (
           <Card 
             key={stat.title} 
-            className="glass border-border/50 hover:border-primary/30 hover:shadow-modern-lg transition-all duration-300 rounded-xl cursor-pointer group overflow-hidden relative"
+            className="glass border-border/50 hover:border-primary/30 hover:shadow-modern transition-all duration-300 rounded-lg cursor-pointer group overflow-hidden relative"
             onClick={() => navigate(stat.path)}
           >
             {/* Subtle gradient background */}
             <div className={`absolute inset-0 ${stat.bgColor} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
             
-            <CardContent className="p-4 sm:p-5 md:p-6 relative z-10">
-              <div className="flex flex-col gap-3 sm:gap-4">
-                <div className="flex items-center justify-between">
-                  <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl ${stat.bgColor} flex items-center justify-center group-hover:scale-110 transition-transform shadow-sm`}>
-                    <stat.icon className={`h-5 w-5 sm:h-6 sm:w-6 ${stat.color}`} />
-                  </div>
-                  <div className="text-right">
-                    <p className="text-[10px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wider">{stat.title}</p>
-                  </div>
+            <CardContent className="p-3 sm:p-4 relative z-10">
+              <div className="flex items-center gap-2.5 sm:gap-3">
+                <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-lg ${stat.bgColor} flex items-center justify-center group-hover:scale-105 transition-transform`}>
+                  <stat.icon className={`h-4 w-4 sm:h-[18px] sm:w-[18px] ${stat.color}`} />
                 </div>
-                <div>
-                  <div className="flex items-baseline gap-1.5 sm:gap-2">
-                    <p className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text">{stat.value}</p>
-                  </div>
+                <div className="flex flex-col">
+                  <p className="text-[9px] sm:text-[10px] font-medium text-muted-foreground uppercase tracking-wide">{stat.title}</p>
+                  <p className="text-lg sm:text-xl font-semibold text-foreground">{stat.value}</p>
                 </div>
               </div>
             </CardContent>
