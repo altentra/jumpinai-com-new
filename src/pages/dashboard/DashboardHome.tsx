@@ -129,7 +129,7 @@ const DashboardHome = () => {
             </div>
           </div>
           <p className="text-[11px] sm:text-xs text-muted-foreground text-center leading-relaxed">
-            Every breakthrough satisfying transformation begins with a single Jump — yours starts now.
+            Your command center for AI adaptation — everything you need to create, track, and implement your Jumps.
           </p>
         </div>
       </div>
