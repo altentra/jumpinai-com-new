@@ -173,14 +173,14 @@ export default function AppSidebar() {
           <Badge 
             variant="outline" 
             className={cn(
-              "text-[10px] px-1.5 py-0",
+              "text-[13px] px-2 py-0.5",
               subInfo?.subscribed ? "border-primary/20 text-primary" : "border-muted text-muted-foreground"
             )}
           >
             {subInfo?.subscribed ? subInfo.subscription_tier || 'Free' : 'Free'}
           </Badge>
-          <div className="flex items-center gap-1 text-[11px]">
-            <Zap className="w-3 h-3 text-primary" />
+          <div className="flex items-center gap-1 text-[13px]">
+            <Zap className="w-3.5 h-3.5 text-primary" />
             <span className="font-semibold text-foreground">{creditsBalance}</span>
             <span className="text-muted-foreground">credits</span>
           </div>
