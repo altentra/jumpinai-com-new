@@ -13,6 +13,8 @@ import AccountProfile from "./dashboard/AccountProfile";
 import Subscription from "./dashboard/Subscription";
 import ViewJump from "./dashboard/ViewJump";
 import JumpinAIStudioContent from "@/components/dashboard/JumpinAIStudioContent";
+import PublicProfileView from "./dashboard/PublicProfileView";
+import PublicJumpView from "./dashboard/PublicJumpView";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -81,6 +83,8 @@ export default function Dashboard() {
               <Route path="jump/:jumpId" element={<ViewJump embedded />} />
               <Route path="tools-prompts" element={<ToolsPrompts />} />
               <Route path="profile" element={<Profile />} />
+              <Route path="profile/:username" element={<PublicProfileView />} />
+              <Route path="public-jump/:jumpId/:username" element={<PublicJumpView />} />
               <Route path="settings" element={<AccountProfile />} />
               <Route path="subscription" element={<Subscription />} />
               <Route path="*" element={<Navigate to="." replace />} />
