@@ -395,30 +395,32 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
     if (!skipScrollToTopRef.current) {
       requestAnimationFrame(() => {
         try {
-          if (tabsContainerRef.current) {
+          // Get the content ref for the new tab
+          let contentRef: React.RefObject<HTMLDivElement> | null = null;
+          if (newTab === 'overview') contentRef = overviewContentRef;
+          else if (newTab === 'plan') contentRef = planContentRef;
+          else if (newTab === 'toolPrompts') contentRef = toolPromptsContentRef;
+          
+          if (contentRef?.current && tabsContainerRef.current) {
             const isMobile = window.innerWidth < 768;
+            const tabsHeight = tabsContainerRef.current.getBoundingClientRect().height;
             
-            // Get the position of the tabs container
-            const tabsRect = tabsContainerRef.current.getBoundingClientRect();
-            
-            // Calculate where the tabs are on the page (absolute position)
-            const tabsAbsoluteTop = tabsRect.top + window.pageYOffset;
-            
-            // Calculate the scroll position so tabs are at the top of viewport
-            // accounting for any fixed headers above them
-            let scrollTarget: number;
-            
+            // Calculate the offset needed to show content below sticky tabs
+            let stickyOffset: number;
             if (isMobile) {
-              // On mobile: account for header when visible (80px), or just a small gap when hidden
-              const headerOffset = isHeaderHidden ? 0 : 80;
-              scrollTarget = tabsAbsoluteTop - headerOffset;
+              // On mobile: sticky tabs height + header offset when visible
+              stickyOffset = isHeaderHidden ? tabsHeight + 8 : tabsHeight + 80 + 8;
             } else {
-              // On desktop: account for fixed header/sidebar (~120px typical)
-              scrollTarget = tabsAbsoluteTop - 120;
+              // On desktop: sticky tabs height + fixed header/nav offset
+              stickyOffset = tabsHeight + 64 + 8; // 64px header + 8px padding
             }
             
+            // Get content's absolute position in the document
+            const contentTop = contentRef.current.getBoundingClientRect().top + window.pageYOffset;
+            
+            // Scroll so content appears right below the sticky tabs
             window.scrollTo({
-              top: Math.max(0, scrollTarget),
+              top: Math.max(0, contentTop - stickyOffset),
               behavior: 'smooth'
             });
           }
