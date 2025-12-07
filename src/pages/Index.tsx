@@ -649,10 +649,10 @@ const Index = () => {
                 }}
               >
                 <h3 className="text-xl sm:text-2xl font-bold gradient-text-primary mb-2 font-display">
-                  Not the Direction You Envisioned?
+                  The Jump Forward Not Quite Right?
                 </h3>
-                <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto">
-                  Explore Alternative Routes from your Overview tab and discover different strategic paths to achieve your goals
+                <p className="text-sm text-muted-foreground/80">
+                  Discover alternative strategic directions from your generated solution
                 </p>
               </div>
               
@@ -705,7 +705,8 @@ const Index = () => {
                         }}
                       >
                         <p className="text-center text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto mb-6 leading-relaxed">
-                          AI instantly generates 3 distinct strategic approaches based on your goals. Select any alternative and generate a complete new Jump with one click—then keep exploring alternatives from the new Jump, building an unlimited exploration tree of possibilities.
+                          Instantly generate <span className="text-foreground font-medium">3 alternative strategic approaches</span>. 
+                          Select your preferred path and generate a complete new Jump—then explore further from there.
                         </p>
                       </div>
                       
