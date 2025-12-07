@@ -393,37 +393,34 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
     
     // Scroll to top of tab content unless it's a programmatic change from View button
     if (!skipScrollToTopRef.current) {
-      const isMobile = window.innerWidth < 768;
-      
       requestAnimationFrame(() => {
         try {
           if (tabsContainerRef.current) {
-            // Get the tabs container position - scroll to just below it
+            const isMobile = window.innerWidth < 768;
+            
+            // Get the position of the tabs container
             const tabsRect = tabsContainerRef.current.getBoundingClientRect();
-            const tabsHeight = tabsRect.height;
             
-            // Calculate offset based on device and header state
-            let offset = 130; // Desktop default offset
+            // Calculate where the tabs are on the page (absolute position)
+            const tabsAbsoluteTop = tabsRect.top + window.pageYOffset;
+            
+            // Calculate the scroll position so tabs are at the top of viewport
+            // accounting for any fixed headers above them
+            let scrollTarget: number;
+            
             if (isMobile) {
-              // On mobile, account for sticky tabs + potential header
-              offset = isHeaderHidden ? tabsHeight + 10 : tabsHeight + 80;
+              // On mobile: account for header when visible (80px), or just a small gap when hidden
+              const headerOffset = isHeaderHidden ? 0 : 80;
+              scrollTarget = tabsAbsoluteTop - headerOffset;
+            } else {
+              // On desktop: account for fixed header/sidebar (~120px typical)
+              scrollTarget = tabsAbsoluteTop - 120;
             }
             
-            // Get the content ref for the new tab
-            let contentRef: React.RefObject<HTMLDivElement> | null = null;
-            if (newTab === 'overview') contentRef = overviewContentRef;
-            else if (newTab === 'plan') contentRef = planContentRef;
-            else if (newTab === 'toolPrompts') contentRef = toolPromptsContentRef;
-            
-            if (contentRef?.current) {
-              const elementPosition = contentRef.current.getBoundingClientRect().top + window.pageYOffset;
-              const offsetPosition = Math.max(0, elementPosition - offset);
-              
-              window.scrollTo({
-                top: offsetPosition,
-                behavior: 'smooth'
-              });
-            }
+            window.scrollTo({
+              top: Math.max(0, scrollTarget),
+              behavior: 'smooth'
+            });
           }
         } catch (error) {
           console.error('Tab scroll error:', error);
