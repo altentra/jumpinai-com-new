@@ -111,10 +111,10 @@ const DashboardHome = () => {
       <div className="relative space-y-4 sm:space-y-6 px-2 sm:px-0">
       {/* Welcome Header - Mobile Optimized */}
       <div className="glass rounded-xl border border-border/40 shadow-modern hover:shadow-modern-lg transition-all duration-300 animate-fade-in-down">
-        <div className="p-4 sm:p-6">
-          <div className="flex flex-col items-center gap-3 mb-3">
-            <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3">
-              <h1 className="text-lg sm:text-2xl md:text-3xl font-bold gradient-text-primary text-center leading-tight">
+        <div className="p-3 sm:p-5">
+          <div className="flex flex-col items-center gap-2 mb-2">
+            <div className="flex flex-col sm:flex-row items-center gap-2">
+              <h1 className="text-base sm:text-xl md:text-2xl font-semibold text-foreground text-center leading-tight">
                 Welcome{user?.display_name ? `, ${user.display_name}` : ""}!
               </h1>
               {subscription && (
@@ -122,13 +122,13 @@ const DashboardHome = () => {
                   subscription.subscribed 
                     ? "bg-primary/10 text-primary border-primary/20" 
                     : "bg-muted text-muted-foreground border-border"
-                } text-xs sm:text-sm px-3 py-1 font-medium shadow-sm`}>
+                } text-[10px] sm:text-xs px-2 py-0.5 font-medium`}>
                   {subscription.subscribed ? subscription.subscription_tier || 'Pro Plan' : 'Free Plan'}
                 </Badge>
               )}
             </div>
           </div>
-          <p className="text-xs sm:text-sm md:text-base text-muted-foreground text-center max-w-2xl mx-auto leading-relaxed">
+          <p className="text-[11px] sm:text-xs text-muted-foreground text-center max-w-xl mx-auto leading-relaxed">
             Your AI-powered dashboard is ready. Explore your tools, manage your projects, and accelerate your AI journey.
           </p>
         </div>
