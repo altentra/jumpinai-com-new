@@ -395,40 +395,40 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
     if (!skipScrollToTopRef.current) {
       const isMobile = window.innerWidth < 768;
       
-      // On mobile, skip complex scroll logic to prevent touch interference
-      if (isMobile) {
-        skipScrollToTopRef.current = false;
-        return;
-      }
-      
-      // Desktop only: Check if tabs are sticky and scroll accordingly
-      if (tabsContainerRef.current) {
-        const tabsRect = tabsContainerRef.current.getBoundingClientRect();
-        const isTabsSticky = tabsRect.top <= 80;
-        
-        if (isTabsSticky) {
-          requestAnimationFrame(() => {
-            try {
-              let contentRef: React.RefObject<HTMLDivElement> | null = null;
-              if (newTab === 'overview') contentRef = overviewContentRef;
-              else if (newTab === 'plan') contentRef = planContentRef;
-              else if (newTab === 'toolPrompts') contentRef = toolPromptsContentRef;
-              
-              if (contentRef?.current) {
-                const elementPosition = contentRef.current.getBoundingClientRect().top + window.pageYOffset;
-                const offsetPosition = Math.max(0, elementPosition - 130);
-                
-                window.scrollTo({
-                  top: offsetPosition,
-                  behavior: 'smooth'
-                });
-              }
-            } catch (error) {
-              console.error('Tab scroll error:', error);
+      requestAnimationFrame(() => {
+        try {
+          if (tabsContainerRef.current) {
+            // Get the tabs container position - scroll to just below it
+            const tabsRect = tabsContainerRef.current.getBoundingClientRect();
+            const tabsHeight = tabsRect.height;
+            
+            // Calculate offset based on device and header state
+            let offset = 130; // Desktop default offset
+            if (isMobile) {
+              // On mobile, account for sticky tabs + potential header
+              offset = isHeaderHidden ? tabsHeight + 10 : tabsHeight + 80;
             }
-          });
+            
+            // Get the content ref for the new tab
+            let contentRef: React.RefObject<HTMLDivElement> | null = null;
+            if (newTab === 'overview') contentRef = overviewContentRef;
+            else if (newTab === 'plan') contentRef = planContentRef;
+            else if (newTab === 'toolPrompts') contentRef = toolPromptsContentRef;
+            
+            if (contentRef?.current) {
+              const elementPosition = contentRef.current.getBoundingClientRect().top + window.pageYOffset;
+              const offsetPosition = Math.max(0, elementPosition - offset);
+              
+              window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+              });
+            }
+          }
+        } catch (error) {
+          console.error('Tab scroll error:', error);
         }
-      }
+      });
     }
     skipScrollToTopRef.current = false;
   };
