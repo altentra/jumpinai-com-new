@@ -18,6 +18,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useCredits } from '@/hooks/useCredits';
 import { useAuth } from '@/hooks/useAuth';
 import { RouteExplorationBreadcrumb } from '@/components/RouteExplorationBreadcrumb';
+import { useIsMobile } from '@/hooks/use-mobile';
 import type { 
   AlternativeRoute, 
   RouteExplorationHistory, 
@@ -43,6 +44,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
   embedded = false
 }) => {
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const { hasCredits, deductCredit, creditsBalance } = useCredits();
   const { isAuthenticated: authCheck } = useAuth();
   const [copiedPrompts, setCopiedPrompts] = React.useState<Set<number>>(new Set());
@@ -627,11 +629,10 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
       <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full" style={{ overflow: 'visible', display: 'block' }}>
         <div 
           ref={tabsContainerRef} 
-          className={`sticky z-[60] mb-6 bg-background/95 backdrop-blur-lg border-b border-border/40 shadow-lg pb-2 -mt-2 pt-1 transition-[top] duration-300 ease-out ${
-            isHeaderHidden ? 'top-0' : 'top-20'
-          } md:top-16`}
+          className="sticky z-[60] mb-6 bg-background/95 backdrop-blur-lg border-b border-border/40 shadow-lg pb-2 -mt-2 pt-1 transition-[top] duration-300 ease-out"
           style={{ 
             pointerEvents: 'auto',
+            top: isMobile ? (isHeaderHidden ? '0px' : '80px') : '64px',
           }}
         >
           {/* Mobile: Equal width tabs */}
