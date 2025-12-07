@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import logoTransparent from "@/assets/logo-transparent.png";
-import heroDesktopNew from "@/assets/hero-desktop-new.jpg";
+import heroDesktopNew from "@/assets/hero-desktop-studio-new.jpg";
 import heroMobileGeneration from "@/assets/hero-mobile-generation.jpg";
 import heroMobileDashboardGraph from "@/assets/hero-mobile-dashboard-graph.jpg";
 import heroMobileComboDetail from "@/assets/hero-mobile-combo-detail.png";
