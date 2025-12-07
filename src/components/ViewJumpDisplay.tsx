@@ -29,11 +29,38 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
   const navigate = useNavigate();
   const [copiedPrompts, setCopiedPrompts] = React.useState<Set<number>>(new Set());
   const [activeTab, setActiveTab] = React.useState('overview');
+  const [isHeaderHidden, setIsHeaderHidden] = React.useState(false);
   const skipScrollToTopRef = React.useRef(false);
   const tabsContainerRef = React.useRef<HTMLDivElement>(null);
   const overviewContentRef = React.useRef<HTMLDivElement>(null);
   const planContentRef = React.useRef<HTMLDivElement>(null);
   const toolPromptsContentRef = React.useRef<HTMLDivElement>(null);
+
+  // Listen to header visibility changes for perfect sync on mobile
+  React.useEffect(() => {
+    const handleHeaderVisibilityChange = (event: CustomEvent) => {
+      if (window.innerWidth < 768) {
+        setIsHeaderHidden(!event.detail.visible);
+      } else {
+        setIsHeaderHidden(false);
+      }
+    };
+
+    window.addEventListener('headerVisibilityChange', handleHeaderVisibilityChange as EventListener);
+    
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setIsHeaderHidden(false);
+      }
+    };
+    
+    window.addEventListener('resize', handleResize);
+    
+    return () => {
+      window.removeEventListener('headerVisibilityChange', handleHeaderVisibilityChange as EventListener);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   const handleCopyPrompt = async (promptText: string, index: number) => {
     try {
@@ -65,42 +92,42 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
     
     // Scroll to top of tab content unless it's a programmatic change from View button
     if (!skipScrollToTopRef.current) {
-      const isMobile = window.innerWidth < 768;
-      
-      // On mobile, skip complex scroll logic to prevent touch interference
-      if (isMobile) {
-        skipScrollToTopRef.current = false;
-        return;
-      }
-      
-      // Desktop only: Check if tabs are sticky and scroll accordingly
-      if (tabsContainerRef.current) {
-        const tabsRect = tabsContainerRef.current.getBoundingClientRect();
-        const isTabsSticky = tabsRect.top <= 0;
-        
-        if (isTabsSticky) {
-          requestAnimationFrame(() => {
-            try {
-              let contentRef: React.RefObject<HTMLDivElement> | null = null;
-              if (newTab === 'overview') contentRef = overviewContentRef;
-              else if (newTab === 'plan') contentRef = planContentRef;
-              else if (newTab === 'toolPrompts') contentRef = toolPromptsContentRef;
-              
-              if (contentRef?.current) {
-                const elementPosition = contentRef.current.getBoundingClientRect().top + window.pageYOffset;
-                const offsetPosition = Math.max(0, elementPosition - 110);
-                
-                window.scrollTo({
-                  top: offsetPosition,
-                  behavior: 'smooth'
-                });
-              }
-            } catch (error) {
-              console.error('Tab scroll error:', error);
+      requestAnimationFrame(() => {
+        try {
+          // Get the content ref for the new tab
+          let contentRef: React.RefObject<HTMLDivElement> | null = null;
+          if (newTab === 'overview') contentRef = overviewContentRef;
+          else if (newTab === 'plan') contentRef = planContentRef;
+          else if (newTab === 'toolPrompts') contentRef = toolPromptsContentRef;
+          
+          if (contentRef?.current && tabsContainerRef.current) {
+            const isMobile = window.innerWidth < 768;
+            const tabsHeight = tabsContainerRef.current.getBoundingClientRect().height;
+            
+            // Calculate the total fixed height at top (header + sticky tabs + padding)
+            // On mobile: ALWAYS account for header since scrolling up will make it appear
+            let stickyOffset: number;
+            if (isMobile) {
+              // On mobile: header (80px) + tabs height + padding - header WILL appear when scrolling up
+              stickyOffset = 80 + tabsHeight + 16;
+            } else {
+              // On desktop: header (64px) + tabs height + padding
+              stickyOffset = 64 + tabsHeight + 16;
             }
-          });
+            
+            // Get content's absolute position in the document
+            const contentTop = contentRef.current.getBoundingClientRect().top + window.pageYOffset;
+            
+            // Scroll so content appears right below the sticky tabs
+            window.scrollTo({
+              top: Math.max(0, contentTop - stickyOffset),
+              behavior: 'smooth'
+            });
+          }
+        } catch (error) {
+          console.error('Tab scroll error:', error);
         }
-      }
+      });
     }
     skipScrollToTopRef.current = false;
   };
@@ -176,7 +203,7 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
     <div className="w-full max-w-full space-y-4" style={{ overflow: 'visible' }}>
       {/* Content Tabs - Ultra Premium Design with Sticky Behavior */}
       <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full" style={{ overflow: 'visible', display: 'block' }}>
-        <div ref={tabsContainerRef} className="sticky top-20 md:top-16 z-[60] mb-6 bg-background/95 backdrop-blur-lg border-b border-border/40 shadow-lg pb-2 -mt-2 pt-1" style={{ pointerEvents: 'auto' }}>
+        <div ref={tabsContainerRef} className={`sticky z-[60] mb-6 bg-background/95 backdrop-blur-lg border-b border-border/40 shadow-lg pb-2 -mt-2 pt-1 transition-[top] duration-300 ease-out ${isHeaderHidden ? 'top-0' : 'top-20'} md:top-16`} style={{ pointerEvents: 'auto' }}>
           {/* Mobile: Equal width tabs */}
           <div className="sm:hidden">
             <TabsList className="grid h-auto w-full grid-cols-3 gap-1 p-1.5 bg-background rounded-xl border border-border/50 shadow-lg shadow-primary/10" style={{ pointerEvents: 'auto', touchAction: 'manipulation' }}>
