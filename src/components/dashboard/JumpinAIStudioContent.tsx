@@ -251,7 +251,7 @@ const JumpinAIStudioContent = () => {
       <div className="relative pt-4 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           {/* Premium Hero Section */}
-          <div className="text-center mb-8 sm:mb-12 lg:mb-20 animate-fade-in-up px-2">
+          <div className="text-center mb-6 sm:mb-8 lg:mb-12 animate-fade-in-up px-2">
             <div className="relative mb-4 sm:mb-6 lg:mb-8">
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent dark:via-primary/8 blur-3xl transform -translate-y-4"></div>
               <h1 className="relative text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent leading-tight tracking-tight px-2">
