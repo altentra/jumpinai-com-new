@@ -103,16 +103,6 @@ export default function MyJumpsNew() {
       </div>
       
       <div className="relative space-y-4 sm:space-y-6 px-2 sm:px-0">
-      <div className="space-y-3 sm:space-y-1">
-        <div className="block sm:hidden">
-          <h1 className="text-2xl font-bold tracking-tight">My Jumps</h1>
-          <p className="text-sm text-muted-foreground">Your AI transformation plans</p>
-        </div>
-        <div className="hidden sm:block">
-          <h1 className="text-3xl font-bold tracking-tight">My Jumps</h1>
-          <p className="text-muted-foreground">Your personal AI transformation plans ready to implement</p>
-        </div>
-      </div>
 
       <div className="glass rounded-xl p-3 sm:p-4 shadow-modern">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
