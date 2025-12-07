@@ -104,14 +104,14 @@ const ViewJumpDisplay: React.FC<ViewJumpDisplayProps> = ({
             const isMobile = window.innerWidth < 768;
             const tabsHeight = tabsContainerRef.current.getBoundingClientRect().height;
             
-            // Calculate the offset needed to show content below sticky tabs
+            // Calculate the total fixed height at top (header + sticky tabs + padding)
             let stickyOffset: number;
             if (isMobile) {
-              // On mobile: sticky tabs height + header offset when visible
-              stickyOffset = isHeaderHidden ? tabsHeight + 8 : tabsHeight + 80 + 8;
+              // On mobile: header (80px when visible) + tabs height + extra padding
+              stickyOffset = isHeaderHidden ? tabsHeight + 16 : 80 + tabsHeight + 16;
             } else {
-              // On desktop: sticky tabs height + fixed header/nav offset
-              stickyOffset = tabsHeight + 64 + 8; // 64px header + 8px padding
+              // On desktop: header (64px) + tabs height + extra padding
+              stickyOffset = 64 + tabsHeight + 16;
             }
             
             // Get content's absolute position in the document
