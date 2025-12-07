@@ -639,13 +639,13 @@ const Index = () => {
 
             {/* Explore Alternative Routes Feature */}
             <div className="mt-10">
-              {/* Section Header - appears first from right */}
+              {/* Section Header - appears first from bottom */}
               <div 
                 ref={exploreHeaderRef}
                 className="text-center mb-6 transition-all duration-700 ease-out"
                 style={{
                   opacity: Math.min(1, exploreHeaderProgress * 2),
-                  transform: `translateX(${(1 - Math.min(1, exploreHeaderProgress * 2)) * 60}px)`
+                  transform: `translateY(${(1 - Math.min(1, exploreHeaderProgress * 2)) * 40}px)`
                 }}
               >
                 <h3 className="text-xl sm:text-2xl font-bold gradient-text-primary mb-2 font-display">
@@ -657,13 +657,13 @@ const Index = () => {
               </div>
               
               <div className="max-w-4xl mx-auto">
-                {/* Main Card Frame - appears second */}
+                {/* Main Card Frame - appears second from bottom */}
                 <div 
                   ref={exploreCardRef}
                   className="group relative rounded-3xl transition-all duration-700 ease-out"
                   style={{
                     opacity: Math.min(1, exploreCardProgress * 1.5),
-                    transform: `translateX(${(1 - Math.min(1, exploreCardProgress * 1.5)) * 80}px) scale(${0.95 + Math.min(1, exploreCardProgress * 1.5) * 0.05})`
+                    transform: `translateY(${(1 - Math.min(1, exploreCardProgress * 1.5)) * 50}px) scale(${0.95 + Math.min(1, exploreCardProgress * 1.5) * 0.05})`
                   }}
                 >
                   {/* Liquid glass border wrapper */}
@@ -676,13 +676,13 @@ const Index = () => {
                     <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/[0.02] via-transparent to-white/[0.01] pointer-events-none"></div>
                     
                     <div className="relative z-10">
-                      {/* Feature Button Display - appears third with elegant slide + scale */}
+                      {/* Feature Button Display - appears third from bottom with scale */}
                       <div 
                         ref={exploreButtonRef}
                         className="flex justify-center mb-6 transition-all duration-700 ease-out"
                         style={{
                           opacity: Math.max(0, Math.min(1, (exploreButtonProgress - 0.1) * 2.5)),
-                          transform: `translateX(${(1 - Math.max(0, Math.min(1, (exploreButtonProgress - 0.1) * 2.5))) * 100}px) scale(${0.8 + Math.max(0, Math.min(1, (exploreButtonProgress - 0.1) * 2.5)) * 0.2})`
+                          transform: `translateY(${(1 - Math.max(0, Math.min(1, (exploreButtonProgress - 0.1) * 2.5))) * 30}px) scale(${0.9 + Math.max(0, Math.min(1, (exploreButtonProgress - 0.1) * 2.5)) * 0.1})`
                         }}
                       >
                         <div className="relative group/explore">
@@ -695,13 +695,13 @@ const Index = () => {
                         </div>
                       </div>
                       
-                      {/* Description - appears fourth */}
+                      {/* Description - appears fourth from bottom */}
                       <div
                         ref={exploreDescRef}
                         className="transition-all duration-700 ease-out"
                         style={{
                           opacity: Math.max(0, Math.min(1, (exploreDescProgress - 0.15) * 2.5)),
-                          transform: `translateX(${(1 - Math.max(0, Math.min(1, (exploreDescProgress - 0.15) * 2.5))) * 80}px)`
+                          transform: `translateY(${(1 - Math.max(0, Math.min(1, (exploreDescProgress - 0.15) * 2.5))) * 25}px)`
                         }}
                       >
                         <p className="text-center text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto mb-6 leading-relaxed">
