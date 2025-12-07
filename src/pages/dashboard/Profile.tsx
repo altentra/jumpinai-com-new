@@ -216,7 +216,7 @@ export default function Profile() {
         </Card>
 
         <Tabs defaultValue="edit" className="space-y-6">
-          <TabsList className="flex flex-row w-full gap-1 sm:gap-2 rounded-xl sm:rounded-2xl glass border border-border/50 p-1 sm:p-1.5 h-auto justify-center max-w-full sm:max-w-4xl mx-auto backdrop-blur-sm">
+          <TabsList className="flex flex-row w-full gap-1 sm:gap-2 rounded-xl sm:rounded-2xl glass border border-border/50 p-1 sm:p-1.5 h-auto justify-center backdrop-blur-sm">
             <TabsTrigger 
               value="edit" 
               className="flex-1 sm:max-w-52 flex items-center justify-center gap-1.5 sm:gap-2 text-[11px] sm:text-sm py-2.5 sm:py-3.5 px-2 sm:px-6 transition-all duration-300 hover:bg-background/60 data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/10 data-[state=active]:to-accent/10 data-[state=active]:border data-[state=active]:border-primary/20 data-[state=active]:shadow-sm rounded-lg sm:rounded-xl font-medium"
