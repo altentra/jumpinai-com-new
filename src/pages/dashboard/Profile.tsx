@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useOptimizedAuth } from '@/hooks/useOptimizedAuth';
 import { profileService, ProfileData } from '@/services/profileService';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -17,6 +18,7 @@ import logoTransparent from '@/assets/logo-transparent.png';
 export default function Profile() {
   const { user, isLoading: authLoading } = useOptimizedAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -203,14 +205,12 @@ export default function Profile() {
           {profile?.is_public && (
             <div className="relative">
               <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent mb-4" />
-              <a
-                href={`/u/${profile.username?.replace('@', '')}`}
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
+                onClick={() => navigate(`/dashboard/profile/${profile.username?.replace('@', '')}`)}
                 className="inline-flex items-center gap-2 text-sm text-primary hover:text-primary/80 transition-colors font-medium"
               >
                 View my public profile →
-              </a>
+              </button>
             </div>
           )}
         </Card>
