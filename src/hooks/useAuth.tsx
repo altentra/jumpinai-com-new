@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useMemo, useState, useRef, useCallback } from "react";
+import React, { createContext, useContext, useEffect, useMemo, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { subscriptionCache } from "@/utils/subscriptionCache";
 
@@ -36,7 +36,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isLoading, setIsLoading] = useState(true);
   const [subscription, setSubscription] = useState<SubscriptionInfo | null>(null);
   const [isSubscriptionLoading, setIsSubscriptionLoading] = useState(false);
-  const isLoggingOutRef = useRef(false); // Prevent multiple logout attempts
 
   // Function to fetch and merge user profile data
   const fetchUserWithProfile = async (authUser: any): Promise<AuthUser | null> => {
@@ -205,32 +204,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = useCallback(async () => {
-    // Prevent multiple simultaneous logout attempts
-    if (isLoggingOutRef.current) {
-      console.log('Logout already in progress, skipping...');
-      return;
-    }
-    
-    isLoggingOutRef.current = true;
-    
-    // Clear cache and state immediately for responsive UI
     subscriptionCache.clear();
-    setUser(null);
-    setSubscription(null);
     
-    try {
-      // Attempt signOut but don't block on errors (session may already be expired)
-      await supabase.auth.signOut({ scope: 'local' });
-      console.log('Logout completed successfully');
-    } catch (error) {
-      // Session may already be expired or invalid, that's fine
-      console.log('Logout completed (session may have been expired):', error);
-    } finally {
-      isLoggingOutRef.current = false;
-    }
+    // Sign out from Supabase first, then redirect
+    await supabase.auth.signOut();
     
-    // Navigate after everything is done
-    window.location.href = "/";
+    // Force a clean redirect
+    window.location.replace("/");
   }, []);
 
   const value = useMemo<AuthContextValue>(() => ({
