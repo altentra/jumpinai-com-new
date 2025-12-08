@@ -648,9 +648,14 @@ const Index = () => {
                   transform: `translateY(${(1 - Math.min(1, exploreHeaderProgress * 2)) * 40}px)`
                 }}
               >
-                <h3 className="text-xl sm:text-2xl font-bold gradient-text-primary mb-2 font-display">
-                  The Jump Forward Not Quite Right?
-                </h3>
+                <div className="flex items-center justify-center gap-2 mb-2">
+                  <h3 className="text-xl sm:text-2xl font-bold gradient-text-primary font-display">
+                    The Jump Forward Not Quite Right?
+                  </h3>
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-primary/80 bg-primary/10 px-2 py-0.5 rounded-full border border-primary/20">
+                    Feature
+                  </span>
+                </div>
                 <p className="text-sm text-muted-foreground/80">
                   Discover alternative strategic directions from your generated solution
                 </p>
