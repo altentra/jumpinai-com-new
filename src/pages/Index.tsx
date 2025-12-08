@@ -705,7 +705,7 @@ const Index = () => {
                         }}
                       >
                         <p className="text-center text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto mb-6 leading-relaxed">
-                          Instantly generate <span className="text-foreground font-medium">3 alternative strategic approaches</span>. 
+                          This feature instantly generates <span className="text-foreground font-medium">3 alternative strategic approaches</span>. 
                           Select your preferred path and generate a complete new Jump—then explore further from there.
                         </p>
                       </div>
