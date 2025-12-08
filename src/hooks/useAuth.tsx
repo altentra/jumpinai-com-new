@@ -204,15 +204,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = useCallback(async () => {
+    // Clear all caches and state first
+    subscriptionCache.clear();
+    setUser(null);
+    setSubscription(null);
+    
     try {
-      subscriptionCache.clear();
-      setUser(null);
-      setSubscription(null);
-      await supabase.auth.signOut();
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        console.error('SignOut error:', error);
+      }
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error('Logout exception:', error);
     }
-    // Always redirect regardless of signOut success/failure
+    
+    // Force redirect - this will happen regardless of signOut result
     window.location.href = "/";
   }, []);
 
