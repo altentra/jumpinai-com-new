@@ -221,7 +221,15 @@ const Navigation = React.memo(() => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="min-w-[200px]">
                   <DropdownMenuItem onSelect={() => navigate('/dashboard')}>Dashboard</DropdownMenuItem>
-                  <DropdownMenuItem onSelect={() => logout()}>Log Out</DropdownMenuItem>
+                  <DropdownMenuItem 
+                    onSelect={(e) => {
+                      e.preventDefault();
+                      // Use setTimeout to ensure dropdown closes first before logout executes
+                      setTimeout(() => logout(), 50);
+                    }}
+                  >
+                    Log Out
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
