@@ -204,13 +204,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = useCallback(async () => {
-    subscriptionCache.clear();
-    
-    // Sign out from Supabase first, then redirect
-    await supabase.auth.signOut();
-    
-    // Force a clean redirect
-    window.location.replace("/");
+    try {
+      subscriptionCache.clear();
+      setUser(null);
+      setSubscription(null);
+      await supabase.auth.signOut();
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+    // Always redirect regardless of signOut success/failure
+    window.location.href = "/";
   }, []);
 
   const value = useMemo<AuthContextValue>(() => ({
