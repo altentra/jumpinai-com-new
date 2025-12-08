@@ -221,7 +221,15 @@ const Navigation = React.memo(() => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="min-w-[200px]">
                   <DropdownMenuItem onClick={() => navigate('/dashboard')}>Dashboard</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => logout()}>Log Out</DropdownMenuItem>
+                  <DropdownMenuItem 
+                    onClick={async (e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      await logout();
+                    }}
+                  >
+                    Log Out
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
