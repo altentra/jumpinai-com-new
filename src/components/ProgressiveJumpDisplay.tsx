@@ -61,12 +61,14 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
   // Alternative jumps state
   const [alternativeJumps, setAlternativeJumps] = React.useState<AlternativeRoute[]>([]);
   const [isGeneratingAlternatives, setIsGeneratingAlternatives] = React.useState(false);
+  const [isGeneratingMoreRoutes, setIsGeneratingMoreRoutes] = React.useState(false);
   const [showAlternatives, setShowAlternatives] = React.useState(false);
   const [generatingJumpIndex, setGeneratingJumpIndex] = React.useState<number | null>(null);
   const [selectedAlternative, setSelectedAlternative] = React.useState<AlternativeRoute | null>(null);
   const [alternativesCollapsed, setAlternativesCollapsed] = React.useState(false);
   const [generatedJumpIndex, setGeneratedJumpIndex] = React.useState<number | null>(null);
   const [jumpGenerationComplete, setJumpGenerationComplete] = React.useState(false);
+  const [alternativesBatchCount, setAlternativesBatchCount] = React.useState(0); // Track how many batches generated (max 4)
   
   // Route exploration history - tracks the full tree of alternative explorations
   const [explorationHistory, setExplorationHistory] = React.useState<RouteExplorationHistory | null>(null);
@@ -106,6 +108,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
         setAlternativeJumps([]);
         setSelectedAlternative(null);
         setAlternativesCollapsed(false);
+        setAlternativesBatchCount(0);
         // Keep generatedJumpIndex to show "Jump Generated" state briefly
         // Keep explorationHistory - this is the key change!
       }, 100);
@@ -128,6 +131,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
         setGeneratedJumpIndex(null);
         setGeneratingJumpIndex(null);
         setJumpGenerationComplete(false);
+        setAlternativesBatchCount(0);
         
         // If there's no previous jump (first generation) or it's an alternative jump
         // don't reset the exploration history - it was already updated
@@ -192,7 +196,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
     }
   };
 
-  // Explore alternative routes
+  // Explore alternative routes (initial generation)
   const handleGenerateAlternatives = async () => {
     if (!result.comprehensive_plan?.jumpForward || !result.formGoals) {
       toast.error('Cannot explore alternatives: missing required data');
@@ -204,6 +208,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
     setGeneratedJumpIndex(null);
     setSelectedAlternative(null);
     setAlternativesCollapsed(false);
+    setAlternativesBatchCount(0);
     
     try {
       const { data, error } = await supabase.functions.invoke('explore-alternative-routes', {
@@ -211,7 +216,8 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
           jumpForward: result.comprehensive_plan.jumpForward,
           formGoals: result.formGoals,
           formChallenges: result.formChallenges || '',
-          jumpTitle: result.title
+          jumpTitle: result.title,
+          existingAlternatives: [] // First batch, no existing
         }
       });
 
@@ -219,6 +225,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
 
       if (data?.alternatives && Array.isArray(data.alternatives)) {
         setAlternativeJumps(data.alternatives);
+        setAlternativesBatchCount(1);
         setShowAlternatives(true);
         toast.success('Alternative routes discovered!');
       } else {
@@ -229,6 +236,49 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
       toast.error('Failed to explore alternatives. Please try again.');
     } finally {
       setIsGeneratingAlternatives(false);
+    }
+  };
+
+  // Generate more alternative routes (additional batches)
+  const handleGenerateMoreRoutes = async () => {
+    if (!result.comprehensive_plan?.jumpForward || !result.formGoals) {
+      toast.error('Cannot explore more routes: missing required data');
+      return;
+    }
+
+    if (alternativesBatchCount >= 4) {
+      toast.info('Maximum of 12 alternative routes reached.');
+      return;
+    }
+
+    setIsGeneratingMoreRoutes(true);
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('explore-alternative-routes', {
+        body: {
+          jumpForward: result.comprehensive_plan.jumpForward,
+          formGoals: result.formGoals,
+          formChallenges: result.formChallenges || '',
+          jumpTitle: result.title,
+          existingAlternatives: alternativeJumps // Pass all existing alternatives to avoid duplicates
+        }
+      });
+
+      if (error) throw error;
+
+      if (data?.alternatives && Array.isArray(data.alternatives)) {
+        // Append new alternatives to existing ones
+        setAlternativeJumps(prev => [...prev, ...data.alternatives]);
+        setAlternativesBatchCount(prev => prev + 1);
+        toast.success('3 more routes discovered!');
+      } else {
+        throw new Error('Invalid response from server');
+      }
+    } catch (error) {
+      console.error('Error generating more routes:', error);
+      toast.error('Failed to explore more routes. Please try again.');
+    } finally {
+      setIsGeneratingMoreRoutes(false);
     }
   };
 
@@ -813,7 +863,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                           <Route className="w-4 h-4 text-primary" />
                           <span className="font-semibold text-foreground">Explore Alternative Routes</span>
                           <Badge variant="outline" className="text-xs bg-primary/5 border-primary/20 text-primary">
-                            3 Options
+                            {alternativeJumps.length} {alternativeJumps.length === 1 ? 'Option' : 'Options'}
                           </Badge>
                         </div>
                         <button
@@ -920,6 +970,46 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                           );
                         })}
                       </div>
+
+                      {/* Explore More Routes Button - appears after alternatives, max 4 batches (12 routes) */}
+                      {alternativesBatchCount < 4 && (
+                        <div className="flex justify-center pt-2">
+                          <button
+                            onClick={handleGenerateMoreRoutes}
+                            disabled={isGeneratingMoreRoutes || generatingJumpIndex !== null}
+                            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-medium rounded-lg
+                              bg-gradient-to-r from-secondary/20 via-accent/10 to-secondary/20 
+                              border border-secondary/40 hover:border-primary/50
+                              text-foreground hover:text-primary
+                              backdrop-blur-sm transition-all duration-300
+                              hover:from-primary/15 hover:via-accent/10 hover:to-primary/15
+                              hover:shadow-lg hover:shadow-primary/20
+                              disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            {isGeneratingMoreRoutes ? (
+                              <>
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                                Exploring more routes...
+                              </>
+                            ) : (
+                              <>
+                                <Route className="w-4 h-4" />
+                                Explore more routes
+                                <span className="text-xs text-muted-foreground">({12 - alternativeJumps.length} remaining)</span>
+                              </>
+                            )}
+                          </button>
+                        </div>
+                      )}
+
+                      {/* Max routes reached indicator */}
+                      {alternativesBatchCount >= 4 && (
+                        <div className="flex justify-center pt-2">
+                          <span className="text-xs text-muted-foreground italic">
+                            Maximum of 12 alternative routes explored
+                          </span>
+                        </div>
+                      )}
                     </div>
                   )}
 
