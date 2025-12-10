@@ -647,14 +647,11 @@ const Index = () => {
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold gradient-text-primary mb-3 sm:mb-4 font-display">
               Intelligent Features That Evolve With Your Progress
             </h2>
-            <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto mb-8">
-              JumpinAI empowers you to refine every step with precision. Go deeper, pivot strategically, or arm yourself with the exact resources you need—all seamlessly integrated into your workflow.
-            </p>
             
             {/* Explore Alternative Routes Feature - Relocated */}
             <div className="max-w-4xl mx-auto mb-10">
               <p className="text-sm sm:text-base text-muted-foreground/80 max-w-2xl mx-auto mb-6">
-                Not aligned with the initial strategic direction? Instantly explore alternative approaches directly from your Overview tab—generate up to 12 distinct pathways and select the one that resonates with your vision.
+                Seeking a different strategic direction? Instantly explore alternative approaches directly from your Overview tab—generate up to 12 distinct pathways and select the one that perfectly aligns with your vision.
               </p>
               
               {/* Main Card Frame */}
@@ -780,6 +777,10 @@ const Index = () => {
                 <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-gray-800 to-black dark:from-white dark:to-gray-300 opacity-20 group-hover:opacity-40 transition-opacity duration-500 -z-10 blur-lg"></div>
               </div>
             </div>
+            
+            <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto mt-10">
+              JumpinAI empowers you to refine every step with precision. Go deeper, pivot strategically, or arm yourself with the exact resources you need—all seamlessly integrated into your workflow.
+            </p>
           </div>
 
           {/* Feature 1: CLARIFY - Multi-Level Breakdown */}
