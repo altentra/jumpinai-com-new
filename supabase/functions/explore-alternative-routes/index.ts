@@ -13,9 +13,13 @@ serve(async (req) => {
   }
 
   try {
-    const { jumpForward, formGoals, formChallenges, jumpTitle } = await req.json();
+    const { jumpForward, formGoals, formChallenges, jumpTitle, existingAlternatives } = await req.json();
 
-    console.log('Generating alternative jumps for:', { jumpTitle, formGoals: formGoals?.substring(0, 100) });
+    console.log('Generating alternative jumps for:', { 
+      jumpTitle, 
+      formGoals: formGoals?.substring(0, 100),
+      existingCount: existingAlternatives?.length || 0
+    });
 
     if (!jumpForward || !formGoals) {
       return new Response(
@@ -33,6 +37,14 @@ serve(async (req) => {
       );
     }
 
+    // Build the context of existing alternatives to avoid
+    const existingContext = existingAlternatives && existingAlternatives.length > 0
+      ? `\n\nIMPORTANT - AVOID THESE ALREADY GENERATED ALTERNATIVES (generate completely DIFFERENT approaches):
+${existingAlternatives.map((alt: { title: string; description: string }, i: number) => 
+  `${i + 1}. "${alt.title}": ${alt.description}`
+).join('\n')}`
+      : '';
+
     const systemPrompt = `You are JumpinAI, an expert AI strategist specializing in AI adaptation and implementation planning.
 
 Your task is to generate 3 COMPLETELY DIFFERENT alternative strategic approaches to help the user achieve their goals.
@@ -43,6 +55,9 @@ IMPORTANT GUIDELINES:
 - Be creative but practical - each alternative must be actionable
 - Consider different risk tolerances, budgets, and time commitments
 - Each alternative should be compelling and well-reasoned
+${existingAlternatives && existingAlternatives.length > 0 
+  ? `- CRITICAL: You must generate alternatives that are COMPLETELY DIFFERENT from the ${existingAlternatives.length} alternatives already generated. Do NOT repeat similar ideas, approaches, or methodologies.`
+  : ''}
 
 Output Format: Return ONLY valid JSON with this exact structure:
 {
@@ -72,13 +87,14 @@ ${formChallenges}` : ''}
 
 The AI initially proposed this approach (The Jump Forward):
 "${jumpForward}"
+${existingContext}
 
-Now, generate 3 ALTERNATIVE approaches that are DIFFERENT from the above. Each should offer a distinct pathway to achieve the same goals. Consider:
+Now, generate 3 NEW ALTERNATIVE approaches that are DIFFERENT from the original approach${existingAlternatives?.length > 0 ? ' AND different from all the alternatives listed above' : ''}. Each should offer a distinct pathway to achieve the same goals. Consider:
 - Alternative 1: Could focus on a different methodology or framework
 - Alternative 2: Could prioritize different aspects (speed vs thoroughness, cost vs quality, etc.)
 - Alternative 3: Could use entirely different tools or strategies
 
-Make each alternative genuinely compelling and different from the original and from each other.`;
+Make each alternative genuinely compelling and different from the original${existingAlternatives?.length > 0 ? ', from each other, and from all previously generated alternatives' : ' and from each other'}.`;
 
     console.log('Calling xAI API for alternative jumps...');
 
@@ -94,7 +110,7 @@ Make each alternative genuinely compelling and different from the original and f
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt }
         ],
-        temperature: 0.8,
+        temperature: 0.85, // Slightly higher for more variety when generating additional alternatives
         max_tokens: 1500,
       }),
     });
@@ -156,23 +172,24 @@ Make each alternative genuinely compelling and different from the original and f
       console.error('JSON parse error:', parseError, 'Content:', content);
       
       // Fallback: generate generic alternatives if parsing fails
+      const batchNumber = Math.floor((existingAlternatives?.length || 0) / 3) + 1;
       alternatives = [
         {
-          title: "Rapid AI Integration Sprint",
+          title: batchNumber === 1 ? "Rapid AI Integration Sprint" : `Accelerated Implementation Path ${batchNumber}`,
           description: "Focus on quick wins by implementing the most impactful AI tools first. This approach prioritizes speed and immediate results over comprehensive coverage."
         },
         {
-          title: "Strategic Foundation Building",
+          title: batchNumber === 1 ? "Strategic Foundation Building" : `Methodical Growth Strategy ${batchNumber}`,
           description: "Take a methodical approach by establishing solid foundations before scaling. This ensures long-term success and sustainable growth with AI integration."
         },
         {
-          title: "Hybrid Human-AI Workflow",
+          title: batchNumber === 1 ? "Hybrid Human-AI Workflow" : `Balanced Automation Approach ${batchNumber}`,
           description: "Balance AI automation with human oversight, creating workflows that leverage the best of both. Ideal for those who want control while gaining efficiency."
         }
       ];
     }
 
-    console.log('Successfully generated alternatives:', alternatives.map(a => a.title));
+    console.log('Successfully generated alternatives:', alternatives.map((a: { title: string }) => a.title));
 
     return new Response(
       JSON.stringify({ alternatives }),
