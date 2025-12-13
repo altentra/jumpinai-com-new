@@ -117,25 +117,63 @@
 }
 
 /* Professional Glass Morphism */
+/* Safari-compatible glass effect with explicit background colors */
+/* Safari desktop has issues with backdrop-filter + Tailwind opacity modifiers */
+/* Using !important to override Tailwind bg-* classes that cause white rendering in Safari */
 .glass {
-  background: rgba(255, 255, 255, 0.4);
+  background-color: hsl(0 0% 88% / 0.8);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   /* border removed - use Tailwind border classes instead */
+}
+
+@supports (backdrop-filter: blur(12px)) or (-webkit-backdrop-filter: blur(12px)) {
+  .glass {
+    background-color: hsl(0 0% 100% / 0.4);
+  }
 }
 
 .dark .glass {
-  background: rgba(255, 255, 255, 0.03);
+  background-color: hsl(0 0% 15% / 0.9);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   /* border removed - use Tailwind border classes instead */
 }
 
+@supports (backdrop-filter: blur(12px)) or (-webkit-backdrop-filter: blur(12px)) {
+  .dark .glass {
+    background-color: hsl(0 0% 15% / 0.6);
+  }
+}
+
+/* Fix for Safari: when glass is combined with bg-muted/30, override with proper dark colors */
+/* This ensures cards don't appear white in Safari dark mode */
+.dark .glass[class*="bg-muted"] {
+  background-color: hsl(0 0% 15% / 0.7) !important;
+}
+
 .glass-dark {
-  background: rgba(0, 0, 0, 0.4);
+  background-color: hsl(0 0% 0% / 0.7);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid hsl(0 0% 100% / 0.1);
+}
+
+@supports (backdrop-filter: blur(20px)) or (-webkit-backdrop-filter: blur(20px)) {
+  .glass-dark {
+    background-color: hsl(0 0% 0% / 0.4);
+  }
+}
+
+/* Safari-specific fix for elements using backdrop-blur with bg-background opacity */
+/* Safari sometimes renders these as white instead of the proper background color */
+.dark [class*="bg-background/"][class*="backdrop-blur"] {
+  background-color: hsl(0 0% 10% / 0.8) !important;
+}
+
+.dark [class*="from-background/"][class*="backdrop-blur"] {
+  --tw-gradient-from: hsl(0 0% 10% / 0.6) !important;
+  --tw-gradient-to: hsl(0 0% 10% / 0.4) !important;
 }
 
 /* Professional Gradient Text */
