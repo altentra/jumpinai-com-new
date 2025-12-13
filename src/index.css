@@ -117,6 +117,8 @@
 }
 
 /* Professional Glass Morphism - Original liquid glass effect */
+/* Safari desktop fix: When .glass is combined with Tailwind bg-muted/XX classes, */
+/* Safari incorrectly renders them as white. We override bg-muted when combined with glass in dark mode */
 .glass {
   background: rgba(255, 255, 255, 0.4);
   backdrop-filter: blur(12px);
@@ -131,35 +133,26 @@
   /* border removed - use Tailwind border classes instead */
 }
 
+/* Safari fix: Override Tailwind bg-muted opacity classes when used with .glass in dark mode */
+/* These need explicit rgba backgrounds because Safari misinterprets HSL with opacity modifiers */
+.dark .glass[class*="bg-muted"] {
+  background: rgba(45, 45, 50, 0.55) !important;
+}
+
+.dark [class*="bg-muted"][class*="backdrop-blur"] {
+  background: rgba(45, 45, 50, 0.55) !important;
+}
+
+/* Override for elements using bg-background with opacity + backdrop-blur */
+.dark [class*="bg-background/"][class*="backdrop-blur"] {
+  background: rgba(15, 15, 18, 0.85) !important;
+}
+
 .glass-dark {
   background: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* Safari Desktop Fix: backdrop-filter + Tailwind opacity modifiers render incorrectly */
-/* Safari interprets bg-muted/30 differently - force proper dark background */
-@supports (-webkit-touch-callout: none) {
-  /* This targets Safari only */
-}
-
-/* Safari-specific: Use color-mix for better cross-browser opacity handling */
-@media not all and (min-resolution: 0.001dpcm) {
-  @supports (-webkit-appearance: none) {
-    /* Safari desktop specific fixes */
-    .dark .glass.bg-muted\/30,
-    .dark .glass.bg-muted\/20,
-    .dark .glass.bg-muted\/40 {
-      background: rgba(30, 30, 30, 0.7) !important;
-    }
-    
-    .dark .bg-background\/80.backdrop-blur-xl,
-    .dark .bg-background\/90.backdrop-blur-xl,
-    .dark .bg-background\/95.backdrop-blur-xl {
-      background: rgba(10, 10, 10, 0.85) !important;
-    }
-  }
 }
 
 /* Professional Gradient Text */
