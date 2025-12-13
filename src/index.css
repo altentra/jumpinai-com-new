@@ -116,64 +116,50 @@
   display: none;  /* Chrome, Safari and Opera */
 }
 
-/* Professional Glass Morphism */
-/* Safari-compatible glass effect with explicit background colors */
-/* Safari desktop has issues with backdrop-filter + Tailwind opacity modifiers */
-/* Using !important to override Tailwind bg-* classes that cause white rendering in Safari */
+/* Professional Glass Morphism - Original liquid glass effect */
 .glass {
-  background-color: hsl(0 0% 88% / 0.8);
+  background: rgba(255, 255, 255, 0.4);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   /* border removed - use Tailwind border classes instead */
-}
-
-@supports (backdrop-filter: blur(12px)) or (-webkit-backdrop-filter: blur(12px)) {
-  .glass {
-    background-color: hsl(0 0% 100% / 0.4);
-  }
 }
 
 .dark .glass {
-  background-color: hsl(0 0% 15% / 0.9);
+  background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   /* border removed - use Tailwind border classes instead */
 }
 
-@supports (backdrop-filter: blur(12px)) or (-webkit-backdrop-filter: blur(12px)) {
-  .dark .glass {
-    background-color: hsl(0 0% 15% / 0.6);
-  }
-}
-
-/* Fix for Safari: when glass is combined with bg-muted/30, override with proper dark colors */
-/* This ensures cards don't appear white in Safari dark mode */
-.dark .glass[class*="bg-muted"] {
-  background-color: hsl(0 0% 15% / 0.7) !important;
-}
-
 .glass-dark {
-  background-color: hsl(0 0% 0% / 0.7);
+  background: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid hsl(0 0% 100% / 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-@supports (backdrop-filter: blur(20px)) or (-webkit-backdrop-filter: blur(20px)) {
-  .glass-dark {
-    background-color: hsl(0 0% 0% / 0.4);
+/* Safari Desktop Fix: backdrop-filter + Tailwind opacity modifiers render incorrectly */
+/* Safari interprets bg-muted/30 differently - force proper dark background */
+@supports (-webkit-touch-callout: none) {
+  /* This targets Safari only */
+}
+
+/* Safari-specific: Use color-mix for better cross-browser opacity handling */
+@media not all and (min-resolution: 0.001dpcm) {
+  @supports (-webkit-appearance: none) {
+    /* Safari desktop specific fixes */
+    .dark .glass.bg-muted\/30,
+    .dark .glass.bg-muted\/20,
+    .dark .glass.bg-muted\/40 {
+      background: rgba(30, 30, 30, 0.7) !important;
+    }
+    
+    .dark .bg-background\/80.backdrop-blur-xl,
+    .dark .bg-background\/90.backdrop-blur-xl,
+    .dark .bg-background\/95.backdrop-blur-xl {
+      background: rgba(10, 10, 10, 0.85) !important;
+    }
   }
-}
-
-/* Safari-specific fix for elements using backdrop-blur with bg-background opacity */
-/* Safari sometimes renders these as white instead of the proper background color */
-.dark [class*="bg-background/"][class*="backdrop-blur"] {
-  background-color: hsl(0 0% 10% / 0.8) !important;
-}
-
-.dark [class*="from-background/"][class*="backdrop-blur"] {
-  --tw-gradient-from: hsl(0 0% 10% / 0.6) !important;
-  --tw-gradient-to: hsl(0 0% 10% / 0.4) !important;
 }
 
 /* Professional Gradient Text */
