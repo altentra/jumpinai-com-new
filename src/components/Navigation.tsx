@@ -220,12 +220,12 @@ const Navigation = React.memo(() => {
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="min-w-[200px]">
-                  <DropdownMenuItem onClick={() => navigate('/dashboard')}>Dashboard</DropdownMenuItem>
-                  <DropdownMenuItem 
-                    onClick={async (e) => {
+                  <DropdownMenuItem onSelect={() => navigate('/dashboard')}>Dashboard</DropdownMenuItem>
+                  <DropdownMenuItem
+                    onSelect={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
-                      await logout();
+                      void logout();
                     }}
                   >
                     Log Out
@@ -311,7 +311,7 @@ const Navigation = React.memo(() => {
                     </button>
                     <button
                       onClick={() => {
-                        logout();
+                        void logout();
                         setIsOpen(false);
                       }}
                       className="text-muted-foreground hover:text-foreground block w-full text-left px-4 py-3 rounded-2xl text-base font-medium hover:bg-accent transition-all duration-300"
