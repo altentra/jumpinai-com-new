@@ -207,16 +207,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     subscriptionCache.clear();
     setUser(null);
     setSubscription(null);
-    
-    // Sign out and immediately redirect - don't wait for response
-    supabase.auth.signOut().finally(() => {
-      window.location.href = "/";
-    });
-    
-    // Also redirect immediately as backup
-    setTimeout(() => {
-      window.location.href = "/";
-    }, 500);
+
+    // Always clear local auth state immediately (even if the server session is already gone)
+    try {
+      await supabase.auth.signOut({ scope: "local" });
+    } catch (err) {
+      // Avoid blocking logout UX on network/session edge cases
+      console.warn("supabase.auth.signOut failed (local scope):", err);
+    } finally {
+      // Hard redirect ensures all route guards/state are reset
+      window.location.assign("/");
+    }
   }, []);
 
   const value = useMemo<AuthContextValue>(() => ({
