@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useMemo, useState, useCallback } from "react";
+import React, { createContext, useContext, useEffect, useMemo, useState, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { subscriptionCache } from "@/utils/subscriptionCache";
 
@@ -36,6 +36,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isLoading, setIsLoading] = useState(true);
   const [subscription, setSubscription] = useState<SubscriptionInfo | null>(null);
   const [isSubscriptionLoading, setIsSubscriptionLoading] = useState(false);
+
+  // Guards against stale async profile fetches racing with logout / auth changes
+  const profileFetchTokenRef = useRef(0);
+  const profileFetchTimeoutRef = useRef<number | null>(null);
 
   // Function to fetch and merge user profile data
   const fetchUserWithProfile = async (authUser: any): Promise<AuthUser | null> => {
@@ -104,15 +108,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     // Listen for auth changes FIRST
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      // Invalidate any previously scheduled profile fetch
+      profileFetchTokenRef.current += 1;
+      const token = profileFetchTokenRef.current;
+
+      if (profileFetchTimeoutRef.current) {
+        window.clearTimeout(profileFetchTimeoutRef.current);
+        profileFetchTimeoutRef.current = null;
+      }
+
       const authUser = session?.user ?? null;
-      
+
       if (authUser) {
         // Defer the profile fetch to avoid auth callback issues
-        setTimeout(async () => {
-          const userWithProfile = await fetchUserWithProfile(authUser);
-          setUser(userWithProfile);
-          setIsLoading(false);
+        profileFetchTimeoutRef.current = window.setTimeout(() => {
+          fetchUserWithProfile(authUser).then((userWithProfile) => {
+            // Ignore stale fetch results (e.g. logout happened while this was in-flight)
+            if (profileFetchTokenRef.current !== token) return;
+            setUser(userWithProfile);
+            setIsLoading(false);
+          });
         }, 0);
       } else {
         setUser(null);
@@ -122,13 +138,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // Then check current session
     supabase.auth.getSession().then(async ({ data: { session } }) => {
+      profileFetchTokenRef.current += 1;
+      const token = profileFetchTokenRef.current;
+
       const authUser = session?.user ?? null;
       const userWithProfile = await fetchUserWithProfile(authUser);
+
+      if (profileFetchTokenRef.current !== token) return;
       setUser(userWithProfile);
       setIsLoading(false);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      if (profileFetchTimeoutRef.current) {
+        window.clearTimeout(profileFetchTimeoutRef.current);
+        profileFetchTimeoutRef.current = null;
+      }
+      subscription.unsubscribe();
+    };
   }, []);
 
   // Fetch subscription data directly from Supabase - NO Stripe calls!
@@ -204,6 +231,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = useCallback(async () => {
+    // Invalidate any in-flight profile fetch that could re-set the user after logout
+    profileFetchTokenRef.current += 1;
+    if (profileFetchTimeoutRef.current) {
+      window.clearTimeout(profileFetchTimeoutRef.current);
+      profileFetchTimeoutRef.current = null;
+    }
+
     subscriptionCache.clear();
     setUser(null);
     setSubscription(null);
