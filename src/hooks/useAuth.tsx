@@ -131,6 +131,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           });
         }, 0);
       } else {
+        subscriptionCache.clear();
+        setSubscription(null);
         setUser(null);
         setIsLoading(false);
       }
@@ -238,16 +240,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       profileFetchTimeoutRef.current = null;
     }
 
+    // Prevent route-guards from firing "login()" during the logout transition
+    setIsLoading(true);
     subscriptionCache.clear();
-    setUser(null);
     setSubscription(null);
 
-    // Always clear local auth state immediately (even if the server session is already gone)
     try {
-      await supabase.auth.signOut({ scope: "local" });
+      // Full sign out (clears refresh token + session)
+      await supabase.auth.signOut();
     } catch (err) {
-      // Avoid blocking logout UX on network/session edge cases
-      console.warn("supabase.auth.signOut failed (local scope):", err);
+      // Still continue with redirect; onAuthStateChange should eventually reconcile.
+      console.warn("supabase.auth.signOut failed:", err);
     } finally {
       // Hard redirect ensures all route guards/state are reset
       window.location.assign("/");
