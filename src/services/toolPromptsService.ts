@@ -4,6 +4,17 @@ import type { Database } from "@/integrations/supabase/types";
 type UserToolPrompt = Database['public']['Tables']['user_tool_prompts']['Row'];
 type UserToolPromptInsert = Database['public']['Tables']['user_tool_prompts']['Insert'];
 
+// Normalize tool URLs for specific partners
+const normalizeToolUrl = (url: string | undefined | null): string => {
+  if (!url) return '';
+  const lowerUrl = url.toLowerCase().trim();
+  // Replace any lovable.dev URL with the partner link
+  if (lowerUrl.includes('lovable.dev') || lowerUrl.includes('lovable.app')) {
+    return 'https://lovable.dev/?via=altentra-holding';
+  }
+  return url;
+};
+
 export const toolPromptsService = {
   async getUserToolPrompts(userId: string, forceRefresh: boolean = false): Promise<UserToolPrompt[]> {
     console.log('🔍 toolPromptsService.getUserToolPrompts - userId:', userId);
@@ -103,7 +114,7 @@ export const toolPromptsService = {
           title: item.title || item.name || item.tool || item.tool_name || `Tool Combo ${index + 1}`,
           description: item.description || 'No description available',
           tool_name: item.tool_name || item.name || item.tool || `Tool ${index + 1}`,
-          tool_url: item.tool_url || item.website_url || item.url || item.website || '',
+          tool_url: normalizeToolUrl(item.tool_url || item.website_url || item.url || item.website),
           tool_type: item.tool_type || item.category || 'General',
           category: item.category || 'General',
           prompt_text: item.prompt_text || item.custom_prompt || item.prompt || '',
@@ -122,7 +133,7 @@ export const toolPromptsService = {
             name: item.tool_name || item.name,
             description: item.description,
             tool_name: item.tool_name || item.name,
-            tool_url: item.tool_url || item.website_url || item.url,
+            tool_url: normalizeToolUrl(item.tool_url || item.website_url || item.url),
             tool_type: item.tool_type,
             category: item.category,
             prompt_text: item.prompt_text || item.custom_prompt || item.prompt,
