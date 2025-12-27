@@ -69,6 +69,9 @@ interface JumpGeneration {
   form_goals?: string;
   form_challenges?: string;
   stt_used?: boolean;
+  input_method?: 'typed' | 'narrated' | 'mixed';
+  goals_stt_seconds?: number;
+  challenges_stt_seconds?: number;
 }
 
 interface CreditOverview {
@@ -106,6 +109,10 @@ interface GuestUser {
     location?: string;
     form_goals?: string;
     form_challenges?: string;
+    stt_used?: boolean;
+    input_method?: 'typed' | 'narrated' | 'mixed';
+    goals_stt_seconds?: number;
+    challenges_stt_seconds?: number;
   }>;
 }
 
@@ -1021,9 +1028,20 @@ export default function AdminDashboard() {
                             className="p-4 align-middle"
                             style={{ width: `${columnWidths.input}px`, minWidth: `${columnWidths.input}px` }}
                           >
-                            <Badge variant={jump.stt_used ? 'default' : 'secondary'} className="text-xs">
-                              {jump.stt_used ? '🎤 Voice' : '⌨️ Typed'}
-                            </Badge>
+                            <div className="flex flex-col gap-1">
+                              <Badge 
+                                variant={jump.input_method === 'narrated' ? 'default' : jump.input_method === 'mixed' ? 'outline' : 'secondary'} 
+                                className="text-xs"
+                              >
+                                {jump.input_method === 'narrated' ? '🎤 Voice' : jump.input_method === 'mixed' ? '🔄 Mixed' : '⌨️ Typed'}
+                              </Badge>
+                              {(jump.goals_stt_seconds > 0 || jump.challenges_stt_seconds > 0) && (
+                                <span className="text-xs text-muted-foreground">
+                                  🎤 {(jump.goals_stt_seconds || 0) + (jump.challenges_stt_seconds || 0)}s
+                                  <span className="text-[10px] ml-1">(G:{jump.goals_stt_seconds || 0}s C:{jump.challenges_stt_seconds || 0}s)</span>
+                                </span>
+                              )}
+                            </div>
                           </td>
                           <td 
                             className="p-4 align-middle"
@@ -1231,6 +1249,21 @@ export default function AdminDashboard() {
                                     
                                     {/* Form Inputs - Compact Display */}
                                     <div className="grid grid-cols-1 gap-1.5 sm:gap-2 text-[10px] sm:text-xs pt-2 border-t">
+                                      {/* Input Method Badge */}
+                                      <div className="flex items-center gap-2 flex-wrap">
+                                        <Badge 
+                                          variant={attempt.input_method === 'narrated' ? 'default' : attempt.input_method === 'mixed' ? 'outline' : 'secondary'} 
+                                          className="text-[10px]"
+                                        >
+                                          {attempt.input_method === 'narrated' ? '🎤 Voice' : attempt.input_method === 'mixed' ? '🔄 Mixed' : '⌨️ Typed'}
+                                        </Badge>
+                                        {((attempt.goals_stt_seconds || 0) > 0 || (attempt.challenges_stt_seconds || 0) > 0) && (
+                                          <span className="text-[10px] text-muted-foreground">
+                                            🎤 {(attempt.goals_stt_seconds || 0) + (attempt.challenges_stt_seconds || 0)}s total
+                                            (G:{attempt.goals_stt_seconds || 0}s C:{attempt.challenges_stt_seconds || 0}s)
+                                          </span>
+                                        )}
+                                      </div>
                                       <div className="break-words">
                                         <span className="font-medium text-muted-foreground">Goals: </span>
                                         <span className="text-foreground">{attempt.form_goals || 'N/A'}</span>

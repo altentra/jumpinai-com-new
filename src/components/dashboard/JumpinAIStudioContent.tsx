@@ -227,12 +227,41 @@ const JumpinAIStudioContent = () => {
   };
 
   const handleGenerate = async (alternativeContext?: { title: string; description: string }) => {
+    // Calculate input methods first
+    const getInputMethod = (usedStt: boolean, typed: boolean): 'typed' | 'narrated' | 'mixed' => {
+      if (usedStt && typed) return 'mixed';
+      if (usedStt) return 'narrated';
+      return 'typed';
+    };
+    
+    // Determine overall input method
+    const goalsMethod = getInputMethod(goalsUsedStt, goalsTyped);
+    const challengesMethod = getInputMethod(challengesUsedStt, challengesTyped);
+    let overallInputMethod: 'typed' | 'narrated' | 'mixed' = 'typed';
+    if (goalsMethod === 'narrated' && challengesMethod === 'narrated') {
+      overallInputMethod = 'narrated';
+    } else if (goalsUsedStt || challengesUsedStt) {
+      overallInputMethod = 'mixed';
+    }
+    
     const effectiveFormData = alternativeContext 
       ? {
           ...formData,
           goals: `${formData.goals}\n\n[ALTERNATIVE APPROACH SELECTED: "${alternativeContext.title}"]\nUser has explicitly chosen this alternative approach: ${alternativeContext.description}\nGenerate a jump that follows THIS specific approach, NOT the original default approach.`,
+          // Add STT tracking data to formData for edge function
+          sttUsed: goalsUsedStt || challengesUsedStt,
+          inputMethod: overallInputMethod,
+          goalsSttSeconds: goalsSttDuration,
+          challengesSttSeconds: challengesSttDuration,
         }
-      : formData;
+      : {
+          ...formData,
+          // Add STT tracking data to formData for edge function
+          sttUsed: goalsUsedStt || challengesUsedStt,
+          inputMethod: overallInputMethod,
+          goalsSttSeconds: goalsSttDuration,
+          challengesSttSeconds: challengesSttDuration,
+        };
     
     if (!effectiveFormData.goals.trim() || !effectiveFormData.challenges.trim()) {
       toast.error('Please fill in your goals and challenges');
@@ -245,16 +274,9 @@ const JumpinAIStudioContent = () => {
     }
 
     try {
-      // Calculate input methods
-      const getInputMethod = (usedStt: boolean, typed: boolean): 'typed' | 'narrated' | 'mixed' => {
-        if (usedStt && typed) return 'mixed';
-        if (usedStt) return 'narrated';
-        return 'typed';
-      };
-      
       const inputTracking: InputTracking = {
-        goalsInputMethod: getInputMethod(goalsUsedStt, goalsTyped),
-        challengesInputMethod: getInputMethod(challengesUsedStt, challengesTyped),
+        goalsInputMethod: goalsMethod,
+        challengesInputMethod: challengesMethod,
         goalsSttDurationSeconds: goalsSttDuration,
         challengesSttDurationSeconds: challengesSttDuration,
         totalSttDurationSeconds: goalsSttDuration + challengesSttDuration,
