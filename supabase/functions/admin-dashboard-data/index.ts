@@ -99,7 +99,7 @@ Deno.serve(async (req) => {
       supabase.from("subscribers").select("id, user_id, email, subscribed, subscription_end, subscription_tier, created_at, stripe_customer_id"),
       supabase.from("contacts").select("id, email, first_name, last_name, source, status, newsletter_subscribed, lead_magnet_downloaded, tags, created_at"),
       supabase.from("products").select("id, name, file_name"),
-      supabase.from("user_jumps").select("id, user_id, title, full_content, status, created_at, ip_address, location, form_goals, form_challenges, completion_percentage, stt_used").order('created_at', { ascending: false }).limit(200),
+      supabase.from("user_jumps").select("id, user_id, title, full_content, status, created_at, ip_address, location, form_goals, form_challenges, completion_percentage, stt_used, input_method, goals_stt_seconds, challenges_stt_seconds").order('created_at', { ascending: false }).limit(200),
       supabase.from("user_credits").select("id, user_id, credits_balance, total_credits_purchased"),
       supabase.from("credit_transactions").select("id, user_id, transaction_type, credits_amount, description, created_at").order('created_at', { ascending: false }),
       supabase.from("subscription_audit_log").select("id, user_id, email, action, old_data, new_data, created_at, changed_by, change_source").order('created_at', { ascending: false }),
@@ -435,6 +435,9 @@ Deno.serve(async (req) => {
         form_goals: j.form_goals || null,
         form_challenges: j.form_challenges || null,
         stt_used: j.stt_used || false,
+        input_method: j.input_method || 'typed',
+        goals_stt_seconds: j.goals_stt_seconds || 0,
+        challenges_stt_seconds: j.challenges_stt_seconds || 0,
       };
     });
 
@@ -502,6 +505,17 @@ Deno.serve(async (req) => {
           tools_clicked_count: j.tools_clicked_count || 0,
           prompts_copied_count: j.prompts_copied_count || 0,
           combos_used_count: j.combos_used_count || 0,
+          // STT tracking fields
+          stt_used: j.stt_used || false,
+          input_method: j.input_method || 'typed',
+          goals_stt_seconds: j.goals_stt_seconds || 0,
+          challenges_stt_seconds: j.challenges_stt_seconds || 0,
+          completion_percentage: j.completion_percentage || 0,
+          status_description: j.status === 'active' || j.status === 'completed' 
+            ? '✓ Successfully generated' 
+            : j.status === 'generating' 
+              ? `In progress (${j.completion_percentage || 0}%)` 
+              : j.status === 'failed' ? 'Failed to generate' : j.status,
         }));
 
       // Get location from the most recent jump, or geolocate the IP if no jumps found

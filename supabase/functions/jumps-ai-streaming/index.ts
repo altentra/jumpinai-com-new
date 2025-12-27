@@ -56,7 +56,19 @@ Deno.serve(async (req) => {
 
     // Parse and validate input
     const body = await req.json();
-    const { formData, turnstileToken }: { formData: StudioFormData; turnstileToken?: string } = body;
+    const { formData, turnstileToken, sttTracking }: { 
+      formData: StudioFormData; 
+      turnstileToken?: string;
+      sttTracking?: {
+        sttUsed: boolean;
+        inputMethod: 'typed' | 'narrated' | 'mixed';
+        goalsSttSeconds: number;
+        challengesSttSeconds: number;
+      };
+    } = body;
+    
+    // Log STT tracking data
+    console.log('🎤 STT tracking data received:', sttTracking);
     
     // Validate formData using Zod
     try {
@@ -237,7 +249,12 @@ Deno.serve(async (req) => {
                   ip_address: ipAddress,
                   location: location,
                   form_goals: formData.goals,
-                  form_challenges: formData.challenges
+                  form_challenges: formData.challenges,
+                  // STT tracking fields
+                  stt_used: sttTracking?.sttUsed || false,
+                  input_method: sttTracking?.inputMethod || 'typed',
+                  goals_stt_seconds: sttTracking?.goalsSttSeconds || 0,
+                  challenges_stt_seconds: sttTracking?.challengesSttSeconds || 0
                 })
                 .select()
                 .single();
@@ -264,7 +281,12 @@ Deno.serve(async (req) => {
                   ip_address: ipAddress,
                   location: location,
                   form_goals: formData.goals,
-                  form_challenges: formData.challenges
+                  form_challenges: formData.challenges,
+                  // STT tracking fields
+                  stt_used: sttTracking?.sttUsed || false,
+                  input_method: sttTracking?.inputMethod || 'typed',
+                  goals_stt_seconds: sttTracking?.goalsSttSeconds || 0,
+                  challenges_stt_seconds: sttTracking?.challengesSttSeconds || 0
                 })
                 .select()
                 .single();

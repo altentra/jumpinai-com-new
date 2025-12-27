@@ -13,6 +13,11 @@ export interface StudioFormData {
   timeCommitment: string;
   budget: string;
   urgency?: string;
+  // STT tracking data
+  sttUsed?: boolean;
+  inputMethod?: 'typed' | 'narrated' | 'mixed';
+  goalsSttSeconds?: number;
+  challengesSttSeconds?: number;
 }
 
 export interface GenerationResult {
@@ -73,9 +78,16 @@ export const jumpinAIStudioService = {
       }
 
       // Build request body - turnstileToken only for guests
+      // Include STT tracking data for database storage
       const requestBody = { 
         formData,
-        turnstileToken
+        turnstileToken,
+        sttTracking: {
+          sttUsed: formData.sttUsed || false,
+          inputMethod: formData.inputMethod || 'typed',
+          goalsSttSeconds: formData.goalsSttSeconds || 0,
+          challengesSttSeconds: formData.challengesSttSeconds || 0
+        }
       };
 
       fetch('https://cieczaajcgkgdgenfdzi.supabase.co/functions/v1/jumps-ai-streaming', {
