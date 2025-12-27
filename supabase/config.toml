@@ -118,6 +118,9 @@ verify_jwt = false
 [functions.explore-alternative-routes]
 verify_jwt = false
 
+[functions.send-jump-generation-notification]
+verify_jwt = false
+
 [realtime]
 enabled = true
 port = 54323
