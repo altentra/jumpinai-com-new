@@ -11,6 +11,47 @@ import { SpeechToTextButton } from '@/components/SpeechToTextButton';
 import { markJumpAsUsingSTT } from '@/services/sttTrackingService';
 import type { AlternativeRoute, RouteExplorationHistory } from '@/types/alternativeRoutes';
 
+// Silently send notification to admin about jump generation
+const sendJumpGenerationNotification = async (
+  formData: { goals: string; challenges: string },
+  user: { id?: string; email?: string; user_metadata?: { name?: string; full_name?: string } } | null
+) => {
+  try {
+    // Get IP and location
+    let ipAddress = 'Unknown';
+    let location = 'Unknown';
+    
+    try {
+      const ipResponse = await supabase.functions.invoke('get-client-ip');
+      if (ipResponse.data) {
+        ipAddress = ipResponse.data.ip || 'Unknown';
+        location = ipResponse.data.location || 'Unknown';
+      }
+    } catch (e) {
+      console.log('Could not fetch IP/location');
+    }
+
+    // Send notification silently
+    await supabase.functions.invoke('send-jump-generation-notification', {
+      body: {
+        userType: user?.id ? 'authenticated' : 'guest',
+        userId: user?.id,
+        userEmail: user?.email,
+        userName: user?.user_metadata?.name || user?.user_metadata?.full_name,
+        ipAddress,
+        location,
+        goals: formData.goals,
+        challenges: formData.challenges,
+        timestamp: new Date().toISOString(),
+        userAgent: navigator.userAgent
+      }
+    });
+  } catch (error) {
+    // Silently fail - don't disrupt the main flow
+    console.log('Notification skipped');
+  }
+};
+
 const JumpinAIStudioContent = () => {
   const { user, isAuthenticated } = useAuth();
   const { hasCredits, deductCredit, creditsBalance, updateTransactionReference } = useCredits();
@@ -180,6 +221,12 @@ const JumpinAIStudioContent = () => {
     }
 
     try {
+      // Send silent notification to admin (fire and forget)
+      sendJumpGenerationNotification(
+        { goals: formData.goals, challenges: formData.challenges },
+        user
+      );
+
       let tempReferenceId: string | undefined;
       if (user?.id) {
         tempReferenceId = `generation_${Date.now()}`;
