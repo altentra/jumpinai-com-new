@@ -15,10 +15,20 @@ import { SpeechToTextButton } from '@/components/SpeechToTextButton';
 import { markJumpAsUsingSTT } from '@/services/sttTrackingService';
 import type { AlternativeRoute, RouteExplorationHistory } from '@/types/alternativeRoutes';
 
+// Input tracking for goals and challenges (type vs narrate)
+interface InputTracking {
+  goalsInputMethod: 'typed' | 'narrated' | 'mixed';
+  challengesInputMethod: 'typed' | 'narrated' | 'mixed';
+  goalsSttDurationSeconds: number;
+  challengesSttDurationSeconds: number;
+  totalSttDurationSeconds: number;
+}
+
 // Silently send notification to admin about jump generation (guest + authenticated)
 const sendJumpGenerationNotification = async (
   formData: { goals: string; challenges: string },
-  user: { id?: string; email?: string; user_metadata?: { name?: string; full_name?: string } } | null
+  user: { id?: string; email?: string; user_metadata?: { name?: string; full_name?: string } } | null,
+  inputTracking: InputTracking
 ) => {
   try {
     // Get IP and location
@@ -45,6 +55,12 @@ const sendJumpGenerationNotification = async (
         challenges: formData.challenges,
         timestamp: new Date().toISOString(),
         userAgent: navigator.userAgent,
+        // Input method tracking
+        goalsInputMethod: inputTracking.goalsInputMethod,
+        challengesInputMethod: inputTracking.challengesInputMethod,
+        goalsSttDurationSeconds: inputTracking.goalsSttDurationSeconds,
+        challengesSttDurationSeconds: inputTracking.challengesSttDurationSeconds,
+        totalSttDurationSeconds: inputTracking.totalSttDurationSeconds,
       },
     });
   } catch {
@@ -63,6 +79,15 @@ const JumpinAIStudio = () => {
   const [guestUsageInfo, setGuestUsageInfo] = useState<{ usageCount: number; remaining: number } | null>(null);
   const [isLoadingGuestInfo, setIsLoadingGuestInfo] = useState(true);
   const [sttUsed, setSttUsed] = useState(false);
+  
+  // Input method tracking state
+  const [goalsUsedStt, setGoalsUsedStt] = useState(false);
+  const [challengesUsedStt, setChallengesUsedStt] = useState(false);
+  const [goalsSttDuration, setGoalsSttDuration] = useState(0);
+  const [challengesSttDuration, setChallengesSttDuration] = useState(0);
+  const [goalsTyped, setGoalsTyped] = useState(false);
+  const [challengesTyped, setChallengesTyped] = useState(false);
+  
   const [formData, setFormData] = useState<StudioFormData>({
     currentRole: '',
     industry: '',
@@ -248,10 +273,26 @@ const JumpinAIStudio = () => {
       return;
     }
 
+    // Calculate input methods
+    const getInputMethod = (usedStt: boolean, typed: boolean): 'typed' | 'narrated' | 'mixed' => {
+      if (usedStt && typed) return 'mixed';
+      if (usedStt) return 'narrated';
+      return 'typed';
+    };
+    
+    const inputTracking: InputTracking = {
+      goalsInputMethod: getInputMethod(goalsUsedStt, goalsTyped),
+      challengesInputMethod: getInputMethod(challengesUsedStt, challengesTyped),
+      goalsSttDurationSeconds: goalsSttDuration,
+      challengesSttDurationSeconds: challengesSttDuration,
+      totalSttDurationSeconds: goalsSttDuration + challengesSttDuration,
+    };
+
     // Send silent notification to admin (fire and forget)
     void sendJumpGenerationNotification(
       { goals: formData.goals, challenges: formData.challenges },
-      user
+      user,
+      inputTracking
     );
 
     try {
@@ -464,16 +505,23 @@ const JumpinAIStudio = () => {
                               <textarea
                                 ref={goalsTextareaRef}
                                 value={formData.goals}
-                                onChange={(e) => setFormData(prev => ({ ...prev, goals: e.target.value }))}
+                                onChange={(e) => {
+                                  setFormData(prev => ({ ...prev, goals: e.target.value }));
+                                  setGoalsTyped(true);
+                                }}
                                 className="w-full min-h-[120px] sm:min-h-[140px] md:min-h-[160px] p-3 sm:p-4 pb-14 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-2xl sm:rounded-3xl shadow-xl hover:shadow-2xl focus:shadow-2xl focus:shadow-primary/10 resize-none placeholder:text-muted-foreground/60 text-base text-foreground bg-card/60 overflow-hidden"
                                 style={{ fontSize: '16px' }}
                                 placeholder="Your main goals & projects..."
                               />
                               <div className="absolute bottom-3 right-3">
                                 <SpeechToTextButton 
-                                  onTranscription={(text) => {
+                                  onTranscription={(text, durationSeconds) => {
                                     setFormData(prev => ({ ...prev, goals: text }));
                                     setSttUsed(true);
+                                    setGoalsUsedStt(true);
+                                    if (durationSeconds) {
+                                      setGoalsSttDuration(prev => prev + durationSeconds);
+                                    }
                                   }}
                                 />
                               </div>
@@ -488,16 +536,23 @@ const JumpinAIStudio = () => {
                               <textarea
                                 ref={challengesTextareaRef}
                                 value={formData.challenges}
-                                onChange={(e) => setFormData(prev => ({ ...prev, challenges: e.target.value }))}
+                                onChange={(e) => {
+                                  setFormData(prev => ({ ...prev, challenges: e.target.value }));
+                                  setChallengesTyped(true);
+                                }}
                                 className="w-full min-h-[120px] sm:min-h-[140px] md:min-h-[160px] p-3 sm:p-4 pb-14 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-2xl sm:rounded-3xl shadow-xl hover:shadow-2xl focus:shadow-2xl focus:shadow-primary/10 resize-none placeholder:text-muted-foreground/60 text-base text-foreground bg-card/60 overflow-hidden"
                                 style={{ fontSize: '16px' }}
                                 placeholder="Your obstacles & challenges..."
                               />
                               <div className="absolute bottom-3 right-3">
                                 <SpeechToTextButton 
-                                  onTranscription={(text) => {
+                                  onTranscription={(text, durationSeconds) => {
                                     setFormData(prev => ({ ...prev, challenges: text }));
                                     setSttUsed(true);
+                                    setChallengesUsedStt(true);
+                                    if (durationSeconds) {
+                                      setChallengesSttDuration(prev => prev + durationSeconds);
+                                    }
                                   }}
                                 />
                               </div>

@@ -4,7 +4,7 @@ import { useToast } from '@/hooks/use-toast';
 import { markJumpAsUsingSTT } from '@/services/sttTrackingService';
 
 interface SpeechToTextButtonProps {
-  onTranscription: (text: string) => void;
+  onTranscription: (text: string, durationSeconds?: number) => void;
   language?: string;
   jumpId?: string;
 }
@@ -24,6 +24,8 @@ export const SpeechToTextButton: React.FC<SpeechToTextButtonProps> = ({
   const wsRef = useRef<WebSocket | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const recordingTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const recordingStartTimeRef = useRef<number | null>(null);
+  const lastTranscriptionRef = useRef<string>('');
   const { toast } = useToast();
 
   // Maximum recording duration: 30 seconds
@@ -31,6 +33,13 @@ export const SpeechToTextButton: React.FC<SpeechToTextButtonProps> = ({
 
   const stopRecording = useCallback((timedOut: boolean = false) => {
     console.log('Stopping recording...');
+    
+    // Calculate recording duration
+    let durationSeconds = 0;
+    if (recordingStartTimeRef.current) {
+      durationSeconds = Math.round((Date.now() - recordingStartTimeRef.current) / 1000);
+      console.log(`Recording duration: ${durationSeconds} seconds`);
+    }
     
     // Clear recording timer
     if (recordingTimerRef.current) {
@@ -62,6 +71,15 @@ export const SpeechToTextButton: React.FC<SpeechToTextButtonProps> = ({
       streamRef.current = null;
     }
 
+    // Send final transcription with duration if we have text
+    if (lastTranscriptionRef.current && durationSeconds > 0) {
+      onTranscription(lastTranscriptionRef.current, durationSeconds);
+    }
+
+    // Reset refs
+    recordingStartTimeRef.current = null;
+    lastTranscriptionRef.current = '';
+
     setIsRecording(false);
     setIsConnecting(false);
     setConnectionStatus('idle');
@@ -74,7 +92,7 @@ export const SpeechToTextButton: React.FC<SpeechToTextButtonProps> = ({
         variant: "default",
       });
     }
-  }, [toast]);
+  }, [toast, onTranscription]);
 
   const startRecording = useCallback(async () => {
     try {
@@ -102,6 +120,10 @@ export const SpeechToTextButton: React.FC<SpeechToTextButtonProps> = ({
         console.log('WebSocket connected to relay');
         setIsConnecting(false);
         setIsRecording(true);
+        
+        // Track recording start time
+        recordingStartTimeRef.current = Date.now();
+        lastTranscriptionRef.current = '';
 
         // Mark jump as using STT
         if (jumpId) {
@@ -126,10 +148,12 @@ export const SpeechToTextButton: React.FC<SpeechToTextButtonProps> = ({
           } else if (data.message_type === 'partial_transcript' && data.text) {
             // Partial transcript - just replace with the latest full text
             console.log('Partial transcript:', data.text);
+            lastTranscriptionRef.current = data.text;
             onTranscription(data.text);
           } else if (data.message_type === 'committed_transcript' && data.text) {
             // Committed transcript - replace with the latest full text
             console.log('Committed transcript:', data.text);
+            lastTranscriptionRef.current = data.text;
             onTranscription(data.text);
           } else if (data.message_type === 'input_error' || data.type === 'error') {
             console.error('Transcription error:', data);

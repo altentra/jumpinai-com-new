@@ -19,7 +19,25 @@ interface JumpGenerationNotification {
   challenges: string;
   timestamp: string;
   userAgent?: string;
+  // Input method tracking
+  goalsInputMethod?: 'typed' | 'narrated' | 'mixed';
+  challengesInputMethod?: 'typed' | 'narrated' | 'mixed';
+  goalsSttDurationSeconds?: number;
+  challengesSttDurationSeconds?: number;
+  totalSttDurationSeconds?: number;
 }
+
+const getInputMethodBadge = (method?: string) => {
+  if (!method) return '<span class="badge badge-typed">⌨️ Typed</span>';
+  switch (method) {
+    case 'narrated':
+      return '<span class="badge badge-narrated">🎤 Narrated</span>';
+    case 'mixed':
+      return '<span class="badge badge-mixed">🔄 Mixed</span>';
+    default:
+      return '<span class="badge badge-typed">⌨️ Typed</span>';
+  }
+};
 
 const handler = async (req: Request): Promise<Response> => {
   // Handle CORS preflight requests
@@ -37,6 +55,9 @@ const handler = async (req: Request): Promise<Response> => {
       userId: data.userId,
       hasGoals: !!data.goals,
       hasChallenges: !!data.challenges,
+      goalsInputMethod: data.goalsInputMethod,
+      challengesInputMethod: data.challengesInputMethod,
+      totalSttDuration: data.totalSttDurationSeconds,
     });
 
     // Format the timestamp
@@ -50,6 +71,10 @@ const handler = async (req: Request): Promise<Response> => {
       second: '2-digit',
       timeZoneName: 'short'
     });
+
+    // Check if STT was used at all
+    const usedStt = data.goalsInputMethod === 'narrated' || data.goalsInputMethod === 'mixed' ||
+                    data.challengesInputMethod === 'narrated' || data.challengesInputMethod === 'mixed';
 
     // Build the email HTML
     const emailHtml = `
@@ -73,6 +98,13 @@ const handler = async (req: Request): Promise<Response> => {
           .badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
           .badge-authenticated { background: #D1FAE5; color: #065F46; }
           .badge-guest { background: #FEE2E2; color: #991B1B; }
+          .badge-typed { background: #E0E7FF; color: #3730A3; }
+          .badge-narrated { background: #FEF3C7; color: #92400E; }
+          .badge-mixed { background: #E0F2FE; color: #0369A1; }
+          .input-method-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+          .stt-stats { background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%); border-radius: 8px; padding: 12px 16px; margin-top: 16px; }
+          .stt-stats-title { font-size: 12px; font-weight: 600; color: #92400E; margin-bottom: 8px; }
+          .stt-stat { display: flex; justify-content: space-between; font-size: 13px; color: #78350F; margin-bottom: 4px; }
           .footer { background: #F9FAFB; padding: 16px 24px; text-align: center; font-size: 12px; color: #9CA3AF; }
         </style>
       </head>
@@ -134,6 +166,11 @@ const handler = async (req: Request): Promise<Response> => {
             
             <div class="section">
               <div class="section-title">🎯 Goals Input</div>
+              <div class="input-method-row">
+                <span style="font-size: 12px; color: #6B7280;">Input Method:</span>
+                ${getInputMethodBadge(data.goalsInputMethod)}
+                ${data.goalsSttDurationSeconds ? `<span style="font-size: 11px; color: #92400E;">(${data.goalsSttDurationSeconds}s)</span>` : ''}
+              </div>
               <div class="input-box">
                 <p>${data.goals || 'No goals provided'}</p>
               </div>
@@ -141,10 +178,33 @@ const handler = async (req: Request): Promise<Response> => {
             
             <div class="section">
               <div class="section-title">⚡ Challenges Input</div>
+              <div class="input-method-row">
+                <span style="font-size: 12px; color: #6B7280;">Input Method:</span>
+                ${getInputMethodBadge(data.challengesInputMethod)}
+                ${data.challengesSttDurationSeconds ? `<span style="font-size: 11px; color: #92400E;">(${data.challengesSttDurationSeconds}s)</span>` : ''}
+              </div>
               <div class="input-box">
                 <p>${data.challenges || 'No challenges provided'}</p>
               </div>
             </div>
+
+            ${usedStt ? `
+            <div class="stt-stats">
+              <div class="stt-stats-title">🎤 Speech-to-Text Usage Summary</div>
+              <div class="stt-stat">
+                <span>Goals STT Duration:</span>
+                <span>${data.goalsSttDurationSeconds || 0} seconds</span>
+              </div>
+              <div class="stt-stat">
+                <span>Challenges STT Duration:</span>
+                <span>${data.challengesSttDurationSeconds || 0} seconds</span>
+              </div>
+              <div class="stt-stat" style="font-weight: 600; border-top: 1px solid #D97706; padding-top: 4px; margin-top: 4px;">
+                <span>Total STT Duration:</span>
+                <span>${data.totalSttDurationSeconds || 0} seconds</span>
+              </div>
+            </div>
+            ` : ''}
           </div>
           
           <div class="footer">
@@ -155,11 +215,17 @@ const handler = async (req: Request): Promise<Response> => {
       </html>
     `;
 
+    // Build subject with STT indicator
+    const sttIndicator = usedStt ? ' 🎤' : '';
+    const subjectName = data.userType === 'authenticated' 
+      ? (data.userName || data.userEmail || 'User') 
+      : 'Guest';
+
     // Send the email
     const emailResponse = await resend.emails.send({
       from: "JumpinAI Studio <noreply@jumpinai.com>",
       to: ["info@jumpinai.com"],
-      subject: `🚀 New Jump: ${data.userType === 'authenticated' ? data.userName || data.userEmail || 'User' : 'Guest'} started generation`,
+      subject: `🚀 New Jump${sttIndicator}: ${subjectName} started generation`,
       html: emailHtml,
     });
 
