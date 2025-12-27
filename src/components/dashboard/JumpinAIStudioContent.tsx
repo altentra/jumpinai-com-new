@@ -20,15 +20,15 @@ const sendJumpGenerationNotification = async (
     // Get IP and location
     let ipAddress = 'Unknown';
     let location = 'Unknown';
-    
+
     try {
       const ipResponse = await supabase.functions.invoke('get-client-ip');
       if (ipResponse.data) {
         ipAddress = ipResponse.data.ip || 'Unknown';
         location = ipResponse.data.location || 'Unknown';
       }
-    } catch (e) {
-      console.log('Could not fetch IP/location');
+    } catch {
+      // ignore
     }
 
     // Send notification silently
@@ -43,12 +43,11 @@ const sendJumpGenerationNotification = async (
         goals: formData.goals,
         challenges: formData.challenges,
         timestamp: new Date().toISOString(),
-        userAgent: navigator.userAgent
-      }
+        userAgent: navigator.userAgent,
+      },
     });
-  } catch (error) {
+  } catch {
     // Silently fail - don't disrupt the main flow
-    console.log('Notification skipped');
   }
 };
 

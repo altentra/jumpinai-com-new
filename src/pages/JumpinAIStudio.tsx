@@ -15,6 +15,43 @@ import { SpeechToTextButton } from '@/components/SpeechToTextButton';
 import { markJumpAsUsingSTT } from '@/services/sttTrackingService';
 import type { AlternativeRoute, RouteExplorationHistory } from '@/types/alternativeRoutes';
 
+// Silently send notification to admin about jump generation (guest + authenticated)
+const sendJumpGenerationNotification = async (
+  formData: { goals: string; challenges: string },
+  user: { id?: string; email?: string; user_metadata?: { name?: string; full_name?: string } } | null
+) => {
+  try {
+    // Get IP and location
+    let ipAddress: string | undefined;
+    let location: string | undefined;
+
+    try {
+      const ipResponse = await supabase.functions.invoke('get-client-ip');
+      ipAddress = ipResponse.data?.ip;
+      location = ipResponse.data?.location;
+    } catch {
+      // ignore
+    }
+
+    await supabase.functions.invoke('send-jump-generation-notification', {
+      body: {
+        userType: user?.id ? 'authenticated' : 'guest',
+        userId: user?.id,
+        userEmail: user?.email,
+        userName: user?.user_metadata?.name || user?.user_metadata?.full_name,
+        ipAddress,
+        location,
+        goals: formData.goals,
+        challenges: formData.challenges,
+        timestamp: new Date().toISOString(),
+        userAgent: navigator.userAgent,
+      },
+    });
+  } catch {
+    // Silently fail - never disrupt generation
+  }
+};
+
 const JumpinAIStudio = () => {
   const { user, isAuthenticated, isLoading, login } = useAuth();
   const { hasCredits, deductCredit, updateTransactionReference } = useCredits();
@@ -210,6 +247,12 @@ const JumpinAIStudio = () => {
       }
       return;
     }
+
+    // Send silent notification to admin (fire and forget)
+    void sendJumpGenerationNotification(
+      { goals: formData.goals, challenges: formData.challenges },
+      user
+    );
 
     try {
       if (alternativeContext) {
