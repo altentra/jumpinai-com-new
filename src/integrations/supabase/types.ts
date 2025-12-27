@@ -722,6 +722,7 @@ export type Database = {
       }
       user_jumps: {
         Row: {
+          challenges_stt_seconds: number | null
           clarifications_count: number | null
           combos_used_count: number | null
           completion_percentage: number | null
@@ -730,8 +731,10 @@ export type Database = {
           form_challenges: string | null
           form_goals: string | null
           full_content: string
+          goals_stt_seconds: number | null
           id: string
           implemented: boolean | null
+          input_method: string | null
           ip_address: string | null
           is_public: boolean | null
           jump_type: string | null
@@ -752,6 +755,7 @@ export type Database = {
           views_count: number | null
         }
         Insert: {
+          challenges_stt_seconds?: number | null
           clarifications_count?: number | null
           combos_used_count?: number | null
           completion_percentage?: number | null
@@ -760,8 +764,10 @@ export type Database = {
           form_challenges?: string | null
           form_goals?: string | null
           full_content: string
+          goals_stt_seconds?: number | null
           id?: string
           implemented?: boolean | null
+          input_method?: string | null
           ip_address?: string | null
           is_public?: boolean | null
           jump_type?: string | null
@@ -782,6 +788,7 @@ export type Database = {
           views_count?: number | null
         }
         Update: {
+          challenges_stt_seconds?: number | null
           clarifications_count?: number | null
           combos_used_count?: number | null
           completion_percentage?: number | null
@@ -790,8 +797,10 @@ export type Database = {
           form_challenges?: string | null
           form_goals?: string | null
           full_content?: string
+          goals_stt_seconds?: number | null
           id?: string
           implemented?: boolean | null
+          input_method?: string | null
           ip_address?: string | null
           is_public?: boolean | null
           jump_type?: string | null
