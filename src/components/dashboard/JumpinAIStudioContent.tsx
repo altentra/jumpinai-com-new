@@ -16,23 +16,26 @@ const sendJumpGenerationNotification = async (
   formData: { goals: string; challenges: string },
   user: { id?: string; email?: string; user_metadata?: { name?: string; full_name?: string } } | null
 ) => {
+  console.log('📧 Starting admin notification...');
   try {
     // Get IP and location
     let ipAddress = 'Unknown';
     let location = 'Unknown';
     
     try {
+      console.log('📧 Fetching IP/location...');
       const ipResponse = await supabase.functions.invoke('get-client-ip');
+      console.log('📧 IP response:', ipResponse);
       if (ipResponse.data) {
         ipAddress = ipResponse.data.ip || 'Unknown';
         location = ipResponse.data.location || 'Unknown';
       }
     } catch (e) {
-      console.log('Could not fetch IP/location');
+      console.log('📧 Could not fetch IP/location:', e);
     }
 
-    // Send notification silently
-    await supabase.functions.invoke('send-jump-generation-notification', {
+    console.log('📧 Sending notification to edge function...');
+    const notificationResponse = await supabase.functions.invoke('send-jump-generation-notification', {
       body: {
         userType: user?.id ? 'authenticated' : 'guest',
         userId: user?.id,
@@ -46,9 +49,10 @@ const sendJumpGenerationNotification = async (
         userAgent: navigator.userAgent
       }
     });
+    console.log('📧 Notification response:', notificationResponse);
   } catch (error) {
     // Silently fail - don't disrupt the main flow
-    console.log('Notification skipped');
+    console.log('📧 Notification error:', error);
   }
 };
 
