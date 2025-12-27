@@ -68,6 +68,7 @@ interface JumpGeneration {
   is_guest: boolean;
   form_goals?: string;
   form_challenges?: string;
+  stt_used?: boolean;
 }
 
 interface CreditOverview {
@@ -259,6 +260,7 @@ export default function AdminDashboard() {
     title: 80,
     status: 100,
     type: 100,
+    input: 80,
     goals: 250,
     challenges: 250,
     location: 150,
@@ -903,6 +905,16 @@ export default function AdminDashboard() {
                         </th>
                         <th 
                           className="h-12 px-4 text-left align-middle font-medium text-muted-foreground relative group"
+                          style={{ width: `${columnWidths.input}px`, minWidth: `${columnWidths.input}px` }}
+                        >
+                          Input
+                          <div 
+                            className="absolute right-0 top-0 h-full w-2 cursor-col-resize bg-border/50 hover:bg-primary transition-colors z-10"
+                            onMouseDown={handleMouseDown('input')}
+                          />
+                        </th>
+                        <th 
+                          className="h-12 px-4 text-left align-middle font-medium text-muted-foreground relative group"
                           style={{ width: `${columnWidths.goals}px`, minWidth: `${columnWidths.goals}px` }}
                         >
                           Goals Input
@@ -1003,6 +1015,14 @@ export default function AdminDashboard() {
                           >
                             <Badge variant={jump.is_guest ? 'secondary' : 'default'}>
                               {jump.is_guest ? 'Guest' : 'User'}
+                            </Badge>
+                          </td>
+                          <td 
+                            className="p-4 align-middle"
+                            style={{ width: `${columnWidths.input}px`, minWidth: `${columnWidths.input}px` }}
+                          >
+                            <Badge variant={jump.stt_used ? 'default' : 'secondary'} className="text-xs">
+                              {jump.stt_used ? '🎤 Voice' : '⌨️ Typed'}
                             </Badge>
                           </td>
                           <td 
