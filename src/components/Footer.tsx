@@ -180,7 +180,7 @@ const Footer = () => {
         <div className="border-t border-border pt-6">
           <div className="text-center">
             <p className="text-xs text-foreground/70 font-light">
-              Copyright © 2025 JumpinAI, LLC. All rights reserved.
+              Copyright © 2026 JumpinAI, LLC. All rights reserved.
             </p>
           </div>
         </div>
