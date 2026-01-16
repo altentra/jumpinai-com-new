@@ -94,13 +94,12 @@ export const profileService = {
     return data;
   },
 
-  // Get user's public jumps
+  // Get user's public jumps (uses secure view that hides IP/location)
   async getPublicJumps(userId: string) {
     const { data, error } = await supabase
-      .from('user_jumps')
+      .from('public_jumps_safe')
       .select('*')
       .eq('user_id', userId)
-      .eq('is_public', true)
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -111,7 +110,7 @@ export const profileService = {
     return data;
   },
 
-  // Get public jumps by username (for public profile view)
+  // Get public jumps by username (for public profile view - uses secure view)
   async getPublicJumpsByUsername(username: string) {
     const formattedUsername = username.startsWith('@') ? username : `@${username}`;
     
@@ -125,11 +124,11 @@ export const profileService = {
 
     if (!profile) return [];
 
+    // Use secure view that hides IP addresses and masks location
     const { data, error } = await supabase
-      .from('user_jumps')
+      .from('public_jumps_safe')
       .select('*')
       .eq('user_id', profile.id)
-      .eq('is_public', true)
       .order('created_at', { ascending: false });
 
     if (error) {

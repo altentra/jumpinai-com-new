@@ -310,6 +310,13 @@ export type Database = {
             foreignKeyName: "jump_likes_jump_id_fkey"
             columns: ["jump_id"]
             isOneToOne: false
+            referencedRelation: "public_jumps_safe"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "jump_likes_jump_id_fkey"
+            columns: ["jump_id"]
+            isOneToOne: false
             referencedRelation: "user_jumps"
             referencedColumns: ["id"]
           },
@@ -539,6 +546,13 @@ export type Database = {
             foreignKeyName: "stt_usage_logs_jump_id_fkey"
             columns: ["jump_id"]
             isOneToOne: false
+            referencedRelation: "public_jumps_safe"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stt_usage_logs_jump_id_fkey"
+            columns: ["jump_id"]
+            isOneToOne: false
             referencedRelation: "user_jumps"
             referencedColumns: ["id"]
           },
@@ -711,6 +725,13 @@ export type Database = {
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "user_jump_actions_jump_id_fkey"
+            columns: ["jump_id"]
+            isOneToOne: false
+            referencedRelation: "public_jumps_safe"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "user_jump_actions_jump_id_fkey"
             columns: ["jump_id"]
@@ -985,7 +1006,113 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      public_jumps_safe: {
+        Row: {
+          challenges_stt_seconds: number | null
+          clarifications_count: number | null
+          combos_used_count: number | null
+          completion_percentage: number | null
+          comprehensive_plan: Json | null
+          created_at: string | null
+          form_challenges: string | null
+          form_goals: string | null
+          full_content: string | null
+          goals_stt_seconds: number | null
+          id: string | null
+          implemented: boolean | null
+          input_method: string | null
+          is_public: boolean | null
+          jump_type: string | null
+          likes_count: number | null
+          location: string | null
+          max_clarification_level: number | null
+          profile_id: string | null
+          prompts_copied_count: number | null
+          reroutes_count: number | null
+          status: string | null
+          structured_plan: Json | null
+          stt_used: boolean | null
+          summary: string | null
+          title: string | null
+          tools_clicked_count: number | null
+          updated_at: string | null
+          user_id: string | null
+          views_count: number | null
+        }
+        Insert: {
+          challenges_stt_seconds?: number | null
+          clarifications_count?: number | null
+          combos_used_count?: number | null
+          completion_percentage?: number | null
+          comprehensive_plan?: Json | null
+          created_at?: string | null
+          form_challenges?: string | null
+          form_goals?: string | null
+          full_content?: string | null
+          goals_stt_seconds?: number | null
+          id?: string | null
+          implemented?: boolean | null
+          input_method?: string | null
+          is_public?: boolean | null
+          jump_type?: string | null
+          likes_count?: number | null
+          location?: never
+          max_clarification_level?: number | null
+          profile_id?: string | null
+          prompts_copied_count?: number | null
+          reroutes_count?: number | null
+          status?: string | null
+          structured_plan?: Json | null
+          stt_used?: boolean | null
+          summary?: string | null
+          title?: string | null
+          tools_clicked_count?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+          views_count?: number | null
+        }
+        Update: {
+          challenges_stt_seconds?: number | null
+          clarifications_count?: number | null
+          combos_used_count?: number | null
+          completion_percentage?: number | null
+          comprehensive_plan?: Json | null
+          created_at?: string | null
+          form_challenges?: string | null
+          form_goals?: string | null
+          full_content?: string | null
+          goals_stt_seconds?: number | null
+          id?: string | null
+          implemented?: boolean | null
+          input_method?: string | null
+          is_public?: boolean | null
+          jump_type?: string | null
+          likes_count?: number | null
+          location?: never
+          max_clarification_level?: number | null
+          profile_id?: string | null
+          prompts_copied_count?: number | null
+          reroutes_count?: number | null
+          status?: string | null
+          structured_plan?: Json | null
+          stt_used?: boolean | null
+          summary?: string | null
+          title?: string | null
+          tools_clicked_count?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+          views_count?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_jumps_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       add_user_credits: {
