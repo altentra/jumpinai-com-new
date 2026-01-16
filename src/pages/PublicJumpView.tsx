@@ -38,12 +38,11 @@ export default function PublicJumpView() {
     try {
       setLoading(true);
 
-      // Fetch jump and verify it's public
+      // Fetch jump using secure view (hides IP/location data)
       const { data: jump, error } = await supabase
-        .from('user_jumps')
+        .from('public_jumps_safe')
         .select('*')
         .eq('id', jumpId)
-        .eq('is_public', true)
         .single();
 
       if (error || !jump) {

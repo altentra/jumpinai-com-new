@@ -38,11 +38,11 @@ export default function PublicJumpView() {
     try {
       setIsLoading(true);
       
+      // Use secure view that hides IP addresses and masks location
       const { data, error } = await supabase
-        .from('user_jumps')
+        .from('public_jumps_safe')
         .select('*')
         .eq('id', jumpId)
-        .eq('is_public', true)
         .single();
 
       if (error) throw error;
