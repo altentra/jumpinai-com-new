@@ -63,6 +63,20 @@ export default function Implementation() {
     workflow: any;
     filename: string;
     instructions: Record<string, string>;
+    detailedInstructions?: {
+      quickStart: string;
+      requirements: string[];
+      steps: Array<{
+        title: string;
+        description: string;
+        tips?: string[];
+      }>;
+      testingGuide: string;
+      troubleshooting: Array<{
+        problem: string;
+        solution: string;
+      }>;
+    };
     opportunityId: string;
   } | null>(null);
   useEffect(() => {
@@ -168,6 +182,7 @@ export default function Implementation() {
           workflow: data.workflow,
           filename: data.filename,
           instructions: data.instructions,
+          detailedInstructions: data.detailedInstructions,
           opportunityId: opportunity.id,
         });
         toast.success("Workflow generated successfully!", {
@@ -541,34 +556,138 @@ export default function Implementation() {
                                 <span className="font-semibold text-green-500">Workflow Generated!</span>
                               </div>
                               
-                              <div className="space-y-3">
+                              <div className="space-y-4">
+                                {/* Quick Start Summary */}
+                                {generatedWorkflow.detailedInstructions?.quickStart && (
+                                  <div className="p-3 rounded-md bg-primary/10 border border-primary/20">
+                                    <p className="text-sm font-medium text-foreground">
+                                      {generatedWorkflow.detailedInstructions.quickStart}
+                                    </p>
+                                  </div>
+                                )}
+                                
+                                {/* Download Button */}
                                 <Button 
                                   onClick={handleDownloadWorkflow}
                                   className="w-full bg-green-600 hover:bg-green-700"
+                                  size="lg"
                                 >
-                                  <Download className="w-4 h-4 mr-2" />
-                                  Download n8n Workflow JSON
+                                  <Download className="w-5 h-5 mr-2" />
+                                  Download Your n8n Workflow
                                 </Button>
-                                
-                                <div className="text-xs text-muted-foreground space-y-1">
-                                  <p className="font-medium text-foreground">How to use:</p>
-                                  {Object.entries(generatedWorkflow.instructions).map(([key, value]) => (
-                                    <p key={key} className="flex gap-2">
-                                      <span className="text-primary">{key.replace('step', '')}.</span>
-                                      <span>{value}</span>
-                                    </p>
-                                  ))}
-                                </div>
                                 
                                 <a 
                                   href="https://n8n.io" 
                                   target="_blank" 
                                   rel="noopener noreferrer"
-                                  className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
+                                  className="flex items-center justify-center gap-1.5 text-sm text-primary hover:underline py-1"
                                 >
-                                  Don't have n8n? Create free account
-                                  <ExternalLink className="w-3 h-3" />
+                                  Don't have n8n? Create your free account here
+                                  <ExternalLink className="w-3.5 h-3.5" />
                                 </a>
+                                
+                                {/* Requirements Section */}
+                                {generatedWorkflow.detailedInstructions?.requirements && generatedWorkflow.detailedInstructions.requirements.length > 0 && (
+                                  <div className="space-y-2">
+                                    <h4 className="text-sm font-semibold flex items-center gap-2">
+                                      <span className="w-5 h-5 rounded-full bg-yellow-500/20 text-yellow-500 flex items-center justify-center text-xs">!</span>
+                                      Before You Start - You'll Need:
+                                    </h4>
+                                    <ul className="space-y-1.5">
+                                      {generatedWorkflow.detailedInstructions.requirements.map((req, i) => (
+                                        <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+                                          <Check className="w-4 h-4 text-muted-foreground shrink-0 mt-0.5" />
+                                          <span>{req}</span>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                )}
+                                
+                                <Separator />
+                                
+                                {/* Detailed Steps */}
+                                {generatedWorkflow.detailedInstructions?.steps && generatedWorkflow.detailedInstructions.steps.length > 0 ? (
+                                  <div className="space-y-3">
+                                    <h4 className="text-sm font-semibold">Step-by-Step Setup Guide:</h4>
+                                    <div className="space-y-4">
+                                      {generatedWorkflow.detailedInstructions.steps.map((step, i) => (
+                                        <div key={i} className="relative pl-8">
+                                          <div className="absolute left-0 top-0 w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold">
+                                            {i + 1}
+                                          </div>
+                                          <div className="space-y-1.5">
+                                            <h5 className="font-medium text-sm">{step.title}</h5>
+                                            <p className="text-sm text-muted-foreground leading-relaxed">{step.description}</p>
+                                            {step.tips && step.tips.length > 0 && (
+                                              <div className="mt-2 p-2 rounded bg-muted/50 border border-border/50">
+                                                <p className="text-xs text-muted-foreground flex items-start gap-1.5">
+                                                  <Lightbulb className="w-3.5 h-3.5 text-yellow-500 shrink-0 mt-0.5" />
+                                                  <span><strong>Tip:</strong> {step.tips.join(' ')}</span>
+                                                </p>
+                                              </div>
+                                            )}
+                                          </div>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <div className="space-y-2">
+                                    <h4 className="text-sm font-semibold">Quick Setup Guide:</h4>
+                                    <div className="space-y-1.5">
+                                      {Object.entries(generatedWorkflow.instructions).map(([key, value]) => (
+                                        <p key={key} className="flex items-start gap-2 text-sm text-muted-foreground">
+                                          <span className="w-5 h-5 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-bold shrink-0">
+                                            {key.replace('step', '')}
+                                          </span>
+                                          <span>{value}</span>
+                                        </p>
+                                      ))}
+                                    </div>
+                                  </div>
+                                )}
+                                
+                                {/* Testing Guide */}
+                                {generatedWorkflow.detailedInstructions?.testingGuide && (
+                                  <>
+                                    <Separator />
+                                    <div className="space-y-2">
+                                      <h4 className="text-sm font-semibold flex items-center gap-2">
+                                        <Zap className="w-4 h-4 text-primary" />
+                                        How to Test Your Workflow
+                                      </h4>
+                                      <p className="text-sm text-muted-foreground leading-relaxed">
+                                        {generatedWorkflow.detailedInstructions.testingGuide}
+                                      </p>
+                                    </div>
+                                  </>
+                                )}
+                                
+                                {/* Troubleshooting */}
+                                {generatedWorkflow.detailedInstructions?.troubleshooting && generatedWorkflow.detailedInstructions.troubleshooting.length > 0 && (
+                                  <>
+                                    <Separator />
+                                    <div className="space-y-2">
+                                      <h4 className="text-sm font-semibold flex items-center gap-2">
+                                        <Wrench className="w-4 h-4 text-orange-500" />
+                                        Common Issues & Solutions
+                                      </h4>
+                                      <div className="space-y-3">
+                                        {generatedWorkflow.detailedInstructions.troubleshooting.map((item, i) => (
+                                          <div key={i} className="p-3 rounded-md bg-muted/30 border border-border/50">
+                                            <p className="text-sm font-medium text-foreground mb-1">
+                                              ❓ {item.problem}
+                                            </p>
+                                            <p className="text-sm text-muted-foreground">
+                                              ✅ {item.solution}
+                                            </p>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  </>
+                                )}
                               </div>
                             </div>
                             
