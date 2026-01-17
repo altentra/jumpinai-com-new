@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useCredits } from "@/hooks/useCredits";
 import { supabase } from "@/integrations/supabase/client";
-import { Settings, Home, FileText, CreditCard, Zap, Rocket, ChevronLeft, ChevronRight } from "lucide-react";
+import { Settings, Home, FileText, CreditCard, Zap, Rocket, ChevronLeft, ChevronRight, Bot } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { useAuth0Token } from "@/hooks/useAuth0Token";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -231,6 +231,17 @@ export default function AppSidebar() {
         >
           <FileText className="h-4 w-4" />
           My Jumps
+        </Link>
+
+        <Link 
+          to="/dashboard/implementation" 
+          className={cn(
+            "flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-[13px] font-medium transition-all duration-300",
+            getNavCls({ isActive: currentPath === "/dashboard/implementation" })
+          )}
+        >
+          <Bot className="h-4 w-4" />
+          Implementation
         </Link>
 
         <Separator className="my-1" />
