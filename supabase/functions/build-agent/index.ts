@@ -102,6 +102,34 @@ WORKFLOW STRUCTURE:
   }
 }`;
 
+    // Second prompt for generating detailed setup instructions
+    const instructionsSystemPrompt = `You are a friendly, expert technical writer who specializes in explaining n8n workflows to non-technical users. Your job is to create personalized, step-by-step setup instructions that are:
+1. Written in plain English - avoid technical jargon
+2. Super specific to the actual workflow being set up
+3. Include exact node names and what they do
+4. Explain what credentials/API keys are needed and exactly how to get them
+5. Include troubleshooting tips for common issues
+
+Format your response as a JSON object with these fields:
+{
+  "quickStart": "A 1-2 sentence summary of what this workflow does",
+  "requirements": ["List of accounts/credentials needed BEFORE starting"],
+  "steps": [
+    {
+      "title": "Step title",
+      "description": "Detailed explanation of what to do",
+      "tips": ["Optional helpful tips"]
+    }
+  ],
+  "testingGuide": "How to test if the workflow works correctly",
+  "troubleshooting": [
+    {
+      "problem": "Common issue",
+      "solution": "How to fix it"
+    }
+  ]
+}`;
+
     const userPrompt = `Create a complete n8n workflow JSON for this automation:
 
 AGENT TITLE: ${opportunity.title}
@@ -196,6 +224,77 @@ Return ONLY the JSON workflow - no explanations, no markdown code blocks.`;
       opportunityTitle: opportunity.title,
     };
 
+    // Now generate detailed, personalized setup instructions
+    console.log('Generating personalized setup instructions...');
+    
+    const instructionsPrompt = `Generate detailed setup instructions for this n8n workflow:
+
+WORKFLOW NAME: ${parsedWorkflow.name}
+WORKFLOW PURPOSE: ${opportunity.description}
+
+NODES IN THIS WORKFLOW:
+${parsedWorkflow.nodes?.map((node: any) => `- ${node.name} (${node.type})`).join('\n') || 'Unknown nodes'}
+
+REQUIRED TOOLS MENTIONED:
+${opportunity.requiredTools.map(tool => `- ${tool}`).join('\n')}
+
+USER'S PROJECT CONTEXT:
+- Project: ${jump.title}
+- Goals: ${jump.goals}
+
+Create personalized, beginner-friendly setup instructions. Be VERY specific about:
+1. What credentials/accounts the user needs to set up
+2. Exactly how to import the JSON file into n8n
+3. How to configure each node that needs configuration
+4. How to test the workflow
+5. Common problems and solutions
+
+Return ONLY the JSON object, no markdown.`;
+
+    const instructionsResponse = await fetch('https://api.x.ai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${xaiApiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'grok-3-fast',
+        messages: [
+          { role: 'system', content: instructionsSystemPrompt },
+          { role: 'user', content: instructionsPrompt }
+        ],
+        temperature: 0.4,
+        max_tokens: 3000,
+      }),
+    });
+
+    let detailedInstructions = null;
+    
+    if (instructionsResponse.ok) {
+      const instructionsData = await instructionsResponse.json();
+      let instructionsContent = instructionsData.choices?.[0]?.message?.content || '';
+      
+      // Clean up the response
+      instructionsContent = instructionsContent.trim();
+      if (instructionsContent.startsWith('```json')) {
+        instructionsContent = instructionsContent.slice(7);
+      } else if (instructionsContent.startsWith('```')) {
+        instructionsContent = instructionsContent.slice(3);
+      }
+      if (instructionsContent.endsWith('```')) {
+        instructionsContent = instructionsContent.slice(0, -3);
+      }
+      instructionsContent = instructionsContent.trim();
+      
+      try {
+        detailedInstructions = JSON.parse(instructionsContent);
+        console.log('Successfully parsed detailed instructions');
+      } catch (parseError) {
+        console.error('Failed to parse instructions JSON:', parseError);
+        // Continue without detailed instructions
+      }
+    }
+
     // Log the build
     await supabase.from('api_usage_logs').insert({
       user_id: user.id,
@@ -210,6 +309,8 @@ Return ONLY the JSON workflow - no explanations, no markdown code blocks.`;
         success: true,
         workflow: parsedWorkflow,
         filename: `${opportunity.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-workflow.json`,
+        detailedInstructions: detailedInstructions,
+        // Keep basic instructions as fallback
         instructions: {
           step1: "Download the workflow JSON file",
           step2: "Open your n8n instance (or create free account at n8n.io)",
