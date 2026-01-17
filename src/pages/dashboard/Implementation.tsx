@@ -56,6 +56,7 @@ export default function Implementation() {
   const [isLoadingJumps, setIsLoadingJumps] = useState(true);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
+  const [buildingAgentId, setBuildingAgentId] = useState<string | null>(null);
 
   useEffect(() => {
     loadJumps();
@@ -118,6 +119,52 @@ export default function Implementation() {
       toast.error(error.message || "Failed to analyze jump for agent opportunities");
     } finally {
       setIsAnalyzing(false);
+    }
+  };
+
+  const handleBuildAgent = async (opportunity: AgentOpportunity) => {
+    if (!selectedJump || !user) {
+      toast.error("Please ensure you're logged in and have selected a jump");
+      return;
+    }
+
+    setBuildingAgentId(opportunity.id);
+
+    try {
+      const { data, error } = await supabase.functions.invoke("build-agent", {
+        headers: await getAuthHeaders(),
+        body: {
+          opportunity: {
+            title: opportunity.title,
+            description: opportunity.description,
+            impact: opportunity.impactLevel,
+            complexity: opportunity.complexityLevel,
+            estimatedTimeSaved: opportunity.estimatedTimeSaved,
+            requiredTools: opportunity.requiredTools,
+            benefits: opportunity.benefits,
+          },
+          jump: {
+            id: selectedJump.id,
+            title: selectedJump.title,
+            summary: selectedJump.summary || "",
+            goals: selectedJump.comprehensive_plan?.overview?.goals?.join(", ") || "",
+            challenges: selectedJump.comprehensive_plan?.overview?.challenges?.join(", ") || "",
+          },
+        }
+      });
+
+      if (error) throw error;
+
+      toast.success("Agent build request submitted to n8n!", {
+        description: "Check your n8n workflow for the incoming request",
+      });
+      
+      console.log("Build agent response:", data);
+    } catch (error: any) {
+      console.error("Build agent error:", error);
+      toast.error(error.message || "Failed to submit agent build request");
+    } finally {
+      setBuildingAgentId(null);
     }
   };
 
@@ -449,10 +496,21 @@ export default function Implementation() {
                         {/* Build Button */}
                         <div className="flex justify-end">
                           <Button 
+                            onClick={() => handleBuildAgent(opportunity)}
+                            disabled={buildingAgentId === opportunity.id}
                             className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70"
                           >
-                            <Rocket className="w-4 h-4 mr-2" />
-                            Build This Agent
+                            {buildingAgentId === opportunity.id ? (
+                              <>
+                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                Building Agent...
+                              </>
+                            ) : (
+                              <>
+                                <Rocket className="w-4 h-4 mr-2" />
+                                Build This Agent
+                              </>
+                            )}
                           </Button>
                         </div>
                       </CardContent>
