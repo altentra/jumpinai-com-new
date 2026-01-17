@@ -22,14 +22,9 @@ interface AgentBuildRequest {
     goals: string;
     challenges: string;
   };
-  user: {
-    id: string;
-    email: string;
-  };
 }
 
 Deno.serve(async (req) => {
-  // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
@@ -37,10 +32,10 @@ Deno.serve(async (req) => {
   try {
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-    const n8nWebhook = Deno.env.get('N8N_BUILD_AGENT_WEBHOOK');
+    const xaiApiKey = Deno.env.get('XAI_API_KEY');
 
-    if (!n8nWebhook) {
-      throw new Error('N8N_BUILD_AGENT_WEBHOOK not configured');
+    if (!xaiApiKey) {
+      throw new Error('XAI_API_KEY not configured');
     }
 
     // Get auth token from request
@@ -64,98 +59,148 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Parse request body
     const { opportunity, jump } = await req.json() as AgentBuildRequest;
 
-    console.log('Building agent for opportunity:', opportunity.title);
-    console.log('Jump context:', jump.title);
+    console.log('Generating n8n workflow for:', opportunity.title);
 
-    // Prepare comprehensive payload for n8n
-    const n8nPayload = {
-      // Opportunity details
-      agentTitle: opportunity.title,
-      agentDescription: opportunity.description,
-      impact: opportunity.impact,
-      complexity: opportunity.complexity,
-      estimatedTimeSaved: opportunity.estimatedTimeSaved,
-      requiredTools: opportunity.requiredTools,
-      benefits: opportunity.benefits,
-      
-      // Jump context
-      jumpId: jump.id,
-      jumpTitle: jump.title,
-      jumpSummary: jump.summary,
-      jumpGoals: jump.goals,
-      jumpChallenges: jump.challenges,
-      
-      // User context
-      userId: user.id,
-      userEmail: user.email,
-      
-      // Metadata
-      timestamp: new Date().toISOString(),
-      source: 'jumpinai-implementation',
-      
-      // Detailed agent building instructions
-      buildInstructions: `
-        Create an AI Agent with the following specifications:
-        
-        AGENT NAME: ${opportunity.title}
-        
-        PURPOSE: ${opportunity.description}
-        
-        CONTEXT FROM USER'S JUMP:
-        - Project: ${jump.title}
-        - Goals: ${jump.goals}
-        - Challenges: ${jump.challenges}
-        - Summary: ${jump.summary}
-        
-        REQUIRED CAPABILITIES:
-        ${opportunity.requiredTools.map(tool => `- ${tool}`).join('\n')}
-        
-        EXPECTED BENEFITS:
-        ${opportunity.benefits.map(benefit => `- ${benefit}`).join('\n')}
-        
-        COMPLEXITY LEVEL: ${opportunity.complexity}
-        EXPECTED TIME SAVINGS: ${opportunity.estimatedTimeSaved}
-        
-        Please build this agent and provide a shareable link when complete.
-      `.trim()
-    };
+    // Generate n8n workflow using xAI
+    const systemPrompt = `You are an expert n8n workflow builder. Your task is to generate complete, valid, importable n8n workflow JSON files.
 
-    console.log('Sending payload to n8n webhook...');
+CRITICAL RULES:
+1. Return ONLY valid JSON - no markdown, no explanations, just the JSON
+2. Use real n8n node types that exist in n8n
+3. Include all required node properties
+4. Make sure node positions don't overlap
+5. Include proper connections between nodes
+6. Use webhook triggers for easy testing
 
-    // Call n8n webhook
-    const n8nResponse = await fetch(n8nWebhook, {
+COMMON N8N NODE TYPES:
+- n8n-nodes-base.webhook (trigger)
+- n8n-nodes-base.httpRequest (API calls)
+- n8n-nodes-base.openAi (AI processing)
+- n8n-nodes-base.gmail (send emails)
+- n8n-nodes-base.slack (send messages)
+- n8n-nodes-base.googleSheets (data storage)
+- n8n-nodes-base.notion (notes/databases)
+- n8n-nodes-base.if (conditional logic)
+- n8n-nodes-base.set (set variables)
+- n8n-nodes-base.code (custom JavaScript)
+- n8n-nodes-base.respondToWebhook (return response)
+
+WORKFLOW STRUCTURE:
+{
+  "name": "Workflow Name",
+  "nodes": [...],
+  "connections": {...},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1",
+  "meta": {
+    "instanceId": "generated-by-jumpinai"
+  }
+}`;
+
+    const userPrompt = `Create a complete n8n workflow JSON for this automation:
+
+AGENT TITLE: ${opportunity.title}
+
+DESCRIPTION: ${opportunity.description}
+
+CONTEXT FROM USER'S PROJECT:
+- Project: ${jump.title}
+- Goals: ${jump.goals}
+- Challenges: ${jump.challenges}
+- Summary: ${jump.summary}
+
+REQUIRED CAPABILITIES:
+${opportunity.requiredTools.map(tool => `- ${tool}`).join('\n')}
+
+EXPECTED BENEFITS:
+${opportunity.benefits.map(benefit => `- ${benefit}`).join('\n')}
+
+COMPLEXITY: ${opportunity.complexity}
+TIME SAVINGS: ${opportunity.estimatedTimeSaved}
+
+Generate a complete, working n8n workflow that:
+1. Starts with a Webhook trigger (so user can easily test it)
+2. Includes all necessary nodes to accomplish the automation
+3. Uses AI nodes where intelligent processing is needed
+4. Ends with appropriate output (webhook response, email, etc.)
+5. Has helpful node names and notes
+
+Return ONLY the JSON workflow - no explanations, no markdown code blocks.`;
+
+    const xaiResponse = await fetch('https://api.x.ai/v1/chat/completions', {
       method: 'POST',
       headers: {
+        'Authorization': `Bearer ${xaiApiKey}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(n8nPayload),
+      body: JSON.stringify({
+        model: 'grok-3-fast',
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: userPrompt }
+        ],
+        temperature: 0.3,
+        max_tokens: 8000,
+      }),
     });
 
-    console.log('n8n response status:', n8nResponse.status);
-
-    // Try to get response from n8n
-    let responseData;
-    const responseText = await n8nResponse.text();
-    
-    try {
-      responseData = JSON.parse(responseText);
-    } catch {
-      // n8n might return non-JSON, which is fine for webhooks
-      responseData = { 
-        status: 'submitted',
-        message: 'Agent build request submitted to n8n',
-        rawResponse: responseText 
-      };
+    if (!xaiResponse.ok) {
+      const errorText = await xaiResponse.text();
+      console.error('xAI API error:', xaiResponse.status, errorText);
+      throw new Error(`AI API error: ${xaiResponse.status}`);
     }
 
-    // Log the build request
+    const xaiData = await xaiResponse.json();
+    let workflowJson = xaiData.choices?.[0]?.message?.content || '';
+
+    console.log('Raw AI response length:', workflowJson.length);
+
+    // Clean up the response - remove markdown code blocks if present
+    workflowJson = workflowJson.trim();
+    if (workflowJson.startsWith('```json')) {
+      workflowJson = workflowJson.slice(7);
+    } else if (workflowJson.startsWith('```')) {
+      workflowJson = workflowJson.slice(3);
+    }
+    if (workflowJson.endsWith('```')) {
+      workflowJson = workflowJson.slice(0, -3);
+    }
+    workflowJson = workflowJson.trim();
+
+    // Validate it's proper JSON
+    let parsedWorkflow;
+    try {
+      parsedWorkflow = JSON.parse(workflowJson);
+    } catch (parseError) {
+      console.error('JSON parse error:', parseError);
+      console.error('Raw content:', workflowJson.substring(0, 500));
+      throw new Error('Failed to generate valid workflow JSON');
+    }
+
+    // Ensure the workflow has a proper name
+    if (!parsedWorkflow.name) {
+      parsedWorkflow.name = `JumpinAI: ${opportunity.title}`;
+    }
+
+    // Add metadata
+    parsedWorkflow.meta = {
+      ...parsedWorkflow.meta,
+      instanceId: 'generated-by-jumpinai',
+      generatedAt: new Date().toISOString(),
+      jumpId: jump.id,
+      opportunityTitle: opportunity.title,
+    };
+
+    // Log the build
     await supabase.from('api_usage_logs').insert({
       user_id: user.id,
       endpoint: 'build-agent',
-      status_code: n8nResponse.status,
+      status_code: 200,
       ip_address: req.headers.get('x-forwarded-for') || 'unknown',
       user_agent: req.headers.get('user-agent'),
     });
@@ -163,9 +208,16 @@ Deno.serve(async (req) => {
     return new Response(
       JSON.stringify({
         success: true,
-        message: 'Agent build request submitted successfully',
-        data: responseData,
-        opportunity: opportunity.title,
+        workflow: parsedWorkflow,
+        filename: `${opportunity.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-workflow.json`,
+        instructions: {
+          step1: "Download the workflow JSON file",
+          step2: "Open your n8n instance (or create free account at n8n.io)",
+          step3: "Go to Workflows → Import from File",
+          step4: "Select the downloaded JSON file",
+          step5: "Review the workflow and update any credentials (API keys, etc.)",
+          step6: "Activate the workflow and test it!",
+        }
       }),
       { 
         status: 200, 
@@ -178,7 +230,7 @@ Deno.serve(async (req) => {
     
     return new Response(
       JSON.stringify({ 
-        error: 'Failed to submit agent build request',
+        error: 'Failed to generate workflow',
         details: error.message 
       }),
       { 

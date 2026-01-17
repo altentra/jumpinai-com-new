@@ -23,7 +23,9 @@ import {
   Clock,
   TrendingUp,
   Workflow,
-  Wrench
+  Wrench,
+  Download,
+  ExternalLink
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -57,7 +59,12 @@ export default function Implementation() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [buildingAgentId, setBuildingAgentId] = useState<string | null>(null);
-
+  const [generatedWorkflow, setGeneratedWorkflow] = useState<{
+    workflow: any;
+    filename: string;
+    instructions: Record<string, string>;
+    opportunityId: string;
+  } | null>(null);
   useEffect(() => {
     loadJumps();
   }, []);
@@ -129,6 +136,7 @@ export default function Implementation() {
     }
 
     setBuildingAgentId(opportunity.id);
+    setGeneratedWorkflow(null);
 
     try {
       const { data, error } = await supabase.functions.invoke("build-agent", {
@@ -155,17 +163,47 @@ export default function Implementation() {
 
       if (error) throw error;
 
-      toast.success("Agent build request submitted to n8n!", {
-        description: "Check your n8n workflow for the incoming request",
-      });
+      if (data?.workflow) {
+        setGeneratedWorkflow({
+          workflow: data.workflow,
+          filename: data.filename,
+          instructions: data.instructions,
+          opportunityId: opportunity.id,
+        });
+        toast.success("Workflow generated successfully!", {
+          description: "Download your n8n workflow JSON below",
+        });
+      } else {
+        throw new Error("No workflow generated");
+      }
       
       console.log("Build agent response:", data);
     } catch (error: any) {
       console.error("Build agent error:", error);
-      toast.error(error.message || "Failed to submit agent build request");
+      toast.error(error.message || "Failed to generate workflow");
     } finally {
       setBuildingAgentId(null);
     }
+  };
+
+  const handleDownloadWorkflow = () => {
+    if (!generatedWorkflow) return;
+    
+    const blob = new Blob([JSON.stringify(generatedWorkflow.workflow, null, 2)], {
+      type: 'application/json',
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = generatedWorkflow.filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    toast.success("Workflow downloaded!", {
+      description: "Import this file into your n8n instance",
+    });
   };
 
   const getImpactBadgeColor = (level: string) => {
@@ -493,26 +531,76 @@ export default function Implementation() {
 
                         <Separator className="my-3" />
 
-                        {/* Build Button */}
-                        <div className="flex justify-end">
-                          <Button 
-                            onClick={() => handleBuildAgent(opportunity)}
-                            disabled={buildingAgentId === opportunity.id}
-                            className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70"
-                          >
-                            {buildingAgentId === opportunity.id ? (
-                              <>
-                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                Building Agent...
-                              </>
-                            ) : (
-                              <>
-                                <Rocket className="w-4 h-4 mr-2" />
-                                Build This Agent
-                              </>
-                            )}
-                          </Button>
-                        </div>
+                        {/* Build Button or Download Section */}
+                        {generatedWorkflow?.opportunityId === opportunity.id ? (
+                          <div className="space-y-4">
+                            {/* Success State - Download Section */}
+                            <div className="p-4 rounded-lg bg-green-500/10 border border-green-500/20">
+                              <div className="flex items-center gap-2 mb-3">
+                                <Check className="w-5 h-5 text-green-500" />
+                                <span className="font-semibold text-green-500">Workflow Generated!</span>
+                              </div>
+                              
+                              <div className="space-y-3">
+                                <Button 
+                                  onClick={handleDownloadWorkflow}
+                                  className="w-full bg-green-600 hover:bg-green-700"
+                                >
+                                  <Download className="w-4 h-4 mr-2" />
+                                  Download n8n Workflow JSON
+                                </Button>
+                                
+                                <div className="text-xs text-muted-foreground space-y-1">
+                                  <p className="font-medium text-foreground">How to use:</p>
+                                  {Object.entries(generatedWorkflow.instructions).map(([key, value]) => (
+                                    <p key={key} className="flex gap-2">
+                                      <span className="text-primary">{key.replace('step', '')}.</span>
+                                      <span>{value}</span>
+                                    </p>
+                                  ))}
+                                </div>
+                                
+                                <a 
+                                  href="https://n8n.io" 
+                                  target="_blank" 
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
+                                >
+                                  Don't have n8n? Create free account
+                                  <ExternalLink className="w-3 h-3" />
+                                </a>
+                              </div>
+                            </div>
+                            
+                            <Button 
+                              variant="outline"
+                              onClick={() => setGeneratedWorkflow(null)}
+                              className="w-full"
+                            >
+                              Generate New Workflow
+                            </Button>
+                          </div>
+                        ) : (
+                          <div className="flex justify-end">
+                            <Button 
+                              onClick={() => handleBuildAgent(opportunity)}
+                              disabled={buildingAgentId === opportunity.id}
+                              className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70"
+                            >
+                              {buildingAgentId === opportunity.id ? (
+                                <>
+                                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                  Generating Workflow...
+                                </>
+                              ) : (
+                                <>
+                                  <Rocket className="w-4 h-4 mr-2" />
+                                  Build This Agent
+                                </>
+                              )}
+                            </Button>
+                          </div>
+                        )}
                       </CardContent>
                     </Card>
                   ))}
