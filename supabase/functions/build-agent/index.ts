@@ -9,6 +9,7 @@ interface AgentBuildRequest {
   opportunity: {
     title: string;
     description: string;
+    automationTarget?: string;
     impact: string;
     complexity: string;
     estimatedTimeSaved: string;
@@ -22,6 +23,7 @@ interface AgentBuildRequest {
     goals: string;
     challenges: string;
   };
+  analysisId?: string;
 }
 
 Deno.serve(async (req) => {
@@ -59,7 +61,7 @@ Deno.serve(async (req) => {
       );
     }
 
-    const { opportunity, jump } = await req.json() as AgentBuildRequest;
+    const { opportunity, jump, analysisId } = await req.json() as AgentBuildRequest;
 
     console.log('Generating n8n workflow for:', opportunity.title);
 
@@ -224,6 +226,8 @@ Return ONLY the JSON workflow - no explanations, no markdown code blocks.`;
       opportunityTitle: opportunity.title,
     };
 
+    const filename = `${opportunity.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-workflow.json`;
+
     // Now generate detailed, personalized setup instructions
     console.log('Generating personalized setup instructions...');
     
@@ -295,6 +299,37 @@ Return ONLY the JSON object, no markdown.`;
       }
     }
 
+    // Save agent to database
+    const { data: savedAgent, error: saveError } = await supabase
+      .from('user_agents')
+      .insert({
+        user_id: user.id,
+        jump_id: jump.id,
+        analysis_id: analysisId || null,
+        title: opportunity.title,
+        description: opportunity.description,
+        automation_target: opportunity.automationTarget || null,
+        impact_level: opportunity.impact,
+        complexity_level: opportunity.complexity,
+        estimated_time_saved: opportunity.estimatedTimeSaved,
+        required_tools: opportunity.requiredTools,
+        benefits: opportunity.benefits,
+        workflow_json: parsedWorkflow,
+        workflow_filename: filename,
+        detailed_instructions: detailedInstructions,
+        platform: 'n8n',
+        status: 'active',
+      })
+      .select()
+      .single();
+
+    if (saveError) {
+      console.error('Failed to save agent:', saveError);
+      // Continue without saving - don't fail the request
+    } else {
+      console.log('✅ Agent saved to database:', savedAgent.id);
+    }
+
     // Log the build
     await supabase.from('api_usage_logs').insert({
       user_id: user.id,
@@ -307,8 +342,9 @@ Return ONLY the JSON object, no markdown.`;
     return new Response(
       JSON.stringify({
         success: true,
+        agentId: savedAgent?.id,
         workflow: parsedWorkflow,
-        filename: `${opportunity.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-workflow.json`,
+        filename: filename,
         detailedInstructions: detailedInstructions,
         // Keep basic instructions as fallback
         instructions: {

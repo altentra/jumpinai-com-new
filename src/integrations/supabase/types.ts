@@ -286,6 +286,54 @@ export type Database = {
         }
         Relationships: []
       }
+      jump_analysis: {
+        Row: {
+          created_at: string
+          id: string
+          jump_id: string
+          opportunities: Json
+          overall_potential: string | null
+          summary: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          jump_id: string
+          opportunities?: Json
+          overall_potential?: string | null
+          summary: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          jump_id?: string
+          opportunities?: Json
+          overall_potential?: string | null
+          summary?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "jump_analysis_jump_id_fkey"
+            columns: ["jump_id"]
+            isOneToOne: false
+            referencedRelation: "public_jumps_safe"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "jump_analysis_jump_id_fkey"
+            columns: ["jump_id"]
+            isOneToOne: false
+            referencedRelation: "user_jumps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       jump_likes: {
         Row: {
           created_at: string
@@ -674,6 +722,100 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: []
+      }
+      user_agents: {
+        Row: {
+          analysis_id: string | null
+          automation_target: string | null
+          benefits: string[] | null
+          complexity_level: string | null
+          created_at: string
+          description: string | null
+          detailed_instructions: Json | null
+          download_count: number | null
+          estimated_time_saved: string | null
+          id: string
+          impact_level: string | null
+          jump_id: string
+          last_downloaded_at: string | null
+          platform: string | null
+          required_tools: string[] | null
+          status: string | null
+          title: string
+          updated_at: string
+          user_id: string
+          workflow_filename: string | null
+          workflow_json: Json
+        }
+        Insert: {
+          analysis_id?: string | null
+          automation_target?: string | null
+          benefits?: string[] | null
+          complexity_level?: string | null
+          created_at?: string
+          description?: string | null
+          detailed_instructions?: Json | null
+          download_count?: number | null
+          estimated_time_saved?: string | null
+          id?: string
+          impact_level?: string | null
+          jump_id: string
+          last_downloaded_at?: string | null
+          platform?: string | null
+          required_tools?: string[] | null
+          status?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+          workflow_filename?: string | null
+          workflow_json: Json
+        }
+        Update: {
+          analysis_id?: string | null
+          automation_target?: string | null
+          benefits?: string[] | null
+          complexity_level?: string | null
+          created_at?: string
+          description?: string | null
+          detailed_instructions?: Json | null
+          download_count?: number | null
+          estimated_time_saved?: string | null
+          id?: string
+          impact_level?: string | null
+          jump_id?: string
+          last_downloaded_at?: string | null
+          platform?: string | null
+          required_tools?: string[] | null
+          status?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+          workflow_filename?: string | null
+          workflow_json?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_agents_analysis_id_fkey"
+            columns: ["analysis_id"]
+            isOneToOne: false
+            referencedRelation: "jump_analysis"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_agents_jump_id_fkey"
+            columns: ["jump_id"]
+            isOneToOne: false
+            referencedRelation: "public_jumps_safe"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_agents_jump_id_fkey"
+            columns: ["jump_id"]
+            isOneToOne: false
+            referencedRelation: "user_jumps"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_credits: {
         Row: {
