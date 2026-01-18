@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -22,12 +23,56 @@ serve(async (req) => {
 
   try {
     const XAI_API_KEY = Deno.env.get('XAI_API_KEY');
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    
     if (!XAI_API_KEY) {
       throw new Error('XAI_API_KEY not configured');
     }
 
+    // Get auth token and verify user
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      return new Response(
+        JSON.stringify({ error: 'Authorization required' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+    const token = authHeader.replace('Bearer ', '');
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+
+    if (authError || !user) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid authorization' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     const jumpData: JumpData = await req.json();
     console.log('📊 Analyzing jump for agent opportunities:', jumpData.jumpTitle);
+
+    // Check if analysis already exists for this jump
+    const { data: existingAnalysis } = await supabase
+      .from('jump_analysis')
+      .select('*')
+      .eq('user_id', user.id)
+      .eq('jump_id', jumpData.jumpId)
+      .single();
+
+    if (existingAnalysis) {
+      console.log('✅ Returning cached analysis for jump:', jumpData.jumpId);
+      return new Response(JSON.stringify({
+        summary: existingAnalysis.summary,
+        overallPotential: existingAnalysis.overall_potential,
+        opportunities: existingAnalysis.opportunities,
+        analysisId: existingAnalysis.id,
+        cached: true,
+      }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
 
     // Construct comprehensive context from all jump data
     const jumpContext = buildJumpContext(jumpData);
@@ -154,7 +199,31 @@ Focus on practical, immediately implementable opportunities. Prioritize by impac
 
     console.log(`✅ Analysis complete: Found ${analysisResult.opportunities.length} opportunities`);
 
-    return new Response(JSON.stringify(analysisResult), {
+    // Save analysis to database
+    const { data: savedAnalysis, error: saveError } = await supabase
+      .from('jump_analysis')
+      .insert({
+        user_id: user.id,
+        jump_id: jumpData.jumpId,
+        summary: analysisResult.summary,
+        overall_potential: analysisResult.overallPotential,
+        opportunities: analysisResult.opportunities,
+      })
+      .select()
+      .single();
+
+    if (saveError) {
+      console.error('Failed to save analysis:', saveError);
+      // Continue without saving - don't fail the request
+    } else {
+      console.log('✅ Analysis saved to database:', savedAnalysis.id);
+    }
+
+    return new Response(JSON.stringify({
+      ...analysisResult,
+      analysisId: savedAnalysis?.id,
+      cached: false,
+    }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
 

@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Bot, 
   Rocket, 
@@ -25,9 +26,32 @@ import {
   Workflow,
   Wrench,
   Download,
-  ExternalLink
+  ExternalLink,
+  RefreshCw,
+  Package,
+  Eye,
+  Trash2,
+  MoreVertical,
+  Copy,
+  CheckCircle2
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface AgentOpportunity {
   id: string;
@@ -48,13 +72,39 @@ interface AnalysisResult {
   summary: string;
   opportunities: AgentOpportunity[];
   overallPotential: string;
+  analysisId?: string;
+  cached?: boolean;
+}
+
+interface SavedAgent {
+  id: string;
+  title: string;
+  description: string | null;
+  automation_target: string | null;
+  impact_level: string | null;
+  complexity_level: string | null;
+  estimated_time_saved: string | null;
+  required_tools: string[];
+  benefits: string[];
+  workflow_json: any;
+  workflow_filename: string | null;
+  detailed_instructions: any;
+  platform: string;
+  status: string;
+  download_count: number;
+  created_at: string;
+  jump_id: string;
+}
+
+interface JumpWithAnalysis extends UserJump {
+  hasAnalysis?: boolean;
 }
 
 export default function Implementation() {
   const { user } = useAuth();
   const { getAuthHeaders } = useAuth0Token();
-  const [jumps, setJumps] = useState<UserJump[]>([]);
-  const [selectedJump, setSelectedJump] = useState<UserJump | null>(null);
+  const [jumps, setJumps] = useState<JumpWithAnalysis[]>([]);
+  const [selectedJump, setSelectedJump] = useState<JumpWithAnalysis | null>(null);
   const [isLoadingJumps, setIsLoadingJumps] = useState(true);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
@@ -63,35 +113,53 @@ export default function Implementation() {
     workflow: any;
     filename: string;
     instructions: Record<string, string>;
-    detailedInstructions?: {
-      quickStart: string;
-      requirements: string[];
-      steps: Array<{
-        title: string;
-        description: string;
-        tips?: string[];
-      }>;
-      testingGuide: string;
-      troubleshooting: Array<{
-        problem: string;
-        solution: string;
-      }>;
-    };
+    detailedInstructions?: any;
     opportunityId: string;
+    agentId?: string;
   } | null>(null);
+  
+  // Saved agents state
+  const [savedAgents, setSavedAgents] = useState<SavedAgent[]>([]);
+  const [isLoadingAgents, setIsLoadingAgents] = useState(true);
+  const [selectedAgent, setSelectedAgent] = useState<SavedAgent | null>(null);
+  const [agentToDelete, setAgentToDelete] = useState<SavedAgent | null>(null);
+  const [activeTab, setActiveTab] = useState<string>("analyze");
+
   useEffect(() => {
     loadJumps();
+    loadSavedAgents();
   }, []);
 
   const loadJumps = async () => {
     setIsLoadingJumps(true);
     try {
       const userJumps = await getUserJumps();
-      // Sort by creation date, newest first
-      const sortedJumps = userJumps.sort((a, b) => 
-        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-      );
-      setJumps(sortedJumps);
+      
+      // Check which jumps have existing analysis
+      if (user) {
+        const { data: analyses } = await supabase
+          .from('jump_analysis')
+          .select('jump_id')
+          .eq('user_id', user.id);
+        
+        const analysedJumpIds = new Set(analyses?.map(a => a.jump_id) || []);
+        
+        const jumpsWithAnalysis = userJumps.map(jump => ({
+          ...jump,
+          hasAnalysis: analysedJumpIds.has(jump.id),
+        }));
+        
+        // Sort by creation date, newest first
+        const sortedJumps = jumpsWithAnalysis.sort((a, b) => 
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        );
+        setJumps(sortedJumps);
+      } else {
+        const sortedJumps = userJumps.sort((a, b) => 
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        );
+        setJumps(sortedJumps);
+      }
     } catch (error) {
       console.error("Error loading jumps:", error);
       toast.error("Failed to load your jumps");
@@ -100,21 +168,85 @@ export default function Implementation() {
     }
   };
 
-  const handleSelectJump = (jump: UserJump) => {
-    setSelectedJump(jump);
-    setAnalysisResult(null); // Clear previous analysis
+  const loadSavedAgents = async () => {
+    if (!user) return;
+    
+    setIsLoadingAgents(true);
+    try {
+      const { data, error } = await supabase
+        .from('user_agents')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+      
+      if (error) throw error;
+      setSavedAgents(data || []);
+    } catch (error) {
+      console.error("Error loading agents:", error);
+      toast.error("Failed to load your agents");
+    } finally {
+      setIsLoadingAgents(false);
+    }
   };
 
-  const handleAnalyze = async () => {
+  const handleSelectJump = async (jump: JumpWithAnalysis) => {
+    setSelectedJump(jump);
+    setAnalysisResult(null);
+    setGeneratedWorkflow(null);
+    
+    // If jump has cached analysis, fetch it
+    if (jump.hasAnalysis && user) {
+      try {
+        const { data } = await supabase
+          .from('jump_analysis')
+          .select('*')
+          .eq('user_id', user.id)
+          .eq('jump_id', jump.id)
+          .single();
+        
+        if (data) {
+          setAnalysisResult({
+            summary: data.summary,
+            overallPotential: data.overall_potential || '',
+            opportunities: data.opportunities as unknown as AgentOpportunity[],
+            analysisId: data.id,
+            cached: true,
+          });
+          toast.success("Loaded cached analysis");
+        }
+      } catch (error) {
+        console.error("Error loading cached analysis:", error);
+      }
+    }
+  };
+
+  const handleAnalyze = async (forceRefresh = false) => {
     if (!selectedJump) {
       toast.error("Please select a jump first");
       return;
     }
 
+    // If we have cached analysis and not forcing refresh, use it
+    if (analysisResult?.cached && !forceRefresh) {
+      toast.info("Analysis already loaded from cache");
+      return;
+    }
+
     setIsAnalyzing(true);
-    setAnalysisResult(null);
+    if (forceRefresh) {
+      setAnalysisResult(null);
+    }
 
     try {
+      // If forcing refresh, delete existing analysis first
+      if (forceRefresh && user && selectedJump.hasAnalysis) {
+        await supabase
+          .from('jump_analysis')
+          .delete()
+          .eq('user_id', user.id)
+          .eq('jump_id', selectedJump.id);
+      }
+
       const { data, error } = await supabase.functions.invoke("analyze-for-agents", {
         headers: await getAuthHeaders(),
         body: {
@@ -131,7 +263,17 @@ export default function Implementation() {
 
       if (data?.opportunities) {
         setAnalysisResult(data);
-        toast.success("Analysis complete! Found " + data.opportunities.length + " opportunities");
+        
+        // Update jump to show it has analysis
+        setJumps(prev => prev.map(j => 
+          j.id === selectedJump.id ? { ...j, hasAnalysis: true } : j
+        ));
+        setSelectedJump(prev => prev ? { ...prev, hasAnalysis: true } : null);
+        
+        const message = data.cached 
+          ? "Loaded " + data.opportunities.length + " opportunities from cache"
+          : "Analysis complete! Found " + data.opportunities.length + " opportunities";
+        toast.success(message);
       } else {
         throw new Error("Invalid response from analysis");
       }
@@ -159,6 +301,7 @@ export default function Implementation() {
           opportunity: {
             title: opportunity.title,
             description: opportunity.description,
+            automationTarget: opportunity.automationTarget,
             impact: opportunity.impactLevel,
             complexity: opportunity.complexityLevel,
             estimatedTimeSaved: opportunity.estimatedTimeSaved,
@@ -172,6 +315,7 @@ export default function Implementation() {
             goals: selectedJump.comprehensive_plan?.overview?.goals?.join(", ") || "",
             challenges: selectedJump.comprehensive_plan?.overview?.challenges?.join(", ") || "",
           },
+          analysisId: analysisResult?.analysisId,
         }
       });
 
@@ -184,15 +328,18 @@ export default function Implementation() {
           instructions: data.instructions,
           detailedInstructions: data.detailedInstructions,
           opportunityId: opportunity.id,
+          agentId: data.agentId,
         });
-        toast.success("Workflow generated successfully!", {
-          description: "Download your n8n workflow JSON below",
+        
+        // Refresh the agents list
+        await loadSavedAgents();
+        
+        toast.success("Workflow generated and saved!", {
+          description: "Find it in your AI Agents tab",
         });
       } else {
         throw new Error("No workflow generated");
       }
-      
-      console.log("Build agent response:", data);
     } catch (error: any) {
       console.error("Build agent error:", error);
       toast.error(error.message || "Failed to generate workflow");
@@ -201,27 +348,42 @@ export default function Implementation() {
     }
   };
 
-  const handleDownloadWorkflow = () => {
-    if (!generatedWorkflow) return;
-    
-    const blob = new Blob([JSON.stringify(generatedWorkflow.workflow, null, 2)], {
+  const handleDownloadWorkflow = (workflow: any, filename: string) => {
+    const blob = new Blob([JSON.stringify(workflow, null, 2)], {
       type: 'application/json',
     });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = generatedWorkflow.filename;
+    a.download = filename || 'workflow.json';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
     
-    toast.success("Workflow downloaded!", {
-      description: "Import this file into your n8n instance",
-    });
+    toast.success("Workflow downloaded!");
   };
 
-  const getImpactBadgeColor = (level: string) => {
+  const handleDeleteAgent = async (agent: SavedAgent) => {
+    try {
+      const { error } = await supabase
+        .from('user_agents')
+        .delete()
+        .eq('id', agent.id);
+      
+      if (error) throw error;
+      
+      setSavedAgents(prev => prev.filter(a => a.id !== agent.id));
+      setAgentToDelete(null);
+      setSelectedAgent(null);
+      toast.success("Agent deleted successfully");
+    } catch (error) {
+      console.error("Error deleting agent:", error);
+      toast.error("Failed to delete agent");
+    }
+  };
+
+  const getImpactBadgeColor = (level: string | null) => {
     switch (level) {
       case "high": return "bg-green-500/20 text-green-400 border-green-500/30";
       case "medium": return "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
@@ -230,7 +392,7 @@ export default function Implementation() {
     }
   };
 
-  const getComplexityBadgeColor = (level: string) => {
+  const getComplexityBadgeColor = (level: string | null) => {
     switch (level) {
       case "simple": return "bg-emerald-500/20 text-emerald-400 border-emerald-500/30";
       case "moderate": return "bg-orange-500/20 text-orange-400 border-orange-500/30";
@@ -248,7 +410,7 @@ export default function Implementation() {
   };
 
   return (
-    <div className="space-y-6 max-w-6xl mx-auto">
+    <div className="space-y-6 max-w-7xl mx-auto">
       {/* Header Section */}
       <div className="space-y-2">
         <div className="flex items-center gap-3">
@@ -260,475 +422,759 @@ export default function Implementation() {
               AI Agent Implementation
             </h1>
             <p className="text-muted-foreground text-sm">
-              Discover automation opportunities in your jumps
+              Analyze jumps for automation opportunities & manage your AI agents
             </p>
           </div>
         </div>
       </div>
 
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column - Jump Selection */}
-        <div className="lg:col-span-1">
-          <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-lg flex items-center gap-2">
-                <FileText className="w-4 h-4 text-primary" />
-                Select a Jump
-              </CardTitle>
-              <CardDescription>
-                Choose one of your generated jumps to analyze
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {isLoadingJumps ? (
-                <div className="flex items-center justify-center py-8">
-                  <Loader2 className="w-6 h-6 animate-spin text-primary" />
-                </div>
-              ) : jumps.length === 0 ? (
-                <div className="text-center py-8 space-y-3">
-                  <FileText className="w-10 h-10 mx-auto text-muted-foreground/50" />
-                  <p className="text-sm text-muted-foreground">
-                    No jumps found. Create a jump first in the Studio.
-                  </p>
-                  <Button variant="outline" size="sm" asChild>
-                    <a href="/dashboard/studio">Go to Studio</a>
-                  </Button>
-                </div>
-              ) : (
-                <ScrollArea className="h-[400px] pr-3">
-                  <div className="space-y-2">
-                    {jumps.map((jump, index) => (
-                      <button
-                        key={jump.id}
-                        onClick={() => handleSelectJump(jump)}
-                        className={cn(
-                          "w-full p-3 rounded-lg text-left transition-all duration-200",
-                          "border hover:border-primary/30 hover:bg-primary/5",
-                          selectedJump?.id === jump.id
-                            ? "border-primary/50 bg-primary/10"
-                            : "border-border/30 bg-background/50"
-                        )}
-                      >
-                        <div className="flex items-start gap-2">
-                          <div className={cn(
-                            "shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold",
-                            selectedJump?.id === jump.id
-                              ? "bg-primary text-primary-foreground"
-                              : "bg-muted text-muted-foreground"
-                          )}>
-                            {jumps.length - index}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <h4 className="font-medium text-sm truncate">
-                              {jump.title}
-                            </h4>
-                            <div className="flex items-center gap-2 mt-1">
-                              <Clock className="w-3 h-3 text-muted-foreground" />
-                              <span className="text-xs text-muted-foreground">
-                                {formatDate(jump.created_at)}
-                              </span>
+      {/* Main Tabs */}
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <TabsList className="grid w-full max-w-md grid-cols-2">
+          <TabsTrigger value="analyze" className="flex items-center gap-2">
+            <Sparkles className="w-4 h-4" />
+            Analyze Jumps
+          </TabsTrigger>
+          <TabsTrigger value="agents" className="flex items-center gap-2">
+            <Package className="w-4 h-4" />
+            My AI Agents
+            {savedAgents.length > 0 && (
+              <Badge variant="secondary" className="ml-1 text-xs">
+                {savedAgents.length}
+              </Badge>
+            )}
+          </TabsTrigger>
+        </TabsList>
+
+        {/* Analyze Tab */}
+        <TabsContent value="analyze" className="mt-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Left Column - Jump Selection */}
+            <div className="lg:col-span-1">
+              <Card className="border-border/50 bg-card/50 backdrop-blur-sm h-[600px] flex flex-col">
+                <CardHeader className="pb-3 shrink-0">
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <FileText className="w-4 h-4 text-primary" />
+                    Select a Jump
+                  </CardTitle>
+                  <CardDescription>
+                    Choose from your {jumps.length} generated jumps
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="flex-1 overflow-hidden p-0">
+                  {isLoadingJumps ? (
+                    <div className="flex items-center justify-center py-8">
+                      <Loader2 className="w-6 h-6 animate-spin text-primary" />
+                    </div>
+                  ) : jumps.length === 0 ? (
+                    <div className="text-center py-8 space-y-3 px-6">
+                      <FileText className="w-10 h-10 mx-auto text-muted-foreground/50" />
+                      <p className="text-sm text-muted-foreground">
+                        No jumps found. Create a jump first in the Studio.
+                      </p>
+                      <Button variant="outline" size="sm" asChild>
+                        <a href="/dashboard/studio">Go to Studio</a>
+                      </Button>
+                    </div>
+                  ) : (
+                    <ScrollArea className="h-full px-4 pb-4">
+                      <div className="space-y-2 pr-2">
+                        {jumps.map((jump, index) => (
+                          <button
+                            key={jump.id}
+                            onClick={() => handleSelectJump(jump)}
+                            className={cn(
+                              "w-full p-3 rounded-lg text-left transition-all duration-200",
+                              "border hover:border-primary/30 hover:bg-primary/5",
+                              selectedJump?.id === jump.id
+                                ? "border-primary/50 bg-primary/10"
+                                : "border-border/30 bg-background/50"
+                            )}
+                          >
+                            <div className="flex items-start gap-2">
+                              <div className={cn(
+                                "shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold",
+                                selectedJump?.id === jump.id
+                                  ? "bg-primary text-primary-foreground"
+                                  : "bg-muted text-muted-foreground"
+                              )}>
+                                {jumps.length - index}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2">
+                                  <h4 className="font-medium text-sm truncate flex-1">
+                                    {jump.title}
+                                  </h4>
+                                  {jump.hasAnalysis && (
+                                    <CheckCircle2 className="w-3.5 h-3.5 text-green-500 shrink-0" />
+                                  )}
+                                </div>
+                                <div className="flex items-center gap-2 mt-1">
+                                  <Clock className="w-3 h-3 text-muted-foreground" />
+                                  <span className="text-xs text-muted-foreground">
+                                    {formatDate(jump.created_at)}
+                                  </span>
+                                </div>
+                              </div>
+                              {selectedJump?.id === jump.id && (
+                                <Check className="w-4 h-4 text-primary shrink-0" />
+                              )}
                             </div>
-                          </div>
-                          {selectedJump?.id === jump.id && (
-                            <Check className="w-4 h-4 text-primary shrink-0" />
+                          </button>
+                        ))}
+                      </div>
+                    </ScrollArea>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Right Column - Analysis Section */}
+            <div className="lg:col-span-2 space-y-6">
+              {/* Analysis Card */}
+              <Card className="border-border/50 bg-gradient-to-br from-card/80 to-card/40 backdrop-blur-sm overflow-hidden relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent pointer-events-none" />
+                <CardHeader className="relative">
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-primary" />
+                    Agentic Implementation Analysis
+                  </CardTitle>
+                  <CardDescription className="text-sm leading-relaxed">
+                    Our AI analyzes your jump to identify <strong className="text-foreground">automation opportunities</strong> using personalized AI agents.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="relative">
+                  {selectedJump ? (
+                    <div className="space-y-4">
+                      <div className="p-4 rounded-lg bg-background/50 border border-border/30">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Target className="w-4 h-4 text-primary" />
+                          <span className="text-sm font-medium">Selected Jump</span>
+                          {analysisResult?.cached && (
+                            <Badge variant="secondary" className="text-xs">Cached</Badge>
                           )}
                         </div>
-                      </button>
-                    ))}
-                  </div>
-                </ScrollArea>
-              )}
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Right Column - Analysis Section */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* Analysis Card */}
-          <Card className="border-border/50 bg-gradient-to-br from-card/80 to-card/40 backdrop-blur-sm overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent pointer-events-none" />
-            <CardHeader className="relative">
-              <CardTitle className="text-lg flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-primary" />
-                Agentic Implementation Analysis
-              </CardTitle>
-              <CardDescription className="text-sm leading-relaxed">
-                Our AI will analyze your selected jump across all phases and steps to identify 
-                the <strong className="text-foreground">best opportunities for automation</strong> using 
-                personalized AI agents. We'll find tasks that can be streamlined, workflows that 
-                can run autonomously, and steps where intelligent automation can save you significant time.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="relative">
-              {selectedJump ? (
-                <div className="space-y-4">
-                  <div className="p-4 rounded-lg bg-background/50 border border-border/30">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Target className="w-4 h-4 text-primary" />
-                      <span className="text-sm font-medium">Selected Jump</span>
-                    </div>
-                    <h3 className="font-semibold text-lg">{selectedJump.title}</h3>
-                    {selectedJump.summary && (
-                      <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
-                        {selectedJump.summary}
-                      </p>
-                    )}
-                  </div>
-                  
-                  <Button
-                    onClick={handleAnalyze}
-                    disabled={isAnalyzing}
-                    size="lg"
-                    className="w-full bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground font-semibold"
-                  >
-                    {isAnalyzing ? (
-                      <>
-                        <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                        Analyzing for Agent Opportunities...
-                      </>
-                    ) : (
-                      <>
-                        <Bot className="w-5 h-5 mr-2" />
-                        Analyze for Agentic Implementation
-                        <Rocket className="w-4 h-4 ml-2" />
-                      </>
-                    )}
-                  </Button>
-                </div>
-              ) : (
-                <div className="text-center py-6 space-y-3">
-                  <div className="w-16 h-16 mx-auto rounded-full bg-muted/50 flex items-center justify-center">
-                    <ChevronRight className="w-8 h-8 text-muted-foreground" />
-                  </div>
-                  <p className="text-muted-foreground">
-                    Select a jump from the list to start analysis
-                  </p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* Results Section */}
-          {analysisResult && (
-            <div className="space-y-4">
-              {/* Summary Card */}
-              <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
-                <CardContent className="pt-6">
-                  <div className="flex items-start gap-3">
-                    <div className="p-2 rounded-lg bg-primary/20">
-                      <Lightbulb className="w-5 h-5 text-primary" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold mb-1">Analysis Summary</h3>
-                      <p className="text-sm text-muted-foreground">{analysisResult.summary}</p>
-                      <div className="mt-3 flex items-center gap-2">
-                        <TrendingUp className="w-4 h-4 text-green-500" />
-                        <span className="text-sm font-medium text-green-500">
-                          {analysisResult.overallPotential}
-                        </span>
+                        <h3 className="font-semibold text-lg">{selectedJump.title}</h3>
+                        {selectedJump.summary && (
+                          <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
+                            {selectedJump.summary}
+                          </p>
+                        )}
+                      </div>
+                      
+                      <div className="flex gap-2">
+                        <Button
+                          onClick={() => handleAnalyze(false)}
+                          disabled={isAnalyzing}
+                          size="lg"
+                          className="flex-1 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground font-semibold"
+                        >
+                          {isAnalyzing ? (
+                            <>
+                              <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                              Analyzing...
+                            </>
+                          ) : analysisResult ? (
+                            <>
+                              <Check className="w-5 h-5 mr-2" />
+                              View Analysis
+                            </>
+                          ) : (
+                            <>
+                              <Bot className="w-5 h-5 mr-2" />
+                              Analyze for Agents
+                              <Rocket className="w-4 h-4 ml-2" />
+                            </>
+                          )}
+                        </Button>
+                        {analysisResult && (
+                          <Button
+                            onClick={() => handleAnalyze(true)}
+                            disabled={isAnalyzing}
+                            variant="outline"
+                            size="lg"
+                          >
+                            <RefreshCw className={cn("w-4 h-4", isAnalyzing && "animate-spin")} />
+                          </Button>
+                        )}
                       </div>
                     </div>
-                  </div>
+                  ) : (
+                    <div className="text-center py-6 space-y-3">
+                      <div className="w-16 h-16 mx-auto rounded-full bg-muted/50 flex items-center justify-center">
+                        <ChevronRight className="w-8 h-8 text-muted-foreground" />
+                      </div>
+                      <p className="text-muted-foreground">
+                        Select a jump from the list to start analysis
+                      </p>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
 
-              {/* Opportunities */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold flex items-center gap-2">
-                  <Zap className="w-5 h-5 text-primary" />
-                  Top Automation Opportunities
-                  <Badge variant="secondary" className="ml-2">
-                    {analysisResult.opportunities.length} found
-                  </Badge>
-                </h3>
-
-                <div className="grid gap-4">
-                  {analysisResult.opportunities.map((opportunity, index) => (
-                    <Card 
-                      key={opportunity.id} 
-                      className="border-border/50 bg-card/50 backdrop-blur-sm hover:border-primary/30 transition-colors"
-                    >
-                      <CardHeader className="pb-3">
-                        <div className="flex items-start justify-between gap-4">
-                          <div className="flex items-start gap-3">
-                            <div className="p-2 rounded-lg bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/20">
-                              <Bot className="w-5 h-5 text-primary" />
-                            </div>
-                            <div>
-                              <CardTitle className="text-base">
-                                {index + 1}. {opportunity.title}
-                              </CardTitle>
-                              {(opportunity.phaseNumber || opportunity.stepNumber) && (
-                                <div className="flex items-center gap-2 mt-1">
-                                  <Badge variant="outline" className="text-xs">
-                                    {opportunity.phaseNumber && `Phase ${opportunity.phaseNumber}`}
-                                    {opportunity.stepNumber && ` • Step ${opportunity.stepNumber}`}
-                                  </Badge>
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                          <div className="flex gap-2 shrink-0">
-                            <Badge className={cn("text-xs", getImpactBadgeColor(opportunity.impactLevel))}>
-                              {opportunity.impactLevel} impact
-                            </Badge>
-                            <Badge className={cn("text-xs", getComplexityBadgeColor(opportunity.complexityLevel))}>
-                              {opportunity.complexityLevel}
-                            </Badge>
-                          </div>
+              {/* Results Section */}
+              {analysisResult && (
+                <div className="space-y-4">
+                  {/* Summary Card */}
+                  <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
+                    <CardContent className="pt-6">
+                      <div className="flex items-start gap-3">
+                        <div className="p-2 rounded-lg bg-primary/20">
+                          <Lightbulb className="w-5 h-5 text-primary" />
                         </div>
-                      </CardHeader>
-                      <CardContent className="space-y-4">
-                        <p className="text-sm text-muted-foreground">
-                          {opportunity.description}
-                        </p>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          {/* Automation Target */}
-                          <div className="p-3 rounded-lg bg-background/50 border border-border/30">
-                            <div className="flex items-center gap-2 mb-2">
-                              <Workflow className="w-4 h-4 text-primary" />
-                              <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                                What Gets Automated
-                              </span>
-                            </div>
-                            <p className="text-sm">{opportunity.automationTarget}</p>
-                          </div>
-
-                          {/* Time Saved */}
-                          <div className="p-3 rounded-lg bg-background/50 border border-border/30">
-                            <div className="flex items-center gap-2 mb-2">
-                              <Clock className="w-4 h-4 text-green-500" />
-                              <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                                Estimated Time Saved
-                              </span>
-                            </div>
-                            <p className="text-sm font-semibold text-green-500">
-                              {opportunity.estimatedTimeSaved}
-                            </p>
-                          </div>
-                        </div>
-
-                        {/* Benefits */}
                         <div>
-                          <div className="flex items-center gap-2 mb-2">
-                            <Sparkles className="w-4 h-4 text-primary" />
-                            <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                              Key Benefits
+                          <h3 className="font-semibold mb-1">Analysis Summary</h3>
+                          <p className="text-sm text-muted-foreground">{analysisResult.summary}</p>
+                          <div className="mt-3 flex items-center gap-2">
+                            <TrendingUp className="w-4 h-4 text-green-500" />
+                            <span className="text-sm font-medium text-green-500">
+                              {analysisResult.overallPotential}
                             </span>
                           </div>
-                          <div className="flex flex-wrap gap-2">
-                            {opportunity.benefits.map((benefit, i) => (
-                              <Badge key={i} variant="secondary" className="text-xs">
-                                {benefit}
-                              </Badge>
-                            ))}
-                          </div>
                         </div>
+                      </div>
+                    </CardContent>
+                  </Card>
 
-                        {/* Required Tools */}
-                        <div>
-                          <div className="flex items-center gap-2 mb-2">
-                            <Wrench className="w-4 h-4 text-muted-foreground" />
-                            <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                              Tools & Technologies
-                            </span>
-                          </div>
-                          <div className="flex flex-wrap gap-2">
-                            {opportunity.requiredTools.map((tool, i) => (
-                              <Badge key={i} variant="outline" className="text-xs">
-                                {tool}
-                              </Badge>
-                            ))}
-                          </div>
-                        </div>
+                  {/* Opportunities */}
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold flex items-center gap-2">
+                      <Zap className="w-5 h-5 text-primary" />
+                      Automation Opportunities
+                      <Badge variant="secondary" className="ml-2">
+                        {analysisResult.opportunities.length} found
+                      </Badge>
+                    </h3>
 
-                        <Separator className="my-3" />
-
-                        {/* Build Button or Download Section */}
-                        {generatedWorkflow?.opportunityId === opportunity.id ? (
-                          <div className="space-y-4">
-                            {/* Success State - Download Section */}
-                            <div className="p-4 rounded-lg bg-green-500/10 border border-green-500/20">
-                              <div className="flex items-center gap-2 mb-3">
-                                <Check className="w-5 h-5 text-green-500" />
-                                <span className="font-semibold text-green-500">Workflow Generated!</span>
-                              </div>
-                              
-                              <div className="space-y-4">
-                                {/* Quick Start Summary */}
-                                {generatedWorkflow.detailedInstructions?.quickStart && (
-                                  <div className="p-3 rounded-md bg-primary/10 border border-primary/20">
-                                    <p className="text-sm font-medium text-foreground">
-                                      {generatedWorkflow.detailedInstructions.quickStart}
-                                    </p>
-                                  </div>
-                                )}
-                                
-                                {/* Download Button */}
-                                <Button 
-                                  onClick={handleDownloadWorkflow}
-                                  className="w-full bg-green-600 hover:bg-green-700"
-                                  size="lg"
-                                >
-                                  <Download className="w-5 h-5 mr-2" />
-                                  Download Your n8n Workflow
-                                </Button>
-                                
-                                <a 
-                                  href="https://n8n.io" 
-                                  target="_blank" 
-                                  rel="noopener noreferrer"
-                                  className="flex items-center justify-center gap-1.5 text-sm text-primary hover:underline py-1"
-                                >
-                                  Don't have n8n? Create your free account here
-                                  <ExternalLink className="w-3.5 h-3.5" />
-                                </a>
-                                
-                                {/* Requirements Section */}
-                                {generatedWorkflow.detailedInstructions?.requirements && generatedWorkflow.detailedInstructions.requirements.length > 0 && (
-                                  <div className="space-y-2">
-                                    <h4 className="text-sm font-semibold flex items-center gap-2">
-                                      <span className="w-5 h-5 rounded-full bg-yellow-500/20 text-yellow-500 flex items-center justify-center text-xs">!</span>
-                                      Before You Start - You'll Need:
-                                    </h4>
-                                    <ul className="space-y-1.5">
-                                      {generatedWorkflow.detailedInstructions.requirements.map((req, i) => (
-                                        <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
-                                          <Check className="w-4 h-4 text-muted-foreground shrink-0 mt-0.5" />
-                                          <span>{req}</span>
-                                        </li>
-                                      ))}
-                                    </ul>
-                                  </div>
-                                )}
-                                
-                                <Separator />
-                                
-                                {/* Detailed Steps */}
-                                {generatedWorkflow.detailedInstructions?.steps && generatedWorkflow.detailedInstructions.steps.length > 0 ? (
-                                  <div className="space-y-3">
-                                    <h4 className="text-sm font-semibold">Step-by-Step Setup Guide:</h4>
-                                    <div className="space-y-4">
-                                      {generatedWorkflow.detailedInstructions.steps.map((step, i) => (
-                                        <div key={i} className="relative pl-8">
-                                          <div className="absolute left-0 top-0 w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold">
-                                            {i + 1}
-                                          </div>
-                                          <div className="space-y-1.5">
-                                            <h5 className="font-medium text-sm">{step.title}</h5>
-                                            <p className="text-sm text-muted-foreground leading-relaxed">{step.description}</p>
-                                            {step.tips && step.tips.length > 0 && (
-                                              <div className="mt-2 p-2 rounded bg-muted/50 border border-border/50">
-                                                <p className="text-xs text-muted-foreground flex items-start gap-1.5">
-                                                  <Lightbulb className="w-3.5 h-3.5 text-yellow-500 shrink-0 mt-0.5" />
-                                                  <span><strong>Tip:</strong> {step.tips.join(' ')}</span>
-                                                </p>
-                                              </div>
-                                            )}
-                                          </div>
-                                        </div>
-                                      ))}
-                                    </div>
-                                  </div>
-                                ) : (
-                                  <div className="space-y-2">
-                                    <h4 className="text-sm font-semibold">Quick Setup Guide:</h4>
-                                    <div className="space-y-1.5">
-                                      {Object.entries(generatedWorkflow.instructions).map(([key, value]) => (
-                                        <p key={key} className="flex items-start gap-2 text-sm text-muted-foreground">
-                                          <span className="w-5 h-5 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-bold shrink-0">
-                                            {key.replace('step', '')}
-                                          </span>
-                                          <span>{value}</span>
-                                        </p>
-                                      ))}
-                                    </div>
-                                  </div>
-                                )}
-                                
-                                {/* Testing Guide */}
-                                {generatedWorkflow.detailedInstructions?.testingGuide && (
-                                  <>
-                                    <Separator />
-                                    <div className="space-y-2">
-                                      <h4 className="text-sm font-semibold flex items-center gap-2">
-                                        <Zap className="w-4 h-4 text-primary" />
-                                        How to Test Your Workflow
-                                      </h4>
-                                      <p className="text-sm text-muted-foreground leading-relaxed">
-                                        {generatedWorkflow.detailedInstructions.testingGuide}
-                                      </p>
-                                    </div>
-                                  </>
-                                )}
-                                
-                                {/* Troubleshooting */}
-                                {generatedWorkflow.detailedInstructions?.troubleshooting && generatedWorkflow.detailedInstructions.troubleshooting.length > 0 && (
-                                  <>
-                                    <Separator />
-                                    <div className="space-y-2">
-                                      <h4 className="text-sm font-semibold flex items-center gap-2">
-                                        <Wrench className="w-4 h-4 text-orange-500" />
-                                        Common Issues & Solutions
-                                      </h4>
-                                      <div className="space-y-3">
-                                        {generatedWorkflow.detailedInstructions.troubleshooting.map((item, i) => (
-                                          <div key={i} className="p-3 rounded-md bg-muted/30 border border-border/50">
-                                            <p className="text-sm font-medium text-foreground mb-1">
-                                              ❓ {item.problem}
-                                            </p>
-                                            <p className="text-sm text-muted-foreground">
-                                              ✅ {item.solution}
-                                            </p>
-                                          </div>
-                                        ))}
-                                      </div>
-                                    </div>
-                                  </>
-                                )}
-                              </div>
-                            </div>
-                            
-                            <Button 
-                              variant="outline"
-                              onClick={() => setGeneratedWorkflow(null)}
-                              className="w-full"
-                            >
-                              Generate New Workflow
-                            </Button>
-                          </div>
-                        ) : (
-                          <div className="flex justify-end">
-                            <Button 
-                              onClick={() => handleBuildAgent(opportunity)}
-                              disabled={buildingAgentId === opportunity.id}
-                              className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70"
-                            >
-                              {buildingAgentId === opportunity.id ? (
-                                <>
-                                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                  Generating Workflow...
-                                </>
-                              ) : (
-                                <>
-                                  <Rocket className="w-4 h-4 mr-2" />
-                                  Build This Agent
-                                </>
-                              )}
-                            </Button>
-                          </div>
-                        )}
-                      </CardContent>
-                    </Card>
-                  ))}
+                    <ScrollArea className="h-[500px] pr-4">
+                      <div className="space-y-4">
+                        {analysisResult.opportunities.map((opportunity, index) => (
+                          <OpportunityCard
+                            key={opportunity.id}
+                            opportunity={opportunity}
+                            index={index}
+                            isBuilding={buildingAgentId === opportunity.id}
+                            generatedWorkflow={generatedWorkflow?.opportunityId === opportunity.id ? generatedWorkflow : null}
+                            onBuild={() => handleBuildAgent(opportunity)}
+                            onDownload={handleDownloadWorkflow}
+                            onClearWorkflow={() => setGeneratedWorkflow(null)}
+                            getImpactBadgeColor={getImpactBadgeColor}
+                            getComplexityBadgeColor={getComplexityBadgeColor}
+                          />
+                        ))}
+                      </div>
+                    </ScrollArea>
+                  </div>
                 </div>
+              )}
+            </div>
+          </div>
+        </TabsContent>
+
+        {/* AI Agents Tab */}
+        <TabsContent value="agents" className="mt-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Agents List */}
+            <div className="lg:col-span-1">
+              <Card className="border-border/50 bg-card/50 backdrop-blur-sm h-[600px] flex flex-col">
+                <CardHeader className="pb-3 shrink-0">
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <Package className="w-4 h-4 text-primary" />
+                    Your AI Agents
+                  </CardTitle>
+                  <CardDescription>
+                    {savedAgents.length} agents built
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="flex-1 overflow-hidden p-0">
+                  {isLoadingAgents ? (
+                    <div className="flex items-center justify-center py-8">
+                      <Loader2 className="w-6 h-6 animate-spin text-primary" />
+                    </div>
+                  ) : savedAgents.length === 0 ? (
+                    <div className="text-center py-8 space-y-3 px-6">
+                      <Bot className="w-10 h-10 mx-auto text-muted-foreground/50" />
+                      <p className="text-sm text-muted-foreground">
+                        No agents built yet. Analyze a jump and build your first agent!
+                      </p>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        onClick={() => setActiveTab("analyze")}
+                      >
+                        Start Analyzing
+                      </Button>
+                    </div>
+                  ) : (
+                    <ScrollArea className="h-full px-4 pb-4">
+                      <div className="space-y-2 pr-2">
+                        {savedAgents.map((agent) => (
+                          <button
+                            key={agent.id}
+                            onClick={() => setSelectedAgent(agent)}
+                            className={cn(
+                              "w-full p-3 rounded-lg text-left transition-all duration-200",
+                              "border hover:border-primary/30 hover:bg-primary/5",
+                              selectedAgent?.id === agent.id
+                                ? "border-primary/50 bg-primary/10"
+                                : "border-border/30 bg-background/50"
+                            )}
+                          >
+                            <div className="flex items-start gap-2">
+                              <div className="p-1.5 rounded-md bg-primary/20 shrink-0">
+                                <Bot className="w-4 h-4 text-primary" />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <h4 className="font-medium text-sm truncate">
+                                  {agent.title}
+                                </h4>
+                                <div className="flex items-center gap-2 mt-1">
+                                  <Badge className={cn("text-xs", getImpactBadgeColor(agent.impact_level))}>
+                                    {agent.impact_level}
+                                  </Badge>
+                                  <span className="text-xs text-muted-foreground">
+                                    {formatDate(agent.created_at)}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </ScrollArea>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Agent Details */}
+            <div className="lg:col-span-2">
+              {selectedAgent ? (
+                <AgentDetailCard
+                  agent={selectedAgent}
+                  onDownload={handleDownloadWorkflow}
+                  onDelete={() => setAgentToDelete(selectedAgent)}
+                  getImpactBadgeColor={getImpactBadgeColor}
+                  getComplexityBadgeColor={getComplexityBadgeColor}
+                />
+              ) : (
+                <Card className="border-border/50 bg-card/50 backdrop-blur-sm h-[600px] flex items-center justify-center">
+                  <div className="text-center space-y-3">
+                    <div className="w-16 h-16 mx-auto rounded-full bg-muted/50 flex items-center justify-center">
+                      <Eye className="w-8 h-8 text-muted-foreground" />
+                    </div>
+                    <p className="text-muted-foreground">
+                      Select an agent to view details
+                    </p>
+                  </div>
+                </Card>
+              )}
+            </div>
+          </div>
+        </TabsContent>
+      </Tabs>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={!!agentToDelete} onOpenChange={() => setAgentToDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Agent?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete "{agentToDelete?.title}" and its workflow. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => agentToDelete && handleDeleteAgent(agentToDelete)}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
+  );
+}
+
+// Opportunity Card Component
+interface OpportunityCardProps {
+  opportunity: AgentOpportunity;
+  index: number;
+  isBuilding: boolean;
+  generatedWorkflow: any;
+  onBuild: () => void;
+  onDownload: (workflow: any, filename: string) => void;
+  onClearWorkflow: () => void;
+  getImpactBadgeColor: (level: string | null) => string;
+  getComplexityBadgeColor: (level: string | null) => string;
+}
+
+function OpportunityCard({
+  opportunity,
+  index,
+  isBuilding,
+  generatedWorkflow,
+  onBuild,
+  onDownload,
+  onClearWorkflow,
+  getImpactBadgeColor,
+  getComplexityBadgeColor,
+}: OpportunityCardProps) {
+  return (
+    <Card className="border-border/50 bg-card/50 backdrop-blur-sm hover:border-primary/30 transition-colors">
+      <CardHeader className="pb-3">
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex items-start gap-3">
+            <div className="p-2 rounded-lg bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/20">
+              <Bot className="w-5 h-5 text-primary" />
+            </div>
+            <div>
+              <CardTitle className="text-base">
+                {index + 1}. {opportunity.title}
+              </CardTitle>
+              {(opportunity.phaseNumber || opportunity.stepNumber) && (
+                <div className="flex items-center gap-2 mt-1">
+                  <Badge variant="outline" className="text-xs">
+                    {opportunity.phaseNumber && `Phase ${opportunity.phaseNumber}`}
+                    {opportunity.stepNumber && ` • Step ${opportunity.stepNumber}`}
+                  </Badge>
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="flex gap-2 shrink-0">
+            <Badge className={cn("text-xs", getImpactBadgeColor(opportunity.impactLevel))}>
+              {opportunity.impactLevel} impact
+            </Badge>
+            <Badge className={cn("text-xs", getComplexityBadgeColor(opportunity.complexityLevel))}>
+              {opportunity.complexityLevel}
+            </Badge>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <p className="text-sm text-muted-foreground">{opportunity.description}</p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="p-3 rounded-lg bg-background/50 border border-border/30">
+            <div className="flex items-center gap-2 mb-2">
+              <Workflow className="w-4 h-4 text-primary" />
+              <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                What Gets Automated
+              </span>
+            </div>
+            <p className="text-sm">{opportunity.automationTarget}</p>
+          </div>
+
+          <div className="p-3 rounded-lg bg-background/50 border border-border/30">
+            <div className="flex items-center gap-2 mb-2">
+              <Clock className="w-4 h-4 text-green-500" />
+              <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                Estimated Time Saved
+              </span>
+            </div>
+            <p className="text-sm font-semibold text-green-500">
+              {opportunity.estimatedTimeSaved}
+            </p>
+          </div>
+        </div>
+
+        <div>
+          <div className="flex items-center gap-2 mb-2">
+            <Sparkles className="w-4 h-4 text-primary" />
+            <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+              Key Benefits
+            </span>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {opportunity.benefits.map((benefit, i) => (
+              <Badge key={i} variant="secondary" className="text-xs">
+                {benefit}
+              </Badge>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <div className="flex items-center gap-2 mb-2">
+            <Wrench className="w-4 h-4 text-muted-foreground" />
+            <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+              Tools & Technologies
+            </span>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {opportunity.requiredTools.map((tool, i) => (
+              <Badge key={i} variant="outline" className="text-xs">
+                {tool}
+              </Badge>
+            ))}
+          </div>
+        </div>
+
+        <Separator className="my-3" />
+
+        {generatedWorkflow ? (
+          <div className="space-y-4">
+            <div className="p-4 rounded-lg bg-green-500/10 border border-green-500/20">
+              <div className="flex items-center gap-2 mb-3">
+                <Check className="w-5 h-5 text-green-500" />
+                <span className="font-semibold text-green-500">Workflow Generated & Saved!</span>
               </div>
+              
+              <Button 
+                onClick={() => onDownload(generatedWorkflow.workflow, generatedWorkflow.filename)}
+                className="w-full bg-green-600 hover:bg-green-700"
+                size="lg"
+              >
+                <Download className="w-5 h-5 mr-2" />
+                Download n8n Workflow
+              </Button>
+              
+              <a 
+                href="https://n8n.io" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-1.5 text-sm text-primary hover:underline py-2"
+              >
+                Don't have n8n? Create your free account here
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            </div>
+            
+            <Button 
+              variant="outline"
+              onClick={onClearWorkflow}
+              className="w-full"
+            >
+              Close
+            </Button>
+          </div>
+        ) : (
+          <div className="flex justify-end">
+            <Button 
+              onClick={onBuild}
+              disabled={isBuilding}
+              className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70"
+            >
+              {isBuilding ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Generating Workflow...
+                </>
+              ) : (
+                <>
+                  <Rocket className="w-4 h-4 mr-2" />
+                  Build This Agent
+                </>
+              )}
+            </Button>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
+// Agent Detail Card Component
+interface AgentDetailCardProps {
+  agent: SavedAgent;
+  onDownload: (workflow: any, filename: string) => void;
+  onDelete: () => void;
+  getImpactBadgeColor: (level: string | null) => string;
+  getComplexityBadgeColor: (level: string | null) => string;
+}
+
+function AgentDetailCard({
+  agent,
+  onDownload,
+  onDelete,
+  getImpactBadgeColor,
+  getComplexityBadgeColor,
+}: AgentDetailCardProps) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyWorkflow = () => {
+    navigator.clipboard.writeText(JSON.stringify(agent.workflow_json, null, 2));
+    setCopied(true);
+    toast.success("Workflow JSON copied to clipboard");
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
+      <CardHeader>
+        <div className="flex items-start justify-between">
+          <div className="flex items-start gap-3">
+            <div className="p-2.5 rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/20">
+              <Bot className="w-6 h-6 text-primary" />
+            </div>
+            <div>
+              <CardTitle className="text-xl">{agent.title}</CardTitle>
+              <div className="flex items-center gap-2 mt-2">
+                <Badge className={cn("text-xs", getImpactBadgeColor(agent.impact_level))}>
+                  {agent.impact_level} impact
+                </Badge>
+                <Badge className={cn("text-xs", getComplexityBadgeColor(agent.complexity_level))}>
+                  {agent.complexity_level}
+                </Badge>
+                <Badge variant="outline" className="text-xs">
+                  {agent.platform}
+                </Badge>
+              </div>
+            </div>
+          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <MoreVertical className="w-4 h-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={handleCopyWorkflow}>
+                <Copy className="w-4 h-4 mr-2" />
+                Copy Workflow JSON
+              </DropdownMenuItem>
+              <DropdownMenuItem 
+                onClick={onDelete}
+                className="text-destructive focus:text-destructive"
+              >
+                <Trash2 className="w-4 h-4 mr-2" />
+                Delete Agent
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        {agent.description && (
+          <p className="text-muted-foreground">{agent.description}</p>
+        )}
+
+        <div className="grid grid-cols-2 gap-4">
+          {agent.automation_target && (
+            <div className="p-3 rounded-lg bg-background/50 border border-border/30">
+              <div className="flex items-center gap-2 mb-2">
+                <Workflow className="w-4 h-4 text-primary" />
+                <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                  Automation Target
+                </span>
+              </div>
+              <p className="text-sm">{agent.automation_target}</p>
+            </div>
+          )}
+
+          {agent.estimated_time_saved && (
+            <div className="p-3 rounded-lg bg-background/50 border border-border/30">
+              <div className="flex items-center gap-2 mb-2">
+                <Clock className="w-4 h-4 text-green-500" />
+                <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                  Time Saved
+                </span>
+              </div>
+              <p className="text-sm font-semibold text-green-500">
+                {agent.estimated_time_saved}
+              </p>
             </div>
           )}
         </div>
-      </div>
-    </div>
+
+        {agent.benefits && agent.benefits.length > 0 && (
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <Sparkles className="w-4 h-4 text-primary" />
+              <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                Benefits
+              </span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {agent.benefits.map((benefit, i) => (
+                <Badge key={i} variant="secondary" className="text-xs">
+                  {benefit}
+                </Badge>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {agent.required_tools && agent.required_tools.length > 0 && (
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <Wrench className="w-4 h-4 text-muted-foreground" />
+              <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                Required Tools
+              </span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {agent.required_tools.map((tool, i) => (
+                <Badge key={i} variant="outline" className="text-xs">
+                  {tool}
+                </Badge>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <Separator />
+
+        {/* Setup Instructions */}
+        {agent.detailed_instructions && (
+          <div className="space-y-4">
+            <h4 className="font-semibold flex items-center gap-2">
+              <FileText className="w-4 h-4 text-primary" />
+              Setup Instructions
+            </h4>
+            
+            {agent.detailed_instructions.quickStart && (
+              <div className="p-3 rounded-md bg-primary/10 border border-primary/20">
+                <p className="text-sm font-medium">{agent.detailed_instructions.quickStart}</p>
+              </div>
+            )}
+
+            {agent.detailed_instructions.requirements?.length > 0 && (
+              <div className="space-y-2">
+                <h5 className="text-sm font-medium flex items-center gap-2">
+                  <span className="w-5 h-5 rounded-full bg-yellow-500/20 text-yellow-500 flex items-center justify-center text-xs">!</span>
+                  Requirements
+                </h5>
+                <ul className="space-y-1.5">
+                  {agent.detailed_instructions.requirements.map((req: string, i: number) => (
+                    <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+                      <Check className="w-4 h-4 text-muted-foreground shrink-0 mt-0.5" />
+                      <span>{req}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        )}
+
+        <Separator />
+
+        {/* Download Section */}
+        <div className="space-y-3">
+          <Button 
+            onClick={() => onDownload(agent.workflow_json, agent.workflow_filename || 'workflow.json')}
+            className="w-full bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70"
+            size="lg"
+          >
+            <Download className="w-5 h-5 mr-2" />
+            Download n8n Workflow
+          </Button>
+          
+          <a 
+            href="https://n8n.io" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-1.5 text-sm text-primary hover:underline"
+          >
+            Don't have n8n? Create your free account here
+            <ExternalLink className="w-3.5 h-3.5" />
+          </a>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
