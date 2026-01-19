@@ -155,7 +155,7 @@ export default function Pricing() {
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent/5 to-transparent blur-2xl"></div>
                 <p className="relative text-base sm:text-lg md:text-xl text-muted-foreground/90 mb-8 sm:mb-12 max-w-4xl mx-auto leading-relaxed font-light">
                   Transform your vision into reality with our AI-powered JumpinAI Studio. 
-                  Start creating comprehensive transformation plans today.
+                  Start creating comprehensive transformation plans today. <span className="font-medium text-foreground">1 credit = 1 Jump or 1 AI Agent build.</span>
                 </p>
               </div>
             </div>

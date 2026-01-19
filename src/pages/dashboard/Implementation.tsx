@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { useCredits } from "@/hooks/useCredits";
 import { getUserJumps, UserJump } from "@/services/jumpService";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth0Token } from "@/hooks/useAuth0Token";
@@ -90,6 +91,7 @@ interface JumpWithAnalysis extends UserJump {
 
 export default function Implementation() {
   const { user } = useAuth();
+  const { hasCredits, fetchCredits } = useCredits();
   const { getAuthHeaders } = useAuth0Token();
   const [searchParams] = useSearchParams();
   const [jumps, setJumps] = useState<JumpWithAnalysis[]>([]);
@@ -277,12 +279,36 @@ export default function Implementation() {
     }
   };
 
+  // Credit confirmation state for agent builds
+  const [showCreditConfirmDialog, setShowCreditConfirmDialog] = useState(false);
+  const [pendingBuildOpportunity, setPendingBuildOpportunity] = useState<AgentOpportunity | null>(null);
+
   const handleBuildAgent = async (opportunity: AgentOpportunity) => {
     if (!selectedJump || !user) {
       toast.error("Please ensure you're logged in and have selected a jump");
       return;
     }
 
+    // Check if user has credits
+    if (!hasCredits()) {
+      toast.error("Insufficient credits", {
+        description: "You need at least 1 credit to build an AI agent. Please purchase more credits.",
+      });
+      return;
+    }
+
+    // Show confirmation dialog
+    setPendingBuildOpportunity(opportunity);
+    setShowCreditConfirmDialog(true);
+  };
+
+  const confirmBuildAgent = async () => {
+    if (!pendingBuildOpportunity || !selectedJump) return;
+    
+    const opportunity = pendingBuildOpportunity;
+    setShowCreditConfirmDialog(false);
+    setPendingBuildOpportunity(null);
+    
     setBuildingAgentId(opportunity.id);
     setGeneratedWorkflow(null);
 
@@ -323,18 +349,25 @@ export default function Implementation() {
           agentId: data.agentId,
         });
         
-        // Refresh the agents list
-        await loadSavedAgents();
+        // Refresh the agents list and credits balance
+        await Promise.all([loadSavedAgents(), fetchCredits()]);
         
-        toast.success("Workflow generated and saved!", {
-          description: "Find it in your AI Agents tab",
+        toast.success("AI Agent built successfully!", {
+          description: "1 credit used. Find it in your AI Agents tab.",
         });
       } else {
         throw new Error("No workflow generated");
       }
     } catch (error: any) {
       console.error("Build agent error:", error);
-      toast.error(error.message || "Failed to generate workflow");
+      // Handle specific error cases
+      if (error.message?.includes('Insufficient credits')) {
+        toast.error("Insufficient credits", {
+          description: "You need at least 1 credit to build an AI agent.",
+        });
+      } else {
+        toast.error(error.message || "Failed to generate workflow");
+      }
     } finally {
       setBuildingAgentId(null);
     }
@@ -725,6 +758,34 @@ export default function Implementation() {
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Credit Confirmation Dialog for Agent Builds */}
+      <AlertDialog open={showCreditConfirmDialog} onOpenChange={setShowCreditConfirmDialog}>
+        <AlertDialogContent className="border-border/50 bg-card">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <Zap className="w-5 h-5 text-primary" />
+              Confirm AI Agent Build
+            </AlertDialogTitle>
+            <AlertDialogDescription className="space-y-2">
+              <p>Building this AI agent will use <span className="font-semibold text-foreground">1 credit</span>.</p>
+              {pendingBuildOpportunity && (
+                <p className="text-sm">Agent: <span className="font-medium text-foreground">{pendingBuildOpportunity.title}</span></p>
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="border-border/50">Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmBuildAgent}
+              className="bg-primary text-primary-foreground hover:bg-primary/90"
+            >
+              <Zap className="w-4 h-4 mr-1" />
+              Use 1 Credit & Build
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

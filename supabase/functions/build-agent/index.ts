@@ -65,6 +65,31 @@ Deno.serve(async (req) => {
 
     console.log('Generating n8n workflow for:', opportunity.title);
 
+    // Check and deduct credit BEFORE generation
+    const { data: creditDeducted, error: creditError } = await supabase
+      .rpc('deduct_user_credit', {
+        p_user_id: user.id,
+        p_description: 'AI Agent build: ' + opportunity.title,
+        p_reference_id: jump.id
+      });
+
+    if (creditError) {
+      console.error('Credit deduction error:', creditError);
+      return new Response(
+        JSON.stringify({ error: 'Failed to process credit', details: creditError.message }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    if (!creditDeducted) {
+      return new Response(
+        JSON.stringify({ error: 'Insufficient credits', message: 'You need at least 1 credit to build an AI agent. Please purchase more credits.' }),
+        { status: 402, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    console.log('Credit deducted successfully for user:', user.id);
+
     // Generate n8n workflow using xAI
     const systemPrompt = `You are an expert n8n workflow builder. Your task is to generate complete, valid, importable n8n workflow JSON files.
 
