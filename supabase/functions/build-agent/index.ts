@@ -227,15 +227,107 @@ Return ONLY the JSON workflow - no explanations, no markdown code blocks.`;
     }
     workflowJson = workflowJson.trim();
 
-    // Validate it's proper JSON
-    let parsedWorkflow;
-    try {
-      parsedWorkflow = JSON.parse(workflowJson);
-    } catch (parseError) {
-      console.error('JSON parse error:', parseError);
-      console.error('Raw content:', workflowJson.substring(0, 500));
+    // Robust JSON parsing with salvage attempts
+    const salvageWorkflowJson = (raw: string): any => {
+      // First, try direct parse
+      try {
+        return JSON.parse(raw);
+      } catch (e) {
+        console.log('Direct parse failed, attempting salvage...');
+      }
+
+      // Try to find JSON object boundaries
+      const start = raw.indexOf('{');
+      if (start < 0) return null;
+
+      // Find the last valid closing brace by trying progressively
+      let lastValidEnd = -1;
+      let lastValidParsed = null;
+
+      for (let i = raw.length - 1; i > start; i--) {
+        if (raw[i] === '}') {
+          const attempt = raw.slice(start, i + 1);
+          try {
+            const parsed = JSON.parse(attempt);
+            if (parsed && typeof parsed === 'object') {
+              lastValidEnd = i;
+              lastValidParsed = parsed;
+              break;
+            }
+          } catch {
+            // Continue searching for an earlier valid end
+          }
+        }
+      }
+
+      if (lastValidParsed) {
+        console.log(`Salvaged JSON from position ${start} to ${lastValidEnd}`);
+        return lastValidParsed;
+      }
+
+      // Try to fix common truncation issues - close unclosed structures
+      let fixed = raw.slice(start);
+      
+      // Count unclosed brackets/braces
+      let braces = 0, brackets = 0;
+      let inString = false;
+      let escapeNext = false;
+      
+      for (const char of fixed) {
+        if (escapeNext) {
+          escapeNext = false;
+          continue;
+        }
+        if (char === '\\') {
+          escapeNext = true;
+          continue;
+        }
+        if (char === '"') {
+          inString = !inString;
+          continue;
+        }
+        if (!inString) {
+          if (char === '{') braces++;
+          else if (char === '}') braces--;
+          else if (char === '[') brackets++;
+          else if (char === ']') brackets--;
+        }
+      }
+
+      // Close any unclosed strings (if we ended inside a string)
+      if (inString) {
+        fixed += '"';
+      }
+
+      // Close unclosed brackets and braces
+      while (brackets > 0) {
+        fixed += ']';
+        brackets--;
+      }
+      while (braces > 0) {
+        fixed += '}';
+        braces--;
+      }
+
+      try {
+        const parsed = JSON.parse(fixed);
+        console.log('Fixed truncated JSON by closing structures');
+        return parsed;
+      } catch {
+        return null;
+      }
+    };
+
+    let parsedWorkflow = salvageWorkflowJson(workflowJson);
+    
+    if (!parsedWorkflow) {
+      console.error('JSON parse error - all salvage attempts failed');
+      console.error('Raw content (first 500 chars):', workflowJson.substring(0, 500));
+      console.error('Raw content (last 200 chars):', workflowJson.substring(workflowJson.length - 200));
       throw new Error('Failed to generate valid workflow JSON');
     }
+    
+    console.log('Successfully parsed workflow JSON');
 
     // Ensure the workflow has a proper name
     if (!parsedWorkflow.name) {
