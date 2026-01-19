@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { getUserJumps, UserJump } from "@/services/jumpService";
 import { supabase } from "@/integrations/supabase/client";
@@ -90,6 +91,7 @@ interface JumpWithAnalysis extends UserJump {
 export default function Implementation() {
   const { user } = useAuth();
   const { getAuthHeaders } = useAuth0Token();
+  const [searchParams] = useSearchParams();
   const [jumps, setJumps] = useState<JumpWithAnalysis[]>([]);
   const [selectedJump, setSelectedJump] = useState<JumpWithAnalysis | null>(null);
   const [isLoadingJumps, setIsLoadingJumps] = useState(true);
@@ -110,7 +112,10 @@ export default function Implementation() {
   const [isLoadingAgents, setIsLoadingAgents] = useState(true);
   const [selectedAgent, setSelectedAgent] = useState<SavedAgent | null>(null);
   const [agentToDelete, setAgentToDelete] = useState<SavedAgent | null>(null);
-  const [activeTab, setActiveTab] = useState<string>("analyze");
+  
+  // Read tab from URL params, default to "analyze"
+  const tabFromUrl = searchParams.get('tab');
+  const [activeTab, setActiveTab] = useState<string>(tabFromUrl === 'agents' ? 'agents' : 'analyze');
 
   useEffect(() => {
     loadJumps();

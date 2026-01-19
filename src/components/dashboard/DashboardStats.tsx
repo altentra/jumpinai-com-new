@@ -77,7 +77,7 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({ stats, isLoading
       icon: Bot,
       color: 'text-indigo-500',
       bgColor: 'bg-indigo-500/10',
-      path: '/dashboard/implementation',
+      path: '/dashboard/implementation?tab=agents',
     },
   ];
 
