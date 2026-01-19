@@ -57,7 +57,7 @@ export function AgentListCard({
 }: AgentListCardProps) {
   return (
     <Card className={cn(
-      "h-[500px] flex flex-col",
+      "h-[280px] lg:h-[500px] flex flex-col",
       "border-border/40",
       "bg-gradient-to-br from-card via-card/95 to-card/90"
     )}>
