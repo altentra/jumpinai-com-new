@@ -64,7 +64,7 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({ stats, isLoading
       path: '/dashboard/jumps',
     },
     {
-      title: 'Analyzed',
+      title: 'Analyzed Jumps',
       value: stats.totalAnalyzedJumps,
       icon: Search,
       color: 'text-pink-500',
