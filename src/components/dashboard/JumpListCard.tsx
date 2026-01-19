@@ -115,7 +115,9 @@ export default function JumpListCard({ jump, jumpNumber, onView, onDelete }: Jum
             reroutes_count: jump.reroutes_count,
             tools_clicked_count: jump.tools_clicked_count,
             prompts_copied_count: jump.prompts_copied_count,
-            combos_used_count: jump.combos_used_count
+            combos_used_count: jump.combos_used_count,
+            is_analyzed: (jump as any).is_analyzed,
+            agents_count: (jump as any).agents_count
           }} />
         </div>
       </div>
