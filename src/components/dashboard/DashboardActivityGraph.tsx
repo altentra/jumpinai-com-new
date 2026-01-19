@@ -34,7 +34,10 @@ export const DashboardActivityGraph: React.FC<DashboardActivityGraphProps> = ({ 
   const totalComponents = data.reduce((sum, item) => sum + item.components, 0);
   const totalClarifications = data.reduce((sum, item) => sum + item.clarifications, 0);
   const totalReroutes = data.reduce((sum, item) => sum + item.reroutes, 0);
-  const totalItems = totalJumps + totalComponents + totalClarifications + totalReroutes;
+  const totalAlternativeRoutes = data.reduce((sum, item) => sum + item.alternativeRoutes, 0);
+  const totalAnalyzedJumps = data.reduce((sum, item) => sum + item.analyzedJumps, 0);
+  const totalAiAgents = data.reduce((sum, item) => sum + item.aiAgents, 0);
+  const totalItems = totalJumps + totalComponents + totalClarifications + totalReroutes + totalAlternativeRoutes + totalAnalyzedJumps + totalAiAgents;
 
   const chartConfig = {
     jumps: {
@@ -52,6 +55,18 @@ export const DashboardActivityGraph: React.FC<DashboardActivityGraphProps> = ({ 
     reroutes: {
       label: "Reroutes",
       color: "hsl(262, 83%, 58%)",
+    },
+    alternativeRoutes: {
+      label: "Alt. Routes",
+      color: "hsl(187, 85%, 53%)",
+    },
+    analyzedJumps: {
+      label: "Analyzed",
+      color: "hsl(330, 81%, 60%)",
+    },
+    aiAgents: {
+      label: "AI Agents",
+      color: "hsl(239, 84%, 67%)",
     },
   };
 
@@ -92,7 +107,7 @@ export const DashboardActivityGraph: React.FC<DashboardActivityGraphProps> = ({ 
       </CardHeader>
       
       <CardContent className="relative pb-4 sm:pb-8 px-2 sm:px-6">
-        <ChartContainer config={chartConfig} className="h-[240px] sm:h-[300px] md:h-[340px] w-full">
+        <ChartContainer config={chartConfig} className="h-[280px] sm:h-[340px] md:h-[380px] w-full">
           <AreaChart 
             data={data} 
             margin={{ top: 20, right: 20, left: -20, bottom: 0 }}
@@ -100,30 +115,51 @@ export const DashboardActivityGraph: React.FC<DashboardActivityGraphProps> = ({ 
             <defs>
               {/* Gradient for jumps - green */}
               <linearGradient id="jumpsGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="hsl(142, 76%, 36%)" stopOpacity={0.6} />
-                <stop offset="40%" stopColor="hsl(142, 76%, 36%)" stopOpacity={0.3} />
+                <stop offset="0%" stopColor="hsl(142, 76%, 36%)" stopOpacity={0.5} />
+                <stop offset="40%" stopColor="hsl(142, 76%, 36%)" stopOpacity={0.25} />
                 <stop offset="100%" stopColor="hsl(142, 76%, 36%)" stopOpacity={0.02} />
               </linearGradient>
               
               {/* Gradient for components - blue */}
               <linearGradient id="componentsGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="hsl(210, 100%, 60%)" stopOpacity={0.6} />
-                <stop offset="40%" stopColor="hsl(210, 100%, 60%)" stopOpacity={0.3} />
+                <stop offset="0%" stopColor="hsl(210, 100%, 60%)" stopOpacity={0.5} />
+                <stop offset="40%" stopColor="hsl(210, 100%, 60%)" stopOpacity={0.25} />
                 <stop offset="100%" stopColor="hsl(210, 100%, 60%)" stopOpacity={0.02} />
               </linearGradient>
 
               {/* Gradient for clarifications - orange */}
               <linearGradient id="clarificationsGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="hsl(25, 95%, 53%)" stopOpacity={0.6} />
-                <stop offset="40%" stopColor="hsl(25, 95%, 53%)" stopOpacity={0.3} />
+                <stop offset="0%" stopColor="hsl(25, 95%, 53%)" stopOpacity={0.5} />
+                <stop offset="40%" stopColor="hsl(25, 95%, 53%)" stopOpacity={0.25} />
                 <stop offset="100%" stopColor="hsl(25, 95%, 53%)" stopOpacity={0.02} />
               </linearGradient>
 
               {/* Gradient for reroutes - purple */}
               <linearGradient id="reroutesGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="hsl(262, 83%, 58%)" stopOpacity={0.6} />
-                <stop offset="40%" stopColor="hsl(262, 83%, 58%)" stopOpacity={0.3} />
+                <stop offset="0%" stopColor="hsl(262, 83%, 58%)" stopOpacity={0.5} />
+                <stop offset="40%" stopColor="hsl(262, 83%, 58%)" stopOpacity={0.25} />
                 <stop offset="100%" stopColor="hsl(262, 83%, 58%)" stopOpacity={0.02} />
+              </linearGradient>
+
+              {/* Gradient for alternative routes - cyan */}
+              <linearGradient id="alternativeRoutesGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="hsl(187, 85%, 53%)" stopOpacity={0.5} />
+                <stop offset="40%" stopColor="hsl(187, 85%, 53%)" stopOpacity={0.25} />
+                <stop offset="100%" stopColor="hsl(187, 85%, 53%)" stopOpacity={0.02} />
+              </linearGradient>
+
+              {/* Gradient for analyzed jumps - pink */}
+              <linearGradient id="analyzedJumpsGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="hsl(330, 81%, 60%)" stopOpacity={0.5} />
+                <stop offset="40%" stopColor="hsl(330, 81%, 60%)" stopOpacity={0.25} />
+                <stop offset="100%" stopColor="hsl(330, 81%, 60%)" stopOpacity={0.02} />
+              </linearGradient>
+
+              {/* Gradient for AI agents - indigo */}
+              <linearGradient id="aiAgentsGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="hsl(239, 84%, 67%)" stopOpacity={0.5} />
+                <stop offset="40%" stopColor="hsl(239, 84%, 67%)" stopOpacity={0.25} />
+                <stop offset="100%" stopColor="hsl(239, 84%, 67%)" stopOpacity={0.02} />
               </linearGradient>
 
               {/* Subtle glow effect */}
@@ -177,7 +213,64 @@ export const DashboardActivityGraph: React.FC<DashboardActivityGraphProps> = ({ 
               iconType="circle"
             />
             
-            {/* Reroutes area (back layer) */}
+            {/* AI Agents area (back layer) - indigo */}
+            <Area
+              type="monotone"
+              dataKey="aiAgents"
+              stroke="hsl(239, 84%, 67%)"
+              strokeWidth={2}
+              fill="url(#aiAgentsGradient)"
+              dot={false}
+              activeDot={{ 
+                r: 4, 
+                strokeWidth: 2,
+                stroke: 'hsl(var(--background))',
+                fill: 'hsl(239, 84%, 67%)',
+                filter: 'url(#softGlow)'
+              }}
+              animationDuration={1500}
+              animationEasing="ease-in-out"
+            />
+
+            {/* Analyzed jumps area - pink */}
+            <Area
+              type="monotone"
+              dataKey="analyzedJumps"
+              stroke="hsl(330, 81%, 60%)"
+              strokeWidth={2}
+              fill="url(#analyzedJumpsGradient)"
+              dot={false}
+              activeDot={{ 
+                r: 4, 
+                strokeWidth: 2,
+                stroke: 'hsl(var(--background))',
+                fill: 'hsl(330, 81%, 60%)',
+                filter: 'url(#softGlow)'
+              }}
+              animationDuration={1500}
+              animationEasing="ease-in-out"
+            />
+
+            {/* Alternative routes area - cyan */}
+            <Area
+              type="monotone"
+              dataKey="alternativeRoutes"
+              stroke="hsl(187, 85%, 53%)"
+              strokeWidth={2}
+              fill="url(#alternativeRoutesGradient)"
+              dot={false}
+              activeDot={{ 
+                r: 4, 
+                strokeWidth: 2,
+                stroke: 'hsl(var(--background))',
+                fill: 'hsl(187, 85%, 53%)',
+                filter: 'url(#softGlow)'
+              }}
+              animationDuration={1500}
+              animationEasing="ease-in-out"
+            />
+            
+            {/* Reroutes area - purple */}
             <Area
               type="monotone"
               dataKey="reroutes"
@@ -186,7 +279,7 @@ export const DashboardActivityGraph: React.FC<DashboardActivityGraphProps> = ({ 
               fill="url(#reroutesGradient)"
               dot={false}
               activeDot={{ 
-                r: 5, 
+                r: 4, 
                 strokeWidth: 2,
                 stroke: 'hsl(var(--background))',
                 fill: 'hsl(262, 83%, 58%)',
@@ -196,7 +289,7 @@ export const DashboardActivityGraph: React.FC<DashboardActivityGraphProps> = ({ 
               animationEasing="ease-in-out"
             />
 
-            {/* Clarifications area */}
+            {/* Clarifications area - orange */}
             <Area
               type="monotone"
               dataKey="clarifications"
@@ -205,7 +298,7 @@ export const DashboardActivityGraph: React.FC<DashboardActivityGraphProps> = ({ 
               fill="url(#clarificationsGradient)"
               dot={false}
               activeDot={{ 
-                r: 5, 
+                r: 4, 
                 strokeWidth: 2,
                 stroke: 'hsl(var(--background))',
                 fill: 'hsl(25, 95%, 53%)',
@@ -215,7 +308,7 @@ export const DashboardActivityGraph: React.FC<DashboardActivityGraphProps> = ({ 
               animationEasing="ease-in-out"
             />
             
-            {/* Components area */}
+            {/* Components area - blue */}
             <Area
               type="monotone"
               dataKey="components"
@@ -224,7 +317,7 @@ export const DashboardActivityGraph: React.FC<DashboardActivityGraphProps> = ({ 
               fill="url(#componentsGradient)"
               dot={false}
               activeDot={{ 
-                r: 5, 
+                r: 4, 
                 strokeWidth: 2,
                 stroke: 'hsl(var(--background))',
                 fill: 'hsl(210, 100%, 60%)',
@@ -234,7 +327,7 @@ export const DashboardActivityGraph: React.FC<DashboardActivityGraphProps> = ({ 
               animationEasing="ease-in-out"
             />
             
-            {/* Jumps area (front layer) */}
+            {/* Jumps area (front layer) - green */}
             <Area
               type="monotone"
               dataKey="jumps"
@@ -243,7 +336,7 @@ export const DashboardActivityGraph: React.FC<DashboardActivityGraphProps> = ({ 
               fill="url(#jumpsGradient)"
               dot={false}
               activeDot={{ 
-                r: 5, 
+                r: 4, 
                 strokeWidth: 2,
                 stroke: 'hsl(var(--background))',
                 fill: 'hsl(142, 76%, 36%)',
@@ -256,8 +349,8 @@ export const DashboardActivityGraph: React.FC<DashboardActivityGraphProps> = ({ 
         </ChartContainer>
       </CardContent>
       
-      {/* Bottom accent line */}
-      <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-green-500/50 via-blue-500/50 via-orange-500/50 to-purple-500/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      {/* Bottom accent line with all colors */}
+      <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-green-500/50 via-blue-500/50 via-cyan-500/50 via-pink-500/50 to-indigo-500/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
     </Card>
   );
 };

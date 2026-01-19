@@ -153,3 +153,21 @@ export const trackComboUsage = async (jumpId: string): Promise<void> => {
     console.error('Error tracking combo usage:', error);
   }
 };
+
+// Track alternative route generation
+export const trackAlternativeRoute = async (jumpId: string, userId: string): Promise<void> => {
+  try {
+    // Insert into user_jump_actions for activity tracking
+    await supabase
+      .from('user_jump_actions')
+      .insert({
+        user_id: userId,
+        jump_id: jumpId,
+        action_type: 'alternative_route'
+      });
+
+    console.log(`✅ Tracked alternative route generation for jump ${jumpId}`);
+  } catch (error) {
+    console.error('Error tracking alternative route:', error);
+  }
+};

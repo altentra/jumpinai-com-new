@@ -8,6 +8,9 @@ export interface DashboardStats {
   implementedToolPrompts: number;
   totalClarifications: number;
   totalReroutes: number;
+  totalAlternativeRoutes: number;
+  totalAnalyzedJumps: number;
+  totalAiAgents: number;
 }
 
 export interface ActivityData {
@@ -16,6 +19,9 @@ export interface ActivityData {
   components: number;
   clarifications: number;
   reroutes: number;
+  alternativeRoutes: number;
+  analyzedJumps: number;
+  aiAgents: number;
   total: number;
 }
 
@@ -55,6 +61,25 @@ export const dashboardStatsService = {
         .eq('user_id', userId)
         .eq('action_type', 'reroute') as any;
 
+      // Get alternative routes count
+      const { data: alternativeRoutesData } = await supabase
+        .from('user_jump_actions')
+        .select('id')
+        .eq('user_id', userId)
+        .eq('action_type', 'alternative_route') as any;
+
+      // Get analyzed jumps count
+      const { data: analyzedJumpsData } = await supabase
+        .from('jump_analysis')
+        .select('id')
+        .eq('user_id', userId) as any;
+
+      // Get AI agents count
+      const { data: aiAgentsData } = await supabase
+        .from('user_agents')
+        .select('id')
+        .eq('user_id', userId) as any;
+
       return {
         credits: creditsData?.credits_balance || 0,
         totalJumps: jumpsData?.length || 0,
@@ -63,6 +88,9 @@ export const dashboardStatsService = {
         implementedToolPrompts: toolPromptsData?.filter((tp: any) => tp.implemented).length || 0,
         totalClarifications: clarificationsData?.length || 0,
         totalReroutes: reroutesData?.length || 0,
+        totalAlternativeRoutes: alternativeRoutesData?.length || 0,
+        totalAnalyzedJumps: analyzedJumpsData?.length || 0,
+        totalAiAgents: aiAgentsData?.length || 0,
       };
     } catch (error) {
       console.error('Error fetching dashboard stats:', error);
@@ -74,6 +102,9 @@ export const dashboardStatsService = {
         implementedToolPrompts: 0,
         totalClarifications: 0,
         totalReroutes: 0,
+        totalAlternativeRoutes: 0,
+        totalAnalyzedJumps: 0,
+        totalAiAgents: 0,
       };
     }
   },
@@ -84,21 +115,24 @@ export const dashboardStatsService = {
       startDate.setDate(startDate.getDate() - days);
 
       // Fetch all data with created_at timestamps
-      const [jumpsRes, toolPromptsRes, clarificationsRes, reroutesRes] = await Promise.all([
+      const [jumpsRes, toolPromptsRes, clarificationsRes, reroutesRes, alternativeRoutesRes, analyzedJumpsRes, aiAgentsRes] = await Promise.all([
         supabase.from('user_jumps').select('created_at').eq('user_id', userId).gte('created_at', startDate.toISOString()),
         supabase.from('user_tool_prompts').select('created_at').eq('user_id', userId).gte('created_at', startDate.toISOString()),
         supabase.from('user_jump_actions').select('created_at').eq('user_id', userId).eq('action_type', 'clarify').gte('created_at', startDate.toISOString()),
         supabase.from('user_jump_actions').select('created_at').eq('user_id', userId).eq('action_type', 'reroute').gte('created_at', startDate.toISOString()),
+        supabase.from('user_jump_actions').select('created_at').eq('user_id', userId).eq('action_type', 'alternative_route').gte('created_at', startDate.toISOString()),
+        supabase.from('jump_analysis').select('created_at').eq('user_id', userId).gte('created_at', startDate.toISOString()),
+        supabase.from('user_agents').select('created_at').eq('user_id', userId).gte('created_at', startDate.toISOString()),
       ]);
 
       // Create a map for all dates in range
-      const dateMap = new Map<string, { jumps: number; components: number; clarifications: number; reroutes: number }>();
+      const dateMap = new Map<string, { jumps: number; components: number; clarifications: number; reroutes: number; alternativeRoutes: number; analyzedJumps: number; aiAgents: number }>();
       
       for (let i = 0; i < days; i++) {
         const date = new Date();
         date.setDate(date.getDate() - i);
         const dateKey = date.toISOString().split('T')[0];
-        dateMap.set(dateKey, { jumps: 0, components: 0, clarifications: 0, reroutes: 0 });
+        dateMap.set(dateKey, { jumps: 0, components: 0, clarifications: 0, reroutes: 0, alternativeRoutes: 0, analyzedJumps: 0, aiAgents: 0 });
       }
 
       // Count jumps per day
@@ -133,6 +167,30 @@ export const dashboardStatsService = {
         }
       });
 
+      // Count alternative routes per day
+      alternativeRoutesRes.data?.forEach(item => {
+        const dateKey = new Date(item.created_at).toISOString().split('T')[0];
+        if (dateMap.has(dateKey)) {
+          dateMap.get(dateKey)!.alternativeRoutes += 1;
+        }
+      });
+
+      // Count analyzed jumps per day
+      analyzedJumpsRes.data?.forEach(item => {
+        const dateKey = new Date(item.created_at).toISOString().split('T')[0];
+        if (dateMap.has(dateKey)) {
+          dateMap.get(dateKey)!.analyzedJumps += 1;
+        }
+      });
+
+      // Count AI agents per day
+      aiAgentsRes.data?.forEach(item => {
+        const dateKey = new Date(item.created_at).toISOString().split('T')[0];
+        if (dateMap.has(dateKey)) {
+          dateMap.get(dateKey)!.aiAgents += 1;
+        }
+      });
+
       // Convert to array and sort by date
       const activityData: ActivityData[] = Array.from(dateMap.entries())
         .map(([date, counts]) => ({
@@ -141,7 +199,10 @@ export const dashboardStatsService = {
           components: counts.components,
           clarifications: counts.clarifications,
           reroutes: counts.reroutes,
-          total: counts.jumps + counts.components + counts.clarifications + counts.reroutes,
+          alternativeRoutes: counts.alternativeRoutes,
+          analyzedJumps: counts.analyzedJumps,
+          aiAgents: counts.aiAgents,
+          total: counts.jumps + counts.components + counts.clarifications + counts.reroutes + counts.alternativeRoutes + counts.analyzedJumps + counts.aiAgents,
         }))
         .sort((a, b) => a.date.localeCompare(b.date));
 
