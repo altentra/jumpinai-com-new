@@ -272,12 +272,35 @@ Return ONLY the JSON object, no markdown.`;
       }),
     });
 
-    let detailedInstructions = null;
-    
+    let detailedInstructions: any = null;
+    let instructionsContent = '';
+
+    const tryParseJsonObject = (raw: string) => {
+      const cleaned = raw.trim();
+      try {
+        const parsed = JSON.parse(cleaned);
+        return parsed && typeof parsed === 'object' ? parsed : null;
+      } catch {
+        // Try to salvage JSON if model added extra text
+        const start = cleaned.indexOf('{');
+        const end = cleaned.lastIndexOf('}');
+        if (start >= 0 && end > start) {
+          const sliced = cleaned.slice(start, end + 1);
+          try {
+            const parsed = JSON.parse(sliced);
+            return parsed && typeof parsed === 'object' ? parsed : null;
+          } catch {
+            return null;
+          }
+        }
+        return null;
+      }
+    };
+
     if (instructionsResponse.ok) {
       const instructionsData = await instructionsResponse.json();
-      let instructionsContent = instructionsData.choices?.[0]?.message?.content || '';
-      
+      instructionsContent = instructionsData.choices?.[0]?.message?.content || '';
+
       // Clean up the response
       instructionsContent = instructionsContent.trim();
       if (instructionsContent.startsWith('```json')) {
@@ -289,13 +312,20 @@ Return ONLY the JSON object, no markdown.`;
         instructionsContent = instructionsContent.slice(0, -3);
       }
       instructionsContent = instructionsContent.trim();
-      
-      try {
-        detailedInstructions = JSON.parse(instructionsContent);
+
+      detailedInstructions = tryParseJsonObject(instructionsContent);
+      if (detailedInstructions) {
         console.log('Successfully parsed detailed instructions');
-      } catch (parseError) {
-        console.error('Failed to parse instructions JSON:', parseError);
-        // Continue without detailed instructions
+      } else {
+        console.error('Failed to parse instructions JSON; saving raw instructions for UI fallback');
+        detailedInstructions = {
+          quickStart: `Setup guide for: ${parsedWorkflow.name}`,
+          requirements: [],
+          steps: [],
+          testingGuide: '',
+          troubleshooting: [],
+          _raw: instructionsContent,
+        };
       }
     }
 
