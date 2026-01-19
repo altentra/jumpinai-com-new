@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import { useCredits } from "@/hooks/useCredits";
+import { useCredits, dispatchCreditsUpdate } from "@/hooks/useCredits";
 import { getUserJumps, UserJump } from "@/services/jumpService";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth0Token } from "@/hooks/useAuth0Token";
@@ -349,8 +349,9 @@ export default function Implementation() {
           agentId: data.agentId,
         });
         
-        // Refresh the agents list and credits balance
+        // Refresh the agents list and credits balance, then notify other components
         await Promise.all([loadSavedAgents(), fetchCredits()]);
+        dispatchCreditsUpdate(); // Sync sidebar and other credit displays
         
         toast.success("AI Agent built successfully!", {
           description: "1 credit used. Find it in your AI Agents tab.",

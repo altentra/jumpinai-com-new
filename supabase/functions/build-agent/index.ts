@@ -65,30 +65,25 @@ Deno.serve(async (req) => {
 
     console.log('Generating n8n workflow for:', opportunity.title);
 
-    // Check and deduct credit BEFORE generation
-    const { data: creditDeducted, error: creditError } = await supabase
-      .rpc('deduct_user_credit', {
-        p_user_id: user.id,
-        p_description: 'AI Agent build: ' + opportunity.title,
-        p_reference_id: jump.id
-      });
+    // First, check if user has credits (without deducting)
+    const { data: userCredits, error: creditsCheckError } = await supabase
+      .from('user_credits')
+      .select('credits_balance')
+      .eq('user_id', user.id)
+      .single();
 
-    if (creditError) {
-      console.error('Credit deduction error:', creditError);
+    if (creditsCheckError || !userCredits || userCredits.credits_balance < 1) {
       return new Response(
-        JSON.stringify({ error: 'Failed to process credit', details: creditError.message }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    if (!creditDeducted) {
-      return new Response(
-        JSON.stringify({ error: 'Insufficient credits', message: 'You need at least 1 credit to build an AI agent. Please purchase more credits.' }),
+        JSON.stringify({ 
+          error: 'Insufficient credits', 
+          message: 'You need at least 1 credit to build an AI agent. Please purchase more credits.' 
+        }),
         { status: 402, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    console.log('Credit deducted successfully for user:', user.id);
+    console.log('User has sufficient credits, proceeding with generation...');
+
 
     // Generate n8n workflow using xAI
     const systemPrompt = `You are an expert n8n workflow builder. Your task is to generate complete, valid, importable n8n workflow JSON files.
@@ -477,6 +472,23 @@ Return ONLY the JSON object, no markdown.`;
       console.log('✅ Agent saved to database:', savedAgent.id);
     }
 
+    // NOW deduct credit AFTER successful generation and save
+    const { data: creditDeducted, error: creditError } = await supabase
+      .rpc('deduct_user_credit', {
+        p_user_id: user.id,
+        p_description: 'AI Agent build: ' + opportunity.title,
+        p_reference_id: savedAgent?.id || `agent_${Date.now()}`
+      });
+
+    if (creditError) {
+      console.error('Credit deduction error (after success):', creditError);
+      // Agent was already built, log the error but don't fail
+    } else if (creditDeducted) {
+      console.log('✅ Credit deducted successfully after agent build');
+    } else {
+      console.warn('Credit deduction returned false - user may have run out of credits during build');
+    }
+
     // Log the build
     await supabase.from('api_usage_logs').insert({
       user_id: user.id,
@@ -493,6 +505,7 @@ Return ONLY the JSON object, no markdown.`;
         workflow: parsedWorkflow,
         filename: filename,
         detailedInstructions: detailedInstructions,
+        creditDeducted: creditDeducted || false,
         // Keep basic instructions as fallback
         instructions: {
           step1: "Download the workflow JSON file",
@@ -511,6 +524,7 @@ Return ONLY the JSON object, no markdown.`;
 
   } catch (error) {
     console.error('Error in build-agent function:', error);
+    // No credit was deducted since we deduct AFTER success, so no refund needed
     
     return new Response(
       JSON.stringify({ 

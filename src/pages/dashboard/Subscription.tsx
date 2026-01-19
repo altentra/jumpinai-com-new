@@ -2,12 +2,12 @@ import { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { ExternalLink, RefreshCw, CreditCard, Crown, Zap, Star, Rocket, AlertTriangle, ArrowRight, Sparkles, TrendingUp, TrendingDown, Gift, Calendar, Coins, Loader2 } from "lucide-react";
+import { ExternalLink, RefreshCw, CreditCard, Crown, Zap, Star, Rocket, AlertTriangle, ArrowRight, Sparkles, TrendingUp, TrendingDown, Gift, Calendar, Coins, Loader2, Bot } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useCredits } from "@/hooks/useCredits";
+import { useCredits, dispatchCreditsUpdate } from "@/hooks/useCredits";
 import { creditsService, type CreditPackage, type SubscriptionPlan, type CreditTransaction } from "@/services/creditsService";
 import { Separator } from "@/components/ui/separator";
 import { SubscriptionUpgradeModal } from "@/components/SubscriptionUpgradeModal";
@@ -58,8 +58,8 @@ export default function Subscription() {
           toast.success("Payment successful! Your credits have been added.", {
             duration: 5000,
           });
-          // Force refresh credits and transactions
-          fetchCredits();
+          // Force refresh credits and transactions, then sync across components
+          fetchCredits().then(() => dispatchCreditsUpdate());
           fetchCreditTransactions();
           window.history.replaceState({}, document.title, window.location.pathname);
         }
@@ -69,7 +69,7 @@ export default function Subscription() {
             duration: 5000,
           });
           // Force refresh both subscription status and credits
-          handleRefreshSubscription();
+          handleRefreshSubscription().then(() => dispatchCreditsUpdate());
           window.history.replaceState({}, document.title, window.location.pathname);
         }
       }
@@ -750,9 +750,23 @@ export default function Subscription() {
             <div className="space-y-2 max-h-[400px] overflow-y-auto">
               {creditTransactions.map((transaction) => {
                 const isPositive = transaction.credits_amount > 0;
+                
+                // Determine if this is an AI Agent build based on description
+                const isAgentBuild = transaction.description?.startsWith('AI Agent build:');
+                const isJumpGeneration = transaction.transaction_type === 'usage' && 
+                  transaction.reference_id && 
+                  jumpTitles[transaction.reference_id] && 
+                  !isAgentBuild;
+                
                 const typeConfig = {
                   purchase: { icon: Sparkles, label: 'Credit Purchase', color: 'text-emerald-500', bgColor: 'bg-emerald-500/10' },
-                  usage: { icon: Zap, label: 'Credit Used', color: 'text-blue-500', bgColor: 'bg-blue-500/10' },
+                  usage: { 
+                    icon: isAgentBuild ? Bot : Zap, 
+                    label: isAgentBuild ? 'AI Agent Built' : 'Credit Used', 
+                    color: isAgentBuild ? 'text-purple-500' : 'text-blue-500', 
+                    bgColor: isAgentBuild ? 'bg-purple-500/10' : 'bg-blue-500/10' 
+                  },
+                  refund: { icon: TrendingUp, label: 'Credit Refund', color: 'text-emerald-500', bgColor: 'bg-emerald-500/10' },
                   welcome_bonus: { icon: Gift, label: 'Welcome Bonus', color: 'text-violet-500', bgColor: 'bg-violet-500/10' },
                   monthly_allocation: { icon: Calendar, label: 'Monthly Credits', color: 'text-cyan-500', bgColor: 'bg-cyan-500/10' },
                   drip_bonus: { icon: TrendingUp, label: 'Bonus credit 48hr', color: 'text-amber-500', bgColor: 'bg-amber-500/10' },
@@ -765,6 +779,19 @@ export default function Subscription() {
                 };
                 const Icon = config.icon;
 
+                // Format the description for display
+                const getDisplayDescription = () => {
+                  if (isAgentBuild && transaction.description) {
+                    // Extract agent name from "AI Agent build: AgentName"
+                    const agentName = transaction.description.replace('AI Agent build: ', '');
+                    return `🤖 ${agentName}`;
+                  }
+                  if (isJumpGeneration) {
+                    return `Jump #${jumpNumbers[transaction.reference_id!] || '?'}: ${jumpTitles[transaction.reference_id!]}`;
+                  }
+                  return transaction.description || null;
+                };
+
                 return (
                   <div
                     key={transaction.id}
@@ -776,13 +803,9 @@ export default function Subscription() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="font-medium text-xs text-foreground">{config.label}</p>
-                        {transaction.transaction_type === 'usage' && transaction.reference_id && jumpTitles[transaction.reference_id] ? (
+                        {getDisplayDescription() && (
                           <p className="text-xs text-muted-foreground truncate">
-                            Jump #{jumpNumbers[transaction.reference_id] || '?'}: {jumpTitles[transaction.reference_id]}
-                          </p>
-                        ) : transaction.description && (
-                          <p className="text-xs text-muted-foreground truncate">
-                            {transaction.description}
+                            {getDisplayDescription()}
                           </p>
                         )}
                         <p className="text-xs text-muted-foreground/70">

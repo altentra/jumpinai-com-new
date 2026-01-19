@@ -1,7 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { creditsService, type UserCredits } from '@/services/creditsService';
 import { toast } from 'sonner';
+
+// Global event for credit updates across components
+const CREDITS_UPDATED_EVENT = 'credits-updated';
+
+export const dispatchCreditsUpdate = () => {
+  window.dispatchEvent(new CustomEvent(CREDITS_UPDATED_EVENT));
+};
 
 export const useCredits = () => {
   const { user, isAuthenticated } = useAuth();
@@ -9,7 +16,7 @@ export const useCredits = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   // Fetch user credits
-  const fetchCredits = async () => {
+  const fetchCredits = useCallback(async () => {
     if (!isAuthenticated || !user?.id) {
       setCredits(null);
       return;
@@ -25,7 +32,7 @@ export const useCredits = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [isAuthenticated, user?.id]);
 
   // Check if user has credits
   const hasCredits = (): boolean => {
@@ -39,8 +46,9 @@ export const useCredits = () => {
     try {
       const success = await creditsService.deductCredit(user.id, description, referenceId);
       if (success) {
-        // Refresh credits balance
+        // Refresh credits balance and notify other components
         await fetchCredits();
+        dispatchCreditsUpdate();
         return true;
       } else {
         toast.error('Insufficient credits');
@@ -60,6 +68,7 @@ export const useCredits = () => {
     try {
       await creditsService.addCredits(user.id, creditAmount, description, referenceId);
       await fetchCredits();
+      dispatchCreditsUpdate();
       toast.success(`${creditAmount} credits added to your account!`);
     } catch (error) {
       console.error('Error adding credits:', error);
@@ -85,6 +94,7 @@ export const useCredits = () => {
     try {
       await creditsService.initializeUserCredits(user.id);
       await fetchCredits();
+      dispatchCreditsUpdate();
     } catch (error) {
       console.error('Error initializing credits:', error);
     }
@@ -97,7 +107,19 @@ export const useCredits = () => {
     } else {
       setCredits(null);
     }
-  }, [isAuthenticated, user?.id]);
+  }, [isAuthenticated, user?.id, fetchCredits]);
+
+  // Listen for global credit update events from other components
+  useEffect(() => {
+    const handleCreditsUpdate = () => {
+      if (isAuthenticated && user?.id) {
+        fetchCredits();
+      }
+    };
+
+    window.addEventListener(CREDITS_UPDATED_EVENT, handleCreditsUpdate);
+    return () => window.removeEventListener(CREDITS_UPDATED_EVENT, handleCreditsUpdate);
+  }, [isAuthenticated, user?.id, fetchCredits]);
 
   return {
     credits,
