@@ -352,24 +352,47 @@ export function OpportunityCard({
                 </div>
               </div>
               
-              <div className="flex flex-col gap-2">
-                <Button 
+              <div className="flex flex-col gap-3">
+                {/* Download Button - Premium glass morphism */}
+                <button 
                   onClick={() => onDownload(existingAgent.workflow_json, existingAgent.workflow_filename || 'workflow.json')}
-                  className="w-full bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-600 text-white shadow-lg shadow-green-500/20"
-                  size="lg"
+                  className="relative group w-full overflow-hidden"
                 >
-                  <Download className="w-5 h-5 mr-2" />
-                  Download n8n Workflow
-                </Button>
+                  {/* Glow effect */}
+                  <div className="absolute -inset-0.5 bg-gradient-to-r from-green-500/40 via-green-400/30 to-green-500/40 rounded-2xl blur-md opacity-50 group-hover:opacity-80 transition duration-500" />
+                  
+                  {/* Button body */}
+                  <div className="relative flex items-center justify-center gap-2 px-6 py-3.5 bg-gradient-to-br from-green-500/15 via-green-400/10 to-green-500/15 backdrop-blur-xl rounded-2xl border border-green-500/40 group-hover:border-green-400/60 transition-all duration-300 shadow-lg shadow-green-500/10">
+                    {/* Shimmer */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 rounded-2xl" />
+                    
+                    <Download className="relative w-5 h-5 text-green-500 group-hover:text-green-400 transition-colors" />
+                    <span className="relative font-bold text-green-500 group-hover:text-green-400 transition-colors">
+                      Download n8n Workflow
+                    </span>
+                    <ArrowRight className="relative w-4 h-4 text-green-500 group-hover:translate-x-1 transition-all duration-300" />
+                  </div>
+                </button>
                 
-                <Button 
-                  variant="outline"
+                {/* View Instructions Button - Secondary glass morphism */}
+                <button 
                   onClick={() => onViewAgent(existingAgent)}
-                  className="w-full border-green-500/30 hover:bg-green-500/5"
+                  className="relative group w-full overflow-hidden"
                 >
-                  <Eye className="w-4 h-4 mr-2" />
-                  View Full Instructions
-                </Button>
+                  {/* Subtle glow */}
+                  <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 via-accent/15 to-primary/20 rounded-2xl blur-md opacity-0 group-hover:opacity-50 transition duration-500" />
+                  
+                  {/* Button body */}
+                  <div className="relative flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-br from-background/80 via-muted/30 to-background/80 backdrop-blur-xl rounded-2xl border border-border/60 group-hover:border-primary/40 transition-all duration-300">
+                    {/* Shimmer */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 rounded-2xl" />
+                    
+                    <Eye className="relative w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                    <span className="relative font-medium text-muted-foreground group-hover:text-foreground transition-colors">
+                      View Full Instructions
+                    </span>
+                  </div>
+                </button>
               </div>
               
               <a 
