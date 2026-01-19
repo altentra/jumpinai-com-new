@@ -7,8 +7,6 @@ import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Bot, 
@@ -18,30 +16,12 @@ import {
   Check, 
   Zap, 
   Target, 
-  Lightbulb,
   Loader2,
-  FileText,
-  Clock,
-  TrendingUp,
-  Workflow,
-  Wrench,
-  Download,
-  ExternalLink,
   RefreshCw,
   Package,
-  Eye,
-  Trash2,
-  MoreVertical,
-  Copy,
-  CheckCircle2
+  Eye
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -52,6 +32,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { OpportunityCard } from "@/components/implementation/OpportunityCard";
+import { AgentDetailCard } from "@/components/implementation/AgentDetailCard";
+import { AnalysisSummaryCard } from "@/components/implementation/AnalysisSummaryCard";
+import { JumpSelectionCard } from "@/components/implementation/JumpSelectionCard";
+import { AgentListCard } from "@/components/implementation/AgentListCard";
 
 interface AgentOpportunity {
   id: string;
