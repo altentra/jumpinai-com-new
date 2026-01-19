@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Sparkles, GitBranch, Wrench, ArrowRight, ChevronDown, Route, Compass } from 'lucide-react';
+import { Sparkles, GitBranch, Wrench, ArrowRight, ChevronDown, Route, Compass, Bot, Workflow, Zap, Target, Cog, Play } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Navigation from "@/components/Navigation";
 import Hero from "@/components/Hero";
@@ -62,6 +62,13 @@ const Index = () => {
   const { elementRef: exploreFlow2Ref, scrollProgress: exploreFlow2Progress } = useScrollAnimation({ threshold: 0.15 });
   const { elementRef: exploreFlow3Ref, scrollProgress: exploreFlow3Progress } = useScrollAnimation({ threshold: 0.15 });
   const { elementRef: exploreBenefitRef, scrollProgress: exploreBenefitProgress } = useScrollAnimation({ threshold: 0.15 });
+  
+  // Implementation section refs
+  const { elementRef: implementRef, scrollProgress: implementProgress } = useScrollAnimation({ threshold: 0.15 });
+  const { elementRef: implementCard1Ref, scrollProgress: implementCard1Progress } = useScrollAnimation({ threshold: 0.15 });
+  const { elementRef: implementCard2Ref, scrollProgress: implementCard2Progress } = useScrollAnimation({ threshold: 0.15 });
+  const { elementRef: implementCard3Ref, scrollProgress: implementCard3Progress } = useScrollAnimation({ threshold: 0.15 });
+  const { elementRef: implementCtaRef, scrollProgress: implementCtaProgress } = useScrollAnimation({ threshold: 0.15 });
   
   // Individual refs for mobile animations
   const { elementRef: tab1Ref, scrollProgress: tab1Progress } = useScrollAnimation({ threshold: 0.2 });
@@ -1162,6 +1169,242 @@ const Index = () => {
               </div>
               <div className="text-xs sm:text-sm text-foreground/80">
                 <span className="font-bold text-primary">Reroute</span> & <span className="font-bold text-primary">Equip</span> available on any existing step
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Implementation - Agentic Automation Section */}
+      <section className="py-12 sm:py-16 lg:py-24 relative">
+        <div className="container mx-auto px-4">
+          {/* Section Header */}
+          <div 
+            ref={implementRef}
+            className="text-center mb-10 sm:mb-14 transition-all duration-700 ease-out"
+            style={{
+              opacity: Math.min(1, implementProgress * 1.5),
+              transform: `translateY(${(1 - Math.min(1, implementProgress * 1.5)) * 40}px)`
+            }}
+          >
+            <div className="flex justify-center mb-6">
+              <div className="relative group/implement">
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-emerald-500/40 via-teal-400/30 to-emerald-500/40 rounded-[2.5rem] blur-md opacity-50 transition duration-500"></div>
+                <div className="relative flex items-center gap-3 px-8 py-4 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2.5rem] border border-emerald-500/40 transition-all duration-300 overflow-hidden shadow-lg shadow-emerald-500/10">
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full transition-transform duration-1000"></div>
+                  <Bot className="relative w-6 h-6 text-emerald-500" />
+                  <span className="relative text-2xl font-bold text-foreground whitespace-nowrap">Implement</span>
+                </div>
+              </div>
+            </div>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold gradient-text-primary mb-4 font-display px-4">
+              From Strategy to Automation—In One Platform
+            </h2>
+            <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto px-4 leading-relaxed">
+              Your Jump doesn't end at a plan. JumpinAI analyzes your strategy, discovers automation opportunities, and builds ready-to-deploy AI agents—accelerating your path from vision to reality.
+            </p>
+          </div>
+
+          {/* How It Works - 3 Step Flow */}
+          <div className="max-w-5xl mx-auto mb-12">
+            <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
+              {/* Step 1: Analyze */}
+              <div 
+                ref={implementCard1Ref}
+                className="group relative rounded-3xl transition-all duration-700 ease-out"
+                style={{
+                  opacity: Math.min(1, implementCard1Progress * 1.5),
+                  transform: `translateY(${(1 - Math.min(1, implementCard1Progress * 1.5)) * 50}px)`
+                }}
+              >
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-emerald-500/[0.08] via-transparent to-teal-500/[0.05] p-[1px]">
+                  <div className="absolute inset-0 rounded-3xl bg-card"></div>
+                </div>
+                
+                <div className="relative bg-card rounded-3xl p-6 lg:p-8 h-full shadow-modern hover:shadow-modern-lg transition-all duration-500 border border-emerald-500/20 hover:border-emerald-500/40">
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-emerald-500/[0.03] via-transparent to-transparent pointer-events-none"></div>
+                  
+                  <div className="relative z-10">
+                    {/* Step Number */}
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500/20 to-teal-500/10 border border-emerald-500/30 flex items-center justify-center">
+                        <span className="text-lg font-bold text-emerald-500">1</span>
+                      </div>
+                      <div className="flex-1 h-px bg-gradient-to-r from-emerald-500/30 to-transparent"></div>
+                    </div>
+                    
+                    {/* Icon */}
+                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500/15 to-teal-500/10 border border-emerald-500/20 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
+                      <Target className="w-7 h-7 text-emerald-500" />
+                    </div>
+                    
+                    <h3 className="text-xl font-bold font-display mb-3">Analyze Your Jump</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      AI scans your entire implementation plan to identify 3-5 high-impact processes that can be automated—ranking them by potential time savings and business impact.
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-emerald-600 to-teal-500 opacity-10 group-hover:opacity-20 transition-opacity duration-500 -z-10 blur-xl"></div>
+              </div>
+
+              {/* Step 2: Discover */}
+              <div 
+                ref={implementCard2Ref}
+                className="group relative rounded-3xl transition-all duration-700 ease-out"
+                style={{
+                  opacity: Math.max(0, Math.min(1, (implementCard2Progress - 0.1) * 1.5)),
+                  transform: `translateY(${(1 - Math.max(0, Math.min(1, (implementCard2Progress - 0.1) * 1.5))) * 50}px)`
+                }}
+              >
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-teal-500/[0.08] via-transparent to-cyan-500/[0.05] p-[1px]">
+                  <div className="absolute inset-0 rounded-3xl bg-card"></div>
+                </div>
+                
+                <div className="relative bg-card rounded-3xl p-6 lg:p-8 h-full shadow-modern hover:shadow-modern-lg transition-all duration-500 border border-teal-500/20 hover:border-teal-500/40">
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-teal-500/[0.03] via-transparent to-transparent pointer-events-none"></div>
+                  
+                  <div className="relative z-10">
+                    {/* Step Number */}
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-500/20 to-cyan-500/10 border border-teal-500/30 flex items-center justify-center">
+                        <span className="text-lg font-bold text-teal-500">2</span>
+                      </div>
+                      <div className="flex-1 h-px bg-gradient-to-r from-teal-500/30 to-transparent"></div>
+                    </div>
+                    
+                    {/* Icon */}
+                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-teal-500/15 to-cyan-500/10 border border-teal-500/20 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
+                      <Zap className="w-7 h-7 text-teal-500" />
+                    </div>
+                    
+                    <h3 className="text-xl font-bold font-display mb-3">Discover Opportunities</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      Each opportunity comes with a clear description of what can be automated, estimated time savings, complexity level, and the specific tools required.
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-teal-600 to-cyan-500 opacity-10 group-hover:opacity-20 transition-opacity duration-500 -z-10 blur-xl"></div>
+              </div>
+
+              {/* Step 3: Build */}
+              <div 
+                ref={implementCard3Ref}
+                className="group relative rounded-3xl transition-all duration-700 ease-out"
+                style={{
+                  opacity: Math.max(0, Math.min(1, (implementCard3Progress - 0.2) * 1.5)),
+                  transform: `translateY(${(1 - Math.max(0, Math.min(1, (implementCard3Progress - 0.2) * 1.5))) * 50}px)`
+                }}
+              >
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-cyan-500/[0.08] via-transparent to-blue-500/[0.05] p-[1px]">
+                  <div className="absolute inset-0 rounded-3xl bg-card"></div>
+                </div>
+                
+                <div className="relative bg-card rounded-3xl p-6 lg:p-8 h-full shadow-modern hover:shadow-modern-lg transition-all duration-500 border border-cyan-500/20 hover:border-cyan-500/40">
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-cyan-500/[0.03] via-transparent to-transparent pointer-events-none"></div>
+                  
+                  <div className="relative z-10">
+                    {/* Step Number */}
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/10 border border-cyan-500/30 flex items-center justify-center">
+                        <span className="text-lg font-bold text-cyan-500">3</span>
+                      </div>
+                      <div className="flex-1 h-px bg-gradient-to-r from-cyan-500/30 to-transparent"></div>
+                    </div>
+                    
+                    {/* Icon */}
+                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-500/15 to-blue-500/10 border border-cyan-500/20 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
+                      <Workflow className="w-7 h-7 text-cyan-500" />
+                    </div>
+                    
+                    <h3 className="text-xl font-bold font-display mb-3">Build AI Agents</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      One click generates a complete n8n workflow—a ready-to-deploy AI agent with detailed implementation instructions, testing guides, and troubleshooting tips.
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-cyan-600 to-blue-500 opacity-10 group-hover:opacity-20 transition-opacity duration-500 -z-10 blur-xl"></div>
+              </div>
+            </div>
+          </div>
+
+          {/* What You Get */}
+          <div className="max-w-4xl mx-auto">
+            <div 
+              ref={implementCtaRef}
+              className="group relative rounded-2xl transition-all duration-700 ease-out"
+              style={{
+                opacity: Math.min(1, implementCtaProgress * 1.5),
+                transform: `translateY(${(1 - Math.min(1, implementCtaProgress * 1.5)) * 30}px)`
+              }}
+            >
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-emerald-500/[0.05] via-teal-500/[0.03] to-cyan-500/[0.05] p-[1px]">
+                <div className="absolute inset-0 rounded-2xl bg-card"></div>
+              </div>
+              
+              <div className="relative bg-card rounded-2xl p-6 lg:p-8 shadow-modern border border-emerald-500/20">
+                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+                  {/* Feature 1 */}
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center flex-shrink-0">
+                      <Cog className="w-4 h-4 text-emerald-500" />
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-semibold mb-1">n8n Workflows</h4>
+                      <p className="text-xs text-muted-foreground">Production-ready automation files</p>
+                    </div>
+                  </div>
+                  
+                  {/* Feature 2 */}
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-teal-500/10 border border-teal-500/20 flex items-center justify-center flex-shrink-0">
+                      <Play className="w-4 h-4 text-teal-500" />
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-semibold mb-1">Step-by-Step Guides</h4>
+                      <p className="text-xs text-muted-foreground">Detailed implementation instructions</p>
+                    </div>
+                  </div>
+                  
+                  {/* Feature 3 */}
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center flex-shrink-0">
+                      <Bot className="w-4 h-4 text-cyan-500" />
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-semibold mb-1">Agent Library</h4>
+                      <p className="text-xs text-muted-foreground">All your agents in one place</p>
+                    </div>
+                  </div>
+                  
+                  {/* Feature 4 */}
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center flex-shrink-0">
+                      <Target className="w-4 h-4 text-blue-500" />
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-semibold mb-1">Impact Tracking</h4>
+                      <p className="text-xs text-muted-foreground">Monitor time savings & ROI</p>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Bottom CTA */}
+                <div className="mt-6 pt-6 border-t border-emerald-500/10 text-center">
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Transform your strategic Jumps into working automations—no coding required
+                  </p>
+                  <Button 
+                    onClick={() => navigate('/dashboard/implementation')}
+                    className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-6 py-2 rounded-full font-semibold shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/30 transition-all duration-300"
+                  >
+                    <Bot className="w-4 h-4 mr-2" />
+                    Explore Implementation
+                    <ArrowRight className="w-4 h-4 ml-2" />
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
