@@ -19,7 +19,10 @@ import {
   Loader2,
   RefreshCw,
   Package,
-  Eye
+  Eye,
+  FileText,
+  Clock,
+  CheckCircle2
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -694,7 +697,7 @@ interface JumpSelectionListProps {
   onSelectJump: (jump: JumpWithAnalysis) => void;
 }
 
-import { FileText, Clock, CheckCircle2 } from "lucide-react";
+
 
 function JumpSelectionList({
   jumps,
