@@ -3,24 +3,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Rocket, Plus, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { getUserJumpsLight, deleteJump } from "@/services/jumpService";
+import { getUserJumpsLight, deleteJump, LightJumpWithAgentStats } from "@/services/jumpService";
 import { useOptimizedAuth } from "@/hooks/useOptimizedAuth";
 import JumpListCard from "@/components/dashboard/JumpListCard";
 import { toast } from 'sonner';
 import { Link } from 'react-router-dom';
 
-type LightJump = {
-  id: string;
-  title: string;
-  summary: string | null;
-  created_at: string;
-  jump_type?: string;
-  status?: string;
-  completion_percentage?: number;
-};
-
 export default function MyJumpsNew() {
-  const [jumps, setJumps] = useState<LightJump[]>([]);
+  const [jumps, setJumps] = useState<LightJumpWithAgentStats[]>([]);
   const [loading, setLoading] = useState(true);
   const [displayLimit, setDisplayLimit] = useState(20);
   const { isAuthenticated, isLoading: authLoading } = useOptimizedAuth();
@@ -45,7 +35,7 @@ export default function MyJumpsNew() {
     loadJumps();
   }, [isAuthenticated, authLoading]);
 
-  const handleViewJump = (jump: LightJump) => {
+  const handleViewJump = (jump: LightJumpWithAgentStats) => {
     // Navigation is now handled in JumpCard component
   };
 

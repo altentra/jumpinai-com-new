@@ -91,14 +91,35 @@ export const getUserJumps = async (): Promise<UserJump[]> => {
   return data || [];
 };
 
+// Extended jump type with agentic implementation stats
+export interface LightJumpWithAgentStats {
+  id: string;
+  title: string;
+  summary: string | null;
+  created_at: string;
+  jump_type?: string;
+  status?: string;
+  completion_percentage?: number;
+  views_count?: number;
+  clarifications_count?: number;
+  max_clarification_level?: number;
+  reroutes_count?: number;
+  tools_clicked_count?: number;
+  prompts_copied_count?: number;
+  combos_used_count?: number;
+  is_analyzed?: boolean;
+  agents_count?: number;
+}
+
 // Get jumps with minimal fields for list view (optimized for performance)
-export const getUserJumpsLight = async (limit?: number): Promise<Pick<UserJump, 'id' | 'title' | 'summary' | 'created_at' | 'jump_type' | 'status' | 'completion_percentage' | 'views_count' | 'clarifications_count' | 'max_clarification_level' | 'reroutes_count' | 'tools_clicked_count' | 'prompts_copied_count' | 'combos_used_count'>[]> => {
+export const getUserJumpsLight = async (limit?: number): Promise<LightJumpWithAgentStats[]> => {
   const { data: { user } } = await supabase.auth.getUser();
   
   if (!user) {
     return [];
   }
 
+  // Fetch jumps
   let query = supabase
     .from('user_jumps')
     .select('id, title, summary, created_at, jump_type, status, completion_percentage, views_count, clarifications_count, max_clarification_level, reroutes_count, tools_clicked_count, prompts_copied_count, combos_used_count')
@@ -109,14 +130,48 @@ export const getUserJumpsLight = async (limit?: number): Promise<Pick<UserJump, 
     query = query.limit(limit);
   }
 
-  const { data, error } = await query;
+  const { data: jumps, error: jumpsError } = await query;
 
-  if (error) {
-    console.error('Error fetching user jumps (light):', error);
-    throw error;
+  if (jumpsError) {
+    console.error('Error fetching user jumps (light):', jumpsError);
+    throw jumpsError;
   }
 
-  return data || [];
+  if (!jumps || jumps.length === 0) {
+    return [];
+  }
+
+  // Get jump IDs for querying related tables
+  const jumpIds = jumps.map(j => j.id);
+
+  // Fetch analysis status for all jumps in parallel
+  const [analysisResult, agentsResult] = await Promise.all([
+    supabase
+      .from('jump_analysis')
+      .select('jump_id')
+      .in('jump_id', jumpIds),
+    supabase
+      .from('user_agents')
+      .select('jump_id')
+      .in('jump_id', jumpIds)
+  ]);
+
+  // Create lookup sets/maps
+  const analyzedJumpIds = new Set(analysisResult.data?.map(a => a.jump_id) || []);
+  
+  // Count agents per jump
+  const agentsCountMap = new Map<string, number>();
+  agentsResult.data?.forEach(agent => {
+    const current = agentsCountMap.get(agent.jump_id) || 0;
+    agentsCountMap.set(agent.jump_id, current + 1);
+  });
+
+  // Merge stats into jumps
+  return jumps.map(jump => ({
+    ...jump,
+    is_analyzed: analyzedJumpIds.has(jump.id),
+    agents_count: agentsCountMap.get(jump.id) || 0
+  }));
 };
 
 // Get a specific jump by ID
