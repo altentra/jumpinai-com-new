@@ -409,6 +409,25 @@ export default function Implementation() {
     });
   };
 
+  // Find existing agent for an opportunity based on title match
+  const findExistingAgentForOpportunity = (opportunity: AgentOpportunity): SavedAgent | null => {
+    if (!selectedJump) return null;
+    
+    // Match by jump_id and similar title
+    return savedAgents.find(agent => 
+      agent.jump_id === selectedJump.id && 
+      (agent.title === opportunity.title || 
+       agent.title.toLowerCase().includes(opportunity.title.toLowerCase().slice(0, 30)) ||
+       opportunity.title.toLowerCase().includes(agent.title.toLowerCase().slice(0, 30)))
+    ) || null;
+  };
+
+  // Handle viewing agent from opportunity card
+  const handleViewAgentFromOpportunity = (agent: SavedAgent) => {
+    setSelectedAgent(agent);
+    setActiveTab("agents");
+  };
+
   return (
     <div className="space-y-6 max-w-7xl mx-auto pb-8">
       {/* Header Section */}
@@ -654,9 +673,11 @@ export default function Implementation() {
                           index={index}
                           isBuilding={buildingAgentId === opportunity.id}
                           generatedWorkflow={generatedWorkflow?.opportunityId === opportunity.id ? generatedWorkflow : null}
+                          existingAgent={findExistingAgentForOpportunity(opportunity)}
                           onBuild={() => handleBuildAgent(opportunity)}
                           onDownload={handleDownloadWorkflow}
                           onClearWorkflow={() => setGeneratedWorkflow(null)}
+                          onViewAgent={handleViewAgentFromOpportunity}
                           getImpactBadgeColor={getImpactBadgeColor}
                           getComplexityBadgeColor={getComplexityBadgeColor}
                         />
@@ -802,9 +823,11 @@ interface OpportunityCardProps {
   index: number;
   isBuilding: boolean;
   generatedWorkflow: any;
+  existingAgent: SavedAgent | null;
   onBuild: () => void;
   onDownload: (workflow: any, filename: string) => void;
   onClearWorkflow: () => void;
+  onViewAgent: (agent: SavedAgent) => void;
   getImpactBadgeColor: (level: string | null) => string;
   getComplexityBadgeColor: (level: string | null) => string;
 }
@@ -814,9 +837,11 @@ function OpportunityCard({
   index,
   isBuilding,
   generatedWorkflow,
+  existingAgent,
   onBuild,
   onDownload,
   onClearWorkflow,
+  onViewAgent,
   getImpactBadgeColor,
   getComplexityBadgeColor,
 }: OpportunityCardProps) {
@@ -1034,6 +1059,57 @@ function OpportunityCard({
               Close
             </Button>
           </div>
+        ) : existingAgent ? (
+          // Show existing agent
+          <div className="space-y-4">
+            <div className="p-4 rounded-lg bg-green-500/10 border border-green-500/20">
+              <div className="flex items-center gap-2 mb-3">
+                <CheckCircle2 className="w-5 h-5 text-green-500" />
+                <span className="font-semibold text-green-500">Agent Already Built!</span>
+              </div>
+              
+              <div className="flex flex-col gap-2">
+                <Button 
+                  onClick={() => onDownload(existingAgent.workflow_json, existingAgent.workflow_filename || 'workflow.json')}
+                  className="w-full bg-green-600 hover:bg-green-700"
+                  size="lg"
+                >
+                  <Download className="w-5 h-5 mr-2" />
+                  Download n8n Workflow
+                </Button>
+                
+                <Button 
+                  variant="outline"
+                  onClick={() => onViewAgent(existingAgent)}
+                  className="w-full"
+                >
+                  <Eye className="w-4 h-4 mr-2" />
+                  View Full Instructions
+                </Button>
+              </div>
+              
+              <a 
+                href="https://n8n.io" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-1.5 text-sm text-primary hover:underline py-2"
+              >
+                Don't have n8n? Create your free account here
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            </div>
+            
+            <Button 
+              variant="ghost"
+              onClick={onBuild}
+              disabled={isBuilding}
+              className="w-full text-muted-foreground"
+              size="sm"
+            >
+              <RefreshCw className="w-4 h-4 mr-2" />
+              Rebuild Agent
+            </Button>
+          </div>
         ) : (
           <div className="flex justify-end">
             <Button 
@@ -1201,12 +1277,12 @@ function AgentDetailCard({
 
         <Separator />
 
-        {/* Setup Instructions */}
+        {/* Complete Setup Instructions */}
         {agent.detailed_instructions && (
-          <div className="space-y-4">
-            <h4 className="font-semibold flex items-center gap-2">
-              <FileText className="w-4 h-4 text-primary" />
-              Setup Instructions
+          <div className="space-y-4 p-4 rounded-lg bg-green-500/5 border border-green-500/20">
+            <h4 className="font-semibold flex items-center gap-2 text-green-500">
+              <FileText className="w-4 h-4" />
+              Implementation Instructions
             </h4>
             
             {agent.detailed_instructions.quickStart && (
@@ -1226,6 +1302,58 @@ function AgentDetailCard({
                     <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
                       <Check className="w-4 h-4 text-muted-foreground shrink-0 mt-0.5" />
                       <span>{req}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {agent.detailed_instructions.steps?.length > 0 && (
+              <div className="space-y-3">
+                <h5 className="text-sm font-medium">Step-by-Step Guide</h5>
+                <div className="space-y-3">
+                  {agent.detailed_instructions.steps.map((step: any, i: number) => (
+                    <div key={i} className="flex gap-3">
+                      <div className="w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-bold shrink-0">
+                        {i + 1}
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium">{step.title}</p>
+                        <p className="text-sm text-muted-foreground mt-0.5">{step.description}</p>
+                        {step.tips && (
+                          <p className="text-xs text-primary/80 mt-1 italic">💡 {step.tips}</p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {agent.detailed_instructions.testingGuide && (
+              <div className="p-3 rounded-md bg-green-500/10 border border-green-500/20">
+                <h5 className="text-sm font-medium text-green-400 mb-1">Testing Guide</h5>
+                <p className="text-sm text-muted-foreground">{agent.detailed_instructions.testingGuide}</p>
+              </div>
+            )}
+
+            {agent.detailed_instructions.troubleshooting?.length > 0 && (
+              <div className="space-y-2">
+                <h5 className="text-sm font-medium flex items-center gap-2">
+                  <Wrench className="w-4 h-4 text-muted-foreground" />
+                  Troubleshooting
+                </h5>
+                <ul className="space-y-2">
+                  {agent.detailed_instructions.troubleshooting.map((tip: any, i: number) => (
+                    <li key={i} className="text-sm text-muted-foreground">
+                      {typeof tip === 'string' ? (
+                        <span>• {tip}</span>
+                      ) : (
+                        <div className="space-y-1">
+                          <p className="font-medium text-foreground">• {tip.problem}</p>
+                          <p className="ml-3 text-muted-foreground">{tip.solution}</p>
+                        </div>
+                      )}
                     </li>
                   ))}
                 </ul>
