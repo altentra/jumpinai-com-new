@@ -140,12 +140,12 @@ const Hero = () => {
             {/* Main H1 Title */}
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-5xl xl:text-6xl font-black mb-6 sm:mb-8 tracking-tight font-display leading-tight pb-2">
               <span className="block gradient-text-primary">AI Adaptation Studio</span>
-              <span className="block gradient-text-primary mt-2 pb-1">that Clarifies Your Path Forward</span>
+              <span className="block gradient-text-primary mt-2 pb-1">that Clarifies and Builds Your Path Forward</span>
             </h1>
             
             {/* Body Text */}
             <p className="text-sm sm:text-base md:text-lg text-muted-foreground mb-8 sm:mb-10 max-w-4xl mx-auto lg:mx-0 leading-relaxed font-light px-4 lg:px-0">
-              AI is advancing fast, and effective adaptation demands clarity. JumpinAI delivers implementation plans designed around your goals, with clear steps, tailored prompts, and the right tools—giving you a structured way to begin implementing AI with confidence.
+              AI is advancing fast, and effective adaptation demands clarity. JumpinAI delivers implementation plans designed around your goals, with clear steps, tailored prompts, and the right tools. Then it analyzes your strategy for automation opportunities and builds ready-to-deploy AI agents—taking you from vision to execution with confidence.
             </p>
             
             {/* Call to Action Button */}
