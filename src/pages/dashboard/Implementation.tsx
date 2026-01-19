@@ -410,7 +410,7 @@ export default function Implementation() {
   };
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto">
+    <div className="space-y-6 max-w-7xl mx-auto pb-8">
       {/* Header Section */}
       <div className="space-y-2">
         <div className="flex items-center gap-3">
@@ -451,8 +451,8 @@ export default function Implementation() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Left Column - Jump Selection */}
             <div className="lg:col-span-1">
-              <Card className="border-border/50 bg-card/50 backdrop-blur-sm h-[600px] flex flex-col">
-                <CardHeader className="pb-3 shrink-0">
+              <Card className="border-border/50 bg-card/50 backdrop-blur-sm h-[500px] flex flex-col">
+                <CardHeader className="pb-3 flex-shrink-0">
                   <CardTitle className="text-lg flex items-center gap-2">
                     <FileText className="w-4 h-4 text-primary" />
                     Select a Jump
@@ -461,7 +461,7 @@ export default function Implementation() {
                     Choose from your {jumps.length} generated jumps
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="flex-1 overflow-hidden p-0">
+                <CardContent className="flex-1 min-h-0 p-0">
                   {isLoadingJumps ? (
                     <div className="flex items-center justify-center py-8">
                       <Loader2 className="w-6 h-6 animate-spin text-primary" />
@@ -477,8 +477,8 @@ export default function Implementation() {
                       </Button>
                     </div>
                   ) : (
-                    <ScrollArea className="h-full px-4 pb-4">
-                      <div className="space-y-2 pr-2">
+                    <div className="h-full overflow-y-auto px-4 pb-4">
+                      <div className="space-y-2">
                         {jumps.map((jump, index) => (
                           <button
                             key={jump.id}
@@ -523,7 +523,7 @@ export default function Implementation() {
                           </button>
                         ))}
                       </div>
-                    </ScrollArea>
+                    </div>
                   )}
                 </CardContent>
               </Card>
@@ -646,24 +646,22 @@ export default function Implementation() {
                       </Badge>
                     </h3>
 
-                    <ScrollArea className="h-[500px] pr-4">
-                      <div className="space-y-4">
-                        {analysisResult.opportunities.map((opportunity, index) => (
-                          <OpportunityCard
-                            key={opportunity.id}
-                            opportunity={opportunity}
-                            index={index}
-                            isBuilding={buildingAgentId === opportunity.id}
-                            generatedWorkflow={generatedWorkflow?.opportunityId === opportunity.id ? generatedWorkflow : null}
-                            onBuild={() => handleBuildAgent(opportunity)}
-                            onDownload={handleDownloadWorkflow}
-                            onClearWorkflow={() => setGeneratedWorkflow(null)}
-                            getImpactBadgeColor={getImpactBadgeColor}
-                            getComplexityBadgeColor={getComplexityBadgeColor}
-                          />
-                        ))}
-                      </div>
-                    </ScrollArea>
+                    <div className="space-y-4">
+                      {analysisResult.opportunities.map((opportunity, index) => (
+                        <OpportunityCard
+                          key={opportunity.id}
+                          opportunity={opportunity}
+                          index={index}
+                          isBuilding={buildingAgentId === opportunity.id}
+                          generatedWorkflow={generatedWorkflow?.opportunityId === opportunity.id ? generatedWorkflow : null}
+                          onBuild={() => handleBuildAgent(opportunity)}
+                          onDownload={handleDownloadWorkflow}
+                          onClearWorkflow={() => setGeneratedWorkflow(null)}
+                          getImpactBadgeColor={getImpactBadgeColor}
+                          getComplexityBadgeColor={getComplexityBadgeColor}
+                        />
+                      ))}
+                    </div>
                   </div>
                 </div>
               )}
@@ -676,8 +674,8 @@ export default function Implementation() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Agents List */}
             <div className="lg:col-span-1">
-              <Card className="border-border/50 bg-card/50 backdrop-blur-sm h-[600px] flex flex-col">
-                <CardHeader className="pb-3 shrink-0">
+              <Card className="border-border/50 bg-card/50 backdrop-blur-sm h-[500px] flex flex-col">
+                <CardHeader className="pb-3 flex-shrink-0">
                   <CardTitle className="text-lg flex items-center gap-2">
                     <Package className="w-4 h-4 text-primary" />
                     Your AI Agents
@@ -686,7 +684,7 @@ export default function Implementation() {
                     {savedAgents.length} agents built
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="flex-1 overflow-hidden p-0">
+                <CardContent className="flex-1 min-h-0 p-0">
                   {isLoadingAgents ? (
                     <div className="flex items-center justify-center py-8">
                       <Loader2 className="w-6 h-6 animate-spin text-primary" />
@@ -706,8 +704,8 @@ export default function Implementation() {
                       </Button>
                     </div>
                   ) : (
-                    <ScrollArea className="h-full px-4 pb-4">
-                      <div className="space-y-2 pr-2">
+                    <div className="h-full overflow-y-auto px-4 pb-4">
+                      <div className="space-y-2">
                         {savedAgents.map((agent) => (
                           <button
                             key={agent.id}
@@ -741,7 +739,7 @@ export default function Implementation() {
                           </button>
                         ))}
                       </div>
-                    </ScrollArea>
+                    </div>
                   )}
                 </CardContent>
               </Card>
@@ -758,7 +756,7 @@ export default function Implementation() {
                   getComplexityBadgeColor={getComplexityBadgeColor}
                 />
               ) : (
-                <Card className="border-border/50 bg-card/50 backdrop-blur-sm h-[600px] flex items-center justify-center">
+                <Card className="border-border/50 bg-card/50 backdrop-blur-sm h-[500px] flex items-center justify-center">
                   <div className="text-center space-y-3">
                     <div className="w-16 h-16 mx-auto rounded-full bg-muted/50 flex items-center justify-center">
                       <Eye className="w-8 h-8 text-muted-foreground" />
