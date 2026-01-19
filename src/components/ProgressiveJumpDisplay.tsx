@@ -228,6 +228,13 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
         setAlternativesBatchCount(1);
         setShowAlternatives(true);
         toast.success('Alternative routes discovered!');
+        
+        // Track alternative route generation for analytics
+        const { data: { user } } = await supabase.auth.getUser();
+        if (result.jumpId && user?.id) {
+          const { trackAlternativeRoute } = await import('@/services/jumpTrackingService');
+          trackAlternativeRoute(result.jumpId, user.id);
+        }
       } else {
         throw new Error('Invalid response from server');
       }
