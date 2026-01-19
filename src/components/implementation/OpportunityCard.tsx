@@ -6,7 +6,6 @@ import { Separator } from "@/components/ui/separator";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { 
   Bot, 
-  Rocket, 
   Check, 
   Zap,
   Loader2,
@@ -26,6 +25,7 @@ import {
   Target
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { AgentBuildButton } from "./AgentBuildButton";
 
 interface AgentOpportunity {
   id: string;
@@ -395,32 +395,11 @@ export function OpportunityCard({
             </Button>
           </div>
         ) : (
-          <div className="flex justify-end pt-2">
-            <Button 
-              onClick={onBuild}
-              disabled={isBuilding}
-              size="lg"
-              className={cn(
-                "min-w-[200px]",
-                "bg-gradient-to-r from-primary via-primary to-primary/90",
-                "hover:from-primary/90 hover:to-primary",
-                "shadow-lg shadow-primary/20",
-                "transition-all duration-300"
-              )}
-            >
-              {isBuilding ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Generating Workflow...
-                </>
-              ) : (
-                <>
-                  <Rocket className="w-4 h-4 mr-2" />
-                  Build This Agent
-                  <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                </>
-              )}
-            </Button>
+          <div className="pt-2">
+            <AgentBuildButton 
+              isBuilding={isBuilding}
+              onBuild={onBuild}
+            />
           </div>
         )}
       </CardContent>
