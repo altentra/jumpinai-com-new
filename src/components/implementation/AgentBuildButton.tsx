@@ -159,24 +159,25 @@ export function AgentBuildButton({ isBuilding, onBuild, disabled }: AgentBuildBu
 
   // Idle State - Premium liquid glass button
   return (
-    <button
-      onClick={onBuild}
-      disabled={disabled}
-      className="relative group w-full overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
-    >
-      {/* Liquid glass glow effect */}
-      <div className="absolute -inset-1 bg-gradient-to-r from-primary/30 via-accent/25 to-primary/30 rounded-[2rem] blur-lg opacity-40 group-hover:opacity-70 transition duration-500" />
-      
-      {/* Button body */}
-      <div className={cn(
-        "relative flex items-center justify-center gap-3 px-8 py-4",
-        "bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10",
-        "backdrop-blur-xl rounded-[2rem]",
-        "border border-primary/30 group-hover:border-primary/50",
-        "shadow-xl shadow-primary/10 group-hover:shadow-2xl group-hover:shadow-primary/20",
-        "transition-all duration-300",
-        "group-hover:scale-[1.02]"
-      )}>
+    <div className="p-1"> {/* Padding container to prevent overflow on scale */}
+      <button
+        onClick={onBuild}
+        disabled={disabled}
+        className="relative group w-full overflow-visible disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        {/* Liquid glass glow effect */}
+        <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/25 to-primary/30 rounded-[2rem] blur-md opacity-40 group-hover:opacity-70 transition duration-500" />
+        
+        {/* Button body */}
+        <div className={cn(
+          "relative flex items-center justify-center gap-3 px-8 py-4",
+          "bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10",
+          "backdrop-blur-xl rounded-[2rem]",
+          "border border-primary/30 group-hover:border-primary/50",
+          "shadow-xl shadow-primary/10 group-hover:shadow-2xl group-hover:shadow-primary/20",
+          "transition-all duration-300 ease-out",
+          "group-hover:scale-[1.015]"
+        )}>
         {/* Shimmer effect on hover */}
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 rounded-[2rem]" />
         
@@ -190,5 +191,6 @@ export function AgentBuildButton({ isBuilding, onBuild, disabled }: AgentBuildBu
         <ArrowRight className="relative h-5 w-5 text-primary group-hover:translate-x-1 transition-transform duration-300" />
       </div>
     </button>
+  </div>
   );
 }
