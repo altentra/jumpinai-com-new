@@ -426,30 +426,69 @@ export default function Implementation() {
           </div>
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-foreground via-foreground to-foreground/60 bg-clip-text text-transparent">
-              AI Agent Implementation
+              Jump Implementation
             </h1>
             <p className="text-muted-foreground text-sm">
-              Analyze jumps for automation opportunities & manage your AI agents
+              Analyze your jumps for automation opportunities & build AI agents
             </p>
           </div>
         </div>
       </div>
 
-      {/* Main Tabs */}
+      {/* Main Tabs - Premium Design */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className={cn(
-          "grid w-full max-w-md grid-cols-2 p-1",
-          "bg-muted/50 border border-border/50"
+          "flex flex-row w-full max-w-lg gap-1.5 sm:gap-2",
+          "rounded-xl sm:rounded-2xl",
+          "glass border border-border/50",
+          "p-1.5 sm:p-2",
+          "h-auto",
+          "backdrop-blur-xl",
+          "bg-gradient-to-r from-background/95 via-background/90 to-background/95",
+          "shadow-lg shadow-primary/5"
         )}>
-          <TabsTrigger value="analyze" className="flex items-center gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm">
+          <TabsTrigger 
+            value="analyze" 
+            className={cn(
+              "flex-1 flex items-center justify-center gap-2",
+              "text-xs sm:text-sm font-semibold",
+              "py-3 sm:py-3.5 px-4 sm:px-6",
+              "rounded-lg sm:rounded-xl",
+              "transition-all duration-300",
+              "text-muted-foreground hover:text-foreground hover:bg-accent/50",
+              "data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary/20 data-[state=active]:to-primary/10",
+              "data-[state=active]:text-primary data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20",
+              "data-[state=active]:border data-[state=active]:border-primary/30"
+            )}
+          >
             <Sparkles className="w-4 h-4" />
-            Analyze Jumps
+            <span>Analyze Jumps</span>
           </TabsTrigger>
-          <TabsTrigger value="agents" className="flex items-center gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm">
+          <TabsTrigger 
+            value="agents" 
+            className={cn(
+              "flex-1 flex items-center justify-center gap-2",
+              "text-xs sm:text-sm font-semibold",
+              "py-3 sm:py-3.5 px-4 sm:px-6",
+              "rounded-lg sm:rounded-xl",
+              "transition-all duration-300",
+              "text-muted-foreground hover:text-foreground hover:bg-accent/50",
+              "data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary/20 data-[state=active]:to-primary/10",
+              "data-[state=active]:text-primary data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20",
+              "data-[state=active]:border data-[state=active]:border-primary/30"
+            )}
+          >
             <Package className="w-4 h-4" />
-            My AI Agents
+            <span>AI Agents</span>
             {savedAgents.length > 0 && (
-              <Badge variant="secondary" className="ml-1 text-xs bg-primary/10 text-primary border-primary/20">
+              <Badge 
+                variant="secondary" 
+                className={cn(
+                  "ml-1 text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5",
+                  "bg-primary/15 text-primary border-primary/25",
+                  "font-semibold"
+                )}
+              >
                 {savedAgents.length}
               </Badge>
             )}
