@@ -41,6 +41,7 @@ import { OpportunityCard } from "@/components/implementation/OpportunityCard";
 import { AgentDetailCard } from "@/components/implementation/AgentDetailCard";
 import { AnalysisSummaryCard } from "@/components/implementation/AnalysisSummaryCard";
 import { AgentListCard } from "@/components/implementation/AgentListCard";
+import { AnalyzeButton } from "@/components/implementation/AnalyzeButton";
 
 interface AgentOpportunity {
   id: string;
@@ -585,49 +586,12 @@ export default function Implementation() {
                         )}
                       </div>
                       
-                      <div className="flex gap-2">
-                        <Button
-                          onClick={() => handleAnalyze(false)}
-                          disabled={isAnalyzing}
-                          size="lg"
-                          className={cn(
-                            "flex-1",
-                            "bg-gradient-to-r from-primary via-primary to-primary/90",
-                            "hover:from-primary/90 hover:to-primary",
-                            "text-primary-foreground font-semibold",
-                            "shadow-lg shadow-primary/20"
-                          )}
-                        >
-                          {isAnalyzing ? (
-                            <>
-                              <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                              Analyzing...
-                            </>
-                          ) : analysisResult ? (
-                            <>
-                              <Check className="w-5 h-5 mr-2" />
-                              View Analysis
-                            </>
-                          ) : (
-                            <>
-                              <Bot className="w-5 h-5 mr-2" />
-                              Analyze for Agents
-                              <Rocket className="w-4 h-4 ml-2" />
-                            </>
-                          )}
-                        </Button>
-                        {analysisResult && (
-                          <Button
-                            onClick={() => handleAnalyze(true)}
-                            disabled={isAnalyzing}
-                            variant="outline"
-                            size="lg"
-                            className="border-border/50 hover:bg-muted/50"
-                          >
-                            <RefreshCw className={cn("w-4 h-4", isAnalyzing && "animate-spin")} />
-                          </Button>
-                        )}
-                      </div>
+                      <AnalyzeButton
+                        isAnalyzing={isAnalyzing}
+                        hasAnalysis={!!analysisResult}
+                        onAnalyze={handleAnalyze}
+                        disabled={!selectedJump}
+                      />
                     </div>
                   ) : (
                     <div className="text-center py-8 space-y-3">
