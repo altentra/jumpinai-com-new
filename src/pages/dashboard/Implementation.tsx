@@ -1007,9 +1007,18 @@ function OpportunityCard({
                       <Wrench className="w-4 h-4 text-muted-foreground" />
                       Troubleshooting
                     </h5>
-                    <ul className="space-y-1.5">
-                      {generatedWorkflow.detailedInstructions.troubleshooting.map((tip: string, i: number) => (
-                        <li key={i} className="text-sm text-muted-foreground">• {tip}</li>
+                    <ul className="space-y-2">
+                      {generatedWorkflow.detailedInstructions.troubleshooting.map((tip: any, i: number) => (
+                        <li key={i} className="text-sm text-muted-foreground">
+                          {typeof tip === 'string' ? (
+                            <span>• {tip}</span>
+                          ) : (
+                            <div className="space-y-1">
+                              <p className="font-medium text-foreground">• {tip.problem}</p>
+                              <p className="ml-3 text-muted-foreground">{tip.solution}</p>
+                            </div>
+                          )}
+                        </li>
                       ))}
                     </ul>
                   </div>
