@@ -940,6 +940,82 @@ function OpportunityCard({
                 <ExternalLink className="w-3.5 h-3.5" />
               </a>
             </div>
+
+            {/* Detailed Instructions Section */}
+            {generatedWorkflow.detailedInstructions && (
+              <div className="space-y-4 p-4 rounded-lg bg-background/50 border border-border/30">
+                <h4 className="font-semibold flex items-center gap-2">
+                  <FileText className="w-4 h-4 text-primary" />
+                  Setup Instructions
+                </h4>
+                
+                {generatedWorkflow.detailedInstructions.quickStart && (
+                  <div className="p-3 rounded-md bg-primary/10 border border-primary/20">
+                    <p className="text-sm font-medium">{generatedWorkflow.detailedInstructions.quickStart}</p>
+                  </div>
+                )}
+
+                {generatedWorkflow.detailedInstructions.requirements?.length > 0 && (
+                  <div className="space-y-2">
+                    <h5 className="text-sm font-medium flex items-center gap-2">
+                      <span className="w-5 h-5 rounded-full bg-yellow-500/20 text-yellow-500 flex items-center justify-center text-xs">!</span>
+                      Requirements
+                    </h5>
+                    <ul className="space-y-1.5">
+                      {generatedWorkflow.detailedInstructions.requirements.map((req: string, i: number) => (
+                        <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+                          <Check className="w-4 h-4 text-muted-foreground shrink-0 mt-0.5" />
+                          <span>{req}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {generatedWorkflow.detailedInstructions.steps?.length > 0 && (
+                  <div className="space-y-3">
+                    <h5 className="text-sm font-medium">Step-by-Step Guide</h5>
+                    <div className="space-y-3">
+                      {generatedWorkflow.detailedInstructions.steps.map((step: any, i: number) => (
+                        <div key={i} className="flex gap-3">
+                          <div className="w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-bold shrink-0">
+                            {i + 1}
+                          </div>
+                          <div className="flex-1">
+                            <p className="text-sm font-medium">{step.title}</p>
+                            <p className="text-sm text-muted-foreground mt-0.5">{step.description}</p>
+                            {step.tips && (
+                              <p className="text-xs text-primary/80 mt-1 italic">💡 {step.tips}</p>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {generatedWorkflow.detailedInstructions.testingGuide && (
+                  <div className="p-3 rounded-md bg-green-500/10 border border-green-500/20">
+                    <h5 className="text-sm font-medium text-green-400 mb-1">Testing Guide</h5>
+                    <p className="text-sm text-muted-foreground">{generatedWorkflow.detailedInstructions.testingGuide}</p>
+                  </div>
+                )}
+
+                {generatedWorkflow.detailedInstructions.troubleshooting?.length > 0 && (
+                  <div className="space-y-2">
+                    <h5 className="text-sm font-medium flex items-center gap-2">
+                      <Wrench className="w-4 h-4 text-muted-foreground" />
+                      Troubleshooting
+                    </h5>
+                    <ul className="space-y-1.5">
+                      {generatedWorkflow.detailedInstructions.troubleshooting.map((tip: string, i: number) => (
+                        <li key={i} className="text-sm text-muted-foreground">• {tip}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            )}
             
             <Button 
               variant="outline"
