@@ -35,7 +35,6 @@ import {
 import { OpportunityCard } from "@/components/implementation/OpportunityCard";
 import { AgentDetailCard } from "@/components/implementation/AgentDetailCard";
 import { AnalysisSummaryCard } from "@/components/implementation/AnalysisSummaryCard";
-import { JumpSelectionCard } from "@/components/implementation/JumpSelectionCard";
 import { AgentListCard } from "@/components/implementation/AgentListCard";
 
 interface AgentOpportunity {
@@ -386,14 +385,6 @@ export default function Implementation() {
     }
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric'
-    });
-  };
-
   // Find existing agent for an opportunity based on title match
   const findExistingAgentForOpportunity = (opportunity: AgentOpportunity): SavedAgent | null => {
     if (!selectedJump) return null;
@@ -418,11 +409,15 @@ export default function Implementation() {
       {/* Header Section */}
       <div className="space-y-2">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/20">
-            <Bot className="w-6 h-6 text-primary" />
+          <div className={cn(
+            "p-3 rounded-2xl",
+            "bg-gradient-to-br from-primary/25 via-primary/15 to-primary/5",
+            "border border-primary/20 shadow-lg shadow-primary/10"
+          )}>
+            <Bot className="w-7 h-7 text-primary" />
           </div>
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+            <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-foreground via-foreground to-foreground/60 bg-clip-text text-transparent">
               AI Agent Implementation
             </h1>
             <p className="text-muted-foreground text-sm">
@@ -434,16 +429,19 @@ export default function Implementation() {
 
       {/* Main Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full max-w-md grid-cols-2">
-          <TabsTrigger value="analyze" className="flex items-center gap-2">
+        <TabsList className={cn(
+          "grid w-full max-w-md grid-cols-2 p-1",
+          "bg-muted/50 border border-border/50"
+        )}>
+          <TabsTrigger value="analyze" className="flex items-center gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm">
             <Sparkles className="w-4 h-4" />
             Analyze Jumps
           </TabsTrigger>
-          <TabsTrigger value="agents" className="flex items-center gap-2">
+          <TabsTrigger value="agents" className="flex items-center gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm">
             <Package className="w-4 h-4" />
             My AI Agents
             {savedAgents.length > 0 && (
-              <Badge variant="secondary" className="ml-1 text-xs">
+              <Badge variant="secondary" className="ml-1 text-xs bg-primary/10 text-primary border-primary/20">
                 {savedAgents.length}
               </Badge>
             )}
@@ -455,92 +453,28 @@ export default function Implementation() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Left Column - Jump Selection */}
             <div className="lg:col-span-1">
-              <Card className="border-border/50 bg-card/50 backdrop-blur-sm h-[500px] flex flex-col">
-                <CardHeader className="pb-3 flex-shrink-0">
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <FileText className="w-4 h-4 text-primary" />
-                    Select a Jump
-                  </CardTitle>
-                  <CardDescription>
-                    Choose from your {jumps.length} generated jumps
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="flex-1 min-h-0 p-0">
-                  {isLoadingJumps ? (
-                    <div className="flex items-center justify-center py-8">
-                      <Loader2 className="w-6 h-6 animate-spin text-primary" />
-                    </div>
-                  ) : jumps.length === 0 ? (
-                    <div className="text-center py-8 space-y-3 px-6">
-                      <FileText className="w-10 h-10 mx-auto text-muted-foreground/50" />
-                      <p className="text-sm text-muted-foreground">
-                        No jumps found. Create a jump first in the Studio.
-                      </p>
-                      <Button variant="outline" size="sm" asChild>
-                        <a href="/dashboard/studio">Go to Studio</a>
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="h-full overflow-y-auto px-4 pb-4">
-                      <div className="space-y-2">
-                        {jumps.map((jump, index) => (
-                          <button
-                            key={jump.id}
-                            onClick={() => handleSelectJump(jump)}
-                            className={cn(
-                              "w-full p-3 rounded-lg text-left transition-all duration-200",
-                              "border hover:border-primary/30 hover:bg-primary/5",
-                              selectedJump?.id === jump.id
-                                ? "border-primary/50 bg-primary/10"
-                                : "border-border/30 bg-background/50"
-                            )}
-                          >
-                            <div className="flex items-start gap-2">
-                              <div className={cn(
-                                "shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold",
-                                selectedJump?.id === jump.id
-                                  ? "bg-primary text-primary-foreground"
-                                  : "bg-muted text-muted-foreground"
-                              )}>
-                                {jumps.length - index}
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <div className="flex items-center gap-2">
-                                  <h4 className="font-medium text-sm truncate flex-1">
-                                    {jump.title}
-                                  </h4>
-                                  {jump.hasAnalysis && (
-                                    <CheckCircle2 className="w-3.5 h-3.5 text-green-500 shrink-0" />
-                                  )}
-                                </div>
-                                <div className="flex items-center gap-2 mt-1">
-                                  <Clock className="w-3 h-3 text-muted-foreground" />
-                                  <span className="text-xs text-muted-foreground">
-                                    {formatDate(jump.created_at)}
-                                  </span>
-                                </div>
-                              </div>
-                              {selectedJump?.id === jump.id && (
-                                <Check className="w-4 h-4 text-primary shrink-0" />
-                              )}
-                            </div>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
+              <JumpSelectionList
+                jumps={jumps}
+                selectedJump={selectedJump}
+                isLoading={isLoadingJumps}
+                onSelectJump={handleSelectJump}
+              />
             </div>
 
             {/* Right Column - Analysis Section */}
             <div className="lg:col-span-2 space-y-6">
               {/* Analysis Card */}
-              <Card className="border-border/50 bg-gradient-to-br from-card/80 to-card/40 backdrop-blur-sm overflow-hidden relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent pointer-events-none" />
+              <Card className={cn(
+                "relative overflow-hidden",
+                "border-border/40",
+                "bg-gradient-to-br from-card via-card/95 to-card/90"
+              )}>
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.03] via-transparent to-transparent pointer-events-none" />
+                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl" />
+                
                 <CardHeader className="relative">
                   <CardTitle className="text-lg flex items-center gap-2">
-                    <Sparkles className="w-4 h-4 text-primary" />
+                    <Sparkles className="w-5 h-5 text-primary" />
                     Agentic Implementation Analysis
                   </CardTitle>
                   <CardDescription className="text-sm leading-relaxed">
@@ -550,12 +484,16 @@ export default function Implementation() {
                 <CardContent className="relative">
                   {selectedJump ? (
                     <div className="space-y-4">
-                      <div className="p-4 rounded-lg bg-background/50 border border-border/30">
+                      <div className={cn(
+                        "p-4 rounded-xl",
+                        "bg-gradient-to-br from-background/80 to-background/40",
+                        "border border-border/40"
+                      )}>
                         <div className="flex items-center gap-2 mb-2">
                           <Target className="w-4 h-4 text-primary" />
                           <span className="text-sm font-medium">Selected Jump</span>
                           {analysisResult?.cached && (
-                            <Badge variant="secondary" className="text-xs">Cached</Badge>
+                            <Badge variant="secondary" className="text-xs bg-green-500/10 text-green-500 border-green-500/20">Cached</Badge>
                           )}
                         </div>
                         <h3 className="font-semibold text-lg">{selectedJump.title}</h3>
@@ -571,7 +509,13 @@ export default function Implementation() {
                           onClick={() => handleAnalyze(false)}
                           disabled={isAnalyzing}
                           size="lg"
-                          className="flex-1 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground font-semibold"
+                          className={cn(
+                            "flex-1",
+                            "bg-gradient-to-r from-primary via-primary to-primary/90",
+                            "hover:from-primary/90 hover:to-primary",
+                            "text-primary-foreground font-semibold",
+                            "shadow-lg shadow-primary/20"
+                          )}
                         >
                           {isAnalyzing ? (
                             <>
@@ -597,6 +541,7 @@ export default function Implementation() {
                             disabled={isAnalyzing}
                             variant="outline"
                             size="lg"
+                            className="border-border/50 hover:bg-muted/50"
                           >
                             <RefreshCw className={cn("w-4 h-4", isAnalyzing && "animate-spin")} />
                           </Button>
@@ -604,8 +549,12 @@ export default function Implementation() {
                       </div>
                     </div>
                   ) : (
-                    <div className="text-center py-6 space-y-3">
-                      <div className="w-16 h-16 mx-auto rounded-full bg-muted/50 flex items-center justify-center">
+                    <div className="text-center py-8 space-y-3">
+                      <div className={cn(
+                        "w-16 h-16 mx-auto rounded-2xl flex items-center justify-center",
+                        "bg-gradient-to-br from-muted/50 to-muted/20",
+                        "border border-border/30"
+                      )}>
                         <ChevronRight className="w-8 h-8 text-muted-foreground" />
                       </div>
                       <p className="text-muted-foreground">
@@ -618,34 +567,22 @@ export default function Implementation() {
 
               {/* Results Section */}
               {analysisResult && (
-                <div className="space-y-4">
+                <div className="space-y-5">
                   {/* Summary Card */}
-                  <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
-                    <CardContent className="pt-6">
-                      <div className="flex items-start gap-3">
-                        <div className="p-2 rounded-lg bg-primary/20">
-                          <Lightbulb className="w-5 h-5 text-primary" />
-                        </div>
-                        <div>
-                          <h3 className="font-semibold mb-1">Analysis Summary</h3>
-                          <p className="text-sm text-muted-foreground">{analysisResult.summary}</p>
-                          <div className="mt-3 flex items-center gap-2">
-                            <TrendingUp className="w-4 h-4 text-green-500" />
-                            <span className="text-sm font-medium text-green-500">
-                              {analysisResult.overallPotential}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+                  <AnalysisSummaryCard
+                    summary={analysisResult.summary}
+                    overallPotential={analysisResult.overallPotential}
+                    opportunitiesCount={analysisResult.opportunities.length}
+                  />
 
                   {/* Opportunities */}
                   <div className="space-y-4">
-                    <h3 className="text-lg font-semibold flex items-center gap-2">
-                      <Zap className="w-5 h-5 text-primary" />
+                    <h3 className="text-lg font-bold flex items-center gap-2">
+                      <div className="p-1.5 rounded-lg bg-primary/10">
+                        <Zap className="w-5 h-5 text-primary" />
+                      </div>
                       Automation Opportunities
-                      <Badge variant="secondary" className="ml-2">
+                      <Badge variant="secondary" className="ml-2 font-medium">
                         {analysisResult.opportunities.length} found
                       </Badge>
                     </h3>
@@ -680,75 +617,14 @@ export default function Implementation() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Agents List */}
             <div className="lg:col-span-1">
-              <Card className="border-border/50 bg-card/50 backdrop-blur-sm h-[500px] flex flex-col">
-                <CardHeader className="pb-3 flex-shrink-0">
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <Package className="w-4 h-4 text-primary" />
-                    Your AI Agents
-                  </CardTitle>
-                  <CardDescription>
-                    {savedAgents.length} agents built
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="flex-1 min-h-0 p-0">
-                  {isLoadingAgents ? (
-                    <div className="flex items-center justify-center py-8">
-                      <Loader2 className="w-6 h-6 animate-spin text-primary" />
-                    </div>
-                  ) : savedAgents.length === 0 ? (
-                    <div className="text-center py-8 space-y-3 px-6">
-                      <Bot className="w-10 h-10 mx-auto text-muted-foreground/50" />
-                      <p className="text-sm text-muted-foreground">
-                        No agents built yet. Analyze a jump and build your first agent!
-                      </p>
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        onClick={() => setActiveTab("analyze")}
-                      >
-                        Start Analyzing
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="h-full overflow-y-auto px-4 pb-4">
-                      <div className="space-y-2">
-                        {savedAgents.map((agent) => (
-                          <button
-                            key={agent.id}
-                            onClick={() => setSelectedAgent(agent)}
-                            className={cn(
-                              "w-full p-3 rounded-lg text-left transition-all duration-200",
-                              "border hover:border-primary/30 hover:bg-primary/5",
-                              selectedAgent?.id === agent.id
-                                ? "border-primary/50 bg-primary/10"
-                                : "border-border/30 bg-background/50"
-                            )}
-                          >
-                            <div className="flex items-start gap-2">
-                              <div className="p-1.5 rounded-md bg-primary/20 shrink-0">
-                                <Bot className="w-4 h-4 text-primary" />
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <h4 className="font-medium text-sm truncate">
-                                  {agent.title}
-                                </h4>
-                                <div className="flex items-center gap-2 mt-1">
-                                  <Badge className={cn("text-xs", getImpactBadgeColor(agent.impact_level))}>
-                                    {agent.impact_level}
-                                  </Badge>
-                                  <span className="text-xs text-muted-foreground">
-                                    {formatDate(agent.created_at)}
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
+              <AgentListCard
+                agents={savedAgents}
+                selectedAgent={selectedAgent}
+                isLoading={isLoadingAgents}
+                onSelectAgent={(agent) => setSelectedAgent(agent as SavedAgent)}
+                onSwitchToAnalyze={() => setActiveTab("analyze")}
+                getImpactBadgeColor={getImpactBadgeColor}
+              />
             </div>
 
             {/* Agent Details */}
@@ -762,9 +638,17 @@ export default function Implementation() {
                   getComplexityBadgeColor={getComplexityBadgeColor}
                 />
               ) : (
-                <Card className="border-border/50 bg-card/50 backdrop-blur-sm h-[500px] flex items-center justify-center">
+                <Card className={cn(
+                  "h-[500px] flex items-center justify-center",
+                  "border-border/40",
+                  "bg-gradient-to-br from-card via-card/95 to-card/90"
+                )}>
                   <div className="text-center space-y-3">
-                    <div className="w-16 h-16 mx-auto rounded-full bg-muted/50 flex items-center justify-center">
+                    <div className={cn(
+                      "w-16 h-16 mx-auto rounded-2xl flex items-center justify-center",
+                      "bg-gradient-to-br from-muted/50 to-muted/20",
+                      "border border-border/30"
+                    )}>
                       <Eye className="w-8 h-8 text-muted-foreground" />
                     </div>
                     <p className="text-muted-foreground">
@@ -780,7 +664,7 @@ export default function Implementation() {
 
       {/* Delete Confirmation Dialog */}
       <AlertDialog open={!!agentToDelete} onOpenChange={() => setAgentToDelete(null)}>
-        <AlertDialogContent>
+        <AlertDialogContent className="border-border/50 bg-card">
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Agent?</AlertDialogTitle>
             <AlertDialogDescription>
@@ -788,7 +672,7 @@ export default function Implementation() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel className="border-border/50">Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => agentToDelete && handleDeleteAgent(agentToDelete)}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
@@ -802,612 +686,139 @@ export default function Implementation() {
   );
 }
 
-// Opportunity Card Component
-interface OpportunityCardProps {
-  opportunity: AgentOpportunity;
-  index: number;
-  isBuilding: boolean;
-  generatedWorkflow: any;
-  existingAgent: SavedAgent | null;
-  onBuild: () => void;
-  onDownload: (workflow: any, filename: string) => void;
-  onClearWorkflow: () => void;
-  onViewAgent: (agent: SavedAgent) => void;
-  getImpactBadgeColor: (level: string | null) => string;
-  getComplexityBadgeColor: (level: string | null) => string;
+// Jump Selection List Component
+interface JumpSelectionListProps {
+  jumps: JumpWithAnalysis[];
+  selectedJump: JumpWithAnalysis | null;
+  isLoading: boolean;
+  onSelectJump: (jump: JumpWithAnalysis) => void;
 }
 
-function OpportunityCard({
-  opportunity,
-  index,
-  isBuilding,
-  generatedWorkflow,
-  existingAgent,
-  onBuild,
-  onDownload,
-  onClearWorkflow,
-  onViewAgent,
-  getImpactBadgeColor,
-  getComplexityBadgeColor,
-}: OpportunityCardProps) {
-  return (
-    <Card className="border-border/50 bg-card/50 backdrop-blur-sm hover:border-primary/30 transition-colors">
-      <CardHeader className="pb-3">
-        <div className="flex items-start justify-between gap-4">
-          <div className="flex items-start gap-3">
-            <div className="p-2 rounded-lg bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/20">
-              <Bot className="w-5 h-5 text-primary" />
-            </div>
-            <div>
-              <CardTitle className="text-base">
-                {index + 1}. {opportunity.title}
-              </CardTitle>
-              {(opportunity.phaseNumber || opportunity.stepNumber) && (
-                <div className="flex items-center gap-2 mt-1">
-                  <Badge variant="outline" className="text-xs">
-                    {opportunity.phaseNumber && `Phase ${opportunity.phaseNumber}`}
-                    {opportunity.stepNumber && ` • Step ${opportunity.stepNumber}`}
-                  </Badge>
-                </div>
-              )}
-            </div>
-          </div>
-          <div className="flex gap-2 shrink-0">
-            <Badge className={cn("text-xs", getImpactBadgeColor(opportunity.impactLevel))}>
-              {opportunity.impactLevel} impact
-            </Badge>
-            <Badge className={cn("text-xs", getComplexityBadgeColor(opportunity.complexityLevel))}>
-              {opportunity.complexityLevel}
-            </Badge>
-          </div>
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <p className="text-sm text-muted-foreground">{opportunity.description}</p>
+import { FileText, Clock, CheckCircle2 } from "lucide-react";
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="p-3 rounded-lg bg-background/50 border border-border/30">
-            <div className="flex items-center gap-2 mb-2">
-              <Workflow className="w-4 h-4 text-primary" />
-              <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                What Gets Automated
-              </span>
-            </div>
-            <p className="text-sm">{opportunity.automationTarget}</p>
-          </div>
-
-          <div className="p-3 rounded-lg bg-background/50 border border-border/30">
-            <div className="flex items-center gap-2 mb-2">
-              <Clock className="w-4 h-4 text-green-500" />
-              <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                Estimated Time Saved
-              </span>
-            </div>
-            <p className="text-sm font-semibold text-green-500">
-              {opportunity.estimatedTimeSaved}
-            </p>
-          </div>
-        </div>
-
-        <div>
-          <div className="flex items-center gap-2 mb-2">
-            <Sparkles className="w-4 h-4 text-primary" />
-            <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-              Key Benefits
-            </span>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {opportunity.benefits.map((benefit, i) => (
-              <Badge key={i} variant="secondary" className="text-xs">
-                {benefit}
-              </Badge>
-            ))}
-          </div>
-        </div>
-
-        <div>
-          <div className="flex items-center gap-2 mb-2">
-            <Wrench className="w-4 h-4 text-muted-foreground" />
-            <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-              Tools & Technologies
-            </span>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {opportunity.requiredTools.map((tool, i) => (
-              <Badge key={i} variant="outline" className="text-xs">
-                {tool}
-              </Badge>
-            ))}
-          </div>
-        </div>
-
-        <Separator className="my-3" />
-
-        {generatedWorkflow ? (
-          <div className="space-y-4">
-            <div className="p-4 rounded-lg bg-green-500/10 border border-green-500/20">
-              <div className="flex items-center gap-2 mb-3">
-                <Check className="w-5 h-5 text-green-500" />
-                <span className="font-semibold text-green-500">Workflow Generated & Saved!</span>
-              </div>
-              
-              <Button 
-                onClick={() => onDownload(generatedWorkflow.workflow, generatedWorkflow.filename)}
-                className="w-full bg-green-600 hover:bg-green-700"
-                size="lg"
-              >
-                <Download className="w-5 h-5 mr-2" />
-                Download n8n Workflow
-              </Button>
-              
-              <a 
-                href="https://n8n.io" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-1.5 text-sm text-primary hover:underline py-2"
-              >
-                Don't have n8n? Create your free account here
-                <ExternalLink className="w-3.5 h-3.5" />
-              </a>
-            </div>
-
-            {/* Detailed Instructions Section */}
-            {(generatedWorkflow.detailedInstructions || generatedWorkflow.instructions) && (
-              <div className="space-y-4 p-4 rounded-lg bg-background/50 border border-border/30">
-                <h4 className="font-semibold flex items-center gap-2">
-                  <FileText className="w-4 h-4 text-primary" />
-                  Setup Instructions
-                </h4>
-
-                {/* Best-case: structured detailed instructions */}
-                {generatedWorkflow.detailedInstructions?.quickStart && (
-                  <div className="p-3 rounded-md bg-primary/10 border border-primary/20">
-                    <p className="text-sm font-medium">{generatedWorkflow.detailedInstructions.quickStart}</p>
-                  </div>
-                )}
-
-                {generatedWorkflow.detailedInstructions?.requirements?.length > 0 && (
-                  <div className="space-y-2">
-                    <h5 className="text-sm font-medium flex items-center gap-2">
-                      <span className="w-5 h-5 rounded-full bg-yellow-500/20 text-yellow-500 flex items-center justify-center text-xs">!</span>
-                      Requirements
-                    </h5>
-                    <ul className="space-y-1.5">
-                      {generatedWorkflow.detailedInstructions.requirements.map((req: string, i: number) => (
-                        <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
-                          <Check className="w-4 h-4 text-muted-foreground shrink-0 mt-0.5" />
-                          <span>{req}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-
-                {generatedWorkflow.detailedInstructions?.steps?.length > 0 && (
-                  <div className="space-y-3">
-                    <h5 className="text-sm font-medium">Step-by-Step Guide</h5>
-                    <div className="space-y-3">
-                      {generatedWorkflow.detailedInstructions.steps.map((step: any, i: number) => (
-                        <div key={i} className="flex gap-3">
-                          <div className="w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-bold shrink-0">
-                            {i + 1}
-                          </div>
-                          <div className="flex-1">
-                            <p className="text-sm font-medium">{step.title}</p>
-                            <p className="text-sm text-muted-foreground mt-0.5">{step.description}</p>
-                            {step.tips && (
-                              <p className="text-xs text-primary/80 mt-1 italic">💡 {Array.isArray(step.tips) ? step.tips.join(' ') : step.tips}</p>
-                            )}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {generatedWorkflow.detailedInstructions?.testingGuide && (
-                  <div className="p-3 rounded-md bg-green-500/10 border border-green-500/20">
-                    <h5 className="text-sm font-medium text-green-400 mb-1">Testing Guide</h5>
-                    <p className="text-sm text-muted-foreground">{generatedWorkflow.detailedInstructions.testingGuide}</p>
-                  </div>
-                )}
-
-                {generatedWorkflow.detailedInstructions?.troubleshooting?.length > 0 && (
-                  <div className="space-y-2">
-                    <h5 className="text-sm font-medium flex items-center gap-2">
-                      <Wrench className="w-4 h-4 text-muted-foreground" />
-                      Troubleshooting
-                    </h5>
-                    <ul className="space-y-2">
-                      {generatedWorkflow.detailedInstructions.troubleshooting.map((tip: any, i: number) => (
-                        <li key={i} className="text-sm text-muted-foreground">
-                          {typeof tip === 'string' ? (
-                            <span>• {tip}</span>
-                          ) : (
-                            <div className="space-y-1">
-                              <p className="font-medium text-foreground">• {tip.problem}</p>
-                              <p className="ml-3 text-muted-foreground">{tip.solution}</p>
-                            </div>
-                          )}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-
-                {/* Fallback: raw content if the model output couldn't be parsed */}
-                {generatedWorkflow.detailedInstructions?._raw && (
-                  <div className="space-y-2">
-                    <h5 className="text-sm font-medium">Full Instructions (Raw)</h5>
-                    <pre className="whitespace-pre-wrap break-words text-sm text-muted-foreground bg-background/60 border border-border/40 rounded-md p-3">
-                      {generatedWorkflow.detailedInstructions._raw}
-                    </pre>
-                  </div>
-                )}
-
-                {/* Always show basic import steps as a guaranteed minimum */}
-                {generatedWorkflow.instructions && (
-                  <div className="space-y-2">
-                    <h5 className="text-sm font-medium">Basic Import Steps</h5>
-                    <ol className="space-y-1.5 text-sm text-muted-foreground list-decimal pl-4">
-                      {Object.values(generatedWorkflow.instructions).map((line, i) => (
-                        <li key={i}>{String(line)}</li>
-                      ))}
-                    </ol>
-                  </div>
-                )}
-              </div>
-            )}
-            
-            <Button 
-              variant="outline"
-              onClick={onClearWorkflow}
-              className="w-full"
-            >
-              Close
-            </Button>
-          </div>
-        ) : existingAgent ? (
-          // Show existing agent
-          <div className="space-y-4">
-            <div className="p-4 rounded-lg bg-green-500/10 border border-green-500/20">
-              <div className="flex items-center gap-2 mb-3">
-                <CheckCircle2 className="w-5 h-5 text-green-500" />
-                <span className="font-semibold text-green-500">Agent Already Built!</span>
-              </div>
-              
-              <div className="flex flex-col gap-2">
-                <Button 
-                  onClick={() => onDownload(existingAgent.workflow_json, existingAgent.workflow_filename || 'workflow.json')}
-                  className="w-full bg-green-600 hover:bg-green-700"
-                  size="lg"
-                >
-                  <Download className="w-5 h-5 mr-2" />
-                  Download n8n Workflow
-                </Button>
-                
-                <Button 
-                  variant="outline"
-                  onClick={() => onViewAgent(existingAgent)}
-                  className="w-full"
-                >
-                  <Eye className="w-4 h-4 mr-2" />
-                  View Full Instructions
-                </Button>
-              </div>
-              
-              <a 
-                href="https://n8n.io" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-1.5 text-sm text-primary hover:underline py-2"
-              >
-                Don't have n8n? Create your free account here
-                <ExternalLink className="w-3.5 h-3.5" />
-              </a>
-            </div>
-            
-            <Button 
-              variant="ghost"
-              onClick={onBuild}
-              disabled={isBuilding}
-              className="w-full text-muted-foreground"
-              size="sm"
-            >
-              <RefreshCw className="w-4 h-4 mr-2" />
-              Rebuild Agent
-            </Button>
-          </div>
-        ) : (
-          <div className="flex justify-end">
-            <Button 
-              onClick={onBuild}
-              disabled={isBuilding}
-              className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70"
-            >
-              {isBuilding ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Generating Workflow...
-                </>
-              ) : (
-                <>
-                  <Rocket className="w-4 h-4 mr-2" />
-                  Build This Agent
-                </>
-              )}
-            </Button>
-          </div>
-        )}
-      </CardContent>
-    </Card>
-  );
-}
-
-// Agent Detail Card Component
-interface AgentDetailCardProps {
-  agent: SavedAgent;
-  onDownload: (workflow: any, filename: string) => void;
-  onDelete: () => void;
-  getImpactBadgeColor: (level: string | null) => string;
-  getComplexityBadgeColor: (level: string | null) => string;
-}
-
-function AgentDetailCard({
-  agent,
-  onDownload,
-  onDelete,
-  getImpactBadgeColor,
-  getComplexityBadgeColor,
-}: AgentDetailCardProps) {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopyWorkflow = () => {
-    navigator.clipboard.writeText(JSON.stringify(agent.workflow_json, null, 2));
-    setCopied(true);
-    toast.success("Workflow JSON copied to clipboard");
-    setTimeout(() => setCopied(false), 2000);
+function JumpSelectionList({
+  jumps,
+  selectedJump,
+  isLoading,
+  onSelectJump,
+}: JumpSelectionListProps) {
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    });
   };
 
   return (
-    <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
-      <CardHeader>
-        <div className="flex items-start justify-between">
-          <div className="flex items-start gap-3">
-            <div className="p-2.5 rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/20">
-              <Bot className="w-6 h-6 text-primary" />
-            </div>
-            <div>
-              <CardTitle className="text-xl">{agent.title}</CardTitle>
-              <div className="flex items-center gap-2 mt-2">
-                <Badge className={cn("text-xs", getImpactBadgeColor(agent.impact_level))}>
-                  {agent.impact_level} impact
-                </Badge>
-                <Badge className={cn("text-xs", getComplexityBadgeColor(agent.complexity_level))}>
-                  {agent.complexity_level}
-                </Badge>
-                <Badge variant="outline" className="text-xs">
-                  {agent.platform}
-                </Badge>
-              </div>
+    <Card className={cn(
+      "h-[500px] flex flex-col",
+      "border-border/40",
+      "bg-gradient-to-br from-card via-card/95 to-card/90"
+    )}>
+      <CardHeader className="pb-3 flex-shrink-0 space-y-1">
+        <CardTitle className="text-lg flex items-center gap-2">
+          <div className="p-1.5 rounded-lg bg-primary/10">
+            <FileText className="w-4 h-4 text-primary" />
+          </div>
+          Select a Jump
+        </CardTitle>
+        <CardDescription className="text-xs">
+          Choose from your {jumps.length} generated jumps
+        </CardDescription>
+      </CardHeader>
+
+      <CardContent className="flex-1 min-h-0 p-0">
+        {isLoading ? (
+          <div className="flex items-center justify-center py-12">
+            <div className="text-center space-y-3">
+              <Loader2 className="w-8 h-8 animate-spin text-primary mx-auto" />
+              <p className="text-sm text-muted-foreground">Loading jumps...</p>
             </div>
           </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <MoreVertical className="w-4 h-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={handleCopyWorkflow}>
-                <Copy className="w-4 h-4 mr-2" />
-                Copy Workflow JSON
-              </DropdownMenuItem>
-              <DropdownMenuItem 
-                onClick={onDelete}
-                className="text-destructive focus:text-destructive"
-              >
-                <Trash2 className="w-4 h-4 mr-2" />
-                Delete Agent
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        {agent.description && (
-          <p className="text-muted-foreground">{agent.description}</p>
-        )}
-
-        <div className="grid grid-cols-2 gap-4">
-          {agent.automation_target && (
-            <div className="p-3 rounded-lg bg-background/50 border border-border/30">
-              <div className="flex items-center gap-2 mb-2">
-                <Workflow className="w-4 h-4 text-primary" />
-                <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                  Automation Target
-                </span>
-              </div>
-              <p className="text-sm">{agent.automation_target}</p>
+        ) : jumps.length === 0 ? (
+          <div className="text-center py-12 space-y-4 px-6">
+            <div className="w-16 h-16 rounded-full bg-muted/30 flex items-center justify-center mx-auto">
+              <FileText className="w-8 h-8 text-muted-foreground/50" />
             </div>
-          )}
-
-          {agent.estimated_time_saved && (
-            <div className="p-3 rounded-lg bg-background/50 border border-border/30">
-              <div className="flex items-center gap-2 mb-2">
-                <Clock className="w-4 h-4 text-green-500" />
-                <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                  Time Saved
-                </span>
-              </div>
-              <p className="text-sm font-semibold text-green-500">
-                {agent.estimated_time_saved}
+            <div className="space-y-1">
+              <p className="text-sm font-medium text-muted-foreground">
+                No jumps found
+              </p>
+              <p className="text-xs text-muted-foreground/70">
+                Create a jump first in the Studio
               </p>
             </div>
-          )}
-        </div>
-
-        {agent.benefits && agent.benefits.length > 0 && (
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <Sparkles className="w-4 h-4 text-primary" />
-              <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                Benefits
-              </span>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {agent.benefits.map((benefit, i) => (
-                <Badge key={i} variant="secondary" className="text-xs">
-                  {benefit}
-                </Badge>
-              ))}
-            </div>
+            <Button variant="outline" size="sm" asChild className="gap-2">
+              <a href="/dashboard/studio">
+                <Rocket className="w-4 h-4" />
+                Go to Studio
+              </a>
+            </Button>
           </div>
-        )}
+        ) : (
+          <div className="h-full overflow-y-auto px-3 pb-4 scrollbar-thin">
+            <div className="space-y-2">
+              {jumps.map((jump, index) => (
+                <button
+                  key={jump.id}
+                  onClick={() => onSelectJump(jump)}
+                  className={cn(
+                    "w-full p-3 rounded-xl text-left transition-all duration-200",
+                    "border hover:border-primary/40",
+                    "group",
+                    selectedJump?.id === jump.id
+                      ? "border-primary/50 bg-gradient-to-r from-primary/15 via-primary/10 to-primary/5 shadow-sm"
+                      : "border-border/30 bg-background/30 hover:bg-background/50"
+                  )}
+                >
+                  <div className="flex items-start gap-3">
+                    {/* Index number */}
+                    <div className={cn(
+                      "shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold transition-colors",
+                      selectedJump?.id === jump.id
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-muted/50 text-muted-foreground group-hover:bg-muted"
+                    )}>
+                      {jumps.length - index}
+                    </div>
 
-        {agent.required_tools && agent.required_tools.length > 0 && (
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <Wrench className="w-4 h-4 text-muted-foreground" />
-              <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                Required Tools
-              </span>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {agent.required_tools.map((tool, i) => (
-                <Badge key={i} variant="outline" className="text-xs">
-                  {tool}
-                </Badge>
-              ))}
-            </div>
-          </div>
-        )}
-
-        <Separator />
-
-        {/* Complete Setup Instructions */}
-        <div className="space-y-4 p-4 rounded-lg bg-green-500/5 border border-green-500/20">
-          <h4 className="font-semibold flex items-center gap-2 text-green-500">
-            <FileText className="w-4 h-4" />
-            Implementation Instructions
-          </h4>
-
-          {agent.detailed_instructions ? (
-            <>
-              {agent.detailed_instructions.quickStart && (
-                <div className="p-3 rounded-md bg-primary/10 border border-primary/20">
-                  <p className="text-sm font-medium">{agent.detailed_instructions.quickStart}</p>
-                </div>
-              )}
-
-              {agent.detailed_instructions.requirements?.length > 0 && (
-                <div className="space-y-2">
-                  <h5 className="text-sm font-medium flex items-center gap-2">
-                    <span className="w-5 h-5 rounded-full bg-yellow-500/20 text-yellow-500 flex items-center justify-center text-xs">!</span>
-                    Requirements
-                  </h5>
-                  <ul className="space-y-1.5">
-                    {agent.detailed_instructions.requirements.map((req: string, i: number) => (
-                      <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
-                        <Check className="w-4 h-4 text-muted-foreground shrink-0 mt-0.5" />
-                        <span>{req}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {agent.detailed_instructions.steps?.length > 0 && (
-                <div className="space-y-3">
-                  <h5 className="text-sm font-medium">Step-by-Step Guide</h5>
-                  <div className="space-y-3">
-                    {agent.detailed_instructions.steps.map((step: any, i: number) => (
-                      <div key={i} className="flex gap-3">
-                        <div className="w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-bold shrink-0">
-                          {i + 1}
-                        </div>
-                        <div className="flex-1">
-                          <p className="text-sm font-medium">{step.title}</p>
-                          <p className="text-sm text-muted-foreground mt-0.5">{step.description}</p>
-                          {step.tips && (
-                            <p className="text-xs text-primary/80 mt-1 italic">💡 {Array.isArray(step.tips) ? step.tips.join(' ') : step.tips}</p>
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {agent.detailed_instructions.testingGuide && (
-                <div className="p-3 rounded-md bg-green-500/10 border border-green-500/20">
-                  <h5 className="text-sm font-medium text-green-400 mb-1">Testing Guide</h5>
-                  <p className="text-sm text-muted-foreground">{agent.detailed_instructions.testingGuide}</p>
-                </div>
-              )}
-
-              {agent.detailed_instructions.troubleshooting?.length > 0 && (
-                <div className="space-y-2">
-                  <h5 className="text-sm font-medium flex items-center gap-2">
-                    <Wrench className="w-4 h-4 text-muted-foreground" />
-                    Troubleshooting
-                  </h5>
-                  <ul className="space-y-2">
-                    {agent.detailed_instructions.troubleshooting.map((tip: any, i: number) => (
-                      <li key={i} className="text-sm text-muted-foreground">
-                        {typeof tip === 'string' ? (
-                          <span>• {tip}</span>
-                        ) : (
-                          <div className="space-y-1">
-                            <p className="font-medium text-foreground">• {tip.problem}</p>
-                            <p className="ml-3 text-muted-foreground">{tip.solution}</p>
-                          </div>
+                    {/* Content */}
+                    <div className="flex-1 min-w-0 space-y-1.5">
+                      <div className="flex items-center gap-2">
+                        <h4 className={cn(
+                          "font-medium text-sm truncate flex-1 transition-colors",
+                          selectedJump?.id === jump.id && "text-primary"
+                        )}>
+                          {jump.title}
+                        </h4>
+                        {jump.hasAnalysis && (
+                          <Badge variant="secondary" className="shrink-0 text-[10px] px-1.5 py-0 h-5 bg-green-500/10 text-green-500 border-green-500/20">
+                            <CheckCircle2 className="w-3 h-3 mr-0.5" />
+                            Analyzed
+                          </Badge>
                         )}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-3 h-3 text-muted-foreground/60" />
+                        <span className="text-xs text-muted-foreground/60">
+                          {formatDate(jump.created_at)}
+                        </span>
+                      </div>
+                    </div>
 
-              {agent.detailed_instructions._raw && (
-                <div className="space-y-2">
-                  <h5 className="text-sm font-medium">Full Instructions (Raw)</h5>
-                  <pre className="whitespace-pre-wrap break-words text-sm text-muted-foreground bg-background/60 border border-border/40 rounded-md p-3">
-                    {agent.detailed_instructions._raw}
-                  </pre>
-                </div>
-              )}
-            </>
-          ) : (
-            <p className="text-sm text-muted-foreground">
-              This agent was saved without implementation instructions. Please rebuild this agent from the Analyze tab to regenerate the full setup guide.
-            </p>
-          )}
-        </div>
-
-        <Separator />
-
-        {/* Download Section */}
-        <div className="space-y-3">
-          <Button 
-            onClick={() => onDownload(agent.workflow_json, agent.workflow_filename || 'workflow.json')}
-            className="w-full bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70"
-            size="lg"
-          >
-            <Download className="w-5 h-5 mr-2" />
-            Download n8n Workflow
-          </Button>
-          
-          <a 
-            href="https://n8n.io" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="flex items-center justify-center gap-1.5 text-sm text-primary hover:underline"
-          >
-            Don't have n8n? Create your free account here
-            <ExternalLink className="w-3.5 h-3.5" />
-          </a>
-        </div>
+                    {/* Selection indicator */}
+                    {selectedJump?.id === jump.id && (
+                      <div className="shrink-0 w-5 h-5 rounded-full bg-primary flex items-center justify-center">
+                        <Check className="w-3 h-3 text-primary-foreground" />
+                      </div>
+                    )}
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
