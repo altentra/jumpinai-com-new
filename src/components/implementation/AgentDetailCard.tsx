@@ -84,7 +84,7 @@ function PlatformBadge({ platform }: { platform: string }) {
   );
 }
 
-// Platform-specific download button component - subtle premium design
+// Platform-specific download button component - premium glassmorphism design
 function PlatformDownloadButton({ 
   platform, 
   onClick, 
@@ -99,28 +99,40 @@ function PlatformDownloadButton({
   return (
     <button 
       onClick={onClick}
-      className={cn("relative group w-full overflow-hidden", className)}
+      className={cn("relative group w-full overflow-hidden rounded-2xl", className)}
     >
-      {/* Subtle shadow glow - platform colored */}
+      {/* Outer glow - platform colored */}
       <div className={cn(
-        "absolute -inset-1 rounded-2xl blur-xl opacity-0 group-hover:opacity-40 transition duration-500",
-        isN8n ? "bg-amber-500/30" : "bg-violet-500/30"
+        "absolute -inset-1 rounded-2xl blur-xl opacity-0 group-hover:opacity-60 transition duration-500",
+        isN8n ? "bg-amber-500/40" : "bg-violet-500/40"
       )} />
       
-      {/* Button body - clean neutral with subtle accent */}
+      {/* Glass morphism button body */}
       <div className={cn(
-        "relative flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-2xl transition-all duration-300",
-        "bg-card border border-border/60 group-hover:border-border",
-        "shadow-sm group-hover:shadow-md",
+        "relative flex items-center justify-center gap-3 px-6 py-4 rounded-2xl transition-all duration-300",
+        "backdrop-blur-xl",
+        "bg-background/60 dark:bg-background/40",
+        "border border-border/50 group-hover:border-border/80",
         isN8n 
-          ? "group-hover:shadow-amber-500/10" 
-          : "group-hover:shadow-violet-500/10"
+          ? "shadow-[0_8px_32px_rgba(245,158,11,0.15)] group-hover:shadow-[0_12px_40px_rgba(245,158,11,0.25)]" 
+          : "shadow-[0_8px_32px_rgba(139,92,246,0.15)] group-hover:shadow-[0_12px_40px_rgba(139,92,246,0.25)]"
       )}>
-        {/* Shimmer */}
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 rounded-2xl" />
+        {/* Shimmer effect */}
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 rounded-2xl" />
         
-        <Download className="relative w-5 h-5 text-foreground/80 group-hover:text-foreground transition-colors" />
-        <span className="relative font-semibold text-foreground/90 group-hover:text-foreground transition-colors">
+        {/* Inner glow line */}
+        <div className={cn(
+          "absolute inset-x-0 top-0 h-px",
+          isN8n 
+            ? "bg-gradient-to-r from-transparent via-amber-400/50 to-transparent" 
+            : "bg-gradient-to-r from-transparent via-violet-400/50 to-transparent"
+        )} />
+        
+        <Download className={cn(
+          "relative w-5 h-5 transition-colors",
+          isN8n ? "text-amber-600 dark:text-amber-400" : "text-violet-600 dark:text-violet-400"
+        )} />
+        <span className="relative font-semibold text-foreground">
           Download {isN8n ? 'n8n' : 'Make.com'} Workflow
         </span>
         {/* Small platform indicator dot */}
@@ -128,7 +140,10 @@ function PlatformDownloadButton({
           "w-2 h-2 rounded-full",
           isN8n ? "bg-amber-500" : "bg-violet-500"
         )} />
-        <ArrowRight className="relative w-4 h-4 text-muted-foreground group-hover:translate-x-1 group-hover:text-foreground transition-all duration-300" />
+        <ArrowRight className={cn(
+          "relative w-4 h-4 group-hover:translate-x-1 transition-all duration-300",
+          isN8n ? "text-amber-500/70" : "text-violet-500/70"
+        )} />
       </div>
     </button>
   );
