@@ -70,22 +70,21 @@ const getImpactIcon = (level: string | null) => {
   }
 };
 
-// Platform badge component
+// Platform badge component - subtle with indicator dot
 function PlatformBadge({ platform }: { platform: string }) {
   const isN8n = platform === 'n8n';
   return (
-    <Badge className={cn(
-      "text-xs font-semibold px-2.5 py-0.5",
-      isN8n 
-        ? "bg-orange-500/15 text-orange-500 border-orange-500/30"
-        : "bg-purple-500/15 text-purple-500 border-purple-500/30"
-    )}>
+    <Badge variant="outline" className="text-xs font-medium px-2.5 py-0.5 bg-background/50 gap-1.5">
+      <span className={cn(
+        "w-1.5 h-1.5 rounded-full",
+        isN8n ? "bg-amber-500" : "bg-violet-500"
+      )} />
       {isN8n ? 'n8n' : 'Make.com'}
     </Badge>
   );
 }
 
-// Platform-specific download button component
+// Platform-specific download button component - subtle premium design
 function PlatformDownloadButton({ 
   platform, 
   onClick, 
@@ -102,38 +101,34 @@ function PlatformDownloadButton({
       onClick={onClick}
       className={cn("relative group w-full overflow-hidden", className)}
     >
-      {/* Glow effect */}
+      {/* Subtle shadow glow - platform colored */}
       <div className={cn(
-        "absolute -inset-0.5 rounded-3xl blur-md opacity-50 group-hover:opacity-80 transition duration-500",
-        isN8n 
-          ? "bg-gradient-to-r from-orange-500/40 via-orange-400/30 to-orange-500/40"
-          : "bg-gradient-to-r from-purple-500/40 via-purple-400/30 to-purple-500/40"
+        "absolute -inset-1 rounded-2xl blur-xl opacity-0 group-hover:opacity-40 transition duration-500",
+        isN8n ? "bg-amber-500/30" : "bg-violet-500/30"
       )} />
       
-      {/* Button body */}
+      {/* Button body - clean neutral with subtle accent */}
       <div className={cn(
-        "relative flex items-center justify-center gap-2 px-6 py-3.5 backdrop-blur-xl rounded-3xl transition-all duration-300 shadow-lg",
-        isN8n
-          ? "bg-gradient-to-br from-orange-500/15 via-orange-400/10 to-orange-500/15 border border-orange-500/40 group-hover:border-orange-400/60 shadow-orange-500/10"
-          : "bg-gradient-to-br from-purple-500/15 via-purple-400/10 to-purple-500/15 border border-purple-500/40 group-hover:border-purple-400/60 shadow-purple-500/10"
+        "relative flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-2xl transition-all duration-300",
+        "bg-card border border-border/60 group-hover:border-border",
+        "shadow-sm group-hover:shadow-md",
+        isN8n 
+          ? "group-hover:shadow-amber-500/10" 
+          : "group-hover:shadow-violet-500/10"
       )}>
         {/* Shimmer */}
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 rounded-3xl" />
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 rounded-2xl" />
         
-        <Download className={cn(
-          "relative w-5 h-5 transition-colors",
-          isN8n ? "text-orange-500 group-hover:text-orange-400" : "text-purple-500 group-hover:text-purple-400"
-        )} />
-        <span className={cn(
-          "relative font-bold transition-colors",
-          isN8n ? "text-orange-500 group-hover:text-orange-400" : "text-purple-500 group-hover:text-purple-400"
-        )}>
-          Download {isN8n ? 'n8n Workflow' : 'Make.com Scenario'}
+        <Download className="relative w-5 h-5 text-foreground/80 group-hover:text-foreground transition-colors" />
+        <span className="relative font-semibold text-foreground/90 group-hover:text-foreground transition-colors">
+          Download {isN8n ? 'n8n' : 'Make.com'} Workflow
         </span>
-        <ArrowRight className={cn(
-          "relative w-4 h-4 group-hover:translate-x-1 transition-all duration-300",
-          isN8n ? "text-orange-500" : "text-purple-500"
+        {/* Small platform indicator dot */}
+        <span className={cn(
+          "w-2 h-2 rounded-full",
+          isN8n ? "bg-amber-500" : "bg-violet-500"
         )} />
+        <ArrowRight className="relative w-4 h-4 text-muted-foreground group-hover:translate-x-1 group-hover:text-foreground transition-all duration-300" />
       </div>
     </button>
   );
@@ -172,12 +167,12 @@ export function AgentDetailCard({
       "border-border/40",
       "bg-gradient-to-br from-card via-card/95 to-card/90"
     )}>
-      {/* Decorative header gradient - platform colored */}
+      {/* Decorative header gradient - subtle with platform accent */}
+      <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-border via-muted-foreground/30 to-border" />
+      {/* Small platform indicator */}
       <div className={cn(
-        "absolute top-0 left-0 right-0 h-1",
-        isN8n 
-          ? "bg-gradient-to-r from-orange-500/50 via-orange-400 to-orange-500/50"
-          : "bg-gradient-to-r from-purple-500/50 via-purple-400 to-purple-500/50"
+        "absolute top-0 left-6 w-8 h-1 rounded-b-full",
+        isN8n ? "bg-amber-500" : "bg-violet-500"
       )} />
       
       <CardHeader className="pb-4">
@@ -186,11 +181,11 @@ export function AgentDetailCard({
           <div className="flex items-start gap-4 flex-1">
             <div className={cn(
               "relative shrink-0 w-14 h-14 rounded-2xl flex items-center justify-center",
-              isN8n
-                ? "bg-gradient-to-br from-orange-500/25 via-orange-500/15 to-orange-500/5 border border-orange-500/25 shadow-xl shadow-orange-500/10"
-                : "bg-gradient-to-br from-purple-500/25 via-purple-500/15 to-purple-500/5 border border-purple-500/25 shadow-xl shadow-purple-500/10"
+              "bg-gradient-to-br from-muted/80 via-muted/50 to-muted/30",
+              "border border-border/50",
+              isN8n ? "shadow-lg shadow-amber-500/5" : "shadow-lg shadow-violet-500/5"
             )}>
-              <Bot className={cn("w-7 h-7", isN8n ? "text-orange-500" : "text-purple-500")} />
+              <Bot className="w-7 h-7 text-foreground/80" />
               <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-green-500 flex items-center justify-center border-2 border-background">
                 <Check className="w-3 h-3 text-white" />
               </div>
@@ -282,11 +277,8 @@ export function AgentDetailCard({
               "border border-border/40"
             )}>
               <div className="flex items-center gap-2 mb-2">
-                <div className={cn(
-                  "p-1.5 rounded-lg",
-                  isN8n ? "bg-orange-500/10" : "bg-purple-500/10"
-                )}>
-                  <Workflow className={cn("w-3.5 h-3.5", isN8n ? "text-orange-500" : "text-purple-500")} />
+                <div className="p-1.5 rounded-lg bg-muted">
+                  <Workflow className="w-3.5 h-3.5 text-foreground/70" />
                 </div>
                 <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                   Automation Target
@@ -321,11 +313,8 @@ export function AgentDetailCard({
         {agent.benefits && agent.benefits.length > 0 && (
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <div className={cn(
-                "p-1 rounded-md",
-                isN8n ? "bg-orange-500/10" : "bg-purple-500/10"
-              )}>
-                <Sparkles className={cn("w-3.5 h-3.5", isN8n ? "text-orange-500" : "text-purple-500")} />
+              <div className="p-1 rounded-md bg-primary/10">
+                <Sparkles className="w-3.5 h-3.5 text-primary" />
               </div>
               <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Benefits
@@ -365,29 +354,26 @@ export function AgentDetailCard({
 
         <Separator />
 
-        {/* Download Section - Platform Colored */}
+        {/* Download Section - Subtle with platform accent */}
         <div className={cn(
           "p-5 rounded-xl",
-          isN8n
-            ? "bg-gradient-to-br from-orange-500/10 via-orange-500/5 to-transparent border border-orange-500/20"
-            : "bg-gradient-to-br from-purple-500/10 via-purple-500/5 to-transparent border border-purple-500/20"
+          "bg-gradient-to-br from-muted/50 via-muted/30 to-transparent",
+          "border border-border/50",
+          isN8n ? "shadow-sm shadow-amber-500/5" : "shadow-sm shadow-violet-500/5"
         )}>
           <div className="flex items-center gap-3 mb-4">
-            <div className={cn(
-              "p-2 rounded-full",
-              isN8n ? "bg-orange-500/20" : "bg-purple-500/20"
-            )}>
-              <Download className={cn("w-5 h-5", isN8n ? "text-orange-500" : "text-purple-500")} />
+            <div className="p-2 rounded-full bg-muted">
+              <Download className="w-5 h-5 text-foreground/80" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className={cn("font-semibold block", isN8n ? "text-orange-500" : "text-purple-500")}>
+                <span className="font-semibold block text-foreground">
                   Ready to Download
                 </span>
                 <PlatformBadge platform={agent.platform} />
               </div>
               <span className="text-xs text-muted-foreground">
-                Import this {isN8n ? 'workflow' : 'scenario'} into {isN8n ? 'n8n' : 'Make.com'}
+                Import this workflow into {isN8n ? 'n8n' : 'Make.com'}
               </span>
             </div>
           </div>
@@ -401,7 +387,7 @@ export function AgentDetailCard({
             href={isN8n ? "https://n8n.io" : "https://make.com"} 
             target="_blank" 
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-1.5 text-sm text-primary hover:text-primary/80 transition-colors py-3"
+            className="flex items-center justify-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors py-3"
           >
             Don't have {isN8n ? 'n8n' : 'Make.com'}? Create your free account here
             <ExternalLink className="w-3.5 h-3.5" />
@@ -415,19 +401,20 @@ export function AgentDetailCard({
           <CollapsibleTrigger asChild>
             <button className={cn(
               "w-full p-4 rounded-xl flex items-center justify-between",
-              isN8n
-                ? "bg-gradient-to-br from-orange-500/5 to-orange-500/[0.02] border border-orange-500/20 hover:border-orange-500/30"
-                : "bg-gradient-to-br from-purple-500/5 to-purple-500/[0.02] border border-purple-500/20 hover:border-purple-500/30",
+              "bg-muted/30 border border-border/50 hover:border-border",
               "transition-colors"
             )}>
               <div className="flex items-center gap-3">
-                <div className={cn(
-                  "p-2 rounded-full",
-                  isN8n ? "bg-orange-500/15" : "bg-purple-500/15"
-                )}>
-                  <FileText className={cn("w-4 h-4", isN8n ? "text-orange-500" : "text-purple-500")} />
+                <div className="p-2 rounded-full bg-muted">
+                  <FileText className="w-4 h-4 text-foreground/70" />
                 </div>
-                <span className="font-semibold">{isN8n ? 'n8n' : 'Make.com'} Implementation Instructions</span>
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold">{isN8n ? 'n8n' : 'Make.com'} Implementation Instructions</span>
+                  <span className={cn(
+                    "w-2 h-2 rounded-full",
+                    isN8n ? "bg-amber-500" : "bg-violet-500"
+                  )} />
+                </div>
               </div>
               <ChevronDown className={cn("w-5 h-5 transition-transform text-muted-foreground", showInstructions && "rotate-180")} />
             </button>
@@ -435,17 +422,9 @@ export function AgentDetailCard({
           
           <CollapsibleContent className="pt-4">
             {agent.detailed_instructions ? (
-              <div className={cn(
-                "space-y-5 p-5 rounded-xl",
-                isN8n
-                  ? "bg-gradient-to-br from-orange-500/5 via-orange-500/[0.02] to-transparent border border-orange-500/20"
-                  : "bg-gradient-to-br from-purple-500/5 via-purple-500/[0.02] to-transparent border border-purple-500/20"
-              )}>
+              <div className="space-y-5 p-5 rounded-xl bg-muted/20 border border-border/40">
                 {agent.detailed_instructions.quickStart && (
-                  <div className={cn(
-                    "p-4 rounded-lg border",
-                    isN8n ? "bg-orange-500/10 border-orange-500/20" : "bg-purple-500/10 border-purple-500/20"
-                  )}>
+                  <div className="p-4 rounded-lg bg-primary/5 border border-primary/10">
                     <p className="text-sm font-medium">{agent.detailed_instructions.quickStart}</p>
                   </div>
                 )}

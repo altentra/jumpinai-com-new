@@ -48,16 +48,15 @@ const getImpactIcon = (level: string | null) => {
   }
 };
 
-// Platform badge component
+// Platform badge component - subtle with indicator dot
 function PlatformBadge({ platform }: { platform: string }) {
   const isN8n = platform === 'n8n';
   return (
-    <Badge className={cn(
-      "text-[10px] px-1.5 py-0 h-5 font-semibold",
-      isN8n 
-        ? "bg-orange-500/15 text-orange-500 border-orange-500/30"
-        : "bg-purple-500/15 text-purple-500 border-purple-500/30"
-    )}>
+    <Badge variant="outline" className="text-[10px] px-1.5 py-0 h-5 font-medium bg-background/50 gap-1">
+      <span className={cn(
+        "w-1.5 h-1.5 rounded-full",
+        isN8n ? "bg-amber-500" : "bg-violet-500"
+      )} />
       {isN8n ? 'n8n' : 'Make'}
     </Badge>
   );
@@ -134,9 +133,10 @@ export function AgentListCard({
                       "border hover:border-primary/40",
                       "group",
                       selectedAgent?.id === agent.id
-                        ? isN8n
-                          ? "border-orange-500/50 bg-gradient-to-r from-orange-500/15 via-orange-500/10 to-orange-500/5 shadow-sm"
-                          : "border-purple-500/50 bg-gradient-to-r from-purple-500/15 via-purple-500/10 to-purple-500/5 shadow-sm"
+                        ? cn(
+                            "border-primary/50 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent shadow-sm",
+                            isN8n ? "shadow-amber-500/5" : "shadow-violet-500/5"
+                          )
                         : "border-border/30 bg-background/30 hover:bg-background/50"
                     )}
                   >
@@ -145,15 +145,13 @@ export function AgentListCard({
                       <div className={cn(
                         "shrink-0 w-10 h-10 rounded-xl flex items-center justify-center transition-colors",
                         selectedAgent?.id === agent.id
-                          ? isN8n
-                            ? "bg-gradient-to-br from-orange-500/30 to-orange-500/10"
-                            : "bg-gradient-to-br from-purple-500/30 to-purple-500/10"
+                          ? "bg-primary/15"
                           : "bg-muted/50 group-hover:bg-muted"
                       )}>
                         <Bot className={cn(
                           "w-5 h-5 transition-colors",
                           selectedAgent?.id === agent.id 
-                            ? isN8n ? "text-orange-500" : "text-purple-500"
+                            ? "text-primary"
                             : "text-muted-foreground"
                         )} />
                       </div>
@@ -162,7 +160,7 @@ export function AgentListCard({
                       <div className="flex-1 min-w-0 space-y-1.5">
                         <h4 className={cn(
                           "font-medium text-sm truncate transition-colors",
-                          selectedAgent?.id === agent.id && (isN8n ? "text-orange-500" : "text-purple-500")
+                          selectedAgent?.id === agent.id && "text-foreground"
                         )}>
                           {agent.title}
                         </h4>
