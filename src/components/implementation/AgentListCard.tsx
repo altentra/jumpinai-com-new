@@ -74,7 +74,7 @@ function AutomationTypeBadge({ type }: { type: string | null }) {
       className={cn(
         "text-[10px] px-1.5 py-0 h-5 font-medium gap-1",
         isAIAgent 
-          ? "bg-purple-500/10 border-purple-500/30 text-purple-600 dark:text-purple-400" 
+          ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-600 dark:text-emerald-400" 
           : "bg-blue-500/10 border-blue-500/30 text-blue-600 dark:text-blue-400"
       )}
     >
@@ -169,13 +169,13 @@ export function AgentListCard({
                       <div className={cn(
                         "shrink-0 w-10 h-10 rounded-xl flex items-center justify-center transition-colors",
                         selectedAgent?.id === agent.id
-                          ? isAIAgent ? "bg-purple-500/15" : "bg-blue-500/15"
+                          ? isAIAgent ? "bg-emerald-500/15" : "bg-blue-500/15"
                           : "bg-muted/50 group-hover:bg-muted"
                       )}>
                         <IconComponent className={cn(
                           "w-5 h-5 transition-colors",
                           selectedAgent?.id === agent.id 
-                            ? isAIAgent ? "text-purple-500" : "text-blue-500"
+                            ? isAIAgent ? "text-emerald-500" : "text-blue-500"
                             : "text-muted-foreground"
                         )} />
                       </div>
