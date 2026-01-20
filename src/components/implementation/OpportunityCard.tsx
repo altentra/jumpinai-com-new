@@ -550,7 +550,16 @@ export function OpportunityCard({
             </Button>
           </div>
         ) : (
-          <div className="pt-2 space-y-4">
+          <div className="pt-2 space-y-5">
+            {/* Automation Type Selector */}
+            <AutomationTypeSelector
+              value={selectedAutomationType}
+              onChange={onAutomationTypeChange}
+              disabled={isBuilding}
+            />
+            
+            <Separator />
+            
             {/* Platform Selector */}
             <PlatformSelector
               value={selectedPlatform}
@@ -558,17 +567,24 @@ export function OpportunityCard({
               disabled={isBuilding}
             />
             
-            {/* Build Button */}
+            {/* Build Button - Dynamic based on selection */}
             <AgentBuildButton 
               isBuilding={isBuilding}
               onBuild={onBuild}
+              automationType={selectedAutomationType}
             />
             
-            {/* Credits info */}
+            {/* Credits info - Dynamic */}
             <p className="text-xs text-center text-muted-foreground">
-              {selectedPlatform === 'both' 
-                ? "Building both workflows will use 2 credits" 
-                : "Building this agent will use 1 credit"}
+              {selectedAutomationType === 'ai-agent' ? (
+                selectedPlatform === 'both' 
+                  ? "Building AI Agents for both platforms will use 4 credits" 
+                  : "Building this AI Agent will use 2 credits"
+              ) : (
+                selectedPlatform === 'both' 
+                  ? "Building Workflows for both platforms will use 2 credits" 
+                  : "Building this Workflow will use 1 credit"
+              )}
             </p>
           </div>
         )}

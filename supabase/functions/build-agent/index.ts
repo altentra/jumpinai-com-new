@@ -5,6 +5,8 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+type AutomationType = 'workflow' | 'ai-agent';
+
 interface AgentBuildRequest {
   opportunity: {
     title: string;
@@ -25,10 +27,18 @@ interface AgentBuildRequest {
   };
   analysisId?: string;
   platform?: 'n8n' | 'make' | 'both';
+  automationType?: AutomationType;
 }
 
-// System prompts for n8n workflow generation
-const N8N_SYSTEM_PROMPT = `You are an expert n8n workflow builder. Your task is to generate complete, valid, importable n8n workflow JSON files.
+// ============ WORKFLOW PROMPTS (Simple Task Automation) ============
+
+const N8N_WORKFLOW_PROMPT = `You are an expert n8n workflow builder. Your task is to generate a SIMPLE, LINEAR workflow for task automation.
+
+WORKFLOW CHARACTERISTICS:
+- Sequential, predictable execution
+- Fixed logic paths with basic conditionals
+- Straightforward data transformations
+- Standard integrations and API calls
 
 CRITICAL RULES:
 1. Return ONLY valid JSON - no markdown, no explanations, just the JSON
@@ -41,7 +51,6 @@ CRITICAL RULES:
 COMMON N8N NODE TYPES:
 - n8n-nodes-base.webhook (trigger)
 - n8n-nodes-base.httpRequest (API calls)
-- n8n-nodes-base.openAi (AI processing)
 - n8n-nodes-base.gmail (send emails)
 - n8n-nodes-base.slack (send messages)
 - n8n-nodes-base.googleSheets (data storage)
@@ -57,30 +66,29 @@ WORKFLOW STRUCTURE:
   "nodes": [...],
   "connections": {...},
   "active": false,
-  "settings": {
-    "executionOrder": "v1"
-  },
+  "settings": { "executionOrder": "v1" },
   "versionId": "1",
-  "meta": {
-    "instanceId": "generated-by-jumpinai"
-  }
+  "meta": { "instanceId": "generated-by-jumpinai", "type": "workflow" }
 }`;
 
-// System prompts for Make.com (Integromat) scenario generation
-const MAKE_SYSTEM_PROMPT = `You are an expert Make.com (formerly Integromat) scenario builder. Your task is to generate complete, valid, importable Make.com scenario blueprint JSON files.
+const MAKE_WORKFLOW_PROMPT = `You are an expert Make.com scenario builder. Your task is to generate a SIMPLE, LINEAR scenario for task automation.
+
+SCENARIO CHARACTERISTICS:
+- Sequential, predictable execution
+- Fixed logic paths with basic routers
+- Straightforward data transformations
+- Standard module integrations
 
 CRITICAL RULES:
 1. Return ONLY valid JSON - no markdown, no explanations, just the JSON
-2. Use real Make.com module types that exist in Make.com
+2. Use real Make.com module types
 3. Include all required module properties
 4. Use proper module IDs and flow connections
 5. Use webhook triggers for easy testing
-6. Follow Make.com blueprint format
 
 COMMON MAKE.COM MODULES:
 - gateway:CustomWebHook (webhook trigger)
 - http:ActionSendData (HTTP requests)
-- openai:CreateCompletion (AI processing)  
 - google-email:ActionSendEmail (send emails)
 - slack:ActionPostMessage (send messages)
 - google-sheets:ActionAppendRow (data storage)
@@ -89,20 +97,111 @@ COMMON MAKE.COM MODULES:
 - util:SetVariables (set variables)
 - builtin:BasicFilter (filters)
 
-SCENARIO BLUEPRINT STRUCTURE:
+SCENARIO STRUCTURE:
 {
   "name": "Scenario Name",
   "flow": [...],
-  "metadata": {
-    "instant": true,
-    "version": 1,
-    "scenario": {
-      "roundtrips": 1,
-      "maxErrors": 3,
-      "autoCommit": true,
-      "autoCommitTriggerLast": true
-    }
-  }
+  "metadata": { "instant": true, "version": 1, "type": "workflow" }
+}`;
+
+// ============ AI AGENT PROMPTS (Autonomous Decision-Making) ============
+
+const N8N_AI_AGENT_PROMPT = `You are an expert AI agent architect for n8n. Your task is to build an AUTONOMOUS AI AGENT that can reason, decide, and adapt.
+
+AI AGENT CHARACTERISTICS:
+- Reasoning loops that analyze situations before acting
+- Dynamic decision branches based on context
+- Memory and context management
+- Self-correction and error handling
+- Multiple execution paths based on AI analysis
+- Feedback loops for continuous improvement
+
+CRITICAL RULES:
+1. Return ONLY valid JSON - no markdown, no explanations
+2. MUST include AI/LLM nodes for reasoning (OpenAI, Anthropic, etc.)
+3. Use agent-style patterns with loops and decision trees
+4. Include error handling and fallback paths
+5. Add memory/state management where appropriate
+
+REQUIRED AI AGENT COMPONENTS:
+- n8n-nodes-base.openAi or similar for reasoning
+- Decision branches based on AI output
+- Loops for iterative refinement
+- Error handlers for graceful degradation
+- Context/memory management nodes
+
+ADVANCED NODE TYPES FOR AGENTS:
+- n8n-nodes-base.openAi (AI reasoning/analysis)
+- n8n-nodes-base.anthropic (Claude reasoning)
+- n8n-nodes-base.if (decision branching)
+- n8n-nodes-base.switch (multi-path routing)
+- n8n-nodes-base.splitInBatches (iteration)
+- n8n-nodes-base.code (custom logic/memory)
+- n8n-nodes-base.merge (path convergence)
+- n8n-nodes-base.wait (async coordination)
+
+AGENT WORKFLOW STRUCTURE:
+{
+  "name": "AI Agent: [Name]",
+  "nodes": [
+    // 1. Input/Trigger
+    // 2. Context Gathering
+    // 3. AI Analysis/Reasoning (LLM call)
+    // 4. Decision Router based on AI output
+    // 5. Action branches for different decisions
+    // 6. Feedback/Refinement loop
+    // 7. Output/Response
+  ],
+  "connections": {...},
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "meta": { "instanceId": "generated-by-jumpinai", "type": "ai-agent" }
+}`;
+
+const MAKE_AI_AGENT_PROMPT = `You are an expert AI agent architect for Make.com. Your task is to build an AUTONOMOUS AI AGENT that can reason, decide, and adapt.
+
+AI AGENT CHARACTERISTICS:
+- Reasoning modules that analyze situations
+- Dynamic routers based on AI decisions
+- Context and state management
+- Multi-path execution based on analysis
+- Error handling and recovery
+
+CRITICAL RULES:
+1. Return ONLY valid JSON - no markdown, no explanations
+2. MUST include AI modules (OpenAI, etc.) for reasoning
+3. Use routers for dynamic decision paths
+4. Include iterators for refinement loops
+5. Add error handlers throughout
+
+REQUIRED AI AGENT COMPONENTS:
+- openai:CreateCompletion for reasoning
+- builtin:BasicRouter for AI-based decisions
+- builtin:Repeater for iteration/refinement
+- Error handlers for each critical path
+
+ADVANCED MODULES FOR AGENTS:
+- openai:CreateCompletion (AI reasoning)
+- openai:CreateChatCompletion (conversational AI)
+- builtin:BasicRouter (multi-path routing)
+- builtin:Repeater (loops/iteration)
+- util:SetVariables (memory/state)
+- builtin:BasicFilter (conditional filtering)
+- tools:SetVariable (context storage)
+
+AGENT SCENARIO STRUCTURE:
+{
+  "name": "AI Agent: [Name]",
+  "flow": [
+    // 1. Webhook trigger
+    // 2. Context gathering modules
+    // 3. AI analysis module
+    // 4. Router based on AI decision
+    // 5. Multiple action branches
+    // 6. Aggregation/feedback
+    // 7. Response
+  ],
+  "metadata": { "instant": true, "version": 1, "type": "ai-agent" }
 }`;
 
 // Instructions generation prompts
@@ -264,22 +363,67 @@ const salvageJson = (raw: string): any => {
   }
 };
 
-// Generate workflow for a specific platform
+// Generate workflow or AI agent for a specific platform
 async function generateWorkflow(
   xaiApiKey: string,
   platform: 'n8n' | 'make',
   opportunity: AgentBuildRequest['opportunity'],
-  jump: AgentBuildRequest['jump']
-): Promise<{ workflow: any; filename: string; instructions: any }> {
+  jump: AgentBuildRequest['jump'],
+  automationType: AutomationType = 'workflow'
+): Promise<{ workflow: any; filename: string; instructions: any; automationType: AutomationType }> {
   
-  const systemPrompt = platform === 'n8n' ? N8N_SYSTEM_PROMPT : MAKE_SYSTEM_PROMPT;
+  const isAIAgent = automationType === 'ai-agent';
+  
+  // Select the appropriate system prompt based on type
+  let systemPrompt: string;
+  if (platform === 'n8n') {
+    systemPrompt = isAIAgent ? N8N_AI_AGENT_PROMPT : N8N_WORKFLOW_PROMPT;
+  } else {
+    systemPrompt = isAIAgent ? MAKE_AI_AGENT_PROMPT : MAKE_WORKFLOW_PROMPT;
+  }
+  
   const instructionsSystemPrompt = platform === 'n8n' ? N8N_INSTRUCTIONS_PROMPT : MAKE_INSTRUCTIONS_PROMPT;
   const platformName = platform === 'n8n' ? 'n8n' : 'Make.com';
   const workflowTerm = platform === 'n8n' ? 'workflow' : 'scenario';
+  const buildType = isAIAgent ? 'AI Agent' : 'Workflow';
 
-  const userPrompt = `Create a complete ${platformName} ${workflowTerm} JSON for this automation:
+  // Create different prompts based on automation type
+  const userPrompt = isAIAgent 
+    ? `Create a complete ${platformName} AI AGENT for autonomous decision-making:
 
-AGENT TITLE: ${opportunity.title}
+AI AGENT TITLE: ${opportunity.title}
+
+DESCRIPTION: ${opportunity.description}
+
+CONTEXT FROM USER'S PROJECT:
+- Project: ${jump.title}
+- Goals: ${jump.goals}
+- Challenges: ${jump.challenges}
+- Summary: ${jump.summary}
+
+REQUIRED CAPABILITIES:
+${opportunity.requiredTools.map(tool => `- ${tool}`).join('\n')}
+
+EXPECTED BENEFITS:
+${opportunity.benefits.map(benefit => `- ${benefit}`).join('\n')}
+
+COMPLEXITY: ${opportunity.complexity}
+TIME SAVINGS: ${opportunity.estimatedTimeSaved}
+
+Generate a COMPLETE AI AGENT that:
+1. Starts with a Webhook trigger for easy testing
+2. Includes AI/LLM reasoning nodes that ANALYZE the input and DECIDE what to do
+3. Has decision branches based on AI analysis
+4. Can handle multiple scenarios and edge cases
+5. Includes error handling and fallback paths
+6. Has clear logging/debugging output
+7. Can adapt based on context
+
+IMPORTANT: This must be a TRUE AI AGENT with reasoning capabilities, NOT a simple linear workflow!
+Return ONLY the JSON - no explanations, no markdown code blocks.`
+    : `Create a complete ${platformName} ${workflowTerm} JSON for this simple automation:
+
+WORKFLOW TITLE: ${opportunity.title}
 
 DESCRIPTION: ${opportunity.description}
 
@@ -301,14 +445,14 @@ TIME SAVINGS: ${opportunity.estimatedTimeSaved}
 Generate a complete, working ${platformName} ${workflowTerm} that:
 1. Starts with a Webhook trigger (so user can easily test it)
 2. Includes all necessary ${platform === 'n8n' ? 'nodes' : 'modules'} to accomplish the automation
-3. Uses AI ${platform === 'n8n' ? 'nodes' : 'modules'} where intelligent processing is needed
+3. Follows a LINEAR, PREDICTABLE execution path
 4. Ends with appropriate output (webhook response, email, etc.)
 5. Has helpful ${platform === 'n8n' ? 'node' : 'module'} names and notes
 
 Return ONLY the JSON ${workflowTerm} - no explanations, no markdown code blocks.`;
 
-  // Generate workflow
-  console.log(`Generating ${platformName} ${workflowTerm}...`);
+  // Generate workflow/agent
+  console.log(`Generating ${platformName} ${buildType}...`);
   const workflowResponse = await fetch('https://api.x.ai/v1/chat/completions', {
     method: 'POST',
     headers: {
@@ -316,13 +460,13 @@ Return ONLY the JSON ${workflowTerm} - no explanations, no markdown code blocks.
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      model: 'grok-3-fast',
+      model: isAIAgent ? 'grok-3' : 'grok-3-fast', // Use more powerful model for AI agents
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt }
       ],
-      temperature: 0.3,
-      max_tokens: 8000,
+      temperature: isAIAgent ? 0.4 : 0.3, // Slightly higher temp for creative agent design
+      max_tokens: isAIAgent ? 12000 : 8000, // More tokens for complex agents
     }),
   });
 
@@ -359,10 +503,12 @@ Return ONLY the JSON ${workflowTerm} - no explanations, no markdown code blocks.
     jumpId: jump.id,
     opportunityTitle: opportunity.title,
     platform: platform,
+    automationType: automationType,
   };
 
-  const fileExt = platform === 'n8n' ? 'json' : 'json';
-  const filename = `${opportunity.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${platform}-${workflowTerm}.${fileExt}`;
+  const typePrefix = isAIAgent ? 'ai-agent' : 'workflow';
+  const fileExt = 'json';
+  const filename = `${opportunity.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${platform}-${typePrefix}.${fileExt}`;
 
   // Generate instructions
   console.log(`Generating ${platformName} setup instructions...`);
@@ -438,6 +584,7 @@ Return ONLY the JSON object, no markdown.`;
     workflow: parsedWorkflow,
     filename: filename,
     instructions: detailedInstructions,
+    automationType: automationType,
   };
 }
 
@@ -476,12 +623,15 @@ Deno.serve(async (req) => {
       );
     }
 
-    const { opportunity, jump, analysisId, platform = 'n8n' } = await req.json() as AgentBuildRequest;
+    const { opportunity, jump, analysisId, platform = 'n8n', automationType = 'workflow' } = await req.json() as AgentBuildRequest;
 
-    console.log('Generating workflow for platform:', platform, '- Opportunity:', opportunity.title);
+    const isAIAgent = automationType === 'ai-agent';
+    const buildTypeName = isAIAgent ? 'AI Agent' : 'Workflow';
+    console.log(`Generating ${buildTypeName} for platform: ${platform} - Opportunity: ${opportunity.title}`);
 
-    // Determine how many credits needed (1 per platform)
-    const creditsNeeded = platform === 'both' ? 2 : 1;
+    // Determine credits: AI agents cost 2x, platforms multiply
+    const baseCredits = isAIAgent ? 2 : 1;
+    const creditsNeeded = platform === 'both' ? baseCredits * 2 : baseCredits;
 
     // Check if user has sufficient credits
     const { data: userCredits, error: creditsCheckError } = await supabase
@@ -494,7 +644,7 @@ Deno.serve(async (req) => {
       return new Response(
         JSON.stringify({ 
           error: 'Insufficient credits', 
-          message: `You need at least ${creditsNeeded} credit${creditsNeeded > 1 ? 's' : ''} to build ${platform === 'both' ? 'both workflows' : 'an AI agent'}. Please purchase more credits.` 
+          message: `You need at least ${creditsNeeded} credit${creditsNeeded > 1 ? 's' : ''} to build this ${buildTypeName}. Please purchase more credits.` 
         }),
         { status: 402, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
@@ -504,16 +654,16 @@ Deno.serve(async (req) => {
 
     // Generate workflow(s) based on platform selection
     const results: {
-      n8n?: { workflow: any; filename: string; instructions: any };
-      make?: { workflow: any; filename: string; instructions: any };
+      n8n?: { workflow: any; filename: string; instructions: any; automationType: AutomationType };
+      make?: { workflow: any; filename: string; instructions: any; automationType: AutomationType };
     } = {};
 
     if (platform === 'n8n' || platform === 'both') {
-      results.n8n = await generateWorkflow(xaiApiKey, 'n8n', opportunity, jump);
+      results.n8n = await generateWorkflow(xaiApiKey, 'n8n', opportunity, jump, automationType);
     }
 
     if (platform === 'make' || platform === 'both') {
-      results.make = await generateWorkflow(xaiApiKey, 'make', opportunity, jump);
+      results.make = await generateWorkflow(xaiApiKey, 'make', opportunity, jump, automationType);
     }
 
     // Save agent(s) to database
