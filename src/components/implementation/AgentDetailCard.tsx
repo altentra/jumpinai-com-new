@@ -3,16 +3,20 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { 
-  Bot, 
-  Check, 
+import {
+  Bot,
+  Check,
   Zap,
   FileText,
   Clock,
@@ -29,10 +33,11 @@ import {
   ArrowRight,
   Target,
   Timer,
-  AlertCircle
+  AlertCircle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { PlatformDownloadButton } from "./PlatformDownloadButton";
 
 interface SavedAgent {
   id: string;
@@ -64,55 +69,34 @@ interface AgentDetailCardProps {
 
 const getImpactIcon = (level: string | null) => {
   switch (level) {
-    case "high": return <Zap className="w-3.5 h-3.5" />;
-    case "medium": return <Target className="w-3.5 h-3.5" />;
-    default: return <Timer className="w-3.5 h-3.5" />;
+    case "high":
+      return <Zap className="w-3.5 h-3.5" />;
+    case "medium":
+      return <Target className="w-3.5 h-3.5" />;
+    default:
+      return <Timer className="w-3.5 h-3.5" />;
   }
 };
 
 // Platform badge component - subtle with indicator dot
 function PlatformBadge({ platform }: { platform: string }) {
-  const isN8n = platform === 'n8n';
+  const isN8n = platform === "n8n";
   return (
-    <Badge variant="outline" className="text-xs font-medium px-2.5 py-0.5 bg-background/50 gap-1.5">
-      <span className={cn(
-        "w-1.5 h-1.5 rounded-full",
-        isN8n ? "bg-amber-500" : "bg-violet-500"
-      )} />
-      {isN8n ? 'n8n' : 'Make.com'}
+    <Badge
+      variant="outline"
+      className="text-xs font-medium px-2.5 py-0.5 bg-background/50 gap-1.5"
+    >
+      <span
+        className={cn(
+          "w-1.5 h-1.5 rounded-full",
+          isN8n ? "bg-amber-500" : "bg-violet-500"
+        )}
+      />
+      {isN8n ? "n8n" : "Make.com"}
     </Badge>
   );
 }
 
-// Platform-specific download button - clean glassmorphism with subtle platform shadow
-function PlatformDownloadButton({ 
-  platform, 
-  onClick, 
-  className 
-}: { 
-  platform: string; 
-  onClick: () => void;
-  className?: string;
-}) {
-  const isN8n = platform === 'n8n';
-  
-  return (
-    <Button 
-      onClick={onClick}
-      className={cn(
-        "w-full bg-background/60 backdrop-blur-md border border-white/20 dark:border-white/10",
-        "text-foreground hover:bg-background/80 transition-all duration-300",
-        isN8n 
-          ? "shadow-lg shadow-amber-500/15 hover:shadow-amber-500/25" 
-          : "shadow-lg shadow-violet-500/15 hover:shadow-violet-500/25",
-        className
-      )}
-    >
-      <Download className="w-4 h-4 mr-2" />
-      Download {isN8n ? 'n8n' : 'Make.com'} Workflow
-    </Button>
-  );
-}
 
 export function AgentDetailCard({
   agent,
@@ -358,9 +342,9 @@ export function AgentDetailCard({
             </div>
           </div>
           
-          <PlatformDownloadButton 
-            platform={agent.platform}
-            onClick={() => onDownload(agent.workflow_json, agent.workflow_filename || 'workflow.json')}
+          <PlatformDownloadButton
+            platform={isN8n ? "n8n" : "make"}
+            onClick={() => onDownload(agent.workflow_json, agent.workflow_filename || "workflow.json")}
           />
           
           <a 
