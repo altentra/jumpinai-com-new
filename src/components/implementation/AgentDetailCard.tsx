@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {
   Bot,
+  Brain,
   Check,
   Zap,
   FileText,
@@ -44,6 +45,7 @@ interface SavedAgent {
   title: string;
   description: string | null;
   automation_target: string | null;
+  automation_type: string | null;
   impact_level: string | null;
   complexity_level: string | null;
   estimated_time_saved: string | null;
@@ -96,7 +98,24 @@ function PlatformBadge({ platform }: { platform: string }) {
     </Badge>
   );
 }
-
+// Automation type badge - shows workflow or AI agent
+function AutomationTypeBadge({ type }: { type: string | null }) {
+  const isAIAgent = type === 'ai-agent';
+  return (
+    <Badge 
+      variant="outline" 
+      className={cn(
+        "text-xs font-medium px-2.5 py-0.5 gap-1.5",
+        isAIAgent 
+          ? "bg-purple-500/10 border-purple-500/30 text-purple-600 dark:text-purple-400" 
+          : "bg-blue-500/10 border-blue-500/30 text-blue-600 dark:text-blue-400"
+      )}
+    >
+      {isAIAgent ? <Brain className="w-3.5 h-3.5" /> : <Workflow className="w-3.5 h-3.5" />}
+      {isAIAgent ? 'AI Agent' : 'Workflow'}
+    </Badge>
+  );
+}
 
 export function AgentDetailCard({
   agent,
@@ -109,6 +128,8 @@ export function AgentDetailCard({
   const [showInstructions, setShowInstructions] = useState(true);
 
   const isN8n = agent.platform === 'n8n';
+  const isAIAgent = agent.automation_type === 'ai-agent';
+  const IconComponent = isAIAgent ? Brain : Workflow;
 
   const handleCopyWorkflow = () => {
     navigator.clipboard.writeText(JSON.stringify(agent.workflow_json, null, 2));
@@ -145,11 +166,17 @@ export function AgentDetailCard({
           <div className="flex items-start gap-4 flex-1">
             <div className={cn(
               "relative shrink-0 w-14 h-14 rounded-2xl flex items-center justify-center",
-              "bg-gradient-to-br from-muted/80 via-muted/50 to-muted/30",
-              "border border-border/50",
+              "bg-gradient-to-br",
+              isAIAgent 
+                ? "from-purple-500/20 via-purple-500/10 to-purple-500/5 border-purple-500/30"
+                : "from-blue-500/20 via-blue-500/10 to-blue-500/5 border-blue-500/30",
+              "border",
               isN8n ? "shadow-lg shadow-amber-500/5" : "shadow-lg shadow-violet-500/5"
             )}>
-              <Bot className="w-7 h-7 text-foreground/80" />
+              <IconComponent className={cn(
+                "w-7 h-7",
+                isAIAgent ? "text-purple-500" : "text-blue-500"
+              )} />
               <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-green-500 flex items-center justify-center border-2 border-background">
                 <Check className="w-3 h-3 text-white" />
               </div>
@@ -162,6 +189,7 @@ export function AgentDetailCard({
               
               {/* Badges */}
               <div className="flex flex-wrap items-center gap-2">
+                <AutomationTypeBadge type={agent.automation_type} />
                 <Badge className={cn(
                   "text-xs font-medium px-2.5 py-0.5 flex items-center gap-1.5",
                   getImpactBadgeColor(agent.impact_level)
@@ -217,7 +245,7 @@ export function AgentDetailCard({
                 className="text-destructive focus:text-destructive cursor-pointer"
               >
                 <Trash2 className="w-4 h-4 mr-2" />
-                Delete Agent
+                Delete {isAIAgent ? 'AI Agent' : 'Workflow'}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

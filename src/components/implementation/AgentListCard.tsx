@@ -3,10 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { 
   Bot, 
+  Brain,
   Clock, 
   Loader2,
   Package,
   Sparkles,
+  Workflow,
   Zap,
   Target,
   Timer
@@ -17,6 +19,7 @@ interface SavedAgent {
   id: string;
   title: string;
   description: string | null;
+  automation_type: string | null;
   impact_level: string | null;
   complexity_level: string | null;
   platform: string;
@@ -62,6 +65,25 @@ function PlatformBadge({ platform }: { platform: string }) {
   );
 }
 
+// Automation type badge
+function AutomationTypeBadge({ type }: { type: string | null }) {
+  const isAIAgent = type === 'ai-agent';
+  return (
+    <Badge 
+      variant="outline" 
+      className={cn(
+        "text-[10px] px-1.5 py-0 h-5 font-medium gap-1",
+        isAIAgent 
+          ? "bg-purple-500/10 border-purple-500/30 text-purple-600 dark:text-purple-400" 
+          : "bg-blue-500/10 border-blue-500/30 text-blue-600 dark:text-blue-400"
+      )}
+    >
+      {isAIAgent ? <Brain className="w-3 h-3" /> : <Workflow className="w-3 h-3" />}
+      {isAIAgent ? 'Agent' : 'Workflow'}
+    </Badge>
+  );
+}
+
 export function AgentListCard({
   agents,
   selectedAgent,
@@ -81,10 +103,10 @@ export function AgentListCard({
           <div className="p-1.5 rounded-lg bg-primary/10">
             <Package className="w-4 h-4 text-primary" />
           </div>
-          Your AI Agents
+          Your Automations
         </CardTitle>
         <CardDescription className="text-xs">
-          {agents.length} agent{agents.length !== 1 ? 's' : ''} built
+          {agents.length} automation{agents.length !== 1 ? 's' : ''} built
         </CardDescription>
       </CardHeader>
 
@@ -93,7 +115,7 @@ export function AgentListCard({
           <div className="flex items-center justify-center py-12">
             <div className="text-center space-y-3">
               <Loader2 className="w-8 h-8 animate-spin text-primary mx-auto" />
-              <p className="text-sm text-muted-foreground">Loading agents...</p>
+              <p className="text-sm text-muted-foreground">Loading automations...</p>
             </div>
           </div>
         ) : agents.length === 0 ? (
@@ -103,10 +125,10 @@ export function AgentListCard({
             </div>
             <div className="space-y-1">
               <p className="text-sm font-medium text-muted-foreground">
-                No agents built yet
+                No automations built yet
               </p>
               <p className="text-xs text-muted-foreground/70">
-                Analyze a jump and build your first agent!
+                Analyze a jump and build your first workflow or AI agent!
               </p>
             </div>
             <Button 
@@ -124,6 +146,8 @@ export function AgentListCard({
             <div className="space-y-2">
               {agents.map((agent) => {
                 const isN8n = agent.platform === 'n8n';
+                const isAIAgent = agent.automation_type === 'ai-agent';
+                const IconComponent = isAIAgent ? Brain : Workflow;
                 return (
                   <button
                     key={agent.id}
@@ -141,17 +165,17 @@ export function AgentListCard({
                     )}
                   >
                     <div className="flex items-start gap-3">
-                      {/* Icon */}
+                      {/* Icon - different based on automation type */}
                       <div className={cn(
                         "shrink-0 w-10 h-10 rounded-xl flex items-center justify-center transition-colors",
                         selectedAgent?.id === agent.id
-                          ? "bg-primary/15"
+                          ? isAIAgent ? "bg-purple-500/15" : "bg-blue-500/15"
                           : "bg-muted/50 group-hover:bg-muted"
                       )}>
-                        <Bot className={cn(
+                        <IconComponent className={cn(
                           "w-5 h-5 transition-colors",
                           selectedAgent?.id === agent.id 
-                            ? "text-primary"
+                            ? isAIAgent ? "text-purple-500" : "text-blue-500"
                             : "text-muted-foreground"
                         )} />
                       </div>
@@ -165,6 +189,7 @@ export function AgentListCard({
                           {agent.title}
                         </h4>
                         <div className="flex items-center gap-2 flex-wrap">
+                          <AutomationTypeBadge type={agent.automation_type} />
                           <PlatformBadge platform={agent.platform} />
                           <Badge className={cn(
                             "text-[10px] px-1.5 py-0 h-5 flex items-center gap-1",
