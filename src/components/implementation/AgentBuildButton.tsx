@@ -199,11 +199,11 @@ export function AgentBuildButton({ isBuilding, onBuild, disabled, automationType
         {/* Content */}
         <div className={cn(
           "relative p-2 rounded-xl transition-colors",
-          isAIAgent ? "bg-purple-500/10 group-hover:bg-purple-500/20" : "bg-blue-500/10 group-hover:bg-blue-500/20"
+          isAIAgent ? "bg-yellow-500/10 group-hover:bg-yellow-500/20" : "bg-blue-500/10 group-hover:bg-blue-500/20"
         )}>
           <ButtonIcon className={cn(
             "h-5 w-5 transition-colors",
-            isAIAgent ? "text-purple-500" : "text-blue-500"
+            isAIAgent ? "text-yellow-500" : "text-blue-500"
           )} />
         </div>
         <span className="relative text-lg font-bold text-foreground group-hover:text-primary transition-colors duration-300">

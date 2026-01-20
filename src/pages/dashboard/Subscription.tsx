@@ -763,8 +763,8 @@ export default function Subscription() {
                   usage: { 
                     icon: isAgentBuild ? Bot : Zap, 
                     label: isAgentBuild ? 'AI Agent Built' : 'Credit Used', 
-                    color: isAgentBuild ? 'text-purple-500' : 'text-blue-500', 
-                    bgColor: isAgentBuild ? 'bg-purple-500/10' : 'bg-blue-500/10' 
+                    color: isAgentBuild ? 'text-yellow-500' : 'text-blue-500', 
+                    bgColor: isAgentBuild ? 'bg-yellow-500/10' : 'bg-blue-500/10' 
                   },
                   refund: { icon: TrendingUp, label: 'Credit Refund', color: 'text-emerald-500', bgColor: 'bg-emerald-500/10' },
                   welcome_bonus: { icon: Gift, label: 'Welcome Bonus', color: 'text-violet-500', bgColor: 'bg-violet-500/10' },
