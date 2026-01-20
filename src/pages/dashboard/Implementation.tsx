@@ -42,6 +42,7 @@ import { AgentDetailCard } from "@/components/implementation/AgentDetailCard";
 import { AnalysisSummaryCard } from "@/components/implementation/AnalysisSummaryCard";
 import { AgentListCard } from "@/components/implementation/AgentListCard";
 import { AnalyzeButton } from "@/components/implementation/AnalyzeButton";
+import { Platform } from "@/components/implementation/PlatformSelector";
 
 interface AgentOpportunity {
   id: string;
@@ -119,6 +120,9 @@ export default function Implementation() {
   // Read tab from URL params, default to "analyze"
   const tabFromUrl = searchParams.get('tab');
   const [activeTab, setActiveTab] = useState<string>(tabFromUrl === 'agents' ? 'agents' : 'analyze');
+  
+  // Platform selection state
+  const [selectedPlatform, setSelectedPlatform] = useState<Platform>('n8n');
 
   useEffect(() => {
     loadJumps();
@@ -314,6 +318,7 @@ export default function Implementation() {
     setGeneratedWorkflow(null);
 
     try {
+      const creditsNeeded = selectedPlatform === 'both' ? 2 : 1;
       const { data, error } = await supabase.functions.invoke("build-agent", {
         headers: await getAuthHeaders(),
         body: {
@@ -335,6 +340,7 @@ export default function Implementation() {
             challenges: selectedJump.comprehensive_plan?.overview?.challenges?.join(", ") || "",
           },
           analysisId: analysisResult?.analysisId,
+          platform: selectedPlatform,
         }
       });
 
@@ -641,6 +647,8 @@ export default function Implementation() {
                           isBuilding={buildingAgentId === opportunity.id}
                           generatedWorkflow={generatedWorkflow?.opportunityId === opportunity.id ? generatedWorkflow : null}
                           existingAgent={findExistingAgentForOpportunity(opportunity)}
+                          selectedPlatform={selectedPlatform}
+                          onPlatformChange={setSelectedPlatform}
                           onBuild={() => handleBuildAgent(opportunity)}
                           onDownload={handleDownloadWorkflow}
                           onClearWorkflow={() => setGeneratedWorkflow(null)}

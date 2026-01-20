@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { AgentBuildButton } from "./AgentBuildButton";
+import { PlatformSelector, Platform } from "./PlatformSelector";
 
 interface AgentOpportunity {
   id: string;
@@ -68,6 +69,8 @@ interface OpportunityCardProps {
   isBuilding: boolean;
   generatedWorkflow: any;
   existingAgent: SavedAgent | null;
+  selectedPlatform: Platform;
+  onPlatformChange: (platform: Platform) => void;
   onBuild: () => void;
   onDownload: (workflow: any, filename: string) => void;
   onClearWorkflow: () => void;
@@ -90,6 +93,8 @@ export function OpportunityCard({
   isBuilding,
   generatedWorkflow,
   existingAgent,
+  selectedPlatform,
+  onPlatformChange,
   onBuild,
   onDownload,
   onClearWorkflow,
@@ -429,11 +434,26 @@ export function OpportunityCard({
             </Button>
           </div>
         ) : (
-          <div className="pt-2">
+          <div className="pt-2 space-y-4">
+            {/* Platform Selector */}
+            <PlatformSelector
+              value={selectedPlatform}
+              onChange={onPlatformChange}
+              disabled={isBuilding}
+            />
+            
+            {/* Build Button */}
             <AgentBuildButton 
               isBuilding={isBuilding}
               onBuild={onBuild}
             />
+            
+            {/* Credits info */}
+            <p className="text-xs text-center text-muted-foreground">
+              {selectedPlatform === 'both' 
+                ? "Building both workflows will use 2 credits" 
+                : "Building this agent will use 1 credit"}
+            </p>
           </div>
         )}
       </CardContent>
