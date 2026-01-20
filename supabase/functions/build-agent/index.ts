@@ -680,6 +680,7 @@ Deno.serve(async (req) => {
           title: opportunity.title,
           description: opportunity.description,
           automation_target: opportunity.automationTarget || null,
+          automation_type: automationType,
           impact_level: opportunity.impact,
           complexity_level: opportunity.complexity,
           estimated_time_saved: opportunity.estimatedTimeSaved,
@@ -713,6 +714,7 @@ Deno.serve(async (req) => {
           title: opportunity.title + ' (Make.com)',
           description: opportunity.description,
           automation_target: opportunity.automationTarget || null,
+          automation_type: automationType,
           impact_level: opportunity.impact,
           complexity_level: opportunity.complexity,
           estimated_time_saved: opportunity.estimatedTimeSaved,
@@ -741,10 +743,11 @@ Deno.serve(async (req) => {
         ? (platform === 'both' ? 'n8n' : platform) 
         : 'Make.com';
       
+      const buildTypeLabel = automationType === 'ai-agent' ? 'AI Agent' : 'Workflow';
       const { data: creditDeducted, error: creditError } = await supabase
         .rpc('deduct_user_credit', {
           p_user_id: user.id,
-          p_description: `AI Agent build (${platformName}): ${opportunity.title}`,
+          p_description: `${buildTypeLabel} build (${platformName}): ${opportunity.title}`,
           p_reference_id: savedAgentIds[i] || `agent_${platformName}_${Date.now()}`
         });
 
