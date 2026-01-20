@@ -107,7 +107,7 @@ function AutomationTypeBadge({ type }: { type: string | null }) {
       className={cn(
         "text-xs font-medium px-2.5 py-0.5 gap-1.5",
         isAIAgent 
-          ? "bg-purple-500/10 border-purple-500/30 text-purple-600 dark:text-purple-400" 
+          ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-600 dark:text-emerald-400" 
           : "bg-blue-500/10 border-blue-500/30 text-blue-600 dark:text-blue-400"
       )}
     >
@@ -168,14 +168,14 @@ export function AgentDetailCard({
               "relative shrink-0 w-14 h-14 rounded-2xl flex items-center justify-center",
               "bg-gradient-to-br",
               isAIAgent 
-                ? "from-purple-500/20 via-purple-500/10 to-purple-500/5 border-purple-500/30"
+                ? "from-emerald-500/20 via-emerald-500/10 to-emerald-500/5 border-emerald-500/30"
                 : "from-blue-500/20 via-blue-500/10 to-blue-500/5 border-blue-500/30",
               "border",
               isN8n ? "shadow-lg shadow-amber-500/5" : "shadow-lg shadow-violet-500/5"
             )}>
               <IconComponent className={cn(
                 "w-7 h-7",
-                isAIAgent ? "text-purple-500" : "text-blue-500"
+                isAIAgent ? "text-emerald-500" : "text-blue-500"
               )} />
               <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-green-500 flex items-center justify-center border-2 border-background">
                 <Check className="w-3 h-3 text-white" />
