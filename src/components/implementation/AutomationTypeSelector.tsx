@@ -76,11 +76,11 @@ const automationOptions: AutomationOption[] = [
     bestFor: "Complex decisions, dynamic situations, content creation, customer interactions",
     complexity: "Advanced",
     credits: 2,
-    color: "text-purple-500",
-    borderColor: "border-purple-500/30",
-    hoverBorder: "hover:border-purple-500/50",
-    selectedBg: "from-purple-500/15 via-purple-500/10 to-purple-500/5",
-    accentColor: "bg-purple-500",
+    color: "text-yellow-500",
+    borderColor: "border-yellow-500/30",
+    hoverBorder: "hover:border-yellow-500/50",
+    selectedBg: "from-yellow-500/15 via-yellow-500/10 to-yellow-500/5",
+    accentColor: "bg-yellow-500",
   },
 ];
 
@@ -219,7 +219,7 @@ export function AutomationTypeSelector({ value, onChange, disabled }: Automation
             <span className="font-medium text-foreground">Not sure which to choose? </span>
             <span className="text-muted-foreground">
               Start with a <span className="text-blue-500 font-medium">Workflow</span> for simple, 
-              predictable tasks. Choose an <span className="text-purple-500 font-medium">AI Agent</span> when 
+              predictable tasks. Choose an <span className="text-yellow-500 font-medium">AI Agent</span> when 
               you need intelligent decision-making and the ability to handle exceptions.
             </span>
           </div>
