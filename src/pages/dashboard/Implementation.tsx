@@ -103,12 +103,17 @@ export default function Implementation() {
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [buildingAgentId, setBuildingAgentId] = useState<string | null>(null);
   const [generatedWorkflow, setGeneratedWorkflow] = useState<{
-    workflow: any;
-    filename: string;
-    instructions: Record<string, string>;
+    workflow?: any;
+    filename?: string;
+    instructions?: Record<string, string>;
     detailedInstructions?: any;
     opportunityId: string;
     agentId?: string;
+    platform?: string;
+    workflows?: {
+      n8n?: { workflow: any; filename: string; detailedInstructions: any; instructions: any };
+      make?: { workflow: any; filename: string; detailedInstructions: any; instructions: any };
+    };
   } | null>(null);
   
   // Saved agents state
