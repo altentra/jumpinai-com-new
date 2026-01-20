@@ -1367,6 +1367,54 @@ const Index = () => {
             </div>
           </div>
 
+          {/* Closing Argument - Why Implementation Matters */}
+          <div className="max-w-4xl mx-auto mt-12">
+            <div className="relative group">
+              {/* Subtle glow effect */}
+              <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500/20 via-teal-500/20 to-cyan-500/20 rounded-3xl blur-xl opacity-50 group-hover:opacity-70 transition-opacity duration-500"></div>
+              
+              <div className="relative glass rounded-3xl p-8 lg:p-10 border border-primary/20 shadow-modern backdrop-blur-xl text-center">
+                {/* Icon */}
+                <div className="flex justify-center mb-6">
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500/20 via-teal-500/15 to-cyan-500/20 border border-emerald-500/30 flex items-center justify-center shadow-lg">
+                    <Bot className="w-7 h-7 text-emerald-500" />
+                  </div>
+                </div>
+                
+                {/* Main Statement */}
+                <h3 className="text-xl sm:text-2xl font-bold font-display mb-4 gradient-text-primary">
+                  Your Vision Deserves to Run—Not Just Exist
+                </h3>
+                
+                {/* Supporting Text */}
+                <p className="text-muted-foreground leading-relaxed mb-6 max-w-2xl mx-auto">
+                  A plan on paper is potential. A workflow in motion is <span className="text-foreground font-medium">power</span>. When you implement your Jump, you transform strategic insight into systems that work for you—24/7, without hesitation, with precision you control.
+                </p>
+                
+                {/* Key Benefits - Horizontal */}
+                <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-muted-foreground mb-6">
+                  <span className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                    <span>Full ownership of your automations</span>
+                  </span>
+                  <span className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-teal-500"></span>
+                    <span>Customize every step</span>
+                  </span>
+                  <span className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-500"></span>
+                    <span>Scale as you grow</span>
+                  </span>
+                </div>
+                
+                {/* Final Line */}
+                <p className="text-sm text-muted-foreground/80 italic">
+                  This is where strategy meets execution—where your Jump in AI becomes reality.
+                </p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </section>
 
