@@ -1,25 +1,40 @@
 import { useState, useEffect } from "react";
-import { Rocket, ArrowRight, Loader2, Sparkles, Zap, Bot, CheckCircle2 } from "lucide-react";
+import { Rocket, ArrowRight, Loader2, Sparkles, Zap, Bot, CheckCircle2, Brain, Workflow } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { AutomationType } from "./AutomationTypeSelector";
 
 interface AgentBuildButtonProps {
   isBuilding: boolean;
   onBuild: () => void;
   disabled?: boolean;
+  automationType?: AutomationType;
 }
 
 // Estimated phases and their approximate durations in seconds
-const BUILD_PHASES = [
-  { name: "Analyzing opportunity...", duration: 8, icon: Sparkles },
-  { name: "Designing workflow structure...", duration: 12, icon: Bot },
-  { name: "Generating n8n nodes...", duration: 15, icon: Zap },
-  { name: "Creating setup instructions...", duration: 10, icon: Rocket },
-  { name: "Finalizing agent...", duration: 5, icon: CheckCircle2 },
+const WORKFLOW_BUILD_PHASES = [
+  { name: "Analyzing automation...", duration: 6, icon: Sparkles },
+  { name: "Designing workflow structure...", duration: 10, icon: Workflow },
+  { name: "Generating nodes...", duration: 12, icon: Zap },
+  { name: "Creating setup instructions...", duration: 8, icon: Rocket },
+  { name: "Finalizing workflow...", duration: 4, icon: CheckCircle2 },
 ];
 
-const TOTAL_ESTIMATED_TIME = BUILD_PHASES.reduce((acc, phase) => acc + phase.duration, 0);
+const AI_AGENT_BUILD_PHASES = [
+  { name: "Analyzing decision requirements...", duration: 10, icon: Sparkles },
+  { name: "Designing reasoning architecture...", duration: 15, icon: Brain },
+  { name: "Building decision nodes...", duration: 18, icon: Bot },
+  { name: "Configuring adaptive logic...", duration: 12, icon: Zap },
+  { name: "Creating implementation guide...", duration: 10, icon: Rocket },
+  { name: "Finalizing AI Agent...", duration: 5, icon: CheckCircle2 },
+];
 
-export function AgentBuildButton({ isBuilding, onBuild, disabled }: AgentBuildButtonProps) {
+export function AgentBuildButton({ isBuilding, onBuild, disabled, automationType = 'workflow' }: AgentBuildButtonProps) {
+  const BUILD_PHASES = automationType === 'ai-agent' ? AI_AGENT_BUILD_PHASES : WORKFLOW_BUILD_PHASES;
+  const TOTAL_ESTIMATED_TIME = BUILD_PHASES.reduce((acc, phase) => acc + phase.duration, 0);
+  
+  const isAIAgent = automationType === 'ai-agent';
+  const buttonLabel = isAIAgent ? "Build AI Agent" : "Build Workflow";
+  const ButtonIcon = isAIAgent ? Brain : Workflow;
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [currentPhaseIndex, setCurrentPhaseIndex] = useState(0);
 
@@ -182,11 +197,17 @@ export function AgentBuildButton({ isBuilding, onBuild, disabled }: AgentBuildBu
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 rounded-[2rem]" />
         
         {/* Content */}
-        <div className="relative p-2 rounded-xl bg-primary/10 group-hover:bg-primary/20 transition-colors">
-          <Rocket className="h-5 w-5 text-primary group-hover:text-primary transition-colors" />
+        <div className={cn(
+          "relative p-2 rounded-xl transition-colors",
+          isAIAgent ? "bg-purple-500/10 group-hover:bg-purple-500/20" : "bg-blue-500/10 group-hover:bg-blue-500/20"
+        )}>
+          <ButtonIcon className={cn(
+            "h-5 w-5 transition-colors",
+            isAIAgent ? "text-purple-500" : "text-blue-500"
+          )} />
         </div>
         <span className="relative text-lg font-bold text-foreground group-hover:text-primary transition-colors duration-300">
-          Build This Agent
+          {buttonLabel}
         </span>
         <ArrowRight className="relative h-5 w-5 text-primary group-hover:translate-x-1 transition-transform duration-300" />
       </div>

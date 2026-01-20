@@ -727,6 +727,7 @@ export type Database = {
         Row: {
           analysis_id: string | null
           automation_target: string | null
+          automation_type: string | null
           benefits: string[] | null
           complexity_level: string | null
           created_at: string
@@ -750,6 +751,7 @@ export type Database = {
         Insert: {
           analysis_id?: string | null
           automation_target?: string | null
+          automation_type?: string | null
           benefits?: string[] | null
           complexity_level?: string | null
           created_at?: string
@@ -773,6 +775,7 @@ export type Database = {
         Update: {
           analysis_id?: string | null
           automation_target?: string | null
+          automation_type?: string | null
           benefits?: string[] | null
           complexity_level?: string | null
           created_at?: string

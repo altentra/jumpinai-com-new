@@ -112,6 +112,7 @@ export default function Implementation() {
     opportunityId: string;
     agentId?: string;
     platform?: string;
+    automationType?: AutomationType;
     workflows?: {
       n8n?: { workflow: any; filename: string; detailedInstructions: any; instructions: any };
       make?: { workflow: any; filename: string; detailedInstructions: any; instructions: any };
@@ -128,8 +129,9 @@ export default function Implementation() {
   const tabFromUrl = searchParams.get('tab');
   const [activeTab, setActiveTab] = useState<string>(tabFromUrl === 'agents' ? 'agents' : 'analyze');
   
-  // Platform selection state
+  // Platform and automation type selection state
   const [selectedPlatform, setSelectedPlatform] = useState<Platform>('n8n');
+  const [selectedAutomationType, setSelectedAutomationType] = useState<AutomationType>('workflow');
 
   useEffect(() => {
     loadJumps();
@@ -186,7 +188,12 @@ export default function Implementation() {
         .order('created_at', { ascending: false });
       
       if (error) throw error;
-      setSavedAgents(data || []);
+      // Map data to ensure automation_type exists (default to 'workflow' for old records)
+      const mappedAgents: SavedAgent[] = (data || []).map(agent => ({
+        ...agent,
+        automation_type: agent.automation_type || 'workflow',
+      }));
+      setSavedAgents(mappedAgents);
     } catch (error) {
       console.error("Error loading agents:", error);
       toast.error("Failed to load your agents");
@@ -325,7 +332,10 @@ export default function Implementation() {
     setGeneratedWorkflow(null);
 
     try {
-      const creditsNeeded = selectedPlatform === 'both' ? 2 : 1;
+      // Calculate credits: AI agents cost 2x, both platforms also 2x
+      const baseCredits = selectedAutomationType === 'ai-agent' ? 2 : 1;
+      const creditsNeeded = selectedPlatform === 'both' ? baseCredits * 2 : baseCredits;
+      
       const { data, error } = await supabase.functions.invoke("build-agent", {
         headers: await getAuthHeaders(),
         body: {
@@ -348,6 +358,7 @@ export default function Implementation() {
           },
           analysisId: analysisResult?.analysisId,
           platform: selectedPlatform,
+          automationType: selectedAutomationType,
         }
       });
 
@@ -362,6 +373,7 @@ export default function Implementation() {
           opportunityId: opportunity.id,
           agentId: data.agentId,
           platform: data.platform,
+          automationType: data.automationType,
           workflows: data.workflows,
         });
         
@@ -370,7 +382,8 @@ export default function Implementation() {
         dispatchCreditsUpdate(); // Sync sidebar and other credit displays
         
         const creditsUsed = data.creditsUsed || 1;
-        toast.success("AI Agent built successfully!", {
+        const buildType = selectedAutomationType === 'ai-agent' ? 'AI Agent' : 'Workflow';
+        toast.success(`${buildType} built successfully!`, {
           description: `${creditsUsed} credit${creditsUsed > 1 ? 's' : ''} used. Find it in your AI Agents tab.`,
         });
       } else {
@@ -381,10 +394,10 @@ export default function Implementation() {
       // Handle specific error cases
       if (error.message?.includes('Insufficient credits')) {
         toast.error("Insufficient credits", {
-          description: "You need at least 1 credit to build an AI agent.",
+          description: "You need more credits to build this. Please purchase more credits.",
         });
       } else {
-        toast.error(error.message || "Failed to generate workflow");
+        toast.error(error.message || "Failed to generate");
       }
     } finally {
       setBuildingAgentId(null);
@@ -658,7 +671,9 @@ export default function Implementation() {
                           generatedWorkflow={generatedWorkflow?.opportunityId === opportunity.id ? generatedWorkflow : null}
                           existingAgent={findExistingAgentForOpportunity(opportunity)}
                           selectedPlatform={selectedPlatform}
+                          selectedAutomationType={selectedAutomationType}
                           onPlatformChange={setSelectedPlatform}
+                          onAutomationTypeChange={setSelectedAutomationType}
                           onBuild={() => handleBuildAgent(opportunity)}
                           onDownload={handleDownloadWorkflow}
                           onClearWorkflow={() => setGeneratedWorkflow(null)}
