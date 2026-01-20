@@ -346,7 +346,7 @@ export default function Implementation() {
 
       if (error) throw error;
 
-      if (data?.workflow) {
+      if (data?.workflow || data?.workflows) {
         setGeneratedWorkflow({
           workflow: data.workflow,
           filename: data.filename,
@@ -354,14 +354,17 @@ export default function Implementation() {
           detailedInstructions: data.detailedInstructions,
           opportunityId: opportunity.id,
           agentId: data.agentId,
+          platform: data.platform,
+          workflows: data.workflows,
         });
         
         // Refresh the agents list and credits balance, then notify other components
         await Promise.all([loadSavedAgents(), fetchCredits()]);
         dispatchCreditsUpdate(); // Sync sidebar and other credit displays
         
+        const creditsUsed = data.creditsUsed || 1;
         toast.success("AI Agent built successfully!", {
-          description: "1 credit used. Find it in your AI Agents tab.",
+          description: `${creditsUsed} credit${creditsUsed > 1 ? 's' : ''} used. Find it in your AI Agents tab.`,
         });
       } else {
         throw new Error("No workflow generated");
