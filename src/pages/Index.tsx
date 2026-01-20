@@ -68,6 +68,8 @@ const Index = () => {
   const { elementRef: implementCard1Ref, scrollProgress: implementCard1Progress } = useScrollAnimation({ threshold: 0.15 });
   const { elementRef: implementCard2Ref, scrollProgress: implementCard2Progress } = useScrollAnimation({ threshold: 0.15 });
   const { elementRef: implementCard3Ref, scrollProgress: implementCard3Progress } = useScrollAnimation({ threshold: 0.15 });
+  const { elementRef: implementSummaryRef, scrollProgress: implementSummaryProgress } = useScrollAnimation({ threshold: 0.15 });
+  const { elementRef: implementClosingRef, scrollProgress: implementClosingProgress } = useScrollAnimation({ threshold: 0.15 });
   
   
   // Individual refs for mobile animations
@@ -1316,7 +1318,14 @@ const Index = () => {
           </div>
 
           {/* Platform & Package Summary - Compact */}
-          <div className="max-w-4xl mx-auto">
+          <div 
+            ref={implementSummaryRef}
+            className="max-w-4xl mx-auto transition-all duration-700 ease-out"
+            style={{
+              opacity: Math.min(1, implementSummaryProgress * 1.5),
+              transform: `translateY(${(1 - Math.min(1, implementSummaryProgress * 1.5)) * 40}px)`
+            }}
+          >
             <div className="glass rounded-2xl p-6 lg:p-8 border border-emerald-500/20 shadow-lg backdrop-blur-xl">
               {/* Two Platforms - Side by Side Compact */}
               <div className="grid sm:grid-cols-2 gap-4 mb-6">
@@ -1368,7 +1377,14 @@ const Index = () => {
           </div>
 
           {/* Closing Argument - Why Implementation Matters */}
-          <div className="max-w-4xl mx-auto mt-12">
+          <div 
+            ref={implementClosingRef}
+            className="max-w-4xl mx-auto mt-12 transition-all duration-700 ease-out"
+            style={{
+              opacity: Math.min(1, implementClosingProgress * 1.5),
+              transform: `translateY(${(1 - Math.min(1, implementClosingProgress * 1.5)) * 40}px)`
+            }}
+          >
             <div className="relative group">
               {/* Subtle glow effect - neutral/white like other sections */}
               <div className="absolute -inset-1 bg-gradient-to-r from-white/10 via-white/5 to-white/10 dark:from-white/5 dark:via-white/[0.02] dark:to-white/5 rounded-3xl blur-xl opacity-50 group-hover:opacity-70 transition-opacity duration-500"></div>
@@ -1380,7 +1396,7 @@ const Index = () => {
                 <div className="relative z-10">
                   {/* Main Statement */}
                   <h3 className="text-xl sm:text-2xl font-bold font-display mb-4 gradient-text-primary">
-                    From Strategy to Systems That Work for You
+                    Turn Your Plan Into a Force That Never Stops
                   </h3>
                   
                   {/* Supporting Text */}
