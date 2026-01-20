@@ -68,6 +68,8 @@ const Index = () => {
   const { elementRef: implementCard1Ref, scrollProgress: implementCard1Progress } = useScrollAnimation({ threshold: 0.15 });
   const { elementRef: implementCard2Ref, scrollProgress: implementCard2Progress } = useScrollAnimation({ threshold: 0.15 });
   const { elementRef: implementCard3Ref, scrollProgress: implementCard3Progress } = useScrollAnimation({ threshold: 0.15 });
+  const { elementRef: implementSummaryRef, scrollProgress: implementSummaryProgress } = useScrollAnimation({ threshold: 0.15 });
+  const { elementRef: implementClosingRef, scrollProgress: implementClosingProgress } = useScrollAnimation({ threshold: 0.15 });
   
   
   // Individual refs for mobile animations
@@ -1305,12 +1307,124 @@ const Index = () => {
                     
                     <h3 className="text-xl font-bold font-display mb-3">Build AI Agents</h3>
                     <p className="text-sm text-muted-foreground leading-relaxed">
-                      One click generates a complete n8n workflow—a ready-to-deploy AI agent with detailed implementation instructions, testing guides, and troubleshooting tips.
+                      One click generates a complete workflow—a ready-to-deploy AI agent with detailed implementation instructions, testing guides, and troubleshooting tips.
                     </p>
                   </div>
                 </div>
                 
                 <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-cyan-600 to-blue-500 opacity-10 group-hover:opacity-20 transition-opacity duration-500 -z-10 blur-xl"></div>
+              </div>
+            </div>
+          </div>
+
+          {/* Platform & Package Summary - Compact */}
+          <div 
+            ref={implementSummaryRef}
+            className="max-w-4xl mx-auto transition-all duration-700 ease-out"
+            style={{
+              opacity: Math.min(1, implementSummaryProgress * 1.5),
+              transform: `translateY(${(1 - Math.min(1, implementSummaryProgress * 1.5)) * 40}px)`
+            }}
+          >
+            <div className="glass rounded-2xl p-6 lg:p-8 border border-emerald-500/20 shadow-lg backdrop-blur-xl">
+              {/* Two Platforms - Side by Side Compact */}
+              <div className="grid sm:grid-cols-2 gap-4 mb-6">
+                {/* n8n */}
+                <div className="flex items-center gap-4 p-4 rounded-xl bg-muted/30 border border-amber-500/20 hover:border-amber-500/40 transition-all duration-300">
+                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-500/20 to-orange-500/10 border border-amber-500/30 flex items-center justify-center flex-shrink-0">
+                    <Workflow className="w-5 h-5 text-amber-500" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-sm text-foreground">n8n Workflows</h4>
+                    <p className="text-xs text-muted-foreground">For technical users & power users</p>
+                  </div>
+                </div>
+                
+                {/* Make.com */}
+                <div className="flex items-center gap-4 p-4 rounded-xl bg-muted/30 border border-violet-500/20 hover:border-violet-500/40 transition-all duration-300">
+                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-violet-500/20 to-purple-500/10 border border-violet-500/30 flex items-center justify-center flex-shrink-0">
+                    <Zap className="w-5 h-5 text-violet-500" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-sm text-foreground">Make.com Blueprints</h4>
+                    <p className="text-xs text-muted-foreground">For non-technical users</p>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Divider */}
+              <div className="h-px bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent mb-6"></div>
+              
+              {/* What's Included - Inline */}
+              <div className="text-center mb-4">
+                <p className="text-sm text-muted-foreground">
+                  Every agent includes: <span className="text-foreground font-medium">Quick Start Guide</span> • <span className="text-foreground font-medium">Configuration Steps</span> • <span className="text-foreground font-medium">Testing Checklist</span> • <span className="text-foreground font-medium">Troubleshooting Tips</span>
+                </p>
+              </div>
+              
+              {/* Automation Examples - Compact Pills */}
+              <div className="flex flex-wrap justify-center gap-2">
+                {['Lead Capture', 'Email Automation', 'Social Scheduling', 'Customer Onboarding', 'Data Processing', 'Report Generation'].map((item, index) => (
+                  <span 
+                    key={index}
+                    className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-600 dark:text-emerald-400"
+                  >
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Closing Argument - Why Implementation Matters */}
+          <div 
+            ref={implementClosingRef}
+            className="max-w-4xl mx-auto mt-12 transition-all duration-700 ease-out"
+            style={{
+              opacity: Math.min(1, implementClosingProgress * 1.5),
+              transform: `translateY(${(1 - Math.min(1, implementClosingProgress * 1.5)) * 40}px)`
+            }}
+          >
+            <div className="relative group">
+              {/* Subtle glow effect - neutral/white like other sections */}
+              <div className="absolute -inset-1 bg-gradient-to-r from-white/10 via-white/5 to-white/10 dark:from-white/5 dark:via-white/[0.02] dark:to-white/5 rounded-3xl blur-xl opacity-50 group-hover:opacity-70 transition-opacity duration-500"></div>
+              
+              <div className="relative bg-card rounded-3xl p-8 lg:p-10 border border-white/10 hover:border-white/20 shadow-modern backdrop-blur-xl text-center transition-all duration-500">
+                {/* Subtle glass overlay */}
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/[0.02] via-transparent to-white/[0.01] pointer-events-none"></div>
+                
+                <div className="relative z-10">
+                  {/* Main Statement */}
+                  <h3 className="text-xl sm:text-2xl font-bold font-display mb-4 gradient-text-primary">
+                    Turn Your Plan Into a Force That Never Stops
+                  </h3>
+                  
+                  {/* Supporting Text */}
+                  <p className="text-muted-foreground leading-relaxed mb-6 max-w-2xl mx-auto">
+                    A plan on paper is potential. A workflow in motion is <span className="text-foreground font-medium">power</span>. When you implement your Jump, you transform strategic insight into systems that work for you—24/7, without hesitation, with precision you control.
+                  </p>
+                  
+                  {/* Key Benefits - Horizontal */}
+                  <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-muted-foreground mb-6">
+                    <span className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-primary/60"></span>
+                      <span>Full ownership of your automations</span>
+                    </span>
+                    <span className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-primary/60"></span>
+                      <span>Customize every step</span>
+                    </span>
+                    <span className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-primary/60"></span>
+                      <span>Scale as you grow</span>
+                    </span>
+                  </div>
+                  
+                  {/* Final Line */}
+                  <p className="text-sm text-muted-foreground/80 italic">
+                    This is where strategy meets execution—where your Jump in AI becomes reality.
+                  </p>
+                </div>
               </div>
             </div>
           </div>

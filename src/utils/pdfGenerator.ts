@@ -1053,14 +1053,14 @@ export const generatePitchDeckPDF = (): void => {
   yPosition = margin + 5;
   addSectionHeader('Our Solution');
   
-  addParagraph('JumpinAI is the world\'s first truly adaptive AI transformation platform, delivering complete personalized blueprints in 2 minutes from just 2 questions.', 10, 'bold');
+  addParagraph('JumpinAI is the world\'s first truly adaptive AI transformation platform, delivering complete personalized blueprints in 2 minutes from just 2 questions—with the ability to implement them as automated workflows.', 10, 'bold');
   yPosition += 2;
 
-  addSubsectionHeader('The 3-Tab Transformation System', 10);
+  addSubsectionHeader('The Jump Blueprint System', 10);
   yPosition += 2;
 
   // 3-Tab visual cards
-  checkPageBreak(48);
+  checkPageBreak(65);
   const tabWidth = (maxWidth - 8) / 3;
   const tabHeight = 42;
   const tabY = yPosition;
@@ -1086,10 +1086,10 @@ export const generatePitchDeckPDF = (): void => {
   pdf.text('Overview Tab', margin + tabWidth / 2, tabY + 20, { align: 'center' });
   
   setTextColor(colors.body);
-  pdf.setFontSize(7);
+  pdf.setFontSize(6.5);
   pdf.setFont('helvetica', 'normal');
-  const tab1Text = wrapText('Strategic foundation with current situation analysis, vision & objectives, and high-level roadmap', tabWidth - 6, 7);
-  pdf.text(tab1Text, margin + 3, tabY + 27);
+  const tab1Text = wrapText('Strategic foundation with alternative routes to explore different directions', tabWidth - 4, 6.5);
+  pdf.text(tab1Text, margin + 2, tabY + 27);
 
   // Tab 2: Adaptive Plan
   setFillColor(colors.cardBg);
@@ -1106,15 +1106,15 @@ export const generatePitchDeckPDF = (): void => {
   pdf.text('2', margin + tabWidth + 4 + 7, tabY + 10);
   
   setTextColor(colors.heading);
-  pdf.setFontSize(9.5);
+  pdf.setFontSize(8.5);
   pdf.setFont('helvetica', 'bold');
-  pdf.text('Adaptive Plan Tab', margin + tabWidth + 4 + tabWidth / 2, tabY + 20, { align: 'center' });
+  pdf.text('Adaptive Plan', margin + tabWidth + 4 + tabWidth / 2, tabY + 20, { align: 'center' });
   
   setTextColor(colors.body);
-  pdf.setFontSize(7);
+  pdf.setFontSize(6.5);
   pdf.setFont('helvetica', 'normal');
-  const tab2Text = wrapText('Step-by-step guidance with 4-level clarification for granular details and 3 alternative routes to pivot when obstacles arise', tabWidth - 6, 7);
-  pdf.text(tab2Text, margin + tabWidth + 4 + 3, tabY + 27);
+  const tab2Text = wrapText('4-level clarification + alternative routes per step', tabWidth - 4, 6.5);
+  pdf.text(tab2Text, margin + tabWidth + 4 + 2, tabY + 27);
 
   // Tab 3: Tools & Prompts
   setFillColor(colors.cardBg);
@@ -1131,24 +1131,45 @@ export const generatePitchDeckPDF = (): void => {
   pdf.text('3', margin + 2 * (tabWidth + 4) + 7, tabY + 10);
   
   setTextColor(colors.heading);
-  pdf.setFontSize(9.5);
+  pdf.setFontSize(8.5);
   pdf.setFont('helvetica', 'bold');
   pdf.text('Tools & Prompts', margin + 2 * (tabWidth + 4) + tabWidth / 2, tabY + 20, { align: 'center' });
   
   setTextColor(colors.body);
-  pdf.setFontSize(7);
+  pdf.setFontSize(6.5);
   pdf.setFont('helvetica', 'normal');
-  const tab3Text = wrapText('9 custom tool-prompt combinations, copy-paste ready, with AI Coach access for ongoing guidance', tabWidth - 6, 7);
-  pdf.text(tab3Text, margin + 2 * (tabWidth + 4) + 3, tabY + 27);
+  const tab3Text = wrapText('9+ tool-prompt combos, copy-paste ready with Equip feature', tabWidth - 4, 6.5);
+  pdf.text(tab3Text, margin + 2 * (tabWidth + 4) + 2, tabY + 27);
 
-  yPosition += tabHeight + 8;
+  yPosition += tabHeight + 6;
+
+  // Implementation capability box (separate from tabs)
+  checkPageBreak(28);
+  setFillColor(colors.sectionBg);
+  pdf.rect(margin, yPosition, maxWidth, 22, 'F');
+  setDrawColor(colors.success);
+  pdf.setLineWidth(0.5);
+  pdf.rect(margin, yPosition, maxWidth, 22, 'S');
+  
+  setTextColor(colors.heading);
+  pdf.setFontSize(9);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Implementation Capability', margin + 4, yPosition + 8);
+  
+  setTextColor(colors.body);
+  pdf.setFontSize(7.5);
+  pdf.setFont('helvetica', 'normal');
+  const implText = wrapText('Beyond strategy: Users can analyze completed Jumps to discover automation opportunities and build AI agents with downloadable workflows for n8n and Make.com.', maxWidth - 8, 7.5);
+  pdf.text(implText, margin + 4, yPosition + 15);
+  
+  yPosition += 28;
 
   // Key Differentiators
   addSubsectionHeader('Key Differentiators', 10);
-  addBullet('Hyper-personalization at scale using multi-model AI orchestration (xAI as primary choice, supplemented by ChatGPT-5, Claude, and Gemini)', 8.5);
-  addBullet('True adaptability with multi-level clarifications and alternative routes—no static templates', 8.5);
+  addBullet('Hyper-personalization at scale using multi-model AI orchestration (xAI, ChatGPT-5, Claude, Gemini)', 8.5);
+  addBullet('True adaptability with multi-level clarifications and alternative routes at both Overview and Plan levels', 8.5);
   addBullet('Complete transformation in ~2 minutes, not months of expensive consulting', 8.5);
-  addBullet('Ongoing AI Coach for continuous refinement and strategic adjustments post-generation', 8.5);
+  addBullet('Implementation capability—analyze Jumps to build downloadable workflows for n8n and Make.com with personalized instructions', 8.5);
 
   // ================== MARKET OPPORTUNITY ==================
   pdf.addPage();
@@ -1830,7 +1851,7 @@ export const generatePitchDeckPDF = (): void => {
   setTextColor(colors.body);
   pdf.setFontSize(8);
   pdf.setFont('helvetica', 'normal');
-  const stratPos = wrapText('We\'re first-to-market with adaptive AI transformation at scale. Our technology creates compounding advantages: every Jump improves our AI, every user interaction strengthens our network effects, and our data moat deepens daily. As the market matures, we\'ll be established with millions of transformation journeys powering a defensible platform.', maxWidth - 10, 8);
+  const stratPos = wrapText('We\'re first-to-market with adaptive AI transformation at scale—and now the only platform taking users from strategy to running automation systems. Our technology creates compounding advantages: every Jump improves our AI, every workflow generated strengthens our platform, and our data moat deepens daily.', maxWidth - 10, 8);
   pdf.text(stratPos, margin + 5, yPosition + 13);
   
   yPosition += 28;
