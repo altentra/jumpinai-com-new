@@ -1305,13 +1305,202 @@ const Index = () => {
                     
                     <h3 className="text-xl font-bold font-display mb-3">Build AI Agents</h3>
                     <p className="text-sm text-muted-foreground leading-relaxed">
-                      One click generates a complete n8n workflow—a ready-to-deploy AI agent with detailed implementation instructions, testing guides, and troubleshooting tips.
+                      One click generates a complete workflow—a ready-to-deploy AI agent with detailed implementation instructions, testing guides, and troubleshooting tips.
                     </p>
                   </div>
                 </div>
                 
                 <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-cyan-600 to-blue-500 opacity-10 group-hover:opacity-20 transition-opacity duration-500 -z-10 blur-xl"></div>
               </div>
+            </div>
+          </div>
+
+          {/* Platform Options - Two Paths */}
+          <div className="max-w-5xl mx-auto mb-12">
+            <div className="text-center mb-8">
+              <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-3 font-display">
+                Choose Your Automation Platform
+              </h3>
+              <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto">
+                We build workflows for two industry-leading platforms—each optimized for different skill levels and use cases.
+              </p>
+            </div>
+            
+            <div className="grid md:grid-cols-2 gap-6 lg:gap-8">
+              {/* n8n Platform Card */}
+              <div className="group relative rounded-3xl">
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-amber-500/[0.08] via-transparent to-orange-500/[0.05] p-[1px]">
+                  <div className="absolute inset-0 rounded-3xl bg-card"></div>
+                </div>
+                
+                <div className="relative bg-card rounded-3xl p-6 lg:p-8 h-full shadow-modern hover:shadow-modern-lg transition-all duration-500 border border-amber-500/20 hover:border-amber-500/40">
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-amber-500/[0.03] via-transparent to-transparent pointer-events-none"></div>
+                  
+                  <div className="relative z-10">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/10 border border-amber-500/30 flex items-center justify-center">
+                        <Workflow className="w-6 h-6 text-amber-500" />
+                      </div>
+                      <div>
+                        <h4 className="text-lg font-bold font-display text-foreground">n8n Workflows</h4>
+                        <span className="text-xs text-amber-500 font-medium">For Technical Users & Power Users</span>
+                      </div>
+                    </div>
+                    
+                    <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+                      Self-hosted or cloud option with maximum flexibility. Full code access, custom nodes, and enterprise-grade control over your automation infrastructure.
+                    </p>
+                    
+                    <div className="space-y-2 mb-4">
+                      <div className="flex items-start gap-2 text-sm">
+                        <div className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1.5 flex-shrink-0"></div>
+                        <span className="text-muted-foreground">Complete JSON workflow files—import and run instantly</span>
+                      </div>
+                      <div className="flex items-start gap-2 text-sm">
+                        <div className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1.5 flex-shrink-0"></div>
+                        <span className="text-muted-foreground">Cost-effective at scale with self-hosting options</span>
+                      </div>
+                      <div className="flex items-start gap-2 text-sm">
+                        <div className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1.5 flex-shrink-0"></div>
+                        <span className="text-muted-foreground">Advanced customization with JavaScript/Python</span>
+                      </div>
+                    </div>
+                    
+                    <div className="pt-4 border-t border-primary/10">
+                      <span className="text-xs text-muted-foreground/80">Best for: Developers, technical teams, and organizations with existing DevOps infrastructure</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-amber-600 to-orange-500 opacity-10 group-hover:opacity-20 transition-opacity duration-500 -z-10 blur-xl"></div>
+              </div>
+
+              {/* Make.com Platform Card */}
+              <div className="group relative rounded-3xl">
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-violet-500/[0.08] via-transparent to-purple-500/[0.05] p-[1px]">
+                  <div className="absolute inset-0 rounded-3xl bg-card"></div>
+                </div>
+                
+                <div className="relative bg-card rounded-3xl p-6 lg:p-8 h-full shadow-modern hover:shadow-modern-lg transition-all duration-500 border border-violet-500/20 hover:border-violet-500/40">
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-violet-500/[0.03] via-transparent to-transparent pointer-events-none"></div>
+                  
+                  <div className="relative z-10">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500/20 to-purple-500/10 border border-violet-500/30 flex items-center justify-center">
+                        <Zap className="w-6 h-6 text-violet-500" />
+                      </div>
+                      <div>
+                        <h4 className="text-lg font-bold font-display text-foreground">Make.com Blueprints</h4>
+                        <span className="text-xs text-violet-500 font-medium">For Non-Technical Users & Quick Deployment</span>
+                      </div>
+                    </div>
+                    
+                    <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+                      Visual, no-code automation with an intuitive drag-and-drop interface. Perfect for business users who want powerful automation without writing code.
+                    </p>
+                    
+                    <div className="space-y-2 mb-4">
+                      <div className="flex items-start gap-2 text-sm">
+                        <div className="w-1.5 h-1.5 rounded-full bg-violet-500 mt-1.5 flex-shrink-0"></div>
+                        <span className="text-muted-foreground">Ready-to-import blueprints with visual flow design</span>
+                      </div>
+                      <div className="flex items-start gap-2 text-sm">
+                        <div className="w-1.5 h-1.5 rounded-full bg-violet-500 mt-1.5 flex-shrink-0"></div>
+                        <span className="text-muted-foreground">1,000+ pre-built app integrations available</span>
+                      </div>
+                      <div className="flex items-start gap-2 text-sm">
+                        <div className="w-1.5 h-1.5 rounded-full bg-violet-500 mt-1.5 flex-shrink-0"></div>
+                        <span className="text-muted-foreground">Rapid deployment with zero coding required</span>
+                      </div>
+                    </div>
+                    
+                    <div className="pt-4 border-t border-primary/10">
+                      <span className="text-xs text-muted-foreground/80">Best for: Entrepreneurs, marketing teams, operations managers, and anyone seeking fast results</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-violet-600 to-purple-500 opacity-10 group-hover:opacity-20 transition-opacity duration-500 -z-10 blur-xl"></div>
+              </div>
+            </div>
+          </div>
+
+          {/* What's Included - Detailed Instructions */}
+          <div className="max-w-5xl mx-auto mb-8">
+            <div className="glass rounded-2xl p-6 lg:p-8 border border-emerald-500/20 shadow-lg backdrop-blur-xl">
+              <div className="text-center mb-8">
+                <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-3 font-display">
+                  Complete Implementation Package
+                </h3>
+                <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto">
+                  Every AI agent you build comes with everything you need for successful deployment—not just the workflow, but a complete implementation guide tailored to your specific automation.
+                </p>
+              </div>
+              
+              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="glass bg-muted/30 p-4 rounded-xl border border-emerald-500/15 backdrop-blur-sm text-center">
+                  <div className="w-10 h-10 mx-auto mb-3 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                    <Play className="w-5 h-5 text-emerald-500" />
+                  </div>
+                  <h4 className="font-semibold text-sm mb-1.5 text-foreground">Quick Start Guide</h4>
+                  <p className="text-xs text-muted-foreground leading-relaxed">Step-by-step instructions to get your workflow running in minutes</p>
+                </div>
+                
+                <div className="glass bg-muted/30 p-4 rounded-xl border border-teal-500/15 backdrop-blur-sm text-center">
+                  <div className="w-10 h-10 mx-auto mb-3 rounded-lg bg-teal-500/10 flex items-center justify-center">
+                    <Cog className="w-5 h-5 text-teal-500" />
+                  </div>
+                  <h4 className="font-semibold text-sm mb-1.5 text-foreground">Configuration Steps</h4>
+                  <p className="text-xs text-muted-foreground leading-relaxed">Detailed setup for credentials, triggers, and environment variables</p>
+                </div>
+                
+                <div className="glass bg-muted/30 p-4 rounded-xl border border-cyan-500/15 backdrop-blur-sm text-center">
+                  <div className="w-10 h-10 mx-auto mb-3 rounded-lg bg-cyan-500/10 flex items-center justify-center">
+                    <Target className="w-5 h-5 text-cyan-500" />
+                  </div>
+                  <h4 className="font-semibold text-sm mb-1.5 text-foreground">Testing Checklist</h4>
+                  <p className="text-xs text-muted-foreground leading-relaxed">Validation steps to ensure your automation works flawlessly</p>
+                </div>
+                
+                <div className="glass bg-muted/30 p-4 rounded-xl border border-blue-500/15 backdrop-blur-sm text-center">
+                  <div className="w-10 h-10 mx-auto mb-3 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                    <Wrench className="w-5 h-5 text-blue-500" />
+                  </div>
+                  <h4 className="font-semibold text-sm mb-1.5 text-foreground">Troubleshooting Tips</h4>
+                  <p className="text-xs text-muted-foreground leading-relaxed">Common issues and solutions specific to your workflow type</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* What You Can Automate */}
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-6">
+              <h3 className="text-lg sm:text-xl font-bold text-foreground mb-2 font-display">
+                Examples of What You Can Automate
+              </h3>
+            </div>
+            
+            <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
+              {[
+                'Lead Capture & CRM Sync',
+                'Email Campaign Automation',
+                'Social Media Scheduling',
+                'Customer Onboarding Flows',
+                'Data Entry & Processing',
+                'Report Generation',
+                'Invoice Processing',
+                'Appointment Scheduling',
+                'Feedback Collection',
+                'Inventory Management'
+              ].map((item, index) => (
+                <div 
+                  key={index}
+                  className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-full glass bg-muted/30 border border-primary/15 text-xs sm:text-sm text-muted-foreground backdrop-blur-sm hover:border-primary/30 hover:text-foreground transition-all duration-300"
+                >
+                  {item}
+                </div>
+              ))}
             </div>
           </div>
 
