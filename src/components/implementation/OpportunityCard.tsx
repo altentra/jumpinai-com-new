@@ -100,7 +100,7 @@ const getImpactIcon = (level: string) => {
   }
 };
 
-// Platform-specific download button component
+// Platform-specific download button component - subtle premium design
 function PlatformDownloadButton({ 
   platform, 
   onClick, 
@@ -111,60 +111,54 @@ function PlatformDownloadButton({
   className?: string;
 }) {
   const isN8n = platform === 'n8n';
-  const colorClass = isN8n ? 'orange' : 'purple';
   
   return (
     <button 
       onClick={onClick}
       className={cn("relative group w-full overflow-hidden", className)}
     >
-      {/* Glow effect */}
+      {/* Subtle shadow glow - platform colored */}
       <div className={cn(
-        "absolute -inset-0.5 rounded-3xl blur-md opacity-50 group-hover:opacity-80 transition duration-500",
-        isN8n 
-          ? "bg-gradient-to-r from-orange-500/40 via-orange-400/30 to-orange-500/40"
-          : "bg-gradient-to-r from-purple-500/40 via-purple-400/30 to-purple-500/40"
+        "absolute -inset-1 rounded-2xl blur-xl opacity-0 group-hover:opacity-40 transition duration-500",
+        isN8n ? "bg-amber-500/30" : "bg-violet-500/30"
       )} />
       
-      {/* Button body */}
+      {/* Button body - clean neutral with subtle accent */}
       <div className={cn(
-        "relative flex items-center justify-center gap-2 px-6 py-3.5 backdrop-blur-xl rounded-3xl transition-all duration-300 shadow-lg",
-        isN8n
-          ? "bg-gradient-to-br from-orange-500/15 via-orange-400/10 to-orange-500/15 border border-orange-500/40 group-hover:border-orange-400/60 shadow-orange-500/10"
-          : "bg-gradient-to-br from-purple-500/15 via-purple-400/10 to-purple-500/15 border border-purple-500/40 group-hover:border-purple-400/60 shadow-purple-500/10"
+        "relative flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-2xl transition-all duration-300",
+        "bg-card border border-border/60 group-hover:border-border",
+        "shadow-sm group-hover:shadow-md",
+        isN8n 
+          ? "group-hover:shadow-amber-500/10" 
+          : "group-hover:shadow-violet-500/10"
       )}>
         {/* Shimmer */}
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 rounded-3xl" />
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 rounded-2xl" />
         
-        <Download className={cn(
-          "relative w-5 h-5 transition-colors",
-          isN8n ? "text-orange-500 group-hover:text-orange-400" : "text-purple-500 group-hover:text-purple-400"
-        )} />
-        <span className={cn(
-          "relative font-bold transition-colors",
-          isN8n ? "text-orange-500 group-hover:text-orange-400" : "text-purple-500 group-hover:text-purple-400"
-        )}>
-          Download {isN8n ? 'n8n Workflow' : 'Make.com Scenario'}
+        <Download className="relative w-5 h-5 text-foreground/80 group-hover:text-foreground transition-colors" />
+        <span className="relative font-semibold text-foreground/90 group-hover:text-foreground transition-colors">
+          Download {isN8n ? 'n8n' : 'Make.com'} Workflow
         </span>
-        <ArrowRight className={cn(
-          "relative w-4 h-4 group-hover:translate-x-1 transition-all duration-300",
-          isN8n ? "text-orange-500" : "text-purple-500"
+        {/* Small platform indicator dot */}
+        <span className={cn(
+          "w-2 h-2 rounded-full",
+          isN8n ? "bg-amber-500" : "bg-violet-500"
         )} />
+        <ArrowRight className="relative w-4 h-4 text-muted-foreground group-hover:translate-x-1 group-hover:text-foreground transition-all duration-300" />
       </div>
     </button>
   );
 }
 
-// Platform badge component
+// Platform badge component - subtle with indicator dot
 function PlatformBadge({ platform }: { platform: 'n8n' | 'make' }) {
   const isN8n = platform === 'n8n';
   return (
-    <Badge className={cn(
-      "text-xs font-semibold px-2.5 py-0.5",
-      isN8n 
-        ? "bg-orange-500/15 text-orange-500 border-orange-500/30"
-        : "bg-purple-500/15 text-purple-500 border-purple-500/30"
-    )}>
+    <Badge variant="outline" className="text-xs font-medium px-2.5 py-0.5 bg-background/50 gap-1.5">
+      <span className={cn(
+        "w-1.5 h-1.5 rounded-full",
+        isN8n ? "bg-amber-500" : "bg-violet-500"
+      )} />
       {isN8n ? 'n8n' : 'Make.com'}
     </Badge>
   );
