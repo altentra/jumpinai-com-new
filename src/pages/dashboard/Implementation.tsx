@@ -43,6 +43,7 @@ import { AnalysisSummaryCard } from "@/components/implementation/AnalysisSummary
 import { AgentListCard } from "@/components/implementation/AgentListCard";
 import { AnalyzeButton } from "@/components/implementation/AnalyzeButton";
 import { Platform } from "@/components/implementation/PlatformSelector";
+import { AutomationType } from "@/components/implementation/AutomationTypeSelector";
 
 interface AgentOpportunity {
   id: string;
@@ -72,6 +73,7 @@ interface SavedAgent {
   title: string;
   description: string | null;
   automation_target: string | null;
+  automation_type: string | null;
   impact_level: string | null;
   complexity_level: string | null;
   estimated_time_saved: string | null;

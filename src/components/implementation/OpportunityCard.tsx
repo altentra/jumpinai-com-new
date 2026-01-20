@@ -21,11 +21,13 @@ import {
   ArrowRight,
   Timer,
   Target,
+  Brain,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { AgentBuildButton } from "./AgentBuildButton";
 import { PlatformSelector, Platform } from "./PlatformSelector";
 import { PlatformDownloadButton } from "./PlatformDownloadButton";
+import { AutomationTypeSelector, AutomationType } from "./AutomationTypeSelector";
 
 interface AgentOpportunity {
   id: string;
@@ -47,6 +49,7 @@ interface SavedAgent {
   title: string;
   description: string | null;
   automation_target: string | null;
+  automation_type: string | null;
   impact_level: string | null;
   complexity_level: string | null;
   estimated_time_saved: string | null;
@@ -70,6 +73,7 @@ interface GeneratedWorkflowData {
   opportunityId: string;
   agentId?: string;
   platform?: string;
+  automationType?: AutomationType;
   workflows?: {
     n8n?: {
       workflow: any;
@@ -93,7 +97,9 @@ interface OpportunityCardProps {
   generatedWorkflow: GeneratedWorkflowData | null;
   existingAgent: SavedAgent | null;
   selectedPlatform: Platform;
+  selectedAutomationType: AutomationType;
   onPlatformChange: (platform: Platform) => void;
+  onAutomationTypeChange: (type: AutomationType) => void;
   onBuild: () => void;
   onDownload: (workflow: any, filename: string) => void;
   onClearWorkflow: () => void;
@@ -139,7 +145,9 @@ export function OpportunityCard({
   generatedWorkflow,
   existingAgent,
   selectedPlatform,
+  selectedAutomationType,
   onPlatformChange,
+  onAutomationTypeChange,
   onBuild,
   onDownload,
   onClearWorkflow,
@@ -154,6 +162,10 @@ export function OpportunityCard({
   // Check if this is a "both" platform build
   const hasBothPlatforms = generatedWorkflow?.workflows?.n8n && generatedWorkflow?.workflows?.make;
   const generatedPlatform = generatedWorkflow?.platform || selectedPlatform;
+  
+  // Determine what type was built (from existing agent or generated workflow)
+  const builtType = existingAgent?.automation_type || generatedWorkflow?.automationType || 'workflow';
+  const isAIAgent = builtType === 'ai-agent';
 
   return (
     <Card className={cn(
