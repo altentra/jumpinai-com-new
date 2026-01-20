@@ -1053,15 +1053,15 @@ export const generatePitchDeckPDF = (): void => {
   yPosition = margin + 5;
   addSectionHeader('Our Solution');
   
-  addParagraph('JumpinAI is the world\'s first truly adaptive AI transformation platform, delivering complete personalized blueprints with working automation systems in 2 minutes from just 2 questions.', 10, 'bold');
+  addParagraph('JumpinAI is the world\'s first truly adaptive AI transformation platform, delivering complete personalized blueprints in 2 minutes from just 2 questions—with the ability to implement them as automated workflows.', 10, 'bold');
   yPosition += 2;
 
-  addSubsectionHeader('The 4-Tab Transformation System', 10);
+  addSubsectionHeader('The Jump Blueprint System', 10);
   yPosition += 2;
 
-  // 4-Tab visual cards
+  // 3-Tab visual cards
   checkPageBreak(65);
-  const tabWidth = (maxWidth - 12) / 4;
+  const tabWidth = (maxWidth - 8) / 3;
   const tabHeight = 42;
   const tabY = yPosition;
 
@@ -1088,7 +1088,7 @@ export const generatePitchDeckPDF = (): void => {
   setTextColor(colors.body);
   pdf.setFontSize(6.5);
   pdf.setFont('helvetica', 'normal');
-  const tab1Text = wrapText('Strategic foundation with 3 alternative routes to explore different directions', tabWidth - 4, 6.5);
+  const tab1Text = wrapText('Strategic foundation with alternative routes to explore different directions', tabWidth - 4, 6.5);
   pdf.text(tab1Text, margin + 2, tabY + 27);
 
   // Tab 2: Adaptive Plan
@@ -1141,39 +1141,35 @@ export const generatePitchDeckPDF = (): void => {
   const tab3Text = wrapText('9+ tool-prompt combos, copy-paste ready with Equip feature', tabWidth - 4, 6.5);
   pdf.text(tab3Text, margin + 2 * (tabWidth + 4) + 2, tabY + 27);
 
-  // Tab 4: Implementation (NEW)
-  setFillColor(colors.cardBg);
-  pdf.rect(margin + 3 * (tabWidth + 4), tabY, tabWidth, tabHeight, 'F');
+  yPosition += tabHeight + 6;
+
+  // Implementation capability box (separate from tabs)
+  checkPageBreak(28);
+  setFillColor(colors.sectionBg);
+  pdf.rect(margin, yPosition, maxWidth, 22, 'F');
   setDrawColor(colors.success);
   pdf.setLineWidth(0.5);
-  pdf.rect(margin + 3 * (tabWidth + 4), tabY, tabWidth, tabHeight, 'S');
-  
-  setFillColor(colors.success);
-  pdf.circle(margin + 3 * (tabWidth + 4) + 8, tabY + 8, 4, 'F');
-  setTextColor(colors.white);
-  pdf.setFontSize(10);
-  pdf.setFont('helvetica', 'bold');
-  pdf.text('4', margin + 3 * (tabWidth + 4) + 7, tabY + 10);
+  pdf.rect(margin, yPosition, maxWidth, 22, 'S');
   
   setTextColor(colors.heading);
-  pdf.setFontSize(8.5);
+  pdf.setFontSize(9);
   pdf.setFont('helvetica', 'bold');
-  pdf.text('Implementation', margin + 3 * (tabWidth + 4) + tabWidth / 2, tabY + 20, { align: 'center' });
+  pdf.text('Implementation Capability', margin + 4, yPosition + 8);
   
   setTextColor(colors.body);
-  pdf.setFontSize(6.5);
+  pdf.setFontSize(7.5);
   pdf.setFont('helvetica', 'normal');
-  const tab4Text = wrapText('AI builds workflows for n8n & Make.com, downloadable JSON', tabWidth - 4, 6.5);
-  pdf.text(tab4Text, margin + 3 * (tabWidth + 4) + 2, tabY + 27);
-
-  yPosition += tabHeight + 8;
+  const implText = wrapText('Beyond strategy: Users can analyze completed Jumps to discover automation opportunities and build AI agents with downloadable workflows for n8n and Make.com.', maxWidth - 8, 7.5);
+  pdf.text(implText, margin + 4, yPosition + 15);
+  
+  yPosition += 28;
 
   // Key Differentiators
   addSubsectionHeader('Key Differentiators', 10);
   addBullet('Hyper-personalization at scale using multi-model AI orchestration (xAI, ChatGPT-5, Claude, Gemini)', 8.5);
   addBullet('True adaptability with multi-level clarifications and alternative routes at both Overview and Plan levels', 8.5);
   addBullet('Complete transformation in ~2 minutes, not months of expensive consulting', 8.5);
-  addBullet('NEW: Implementation tab—AI analyzes Jumps to discover automation opportunities and generates downloadable workflows for n8n and Make.com with step-by-step instructions', 8.5);
+  addBullet('Implementation capability—analyze Jumps to build downloadable workflows for n8n and Make.com with personalized instructions', 8.5);
 
   // ================== MARKET OPPORTUNITY ==================
   pdf.addPage();

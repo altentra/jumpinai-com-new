@@ -149,13 +149,13 @@ const PitchDeck = () => {
                     The World's First Truly Adaptive AI Transformation Platform
                   </h3>
                   <p className="text-base text-muted-foreground max-w-2xl mx-auto mb-4">
-                    4-Tab System: From 2 Questions to Complete Blueprint + Implementation in 2 Minutes
+                    From 2 Questions to Complete Blueprint in 2 Minutes + Implementation Capability
                   </p>
                 </div>
                 
                 <div className="glass backdrop-blur-sm bg-primary/10 border border-primary/20 rounded-xl p-6">
                   <p className="text-sm text-foreground leading-relaxed text-center">
-                    JumpinAI solves the personalization crisis, implementation gap, and adaptation void simultaneously. Our AI engine generates a comprehensive transformation blueprint tailored specifically to your situation—including strategic Overview with 3 alternative routes for exploring different directions, adaptive Plan with multi-level clarifications and alternative approaches, ready-to-use Tools & Prompts, and now <span className="font-semibold">Implementation</span>: AI-powered analysis that discovers automation opportunities in your Jump and generates downloadable workflow files for n8n and Make.com with step-by-step instructions. From strategy to working systems.
+                    JumpinAI solves the personalization crisis, implementation gap, and adaptation void simultaneously. Our AI engine generates a comprehensive transformation blueprint tailored specifically to your situation—including strategic Overview with alternative routes, adaptive Plan with multi-level clarifications and alternative approaches, and ready-to-use Tools & Prompts. Beyond strategy, users can analyze their Jumps to discover automation opportunities and build downloadable workflow files for n8n and Make.com with step-by-step instructions. From strategy to working systems.
                   </p>
                 </div>
                 
@@ -199,9 +199,9 @@ const PitchDeck = () => {
               </div>
               
               <div className="space-y-5">
-                <h3 className="text-lg font-bold text-center text-foreground mb-4">The 4-Tab Transformation System</h3>
+                <h3 className="text-lg font-bold text-center text-foreground mb-4">The Jump Blueprint System</h3>
                 
-                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="grid md:grid-cols-3 gap-4">
                   <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 rounded-xl p-5 hover:border-primary/40 transition-all duration-300">
                     <div className="flex items-center gap-2 mb-3">
                       <div className="w-7 h-7 rounded-full bg-gradient-to-br from-primary/20 to-primary/30 border border-primary/40 flex items-center justify-center text-primary text-sm font-bold">1</div>
@@ -216,7 +216,7 @@ const PitchDeck = () => {
                         </li>
                         <li className="flex items-start gap-1.5">
                           <span className="text-primary mt-0.5">•</span>
-                          <span><span className="font-semibold text-foreground">3 Alternative Routes:</span> Explore different strategic directions</span>
+                          <span><span className="font-semibold text-foreground">Alternative Routes:</span> Explore different strategic directions</span>
                         </li>
                         <li className="flex items-start gap-1.5">
                           <span className="text-primary mt-0.5">•</span>
@@ -273,30 +273,15 @@ const PitchDeck = () => {
                       </ul>
                     </div>
                   </div>
-                  
-                  <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-emerald-500/30 rounded-xl p-5 hover:border-emerald-500/50 transition-all duration-300">
-                    <div className="flex items-center gap-2 mb-3">
-                      <div className="w-7 h-7 rounded-full bg-gradient-to-br from-emerald-500/20 to-emerald-500/30 border border-emerald-500/40 flex items-center justify-center text-emerald-500 text-sm font-bold">4</div>
-                      <h4 className="text-base font-bold text-foreground">Implementation</h4>
-                    </div>
-                    <div className="space-y-2 text-xs text-muted-foreground">
-                      <p className="leading-relaxed">Turn strategy into working automation systems.</p>
-                      <ul className="space-y-1.5">
-                        <li className="flex items-start gap-1.5">
-                          <span className="text-emerald-500 mt-0.5">•</span>
-                          <span><span className="font-semibold text-foreground">AI Analysis:</span> Discover automation opportunities</span>
-                        </li>
-                        <li className="flex items-start gap-1.5">
-                          <span className="text-emerald-500 mt-0.5">•</span>
-                          <span><span className="font-semibold text-foreground">Workflow Generation:</span> Build agents for n8n & Make.com</span>
-                        </li>
-                        <li className="flex items-start gap-1.5">
-                          <span className="text-emerald-500 mt-0.5">•</span>
-                          <span><span className="font-semibold text-foreground">Downloadable JSON:</span> Ready to import and run</span>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
+                </div>
+                
+                <div className="mt-6 p-5 rounded-xl glass backdrop-blur-sm bg-card/30 border border-border/30">
+                  <h4 className="text-base font-bold text-foreground mb-2">Implementation Capability</h4>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    Beyond strategy generation, users can analyze their completed Jumps to discover automation opportunities, 
+                    then build AI agents with downloadable workflows for n8n (technical users) and Make.com (non-technical users)—complete 
+                    with personalized setup instructions. Turning strategic plans into working systems.
+                  </p>
                 </div>
               </div>
             </div>
@@ -743,7 +728,7 @@ const PitchDeck = () => {
                   Speed + Simplicity + Depth + Action
                 </h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  Generate comprehensive 4-tab transformation blueprints in 2 minutes from just 2 questions—plus downloadable AI agent workflows. No competitor matches this combination of speed, ease-of-use, depth of personalization, and actionable implementation. Strategy that runs.
+                  Generate comprehensive transformation blueprints in 2 minutes from just 2 questions—plus the ability to build downloadable AI agent workflows from completed Jumps. No competitor matches this combination of speed, ease-of-use, depth of personalization, and actionable implementation.
                 </p>
               </div>
               

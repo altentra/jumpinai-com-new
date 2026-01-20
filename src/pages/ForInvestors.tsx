@@ -128,7 +128,7 @@ const ForInvestors = () => {
                   </span>
                 </h2>
                 <p className="text-xs sm:text-sm md:text-base text-muted-foreground max-w-3xl mx-auto leading-relaxed px-2">
-                  JumpinAI Studio empowers professionals and entrepreneurs to confidently navigate AI transformation—generating complete 3-tab transformation blueprints in 2 minutes. Each Jump includes: strategic Overview (with 3 alternative routes for exploring different strategic directions), adaptive Plan (multi-level clarification up to 4 levels deep + alternative routes per step), Tools & Prompts (9+ tool-prompt combinations with ready-to-use prompts), and now <span className="font-semibold text-foreground">Implementation</span>—where users can analyze Jumps to discover automation opportunities and build downloadable AI agent workflows for n8n and Make.com. From strategy to working systems.
+                  JumpinAI Studio empowers professionals and entrepreneurs to confidently navigate AI transformation—generating complete transformation blueprints in 2 minutes. Each Jump includes three integrated tabs: strategic Overview (with alternative routes for exploring different strategic directions), adaptive Plan (multi-level clarification up to 4 levels deep), and Tools & Prompts (9+ tool-prompt combinations with ready-to-use prompts). Beyond strategy, our Implementation capability enables users to analyze their Jumps, discover automation opportunities, and build downloadable AI agent workflows for n8n and Make.com.
                 </p>
               </div>
               <div className="flex flex-col sm:flex-row justify-center gap-4">
@@ -197,7 +197,7 @@ const ForInvestors = () => {
                 <Target className="h-8 w-8 md:h-10 md:w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
                 <h3 className="text-base md:text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Breakthrough Innovation</h3>
                 <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
-                  Revolutionary 4-tab transformation system: Strategic Overview with 3 alternative strategic routes for exploring different directions, Adaptive Plan with multi-level clarification (4 levels deep) and alternative routes per step, Tool-Prompt combinations for execution, plus new Implementation tab where AI analyzes Jumps to discover automation opportunities and builds downloadable workflow files for n8n and Make.com with step-by-step instructions. No competitor offers this depth—from strategy to working automation systems.
+                  Complete transformation system with three integrated tabs: Strategic Overview with alternative routes, Adaptive Plan with 4-level deep clarification, and Tool-Prompt combinations for execution. Additionally, our Implementation capability enables users to analyze completed Jumps, discover automation opportunities, and build downloadable workflow files for n8n and Make.com with step-by-step instructions. No competitor offers this depth—from strategy to working systems.
                 </p>
               </div>
               
@@ -247,7 +247,7 @@ const ForInvestors = () => {
                 <Globe className="h-8 w-8 md:h-10 md:w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
                 <h3 className="text-base md:text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Adaptive Intelligence System</h3>
                 <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
-                  Users never get stuck: Overview tab offers 3 alternative strategic routes for different directions, Plan tab provides 4-level deep clarification with alternative routes per step, Tools tab delivers 9+ ready-to-execute combinations. New Implementation tab uses AI to analyze Jumps, discover automation opportunities, and generate downloadable workflow files for n8n and Make.com—complete with personalized instructions. From insight to implementation.
+                  Users never get stuck: Overview tab offers alternative strategic routes, Plan tab provides 4-level deep clarification with alternative routes per step, Tools tab delivers 9+ ready-to-execute combinations. Our separate Implementation page enables users to analyze completed Jumps, discover automation opportunities, and generate downloadable workflow files for n8n and Make.com—complete with personalized instructions. From insight to implementation.
                 </p>
               </div>
               
