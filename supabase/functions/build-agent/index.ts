@@ -460,7 +460,9 @@ Return ONLY the JSON ${workflowTerm} - no explanations, no markdown code blocks.
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      model: 'grok-4-1-fast-reasoning', // Latest model for best quality workflow/agent generation
+      // Non-reasoning variant is significantly faster and reduces edge-function timeout risk
+      // while still keeping Grok 4.1 quality.
+      model: 'grok-4-1-fast-non-reasoning',
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt }
