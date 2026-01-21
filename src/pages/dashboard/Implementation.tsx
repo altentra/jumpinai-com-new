@@ -300,6 +300,7 @@ export default function Implementation() {
 
   // Credit confirmation state for agent builds
   const [showCreditConfirmDialog, setShowCreditConfirmDialog] = useState(false);
+  const [isConfirmingBuild, setIsConfirmingBuild] = useState(false); // Prevents double-click on confirm button
   const [pendingBuildOpportunity, setPendingBuildOpportunity] = useState<AgentOpportunity | null>(null);
 
   const handleBuildAgent = async (opportunity: AgentOpportunity) => {
@@ -322,7 +323,11 @@ export default function Implementation() {
   };
 
   const confirmBuildAgent = async () => {
-    if (!pendingBuildOpportunity || !selectedJump) return;
+    // Guard against double-click: if already confirming or building, ignore
+    if (!pendingBuildOpportunity || !selectedJump || isConfirmingBuild || buildingAgentId) return;
+    
+    // Immediately lock to prevent double-clicks
+    setIsConfirmingBuild(true);
     
     const opportunity = pendingBuildOpportunity;
     setShowCreditConfirmDialog(false);
@@ -444,6 +449,7 @@ export default function Implementation() {
       }
     } finally {
       setBuildingAgentId(null);
+      setIsConfirmingBuild(false); // Reset the lock
     }
   };
 
@@ -858,21 +864,32 @@ export default function Implementation() {
             <AlertDialogCancel className="border-border/50">Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={confirmBuildAgent}
+              disabled={isConfirmingBuild}
               className={cn(
                 "text-primary-foreground hover:opacity-90",
                 selectedAutomationType === 'ai-agent' 
                   ? "bg-gradient-to-r from-yellow-500 to-amber-500" 
-                  : "bg-primary"
+                  : "bg-primary",
+                isConfirmingBuild && "opacity-50 cursor-not-allowed"
               )}
             >
-              <Zap className="w-4 h-4 mr-1" />
-              Use {(() => {
-                const baseCredits = selectedAutomationType === 'ai-agent' ? 2 : 1;
-                return selectedPlatform === 'both' ? baseCredits * 2 : baseCredits;
-              })()} Credit{(() => {
-                const baseCredits = selectedAutomationType === 'ai-agent' ? 2 : 1;
-                return (selectedPlatform === 'both' ? baseCredits * 2 : baseCredits) > 1 ? 's' : '';
-              })()} & Build
+              {isConfirmingBuild ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-1 animate-spin" />
+                  Building...
+                </>
+              ) : (
+                <>
+                  <Zap className="w-4 h-4 mr-1" />
+                  Use {(() => {
+                    const baseCredits = selectedAutomationType === 'ai-agent' ? 2 : 1;
+                    return selectedPlatform === 'both' ? baseCredits * 2 : baseCredits;
+                  })()} Credit{(() => {
+                    const baseCredits = selectedAutomationType === 'ai-agent' ? 2 : 1;
+                    return (selectedPlatform === 'both' ? baseCredits * 2 : baseCredits) > 1 ? 's' : '';
+                  })()} & Build
+                </>
+              )}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
