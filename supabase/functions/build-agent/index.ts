@@ -460,7 +460,7 @@ Return ONLY the JSON ${workflowTerm} - no explanations, no markdown code blocks.
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      model: isAIAgent ? 'grok-3' : 'grok-3-fast', // Use more powerful model for AI agents
+      model: 'grok-4-1-fast-reasoning', // Latest model for best quality workflow/agent generation
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt }
@@ -547,7 +547,7 @@ Return ONLY the JSON object, no markdown.`;
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      model: 'grok-3-fast',
+      model: 'grok-4-1-fast-reasoning', // Latest model for quality instructions
       messages: [
         { role: 'system', content: instructionsSystemPrompt },
         { role: 'user', content: instructionsPrompt }
