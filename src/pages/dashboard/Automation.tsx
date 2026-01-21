@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/integrations/supabase/client";
+import { useAutomations, SavedAgent } from "@/hooks/useAutomations";
+
 import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -28,66 +28,21 @@ import {
 import { AgentDetailCard } from "@/components/implementation/AgentDetailCard";
 import { AgentListCard } from "@/components/implementation/AgentListCard";
 
-interface SavedAgent {
-  id: string;
-  title: string;
-  description: string | null;
-  automation_target: string | null;
-  automation_type: string | null;
-  impact_level: string | null;
-  complexity_level: string | null;
-  estimated_time_saved: string | null;
-  required_tools: string[];
-  benefits: string[];
-  workflow_json: any;
-  workflow_filename: string | null;
-  detailed_instructions: any;
-  platform: string;
-  status: string;
-  download_count: number;
-  created_at: string;
-  jump_id: string;
-}
+// SavedAgent type is imported from useAutomations hook
 
 export default function Automation() {
   const navigate = useNavigate();
-  const { user } = useAuth();
   
-  // Saved agents state
-  const [savedAgents, setSavedAgents] = useState<SavedAgent[]>([]);
-  const [isLoadingAgents, setIsLoadingAgents] = useState(true);
+  // Use cached hook for fast loading
+  const { 
+    automations: savedAgents, 
+    isLoading: isLoadingAgents, 
+    deleteAutomation,
+    isDeleting 
+  } = useAutomations();
+  
   const [selectedAgent, setSelectedAgent] = useState<SavedAgent | null>(null);
   const [agentToDelete, setAgentToDelete] = useState<SavedAgent | null>(null);
-
-  useEffect(() => {
-    loadSavedAgents();
-  }, [user]);
-
-  const loadSavedAgents = async () => {
-    if (!user) return;
-    
-    setIsLoadingAgents(true);
-    try {
-      const { data, error } = await supabase
-        .from('user_agents')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false });
-      
-      if (error) throw error;
-      // Map data to ensure automation_type exists (default to 'workflow' for old records)
-      const mappedAgents: SavedAgent[] = (data || []).map(agent => ({
-        ...agent,
-        automation_type: agent.automation_type || 'workflow',
-      }));
-      setSavedAgents(mappedAgents);
-    } catch (error) {
-      console.error("Error loading agents:", error);
-      toast.error("Failed to load your automations");
-    } finally {
-      setIsLoadingAgents(false);
-    }
-  };
 
   const handleDownloadWorkflow = (workflow: any, filename: string) => {
     const blob = new Blob([JSON.stringify(workflow, null, 2)], {
@@ -106,22 +61,9 @@ export default function Automation() {
   };
 
   const handleDeleteAgent = async (agent: SavedAgent) => {
-    try {
-      const { error } = await supabase
-        .from('user_agents')
-        .delete()
-        .eq('id', agent.id);
-      
-      if (error) throw error;
-      
-      setSavedAgents(prev => prev.filter(a => a.id !== agent.id));
-      setAgentToDelete(null);
-      setSelectedAgent(null);
-      toast.success("Automation deleted successfully");
-    } catch (error) {
-      console.error("Error deleting agent:", error);
-      toast.error("Failed to delete automation");
-    }
+    deleteAutomation(agent.id);
+    setAgentToDelete(null);
+    setSelectedAgent(null);
   };
 
   const getImpactBadgeColor = (level: string | null) => {

@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useCredits, dispatchCreditsUpdate } from "@/hooks/useCredits";
-import { getUserJumps, UserJump } from "@/services/jumpService";
+import { useJumpsWithAnalysis, JumpWithAnalysis } from "@/hooks/useJumpsWithAnalysis";
+import { useAutomations, SavedAgent } from "@/hooks/useAutomations";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth0Token } from "@/hooks/useAuth0Token";
 import { toast } from "sonner";
@@ -60,39 +61,19 @@ interface AnalysisResult {
   cached?: boolean;
 }
 
-interface SavedAgent {
-  id: string;
-  title: string;
-  description: string | null;
-  automation_target: string | null;
-  automation_type: string | null;
-  impact_level: string | null;
-  complexity_level: string | null;
-  estimated_time_saved: string | null;
-  required_tools: string[];
-  benefits: string[];
-  workflow_json: any;
-  workflow_filename: string | null;
-  detailed_instructions: any;
-  platform: string;
-  status: string;
-  download_count: number;
-  created_at: string;
-  jump_id: string;
-}
-
-interface JumpWithAnalysis extends UserJump {
-  hasAnalysis?: boolean;
-}
+// SavedAgent type imported from useAutomations hook
 
 export default function Implementation() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { hasCredits, fetchCredits } = useCredits();
   const { getAuthHeaders } = useAuth0Token();
-  const [jumps, setJumps] = useState<JumpWithAnalysis[]>([]);
+  
+  // Use cached hooks for fast loading
+  const { jumps, isLoading: isLoadingJumps, invalidateCache: invalidateJumpsCache } = useJumpsWithAnalysis();
+  const { automations: savedAgents, addToCache: addAgentToCache } = useAutomations();
+  
   const [selectedJump, setSelectedJump] = useState<JumpWithAnalysis | null>(null);
-  const [isLoadingJumps, setIsLoadingJumps] = useState(true);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [buildingAgentId, setBuildingAgentId] = useState<string | null>(null);
@@ -111,8 +92,6 @@ export default function Implementation() {
     };
   } | null>(null);
   
-  // Saved agents state (needed for matching existing agents to opportunities)
-  const [savedAgents, setSavedAgents] = useState<SavedAgent[]>([]);
   
   // Platform and automation type selection state
   const [selectedPlatform, setSelectedPlatform] = useState<Platform>('n8n');
@@ -123,69 +102,7 @@ export default function Implementation() {
   const [isConfirmingBuild, setIsConfirmingBuild] = useState(false);
   const [pendingBuildOpportunity, setPendingBuildOpportunity] = useState<AgentOpportunity | null>(null);
 
-  useEffect(() => {
-    loadJumps();
-    loadSavedAgents();
-  }, []);
-
-  const loadJumps = async () => {
-    setIsLoadingJumps(true);
-    try {
-      const userJumps = await getUserJumps();
-      
-      // Check which jumps have existing analysis
-      if (user) {
-        const { data: analyses } = await supabase
-          .from('jump_analysis')
-          .select('jump_id')
-          .eq('user_id', user.id);
-        
-        const analysedJumpIds = new Set(analyses?.map(a => a.jump_id) || []);
-        
-        const jumpsWithAnalysis = userJumps.map(jump => ({
-          ...jump,
-          hasAnalysis: analysedJumpIds.has(jump.id),
-        }));
-        
-        // Sort by creation date, newest first
-        const sortedJumps = jumpsWithAnalysis.sort((a, b) => 
-          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-        );
-        setJumps(sortedJumps);
-      } else {
-        const sortedJumps = userJumps.sort((a, b) => 
-          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-        );
-        setJumps(sortedJumps);
-      }
-    } catch (error) {
-      console.error("Error loading jumps:", error);
-      toast.error("Failed to load your jumps");
-    } finally {
-      setIsLoadingJumps(false);
-    }
-  };
-
-  const loadSavedAgents = async () => {
-    if (!user) return;
-    
-    try {
-      const { data, error } = await supabase
-        .from('user_agents')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false });
-      
-      if (error) throw error;
-      const mappedAgents: SavedAgent[] = (data || []).map(agent => ({
-        ...agent,
-        automation_type: agent.automation_type || 'workflow',
-      }));
-      setSavedAgents(mappedAgents);
-    } catch (error) {
-      console.error("Error loading agents:", error);
-    }
-  };
+  // No useEffect needed - hooks handle loading automatically
 
   const handleSelectJump = async (jump: JumpWithAnalysis) => {
     setSelectedJump(jump);
@@ -262,10 +179,8 @@ export default function Implementation() {
       if (data?.opportunities) {
         setAnalysisResult(data);
         
-        // Update jump to show it has analysis
-        setJumps(prev => prev.map(j => 
-          j.id === selectedJump.id ? { ...j, hasAnalysis: true } : j
-        ));
+        // Invalidate jumps cache to reflect new analysis
+        invalidateJumpsCache();
         setSelectedJump(prev => prev ? { ...prev, hasAnalysis: true } : null);
         
         const message = data.cached 
@@ -396,8 +311,8 @@ export default function Implementation() {
           workflows: data.workflows,
         });
         
-        // Refresh agents list and credits
-        await Promise.all([loadSavedAgents(), fetchCredits()]);
+        // Refresh credits (agents list is handled by cache hook)
+        await fetchCredits();
         dispatchCreditsUpdate();
         
         const creditsUsed = data.creditsUsed || 1;
