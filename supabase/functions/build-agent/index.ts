@@ -547,12 +547,12 @@ Return ONLY the JSON object, no markdown.`;
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      model: 'grok-4-1-fast-reasoning', // Latest model for quality instructions
+      model: 'grok-3-fast', // Use faster model for instructions to reduce total time
       messages: [
         { role: 'system', content: instructionsSystemPrompt },
         { role: 'user', content: instructionsPrompt }
       ],
-      temperature: 0.4,
+      temperature: 0.3,
       max_tokens: 3000,
     }),
   });
