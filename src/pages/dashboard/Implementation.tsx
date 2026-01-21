@@ -132,7 +132,7 @@ export default function Implementation() {
             analysisId: data.id,
             cached: true,
           });
-          toast.success("Loaded cached analysis");
+          // Silently load cached analysis - no notification needed
         }
       } catch (error) {
         console.error("Error loading cached analysis:", error);
@@ -146,9 +146,8 @@ export default function Implementation() {
       return;
     }
 
-    // If we have cached analysis and not forcing refresh, use it
+    // If we have cached analysis and not forcing refresh, silently use it
     if (analysisResult?.cached && !forceRefresh) {
-      toast.info("Analysis already loaded from cache");
       return;
     }
 
