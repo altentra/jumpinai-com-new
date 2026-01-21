@@ -155,7 +155,7 @@ const PitchDeck = () => {
                 
                 <div className="glass backdrop-blur-sm bg-primary/10 border border-primary/20 rounded-xl p-6">
                   <p className="text-sm text-foreground leading-relaxed text-center">
-                    JumpinAI solves the personalization crisis, implementation gap, and adaptation void simultaneously. Our AI engine generates a comprehensive transformation blueprint tailored specifically to your situation—including strategic Overview with alternative routes, adaptive Plan with multi-level clarifications and alternative approaches, and ready-to-use Tools & Prompts. Beyond strategy, users can analyze their Jumps to discover automation opportunities and build downloadable workflow files for n8n and Make.com with step-by-step instructions. From strategy to working systems.
+                    JumpinAI solves the personalization crisis, implementation gap, and adaptation void simultaneously. Our AI engine generates a comprehensive transformation blueprint tailored specifically to your situation—including strategic Overview with alternative routes, adaptive Plan with multi-level clarifications and alternative approaches, and ready-to-use Tools & Prompts. Beyond strategy, users can analyze Jumps to discover automation opportunities and build two types of automation: <span className="font-semibold">Workflows</span> (linear sequences, 1 credit) or <span className="font-semibold">AI Agents</span> (autonomous reasoning, 2 credits)—downloadable for both n8n and Make.com. From strategy to working systems.
                   </p>
                 </div>
                 
@@ -276,12 +276,37 @@ const PitchDeck = () => {
                 </div>
                 
                 <div className="mt-6 p-5 rounded-xl glass backdrop-blur-sm bg-card/30 border border-border/30">
-                  <h4 className="text-base font-bold text-foreground mb-2">Implementation Capability</h4>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
+                  <h4 className="text-base font-bold text-foreground mb-3">Implementation Capability</h4>
+                  <p className="text-sm text-muted-foreground leading-relaxed mb-4">
                     Beyond strategy generation, users can analyze their completed Jumps to discover automation opportunities, 
-                    then build AI agents with downloadable workflows for n8n (technical users) and Make.com (non-technical users)—complete 
-                    with personalized setup instructions. Turning strategic plans into working systems.
+                    then choose between two automation types and two platforms:
                   </p>
+                  <div className="grid md:grid-cols-2 gap-4 mb-4">
+                    <div className="glass backdrop-blur-sm bg-blue-500/10 border border-blue-500/20 rounded-lg p-3">
+                      <h5 className="text-sm font-bold text-foreground mb-1 flex items-center gap-2">
+                        <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                        Workflows
+                      </h5>
+                      <p className="text-xs text-muted-foreground">Linear automation sequences with predefined steps. Perfect for data sync, email automation, and scheduled tasks. <span className="font-semibold text-foreground">1 credit</span></p>
+                    </div>
+                    <div className="glass backdrop-blur-sm bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3">
+                      <h5 className="text-sm font-bold text-foreground mb-1 flex items-center gap-2">
+                        <span className="w-2 h-2 bg-yellow-500 rounded-full"></span>
+                        AI Agents
+                      </h5>
+                      <p className="text-xs text-muted-foreground">Autonomous systems that reason, adapt, and make decisions. Ideal for lead qualification and research. <span className="font-semibold text-foreground">2 credits</span></p>
+                    </div>
+                  </div>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div className="glass backdrop-blur-sm bg-amber-500/10 border border-amber-500/20 rounded-lg p-3">
+                      <h5 className="text-sm font-bold text-foreground mb-1">n8n</h5>
+                      <p className="text-xs text-muted-foreground">Self-hosted, open-source platform for technical users seeking full control and customization.</p>
+                    </div>
+                    <div className="glass backdrop-blur-sm bg-violet-500/10 border border-violet-500/20 rounded-lg p-3">
+                      <h5 className="text-sm font-bold text-foreground mb-1">Make.com</h5>
+                      <p className="text-xs text-muted-foreground">Cloud-hosted visual builder for non-technical users—intuitive drag-and-drop interface.</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
