@@ -128,7 +128,7 @@ const ForInvestors = () => {
                   </span>
                 </h2>
                 <p className="text-xs sm:text-sm md:text-base text-muted-foreground max-w-3xl mx-auto leading-relaxed px-2">
-                  JumpinAI Studio empowers professionals and entrepreneurs to confidently navigate AI transformation—generating complete transformation blueprints in 2 minutes. Each Jump includes three integrated tabs: strategic Overview (with alternative routes for exploring different strategic directions), adaptive Plan (multi-level clarification up to 4 levels deep), and Tools & Prompts (9+ tool-prompt combinations with ready-to-use prompts). Beyond strategy, our Implementation capability enables users to analyze Jumps, discover automation opportunities, and build two types of automation: linear <span className="font-semibold text-foreground">Workflows</span> (1 credit) for predefined sequences or autonomous <span className="font-semibold text-foreground">AI Agents</span> (2 credits) that reason and adapt—downloadable for both n8n (technical users) and Make.com (visual builders).
+                  JumpinAI Studio empowers professionals and entrepreneurs to confidently navigate AI transformation—generating complete transformation blueprints in 2 minutes. Each Jump includes three integrated tabs: strategic Overview (with alternative routes for exploring different strategic directions), adaptive Plan (multi-level clarification up to 4 levels deep), and Tools & Prompts (9+ tool-prompt combinations with ready-to-use prompts). Beyond strategy, our Implementation capability enables users to analyze Jumps, discover automation opportunities, and build two types of automation: linear workflows (1 credit) for predefined sequences or autonomous AI agents (2 credits) that reason and adapt—downloadable for both n8n (technical users) and Make.com (visual builders).
                 </p>
               </div>
               <div className="flex flex-col sm:flex-row justify-center gap-4">
@@ -197,7 +197,7 @@ const ForInvestors = () => {
                 <Target className="h-8 w-8 md:h-10 md:w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
                 <h3 className="text-base md:text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Breakthrough Innovation</h3>
                 <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
-                  Complete transformation system with three integrated tabs: Strategic Overview with alternative routes, Adaptive Plan with 4-level deep clarification, and Tool-Prompt combinations for execution. Our Implementation capability offers two automation types: <span className="font-semibold text-foreground">Workflows</span> for linear automation sequences and <span className="font-semibold text-foreground">AI Agents</span> for autonomous reasoning systems—both downloadable for n8n (self-hosted, technical) and Make.com (cloud-hosted, visual). No competitor offers this depth—from strategy to working systems.
+                  Complete transformation system with three integrated tabs: Strategic Overview with alternative routes, Adaptive Plan with 4-level deep clarification, and Tool-Prompt combinations for execution. Our Implementation capability offers two automation types: workflows for linear automation sequences and AI agents for autonomous reasoning systems—both downloadable for n8n (self-hosted, technical) and Make.com (cloud-hosted, visual). No competitor offers this depth—from strategy to working systems.
                 </p>
               </div>
               
@@ -247,7 +247,7 @@ const ForInvestors = () => {
                 <Globe className="h-8 w-8 md:h-10 md:w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
                 <h3 className="text-base md:text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Adaptive Intelligence System</h3>
                 <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
-                  Users never get stuck: Overview tab offers alternative strategic routes, Plan tab provides 4-level deep clarification with alternative routes per step, Tools tab delivers 9+ ready-to-execute combinations. Our Implementation page enables users to build <span className="font-semibold text-foreground">Workflows</span> (step-by-step automation) or <span className="font-semibold text-foreground">AI Agents</span> (autonomous decision-making systems)—downloadable for n8n (power users) and Make.com (visual builders) with complete setup instructions. From insight to implementation.
+                  Users never get stuck: Overview tab offers alternative strategic routes, Plan tab provides 4-level deep clarification with alternative routes per step, Tools tab delivers 9+ ready-to-execute combinations. Our Implementation page enables users to build workflows (step-by-step automation) or AI agents (autonomous decision-making systems)—downloadable for n8n (power users) and Make.com (visual builders) with complete setup instructions. From insight to implementation.
                 </p>
               </div>
               
