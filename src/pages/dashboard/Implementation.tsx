@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useCredits, dispatchCreditsUpdate } from "@/hooks/useCredits";
 import { getUserJumps, UserJump } from "@/services/jumpService";
@@ -9,21 +9,15 @@ import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Bot, 
   Rocket, 
   Sparkles, 
   ChevronRight, 
-  Check, 
   Zap, 
   Target, 
   Loader2,
-  RefreshCw,
-  Package,
-  Eye,
   FileText,
-  Clock,
   CheckCircle2
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -38,9 +32,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { OpportunityCard } from "@/components/implementation/OpportunityCard";
-import { AgentDetailCard } from "@/components/implementation/AgentDetailCard";
 import { AnalysisSummaryCard } from "@/components/implementation/AnalysisSummaryCard";
-import { AgentListCard } from "@/components/implementation/AgentListCard";
 import { AnalyzeButton } from "@/components/implementation/AnalyzeButton";
 import { Platform } from "@/components/implementation/PlatformSelector";
 import { AutomationType } from "@/components/implementation/AutomationTypeSelector";
@@ -94,10 +86,10 @@ interface JumpWithAnalysis extends UserJump {
 }
 
 export default function Implementation() {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const { hasCredits, fetchCredits } = useCredits();
   const { getAuthHeaders } = useAuth0Token();
-  const [searchParams] = useSearchParams();
   const [jumps, setJumps] = useState<JumpWithAnalysis[]>([]);
   const [selectedJump, setSelectedJump] = useState<JumpWithAnalysis | null>(null);
   const [isLoadingJumps, setIsLoadingJumps] = useState(true);
@@ -119,19 +111,17 @@ export default function Implementation() {
     };
   } | null>(null);
   
-  // Saved agents state
+  // Saved agents state (needed for matching existing agents to opportunities)
   const [savedAgents, setSavedAgents] = useState<SavedAgent[]>([]);
-  const [isLoadingAgents, setIsLoadingAgents] = useState(true);
-  const [selectedAgent, setSelectedAgent] = useState<SavedAgent | null>(null);
-  const [agentToDelete, setAgentToDelete] = useState<SavedAgent | null>(null);
-  
-  // Read tab from URL params, default to "analyze"
-  const tabFromUrl = searchParams.get('tab');
-  const [activeTab, setActiveTab] = useState<string>(tabFromUrl === 'agents' ? 'agents' : 'analyze');
   
   // Platform and automation type selection state
   const [selectedPlatform, setSelectedPlatform] = useState<Platform>('n8n');
   const [selectedAutomationType, setSelectedAutomationType] = useState<AutomationType>('workflow');
+
+  // Credit confirmation state for agent builds
+  const [showCreditConfirmDialog, setShowCreditConfirmDialog] = useState(false);
+  const [isConfirmingBuild, setIsConfirmingBuild] = useState(false);
+  const [pendingBuildOpportunity, setPendingBuildOpportunity] = useState<AgentOpportunity | null>(null);
 
   useEffect(() => {
     loadJumps();
@@ -179,7 +169,6 @@ export default function Implementation() {
   const loadSavedAgents = async () => {
     if (!user) return;
     
-    setIsLoadingAgents(true);
     try {
       const { data, error } = await supabase
         .from('user_agents')
@@ -188,7 +177,6 @@ export default function Implementation() {
         .order('created_at', { ascending: false });
       
       if (error) throw error;
-      // Map data to ensure automation_type exists (default to 'workflow' for old records)
       const mappedAgents: SavedAgent[] = (data || []).map(agent => ({
         ...agent,
         automation_type: agent.automation_type || 'workflow',
@@ -196,9 +184,6 @@ export default function Implementation() {
       setSavedAgents(mappedAgents);
     } catch (error) {
       console.error("Error loading agents:", error);
-      toast.error("Failed to load your agents");
-    } finally {
-      setIsLoadingAgents(false);
     }
   };
 
@@ -298,11 +283,6 @@ export default function Implementation() {
     }
   };
 
-  // Credit confirmation state for agent builds
-  const [showCreditConfirmDialog, setShowCreditConfirmDialog] = useState(false);
-  const [isConfirmingBuild, setIsConfirmingBuild] = useState(false); // Prevents double-click on confirm button
-  const [pendingBuildOpportunity, setPendingBuildOpportunity] = useState<AgentOpportunity | null>(null);
-
   const handleBuildAgent = async (opportunity: AgentOpportunity) => {
     if (!selectedJump || !user) {
       toast.error("Please ensure you're logged in and have selected a jump");
@@ -312,7 +292,7 @@ export default function Implementation() {
     // Check if user has credits
     if (!hasCredits()) {
       toast.error("Insufficient credits", {
-        description: "You need at least 1 credit to build an AI agent. Please purchase more credits.",
+        description: "You need at least 1 credit to build an automation. Please purchase more credits.",
       });
       return;
     }
@@ -323,10 +303,9 @@ export default function Implementation() {
   };
 
   const confirmBuildAgent = async () => {
-    // Guard against double-click: if already confirming or building, ignore
+    // Guard against double-click
     if (!pendingBuildOpportunity || !selectedJump || isConfirmingBuild || buildingAgentId) return;
     
-    // Immediately lock to prevent double-clicks
     setIsConfirmingBuild(true);
     
     const opportunity = pendingBuildOpportunity;
@@ -336,7 +315,7 @@ export default function Implementation() {
     setBuildingAgentId(opportunity.id);
     setGeneratedWorkflow(null);
     
-    // Notify user that generation is starting and takes time
+    // Notify user that generation is starting
     const buildType = selectedAutomationType === 'ai-agent' ? 'AI Agent' : 'Workflow';
     toast.info(`Building ${buildType}...`, {
       description: selectedAutomationType === 'ai-agent' 
@@ -346,14 +325,8 @@ export default function Implementation() {
     });
 
     try {
-      // Calculate credits: AI agents cost 2x, both platforms also 2x
-      const baseCredits = selectedAutomationType === 'ai-agent' ? 2 : 1;
-      const creditsNeeded = selectedPlatform === 'both' ? baseCredits * 2 : baseCredits;
-      
-      // Use raw fetch with AbortController for extended timeout (3 minutes)
-      // supabase.functions.invoke doesn't support signal, so we use fetch directly
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 180000); // 3 minute timeout
+      const timeoutId = setTimeout(() => controller.abort(), 180000);
       
       const authHeaders = await getAuthHeaders();
       const supabaseUrl = "https://cieczaajcgkgdgenfdzi.supabase.co";
@@ -405,12 +378,10 @@ export default function Implementation() {
       } catch (err: any) {
         clearTimeout(timeoutId);
         if (err.name === 'AbortError') {
-          throw new Error('Generation timed out. The AI is still working - please check your AI Agents tab in 1-2 minutes.');
+          throw new Error('Generation timed out. The AI is still working - please check your Automations page in 1-2 minutes.');
         }
         throw err;
       }
-      
-      // Data was successfully retrieved
 
       if (data?.workflow || data?.workflows) {
         setGeneratedWorkflow({
@@ -425,21 +396,19 @@ export default function Implementation() {
           workflows: data.workflows,
         });
         
-        // Refresh the agents list and credits balance, then notify other components
+        // Refresh agents list and credits
         await Promise.all([loadSavedAgents(), fetchCredits()]);
-        dispatchCreditsUpdate(); // Sync sidebar and other credit displays
+        dispatchCreditsUpdate();
         
         const creditsUsed = data.creditsUsed || 1;
-        const buildType = selectedAutomationType === 'ai-agent' ? 'AI Agent' : 'Workflow';
         toast.success(`${buildType} built successfully!`, {
-          description: `${creditsUsed} credit${creditsUsed > 1 ? 's' : ''} used. Find it in your AI Agents tab.`,
+          description: `${creditsUsed} credit${creditsUsed > 1 ? 's' : ''} used. View it in your Automations page.`,
         });
       } else {
         throw new Error("No workflow generated");
       }
     } catch (error: any) {
       console.error("Build agent error:", error);
-      // Handle specific error cases
       if (error.message?.includes('Insufficient credits')) {
         toast.error("Insufficient credits", {
           description: "You need more credits to build this. Please purchase more credits.",
@@ -449,7 +418,7 @@ export default function Implementation() {
       }
     } finally {
       setBuildingAgentId(null);
-      setIsConfirmingBuild(false); // Reset the lock
+      setIsConfirmingBuild(false);
     }
   };
 
@@ -467,25 +436,6 @@ export default function Implementation() {
     URL.revokeObjectURL(url);
     
     toast.success("Workflow downloaded!");
-  };
-
-  const handleDeleteAgent = async (agent: SavedAgent) => {
-    try {
-      const { error } = await supabase
-        .from('user_agents')
-        .delete()
-        .eq('id', agent.id);
-      
-      if (error) throw error;
-      
-      setSavedAgents(prev => prev.filter(a => a.id !== agent.id));
-      setAgentToDelete(null);
-      setSelectedAgent(null);
-      toast.success("Agent deleted successfully");
-    } catch (error) {
-      console.error("Error deleting agent:", error);
-      toast.error("Failed to delete agent");
-    }
   };
 
   const getImpactBadgeColor = (level: string | null) => {
@@ -510,7 +460,6 @@ export default function Implementation() {
   const findExistingAgentForOpportunity = (opportunity: AgentOpportunity): SavedAgent | null => {
     if (!selectedJump) return null;
     
-    // Match by jump_id and similar title
     return savedAgents.find(agent => 
       agent.jump_id === selectedJump.id && 
       (agent.title === opportunity.title || 
@@ -519,10 +468,9 @@ export default function Implementation() {
     ) || null;
   };
 
-  // Handle viewing agent from opportunity card
+  // Handle viewing agent - navigate to Automation page
   const handleViewAgentFromOpportunity = (agent: SavedAgent) => {
-    setSelectedAgent(agent);
-    setActiveTab("agents");
+    navigate('/dashboard/automation');
   };
 
   return (
@@ -548,267 +496,134 @@ export default function Implementation() {
         </div>
       </div>
 
-      {/* Main Tabs - Premium Design */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className={cn(
-          "flex flex-row w-full max-w-lg gap-1.5 sm:gap-2",
-          "rounded-xl sm:rounded-2xl",
-          "glass border border-border/50",
-          "p-1.5 sm:p-2",
-          "h-auto",
-          "backdrop-blur-xl",
-          "bg-gradient-to-r from-background/95 via-background/90 to-background/95",
-          "shadow-lg shadow-primary/5"
-        )}>
-          <TabsTrigger 
-            value="analyze" 
-            className={cn(
-              "flex-1 flex items-center justify-center gap-2",
-              "text-xs sm:text-sm font-semibold",
-              "py-3 sm:py-3.5 px-4 sm:px-6",
-              "rounded-lg sm:rounded-xl",
-              "transition-all duration-300",
-              "text-muted-foreground hover:text-foreground hover:bg-accent/50",
-              "data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary/20 data-[state=active]:to-primary/10",
-              "data-[state=active]:text-primary data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20",
-              "data-[state=active]:border data-[state=active]:border-primary/30"
-            )}
-          >
-            <Sparkles className="w-4 h-4" />
-            <span>Analyze Jumps</span>
-          </TabsTrigger>
-          <TabsTrigger 
-            value="agents" 
-            className={cn(
-              "flex-1 flex items-center justify-center gap-2",
-              "text-xs sm:text-sm font-semibold",
-              "py-3 sm:py-3.5 px-4 sm:px-6",
-              "rounded-lg sm:rounded-xl",
-              "transition-all duration-300",
-              "text-muted-foreground hover:text-foreground hover:bg-accent/50",
-              "data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary/20 data-[state=active]:to-primary/10",
-              "data-[state=active]:text-primary data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20",
-              "data-[state=active]:border data-[state=active]:border-primary/30"
-            )}
-          >
-            <Package className="w-4 h-4" />
-            <span>AI Agents</span>
-            {savedAgents.length > 0 && (
-              <Badge 
-                variant="secondary" 
-                className={cn(
-                  "ml-1 text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5",
-                  "bg-primary/15 text-primary border-primary/25",
-                  "font-semibold"
-                )}
-              >
-                {savedAgents.length}
-              </Badge>
-            )}
-          </TabsTrigger>
-        </TabsList>
+      {/* Main Content - Two Column Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Left Column - Jump Selection */}
+        <div className="lg:col-span-1">
+          <JumpSelectionList
+            jumps={jumps}
+            selectedJump={selectedJump}
+            isLoading={isLoadingJumps}
+            onSelectJump={handleSelectJump}
+          />
+        </div>
 
-        {/* Analyze Tab */}
-        <TabsContent value="analyze" className="mt-6">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Left Column - Jump Selection */}
-            <div className="lg:col-span-1">
-              <JumpSelectionList
-                jumps={jumps}
-                selectedJump={selectedJump}
-                isLoading={isLoadingJumps}
-                onSelectJump={handleSelectJump}
-              />
-            </div>
-
-            {/* Right Column - Analysis Section */}
-            <div className="lg:col-span-2 space-y-6">
-              {/* Analysis Card */}
-              <Card className={cn(
-                "relative overflow-hidden",
-                "border-border/40",
-                "bg-gradient-to-br from-card via-card/95 to-card/90"
-              )}>
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.03] via-transparent to-transparent pointer-events-none" />
-                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl" />
-                
-                <CardHeader className="relative">
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <Sparkles className="w-5 h-5 text-primary" />
-                    Agentic Implementation Analysis
-                  </CardTitle>
-                  <CardDescription className="text-sm leading-relaxed">
-                    Our AI analyzes your jump to identify <strong className="text-foreground">automation opportunities</strong> using personalized AI agents.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="relative">
-                  {selectedJump ? (
-                    <div className="space-y-4">
-                      <div className={cn(
-                        "p-4 rounded-xl",
-                        "bg-gradient-to-br from-background/80 to-background/40",
-                        "border border-border/40"
-                      )}>
-                        <div className="flex items-center gap-2 mb-2">
-                          <Target className="w-4 h-4 text-primary" />
-                          <span className="text-sm font-medium">Selected Jump</span>
-                          {analysisResult?.cached && (
-                            <Badge variant="secondary" className="text-xs bg-green-500/10 text-green-500 border-green-500/20">Cached</Badge>
-                          )}
-                        </div>
-                        <h3 className="font-semibold text-lg">{selectedJump.title}</h3>
-                        {selectedJump.summary && (
-                          <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
-                            {selectedJump.summary}
-                          </p>
-                        )}
-                      </div>
-                      
-                      <AnalyzeButton
-                        isAnalyzing={isAnalyzing}
-                        hasAnalysis={!!analysisResult}
-                        onAnalyze={handleAnalyze}
-                        disabled={!selectedJump}
-                      />
+        {/* Right Column - Analysis Section */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Analysis Card */}
+          <Card className={cn(
+            "relative overflow-hidden",
+            "border-border/40",
+            "bg-gradient-to-br from-card via-card/95 to-card/90"
+          )}>
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.03] via-transparent to-transparent pointer-events-none" />
+            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl" />
+            
+            <CardHeader className="relative">
+              <CardTitle className="text-lg flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-primary" />
+                Agentic Implementation Analysis
+              </CardTitle>
+              <CardDescription className="text-sm leading-relaxed">
+                Our AI analyzes your jump to identify <strong className="text-foreground">automation opportunities</strong> using personalized AI agents.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="relative">
+              {selectedJump ? (
+                <div className="space-y-4">
+                  <div className={cn(
+                    "p-4 rounded-xl",
+                    "bg-gradient-to-br from-background/80 to-background/40",
+                    "border border-border/40"
+                  )}>
+                    <div className="flex items-center gap-2 mb-2">
+                      <Target className="w-4 h-4 text-primary" />
+                      <span className="text-sm font-medium">Selected Jump</span>
+                      {analysisResult?.cached && (
+                        <Badge variant="secondary" className="text-xs bg-green-500/10 text-green-500 border-green-500/20">Cached</Badge>
+                      )}
                     </div>
-                  ) : (
-                    <div className="text-center py-8 space-y-3">
-                      <div className={cn(
-                        "w-16 h-16 mx-auto rounded-2xl flex items-center justify-center",
-                        "bg-gradient-to-br from-muted/50 to-muted/20",
-                        "border border-border/30"
-                      )}>
-                        <ChevronRight className="w-8 h-8 text-muted-foreground" />
-                      </div>
-                      <p className="text-muted-foreground">
-                        Select a jump from the list to start analysis
+                    <h3 className="font-semibold text-lg">{selectedJump.title}</h3>
+                    {selectedJump.summary && (
+                      <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
+                        {selectedJump.summary}
                       </p>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-
-              {/* Results Section */}
-              {analysisResult && (
-                <div className="space-y-5">
-                  {/* Summary Card */}
-                  <AnalysisSummaryCard
-                    summary={analysisResult.summary}
-                    overallPotential={analysisResult.overallPotential}
-                    opportunitiesCount={analysisResult.opportunities.length}
-                  />
-
-                  {/* Opportunities */}
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-bold flex items-center gap-2">
-                      <div className="p-1.5 rounded-lg bg-primary/10">
-                        <Zap className="w-5 h-5 text-primary" />
-                      </div>
-                      Automation Opportunities
-                      <Badge variant="secondary" className="ml-2 font-medium">
-                        {analysisResult.opportunities.length} found
-                      </Badge>
-                    </h3>
-
-                    <div className="space-y-4">
-                      {analysisResult.opportunities.map((opportunity, index) => (
-                        <OpportunityCard
-                          key={opportunity.id}
-                          opportunity={opportunity}
-                          index={index}
-                          isBuilding={buildingAgentId === opportunity.id}
-                          generatedWorkflow={generatedWorkflow?.opportunityId === opportunity.id ? generatedWorkflow : null}
-                          existingAgent={findExistingAgentForOpportunity(opportunity)}
-                          selectedPlatform={selectedPlatform}
-                          selectedAutomationType={selectedAutomationType}
-                          onPlatformChange={setSelectedPlatform}
-                          onAutomationTypeChange={setSelectedAutomationType}
-                          onBuild={() => handleBuildAgent(opportunity)}
-                          onDownload={handleDownloadWorkflow}
-                          onClearWorkflow={() => setGeneratedWorkflow(null)}
-                          onViewAgent={handleViewAgentFromOpportunity}
-                          getImpactBadgeColor={getImpactBadgeColor}
-                          getComplexityBadgeColor={getComplexityBadgeColor}
-                        />
-                      ))}
-                    </div>
+                    )}
                   </div>
+                  
+                  <AnalyzeButton
+                    isAnalyzing={isAnalyzing}
+                    hasAnalysis={!!analysisResult}
+                    onAnalyze={handleAnalyze}
+                    disabled={!selectedJump}
+                  />
+                </div>
+              ) : (
+                <div className="text-center py-8 space-y-3">
+                  <div className={cn(
+                    "w-16 h-16 mx-auto rounded-2xl flex items-center justify-center",
+                    "bg-gradient-to-br from-muted/50 to-muted/20",
+                    "border border-border/30"
+                  )}>
+                    <ChevronRight className="w-8 h-8 text-muted-foreground" />
+                  </div>
+                  <p className="text-muted-foreground">
+                    Select a jump from the list to start analysis
+                  </p>
                 </div>
               )}
-            </div>
-          </div>
-        </TabsContent>
+            </CardContent>
+          </Card>
 
-        {/* AI Agents Tab */}
-        <TabsContent value="agents" className="mt-6">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Agents List */}
-            <div className="lg:col-span-1">
-              <AgentListCard
-                agents={savedAgents}
-                selectedAgent={selectedAgent}
-                isLoading={isLoadingAgents}
-                onSelectAgent={(agent) => setSelectedAgent(agent as SavedAgent)}
-                onSwitchToAnalyze={() => setActiveTab("analyze")}
-                getImpactBadgeColor={getImpactBadgeColor}
+          {/* Results Section */}
+          {analysisResult && (
+            <div className="space-y-5">
+              {/* Summary Card */}
+              <AnalysisSummaryCard
+                summary={analysisResult.summary}
+                overallPotential={analysisResult.overallPotential}
+                opportunitiesCount={analysisResult.opportunities.length}
               />
-            </div>
 
-            {/* Agent Details */}
-            <div className="lg:col-span-2">
-              {selectedAgent ? (
-                <AgentDetailCard
-                  agent={selectedAgent}
-                  onDownload={handleDownloadWorkflow}
-                  onDelete={() => setAgentToDelete(selectedAgent)}
-                  getImpactBadgeColor={getImpactBadgeColor}
-                  getComplexityBadgeColor={getComplexityBadgeColor}
-                />
-              ) : (
-                <Card className={cn(
-                  "h-[500px] flex items-center justify-center",
-                  "border-border/40",
-                  "bg-gradient-to-br from-card via-card/95 to-card/90"
-                )}>
-                  <div className="text-center space-y-3">
-                    <div className={cn(
-                      "w-16 h-16 mx-auto rounded-2xl flex items-center justify-center",
-                      "bg-gradient-to-br from-muted/50 to-muted/20",
-                      "border border-border/30"
-                    )}>
-                      <Eye className="w-8 h-8 text-muted-foreground" />
-                    </div>
-                    <p className="text-muted-foreground">
-                      Select an agent to view details
-                    </p>
+              {/* Opportunities */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-bold flex items-center gap-2">
+                  <div className="p-1.5 rounded-lg bg-primary/10">
+                    <Zap className="w-5 h-5 text-primary" />
                   </div>
-                </Card>
-              )}
-            </div>
-          </div>
-        </TabsContent>
-      </Tabs>
+                  Automation Opportunities
+                  <Badge variant="secondary" className="ml-2 font-medium">
+                    {analysisResult.opportunities.length} found
+                  </Badge>
+                </h3>
 
-      {/* Delete Confirmation Dialog */}
-      <AlertDialog open={!!agentToDelete} onOpenChange={() => setAgentToDelete(null)}>
-        <AlertDialogContent className="border-border/50 bg-card">
-          <AlertDialogHeader>
-            <AlertDialogTitle>Delete Agent?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This will permanently delete "{agentToDelete?.title}" and its workflow. This action cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel className="border-border/50">Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() => agentToDelete && handleDeleteAgent(agentToDelete)}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
-              Delete
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+                <div className="space-y-4">
+                  {analysisResult.opportunities.map((opportunity, index) => (
+                    <OpportunityCard
+                      key={opportunity.id}
+                      opportunity={opportunity}
+                      index={index}
+                      isBuilding={buildingAgentId === opportunity.id}
+                      generatedWorkflow={generatedWorkflow?.opportunityId === opportunity.id ? generatedWorkflow : null}
+                      existingAgent={findExistingAgentForOpportunity(opportunity)}
+                      selectedPlatform={selectedPlatform}
+                      selectedAutomationType={selectedAutomationType}
+                      onPlatformChange={setSelectedPlatform}
+                      onAutomationTypeChange={setSelectedAutomationType}
+                      onBuild={() => handleBuildAgent(opportunity)}
+                      onDownload={handleDownloadWorkflow}
+                      onClearWorkflow={() => setGeneratedWorkflow(null)}
+                      onViewAgent={handleViewAgentFromOpportunity}
+                      getImpactBadgeColor={getImpactBadgeColor}
+                      getComplexityBadgeColor={getComplexityBadgeColor}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
 
       {/* Credit Confirmation Dialog for Agent Builds */}
       <AlertDialog open={showCreditConfirmDialog} onOpenChange={setShowCreditConfirmDialog}>
@@ -848,6 +663,13 @@ export default function Implementation() {
                         <p className="text-xs text-muted-foreground">
                           Generating for both platforms doubles the credit cost.
                         </p>
+                      )}
+                      {totalCredits >= 3 && (
+                        <div className="p-2 rounded-lg bg-yellow-500/10 border border-yellow-500/20">
+                          <p className="text-xs text-yellow-500 font-medium">
+                            ⚡ High credit usage - consider building for one platform first
+                          </p>
+                        </div>
                       )}
                     </>
                   );
@@ -905,8 +727,6 @@ interface JumpSelectionListProps {
   isLoading: boolean;
   onSelectJump: (jump: JumpWithAnalysis) => void;
 }
-
-
 
 function JumpSelectionList({
   jumps,
@@ -971,7 +791,7 @@ function JumpSelectionList({
         ) : (
           <div className="h-full overflow-y-auto px-3 pb-4 scrollbar-thin">
             <div className="space-y-2">
-              {jumps.map((jump, index) => (
+              {jumps.map((jump) => (
                 <button
                   key={jump.id}
                   onClick={() => onSelectJump(jump)}
@@ -980,51 +800,45 @@ function JumpSelectionList({
                     "border hover:border-primary/40",
                     "group",
                     selectedJump?.id === jump.id
-                      ? "border-primary/50 bg-gradient-to-r from-primary/15 via-primary/10 to-primary/5 shadow-sm"
+                      ? "border-primary/50 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent shadow-sm"
                       : "border-border/30 bg-background/30 hover:bg-background/50"
                   )}
                 >
                   <div className="flex items-start gap-3">
-                    {/* Index number */}
                     <div className={cn(
-                      "shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold transition-colors",
+                      "shrink-0 w-9 h-9 rounded-xl flex items-center justify-center transition-colors",
                       selectedJump?.id === jump.id
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-muted/50 text-muted-foreground group-hover:bg-muted"
+                        ? "bg-primary/15"
+                        : "bg-muted/50 group-hover:bg-muted"
                     )}>
-                      {jumps.length - index}
+                      <FileText className={cn(
+                        "w-4 h-4 transition-colors",
+                        selectedJump?.id === jump.id ? "text-primary" : "text-muted-foreground"
+                      )} />
                     </div>
-
-                    {/* Content */}
-                    <div className="flex-1 min-w-0 space-y-1.5">
-                      <div className="flex items-center gap-2">
-                        <h4 className={cn(
-                          "font-medium text-sm truncate flex-1 transition-colors",
-                          selectedJump?.id === jump.id && "text-primary"
-                        )}>
-                          {jump.title}
-                        </h4>
+                    
+                    <div className="flex-1 min-w-0">
+                      <h4 className={cn(
+                        "font-medium text-sm truncate transition-colors",
+                        selectedJump?.id === jump.id && "text-foreground"
+                      )}>
+                        {jump.title}
+                      </h4>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className="text-[11px] text-muted-foreground">
+                          {formatDate(jump.created_at)}
+                        </span>
                         {jump.hasAnalysis && (
-                          <Badge variant="secondary" className="shrink-0 text-[10px] px-1.5 py-0 h-5 bg-green-500/10 text-green-500 border-green-500/20">
-                            <CheckCircle2 className="w-3 h-3 mr-0.5" />
+                          <Badge 
+                            variant="secondary" 
+                            className="text-[10px] px-1.5 py-0 h-4 bg-green-500/10 text-green-500 border-green-500/20"
+                          >
+                            <CheckCircle2 className="w-2.5 h-2.5 mr-0.5" />
                             Analyzed
                           </Badge>
                         )}
                       </div>
-                      <div className="flex items-center gap-2">
-                        <Clock className="w-3 h-3 text-muted-foreground/60" />
-                        <span className="text-xs text-muted-foreground/60">
-                          {formatDate(jump.created_at)}
-                        </span>
-                      </div>
                     </div>
-
-                    {/* Selection indicator */}
-                    {selectedJump?.id === jump.id && (
-                      <div className="shrink-0 w-5 h-5 rounded-full bg-primary flex items-center justify-center">
-                        <Check className="w-3 h-3 text-primary-foreground" />
-                      </div>
-                    )}
                   </div>
                 </button>
               ))}
