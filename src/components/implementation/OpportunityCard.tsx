@@ -474,42 +474,50 @@ export function OpportunityCard({
         ) : existingAgent ? (
           <div className="space-y-4 animate-in fade-in duration-200">
             {/* Existing Agent Banner */}
-            <div className={cn(
-              "p-5 rounded-xl",
-              existingAgent.platform === 'make'
-                ? "bg-gradient-to-br from-purple-500/10 via-purple-500/5 to-transparent border border-purple-500/20"
-                : "bg-gradient-to-br from-orange-500/10 via-orange-500/5 to-transparent border border-orange-500/20"
-            )}>
-              <div className="flex items-center gap-3 mb-4">
+            {(() => {
+              const existingIsAIAgent = existingAgent.automation_type === 'ai-agent';
+              const existingTypeLabel = existingIsAIAgent ? 'AI Agent' : 'Workflow';
+              return (
                 <div className={cn(
-                  "p-2 rounded-full animate-pulse",
-                  existingAgent.platform === 'make' ? "bg-purple-500/20" : "bg-orange-500/20"
+                  "p-5 rounded-xl",
+                  existingAgent.platform === 'make'
+                    ? "bg-gradient-to-br from-purple-500/10 via-purple-500/5 to-transparent border border-purple-500/20"
+                    : "bg-gradient-to-br from-orange-500/10 via-orange-500/5 to-transparent border border-orange-500/20"
                 )}>
-                  <CheckCircle2 className={cn(
-                    "w-5 h-5",
-                    existingAgent.platform === 'make' ? "text-purple-500" : "text-orange-500"
-                  )} />
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <span className={cn(
-                      "font-semibold block",
-                      existingAgent.platform === 'make' ? "text-purple-500" : "text-orange-500"
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className={cn(
+                      "p-2 rounded-full animate-pulse",
+                      existingIsAIAgent ? "bg-yellow-500/20" : "bg-blue-500/20"
                     )}>
-                      Agent Already Built!
-                    </span>
-                    <PlatformBadge platform={existingAgent.platform as 'n8n' | 'make'} />
+                      {existingIsAIAgent ? (
+                        <Brain className="w-5 h-5 text-yellow-500" />
+                      ) : (
+                        <Workflow className="w-5 h-5 text-blue-500" />
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <span className={cn(
+                          "font-semibold block",
+                          existingIsAIAgent ? "text-yellow-500" : "text-blue-500"
+                        )}>
+                          {existingTypeLabel} Already Built!
+                        </span>
+                        <PlatformBadge platform={existingAgent.platform as 'n8n' | 'make'} />
+                      </div>
+                      <span className="text-xs text-muted-foreground">
+                        Download your {existingTypeLabel.toLowerCase()} or view full instructions
+                      </span>
+                    </div>
                   </div>
-                  <span className="text-xs text-muted-foreground">Download your workflow or view full instructions</span>
-                </div>
-              </div>
-              
-              <div className="flex flex-col gap-3">
-                {/* Download Button - Platform specific */}
-                <PlatformDownloadButton 
-                  platform={existingAgent.platform as 'n8n' | 'make'}
-                  onClick={() => onDownload(existingAgent.workflow_json, existingAgent.workflow_filename || 'workflow.json')}
-                />
+                  
+                  <div className="flex flex-col gap-3">
+                    {/* Download Button - Platform and type specific */}
+                    <PlatformDownloadButton 
+                      platform={existingAgent.platform as 'n8n' | 'make'}
+                      automationType={existingIsAIAgent ? 'ai-agent' : 'workflow'}
+                      onClick={() => onDownload(existingAgent.workflow_json, existingAgent.workflow_filename || 'workflow.json')}
+                    />
                 
                 {/* View Instructions Button - Secondary glass morphism */}
                 <button 
@@ -541,7 +549,9 @@ export function OpportunityCard({
                 Don't have {existingAgent.platform === 'make' ? 'Make.com' : 'n8n'}? Create your free account here
                 <ExternalLink className="w-3.5 h-3.5" />
               </a>
-            </div>
+                </div>
+              );
+            })()}
             
             <Button 
               variant="ghost"
@@ -551,7 +561,7 @@ export function OpportunityCard({
               size="sm"
             >
               <RefreshCw className="w-4 h-4 mr-2" />
-              Rebuild Agent
+              Rebuild {existingAgent.automation_type === 'ai-agent' ? 'AI Agent' : 'Workflow'}
             </Button>
           </div>
         ) : (
