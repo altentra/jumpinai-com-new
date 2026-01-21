@@ -29,11 +29,13 @@ interface JumpSelectionCardProps {
   onSelectJump: (jump: JumpWithAnalysis) => void;
 }
 
-const formatDate = (dateString: string) => {
+const formatDateTime = (dateString: string) => {
   return new Date(dateString).toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
-    year: 'numeric'
+    year: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
   });
 };
 
@@ -135,7 +137,7 @@ export function JumpSelectionCard({
                       <div className="flex items-center gap-2">
                         <Clock className="w-3 h-3 text-muted-foreground/60" />
                         <span className="text-xs text-muted-foreground/60">
-                          {formatDate(jump.created_at)}
+                          {formatDateTime(jump.created_at)}
                         </span>
                       </div>
                     </div>

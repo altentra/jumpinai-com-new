@@ -36,10 +36,12 @@ interface AgentListCardProps {
   getImpactBadgeColor: (level: string | null) => string;
 }
 
-const formatDate = (dateString: string) => {
+const formatDateTime = (dateString: string) => {
   return new Date(dateString).toLocaleDateString('en-US', {
     month: 'short',
-    day: 'numeric'
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
   });
 };
 
@@ -200,7 +202,7 @@ export function AgentListCard({
                           </Badge>
                           <span className="text-[10px] text-muted-foreground/60 flex items-center gap-1">
                             <Clock className="w-3 h-3" />
-                            {formatDate(agent.created_at)}
+                            {formatDateTime(agent.created_at)}
                           </span>
                         </div>
                       </div>
