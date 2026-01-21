@@ -354,8 +354,14 @@ export function AgentDetailCard({
           isN8n ? "shadow-sm shadow-amber-500/5" : "shadow-sm shadow-violet-500/5"
         )}>
           <div className="flex items-center gap-3 mb-4">
-            <div className="p-2 rounded-full bg-muted">
-              <Download className="w-5 h-5 text-foreground/80" />
+            <div className={cn(
+              "p-2 rounded-full",
+              isAIAgent ? "bg-yellow-500/20" : "bg-blue-500/20"
+            )}>
+              <Download className={cn(
+                "w-5 h-5",
+                isAIAgent ? "text-yellow-500" : "text-blue-500"
+              )} />
             </div>
             <div>
               <div className="flex items-center gap-2">
@@ -365,13 +371,14 @@ export function AgentDetailCard({
                 <PlatformBadge platform={agent.platform} />
               </div>
               <span className="text-xs text-muted-foreground">
-                Import this workflow into {isN8n ? 'n8n' : 'Make.com'}
+                Import this {isAIAgent ? 'AI agent' : 'workflow'} into {isN8n ? 'n8n' : 'Make.com'}
               </span>
             </div>
           </div>
           
           <PlatformDownloadButton
             platform={isN8n ? "n8n" : "make"}
+            automationType={isAIAgent ? "ai-agent" : "workflow"}
             onClick={() => onDownload(agent.workflow_json, agent.workflow_filename || "workflow.json")}
           />
           
@@ -397,11 +404,19 @@ export function AgentDetailCard({
               "transition-colors"
             )}>
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-full bg-muted">
-                  <FileText className="w-4 h-4 text-foreground/70" />
+                <div className={cn(
+                  "p-2 rounded-full",
+                  isAIAgent ? "bg-yellow-500/10" : "bg-blue-500/10"
+                )}>
+                  <FileText className={cn(
+                    "w-4 h-4",
+                    isAIAgent ? "text-yellow-500" : "text-blue-500"
+                  )} />
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="font-semibold">{isN8n ? 'n8n' : 'Make.com'} Implementation Instructions</span>
+                  <span className="font-semibold">
+                    {isN8n ? 'n8n' : 'Make.com'} {isAIAgent ? 'AI Agent' : 'Workflow'} Instructions
+                  </span>
                   <span className={cn(
                     "w-2 h-2 rounded-full",
                     isN8n ? "bg-amber-500" : "bg-violet-500"

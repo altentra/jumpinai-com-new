@@ -810,23 +810,69 @@ export default function Implementation() {
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center gap-2">
               <Zap className="w-5 h-5 text-primary" />
-              Confirm AI Agent Build
+              Confirm {selectedAutomationType === 'ai-agent' ? 'AI Agent' : 'Workflow'} Build
             </AlertDialogTitle>
-            <AlertDialogDescription className="space-y-2">
-              <p>Building this AI agent will use <span className="font-semibold text-foreground">1 credit</span>.</p>
-              {pendingBuildOpportunity && (
-                <p className="text-sm">Agent: <span className="font-medium text-foreground">{pendingBuildOpportunity.title}</span></p>
-              )}
+            <AlertDialogDescription asChild>
+              <div className="space-y-3">
+                {(() => {
+                  const baseCredits = selectedAutomationType === 'ai-agent' ? 2 : 1;
+                  const totalCredits = selectedPlatform === 'both' ? baseCredits * 2 : baseCredits;
+                  const platformLabel = selectedPlatform === 'both' 
+                    ? 'n8n + Make.com' 
+                    : selectedPlatform === 'n8n' ? 'n8n' : 'Make.com';
+                  const typeLabel = selectedAutomationType === 'ai-agent' ? 'AI Agent' : 'Workflow';
+                  
+                  return (
+                    <>
+                      <p>
+                        Building a <span className="font-semibold text-foreground">{platformLabel} {typeLabel}</span> will use{' '}
+                        <span className={cn(
+                          "font-bold",
+                          totalCredits >= 3 ? "text-yellow-500" : "text-foreground"
+                        )}>
+                          {totalCredits} credit{totalCredits > 1 ? 's' : ''}
+                        </span>.
+                      </p>
+                      {selectedAutomationType === 'ai-agent' && (
+                        <p className="text-xs text-muted-foreground">
+                          AI Agents require 2 credits (autonomous reasoning architecture).
+                        </p>
+                      )}
+                      {selectedPlatform === 'both' && (
+                        <p className="text-xs text-muted-foreground">
+                          Generating for both platforms doubles the credit cost.
+                        </p>
+                      )}
+                    </>
+                  );
+                })()}
+                {pendingBuildOpportunity && (
+                  <p className="text-sm">
+                    {selectedAutomationType === 'ai-agent' ? 'Agent' : 'Workflow'}: <span className="font-medium text-foreground">{pendingBuildOpportunity.title}</span>
+                  </p>
+                )}
+              </div>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel className="border-border/50">Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={confirmBuildAgent}
-              className="bg-primary text-primary-foreground hover:bg-primary/90"
+              className={cn(
+                "text-primary-foreground hover:opacity-90",
+                selectedAutomationType === 'ai-agent' 
+                  ? "bg-gradient-to-r from-yellow-500 to-amber-500" 
+                  : "bg-primary"
+              )}
             >
               <Zap className="w-4 h-4 mr-1" />
-              Use 1 Credit & Build
+              Use {(() => {
+                const baseCredits = selectedAutomationType === 'ai-agent' ? 2 : 1;
+                return selectedPlatform === 'both' ? baseCredits * 2 : baseCredits;
+              })()} Credit{(() => {
+                const baseCredits = selectedAutomationType === 'ai-agent' ? 2 : 1;
+                return (selectedPlatform === 'both' ? baseCredits * 2 : baseCredits) > 1 ? 's' : '';
+              })()} & Build
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
