@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAutomations, SavedAgent } from "@/hooks/useAutomations";
 
@@ -43,6 +43,13 @@ export default function Automation() {
   
   const [selectedAgent, setSelectedAgent] = useState<SavedAgent | null>(null);
   const [agentToDelete, setAgentToDelete] = useState<SavedAgent | null>(null);
+
+  // Auto-select the most recent automation when data loads
+  useEffect(() => {
+    if (savedAgents.length > 0 && !selectedAgent) {
+      setSelectedAgent(savedAgents[0]);
+    }
+  }, [savedAgents]);
 
   const handleDownloadWorkflow = (workflow: any, filename: string) => {
     const blob = new Blob([JSON.stringify(workflow, null, 2)], {

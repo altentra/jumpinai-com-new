@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useCredits, dispatchCreditsUpdate } from "@/hooks/useCredits";
@@ -102,7 +102,12 @@ export default function Implementation() {
   const [isConfirmingBuild, setIsConfirmingBuild] = useState(false);
   const [pendingBuildOpportunity, setPendingBuildOpportunity] = useState<AgentOpportunity | null>(null);
 
-  // No useEffect needed - hooks handle loading automatically
+  // Auto-select the most recent jump when data loads
+  useEffect(() => {
+    if (jumps.length > 0 && !selectedJump) {
+      handleSelectJump(jumps[0]);
+    }
+  }, [jumps]);
 
   const handleSelectJump = async (jump: JumpWithAnalysis) => {
     setSelectedJump(jump);
