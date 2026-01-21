@@ -115,6 +115,9 @@ verify_jwt = false
 [functions.speech-to-text-realtime]
 verify_jwt = false
 
+[functions.build-agent]
+verify_jwt = false
+
 [functions.explore-alternative-routes]
 verify_jwt = false
 
