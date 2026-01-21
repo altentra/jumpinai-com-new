@@ -773,7 +773,8 @@ Deno.serve(async (req) => {
     const response: any = {
       success: true,
       platform: platform,
-      creditsUsed: platform === 'both' ? 2 : 1,
+      automationType: automationType,
+      creditsUsed: creditsNeeded,
     };
 
     // For backwards compatibility and single platform requests
