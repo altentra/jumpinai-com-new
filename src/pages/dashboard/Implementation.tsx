@@ -330,39 +330,82 @@ export default function Implementation() {
     
     setBuildingAgentId(opportunity.id);
     setGeneratedWorkflow(null);
+    
+    // Notify user that generation is starting and takes time
+    const buildType = selectedAutomationType === 'ai-agent' ? 'AI Agent' : 'Workflow';
+    toast.info(`Building ${buildType}...`, {
+      description: selectedAutomationType === 'ai-agent' 
+        ? "This may take 45-90 seconds. The AI is designing a reasoning architecture for you."
+        : "This may take 30-60 seconds. The AI is generating your automation workflow.",
+      duration: 8000,
+    });
 
     try {
       // Calculate credits: AI agents cost 2x, both platforms also 2x
       const baseCredits = selectedAutomationType === 'ai-agent' ? 2 : 1;
       const creditsNeeded = selectedPlatform === 'both' ? baseCredits * 2 : baseCredits;
       
-      const { data, error } = await supabase.functions.invoke("build-agent", {
-        headers: await getAuthHeaders(),
-        body: {
-          opportunity: {
-            title: opportunity.title,
-            description: opportunity.description,
-            automationTarget: opportunity.automationTarget,
-            impact: opportunity.impactLevel,
-            complexity: opportunity.complexityLevel,
-            estimatedTimeSaved: opportunity.estimatedTimeSaved,
-            requiredTools: opportunity.requiredTools,
-            benefits: opportunity.benefits,
+      // Use raw fetch with AbortController for extended timeout (3 minutes)
+      // supabase.functions.invoke doesn't support signal, so we use fetch directly
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 180000); // 3 minute timeout
+      
+      const authHeaders = await getAuthHeaders();
+      const supabaseUrl = "https://cieczaajcgkgdgenfdzi.supabase.co";
+      const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpZWN6YWFqY2drZ2RnZW5mZHppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1MzU4OTksImV4cCI6MjA2NjExMTg5OX0.OiDppCXfN_AN64XvCvfhphFqbjSvRtKSwF-cIXCZMQU";
+      
+      let data: any = null;
+      
+      try {
+        const response = await fetch(`${supabaseUrl}/functions/v1/build-agent`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': supabaseAnonKey,
+            ...authHeaders,
           },
-          jump: {
-            id: selectedJump.id,
-            title: selectedJump.title,
-            summary: selectedJump.summary || "",
-            goals: selectedJump.comprehensive_plan?.overview?.goals?.join(", ") || "",
-            challenges: selectedJump.comprehensive_plan?.overview?.challenges?.join(", ") || "",
-          },
-          analysisId: analysisResult?.analysisId,
-          platform: selectedPlatform,
-          automationType: selectedAutomationType,
+          body: JSON.stringify({
+            opportunity: {
+              title: opportunity.title,
+              description: opportunity.description,
+              automationTarget: opportunity.automationTarget,
+              impact: opportunity.impactLevel,
+              complexity: opportunity.complexityLevel,
+              estimatedTimeSaved: opportunity.estimatedTimeSaved,
+              requiredTools: opportunity.requiredTools,
+              benefits: opportunity.benefits,
+            },
+            jump: {
+              id: selectedJump.id,
+              title: selectedJump.title,
+              summary: selectedJump.summary || "",
+              goals: selectedJump.comprehensive_plan?.overview?.goals?.join(", ") || "",
+              challenges: selectedJump.comprehensive_plan?.overview?.challenges?.join(", ") || "",
+            },
+            analysisId: analysisResult?.analysisId,
+            platform: selectedPlatform,
+            automationType: selectedAutomationType,
+          }),
+          signal: controller.signal,
+        });
+        
+        clearTimeout(timeoutId);
+        
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.error || errorData.message || `Request failed with status ${response.status}`);
         }
-      });
-
-      if (error) throw error;
+        
+        data = await response.json();
+      } catch (err: any) {
+        clearTimeout(timeoutId);
+        if (err.name === 'AbortError') {
+          throw new Error('Generation timed out. The AI is still working - please check your AI Agents tab in 1-2 minutes.');
+        }
+        throw err;
+      }
+      
+      // Data was successfully retrieved
 
       if (data?.workflow || data?.workflows) {
         setGeneratedWorkflow({
