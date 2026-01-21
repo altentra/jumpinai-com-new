@@ -67,7 +67,11 @@ function PlatformBadge({ platform }: { platform: string }) {
   );
 }
 
-// Automation type badge
+// Automation type badge - standardized terminology
+// Unknown/not chosen = "Automation" (Green)
+// Workflow = "Workflow" (Blue)
+// AI Agent = "AI Agent" (Yellow)
+// Both = "Automations" (Green)
 function AutomationTypeBadge({ type }: { type: string | null }) {
   const isAIAgent = type === 'ai-agent';
   return (
@@ -81,7 +85,7 @@ function AutomationTypeBadge({ type }: { type: string | null }) {
       )}
     >
       {isAIAgent ? <Brain className="w-3 h-3" /> : <Workflow className="w-3 h-3" />}
-      {isAIAgent ? 'Agent' : 'Workflow'}
+      {isAIAgent ? 'AI Agent' : 'Workflow'}
     </Badge>
   );
 }
