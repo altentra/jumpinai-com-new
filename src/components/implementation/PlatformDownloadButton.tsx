@@ -1,16 +1,26 @@
-import { Download } from "lucide-react";
+import { Download, Brain, Workflow } from "lucide-react";
 import { cn } from "@/lib/utils";
+
+interface PlatformDownloadButtonProps {
+  platform: "n8n" | "make";
+  automationType?: "workflow" | "ai-agent";
+  onClick: () => void;
+  className?: string;
+}
 
 export function PlatformDownloadButton({
   platform,
+  automationType = "workflow",
   onClick,
   className,
-}: {
-  platform: "n8n" | "make";
-  onClick: () => void;
-  className?: string;
-}) {
+}: PlatformDownloadButtonProps) {
   const isN8n = platform === "n8n";
+  const isAIAgent = automationType === "ai-agent";
+  
+  // Build dynamic label
+  const platformLabel = isN8n ? "n8n" : "Make.com";
+  const typeLabel = isAIAgent ? "AI Agent" : "Workflow";
+  const IconComponent = isAIAgent ? Brain : Workflow;
 
   return (
     <button
@@ -29,7 +39,7 @@ export function PlatformDownloadButton({
       {/* Button body (same structure as 'View Full Instructions') */}
       <div
         className={cn(
-          "relative flex items-center justify-center gap-2 px-6 py-3",
+          "relative flex items-center justify-center gap-2.5 px-6 py-3",
           "bg-gradient-to-br from-background/80 via-muted/30 to-background/80",
           "backdrop-blur-xl rounded-3xl",
           "border border-border/60 transition-all duration-300",
@@ -42,9 +52,24 @@ export function PlatformDownloadButton({
         {/* Shimmer */}
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 rounded-3xl" />
 
-        <Download className="relative w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />
+        {/* Platform indicator dot */}
+        <span
+          className={cn(
+            "relative w-2 h-2 rounded-full shrink-0",
+            isN8n ? "bg-amber-500" : "bg-violet-500"
+          )}
+        />
+        
+        {/* Type icon */}
+        <IconComponent className={cn(
+          "relative w-4 h-4 shrink-0",
+          isAIAgent ? "text-yellow-500" : "text-blue-500"
+        )} />
+        
+        <Download className="relative w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors shrink-0" />
+        
         <span className="relative font-medium text-muted-foreground group-hover:text-foreground transition-colors">
-          Download {isN8n ? "n8n" : "Make.com"} Workflow
+          Download {platformLabel} {typeLabel}
         </span>
       </div>
     </button>

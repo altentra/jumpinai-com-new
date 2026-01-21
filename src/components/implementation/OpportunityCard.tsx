@@ -348,10 +348,12 @@ export function OpportunityCard({
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
                 </div>
                 <div>
-                  <span className="font-semibold text-green-500 block">Workflow Generated & Saved!</span>
+                  <span className="font-semibold text-green-500 block">
+                    {isAIAgent ? 'AI Agent' : 'Workflow'} Generated & Saved!
+                  </span>
                   <span className="text-xs text-muted-foreground">
                     {hasBothPlatforms 
-                      ? "Both n8n and Make.com workflows are ready to download"
+                      ? `Both n8n and Make.com ${isAIAgent ? 'AI agents' : 'workflows'} are ready to download`
                       : `Ready to download and import into ${generatedPlatform === 'n8n' ? 'n8n' : 'Make.com'}`
                     }
                   </span>
@@ -363,6 +365,7 @@ export function OpportunityCard({
                 <div className="space-y-3">
                   <PlatformDownloadButton 
                     platform="n8n"
+                    automationType={builtType as 'workflow' | 'ai-agent'}
                     onClick={() => onDownload(
                       generatedWorkflow.workflows!.n8n!.workflow, 
                       generatedWorkflow.workflows!.n8n!.filename
@@ -370,6 +373,7 @@ export function OpportunityCard({
                   />
                   <PlatformDownloadButton 
                     platform="make"
+                    automationType={builtType as 'workflow' | 'ai-agent'}
                     onClick={() => onDownload(
                       generatedWorkflow.workflows!.make!.workflow, 
                       generatedWorkflow.workflows!.make!.filename
@@ -379,6 +383,7 @@ export function OpportunityCard({
               ) : (
                 <PlatformDownloadButton 
                   platform={generatedPlatform === 'make' ? 'make' : 'n8n'}
+                  automationType={builtType as 'workflow' | 'ai-agent'}
                   onClick={() => onDownload(generatedWorkflow.workflow, generatedWorkflow.filename || 'workflow.json')}
                 />
               )}
