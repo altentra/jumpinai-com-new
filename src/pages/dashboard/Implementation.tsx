@@ -653,11 +653,13 @@ function JumpSelectionList({
   isLoading,
   onSelectJump,
 }: JumpSelectionListProps) {
-  const formatDate = (dateString: string) => {
+  const formatDateTime = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
-      year: 'numeric'
+      year: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
     });
   };
 
@@ -745,7 +747,7 @@ function JumpSelectionList({
                       </h4>
                       <div className="flex items-center gap-2 mt-1">
                         <span className="text-[11px] text-muted-foreground">
-                          {formatDate(jump.created_at)}
+                          {formatDateTime(jump.created_at)}
                         </span>
                         {jump.hasAnalysis && (
                           <Badge 
