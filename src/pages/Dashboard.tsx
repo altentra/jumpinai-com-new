@@ -13,6 +13,7 @@ import AccountProfile from "./dashboard/AccountProfile";
 import Subscription from "./dashboard/Subscription";
 import ViewJump from "./dashboard/ViewJump";
 import Implementation from "./dashboard/Implementation";
+import Automation from "./dashboard/Automation";
 import JumpinAIStudioContent from "@/components/dashboard/JumpinAIStudioContent";
 import PublicProfileView from "./dashboard/PublicProfileView";
 import PublicJumpView from "./dashboard/PublicJumpView";
@@ -83,6 +84,7 @@ export default function Dashboard() {
               <Route path="jumps" element={<MyJumpsNew />} />
               <Route path="jump/:jumpId" element={<ViewJump embedded />} />
               <Route path="implementation" element={<Implementation />} />
+              <Route path="automation" element={<Automation />} />
               <Route path="tools-prompts" element={<ToolsPrompts />} />
               <Route path="profile" element={<Profile />} />
               <Route path="profile/:username" element={<PublicProfileView />} />
