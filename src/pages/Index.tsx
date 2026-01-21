@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Sparkles, GitBranch, Wrench, ArrowRight, ChevronDown, Route, Compass, Bot, Workflow, Zap, Target, Cog, Play } from 'lucide-react';
+import { Sparkles, GitBranch, Wrench, ArrowRight, ChevronDown, Route, Compass, Bot, Workflow, Zap, Target, Cog, Play, Brain, Settings, CheckCircle2, Clock, Shield, Download } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Navigation from "@/components/Navigation";
 import Hero from "@/components/Hero";
@@ -1203,7 +1203,7 @@ const Index = () => {
               From Strategy to Automation—In One Platform
             </h2>
             <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto px-4 leading-relaxed">
-              Your Jump doesn't end at a plan. JumpinAI analyzes your strategy, discovers automation opportunities, and builds ready-to-deploy AI agents—accelerating your path from vision to reality.
+              Your Jump doesn't end at a plan. JumpinAI analyzes your strategy, discovers automation opportunities, and builds ready-to-deploy systems—whether you need a streamlined <span className="text-blue-500 font-medium">Workflow</span> or an intelligent <span className="text-yellow-500 font-medium">AI Agent</span>.
             </p>
           </div>
 
@@ -1237,7 +1237,7 @@ const Index = () => {
                     
                     <h3 className="text-xl font-bold font-display mb-3">Analyze Your Jump</h3>
                     <p className="text-sm text-muted-foreground leading-relaxed">
-                      AI scans your entire implementation plan to identify 3-5 high-impact processes that can be automated—ranking them by potential time savings and business impact.
+                      AI scans your entire plan to identify 3-5 high-impact processes that can be automated—ranked by time savings, complexity, and business impact.
                     </p>
                   </div>
                 </div>
@@ -1245,7 +1245,7 @@ const Index = () => {
                 <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-emerald-600 to-teal-500 opacity-10 group-hover:opacity-20 transition-opacity duration-500 -z-10 blur-xl"></div>
               </div>
 
-              {/* Step 2: Discover */}
+              {/* Step 2: Choose */}
               <div 
                 ref={implementCard2Ref}
                 className="group relative rounded-3xl transition-all duration-700 ease-out"
@@ -1270,9 +1270,9 @@ const Index = () => {
                       <div className="flex-1 h-px bg-gradient-to-r from-teal-500/30 to-transparent"></div>
                     </div>
                     
-                    <h3 className="text-xl font-bold font-display mb-3">Discover Opportunities</h3>
+                    <h3 className="text-xl font-bold font-display mb-3">Choose Your Type</h3>
                     <p className="text-sm text-muted-foreground leading-relaxed">
-                      Each opportunity comes with a clear description of what can be automated, estimated time savings, complexity level, and the specific tools required.
+                      Select a <span className="text-blue-500 font-medium">Workflow</span> for predictable, step-by-step automation or an <span className="text-yellow-500 font-medium">AI Agent</span> for intelligent, context-aware systems that reason and adapt.
                     </p>
                   </div>
                 </div>
@@ -1280,7 +1280,7 @@ const Index = () => {
                 <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-teal-600 to-cyan-500 opacity-10 group-hover:opacity-20 transition-opacity duration-500 -z-10 blur-xl"></div>
               </div>
 
-              {/* Step 3: Build */}
+              {/* Step 3: Build & Deploy */}
               <div 
                 ref={implementCard3Ref}
                 className="group relative rounded-3xl transition-all duration-700 ease-out"
@@ -1305,9 +1305,9 @@ const Index = () => {
                       <div className="flex-1 h-px bg-gradient-to-r from-cyan-500/30 to-transparent"></div>
                     </div>
                     
-                    <h3 className="text-xl font-bold font-display mb-3">Build AI Agents</h3>
+                    <h3 className="text-xl font-bold font-display mb-3">Build & Deploy</h3>
                     <p className="text-sm text-muted-foreground leading-relaxed">
-                      One click generates a complete workflow—a ready-to-deploy AI agent with detailed implementation instructions, testing guides, and troubleshooting tips.
+                      One click generates a complete, ready-to-deploy automation with detailed instructions, testing guides, and troubleshooting tips—yours to own and customize.
                     </p>
                   </div>
                 </div>
@@ -1317,37 +1317,188 @@ const Index = () => {
             </div>
           </div>
 
-          {/* Platform & Package Summary - Compact */}
+          {/* Workflows vs AI Agents - The Core Differentiation */}
           <div 
             ref={implementSummaryRef}
-            className="max-w-4xl mx-auto transition-all duration-700 ease-out"
+            className="max-w-5xl mx-auto mb-10 transition-all duration-700 ease-out"
             style={{
               opacity: Math.min(1, implementSummaryProgress * 1.5),
               transform: `translateY(${(1 - Math.min(1, implementSummaryProgress * 1.5)) * 40}px)`
             }}
           >
-            <div className="glass rounded-2xl p-6 lg:p-8 border border-emerald-500/20 shadow-lg backdrop-blur-xl">
-              {/* Two Platforms - Side by Side Compact */}
-              <div className="grid sm:grid-cols-2 gap-4 mb-6">
-                {/* n8n */}
-                <div className="flex items-center gap-4 p-4 rounded-xl bg-muted/30 border border-amber-500/20 hover:border-amber-500/40 transition-all duration-300">
-                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-500/20 to-orange-500/10 border border-amber-500/30 flex items-center justify-center flex-shrink-0">
-                    <Workflow className="w-5 h-5 text-amber-500" />
+            {/* Section Title */}
+            <div className="text-center mb-8">
+              <h3 className="text-xl sm:text-2xl font-bold font-display mb-2">Two Types of Automation</h3>
+              <p className="text-sm text-muted-foreground">Choose the right tool for your automation needs</p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-6 mb-10">
+              {/* Workflows Card */}
+              <div className="group relative rounded-3xl">
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-blue-500/[0.08] via-transparent to-blue-400/[0.05] p-[1px]">
+                  <div className="absolute inset-0 rounded-3xl bg-card"></div>
+                </div>
+                
+                <div className="relative bg-card rounded-3xl p-6 h-full shadow-modern hover:shadow-modern-lg transition-all duration-500 border border-blue-500/20 hover:border-blue-500/40">
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-blue-500/[0.03] via-transparent to-transparent pointer-events-none"></div>
+                  
+                  <div className="relative z-10">
+                    {/* Header */}
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-blue-400/10 border border-blue-500/30 flex items-center justify-center">
+                        <Workflow className="w-6 h-6 text-blue-500" />
+                      </div>
+                      <div>
+                        <h4 className="text-lg font-bold font-display text-blue-500">Workflows</h4>
+                        <span className="text-xs text-muted-foreground">1 Credit per Build</span>
+                      </div>
+                    </div>
+                    
+                    {/* Description */}
+                    <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+                      Linear, step-by-step automations that execute a <span className="text-foreground font-medium">predefined sequence</span> of actions. Perfect for predictable, repeatable processes.
+                    </p>
+                    
+                    {/* Characteristics */}
+                    <div className="space-y-2 mb-4">
+                      <div className="flex items-center gap-2 text-xs">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />
+                        <span className="text-muted-foreground">Fixed trigger → Fixed sequence → Fixed output</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />
+                        <span className="text-muted-foreground">Predictable execution every time</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />
+                        <span className="text-muted-foreground">Ideal for data syncing, notifications, reports</span>
+                      </div>
+                    </div>
+                    
+                    {/* Use Cases Pills */}
+                    <div className="flex flex-wrap gap-1.5">
+                      {['Form Processing', 'Email Sequences', 'Data Sync', 'Scheduled Reports'].map((item, idx) => (
+                        <span key={idx} className="px-2 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-[10px] text-blue-600 dark:text-blue-400">
+                          {item}
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="font-semibold text-sm text-foreground">n8n Workflows</h4>
-                    <p className="text-xs text-muted-foreground">For technical users & power users</p>
+                </div>
+                
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-600 to-blue-400 opacity-10 group-hover:opacity-20 transition-opacity duration-500 -z-10 blur-xl"></div>
+              </div>
+
+              {/* AI Agents Card */}
+              <div className="group relative rounded-3xl">
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-yellow-500/[0.08] via-transparent to-amber-400/[0.05] p-[1px]">
+                  <div className="absolute inset-0 rounded-3xl bg-card"></div>
+                </div>
+                
+                <div className="relative bg-card rounded-3xl p-6 h-full shadow-modern hover:shadow-modern-lg transition-all duration-500 border border-yellow-500/20 hover:border-yellow-500/40">
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-yellow-500/[0.03] via-transparent to-transparent pointer-events-none"></div>
+                  
+                  <div className="relative z-10">
+                    {/* Header */}
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-yellow-500/20 to-amber-400/10 border border-yellow-500/30 flex items-center justify-center">
+                        <Brain className="w-6 h-6 text-yellow-500" />
+                      </div>
+                      <div>
+                        <h4 className="text-lg font-bold font-display text-yellow-500">AI Agents</h4>
+                        <span className="text-xs text-muted-foreground">2 Credits per Build</span>
+                      </div>
+                    </div>
+                    
+                    {/* Description */}
+                    <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+                      Autonomous systems that <span className="text-foreground font-medium">reason, decide, and adapt</span> based on context. Perfect for complex tasks requiring intelligence.
+                    </p>
+                    
+                    {/* Characteristics */}
+                    <div className="space-y-2 mb-4">
+                      <div className="flex items-center gap-2 text-xs">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-yellow-500 flex-shrink-0" />
+                        <span className="text-muted-foreground">Context-aware decision making</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-yellow-500 flex-shrink-0" />
+                        <span className="text-muted-foreground">Dynamic responses to variable inputs</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-yellow-500 flex-shrink-0" />
+                        <span className="text-muted-foreground">Handles ambiguity and edge cases</span>
+                      </div>
+                    </div>
+                    
+                    {/* Use Cases Pills */}
+                    <div className="flex flex-wrap gap-1.5">
+                      {['Lead Qualification', 'Content Creation', 'Customer Support', 'Research Tasks'].map((item, idx) => (
+                        <span key={idx} className="px-2 py-0.5 rounded-full bg-yellow-500/10 border border-yellow-500/20 text-[10px] text-yellow-600 dark:text-yellow-400">
+                          {item}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-yellow-600 to-amber-400 opacity-10 group-hover:opacity-20 transition-opacity duration-500 -z-10 blur-xl"></div>
+              </div>
+            </div>
+
+            {/* Platform Selection - n8n vs Make.com */}
+            <div className="glass rounded-2xl p-6 lg:p-8 border border-emerald-500/20 shadow-lg backdrop-blur-xl">
+              {/* Section Title */}
+              <div className="text-center mb-6">
+                <h3 className="text-lg font-bold font-display mb-1">Choose Your Platform</h3>
+                <p className="text-xs text-muted-foreground">Both Workflows and AI Agents can be built for either platform—or both at once</p>
+              </div>
+
+              {/* Two Platforms - Enhanced */}
+              <div className="grid md:grid-cols-2 gap-6 mb-6">
+                {/* n8n */}
+                <div className="relative rounded-2xl p-5 bg-gradient-to-br from-amber-500/[0.05] to-orange-500/[0.02] border border-amber-500/20 hover:border-amber-500/40 transition-all duration-300">
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/10 border border-amber-500/30 flex items-center justify-center flex-shrink-0">
+                      <Workflow className="w-6 h-6 text-amber-500" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <h4 className="font-bold text-foreground">n8n</h4>
+                        <span className="px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-[10px] text-amber-600 dark:text-amber-400 font-medium">Technical</span>
+                      </div>
+                      <p className="text-xs text-muted-foreground leading-relaxed mb-3">
+                        Open-source, self-hosted option with unlimited customization. Ideal for developers and power users who want full control.
+                      </p>
+                      <div className="flex flex-wrap gap-1.5">
+                        <span className="px-2 py-0.5 rounded bg-muted/50 text-[10px] text-muted-foreground">Self-Hosted</span>
+                        <span className="px-2 py-0.5 rounded bg-muted/50 text-[10px] text-muted-foreground">400+ Integrations</span>
+                        <span className="px-2 py-0.5 rounded bg-muted/50 text-[10px] text-muted-foreground">Code Nodes</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 
                 {/* Make.com */}
-                <div className="flex items-center gap-4 p-4 rounded-xl bg-muted/30 border border-violet-500/20 hover:border-violet-500/40 transition-all duration-300">
-                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-violet-500/20 to-purple-500/10 border border-violet-500/30 flex items-center justify-center flex-shrink-0">
-                    <Zap className="w-5 h-5 text-violet-500" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-sm text-foreground">Make.com Blueprints</h4>
-                    <p className="text-xs text-muted-foreground">For non-technical users</p>
+                <div className="relative rounded-2xl p-5 bg-gradient-to-br from-violet-500/[0.05] to-purple-500/[0.02] border border-violet-500/20 hover:border-violet-500/40 transition-all duration-300">
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500/20 to-purple-500/10 border border-violet-500/30 flex items-center justify-center flex-shrink-0">
+                      <Zap className="w-6 h-6 text-violet-500" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <h4 className="font-bold text-foreground">Make.com</h4>
+                        <span className="px-2 py-0.5 rounded-full bg-violet-500/10 border border-violet-500/20 text-[10px] text-violet-600 dark:text-violet-400 font-medium">Non-Technical</span>
+                      </div>
+                      <p className="text-xs text-muted-foreground leading-relaxed mb-3">
+                        Cloud-based with a visual, drag-and-drop interface. Perfect for non-technical users who want powerful automation without code.
+                      </p>
+                      <div className="flex flex-wrap gap-1.5">
+                        <span className="px-2 py-0.5 rounded bg-muted/50 text-[10px] text-muted-foreground">Cloud-Hosted</span>
+                        <span className="px-2 py-0.5 rounded bg-muted/50 text-[10px] text-muted-foreground">1500+ Apps</span>
+                        <span className="px-2 py-0.5 rounded bg-muted/50 text-[10px] text-muted-foreground">Visual Builder</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1355,23 +1506,34 @@ const Index = () => {
               {/* Divider */}
               <div className="h-px bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent mb-6"></div>
               
-              {/* What's Included - Inline */}
+              {/* What's Included - Enhanced */}
               <div className="text-center mb-4">
-                <p className="text-sm text-muted-foreground">
-                  Every agent includes: <span className="text-foreground font-medium">Quick Start Guide</span> • <span className="text-foreground font-medium">Configuration Steps</span> • <span className="text-foreground font-medium">Testing Checklist</span> • <span className="text-foreground font-medium">Troubleshooting Tips</span>
-                </p>
+                <p className="text-xs text-muted-foreground mb-3">Every automation you build includes:</p>
+                <div className="flex flex-wrap justify-center gap-3">
+                  <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-muted/30 border border-white/10 text-xs">
+                    <Play className="w-3 h-3 text-emerald-500" />
+                    <span className="text-foreground font-medium">Quick Start Guide</span>
+                  </span>
+                  <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-muted/30 border border-white/10 text-xs">
+                    <Settings className="w-3 h-3 text-emerald-500" />
+                    <span className="text-foreground font-medium">Configuration Steps</span>
+                  </span>
+                  <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-muted/30 border border-white/10 text-xs">
+                    <CheckCircle2 className="w-3 h-3 text-emerald-500" />
+                    <span className="text-foreground font-medium">Testing Checklist</span>
+                  </span>
+                  <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-muted/30 border border-white/10 text-xs">
+                    <Shield className="w-3 h-3 text-emerald-500" />
+                    <span className="text-foreground font-medium">Troubleshooting Tips</span>
+                  </span>
+                </div>
               </div>
               
-              {/* Automation Examples - Compact Pills */}
-              <div className="flex flex-wrap justify-center gap-2">
-                {['Lead Capture', 'Email Automation', 'Social Scheduling', 'Customer Onboarding', 'Data Processing', 'Report Generation'].map((item, index) => (
-                  <span 
-                    key={index}
-                    className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-600 dark:text-emerald-400"
-                  >
-                    {item}
-                  </span>
-                ))}
+              {/* Generate Both Option */}
+              <div className="text-center pt-4 border-t border-white/10">
+                <p className="text-xs text-muted-foreground">
+                  <span className="text-foreground font-medium">Pro Tip:</span> Generate for both platforms at once to compare and choose the best fit for your needs
+                </p>
               </div>
             </div>
           </div>
@@ -1401,21 +1563,21 @@ const Index = () => {
                   
                   {/* Supporting Text */}
                   <p className="text-muted-foreground leading-relaxed mb-6 max-w-2xl mx-auto">
-                    A plan on paper is potential. A workflow in motion is <span className="text-foreground font-medium">power</span>. When you implement your Jump, you transform strategic insight into systems that work for you—24/7, without hesitation, with precision you control.
+                    A plan on paper is potential. A <span className="text-blue-500 font-medium">Workflow</span> or <span className="text-yellow-500 font-medium">AI Agent</span> in motion is <span className="text-foreground font-medium">power</span>. When you implement your Jump, you transform strategic insight into systems that work for you—24/7, without hesitation, with precision you control.
                   </p>
                   
                   {/* Key Benefits - Horizontal */}
                   <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-muted-foreground mb-6">
                     <span className="flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-primary/60"></span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-blue-500/60"></span>
                       <span>Full ownership of your automations</span>
                     </span>
                     <span className="flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-primary/60"></span>
-                      <span>Customize every step</span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-yellow-500/60"></span>
+                      <span>Intelligent or linear—your choice</span>
                     </span>
                     <span className="flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-primary/60"></span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500/60"></span>
                       <span>Scale as you grow</span>
                     </span>
                   </div>
