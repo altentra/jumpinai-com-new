@@ -98,21 +98,37 @@ function PlatformBadge({ platform }: { platform: string }) {
     </Badge>
   );
 }
-// Automation type badge - shows workflow or AI agent
+// Automation type badge - shows workflow, AI agent, or automation (unknown)
 function AutomationTypeBadge({ type }: { type: string | null }) {
   const isAIAgent = type === 'ai-agent';
+  const isWorkflow = type === 'workflow';
+  const isUnknown = !isAIAgent && !isWorkflow;
+  
+  // Get proper styling based on type
+  const getBadgeClasses = () => {
+    if (isAIAgent) return "bg-yellow-500/10 border-yellow-500/30 text-yellow-600 dark:text-yellow-400";
+    if (isWorkflow) return "bg-blue-500/10 border-blue-500/30 text-blue-600 dark:text-blue-400";
+    return "bg-green-500/10 border-green-500/30 text-green-600 dark:text-green-400"; // Automation
+  };
+  
+  const getLabel = () => {
+    if (isAIAgent) return 'AI Agent';
+    if (isWorkflow) return 'Workflow';
+    return 'Automation';
+  };
+  
+  const IconComponent = isAIAgent ? Brain : isWorkflow ? Workflow : Bot;
+  
   return (
     <Badge 
       variant="outline" 
       className={cn(
         "text-xs font-medium px-2.5 py-0.5 gap-1.5",
-        isAIAgent 
-          ? "bg-yellow-500/10 border-yellow-500/30 text-yellow-600 dark:text-yellow-400" 
-          : "bg-blue-500/10 border-blue-500/30 text-blue-600 dark:text-blue-400"
+        getBadgeClasses()
       )}
     >
-      {isAIAgent ? <Brain className="w-3.5 h-3.5" /> : <Workflow className="w-3.5 h-3.5" />}
-      {isAIAgent ? 'AI Agent' : 'Workflow'}
+      <IconComponent className="w-3.5 h-3.5" />
+      {getLabel()}
     </Badge>
   );
 }

@@ -164,8 +164,19 @@ export function OpportunityCard({
   const generatedPlatform = generatedWorkflow?.platform || selectedPlatform;
   
   // Determine what type was built (from existing agent or generated workflow)
-  const builtType = existingAgent?.automation_type || generatedWorkflow?.automationType || 'workflow';
+  // Priority: generatedWorkflow (just built) → existingAgent (from DB) → selectedAutomationType (user's current choice)
+  const builtType = generatedWorkflow?.automationType || existingAgent?.automation_type || selectedAutomationType;
   const isAIAgent = builtType === 'ai-agent';
+  const isWorkflow = builtType === 'workflow';
+  
+  // Helper to get the correct label based on type
+  const getTypeLabel = (type: string | undefined | null): string => {
+    if (type === 'ai-agent') return 'AI Agent';
+    if (type === 'workflow') return 'Workflow';
+    return 'Automation'; // Fallback for unknown/undefined
+  };
+  
+  const typeLabel = getTypeLabel(builtType);
 
   return (
     <Card className={cn(
@@ -349,11 +360,11 @@ export function OpportunityCard({
                 </div>
                 <div>
                   <span className="font-semibold text-green-500 block">
-                    {isAIAgent ? 'AI Agent' : 'Workflow'} Generated & Saved!
+                    {typeLabel} Generated & Saved!
                   </span>
                   <span className="text-xs text-muted-foreground">
                     {hasBothPlatforms 
-                      ? `Both n8n and Make.com ${isAIAgent ? 'AI agents' : 'workflows'} are ready to download`
+                      ? `Both n8n and Make.com ${typeLabel.toLowerCase()}s are ready to download`
                       : `Ready to download and import into ${generatedPlatform === 'n8n' ? 'n8n' : 'Make.com'}`
                     }
                   </span>
@@ -365,7 +376,7 @@ export function OpportunityCard({
                 <div className="space-y-3">
                   <PlatformDownloadButton 
                     platform="n8n"
-                    automationType={builtType as 'workflow' | 'ai-agent'}
+                    automationType={builtType}
                     onClick={() => onDownload(
                       generatedWorkflow.workflows!.n8n!.workflow, 
                       generatedWorkflow.workflows!.n8n!.filename
@@ -373,7 +384,7 @@ export function OpportunityCard({
                   />
                   <PlatformDownloadButton 
                     platform="make"
-                    automationType={builtType as 'workflow' | 'ai-agent'}
+                    automationType={builtType}
                     onClick={() => onDownload(
                       generatedWorkflow.workflows!.make!.workflow, 
                       generatedWorkflow.workflows!.make!.filename
@@ -383,7 +394,7 @@ export function OpportunityCard({
               ) : (
                 <PlatformDownloadButton 
                   platform={generatedPlatform === 'make' ? 'make' : 'n8n'}
-                  automationType={builtType as 'workflow' | 'ai-agent'}
+                  automationType={builtType}
                   onClick={() => onDownload(generatedWorkflow.workflow, generatedWorkflow.filename || 'workflow.json')}
                 />
               )}
@@ -476,7 +487,22 @@ export function OpportunityCard({
             {/* Existing Agent Banner */}
             {(() => {
               const existingIsAIAgent = existingAgent.automation_type === 'ai-agent';
-              const existingTypeLabel = existingIsAIAgent ? 'AI Agent' : 'Workflow';
+              const existingIsWorkflow = existingAgent.automation_type === 'workflow';
+              const existingTypeLabel = getTypeLabel(existingAgent.automation_type);
+              
+              // Get colors based on type
+              const getIconBgColor = () => {
+                if (existingIsAIAgent) return "bg-yellow-500/20";
+                if (existingIsWorkflow) return "bg-blue-500/20";
+                return "bg-green-500/20"; // Automation
+              };
+              const getTextColor = () => {
+                if (existingIsAIAgent) return "text-yellow-500";
+                if (existingIsWorkflow) return "text-blue-500";
+                return "text-green-500"; // Automation
+              };
+              const IconComponent = existingIsAIAgent ? Brain : existingIsWorkflow ? Workflow : Bot;
+              
               return (
                 <div className={cn(
                   "p-5 rounded-xl",
@@ -487,19 +513,15 @@ export function OpportunityCard({
                   <div className="flex items-center gap-3 mb-4">
                     <div className={cn(
                       "p-2 rounded-full animate-pulse",
-                      existingIsAIAgent ? "bg-yellow-500/20" : "bg-blue-500/20"
+                      getIconBgColor()
                     )}>
-                      {existingIsAIAgent ? (
-                        <Brain className="w-5 h-5 text-yellow-500" />
-                      ) : (
-                        <Workflow className="w-5 h-5 text-blue-500" />
-                      )}
+                      <IconComponent className={cn("w-5 h-5", getTextColor())} />
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
                         <span className={cn(
                           "font-semibold block",
-                          existingIsAIAgent ? "text-yellow-500" : "text-blue-500"
+                          getTextColor()
                         )}>
                           {existingTypeLabel} Already Built!
                         </span>
@@ -515,7 +537,7 @@ export function OpportunityCard({
                     {/* Download Button - Platform and type specific */}
                     <PlatformDownloadButton 
                       platform={existingAgent.platform as 'n8n' | 'make'}
-                      automationType={existingIsAIAgent ? 'ai-agent' : 'workflow'}
+                      automationType={existingAgent.automation_type || undefined}
                       onClick={() => onDownload(existingAgent.workflow_json, existingAgent.workflow_filename || 'workflow.json')}
                     />
                 
@@ -561,7 +583,7 @@ export function OpportunityCard({
               size="sm"
             >
               <RefreshCw className="w-4 h-4 mr-2" />
-              Rebuild {existingAgent.automation_type === 'ai-agent' ? 'AI Agent' : 'Workflow'}
+              Rebuild {getTypeLabel(existingAgent.automation_type)}
             </Button>
           </div>
         ) : (

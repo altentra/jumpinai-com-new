@@ -1,26 +1,42 @@
-import { Download, Brain, Workflow } from "lucide-react";
+import { Download, Brain, Workflow, Bot } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface PlatformDownloadButtonProps {
   platform: "n8n" | "make";
-  automationType?: "workflow" | "ai-agent";
+  automationType?: "workflow" | "ai-agent" | string;
   onClick: () => void;
   className?: string;
 }
 
 export function PlatformDownloadButton({
   platform,
-  automationType = "workflow",
+  automationType,
   onClick,
   className,
 }: PlatformDownloadButtonProps) {
   const isN8n = platform === "n8n";
+  
+  // Standardized terminology:
+  // - "workflow" = Workflow (Blue)
+  // - "ai-agent" = AI Agent (Yellow)
+  // - undefined/unknown = Automation (Green)
   const isAIAgent = automationType === "ai-agent";
+  const isWorkflow = automationType === "workflow";
+  const isUnknown = !isAIAgent && !isWorkflow;
   
   // Build dynamic label
   const platformLabel = isN8n ? "n8n" : "Make.com";
-  const typeLabel = isAIAgent ? "AI Agent" : "Workflow";
-  const IconComponent = isAIAgent ? Brain : Workflow;
+  const typeLabel = isAIAgent ? "AI Agent" : isWorkflow ? "Workflow" : "Automation";
+  
+  // Icon based on type
+  const IconComponent = isAIAgent ? Brain : isWorkflow ? Workflow : Bot;
+  
+  // Color based on type
+  const getIconColor = () => {
+    if (isAIAgent) return "text-yellow-500";
+    if (isWorkflow) return "text-blue-500";
+    return "text-green-500"; // Automation
+  };
 
   return (
     <button
@@ -63,7 +79,7 @@ export function PlatformDownloadButton({
         {/* Type icon */}
         <IconComponent className={cn(
           "relative w-4 h-4 shrink-0",
-          isAIAgent ? "text-yellow-500" : "text-blue-500"
+          getIconColor()
         )} />
         
         <Download className="relative w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors shrink-0" />
