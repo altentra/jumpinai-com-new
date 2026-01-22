@@ -213,76 +213,38 @@ export const DashboardActivityGraph: React.FC<DashboardActivityGraphProps> = ({ 
               iconType="circle"
             />
             
-            {/* Automations area (back layer) - green */}
+            {/* Jumps area - blue */}
             <Area
               type="monotone"
-              dataKey="aiAgents"
-              stroke="hsl(142, 76%, 36%)"
+              dataKey="jumps"
+              stroke="hsl(217, 91%, 60%)"
               strokeWidth={2}
-              fill="url(#aiAgentsGradient)"
+              fill="url(#jumpsGradient)"
               dot={false}
               activeDot={{ 
                 r: 4, 
                 strokeWidth: 2,
                 stroke: 'hsl(var(--background))',
-                fill: 'hsl(142, 76%, 36%)',
-                filter: 'url(#softGlow)'
-              }}
-              animationDuration={1500}
-              animationEasing="ease-in-out"
-            />
-
-            {/* Analyzed jumps area - pink */}
-            <Area
-              type="monotone"
-              dataKey="analyzedJumps"
-              stroke="hsl(330, 81%, 60%)"
-              strokeWidth={2}
-              fill="url(#analyzedJumpsGradient)"
-              dot={false}
-              activeDot={{ 
-                r: 4, 
-                strokeWidth: 2,
-                stroke: 'hsl(var(--background))',
-                fill: 'hsl(330, 81%, 60%)',
-                filter: 'url(#softGlow)'
-              }}
-              animationDuration={1500}
-              animationEasing="ease-in-out"
-            />
-
-            {/* Alternative routes area - cyan */}
-            <Area
-              type="monotone"
-              dataKey="alternativeRoutes"
-              stroke="hsl(187, 85%, 53%)"
-              strokeWidth={2}
-              fill="url(#alternativeRoutesGradient)"
-              dot={false}
-              activeDot={{ 
-                r: 4, 
-                strokeWidth: 2,
-                stroke: 'hsl(var(--background))',
-                fill: 'hsl(187, 85%, 53%)',
+                fill: 'hsl(217, 91%, 60%)',
                 filter: 'url(#softGlow)'
               }}
               animationDuration={1500}
               animationEasing="ease-in-out"
             />
             
-            {/* Reroutes area - purple */}
+            {/* Components area - red */}
             <Area
               type="monotone"
-              dataKey="reroutes"
-              stroke="hsl(262, 83%, 58%)"
+              dataKey="components"
+              stroke="hsl(0, 84%, 60%)"
               strokeWidth={2}
-              fill="url(#reroutesGradient)"
+              fill="url(#componentsGradient)"
               dot={false}
               activeDot={{ 
                 r: 4, 
                 strokeWidth: 2,
                 stroke: 'hsl(var(--background))',
-                fill: 'hsl(262, 83%, 58%)',
+                fill: 'hsl(0, 84%, 60%)',
                 filter: 'url(#softGlow)'
               }}
               animationDuration={1500}
@@ -308,38 +270,76 @@ export const DashboardActivityGraph: React.FC<DashboardActivityGraphProps> = ({ 
               animationEasing="ease-in-out"
             />
             
-            {/* Components area - red */}
+            {/* Reroutes area - purple */}
             <Area
               type="monotone"
-              dataKey="components"
-              stroke="hsl(0, 84%, 60%)"
+              dataKey="reroutes"
+              stroke="hsl(262, 83%, 58%)"
               strokeWidth={2}
-              fill="url(#componentsGradient)"
+              fill="url(#reroutesGradient)"
               dot={false}
               activeDot={{ 
                 r: 4, 
                 strokeWidth: 2,
                 stroke: 'hsl(var(--background))',
-                fill: 'hsl(0, 84%, 60%)',
+                fill: 'hsl(262, 83%, 58%)',
                 filter: 'url(#softGlow)'
               }}
               animationDuration={1500}
               animationEasing="ease-in-out"
             />
-            
-            {/* Jumps area (front layer) - blue */}
+
+            {/* Alternative routes area - cyan */}
             <Area
               type="monotone"
-              dataKey="jumps"
-              stroke="hsl(217, 91%, 60%)"
+              dataKey="alternativeRoutes"
+              stroke="hsl(187, 85%, 53%)"
               strokeWidth={2}
-              fill="url(#jumpsGradient)"
+              fill="url(#alternativeRoutesGradient)"
               dot={false}
               activeDot={{ 
                 r: 4, 
                 strokeWidth: 2,
                 stroke: 'hsl(var(--background))',
-                fill: 'hsl(217, 91%, 60%)',
+                fill: 'hsl(187, 85%, 53%)',
+                filter: 'url(#softGlow)'
+              }}
+              animationDuration={1500}
+              animationEasing="ease-in-out"
+            />
+
+            {/* Analyzed jumps area - pink */}
+            <Area
+              type="monotone"
+              dataKey="analyzedJumps"
+              stroke="hsl(330, 81%, 60%)"
+              strokeWidth={2}
+              fill="url(#analyzedJumpsGradient)"
+              dot={false}
+              activeDot={{ 
+                r: 4, 
+                strokeWidth: 2,
+                stroke: 'hsl(var(--background))',
+                fill: 'hsl(330, 81%, 60%)',
+                filter: 'url(#softGlow)'
+              }}
+              animationDuration={1500}
+              animationEasing="ease-in-out"
+            />
+
+            {/* Automations area - green */}
+            <Area
+              type="monotone"
+              dataKey="aiAgents"
+              stroke="hsl(142, 76%, 36%)"
+              strokeWidth={2}
+              fill="url(#aiAgentsGradient)"
+              dot={false}
+              activeDot={{ 
+                r: 4, 
+                strokeWidth: 2,
+                stroke: 'hsl(var(--background))',
+                fill: 'hsl(142, 76%, 36%)',
                 filter: 'url(#softGlow)'
               }}
               animationDuration={1500}
