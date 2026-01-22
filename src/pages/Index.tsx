@@ -266,7 +266,7 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="text-center mb-8 sm:mb-12">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold gradient-text-primary mb-3 sm:mb-4 font-display px-4">
-              Your Complete AI Jump in 3 Powerful Tabs
+              Your Complete AI Jump in 3 Powerful Steps
             </h2>
             <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto px-4">
               Every Jump you generate is a comprehensive AI transformation package—strategically designed across three interconnected sections to take you from confusion to clarity to action.
