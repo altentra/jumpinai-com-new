@@ -162,10 +162,20 @@ const Hero = () => {
               </div>
             </div>
             
-            {/* Main H1 Title */}
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-5xl xl:text-6xl font-black mb-6 sm:mb-8 tracking-tight font-display leading-tight pb-2">
-              <span className="block gradient-text-primary">AI Adaptation Studio</span>
-              <span className="block gradient-text-primary mt-2 pb-1">that Clarifies and Builds Your Path Forward</span>
+            {/* Main H1 Title - Premium billion-dollar styling */}
+            <h1 className="text-[2.25rem] sm:text-[2.75rem] md:text-[3.25rem] lg:text-[2.75rem] xl:text-[3.5rem] font-black mb-6 sm:mb-8 tracking-[-0.02em] font-display leading-[1.1] pb-2">
+              <span 
+                className="block gradient-text-primary drop-shadow-[0_2px_10px_rgba(0,0,0,0.08)] dark:drop-shadow-[0_2px_20px_rgba(255,255,255,0.06)]"
+                style={{ textShadow: '0 4px 30px rgba(251, 191, 36, 0.15), 0 2px 10px rgba(0, 0, 0, 0.1)' }}
+              >
+                AI Adaptation Studio
+              </span>
+              <span 
+                className="block gradient-text-primary mt-2 pb-1 drop-shadow-[0_2px_10px_rgba(0,0,0,0.08)] dark:drop-shadow-[0_2px_20px_rgba(255,255,255,0.06)]"
+                style={{ textShadow: '0 4px 30px rgba(139, 92, 246, 0.12), 0 2px 10px rgba(0, 0, 0, 0.08)' }}
+              >
+                that Clarifies and Builds Your Path Forward
+              </span>
             </h1>
             
             {/* Body Text */}
