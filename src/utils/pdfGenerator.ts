@@ -1143,33 +1143,268 @@ export const generatePitchDeckPDF = (): void => {
 
   yPosition += tabHeight + 6;
 
-  // Implementation capability box (separate from tabs)
-  checkPageBreak(28);
-  setFillColor(colors.sectionBg);
-  pdf.rect(margin, yPosition, maxWidth, 22, 'F');
-  setDrawColor(colors.success);
+  // ================== IMPLEMENTATION CAPABILITY (Full Section) ==================
+  pdf.addPage();
+  yPosition = margin + 5;
+  addSectionHeader('Implementation Capability');
+  
+  // Introduction paragraph
+  addParagraph('Beyond strategy generation, JumpinAI takes users from insight to working automation systems. Users can analyze their completed Jumps to discover automation opportunities, then build downloadable workflow files with personalized instructions.', 9);
+  yPosition += 4;
+
+  // Two Automation Types heading
+  addSubsectionHeader('Two Automation Types', 10);
+  yPosition += 2;
+
+  // Workflows and AI Agents cards side by side
+  checkPageBreak(55);
+  const implCardWidth = (maxWidth - 4) / 2;
+  let implY = yPosition;
+
+  // Workflows Card (Blue theme)
+  setFillColor({ r: 239, g: 246, b: 255 }); // blue-50 equivalent
+  pdf.rect(margin, implY, implCardWidth, 50, 'F');
+  setDrawColor({ r: 59, g: 130, b: 246 }); // blue-500
+  pdf.setLineWidth(0.6);
+  pdf.rect(margin, implY, implCardWidth, 50, 'S');
+  
+  // Blue indicator dot
+  setFillColor({ r: 59, g: 130, b: 246 });
+  pdf.circle(margin + 6, implY + 8, 2.5, 'F');
+  
+  setTextColor(colors.heading);
+  pdf.setFontSize(10);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Workflows', margin + 12, implY + 10);
+  
+  setTextColor(colors.body);
+  pdf.setFontSize(8);
+  pdf.setFont('helvetica', 'normal');
+  const workflowDesc = wrapText('Linear automation sequences with predefined steps. Perfect for structured, repeatable processes that follow a clear path from trigger to completion.', implCardWidth - 10, 8);
+  pdf.text(workflowDesc, margin + 4, implY + 18);
+  
+  setTextColor(colors.muted);
+  pdf.setFontSize(7.5);
+  pdf.setFont('helvetica', 'italic');
+  pdf.text('Use cases:', margin + 4, implY + 35);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text('• Data synchronization', margin + 4, implY + 41);
+  pdf.text('• Email automation', margin + 4, implY + 46);
+
+  // AI Agents Card (Yellow/Gold theme)
+  setFillColor({ r: 254, g: 252, b: 232 }); // yellow-50 equivalent
+  pdf.rect(margin + implCardWidth + 4, implY, implCardWidth, 50, 'F');
+  setDrawColor({ r: 234, g: 179, b: 8 }); // yellow-500
+  pdf.setLineWidth(0.6);
+  pdf.rect(margin + implCardWidth + 4, implY, implCardWidth, 50, 'S');
+  
+  // Yellow indicator dot
+  setFillColor({ r: 234, g: 179, b: 8 });
+  pdf.circle(margin + implCardWidth + 4 + 6, implY + 8, 2.5, 'F');
+  
+  setTextColor(colors.heading);
+  pdf.setFontSize(10);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('AI Agents', margin + implCardWidth + 4 + 12, implY + 10);
+  
+  setTextColor(colors.body);
+  pdf.setFontSize(8);
+  pdf.setFont('helvetica', 'normal');
+  const agentDesc = wrapText('Autonomous systems that reason, adapt, and make decisions. Handle complex, context-dependent tasks requiring judgment and dynamic responses.', implCardWidth - 10, 8);
+  pdf.text(agentDesc, margin + implCardWidth + 4 + 4, implY + 18);
+  
+  setTextColor(colors.muted);
+  pdf.setFontSize(7.5);
+  pdf.setFont('helvetica', 'italic');
+  pdf.text('Use cases:', margin + implCardWidth + 4 + 4, implY + 35);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text('• Lead qualification', margin + implCardWidth + 4 + 4, implY + 41);
+  pdf.text('• Research & analysis', margin + implCardWidth + 4 + 4, implY + 46);
+
+  yPosition = implY + 56;
+
+  // Two Platform Options heading
+  addSubsectionHeader('Two Platform Options', 10);
+  yPosition += 2;
+
+  // n8n and Make.com cards side by side
+  checkPageBreak(55);
+  implY = yPosition;
+
+  // n8n Card (Orange/Amber theme)
+  setFillColor({ r: 255, g: 251, b: 235 }); // amber-50 equivalent
+  pdf.rect(margin, implY, implCardWidth, 50, 'F');
+  setDrawColor({ r: 245, g: 158, b: 11 }); // amber-500
+  pdf.setLineWidth(0.6);
+  pdf.rect(margin, implY, implCardWidth, 50, 'S');
+  
+  setTextColor(colors.heading);
+  pdf.setFontSize(10);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('n8n', margin + 4, implY + 10);
+  
+  setTextColor({ r: 245, g: 158, b: 11 });
+  pdf.setFontSize(7);
+  pdf.setFont('helvetica', 'italic');
+  pdf.text('Self-Hosted / Open-Source', margin + 17, implY + 10);
+  
+  setTextColor(colors.body);
+  pdf.setFontSize(8);
+  pdf.setFont('helvetica', 'normal');
+  const n8nDesc = wrapText('Technical users seeking full control and customization. Self-hosted option for maximum data privacy and unlimited executions without per-operation costs.', implCardWidth - 10, 8);
+  pdf.text(n8nDesc, margin + 4, implY + 18);
+  
+  setTextColor(colors.muted);
+  pdf.setFontSize(7.5);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text('• Full code access', margin + 4, implY + 35);
+  pdf.text('• Maximum customization', margin + 4, implY + 41);
+  pdf.text('• On-premise deployment', margin + 4, implY + 47);
+
+  // Make.com Card (Violet/Purple theme)
+  setFillColor({ r: 245, g: 243, b: 255 }); // violet-50 equivalent
+  pdf.rect(margin + implCardWidth + 4, implY, implCardWidth, 50, 'F');
+  setDrawColor({ r: 139, g: 92, b: 246 }); // violet-500
+  pdf.setLineWidth(0.6);
+  pdf.rect(margin + implCardWidth + 4, implY, implCardWidth, 50, 'S');
+  
+  setTextColor(colors.heading);
+  pdf.setFontSize(10);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Make.com', margin + implCardWidth + 4 + 4, implY + 10);
+  
+  setTextColor({ r: 139, g: 92, b: 246 });
+  pdf.setFontSize(7);
+  pdf.setFont('helvetica', 'italic');
+  pdf.text('Cloud-Hosted / Visual Builder', margin + implCardWidth + 4 + 27, implY + 10);
+  
+  setTextColor(colors.body);
+  pdf.setFontSize(8);
+  pdf.setFont('helvetica', 'normal');
+  const makeDesc = wrapText('Non-technical users seeking intuitive visual automation. Cloud-hosted with drag-and-drop interface—no coding required for powerful automations.', implCardWidth - 10, 8);
+  pdf.text(makeDesc, margin + implCardWidth + 4 + 4, implY + 18);
+  
+  setTextColor(colors.muted);
+  pdf.setFontSize(7.5);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text('• Drag-and-drop builder', margin + implCardWidth + 4 + 4, implY + 35);
+  pdf.text('• No coding required', margin + implCardWidth + 4 + 4, implY + 41);
+  pdf.text('• Quick setup & deployment', margin + implCardWidth + 4 + 4, implY + 47);
+
+  yPosition = implY + 56;
+
+  // Implementation Process
+  addSubsectionHeader('From Strategy to Automation', 10);
+  yPosition += 3;
+
+  checkPageBreak(35);
+  const processWidth = (maxWidth - 8) / 3;
+  const processY = yPosition;
+
+  // Step 1: Analyze
+  setFillColor(colors.cardBg);
+  pdf.rect(margin, processY, processWidth, 30, 'F');
+  setDrawColor(colors.primaryLight);
   pdf.setLineWidth(0.5);
-  pdf.rect(margin, yPosition, maxWidth, 22, 'S');
+  pdf.rect(margin, processY, processWidth, 30, 'S');
+  
+  setFillColor(colors.primary);
+  pdf.circle(margin + processWidth / 2, processY + 8, 4, 'F');
+  setTextColor(colors.white);
+  pdf.setFontSize(9);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('1', margin + processWidth / 2 - 1.5, processY + 10);
+  
+  setTextColor(colors.heading);
+  pdf.setFontSize(8.5);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Analyze', margin + processWidth / 2, processY + 18, { align: 'center' });
+  
+  setTextColor(colors.muted);
+  pdf.setFontSize(7);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text('AI discovers', margin + processWidth / 2, processY + 23, { align: 'center' });
+  pdf.text('opportunities', margin + processWidth / 2, processY + 27, { align: 'center' });
+
+  // Step 2: Choose
+  setFillColor(colors.cardBg);
+  pdf.rect(margin + processWidth + 4, processY, processWidth, 30, 'F');
+  setDrawColor(colors.primaryLight);
+  pdf.setLineWidth(0.5);
+  pdf.rect(margin + processWidth + 4, processY, processWidth, 30, 'S');
+  
+  setFillColor(colors.primary);
+  pdf.circle(margin + processWidth + 4 + processWidth / 2, processY + 8, 4, 'F');
+  setTextColor(colors.white);
+  pdf.setFontSize(9);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('2', margin + processWidth + 4 + processWidth / 2 - 1.5, processY + 10);
+  
+  setTextColor(colors.heading);
+  pdf.setFontSize(8.5);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Choose', margin + processWidth + 4 + processWidth / 2, processY + 18, { align: 'center' });
+  
+  setTextColor(colors.muted);
+  pdf.setFontSize(7);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text('Select type &', margin + processWidth + 4 + processWidth / 2, processY + 23, { align: 'center' });
+  pdf.text('platform', margin + processWidth + 4 + processWidth / 2, processY + 27, { align: 'center' });
+
+  // Step 3: Build & Download
+  setFillColor(colors.cardBg);
+  pdf.rect(margin + 2 * (processWidth + 4), processY, processWidth, 30, 'F');
+  setDrawColor(colors.primaryLight);
+  pdf.setLineWidth(0.5);
+  pdf.rect(margin + 2 * (processWidth + 4), processY, processWidth, 30, 'S');
+  
+  setFillColor(colors.primary);
+  pdf.circle(margin + 2 * (processWidth + 4) + processWidth / 2, processY + 8, 4, 'F');
+  setTextColor(colors.white);
+  pdf.setFontSize(9);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('3', margin + 2 * (processWidth + 4) + processWidth / 2 - 1.5, processY + 10);
+  
+  setTextColor(colors.heading);
+  pdf.setFontSize(8.5);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Build & Download', margin + 2 * (processWidth + 4) + processWidth / 2, processY + 18, { align: 'center' });
+  
+  setTextColor(colors.muted);
+  pdf.setFontSize(7);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text('Get ready-to-use', margin + 2 * (processWidth + 4) + processWidth / 2, processY + 23, { align: 'center' });
+  pdf.text('workflow files', margin + 2 * (processWidth + 4) + processWidth / 2, processY + 27, { align: 'center' });
+
+  yPosition = processY + 36;
+
+  // Value Proposition highlight box
+  checkPageBreak(22);
+  setFillColor(colors.highlightBg);
+  pdf.rect(margin, yPosition, maxWidth, 18, 'F');
+  setDrawColor(colors.success);
+  pdf.setLineWidth(0.6);
+  pdf.rect(margin, yPosition, maxWidth, 18, 'S');
   
   setTextColor(colors.heading);
   pdf.setFontSize(9);
   pdf.setFont('helvetica', 'bold');
-  pdf.text('Implementation Capability', margin + 4, yPosition + 8);
+  pdf.text('Strategy to Execution—Complete Loop', margin + maxWidth / 2, yPosition + 7, { align: 'center' });
   
   setTextColor(colors.body);
-  pdf.setFontSize(7.5);
+  pdf.setFontSize(8);
   pdf.setFont('helvetica', 'normal');
-  const implText = wrapText('Beyond strategy: Users can analyze completed Jumps to discover automation opportunities and build AI agents with downloadable workflows for n8n and Make.com.', maxWidth - 8, 7.5);
-  pdf.text(implText, margin + 4, yPosition + 15);
+  const valueText = wrapText('From initial goals to running automation systems. No other platform takes users from insight through strategy to working, downloadable automation files with personalized setup instructions.', maxWidth - 10, 8);
+  pdf.text(valueText, margin + 5, yPosition + 13);
   
-  yPosition += 28;
+  yPosition += 24;
 
-  // Key Differentiators
-  addSubsectionHeader('Key Differentiators', 10);
+  // Key Differentiators heading before Market Opportunity
+  addSubsectionHeader('Core Platform Differentiators', 10);
   addBullet('Hyper-personalization at scale using multi-model AI orchestration (xAI, ChatGPT-5, Claude, Gemini)', 8.5);
   addBullet('True adaptability with multi-level clarifications and alternative routes at both Overview and Plan levels', 8.5);
   addBullet('Complete transformation in ~2 minutes, not months of expensive consulting', 8.5);
-  addBullet('Implementation capability—analyze Jumps to build downloadable workflows for n8n and Make.com with personalized instructions', 8.5);
+  addBullet('Full implementation path—from strategic plan to downloadable workflows and AI agents', 8.5);
 
   // ================== MARKET OPPORTUNITY ==================
   pdf.addPage();
@@ -1791,7 +2026,7 @@ export const generatePitchDeckPDF = (): void => {
   setTextColor(colors.body);
   pdf.setFontSize(7.5);
   pdf.setFont('helvetica', 'normal');
-  const adv2 = wrapText('A complete solution combining strategic overview, adaptive planning, execution tools, and ongoing AI coaching in one integrated platform. We deliver the complete journey from insight to implementation.', advCardWidth - 6, 7.5);
+  const adv2 = wrapText('A complete solution combining strategic overview with alternative routes, adaptive planning, execution tools, and full Implementation capability—analyze Jumps to build downloadable workflows for n8n and Make.com. From insight to running automation systems.', advCardWidth - 6, 7.5);
   pdf.text(adv2, margin + advCardWidth + 4 + 3, advY + 14);
 
   advY += advCardHeight + 4;
@@ -1806,12 +2041,12 @@ export const generatePitchDeckPDF = (): void => {
   setTextColor(colors.heading);
   pdf.setFontSize(9);
   pdf.setFont('helvetica', 'bold');
-  pdf.text('Speed + Simplicity + Depth', margin + 3, advY + 7);
+  pdf.text('Speed + Simplicity + Depth + Action', margin + 3, advY + 7);
   
   setTextColor(colors.body);
   pdf.setFontSize(7.5);
   pdf.setFont('helvetica', 'normal');
-  const adv3 = wrapText('Generate comprehensive 3-tab transformation blueprints in 2 minutes from just 2 questions. No competitor matches this combination of speed, ease-of-use, and depth of personalization. We\'ve cracked the code on making sophistication simple.', advCardWidth - 6, 7.5);
+  const adv3 = wrapText('Generate comprehensive transformation blueprints in 2 minutes from just 2 questions—plus the ability to build downloadable AI agent workflows from completed Jumps. Speed, ease-of-use, depth, and actionable implementation.', advCardWidth - 6, 7.5);
   pdf.text(adv3, margin + 3, advY + 14);
 
   // Card 4: Scalable AI Architecture

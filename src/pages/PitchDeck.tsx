@@ -965,8 +965,8 @@ const PitchDeck = () => {
                   <div className="flex items-start gap-2">
                     <span className="text-primary mt-1">•</span>
                     <div>
-                      <div className="text-sm font-semibold text-foreground mb-1">First-Mover Advantage</div>
-                      <div className="text-xs text-muted-foreground">Capture market before competition emerges</div>
+                      <div className="text-sm font-semibold text-foreground mb-1">Strong Market Timing</div>
+                      <div className="text-xs text-muted-foreground">AI adoption urgency at all-time high—enterprises mandating transformation</div>
                     </div>
                   </div>
                   
