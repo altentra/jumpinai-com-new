@@ -144,7 +144,7 @@ const Hero = () => {
           {/* Left Content */}
           <div className="animate-fade-in-up text-center lg:text-left">
             {/* Mini-Tagline */}
-            <div className="flex justify-center lg:justify-start mb-6 sm:mb-8 mt-20 sm:mt-24 md:mt-28 lg:mt-20">
+            <div className="flex justify-center lg:justify-start mb-6 sm:mb-8 mt-12 sm:mt-14 md:mt-16 lg:mt-10">
               <div className="relative group inline-block z-10">
                 {/* Liquid glass glow effect */}
                 <div className="absolute -inset-0.5 bg-gradient-to-r from-white/15 via-white/20 to-white/15 rounded-full blur-md opacity-40 group-hover:opacity-60 transition duration-500"></div>
