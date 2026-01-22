@@ -1706,7 +1706,7 @@ const Index = () => {
                       </div>
                     </div>
                     <p className="text-sm text-muted-foreground flex-1 leading-relaxed">
-                      Every Jump you create is your commitment to transformation. You're not testing the waters—you're <strong className="text-foreground">diving in with a plan</strong>. And we make sure you land exactly where you intended.
+                      Every Jump you create is your commitment to transformation. You're not testing the waters—you're <strong className="text-foreground">diving in with a plan</strong>. And when you're ready, we help you turn that plan into automated workflows and AI agents that work for you.
                     </p>
                   </div>
                 </div>
@@ -1745,7 +1745,7 @@ const Index = () => {
                   <div className="relative z-10">
                     <blockquote className="text-center">
                       <p className="text-lg sm:text-xl lg:text-2xl text-foreground font-display leading-relaxed italic font-medium">
-                        The moment you jump, momentum takes over. Gravity pulls you forward. There's no going back—only the landing ahead.{' '}
+                        The moment you jump, momentum takes over. From strategy to implementation, from plan to automation—there's no going back, only the landing ahead.{' '}
                         <span className="gradient-text-primary font-bold not-italic">Make it count.</span>
                       </p>
                     </blockquote>
@@ -1809,7 +1809,7 @@ const Index = () => {
                         AI tools are everywhere. Tutorials are endless. But a clear path forward? That's rare. Everyone talks about what AI can do—but few show you how to actually use it for your specific goals.
                       </p>
                       <p className="text-xs text-muted-foreground/80 leading-relaxed">
-                        We give you a complete, structured plan—not generic advice, but a real roadmap built around what you're trying to achieve.
+                        We give you a complete, structured plan—not generic advice, but a real roadmap built around what you're trying to achieve. And when you're ready, we help you implement it with automated workflows and AI agents.
                       </p>
                     </div>
                   </div>
@@ -1887,7 +1887,7 @@ const Index = () => {
                       <h3 className="text-lg font-bold font-display">What Makes Us Different</h3>
                     </div>
                     <p className="text-sm text-muted-foreground leading-relaxed">
-                      Others give you tools and leave you to figure out the rest. We give you direction. Every Jump is a complete strategic framework—overview, adaptive plan, and curated resources—designed to eliminate guesswork and accelerate execution. It's not about having more options; it's about making the right moves. We turn AI potential into actionable progress, so you're not experimenting—you're building with purpose and a clear path forward.
+                      Others give you tools and leave you to figure out the rest. We give you direction—and execution. Every Jump is a complete strategic framework—overview, adaptive plan, and curated resources—designed to eliminate guesswork and accelerate implementation. Then we help you build automated workflows and AI agents that turn your strategy into systems that work for you. It's not about having more options; it's about making the right moves and automating them.
                     </p>
                   </div>
                 </div>
@@ -1943,7 +1943,7 @@ const Index = () => {
                         <span>Built for Action</span>
                       </div>
                       <p className="text-xs text-muted-foreground pl-4">
-                        This isn't just ideas. It's actionable strategy designed to help you make real progress on your goals.
+                        This isn't just ideas. It's actionable strategy with implementation built in—from planning to automated workflows and AI agents.
                       </p>
                     </div>
                   </div>
@@ -1957,7 +1957,7 @@ const Index = () => {
             {/* Bottom CTA Message */}
             <div className="text-center mt-6">
               <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
-                While others talk about what's possible, <span className="font-semibold text-foreground">we show you exactly how to get there.</span>
+                While others talk about what's possible, <span className="font-semibold text-foreground">we show you exactly how to get there—and build the systems to make it happen.</span>
               </p>
             </div>
           </div>
@@ -2117,7 +2117,7 @@ const Index = () => {
                   </AccordionTrigger>
                   <AccordionContent className="px-5 sm:px-6 pb-4 pt-0">
                     <p className="text-sm text-muted-foreground leading-relaxed">
-                      A Jump is your complete AI transformation blueprint delivered in 3 comprehensive tabs: Overview (executive summary, situation analysis, strategic vision & roadmap), Plan (detailed action steps with multi-level clarification up to 4 levels deep and 3 alternative routes per step), and Tools & Prompts (9 tool-prompt combinations, each with a main tool plus 2 alternatives and ready-to-use prompts with guidance).
+                      A Jump is your complete AI adaptation blueprint delivered in 3 comprehensive tabs: Overview (executive summary, situation analysis, strategic vision & roadmap), Plan (detailed action steps with multi-level clarification up to 4 levels deep and 3 alternative routes per step), and Tools & Prompts (9 tool-prompt combinations, each with a main tool plus 2 alternatives and ready-to-use prompts with guidance). Plus, our Implementation feature lets you build automated workflows and AI agents from your plan, exportable to n8n or Make.com.
                     </p>
                   </AccordionContent>
                 </AccordionItem>
@@ -2184,7 +2184,7 @@ const Index = () => {
                   </AccordionTrigger>
                   <AccordionContent className="px-5 sm:px-6 pb-4 pt-0">
                     <p className="text-sm text-muted-foreground leading-relaxed">
-                      Not at all. Every component of your Jump - from the strategic roadmap to the tool-prompt combinations - is designed for business professionals without technical backgrounds. We provide clear, step-by-step guidance that anyone can follow.
+                      Not at all. Every component of your Jump - from the strategic roadmap to the tool-prompt combinations and even building automated workflows and AI agents - is designed for business professionals without technical backgrounds. We provide clear, step-by-step guidance that anyone can follow, and exports work seamlessly with visual platforms like n8n and Make.com.
                     </p>
                   </AccordionContent>
                 </AccordionItem>
