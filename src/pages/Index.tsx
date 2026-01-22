@@ -1072,6 +1072,9 @@ const Index = () => {
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold gradient-text-primary mb-3 sm:mb-4 font-display">
               Intelligent Features That Evolve With Your Progress
             </h2>
+            <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto mb-8">
+              Shape every Jump with precision. These adaptive tools help you refine your strategic plan—go deeper, pivot directions, or generate the exact resources you need at any step.
+            </p>
             
             {/* Explore Alternative Routes Feature - Relocated */}
             <div className="max-w-4xl mx-auto mb-10">
@@ -1079,7 +1082,7 @@ const Index = () => {
                 Seeking a different strategic direction? Instantly explore alternative approaches directly from your Overview tab—generate up to 12 distinct pathways and select the one that perfectly aligns with your vision.
               </p>
               
-              {/* Main Card Frame */}
+              {/* Main Card Frame - CYAN color theme for Alternative Routes */}
               <div 
                 ref={exploreCardRef}
                 className="group relative rounded-3xl transition-all duration-700 ease-out"
@@ -1088,14 +1091,14 @@ const Index = () => {
                   transform: `translateY(${(1 - Math.min(1, exploreCardProgress * 1.5)) * 50}px) scale(${0.95 + Math.min(1, exploreCardProgress * 1.5) * 0.05})`
                 }}
               >
-                {/* Liquid glass border wrapper */}
-                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/[0.03] via-white/[0.01] to-white/[0.03] p-[1px]">
+                {/* Liquid glass border wrapper - Cyan accent */}
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-cyan-500/[0.08] via-cyan-400/[0.03] to-cyan-500/[0.08] p-[1px]">
                   <div className="absolute inset-0 rounded-3xl bg-card"></div>
                 </div>
                 
-                <div className="relative bg-card rounded-3xl p-6 lg:p-8 shadow-modern hover:shadow-modern-lg transition-all duration-500 border border-white/10 hover:border-white/20 overflow-hidden">
-                  {/* Subtle glass overlay */}
-                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/[0.02] via-transparent to-white/[0.01] pointer-events-none"></div>
+                <div className="relative bg-card rounded-3xl p-6 lg:p-8 shadow-modern hover:shadow-modern-lg transition-all duration-500 border border-cyan-500/20 hover:border-cyan-500/40 overflow-hidden">
+                  {/* Subtle glass overlay - Cyan tint */}
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-cyan-500/[0.02] via-transparent to-cyan-400/[0.01] pointer-events-none"></div>
                   
                   <div className="relative z-10">
                     {/* Feature Button Display */}
@@ -1108,10 +1111,10 @@ const Index = () => {
                       }}
                     >
                       <div className="relative group/explore">
-                        <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/40 via-accent/30 to-primary/40 rounded-[2.5rem] blur-md opacity-40 group-hover/explore:opacity-60 transition duration-500"></div>
-                        <div className="relative flex items-center gap-3 px-6 py-3 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2.5rem] border border-primary/40 transition-all duration-300 overflow-hidden shadow-lg shadow-primary/10 group-hover/explore:shadow-xl group-hover/explore:shadow-primary/20 group-hover/explore:border-primary/60">
+                        <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-500/40 via-cyan-400/30 to-cyan-500/40 rounded-[2.5rem] blur-md opacity-40 group-hover/explore:opacity-60 transition duration-500"></div>
+                        <div className="relative flex items-center gap-3 px-6 py-3 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2.5rem] border border-cyan-500/40 transition-all duration-300 overflow-hidden shadow-lg shadow-cyan-500/10 group-hover/explore:shadow-xl group-hover/explore:shadow-cyan-500/20 group-hover/explore:border-cyan-500/60">
                           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/explore:translate-x-full transition-transform duration-1000"></div>
-                          <Route className="relative w-5 h-5 text-primary" />
+                          <Route className="relative w-5 h-5 text-cyan-500" />
                           <span className="relative text-lg font-bold text-foreground whitespace-nowrap">Explore Alternative Routes</span>
                         </div>
                       </div>
@@ -1132,19 +1135,19 @@ const Index = () => {
                       </p>
                     </div>
                     
-                    {/* Visual Flow - Cards appear sequentially from right to left */}
+                    {/* Visual Flow - Cards appear sequentially from right to left - Cyan theme */}
                     <div className="grid md:grid-cols-3 gap-4 mb-6">
                       {/* Card 1 - Generate Alternatives */}
                       <div 
                         ref={exploreFlow1Ref}
-                        className="glass bg-muted/30 p-4 rounded-xl border border-primary/15 backdrop-blur-sm text-center transition-all duration-700 ease-out hover:border-primary/30 hover:bg-muted/40 hover:shadow-lg hover:shadow-primary/5"
+                        className="glass bg-cyan-500/[0.05] p-4 rounded-xl border border-cyan-500/15 backdrop-blur-sm text-center transition-all duration-700 ease-out hover:border-cyan-500/30 hover:bg-cyan-500/[0.08] hover:shadow-lg hover:shadow-cyan-500/5"
                         style={{
                           opacity: Math.max(0, Math.min(1, (exploreFlow1Progress - 0.2) * 3)),
                           transform: `translateX(${(1 - Math.max(0, Math.min(1, (exploreFlow1Progress - 0.2) * 3))) * 120}px) scale(${0.9 + Math.max(0, Math.min(1, (exploreFlow1Progress - 0.2) * 3)) * 0.1})`
                         }}
                       >
-                        <div className="w-8 h-8 mx-auto mb-2 rounded-lg bg-primary/10 flex items-center justify-center transition-transform duration-300 hover:scale-110">
-                          <Route className="w-4 h-4 text-primary" />
+                        <div className="w-8 h-8 mx-auto mb-2 rounded-lg bg-cyan-500/10 flex items-center justify-center transition-transform duration-300 hover:scale-110">
+                          <Route className="w-4 h-4 text-cyan-500" />
                         </div>
                         <h4 className="font-semibold text-sm mb-1">Generate Alternatives</h4>
                         <p className="text-xs text-muted-foreground">Click to get 3 distinct strategic paths</p>
@@ -1153,14 +1156,14 @@ const Index = () => {
                       {/* Card 2 - Select & Generate */}
                       <div 
                         ref={exploreFlow2Ref}
-                        className="glass bg-muted/30 p-4 rounded-xl border border-primary/15 backdrop-blur-sm text-center transition-all duration-700 ease-out hover:border-primary/30 hover:bg-muted/40 hover:shadow-lg hover:shadow-primary/5"
+                        className="glass bg-cyan-500/[0.05] p-4 rounded-xl border border-cyan-500/15 backdrop-blur-sm text-center transition-all duration-700 ease-out hover:border-cyan-500/30 hover:bg-cyan-500/[0.08] hover:shadow-lg hover:shadow-cyan-500/5"
                         style={{
                           opacity: Math.max(0, Math.min(1, (exploreFlow2Progress - 0.3) * 3)),
                           transform: `translateX(${(1 - Math.max(0, Math.min(1, (exploreFlow2Progress - 0.3) * 3))) * 120}px) scale(${0.9 + Math.max(0, Math.min(1, (exploreFlow2Progress - 0.3) * 3)) * 0.1})`
                         }}
                       >
-                        <div className="w-8 h-8 mx-auto mb-2 rounded-lg bg-primary/10 flex items-center justify-center transition-transform duration-300 hover:scale-110">
-                          <Sparkles className="w-4 h-4 text-primary" />
+                        <div className="w-8 h-8 mx-auto mb-2 rounded-lg bg-cyan-500/10 flex items-center justify-center transition-transform duration-300 hover:scale-110">
+                          <Sparkles className="w-4 h-4 text-cyan-500" />
                         </div>
                         <h4 className="font-semibold text-sm mb-1">Select & Generate</h4>
                         <p className="text-xs text-muted-foreground">One click creates a complete new Jump</p>
@@ -1169,14 +1172,14 @@ const Index = () => {
                       {/* Card 3 - Infinite Exploration */}
                       <div 
                         ref={exploreFlow3Ref}
-                        className="glass bg-muted/30 p-4 rounded-xl border border-primary/15 backdrop-blur-sm text-center transition-all duration-700 ease-out hover:border-primary/30 hover:bg-muted/40 hover:shadow-lg hover:shadow-primary/5"
+                        className="glass bg-cyan-500/[0.05] p-4 rounded-xl border border-cyan-500/15 backdrop-blur-sm text-center transition-all duration-700 ease-out hover:border-cyan-500/30 hover:bg-cyan-500/[0.08] hover:shadow-lg hover:shadow-cyan-500/5"
                         style={{
                           opacity: Math.max(0, Math.min(1, (exploreFlow3Progress - 0.4) * 3)),
                           transform: `translateX(${(1 - Math.max(0, Math.min(1, (exploreFlow3Progress - 0.4) * 3))) * 120}px) scale(${0.9 + Math.max(0, Math.min(1, (exploreFlow3Progress - 0.4) * 3)) * 0.1})`
                         }}
                       >
-                        <div className="w-8 h-8 mx-auto mb-2 rounded-lg bg-primary/10 flex items-center justify-center transition-transform duration-300 hover:scale-110">
-                          <GitBranch className="w-4 h-4 text-primary" />
+                        <div className="w-8 h-8 mx-auto mb-2 rounded-lg bg-cyan-500/10 flex items-center justify-center transition-transform duration-300 hover:scale-110">
+                          <GitBranch className="w-4 h-4 text-cyan-500" />
                         </div>
                         <h4 className="font-semibold text-sm mb-1">Infinite Exploration</h4>
                         <p className="text-xs text-muted-foreground">Keep branching to find your optimal path</p>
@@ -1192,39 +1195,39 @@ const Index = () => {
                         transform: `translateX(${(1 - Math.max(0, Math.min(1, (exploreBenefitProgress - 0.5) * 3))) * 60}px)`
                       }}
                     >
-                      <Compass className="w-4 h-4 text-primary" />
+                      <Compass className="w-4 h-4 text-cyan-500" />
                       <span>Your exploration trail is tracked—never lose sight of where you've been</span>
                     </div>
                   </div>
                 </div>
                 
-                {/* Subtle white back shadow */}
-                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-gray-800 to-black dark:from-white dark:to-gray-300 opacity-20 group-hover:opacity-40 transition-opacity duration-500 -z-10 blur-lg"></div>
+                {/* Subtle cyan back shadow */}
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-cyan-600 to-cyan-400 opacity-10 group-hover:opacity-20 transition-opacity duration-500 -z-10 blur-xl"></div>
               </div>
             </div>
             
-            <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto mt-10">
-              JumpinAI empowers you to refine every step with precision. Go deeper, pivot strategically, or arm yourself with the exact resources you need—all seamlessly integrated into your workflow.
-            </p>
           </div>
 
-          {/* Feature 1: CLARIFY - Multi-Level Breakdown */}
+          {/* Feature 1: CLARIFY - Multi-Level Breakdown - ORANGE color theme */}
           <div ref={clarificationRef} className="max-w-5xl mx-auto mb-12">
             <div 
-              className="glass rounded-2xl p-6 lg:p-8 border border-primary/20 shadow-lg backdrop-blur-xl transition-all duration-700 ease-out"
+              className="glass rounded-2xl p-6 lg:p-8 border border-orange-500/20 shadow-lg backdrop-blur-xl transition-all duration-700 ease-out"
               style={{
                 opacity: Math.min(1, clarificationProgress * 1.3),
                 transform: `translateY(${(1 - Math.min(1, clarificationProgress * 1.3)) * 40}px)`
               }}
             >
+              {/* Subtle orange glass overlay */}
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-orange-500/[0.02] via-transparent to-orange-400/[0.01] pointer-events-none"></div>
+              
               {/* Feature Header */}
-              <div className="text-center mb-10">
+              <div className="text-center mb-10 relative z-10">
                 <div className="flex justify-center mb-6">
                   <div className="relative group/clarify">
-                    <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/40 via-accent/30 to-primary/40 rounded-[2.5rem] blur-md opacity-40 transition duration-500"></div>
-                    <div className="relative flex items-center gap-3 px-8 py-4 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2.5rem] border border-primary/40 transition-all duration-300 overflow-hidden shadow-lg shadow-primary/10">
+                    <div className="absolute -inset-0.5 bg-gradient-to-r from-orange-500/40 via-orange-400/30 to-orange-500/40 rounded-[2.5rem] blur-md opacity-40 transition duration-500"></div>
+                    <div className="relative flex items-center gap-3 px-8 py-4 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2.5rem] border border-orange-500/40 transition-all duration-300 overflow-hidden shadow-lg shadow-orange-500/10">
                       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full transition-transform duration-1000"></div>
-                      <Sparkles className="relative w-6 h-6 text-primary" />
+                      <Sparkles className="relative w-6 h-6 text-orange-500" />
                       <span className="relative text-2xl font-bold text-foreground whitespace-nowrap">Clarify</span>
                     </div>
                   </div>
@@ -1237,29 +1240,29 @@ const Index = () => {
                 </p>
               </div>
 
-              {/* Multi-Level Breakdown */}
-              <div className="space-y-3 sm:space-y-4">
+              {/* Multi-Level Breakdown - Orange theme */}
+              <div className="space-y-3 sm:space-y-4 relative z-10">
                 {/* Level 0 */}
                 <div 
                   ref={level0Ref}
-                  className="relative pl-4 sm:pl-6 border-l-2 border-primary/40 transition-all duration-700 ease-out"
+                  className="relative pl-4 sm:pl-6 border-l-2 border-orange-500/40 transition-all duration-700 ease-out"
                   style={{
                     opacity: level0Progress,
                     transform: `translateX(${(1 - level0Progress) * 80}px) scale(${0.9 + level0Progress * 0.1})`
                   }}
                 >
-                  <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full backdrop-blur-xl bg-primary ring-2 ring-primary/30 flex items-center justify-center text-xs font-bold text-primary-foreground">
+                  <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full backdrop-blur-xl bg-orange-500 ring-2 ring-orange-500/30 flex items-center justify-center text-xs font-bold text-white">
                     0
                   </div>
-                  <div className="glass bg-muted/30 p-3 sm:p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
+                  <div className="glass bg-orange-500/[0.05] p-3 sm:p-4 rounded-lg border border-orange-500/20 backdrop-blur-sm shadow-sm">
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-2">
                       <h4 className="font-bold text-xs sm:text-sm">Level 0: Original Generated Plan</h4>
-                      <span className="text-xs px-2 py-0.5 rounded-full backdrop-blur-xl bg-primary/20 border border-primary/30 text-primary font-semibold">Your Jump</span>
+                      <span className="text-xs px-2 py-0.5 rounded-full backdrop-blur-xl bg-orange-500/20 border border-orange-500/30 text-orange-600 dark:text-orange-400 font-semibold">Your Jump</span>
                     </div>
                     <p className="text-xs text-muted-foreground mb-2">
                       Initial steps from your generated Jump plan
                     </p>
-                    <div className="p-2.5 rounded-lg glass bg-muted/30 border border-primary/20 backdrop-blur-sm">
+                    <div className="p-2.5 rounded-lg glass bg-orange-500/[0.05] border border-orange-500/20 backdrop-blur-sm">
                       <p className="text-xs sm:text-sm font-medium break-words">Step: "Launch digital marketing campaign"</p>
                     </div>
                   </div>
@@ -1268,37 +1271,37 @@ const Index = () => {
                 {/* Level 1 */}
                 <div 
                   ref={level1Ref}
-                  className="relative pl-4 sm:pl-6 border-l-2 border-primary/30 ml-2 sm:ml-4 transition-all duration-700 ease-out"
+                  className="relative pl-4 sm:pl-6 border-l-2 border-orange-500/30 ml-2 sm:ml-4 transition-all duration-700 ease-out"
                   style={{
                     opacity: level1Progress,
                     transform: `translateX(${(1 - level1Progress) * 80}px) scale(${0.9 + level1Progress * 0.1})`
                   }}
                 >
-                  <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full backdrop-blur-xl bg-primary ring-2 ring-primary/20 flex items-center justify-center text-xs font-bold text-primary-foreground">
+                  <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full backdrop-blur-xl bg-orange-500 ring-2 ring-orange-500/20 flex items-center justify-center text-xs font-bold text-white">
                     1
                   </div>
-                  <div className="glass bg-muted/30 p-3 sm:p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
+                  <div className="glass bg-orange-500/[0.05] p-3 sm:p-4 rounded-lg border border-orange-500/20 backdrop-blur-sm shadow-sm">
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-2">
                       <h4 className="font-bold text-xs sm:text-sm">Level 1: First Clarification</h4>
-                      <span className="text-xs px-2 py-0.5 rounded-full bg-green-600/90 text-white font-semibold border border-green-700/50">5 sub-steps</span>
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-orange-500/90 text-white font-semibold border border-orange-600/50">5 sub-steps</span>
                     </div>
                     <p className="text-xs text-muted-foreground mb-2">
                       After clicking "Clarify" on the original step
                     </p>
                     <div className="space-y-1.5 text-xs">
-                      <div className="p-2 rounded glass bg-muted/30 border border-primary/15 hover:border-primary/30 transition-colors backdrop-blur-sm">
+                      <div className="p-2 rounded glass bg-orange-500/[0.05] border border-orange-500/15 hover:border-orange-500/30 transition-colors backdrop-blur-sm">
                         <span className="text-muted-foreground break-words">→ Define target audience & budget</span>
                       </div>
-                      <div className="p-2 rounded glass bg-muted/30 border border-primary/10 text-muted-foreground backdrop-blur-sm break-words">
+                      <div className="p-2 rounded glass bg-orange-500/[0.03] border border-orange-500/10 text-muted-foreground backdrop-blur-sm break-words">
                         → Select marketing channels
                       </div>
-                      <div className="p-2 rounded glass bg-muted/30 border border-primary/10 text-muted-foreground backdrop-blur-sm break-words">
+                      <div className="p-2 rounded glass bg-orange-500/[0.03] border border-orange-500/10 text-muted-foreground backdrop-blur-sm break-words">
                         → Create campaign content
                       </div>
-                      <div className="p-2 rounded glass bg-muted/30 border border-primary/10 text-muted-foreground backdrop-blur-sm break-words">
+                      <div className="p-2 rounded glass bg-orange-500/[0.03] border border-orange-500/10 text-muted-foreground backdrop-blur-sm break-words">
                         → Set up tracking & analytics
                       </div>
-                      <div className="p-2 rounded glass bg-muted/30 border border-primary/10 text-muted-foreground backdrop-blur-sm break-words">
+                      <div className="p-2 rounded glass bg-orange-500/[0.03] border border-orange-500/10 text-muted-foreground backdrop-blur-sm break-words">
                         → Launch & monitor performance
                       </div>
                     </div>
@@ -1308,37 +1311,37 @@ const Index = () => {
                 {/* Level 2 */}
                 <div 
                   ref={level2Ref}
-                  className="relative pl-4 sm:pl-6 border-l-2 border-primary/20 ml-4 sm:ml-8 transition-all duration-700 ease-out"
+                  className="relative pl-4 sm:pl-6 border-l-2 border-orange-500/20 ml-4 sm:ml-8 transition-all duration-700 ease-out"
                   style={{
                     opacity: level2Progress,
                     transform: `translateX(${(1 - level2Progress) * 80}px) scale(${0.9 + level2Progress * 0.1})`
                   }}
                 >
-                  <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full backdrop-blur-xl bg-primary ring-2 ring-primary/15 flex items-center justify-center text-xs font-bold text-primary-foreground">
+                  <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full backdrop-blur-xl bg-orange-500 ring-2 ring-orange-500/15 flex items-center justify-center text-xs font-bold text-white">
                     2
                   </div>
-                  <div className="glass bg-muted/30 p-3 sm:p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
+                  <div className="glass bg-orange-500/[0.05] p-3 sm:p-4 rounded-lg border border-orange-500/20 backdrop-blur-sm shadow-sm">
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-2">
                       <h4 className="font-bold text-xs sm:text-sm">Level 2: Clarify the Sub-Step</h4>
-                      <span className="text-xs px-2 py-0.5 rounded-full bg-green-600/90 text-white font-semibold border border-green-700/50">5 more</span>
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-orange-500/90 text-white font-semibold border border-orange-600/50">5 more</span>
                     </div>
                     <p className="text-xs text-muted-foreground mb-2">
                       Clicked "Clarify" on "Define target audience & budget"
                     </p>
                     <div className="space-y-1 text-xs">
-                      <div className="p-1.5 rounded glass bg-muted/30 border border-primary/15 hover:border-primary/30 transition-colors backdrop-blur-sm">
+                      <div className="p-1.5 rounded glass bg-orange-500/[0.05] border border-orange-500/15 hover:border-orange-500/30 transition-colors backdrop-blur-sm">
                         <span className="text-muted-foreground break-words">→ Analyze current customer data</span>
                       </div>
-                      <div className="p-1.5 rounded glass bg-muted/30 border border-primary/10 text-muted-foreground backdrop-blur-sm break-words">
+                      <div className="p-1.5 rounded glass bg-orange-500/[0.03] border border-orange-500/10 text-muted-foreground backdrop-blur-sm break-words">
                         → Research competitor targeting
                       </div>
-                      <div className="p-1.5 rounded glass bg-muted/30 border border-primary/10 text-muted-foreground backdrop-blur-sm break-words">
+                      <div className="p-1.5 rounded glass bg-orange-500/[0.03] border border-orange-500/10 text-muted-foreground backdrop-blur-sm break-words">
                         → Calculate available marketing budget
                       </div>
-                      <div className="p-1.5 rounded glass bg-muted/30 border border-primary/10 text-muted-foreground backdrop-blur-sm break-words">
+                      <div className="p-1.5 rounded glass bg-orange-500/[0.03] border border-orange-500/10 text-muted-foreground backdrop-blur-sm break-words">
                         → Create audience personas
                       </div>
-                      <div className="p-1.5 rounded glass bg-muted/30 border border-primary/10 text-muted-foreground backdrop-blur-sm break-words">
+                      <div className="p-1.5 rounded glass bg-orange-500/[0.03] border border-orange-500/10 text-muted-foreground backdrop-blur-sm break-words">
                         → Allocate budget across channels
                       </div>
                     </div>
@@ -1348,37 +1351,37 @@ const Index = () => {
                 {/* Level 3 */}
                 <div 
                   ref={level3Ref}
-                  className="relative pl-4 sm:pl-6 border-l-2 border-primary/15 ml-6 sm:ml-12 transition-all duration-700 ease-out"
+                  className="relative pl-4 sm:pl-6 border-l-2 border-orange-500/15 ml-6 sm:ml-12 transition-all duration-700 ease-out"
                   style={{
                     opacity: level3Progress,
                     transform: `translateX(${(1 - level3Progress) * 80}px) scale(${0.9 + level3Progress * 0.1})`
                   }}
                 >
-                  <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full backdrop-blur-xl bg-primary ring-2 ring-primary/10 flex items-center justify-center text-xs font-bold text-primary-foreground">
+                  <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full backdrop-blur-xl bg-orange-500 ring-2 ring-orange-500/10 flex items-center justify-center text-xs font-bold text-white">
                     3
                   </div>
-                  <div className="glass bg-muted/30 p-3 sm:p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
+                  <div className="glass bg-orange-500/[0.05] p-3 sm:p-4 rounded-lg border border-orange-500/20 backdrop-blur-sm shadow-sm">
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-2">
                       <h4 className="font-bold text-xs sm:text-sm">Level 3: Clarify the Level 2 Sub-Step</h4>
-                      <span className="text-xs px-2 py-0.5 rounded-full bg-green-600/90 text-white font-semibold border border-green-700/50">5 more</span>
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-orange-500/90 text-white font-semibold border border-orange-600/50">5 more</span>
                     </div>
                     <p className="text-xs text-muted-foreground mb-2">
                       Clicked "Clarify" on "Analyze current customer data"
                     </p>
                     <div className="space-y-1 text-xs">
-                      <div className="p-1.5 rounded glass bg-muted/30 border border-primary/15 hover:border-primary/30 transition-colors backdrop-blur-sm">
+                      <div className="p-1.5 rounded glass bg-orange-500/[0.05] border border-orange-500/15 hover:border-orange-500/30 transition-colors backdrop-blur-sm">
                         <span className="text-muted-foreground break-words">→ Export customer purchase history from CRM</span>
                       </div>
-                      <div className="p-1.5 rounded glass bg-muted/30 border border-primary/10 text-muted-foreground backdrop-blur-sm break-words">
+                      <div className="p-1.5 rounded glass bg-orange-500/[0.03] border border-orange-500/10 text-muted-foreground backdrop-blur-sm break-words">
                         → Identify top 20% of customers by revenue
                       </div>
-                      <div className="p-1.5 rounded glass bg-muted/30 border border-primary/10 text-muted-foreground backdrop-blur-sm break-words">
+                      <div className="p-1.5 rounded glass bg-orange-500/[0.03] border border-orange-500/10 text-muted-foreground backdrop-blur-sm break-words">
                         → Extract demographic & behavioral patterns
                       </div>
-                      <div className="p-1.5 rounded glass bg-muted/30 border border-primary/10 text-muted-foreground backdrop-blur-sm break-words">
+                      <div className="p-1.5 rounded glass bg-orange-500/[0.03] border border-orange-500/10 text-muted-foreground backdrop-blur-sm break-words">
                         → Document common characteristics in spreadsheet
                       </div>
-                      <div className="p-1.5 rounded glass bg-muted/30 border border-primary/10 text-muted-foreground backdrop-blur-sm break-words">
+                      <div className="p-1.5 rounded glass bg-orange-500/[0.03] border border-orange-500/10 text-muted-foreground backdrop-blur-sm break-words">
                         → Share findings with marketing team
                       </div>
                     </div>
@@ -1388,37 +1391,37 @@ const Index = () => {
                 {/* Level 4 */}
                 <div 
                   ref={level4Ref}
-                  className="relative pl-4 sm:pl-6 border-l-2 border-primary/10 ml-8 sm:ml-16 transition-all duration-700 ease-out"
+                  className="relative pl-4 sm:pl-6 border-l-2 border-orange-500/10 ml-8 sm:ml-16 transition-all duration-700 ease-out"
                   style={{
                     opacity: level4Progress,
                     transform: `translateX(${(1 - level4Progress) * 80}px) scale(${0.9 + level4Progress * 0.1})`
                   }}
                 >
-                  <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full backdrop-blur-xl bg-primary ring-2 ring-primary/30 flex items-center justify-center text-xs font-bold text-primary-foreground">
+                  <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full backdrop-blur-xl bg-orange-500 ring-2 ring-orange-500/30 flex items-center justify-center text-xs font-bold text-white">
                     4
                   </div>
-                  <div className="glass bg-muted/30 p-3 sm:p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm">
+                  <div className="glass bg-orange-500/[0.05] p-3 sm:p-4 rounded-lg border border-orange-500/20 backdrop-blur-sm shadow-sm">
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-2">
                       <h4 className="font-bold text-xs sm:text-sm">Level 4: Maximum Detail</h4>
-                      <span className="text-xs px-2 py-0.5 rounded-full bg-green-600/90 text-white font-semibold border border-green-700/50">Crystal clear</span>
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-orange-500/90 text-white font-semibold border border-orange-600/50">Crystal clear</span>
                     </div>
                     <p className="text-xs text-muted-foreground mb-2">
                       Clicked "Clarify" on "Export customer purchase history from CRM"
                     </p>
                     <div className="space-y-1 text-xs">
-                      <div className="p-1.5 rounded glass bg-muted/30 border border-primary/10 text-muted-foreground backdrop-blur-sm break-words">
+                      <div className="p-1.5 rounded glass bg-orange-500/[0.03] border border-orange-500/10 text-muted-foreground backdrop-blur-sm break-words">
                         → Log into your CRM system (Salesforce/HubSpot)
                       </div>
-                      <div className="p-1.5 rounded glass bg-muted/30 border border-primary/10 text-muted-foreground backdrop-blur-sm break-words">
+                      <div className="p-1.5 rounded glass bg-orange-500/[0.03] border border-orange-500/10 text-muted-foreground backdrop-blur-sm break-words">
                         → Navigate to Reports → Customer Purchase History
                       </div>
-                      <div className="p-1.5 rounded glass bg-muted/30 border border-primary/10 text-muted-foreground backdrop-blur-sm break-words">
+                      <div className="p-1.5 rounded glass bg-orange-500/[0.03] border border-orange-500/10 text-muted-foreground backdrop-blur-sm break-words">
                         → Set date range to last 12 months
                       </div>
-                      <div className="p-1.5 rounded glass bg-muted/30 border border-primary/10 text-muted-foreground backdrop-blur-sm break-words">
+                      <div className="p-1.5 rounded glass bg-orange-500/[0.03] border border-orange-500/10 text-muted-foreground backdrop-blur-sm break-words">
                         → Export as CSV with customer ID, purchase date, amount
                       </div>
-                      <div className="p-1.5 rounded glass bg-muted/30 border border-primary/10 text-muted-foreground backdrop-blur-sm break-words">
+                      <div className="p-1.5 rounded glass bg-orange-500/[0.03] border border-orange-500/10 text-muted-foreground backdrop-blur-sm break-words">
                         → Save file to shared marketing folder
                       </div>
                     </div>
@@ -1432,7 +1435,7 @@ const Index = () => {
             </div>
           </div>
 
-          {/* Feature 2: REROUTE - Alternative Routes */}
+          {/* Feature 2: REROUTE - Alternative Routes - PURPLE color theme */}
           <div 
             ref={rerouteRef}
             className="max-w-5xl mx-auto mb-12 transition-all duration-700 ease-out"
@@ -1441,15 +1444,18 @@ const Index = () => {
               transform: `translateY(${(1 - Math.min(1, rerouteProgress * 1.3)) * 50}px)`
             }}
           >
-            <div className="glass rounded-2xl p-6 lg:p-8 border border-primary/20 shadow-lg backdrop-blur-xl">
+            <div className="glass rounded-2xl p-6 lg:p-8 border border-purple-500/20 shadow-lg backdrop-blur-xl relative overflow-hidden">
+              {/* Subtle purple glass overlay */}
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-purple-500/[0.02] via-transparent to-purple-400/[0.01] pointer-events-none"></div>
+              
               {/* Feature Header */}
-              <div className="text-center mb-10">
+              <div className="text-center mb-10 relative z-10">
                 <div className="flex justify-center mb-6">
                   <div className="relative group/reroute">
-                    <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/40 via-accent/30 to-primary/40 rounded-[2.5rem] blur-md opacity-40 transition duration-500"></div>
-                    <div className="relative flex items-center gap-3 px-8 py-4 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2.5rem] border border-primary/40 transition-all duration-300 overflow-hidden shadow-lg shadow-primary/10">
+                    <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-500/40 via-purple-400/30 to-purple-500/40 rounded-[2.5rem] blur-md opacity-40 transition duration-500"></div>
+                    <div className="relative flex items-center gap-3 px-8 py-4 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2.5rem] border border-purple-500/40 transition-all duration-300 overflow-hidden shadow-lg shadow-purple-500/10">
                       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full transition-transform duration-1000"></div>
-                      <GitBranch className="relative w-6 h-6 text-primary" />
+                      <GitBranch className="relative w-6 h-6 text-purple-500" />
                       <span className="relative text-2xl font-bold text-foreground whitespace-nowrap">Reroute</span>
                     </div>
                   </div>
@@ -1462,16 +1468,16 @@ const Index = () => {
                 </p>
               </div>
 
-              {/* Route Examples */}
-              <div ref={rerouteCardsRef} className="grid grid-cols-3 gap-2 sm:gap-4 mb-6">
+              {/* Route Examples - Purple theme */}
+              <div ref={rerouteCardsRef} className="grid grid-cols-3 gap-2 sm:gap-4 mb-6 relative z-10">
                 <div 
-                  className="glass bg-muted/30 p-3 sm:p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm transition-all duration-700 ease-out scroll-animate"
+                  className="glass bg-purple-500/[0.05] p-3 sm:p-4 rounded-lg border border-purple-500/20 backdrop-blur-sm shadow-sm transition-all duration-700 ease-out scroll-animate hover:border-purple-500/40 hover:bg-purple-500/[0.08]"
                   style={{
                     opacity: Math.max(0, Math.min(1, rerouteCardsProgress * 3)),
                     transform: `translateY(${(1 - Math.max(0, Math.min(1, rerouteCardsProgress * 3))) * 40}px)`
                   }}
                 >
-                  <p className="text-sm font-bold text-primary mb-2">Route A: Premium</p>
+                  <p className="text-sm font-bold text-purple-500 mb-2">Route A: Premium</p>
                   <div className="space-y-1 text-xs text-muted-foreground">
                     <p>• High-end tools</p>
                     <p>• Faster timeline</p>
@@ -1479,13 +1485,13 @@ const Index = () => {
                   </div>
                 </div>
                 <div 
-                  className="glass bg-muted/30 p-3 sm:p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm transition-all duration-700 ease-out scroll-animate"
+                  className="glass bg-purple-500/[0.05] p-3 sm:p-4 rounded-lg border border-purple-500/20 backdrop-blur-sm shadow-sm transition-all duration-700 ease-out scroll-animate hover:border-purple-500/40 hover:bg-purple-500/[0.08]"
                   style={{
                     opacity: Math.max(0, Math.min(1, (rerouteCardsProgress - 0.3) * 3)),
                     transform: `translateY(${(1 - Math.max(0, Math.min(1, (rerouteCardsProgress - 0.3) * 3))) * 40}px)`
                   }}
                 >
-                  <p className="text-sm font-bold text-primary mb-2">Route B: Budget-Friendly</p>
+                  <p className="text-sm font-bold text-purple-500 mb-2">Route B: Budget-Friendly</p>
                   <div className="space-y-1 text-xs text-muted-foreground">
                     <p>• Free/low-cost tools</p>
                     <p>• Gradual rollout</p>
@@ -1493,13 +1499,13 @@ const Index = () => {
                   </div>
                 </div>
                 <div 
-                  className="glass bg-muted/30 p-3 sm:p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm transition-all duration-700 ease-out scroll-animate"
+                  className="glass bg-purple-500/[0.05] p-3 sm:p-4 rounded-lg border border-purple-500/20 backdrop-blur-sm shadow-sm transition-all duration-700 ease-out scroll-animate hover:border-purple-500/40 hover:bg-purple-500/[0.08]"
                   style={{
                     opacity: Math.max(0, Math.min(1, (rerouteCardsProgress - 0.6) * 3)),
                     transform: `translateY(${(1 - Math.max(0, Math.min(1, (rerouteCardsProgress - 0.6) * 3))) * 40}px)`
                   }}
                 >
-                  <p className="text-sm font-bold text-primary mb-2">Route C: Hybrid</p>
+                  <p className="text-sm font-bold text-purple-500 mb-2">Route C: Hybrid</p>
                   <div className="space-y-1 text-xs text-muted-foreground">
                     <p>• Mix of approaches</p>
                     <p>• Balanced timeline</p>
@@ -1508,14 +1514,14 @@ const Index = () => {
                 </div>
               </div>
 
-              <p className="text-sm text-muted-foreground/80 text-center">
+              <p className="text-sm text-muted-foreground/80 text-center relative z-10">
                 Each alternative route includes 3 detailed sub-steps tailored to that approach
               </p>
 
             </div>
           </div>
 
-          {/* Feature 3: EQUIP - On-Demand Tools & Prompts */}
+          {/* Feature 3: EQUIP - On-Demand Tools & Prompts - RED color theme */}
           <div 
             ref={equipRef}
             className="max-w-5xl mx-auto mb-8 transition-all duration-700 ease-out"
@@ -1524,15 +1530,18 @@ const Index = () => {
               transform: `translateY(${(1 - Math.min(1, equipProgress * 1.3)) * 50}px)`
             }}
           >
-            <div className="glass rounded-2xl p-6 lg:p-8 border border-primary/20 shadow-lg backdrop-blur-xl">
+            <div className="glass rounded-2xl p-6 lg:p-8 border border-red-500/20 shadow-lg backdrop-blur-xl relative overflow-hidden">
+              {/* Subtle red glass overlay */}
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-red-500/[0.02] via-transparent to-red-400/[0.01] pointer-events-none"></div>
+              
               {/* Feature Header */}
-              <div className="text-center mb-10">
+              <div className="text-center mb-10 relative z-10">
                 <div className="flex justify-center mb-6">
                   <div className="relative group/equip">
-                    <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/40 via-accent/30 to-primary/40 rounded-[2.5rem] blur-md opacity-40 transition duration-500"></div>
-                    <div className="relative flex items-center gap-3 px-8 py-4 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2.5rem] border border-primary/40 transition-all duration-300 overflow-hidden shadow-lg shadow-primary/10">
+                    <div className="absolute -inset-0.5 bg-gradient-to-r from-red-500/40 via-red-400/30 to-red-500/40 rounded-[2.5rem] blur-md opacity-40 transition duration-500"></div>
+                    <div className="relative flex items-center gap-3 px-8 py-4 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2.5rem] border border-red-500/40 transition-all duration-300 overflow-hidden shadow-lg shadow-red-500/10">
                       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full transition-transform duration-1000"></div>
-                      <Wrench className="relative w-6 h-6 text-primary" />
+                      <Wrench className="relative w-6 h-6 text-red-500" />
                       <span className="relative text-2xl font-bold text-foreground whitespace-nowrap">Equip</span>
                     </div>
                   </div>
@@ -1545,48 +1554,48 @@ const Index = () => {
                 </p>
               </div>
 
-              {/* Feature Highlights */}
-              <div ref={equipCardsRef} className="grid grid-cols-2 gap-2 sm:gap-4 mb-6">
+              {/* Feature Highlights - Red theme */}
+              <div ref={equipCardsRef} className="grid grid-cols-2 gap-2 sm:gap-4 mb-6 relative z-10">
                 <div 
-                  className="glass bg-muted/30 p-3 sm:p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm transition-all duration-700 ease-out scroll-animate"
+                  className="glass bg-red-500/[0.05] p-3 sm:p-4 rounded-lg border border-red-500/20 backdrop-blur-sm shadow-sm transition-all duration-700 ease-out scroll-animate hover:border-red-500/40 hover:bg-red-500/[0.08]"
                   style={{
                     opacity: Math.max(0, Math.min(1, equipCardsProgress * 3)),
                     transform: `translateY(${(1 - Math.max(0, Math.min(1, equipCardsProgress * 3))) * 40}px)`
                   }}
                 >
-                  <p className="text-sm font-bold text-primary mb-2">Curated Tool Selection</p>
+                  <p className="text-sm font-bold text-red-500 mb-2">Curated Tool Selection</p>
                   <p className="text-xs text-muted-foreground leading-relaxed">
                     Get a main tool recommendation plus 2 alternatives perfectly aligned to your step's requirements, budget, and technical level.
                   </p>
                 </div>
                 <div 
-                  className="glass bg-muted/30 p-3 sm:p-4 rounded-lg border border-primary/20 backdrop-blur-sm shadow-sm transition-all duration-700 ease-out scroll-animate"
+                  className="glass bg-red-500/[0.05] p-3 sm:p-4 rounded-lg border border-red-500/20 backdrop-blur-sm shadow-sm transition-all duration-700 ease-out scroll-animate hover:border-red-500/40 hover:bg-red-500/[0.08]"
                   style={{
                     opacity: Math.max(0, Math.min(1, (equipCardsProgress - 0.4) * 3)),
                     transform: `translateY(${(1 - Math.max(0, Math.min(1, (equipCardsProgress - 0.4) * 3))) * 40}px)`
                   }}
                 >
-                  <p className="text-sm font-bold text-primary mb-2">Ready-to-Use Prompts</p>
+                  <p className="text-sm font-bold text-red-500 mb-2">Ready-to-Use Prompts</p>
                   <p className="text-xs text-muted-foreground leading-relaxed">
                     Receive expertly crafted prompts designed specifically for your step—copy, paste, and execute immediately with any AI tool.
                   </p>
                 </div>
               </div>
 
-              <p className="text-sm text-muted-foreground/80 text-center">
+              <p className="text-sm text-muted-foreground/80 text-center relative z-10">
                 Each equipped combo is automatically saved in your Tools & Prompts tab and linked to its originating step
               </p>
             </div>
           </div>
 
-          {/* Availability Info */}
+          {/* Availability Info - Color coded */}
           <div className="text-center">
-            <div className="inline-flex flex-col items-center gap-1.5 px-6 py-3 rounded-full glass border border-primary/30 backdrop-blur-xl shadow-lg">
+            <div className="inline-flex flex-col items-center gap-1.5 px-6 py-3 rounded-2xl glass border border-white/10 backdrop-blur-xl shadow-lg">
               <div className="text-xs sm:text-sm text-foreground/90">
-                <span className="font-bold text-primary">Clarify</span> feature availability varies by clarification depth level and subscription plan
+                <span className="font-bold text-orange-500">Clarify</span> feature availability varies by clarification depth level and subscription plan
               </div>
               <div className="text-xs sm:text-sm text-foreground/80">
-                <span className="font-bold text-primary">Reroute</span> & <span className="font-bold text-primary">Equip</span> available on any existing step
+                <span className="font-bold text-purple-500">Reroute</span> & <span className="font-bold text-red-500">Equip</span> available on any existing step
               </div>
             </div>
           </div>
