@@ -198,7 +198,7 @@ const ForInvestors = () => {
                 <div>
                   <h3 className="text-lg lg:text-xl font-bold mb-2 text-foreground">$50B+ Market Opportunity</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">
-                    Millions struggle with generic AI advice. We're first to deliver hyper-personalized transformation at scale—each blueprint uniquely tailored to user context.
+                    Millions struggle with generic AI advice. We deliver hyper-personalized transformation at scale—each blueprint uniquely tailored to user context.
                   </p>
                 </div>
               </div>
@@ -213,7 +213,7 @@ const ForInvestors = () => {
                 <div>
                   <h3 className="text-lg lg:text-xl font-bold mb-2 text-foreground">Full-Stack Solution</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">
-                    Strategy → Plan → Tools → Automation. We're the only platform taking users from "what should I do?" to working AI agents—deployed in minutes.
+                    Strategy → Plan → Tools → Automation. We take users from "what should I do?" to working AI agents—deployed in minutes.
                   </p>
                 </div>
               </div>
