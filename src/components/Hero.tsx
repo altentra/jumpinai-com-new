@@ -165,14 +165,18 @@ const Hero = () => {
             {/* Main H1 Title - Premium billion-dollar styling */}
             <h1 className="text-[2.25rem] sm:text-[2.75rem] md:text-[3.25rem] lg:text-[2.75rem] xl:text-[3.5rem] font-black mb-6 sm:mb-8 tracking-[-0.02em] font-display leading-[1.1] pb-2">
               <span 
-                className="block gradient-text-primary drop-shadow-[0_2px_10px_rgba(0,0,0,0.08)] dark:drop-shadow-[0_2px_20px_rgba(255,255,255,0.06)]"
-                style={{ textShadow: '0 4px 30px rgba(251, 191, 36, 0.15), 0 2px 10px rgba(0, 0, 0, 0.1)' }}
+                className="block gradient-text-primary"
+                style={{ 
+                  textShadow: '0 4px 20px rgba(0, 0, 0, 0.25), 0 8px 40px rgba(251, 191, 36, 0.3), 0 2px 4px rgba(0, 0, 0, 0.15)' 
+                }}
               >
                 AI Adaptation Studio
               </span>
               <span 
-                className="block gradient-text-primary mt-2 pb-1 drop-shadow-[0_2px_10px_rgba(0,0,0,0.08)] dark:drop-shadow-[0_2px_20px_rgba(255,255,255,0.06)]"
-                style={{ textShadow: '0 4px 30px rgba(139, 92, 246, 0.12), 0 2px 10px rgba(0, 0, 0, 0.08)' }}
+                className="block gradient-text-primary mt-2 pb-1"
+                style={{ 
+                  textShadow: '0 4px 20px rgba(0, 0, 0, 0.25), 0 8px 40px rgba(139, 92, 246, 0.25), 0 2px 4px rgba(0, 0, 0, 0.15)' 
+                }}
               >
                 that Clarifies and Builds Your Path Forward
               </span>
