@@ -817,7 +817,7 @@ export const generatePitchDeckPDF = (): void => {
   pdf.setFontSize(11);
   pdf.setFont('helvetica', 'normal');
   setTextColor({ r: 200, g: 220, b: 255 });
-  pdf.text('The world doesn\'t need more AI tools. It needs a way to use them.', pageWidth / 2, 140, { align: 'center' });
+  pdf.text('The AI Adaptation Studio That Builds Your Path Forward', pageWidth / 2, 140, { align: 'center' });
 
   pdf.setFontSize(9);
   const subtitleLines = wrapText('From 2 questions to complete transformation blueprint in 2 minutes—plus the ability to build and export automated workflows and AI agents. Strategy to execution, personalized at scale.', 140, 9);
