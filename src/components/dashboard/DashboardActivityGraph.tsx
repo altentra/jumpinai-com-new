@@ -61,7 +61,7 @@ export const DashboardActivityGraph: React.FC<DashboardActivityGraphProps> = ({ 
       color: "hsl(187, 85%, 53%)",
     },
     analyzedJumps: {
-      label: "Analyzed",
+      label: "Analyzed Jumps",
       color: "hsl(330, 81%, 60%)",
     },
     aiAgents: {
