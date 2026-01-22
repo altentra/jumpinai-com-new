@@ -105,11 +105,11 @@ const ForInvestors = () => {
       </div>
       <Navigation />
       
-      {/* Premium Hero Section - Glass Morphism */}
-      <section className="relative pt-32 pb-12 px-4 bg-gradient-to-br from-primary/5 via-background to-secondary/5">
+      {/* Premium Hero Section */}
+      <section className="relative pt-32 pb-16 px-4 bg-gradient-to-br from-primary/5 via-background to-secondary/5">
         <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:50px_50px]" />
-        <div className="relative max-w-6xl mx-auto">
-          <div className="text-center mb-8 sm:mb-12">
+        <div className="relative max-w-5xl mx-auto">
+          <div className="text-center mb-8 sm:mb-10">
             <div className="relative inline-block">
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent leading-tight tracking-tight">
                 For Investors
@@ -118,34 +118,53 @@ const ForInvestors = () => {
             </div>
           </div>
           
-          <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-3xl p-6 sm:p-8 md:p-12 lg:p-16 shadow-2xl shadow-primary/10 hover:shadow-3xl hover:shadow-primary/15 transition-all duration-500">
-            <div className="text-center space-y-6 sm:space-y-8">
-              <div className="space-y-4 sm:space-y-6">
-                <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-foreground leading-tight">
-                  Invest in the Future of
-                <span className="block bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
-                    Personalized AI Transformation
+          <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-3xl p-8 sm:p-10 md:p-14 shadow-2xl shadow-primary/10">
+            <div className="text-center space-y-8">
+              {/* The Pitch - Concise and Powerful */}
+              <div className="space-y-6">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground leading-tight">
+                  The AI Era Demands
+                  <span className="block bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent mt-1">
+                    Personalized Transformation
                   </span>
                 </h2>
-                <p className="text-xs sm:text-sm md:text-base text-muted-foreground max-w-3xl mx-auto leading-relaxed px-2">
-                  JumpinAI Studio empowers professionals and entrepreneurs to confidently navigate AI transformation—generating complete transformation blueprints in 2 minutes. Each Jump includes three integrated tabs: strategic Overview (with alternative routes for exploring different strategic directions), adaptive Plan (multi-level clarification up to 4 levels deep), and Tools & Prompts (9+ tool-prompt combinations with ready-to-use prompts). Beyond strategy, our Implementation capability enables users to analyze Jumps, discover automation opportunities, and build two types of automation: linear workflows (1 credit) for predefined sequences or autonomous AI agents (2 credits) that reason and adapt—downloadable for both n8n (technical users) and Make.com (visual builders).
+                
+                {/* One-liner value prop */}
+                <p className="text-lg sm:text-xl md:text-2xl text-foreground/90 font-medium max-w-3xl mx-auto">
+                  We built the first platform that turns AI overwhelm into automated action—in minutes, not months.
+                </p>
+                
+                {/* The hook */}
+                <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+                  JumpinAI delivers complete AI transformation blueprints with ready-to-deploy workflows and AI agents. No consultants. No guesswork. Just personalized strategy that executes itself.
                 </p>
               </div>
+
+              {/* Key metrics - social proof */}
+              <div className="grid grid-cols-3 gap-4 max-w-2xl mx-auto py-6">
+                <div className="text-center">
+                  <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary">15K+</div>
+                  <div className="text-xs sm:text-sm text-muted-foreground">Jumps Generated</div>
+                </div>
+                <div className="text-center border-x border-primary/20">
+                  <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary">2 min</div>
+                  <div className="text-xs sm:text-sm text-muted-foreground">Time to Blueprint</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary">$0</div>
+                  <div className="text-xs sm:text-sm text-muted-foreground">Marginal Cost</div>
+                </div>
+              </div>
+
               <div className="flex flex-col sm:flex-row justify-center gap-4">
                 <button
                   onClick={() => window.location.href = '/pitch-deck'}
                   className="relative group overflow-hidden w-full sm:w-auto"
                 >
-                  {/* Liquid glass glow effect */}
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover:opacity-60 transition duration-500"></div>
-                  
-                  {/* Button */}
                   <div className="relative flex items-center justify-center gap-2 px-8 sm:px-10 py-3 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover:border-primary/50 transition-all duration-300 overflow-hidden">
-                    {/* Shimmer effect */}
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-                    
-                    {/* Content */}
-                    <span className="relative text-sm sm:text-base font-bold text-foreground group-hover:text-primary transition-colors duration-300">View our Pitch Deck</span>
+                    <span className="relative text-sm sm:text-base font-bold text-foreground group-hover:text-primary transition-colors duration-300">View Pitch Deck</span>
                   </div>
                 </button>
                 
@@ -153,16 +172,10 @@ const ForInvestors = () => {
                   onClick={scrollToContactForm}
                   className="relative group overflow-hidden w-full sm:w-auto"
                 >
-                  {/* Liquid glass glow effect */}
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover:opacity-60 transition duration-500"></div>
-                  
-                  {/* Button */}
                   <div className="relative flex items-center justify-center gap-2 px-8 sm:px-10 py-3 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover:border-primary/50 transition-all duration-300 overflow-hidden">
-                    {/* Shimmer effect */}
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-                    
-                    {/* Content */}
-                    <span className="relative text-sm sm:text-base font-bold text-foreground group-hover:text-primary transition-colors duration-300">Contact Our Team</span>
+                    <span className="relative text-sm sm:text-base font-bold text-foreground group-hover:text-primary transition-colors duration-300">Let's Talk</span>
                   </div>
                 </button>
               </div>
@@ -171,100 +184,139 @@ const ForInvestors = () => {
         </div>
       </section>
 
-      {/* Why Invest Section - Premium Glass Morphism */}
-      <section className="py-12 px-4 relative z-10">
+      {/* Investment Thesis - Streamlined */}
+      <section className="py-16 px-4 relative z-10">
         <div className="max-w-6xl mx-auto">
-          <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-3xl p-8 md:p-12 shadow-2xl shadow-primary/10 hover:shadow-3xl hover:shadow-primary/15 transition-all duration-500">
-            <div className="text-center mb-12">
-              <h2 className="text-2xl md:text-3xl font-bold mb-4 bg-gradient-to-br from-foreground via-foreground to-primary/70 bg-clip-text text-transparent">
-                Why Invest in JumpinAI
-              </h2>
-              <p className="text-sm md:text-base text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-                The world's first platform for truly personalized AI transformation at scale
-              </p>
+          <div className="text-center mb-12">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 bg-gradient-to-br from-foreground via-foreground to-primary/70 bg-clip-text text-transparent">
+              The Investment Thesis
+            </h2>
+            <p className="text-muted-foreground max-w-xl mx-auto">
+              Four reasons why JumpinAI is positioned to capture the AI transformation market
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-2 gap-6 lg:gap-8">
+            {/* Card 1 */}
+            <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-2xl p-6 lg:p-8 shadow-xl hover:shadow-2xl hover:border-primary/40 transition-all duration-300 group">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                  <TrendingUp className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                  <h3 className="text-lg lg:text-xl font-bold mb-2 text-foreground">$50B+ Market Opportunity</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    Millions struggle with generic AI advice. We're first to deliver hyper-personalized transformation at scale—each blueprint uniquely tailored to user context.
+                  </p>
+                </div>
+              </div>
             </div>
             
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-2xl p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/40 transition-all duration-300 group hover:scale-105 hover:-translate-y-2 text-center">
-                <TrendingUp className="h-8 w-8 md:h-10 md:w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
-                <h3 className="text-base md:text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Massive Untapped Market</h3>
-                <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
-                  Millions of professionals and businesses struggle with generic AI advice and cookie-cutter solutions. We're first to deliver truly personalized AI transformation at scale—each Jump uniquely tailored to user's specific goals, challenges, industry, and context.
-                </p>
+            {/* Card 2 */}
+            <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-2xl p-6 lg:p-8 shadow-xl hover:shadow-2xl hover:border-primary/40 transition-all duration-300 group">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                  <Target className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                  <h3 className="text-lg lg:text-xl font-bold mb-2 text-foreground">Full-Stack Solution</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    Strategy → Plan → Tools → Automation. We're the only platform taking users from "what should I do?" to working AI agents—deployed in minutes.
+                  </p>
+                </div>
               </div>
-              
-              <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-2xl p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/40 transition-all duration-300 group hover:scale-105 hover:-translate-y-2 text-center">
-                <Target className="h-8 w-8 md:h-10 md:w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
-                <h3 className="text-base md:text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Breakthrough Innovation</h3>
-                <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
-                  Complete transformation system with three integrated tabs: Strategic Overview with alternative routes, Adaptive Plan with 4-level deep clarification, and Tool-Prompt combinations for execution. Our Implementation capability offers two automation types: workflows for linear automation sequences and AI agents for autonomous reasoning systems—both downloadable for n8n (self-hosted, technical) and Make.com (cloud-hosted, visual). No competitor offers this depth—from strategy to working systems.
-                </p>
+            </div>
+            
+            {/* Card 3 */}
+            <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-2xl p-6 lg:p-8 shadow-xl hover:shadow-2xl hover:border-primary/40 transition-all duration-300 group">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                  <DollarSign className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                  <h3 className="text-lg lg:text-xl font-bold mb-2 text-foreground">Zero Marginal Cost Economics</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    Unlike consulting, our AI generates unlimited blueprints with near-zero cost per Jump. Exponential scale, linear spend.
+                  </p>
+                </div>
               </div>
-              
-              <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-2xl p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/40 transition-all duration-300 group hover:scale-105 hover:-translate-y-2 text-center">
-                <DollarSign className="h-8 w-8 md:h-10 md:w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
-                <h3 className="text-base md:text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Scalable AI Engine</h3>
-                <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
-                  Our AI-powered personalization engine generates unlimited unique transformations with minimal marginal cost per Jump. Unlike traditional consulting models with linear cost scaling, our technology enables exponential growth without proportional expense increases, creating exceptional unit economics and sustainable competitive advantages.
-                </p>
-              </div>
-              
-              <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-2xl p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/40 transition-all duration-300 group hover:scale-105 hover:-translate-y-2 text-center">
-                <Rocket className="h-8 w-8 md:h-10 md:w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
-                <h3 className="text-base md:text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Perfect Timing</h3>
-                <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
-                  The AI revolution is creating unprecedented demand for personalized transformation solutions. We're first-to-market with this adaptive approach, capturing early-mover advantages before competitors can replicate our depth of personalization. The convergence of AI maturity and market readiness creates a unique window for exponential growth.
-                </p>
+            </div>
+            
+            {/* Card 4 */}
+            <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-2xl p-6 lg:p-8 shadow-xl hover:shadow-2xl hover:border-primary/40 transition-all duration-300 group">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                  <Rocket className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                  <h3 className="text-lg lg:text-xl font-bold mb-2 text-foreground">Perfect Market Timing</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    AI maturity meets mass adoption anxiety. We're capturing first-mover advantage in the personalized AI transformation space—before incumbents can pivot.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* What Makes Us Unique - Premium Glass Morphism */}
-      <section className="py-12 px-4 relative z-10">
+      {/* What We Built - Visual Product Breakdown */}
+      <section className="py-16 px-4 relative z-10">
         <div className="max-w-6xl mx-auto">
-          <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-3xl p-8 md:p-12 shadow-2xl shadow-primary/10 hover:shadow-3xl hover:shadow-primary/15 transition-all duration-500">
-            <div className="text-center mb-12">
-              <h2 className="text-2xl md:text-3xl font-bold mb-4 bg-gradient-to-br from-foreground via-foreground to-primary/70 bg-clip-text text-transparent">
-                What Makes Us Unique
-              </h2>
-              <p className="text-sm md:text-base text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-                The world's first platform to deliver truly personalized AI transformation at enterprise scale
-              </p>
+          <div className="text-center mb-12">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 bg-gradient-to-br from-foreground via-foreground to-primary/70 bg-clip-text text-transparent">
+              What We Built
+            </h2>
+            <p className="text-muted-foreground max-w-xl mx-auto">
+              A complete AI transformation engine—from clarity to automation
+            </p>
+          </div>
+          
+          {/* Product Flow */}
+          <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-3xl p-8 lg:p-10 shadow-xl">
+            <div className="grid md:grid-cols-3 gap-8">
+              {/* Step 1 */}
+              <div className="text-center">
+                <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-primary/30 to-primary/10 border border-primary/40 rounded-2xl flex items-center justify-center">
+                  <span className="text-2xl font-bold text-primary">1</span>
+                </div>
+                <h3 className="text-lg font-bold mb-2 text-foreground">Generate Jump</h3>
+                <p className="text-sm text-muted-foreground">
+                  2 questions → Complete blueprint with Overview, Plan, and 9+ Tool-Prompt combinations
+                </p>
+              </div>
+              
+              {/* Step 2 */}
+              <div className="text-center">
+                <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-primary/30 to-primary/10 border border-primary/40 rounded-2xl flex items-center justify-center">
+                  <span className="text-2xl font-bold text-primary">2</span>
+                </div>
+                <h3 className="text-lg font-bold mb-2 text-foreground">Explore & Clarify</h3>
+                <p className="text-sm text-muted-foreground">
+                  4-level deep clarification, alternative routes, and AI Coach guidance on demand
+                </p>
+              </div>
+              
+              {/* Step 3 */}
+              <div className="text-center">
+                <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-primary/30 to-primary/10 border border-primary/40 rounded-2xl flex items-center justify-center">
+                  <span className="text-2xl font-bold text-primary">3</span>
+                </div>
+                <h3 className="text-lg font-bold mb-2 text-foreground">Build & Deploy</h3>
+                <p className="text-sm text-muted-foreground">
+                  Generate workflows or AI agents, export to n8n or Make.com, run your automation
+                </p>
+              </div>
             </div>
             
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-2xl p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/40 transition-all duration-300 group hover:scale-105 hover:-translate-y-2 text-center">
-                <Users className="h-8 w-8 md:h-10 md:w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
-                <h3 className="text-base md:text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Simplicity Meets Depth</h3>
-                <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
-                  Users answer just 2 questions (goals & challenges). Our AI engine generates a complete 3-tab transformation blueprint in 2 minutes—joining 15,000+ professionals who've already experienced instant clarity. Low friction, high value.
-                </p>
-              </div>
-              
-              <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-2xl p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/40 transition-all duration-300 group hover:scale-105 hover:-translate-y-2 text-center">
-                <Globe className="h-8 w-8 md:h-10 md:w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
-                <h3 className="text-base md:text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Adaptive Intelligence System</h3>
-                <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
-                  Users never get stuck: Overview tab offers alternative strategic routes, Plan tab provides 4-level deep clarification with alternative routes per step, Tools tab delivers 9+ ready-to-execute combinations. Our Implementation page enables users to build workflows (step-by-step automation) or AI agents (autonomous decision-making systems)—downloadable for n8n (power users) and Make.com (visual builders) with complete setup instructions. From insight to implementation.
-                </p>
-              </div>
-              
-              <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-2xl p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/40 transition-all duration-300 group hover:scale-105 hover:-translate-y-2 text-center">
-                <Users className="h-8 w-8 md:h-10 md:w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
-                <h3 className="text-base md:text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">AI Coach Integration</h3>
-                <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
-                  Our intelligent AI Coach provides ongoing personalized guidance throughout the transformation journey, creating deeper user engagement and exceptional retention rates. This continuous support system learns from each interaction, offering contextual assistance that evolves with user needs, transforming one-time users into long-term subscribers.
-                </p>
-              </div>
-              
-              <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-2xl p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/40 transition-all duration-300 group hover:scale-105 hover:-translate-y-2 text-center">
-                <Lightbulb className="h-8 w-8 md:h-10 md:w-10 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
-                <h3 className="text-base md:text-lg font-bold mb-3 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">Human-Centered AI Architecture</h3>
-                <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
-                  Our platform is designed with a human-first philosophy where AI amplifies human potential rather than replacing it. This approach creates sustainable transformation outcomes and builds deep user loyalty. By empowering users to make informed decisions while providing AI-powered support, we foster trust and long-term relationships.
-                </p>
+            {/* Bottom highlight */}
+            <div className="mt-10 pt-8 border-t border-primary/20 text-center">
+              <p className="text-sm text-muted-foreground mb-4">From overwhelming AI landscape to working automated systems</p>
+              <div className="flex flex-wrap justify-center gap-3">
+                <span className="px-4 py-1.5 bg-primary/10 border border-primary/30 rounded-full text-xs font-medium text-foreground">No-Code</span>
+                <span className="px-4 py-1.5 bg-primary/10 border border-primary/30 rounded-full text-xs font-medium text-foreground">AI-Powered</span>
+                <span className="px-4 py-1.5 bg-primary/10 border border-primary/30 rounded-full text-xs font-medium text-foreground">Export-Ready</span>
+                <span className="px-4 py-1.5 bg-primary/10 border border-primary/30 rounded-full text-xs font-medium text-foreground">Personalized</span>
               </div>
             </div>
           </div>
