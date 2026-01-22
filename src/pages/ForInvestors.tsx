@@ -106,10 +106,10 @@ const ForInvestors = () => {
       <Navigation />
       
       {/* Premium Hero Section */}
-      <section className="relative pt-32 pb-16 px-4 bg-gradient-to-br from-primary/5 via-background to-secondary/5">
+      <section className="relative pt-32 pb-20 px-4 bg-gradient-to-br from-primary/5 via-background to-secondary/5">
         <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:50px_50px]" />
         <div className="relative max-w-5xl mx-auto">
-          <div className="text-center mb-8 sm:mb-10">
+          <div className="text-center mb-10">
             <div className="relative inline-block">
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent leading-tight tracking-tight">
                 For Investors
@@ -120,51 +120,43 @@ const ForInvestors = () => {
           
           <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-3xl p-8 sm:p-10 md:p-14 shadow-2xl shadow-primary/10">
             <div className="text-center space-y-8">
-              {/* The Pitch - Concise and Powerful */}
+              
+              {/* The Core Thesis */}
               <div className="space-y-6">
                 <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground leading-tight">
-                  The AI Era Demands
-                  <span className="block bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent mt-1">
-                    Personalized Transformation
+                  The World Doesn't Need More AI Tools.
+                  <span className="block bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent mt-2">
+                    It Needs a Way to Use Them.
                   </span>
                 </h2>
-                
-                {/* One-liner value prop */}
-                <p className="text-lg sm:text-xl md:text-2xl text-foreground/90 font-medium max-w-3xl mx-auto">
-                  We built the first platform that turns AI overwhelm into automated action—in minutes, not months.
-                </p>
-                
-                {/* The hook */}
-                <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                  JumpinAI delivers complete AI transformation blueprints with ready-to-deploy workflows and AI agents. No consultants. No guesswork. Just personalized strategy that executes itself.
-                </p>
               </div>
 
-              {/* Key metrics - social proof */}
-              <div className="grid grid-cols-3 gap-4 max-w-2xl mx-auto py-6">
-                <div className="text-center">
-                  <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary">15K+</div>
-                  <div className="text-xs sm:text-sm text-muted-foreground">Jumps Generated</div>
-                </div>
-                <div className="text-center border-x border-primary/20">
-                  <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary">2 min</div>
-                  <div className="text-xs sm:text-sm text-muted-foreground">Time to Blueprint</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary">$0</div>
-                  <div className="text-xs sm:text-sm text-muted-foreground">Marginal Cost</div>
+              {/* The Problem → Solution Arc */}
+              <div className="max-w-3xl mx-auto space-y-6 text-left">
+                <div className="space-y-4">
+                  <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
+                    <span className="text-foreground font-semibold">The problem is clear:</span> Billions are being poured into AI, yet most professionals and businesses remain paralyzed—overwhelmed by options, confused by contradictions, and stuck between generic advice and expensive consultants.
+                  </p>
+                  <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
+                    <span className="text-foreground font-semibold">We built the bridge:</span> JumpinAI is an AI Adaptation Studio that transforms confusion into clarity, and clarity into execution. Users describe their goals and challenges. In minutes, they receive a complete, personalized AI transformation blueprint—and can turn it into working automated workflows and AI agents with a single click.
+                  </p>
+                  <p className="text-base sm:text-lg text-foreground/90 leading-relaxed font-medium">
+                    Not education. Not consulting. Not another tool.
+                    <span className="block mt-1 text-primary">A new category: Personalized AI Transformation at Scale.</span>
+                  </p>
                 </div>
               </div>
 
-              <div className="flex flex-col sm:flex-row justify-center gap-4">
+              {/* CTA Buttons */}
+              <div className="flex flex-col sm:flex-row justify-center gap-4 pt-4">
                 <button
                   onClick={() => window.location.href = '/pitch-deck'}
                   className="relative group overflow-hidden w-full sm:w-auto"
                 >
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover:opacity-60 transition duration-500"></div>
-                  <div className="relative flex items-center justify-center gap-2 px-8 sm:px-10 py-3 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover:border-primary/50 transition-all duration-300 overflow-hidden">
+                  <div className="relative flex items-center justify-center gap-2 px-8 sm:px-10 py-3.5 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover:border-primary/50 transition-all duration-300 overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-                    <span className="relative text-sm sm:text-base font-bold text-foreground group-hover:text-primary transition-colors duration-300">View Pitch Deck</span>
+                    <span className="relative text-sm sm:text-base font-bold text-foreground group-hover:text-primary transition-colors duration-300">View Full Pitch Deck</span>
                   </div>
                 </button>
                 
@@ -173,9 +165,9 @@ const ForInvestors = () => {
                   className="relative group overflow-hidden w-full sm:w-auto"
                 >
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover:opacity-60 transition duration-500"></div>
-                  <div className="relative flex items-center justify-center gap-2 px-8 sm:px-10 py-3 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover:border-primary/50 transition-all duration-300 overflow-hidden">
+                  <div className="relative flex items-center justify-center gap-2 px-8 sm:px-10 py-3.5 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover:border-primary/50 transition-all duration-300 overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-                    <span className="relative text-sm sm:text-base font-bold text-foreground group-hover:text-primary transition-colors duration-300">Let's Talk</span>
+                    <span className="relative text-sm sm:text-base font-bold text-foreground group-hover:text-primary transition-colors duration-300">Start a Conversation</span>
                   </div>
                 </button>
               </div>
