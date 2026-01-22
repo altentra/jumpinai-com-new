@@ -1046,14 +1046,14 @@ export const generatePitchDeckPDF = (): void => {
   yPosition += cardHeight + 8;
 
   // Market Opportunity highlight
-  addHighlightBox('Market Opportunity', '$12.4B AI Education & Transformation Market by 2027', 'Millions desperately need a solution bridging AI\'s potential and their ability to realize it');
+  addHighlightBox('Market Opportunity', '$50B+ AI Transformation & Automation Market by 2028', 'Millions desperately need a solution bridging AI\'s potential and their ability to realize it');
 
   // ================== OUR SOLUTION ==================
   pdf.addPage();
   yPosition = margin + 5;
   addSectionHeader('Our Solution');
   
-  addParagraph('JumpinAI is the world\'s first truly adaptive AI transformation platform, delivering complete personalized blueprints in 2 minutes from just 2 questions—with the ability to implement them as automated workflows.', 10, 'bold');
+  addParagraph('JumpinAI is a truly adaptive AI transformation platform, delivering complete personalized blueprints in 2 minutes from just 2 questions—with the ability to implement them as automated workflows.', 10, 'bold');
   yPosition += 2;
 
   addSubsectionHeader('The Jump Blueprint System', 10);
@@ -1176,7 +1176,7 @@ export const generatePitchDeckPDF = (): void => {
   yPosition = margin + 5;
   addSectionHeader('Market Opportunity');
   
-  addSubsectionHeader('Explosive Market Growth (November 2025)', 10);
+  addSubsectionHeader('Explosive Market Growth (2026)', 10);
   yPosition += 2;
 
   // Market metrics - Grid layout
@@ -1184,8 +1184,8 @@ export const generatePitchDeckPDF = (): void => {
   const metricCardWidth = (maxWidth - 4) / 2;
   const metricStartY = yPosition;
   
-  addMetricCard('Global AI Market', '$467B+', margin, metricStartY, metricCardWidth);
-  addMetricCard('AI Education Market', '$15.8B', margin + metricCardWidth + 4, metricStartY, metricCardWidth);
+  addMetricCard('Global AI Market', '$500B+', margin, metricStartY, metricCardWidth);
+  addMetricCard('AI Transformation Market', '$50B+', margin + metricCardWidth + 4, metricStartY, metricCardWidth);
   
   yPosition += 20;
   
@@ -1195,10 +1195,9 @@ export const generatePitchDeckPDF = (): void => {
   yPosition += 22;
 
   // Additional context bullets
-  addBullet('Global AI Market growing at 37.3% CAGR through 2030 (Fortune Business Insights, Nov 2025)', 8);
-  addBullet('AI Education Market expanding at 46.3% CAGR through 2028 (MarketsandMarkets, Nov 2025)', 8);
+  addBullet('$500B+ Global AI market driving massive transformation demand across all industries', 8);
   addBullet('520M+ Knowledge Workers globally all requiring AI transformation guidance', 8);
-  addBullet('92% of organizations adopting AI by end of 2025, up from 84% in early 2025 (Gartner, Nov 2025)', 8);
+  addBullet('2026 marks the shift from AI experimentation to mandatory enterprise transformation', 8);
   yPosition += 4;
 
   // Target Segments
@@ -1294,8 +1293,8 @@ export const generatePitchDeckPDF = (): void => {
   pdf.text('Market Timing:', margin + 3, yPosition + 5);
   pdf.setFont('helvetica', 'normal');
   setTextColor(colors.body);
-  pdf.text('AI adoption urgency at all-time high following ChatGPT\'s mainstream breakthrough', margin + 24, yPosition + 5);
-  pdf.text('and enterprise AI transformation mandates', margin + 3, yPosition + 9);
+  pdf.text('2026 marks the transition from AI experimentation to mandatory enterprise', margin + 24, yPosition + 5);
+  pdf.text('transformation—perfect timing for a personalized adaptation platform', margin + 3, yPosition + 9);
   
   yPosition += 14;
 
@@ -1550,7 +1549,7 @@ export const generatePitchDeckPDF = (): void => {
   setTextColor(colors.heading);
   pdf.setFontSize(9);
   pdf.setFont('helvetica', 'bold');
-  pdf.text('Year 1', margin + yearWidth / 2, yearY + 7, { align: 'center' });
+  pdf.text('2026', margin + yearWidth / 2, yearY + 7, { align: 'center' });
   
   setTextColor(colors.muted);
   pdf.setFontSize(7);
@@ -1600,7 +1599,7 @@ export const generatePitchDeckPDF = (): void => {
   setTextColor(colors.heading);
   pdf.setFontSize(9);
   pdf.setFont('helvetica', 'bold');
-  pdf.text('Year 2', margin + yearWidth + 4 + yearWidth / 2, yearY + 7, { align: 'center' });
+  pdf.text('2027', margin + yearWidth + 4 + yearWidth / 2, yearY + 7, { align: 'center' });
   
   setTextColor(colors.muted);
   pdf.setFontSize(7);
@@ -1650,7 +1649,7 @@ export const generatePitchDeckPDF = (): void => {
   setTextColor(colors.heading);
   pdf.setFontSize(9);
   pdf.setFont('helvetica', 'bold');
-  pdf.text('Year 3', margin + 2 * (yearWidth + 4) + yearWidth / 2, yearY + 7, { align: 'center' });
+  pdf.text('2028', margin + 2 * (yearWidth + 4) + yearWidth / 2, yearY + 7, { align: 'center' });
   
   setTextColor(colors.muted);
   pdf.setFontSize(7);
@@ -1792,7 +1791,7 @@ export const generatePitchDeckPDF = (): void => {
   setTextColor(colors.body);
   pdf.setFontSize(7.5);
   pdf.setFont('helvetica', 'normal');
-  const adv2 = wrapText('We\'re the only solution combining strategic overview, adaptive planning, execution tools, and ongoing AI coaching in one integrated platform. Competitors offer pieces; we deliver the complete journey from insight to implementation.', advCardWidth - 6, 7.5);
+  const adv2 = wrapText('A complete solution combining strategic overview, adaptive planning, execution tools, and ongoing AI coaching in one integrated platform. We deliver the complete journey from insight to implementation.', advCardWidth - 6, 7.5);
   pdf.text(adv2, margin + advCardWidth + 4 + 3, advY + 14);
 
   advY += advCardHeight + 4;
@@ -1851,7 +1850,7 @@ export const generatePitchDeckPDF = (): void => {
   setTextColor(colors.body);
   pdf.setFontSize(8);
   pdf.setFont('helvetica', 'normal');
-  const stratPos = wrapText('We\'re first-to-market with adaptive AI transformation at scale—and now the only platform taking users from strategy to running automation systems. Our technology creates compounding advantages: every Jump improves our AI, every workflow generated strengthens our platform, and our data moat deepens daily.', maxWidth - 10, 8);
+  const stratPos = wrapText('Our adaptive AI transformation platform takes users from strategy to running automation systems. Our technology creates compounding advantages: every Jump improves our AI, every workflow generated strengthens our platform, and our data moat deepens daily.', maxWidth - 10, 8);
   pdf.text(stratPos, margin + 5, yPosition + 13);
   
   yPosition += 28;
@@ -2118,9 +2117,9 @@ export const generatePitchDeckPDF = (): void => {
   let whyY = yPosition;
 
   const whyReasons = [
-    { title: 'First-Mover Advantage', desc: 'Capture market before competition emerges in this greenfield opportunity' },
+    { title: 'Strong Market Timing', desc: 'AI adoption urgency at all-time high with enterprises mandating transformation' },
     { title: 'Product Ready', desc: 'Fully functional platform, proven technology, ready to scale immediately' },
-    { title: 'Massive Market', desc: '$12.4B TAM growing 45% annually with urgent AI adoption pressure' },
+    { title: 'Massive Market', desc: '$50B+ TAM in AI transformation & automation with accelerating demand' },
     { title: 'Scalable Technology', desc: 'AI-powered platform with minimal marginal costs per user and superior unit economics' }
   ];
 
