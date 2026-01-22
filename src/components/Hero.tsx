@@ -44,33 +44,33 @@ const Hero = () => {
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-8">
       {/* === EPIC PREMIUM BACKGROUND === */}
       
-      {/* Base Layer - Deep premium foundation */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-gray-100 to-stone-100 dark:from-[#030712] dark:via-[#0a0f1a] dark:to-[#0f172a]"></div>
+      {/* Base Layer - Deep premium foundation (darkened ~5%) */}
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-100 via-gray-200 to-stone-200 dark:from-[#020509] dark:via-[#070b14] dark:to-[#0c1220]"></div>
       
-      {/* Primary Radial Glow - Top Left Golden Orb */}
-      <div className="absolute -top-[30%] -left-[20%] w-[80%] h-[80%] rounded-full bg-gradient-radial from-amber-400/40 via-orange-500/20 to-transparent dark:from-amber-500/25 dark:via-orange-600/10 dark:to-transparent blur-3xl"></div>
+      {/* Primary Radial Glow - Top Left Golden Orb (darkened ~5%) */}
+      <div className="absolute -top-[30%] -left-[20%] w-[80%] h-[80%] rounded-full bg-gradient-radial from-amber-500/38 via-orange-600/19 to-transparent dark:from-amber-600/24 dark:via-orange-700/9 dark:to-transparent blur-3xl"></div>
       
-      {/* Secondary Radial Glow - Top Right Purple/Blue Orb */}
-      <div className="absolute -top-[20%] -right-[15%] w-[70%] h-[70%] rounded-full bg-gradient-radial from-violet-500/30 via-indigo-600/15 to-transparent dark:from-violet-600/20 dark:via-indigo-700/8 dark:to-transparent blur-3xl"></div>
+      {/* Secondary Radial Glow - Top Right Purple/Blue Orb (darkened ~5%) */}
+      <div className="absolute -top-[20%] -right-[15%] w-[70%] h-[70%] rounded-full bg-gradient-radial from-violet-600/28 via-indigo-700/14 to-transparent dark:from-violet-700/19 dark:via-indigo-800/7 dark:to-transparent blur-3xl"></div>
       
-      {/* Tertiary Radial Glow - Bottom Center Emerald/Teal Orb */}
-      <div className="absolute -bottom-[25%] left-[20%] w-[60%] h-[60%] rounded-full bg-gradient-radial from-emerald-400/25 via-teal-500/12 to-transparent dark:from-emerald-500/15 dark:via-teal-600/6 dark:to-transparent blur-3xl"></div>
+      {/* Tertiary Radial Glow - Bottom Center Emerald/Teal Orb (darkened ~5%) */}
+      <div className="absolute -bottom-[25%] left-[20%] w-[60%] h-[60%] rounded-full bg-gradient-radial from-emerald-500/24 via-teal-600/11 to-transparent dark:from-emerald-600/14 dark:via-teal-700/5 dark:to-transparent blur-3xl"></div>
       
-      {/* Accent Glow - Center-Right Blue Accent */}
-      <div className="absolute top-[30%] right-[10%] w-[40%] h-[40%] rounded-full bg-gradient-radial from-blue-500/20 via-sky-500/10 to-transparent dark:from-blue-600/12 dark:via-sky-600/5 dark:to-transparent blur-2xl"></div>
+      {/* Accent Glow - Center-Right Blue Accent (darkened ~5%) */}
+      <div className="absolute top-[30%] right-[10%] w-[40%] h-[40%] rounded-full bg-gradient-radial from-blue-600/19 via-sky-600/9 to-transparent dark:from-blue-700/11 dark:via-sky-700/4 dark:to-transparent blur-2xl"></div>
       
-      {/* Premium Mesh Gradient Overlay */}
-      <div className="absolute inset-0 bg-[conic-gradient(from_180deg_at_50%_50%,rgba(251,191,36,0.08)_0deg,rgba(139,92,246,0.06)_90deg,rgba(59,130,246,0.06)_180deg,rgba(16,185,129,0.06)_270deg,rgba(251,191,36,0.08)_360deg)] dark:bg-[conic-gradient(from_180deg_at_50%_50%,rgba(251,191,36,0.04)_0deg,rgba(139,92,246,0.03)_90deg,rgba(59,130,246,0.03)_180deg,rgba(16,185,129,0.03)_270deg,rgba(251,191,36,0.04)_360deg)]"></div>
+      {/* Premium Mesh Gradient Overlay (darkened ~5%) */}
+      <div className="absolute inset-0 bg-[conic-gradient(from_180deg_at_50%_50%,rgba(245,180,32,0.076)_0deg,rgba(127,82,232,0.057)_90deg,rgba(52,115,232,0.057)_180deg,rgba(14,175,122,0.057)_270deg,rgba(245,180,32,0.076)_360deg)] dark:bg-[conic-gradient(from_180deg_at_50%_50%,rgba(245,180,32,0.038)_0deg,rgba(127,82,232,0.028)_90deg,rgba(52,115,232,0.028)_180deg,rgba(14,175,122,0.028)_270deg,rgba(245,180,32,0.038)_360deg)]"></div>
       
-      {/* Sophisticated Diagonal Flow - Premium 45deg */}
-      <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(250,204,21,0.35)_0%,rgba(251,146,60,0.28)_15%,rgba(244,63,94,0.18)_30%,rgba(168,85,247,0.22)_45%,rgba(99,102,241,0.18)_60%,rgba(59,130,246,0.15)_75%,rgba(20,184,166,0.12)_90%,transparent_100%)] dark:bg-[linear-gradient(135deg,rgba(250,204,21,0.12)_0%,rgba(251,146,60,0.09)_15%,rgba(244,63,94,0.06)_30%,rgba(168,85,247,0.08)_45%,rgba(99,102,241,0.06)_60%,rgba(59,130,246,0.05)_75%,rgba(20,184,166,0.04)_90%,transparent_100%)]"></div>
+      {/* Sophisticated Diagonal Flow - Premium 45deg (darkened ~5%) */}
+      <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(237,193,20,0.33)_0%,rgba(238,138,57,0.27)_15%,rgba(232,60,89,0.17)_30%,rgba(159,80,234,0.21)_45%,rgba(94,97,229,0.17)_60%,rgba(54,123,232,0.14)_75%,rgba(18,175,158,0.11)_90%,transparent_100%)] dark:bg-[linear-gradient(135deg,rgba(237,193,20,0.11)_0%,rgba(238,138,57,0.086)_15%,rgba(232,60,89,0.057)_30%,rgba(159,80,234,0.076)_45%,rgba(94,97,229,0.057)_60%,rgba(54,123,232,0.048)_75%,rgba(18,175,158,0.038)_90%,transparent_100%)]"></div>
       
-      {/* Premium Vignette Effect */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_50%,transparent_40%,rgba(15,23,42,0.06)_100%)] dark:bg-[radial-gradient(ellipse_80%_80%_at_50%_50%,transparent_30%,rgba(0,0,0,0.4)_100%)]"></div>
+      {/* Premium Vignette Effect (darkened ~5%) */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_50%,transparent_40%,rgba(12,20,38,0.07)_100%)] dark:bg-[radial-gradient(ellipse_80%_80%_at_50%_50%,transparent_30%,rgba(0,0,0,0.45)_100%)]"></div>
       
       {/* Subtle Animated Shimmer - Horizontal Light Sweep */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.03] to-transparent dark:via-white/[0.015] translate-x-[-100%] animate-[shimmer_8s_ease-in-out_infinite]"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.028] to-transparent dark:via-white/[0.014] translate-x-[-100%] animate-[shimmer_8s_ease-in-out_infinite]"></div>
       </div>
       
       {/* Premium Glass Grain Texture */}
@@ -84,17 +84,10 @@ const Hero = () => {
       {/* Ultra-Fine Tech Grid */}
       <div className="absolute inset-0 opacity-[0.015] dark:opacity-[0.04]">
         <div className="absolute inset-0" style={{ 
-          backgroundImage: `linear-gradient(rgba(99, 102, 241, 0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(99, 102, 241, 0.15) 1px, transparent 1px)`,
+          backgroundImage: `linear-gradient(rgba(94, 97, 229, 0.14) 1px, transparent 1px), linear-gradient(90deg, rgba(94, 97, 229, 0.14) 1px, transparent 1px)`,
           backgroundSize: '60px 60px'
         }}></div>
       </div>
-      
-      {/* Floating Accent Particles - Subtle Depth */}
-      <div className="absolute top-[15%] left-[12%] w-1.5 h-1.5 rounded-full bg-amber-400/50 dark:bg-amber-400/30 blur-[1px]"></div>
-      <div className="absolute top-[25%] right-[18%] w-1 h-1 rounded-full bg-violet-400/40 dark:bg-violet-400/25 blur-[1px]"></div>
-      <div className="absolute top-[55%] left-[8%] w-1 h-1 rounded-full bg-emerald-400/40 dark:bg-emerald-400/25 blur-[1px]"></div>
-      <div className="absolute top-[40%] right-[25%] w-1.5 h-1.5 rounded-full bg-blue-400/35 dark:bg-blue-400/20 blur-[1px]"></div>
-      <div className="absolute top-[70%] right-[12%] w-1 h-1 rounded-full bg-rose-400/35 dark:bg-rose-400/20 blur-[1px]"></div>
       
       {/* Enhanced Curved Bottom Arc Feature */}
       <div className="absolute bottom-0 left-0 right-0 h-40 opacity-70 dark:opacity-80">
