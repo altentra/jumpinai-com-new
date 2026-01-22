@@ -317,7 +317,7 @@ const PricingNew = () => {
                   </div>
                 </div>
                 <p className="text-sm sm:text-base md:text-lg text-muted-foreground/90 max-w-3xl mx-auto mb-4 leading-relaxed px-4">
-                  <span className="font-semibold text-foreground">1 credit = 1 Jump generation or 1 AI Agent build.</span> Each Jump includes a complete AI adaptation plan with tools and prompts, plus intelligent features to <span className="text-foreground">Clarify</span> steps into actionable details, <span className="text-foreground">Reroute</span> to explore alternative approaches, and <span className="text-foreground">Equip</span> any step with custom tool-prompt combinations on demand. Build AI Agents to automate your workflows with downloadable n8n integrations.
+                  <span className="font-semibold text-foreground">Credit costs:</span> 1 credit per Jump generation, 1 credit per Workflow build, 2 credits per AI Agent build. Each Jump includes a complete AI adaptation plan with tools and prompts, plus intelligent features to <span className="text-foreground">Clarify</span> steps into actionable details, <span className="text-foreground">Reroute</span> to explore alternative approaches, and <span className="text-foreground">Equip</span> any step with custom tool-prompt combinations. Build Workflows and AI Agents to automate your execution with downloadable n8n and Make.com integrations.
                 </p>
             </div>
           </section>
