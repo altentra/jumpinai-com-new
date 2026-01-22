@@ -175,7 +175,7 @@ const Hero = () => {
               <span 
                 className="block gradient-text-primary mt-2 pb-1"
                 style={{ 
-                  textShadow: '0 4px 20px rgba(0, 0, 0, 0.25), 0 8px 40px rgba(139, 92, 246, 0.25), 0 2px 4px rgba(0, 0, 0, 0.15)' 
+                  textShadow: '0 4px 20px rgba(0, 0, 0, 0.25), 0 8px 40px rgba(59, 130, 246, 0.3), 0 2px 4px rgba(0, 0, 0, 0.15)' 
                 }}
               >
                 that Clarifies and Builds Your Path Forward
