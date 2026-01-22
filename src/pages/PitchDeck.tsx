@@ -149,7 +149,7 @@ const PitchDeck = () => {
               <div className="space-y-5 mb-6">
                 <div className="text-center">
                   <h3 className="text-xl md:text-2xl font-bold mb-3 text-foreground">
-                    The World's First Truly Adaptive AI Transformation Platform
+                    A Truly Adaptive AI Transformation Platform
                   </h3>
                   <p className="text-base text-muted-foreground max-w-2xl mx-auto mb-4">
                     From 2 Questions to Complete Blueprint in 2 Minutes + Implementation Capability
@@ -158,7 +158,7 @@ const PitchDeck = () => {
                 
                 <div className="glass backdrop-blur-sm bg-primary/10 border border-primary/20 rounded-xl p-6">
                   <p className="text-sm text-foreground leading-relaxed text-center">
-                    JumpinAI solves the personalization crisis, implementation gap, and adaptation void simultaneously. Our AI engine generates a comprehensive transformation blueprint tailored specifically to your situation—including strategic Overview with alternative routes, adaptive Plan with multi-level clarifications and alternative approaches, and ready-to-use Tools & Prompts. Beyond strategy, users can analyze Jumps to discover automation opportunities and build two types of automation: workflows (linear sequences, 1 credit) or AI agents (autonomous reasoning, 2 credits)—downloadable for both n8n and Make.com. From strategy to working systems.
+                    JumpinAI solves the personalization crisis, implementation gap, and adaptation void simultaneously. Our AI engine generates a comprehensive transformation blueprint tailored specifically to your situation—including strategic Overview with alternative routes, adaptive Plan with multi-level clarifications and alternative approaches, and ready-to-use Tools & Prompts. Beyond strategy, users can analyze Jumps to discover automation opportunities and build workflows (linear sequences) or AI agents (autonomous reasoning)—downloadable for both n8n and Make.com. From strategy to working systems.
                   </p>
                 </div>
                 
@@ -290,14 +290,14 @@ const PitchDeck = () => {
                         <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
                         Workflows
                       </h5>
-                      <p className="text-xs text-muted-foreground">Linear automation sequences with predefined steps. Perfect for data sync, email automation, and scheduled tasks. 1 credit per build.</p>
+                      <p className="text-xs text-muted-foreground">Linear automation sequences with predefined steps. Perfect for data sync, email automation, and scheduled tasks.</p>
                     </div>
                     <div className="glass backdrop-blur-sm bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3">
                       <h5 className="text-sm font-bold text-foreground mb-1 flex items-center gap-2">
                         <span className="w-2 h-2 bg-yellow-500 rounded-full"></span>
                         AI Agents
                       </h5>
-                      <p className="text-xs text-muted-foreground">Autonomous systems that reason, adapt, and make decisions. Ideal for lead qualification and research. 2 credits per build.</p>
+                      <p className="text-xs text-muted-foreground">Autonomous systems that reason, adapt, and make decisions. Ideal for lead qualification, research, and complex decision-making.</p>
                     </div>
                   </div>
                   <div className="grid md:grid-cols-2 gap-4">
