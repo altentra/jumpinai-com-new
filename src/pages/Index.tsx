@@ -1530,18 +1530,18 @@ const Index = () => {
               transform: `translateY(${(1 - Math.min(1, equipProgress * 1.3)) * 50}px)`
             }}
           >
-            <div className="glass rounded-2xl p-6 lg:p-8 border border-red-500/20 shadow-lg backdrop-blur-xl relative overflow-hidden">
+            <div className="glass rounded-2xl p-6 lg:p-8 border border-red-500/10 shadow-lg backdrop-blur-xl relative overflow-hidden">
               {/* Subtle red glass overlay */}
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-red-500/[0.02] via-transparent to-red-400/[0.01] pointer-events-none"></div>
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-red-500/[0.01] via-transparent to-red-400/[0.005] pointer-events-none"></div>
               
               {/* Feature Header */}
               <div className="text-center mb-10 relative z-10">
                 <div className="flex justify-center mb-6">
                   <div className="relative group/equip">
-                    <div className="absolute -inset-0.5 bg-gradient-to-r from-red-500/40 via-red-400/30 to-red-500/40 rounded-[2.5rem] blur-md opacity-40 transition duration-500"></div>
-                    <div className="relative flex items-center gap-3 px-8 py-4 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2.5rem] border border-red-500/40 transition-all duration-300 overflow-hidden shadow-lg shadow-red-500/10">
+                    <div className="absolute -inset-0.5 bg-gradient-to-r from-red-500/25 via-red-400/20 to-red-500/25 rounded-[2.5rem] blur-md opacity-40 transition duration-500"></div>
+                    <div className="relative flex items-center gap-3 px-8 py-4 bg-gradient-to-br from-background/40 via-background/30 to-background/40 backdrop-blur-xl rounded-[2.5rem] border border-red-500/25 transition-all duration-300 overflow-hidden shadow-lg shadow-red-500/5">
                       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full transition-transform duration-1000"></div>
-                      <Wrench className="relative w-6 h-6 text-red-500" />
+                      <Wrench className="relative w-6 h-6 text-red-400" />
                       <span className="relative text-2xl font-bold text-foreground whitespace-nowrap">Equip</span>
                     </div>
                   </div>
@@ -1557,25 +1557,25 @@ const Index = () => {
               {/* Feature Highlights - Red theme */}
               <div ref={equipCardsRef} className="grid grid-cols-2 gap-2 sm:gap-4 mb-6 relative z-10">
                 <div 
-                  className="glass bg-red-500/[0.05] p-3 sm:p-4 rounded-lg border border-red-500/20 backdrop-blur-sm shadow-sm transition-all duration-700 ease-out scroll-animate hover:border-red-500/40 hover:bg-red-500/[0.08]"
+                  className="glass bg-red-500/[0.03] p-3 sm:p-4 rounded-lg border border-red-500/10 backdrop-blur-sm shadow-sm transition-all duration-700 ease-out scroll-animate hover:border-red-500/20 hover:bg-red-500/[0.05]"
                   style={{
                     opacity: Math.max(0, Math.min(1, equipCardsProgress * 3)),
                     transform: `translateY(${(1 - Math.max(0, Math.min(1, equipCardsProgress * 3))) * 40}px)`
                   }}
                 >
-                  <p className="text-sm font-bold text-red-500 mb-2">Curated Tool Selection</p>
+                  <p className="text-sm font-bold text-red-400 mb-2">Curated Tool Selection</p>
                   <p className="text-xs text-muted-foreground leading-relaxed">
                     Get a main tool recommendation plus 2 alternatives perfectly aligned to your step's requirements, budget, and technical level.
                   </p>
                 </div>
                 <div 
-                  className="glass bg-red-500/[0.05] p-3 sm:p-4 rounded-lg border border-red-500/20 backdrop-blur-sm shadow-sm transition-all duration-700 ease-out scroll-animate hover:border-red-500/40 hover:bg-red-500/[0.08]"
+                  className="glass bg-red-500/[0.03] p-3 sm:p-4 rounded-lg border border-red-500/10 backdrop-blur-sm shadow-sm transition-all duration-700 ease-out scroll-animate hover:border-red-500/20 hover:bg-red-500/[0.05]"
                   style={{
                     opacity: Math.max(0, Math.min(1, (equipCardsProgress - 0.4) * 3)),
                     transform: `translateY(${(1 - Math.max(0, Math.min(1, (equipCardsProgress - 0.4) * 3))) * 40}px)`
                   }}
                 >
-                  <p className="text-sm font-bold text-red-500 mb-2">Ready-to-Use Prompts</p>
+                  <p className="text-sm font-bold text-red-400 mb-2">Ready-to-Use Prompts</p>
                   <p className="text-xs text-muted-foreground leading-relaxed">
                     Receive expertly crafted prompts designed specifically for your step—copy, paste, and execute immediately with any AI tool.
                   </p>
@@ -1592,10 +1592,10 @@ const Index = () => {
           <div className="text-center">
             <div className="inline-flex flex-col items-center gap-1.5 px-6 py-3 rounded-2xl glass border border-white/10 backdrop-blur-xl shadow-lg">
               <div className="text-xs sm:text-sm text-foreground/90">
-                <span className="font-bold text-orange-500">Clarify</span> feature availability varies by clarification depth level and subscription plan
+                <span className="font-bold text-foreground">Clarify</span> feature availability varies by clarification depth level and subscription plan
               </div>
               <div className="text-xs sm:text-sm text-foreground/80">
-                <span className="font-bold text-purple-500">Reroute</span> & <span className="font-bold text-red-500">Equip</span> available on any existing step
+                <span className="font-bold text-foreground">Reroute</span> & <span className="font-bold text-foreground">Equip</span> available on any existing step
               </div>
             </div>
           </div>
