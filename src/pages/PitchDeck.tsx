@@ -54,15 +54,18 @@ const PitchDeck = () => {
           <div className="text-center">
             <div className="relative inline-block mb-4">
               <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent leading-tight tracking-tight">
-                Pitch Deck
+                JumpinAI Pitch Deck
               </h1>
               <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 h-0.5 bg-gradient-to-r from-transparent via-primary/60 to-transparent rounded-full"></div>
             </div>
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-foreground mb-3">
-              JumpinAI - Your Personalized AI Adaptation Studio
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold bg-gradient-to-r from-primary via-primary/80 to-primary bg-clip-text text-transparent mb-4">
+              Personalized AI Transformation at Scale
             </h2>
-            <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Revolutionizing how individuals and businesses adopt AI through intelligent, personalized transformation plans — delivering unprecedented speed, clarity, and actionability.
+            <p className="text-lg text-foreground font-medium max-w-2xl mx-auto mb-3">
+              The world doesn't need more AI tools. It needs a way to use them.
+            </p>
+            <p className="text-base text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              From 2 questions to complete transformation blueprint in 2 minutes—plus the ability to build and export automated workflows and AI agents. Strategy to execution, personalized at scale.
             </p>
           </div>
         </div>
@@ -120,7 +123,7 @@ const PitchDeck = () => {
             <div className="p-5 rounded-xl glass backdrop-blur-sm bg-background/25 border border-primary/20">
               <div className="text-center space-y-2">
                 <p className="text-base font-bold text-foreground">
-                  Market Opportunity: <span className="text-primary text-xl">$12.4B</span> AI Education & Transformation Market by 2027
+                  Market Opportunity: <span className="text-primary text-xl">$50B+</span> AI Transformation & Automation Market by 2028
                 </p>
                 <p className="text-sm text-muted-foreground">
                   Millions of individuals, entrepreneurs, and organizations desperately need a solution that bridges the gap between AI's potential and their ability to realize it
@@ -330,31 +333,31 @@ const PitchDeck = () => {
                 <h3 className="text-lg font-bold mb-4 text-foreground">Explosive Market Growth</h3>
                 <div className="space-y-3">
                   <div className="p-4 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
-                    <div className="text-2xl font-bold text-primary mb-1">$467B+</div>
-                    <p className="text-sm text-muted-foreground font-semibold">Global AI Market Size (November 2025)</p>
-                    <p className="text-xs text-muted-foreground mt-1">Growing at 37.3% CAGR through 2030</p>
-                    <p className="text-xs text-muted-foreground/80 mt-1.5 italic">Source: Fortune Business Insights, November 2025</p>
+                    <div className="text-2xl font-bold text-primary mb-1">$500B+</div>
+                    <p className="text-sm text-muted-foreground font-semibold">Global AI Market Size (2026)</p>
+                    <p className="text-xs text-muted-foreground mt-1">Growing at 37% CAGR through 2030</p>
+                    <p className="text-xs text-muted-foreground/80 mt-1.5 italic">Source: Fortune Business Insights</p>
                   </div>
                   
                   <div className="p-4 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
-                    <div className="text-2xl font-bold text-primary mb-1">$15.8B</div>
-                    <p className="text-sm text-muted-foreground font-semibold">AI Education & Training Market (November 2025)</p>
-                    <p className="text-xs text-muted-foreground mt-1">CAGR: 46.3% through 2028</p>
-                    <p className="text-xs text-muted-foreground/80 mt-1.5 italic">Source: MarketsandMarkets Research, November 2025</p>
+                    <div className="text-2xl font-bold text-primary mb-1">$18B+</div>
+                    <p className="text-sm text-muted-foreground font-semibold">AI Education & Training Market (2026)</p>
+                    <p className="text-xs text-muted-foreground mt-1">CAGR: 45%+ through 2029</p>
+                    <p className="text-xs text-muted-foreground/80 mt-1.5 italic">Source: MarketsandMarkets Research</p>
                   </div>
                   
                   <div className="p-4 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
                     <div className="text-2xl font-bold text-primary mb-1">520M+</div>
                     <p className="text-sm text-muted-foreground font-semibold">Knowledge Workers Globally</p>
                     <p className="text-xs text-muted-foreground mt-1">All requiring AI transformation guidance</p>
-                    <p className="text-xs text-muted-foreground/80 mt-1.5 italic">Potential addressable market for personalized AI transformation</p>
+                    <p className="text-xs text-muted-foreground/80 mt-1.5 italic">Addressable market for personalized AI transformation</p>
                   </div>
                   
                   <div className="p-4 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
-                    <div className="text-2xl font-bold text-primary mb-1">92%</div>
-                    <p className="text-sm text-muted-foreground font-semibold">Organizations Adopting AI by End of 2025</p>
-                    <p className="text-xs text-muted-foreground mt-1">Up from 84% in early 2025</p>
-                    <p className="text-xs text-muted-foreground/80 mt-1.5 italic">Source: Gartner AI Adoption Survey, November 2025</p>
+                    <div className="text-2xl font-bold text-primary mb-1">94%</div>
+                    <p className="text-sm text-muted-foreground font-semibold">Organizations Actively Deploying AI in 2026</p>
+                    <p className="text-xs text-muted-foreground mt-1">Up from 72% in early 2024</p>
+                    <p className="text-xs text-muted-foreground/80 mt-1.5 italic">Source: Gartner AI Adoption Survey</p>
                   </div>
                 </div>
               </div>
@@ -389,7 +392,7 @@ const PitchDeck = () => {
                 
                 <div className="mt-4 p-4 rounded-xl bg-gradient-to-br from-accent/10 to-accent/5 border border-accent/20">
                   <p className="text-xs text-muted-foreground text-center">
-                    <span className="font-semibold text-foreground">Market Timing:</span> AI adoption urgency at all-time high following ChatGPT's mainstream breakthrough and enterprise AI transformation mandates
+                    <span className="font-semibold text-foreground">Market Timing:</span> AI adoption urgency at all-time high—2026 marks the transition from AI experimentation to mandatory enterprise transformation
                   </p>
                 </div>
               </div>
@@ -593,13 +596,13 @@ const PitchDeck = () => {
             
             <div className="space-y-6">
               <p className="text-sm text-muted-foreground text-center max-w-2xl mx-auto">
-                As a pre-launch platform, these are conservative estimates based on comparable SaaS benchmarks, freemium conversion rates, and our unique market positioning.
+                Conservative estimates based on comparable SaaS benchmarks, freemium conversion rates, and our unique market positioning in the AI transformation space.
               </p>
               
               <div className="grid md:grid-cols-3 gap-6">
                 <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 rounded-xl p-5">
                   <div className="text-center mb-4">
-                    <h3 className="text-sm font-bold text-foreground mb-1">Year 1</h3>
+                    <h3 className="text-sm font-bold text-foreground mb-1">2026</h3>
                     <div className="text-xs text-muted-foreground">Launch & Growth</div>
                   </div>
                   <div className="space-y-3">
@@ -621,7 +624,7 @@ const PitchDeck = () => {
                 
                 <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 rounded-xl p-5">
                   <div className="text-center mb-4">
-                    <h3 className="text-sm font-bold text-foreground mb-1">Year 2</h3>
+                    <h3 className="text-sm font-bold text-foreground mb-1">2027</h3>
                     <div className="text-xs text-muted-foreground">Scale & Optimize</div>
                   </div>
                   <div className="space-y-3">
@@ -643,7 +646,7 @@ const PitchDeck = () => {
                 
                 <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/20 rounded-xl p-5">
                   <div className="text-center mb-4">
-                    <h3 className="text-sm font-bold text-foreground mb-1">Year 3</h3>
+                    <h3 className="text-sm font-bold text-foreground mb-1">2028</h3>
                     <div className="text-xs text-muted-foreground">Enterprise Entry</div>
                   </div>
                   <div className="space-y-3">
@@ -979,7 +982,7 @@ const PitchDeck = () => {
                     <span className="text-primary mt-1">•</span>
                     <div>
                       <div className="text-sm font-semibold text-foreground mb-1">Massive Market</div>
-                      <div className="text-xs text-muted-foreground">$12.4B TAM growing 45% annually</div>
+                      <div className="text-xs text-muted-foreground">$50B+ TAM in AI transformation & automation</div>
                     </div>
                   </div>
                   
