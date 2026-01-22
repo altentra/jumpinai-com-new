@@ -62,7 +62,7 @@ const PitchDeck = () => {
               Personalized AI Transformation at Scale
             </h2>
             <p className="text-lg text-foreground font-medium max-w-2xl mx-auto mb-3">
-              The world doesn't need more AI tools. It needs a way to use them.
+              The AI Adaptation Studio That Builds Your Path Forward
             </p>
             <p className="text-base text-muted-foreground max-w-3xl mx-auto leading-relaxed">
               From 2 questions to complete transformation blueprint in 2 minutes—plus the ability to build and export automated workflows and AI agents. Strategy to execution, personalized at scale.
