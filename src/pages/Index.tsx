@@ -1975,7 +1975,7 @@ const Index = () => {
               Flexible plans designed to accelerate your personal and business growth
             </p>
             <p className="text-base text-muted-foreground max-w-3xl mx-auto">
-              <span className="font-semibold text-foreground">1 credit = 1 Jump generation.</span> Each Jump is a complete AI adaptation plan with tools and prompts to execute your strategy.
+              <span className="font-semibold text-foreground">Credit costs:</span> 1 credit per Jump generation, 1 credit per Workflow build, 2 credits per AI Agent build. Each Jump is a complete AI adaptation plan—then build Workflows or AI Agents to automate your execution.
             </p>
           </div>
 
