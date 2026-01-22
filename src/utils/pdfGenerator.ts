@@ -737,26 +737,49 @@ export const generatePitchDeckPDF = (): void => {
   const pdf = new jsPDF();
   const pageWidth = pdf.internal.pageSize.getWidth();
   const pageHeight = pdf.internal.pageSize.getHeight();
-  const margin = 16;
+  const margin = 20;
   const maxWidth = pageWidth - 2 * margin;
   let yPosition = margin;
 
-  // Premium investor-focused color palette
+  // Premium investor-focused color palette - Deep navy & gold accent
   const colors = {
-    primary: { r: 30, g: 58, b: 138 },
-    primaryLight: { r: 59, g: 130, b: 246 },
-    secondary: { r: 55, g: 90, b: 127 },
-    accent: { r: 109, g: 88, b: 249 },
+    // Primary brand - Deep sophisticated navy
+    navy: { r: 15, g: 23, b: 42 },
+    navyLight: { r: 30, g: 41, b: 59 },
+    navyMid: { r: 51, g: 65, b: 85 },
+    
+    // Accent - Warm gold/amber for premium feel
+    gold: { r: 217, g: 167, b: 72 },
+    goldLight: { r: 250, g: 204, b: 100 },
+    goldDark: { r: 180, g: 130, b: 50 },
+    
+    // Text hierarchy
     heading: { r: 15, g: 23, b: 42 },
-    body: { r: 51, g: 65, b: 85 },
-    muted: { r: 100, g: 116, b: 139 },
+    body: { r: 55, g: 65, b: 81 },
+    muted: { r: 107, g: 114, b: 128 },
+    subtle: { r: 156, g: 163, b: 175 },
+    
+    // Backgrounds - warm neutrals
     white: { r: 255, g: 255, b: 255 },
-    sectionBg: { r: 248, g: 250, b: 252 },
-    cardBg: { r: 245, g: 247, b: 250 },
-    highlightBg: { r: 241, g: 245, b: 255 },
-    border: { r: 226, g: 232, b: 240 },
-    success: { r: 34, g: 197, b: 94 },
-    blue: { r: 59, g: 130, b: 246 },
+    cream: { r: 253, g: 251, b: 247 },
+    warmGray: { r: 249, g: 247, b: 243 },
+    cardBg: { r: 255, g: 255, b: 255 },
+    
+    // Semantic colors
+    success: { r: 22, g: 163, b: 74 },
+    blue: { r: 37, g: 99, b: 235 },
+    
+    // Borders
+    border: { r: 229, g: 225, b: 218 },
+    borderLight: { r: 243, g: 240, b: 235 },
+    
+    // Legacy aliases for backward compatibility (mapped to new palette)
+    primary: { r: 15, g: 23, b: 42 },
+    primaryLight: { r: 37, g: 99, b: 235 },
+    secondary: { r: 55, g: 65, b: 81 },
+    accent: { r: 217, g: 167, b: 72 },
+    sectionBg: { r: 249, g: 247, b: 243 },
+    highlightBg: { r: 253, g: 251, b: 247 },
     yellow: { r: 234, g: 179, b: 8 },
     amber: { r: 245, g: 158, b: 11 },
     violet: { r: 139, g: 92, b: 246 },
@@ -775,9 +798,9 @@ export const generatePitchDeckPDF = (): void => {
   };
 
   const checkPageBreak = (neededHeight: number) => {
-    if (yPosition + neededHeight > pageHeight - 20) {
+    if (yPosition + neededHeight > pageHeight - 25) {
       pdf.addPage();
-      yPosition = margin + 5;
+      yPosition = margin + 8;
       return true;
     }
     return false;
@@ -788,215 +811,273 @@ export const generatePitchDeckPDF = (): void => {
     return pdf.splitTextToSize(text, maxW);
   };
 
-  // ================== COVER PAGE ==================
-  setFillColor(colors.primary);
+  // ================== PREMIUM COVER PAGE ==================
+  // Deep navy background with sophisticated gradient effect
+  setFillColor(colors.navy);
   pdf.rect(0, 0, pageWidth, pageHeight, 'F');
-
-  setFillColor(colors.primaryLight);
-  pdf.rect(0, 0, pageWidth, 2, 'F');
-
+  
+  // Subtle gradient overlay (simulated with rectangles)
+  for (let i = 0; i < 20; i++) {
+    const alpha = 0.02 * (20 - i);
+    pdf.setFillColor(30 + i * 2, 41 + i * 2, 59 + i * 2);
+    pdf.rect(0, pageHeight - (i * 15), pageWidth, 15, 'F');
+  }
+  
+  // Gold accent line at top
+  setFillColor(colors.gold);
+  pdf.rect(0, 0, pageWidth, 3, 'F');
+  
+  // Logo area - elegant centered positioning
   setTextColor(colors.white);
-  pdf.setFontSize(36);
+  pdf.setFontSize(48);
   pdf.setFont('helvetica', 'bold');
-  pdf.text('JumpinAI', pageWidth / 2, 75, { align: 'center' });
-
-  pdf.setFontSize(14);
+  pdf.text('JumpinAI', pageWidth / 2, 70, { align: 'center' });
+  
+  // Subtle gold underline
+  setDrawColor(colors.gold);
+  pdf.setLineWidth(1.5);
+  pdf.line(pageWidth / 2 - 35, 78, pageWidth / 2 + 35, 78);
+  
+  // Tagline with refined typography
+  pdf.setFontSize(13);
   pdf.setFont('helvetica', 'normal');
-  setTextColor({ r: 200, g: 220, b: 255 });
-  pdf.text('Your Personalized AI Adaptation Studio', pageWidth / 2, 90, { align: 'center' });
-
-  setDrawColor({ r: 200, g: 220, b: 255 });
-  pdf.setLineWidth(0.5);
-  pdf.line(pageWidth / 2 - 40, 100, pageWidth / 2 + 40, 100);
-
+  setTextColor({ r: 180, g: 190, b: 210 });
+  pdf.text('AI Adaptation Studio', pageWidth / 2, 95, { align: 'center' });
+  
+  // Main value proposition - prominent and clear
   setTextColor(colors.white);
-  pdf.setFontSize(22);
+  pdf.setFontSize(20);
   pdf.setFont('helvetica', 'bold');
-  pdf.text('Personalized AI Transformation at Scale', pageWidth / 2, 125, { align: 'center' });
-
+  pdf.text('Personalized AI Transformation', pageWidth / 2, 125, { align: 'center' });
+  pdf.text('at Scale', pageWidth / 2, 138, { align: 'center' });
+  
+  // Core thesis statement
   pdf.setFontSize(11);
   pdf.setFont('helvetica', 'normal');
-  setTextColor({ r: 200, g: 220, b: 255 });
-  pdf.text('The world doesn\'t need more AI tools. It needs a way to use them.', pageWidth / 2, 140, { align: 'center' });
-
+  setTextColor(colors.goldLight);
+  pdf.text('The AI Adaptation Studio That Builds Your Path Forward', pageWidth / 2, 158, { align: 'center' });
+  
+  // Supporting description with better line height
+  setTextColor({ r: 160, g: 175, b: 200 });
   pdf.setFontSize(9);
-  const subtitleLines = wrapText('From 2 questions to complete transformation blueprint in 2 minutes—plus the ability to build and export automated workflows and AI agents. Strategy to execution, personalized at scale.', 140, 9);
-  pdf.text(subtitleLines, pageWidth / 2, 155, { align: 'center' });
-
-  setTextColor(colors.white);
-  pdf.setFontSize(16);
-  pdf.setFont('helvetica', 'bold');
-  pdf.text('INVESTOR PITCH DECK', pageWidth / 2, 185, { align: 'center' });
-
+  const subtitleLines = wrapText('From 2 questions to a complete transformation blueprint in 2 minutes — plus the ability to build and export automated workflows and AI agents.', 150, 9);
+  subtitleLines.forEach((line: string, idx: number) => {
+    pdf.text(line, pageWidth / 2, 175 + (idx * 5), { align: 'center' });
+  });
+  
+  // Pitch deck label with gold accent
+  yPosition = pageHeight - 70;
+  setFillColor(colors.gold);
+  pdf.rect(pageWidth / 2 - 50, yPosition - 3, 100, 18, 'F');
+  
+  setTextColor(colors.navy);
   pdf.setFontSize(11);
-  pdf.setFont('helvetica', 'normal');
-  setTextColor({ r: 200, g: 220, b: 255 });
-  pdf.text('Pre-Seed Investment Opportunity', pageWidth / 2, 197, { align: 'center' });
-
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('INVESTOR PITCH DECK', pageWidth / 2, yPosition + 7, { align: 'center' });
+  
+  // Date and confidential notice
   const currentDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
-  pdf.setFontSize(10);
-  pdf.text(currentDate, pageWidth / 2, pageHeight - 35, { align: 'center' });
-
+  setTextColor({ r: 140, g: 155, b: 180 });
+  pdf.setFontSize(9);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text('Pre-Seed Investment Opportunity', pageWidth / 2, pageHeight - 38, { align: 'center' });
+  pdf.text(currentDate, pageWidth / 2, pageHeight - 28, { align: 'center' });
+  
   pdf.setFontSize(8);
-  setTextColor({ r: 180, g: 200, b: 235 });
-  pdf.text('Confidential & Proprietary', pageWidth / 2, pageHeight - 22, { align: 'center' });
+  setTextColor({ r: 100, g: 115, b: 140 });
+  pdf.text('Confidential & Proprietary', pageWidth / 2, pageHeight - 15, { align: 'center' });
 
-  // ================== HELPERS ==================
+  // ================== PREMIUM HELPERS ==================
   const addSectionHeader = (title: string) => {
-    checkPageBreak(20);
-    setFillColor(colors.sectionBg);
-    pdf.rect(margin - 6, yPosition - 3, maxWidth + 12, 13, 'F');
-    setFillColor(colors.primary);
-    pdf.rect(margin - 6, yPosition - 3, 3, 13, 'F');
-    setTextColor(colors.heading);
-    pdf.setFontSize(14);
+    checkPageBreak(28);
+    
+    // Premium section header with gold accent
+    setFillColor(colors.warmGray);
+    pdf.rect(margin - 4, yPosition - 4, maxWidth + 8, 18, 'F');
+    
+    // Gold accent bar on left
+    setFillColor(colors.gold);
+    pdf.rect(margin - 4, yPosition - 4, 3, 18, 'F');
+    
+    // Section title with refined typography
+    setTextColor(colors.navy);
+    pdf.setFontSize(15);
     pdf.setFont('helvetica', 'bold');
-    pdf.text(title, margin, yPosition + 6);
-    yPosition += 18;
+    pdf.text(title, margin + 4, yPosition + 7);
+    
+    // Subtle gold underline
+    setDrawColor(colors.gold);
+    pdf.setLineWidth(0.5);
+    pdf.line(margin + 4, yPosition + 11, margin + 4 + pdf.getTextWidth(title), yPosition + 11);
+    
+    yPosition += 22;
   };
 
-  const addSubHeader = (title: string, size: number = 10) => {
-    checkPageBreak(12);
-    setTextColor(colors.heading);
+  const addSubHeader = (title: string, size: number = 11) => {
+    checkPageBreak(14);
+    setTextColor(colors.navy);
     pdf.setFontSize(size);
     pdf.setFont('helvetica', 'bold');
     pdf.text(title, margin, yPosition);
-    yPosition += size + 3;
+    
+    // Subtle underline
+    setDrawColor(colors.borderLight);
+    pdf.setLineWidth(0.3);
+    pdf.line(margin, yPosition + 3, margin + maxWidth * 0.4, yPosition + 3);
+    
+    yPosition += size + 5;
   };
 
-  const addPara = (text: string, fontSize: number = 8.5, style: 'normal' | 'bold' | 'italic' = 'normal') => {
-    checkPageBreak(10);
+  const addPara = (text: string, fontSize: number = 9, style: 'normal' | 'bold' | 'italic' = 'normal') => {
+    checkPageBreak(12);
     setTextColor(colors.body);
     pdf.setFontSize(fontSize);
     pdf.setFont('helvetica', style);
     const lines = wrapText(text, maxWidth, fontSize);
     pdf.text(lines, margin, yPosition);
-    yPosition += lines.length * (fontSize * 0.4) + 3;
+    yPosition += lines.length * (fontSize * 0.45) + 4;
   };
 
-  const addBullet = (text: string, fontSize: number = 8, indent: number = 0) => {
-    checkPageBreak(10);
-    setFillColor(colors.primaryLight);
-    pdf.circle(margin + indent + 1.5, yPosition - 1.5, 0.8, 'F');
+  const addBullet = (text: string, fontSize: number = 8.5, indent: number = 0) => {
+    checkPageBreak(12);
+    // Gold bullet point
+    setFillColor(colors.gold);
+    pdf.circle(margin + indent + 2, yPosition - 1, 1.2, 'F');
     setTextColor(colors.body);
     pdf.setFontSize(fontSize);
     pdf.setFont('helvetica', 'normal');
-    const lines = wrapText(text, maxWidth - 5 - indent, fontSize);
-    pdf.text(lines, margin + indent + 5, yPosition);
-    yPosition += lines.length * (fontSize * 0.4) + 2.5;
+    const lines = wrapText(text, maxWidth - 8 - indent, fontSize);
+    pdf.text(lines, margin + indent + 6, yPosition);
+    yPosition += lines.length * (fontSize * 0.45) + 3;
+  };
+
+  // Premium card helper
+  const drawPremiumCard = (x: number, y: number, w: number, h: number, hasShadow: boolean = true) => {
+    // Subtle shadow effect
+    if (hasShadow) {
+      setFillColor({ r: 240, g: 238, b: 233 });
+      pdf.rect(x + 1, y + 1, w, h, 'F');
+    }
+    // Card background
+    setFillColor(colors.white);
+    pdf.rect(x, y, w, h, 'F');
+    // Border
+    setDrawColor(colors.border);
+    pdf.setLineWidth(0.4);
+    pdf.rect(x, y, w, h, 'S');
   };
 
   // ================== THE PROBLEM ==================
   pdf.addPage();
-  yPosition = margin + 5;
+  yPosition = margin + 10;
   addSectionHeader('The Problem');
 
-  addPara('The AI revolution has created a paradox: while AI capabilities advance exponentially, actual adoption and successful implementation lag dramatically behind. Organizations and individuals face a fundamental disconnect between AI\'s promise and their ability to harness it effectively.', 9);
-  yPosition += 3;
+  addPara('The AI revolution has created a paradox: while AI capabilities advance exponentially, actual adoption and successful implementation lag dramatically behind. Organizations and individuals face a fundamental disconnect between AI\'s promise and their ability to harness it effectively.', 9.5);
+  yPosition += 6;
 
-  // Problem cards - 3 columns
-  checkPageBreak(60);
-  const pCardWidth = (maxWidth - 6) / 3;
-  const pCardHeight = 55;
+  // Problem cards - 3 columns with premium styling
+  checkPageBreak(65);
+  const pCardWidth = (maxWidth - 12) / 3;
+  const pCardHeight = 58;
   const pStartY = yPosition;
 
   // Card 1: Personalization Crisis
-  setFillColor(colors.cardBg);
-  pdf.rect(margin, pStartY, pCardWidth, pCardHeight, 'F');
-  setDrawColor(colors.border);
-  pdf.setLineWidth(0.4);
-  pdf.rect(margin, pStartY, pCardWidth, pCardHeight, 'S');
+  drawPremiumCard(margin, pStartY, pCardWidth, pCardHeight);
+  
+  // Gold accent at top
+  setFillColor(colors.gold);
+  pdf.rect(margin, pStartY, pCardWidth, 3, 'F');
 
-  setTextColor(colors.heading);
-  pdf.setFontSize(9);
+  setTextColor(colors.navy);
+  pdf.setFontSize(9.5);
   pdf.setFont('helvetica', 'bold');
-  pdf.text('Personalization Crisis', margin + pCardWidth / 2, pStartY + 7, { align: 'center' });
+  pdf.text('Personalization Crisis', margin + pCardWidth / 2, pStartY + 12, { align: 'center' });
 
   setTextColor(colors.body);
-  pdf.setFontSize(7);
+  pdf.setFontSize(7.5);
   pdf.setFont('helvetica', 'normal');
-  const c1 = wrapText('Generic AI consulting and cookie-cutter frameworks fundamentally misunderstand the nature of successful transformation. Every organization operates within unique constraints.', pCardWidth - 6, 7);
-  pdf.text(c1, margin + 3, pStartY + 14);
+  const c1 = wrapText('Generic AI consulting and cookie-cutter frameworks fundamentally misunderstand successful transformation. Every organization operates within unique constraints.', pCardWidth - 8, 7.5);
+  pdf.text(c1, margin + 4, pStartY + 20);
 
-  setTextColor(colors.primary);
-  pdf.setFontSize(8.5);
-  pdf.setFont('helvetica', 'bold');
-  pdf.text('78% of AI initiatives fail', margin + pCardWidth / 2, pStartY + 46, { align: 'center' });
-  setTextColor(colors.muted);
-  pdf.setFontSize(6.5);
-  pdf.setFont('helvetica', 'italic');
-  pdf.text('due to poor personalization', margin + pCardWidth / 2, pStartY + 51, { align: 'center' });
-
-  // Card 2: Implementation Gap
-  setFillColor(colors.cardBg);
-  pdf.rect(margin + pCardWidth + 3, pStartY, pCardWidth, pCardHeight, 'F');
-  setDrawColor(colors.border);
-  pdf.rect(margin + pCardWidth + 3, pStartY, pCardWidth, pCardHeight, 'S');
-
-  setTextColor(colors.heading);
-  pdf.setFontSize(9);
-  pdf.setFont('helvetica', 'bold');
-  pdf.text('Implementation Gap', margin + pCardWidth + 3 + pCardWidth / 2, pStartY + 7, { align: 'center' });
-
-  setTextColor(colors.body);
-  pdf.setFontSize(7);
-  pdf.setFont('helvetica', 'normal');
-  const c2 = wrapText('Individuals invest 40+ hours researching AI strategies, consuming countless articles, webinars, and courses. Despite this investment, they remain paralyzed at the starting line.', pCardWidth - 6, 7);
-  pdf.text(c2, margin + pCardWidth + 3 + 3, pStartY + 14);
-
-  setTextColor(colors.primary);
-  pdf.setFontSize(8.5);
-  pdf.setFont('helvetica', 'bold');
-  pdf.text('40+ hours wasted', margin + pCardWidth + 3 + pCardWidth / 2, pStartY + 46, { align: 'center' });
-  setTextColor(colors.muted);
-  pdf.setFontSize(6.5);
-  pdf.setFont('helvetica', 'italic');
-  pdf.text('without actionable results', margin + pCardWidth + 3 + pCardWidth / 2, pStartY + 51, { align: 'center' });
-
-  // Card 3: Adaptation Void
-  setFillColor(colors.cardBg);
-  pdf.rect(margin + 2 * (pCardWidth + 3), pStartY, pCardWidth, pCardHeight, 'F');
-  setDrawColor(colors.border);
-  pdf.rect(margin + 2 * (pCardWidth + 3), pStartY, pCardWidth, pCardHeight, 'S');
-
-  setTextColor(colors.heading);
-  pdf.setFontSize(9);
-  pdf.setFont('helvetica', 'bold');
-  pdf.text('Adaptation Void', margin + 2 * (pCardWidth + 3) + pCardWidth / 2, pStartY + 7, { align: 'center' });
-
-  setTextColor(colors.body);
-  pdf.setFontSize(7);
-  pdf.setFont('helvetica', 'normal');
-  const c3 = wrapText('Traditional solutions offer static documents that become obsolete the moment reality deviates from assumptions. Users are abandoned when they most need guidance.', pCardWidth - 6, 7);
-  pdf.text(c3, margin + 2 * (pCardWidth + 3) + 3, pStartY + 14);
-
-  setTextColor(colors.primary);
-  pdf.setFontSize(8.5);
-  pdf.setFont('helvetica', 'bold');
-  pdf.text('Static plans fail', margin + 2 * (pCardWidth + 3) + pCardWidth / 2, pStartY + 46, { align: 'center' });
-  setTextColor(colors.muted);
-  pdf.setFontSize(6.5);
-  pdf.setFont('helvetica', 'italic');
-  pdf.text('when obstacles arise', margin + 2 * (pCardWidth + 3) + pCardWidth / 2, pStartY + 51, { align: 'center' });
-
-  yPosition += pCardHeight + 8;
-
-  // Market Opportunity highlight
-  checkPageBreak(25);
-  setFillColor(colors.highlightBg);
-  pdf.rect(margin, yPosition, maxWidth, 20, 'F');
-  setDrawColor(colors.primaryLight);
-  pdf.setLineWidth(0.5);
-  pdf.rect(margin, yPosition, maxWidth, 20, 'S');
-
-  setTextColor(colors.primary);
+  setTextColor(colors.gold);
   pdf.setFontSize(10);
   pdf.setFont('helvetica', 'bold');
-  pdf.text('Market Opportunity: $50B+ AI Transformation & Automation Market by 2028', margin + maxWidth / 2, yPosition + 8, { align: 'center' });
-  setTextColor(colors.body);
-  pdf.setFontSize(8);
+  pdf.text('78%', margin + pCardWidth / 2, pStartY + 46, { align: 'center' });
+  setTextColor(colors.muted);
+  pdf.setFontSize(7);
   pdf.setFont('helvetica', 'normal');
-  pdf.text('Millions desperately need a solution bridging AI\'s potential and their ability to realize it', margin + maxWidth / 2, yPosition + 15, { align: 'center' });
+  pdf.text('of AI initiatives fail', margin + pCardWidth / 2, pStartY + 52, { align: 'center' });
+
+  // Card 2: Implementation Gap
+  drawPremiumCard(margin + pCardWidth + 6, pStartY, pCardWidth, pCardHeight);
+  setFillColor(colors.gold);
+  pdf.rect(margin + pCardWidth + 6, pStartY, pCardWidth, 3, 'F');
+
+  setTextColor(colors.navy);
+  pdf.setFontSize(9.5);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Implementation Gap', margin + pCardWidth + 6 + pCardWidth / 2, pStartY + 12, { align: 'center' });
+
+  setTextColor(colors.body);
+  pdf.setFontSize(7.5);
+  pdf.setFont('helvetica', 'normal');
+  const c2 = wrapText('Individuals invest 40+ hours researching AI strategies, consuming countless articles and courses. Despite this investment, they remain paralyzed at the starting line.', pCardWidth - 8, 7.5);
+  pdf.text(c2, margin + pCardWidth + 6 + 4, pStartY + 20);
+
+  setTextColor(colors.gold);
+  pdf.setFontSize(10);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('40+ hours', margin + pCardWidth + 6 + pCardWidth / 2, pStartY + 46, { align: 'center' });
+  setTextColor(colors.muted);
+  pdf.setFontSize(7);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text('wasted without results', margin + pCardWidth + 6 + pCardWidth / 2, pStartY + 52, { align: 'center' });
+
+  // Card 3: Adaptation Void
+  drawPremiumCard(margin + 2 * (pCardWidth + 6), pStartY, pCardWidth, pCardHeight);
+  setFillColor(colors.gold);
+  pdf.rect(margin + 2 * (pCardWidth + 6), pStartY, pCardWidth, 3, 'F');
+
+  setTextColor(colors.navy);
+  pdf.setFontSize(9.5);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Adaptation Void', margin + 2 * (pCardWidth + 6) + pCardWidth / 2, pStartY + 12, { align: 'center' });
+
+  setTextColor(colors.body);
+  pdf.setFontSize(7.5);
+  pdf.setFont('helvetica', 'normal');
+  const c3 = wrapText('Traditional solutions offer static documents that become obsolete the moment reality deviates from assumptions. Users are abandoned when they need guidance most.', pCardWidth - 8, 7.5);
+  pdf.text(c3, margin + 2 * (pCardWidth + 6) + 4, pStartY + 20);
+
+  setTextColor(colors.gold);
+  pdf.setFontSize(10);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Static plans', margin + 2 * (pCardWidth + 6) + pCardWidth / 2, pStartY + 46, { align: 'center' });
+  setTextColor(colors.muted);
+  pdf.setFontSize(7);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text('fail when obstacles arise', margin + 2 * (pCardWidth + 6) + pCardWidth / 2, pStartY + 52, { align: 'center' });
+
+  yPosition = pStartY + pCardHeight + 12;
+
+  // Market Opportunity highlight - Premium gold banner
+  checkPageBreak(28);
+  setFillColor(colors.navy);
+  pdf.rect(margin, yPosition, maxWidth, 24, 'F');
+  
+  // Gold accent lines
+  setFillColor(colors.gold);
+  pdf.rect(margin, yPosition, maxWidth, 2, 'F');
+  pdf.rect(margin, yPosition + 22, maxWidth, 2, 'F');
+
+  setTextColor(colors.goldLight);
+  pdf.setFontSize(11);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Market Opportunity: $50B+ AI Transformation Market by 2028', margin + maxWidth / 2, yPosition + 10, { align: 'center' });
+  setTextColor(colors.white);
+  pdf.setFontSize(8.5);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text('Millions desperately need a solution bridging AI\'s potential and their ability to realize it', margin + maxWidth / 2, yPosition + 18, { align: 'center' });
   yPosition += 24;
 
   // ================== OUR SOLUTION ==================
@@ -2350,69 +2431,111 @@ export const generatePitchDeckPDF = (): void => {
 
   yPosition = whyY + 2 * (whyH + 3) + 6;
 
-  // Final CTA
-  checkPageBreak(30);
-  setFillColor(colors.primary);
-  pdf.rect(margin, yPosition, maxWidth, 26, 'F');
+  // Final CTA - Premium navy with gold accent
+  checkPageBreak(32);
+  setFillColor(colors.navy);
+  pdf.rect(margin, yPosition, maxWidth, 28, 'F');
+  
+  // Gold accent bars
+  setFillColor(colors.gold);
+  pdf.rect(margin, yPosition, maxWidth, 2, 'F');
 
   setTextColor(colors.white);
-  pdf.setFontSize(11);
+  pdf.setFontSize(12);
   pdf.setFont('helvetica', 'bold');
-  pdf.text('Join us in democratizing personalized AI transformation', margin + maxWidth / 2, yPosition + 10, { align: 'center' });
+  pdf.text('Join us in democratizing personalized AI transformation', margin + maxWidth / 2, yPosition + 12, { align: 'center' });
 
   pdf.setFontSize(9);
   pdf.setFont('helvetica', 'normal');
-  pdf.text('Building the category-defining platform for the AI-powered workforce', margin + maxWidth / 2, yPosition + 18, { align: 'center' });
+  setTextColor(colors.goldLight);
+  pdf.text('Building the category-defining platform for the AI-powered workforce', margin + maxWidth / 2, yPosition + 21, { align: 'center' });
 
-  yPosition += 30;
+  yPosition += 32;
 
-  // ================== CLOSING PAGE ==================
+  // ================== PREMIUM CLOSING PAGE ==================
   pdf.addPage();
-  yPosition = pageHeight / 2 - 30;
+  
+  // Full navy background
+  setFillColor(colors.navy);
+  pdf.rect(0, 0, pageWidth, pageHeight, 'F');
+  
+  // Gold accent at top
+  setFillColor(colors.gold);
+  pdf.rect(0, 0, pageWidth, 4, 'F');
+  
+  // Centered content
+  yPosition = pageHeight / 2 - 45;
 
-  setTextColor(colors.primary);
-  pdf.setFontSize(22);
+  // Brand name with elegance
+  setTextColor(colors.white);
+  pdf.setFontSize(36);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('JumpinAI', pageWidth / 2, yPosition, { align: 'center' });
+  
+  // Gold underline
+  setDrawColor(colors.gold);
+  pdf.setLineWidth(1.5);
+  pdf.line(pageWidth / 2 - 30, yPosition + 6, pageWidth / 2 + 30, yPosition + 6);
+
+  yPosition += 25;
+
+  setTextColor(colors.goldLight);
+  pdf.setFontSize(16);
   pdf.setFont('helvetica', 'bold');
   pdf.text('Let\'s Build Together', pageWidth / 2, yPosition, { align: 'center' });
 
-  yPosition += 18;
+  yPosition += 25;
 
-  setTextColor(colors.body);
+  // Contact section with refined styling
+  setTextColor({ r: 160, g: 175, b: 200 });
   pdf.setFontSize(10);
   pdf.setFont('helvetica', 'normal');
   pdf.text('Contact Us', pageWidth / 2, yPosition, { align: 'center' });
 
-  yPosition += 12;
+  yPosition += 14;
 
-  pdf.setFontSize(9.5);
-  pdf.text('Email: info@jumpinai.com', pageWidth / 2, yPosition, { align: 'center' });
+  setTextColor(colors.white);
+  pdf.setFontSize(11);
+  pdf.text('info@jumpinai.com', pageWidth / 2, yPosition, { align: 'center' });
 
-  yPosition += 8;
-  pdf.text('Website: www.jumpinai.com', pageWidth / 2, yPosition, { align: 'center' });
+  yPosition += 10;
+  pdf.text('www.jumpinai.com', pageWidth / 2, yPosition, { align: 'center' });
 
-  yPosition += 20;
-
-  setTextColor(colors.muted);
-  pdf.setFontSize(8);
+  // Tagline at bottom
+  setTextColor({ r: 100, g: 115, b: 140 });
+  pdf.setFontSize(9);
   pdf.setFont('helvetica', 'italic');
-  pdf.text('JumpinAI - Your Personalized AI Adaptation Studio', pageWidth / 2, yPosition, { align: 'center' });
+  pdf.text('The AI Adaptation Studio That Builds Your Path Forward', pageWidth / 2, pageHeight - 25, { align: 'center' });
 
-  // ================== PAGE NUMBERS ==================
+  // ================== PREMIUM PAGE NUMBERS & FOOTER ==================
   const pageCount = pdf.getNumberOfPages();
   for (let i = 1; i <= pageCount; i++) {
     if (i === 1 || i === pageCount) continue;
 
     pdf.setPage(i);
+    
+    // Subtle footer line
+    setDrawColor(colors.border);
+    pdf.setLineWidth(0.3);
+    pdf.line(margin, pageHeight - 18, pageWidth - margin, pageHeight - 18);
 
+    // Brand on left
     setTextColor(colors.muted);
-    pdf.setFontSize(8);
+    pdf.setFontSize(7.5);
     pdf.setFont('helvetica', 'normal');
-    const pgText = `${i} of ${pageCount}`;
+    pdf.text('JumpinAI', margin, pageHeight - 10);
+    
+    // Confidential in center
+    pdf.setFontSize(6.5);
+    setTextColor(colors.subtle);
+    pdf.text('Confidential', pageWidth / 2, pageHeight - 10, { align: 'center' });
+    
+    // Page number on right with refined styling
+    setTextColor(colors.muted);
+    pdf.setFontSize(7.5);
+    const pgText = `${i} / ${pageCount}`;
     const pgW = pdf.getTextWidth(pgText);
     pdf.text(pgText, pageWidth - margin - pgW, pageHeight - 10);
-
-    pdf.setFontSize(7);
-    pdf.text('JumpinAI - Confidential', margin, pageHeight - 10);
   }
 
   // Save

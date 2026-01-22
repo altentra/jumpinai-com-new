@@ -124,9 +124,9 @@ const ForInvestors = () => {
               {/* The Core Thesis */}
               <div className="space-y-6">
                 <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground leading-tight">
-                  The World Doesn't Need More AI Tools.
+                  The AI Adaptation Studio
                   <span className="block bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent mt-2">
-                    It Needs a Way to Use Them.
+                    That Builds Your Path Forward
                   </span>
                 </h2>
               </div>
