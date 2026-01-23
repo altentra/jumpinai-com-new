@@ -1,4 +1,4 @@
-import { ArrowRight, Zap, Target, Users, Rocket, Download, Sparkles, Layers, Lightbulb, GitBranch, Wrench } from "lucide-react";
+import { ArrowRight, Zap, Target, Users, Rocket, Download, Sparkles, Layers, Lightbulb, GitBranch, Wrench, Workflow, Brain, Bot } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -282,6 +282,11 @@ const AboutUs = () => {
       icon: Rocket,
       title: "Tools & Prompts Tab",
       description: "Personalized AI tool recommendations and ready-to-use prompts, specifically selected and crafted for your unique situation and goals."
+    },
+    {
+      icon: Bot,
+      title: "Implementation",
+      description: "Build automated workflows and AI agents from your plan, ready to export to n8n or Make.com for immediate deployment."
     }
   ];
 
@@ -345,7 +350,7 @@ const AboutUs = () => {
                   <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent leading-tight tracking-tight">About JumpinAI</h1>
                   <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-20 sm:w-24 h-0.5 sm:h-1 bg-gradient-to-r from-transparent via-primary/60 to-transparent rounded-full"></div>
                 </div>
-                <p className="text-sm sm:text-base md:text-lg text-muted-foreground/90 max-w-3xl mx-auto leading-relaxed">We are AI Adaptation Studio delivering what the world needs most: clarity. As AI reshapes every industry, we provide the strategic "jumps" to harness its power—personalized implementation plans designed around your goals, transforming ambition into achievement through clear, actionable pathways.</p>
+                <p className="text-sm sm:text-base md:text-lg text-muted-foreground/90 max-w-3xl mx-auto leading-relaxed">We are an AI Adaptation Studio that clarifies and builds your path forward. As AI reshapes every industry, we provide the strategic "jumps" to harness its power—personalized plans and automated workflows designed around your goals, transforming ambition into achievement through strategic clarity and executable implementation.</p>
               </div>
             </div>
           </div>
@@ -376,16 +381,16 @@ const AboutUs = () => {
                 <div className="space-y-3 sm:space-y-4">
                   <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
                     We stand at the crossroads of human potential and AI.<br />
-                    <strong className="text-foreground">JumpinAI</strong> was born from a profound realization: successful AI adaptation isn't about information—it's about clarity. The clarity to see your path forward, the strategic insight to harness AI's power effectively, and the confidence to transform your ambitions into reality.
+                    <strong className="text-foreground">JumpinAI</strong> was born from a profound realization: successful AI adaptation isn't about information—it's about clarity and execution. The clarity to see your path forward, the strategic insight to harness AI's power effectively, and the tools to transform your ambitions into automated reality.
                   </p>
                   <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-                    In a world overflowing with AI tools and generic solutions, what's missing isn't more options—it's clarity and actionable guidance. We believe true adaptation happens when technology meets the individual, when clear pathways cut through complexity, and when AI becomes deeply personal, immediately actionable, and perfectly aligned with your unique context and aspirations.
+                    In a world overflowing with AI tools and generic solutions, what's missing isn't more options—it's clarity, actionable guidance, and the bridge to implementation. We believe true adaptation happens when technology meets the individual, when clear pathways cut through complexity, and when strategic plans become executable workflows and AI agents perfectly aligned with your unique context.
                   </p>
                   <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-                    We are <strong className="text-foreground">architects of personalized AI adaptation</strong>. We craft clear, actionable roadmaps that bridge who you are today with who you can become when you harness AI strategically. Every plan, every insight, every moment of guidance is designed around one fundamental truth: your path to AI success should be as unique as your fingerprint—clear, actionable, and unmistakably yours.
+                    We are <strong className="text-foreground">architects of personalized AI adaptation</strong>. We don't just craft strategic roadmaps—we build the automations that bring them to life. From clarity to execution, we bridge who you are today with who you can become when you harness AI strategically and deploy it confidently.
                   </p>
                   <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-                    As pioneers in the era of AI adaptation, we're not just navigating the revolution—we're shaping it with humanity at its core. Because the future is shaped by those who harness AI with clarity, implement it with confidence, and make it truly their own.
+                    As pioneers in the era of AI adaptation, we're not just navigating the revolution—we're shaping it with humanity at its core. Because the future is shaped by those who harness AI with clarity, implement it with automated precision, and make it truly their own.
                   </p>
                 </div>
               </article>
@@ -403,7 +408,7 @@ const AboutUs = () => {
               Our Mission
             </h2>
             <p className="text-sm sm:text-base text-muted-foreground leading-relaxed max-w-4xl">
-              To democratize successful AI adoption by delivering personalized, adaptive transformation plans that turn complexity into clarity. We empower individuals and organizations to confidently navigate their unique AI journey—from strategic vision to tactical execution—in minutes, not months.
+              To democratize successful AI adoption by delivering personalized transformation plans and automated implementations that turn complexity into clarity and action. We empower individuals and organizations to confidently navigate their unique AI journey—from strategic vision to deployed workflows and AI agents—in minutes, not months.
             </p>
           </div>
 
@@ -413,7 +418,7 @@ const AboutUs = () => {
               Our Vision
             </h2>
             <p className="text-sm sm:text-base text-muted-foreground leading-relaxed max-w-4xl">
-              To become the global standard for AI adaptation—a world where every individual and organization can seamlessly harness artificial intelligence in ways perfectly aligned with their context, capabilities, and ambitions. Where AI adoption is no longer a challenge, but a personalized journey of empowerment.
+              To become the global standard for AI adaptation—a world where every individual and organization can seamlessly harness artificial intelligence in ways perfectly aligned with their context, capabilities, and ambitions. Where AI adoption is no longer a challenge, but a personalized journey from strategic clarity to automated execution.
             </p>
           </div>
         </div>
@@ -460,7 +465,7 @@ const AboutUs = () => {
                 How JumpinAI Studio Works
               </h2>
               <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                Generate your personalized AI transformation roadmap in 2 minutes, then adapt it in real-time as your needs evolve.
+                Generate your personalized AI transformation roadmap in 2 minutes, refine it in real-time, then build automated workflows and AI agents ready for deployment.
               </p>
             </div>
 
@@ -469,7 +474,7 @@ const AboutUs = () => {
               <h3 className="text-lg sm:text-xl font-bold text-center mb-6 sm:mb-8 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">
                 Your Complete Jump Package
               </h3>
-              <div className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-6">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4 md:gap-6">
                 {jumpPackage.map((item, index) => (
                   <div 
                     key={index}
@@ -526,7 +531,7 @@ const AboutUs = () => {
               Ready for Your Personal Jump?
             </h2>
             <p className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed">
-              The AI era demands adaptation. Not someday—today. Those who succeed won't be the ones who wait, watch, or wonder. They'll be the ones who act with clarity, adapt with precision, and harness AI to accelerate everything that matters. You know our purpose. You understand our approach. Now the question isn't what AI can do—it's what you'll do with it. <span className="text-primary font-semibold">Your clarity starts now.</span>
+              The AI era demands adaptation. Not someday—today. Those who succeed won't be the ones who wait, watch, or wonder. They'll be the ones who act with clarity, build with precision, and deploy AI to accelerate everything that matters. You know our purpose. You understand our approach. Now the question isn't what AI can do—it's what you'll build with it. <span className="text-primary font-semibold">Your clarity and execution start now.</span>
             </p>
             
             <div className="flex justify-center">
