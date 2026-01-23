@@ -41,7 +41,7 @@ const Hero = () => {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-8">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-12 sm:pt-14 lg:pt-12">
       {/* === EPIC PREMIUM BACKGROUND === */}
       
       {/* Base Layer - Deep premium foundation */}
@@ -144,7 +144,7 @@ const Hero = () => {
           {/* Left Content */}
           <div className="animate-fade-in-up text-center lg:text-left">
             {/* Mini-Tagline */}
-            <div className="flex justify-center lg:justify-start mb-6 sm:mb-8 mt-12 sm:mt-14 md:mt-16 lg:mt-10">
+            <div className="flex justify-center lg:justify-start mb-6 sm:mb-8 mt-16 sm:mt-18 md:mt-20 lg:mt-14">
               <div className="relative group inline-block z-10">
                 {/* Liquid glass glow effect */}
                 <div className="absolute -inset-0.5 bg-gradient-to-r from-white/15 via-white/20 to-white/15 rounded-full blur-md opacity-40 group-hover:opacity-60 transition duration-500"></div>
