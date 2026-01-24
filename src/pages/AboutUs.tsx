@@ -267,26 +267,21 @@ const AboutUs = () => {
     }
   ];
 
-  const jumpPackage = [
+  const jumpPackageSteps = [
     {
       icon: Sparkles,
-      title: "Overview Tab",
+      title: "Overview",
       description: "Comprehensive situation analysis, strategic vision with measurable success metrics, and clear understanding of your AI transformation path."
     },
     {
       icon: Layers,
-      title: "Plan Tab",
+      title: "Plan",
       description: "Detailed action roadmap organized into phases and milestones, with step-by-step implementation guidance tailored to your context."
     },
     {
       icon: Rocket,
-      title: "Tools & Prompts Tab",
+      title: "Tools & Prompts",
       description: "Personalized AI tool recommendations and ready-to-use prompts, specifically selected and crafted for your unique situation and goals."
-    },
-    {
-      icon: Bot,
-      title: "Implementation",
-      description: "Build automated workflows and AI agents from your plan, ready to export to n8n or Make.com for immediate deployment."
     }
   ];
 
@@ -469,13 +464,13 @@ const AboutUs = () => {
               </p>
             </div>
 
-            {/* Your Complete Jump Package */}
+            {/* Your Complete Jump - 3 Steps */}
             <div className="mb-10 sm:mb-12">
               <h3 className="text-lg sm:text-xl font-bold text-center mb-6 sm:mb-8 bg-gradient-to-br from-foreground to-primary/80 bg-clip-text text-transparent">
-                Your Complete Jump Package
+                Your Complete Jump in 3 Steps
               </h3>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4 md:gap-6">
-                {jumpPackage.map((item, index) => (
+              <div className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-6">
+                {jumpPackageSteps.map((item, index) => (
                   <div 
                     key={index}
                     className="text-center group glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-lg sm:rounded-xl md:rounded-2xl p-2 sm:p-4 md:p-6 shadow-xl shadow-primary/15 hover:shadow-2xl hover:shadow-primary/25 hover:border-primary/40 transition-all duration-300 hover:scale-105 hover:-translate-y-2"
@@ -519,6 +514,125 @@ const AboutUs = () => {
               </div>
             </div>
 
+          </div>
+        </div>
+      </section>
+
+      {/* Implementation Section - Dedicated Premium Frame */}
+      <section className="px-4 py-8 sm:py-12 relative z-10">
+        <div className="max-w-6xl mx-auto">
+          <div className="glass backdrop-blur-md bg-gradient-to-br from-green-500/5 via-background/30 to-emerald-500/5 dark:from-green-500/10 dark:via-background/15 dark:to-emerald-500/10 border border-green-500/20 rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 shadow-2xl shadow-green-500/10 hover:shadow-3xl hover:shadow-green-500/15 transition-all duration-500">
+            <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+              {/* Left side - Content */}
+              <div className="space-y-6">
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-green-500/20 to-emerald-500/10 border border-green-500/30 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg shadow-green-500/20">
+                      <Bot className="w-6 h-6 sm:w-7 sm:h-7 text-green-500" />
+                    </div>
+                    <h2 className="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-br from-foreground via-green-500/90 to-emerald-500/80 bg-clip-text text-transparent">
+                      Implementation
+                    </h2>
+                  </div>
+                  <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+                    Transform your strategic jump into executable automation. Build workflows and AI agents directly from your personalized plan—ready for real-world deployment.
+                  </p>
+                </div>
+
+                {/* Features list */}
+                <div className="space-y-4">
+                  <div className="flex items-start gap-3 group">
+                    <div className="w-8 h-8 bg-gradient-to-br from-blue-500/20 to-blue-500/10 border border-blue-500/30 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:from-blue-500/30 group-hover:border-blue-500/40 transition-all duration-300">
+                      <Workflow className="w-4 h-4 text-blue-500" />
+                    </div>
+                    <div>
+                      <h4 className="text-sm sm:text-base font-semibold text-foreground mb-1">Automated Workflows</h4>
+                      <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">Linear, step-by-step automation sequences that execute your strategic actions with precision and consistency.</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3 group">
+                    <div className="w-8 h-8 bg-gradient-to-br from-yellow-500/20 to-amber-500/10 border border-yellow-500/30 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:from-yellow-500/30 group-hover:border-yellow-500/40 transition-all duration-300">
+                      <Brain className="w-4 h-4 text-yellow-500" />
+                    </div>
+                    <div>
+                      <h4 className="text-sm sm:text-base font-semibold text-foreground mb-1">AI Agents</h4>
+                      <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">Intelligent agents with reasoning capabilities that adapt and make decisions aligned with your strategic goals.</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3 group">
+                    <div className="w-8 h-8 bg-gradient-to-br from-orange-500/20 to-orange-500/10 border border-orange-500/30 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:from-orange-500/30 group-hover:border-orange-500/40 transition-all duration-300">
+                      <Download className="w-4 h-4 text-orange-500" />
+                    </div>
+                    <div>
+                      <h4 className="text-sm sm:text-base font-semibold text-foreground mb-1">Export to n8n</h4>
+                      <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">Download ready-to-import JSON files for n8n—the powerful open-source automation platform for technical teams.</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3 group">
+                    <div className="w-8 h-8 bg-gradient-to-br from-purple-500/20 to-violet-500/10 border border-purple-500/30 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:from-purple-500/30 group-hover:border-purple-500/40 transition-all duration-300">
+                      <Zap className="w-4 h-4 text-purple-500" />
+                    </div>
+                    <div>
+                      <h4 className="text-sm sm:text-base font-semibold text-foreground mb-1">Export to Make.com</h4>
+                      <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">One-click export to Make.com blueprints—perfect for non-technical users who want visual automation building.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right side - Visual */}
+              <div className="relative">
+                <div className="glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-green-500/25 rounded-2xl p-6 sm:p-8 shadow-xl shadow-green-500/15">
+                  <div className="text-center space-y-4">
+                    <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-green-500/20 via-emerald-500/15 to-green-500/10 border border-green-500/30 rounded-2xl flex items-center justify-center mx-auto shadow-lg shadow-green-500/20">
+                      <Bot className="w-10 h-10 sm:w-12 sm:h-12 text-green-500" />
+                    </div>
+                    <div className="space-y-2">
+                      <h3 className="text-lg sm:text-xl font-bold bg-gradient-to-br from-foreground to-green-500/80 bg-clip-text text-transparent">
+                        From Strategy to Execution
+                      </h3>
+                      <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                        Your personalized jump becomes a living automation—analyzing opportunities, building agents, and deploying workflows that work while you focus on what matters.
+                      </p>
+                    </div>
+                    
+                    {/* Flow visualization */}
+                    <div className="flex items-center justify-center gap-2 sm:gap-3 pt-4">
+                      <div className="flex flex-col items-center">
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary/10 border border-primary/30 rounded-lg flex items-center justify-center">
+                          <Target className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
+                        </div>
+                        <span className="text-[10px] sm:text-xs text-muted-foreground mt-1">Jump</span>
+                      </div>
+                      <ArrowRight className="w-4 h-4 text-muted-foreground/50" />
+                      <div className="flex flex-col items-center">
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-pink-500/10 border border-pink-500/30 rounded-lg flex items-center justify-center">
+                          <Lightbulb className="w-5 h-5 sm:w-6 sm:h-6 text-pink-500" />
+                        </div>
+                        <span className="text-[10px] sm:text-xs text-muted-foreground mt-1">Analyze</span>
+                      </div>
+                      <ArrowRight className="w-4 h-4 text-muted-foreground/50" />
+                      <div className="flex flex-col items-center">
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-green-500/10 border border-green-500/30 rounded-lg flex items-center justify-center">
+                          <Bot className="w-5 h-5 sm:w-6 sm:h-6 text-green-500" />
+                        </div>
+                        <span className="text-[10px] sm:text-xs text-muted-foreground mt-1">Build</span>
+                      </div>
+                      <ArrowRight className="w-4 h-4 text-muted-foreground/50" />
+                      <div className="flex flex-col items-center">
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-orange-500/10 border border-orange-500/30 rounded-lg flex items-center justify-center">
+                          <Download className="w-5 h-5 sm:w-6 sm:h-6 text-orange-500" />
+                        </div>
+                        <span className="text-[10px] sm:text-xs text-muted-foreground mt-1">Deploy</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
