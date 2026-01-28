@@ -3,6 +3,7 @@ import { Sparkles, GitBranch, Wrench, ArrowRight, ChevronDown, Route, Compass, B
 import { useNavigate } from 'react-router-dom';
 import Navigation from "@/components/Navigation";
 import Hero from "@/components/Hero";
+import WhyJumpinAI from "@/components/WhyJumpinAI";
 import Features from "@/components/Features";
 import LeadMagnet from "@/components/LeadMagnet";
 import BookPromotion from "@/components/BookPromotion";
@@ -260,6 +261,9 @@ const Index = () => {
       </div>
       <Navigation />
       <Hero />
+      
+      {/* Why JumpinAI - Value Proposition */}
+      <WhyJumpinAI />
 
       {/* What You Get: Complete Jump Structure */}
       <section className="py-12 sm:py-16 lg:py-24 relative">
