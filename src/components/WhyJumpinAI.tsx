@@ -1,5 +1,5 @@
 import React from 'react';
-import { Compass, Clock, Rocket, Shield, Zap } from 'lucide-react';
+import { ArrowRight, Zap, Target, Rocket } from 'lucide-react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
@@ -9,50 +9,31 @@ const WhyJumpinAI = () => {
   const navigate = useNavigate();
   const { isAuthenticated } = useOptimizedAuth();
   
-  // Scroll animations
   const { elementRef: headerRef, scrollProgress: headerProgress } = useScrollAnimation({ threshold: 0.15 });
-  const { elementRef: card1Ref, scrollProgress: card1Progress } = useScrollAnimation({ threshold: 0.15 });
-  const { elementRef: card2Ref, scrollProgress: card2Progress } = useScrollAnimation({ threshold: 0.15 });
-  const { elementRef: card3Ref, scrollProgress: card3Progress } = useScrollAnimation({ threshold: 0.15 });
-  const { elementRef: card4Ref, scrollProgress: card4Progress } = useScrollAnimation({ threshold: 0.15 });
-  const { elementRef: card5Ref, scrollProgress: card5Progress } = useScrollAnimation({ threshold: 0.15 });
+  const { elementRef: statementsRef, scrollProgress: statementsProgress } = useScrollAnimation({ threshold: 0.1 });
   const { elementRef: ctaRef, scrollProgress: ctaProgress } = useScrollAnimation({ threshold: 0.15 });
 
-  const valuePoints = [
+  const statements = [
     {
-      icon: Compass,
-      title: "Direction, Not Just Information",
-      description: "The world is flooded with AI content. What's missing is a clear path forward tailored to you. We cut through the noise and give you strategic direction—specific to your goals, your situation, your timeline.",
-      ref: card1Ref,
-      progress: card1Progress,
+      icon: Zap,
+      highlight: "Stop Wasting Time",
+      subtext: "on endless research and trial-and-error",
+      gradient: "from-amber-500 to-orange-500",
+      bgGlow: "bg-amber-500/20",
     },
     {
-      icon: Clock,
-      title: "Months of Research in Minutes",
-      description: "Skip the trial-and-error. Skip the endless YouTube tutorials. Skip the generic advice. Get a personalized AI implementation roadmap instantly—the same strategic clarity that would take months to develop on your own.",
-      ref: card2Ref,
-      progress: card2Progress,
-    },
-    {
-      icon: Shield,
-      title: "Confidence to Take Action",
-      description: "AI can feel overwhelming, especially when you don't know where to start. We transform uncertainty into confidence—giving you not just a plan, but the exact tools, prompts, and steps to execute it.",
-      ref: card3Ref,
-      progress: card3Progress,
+      icon: Target,
+      highlight: "Know Exactly What To Do",
+      subtext: "with a clear path tailored to you",
+      gradient: "from-cyan-500 to-blue-500",
+      bgGlow: "bg-cyan-500/20",
     },
     {
       icon: Rocket,
-      title: "From Strategy to Execution",
-      description: "Most platforms stop at advice. We go further. Build automated workflows and AI agents directly from your Jump—export to n8n or Make.com and deploy real solutions that work while you sleep.",
-      ref: card4Ref,
-      progress: card4Progress,
-    },
-    {
-      icon: Zap,
-      title: "Evolves With Your Progress",
-      description: "Your needs change. Your Jump adapts. Clarify any step for deeper guidance. Reroute when circumstances shift. Explore alternative paths. This isn't a static document—it's a living strategic companion.",
-      ref: card5Ref,
-      progress: card5Progress,
+      highlight: "Turn AI Overwhelm Into Results",
+      subtext: "from confusion to execution—automatically",
+      gradient: "from-violet-500 to-purple-500",
+      bgGlow: "bg-violet-500/20",
     },
   ];
 
@@ -65,92 +46,83 @@ const WhyJumpinAI = () => {
   };
 
   return (
-    <section className="py-16 sm:py-20 lg:py-28 relative overflow-hidden">
-      {/* Subtle background elements */}
+    <section className="py-20 sm:py-28 lg:py-36 relative overflow-hidden">
+      {/* Subtle background glow */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 right-0 w-80 h-80 bg-gradient-to-bl from-primary/5 via-transparent to-transparent rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 left-0 w-80 h-80 bg-gradient-to-tr from-primary/5 via-transparent to-transparent rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-radial from-primary/5 via-transparent to-transparent rounded-full blur-3xl"></div>
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
         <div 
           ref={headerRef}
-          className="text-center mb-12 sm:mb-16 transition-all duration-700 ease-out"
+          className="text-center mb-16 sm:mb-20 transition-all duration-700 ease-out"
           style={{
             opacity: Math.min(1, headerProgress * 2),
             transform: `translateY(${(1 - Math.min(1, headerProgress * 2)) * 30}px)`
           }}
         >
-          {/* Premium badge */}
-          <div className="inline-flex items-center px-4 py-2 bg-primary/10 dark:bg-primary/5 rounded-full mb-6 border border-primary/20">
-            <span className="text-sm font-semibold text-primary">Why JumpinAI</span>
-          </div>
-          
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold mb-4 sm:mb-6 font-display px-4">
-            <span className="text-foreground">AI Moves Fast.</span>{' '}
-            <span className="gradient-text-primary">You Deserve to Move Faster.</span>
-          </h2>
-          
-          <p className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed px-4">
-            In an era where everyone talks about AI but few know how to actually use it strategically, 
-            JumpinAI exists to bridge the gap between potential and execution.
+          <p className="text-sm sm:text-base font-semibold text-primary tracking-wide uppercase mb-4">
+            What You Gain
           </p>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold font-display leading-tight">
+            <span className="text-muted-foreground">Everyone talks about AI.</span>
+            <br />
+            <span className="gradient-text-primary">We help you actually use it.</span>
+          </h2>
         </div>
 
-        {/* Value Points Grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto mb-12 sm:mb-16">
-          {valuePoints.map((point, index) => {
-            const Icon = point.icon;
-            const isLargeCard = index < 2; // First two cards are larger on lg screens
+        {/* 3 Bold Statements */}
+        <div 
+          ref={statementsRef}
+          className="max-w-5xl mx-auto space-y-6 sm:space-y-8 mb-16 sm:mb-20"
+        >
+          {statements.map((statement, index) => {
+            const Icon = statement.icon;
+            const delay = index * 0.15;
+            const progress = Math.max(0, statementsProgress - delay);
+            const normalizedProgress = Math.min(1, progress * 2);
             
             return (
               <div
                 key={index}
-                ref={point.ref}
-                className={`group relative transition-all duration-700 ease-out ${
-                  index === 4 ? 'sm:col-span-2 lg:col-span-1' : ''
-                }`}
+                className="group relative transition-all duration-700 ease-out"
                 style={{
-                  opacity: Math.min(1, point.progress * 1.8),
-                  transform: `translateY(${(1 - Math.min(1, point.progress * 1.8)) * 40}px)`
+                  opacity: normalizedProgress,
+                  transform: `translateX(${(1 - normalizedProgress) * (index % 2 === 0 ? -60 : 60)}px)`
                 }}
               >
-                {/* Liquid glass border wrapper */}
-                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/[0.03] via-white/[0.01] to-white/[0.03] p-[1px]">
-                  <div className="absolute inset-0 rounded-3xl bg-card"></div>
-                </div>
-                
-                <div className="relative bg-card rounded-3xl p-6 sm:p-8 h-full shadow-modern hover:shadow-modern-lg transition-all duration-500 border border-white/10 hover:border-primary/30 group-hover:-translate-y-1">
-                  {/* Subtle glass overlay */}
-                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/[0.02] via-transparent to-white/[0.01] pointer-events-none"></div>
+                {/* Statement card */}
+                <div className="relative bg-card/50 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 border border-border/50 hover:border-primary/30 transition-all duration-500 group-hover:shadow-modern-lg overflow-hidden">
+                  {/* Hover glow */}
+                  <div className={`absolute inset-0 ${statement.bgGlow} opacity-0 group-hover:opacity-30 transition-opacity duration-500 blur-2xl`}></div>
                   
-                  <div className="relative z-10">
+                  <div className="relative z-10 flex items-center gap-4 sm:gap-6 lg:gap-8">
                     {/* Icon */}
-                    <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center mb-5 group-hover:bg-primary/20 transition-colors duration-300">
-                      <Icon className="w-6 h-6 text-primary" />
+                    <div className={`flex-shrink-0 w-14 h-14 sm:w-16 sm:h-16 lg:w-20 lg:h-20 rounded-2xl bg-gradient-to-br ${statement.gradient} flex items-center justify-center shadow-lg`}>
+                      <Icon className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 text-white" strokeWidth={2} />
                     </div>
                     
-                    {/* Title */}
-                    <h3 className="text-lg sm:text-xl font-bold text-foreground mb-3 font-display group-hover:text-primary transition-colors duration-300">
-                      {point.title}
-                    </h3>
+                    {/* Text */}
+                    <div className="flex-1 min-w-0">
+                      <h3 className={`text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold bg-gradient-to-r ${statement.gradient} bg-clip-text text-transparent leading-tight`}>
+                        {statement.highlight}
+                      </h3>
+                      <p className="text-base sm:text-lg lg:text-xl text-muted-foreground mt-1 sm:mt-2">
+                        {statement.subtext}
+                      </p>
+                    </div>
                     
-                    {/* Description */}
-                    <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-                      {point.description}
-                    </p>
+                    {/* Arrow indicator */}
+                    <ArrowRight className="hidden sm:block flex-shrink-0 w-6 h-6 lg:w-8 lg:h-8 text-muted-foreground/30 group-hover:text-primary group-hover:translate-x-1 transition-all duration-300" />
                   </div>
                 </div>
-                
-                {/* Subtle back shadow on hover */}
-                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-primary/20 to-primary/10 opacity-0 group-hover:opacity-30 transition-opacity duration-500 -z-10 blur-xl"></div>
               </div>
             );
           })}
         </div>
 
-        {/* Bottom CTA */}
+        {/* CTA */}
         <div 
           ref={ctaRef}
           className="text-center transition-all duration-700 ease-out"
@@ -159,22 +131,17 @@ const WhyJumpinAI = () => {
             transform: `translateY(${(1 - Math.min(1, ctaProgress * 2)) * 30}px)`
           }}
         >
-          <div className="relative inline-block">
-            {/* Premium glow effect behind button */}
-            <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl opacity-50"></div>
-            
-            <Button
-              onClick={handleGetStarted}
-              size="lg"
-              className="relative bg-primary hover:bg-primary/90 text-primary-foreground px-8 sm:px-12 py-6 text-base sm:text-lg font-semibold rounded-full transition-all duration-500 hover:scale-105 shadow-xl hover:shadow-2xl"
-            >
-              Start Your Jump
-              <Rocket className="ml-2 w-5 h-5" />
-            </Button>
-          </div>
+          <Button
+            onClick={handleGetStarted}
+            size="lg"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground px-10 sm:px-14 py-6 sm:py-7 text-lg sm:text-xl font-semibold rounded-full transition-all duration-500 hover:scale-105 shadow-xl hover:shadow-2xl"
+          >
+            Start Your Jump — Free
+            <Rocket className="ml-3 w-5 h-5 sm:w-6 sm:h-6" />
+          </Button>
           
-          <p className="text-sm text-muted-foreground mt-6 max-w-md mx-auto">
-            No credit card required. Start with free credits and experience the clarity.
+          <p className="text-sm text-muted-foreground mt-5">
+            No credit card required
           </p>
         </div>
       </div>
