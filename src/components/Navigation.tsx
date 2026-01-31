@@ -120,7 +120,7 @@ const Navigation = React.memo(() => {
     <nav 
       className={`dark fixed left-0 right-0 z-50 transition-all duration-300 ease-out ${
         isLightMode 
-          ? 'bg-background' // Solid background in light mode
+          ? '' // Solid background applied via style prop in light mode
           : isScrolled 
             ? 'bg-background/80 backdrop-blur-2xl' 
             : 'bg-background/40 backdrop-blur-lg'
@@ -136,6 +136,8 @@ const Navigation = React.memo(() => {
         transitionProperty: 'transform, background-color, border-color, box-shadow',
         transitionDuration: '300ms',
         transitionTimingFunction: 'ease-out',
+        // Force solid dark background in light mode
+        ...(isLightMode ? { backgroundColor: 'hsl(222.2 84% 4.9%)' } : {}),
       }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
