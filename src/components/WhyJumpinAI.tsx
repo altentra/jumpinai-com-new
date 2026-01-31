@@ -16,38 +16,33 @@ const WhyJumpinAI = () => {
   const statements = [
     {
       number: "01",
-      highlight: "Cut Through the Noise",
-      description: "Skip endless research and get straight to what actually works for your situation.",
+      highlight: "Reclaim Your Time",
+      description: "Automate the tasks that drain your day. Let AI handle the repetitive, so you can focus on what truly matters.",
       accentColor: "from-amber-400 via-orange-500 to-red-500",
-      glowColor: "amber-500/20",
     },
     {
       number: "02",
-      highlight: "Your Personalized AI Strategy",
-      description: "Tailored recommendations based on your goals, not generic advice.",
+      highlight: "End the Overwhelm",
+      description: "Stop drowning in AI options. Get one clear, personalized path forward—built specifically for your goals.",
       accentColor: "from-cyan-400 via-blue-500 to-indigo-500",
-      glowColor: "cyan-500/20",
     },
     {
       number: "03",
-      highlight: "From Overwhelm to Action",
-      description: "Clear, step-by-step guidance that transforms confusion into execution.",
+      highlight: "Become AI-Empowered",
+      description: "Shift from watching AI change the world to using it to change yours. From spectator to strategist.",
       accentColor: "from-violet-400 via-purple-500 to-fuchsia-500",
-      glowColor: "violet-500/20",
     },
     {
       number: "04",
-      highlight: "Build Real Automations",
-      description: "Go beyond planning—generate actual AI agents and workflows you can deploy.",
+      highlight: "Achieve What Felt Impossible",
+      description: "The productivity, the efficiency, the results you thought required a team—now within your reach.",
       accentColor: "from-emerald-400 via-green-500 to-teal-500",
-      glowColor: "emerald-500/20",
     },
     {
       number: "05",
-      highlight: "Accelerate Your Goals",
-      description: "Achieve in weeks what typically takes months of trial and error.",
+      highlight: "Future-Proof Your Life",
+      description: "Those who adapt to AI will thrive. Those who don't will fall behind. The choice is yours—we make it easy.",
       accentColor: "from-rose-400 via-pink-500 to-red-500",
-      glowColor: "rose-500/20",
     },
   ];
 
@@ -139,7 +134,7 @@ const WhyJumpinAI = () => {
                     
                     {/* Arrow indicator - hidden on mobile */}
                     <div className="hidden sm:flex flex-shrink-0 items-center opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-0 group-hover:translate-x-1">
-                      <ArrowRight className={`w-5 h-5 lg:w-6 lg:h-6 bg-gradient-to-r ${statement.accentColor} bg-clip-text`} style={{ color: 'currentColor' }} />
+                      <ArrowRight className={`w-5 h-5 lg:w-6 lg:h-6`} />
                     </div>
                   </div>
                 </div>
@@ -167,7 +162,7 @@ const WhyJumpinAI = () => {
           </Button>
           
           <p className="text-xs sm:text-sm text-muted-foreground/60 mt-5">
-            No credit card required • Get your personalized AI strategy in minutes
+            No credit card required • Your personalized AI strategy in minutes
           </p>
         </div>
       </div>
