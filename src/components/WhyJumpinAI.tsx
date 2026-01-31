@@ -10,8 +10,17 @@ const WhyJumpinAI = () => {
   const { isAuthenticated } = useOptimizedAuth();
   
   const { elementRef: headerRef, scrollProgress: headerProgress } = useScrollAnimation({ threshold: 0.15 });
-  const { elementRef: statementsRef, scrollProgress: statementsProgress } = useScrollAnimation({ threshold: 0.05 });
   const { elementRef: ctaRef, scrollProgress: ctaProgress } = useScrollAnimation({ threshold: 0.15 });
+  
+  // Individual scroll animations for each statement card
+  const { elementRef: card1Ref, scrollProgress: card1Progress } = useScrollAnimation({ threshold: 0.1 });
+  const { elementRef: card2Ref, scrollProgress: card2Progress } = useScrollAnimation({ threshold: 0.1 });
+  const { elementRef: card3Ref, scrollProgress: card3Progress } = useScrollAnimation({ threshold: 0.1 });
+  const { elementRef: card4Ref, scrollProgress: card4Progress } = useScrollAnimation({ threshold: 0.1 });
+  const { elementRef: card5Ref, scrollProgress: card5Progress } = useScrollAnimation({ threshold: 0.1 });
+  
+  const cardRefs = [card1Ref, card2Ref, card3Ref, card4Ref, card5Ref];
+  const cardProgresses = [card1Progress, card2Progress, card3Progress, card4Progress, card5Progress];
 
   const statements = [
     {
@@ -106,19 +115,16 @@ const WhyJumpinAI = () => {
         </div>
 
         {/* 5 Bold Statements - Alternating Layout */}
-        <div 
-          ref={statementsRef}
-          className="max-w-6xl mx-auto space-y-5 sm:space-y-6 lg:space-y-8 mb-12 sm:mb-14"
-        >
+        <div className="max-w-6xl mx-auto space-y-5 sm:space-y-6 lg:space-y-8 mb-12 sm:mb-14">
           {statements.map((statement, index) => {
-            const delay = index * 0.08;
-            const progress = Math.max(0, statementsProgress - delay);
+            const progress = cardProgresses[index];
             const normalizedProgress = Math.min(1, progress * 2);
             const isEven = index % 2 === 0;
             
             return (
               <div
                 key={index}
+                ref={cardRefs[index]}
                 className="transition-all duration-1000 ease-out"
                 style={{
                   opacity: normalizedProgress,
