@@ -65,7 +65,7 @@ const WhyJumpinAI = () => {
   };
 
   return (
-    <section className="py-24 sm:py-32 lg:py-40 relative overflow-hidden">
+    <section className="py-16 sm:py-20 lg:py-24 relative overflow-hidden">
       {/* Premium background effects */}
       <div className="absolute inset-0 pointer-events-none">
         {/* Central radial gradient */}
@@ -83,13 +83,13 @@ const WhyJumpinAI = () => {
         {/* Header */}
         <div 
           ref={headerRef}
-          className="text-center mb-20 sm:mb-28 lg:mb-36 transition-all duration-700 ease-out"
+          className="text-center mb-12 sm:mb-16 lg:mb-20 transition-all duration-700 ease-out"
           style={{
             opacity: Math.min(1, headerProgress * 2),
             transform: `translateY(${(1 - Math.min(1, headerProgress * 2)) * 30}px)`
           }}
         >
-          <span className="inline-block text-xs sm:text-sm font-semibold tracking-[0.3em] uppercase text-muted-foreground mb-6">
+          <span className="inline-block text-xs sm:text-sm font-semibold tracking-[0.3em] uppercase text-muted-foreground mb-4">
             What You Gain
           </span>
           
@@ -105,7 +105,7 @@ const WhyJumpinAI = () => {
         {/* 5 Bold Statements - Alternating Layout */}
         <div 
           ref={statementsRef}
-          className="max-w-6xl mx-auto space-y-12 sm:space-y-16 lg:space-y-20 mb-24 sm:mb-32"
+          className="max-w-6xl mx-auto space-y-6 sm:space-y-8 lg:space-y-10 mb-16 sm:mb-20"
         >
           {statements.map((statement, index) => {
             const delay = index * 0.08;
@@ -128,28 +128,28 @@ const WhyJumpinAI = () => {
                     className={`group relative w-full sm:w-[85%] lg:w-[75%] xl:w-[70%] ${statement.borderGlow} transition-shadow duration-700`}
                   >
                     {/* Background glow */}
-                    <div className={`absolute inset-0 ${statement.bgGlow} rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700`}></div>
+                    <div className={`absolute inset-0 ${statement.bgGlow} rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700`}></div>
                     
                     {/* Card content */}
-                    <div className={`relative bg-card/40 dark:bg-card/30 backdrop-blur-xl rounded-3xl border border-border/40 group-hover:border-border/60 p-8 sm:p-10 lg:p-12 transition-all duration-500`}>
+                    <div className={`relative bg-card/40 dark:bg-card/30 backdrop-blur-xl rounded-2xl border border-border/40 group-hover:border-border/60 p-6 sm:p-8 lg:p-10 transition-all duration-500`}>
                       
                       {/* Number badge */}
-                      <div className={`inline-flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br ${statement.accentColor} mb-6 sm:mb-8 shadow-lg`}>
-                        <span className="text-white font-bold font-mono text-sm sm:text-base">{statement.number}</span>
+                      <div className={`inline-flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br ${statement.accentColor} mb-4 sm:mb-5 shadow-lg`}>
+                        <span className="text-white font-bold font-mono text-xs sm:text-sm">{statement.number}</span>
                       </div>
                       
                       {/* Headline */}
-                      <h3 className={`text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold font-display leading-[1.1] mb-4 sm:mb-5 bg-gradient-to-r ${statement.accentColor} bg-clip-text text-transparent`}>
+                      <h3 className={`text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold font-display leading-[1.1] mb-3 sm:mb-4 bg-gradient-to-r ${statement.accentColor} bg-clip-text text-transparent`}>
                         {statement.highlight}
                       </h3>
                       
                       {/* Description */}
-                      <p className={`text-base sm:text-lg lg:text-xl text-muted-foreground/80 leading-relaxed max-w-xl ${isEven ? '' : 'ml-auto text-right sm:text-left'}`}>
+                      <p className={`text-sm sm:text-base lg:text-lg text-muted-foreground/80 leading-relaxed max-w-xl ${isEven ? '' : 'ml-auto text-right sm:text-left'}`}>
                         {statement.description}
                       </p>
                       
                       {/* Decorative gradient line */}
-                      <div className={`absolute bottom-0 ${isEven ? 'left-0 rounded-bl-3xl' : 'right-0 rounded-br-3xl'} h-1 w-0 group-hover:w-1/2 bg-gradient-to-r ${statement.accentColor} transition-all duration-700 ease-out`}></div>
+                      <div className={`absolute bottom-0 ${isEven ? 'left-0 rounded-bl-2xl' : 'right-0 rounded-br-2xl'} h-1 w-0 group-hover:w-1/2 bg-gradient-to-r ${statement.accentColor} transition-all duration-700 ease-out`}></div>
                     </div>
                   </div>
                 </div>
