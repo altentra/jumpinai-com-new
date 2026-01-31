@@ -65,7 +65,7 @@ const WhyJumpinAI = () => {
   };
 
   return (
-    <section className="py-16 sm:py-20 lg:py-24 relative overflow-hidden">
+    <section className="py-12 sm:py-16 lg:py-20 relative overflow-hidden">
       {/* Premium background effects */}
       <div className="absolute inset-0 pointer-events-none">
         {/* Central radial gradient */}
@@ -83,29 +83,32 @@ const WhyJumpinAI = () => {
         {/* Header */}
         <div 
           ref={headerRef}
-          className="text-center mb-12 sm:mb-16 lg:mb-20 transition-all duration-700 ease-out"
+          className="text-center mb-10 sm:mb-14 lg:mb-16 transition-all duration-700 ease-out"
           style={{
             opacity: Math.min(1, headerProgress * 2),
             transform: `translateY(${(1 - Math.min(1, headerProgress * 2)) * 30}px)`
           }}
         >
-          <span className="inline-block text-xs sm:text-sm font-semibold tracking-[0.3em] uppercase text-muted-foreground mb-4">
-            What You Gain
-          </span>
-          
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold font-display leading-tight max-w-4xl mx-auto">
-            <span className="text-muted-foreground/80">Everyone talks about AI.</span>
-            <br className="hidden sm:block" />
-            <span className="bg-gradient-to-r from-foreground via-foreground to-foreground/80 bg-clip-text text-transparent">
-              We help you actually use it.
-            </span>
-          </h2>
+          {/* Premium styled heading */}
+          <div className="relative inline-block">
+            {/* Subtle glow behind text */}
+            <div className="absolute inset-0 bg-gradient-to-r from-amber-500/10 via-violet-500/10 to-cyan-500/10 blur-3xl scale-150 opacity-50"></div>
+            
+            <h2 className="relative text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold font-display leading-tight max-w-4xl mx-auto">
+              <span className="block text-muted-foreground/60 mb-2 sm:mb-3">Everyone talks about AI.</span>
+              <span className="block bg-gradient-to-r from-foreground via-foreground/90 to-foreground bg-clip-text text-transparent relative">
+                We help you actually use it.
+                {/* Decorative underline */}
+                <span className="absolute -bottom-2 sm:-bottom-3 left-1/2 -translate-x-1/2 w-24 sm:w-32 h-1 bg-gradient-to-r from-amber-500 via-violet-500 to-cyan-500 rounded-full opacity-80"></span>
+              </span>
+            </h2>
+          </div>
         </div>
 
         {/* 5 Bold Statements - Alternating Layout */}
         <div 
           ref={statementsRef}
-          className="max-w-6xl mx-auto space-y-6 sm:space-y-8 lg:space-y-10 mb-16 sm:mb-20"
+          className="max-w-6xl mx-auto space-y-5 sm:space-y-6 lg:space-y-8 mb-12 sm:mb-14"
         >
           {statements.map((statement, index) => {
             const delay = index * 0.08;
