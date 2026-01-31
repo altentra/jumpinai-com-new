@@ -11,7 +11,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Bot, User, Send, Sparkles, Download, Copy, Lock } from 'lucide-react';
 import { UserProfile } from '@/services/userProfileService';
 import { createJump, updateJump, extractTitle, extractSummary } from '@/services/jumpService';
-import logo from "@/assets/logo.png";
+import logo from "@/assets/logo-header-transparent.png";
 
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
