@@ -15,11 +15,32 @@ const Navigation = React.memo(() => {
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const { isAuthenticated, logout, login } = useAuth();
-  const { resolvedTheme } = useTheme();
+  // We still keep next-themes around for ThemeToggle etc, but we don't rely on
+  // resolvedTheme here because the header itself is forced into `.dark`.
+  useTheme();
   const navigate = useNavigate();
   
-  // In light mode, use solid background; in dark mode, use transparency
-  const isLightMode = resolvedTheme === 'light';
+  // Detect the *global* theme from the <html> class.
+  // This avoids confusion caused by this nav being forced into `.dark`.
+  const [isGlobalDarkMode, setIsGlobalDarkMode] = useState(() => {
+    if (typeof document === 'undefined') return true;
+    return document.documentElement.classList.contains('dark');
+  });
+
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    const el = document.documentElement;
+    const update = () => setIsGlobalDarkMode(el.classList.contains('dark'));
+    update();
+
+    const observer = new MutationObserver(update);
+    observer.observe(el, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
+
+  // In light mode, we want the header to look identical (solid) to dark mode.
+  // In dark mode, keep the existing glass/transparency behavior.
+  const isLightMode = !isGlobalDarkMode;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -120,7 +141,7 @@ const Navigation = React.memo(() => {
     <nav 
       className={`dark fixed left-0 right-0 z-50 transition-all duration-300 ease-out ${
         isLightMode 
-          ? '' // Solid background applied via style prop in light mode
+          ? 'bg-background' // fully opaque (uses dark tokens because of `.dark`)
           : isScrolled 
             ? 'bg-background/80 backdrop-blur-2xl' 
             : 'bg-background/40 backdrop-blur-lg'
@@ -136,8 +157,8 @@ const Navigation = React.memo(() => {
         transitionProperty: 'transform, background-color, border-color, box-shadow',
         transitionDuration: '300ms',
         transitionTimingFunction: 'ease-out',
-        // Force solid dark background in light mode
-        ...(isLightMode ? { backgroundColor: 'hsl(222.2 84% 4.9%)' } : {}),
+        // Ensure no accidental "glass" bleed-through in light mode.
+        ...(isLightMode ? { backdropFilter: 'none' } : {}),
       }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
