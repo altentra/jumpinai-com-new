@@ -227,7 +227,7 @@ const handler = async (req: Request): Promise<Response> => {
           <!-- Email Header with Premium Logo -->
           <div style="text-align: center; padding: 32px 24px 24px 24px;">
             <img 
-              src="https://jumpinai.com/logo.png" 
+              src="https://jumpinai.com/logo.jpg" 
               alt="JumpinAI Logo" 
               style="width: 84px; height: 84px; display: block; border-radius: 12px; margin: 0 auto;"
             />

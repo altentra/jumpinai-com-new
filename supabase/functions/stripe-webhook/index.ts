@@ -228,7 +228,7 @@ async function handleSubscriptionSuccess(
         <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="text-align: center; padding: 32px 24px 24px 24px;">
             <img 
-              src="https://jumpinai.com/logo.png" 
+              src="https://jumpinai.com/logo.jpg" 
               alt="JumpinAI Logo" 
               style="width: 84px; height: 84px; display: block; border-radius: 12px; margin: 0 auto;"
             />
@@ -556,7 +556,7 @@ async function handlePaymentSuccess(
         <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="text-align: center; padding: 32px 24px 24px 24px;">
             <img 
-              src="https://jumpinai.com/logo.png" 
+              src="https://jumpinai.com/logo.jpg" 
               alt="JumpinAI Logo" 
               style="width: 84px; height: 84px; display: block; border-radius: 12px; margin: 0 auto;"
             />

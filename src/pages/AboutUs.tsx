@@ -329,7 +329,7 @@ const AboutUs = () => {
             '@type': 'Organization',
             name: 'JumpinAI',
             url: 'https://jumpinai.com',
-            logo: 'https://jumpinai.com/logo.png',
+            logo: 'https://jumpinai.com/logo.jpg',
             sameAs: ['https://twitter.com/jumpinai'],
             description: 'Pioneering personalized AI transformation through individualized learning paths, custom strategies, and human-centered AI implementation.'
           })}</script>
