@@ -37,7 +37,7 @@ const Footer = () => {
   };
 
   return (
-    <footer id="footer" className="relative bg-background text-foreground overflow-hidden border-t border-border">
+    <footer id="footer" className="dark relative bg-background text-foreground overflow-hidden border-t border-border">
       {/* Premium Background - Light mode friendly */}
       <div className="absolute inset-0 bg-gradient-to-b from-background to-muted/20"></div>
       <div className="absolute inset-0 bg-gradient-to-r from-primary/[0.005] via-transparent to-primary/[0.005]"></div>
