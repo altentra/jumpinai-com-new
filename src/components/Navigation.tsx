@@ -113,10 +113,10 @@ const Navigation = React.memo(() => {
 
   return (
     <nav 
-      className={`dark fixed left-0 right-0 z-50 transition-all duration-300 ease-out ${
+      className={`dark fixed left-0 right-0 z-50 transition-all duration-300 ease-out bg-background ${
         isScrolled 
-          ? 'bg-background/80 backdrop-blur-2xl border-b border-border/50 shadow-2xl' 
-          : 'bg-background/40 backdrop-blur-lg'
+          ? 'border-b border-border/50 shadow-2xl' 
+          : ''
       }`}
       style={{
         top: 0,
