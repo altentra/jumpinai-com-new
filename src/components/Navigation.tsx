@@ -6,7 +6,7 @@ import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/component
 import ThemeToggle from "@/components/ThemeToggle";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import logo from "@/assets/logo-header.png";
+import logo from "@/assets/logo-header-transparent.png";
 
 const Navigation = React.memo(() => {
   const [isOpen, setIsOpen] = useState(false);
