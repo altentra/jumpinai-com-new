@@ -6,6 +6,7 @@ import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/component
 import ThemeToggle from "@/components/ThemeToggle";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { useTheme } from "next-themes";
 import logo from "@/assets/logo-header-transparent.png";
 
 const Navigation = React.memo(() => {
@@ -14,7 +15,11 @@ const Navigation = React.memo(() => {
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const { isAuthenticated, logout, login } = useAuth();
+  const { resolvedTheme } = useTheme();
   const navigate = useNavigate();
+  
+  // In light mode, use solid background; in dark mode, use transparency
+  const isLightMode = resolvedTheme === 'light';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -113,7 +118,13 @@ const Navigation = React.memo(() => {
 
   return (
     <nav 
-      className={`dark fixed left-0 right-0 z-50 transition-all duration-300 ease-out bg-background ${
+      className={`dark fixed left-0 right-0 z-50 transition-all duration-300 ease-out ${
+        isLightMode 
+          ? 'bg-background' // Solid background in light mode
+          : isScrolled 
+            ? 'bg-background/80 backdrop-blur-2xl' 
+            : 'bg-background/40 backdrop-blur-lg'
+      } ${
         isScrolled 
           ? 'border-b border-border/50 shadow-2xl' 
           : ''
