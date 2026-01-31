@@ -6,7 +6,7 @@ import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/component
 import ThemeToggle from "@/components/ThemeToggle";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import logo from "@/assets/logo.png";
+import logo from "@/assets/logo-header.jpg";
 
 const Navigation = React.memo(() => {
   const [isOpen, setIsOpen] = useState(false);
@@ -141,22 +141,16 @@ const Navigation = React.memo(() => {
               }}
               className="flex items-center group cursor-pointer"
             >
-              <div className="relative">
-                <div className="pointer-events-none absolute -inset-1 rounded-2xl bg-primary/20 blur-md opacity-0 group-hover:opacity-60 transition-opacity duration-300"></div>
-                <div className="relative w-10 h-10 rounded-xl overflow-hidden group-hover:scale-105 transition-transform duration-300 ring-1 ring-border shadow-lg">
-                  <img 
-                    src={logo}
-                    alt="JumpinAI Logo" 
-                    width="40"
-                    height="40"
-                    loading="eager"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              </div>
-              <span className="ml-3 text-2xl font-black font-display text-foreground whitespace-nowrap">
-                JumpinAI
-              </span>
+            <div className="relative group-hover:scale-105 transition-transform duration-300">
+              <div className="pointer-events-none absolute -inset-1 rounded-lg bg-primary/20 blur-md opacity-0 group-hover:opacity-60 transition-opacity duration-300"></div>
+              <img 
+                src={logo}
+                alt="JumpinAI Logo" 
+                height="36"
+                loading="eager"
+                className="relative h-9 w-auto object-contain"
+              />
+            </div>
             </button>
           </div>
 
