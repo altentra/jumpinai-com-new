@@ -13,7 +13,7 @@ import { SiThreads } from "react-icons/si";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { PrivacyChoices } from "./PrivacyChoices";
-import logo from "@/assets/logo.png";
+import logo from "@/assets/logo-header.jpg";
 
 const Footer = () => {
   const navigate = useNavigate();
@@ -57,18 +57,15 @@ const Footer = () => {
         <div className="grid md:grid-cols-5 gap-8 mb-8">
           {/* Brand */}
           <div className="md:col-span-2 md:pr-4">
-            <Link to="/" className="flex items-center mb-6 group">
-              <div className="relative">
-                <div className="pointer-events-none absolute -inset-1 rounded-2xl bg-primary/20 blur-md opacity-0 group-hover:opacity-60 transition-opacity duration-300"></div>
-                <div className="relative w-10 h-10 rounded-xl overflow-hidden group-hover:scale-105 transition-transform duration-300 ring-1 ring-border">
-                  <img 
-                    src={logo}
-                    alt="JumpinAI Logo"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
+            <Link to="/" className="inline-block mb-6 group">
+              <div className="relative group-hover:scale-105 transition-transform duration-300">
+                <div className="pointer-events-none absolute -inset-1 rounded-lg bg-primary/20 blur-md opacity-0 group-hover:opacity-60 transition-opacity duration-300"></div>
+                <img 
+                  src={logo}
+                  alt="JumpinAI Logo"
+                  className="relative h-10 w-auto object-contain"
+                />
               </div>
-              <span className="ml-3 text-2xl font-black font-display text-foreground">JumpinAI</span>
             </Link>
             <p className="text-sm text-foreground/70 leading-relaxed mb-8 max-w-md font-light">
               Empowering creators, professionals, and entrepreneurs to adapt to the era of AI — from strategic clarity to automated implementation, turning your vision into workflows and AI agents that work for you.
