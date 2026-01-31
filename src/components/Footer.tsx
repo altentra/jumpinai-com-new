@@ -13,7 +13,7 @@ import { SiThreads } from "react-icons/si";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { PrivacyChoices } from "./PrivacyChoices";
-import logo from "@/assets/logo-header.jpg";
+import logo from "@/assets/logo-header.png";
 
 const Footer = () => {
   const navigate = useNavigate();
