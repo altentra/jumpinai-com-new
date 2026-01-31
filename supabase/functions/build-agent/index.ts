@@ -44,34 +44,54 @@ CRITICAL RULES:
 1. Return ONLY valid JSON - no markdown, no explanations, just the JSON
 2. Use real n8n node types that exist in n8n
 3. Include all required node properties
-4. Make sure node positions don't overlap
-5. Include proper connections between nodes
+4. Make sure node positions don't overlap (increment by 200 horizontally)
+5. Include proper connections between nodes using node NAMES (not IDs)
 6. Use webhook triggers for easy testing
 
-COMMON N8N NODE TYPES:
-- n8n-nodes-base.webhook (trigger)
-- n8n-nodes-base.httpRequest (API calls)
-- n8n-nodes-base.gmail (send emails)
-- n8n-nodes-base.slack (send messages)
-- n8n-nodes-base.googleSheets (data storage)
-- n8n-nodes-base.notion (notes/databases)
-- n8n-nodes-base.if (conditional logic)
-- n8n-nodes-base.set (set variables)
-- n8n-nodes-base.code (custom JavaScript)
-- n8n-nodes-base.respondToWebhook (return response)
-
-WORKFLOW STRUCTURE:
+EXACT n8n WORKFLOW JSON STRUCTURE (MUST FOLLOW):
 {
   "name": "Workflow Name",
-  "nodes": [...],
-  "connections": {...},
+  "nodes": [
+    {
+      "id": "unique-uuid-string",
+      "name": "Node Display Name",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 300],
+      "parameters": { ... },
+      "webhookId": "unique-webhook-id"
+    }
+  ],
+  "connections": {
+    "Node Display Name": {
+      "main": [
+        [
+          { "node": "Next Node Name", "type": "main", "index": 0 }
+        ]
+      ]
+    }
+  },
   "active": false,
   "settings": { "executionOrder": "v1" },
-  "versionId": "1",
-  "meta": { "instanceId": "generated-by-jumpinai", "type": "workflow" }
-}`;
+  "pinData": {},
+  "versionId": "1"
+}
 
-const MAKE_WORKFLOW_PROMPT = `You are an expert Make.com scenario builder. Your task is to generate a SIMPLE, LINEAR scenario for task automation.
+COMMON N8N NODE TYPES (use exact names with correct typeVersion):
+- n8n-nodes-base.webhook (typeVersion: 2) - webhook trigger
+- n8n-nodes-base.httpRequest (typeVersion: 4.2) - API calls
+- n8n-nodes-base.gmail (typeVersion: 2.1) - send emails
+- n8n-nodes-base.slack (typeVersion: 2.2) - send messages
+- n8n-nodes-base.googleSheets (typeVersion: 4.4) - spreadsheets
+- n8n-nodes-base.notion (typeVersion: 2.2) - databases
+- n8n-nodes-base.if (typeVersion: 2) - conditional logic
+- n8n-nodes-base.set (typeVersion: 3.4) - set variables
+- n8n-nodes-base.code (typeVersion: 2) - custom JavaScript
+- n8n-nodes-base.respondToWebhook (typeVersion: 1.1) - return response
+
+IMPORTANT: Connections use NODE NAMES as keys, NOT node IDs!`;
+
+const MAKE_WORKFLOW_PROMPT = `You are an expert Make.com scenario builder. Your task is to generate a SIMPLE, LINEAR scenario (blueprint) for task automation.
 
 SCENARIO CHARACTERISTICS:
 - Sequential, predictable execution
@@ -81,28 +101,69 @@ SCENARIO CHARACTERISTICS:
 
 CRITICAL RULES:
 1. Return ONLY valid JSON - no markdown, no explanations, just the JSON
-2. Use real Make.com module types
+2. Use real Make.com module types with proper format
 3. Include all required module properties
-4. Use proper module IDs and flow connections
+4. Each module needs unique numeric ID
 5. Use webhook triggers for easy testing
 
-COMMON MAKE.COM MODULES:
-- gateway:CustomWebHook (webhook trigger)
-- http:ActionSendData (HTTP requests)
-- google-email:ActionSendEmail (send emails)
-- slack:ActionPostMessage (send messages)
-- google-sheets:ActionAppendRow (data storage)
-- notion:createADatabaseItem (databases)
-- builtin:BasicRouter (conditional logic)
-- util:SetVariables (set variables)
-- builtin:BasicFilter (filters)
-
-SCENARIO STRUCTURE:
+EXACT MAKE.COM BLUEPRINT JSON STRUCTURE (MUST FOLLOW):
 {
   "name": "Scenario Name",
-  "flow": [...],
-  "metadata": { "instant": true, "version": 1, "type": "workflow" }
-}`;
+  "flow": [
+    {
+      "id": 1,
+      "module": "gateway:CustomWebHook",
+      "version": 1,
+      "parameters": {
+        "hook": null,
+        "maxResults": 1
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": { "x": 0, "y": 0 },
+        "restore": {},
+        "expect": []
+      }
+    },
+    {
+      "id": 2,
+      "module": "http:ActionSendData",
+      "version": 3,
+      "parameters": {},
+      "mapper": {
+        "url": "https://api.example.com",
+        "method": "post",
+        "headers": []
+      },
+      "metadata": {
+        "designer": { "x": 300, "y": 0 }
+      }
+    }
+  ],
+  "metadata": {
+    "instant": true,
+    "version": 1,
+    "scenario": {
+      "roundtrips": 1,
+      "maxErrors": 3,
+      "autoCommit": true,
+      "autoCommitTriggerLast": true,
+      "sequential": false
+    }
+  }
+}
+
+COMMON MAKE.COM MODULES (use exact module names):
+- gateway:CustomWebHook (instant webhook trigger)
+- http:ActionSendData (HTTP requests - version 3)
+- google-email:ActionSendEmail (Gmail)
+- slack:ActionPostMessage (Slack messages)
+- google-sheets:ActionAppendRow (Google Sheets)
+- airtable:ActionCreateRecord (Airtable)
+- builtin:BasicRouter (branching/routing)
+- util:SetVariables (set variables)
+- builtin:BasicFilter (conditional filter)
+- json:ParseJSON (parse JSON data)`;
 
 // ============ AI AGENT PROMPTS (Autonomous Decision-Making) ============
 
@@ -118,47 +179,96 @@ AI AGENT CHARACTERISTICS:
 
 CRITICAL RULES:
 1. Return ONLY valid JSON - no markdown, no explanations
-2. MUST include AI/LLM nodes for reasoning (OpenAI, Anthropic, etc.)
+2. MUST use @n8n/n8n-nodes-langchain nodes for AI (NOT n8n-nodes-base.openAi)
 3. Use agent-style patterns with loops and decision trees
 4. Include error handling and fallback paths
-5. Add memory/state management where appropriate
+5. Connections use NODE NAMES as keys (not IDs)!
+6. Each node needs unique ID and proper typeVersion
 
-REQUIRED AI AGENT COMPONENTS:
-- n8n-nodes-base.openAi or similar for reasoning
-- Decision branches based on AI output
-- Loops for iterative refinement
-- Error handlers for graceful degradation
-- Context/memory management nodes
+REQUIRED LANGCHAIN NODES FOR AI AGENTS (use @n8n/n8n-nodes-langchain package):
+- @n8n/n8n-nodes-langchain.agent (typeVersion: 1.7) - Main AI Agent node
+- @n8n/n8n-nodes-langchain.lmChatOpenAi (typeVersion: 1.2) - OpenAI Chat Model
+- @n8n/n8n-nodes-langchain.lmChatAnthropic (typeVersion: 1.3) - Claude Model
+- @n8n/n8n-nodes-langchain.memoryBufferWindow (typeVersion: 1.2) - Conversation memory
+- @n8n/n8n-nodes-langchain.toolCode (typeVersion: 1.1) - Custom code tool
+- @n8n/n8n-nodes-langchain.toolHttpRequest (typeVersion: 1.1) - HTTP request tool
+- @n8n/n8n-nodes-langchain.toolWorkflow (typeVersion: 1.1) - Call other workflows
 
-ADVANCED NODE TYPES FOR AGENTS:
-- n8n-nodes-base.openAi (AI reasoning/analysis)
-- n8n-nodes-base.anthropic (Claude reasoning)
-- n8n-nodes-base.if (decision branching)
-- n8n-nodes-base.switch (multi-path routing)
-- n8n-nodes-base.splitInBatches (iteration)
-- n8n-nodes-base.code (custom logic/memory)
-- n8n-nodes-base.merge (path convergence)
-- n8n-nodes-base.wait (async coordination)
-
-AGENT WORKFLOW STRUCTURE:
+EXACT n8n AI AGENT JSON STRUCTURE (MUST FOLLOW):
 {
-  "name": "AI Agent: [Name]",
+  "name": "AI Agent: Agent Name",
   "nodes": [
-    // 1. Input/Trigger
-    // 2. Context Gathering
-    // 3. AI Analysis/Reasoning (LLM call)
-    // 4. Decision Router based on AI output
-    // 5. Action branches for different decisions
-    // 6. Feedback/Refinement loop
-    // 7. Output/Response
+    {
+      "id": "uuid-1",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 300],
+      "parameters": { "path": "agent-trigger", "httpMethod": "POST" },
+      "webhookId": "webhook-uuid"
+    },
+    {
+      "id": "uuid-2",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [400, 300],
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message }}",
+        "options": {
+          "systemMessage": "You are a helpful AI assistant..."
+        }
+      }
+    },
+    {
+      "id": "uuid-3",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [200, 500],
+      "parameters": {
+        "model": "gpt-4o-mini",
+        "options": { "temperature": 0.7 }
+      },
+      "credentials": { "openAiApi": { "id": "openai-cred-id", "name": "OpenAI API" } }
+    },
+    {
+      "id": "uuid-4",
+      "name": "Window Buffer Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.2,
+      "position": [400, 500],
+      "parameters": { "sessionIdType": "customKey", "sessionKey": "={{ $json.sessionId }}" }
+    },
+    {
+      "id": "uuid-5",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [800, 300],
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}" }
+    }
   ],
-  "connections": {...},
+  "connections": {
+    "Webhook Trigger": { "main": [[{ "node": "AI Agent", "type": "main", "index": 0 }]] },
+    "OpenAI Chat Model": { "ai_languageModel": [[{ "node": "AI Agent", "type": "ai_languageModel", "index": 0 }]] },
+    "Window Buffer Memory": { "ai_memory": [[{ "node": "AI Agent", "type": "ai_memory", "index": 0 }]] },
+    "AI Agent": { "main": [[{ "node": "Respond to Webhook", "type": "main", "index": 0 }]] }
+  },
   "active": false,
   "settings": { "executionOrder": "v1" },
-  "meta": { "instanceId": "generated-by-jumpinai", "type": "ai-agent" }
-}`;
+  "pinData": {},
+  "versionId": "1"
+}
 
-const MAKE_AI_AGENT_PROMPT = `You are an expert AI agent architect for Make.com. Your task is to build an AUTONOMOUS AI AGENT that can reason, decide, and adapt.
+IMPORTANT NOTES:
+- LLM models connect via "ai_languageModel" connection type (NOT "main")
+- Memory nodes connect via "ai_memory" connection type
+- Tool nodes connect via "ai_tool" connection type
+- Credentials require an object with "id" and "name" properties`;
+
+const MAKE_AI_AGENT_PROMPT = `You are an expert AI agent architect for Make.com. Your task is to build an AUTONOMOUS AI AGENT scenario that can reason, decide, and adapt.
 
 AI AGENT CHARACTERISTICS:
 - Reasoning modules that analyze situations
@@ -169,40 +279,103 @@ AI AGENT CHARACTERISTICS:
 
 CRITICAL RULES:
 1. Return ONLY valid JSON - no markdown, no explanations
-2. MUST include AI modules (OpenAI, etc.) for reasoning
+2. MUST include OpenAI modules for AI reasoning
 3. Use routers for dynamic decision paths
 4. Include iterators for refinement loops
-5. Add error handlers throughout
+5. Each module needs unique numeric ID
+6. Add error handlers throughout
 
-REQUIRED AI AGENT COMPONENTS:
-- openai:CreateCompletion for reasoning
-- builtin:BasicRouter for AI-based decisions
-- builtin:Repeater for iteration/refinement
-- Error handlers for each critical path
-
-ADVANCED MODULES FOR AGENTS:
-- openai:CreateCompletion (AI reasoning)
-- openai:CreateChatCompletion (conversational AI)
-- builtin:BasicRouter (multi-path routing)
-- builtin:Repeater (loops/iteration)
-- util:SetVariables (memory/state)
-- builtin:BasicFilter (conditional filtering)
-- tools:SetVariable (context storage)
-
-AGENT SCENARIO STRUCTURE:
+EXACT MAKE.COM AI AGENT BLUEPRINT STRUCTURE (MUST FOLLOW):
 {
-  "name": "AI Agent: [Name]",
+  "name": "AI Agent: Agent Name",
   "flow": [
-    // 1. Webhook trigger
-    // 2. Context gathering modules
-    // 3. AI analysis module
-    // 4. Router based on AI decision
-    // 5. Multiple action branches
-    // 6. Aggregation/feedback
-    // 7. Response
+    {
+      "id": 1,
+      "module": "gateway:CustomWebHook",
+      "version": 1,
+      "parameters": { "hook": null, "maxResults": 1 },
+      "mapper": {},
+      "metadata": { "designer": { "x": 0, "y": 0 }, "expect": [] }
+    },
+    {
+      "id": 2,
+      "module": "openai:CreateChatCompletion",
+      "version": 2,
+      "parameters": {},
+      "mapper": {
+        "model": "gpt-4o-mini",
+        "messages": [
+          { "role": "system", "content": "You are a helpful AI assistant. Analyze the input and decide the best action." },
+          { "role": "user", "content": "{{1.body.message}}" }
+        ],
+        "temperature": 0.7,
+        "response_format": { "type": "json_object" }
+      },
+      "metadata": { "designer": { "x": 300, "y": 0 } }
+    },
+    {
+      "id": 3,
+      "module": "json:ParseJSON",
+      "version": 1,
+      "parameters": {},
+      "mapper": { "json": "{{2.choices[].message.content}}" },
+      "metadata": { "designer": { "x": 600, "y": 0 } }
+    },
+    {
+      "id": 4,
+      "module": "builtin:BasicRouter",
+      "version": 1,
+      "parameters": {},
+      "mapper": {},
+      "metadata": { "designer": { "x": 900, "y": 0 } },
+      "routes": [
+        {
+          "flow": [
+            {
+              "id": 5,
+              "module": "http:ActionSendData",
+              "version": 3,
+              "mapper": { "url": "https://api.example.com/action1", "method": "post" }
+            }
+          ],
+          "filter": { "name": "Action 1", "conditions": [[{ "a": "{{3.action}}", "o": "text:equal", "b": "action1" }]] }
+        },
+        {
+          "flow": [
+            {
+              "id": 6,
+              "module": "http:ActionSendData",
+              "version": 3,
+              "mapper": { "url": "https://api.example.com/action2", "method": "post" }
+            }
+          ],
+          "filter": { "name": "Action 2", "conditions": [[{ "a": "{{3.action}}", "o": "text:equal", "b": "action2" }]] }
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "module": "gateway:WebhookRespond",
+      "version": 1,
+      "mapper": { "body": "{{3}}", "status": "200" },
+      "metadata": { "designer": { "x": 1200, "y": 0 } }
+    }
   ],
-  "metadata": { "instant": true, "version": 1, "type": "ai-agent" }
-}`;
+  "metadata": {
+    "instant": true,
+    "version": 1,
+    "scenario": { "roundtrips": 1, "maxErrors": 3, "autoCommit": true, "sequential": false }
+  }
+}
+
+KEY MAKE.COM AI MODULES:
+- openai:CreateChatCompletion (version 2) - AI reasoning/chat
+- openai:CreateCompletion (version 1) - Text completion
+- json:ParseJSON - Parse AI JSON responses
+- builtin:BasicRouter - Route based on AI decisions
+- builtin:BasicFilter - Filter based on conditions
+- util:SetVariables - Store context/state
+- gateway:WebhookRespond - Return response`;
 
 // Instructions generation prompts
 const N8N_INSTRUCTIONS_PROMPT = `You are a friendly, expert technical writer who specializes in explaining n8n workflows to non-technical users. Your job is to create personalized, step-by-step setup instructions that are:
@@ -460,15 +633,15 @@ Return ONLY the JSON ${workflowTerm} - no explanations, no markdown code blocks.
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      // Non-reasoning variant is significantly faster and reduces edge-function timeout risk
-      // while still keeping Grok 4.1 quality.
-      model: 'grok-4-1-fast-non-reasoning',
+      // Using grok-4-1-fast-reasoning for higher quality structured JSON output
+      // Reasoning model produces more accurate and complete workflow/agent JSON
+      model: 'grok-4-1-fast-reasoning',
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt }
       ],
-      temperature: isAIAgent ? 0.4 : 0.3, // Slightly higher temp for creative agent design
-      max_tokens: isAIAgent ? 12000 : 8000, // More tokens for complex agents
+      temperature: isAIAgent ? 0.3 : 0.2, // Lower temp for more consistent JSON output
+      max_tokens: isAIAgent ? 16000 : 10000, // More tokens for complete JSON structures
     }),
   });
 
@@ -549,7 +722,7 @@ Return ONLY the JSON object, no markdown.`;
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      model: 'grok-3-fast', // Use faster model for instructions to reduce total time
+      model: 'grok-4-1-fast-reasoning', // Using reasoning model for higher quality instructions
       messages: [
         { role: 'system', content: instructionsSystemPrompt },
         { role: 'user', content: instructionsPrompt }
