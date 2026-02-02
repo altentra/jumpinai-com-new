@@ -432,18 +432,21 @@ const JumpinAIStudio = () => {
       </Helmet>
       
       <div className="min-h-screen scroll-snap-container relative overflow-hidden">
-        {/* Layered Background System */}
-        <div className="fixed inset-0 bg-gradient-to-b from-background via-background to-muted/30 dark:from-background dark:via-background dark:to-muted/20"></div>
+        {/* Premium Background System - Dark base for contrast */}
+        <div className="fixed inset-0 bg-gradient-to-br from-muted/60 via-background to-muted/40 dark:from-background dark:via-background dark:to-muted/30"></div>
         
-        {/* Ambient glow orbs */}
+        {/* Subtle noise texture for premium feel */}
+        <div className="fixed inset-0 opacity-[0.015] dark:opacity-[0.03] pointer-events-none" style={{backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 400 400\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")'}}></div>
+        
+        {/* Premium ambient orbs with stronger presence */}
         <div className="fixed inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-[-20%] right-[-10%] w-[600px] h-[600px] bg-primary/[0.08] dark:bg-primary/[0.06] rounded-full blur-[120px] animate-pulse" style={{animationDuration: '8s'}}></div>
-          <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-accent/[0.06] dark:bg-accent/[0.04] rounded-full blur-[100px] animate-pulse" style={{animationDuration: '10s', animationDelay: '2s'}}></div>
-          <div className="absolute top-[40%] left-[50%] -translate-x-1/2 w-[400px] h-[400px] bg-secondary/[0.04] rounded-full blur-[80px] animate-pulse" style={{animationDuration: '12s', animationDelay: '4s'}}></div>
+          <div className="absolute top-[-15%] right-[5%] w-[700px] h-[700px] bg-primary/[0.12] dark:bg-primary/[0.08] rounded-full blur-[150px] animate-pulse" style={{animationDuration: '10s'}}></div>
+          <div className="absolute bottom-[-10%] left-[-5%] w-[600px] h-[600px] bg-accent/[0.08] dark:bg-accent/[0.05] rounded-full blur-[130px] animate-pulse" style={{animationDuration: '12s', animationDelay: '3s'}}></div>
+          <div className="absolute top-[30%] left-[40%] w-[500px] h-[500px] bg-secondary/[0.06] rounded-full blur-[100px]"></div>
         </div>
         
-        {/* Subtle texture overlay */}
-        <div className="fixed inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(0,0,0,0.02)_1px,transparent_1px)] bg-[length:24px_24px] opacity-50 dark:opacity-30 pointer-events-none"></div>
+        {/* Refined grid pattern */}
+        <div className="fixed inset-0 bg-[linear-gradient(hsl(var(--foreground)/0.02)_1px,transparent_1px),linear-gradient(90deg,hsl(var(--foreground)/0.02)_1px,transparent_1px)] bg-[size:60px_60px] dark:bg-[linear-gradient(hsl(var(--foreground)/0.015)_1px,transparent_1px),linear-gradient(90deg,hsl(var(--foreground)/0.015)_1px,transparent_1px)] pointer-events-none"></div>
         
         <Navigation />
         
@@ -452,32 +455,27 @@ const JumpinAIStudio = () => {
         
         <main className="relative z-10">          
           <div className="relative pt-24 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-5xl mx-auto">
-              {/* Guest Status Indicator */}
-              <div className="flex justify-start mb-4 sm:mb-6 animate-fade-in-left">
+            <div className="max-w-4xl mx-auto">
+              {/* Guest Status Indicator - More refined */}
+              <div className="flex justify-start mb-6 sm:mb-8 animate-fade-in-left">
                 <div className="relative group w-full sm:w-auto">
-                  <div className="relative glass rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm border border-border backdrop-blur-xl bg-card/80 shadow-lg transition-all duration-300 w-full sm:max-w-sm">
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/3 rounded-xl"></div>
-                    
+                  <div className="relative rounded-2xl p-3 sm:p-4 text-xs sm:text-sm border border-amber-500/30 dark:border-amber-400/20 bg-gradient-to-r from-amber-50 to-amber-50/50 dark:from-amber-950/30 dark:to-amber-900/20 shadow-lg shadow-amber-500/5 transition-all duration-300 w-full sm:max-w-sm backdrop-blur-sm">
                     <div className="relative z-10">
-                      <div className="flex items-center justify-center sm:justify-start gap-2 text-amber-600">
+                      <div className="flex items-center justify-center sm:justify-start gap-2.5 text-amber-700 dark:text-amber-400">
                         {isLoadingGuestInfo ? (
                           <>
-                            <Loader2 className="w-3 h-3 sm:w-4 sm:h-4 animate-spin" />
-                            <span className="font-medium text-xs sm:text-sm">
-                              Checking availability...
-                            </span>
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            <span className="font-medium">Checking availability...</span>
                           </>
                         ) : (
                           <>
-                            <div className="relative">
-                              <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4" />
-                              <div className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-amber-500 rounded-full"></div>
+                            <div className="relative flex items-center justify-center w-6 h-6 rounded-full bg-amber-500/20 dark:bg-amber-400/20">
+                              <AlertCircle className="w-3.5 h-3.5" />
                             </div>
-                            <span className="font-medium text-xs sm:text-sm">
+                            <span className="font-semibold">
                               {guestUsageInfo 
-                                ? `Guest: ${guestUsageInfo.remaining} jumps remaining` 
-                                : 'Guest: 3 free tries available'}
+                                ? `Guest Mode: ${guestUsageInfo.remaining} jump${guestUsageInfo.remaining !== 1 ? 's' : ''} remaining` 
+                                : 'Guest Mode: 3 free tries available'}
                             </span>
                           </>
                         )}
@@ -487,65 +485,69 @@ const JumpinAIStudio = () => {
                 </div>
               </div>
 
-              {/* Premium Hero Section */}
-              <div className="text-center mb-8 sm:mb-12 lg:mb-16 animate-fade-in-up px-2">
-                {/* Floating badge */}
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 dark:bg-primary/15 border border-primary/20 text-primary text-xs font-medium mb-6 backdrop-blur-sm">
-                  <Zap className="w-3 h-3" />
-                  <span>AI Adaptation Studio</span>
+              {/* PREMIUM Hero Section */}
+              <div className="text-center mb-10 sm:mb-14 lg:mb-16 animate-fade-in-up px-2">
+                {/* Floating badge with premium styling */}
+                <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-primary text-primary-foreground text-xs font-semibold mb-8 shadow-lg shadow-primary/25">
+                  <Zap className="w-3.5 h-3.5" />
+                  <span className="tracking-wide uppercase">AI Adaptation Studio</span>
                 </div>
                 
-                <div className="relative mb-4 sm:mb-6">
-                  <h1 className="relative text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold bg-gradient-to-br from-foreground via-foreground/90 to-foreground/70 bg-clip-text text-transparent leading-[1.1] tracking-tight">
+                <div className="relative mb-6 sm:mb-8">
+                  <h1 className="relative text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-foreground leading-[1.05] tracking-tight">
                     JumpinAI Studio
                   </h1>
-                  {/* Elegant gradient underline */}
-                  <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-32 sm:w-40 h-1 bg-gradient-to-r from-transparent via-primary to-transparent rounded-full opacity-80"></div>
+                  {/* Elegant underline accent */}
+                  <div className="absolute -bottom-3 sm:-bottom-4 left-1/2 transform -translate-x-1/2 w-24 sm:w-32 h-1.5 bg-gradient-to-r from-primary/80 via-primary to-primary/80 rounded-full shadow-lg shadow-primary/30"></div>
                 </div>
                 
-                <p className="text-sm sm:text-base lg:text-lg text-muted-foreground/80 max-w-2xl mx-auto leading-relaxed mt-6">
-                  Generate your personalized <span className="font-semibold text-foreground">Jump in AI</span> in 2 minutes—a clear, structured implementation plan with strategic insights, actionable steps, tailored prompts, and the tools that fit your goals.
+                <p className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed mt-8 sm:mt-10">
+                  Generate your personalized <span className="font-semibold text-foreground">Jump in AI</span> in 2 minutes—strategic insights, actionable steps, and tailored tools for your goals.
                 </p>
               </div>
 
-              {/* Premium Glass Form Card */}
-              <div className="mb-8 sm:mb-10 lg:mb-12 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-                <div className="relative group/card">
-                  {/* Outer glow */}
-                  <div className="absolute -inset-px bg-gradient-to-b from-border/60 via-border/30 to-border/60 rounded-2xl opacity-0 group-hover/card:opacity-100 transition-opacity duration-700"></div>
+              {/* PREMIUM Form Card - Elevated Design */}
+              <div className="mb-10 sm:mb-14 lg:mb-16 animate-fade-in-up" style={{ animationDelay: '0.15s' }}>
+                <div className="relative">
+                  {/* Multi-layer shadow system for depth */}
+                  <div className="absolute -inset-4 bg-gradient-to-b from-primary/5 via-transparent to-transparent rounded-[2rem] blur-2xl"></div>
+                  <div className="absolute -inset-1 bg-gradient-to-b from-border/50 via-border/20 to-border/50 rounded-[1.75rem] opacity-50"></div>
                   
-                  {/* Main card */}
-                  <div className="relative backdrop-blur-2xl bg-card/70 dark:bg-card/50 rounded-2xl border border-border/50 overflow-hidden shadow-2xl shadow-black/5 dark:shadow-black/20">
-                    {/* Top edge highlight */}
-                    <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-foreground/20 to-transparent"></div>
+                  {/* Main card container */}
+                  <div className="relative rounded-3xl overflow-hidden bg-card dark:bg-card/95 border border-border/60 dark:border-border/40 shadow-[0_20px_70px_-15px_rgba(0,0,0,0.15)] dark:shadow-[0_20px_70px_-15px_rgba(0,0,0,0.5)]">
+                    {/* Premium top gradient bar */}
+                    <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-primary to-transparent"></div>
                     
-                    {/* Corner accents */}
-                    <div className="absolute top-0 left-0 w-16 h-px bg-gradient-to-r from-primary/40 to-transparent"></div>
-                    <div className="absolute top-0 left-0 w-px h-16 bg-gradient-to-b from-primary/40 to-transparent"></div>
-                    <div className="absolute top-0 right-0 w-16 h-px bg-gradient-to-l from-primary/40 to-transparent"></div>
-                    <div className="absolute top-0 right-0 w-px h-16 bg-gradient-to-b from-primary/40 to-transparent"></div>
+                    {/* Inner highlight at top */}
+                    <div className="absolute top-1 inset-x-0 h-24 bg-gradient-to-b from-primary/[0.04] to-transparent pointer-events-none"></div>
+                    
+                    {/* Corner decorations */}
+                    <div className="absolute top-6 left-6 w-12 h-12 border-l-2 border-t-2 border-primary/30 rounded-tl-xl pointer-events-none"></div>
+                    <div className="absolute top-6 right-6 w-12 h-12 border-r-2 border-t-2 border-primary/30 rounded-tr-xl pointer-events-none"></div>
                     
                     {/* Content */}
-                    <div className="relative p-5 sm:p-6 md:p-8 lg:p-10">
+                    <div className="relative p-6 sm:p-8 md:p-10 lg:p-12">
                       {/* Section header */}
-                      <div className="text-center mb-6 sm:mb-8">
-                        <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-foreground mb-2">
-                          Let's understand your goals
+                      <div className="text-center mb-8 sm:mb-10">
+                        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-foreground mb-3 tracking-tight">
+                          Tell us about your goals
                         </h2>
-                        <div className="w-12 h-0.5 bg-gradient-to-r from-transparent via-primary/60 to-transparent mx-auto rounded-full"></div>
+                        <p className="text-sm sm:text-base text-muted-foreground">We'll create your personalized implementation roadmap</p>
+                        <div className="w-16 h-0.5 bg-gradient-to-r from-transparent via-primary/50 to-transparent mx-auto rounded-full mt-4"></div>
                       </div>
 
-                      <div className="grid gap-5 sm:gap-6 md:gap-8">
-                        <div className="grid md:grid-cols-2 gap-5 sm:gap-6 md:gap-8">
-                          {/* Goals Input */}
+                      <div className="grid gap-6 sm:gap-8 md:gap-10">
+                        <div className="grid md:grid-cols-2 gap-6 sm:gap-8">
+                          {/* Goals Input - Premium styling */}
                           <div className="group/input relative">
-                            {/* Glow on focus */}
-                            <div className="absolute -inset-px rounded-2xl bg-gradient-to-r from-primary/20 via-primary/10 to-primary/20 opacity-0 group-focus-within/input:opacity-100 blur-sm transition-opacity duration-500"></div>
+                            {/* Glow effect on focus */}
+                            <div className="absolute -inset-1 rounded-2xl bg-primary/20 opacity-0 group-focus-within/input:opacity-100 blur-md transition-opacity duration-300"></div>
                             
                             <div className="relative">
-                              <label className="flex items-center gap-2 text-sm font-medium text-foreground/80 mb-3 transition-colors duration-300 group-focus-within/input:text-primary">
-                                <span className="flex items-center justify-center w-5 h-5 rounded-md bg-primary/10 text-primary text-xs font-bold">1</span>
-                                What are you working toward? *
+                              <label className="flex items-center gap-3 text-sm font-semibold text-foreground mb-3 transition-colors duration-300 group-focus-within/input:text-primary">
+                                <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-primary text-primary-foreground text-xs font-bold shadow-md shadow-primary/25">1</span>
+                                <span>What are you working toward?</span>
+                                <span className="text-destructive">*</span>
                               </label>
                               <div className="relative">
                                 <textarea
@@ -555,11 +557,11 @@ const JumpinAIStudio = () => {
                                     setFormData(prev => ({ ...prev, goals: e.target.value }));
                                     setGoalsTyped(true);
                                   }}
-                                  className="w-full min-h-[140px] sm:min-h-[160px] p-4 pb-14 rounded-xl border border-border/60 bg-background/50 dark:bg-background/30 placeholder:text-muted-foreground/50 text-foreground resize-none transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 hover:border-border"
+                                  className="w-full min-h-[160px] sm:min-h-[180px] p-5 pb-16 rounded-2xl border-2 border-border/70 bg-background/80 dark:bg-background/50 placeholder:text-muted-foreground/40 text-foreground resize-none transition-all duration-300 focus:outline-none focus:border-primary/50 focus:bg-background hover:border-border shadow-inner"
                                   style={{ fontSize: '16px' }}
-                                  placeholder="Your main goals & projects..."
+                                  placeholder="Describe your main goals and what you want to achieve with AI..."
                                 />
-                                <div className="absolute bottom-3 right-3">
+                                <div className="absolute bottom-4 right-4">
                                   <SpeechToTextButton 
                                     onTranscription={(text, durationSeconds) => {
                                       setFormData(prev => ({ ...prev, goals: text }));
@@ -575,15 +577,16 @@ const JumpinAIStudio = () => {
                             </div>
                           </div>
                           
-                          {/* Challenges Input */}
+                          {/* Challenges Input - Premium styling */}
                           <div className="group/input relative">
-                            {/* Glow on focus */}
-                            <div className="absolute -inset-px rounded-2xl bg-gradient-to-r from-primary/20 via-primary/10 to-primary/20 opacity-0 group-focus-within/input:opacity-100 blur-sm transition-opacity duration-500"></div>
+                            {/* Glow effect on focus */}
+                            <div className="absolute -inset-1 rounded-2xl bg-primary/20 opacity-0 group-focus-within/input:opacity-100 blur-md transition-opacity duration-300"></div>
                             
                             <div className="relative">
-                              <label className="flex items-center gap-2 text-sm font-medium text-foreground/80 mb-3 transition-colors duration-300 group-focus-within/input:text-primary">
-                                <span className="flex items-center justify-center w-5 h-5 rounded-md bg-primary/10 text-primary text-xs font-bold">2</span>
-                                What's keeping you from getting there? *
+                              <label className="flex items-center gap-3 text-sm font-semibold text-foreground mb-3 transition-colors duration-300 group-focus-within/input:text-primary">
+                                <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-primary text-primary-foreground text-xs font-bold shadow-md shadow-primary/25">2</span>
+                                <span>What's keeping you from getting there?</span>
+                                <span className="text-destructive">*</span>
                               </label>
                               <div className="relative">
                                 <textarea
@@ -593,11 +596,11 @@ const JumpinAIStudio = () => {
                                     setFormData(prev => ({ ...prev, challenges: e.target.value }));
                                     setChallengesTyped(true);
                                   }}
-                                  className="w-full min-h-[140px] sm:min-h-[160px] p-4 pb-14 rounded-xl border border-border/60 bg-background/50 dark:bg-background/30 placeholder:text-muted-foreground/50 text-foreground resize-none transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 hover:border-border"
+                                  className="w-full min-h-[160px] sm:min-h-[180px] p-5 pb-16 rounded-2xl border-2 border-border/70 bg-background/80 dark:bg-background/50 placeholder:text-muted-foreground/40 text-foreground resize-none transition-all duration-300 focus:outline-none focus:border-primary/50 focus:bg-background hover:border-border shadow-inner"
                                   style={{ fontSize: '16px' }}
-                                  placeholder="Your obstacles & challenges..."
+                                  placeholder="What obstacles or challenges are you facing right now..."
                                 />
-                                <div className="absolute bottom-3 right-3">
+                                <div className="absolute bottom-4 right-4">
                                   <SpeechToTextButton 
                                     onTranscription={(text, durationSeconds) => {
                                       setFormData(prev => ({ ...prev, challenges: text }));
@@ -614,29 +617,30 @@ const JumpinAIStudio = () => {
                           </div>
                         </div>
 
-                        {/* Premium Generate Button */}
-                        <div ref={generateButtonRef} className="text-center mt-4 sm:mt-6">
+                        {/* PREMIUM Generate Button */}
+                        <div ref={generateButtonRef} className="text-center pt-4 sm:pt-6">
                           <div className="relative inline-block group/btn w-full sm:w-auto">
-                            {/* Outer glow ring */}
-                            <div className="absolute -inset-1 bg-primary/20 rounded-xl blur-lg opacity-0 group-hover/btn:opacity-70 transition-opacity duration-500"></div>
+                            {/* Multi-layer glow effect */}
+                            <div className="absolute -inset-2 bg-primary/30 rounded-2xl blur-xl opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500"></div>
+                            <div className="absolute -inset-1 bg-gradient-to-r from-primary/50 via-primary to-primary/50 rounded-xl opacity-0 group-hover/btn:opacity-100 blur-sm transition-opacity duration-500"></div>
                             
                             <button
                               onClick={() => handleGenerate()}
                               disabled={isGenerating}
-                              className="relative w-full sm:w-auto px-10 sm:px-16 md:px-20 py-4 sm:py-5 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100 shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 overflow-hidden"
+                              className="relative w-full sm:w-auto px-12 sm:px-20 md:px-24 py-5 sm:py-6 bg-primary hover:bg-primary/95 text-primary-foreground font-bold text-lg rounded-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100 shadow-xl shadow-primary/30 hover:shadow-2xl hover:shadow-primary/40 overflow-hidden"
                             >
-                              {/* Shine effect */}
-                              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700 ease-out"></div>
+                              {/* Animated shine effect */}
+                              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000 ease-out"></div>
                               
                               <div className="relative z-10 flex items-center justify-center gap-3">
                                 {isGenerating ? (
                                   <div className="flex flex-col items-center gap-2 min-h-[32px] w-full">
                                     <div className="flex items-center gap-3">
                                       <Loader2 className="w-5 h-5 animate-spin" />
-                                      <span className="text-base sm:text-lg">
+                                      <span className="text-base sm:text-lg font-semibold">
                                         {typeof processingStatus === 'string' ? processingStatus : 'Generating your Jump...'}
                                       </span>
-                                      <span className="text-sm opacity-80">
+                                      <span className="text-sm opacity-80 font-mono">
                                         {formatTime(generationTimer)}
                                       </span>
                                     </div>
@@ -645,26 +649,35 @@ const JumpinAIStudio = () => {
                                         e.stopPropagation();
                                         handleCancel();
                                       }}
-                                      className="text-xs opacity-70 hover:opacity-100 hover:text-destructive-foreground transition-all"
+                                      className="text-xs opacity-70 hover:opacity-100 hover:text-destructive-foreground transition-all underline"
                                     >
-                                      Cancel
+                                      Cancel generation
                                     </button>
                                   </div>
                                 ) : (
                                   <>
                                     <Zap className="w-5 h-5 transition-transform duration-300 group-hover/btn:scale-110 group-hover/btn:rotate-12" />
-                                    <span className="text-base sm:text-lg">Generate My Jump in AI</span>
+                                    <span>Generate My Jump in AI</span>
                                   </>
                                 )}
                               </div>
                             </button>
                           </div>
                           
-                          {/* Trust indicators */}
-                          <div className="flex items-center justify-center gap-4 mt-4 text-xs text-muted-foreground/60">
-                            <span>✓ 2-minute generation</span>
-                            <span>✓ Personalized plan</span>
-                            <span>✓ Ready-to-use prompts</span>
+                          {/* Trust indicators with better styling */}
+                          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 mt-6 text-sm text-muted-foreground">
+                            <span className="flex items-center gap-1.5">
+                              <span className="w-4 h-4 rounded-full bg-primary/20 flex items-center justify-center text-[10px]">✓</span>
+                              2-minute generation
+                            </span>
+                            <span className="flex items-center gap-1.5">
+                              <span className="w-4 h-4 rounded-full bg-primary/20 flex items-center justify-center text-[10px]">✓</span>
+                              Personalized plan
+                            </span>
+                            <span className="flex items-center gap-1.5">
+                              <span className="w-4 h-4 rounded-full bg-primary/20 flex items-center justify-center text-[10px]">✓</span>
+                              Ready-to-use prompts
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -673,19 +686,20 @@ const JumpinAIStudio = () => {
                 </div>
               </div>
 
-              {/* Sign Up CTA for Guests */}
-              <div className="mb-8 animate-fade-in-up max-w-4xl mx-auto" style={{ animationDelay: '0.7s' }}>
-                <div className="relative glass rounded-2xl p-5 sm:p-6 border border-amber-400/20 backdrop-blur-xl bg-gradient-to-br from-amber-500/5 via-card/90 to-orange-400/5">
-                  <div className="flex flex-col items-center gap-4 text-center">
-                    <p className="text-sm sm:text-base text-amber-600/90 dark:text-amber-400/90 font-medium leading-relaxed">
-                      Want to be able to save your Jump? Sign up now and get <span className="font-semibold">3 welcome credits</span>!
+              {/* Premium Sign Up CTA */}
+              <div className="mb-10 sm:mb-12 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+                <div className="relative rounded-2xl overflow-hidden bg-gradient-to-r from-amber-500/10 via-amber-400/5 to-orange-500/10 dark:from-amber-500/15 dark:via-amber-400/10 dark:to-orange-500/15 border border-amber-400/30 dark:border-amber-400/20 shadow-lg">
+                  <div className="absolute inset-0 bg-card/60 dark:bg-card/40"></div>
+                  <div className="relative flex flex-col sm:flex-row items-center justify-between gap-4 p-6 sm:p-8">
+                    <p className="text-sm sm:text-base text-amber-800 dark:text-amber-200 font-medium text-center sm:text-left">
+                      Save your Jump and unlock more features — <span className="font-bold">3 welcome credits</span> on sign up!
                     </p>
                     <button
                       onClick={() => login('/dashboard/studio')}
-                      className="flex items-center gap-2 px-7 py-2.5 rounded-full transition-all duration-300 backdrop-blur-md bg-amber-600/80 hover:bg-amber-600/90 text-white/95 border border-amber-500/30 shadow-lg shadow-amber-900/10 hover:shadow-xl hover:shadow-amber-900/15"
+                      className="flex items-center gap-2.5 px-8 py-3 rounded-xl transition-all duration-300 bg-amber-600 hover:bg-amber-500 text-white font-semibold shadow-lg shadow-amber-600/25 hover:shadow-xl hover:shadow-amber-500/30 hover:scale-[1.02] active:scale-[0.98] whitespace-nowrap"
                     >
                       <LogIn className="w-4 h-4" />
-                      <span className="font-medium">Sign Up Now</span>
+                      <span>Sign Up Free</span>
                     </button>
                   </div>
                 </div>
