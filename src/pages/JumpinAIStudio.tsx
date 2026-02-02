@@ -11,7 +11,7 @@ import { toast } from 'sonner';
 import ProgressiveJumpDisplay from '@/components/ProgressiveJumpDisplay';
 import { useProgressiveGeneration } from '@/hooks/useProgressiveGeneration';
 import { supabase } from '@/integrations/supabase/client';
-import { SpeechToTextButton } from '@/components/SpeechToTextButton';
+import { StudioTextarea } from '@/components/studio/StudioTextarea';
 import { markJumpAsUsingSTT } from '@/services/sttTrackingService';
 import type { AlternativeRoute, RouteExplorationHistory } from '@/types/alternativeRoutes';
 
@@ -509,108 +509,46 @@ const JumpinAIStudio = () => {
                     <div className="relative p-6 sm:p-8 md:p-12 lg:p-14">
                       
                       {/* Hero text */}
-                      <div className="text-center mb-8 sm:mb-10">
-                        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-foreground mb-3 tracking-tight">
-                          Create Your <span className="text-primary">Jump in AI</span>
+                      <div className="text-center mb-10 sm:mb-12">
+                        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-4 tracking-tight">
+                          Create Your <span className="bg-gradient-to-r from-primary via-primary to-primary/80 bg-clip-text text-transparent">Jump in AI</span>
                         </h2>
-                        <p className="text-muted-foreground text-sm max-w-md mx-auto leading-relaxed">
-                          Share what you're building and what's in your way. We'll craft your personalized roadmap.
+                        <p className="text-muted-foreground text-sm sm:text-base max-w-lg mx-auto leading-relaxed">
+                          Share what you're building and what's blocking you — we'll craft your personalized roadmap in under 2 minutes.
                         </p>
                       </div>
 
-                      <div className="space-y-6">
-                        <div className="grid md:grid-cols-2 gap-5 sm:gap-6">
+                      <div className="space-y-8">
+                        <div className="grid md:grid-cols-2 gap-6 sm:gap-8">
                           {/* Goals Input */}
-                          <div className="group/input">
-                            <label className="block text-[13px] font-medium text-foreground/90 mb-2.5 tracking-wide">
-                              <span className="inline-flex items-center gap-2">
-                                <span className="text-primary font-semibold">01</span>
-                                <span>What are you building?</span>
-                              </span>
-                            </label>
-                            <div className="relative">
-                              <textarea
-                                ref={goalsTextareaRef}
-                                value={formData.goals}
-                                onChange={(e) => {
-                                  setFormData(prev => ({ ...prev, goals: e.target.value }));
-                                  setGoalsTyped(true);
-                                }}
-                                className="w-full min-h-[160px] sm:min-h-[180px] p-4 sm:p-5 pb-14
-                                  rounded-xl
-                                  bg-muted/40 dark:bg-zinc-800/60
-                                  border border-border/40 dark:border-white/[0.06]
-                                  placeholder:text-muted-foreground/40 
-                                  text-foreground text-[15px] leading-relaxed
-                                  resize-none 
-                                  transition-all duration-200 
-                                  focus:outline-none 
-                                  focus:bg-background dark:focus:bg-zinc-800/90
-                                  focus:border-primary/40 dark:focus:border-primary/30
-                                  focus:ring-2 focus:ring-primary/10
-                                  hover:border-border/60"
-                                placeholder="Describe your goals, project, or what you want to achieve..."
-                              />
-                              <div className="absolute bottom-3 right-3">
-                                <SpeechToTextButton 
-                                  onTranscription={(text, durationSeconds) => {
-                                    setFormData(prev => ({ ...prev, goals: text }));
-                                    setSttUsed(true);
-                                    setGoalsUsedStt(true);
-                                    if (durationSeconds) {
-                                      setGoalsSttDuration(prev => prev + durationSeconds);
-                                    }
-                                  }}
-                                />
-                              </div>
-                            </div>
-                          </div>
+                          <StudioTextarea
+                            ref={goalsTextareaRef}
+                            label="What are you building?"
+                            value={formData.goals}
+                            onChange={(value) => setFormData(prev => ({ ...prev, goals: value }))}
+                            onTyped={() => setGoalsTyped(true)}
+                            onSttUsed={() => {
+                              setSttUsed(true);
+                              setGoalsUsedStt(true);
+                            }}
+                            onSttDuration={(seconds) => setGoalsSttDuration(prev => prev + seconds)}
+                            placeholder="Describe your goals, project, or what you want to achieve with AI..."
+                          />
                           
                           {/* Challenges Input */}
-                          <div className="group/input">
-                            <label className="block text-[13px] font-medium text-foreground/90 mb-2.5 tracking-wide">
-                              <span className="inline-flex items-center gap-2">
-                                <span className="text-primary font-semibold">02</span>
-                                <span>What's in your way?</span>
-                              </span>
-                            </label>
-                            <div className="relative">
-                              <textarea
-                                ref={challengesTextareaRef}
-                                value={formData.challenges}
-                                onChange={(e) => {
-                                  setFormData(prev => ({ ...prev, challenges: e.target.value }));
-                                  setChallengesTyped(true);
-                                }}
-                                className="w-full min-h-[160px] sm:min-h-[180px] p-4 sm:p-5 pb-14
-                                  rounded-xl
-                                  bg-muted/40 dark:bg-zinc-800/60
-                                  border border-border/40 dark:border-white/[0.06]
-                                  placeholder:text-muted-foreground/40 
-                                  text-foreground text-[15px] leading-relaxed
-                                  resize-none 
-                                  transition-all duration-200 
-                                  focus:outline-none 
-                                  focus:bg-background dark:focus:bg-zinc-800/90
-                                  focus:border-primary/40 dark:focus:border-primary/30
-                                  focus:ring-2 focus:ring-primary/10
-                                  hover:border-border/60"
-                                placeholder="What obstacles, challenges, or frustrations are you facing..."
-                              />
-                              <div className="absolute bottom-3 right-3">
-                                <SpeechToTextButton 
-                                  onTranscription={(text, durationSeconds) => {
-                                    setFormData(prev => ({ ...prev, challenges: text }));
-                                    setSttUsed(true);
-                                    setChallengesUsedStt(true);
-                                    if (durationSeconds) {
-                                      setChallengesSttDuration(prev => prev + durationSeconds);
-                                    }
-                                  }}
-                                />
-                              </div>
-                            </div>
-                          </div>
+                          <StudioTextarea
+                            ref={challengesTextareaRef}
+                            label="What's in your way?"
+                            value={formData.challenges}
+                            onChange={(value) => setFormData(prev => ({ ...prev, challenges: value }))}
+                            onTyped={() => setChallengesTyped(true)}
+                            onSttUsed={() => {
+                              setSttUsed(true);
+                              setChallengesUsedStt(true);
+                            }}
+                            onSttDuration={(seconds) => setChallengesSttDuration(prev => prev + seconds)}
+                            placeholder="What obstacles, challenges, or frustrations are you facing..."
+                          />
                         </div>
 
                         {/* Generate Button Section */}

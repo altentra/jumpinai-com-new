@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 import ProgressiveJumpDisplay from '@/components/ProgressiveJumpDisplay';
 import { useProgressiveGeneration } from '@/hooks/useProgressiveGeneration';
 import { supabase } from '@/integrations/supabase/client';
-import { SpeechToTextButton } from '@/components/SpeechToTextButton';
+import { StudioTextarea } from '@/components/studio/StudioTextarea';
 import { markJumpAsUsingSTT } from '@/services/sttTrackingService';
 import type { AlternativeRoute, RouteExplorationHistory } from '@/types/alternativeRoutes';
 
@@ -374,23 +374,17 @@ const JumpinAIStudioContent = () => {
       <div className="relative pt-8 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
           {/* Premium Hero Section with enhanced typography */}
-          <div className="text-center mb-10 sm:mb-12 lg:mb-16 animate-fade-in-up">
-            {/* Badge/chip above title */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 rounded-full border border-border/60 bg-card/60 backdrop-blur-sm shadow-sm">
-              <Zap className="w-3.5 h-3.5 text-primary" />
-              <span className="text-xs font-medium text-muted-foreground tracking-wide uppercase">AI Adaptation Studio</span>
-            </div>
-            
+          <div className="text-center mb-10 sm:mb-12 lg:mb-14 animate-fade-in-up">
             {/* Main Title with premium styling */}
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground mb-6">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-foreground mb-4">
               <span className="bg-gradient-to-br from-foreground via-foreground to-foreground/70 bg-clip-text">
-                JumpinAI Studio
+                Create Your <span className="bg-gradient-to-r from-primary via-primary to-primary/80 bg-clip-text text-transparent">Jump in AI</span>
               </span>
             </h1>
             
-            {/* Refined subtitle with better hierarchy */}
-            <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed font-light">
-              Generate your personalized <span className="font-medium text-foreground/90">Jump in AI</span> in 2 minutes—strategic insights, actionable steps, and tailored tools.
+            {/* Refined subtitle */}
+            <p className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed">
+              Share what you're building and what's blocking you — we'll craft your personalized roadmap.
             </p>
           </div>
 
@@ -416,87 +410,37 @@ const JumpinAIStudioContent = () => {
                 <div className="absolute top-4 right-4 w-8 h-8 border-r-2 border-t-2 border-primary/20 rounded-tr-lg pointer-events-none"></div>
                 
                 <div className="relative z-10 space-y-8 sm:space-y-10">
-                  {/* Section header with refined styling */}
-                  <div className="text-center">
-                    <h2 className="text-xl sm:text-2xl font-semibold text-foreground tracking-tight">
-                      Tell us about your goals
-                    </h2>
-                    <p className="text-sm text-muted-foreground mt-2">We'll create a personalized implementation roadmap</p>
-                  </div>
-
                   {/* Premium input fields grid */}
                   <div className="grid md:grid-cols-2 gap-6 sm:gap-8">
-                    {/* Goals Input - Premium styling */}
-                    <div className="space-y-3">
-                      <label className="flex items-center gap-2 text-sm font-semibold text-foreground">
-                        <span className="w-5 h-5 rounded-md bg-primary/10 flex items-center justify-center text-xs text-primary font-bold">1</span>
-                        What are you working toward?
-                      </label>
-                      <div className="relative group/input">
-                        {/* Input glow on focus */}
-                        <div className="absolute -inset-px bg-gradient-to-b from-primary/20 to-primary/5 rounded-xl sm:rounded-2xl opacity-0 group-focus-within/input:opacity-100 transition-opacity duration-300 blur-sm"></div>
-                        
-                        <textarea
-                          ref={goalsTextareaRef}
-                          value={formData.goals}
-                          onChange={(e) => {
-                            setFormData(prev => ({ ...prev, goals: e.target.value }));
-                            setGoalsTyped(true);
-                          }}
-                          className="relative w-full min-h-[150px] sm:min-h-[180px] p-4 sm:p-5 pb-14 rounded-xl sm:rounded-2xl border-2 border-border/60 bg-background/80 dark:bg-background/60 text-foreground placeholder:text-muted-foreground/40 resize-none transition-all duration-300 focus:outline-none focus:border-primary/50 focus:bg-background hover:border-border shadow-inner shadow-black/[0.02] dark:shadow-black/[0.08]"
-                          style={{ fontSize: '16px' }}
-                          placeholder="Describe your main goals, projects, or what you want to achieve..."
-                        />
-                        <div className="absolute bottom-4 right-4 opacity-60 group-hover/input:opacity-100 transition-opacity">
-                          <SpeechToTextButton 
-                            onTranscription={(text, durationSeconds) => {
-                              setFormData(prev => ({ ...prev, goals: text }));
-                              setSttUsed(true);
-                              setGoalsUsedStt(true);
-                              if (durationSeconds) {
-                                setGoalsSttDuration(prev => prev + durationSeconds);
-                              }
-                            }}
-                          />
-                        </div>
-                      </div>
-                    </div>
+                    {/* Goals Input */}
+                    <StudioTextarea
+                      ref={goalsTextareaRef}
+                      label="What are you building?"
+                      value={formData.goals}
+                      onChange={(value) => setFormData(prev => ({ ...prev, goals: value }))}
+                      onTyped={() => setGoalsTyped(true)}
+                      onSttUsed={() => {
+                        setSttUsed(true);
+                        setGoalsUsedStt(true);
+                      }}
+                      onSttDuration={(seconds) => setGoalsSttDuration(prev => prev + seconds)}
+                      placeholder="Describe your goals, project, or what you want to achieve with AI..."
+                    />
                     
-                    {/* Challenges Input - Premium styling */}
-                    <div className="space-y-3">
-                      <label className="flex items-center gap-2 text-sm font-semibold text-foreground">
-                        <span className="w-5 h-5 rounded-md bg-primary/10 flex items-center justify-center text-xs text-primary font-bold">2</span>
-                        What's keeping you from getting there?
-                      </label>
-                      <div className="relative group/input">
-                        {/* Input glow on focus */}
-                        <div className="absolute -inset-px bg-gradient-to-b from-primary/20 to-primary/5 rounded-xl sm:rounded-2xl opacity-0 group-focus-within/input:opacity-100 transition-opacity duration-300 blur-sm"></div>
-                        
-                        <textarea
-                          ref={challengesTextareaRef}
-                          value={formData.challenges}
-                          onChange={(e) => {
-                            setFormData(prev => ({ ...prev, challenges: e.target.value }));
-                            setChallengesTyped(true);
-                          }}
-                          className="relative w-full min-h-[150px] sm:min-h-[180px] p-4 sm:p-5 pb-14 rounded-xl sm:rounded-2xl border-2 border-border/60 bg-background/80 dark:bg-background/60 text-foreground placeholder:text-muted-foreground/40 resize-none transition-all duration-300 focus:outline-none focus:border-primary/50 focus:bg-background hover:border-border shadow-inner shadow-black/[0.02] dark:shadow-black/[0.08]"
-                          style={{ fontSize: '16px' }}
-                          placeholder="Describe your obstacles, challenges, or what's holding you back..."
-                        />
-                        <div className="absolute bottom-4 right-4 opacity-60 group-hover/input:opacity-100 transition-opacity">
-                          <SpeechToTextButton 
-                            onTranscription={(text, durationSeconds) => {
-                              setFormData(prev => ({ ...prev, challenges: text }));
-                              setSttUsed(true);
-                              setChallengesUsedStt(true);
-                              if (durationSeconds) {
-                                setChallengesSttDuration(prev => prev + durationSeconds);
-                              }
-                            }}
-                          />
-                        </div>
-                      </div>
-                    </div>
+                    {/* Challenges Input */}
+                    <StudioTextarea
+                      ref={challengesTextareaRef}
+                      label="What's in your way?"
+                      value={formData.challenges}
+                      onChange={(value) => setFormData(prev => ({ ...prev, challenges: value }))}
+                      onTyped={() => setChallengesTyped(true)}
+                      onSttUsed={() => {
+                        setSttUsed(true);
+                        setChallengesUsedStt(true);
+                      }}
+                      onSttDuration={(seconds) => setChallengesSttDuration(prev => prev + seconds)}
+                      placeholder="What obstacles, challenges, or frustrations are you facing..."
+                    />
                   </div>
 
                   {/* Premium Generate Button */}
