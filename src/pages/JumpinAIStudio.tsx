@@ -457,170 +457,157 @@ const JumpinAIStudio = () => {
           <div className="relative pt-20 sm:pt-24 px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto">
               
-              {/* Compact Header Row - Title left, Guest status right */}
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 sm:mb-12 animate-fade-in">
-                {/* Small Title - Upper Left */}
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center shadow-lg shadow-primary/25">
-                    <Zap className="w-5 h-5 text-primary-foreground" />
-                  </div>
-                  <div>
-                    <h1 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">
-                      JumpinAI Studio
-                    </h1>
-                    <p className="text-xs text-muted-foreground">AI Adaptation Engine</p>
-                  </div>
+              {/* Clean Header Row */}
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6 sm:mb-10 animate-fade-in">
+                {/* Title - Clean, no icon */}
+                <div>
+                  <h1 className="text-lg sm:text-xl font-semibold text-foreground tracking-tight">
+                    JumpinAI Studio
+                  </h1>
+                  <p className="text-[11px] sm:text-xs text-muted-foreground/70 tracking-wide">
+                    Strategic clarity in 2 minutes
+                  </p>
                 </div>
                 
-                {/* Guest Status - Compact */}
-                <div className="flex-shrink-0">
-                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-medium border border-amber-500/30 dark:border-amber-400/20 bg-amber-50/80 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 backdrop-blur-sm">
-                    {isLoadingGuestInfo ? (
-                      <>
-                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                        <span>Checking...</span>
-                      </>
-                    ) : (
-                      <>
-                        <div className="w-5 h-5 rounded-full bg-amber-500/20 flex items-center justify-center">
-                          <AlertCircle className="w-3 h-3" />
-                        </div>
-                        <span>
-                          {guestUsageInfo 
-                            ? `${guestUsageInfo.remaining} jump${guestUsageInfo.remaining !== 1 ? 's' : ''} left` 
-                            : '3 free tries'}
-                        </span>
-                      </>
-                    )}
-                  </div>
+                {/* Guest Status - Minimal */}
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-medium border border-amber-500/25 dark:border-amber-400/15 bg-amber-50/60 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400/90">
+                  {isLoadingGuestInfo ? (
+                    <>
+                      <Loader2 className="w-3 h-3 animate-spin" />
+                      <span>Checking...</span>
+                    </>
+                  ) : (
+                    <>
+                      <div className="w-1.5 h-1.5 rounded-full bg-amber-500 dark:bg-amber-400"></div>
+                      <span>
+                        {guestUsageInfo 
+                          ? `${guestUsageInfo.remaining} free jump${guestUsageInfo.remaining !== 1 ? 's' : ''} left` 
+                          : '3 free jumps'}
+                      </span>
+                    </>
+                  )}
                 </div>
               </div>
 
-              {/* HERO FORM CARD - The Main Event */}
-              <div className="mb-10 sm:mb-14 lg:mb-16 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+              {/* HERO FORM CARD */}
+              <div className="mb-10 sm:mb-14 lg:mb-16 animate-fade-in-up" style={{ animationDelay: '0.08s' }}>
                 <div className="relative">
-                  {/* Sophisticated shadow layers */}
-                  <div className="absolute -inset-6 bg-gradient-radial from-primary/8 via-transparent to-transparent rounded-[3rem] blur-3xl opacity-60"></div>
-                  <div className="absolute -inset-px bg-gradient-to-b from-white/20 dark:from-white/5 via-transparent to-transparent rounded-[2rem]"></div>
+                  {/* Ambient glow */}
+                  <div className="absolute -inset-8 bg-gradient-radial from-primary/6 via-transparent to-transparent rounded-[4rem] blur-3xl"></div>
                   
                   {/* Main card */}
-                  <div className="relative rounded-[2rem] overflow-hidden 
-                    bg-gradient-to-b from-card via-card to-card/95
-                    dark:from-zinc-900/95 dark:via-zinc-900/90 dark:to-zinc-950/95
-                    border border-border/40 dark:border-white/[0.08]
-                    shadow-[0_25px_80px_-20px_rgba(0,0,0,0.2),0_10px_30px_-10px_rgba(0,0,0,0.1)]
-                    dark:shadow-[0_25px_80px_-20px_rgba(0,0,0,0.6),0_10px_30px_-10px_rgba(0,0,0,0.4)]">
+                  <div className="relative rounded-3xl overflow-hidden 
+                    bg-card dark:bg-zinc-900/90
+                    border border-border/30 dark:border-white/[0.06]
+                    shadow-[0_30px_100px_-25px_rgba(0,0,0,0.15)]
+                    dark:shadow-[0_30px_100px_-25px_rgba(0,0,0,0.5)]">
                     
-                    {/* Subtle top edge glow */}
-                    <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/40 dark:via-white/20 to-transparent"></div>
-                    <div className="absolute top-0 inset-x-[20%] h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent"></div>
+                    {/* Subtle top highlight */}
+                    <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/50 dark:via-white/15 to-transparent"></div>
                     
-                    {/* Content area with generous padding */}
-                    <div className="relative p-8 sm:p-10 md:p-14 lg:p-16">
+                    {/* Content */}
+                    <div className="relative p-6 sm:p-8 md:p-12 lg:p-14">
                       
-                      {/* Hero text inside the card */}
-                      <div className="text-center mb-10 sm:mb-12">
-                        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-4 tracking-tight leading-tight">
-                          Create Your Personalized <br className="hidden sm:block" />
-                          <span className="bg-gradient-to-r from-primary via-primary to-primary/70 bg-clip-text text-transparent">Jump in AI</span>
+                      {/* Hero text */}
+                      <div className="text-center mb-8 sm:mb-10">
+                        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-foreground mb-3 tracking-tight">
+                          Create Your <span className="text-primary">Jump in AI</span>
                         </h2>
-                        <p className="text-muted-foreground text-sm sm:text-base max-w-lg mx-auto leading-relaxed">
-                          Share your goals and challenges. In under 2 minutes, get a strategic roadmap with actionable steps and AI tools tailored for you.
+                        <p className="text-muted-foreground text-sm max-w-md mx-auto leading-relaxed">
+                          Share what you're building and what's in your way. We'll craft your personalized roadmap.
                         </p>
                       </div>
 
-                      <div className="space-y-8">
-                        <div className="grid md:grid-cols-2 gap-6 sm:gap-8">
-                          {/* Goals Input - Ultra Premium */}
-                          <div className="group/input relative">
+                      <div className="space-y-6">
+                        <div className="grid md:grid-cols-2 gap-5 sm:gap-6">
+                          {/* Goals Input */}
+                          <div className="group/input">
+                            <label className="block text-[13px] font-medium text-foreground/90 mb-2.5 tracking-wide">
+                              <span className="inline-flex items-center gap-2">
+                                <span className="text-primary font-semibold">01</span>
+                                <span>What are you building?</span>
+                              </span>
+                            </label>
                             <div className="relative">
-                              <label className="flex items-center gap-2.5 text-sm font-medium text-foreground/80 mb-3 transition-colors duration-300 group-focus-within/input:text-foreground">
-                                <span className="flex items-center justify-center w-6 h-6 rounded-full bg-gradient-to-br from-primary to-primary/80 text-primary-foreground text-[11px] font-bold shadow-sm">1</span>
-                                <span>Your Goals</span>
-                                <span className="text-destructive/70 text-xs">*</span>
-                              </label>
-                              <div className="relative rounded-2xl overflow-hidden">
-                                {/* Focus ring effect */}
-                                <div className="absolute -inset-px rounded-2xl bg-gradient-to-br from-primary/50 via-primary/30 to-primary/50 opacity-0 group-focus-within/input:opacity-100 transition-opacity duration-300"></div>
-                                <textarea
-                                  ref={goalsTextareaRef}
-                                  value={formData.goals}
-                                  onChange={(e) => {
-                                    setFormData(prev => ({ ...prev, goals: e.target.value }));
-                                    setGoalsTyped(true);
+                              <textarea
+                                ref={goalsTextareaRef}
+                                value={formData.goals}
+                                onChange={(e) => {
+                                  setFormData(prev => ({ ...prev, goals: e.target.value }));
+                                  setGoalsTyped(true);
+                                }}
+                                className="w-full min-h-[160px] sm:min-h-[180px] p-4 sm:p-5 pb-14
+                                  rounded-xl
+                                  bg-muted/40 dark:bg-zinc-800/60
+                                  border border-border/40 dark:border-white/[0.06]
+                                  placeholder:text-muted-foreground/40 
+                                  text-foreground text-[15px] leading-relaxed
+                                  resize-none 
+                                  transition-all duration-200 
+                                  focus:outline-none 
+                                  focus:bg-background dark:focus:bg-zinc-800/90
+                                  focus:border-primary/40 dark:focus:border-primary/30
+                                  focus:ring-2 focus:ring-primary/10
+                                  hover:border-border/60"
+                                placeholder="Describe your goals, project, or what you want to achieve..."
+                              />
+                              <div className="absolute bottom-3 right-3">
+                                <SpeechToTextButton 
+                                  onTranscription={(text, durationSeconds) => {
+                                    setFormData(prev => ({ ...prev, goals: text }));
+                                    setSttUsed(true);
+                                    setGoalsUsedStt(true);
+                                    if (durationSeconds) {
+                                      setGoalsSttDuration(prev => prev + durationSeconds);
+                                    }
                                   }}
-                                  className="relative w-full min-h-[180px] sm:min-h-[200px] p-5 pb-16 
-                                    rounded-2xl border border-border/50
-                                    bg-gradient-to-b from-muted/30 to-muted/50
-                                    dark:from-zinc-800/50 dark:to-zinc-800/30
-                                    placeholder:text-muted-foreground/50 
-                                    text-foreground resize-none 
-                                    transition-all duration-300 
-                                    focus:outline-none focus:border-transparent
-                                    focus:bg-gradient-to-b focus:from-background focus:to-background/95
-                                    hover:border-border"
-                                  style={{ fontSize: '16px' }}
-                                  placeholder="What do you want to achieve with AI? Describe your vision..."
                                 />
-                                <div className="absolute bottom-4 right-4">
-                                  <SpeechToTextButton 
-                                    onTranscription={(text, durationSeconds) => {
-                                      setFormData(prev => ({ ...prev, goals: text }));
-                                      setSttUsed(true);
-                                      setGoalsUsedStt(true);
-                                      if (durationSeconds) {
-                                        setGoalsSttDuration(prev => prev + durationSeconds);
-                                      }
-                                    }}
-                                  />
-                                </div>
                               </div>
                             </div>
                           </div>
                           
-                          {/* Challenges Input - Ultra Premium */}
-                          <div className="group/input relative">
+                          {/* Challenges Input */}
+                          <div className="group/input">
+                            <label className="block text-[13px] font-medium text-foreground/90 mb-2.5 tracking-wide">
+                              <span className="inline-flex items-center gap-2">
+                                <span className="text-primary font-semibold">02</span>
+                                <span>What's in your way?</span>
+                              </span>
+                            </label>
                             <div className="relative">
-                              <label className="flex items-center gap-2.5 text-sm font-medium text-foreground/80 mb-3 transition-colors duration-300 group-focus-within/input:text-foreground">
-                                <span className="flex items-center justify-center w-6 h-6 rounded-full bg-gradient-to-br from-primary to-primary/80 text-primary-foreground text-[11px] font-bold shadow-sm">2</span>
-                                <span>Your Challenges</span>
-                                <span className="text-destructive/70 text-xs">*</span>
-                              </label>
-                              <div className="relative rounded-2xl overflow-hidden">
-                                {/* Focus ring effect */}
-                                <div className="absolute -inset-px rounded-2xl bg-gradient-to-br from-primary/50 via-primary/30 to-primary/50 opacity-0 group-focus-within/input:opacity-100 transition-opacity duration-300"></div>
-                                <textarea
-                                  ref={challengesTextareaRef}
-                                  value={formData.challenges}
-                                  onChange={(e) => {
-                                    setFormData(prev => ({ ...prev, challenges: e.target.value }));
-                                    setChallengesTyped(true);
+                              <textarea
+                                ref={challengesTextareaRef}
+                                value={formData.challenges}
+                                onChange={(e) => {
+                                  setFormData(prev => ({ ...prev, challenges: e.target.value }));
+                                  setChallengesTyped(true);
+                                }}
+                                className="w-full min-h-[160px] sm:min-h-[180px] p-4 sm:p-5 pb-14
+                                  rounded-xl
+                                  bg-muted/40 dark:bg-zinc-800/60
+                                  border border-border/40 dark:border-white/[0.06]
+                                  placeholder:text-muted-foreground/40 
+                                  text-foreground text-[15px] leading-relaxed
+                                  resize-none 
+                                  transition-all duration-200 
+                                  focus:outline-none 
+                                  focus:bg-background dark:focus:bg-zinc-800/90
+                                  focus:border-primary/40 dark:focus:border-primary/30
+                                  focus:ring-2 focus:ring-primary/10
+                                  hover:border-border/60"
+                                placeholder="What obstacles, challenges, or frustrations are you facing..."
+                              />
+                              <div className="absolute bottom-3 right-3">
+                                <SpeechToTextButton 
+                                  onTranscription={(text, durationSeconds) => {
+                                    setFormData(prev => ({ ...prev, challenges: text }));
+                                    setSttUsed(true);
+                                    setChallengesUsedStt(true);
+                                    if (durationSeconds) {
+                                      setChallengesSttDuration(prev => prev + durationSeconds);
+                                    }
                                   }}
-                                  className="relative w-full min-h-[180px] sm:min-h-[200px] p-5 pb-16 
-                                    rounded-2xl border border-border/50
-                                    bg-gradient-to-b from-muted/30 to-muted/50
-                                    dark:from-zinc-800/50 dark:to-zinc-800/30
-                                    placeholder:text-muted-foreground/50 
-                                    text-foreground resize-none 
-                                    transition-all duration-300 
-                                    focus:outline-none focus:border-transparent
-                                    focus:bg-gradient-to-b focus:from-background focus:to-background/95
-                                    hover:border-border"
-                                  style={{ fontSize: '16px' }}
-                                  placeholder="What obstacles are holding you back? What frustrates you..."
                                 />
-                                <div className="absolute bottom-4 right-4">
-                                  <SpeechToTextButton 
-                                    onTranscription={(text, durationSeconds) => {
-                                      setFormData(prev => ({ ...prev, challenges: text }));
-                                      setSttUsed(true);
-                                      setChallengesUsedStt(true);
-                                      if (durationSeconds) {
-                                        setChallengesSttDuration(prev => prev + durationSeconds);
-                                      }
-                                    }}
-                                  />
-                                </div>
                               </div>
                             </div>
                           </div>
