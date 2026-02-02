@@ -617,20 +617,35 @@ const JumpinAIStudio = () => {
                           </div>
                         </div>
 
-                        {/* PREMIUM Generate Button */}
+                        {/* PREMIUM Generate Button - Glassmorphism Style */}
                         <div ref={generateButtonRef} className="text-center pt-4 sm:pt-6">
                           <div className="relative inline-block group/btn w-full sm:w-auto">
-                            {/* Multi-layer glow effect */}
-                            <div className="absolute -inset-2 bg-primary/30 rounded-2xl blur-xl opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500"></div>
-                            <div className="absolute -inset-1 bg-gradient-to-r from-primary/50 via-primary to-primary/50 rounded-xl opacity-0 group-hover/btn:opacity-100 blur-sm transition-opacity duration-500"></div>
+                            {/* Subtle outer glow on hover */}
+                            <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-accent/20 to-primary/20 rounded-[2rem] blur-lg opacity-0 group-hover/btn:opacity-60 transition-opacity duration-500"></div>
                             
                             <button
                               onClick={() => handleGenerate()}
                               disabled={isGenerating}
-                              className="relative w-full sm:w-auto px-12 sm:px-20 md:px-24 py-5 sm:py-6 bg-primary hover:bg-primary/95 text-primary-foreground font-bold text-lg rounded-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100 shadow-xl shadow-primary/30 hover:shadow-2xl hover:shadow-primary/40 overflow-hidden"
+                              className="relative w-full sm:w-auto px-12 sm:px-20 md:px-24 py-5 sm:py-6 
+                                bg-gradient-to-br from-muted/80 via-muted/60 to-muted/80
+                                dark:from-zinc-800/90 dark:via-zinc-700/80 dark:to-zinc-800/90
+                                backdrop-blur-xl
+                                text-foreground font-bold text-lg 
+                                rounded-full
+                                border border-border/50 dark:border-white/10
+                                transition-all duration-300 
+                                hover:scale-[1.02] active:scale-[0.98] 
+                                hover:border-primary/30 dark:hover:border-white/20
+                                hover:shadow-lg hover:shadow-primary/10
+                                disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100 
+                                shadow-lg shadow-black/10 dark:shadow-black/30
+                                overflow-hidden"
                             >
-                              {/* Animated shine effect */}
-                              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000 ease-out"></div>
+                              {/* Animated shimmer effect */}
+                              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000 ease-out rounded-full"></div>
+                              
+                              {/* Inner highlight for glass effect */}
+                              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/30 dark:via-white/20 to-transparent"></div>
                               
                               <div className="relative z-10 flex items-center justify-center gap-3">
                                 {isGenerating ? (
