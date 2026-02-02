@@ -7,12 +7,14 @@ interface SpeechToTextButtonProps {
   onTranscription: (text: string, durationSeconds?: number) => void;
   language?: string;
   jumpId?: string;
+  onStateChange?: (state: 'connecting' | 'listening' | 'idle') => void;
 }
 
 export const SpeechToTextButton: React.FC<SpeechToTextButtonProps> = ({ 
   onTranscription,
   language = 'en',
-  jumpId
+  jumpId,
+  onStateChange
 }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
@@ -83,6 +85,7 @@ export const SpeechToTextButton: React.FC<SpeechToTextButtonProps> = ({
     setIsRecording(false);
     setIsConnecting(false);
     setConnectionStatus('idle');
+    onStateChange?.('idle');
 
     // Show timeout message if stopped due to time limit
     if (timedOut) {
@@ -92,12 +95,13 @@ export const SpeechToTextButton: React.FC<SpeechToTextButtonProps> = ({
         variant: "default",
       });
     }
-  }, [toast, onTranscription]);
+  }, [toast, onTranscription, onStateChange]);
 
   const startRecording = useCallback(async () => {
     try {
       setIsConnecting(true);
       setConnectionStatus('connecting');
+      onStateChange?.('connecting');
 
       // Request microphone access
       const stream = await navigator.mediaDevices.getUserMedia({ 
@@ -145,6 +149,7 @@ export const SpeechToTextButton: React.FC<SpeechToTextButtonProps> = ({
           if (data.message_type === 'session_started') {
             console.log('ElevenLabs session started');
             setConnectionStatus('listening');
+            onStateChange?.('listening');
           } else if (data.message_type === 'partial_transcript' && data.text) {
             // Partial transcript - just replace with the latest full text
             console.log('Partial transcript:', data.text);
@@ -237,7 +242,7 @@ export const SpeechToTextButton: React.FC<SpeechToTextButtonProps> = ({
       setIsConnecting(false);
       stopRecording();
     }
-  }, [toast, onTranscription, stopRecording, isRecording]);
+  }, [toast, onTranscription, stopRecording, isRecording, onStateChange]);
 
   const handleClick = () => {
     if (isRecording) {
