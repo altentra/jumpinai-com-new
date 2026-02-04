@@ -58,10 +58,10 @@ export const StudioTextarea = forwardRef<HTMLTextAreaElement, StudioTextareaProp
       default:
         return {
           ring: '',
-          border: 'border-border dark:border-white/10',
+          border: 'border-border/80 dark:border-white/20',
           indicator: 'bg-muted-foreground/40',
           label: 'text-foreground',
-          bg: 'bg-muted/40 dark:bg-zinc-800/50'
+          bg: 'bg-white/60 dark:bg-zinc-800/60'
         };
     }
   }, [inputState]);
