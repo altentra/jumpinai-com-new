@@ -508,22 +508,22 @@ const JumpinAIStudio = () => {
                     {/* Content - Tighter padding */}
                     <div className="relative p-6 sm:p-8 md:p-10 lg:p-12">
                       
-                      {/* Hero text - Compact */}
-                      <div className="text-center mb-8 sm:mb-10">
-                        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-3 tracking-tight leading-[1.15]">
+                      {/* Hero text - Premium typography */}
+                      <div className="text-center mb-10 sm:mb-12">
+                        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[2.75rem] font-bold text-foreground mb-4 tracking-tight leading-[1.15]">
                           Create Your{' '}
-                          <span className="bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
+                          <span className="bg-gradient-to-r from-primary via-primary/90 to-primary/80 bg-clip-text text-transparent">
                             Jump in AI
                           </span>
                         </h2>
-                        <p className="text-muted-foreground text-sm sm:text-base max-w-lg mx-auto">
+                        <p className="text-muted-foreground text-sm sm:text-base md:text-lg max-w-xl mx-auto font-medium">
                           Share your vision and challenges — we'll craft your personalized AI roadmap.
                         </p>
                       </div>
 
-                      {/* Form inputs - Tighter spacing */}
-                      <div className="space-y-6 sm:space-y-8">
-                        <div className="grid md:grid-cols-2 gap-5 sm:gap-6 lg:gap-8">
+                      {/* Form inputs */}
+                      <div className="space-y-8 sm:space-y-10">
+                        <div className="grid md:grid-cols-2 gap-6 sm:gap-8 lg:gap-10">
                           {/* Goals Input */}
                           <StudioTextarea
                             ref={goalsTextareaRef}
