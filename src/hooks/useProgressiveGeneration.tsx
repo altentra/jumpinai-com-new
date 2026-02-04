@@ -313,6 +313,7 @@ export const useProgressiveGeneration = () => {
               currentStep: 'plan'
             };
             progressiveResult.stepTimes = { ...progressiveResult.stepTimes, overview: stepDuration };
+            setStepStartTimes(prev => ({ ...prev, plan: Date.now() }));
             setProcessingStatus(progressiveResult.processing_status);
             setResult({ ...progressiveResult });
             
@@ -339,7 +340,8 @@ export const useProgressiveGeneration = () => {
               isComplete: false,
               currentStep: 'tool_prompts'
             };
-            progressiveResult.stepTimes = { ...progressiveResult.stepTimes, comprehensive: stepDuration };
+            // Use 'plan' key so it matches UI chip
+            progressiveResult.stepTimes = { ...progressiveResult.stepTimes, plan: stepDuration };
             setProcessingStatus(progressiveResult.processing_status);
             setResult({ ...progressiveResult });
             
