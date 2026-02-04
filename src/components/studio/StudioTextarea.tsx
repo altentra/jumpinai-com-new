@@ -33,35 +33,39 @@ export const StudioTextarea = forwardRef<HTMLTextAreaElement, StudioTextareaProp
     switch (inputState) {
       case 'connecting':
         return {
-          ring: 'ring-2 ring-amber-500/40 dark:ring-amber-400/30',
-          border: 'border-amber-500/60 dark:border-amber-400/40',
-          glow: 'shadow-[0_0_20px_-5px_rgba(245,158,11,0.3)]',
+          ring: 'ring-[3px] ring-amber-500/50 dark:ring-amber-400/40',
+          border: 'border-amber-500/70 dark:border-amber-400/50',
+          glow: 'shadow-[0_0_40px_-8px_rgba(245,158,11,0.5)]',
           indicator: 'bg-amber-500',
-          label: 'text-amber-600 dark:text-amber-400'
+          label: 'text-amber-600 dark:text-amber-400',
+          bg: 'bg-amber-50/50 dark:bg-amber-950/30'
         };
       case 'listening':
         return {
-          ring: 'ring-2 ring-emerald-500/40 dark:ring-emerald-400/30',
-          border: 'border-emerald-500/60 dark:border-emerald-400/40',
-          glow: 'shadow-[0_0_25px_-5px_rgba(16,185,129,0.35)]',
+          ring: 'ring-[3px] ring-emerald-500/50 dark:ring-emerald-400/40',
+          border: 'border-emerald-500/70 dark:border-emerald-400/50',
+          glow: 'shadow-[0_0_50px_-8px_rgba(16,185,129,0.55)]',
           indicator: 'bg-emerald-500 animate-pulse',
-          label: 'text-emerald-600 dark:text-emerald-400'
+          label: 'text-emerald-600 dark:text-emerald-400',
+          bg: 'bg-emerald-50/50 dark:bg-emerald-950/30'
         };
       case 'focused':
         return {
-          ring: 'ring-2 ring-primary/30 dark:ring-primary/20',
-          border: 'border-primary/50 dark:border-primary/40',
-          glow: 'shadow-[0_0_20px_-5px_hsl(var(--primary)/0.25)]',
+          ring: 'ring-[3px] ring-primary/40 dark:ring-primary/30',
+          border: 'border-primary/60 dark:border-primary/50',
+          glow: 'shadow-[0_0_40px_-8px_hsl(var(--primary)/0.4)]',
           indicator: 'bg-primary',
-          label: 'text-primary'
+          label: 'text-primary',
+          bg: 'bg-background dark:bg-zinc-900/90'
         };
       default:
         return {
           ring: '',
-          border: 'border-border/40 dark:border-white/[0.06]',
-          glow: '',
-          indicator: 'bg-muted-foreground/30',
-          label: 'text-foreground/90'
+          border: 'border-border/50 dark:border-white/[0.08]',
+          glow: 'shadow-lg shadow-black/[0.03] dark:shadow-black/20',
+          indicator: 'bg-muted-foreground/40',
+          label: 'text-foreground',
+          bg: 'bg-muted/50 dark:bg-zinc-800/60'
         };
     }
   }, [inputState]);
@@ -99,82 +103,99 @@ export const StudioTextarea = forwardRef<HTMLTextAreaElement, StudioTextareaProp
   }, [onChange, onSttUsed, onSttDuration]);
 
   return (
-    <div className="group/input space-y-3">
-      {/* Label with state indicator */}
+    <div className="group/input space-y-4">
+      {/* Label with state indicator - Premium typography */}
       <label className={cn(
-        "flex items-center gap-2.5 text-sm font-medium transition-colors duration-300",
+        "flex items-center gap-3 text-sm font-semibold transition-all duration-300 tracking-wide",
         stateStyles.label
       )}>
-        {/* State indicator dot */}
+        {/* State indicator dot with glow */}
         <span className={cn(
-          "w-2 h-2 rounded-full transition-all duration-300",
+          "relative w-2.5 h-2.5 rounded-full transition-all duration-300",
           stateStyles.indicator
-        )} />
-        <span className="tracking-wide">{label}</span>
+        )}>
+          {/* Glow effect for active states */}
+          {inputState !== 'idle' && (
+            <span className={cn(
+              "absolute inset-0 rounded-full blur-sm opacity-60",
+              stateStyles.indicator
+            )} />
+          )}
+        </span>
+        <span className="uppercase text-xs tracking-[0.2em]">{label}</span>
       </label>
 
-      {/* Input container with dynamic states */}
+      {/* Input container with dynamic states - Super rounded */}
       <div className={cn(
-        "relative rounded-2xl transition-all duration-300",
+        "relative rounded-[28px] transition-all duration-500 ease-out",
         stateStyles.glow
       )}>
         {/* Outer glow ring for active states */}
         <div className={cn(
-          "absolute -inset-px rounded-2xl transition-all duration-300 pointer-events-none",
-          inputState === 'listening' && "bg-gradient-to-br from-emerald-500/20 via-emerald-400/10 to-emerald-500/20",
-          inputState === 'connecting' && "bg-gradient-to-br from-amber-500/20 via-amber-400/10 to-amber-500/20",
-          inputState === 'focused' && "bg-gradient-to-br from-primary/15 via-primary/5 to-primary/15",
-          inputState === 'idle' && "opacity-0"
+          "absolute -inset-1 rounded-[32px] transition-all duration-500 pointer-events-none opacity-0",
+          inputState === 'listening' && "opacity-100 bg-gradient-to-br from-emerald-500/25 via-emerald-400/15 to-emerald-500/25 blur-md",
+          inputState === 'connecting' && "opacity-100 bg-gradient-to-br from-amber-500/25 via-amber-400/15 to-amber-500/25 blur-md",
+          inputState === 'focused' && "opacity-100 bg-gradient-to-br from-primary/20 via-primary/10 to-primary/20 blur-md"
         )} />
 
-        <textarea
-          ref={ref}
-          value={value}
-          onChange={(e) => {
-            onChange(e.target.value);
-            onTyped?.();
-          }}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          placeholder={placeholder}
-          className={cn(
-            "relative w-full min-h-[170px] sm:min-h-[190px] p-5 sm:p-6 pb-16",
-            "rounded-2xl",
-            "bg-gradient-to-b from-muted/30 to-muted/50 dark:from-zinc-800/50 dark:to-zinc-800/70",
-            "placeholder:text-muted-foreground/35",
-            "text-foreground text-[15px] sm:text-base leading-relaxed",
-            "resize-none",
-            "transition-all duration-300 ease-out",
-            "focus:outline-none",
-            "focus:bg-background dark:focus:bg-zinc-800/90",
-            "hover:border-border/60 dark:hover:border-white/10",
-            "border",
-            stateStyles.border,
-            stateStyles.ring,
-            className
-          )}
-        />
+        {/* Inner container for the textarea */}
+        <div className={cn(
+          "relative rounded-[28px] overflow-hidden transition-all duration-300",
+          "border-2",
+          stateStyles.border
+        )}>
+          {/* Top edge highlight */}
+          <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/60 dark:via-white/20 to-transparent z-10" />
 
-        {/* STT Button */}
-        <div className="absolute bottom-4 right-4">
-          <SpeechToTextButton
-            onTranscription={handleTranscription}
-            onStateChange={handleSttStateChange}
+          <textarea
+            ref={ref}
+            value={value}
+            onChange={(e) => {
+              onChange(e.target.value);
+              onTyped?.();
+            }}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            placeholder={placeholder}
+            className={cn(
+              "relative w-full min-h-[200px] sm:min-h-[220px] p-6 sm:p-8 pb-20",
+              "rounded-[26px]",
+              stateStyles.bg,
+              // Premium placeholder styling - much better visibility
+              "placeholder:text-muted-foreground/50 dark:placeholder:text-muted-foreground/40",
+              "placeholder:font-medium placeholder:text-[15px]",
+              // Text styling - excellent readability
+              "text-foreground text-[16px] sm:text-[17px] leading-[1.8] font-medium",
+              "resize-none",
+              "transition-all duration-300 ease-out",
+              "focus:outline-none",
+              // Hover state
+              "hover:border-border/80 dark:hover:border-white/15",
+              className
+            )}
           />
-        </div>
 
-        {/* State label badge */}
-        {inputState !== 'idle' && inputState !== 'focused' && (
-          <div className={cn(
-            "absolute top-3 right-3 px-2.5 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider",
-            "transition-all duration-300 animate-fade-in",
-            inputState === 'connecting' && "bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/20",
-            inputState === 'listening' && "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20"
-          )}>
-            {inputState === 'connecting' && 'Connecting...'}
-            {inputState === 'listening' && '● Live'}
+          {/* STT Button - Premium positioning */}
+          <div className="absolute bottom-5 right-5 z-10">
+            <SpeechToTextButton
+              onTranscription={handleTranscription}
+              onStateChange={handleSttStateChange}
+            />
           </div>
-        )}
+
+          {/* State label badge - more prominent */}
+          {inputState !== 'idle' && inputState !== 'focused' && (
+            <div className={cn(
+              "absolute top-5 right-5 px-4 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-[0.15em]",
+              "transition-all duration-300 animate-fade-in backdrop-blur-sm z-10",
+              inputState === 'connecting' && "bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30",
+              inputState === 'listening' && "bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30"
+            )}>
+              {inputState === 'connecting' && 'Connecting...'}
+              {inputState === 'listening' && '● Recording'}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
