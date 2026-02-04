@@ -37,7 +37,8 @@ export const StudioTextarea = forwardRef<HTMLTextAreaElement, StudioTextareaProp
           border: 'border-amber-500/60',
           indicator: 'bg-amber-500',
           label: 'text-amber-600 dark:text-amber-400',
-          bg: 'bg-amber-50/30 dark:bg-amber-950/20'
+          bg: 'bg-amber-50/50 dark:bg-amber-950/30',
+          shadow: 'shadow-[0_4px_20px_-4px_rgba(245,158,11,0.25)]'
         };
       case 'listening':
         return {
@@ -45,7 +46,8 @@ export const StudioTextarea = forwardRef<HTMLTextAreaElement, StudioTextareaProp
           border: 'border-emerald-500/60',
           indicator: 'bg-emerald-500 animate-pulse',
           label: 'text-emerald-600 dark:text-emerald-400',
-          bg: 'bg-emerald-50/30 dark:bg-emerald-950/20'
+          bg: 'bg-emerald-50/50 dark:bg-emerald-950/30',
+          shadow: 'shadow-[0_4px_20px_-4px_rgba(16,185,129,0.25)]'
         };
       case 'focused':
         return {
@@ -53,15 +55,17 @@ export const StudioTextarea = forwardRef<HTMLTextAreaElement, StudioTextareaProp
           border: 'border-primary/50',
           indicator: 'bg-primary',
           label: 'text-primary',
-          bg: 'bg-background'
+          bg: 'bg-white dark:bg-zinc-800/90',
+          shadow: 'shadow-[0_4px_20px_-4px_rgba(var(--primary),0.2)]'
         };
       default:
         return {
           ring: '',
-          border: 'border-border/80 dark:border-white/20',
-          indicator: 'bg-muted-foreground/40',
+          border: 'border-zinc-300 dark:border-zinc-600',
+          indicator: 'bg-zinc-400 dark:bg-zinc-500',
           label: 'text-foreground',
-          bg: 'bg-white/60 dark:bg-zinc-800/60'
+          bg: 'bg-white dark:bg-zinc-800/90',
+          shadow: 'shadow-[0_2px_8px_-2px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.6)] dark:shadow-[0_2px_8px_-2px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.05)]'
         };
     }
   }, [inputState]);
@@ -113,14 +117,14 @@ export const StudioTextarea = forwardRef<HTMLTextAreaElement, StudioTextareaProp
         <span className="uppercase text-xs tracking-[0.15em]">{label}</span>
       </label>
 
-      {/* Input container */}
+      {/* Input container with premium depth */}
       <div className="relative">
         <div className={cn(
           "relative rounded-2xl overflow-hidden transition-all duration-200",
-          "border",
+          "border-2",
           stateStyles.ring,
           stateStyles.border,
-          "shadow-sm"
+          stateStyles.shadow
         )}>
           <textarea
             ref={ref}
