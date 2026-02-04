@@ -1,7 +1,5 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 
-const xaiApiKey = Deno.env.get('XAI_API_KEY');
-
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
@@ -13,6 +11,11 @@ Deno.serve(async (req) => {
   }
 
   try {
+    const GOOGLE_GEMINI_API_KEY = Deno.env.get('GOOGLE_GEMINI_API_KEY');
+    if (!GOOGLE_GEMINI_API_KEY) {
+      throw new Error('GOOGLE_GEMINI_API_KEY not configured');
+    }
+
     const { jumpOverview, phaseTitle, phaseNumber, stepTitle, stepDescription, stepNumber } = await req.json();
 
     console.log('Reroute Step - Generating alternative routes for:', { phaseTitle, stepTitle });
@@ -64,35 +67,53 @@ Make each direction:
 
 Return ONLY valid JSON, no markdown formatting.`;
 
-    console.log('🚀 Calling xAI API with max_tokens: 16000');
+    console.log('🚀 Calling Google Gemini API...');
     
-    const response = await fetch('https://api.x.ai/v1/chat/completions', {
+    // Call Google Gemini API
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GOOGLE_GEMINI_API_KEY}`;
+    
+    const response = await fetch(geminiUrl, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${xaiApiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'grok-4-fast-non-reasoning',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt }
+        systemInstruction: {
+          parts: [{ text: systemPrompt }]
+        },
+        contents: [
+          {
+            role: 'user',
+            parts: [{ text: userPrompt }]
+          }
         ],
-        temperature: 0.8,
-        max_tokens: 16000,
+        generationConfig: {
+          temperature: 0.8,
+          maxOutputTokens: 16000,
+        },
+        safetySettings: [
+          { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_NONE' },
+          { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_NONE' },
+          { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_NONE' },
+          { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_NONE' },
+        ]
       }),
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('xAI API error:', response.status, errorText);
-      throw new Error(`xAI API error: ${response.status}`);
+      console.error('Gemini API error:', response.status, errorText);
+      throw new Error(`Gemini API error: ${response.status}`);
     }
 
     const data = await response.json();
-    const content = data.choices[0].message.content;
+    const content = data.candidates?.[0]?.content?.parts?.[0]?.text;
     
-    console.log('Raw xAI response length:', content.length);
+    if (!content) {
+      throw new Error('No content in Gemini API response');
+    }
+    
+    console.log('Raw Gemini response length:', content.length);
     console.log('First 500 chars:', content.substring(0, 500));
     console.log('Last 500 chars:', content.substring(content.length - 500));
     

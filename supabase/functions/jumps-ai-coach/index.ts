@@ -2,8 +2,6 @@ import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.4';
 import { z } from 'https://deno.land/x/zod@v3.22.4/mod.ts';
 
-const xaiApiKey = Deno.env.get('XAI_API_KEY');
-
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
@@ -73,11 +71,12 @@ Deno.serve(async (req) => {
 
     console.log('✅ Credit deducted for user:', user.id);
 
-    // Validate xAI API key first
-    if (!xaiApiKey) {
-      console.error('❌ CRITICAL: xAI API key is not set in environment variables');
+    // Validate Google Gemini API key first
+    const GOOGLE_GEMINI_API_KEY = Deno.env.get('GOOGLE_GEMINI_API_KEY');
+    if (!GOOGLE_GEMINI_API_KEY) {
+      console.error('❌ CRITICAL: Google Gemini API key is not set in environment variables');
       return new Response(JSON.stringify({ 
-        error: 'xAI API key not configured',
+        error: 'Google Gemini API key not configured',
         full_content: 'Service configuration error. Please contact support.',
         components: { tools: [], prompts: [], workflows: [], blueprints: [], strategies: [] }
       }), {
@@ -86,7 +85,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    console.log('✅ xAI API key is available');
+    console.log('✅ Google Gemini API key is available');
 
     // Parse and validate input
     const body = await req.json();
@@ -117,101 +116,101 @@ Deno.serve(async (req) => {
       goals, challenges, industry, ai_experience, urgency, budget, overview_content
     });
 
-    console.log('📡 Sending Step', step, 'request to xAI Grok-4 API...');
+    console.log('📡 Sending Step', step, 'request to Google Gemini API...');
 
-    console.log('🤖 Making xAI API request with model: grok-4-fast for step:', step);
+    console.log('🤖 Making Gemini API request for step:', step);
     
-    const requestBody = {
-      model: 'grok-4-fast',
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: userPrompt }
-      ],
-      max_tokens: expectedTokens, // xAI uses max_tokens
-      temperature: 0.7, // Add temperature for better results
-    };
+    // Call Google Gemini API
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GOOGLE_GEMINI_API_KEY}`;
 
     console.log('📋 Request body prepared for step', step, ':', {
-      model: requestBody.model,
-      messageCount: requestBody.messages.length,
+      model: 'gemini-2.5-flash',
       systemPromptLength: systemPrompt.length,
       userPromptLength: userPrompt.length,
-      maxTokens: requestBody.max_tokens,
-      temperature: requestBody.temperature,
+      maxTokens: expectedTokens,
       step: step
     });
     
-    // Create AbortController for timeout handling - Grok-4 should be much faster
+    // Create AbortController for timeout handling
     const controller = new AbortController();
     const timeoutId = setTimeout(() => {
       console.error(`⏰ Step ${step} request timed out after 120 seconds`);
       controller.abort();
     }, 120000); // 120 second timeout for complex generations
     
-    console.log('🌐 Initiating fetch to xAI Grok-4...');
+    console.log('🌐 Initiating fetch to Google Gemini...');
     
-    const response = await fetch('https://api.x.ai/v1/chat/completions', {
+    const response = await fetch(geminiUrl, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${xaiApiKey}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(requestBody),
+      body: JSON.stringify({
+        systemInstruction: {
+          parts: [{ text: systemPrompt }]
+        },
+        contents: [
+          {
+            role: 'user',
+            parts: [{ text: userPrompt }]
+          }
+        ],
+        generationConfig: {
+          temperature: 0.7,
+          maxOutputTokens: expectedTokens,
+        },
+        safetySettings: [
+          { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_NONE' },
+          { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_NONE' },
+          { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_NONE' },
+          { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_NONE' },
+        ]
+      }),
       signal: controller.signal,
     }).catch(fetchError => {
       console.error('🚨 Fetch error occurred:', fetchError.name, fetchError.message);
       if (fetchError.name === 'AbortError') {
-        throw new Error('Request timed out - xAI Grok-4 took too long to respond');
+        throw new Error('Request timed out - Gemini took too long to respond');
       }
       throw new Error(`Network error: ${fetchError.message}`);
     });
     
     clearTimeout(timeoutId);
-    console.log(`✅ Step ${step} response received from xAI Grok-4`);
+    console.log(`✅ Step ${step} response received from Google Gemini`);
 
-    console.log(`xAI Grok-4 Step ${step} response status:`, response.status, response.statusText);
+    console.log(`Gemini Step ${step} response status:`, response.status, response.statusText);
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error(`xAI API error details for Step ${step}:`, {
+      console.error(`Gemini API error details for Step ${step}:`, {
         status: response.status,
         statusText: response.statusText,
         error: errorText,
-        model: 'grok-4',
+        model: 'gemini-2.5-flash',
         step: step,
         maxTokens: expectedTokens,
-        headers: response.headers,
-        url: response.url
       });
-      throw new Error(`xAI API error for Step ${step}: ${response.status} - ${errorText}`);
+      throw new Error(`Gemini API error for Step ${step}: ${response.status} - ${errorText}`);
     }
 
     const data = await response.json();
-    console.log(`xAI Grok-4-fast Step ${step} response received successfully:`, {
-      usage: data.usage,
-      model: data.model,
-      finishReason: data.choices?.[0]?.finish_reason,
-      hasContent: !!data.choices?.[0]?.message?.content,
-      contentLength: data.choices?.[0]?.message?.content?.length || 0,
-      step: step
-    });
+    console.log(`Gemini Step ${step} response received successfully`);
 
-    // Check if we got empty content
-    const rawContent = data.choices?.[0]?.message?.content;
+    // Check if we got empty content - Gemini has different response structure
+    const rawContent = data.candidates?.[0]?.content?.parts?.[0]?.text;
     if (!rawContent || rawContent.trim() === '') {
-      console.error(`❌ Empty response from xAI API for Step ${step}:`, {
-        model: data.model,
-        finishReason: data.choices?.[0]?.finish_reason,
+      console.error(`❌ Empty response from Gemini API for Step ${step}:`, {
+        model: 'gemini-2.5-flash',
         fullResponse: data
       });
-      throw new Error(`xAI API returned empty response for Step ${step}. Model may not support this request.`);
+      throw new Error(`Gemini API returned empty response for Step ${step}.`);
     }
 
     let generatedContent;
     
     try {
-      console.log(`Raw xAI Grok-4-fast Step ${step} response length:`, rawContent.length);
-      console.log(`Raw xAI Grok-4-fast Step ${step} response preview:`, rawContent.substring(0, 200));
+      console.log(`Raw Gemini Step ${step} response length:`, rawContent.length);
+      console.log(`Raw Gemini Step ${step} response preview:`, rawContent.substring(0, 200));
       
       // Simplified parsing - try direct JSON first, then basic cleanup
       try {
@@ -318,7 +317,7 @@ Deno.serve(async (req) => {
       errorType: error.name || 'UnknownError',
       step: step,
       success: false,
-      full_content: `Sorry, there was an error generating Step ${step} of your Jump in AI plan with xAI Grok-4-fast. Please try again.`,
+      full_content: `Sorry, there was an error generating Step ${step} of your Jump in AI plan with Gemini. Please try again.`,
       structured_plan: null,
       comprehensive_plan: null,
       components: { tools: [], prompts: [], workflows: [], blueprints: [], strategies: [] }

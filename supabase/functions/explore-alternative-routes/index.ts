@@ -28,9 +28,9 @@ serve(async (req) => {
       );
     }
 
-    const XAI_API_KEY = Deno.env.get('XAI_API_KEY');
-    if (!XAI_API_KEY) {
-      console.error('XAI_API_KEY not configured');
+    const GOOGLE_GEMINI_API_KEY = Deno.env.get('GOOGLE_GEMINI_API_KEY');
+    if (!GOOGLE_GEMINI_API_KEY) {
+      console.error('GOOGLE_GEMINI_API_KEY not configured');
       return new Response(
         JSON.stringify({ error: 'AI service not configured' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -96,28 +96,42 @@ Now, generate 3 NEW ALTERNATIVE approaches that are DIFFERENT from the original 
 
 Make each alternative genuinely compelling and different from the original${existingAlternatives?.length > 0 ? ', from each other, and from all previously generated alternatives' : ' and from each other'}.`;
 
-    console.log('Calling xAI API for alternative jumps...');
+    console.log('Calling Google Gemini API for alternative jumps...');
 
-    const response = await fetch('https://api.x.ai/v1/chat/completions', {
+    // Call Google Gemini API
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GOOGLE_GEMINI_API_KEY}`;
+    
+    const response = await fetch(geminiUrl, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${XAI_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'grok-3-fast',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt }
+        systemInstruction: {
+          parts: [{ text: systemPrompt }]
+        },
+        contents: [
+          {
+            role: 'user',
+            parts: [{ text: userPrompt }]
+          }
         ],
-        temperature: 0.85, // Slightly higher for more variety when generating additional alternatives
-        max_tokens: 1500,
+        generationConfig: {
+          temperature: 0.85, // Slightly higher for more variety
+          maxOutputTokens: 1500,
+        },
+        safetySettings: [
+          { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_NONE' },
+          { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_NONE' },
+          { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_NONE' },
+          { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_NONE' },
+        ]
       }),
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('xAI API error:', response.status, errorText);
+      console.error('Gemini API error:', response.status, errorText);
       return new Response(
         JSON.stringify({ error: 'AI service error', details: errorText }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -125,17 +139,17 @@ Make each alternative genuinely compelling and different from the original${exis
     }
 
     const data = await response.json();
-    const content = data.choices?.[0]?.message?.content;
+    const content = data.candidates?.[0]?.content?.parts?.[0]?.text;
 
     if (!content) {
-      console.error('No content in xAI response');
+      console.error('No content in Gemini response');
       return new Response(
         JSON.stringify({ error: 'No response from AI' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    console.log('Raw xAI response:', content.substring(0, 500));
+    console.log('Raw Gemini response:', content.substring(0, 500));
 
     // Parse the JSON response
     let alternatives;
