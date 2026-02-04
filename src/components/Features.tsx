@@ -1,11 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight, Target, Zap, Users, Rocket, BookOpen, Settings } from "lucide-react";
-import { useOptimizedAuth } from "@/hooks/useOptimizedAuth";
 import { useNavigate } from "react-router-dom";
 
 const Features = () => {
-  const { isAuthenticated } = useOptimizedAuth();
   const navigate = useNavigate();
 
   const features = [
@@ -31,11 +29,10 @@ const Features = () => {
     }
   ];
 
-  const handleGetStarted = () => {
-    if (isAuthenticated) {
-      navigate('/jumpinai-studio');
-    } else {
-      navigate('/auth');
+  const scrollToInlineStudio = () => {
+    const element = document.getElementById('inline-studio');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
@@ -132,7 +129,7 @@ const Features = () => {
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-stretch sm:items-center justify-center max-w-2xl mx-auto">
             <Button 
               size="lg" 
-              onClick={handleGetStarted}
+              onClick={scrollToInlineStudio}
               className="group bg-primary hover:bg-primary/90 text-primary-foreground px-8 sm:px-10 py-4 sm:py-6 text-base sm:text-lg font-semibold rounded-3xl transition-all duration-500 hover:scale-105 shadow-2xl hover:shadow-3xl w-full sm:w-auto"
             >
               Get Started

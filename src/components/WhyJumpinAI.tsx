@@ -65,11 +65,10 @@ const WhyJumpinAI = () => {
     },
   ];
 
-  const handleGetStarted = () => {
-    if (isAuthenticated) {
-      navigate('/jumpinai-studio');
-    } else {
-      navigate('/auth');
+  const scrollToInlineStudio = () => {
+    const element = document.getElementById('inline-studio');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
@@ -177,7 +176,7 @@ const WhyJumpinAI = () => {
           }}
         >
           <Button
-            onClick={handleGetStarted}
+            onClick={scrollToInlineStudio}
             size="lg"
             className="group bg-foreground hover:bg-foreground/90 text-background px-10 sm:px-14 py-6 sm:py-7 text-base sm:text-lg font-semibold rounded-full transition-all duration-500 hover:scale-[1.02] shadow-xl hover:shadow-2xl"
           >

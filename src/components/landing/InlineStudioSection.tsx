@@ -117,6 +117,7 @@ const InlineStudioSection = () => {
 
   return (
     <section 
+      id="inline-studio"
       ref={elementRef as React.RefObject<HTMLElement>}
       className="relative py-20 sm:py-24 lg:py-32 overflow-hidden"
     >
