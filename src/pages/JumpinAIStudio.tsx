@@ -617,17 +617,18 @@ const JumpinAIStudio = () => {
                                 onClick={() => handleGenerate()}
                                 disabled={isGenerating}
                                 className="relative w-full sm:w-auto px-12 sm:px-16 md:px-20 py-4 sm:py-5 
-                                  bg-gradient-to-br from-zinc-800 via-zinc-900 to-black
-                                  dark:from-zinc-700 dark:via-zinc-800 dark:to-zinc-900
                                   text-white font-semibold text-base sm:text-lg
                                   rounded-full
                                   border border-white/10
                                   transition-all duration-300 ease-out
                                   hover:scale-[1.02] active:scale-[0.98] 
                                   hover:shadow-xl hover:shadow-black/30
-                                  disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 
+                                  disabled:cursor-not-allowed disabled:hover:scale-100 
                                   shadow-lg shadow-black/20
                                   overflow-hidden"
+                                style={{
+                                  background: 'linear-gradient(to bottom right, #27272a, #18181b, #000000)',
+                                }}
                               >
                                 {/* Shimmer effect */}
                                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700 rounded-full"></div>
@@ -638,15 +639,15 @@ const JumpinAIStudio = () => {
                                 {/* Bottom subtle shadow */}
                                 <div className="absolute inset-x-4 bottom-0 h-px bg-gradient-to-r from-transparent via-black/10 to-transparent"></div>
                                 
-                                <div className="relative z-10 flex items-center justify-center gap-4">
+                                <div className="relative z-10 flex items-center justify-center gap-4 text-white">
                                   {isGenerating ? (
                                     <div className="flex flex-col items-center gap-3 min-h-[36px] w-full">
                                       <div className="flex items-center gap-4">
-                                        <Loader2 className="w-6 h-6 animate-spin" />
-                                        <span className="text-lg font-semibold">
+                                        <Loader2 className="w-6 h-6 animate-spin text-white" />
+                                        <span className="text-lg font-semibold text-white">
                                           {typeof processingStatus === 'string' ? processingStatus : 'Generating...'}
                                         </span>
-                                        <span className="text-base opacity-70 font-mono tabular-nums bg-muted/50 px-3 py-1 rounded-full">
+                                        <span className="text-base opacity-70 font-mono tabular-nums bg-white/10 px-3 py-1 rounded-full text-white">
                                           {formatTime(generationTimer)}
                                         </span>
                                       </div>
@@ -655,15 +656,15 @@ const JumpinAIStudio = () => {
                                           e.stopPropagation();
                                           handleCancel();
                                         }}
-                                        className="text-sm opacity-60 hover:opacity-100 transition-opacity underline underline-offset-4 decoration-dotted"
+                                        className="text-sm text-white/60 hover:text-white transition-opacity underline underline-offset-4 decoration-dotted"
                                       >
                                         Cancel
                                       </button>
                                     </div>
                                   ) : (
                                     <>
-                                      <Zap className="w-6 h-6 transition-transform duration-500 group-hover/btn:scale-125 group-hover/btn:rotate-12" />
-                                      <span>Generate My Jump</span>
+                                      <Zap className="w-6 h-6 text-white transition-transform duration-500 group-hover/btn:scale-125 group-hover/btn:rotate-12" />
+                                      <span className="text-white">Generate My Jump</span>
                                     </>
                                   )}
                                 </div>
