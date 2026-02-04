@@ -140,7 +140,7 @@ Focus on practical, immediately implementable opportunities. Prioritize by impac
     console.log('🤖 Calling Google Gemini API for analysis...');
 
     // Call Google Gemini API
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash:generateContent?key=${GOOGLE_GEMINI_API_KEY}`;
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${GOOGLE_GEMINI_API_KEY}`;
     
     const response = await fetch(geminiUrl, {
       method: 'POST',

@@ -583,10 +583,10 @@ async function callGemini(
 ): Promise<any> {
   const { systemPrompt, userPrompt, expectedTokens } = getStepPrompts(step, context, overviewContent);
   
-  console.log(`🚀 Step ${step}: Calling Google Gemini API (model: gemini-2.5-flash, maxOutputTokens: ${expectedTokens})`);
+  console.log(`🚀 Step ${step}: Calling Google Gemini API (model: gemini-3-flash-preview, maxOutputTokens: ${expectedTokens})`);
   
-  // Use Gemini 2.5 Flash for fast, high-quality responses
-  const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+  // Use Gemini 3 Flash Preview for fastest, highest-quality responses (February 2026)
+  const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
   
   const response = await fetch(geminiUrl, {
     method: 'POST',
