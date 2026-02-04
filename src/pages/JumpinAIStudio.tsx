@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { Helmet } from 'react-helmet-async';
 import { AlertCircle, Loader2, LogIn, Zap } from 'lucide-react';
 import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import Navigation from '@/components/Navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { useCredits } from '@/hooks/useCredits';
@@ -14,6 +14,20 @@ import { supabase } from '@/integrations/supabase/client';
 import { StudioTextarea } from '@/components/studio/StudioTextarea';
 import { markJumpAsUsingSTT } from '@/services/sttTrackingService';
 import type { AlternativeRoute, RouteExplorationHistory } from '@/types/alternativeRoutes';
+
+// Interface for state passed from landing page inline studio
+interface IncomingStudioState {
+  goals?: string;
+  challenges?: string;
+  goalsUsedStt?: boolean;
+  challengesUsedStt?: boolean;
+  goalsSttDuration?: number;
+  challengesSttDuration?: number;
+  goalsTyped?: boolean;
+  challengesTyped?: boolean;
+  turnstileToken?: string | null;
+  autoStart?: boolean;
+}
 
 // Input tracking for goals and challenges (type vs narrate)
 interface InputTracking {
@@ -69,32 +83,38 @@ const sendJumpGenerationNotification = async (
 };
 
 const JumpinAIStudio = () => {
+  const location = useLocation();
+  const incomingState = location.state as IncomingStudioState | null;
+  
   const { user, isAuthenticated, isLoading, login } = useAuth();
   const { hasCredits, deductCredit, updateTransactionReference } = useCredits();
   const { isGenerating, result, processingStatus, generateWithProgression } = useProgressiveGeneration();
   
   // State
   const [generationTimer, setGenerationTimer] = useState(0);
-  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(incomingState?.turnstileToken || null);
   const [guestUsageInfo, setGuestUsageInfo] = useState<{ usageCount: number; remaining: number } | null>(null);
   const [isLoadingGuestInfo, setIsLoadingGuestInfo] = useState(true);
-  const [sttUsed, setSttUsed] = useState(false);
+  const [sttUsed, setSttUsed] = useState(incomingState?.goalsUsedStt || incomingState?.challengesUsedStt || false);
   
-  // Input method tracking state
-  const [goalsUsedStt, setGoalsUsedStt] = useState(false);
-  const [challengesUsedStt, setChallengesUsedStt] = useState(false);
-  const [goalsSttDuration, setGoalsSttDuration] = useState(0);
-  const [challengesSttDuration, setChallengesSttDuration] = useState(0);
-  const [goalsTyped, setGoalsTyped] = useState(false);
-  const [challengesTyped, setChallengesTyped] = useState(false);
+  // Input method tracking state - initialize from incoming state if available
+  const [goalsUsedStt, setGoalsUsedStt] = useState(incomingState?.goalsUsedStt || false);
+  const [challengesUsedStt, setChallengesUsedStt] = useState(incomingState?.challengesUsedStt || false);
+  const [goalsSttDuration, setGoalsSttDuration] = useState(incomingState?.goalsSttDuration || 0);
+  const [challengesSttDuration, setChallengesSttDuration] = useState(incomingState?.challengesSttDuration || 0);
+  const [goalsTyped, setGoalsTyped] = useState(incomingState?.goalsTyped || false);
+  const [challengesTyped, setChallengesTyped] = useState(incomingState?.challengesTyped || false);
+  
+  // Track if we've already triggered auto-start
+  const autoStartTriggered = useRef(false);
   
   const [formData, setFormData] = useState<StudioFormData>({
     currentRole: '',
     industry: '',
     experienceLevel: '',
     aiKnowledge: '',
-    goals: '',
-    challenges: '',
+    goals: incomingState?.goals || '',
+    challenges: incomingState?.challenges || '',
     timeCommitment: '',
     budget: ''
   });
@@ -240,6 +260,37 @@ const JumpinAIStudio = () => {
       challengesTextareaRef.current.style.height = maxHeight + 'px';
     }
   }, [formData.goals, formData.challenges]);
+
+  // Auto-start generation when coming from landing page with data
+  useEffect(() => {
+    // Only trigger once, when we have valid incoming state with autoStart flag
+    if (
+      incomingState?.autoStart && 
+      !autoStartTriggered.current && 
+      !isLoading && 
+      !isLoadingGuestInfo &&
+      formData.goals.trim() && 
+      formData.challenges.trim() &&
+      !isGenerating
+    ) {
+      autoStartTriggered.current = true;
+      
+      // Small delay to ensure Turnstile has time to initialize if needed
+      const startDelay = turnstileToken ? 100 : 1500;
+      
+      setTimeout(() => {
+        console.log('🚀 Auto-starting generation from landing page...');
+        toast.info('Starting your Jump generation...');
+        // Trigger generation - handleGenerate will be called via ref or direct invocation
+        if (generateButtonRef.current) {
+          const button = generateButtonRef.current.querySelector('button');
+          if (button && !button.disabled) {
+            button.click();
+          }
+        }
+      }, startDelay);
+    }
+  }, [incomingState, isLoading, isLoadingGuestInfo, formData.goals, formData.challenges, isGenerating, turnstileToken]);
 
   const handleCancel = useCallback(() => {
     toast.info('Generation cancelled. You can start a new request anytime.');
@@ -517,7 +568,7 @@ const JumpinAIStudio = () => {
                           </span>
                         </h2>
                         <p className="text-muted-foreground text-sm sm:text-base md:text-lg max-w-xl mx-auto font-medium">
-                          Share your vision and challenges — we'll craft your personalized AI roadmap.
+                          Share your vision and challenges — we'll craft your personalized AI implementation roadmap.
                         </p>
                       </div>
 
