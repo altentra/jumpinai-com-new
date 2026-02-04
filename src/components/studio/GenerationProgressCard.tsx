@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { Loader2, CheckCircle, Sparkles, Compass, Target, Wrench, Timer, Zap } from 'lucide-react';
+import { Loader2, CheckCircle, Sparkles, Compass, Target, Wrench, Timer, Zap, Circle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import type { ProcessingStatus } from '@/hooks/useProgressiveGeneration';
 
@@ -7,18 +7,34 @@ interface GenerationStep {
   id: string;
   label: string;
   icon: React.ElementType;
-  color: string;
-  bgColor: string;
-  borderColor: string;
 }
 
-// Color-coded steps matching the tab design system
+// Steps with their icons (colors are determined by STATUS, not step type)
 const GENERATION_STEPS: GenerationStep[] = [
-  { id: 'naming', label: 'Name', icon: Sparkles, color: 'text-primary', bgColor: 'bg-primary/15', borderColor: 'border-primary/40' },
-  { id: 'overview', label: 'Overview', icon: Compass, color: 'text-blue-500', bgColor: 'bg-blue-500/15', borderColor: 'border-blue-500/40' },
-  { id: 'plan', label: 'Plan', icon: Target, color: 'text-amber-500', bgColor: 'bg-amber-500/15', borderColor: 'border-amber-500/40' },
-  { id: 'tool_prompts', label: 'Tools', icon: Wrench, color: 'text-rose-500', bgColor: 'bg-rose-500/15', borderColor: 'border-rose-500/40' },
+  { id: 'naming', label: 'Name', icon: Sparkles },
+  { id: 'overview', label: 'Overview', icon: Compass },
+  { id: 'plan', label: 'Plan', icon: Target },
+  { id: 'tool_prompts', label: 'Tools', icon: Wrench },
 ];
+
+// STATUS-BASED colors (not step-type colors)
+const STATUS_COLORS = {
+  active: {
+    text: 'text-blue-500',
+    bg: 'bg-blue-500/15',
+    border: 'border-blue-500/40',
+  },
+  complete: {
+    text: 'text-emerald-500',
+    bg: 'bg-emerald-500/15',
+    border: 'border-emerald-500/40',
+  },
+  pending: {
+    text: 'text-muted-foreground/50',
+    bg: 'bg-muted/30',
+    border: 'border-border/40',
+  },
+};
 
 interface GenerationProgressCardProps {
   status: ProcessingStatus;
@@ -131,7 +147,7 @@ export const GenerationProgressCard: React.FC<GenerationProgressCardProps> = ({
       <div className={`absolute -inset-1.5 rounded-2xl blur-xl transition-all duration-700 ${
         isComplete 
           ? 'bg-emerald-500/15 opacity-60' 
-          : 'bg-primary/10 opacity-40'
+          : 'bg-blue-500/10 opacity-40'
       }`} />
       
       {/* Main card - premium glassmorphic aesthetic */}
@@ -144,23 +160,23 @@ export const GenerationProgressCard: React.FC<GenerationProgressCardProps> = ({
         <div className={`absolute top-0 left-0 right-0 h-px ${
           isComplete 
             ? 'bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent' 
-            : 'bg-gradient-to-r from-transparent via-primary/40 to-transparent'
+            : 'bg-gradient-to-r from-transparent via-blue-500/40 to-transparent'
         }`} />
         
         <div className="relative p-4 sm:p-5 space-y-4">
           {/* Compact header */}
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-2.5 min-w-0 flex-1">
-              {/* Status icon */}
+              {/* Status icon - blue when active, green when complete */}
               <div className={`relative shrink-0 w-8 h-8 rounded-full flex items-center justify-center border shadow-sm ${
                 isComplete 
                   ? 'bg-emerald-500/15 border-emerald-500/40' 
-                  : 'bg-primary/15 border-primary/40'
+                  : 'bg-blue-500/15 border-blue-500/40'
               }`}>
                 {isComplete ? (
                   <CheckCircle className="w-4 h-4 text-emerald-500" />
                 ) : (
-                  <Zap className="w-4 h-4 text-primary animate-pulse" />
+                  <Zap className="w-4 h-4 text-blue-500 animate-pulse" />
                 )}
               </div>
               
@@ -180,19 +196,15 @@ export const GenerationProgressCard: React.FC<GenerationProgressCardProps> = ({
             </Badge>
           </div>
 
-          {/* Step status chips - color-coded with icons matching tab colors */}
+          {/* Step status chips - STATUS-BASED color coding (blue=active, green=complete, grey=pending) */}
           <div className="flex flex-wrap items-center gap-1.5">
             {GENERATION_STEPS.map((step) => {
               const state = getStepState(step.id);
               const Icon = step.icon;
               const stepTime = getStepTime(step.id);
-
-              // Use step-specific colors for active and complete states
-              const stateClasses = {
-                complete: `${step.bgColor} ${step.borderColor} ${step.color}`,
-                active: `${step.bgColor} ${step.borderColor} ${step.color}`,
-                pending: 'bg-muted/30 border-border/40 text-muted-foreground/50',
-              };
+              
+              // Get STATUS-based colors (not step-type colors)
+              const colors = STATUS_COLORS[state];
 
               return (
                 <div
@@ -200,15 +212,15 @@ export const GenerationProgressCard: React.FC<GenerationProgressCardProps> = ({
                   className={`
                     inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-medium
                     transition-all duration-300 shadow-sm
-                    ${stateClasses[state]}
+                    ${colors.bg} ${colors.border} ${colors.text}
                   `}
                 >
                   {state === 'complete' ? (
-                    <CheckCircle className={`w-3 h-3 ${step.color}`} />
+                    <CheckCircle className="w-3 h-3 text-emerald-500" />
                   ) : state === 'active' ? (
-                    <Loader2 className={`w-3 h-3 animate-spin ${step.color}`} />
+                    <Loader2 className="w-3 h-3 animate-spin text-blue-500" />
                   ) : (
-                    <Icon className="w-3 h-3 opacity-40" />
+                    <Circle className="w-3 h-3 opacity-40" />
                   )}
                   <span>{step.label}</span>
                   {state === 'complete' && stepTime !== undefined && (

@@ -139,6 +139,15 @@ export const jumpinAIStudioService = {
 
               console.log(`📨 Received SSE event: step=${step}, type=${type}`);
 
+              // Handle progress updates for smoother streaming feel
+              if (type === 'progress') {
+                console.log(`⏳ Progress update: ${data.stepName} - ${data.percent}% - ${data.message}`);
+                if (onProgress) {
+                  onProgress(step, type, data);
+                }
+                continue; // Don't process further, just pass to callback
+              }
+
               if (type === 'naming') {
                 console.log('📨 Received naming event, raw data:', data);
                 console.log('📨 data.jumpName:', data.jumpName);
