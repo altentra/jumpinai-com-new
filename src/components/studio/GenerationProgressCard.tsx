@@ -1,7 +1,6 @@
 import React from 'react';
 import { Loader2, CheckCircle, Sparkles, FileText, ListChecks, Wrench, Timer, Zap } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
 import type { ProcessingStatus } from '@/hooks/useProgressiveGeneration';
 
 interface GenerationStep {
@@ -66,9 +65,9 @@ export const GenerationProgressCard: React.FC<GenerationProgressCardProps> = ({
         <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-transparent to-accent/10 opacity-50" />
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
         
-        <div className="relative p-6 space-y-6">
+        <div className="relative p-5 sm:p-6 space-y-4">
           {/* Header with timer */}
-          <div className="flex items-center justify-between">
+          <div className="flex items-start justify-between gap-4">
             <div className="flex items-center gap-3">
               <div className="relative">
                 <div className="absolute inset-0 bg-primary/30 rounded-full blur-md animate-pulse" />
@@ -81,10 +80,10 @@ export const GenerationProgressCard: React.FC<GenerationProgressCardProps> = ({
                 </div>
               </div>
               <div>
-                <h3 className="font-bold text-lg text-foreground">
+                <h3 className="font-bold text-base sm:text-lg text-foreground leading-tight">
                   {isComplete ? 'Generation Complete!' : 'Generating Your Jump...'}
                 </h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-xs sm:text-sm text-muted-foreground line-clamp-1">
                   {jumpName || 'Creating your AI transformation journey'}
                 </p>
               </div>
@@ -98,100 +97,38 @@ export const GenerationProgressCard: React.FC<GenerationProgressCardProps> = ({
               {formatTime(timer)}
             </Badge>
           </div>
-          
-          {/* Step indicators */}
-          <div className="grid grid-cols-4 gap-3">
-            {GENERATION_STEPS.map((step, index) => {
+
+          {/* Compact step status row (no large cards) */}
+          <div className="flex flex-wrap items-center gap-2">
+            {GENERATION_STEPS.map((step) => {
               const state = getStepState(step.id);
               const Icon = step.icon;
               const stepTime = stepTimes[step.id];
-              
+
               return (
                 <div
                   key={step.id}
-                  className={`relative group/step transition-all duration-500 ${
-                    state === 'active' ? 'scale-[1.02]' : ''
-                  }`}
-                >
-                  {/* Step card */}
-                  <div className={`
-                    relative rounded-xl p-3 border transition-all duration-500
-                    ${state === 'complete' 
-                      ? 'bg-primary/10 border-primary/30 shadow-lg shadow-primary/10' 
+                  className={`
+                    inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-medium
+                    transition-colors duration-300
+                    ${state === 'complete'
+                      ? 'bg-primary/10 border-primary/30 text-primary'
                       : state === 'active'
-                        ? 'bg-primary/10 border-primary/50 shadow-lg shadow-primary/20'
-                        : 'bg-muted/20 border-border/30'
-                    }
-                  `}>
-                    {/* Active step glow */}
-                    {state === 'active' && (
-                      <div className="absolute inset-0 bg-primary/5 rounded-xl animate-pulse" />
-                    )}
-                    
-                    <div className="relative flex flex-col items-center gap-2">
-                      {/* Icon container */}
-                      <div className={`
-                        w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300
-                        ${state === 'complete'
-                          ? 'bg-primary/20 text-primary'
-                          : state === 'active'
-                            ? 'bg-primary/20 text-primary'
-                            : 'bg-muted/30 text-muted-foreground/60'
-                        }
-                      `}>
-                        {state === 'complete' ? (
-                          <CheckCircle className="w-4 h-4" />
-                        ) : state === 'active' ? (
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                        ) : (
-                          <Icon className="w-4 h-4" />
-                        )}
-                      </div>
-                      
-                      {/* Step number */}
-                      <span className={`
-                        text-[10px] font-bold uppercase tracking-wider
-                        ${state === 'complete'
-                          ? 'text-primary'
-                          : state === 'active'
-                            ? 'text-primary'
-                            : 'text-muted-foreground/50'
-                        }
-                      `}>
-                        Step {index + 1}
-                      </span>
-                      
-                      {/* Step label */}
-                      <span className={`
-                        text-xs font-medium text-center leading-tight min-h-[2rem] flex items-center
-                        ${state === 'complete'
-                          ? 'text-primary'
-                          : state === 'active'
-                            ? 'text-foreground'
-                            : 'text-muted-foreground/70'
-                        }
-                      `}>
-                        {step.label}
-                      </span>
-                      
-                      {/* Step time (if complete) */}
-                      {state === 'complete' && stepTime && (
-                        <span className="text-[10px] font-mono text-primary/80">
-                          {stepTime}s
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                  
-                  {/* Connector line */}
-                  {index < GENERATION_STEPS.length - 1 && (
-                    <div className="hidden sm:block absolute top-1/2 -right-1.5 w-3 h-px">
-                      <div className={`
-                        h-full transition-colors duration-500
-                        ${state === 'complete' ? 'bg-primary/50' : 'bg-border/50'}
-                      `} />
-                    </div>
+                        ? 'bg-primary/10 border-primary/50 text-foreground'
+                        : 'bg-muted/20 border-border/30 text-muted-foreground'}
+                  `}
+                >
+                  {state === 'complete' ? (
+                    <CheckCircle className="w-3.5 h-3.5" />
+                  ) : state === 'active' ? (
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  ) : (
+                    <Icon className="w-3.5 h-3.5" />
                   )}
+                  <span>{step.label}</span>
+                  {state === 'complete' && stepTime ? (
+                    <span className="font-mono text-[11px] text-primary/80">{stepTime}s</span>
+                  ) : null}
                 </div>
               );
             })}
@@ -220,13 +157,14 @@ export const GenerationProgressCard: React.FC<GenerationProgressCardProps> = ({
                   animation: isComplete ? 'none' : 'shimmer 2s linear infinite',
                 }}
               />
-              {/* Shimmer effect */}
+              {/* Indeterminate movement overlay while streaming */}
               {!isComplete && (
-                <div 
-                  className="absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                <div
+                  className="absolute inset-0 opacity-60"
                   style={{
-                    left: `${(status.progress || 0) - 25}%`,
-                    animation: 'shimmerMove 2s ease-in-out infinite',
+                    background:
+                      'repeating-linear-gradient(135deg, rgba(255,255,255,0.00) 0px, rgba(255,255,255,0.00) 10px, rgba(255,255,255,0.14) 10px, rgba(255,255,255,0.14) 18px)',
+                    animation: 'barberpole 1.3s linear infinite',
                   }}
                 />
               )}
@@ -251,10 +189,10 @@ export const GenerationProgressCard: React.FC<GenerationProgressCardProps> = ({
           0% { background-position: 200% 0; }
           100% { background-position: -200% 0; }
         }
-        @keyframes shimmerMove {
-          0%, 100% { transform: translateX(-100%); opacity: 0; }
-          50% { transform: translateX(400%); opacity: 1; }
-        }
+          @keyframes barberpole {
+            0% { background-position: 0 0; }
+            100% { background-position: 40px 0; }
+          }
       `}</style>
     </div>
   );

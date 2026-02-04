@@ -5,6 +5,8 @@ import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile';
 import { StudioTextarea } from '@/components/studio/StudioTextarea';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
+const TURNSTILE_TEST_SITE_KEY = '1x00000000000000000000AA';
+
 /**
  * InlineStudioSection - A fully functional studio form embedded in the landing page
  * When user clicks generate, it transitions them to /jumpinai-studio with preserved data
@@ -71,32 +73,45 @@ const InlineStudioSection = () => {
   }, [goals, challenges, goalsUsedStt, challengesUsedStt, goalsSttDuration, challengesSttDuration, goalsTyped, challengesTyped, turnstileToken, navigate]);
 
   // Memoized Turnstile component
-  const turnstileElement = useMemo(() => (
-    <div className="hidden">
-      <Turnstile
-        ref={turnstileRef}
-        siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY || "1x00000000000000000000AA"}
-        onSuccess={(token) => {
-          setTurnstileToken(token);
-          turnstileErrorShownRef.current = false;
-        }}
-        onError={() => {
-          if (!turnstileErrorShownRef.current) {
-            turnstileErrorShownRef.current = true;
-          }
-        }}
-        onExpire={() => {
-          setTurnstileToken(null);
-          turnstileRef.current?.reset();
-        }}
-        options={{
-          theme: 'light',
-          size: 'invisible',
-          refreshExpired: 'auto',
-        }}
-      />
-    </div>
-  ), []);
+  const turnstileElement = useMemo(() => {
+    const host = typeof window !== 'undefined' ? window.location.hostname : '';
+    const isPreviewHost =
+      host.includes('lovable.app') ||
+      host.includes('lovableproject.com') ||
+      host.includes('lovable.dev') ||
+      host === 'localhost' ||
+      host === '127.0.0.1';
+
+    const configured = import.meta.env.VITE_TURNSTILE_SITE_KEY;
+    const siteKey = isPreviewHost ? TURNSTILE_TEST_SITE_KEY : (configured || TURNSTILE_TEST_SITE_KEY);
+
+    return (
+      <div className="hidden">
+        <Turnstile
+          ref={turnstileRef}
+          siteKey={siteKey}
+          onSuccess={(token) => {
+            setTurnstileToken(token);
+            turnstileErrorShownRef.current = false;
+          }}
+          onError={() => {
+            if (!turnstileErrorShownRef.current) {
+              turnstileErrorShownRef.current = true;
+            }
+          }}
+          onExpire={() => {
+            setTurnstileToken(null);
+            // Avoid reset loops; Turnstile auto-refreshes when refreshExpired='auto'.
+          }}
+          options={{
+            theme: 'light',
+            size: 'invisible',
+            refreshExpired: 'auto',
+          }}
+        />
+      </div>
+    );
+  }, []);
 
   const isFormValid = goals.trim() && challenges.trim();
 
