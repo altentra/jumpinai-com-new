@@ -103,13 +103,29 @@ const InlineStudioSection = () => {
   return (
     <section 
       ref={elementRef as React.RefObject<HTMLElement>}
-      className="relative py-16 sm:py-20 lg:py-24 overflow-hidden"
+      className="relative py-20 sm:py-24 lg:py-32 overflow-hidden"
     >
-      {/* Background Elements */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/[0.02] to-transparent"></div>
-      
-      {/* Ambient glow orbs */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-primary/[0.04] rounded-full blur-[120px] pointer-events-none"></div>
+      {/* Premium Background System */}
+      <div className="absolute inset-0">
+        {/* Base gradient */}
+        <div className="absolute inset-0 bg-gradient-to-b from-background via-primary/[0.02] to-background"></div>
+        
+        {/* Warm golden center glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[700px] bg-amber-500/[0.06] dark:bg-amber-400/[0.04] rounded-full blur-[150px] pointer-events-none"></div>
+        
+        {/* Accent glow orbs */}
+        <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-violet-500/[0.05] dark:bg-violet-400/[0.03] rounded-full blur-[100px] pointer-events-none"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-[350px] h-[350px] bg-blue-500/[0.05] dark:bg-blue-400/[0.03] rounded-full blur-[100px] pointer-events-none"></div>
+        
+        {/* Subtle grid texture */}
+        <div 
+          className="absolute inset-0 opacity-[0.015] dark:opacity-[0.03]"
+          style={{
+            backgroundImage: `linear-gradient(rgba(0,0,0,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.1) 1px, transparent 1px)`,
+            backgroundSize: '60px 60px'
+          }}
+        ></div>
+      </div>
       
       {turnstileElement}
       
@@ -121,9 +137,9 @@ const InlineStudioSection = () => {
             transform: `translateY(${(1 - Math.min(1, scrollProgress * 2)) * 30}px)`
           }}
         >
-          {/* Hero text - Premium typography (matches JumpinAIStudio exactly) */}
-          <div className="text-center mb-10 sm:mb-12">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[2.75rem] font-bold text-foreground mb-4 tracking-tight leading-[1.15]">
+          {/* Hero text - Premium typography */}
+          <div className="text-center mb-12 sm:mb-14">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[2.75rem] font-bold text-foreground mb-5 tracking-tight leading-[1.15]">
               Create Your{' '}
               <span className="bg-gradient-to-r from-primary via-primary/90 to-primary/80 bg-clip-text text-transparent">
                 Jump in AI
@@ -134,23 +150,28 @@ const InlineStudioSection = () => {
             </p>
           </div>
 
-          {/* Main Form Card */}
+          {/* Premium Glassmorphism Card */}
           <div className="relative">
-            {/* Subtle ambient glow */}
-            <div className="absolute -inset-6 bg-primary/[0.04] rounded-[3rem] blur-2xl opacity-60"></div>
+            {/* Multi-layer ambient glow behind card */}
+            <div className="absolute -inset-8 bg-gradient-to-br from-amber-500/[0.08] via-primary/[0.06] to-violet-500/[0.08] rounded-[4rem] blur-3xl opacity-70"></div>
+            <div className="absolute -inset-4 bg-primary/[0.04] rounded-[3rem] blur-xl opacity-50"></div>
             
-            {/* Card */}
-            <div className="relative rounded-[28px] sm:rounded-[36px] overflow-hidden 
-              bg-card dark:bg-zinc-900/95
-              border border-border/50 dark:border-white/[0.08]
-              shadow-[0_25px_80px_-20px_rgba(0,0,0,0.12)]
-              dark:shadow-[0_25px_80px_-20px_rgba(0,0,0,0.4)]">
+            {/* Card with glassmorphism */}
+            <div className="relative rounded-[32px] sm:rounded-[40px] overflow-hidden 
+              bg-white/70 dark:bg-zinc-900/70
+              backdrop-blur-2xl
+              border border-white/40 dark:border-white/[0.12]
+              shadow-[0_32px_100px_-20px_rgba(0,0,0,0.15),0_0_0_1px_rgba(255,255,255,0.1)_inset]
+              dark:shadow-[0_32px_100px_-20px_rgba(0,0,0,0.6),0_0_0_1px_rgba(255,255,255,0.05)_inset]">
               
-              {/* Premium top highlight */}
-              <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/50 dark:via-white/15 to-transparent"></div>
+              {/* Premium top highlight - rainbow shimmer */}
+              <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/80 dark:via-white/30 to-transparent"></div>
+              
+              {/* Subtle inner glow */}
+              <div className="absolute inset-0 bg-gradient-to-br from-white/50 via-transparent to-transparent dark:from-white/5 pointer-events-none"></div>
               
               {/* Content */}
-              <div className="relative p-6 sm:p-8 md:p-10 lg:p-12">
+              <div className="relative p-8 sm:p-10 md:p-12 lg:p-14">
                 {/* Form inputs */}
                 <div className="space-y-8 sm:space-y-10">
                   <div className="grid md:grid-cols-2 gap-6 sm:gap-8 lg:gap-10">
