@@ -581,7 +581,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
       <GenerationProgressCard
         status={result.processing_status}
         timer={generationTimer}
-        jumpName={result.fullTitle || result.title}
+        jumpName={result.jumpName || result.fullTitle || result.title}
         stepTimes={result.stepTimes}
       />
 
