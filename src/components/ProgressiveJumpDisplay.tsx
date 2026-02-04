@@ -533,32 +533,59 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
     return `${seconds}s`;
   };
 
+  // Color-coded icon configuration for each tab
+  const TAB_CONFIG = {
+    overview: {
+      icon: Compass,
+      color: 'text-blue-500',
+      bgColor: 'bg-blue-500/15',
+      borderColor: 'border-blue-500/40',
+    },
+    plan: {
+      icon: Target,
+      color: 'text-amber-500',
+      bgColor: 'bg-amber-500/15',
+      borderColor: 'border-amber-500/40',
+    },
+    tool_prompts: {
+      icon: Wrench,
+      color: 'text-rose-500',
+      bgColor: 'bg-rose-500/15',
+      borderColor: 'border-rose-500/40',
+    },
+  };
+
   const getStatusIcon = (stepName: string, hasContent: boolean) => {
     const currentStep = result.processing_status?.currentStep;
     const isComplete = result.processing_status?.isComplete;
+    
+    // Get the config for this step
+    const config = TAB_CONFIG[stepName as keyof typeof TAB_CONFIG];
+    const Icon = config?.icon || Clock;
+    const colorClass = config?.color || 'text-primary';
     
     // Determine if this step is complete
     const stepOrder = ['naming', 'overview', 'plan', 'tool_prompts', 'complete'];
     const currentStepIndex = currentStep ? stepOrder.indexOf(currentStep) : -1;
     const thisStepIndex = stepOrder.indexOf(stepName);
     
-    // If generation is complete, all steps get checkmark (using primary color for consistency)
+    // If generation is complete, all steps get checkmark (with step's color)
     if (isComplete && hasContent) {
-      return <CheckCircle className="w-4 h-4 text-primary" />;
+      return <CheckCircle className={`w-4 h-4 ${colorClass}`} />;
     }
     
     // If current step is past this step and we have content, it's complete
     if (currentStepIndex > thisStepIndex && hasContent) {
-      return <CheckCircle className="w-4 h-4 text-primary" />;
+      return <CheckCircle className={`w-4 h-4 ${colorClass}`} />;
     }
     
     // If this is the current step, show spinning
     if (currentStep === stepName) {
-      return <Loader2 className="w-4 h-4 text-primary animate-spin" />;
+      return <Loader2 className={`w-4 h-4 ${colorClass} animate-spin`} />;
     }
     
-    // Otherwise, waiting
-    return <Clock className="w-4 h-4 text-muted-foreground" />;
+    // Otherwise, show the step icon in muted
+    return <Icon className="w-4 h-4 text-muted-foreground/50" />;
   };
 
   // Add null safety checks

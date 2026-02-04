@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { Loader2, CheckCircle, Sparkles, FileText, ListChecks, Wrench, Timer, Zap } from 'lucide-react';
+import { Loader2, CheckCircle, Sparkles, Compass, Target, Wrench, Timer, Zap } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import type { ProcessingStatus } from '@/hooks/useProgressiveGeneration';
 
@@ -7,13 +7,17 @@ interface GenerationStep {
   id: string;
   label: string;
   icon: React.ElementType;
+  color: string;
+  bgColor: string;
+  borderColor: string;
 }
 
+// Color-coded steps matching the tab design system
 const GENERATION_STEPS: GenerationStep[] = [
-  { id: 'naming', label: 'Name', icon: Sparkles },
-  { id: 'overview', label: 'Overview', icon: FileText },
-  { id: 'plan', label: 'Plan', icon: ListChecks },
-  { id: 'tool_prompts', label: 'Tools', icon: Wrench },
+  { id: 'naming', label: 'Name', icon: Sparkles, color: 'text-primary', bgColor: 'bg-primary/15', borderColor: 'border-primary/40' },
+  { id: 'overview', label: 'Overview', icon: Compass, color: 'text-blue-500', bgColor: 'bg-blue-500/15', borderColor: 'border-blue-500/40' },
+  { id: 'plan', label: 'Plan', icon: Target, color: 'text-amber-500', bgColor: 'bg-amber-500/15', borderColor: 'border-amber-500/40' },
+  { id: 'tool_prompts', label: 'Tools', icon: Wrench, color: 'text-rose-500', bgColor: 'bg-rose-500/15', borderColor: 'border-rose-500/40' },
 ];
 
 interface GenerationProgressCardProps {
@@ -176,12 +180,19 @@ export const GenerationProgressCard: React.FC<GenerationProgressCardProps> = ({
             </Badge>
           </div>
 
-          {/* Step status chips - color-coded with icons */}
+          {/* Step status chips - color-coded with icons matching tab colors */}
           <div className="flex flex-wrap items-center gap-1.5">
             {GENERATION_STEPS.map((step) => {
               const state = getStepState(step.id);
               const Icon = step.icon;
               const stepTime = getStepTime(step.id);
+
+              // Use step-specific colors for active and complete states
+              const stateClasses = {
+                complete: `${step.bgColor} ${step.borderColor} ${step.color}`,
+                active: `${step.bgColor} ${step.borderColor} ${step.color}`,
+                pending: 'bg-muted/30 border-border/40 text-muted-foreground/50',
+              };
 
               return (
                 <div
@@ -189,17 +200,13 @@ export const GenerationProgressCard: React.FC<GenerationProgressCardProps> = ({
                   className={`
                     inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-medium
                     transition-all duration-300 shadow-sm
-                    ${state === 'complete'
-                      ? 'bg-emerald-500/15 border-emerald-500/40 text-emerald-600 dark:text-emerald-400'
-                      : state === 'active'
-                        ? 'bg-primary/15 border-primary/40 text-primary'
-                        : 'bg-muted/30 border-border/40 text-muted-foreground/50'}
+                    ${stateClasses[state]}
                   `}
                 >
                   {state === 'complete' ? (
-                    <CheckCircle className="w-3 h-3 text-emerald-500" />
+                    <CheckCircle className={`w-3 h-3 ${step.color}`} />
                   ) : state === 'active' ? (
-                    <Loader2 className="w-3 h-3 animate-spin text-primary" />
+                    <Loader2 className={`w-3 h-3 animate-spin ${step.color}`} />
                   ) : (
                     <Icon className="w-3 h-3 opacity-40" />
                   )}
