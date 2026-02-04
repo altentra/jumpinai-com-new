@@ -1,6 +1,6 @@
 import React, { useState, useRef, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Loader2, Sparkles, ArrowRight } from 'lucide-react';
+import { Loader2, Zap } from 'lucide-react';
 import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile';
 import { StudioTextarea } from '@/components/studio/StudioTextarea';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
@@ -121,13 +121,9 @@ const InlineStudioSection = () => {
             transform: `translateY(${(1 - Math.min(1, scrollProgress * 2)) * 30}px)`
           }}
         >
-          {/* Section Header */}
+          {/* Hero text - Premium typography (matches JumpinAIStudio exactly) */}
           <div className="text-center mb-10 sm:mb-12">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold border border-primary/20 bg-primary/5 text-primary mb-6">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Start Your AI Transformation</span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[2.5rem] font-bold text-foreground mb-4 tracking-tight leading-[1.15]">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[2.75rem] font-bold text-foreground mb-4 tracking-tight leading-[1.15]">
               Create Your{' '}
               <span className="bg-gradient-to-r from-primary via-primary/90 to-primary/80 bg-clip-text text-transparent">
                 Jump in AI
@@ -183,7 +179,7 @@ const InlineStudioSection = () => {
                     />
                   </div>
 
-                  {/* Generate Button */}
+                  {/* Generate Button - Matches JumpinAIStudio exactly */}
                   <div className="pt-4 sm:pt-6">
                     <div className="flex flex-col items-center">
                       <div className="relative group/btn w-full sm:w-auto">
@@ -212,27 +208,40 @@ const InlineStudioSection = () => {
                           {/* Top highlight */}
                           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
                           
-                          <div className="relative z-10 flex items-center justify-center gap-3">
+                          {/* Bottom subtle shadow */}
+                          <div className="absolute inset-x-4 bottom-0 h-px bg-gradient-to-r from-transparent via-black/10 to-transparent"></div>
+                          
+                          <div className="relative z-10 flex items-center justify-center gap-4">
                             {isTransitioning ? (
                               <>
-                                <Loader2 className="w-5 h-5 animate-spin" />
+                                <Loader2 className="w-6 h-6 animate-spin" />
                                 <span>Loading Studio...</span>
                               </>
                             ) : (
                               <>
-                                <Sparkles className="w-5 h-5" />
+                                <Zap className="w-6 h-6 transition-transform duration-500 group-hover/btn:scale-125 group-hover/btn:rotate-12" />
                                 <span>Generate My Jump</span>
-                                <ArrowRight className="w-5 h-5" />
                               </>
                             )}
                           </div>
                         </button>
                       </div>
                       
-                      {/* Helper text */}
-                      <p className="mt-4 text-xs text-muted-foreground/60 text-center">
-                        Free • No signup required • Results in under 2 minutes
-                      </p>
+                      {/* Trust badges - Premium minimal (matches JumpinAIStudio) */}
+                      <div className="flex items-center justify-center gap-8 mt-8 text-sm text-muted-foreground/60 font-medium">
+                        <span className="flex items-center gap-2.5">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500/70"></span>
+                          ~2 minutes
+                        </span>
+                        <span className="flex items-center gap-2.5">
+                          <span className="w-1.5 h-1.5 rounded-full bg-primary/50"></span>
+                          Personalized
+                        </span>
+                        <span className="flex items-center gap-2.5">
+                          <span className="w-1.5 h-1.5 rounded-full bg-amber-500/70"></span>
+                          Ready-to-use
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
