@@ -1251,112 +1251,163 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
               )}
             </div>
           ) : result.streaming_parsed?.overview ? (
-            /* Progressive UI rendering of parsed frames as they stream in */
-            <div ref={overviewContentRef} className="space-y-4 animate-in fade-in-50 duration-300">
-              {/* The Jump Forward - appears first */}
+            /* Progressive UI rendering with EXACT final styling - premium polish while streaming */
+            <div ref={overviewContentRef} className="space-y-6">
+              {/* THE JUMP FORWARD - Exact same styling as final version */}
               {result.streaming_parsed.overview.jumpForward && (
-                <div className="relative group">
-                  <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-secondary/30 rounded-xl blur opacity-40 group-hover:opacity-60 transition duration-300"></div>
-                  <Card className="relative glass backdrop-blur-lg bg-card/80 border border-primary/30 rounded-2xl">
+                <div className="space-y-4">
+                  <div className="relative group">
+                    <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-secondary/30 rounded-xl blur opacity-40 group-hover:opacity-60 transition duration-300"></div>
+                    <Card className="relative glass backdrop-blur-lg bg-card/80 border border-primary/30 hover:border-primary/50 transition-all duration-300 rounded-2xl">
+                      <CardHeader className="pb-3">
+                        <CardTitle className="text-lg flex items-center gap-2">
+                          <Zap className="w-5 h-5 text-primary" />
+                          The Jump Forward
+                          {result.processing_status?.currentStep === 'overview' && (
+                            <Loader2 className="w-3 h-3 animate-spin ml-auto text-blue-500" />
+                          )}
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <p className="text-sm sm:text-base leading-relaxed text-foreground/90">
+                          {result.streaming_parsed.overview.jumpForward}
+                        </p>
+                        
+                        {/* Explore Alternative Routes - Disabled during generation */}
+                        <div className="pt-4 border-t border-border/30">
+                          <div className="space-y-2">
+                            <button
+                              disabled={true}
+                              className="inline-flex items-center justify-center gap-2 px-4 py-2 text-xs font-medium rounded-lg
+                                bg-gradient-to-r from-muted/30 via-muted/20 to-muted/30 
+                                border border-muted/30
+                                text-muted-foreground
+                                backdrop-blur-sm cursor-not-allowed opacity-60"
+                            >
+                              <Route className="w-3.5 h-3.5" />
+                              Explore Alternative Routes
+                            </button>
+                            <p className="text-xs text-muted-foreground/70 italic">
+                              Available after generation completes
+                            </p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
+              )}
+
+              {/* STRATEGIC EDGE - Exact same styling as final version */}
+              {result.streaming_parsed.overview.strategicEdge && (
+                <div className="relative group animate-in fade-in-50 slide-in-from-bottom-2 duration-300">
+                  <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
+                  <Card className="relative glass backdrop-blur-lg bg-card/80 border border-border hover:border-primary/40 transition-all duration-300 rounded-2xl">
                     <CardHeader className="pb-3">
                       <CardTitle className="text-lg flex items-center gap-2">
-                        <Zap className="w-5 h-5 text-primary" />
-                        The Jump Forward
-                        <Loader2 className="w-3 h-3 animate-spin ml-auto text-muted-foreground" />
+                        <Compass className="w-5 h-5 text-primary" />
+                        Strategic Edge
+                        {result.processing_status?.currentStep === 'overview' && !result.streaming_parsed.overview.flightPath && (
+                          <Loader2 className="w-3 h-3 animate-spin ml-auto text-blue-500" />
+                        )}
                       </CardTitle>
                     </CardHeader>
-                    <CardContent>
-                      <p className="text-sm sm:text-base leading-relaxed text-foreground/90">
-                        {result.streaming_parsed.overview.jumpForward}
-                      </p>
+                    <CardContent className="space-y-4">
+                      {result.streaming_parsed.overview.strategicEdge.analysis && (
+                        <p className="text-sm text-foreground/80 leading-relaxed">
+                          {result.streaming_parsed.overview.strategicEdge.analysis}
+                        </p>
+                      )}
+                      {result.streaming_parsed.overview.strategicEdge.keyPoints?.length > 0 && (
+                        <ul className="space-y-2">
+                          {result.streaming_parsed.overview.strategicEdge.keyPoints.map((point: string, idx: number) => (
+                            <li key={idx} className="flex items-start gap-2 text-sm">
+                              <CheckCircle className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                              <span className="text-foreground/80">{point}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
                     </CardContent>
                   </Card>
                 </div>
               )}
 
-              {/* Strategic Edge - appears second */}
-              {result.streaming_parsed.overview.strategicEdge && (
-                <Card className="glass backdrop-blur-lg bg-card/80 border border-border rounded-2xl animate-in fade-in-50 slide-in-from-bottom-2 duration-300">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-lg flex items-center gap-2">
-                      <TrendingUp className="w-5 h-5 text-primary" />
-                      Strategic Edge
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    {result.streaming_parsed.overview.strategicEdge.analysis && (
-                      <p className="text-sm leading-relaxed text-foreground/80">
-                        {result.streaming_parsed.overview.strategicEdge.analysis}
-                      </p>
-                    )}
-                    {result.streaming_parsed.overview.strategicEdge.keyPoints?.length ? (
-                      <ul className="space-y-1.5 text-sm">
-                        {result.streaming_parsed.overview.strategicEdge.keyPoints.map((point, i) => (
-                          <li key={i} className="flex items-start gap-2">
-                            <Lightbulb className="w-4 h-4 text-primary shrink-0 mt-0.5" />
-                            <span>{point}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    ) : null}
-                  </CardContent>
-                </Card>
-              )}
-
-              {/* Flight Path - appears third */}
+              {/* FLIGHT PATH - Exact same styling as final version */}
               {result.streaming_parsed.overview.flightPath && (
-                <Card className="glass backdrop-blur-lg bg-card/80 border border-border rounded-2xl animate-in fade-in-50 slide-in-from-bottom-2 duration-300">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-lg flex items-center gap-2">
-                      <MapPin className="w-5 h-5 text-primary" />
-                      Flight Path
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    {result.streaming_parsed.overview.flightPath.vision && (
-                      <p className="text-sm leading-relaxed text-foreground/80">
-                        {result.streaming_parsed.overview.flightPath.vision}
-                      </p>
-                    )}
-                    {result.streaming_parsed.overview.flightPath.roadmap?.length ? (
-                      <div className="space-y-2">
-                        {result.streaming_parsed.overview.flightPath.roadmap.map((phase, i) => (
-                          <div key={i} className="p-3 rounded-lg bg-muted/30 border border-border/50">
-                            <div className="flex items-center gap-2 mb-1">
-                              <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
-                              <span className="font-medium text-sm">{phase.phase}</span>
-                              <Badge variant="outline" className="text-xs">{phase.timeframe}</Badge>
-                            </div>
-                            <p className="text-xs text-muted-foreground">{phase.focus}</p>
+                <div className="relative group animate-in fade-in-50 slide-in-from-bottom-2 duration-300">
+                  <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
+                  <Card className="relative glass backdrop-blur-lg bg-card/80 border border-border hover:border-primary/40 transition-all duration-300 rounded-2xl">
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-lg flex items-center gap-2">
+                        <MapPin className="w-5 h-5 text-primary" />
+                        Flight Path
+                        {result.processing_status?.currentStep === 'overview' && !result.streaming_parsed.overview.newBaseline && (
+                          <Loader2 className="w-3 h-3 animate-spin ml-auto text-blue-500" />
+                        )}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-5">
+                      {result.streaming_parsed.overview.flightPath.vision && (
+                        <div className="p-4 rounded-xl bg-primary/5 border border-primary/20">
+                          <div className="flex items-center gap-2 mb-2">
+                            <Target className="w-4 h-4 text-primary" />
+                            <span className="text-sm font-semibold text-primary">Victory Vision</span>
                           </div>
-                        ))}
-                      </div>
-                    ) : null}
-                  </CardContent>
-                </Card>
+                          <p className="text-sm text-foreground/80 leading-relaxed">
+                            {result.streaming_parsed.overview.flightPath.vision}
+                          </p>
+                        </div>
+                      )}
+                      {result.streaming_parsed.overview.flightPath.roadmap?.length > 0 && (
+                        <div className="space-y-3">
+                          {result.streaming_parsed.overview.flightPath.roadmap.map((phase: any, idx: number) => (
+                            <div key={idx} className="p-4 rounded-xl border border-border/50 bg-background/50 hover:border-primary/30 transition-colors">
+                              <div className="flex items-center justify-between mb-2">
+                                <h4 className="font-semibold text-sm flex items-center gap-2">
+                                  {idx === 0 && <Play className="w-4 h-4 text-primary" />}
+                                  {idx === 1 && <TrendingUp className="w-4 h-4 text-primary" />}
+                                  {idx === 2 && <Flag className="w-4 h-4 text-primary" />}
+                                  {phase.phase}
+                                </h4>
+                                <Badge variant="outline" className="text-xs bg-primary/10 text-primary border-primary/30">
+                                  {phase.timeframe}
+                                </Badge>
+                              </div>
+                              <p className="text-sm text-foreground/70">{phase.focus}</p>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                </div>
               )}
 
-              {/* New Baseline - appears last */}
+              {/* NEW BASELINE - Exact same styling as final version */}
               {result.streaming_parsed.overview.newBaseline && (
-                <Card className="glass backdrop-blur-lg bg-card/80 border border-border rounded-2xl animate-in fade-in-50 slide-in-from-bottom-2 duration-300">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-lg flex items-center gap-2">
-                      <Flag className="w-5 h-5 text-primary" />
-                      New Baseline
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm leading-relaxed text-foreground/80 italic">
-                      {result.streaming_parsed.overview.newBaseline}
-                    </p>
-                  </CardContent>
-                </Card>
+                <div className="relative group animate-in fade-in-50 slide-in-from-bottom-2 duration-300">
+                  <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/25 via-accent/20 to-secondary/25 rounded-xl blur opacity-40 group-hover:opacity-60 transition duration-300"></div>
+                  <Card className="relative glass backdrop-blur-lg bg-gradient-to-br from-primary/10 via-card/80 to-secondary/10 border border-primary/30 hover:border-primary/50 transition-all duration-300 rounded-2xl">
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-lg flex items-center gap-2">
+                        <Flag className="w-5 h-5 text-primary" />
+                        New Baseline
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-sm sm:text-base font-medium text-foreground/90 leading-relaxed italic">
+                        "{result.streaming_parsed.overview.newBaseline}"
+                      </p>
+                    </CardContent>
+                  </Card>
+                </div>
               )}
             </div>
           ) : (
             <div className="flex items-center justify-center h-32">
-              <Loader2 className="w-6 h-6 animate-spin mr-2" />
-              Generating strategic overview...
+              <Loader2 className="w-6 h-6 animate-spin text-blue-500 mr-2" />
+              <span className="text-muted-foreground">Generating strategic overview...</span>
             </div>
           )}
         </TabsContent>
@@ -1382,54 +1433,78 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
               isGenerationComplete={result.processing_status?.isComplete || false}
             />
           ) : result.streaming_parsed?.plan?.phases?.length ? (
-            /* Progressive UI rendering of Plan phases as they stream in */
-            <div className="space-y-4 animate-in fade-in-50 duration-300">
-              <div className="flex items-center gap-2 mb-2">
-                <Target className="w-5 h-5 text-primary" />
-                <h3 className="text-lg font-semibold">Strategic Action Plan</h3>
-                <Loader2 className="w-4 h-4 animate-spin ml-auto text-muted-foreground" />
-              </div>
+            /* Progressive UI rendering with EXACT final JumpPlanDisplay styling */
+            <div className="space-y-6">
+              {/* Phase cards with premium styling matching JumpPlanDisplay */}
               {result.streaming_parsed.plan.phases.map((phase, idx) => (
-                <Card key={idx} className="glass backdrop-blur-lg bg-card/80 border border-border rounded-2xl animate-in fade-in-50 slide-in-from-bottom-2 duration-300">
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-base flex items-center gap-2">
-                      <Badge variant="outline" className="text-xs">Phase {phase.phase_number || idx + 1}</Badge>
-                      {phase.title}
-                      {phase.duration && (
-                        <span className="text-xs text-muted-foreground ml-auto">{phase.duration}</span>
-                      )}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-2">
-                    {phase.description && (
-                      <p className="text-sm text-foreground/80">{phase.description}</p>
-                    )}
-                    {phase.steps?.length ? (
-                      <div className="space-y-1.5 mt-2">
-                        {phase.steps.map((step, sIdx) => (
-                          <div key={sIdx} className="flex items-start gap-2 text-xs p-2 rounded bg-muted/30">
-                            <span className="font-mono text-primary shrink-0">{step.step_number}.</span>
-                            <div>
-                              <span className="font-medium">{step.title}</span>
-                              {step.description && (
-                                <p className="text-muted-foreground mt-0.5">{step.description}</p>
-                              )}
-                              {step.estimated_time && (
-                                <span className="text-muted-foreground">⏱ {step.estimated_time}</span>
-                              )}
+                <div key={idx} className="relative group animate-in fade-in-50 slide-in-from-bottom-2 duration-300">
+                  <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
+                  <Card className="relative glass backdrop-blur-lg bg-card/80 border border-border hover:border-primary/40 transition-all duration-300 rounded-2xl overflow-hidden">
+                    {/* Phase Header with gradient accent */}
+                    <div className="bg-gradient-to-r from-primary/10 via-primary/5 to-transparent border-b border-border/50">
+                      <CardHeader className="pb-3">
+                        <div className="flex items-center justify-between">
+                          <CardTitle className="text-base flex items-center gap-3">
+                            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20 border border-primary/30">
+                              <span className="text-sm font-bold text-primary">{phase.phase_number || idx + 1}</span>
                             </div>
-                          </div>
-                        ))}
-                      </div>
-                    ) : null}
-                  </CardContent>
-                </Card>
+                            <span className="font-semibold">{phase.title}</span>
+                            {result.processing_status?.currentStep === 'plan' && idx === result.streaming_parsed.plan.phases.length - 1 && (
+                              <Loader2 className="w-3 h-3 animate-spin text-blue-500" />
+                            )}
+                          </CardTitle>
+                          {phase.duration && (
+                            <Badge variant="outline" className="text-xs bg-primary/10 text-primary border-primary/30">
+                              <Clock className="w-3 h-3 mr-1" />
+                              {phase.duration}
+                            </Badge>
+                          )}
+                        </div>
+                      </CardHeader>
+                    </div>
+                    
+                    <CardContent className="pt-4 space-y-4">
+                      {phase.description && (
+                        <p className="text-sm text-foreground/80 leading-relaxed">{phase.description}</p>
+                      )}
+                      
+                      {phase.steps?.length ? (
+                        <div className="space-y-2">
+                          {phase.steps.map((step, sIdx) => (
+                            <div 
+                              key={sIdx} 
+                              className="flex items-start gap-3 p-3 rounded-xl bg-background/50 border border-border/50 hover:border-primary/30 transition-colors"
+                            >
+                              <div className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 border border-primary/20 shrink-0 mt-0.5">
+                                <span className="text-xs font-semibold text-primary">{step.step_number}</span>
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2 flex-wrap">
+                                  <span className="font-medium text-sm">{step.title}</span>
+                                  {step.estimated_time && (
+                                    <Badge variant="outline" className="text-xs">
+                                      <Timer className="w-3 h-3 mr-1" />
+                                      {step.estimated_time}
+                                    </Badge>
+                                  )}
+                                </div>
+                                {step.description && (
+                                  <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{step.description}</p>
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : null}
+                    </CardContent>
+                  </Card>
+                </div>
               ))}
             </div>
           ) : (
             <div className="flex items-center justify-center h-32">
-              <Loader2 className="w-6 h-6 animate-spin mr-2" />
-              Creating implementation plan...
+              <Loader2 className="w-6 h-6 animate-spin text-blue-500 mr-2" />
+              <span className="text-muted-foreground">Creating implementation plan...</span>
             </div>
           )}
           </div>
@@ -1449,43 +1524,71 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
               const streamedToolPrompts = result.streaming_parsed?.tool_prompts?.tool_prompts;
               if (streamedToolPrompts?.length) {
                 return (
-                  <div className="grid gap-4 animate-in fade-in-50 duration-300">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Wrench className="w-5 h-5 text-primary" />
-                      <h3 className="text-lg font-semibold">Tools & Prompts</h3>
-                      <Loader2 className="w-4 h-4 animate-spin ml-auto text-muted-foreground" />
-                    </div>
+                  <div className="grid gap-4">
                     {streamedToolPrompts.map((tp: any, idx: number) => (
-                      <Card key={idx} className="glass backdrop-blur-lg bg-card/80 border border-border rounded-2xl animate-in fade-in-50 slide-in-from-bottom-2 duration-300">
-                        <CardHeader className="pb-2">
-                          <CardTitle className="text-base flex items-center gap-2">
-                            <Badge variant="outline" className="text-xs">#{idx + 1}</Badge>
-                            {tp.title || 'Tool Prompt'}
-                            {tp.tool_name && (
-                              <Badge className="ml-auto text-xs">{tp.tool_name}</Badge>
+                      <div key={idx} className="relative group animate-in fade-in-50 slide-in-from-bottom-2 duration-300">
+                        <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
+                        <Card className="relative glass backdrop-blur-lg bg-card/80 border border-border hover:border-primary/40 transition-all duration-300 rounded-2xl overflow-hidden">
+                          {/* Header with tool badge - matching ToolPromptComboCard */}
+                          <div className="bg-gradient-to-r from-primary/10 via-primary/5 to-transparent border-b border-border/50">
+                            <CardHeader className="pb-3">
+                              <div className="flex items-center justify-between">
+                                <CardTitle className="text-sm flex items-center gap-2">
+                                  <div className="flex items-center justify-center w-7 h-7 rounded-full bg-primary/20 border border-primary/30">
+                                    <Wrench className="w-3.5 h-3.5 text-primary" />
+                                  </div>
+                                  <span className="font-semibold">{tp.title || 'Tool & Prompt'}</span>
+                                  {result.processing_status?.currentStep === 'tool_prompts' && idx === streamedToolPrompts.length - 1 && (
+                                    <Loader2 className="w-3 h-3 animate-spin text-blue-500" />
+                                  )}
+                                </CardTitle>
+                                {tp.tool_name && (
+                                  <Badge className="text-xs bg-primary/20 text-primary border-primary/30 hover:bg-primary/30">
+                                    {tp.tool_name}
+                                  </Badge>
+                                )}
+                              </div>
+                            </CardHeader>
+                          </div>
+                          
+                          <CardContent className="pt-4 space-y-4">
+                            {tp.description && (
+                              <p className="text-sm text-foreground/80 leading-relaxed">{tp.description}</p>
                             )}
-                          </CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-2 text-sm">
-                          {tp.description && (
-                            <p className="text-foreground/80">{tp.description}</p>
-                          )}
-                          {(tp.prompt_text || tp.custom_prompt || tp.prompt) && (
-                            <div className="p-3 rounded-lg bg-muted/40 border border-border/50 font-mono text-xs whitespace-pre-wrap">
-                              {tp.prompt_text || tp.custom_prompt || tp.prompt}
-                            </div>
-                          )}
-                        </CardContent>
-                      </Card>
+                            
+                            {/* Prompt Section - Premium styling */}
+                            {(tp.prompt_text || tp.custom_prompt || tp.prompt) && (
+                              <div className="space-y-2">
+                                <div className="flex items-center justify-between">
+                                  <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Prompt</span>
+                                </div>
+                                <div className="p-4 rounded-xl bg-gradient-to-br from-muted/50 via-muted/30 to-muted/50 border border-border/50 backdrop-blur-sm">
+                                  <p className="text-sm text-foreground/90 leading-relaxed whitespace-pre-wrap">
+                                    {tp.prompt_text || tp.custom_prompt || tp.prompt}
+                                  </p>
+                                </div>
+                              </div>
+                            )}
+                            
+                            {/* Tool URL if available */}
+                            {tp.tool_url && (
+                              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                                <Sparkles className="w-3 h-3" />
+                                <span className="truncate">{tp.tool_url}</span>
+                              </div>
+                            )}
+                          </CardContent>
+                        </Card>
+                      </div>
                     ))}
                   </div>
                 );
               }
 
               return (
-                <div className="glass backdrop-blur-lg bg-card/80 border border-border rounded-xl flex items-center justify-center h-32 text-muted-foreground">
-                  <Loader2 className="w-6 h-6 animate-spin mr-2" />
-                  Generating tools & prompts...
+                <div className="flex items-center justify-center h-32">
+                  <Loader2 className="w-6 h-6 animate-spin text-blue-500 mr-2" />
+                  <span className="text-muted-foreground">Generating tools & prompts...</span>
                 </div>
               );
             }
