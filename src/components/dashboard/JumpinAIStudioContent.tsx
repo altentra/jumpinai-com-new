@@ -384,7 +384,7 @@ const JumpinAIStudioContent = () => {
             
             {/* Refined subtitle */}
             <p className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed">
-              Share what you're building and what's blocking you — we'll craft your personalized roadmap.
+              Share what you're building and what's blocking you — we'll craft your personalized AI implementation roadmap.
             </p>
           </div>
 

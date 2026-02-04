@@ -3,6 +3,7 @@ import { Sparkles, GitBranch, Wrench, ArrowRight, ChevronDown, Route, Compass, B
 import { useNavigate } from 'react-router-dom';
 import Navigation from "@/components/Navigation";
 import Hero from "@/components/Hero";
+import InlineStudioSection from "@/components/landing/InlineStudioSection";
 import WhyJumpinAI from "@/components/WhyJumpinAI";
 import Features from "@/components/Features";
 import LeadMagnet from "@/components/LeadMagnet";
@@ -261,6 +262,9 @@ const Index = () => {
       </div>
       <Navigation />
       <Hero />
+      
+      {/* Inline Studio Section - Jump Generation from Landing Page */}
+      <InlineStudioSection />
       
       {/* Why JumpinAI - Value Proposition */}
       <WhyJumpinAI />
