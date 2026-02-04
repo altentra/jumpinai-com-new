@@ -213,16 +213,16 @@ const InlineStudioSection = () => {
                           {/* Bottom subtle shadow */}
                           <div className="absolute inset-x-4 bottom-0 h-px bg-gradient-to-r from-transparent via-black/10 to-transparent"></div>
                           
-                          <div className="relative z-10 flex items-center justify-center gap-4">
+                          <div className="relative z-10 flex items-center justify-center gap-4 text-white">
                             {isTransitioning ? (
                               <>
-                                <Loader2 className="w-6 h-6 animate-spin" />
-                                <span>Loading Studio...</span>
+                                <Loader2 className="w-6 h-6 animate-spin text-white" />
+                                <span className="text-white">Loading Studio...</span>
                               </>
                             ) : (
                               <>
-                                <Zap className="w-6 h-6 transition-transform duration-500 group-hover/btn:scale-125 group-hover/btn:rotate-12" />
-                                <span>Generate My Jump</span>
+                                <Zap className="w-6 h-6 text-white transition-transform duration-500 group-hover/btn:scale-125 group-hover/btn:rotate-12" />
+                                <span className="text-white">Generate My Jump</span>
                               </>
                             )}
                           </div>
