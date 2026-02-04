@@ -121,10 +121,10 @@ Deno.serve(async (req) => {
     console.log('🤖 Making Gemini API request for step:', step);
     
     // Call Google Gemini API
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GOOGLE_GEMINI_API_KEY}`;
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${GOOGLE_GEMINI_API_KEY}`;
 
     console.log('📋 Request body prepared for step', step, ':', {
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3-flash-preview',
       systemPromptLength: systemPrompt.length,
       userPromptLength: userPrompt.length,
       maxTokens: expectedTokens,

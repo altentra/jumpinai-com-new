@@ -1,10 +1,11 @@
 // Google Gemini API client with retry logic
-// Using gemini-3-flash for fast, high-quality responses (latest model as of late 2025)
+// Using gemini-3-flash-preview for fast, high-quality responses (latest model as of February 2026)
+// Note: Model name must include "-preview" suffix for Gemini 3 models
 
 export async function callGeminiWithRetry(
   prompt: string,
   apiKey: string,
-  model: string = 'gemini-3-flash',
+  model: string = 'gemini-3-flash-preview',
   maxRetries: number = 3
 ): Promise<string> {
   let lastError: Error | null = null;
@@ -109,7 +110,7 @@ export async function callGeminiChat(
   systemPrompt: string,
   userPrompt: string,
   apiKey: string,
-  model: string = 'gemini-3-flash',
+  model: string = 'gemini-3-flash-preview',
   options: {
     temperature?: number;
     maxOutputTokens?: number;
@@ -176,7 +177,7 @@ export async function callGeminiChatWithRetry(
   systemPrompt: string,
   userPrompt: string,
   apiKey: string,
-  model: string = 'gemini-3-flash',
+  model: string = 'gemini-3-flash-preview',
   options: {
     temperature?: number;
     maxOutputTokens?: number;

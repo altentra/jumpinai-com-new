@@ -19,6 +19,7 @@ import { useCredits } from '@/hooks/useCredits';
 import { useAuth } from '@/hooks/useAuth';
 import { RouteExplorationBreadcrumb } from '@/components/RouteExplorationBreadcrumb';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { GenerationProgressCard } from '@/components/studio/GenerationProgressCard';
 import type { 
   AlternativeRoute, 
   RouteExplorationHistory, 
@@ -541,23 +542,23 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
     const currentStepIndex = currentStep ? stepOrder.indexOf(currentStep) : -1;
     const thisStepIndex = stepOrder.indexOf(stepName);
     
-    // If generation is complete, all steps get checkmark
+    // If generation is complete, all steps get checkmark (using primary color for consistency)
     if (isComplete && hasContent) {
-      return <CheckCircle className="w-4 h-4 text-green-500" />;
+      return <CheckCircle className="w-4 h-4 text-primary" />;
     }
     
     // If current step is past this step and we have content, it's complete
     if (currentStepIndex > thisStepIndex && hasContent) {
-      return <CheckCircle className="w-4 h-4 text-green-500" />;
+      return <CheckCircle className="w-4 h-4 text-primary" />;
     }
     
     // If this is the current step, show spinning
     if (currentStep === stepName) {
-      return <Loader2 className="w-4 h-4 text-blue-500 animate-spin" />;
+      return <Loader2 className="w-4 h-4 text-primary animate-spin" />;
     }
     
     // Otherwise, waiting
-    return <Clock className="w-4 h-4 text-gray-400" />;
+    return <Clock className="w-4 h-4 text-muted-foreground" />;
   };
 
   // Add null safety checks
@@ -576,110 +577,13 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
 
   return (
     <div className="w-full space-y-4" style={{ overflow: 'visible' }}>
-      {/* Compact Glass Progress Header with enhanced glass morphism */}
-      <div className="relative group">
-        <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 rounded-2xl blur-xl opacity-40"></div>
-        <div className="relative glass backdrop-blur-xl border border-border/40 hover:border-primary/30 transition-all duration-500 rounded-2xl p-5 shadow-xl hover:shadow-2xl hover:shadow-primary/10 bg-card/80">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/4 via-transparent to-secondary/4 rounded-2xl"></div>
-          <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-border/60 to-transparent"></div>
-          
-          <div className="relative z-10">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <Zap className="w-5 h-5 text-primary" />
-                <div>
-                  <h2 className="text-xl font-semibold text-foreground">
-                    {result.fullTitle || result.title}
-                  </h2>
-                  {result.jumpNumber && result.jumpName && (
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground/70 mt-1">
-                      <span>Jump #{result.jumpNumber}</span>
-                      <span>•</span>
-                      <span>{result.jumpName}</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <Badge variant="outline" className="text-xs flex items-center gap-1.5 border-border/40 bg-background/50 backdrop-blur-sm">
-                  <Timer className="w-3 h-3" />
-                  {formatTime(generationTimer)}
-                </Badge>
-                <Badge 
-                  variant={result.processing_status?.isComplete ? "default" : "secondary"}
-                  className="text-xs bg-primary/10 text-primary border-primary/20"
-                >
-                  {result.processing_status?.stage || 'Initializing...'}
-                </Badge>
-              </div>
-            </div>
-            
-            {/* Compact Generation Performance Section */}
-            {result.processing_status?.isComplete && result.stepTimes && (() => {
-              // Map technical step names to user-friendly labels
-              const stepLabels: Record<string, string> = {
-                naming: 'Name',
-                overview: 'Overview',
-                comprehensive: 'Plan',
-                plan: 'Plan',
-                tool_prompts: 'Tools & Prompts',
-                tools: 'Tools & Prompts'
-              };
-              
-              // Transform stepTimes into display format, excluding internal steps
-              const displaySteps = Object.entries(result.stepTimes)
-                .filter(([key]) => key !== 'jump_created' && stepLabels[key]) // Only show mapped steps
-                .map(([key, time]) => ({
-                  label: stepLabels[key],
-                  time
-                }))
-                .filter((step, index, self) => 
-                  // Remove duplicates (e.g., if both 'comprehensive' and 'plan' exist)
-                  index === self.findIndex(s => s.label === step.label)
-                );
-              
-              return (
-                <div className="mb-3 inline-block">
-                  <div className="text-xs font-semibold mb-1.5 text-muted-foreground flex items-center gap-1.5">
-                    <Zap className="w-3 h-3 text-primary" />
-                    Generation Performance
-                  </div>
-                  <div className="space-y-0.5">
-                    {displaySteps.map((step) => (
-                      <div 
-                        key={step.label}
-                        className="text-[11px] font-medium text-foreground/70 flex items-center gap-1.5"
-                      >
-                        <span className="min-w-[110px]">{step.label}</span>
-                        <span className="text-primary font-semibold">{step.time}s</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              );
-            })()}
-            
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">
-                  {result.processing_status?.currentTask?.replace(/\(\d+s\)/, (match) => {
-                    const seconds = parseInt(match.match(/\d+/)?.[0] || '0');
-                    return `(${formatDuration(seconds)})`;
-                  }) || 'Starting...'}
-                </span>
-                <span className="text-foreground font-semibold">{result.processing_status?.progress || 0}%</span>
-              </div>
-              <div className="relative">
-                {/* Premium Animated Progress Bar */}
-                <Progress 
-                  value={result.processing_status?.progress || 0} 
-                  className="h-3 bg-muted/40 border border-border/30 shadow-inner" 
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* Premium Animated Generation Progress Card */}
+      <GenerationProgressCard
+        status={result.processing_status}
+        timer={generationTimer}
+        jumpName={result.fullTitle || result.title}
+        stepTimes={result.stepTimes}
+      />
 
 
       {/* Content Tabs - Ultra Premium Design with Sticky Behavior */}
