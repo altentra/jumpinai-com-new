@@ -1412,7 +1412,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
           )}
         </TabsContent>
 
-        <TabsContent value="plan" className="mt-0" style={{ overflow: 'visible', maxHeight: 'none', height: 'auto', display: 'block' }}>
+        <TabsContent value="plan" forceMount className="mt-0" style={{ overflow: 'visible', maxHeight: 'none', height: 'auto', display: 'block' }}>
           <div ref={planContentRef}>
             {/* Use JumpPlanDisplay for BOTH final AND streaming states - just with different data sources */}
             {(result.structured_plan?.phases || result.streaming_parsed?.plan?.phases?.length) ? (
@@ -1451,7 +1451,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
           </div>
         </TabsContent>
 
-        <TabsContent value="toolPrompts" className="mt-0" style={{ overflow: 'visible', maxHeight: 'none', height: 'auto', display: 'block' }}>
+        <TabsContent value="toolPrompts" forceMount className="mt-0" style={{ overflow: 'visible', maxHeight: 'none', height: 'auto', display: 'block' }}>
           {(() => {
             console.log('🔍 Tools & Prompts Tab - Checking data:', {
               hasComponents: !!result.components,

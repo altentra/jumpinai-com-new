@@ -284,9 +284,7 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
     return currentLevel <= 1;
   };
   
-  if (!planContent.trim() && !structuredPlan) {
-    return null;
-  }
+  const hasAnyInput = Boolean(planContent?.trim?.() || structuredPlan);
 
   const candidate = React.useMemo(() => {
     const parsedStructured = typeof structuredPlan === 'string' ? safeParseJSON(structuredPlan) : structuredPlan;
@@ -301,12 +299,29 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
     return buildDefaultPlan();
   }, [localPlan, comprehensivePlan]);
 
-  // Initialize localPlan when comprehensivePlan changes
+  /**
+   * IMPORTANT: keep streaming renders "fully final".
+   *
+   * JumpPlanDisplay uses localPlan to support user-driven mutations (clarify/reroute/equip).
+   * During generation, though, we want the *same* final render pipeline to continuously re-render
+   * as new phases/steps arrive. Previously we only set localPlan once, which froze the UI until
+   * the tab/step completed.
+   */
   React.useEffect(() => {
-    if (comprehensivePlan && !localPlan) {
+    if (!comprehensivePlan) return;
+
+    // While generation is in progress, continuously mirror the latest normalized plan so
+    // each phase/step appears immediately in its final UI.
+    if (!isGenerationComplete) {
+      setLocalPlan(comprehensivePlan);
+      return;
+    }
+
+    // After completion, only initialize once (do not override user edits).
+    if (!localPlan) {
       setLocalPlan(comprehensivePlan);
     }
-  }, [comprehensivePlan, localPlan]);
+  }, [comprehensivePlan, isGenerationComplete, localPlan]);
 
   const phases = finalPlan?.action_plan?.phases || [];
   const navigate = useNavigate();
@@ -1507,6 +1522,8 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
       toast.error('Failed to save chosen route. Please try again.');
     }
   };
+
+  if (!hasAnyInput) return null;
 
   return (
     <div className="w-full max-w-full space-y-6 sm:space-y-8" style={{ overflow: 'visible' }}>
