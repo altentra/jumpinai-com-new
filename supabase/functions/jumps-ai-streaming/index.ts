@@ -92,8 +92,20 @@ Deno.serve(async (req) => {
     if (isGuest && turnstileToken) {
       console.log('🔒 Verifying Turnstile token for guest user');
       
-      const turnstileVerifyUrl = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
-      const turnstileSecret = Deno.env.get('TURNSTILE_SECRET_KEY');
+      // Detect preview/staging environments to use test secret key
+      const origin = req.headers.get('origin') || '';
+      const isPreviewEnvironment = origin.includes('lovable.app') || 
+                                   origin.includes('lovableproject.com') || 
+                                   origin.includes('localhost') ||
+                                   origin.includes('preview');
+      
+      // Use Cloudflare's test secret key for preview environments
+      // This matches the test site key used on the frontend
+      const turnstileSecret = isPreviewEnvironment 
+        ? '1x0000000000000000000000000000000AA'  // Cloudflare's always-pass test secret
+        : Deno.env.get('TURNSTILE_SECRET_KEY');
+      
+      console.log(`🔐 Using ${isPreviewEnvironment ? 'TEST' : 'PRODUCTION'} Turnstile secret (origin: ${origin})`);
       
       if (!turnstileSecret) {
         console.error('❌ TURNSTILE_SECRET_KEY not configured');
@@ -103,6 +115,8 @@ Deno.serve(async (req) => {
           { status: 500, headers: corsHeaders }
         );
       }
+
+      const turnstileVerifyUrl = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
 
       try {
         const turnstileResponse = await fetch(turnstileVerifyUrl, {
