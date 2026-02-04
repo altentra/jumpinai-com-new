@@ -336,12 +336,16 @@ export const useProgressiveGeneration = () => {
             progressiveResult.processing_status = {
               stage: 'Generating',
               progress: 60,
-              currentTask: `Plan has been generated. (${stepDuration}s) Generating Tools & Prompts...`,
+              currentTask: `Plan generated (${stepDuration}s). Generating Tools & Prompts...`,
               isComplete: false,
               currentStep: 'tool_prompts'
             };
-            // Use 'plan' key so it matches UI chip
-            progressiveResult.stepTimes = { ...progressiveResult.stepTimes, plan: stepDuration };
+            // Store as BOTH 'plan' and 'comprehensive' so UI can find it with either key
+            progressiveResult.stepTimes = { 
+              ...progressiveResult.stepTimes, 
+              plan: stepDuration,
+              comprehensive: stepDuration 
+            };
             setProcessingStatus(progressiveResult.processing_status);
             setResult({ ...progressiveResult });
             

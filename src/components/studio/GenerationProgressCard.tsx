@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Loader2, CheckCircle, Sparkles, FileText, ListChecks, Wrench, Timer, Zap } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import type { ProcessingStatus } from '@/hooks/useProgressiveGeneration';
@@ -41,21 +41,24 @@ export const GenerationProgressCard: React.FC<GenerationProgressCardProps> = ({
   const currentStep = status.currentStep || 'naming';
   const isComplete = status.isComplete;
   
-  // Smooth animated progress that interpolates toward target
+  // Smooth animated progress that continuously interpolates toward target
   const [displayProgress, setDisplayProgress] = useState(0);
   const animationRef = useRef<number>();
   const targetProgress = status.progress || 0;
   
+  // Micro-progress for continuous streaming feel
+  const [microProgress, setMicroProgress] = useState(0);
+  
   useEffect(() => {
-    // Smoothly animate progress bar
+    // Smoothly animate progress bar with easing
     const animate = () => {
       setDisplayProgress(prev => {
         const diff = targetProgress - prev;
-        if (Math.abs(diff) < 0.5) return targetProgress;
+        if (Math.abs(diff) < 0.3) return targetProgress;
         
-        // Faster catch-up when far behind, slower when close
-        const speed = Math.max(0.3, Math.min(2, Math.abs(diff) / 10));
-        return prev + diff * 0.08 * speed;
+        // Dynamic speed: faster when far behind, slower when close
+        const speed = Math.max(0.5, Math.min(3, Math.abs(diff) / 8));
+        return prev + diff * 0.06 * speed;
       });
       animationRef.current = requestAnimationFrame(animate);
     };
@@ -66,31 +69,28 @@ export const GenerationProgressCard: React.FC<GenerationProgressCardProps> = ({
     };
   }, [targetProgress]);
   
-  // Add micro-progress within each step (smooth continuous feel)
-  const [microProgress, setMicroProgress] = useState(0);
-  
+  // Micro-streaming animation within each step
   useEffect(() => {
     if (isComplete) {
       setMicroProgress(0);
       return;
     }
     
-    // Micro-animation within current step
     const interval = setInterval(() => {
       setMicroProgress(prev => {
-        // Small incremental progress that resets when real progress updates
-        const next = prev + 0.15;
-        return next > 8 ? 0 : next;
+        // Subtle incremental progress that creates streaming feel
+        const next = prev + 0.12;
+        return next > 6 ? 0 : next;
       });
-    }, 100);
+    }, 80);
     
     return () => clearInterval(interval);
-  }, [isComplete, targetProgress]);
+  }, [isComplete, currentStep]);
   
-  // Reset micro progress when actual progress changes
+  // Reset micro progress when actual step changes
   useEffect(() => {
     setMicroProgress(0);
-  }, [targetProgress]);
+  }, [currentStep]);
   
   const getStepState = (stepId: string): 'complete' | 'active' | 'pending' => {
     const stepOrder = ['naming', 'overview', 'plan', 'tool_prompts', 'complete'];
@@ -102,8 +102,16 @@ export const GenerationProgressCard: React.FC<GenerationProgressCardProps> = ({
     return 'pending';
   };
 
+  // Get step time, checking both 'plan' and 'comprehensive' keys
+  const getStepTime = (stepId: string): number | undefined => {
+    if (stepId === 'plan') {
+      return stepTimes['plan'] ?? stepTimes['comprehensive'];
+    }
+    return stepTimes[stepId];
+  };
+
   // Determine display title
-  const displayTitle = React.useMemo(() => {
+  const displayTitle = useMemo(() => {
     if (jumpName && jumpName !== 'Generating Jump...' && jumpName !== 'Generating Your Jump...') {
       return jumpName;
     }
@@ -111,148 +119,137 @@ export const GenerationProgressCard: React.FC<GenerationProgressCardProps> = ({
   }, [jumpName]);
   
   // Calculate smooth visual progress including micro-progress
-  const visualProgress = Math.min(100, displayProgress + (isComplete ? 0 : microProgress * 0.5));
+  const visualProgress = Math.min(100, displayProgress + (isComplete ? 0 : microProgress * 0.4));
 
   return (
     <div className="relative group">
-      {/* Subtle ambient glow - white/neutral only */}
-      <div className={`absolute -inset-2 rounded-3xl blur-2xl transition-all duration-700 ${
+      {/* Subtle ambient glow */}
+      <div className={`absolute -inset-1.5 rounded-2xl blur-xl transition-all duration-700 ${
         isComplete 
-          ? 'bg-gradient-to-r from-white/20 via-white/10 to-white/20 opacity-40' 
-          : 'bg-gradient-to-r from-white/10 via-white/5 to-white/10 opacity-30'
+          ? 'bg-emerald-500/15 opacity-60' 
+          : 'bg-primary/10 opacity-40'
       }`} />
       
-      {/* Main card - neutral/white premium aesthetic */}
-      <div className={`relative backdrop-blur-2xl border rounded-2xl overflow-hidden shadow-2xl transition-all duration-500 ${
+      {/* Main card - premium glassmorphic aesthetic */}
+      <div className={`relative backdrop-blur-xl border rounded-2xl overflow-hidden shadow-xl transition-all duration-500 ${
         isComplete 
-          ? 'bg-gradient-to-br from-background via-background to-muted/20 border-border/60' 
-          : 'bg-gradient-to-br from-background via-background to-muted/10 border-border/40'
+          ? 'bg-card/95 border-emerald-500/30' 
+          : 'bg-card/90 border-border/50'
       }`}>
-        {/* Top gradient line - subtle neutral */}
-        <div className={`absolute top-0 left-0 right-0 h-0.5 ${
+        {/* Top accent line */}
+        <div className={`absolute top-0 left-0 right-0 h-px ${
           isComplete 
-            ? 'bg-gradient-to-r from-transparent via-foreground/30 to-transparent' 
-            : 'bg-gradient-to-r from-transparent via-foreground/20 to-transparent'
+            ? 'bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent' 
+            : 'bg-gradient-to-r from-transparent via-primary/40 to-transparent'
         }`} />
         
-        <div className="relative p-5 sm:p-6 space-y-4">
-          {/* Header - clean minimal */}
-          <div className="flex items-start justify-between gap-4">
-            <div className="flex items-center gap-3">
-              {/* Status icon - subtle with appropriate color inside only */}
-              <div className="relative">
-                <div className={`relative w-10 h-10 rounded-full flex items-center justify-center border shadow-sm ${
-                  isComplete 
-                    ? 'bg-emerald-500/10 border-emerald-500/30' 
-                    : 'bg-primary/10 border-primary/30'
-                }`}>
-                  {isComplete ? (
-                    <CheckCircle className="w-5 h-5 text-emerald-500" />
-                  ) : (
-                    <Zap className="w-5 h-5 text-primary animate-pulse" />
-                  )}
-                </div>
-              </div>
-              
-              <div className="min-w-0 flex-1">
-                {/* Title display */}
-                <h3 className="font-bold text-base sm:text-lg leading-tight text-foreground">
-                  {displayTitle || (isComplete ? 'Generation Complete' : 'Generating Your Jump...')}
-                </h3>
-                {/* Subtitle when complete */}
-                {isComplete && (
-                  <p className="text-sm text-emerald-600 dark:text-emerald-400 mt-0.5 font-medium">
-                    Ready to explore
-                  </p>
+        <div className="relative p-4 sm:p-5 space-y-4">
+          {/* Compact header */}
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2.5 min-w-0 flex-1">
+              {/* Status icon */}
+              <div className={`relative shrink-0 w-8 h-8 rounded-full flex items-center justify-center border shadow-sm ${
+                isComplete 
+                  ? 'bg-emerald-500/15 border-emerald-500/40' 
+                  : 'bg-primary/15 border-primary/40'
+              }`}>
+                {isComplete ? (
+                  <CheckCircle className="w-4 h-4 text-emerald-500" />
+                ) : (
+                  <Zap className="w-4 h-4 text-primary animate-pulse" />
                 )}
               </div>
+              
+              {/* Title */}
+              <h3 className="font-semibold text-sm sm:text-base leading-tight text-foreground truncate">
+                {displayTitle || (isComplete ? 'Generation Complete' : 'Generating Your Jump...')}
+              </h3>
             </div>
             
-            {/* Timer badge - clean neutral */}
+            {/* Timer badge */}
             <Badge 
               variant="outline" 
-              className="text-sm font-mono shrink-0 backdrop-blur border shadow-sm bg-muted/30 border-border/50 text-foreground/80"
+              className="text-xs font-mono shrink-0 bg-muted/50 border-border/60 text-foreground/70 px-2 py-1"
             >
-              <Timer className="w-3.5 h-3.5 mr-1.5 text-muted-foreground" />
+              <Timer className="w-3 h-3 mr-1 text-muted-foreground" />
               {formatTime(timer)}
             </Badge>
           </div>
 
-          {/* Step status chips - improved icons and colors */}
-          <div className="flex flex-wrap items-center gap-2">
+          {/* Step status chips - color-coded with icons */}
+          <div className="flex flex-wrap items-center gap-1.5">
             {GENERATION_STEPS.map((step) => {
               const state = getStepState(step.id);
               const Icon = step.icon;
-              const stepTime = stepTimes[step.id];
+              const stepTime = getStepTime(step.id);
 
               return (
                 <div
                   key={step.id}
                   className={`
-                    inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold
+                    inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-medium
                     transition-all duration-300 shadow-sm
                     ${state === 'complete'
                       ? 'bg-emerald-500/15 border-emerald-500/40 text-emerald-600 dark:text-emerald-400'
                       : state === 'active'
                         ? 'bg-primary/15 border-primary/40 text-primary'
-                        : 'bg-muted/40 border-border/40 text-muted-foreground/60'}
+                        : 'bg-muted/30 border-border/40 text-muted-foreground/50'}
                   `}
                 >
                   {state === 'complete' ? (
-                    <CheckCircle className="w-3.5 h-3.5" />
+                    <CheckCircle className="w-3 h-3 text-emerald-500" />
                   ) : state === 'active' ? (
-                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    <Loader2 className="w-3 h-3 animate-spin text-primary" />
                   ) : (
-                    <Icon className="w-3.5 h-3.5 opacity-50" />
+                    <Icon className="w-3 h-3 opacity-40" />
                   )}
                   <span>{step.label}</span>
                   {state === 'complete' && stepTime !== undefined && (
-                    <span className="font-mono text-[10px] opacity-75">{stepTime}s</span>
+                    <span className="font-mono text-[10px] opacity-70 ml-0.5">{stepTime}s</span>
                   )}
                 </div>
               );
             })}
           </div>
           
-          {/* Progress bar - smooth continuous animation */}
+          {/* Progress section */}
           <div className="space-y-2">
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-muted-foreground font-medium truncate pr-2">
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-muted-foreground truncate pr-2">
                 {status.currentTask || 'Starting...'}
               </span>
-              <span className={`font-bold shrink-0 ${
+              <span className={`font-semibold shrink-0 tabular-nums ${
                 isComplete ? 'text-emerald-600 dark:text-emerald-400' : 'text-foreground'
               }`}>
                 {Math.round(visualProgress)}%
               </span>
             </div>
             
-            {/* Enhanced smooth progress bar */}
-            <div className={`relative h-2.5 rounded-full overflow-hidden shadow-inner border ${
+            {/* Premium smooth progress bar */}
+            <div className={`relative h-2 rounded-full overflow-hidden shadow-inner border ${
               isComplete 
                 ? 'bg-emerald-500/10 border-emerald-500/20' 
-                : 'bg-muted/40 border-border/30'
+                : 'bg-muted/30 border-border/30'
             }`}>
-              {/* Progress fill with smooth transition */}
+              {/* Progress fill */}
               <div
-                className="absolute inset-y-0 left-0 rounded-full"
+                className="absolute inset-y-0 left-0 rounded-full transition-[width] duration-150 ease-out"
                 style={{ 
                   width: `${visualProgress}%`,
                   background: isComplete 
-                    ? 'linear-gradient(90deg, #10b981, #22c55e, #10b981)'
-                    : 'linear-gradient(90deg, hsl(var(--primary)), hsl(var(--primary) / 0.8), hsl(var(--primary)))',
+                    ? 'linear-gradient(90deg, rgb(16, 185, 129), rgb(34, 197, 94), rgb(16, 185, 129))'
+                    : 'linear-gradient(90deg, hsl(var(--primary)), hsl(var(--primary) / 0.85), hsl(var(--primary)))',
                   backgroundSize: '200% 100%',
-                  transition: 'width 0.3s ease-out',
-                  animation: isComplete ? 'none' : 'shimmer 2s linear infinite',
+                  animation: isComplete ? 'none' : 'shimmer 2.5s linear infinite',
                 }}
               />
-              {/* Continuous moving barberpole for streaming feel */}
+              {/* Streaming barberpole effect */}
               {!isComplete && (
                 <div
                   className="absolute inset-0"
                   style={{
-                    background: 'repeating-linear-gradient(135deg, transparent 0px, transparent 6px, rgba(255,255,255,0.12) 6px, rgba(255,255,255,0.12) 12px)',
-                    animation: 'barberpole 0.8s linear infinite',
+                    background: 'repeating-linear-gradient(135deg, transparent 0px, transparent 5px, rgba(255,255,255,0.1) 5px, rgba(255,255,255,0.1) 10px)',
+                    animation: 'barberpole 0.6s linear infinite',
                   }}
                 />
               )}
@@ -261,10 +258,10 @@ export const GenerationProgressCard: React.FC<GenerationProgressCardProps> = ({
           
           {/* Completion message */}
           {isComplete && (
-            <div className="flex items-center justify-center gap-2 pt-2 animate-in fade-in-0 slide-in-from-bottom-2 duration-500">
-              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/30">
-                <CheckCircle className="w-4 h-4 text-emerald-500" />
-                <span className="text-sm font-medium text-emerald-600 dark:text-emerald-400">
+            <div className="flex items-center justify-center pt-1 animate-in fade-in-0 slide-in-from-bottom-1 duration-400">
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/25">
+                <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />
+                <span className="text-xs font-medium text-emerald-600 dark:text-emerald-400">
                   Explore your personalized roadmap below
                 </span>
               </div>
@@ -281,7 +278,7 @@ export const GenerationProgressCard: React.FC<GenerationProgressCardProps> = ({
         }
         @keyframes barberpole {
           0% { background-position: 0 0; }
-          100% { background-position: 24px 0; }
+          100% { background-position: 20px 0; }
         }
       `}</style>
     </div>
