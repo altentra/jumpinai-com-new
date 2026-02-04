@@ -1414,99 +1414,40 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
 
         <TabsContent value="plan" className="mt-0" style={{ overflow: 'visible', maxHeight: 'none', height: 'auto', display: 'block' }}>
           <div ref={planContentRef}>
-            {result.structured_plan && result.structured_plan.phases ? (
+            {/* Use JumpPlanDisplay for BOTH final AND streaming states - just with different data sources */}
+            {(result.structured_plan?.phases || result.streaming_parsed?.plan?.phases?.length) ? (
               <JumpPlanDisplay
-              planContent={result.full_content || ''}
-              structuredPlan={result.comprehensive_plan}
-              onEdit={() => {
-                // Scroll to chat to refine
-                const chatSection = document.querySelector('[data-chat-section]');
-                if (chatSection) {
-                  chatSection.scrollIntoView({ behavior: 'smooth' });
+                planContent={result.full_content || ''}
+                structuredPlan={
+                  // Use final structured_plan if available, otherwise build from streaming data
+                  result.structured_plan?.phases 
+                    ? result.comprehensive_plan 
+                    : {
+                        // Build comprehensive plan structure from streaming parsed data
+                        action_plan: {
+                          phases: result.streaming_parsed?.plan?.phases || []
+                        }
+                      }
                 }
-              }}
-              onDownload={() => handleDownload()}
-              jumpId={result.jumpId}
-              toolPromptIds={toolPrompts?.map((tp: any) => tp?.id || null) || []}
-              onToolPromptClick={handleToolPromptClick}
-              onToolPromptGenerated={handleToolPromptGenerated}
-              isGenerationComplete={result.processing_status?.isComplete || false}
-            />
-          ) : result.streaming_parsed?.plan?.phases?.length ? (
-            /* Progressive UI rendering with EXACT final JumpPlanDisplay styling */
-            <div className="space-y-6">
-              {/* Phase cards with premium styling matching JumpPlanDisplay */}
-              {result.streaming_parsed.plan.phases.map((phase, idx) => (
-                <div key={idx} className="relative group animate-in fade-in-50 slide-in-from-bottom-2 duration-300">
-                  <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
-                  <Card className="relative glass backdrop-blur-lg bg-card/80 border border-border hover:border-primary/40 transition-all duration-300 rounded-2xl overflow-hidden">
-                    {/* Phase Header with gradient accent */}
-                    <div className="bg-gradient-to-r from-primary/10 via-primary/5 to-transparent border-b border-border/50">
-                      <CardHeader className="pb-3">
-                        <div className="flex items-center justify-between">
-                          <CardTitle className="text-base flex items-center gap-3">
-                            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20 border border-primary/30">
-                              <span className="text-sm font-bold text-primary">{phase.phase_number || idx + 1}</span>
-                            </div>
-                            <span className="font-semibold">{phase.title}</span>
-                            {result.processing_status?.currentStep === 'plan' && idx === result.streaming_parsed.plan.phases.length - 1 && (
-                              <Loader2 className="w-3 h-3 animate-spin text-blue-500" />
-                            )}
-                          </CardTitle>
-                          {phase.duration && (
-                            <Badge variant="outline" className="text-xs bg-primary/10 text-primary border-primary/30">
-                              <Clock className="w-3 h-3 mr-1" />
-                              {phase.duration}
-                            </Badge>
-                          )}
-                        </div>
-                      </CardHeader>
-                    </div>
-                    
-                    <CardContent className="pt-4 space-y-4">
-                      {phase.description && (
-                        <p className="text-sm text-foreground/80 leading-relaxed">{phase.description}</p>
-                      )}
-                      
-                      {phase.steps?.length ? (
-                        <div className="space-y-2">
-                          {phase.steps.map((step, sIdx) => (
-                            <div 
-                              key={sIdx} 
-                              className="flex items-start gap-3 p-3 rounded-xl bg-background/50 border border-border/50 hover:border-primary/30 transition-colors"
-                            >
-                              <div className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 border border-primary/20 shrink-0 mt-0.5">
-                                <span className="text-xs font-semibold text-primary">{step.step_number}</span>
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <div className="flex items-center gap-2 flex-wrap">
-                                  <span className="font-medium text-sm">{step.title}</span>
-                                  {step.estimated_time && (
-                                    <Badge variant="outline" className="text-xs">
-                                      <Timer className="w-3 h-3 mr-1" />
-                                      {step.estimated_time}
-                                    </Badge>
-                                  )}
-                                </div>
-                                {step.description && (
-                                  <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{step.description}</p>
-                                )}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      ) : null}
-                    </CardContent>
-                  </Card>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="flex items-center justify-center h-32">
-              <Loader2 className="w-6 h-6 animate-spin text-blue-500 mr-2" />
-              <span className="text-muted-foreground">Creating implementation plan...</span>
-            </div>
-          )}
+                onEdit={() => {
+                  const chatSection = document.querySelector('[data-chat-section]');
+                  if (chatSection) {
+                    chatSection.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
+                onDownload={() => handleDownload()}
+                jumpId={result.jumpId}
+                toolPromptIds={toolPrompts?.map((tp: any) => tp?.id || null) || []}
+                onToolPromptClick={handleToolPromptClick}
+                onToolPromptGenerated={handleToolPromptGenerated}
+                isGenerationComplete={result.processing_status?.isComplete || false}
+              />
+            ) : (
+              <div className="flex items-center justify-center h-32">
+                <Loader2 className="w-6 h-6 animate-spin text-blue-500 mr-2" />
+                <span className="text-muted-foreground">Creating implementation plan...</span>
+              </div>
+            )}
           </div>
         </TabsContent>
 
@@ -1520,66 +1461,30 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
             });
 
             if (!toolPrompts || toolPrompts.length === 0) {
-              // Check for progressively parsed tool prompts first
+              // Check for progressively parsed tool prompts - use ToolPromptComboCard directly!
               const streamedToolPrompts = result.streaming_parsed?.tool_prompts?.tool_prompts;
               if (streamedToolPrompts?.length) {
                 return (
-                  <div className="grid gap-4">
+                  <div ref={toolPromptsContentRef} className="grid gap-4">
                     {streamedToolPrompts.map((tp: any, idx: number) => (
-                      <div key={idx} className="relative group animate-in fade-in-50 slide-in-from-bottom-2 duration-300">
-                        <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
-                        <Card className="relative glass backdrop-blur-lg bg-card/80 border border-border hover:border-primary/40 transition-all duration-300 rounded-2xl overflow-hidden">
-                          {/* Header with tool badge - matching ToolPromptComboCard */}
-                          <div className="bg-gradient-to-r from-primary/10 via-primary/5 to-transparent border-b border-border/50">
-                            <CardHeader className="pb-3">
-                              <div className="flex items-center justify-between">
-                                <CardTitle className="text-sm flex items-center gap-2">
-                                  <div className="flex items-center justify-center w-7 h-7 rounded-full bg-primary/20 border border-primary/30">
-                                    <Wrench className="w-3.5 h-3.5 text-primary" />
-                                  </div>
-                                  <span className="font-semibold">{tp.title || 'Tool & Prompt'}</span>
-                                  {result.processing_status?.currentStep === 'tool_prompts' && idx === streamedToolPrompts.length - 1 && (
-                                    <Loader2 className="w-3 h-3 animate-spin text-blue-500" />
-                                  )}
-                                </CardTitle>
-                                {tp.tool_name && (
-                                  <Badge className="text-xs bg-primary/20 text-primary border-primary/30 hover:bg-primary/30">
-                                    {tp.tool_name}
-                                  </Badge>
-                                )}
-                              </div>
-                            </CardHeader>
+                      <ErrorBoundary 
+                        key={`streaming-combo-${idx}`}
+                        fallback={
+                          <div className="p-6 border border-destructive/30 rounded-lg bg-destructive/5 text-center">
+                            <h3 className="text-lg font-semibold mb-2">Error loading tool #{idx + 1}</h3>
+                            <p className="text-sm text-muted-foreground">This tool-prompt combo couldn't be displayed.</p>
                           </div>
-                          
-                          <CardContent className="pt-4 space-y-4">
-                            {tp.description && (
-                              <p className="text-sm text-foreground/80 leading-relaxed">{tp.description}</p>
-                            )}
-                            
-                            {/* Prompt Section - Premium styling */}
-                            {(tp.prompt_text || tp.custom_prompt || tp.prompt) && (
-                              <div className="space-y-2">
-                                <div className="flex items-center justify-between">
-                                  <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Prompt</span>
-                                </div>
-                                <div className="p-4 rounded-xl bg-gradient-to-br from-muted/50 via-muted/30 to-muted/50 border border-border/50 backdrop-blur-sm">
-                                  <p className="text-sm text-foreground/90 leading-relaxed whitespace-pre-wrap">
-                                    {tp.prompt_text || tp.custom_prompt || tp.prompt}
-                                  </p>
-                                </div>
-                              </div>
-                            )}
-                            
-                            {/* Tool URL if available */}
-                            {tp.tool_url && (
-                              <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                                <Sparkles className="w-3 h-3" />
-                                <span className="truncate">{tp.tool_url}</span>
-                              </div>
-                            )}
-                          </CardContent>
-                        </Card>
-                      </div>
+                        }
+                      >
+                        <div className="animate-fade-in">
+                          {/* Use the EXACT same ToolPromptComboCard component as final state */}
+                          <ToolPromptComboCard
+                            combo={tp}
+                            index={idx + 1}
+                            onClick={() => {/* Detail modal will be added later */}}
+                          />
+                        </div>
+                      </ErrorBoundary>
                     ))}
                   </div>
                 );
