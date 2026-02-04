@@ -37,7 +37,7 @@ export const StudioTextarea = forwardRef<HTMLTextAreaElement, StudioTextareaProp
           border: 'border-amber-500/60',
           indicator: 'bg-amber-500',
           label: 'text-amber-600 dark:text-amber-400',
-          bg: 'bg-amber-50/80 dark:bg-amber-950/40',
+          bg: 'bg-zinc-200 dark:bg-zinc-900',
           shadow: 'shadow-[0_4px_20px_-4px_rgba(245,158,11,0.25)]'
         };
       case 'listening':
@@ -46,7 +46,7 @@ export const StudioTextarea = forwardRef<HTMLTextAreaElement, StudioTextareaProp
           border: 'border-emerald-500/60',
           indicator: 'bg-emerald-500 animate-pulse',
           label: 'text-emerald-600 dark:text-emerald-400',
-          bg: 'bg-emerald-50/80 dark:bg-emerald-950/40',
+          bg: 'bg-zinc-200 dark:bg-zinc-900',
           shadow: 'shadow-[0_4px_20px_-4px_rgba(16,185,129,0.25)]'
         };
       case 'focused':
@@ -55,17 +55,17 @@ export const StudioTextarea = forwardRef<HTMLTextAreaElement, StudioTextareaProp
           border: 'border-blue-500/60',
           indicator: 'bg-blue-500',
           label: 'text-blue-600 dark:text-blue-400',
-          bg: 'bg-blue-50/50 dark:bg-zinc-800',
+          bg: 'bg-zinc-100 dark:bg-zinc-950',
           shadow: 'shadow-[0_4px_20px_-4px_rgba(59,130,246,0.25)]'
         };
       default:
         return {
           ring: '',
-          border: 'border-zinc-400/80 dark:border-zinc-500',
+          border: 'border-zinc-400 dark:border-zinc-600',
           indicator: 'bg-zinc-400 dark:bg-zinc-500',
           label: 'text-foreground',
-          bg: 'bg-zinc-100/90 dark:bg-zinc-800',
-          shadow: 'shadow-[0_2px_8px_-2px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.8)] dark:shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.05)]'
+          bg: 'bg-zinc-200 dark:bg-zinc-900',
+          shadow: 'shadow-[0_2px_8px_-2px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.8)] dark:shadow-[0_2px_8px_-2px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.03)]'
         };
     }
   }, [inputState]);
