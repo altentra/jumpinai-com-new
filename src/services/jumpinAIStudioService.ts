@@ -96,7 +96,23 @@ export const jumpinAIStudioService = {
         body: JSON.stringify(requestBody)
       }).then(async response => {
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          // Parse error response to get detailed message
+          let errorMessage = `HTTP error! status: ${response.status}`;
+          try {
+            const errorData = await response.json();
+            if (errorData.error) {
+              errorMessage = errorData.error;
+              // For rate limit errors, include reset time if available
+              if (response.status === 429 && errorData.resetAt) {
+                const resetDate = new Date(errorData.resetAt);
+                const hoursUntilReset = Math.ceil((resetDate.getTime() - Date.now()) / (1000 * 60 * 60));
+                errorMessage += ` Resets in ~${hoursUntilReset} hours.`;
+              }
+            }
+          } catch {
+            // Couldn't parse JSON, use default message
+          }
+          throw new Error(errorMessage);
         }
 
         const reader = response.body?.getReader();
